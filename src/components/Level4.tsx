@@ -3,11 +3,12 @@ import { useKV } from '@github/spark/hooks'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { SignOut, Database, Lightning, Code, Eye, House, Download, Upload } from '@phosphor-icons/react'
+import { SignOut, Database, Lightning, Code, Eye, House, Download, Upload, BookOpen } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { SchemaEditorLevel4 } from './SchemaEditorLevel4'
 import { WorkflowEditor } from './WorkflowEditor'
 import { LuaEditor } from './LuaEditor'
+import { LuaSnippetLibrary } from './LuaSnippetLibrary'
 import type { User as UserType, AppConfiguration } from '@/lib/level-types'
 import type { ModelSchema } from '@/lib/schema-types'
 
@@ -120,7 +121,7 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
         </div>
 
         <Tabs defaultValue="schemas" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 max-w-2xl">
+          <TabsList className="grid w-full grid-cols-4 max-w-3xl">
             <TabsTrigger value="schemas">
               <Database className="mr-2" size={16} />
               Data Schemas
@@ -135,6 +136,10 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
               <Code className="mr-2" size={16} />
               Lua Scripts
               <Badge variant="secondary" className="ml-2">{appConfig.luaScripts.length}</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="snippets">
+              <BookOpen className="mr-2" size={16} />
+              Snippet Library
             </TabsTrigger>
           </TabsList>
 
@@ -164,6 +169,10 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
                 setAppConfig((current) => ({ ...current!, luaScripts }))
               }
             />
+          </TabsContent>
+
+          <TabsContent value="snippets" className="space-y-6">
+            <LuaSnippetLibrary />
           </TabsContent>
         </Tabs>
 

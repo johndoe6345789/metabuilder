@@ -11,13 +11,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Plus, Trash, Play, CheckCircle, XCircle, FileCode, ArrowsOut } from '@phosphor-icons/react'
+import { Plus, Trash, Play, CheckCircle, XCircle, FileCode, ArrowsOut, BookOpen } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { createLuaEngine, type LuaExecutionResult } from '@/lib/lua-engine'
 import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua-examples'
 import type { LuaScript } from '@/lib/level-types'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import type { editor } from 'monaco-editor'
+import { LuaSnippetLibrary } from '@/components/LuaSnippetLibrary'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 
 interface LuaEditorProps {
   scripts: LuaScript[]
@@ -32,6 +34,7 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
   const [testInputs, setTestInputs] = useState<Record<string, any>>({})
   const [isExecuting, setIsExecuting] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [showSnippetLibrary, setShowSnippetLibrary] = useState(false)
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const monaco = useMonaco()
 
@@ -236,6 +239,32 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
     })
   }
 
+  const handleInsertSnippet = (code: string) => {
+    if (!currentScript) return
+    
+    if (editorRef.current) {
+      const selection = editorRef.current.getSelection()
+      if (selection) {
+        editorRef.current.executeEdits('', [{
+          range: selection,
+          text: code,
+          forceMoveMarkers: true
+        }])
+        editorRef.current.focus()
+      } else {
+        const currentCode = currentScript.code
+        const newCode = currentCode ? currentCode + '\n\n' + code : code
+        handleUpdateScript({ code: newCode })
+      }
+    } else {
+      const currentCode = currentScript.code
+      const newCode = currentCode ? currentCode + '\n\n' + code : code
+      handleUpdateScript({ code: newCode })
+    }
+    
+    setShowSnippetLibrary(false)
+  }
+
   return (
     <div className="grid md:grid-cols-3 gap-6 h-full">
       <Card className="md:col-span-1">
@@ -414,6 +443,25 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
                 <div className="flex items-center justify-between">
                   <Label>Lua Code</Label>
                   <div className="flex gap-2">
+                    <Sheet open={showSnippetLibrary} onOpenChange={setShowSnippetLibrary}>
+                      <SheetTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          <BookOpen size={16} className="mr-2" />
+                          Snippet Library
+                        </Button>
+                      </SheetTrigger>
+                      <SheetContent side="right" className="w-full sm:max-w-4xl overflow-y-auto">
+                        <SheetHeader>
+                          <SheetTitle>Lua Snippet Library</SheetTitle>
+                          <SheetDescription>
+                            Browse and insert pre-built code templates
+                          </SheetDescription>
+                        </SheetHeader>
+                        <div className="mt-6">
+                          <LuaSnippetLibrary onInsertSnippet={handleInsertSnippet} />
+                        </div>
+                      </SheetContent>
+                    </Sheet>
                     <Select
                       onValueChange={(value) => {
                         const exampleCode = getLuaExampleCode(value as any)
@@ -421,9 +469,9 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
                         toast.success('Example loaded')
                       }}
                     >
-                      <SelectTrigger className="w-[200px]">
+                      <SelectTrigger className="w-[180px]">
                         <FileCode size={16} className="mr-2" />
-                        <SelectValue placeholder="Load example" />
+                        <SelectValue placeholder="Examples" />
                       </SelectTrigger>
                       <SelectContent>
                         {getLuaExamplesList().map((example) => (

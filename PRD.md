@@ -55,11 +55,18 @@ This is a 4-tier meta-application builder: a public website layer, authenticated
 - **Success criteria**: Nodes connect smoothly; execution order clear; can branch/merge; error handling; logs show execution path; integrates with Lua
 
 ### Lua Lambda System (Level 4)
-- **Functionality**: Real Lua interpreter (fengari-web) with full language support, Monaco editor with syntax highlighting and autocomplete, parameter handling, context API access, and comprehensive execution feedback
-- **Purpose**: Provide safe, sandboxed scripting for custom transformations, validations, and business logic with real Lua execution beyond declarative capabilities, enhanced by professional code editing experience
+- **Functionality**: Real Lua interpreter (fengari-web) with full language support, Monaco editor with syntax highlighting and autocomplete, parameter handling, context API access, comprehensive execution feedback, and extensive snippet library with 30+ pre-built templates
+- **Purpose**: Provide safe, sandboxed scripting for custom transformations, validations, and business logic with real Lua execution beyond declarative capabilities, enhanced by professional code editing experience and reusable code patterns
 - **Trigger**: User adds "Lua Action" node in workflow or creates Lua script in scripts tab
-- **Progression**: Open Monaco-based Lua editor → Define parameters → Write Lua code with syntax highlighting and autocomplete → Access context.data/user/kv via intelligent suggestions → Test with sample inputs → View execution logs → Return structured results → Integrate into workflows
-- **Success criteria**: Monaco editor integrated with Lua language support; autocomplete provides context API suggestions (context.data, context.user, context.kv, log, print); syntax highlighting active; real Lua execution via fengari; parameter type validation; execution logs captured; return values parsed; syntax/runtime errors shown with line numbers; can transform JSON data; fullscreen editing mode available; integrates with workflow nodes
+- **Progression**: Open Monaco-based Lua editor → Define parameters → Browse snippet library by category → Search and preview snippets → Insert template code → Customize with syntax highlighting and autocomplete → Access context.data/user/kv via intelligent suggestions → Test with sample inputs → View execution logs → Return structured results → Integrate into workflows
+- **Success criteria**: Monaco editor integrated with Lua language support; autocomplete provides context API suggestions (context.data, context.user, context.kv, log, print); syntax highlighting active; real Lua execution via fengari; parameter type validation; execution logs captured; return values parsed; syntax/runtime errors shown with line numbers; can transform JSON data; fullscreen editing mode available; snippet library accessible with 30+ templates across 12 categories; snippets insertable at cursor position; integrates with workflow nodes
+
+### Lua Snippet Library (Level 4)
+- **Functionality**: Comprehensive library of 30+ pre-built Lua code templates organized into 12 categories (Data Validation, Data Transformation, Array Operations, String Processing, Math & Calculations, Conditionals & Logic, User Management, Error Handling, API & Networking, Date & Time, File Operations, Utilities)
+- **Purpose**: Accelerate development by providing tested, reusable patterns for common operations; reduce errors; teach best practices
+- **Trigger**: User clicks "Snippet Library" button in Lua editor or opens "Snippet Library" tab in Level 4
+- **Progression**: Open snippet library → Browse by category or search by keyword/tag → Preview snippet details and parameters → View full code in syntax-highlighted display → Copy to clipboard or insert into editor → Customize for specific use case
+- **Success criteria**: 30+ snippets covering common patterns; organized into logical categories; searchable by name, description, and tags; preview shows code, description, and required parameters; one-click copy or insert; snippets include validation, transformation, calculations, conditionals, string operations, array operations, date handling, error handling, and utilities; modal detail view for full inspection
 
 ## Edge Case Handling
 - **Invalid User Credentials**: Show clear error message; rate limit after 5 attempts; support password reset flow
@@ -107,13 +114,14 @@ Animations should feel responsive and purposeful - immediate visual feedback for
 - **Components**: 
   - Sidebar with collapsible sections for component catalog
   - Resizable panels for canvas/inspector layout
-  - Card for component previews in catalog
-  - Dialog for login form and settings
-  - Tabs for switching between visual/code views
-  - ScrollArea for component lists and property panels
+  - Card for component previews in catalog and snippet library
+  - Dialog for login form, settings, and snippet detail view
+  - Sheet for slide-out snippet library panel
+  - Tabs for switching between visual/code views and snippet categories
+  - ScrollArea for component lists, property panels, and snippet browsing
   - Input, Select, Switch, Slider for property editors
   - Button throughout for actions
-  - Badge for component type indicators
+  - Badge for component type indicators and snippet tags
   - Separator for visual hierarchy
   - Tooltip for help text on hover
   - Sonner for notifications
@@ -126,13 +134,16 @@ Animations should feel responsive and purposeful - immediate visual feedback for
   - Canvas ruler and grid overlay
   - Component outline overlay on hover
   - Fullscreen mode for Monaco editor instances
+  - Snippet library with category filtering and search
+  - Snippet card grid with tag display and copy/insert actions
+  - Snippet detail modal with parameter documentation and code highlighting
 - **States**: 
   - Canvas: neutral state shows dotted grid, hover shows drop zones, dragging shows blue outlines
   - Components: default has subtle border, hover shows blue glow, selected shows thick accent border with resize handles
   - Drop zones: hidden by default, appear on drag with dashed accent border and background tint
   - Property inputs: follow standard focus states with accent color
 - **Icon Selection**: 
-  - Phosphor icons: Layout for layouts, PaintBrush for styling, Code for code editor, Lock/LockOpen for auth, FloppyDisk for save, Eye for preview, ArrowsOutSimple for fullscreen, Plus for add, Trash for delete, Copy for duplicate, CaretRight/Down for tree expand
+  - Phosphor icons: Layout for layouts, PaintBrush for styling, Code for code editor, Lock/LockOpen for auth, FloppyDisk for save, Eye for preview, ArrowsOutSimple for fullscreen, Plus for add, Trash for delete, Copy for duplicate/copy, CaretRight/Down for tree expand, BookOpen for snippet library, MagnifyingGlass for search, Tag for snippet tags, Check for copied confirmation, ArrowRight for insert action
 - **Spacing**: 
   - Sidebars: p-4 for sections, gap-2 for component grid
   - Canvas: p-8 for outer padding, min-h-screen for scrollability
