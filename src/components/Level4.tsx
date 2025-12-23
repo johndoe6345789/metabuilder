@@ -2,14 +2,18 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { SignOut, Database as DatabaseIcon, Lightning, Code, Eye, House, Download, Upload, BookOpen, HardDrives } from '@phosphor-icons/react'
+import { SignOut, Database as DatabaseIcon, Lightning, Code, Eye, House, Download, Upload, BookOpen, HardDrives, MapTrifold, Tree, Users } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { SchemaEditorLevel4 } from './SchemaEditorLevel4'
 import { WorkflowEditor } from './WorkflowEditor'
 import { LuaEditor } from './LuaEditor'
 import { LuaSnippetLibrary } from './LuaSnippetLibrary'
 import { DatabaseManager } from './DatabaseManager'
+import { PageRoutesManager } from './PageRoutesManager'
+import { ComponentHierarchyEditor } from './ComponentHierarchyEditor'
+import { UserManagement } from './UserManagement'
 import { Database } from '@/lib/database'
+import { seedDatabase } from '@/lib/seed-data'
 import type { User as UserType, AppConfiguration } from '@/lib/level-types'
 import type { ModelSchema } from '@/lib/schema-types'
 
@@ -26,6 +30,8 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
 
   useEffect(() => {
     const loadConfig = async () => {
+      await seedDatabase()
+      
       const config = await Database.getAppConfig()
       if (config) {
         setAppConfig(config)
@@ -146,32 +152,53 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
           </p>
         </div>
 
-        <Tabs defaultValue="schemas" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 max-w-4xl">
+        <Tabs defaultValue="pages" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 max-w-full">
+            <TabsTrigger value="pages">
+              <MapTrifold className="mr-2" size={16} />
+              Page Routes
+            </TabsTrigger>
+            <TabsTrigger value="hierarchy">
+              <Tree className="mr-2" size={16} />
+              Components
+            </TabsTrigger>
+            <TabsTrigger value="users">
+              <Users className="mr-2" size={16} />
+              Users
+            </TabsTrigger>
             <TabsTrigger value="schemas">
               <DatabaseIcon className="mr-2" size={16} />
-              Data Schemas
-              <Badge variant="secondary" className="ml-2">{appConfig.schemas.length}</Badge>
+              Schemas
             </TabsTrigger>
             <TabsTrigger value="workflows">
               <Lightning className="mr-2" size={16} />
               Workflows
-              <Badge variant="secondary" className="ml-2">{appConfig.workflows.length}</Badge>
             </TabsTrigger>
             <TabsTrigger value="lua">
               <Code className="mr-2" size={16} />
               Lua Scripts
-              <Badge variant="secondary" className="ml-2">{appConfig.luaScripts.length}</Badge>
             </TabsTrigger>
             <TabsTrigger value="snippets">
               <BookOpen className="mr-2" size={16} />
-              Snippet Library
+              Snippets
             </TabsTrigger>
             <TabsTrigger value="database">
               <HardDrives className="mr-2" size={16} />
               Database
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="pages" className="space-y-6">
+            <PageRoutesManager />
+          </TabsContent>
+
+          <TabsContent value="hierarchy" className="space-y-6">
+            <ComponentHierarchyEditor />
+          </TabsContent>
+
+          <TabsContent value="users" className="space-y-6">
+            <UserManagement />
+          </TabsContent>
 
           <TabsContent value="schemas" className="space-y-6">
             <SchemaEditorLevel4
@@ -199,8 +226,8 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
           <TabsContent value="lua" className="space-y-6">
             <LuaEditor
               scripts={appConfig.luaScripts}
-              onScriptsChange={async (luaScripts) => {
-                const newConfig = { ...appConfig, luaScripts }
+              onScriptsChange={async (scripts) => {
+                const newConfig = { ...appConfig, luaScripts: scripts }
                 setAppConfig(newConfig)
                 await Database.setAppConfig(newConfig)
               }}

@@ -7,6 +7,7 @@ import { Level4 } from '@/components/Level4'
 import { toast } from 'sonner'
 import { canAccessLevel } from '@/lib/auth'
 import { Database, hashPassword } from '@/lib/database'
+import { seedDatabase } from '@/lib/seed-data'
 import type { User, AppLevel } from '@/lib/level-types'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
   useEffect(() => {
     const initDatabase = async () => {
       await Database.initializeDatabase()
+      await seedDatabase()
       const loadedUsers = await Database.getUsers()
       setUsers(loadedUsers)
       setIsInitialized(true)
