@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Toaster } from '@/components/ui/sonner'
+import { Button } from '@/components/ui/button'
 import { Level1 } from '@/components/Level1'
 import { Level2 } from '@/components/Level2'
 import { Level3 } from '@/components/Level3'
@@ -15,6 +16,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [currentLevel, setCurrentLevel] = useState<AppLevel>(1)
   const [isInitialized, setIsInitialized] = useState(false)
+  const [isPreviewMode, setIsPreviewMode] = useState(false)
 
   useEffect(() => {
     const initDatabase = async () => {
@@ -103,12 +105,20 @@ function App() {
       return
     }
 
+    setIsPreviewMode(false)
     setCurrentLevel(level)
   }
 
   const handlePreview = (level: AppLevel) => {
+    setIsPreviewMode(true)
     setCurrentLevel(level)
     toast.info(`Previewing Level ${level}`)
+  }
+
+  const handleExitPreview = () => {
+    setIsPreviewMode(false)
+    setCurrentLevel(4)
+    toast.info('Returning to Builder')
   }
 
   if (!currentUser) {
@@ -123,7 +133,26 @@ function App() {
   if (currentLevel === 1) {
     return (
       <>
-        <Level1 onNavigate={handleNavigate} />
+        {isPreviewMode && (
+          <div className="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-purple-600 to-purple-800 text-white py-3 px-4 shadow-lg">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-yellow-300 animate-pulse" />
+                <span className="font-semibold">Preview Mode: Level 1</span>
+              </div>
+              <Button 
+                size="sm" 
+                variant="secondary"
+                onClick={handleExitPreview}
+              >
+                Exit Preview
+              </Button>
+            </div>
+          </div>
+        )}
+        <div className={isPreviewMode ? 'pt-14' : ''}>
+          <Level1 onNavigate={handleNavigate} />
+        </div>
         <Toaster />
       </>
     )
@@ -132,7 +161,26 @@ function App() {
   if (currentLevel === 2) {
     return (
       <>
-        <Level2 user={currentUser} onLogout={handleLogout} onNavigate={handleNavigate} />
+        {isPreviewMode && (
+          <div className="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-purple-600 to-purple-800 text-white py-3 px-4 shadow-lg">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-yellow-300 animate-pulse" />
+                <span className="font-semibold">Preview Mode: Level 2 (User Area)</span>
+              </div>
+              <Button 
+                size="sm" 
+                variant="secondary"
+                onClick={handleExitPreview}
+              >
+                Exit Preview
+              </Button>
+            </div>
+          </div>
+        )}
+        <div className={isPreviewMode ? 'pt-14' : ''}>
+          <Level2 user={currentUser} onLogout={handleLogout} onNavigate={handleNavigate} />
+        </div>
         <Toaster />
       </>
     )
@@ -141,7 +189,26 @@ function App() {
   if (currentLevel === 3 && canAccessLevel(currentUser.role, 3)) {
     return (
       <>
-        <Level3 user={currentUser} onLogout={handleLogout} onNavigate={handleNavigate} />
+        {isPreviewMode && (
+          <div className="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-purple-600 to-purple-800 text-white py-3 px-4 shadow-lg">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-yellow-300 animate-pulse" />
+                <span className="font-semibold">Preview Mode: Level 3 (Admin Panel)</span>
+              </div>
+              <Button 
+                size="sm" 
+                variant="secondary"
+                onClick={handleExitPreview}
+              >
+                Exit Preview
+              </Button>
+            </div>
+          </div>
+        )}
+        <div className={isPreviewMode ? 'pt-14' : ''}>
+          <Level3 user={currentUser} onLogout={handleLogout} onNavigate={handleNavigate} />
+        </div>
         <Toaster />
       </>
     )

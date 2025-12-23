@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { SignOut, Database as DatabaseIcon, Lightning, Code, Eye, House, Download, Upload, BookOpen, HardDrives, MapTrifold, Tree, Users } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { SchemaEditorLevel4 } from './SchemaEditorLevel4'
@@ -115,20 +121,61 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="hidden sm:flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => onPreview(1)}>
+              <div className="hidden sm:flex gap-2 items-center">
+                <div className="text-xs text-sidebar-foreground/70 font-medium mr-1">PREVIEW:</div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => onPreview(1)}
+                  className="bg-sidebar-accent hover:bg-sidebar-accent/80"
+                >
                   <Eye className="mr-2" size={16} />
-                  Preview L1
+                  Level 1
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => onPreview(2)}>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => onPreview(2)}
+                  className="bg-sidebar-accent hover:bg-sidebar-accent/80"
+                >
                   <Eye className="mr-2" size={16} />
-                  Preview L2
+                  Level 2
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => onPreview(3)}>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => onPreview(3)}
+                  className="bg-sidebar-accent hover:bg-sidebar-accent/80"
+                >
                   <Eye className="mr-2" size={16} />
-                  Preview L3
+                  Level 3
                 </Button>
               </div>
+              <div className="sm:hidden">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <Eye size={16} className="mr-2" />
+                      Preview
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => onPreview(1)}>
+                      <Eye className="mr-2" size={16} />
+                      Level 1 (Public)
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onPreview(2)}>
+                      <Eye className="mr-2" size={16} />
+                      Level 2 (User Area)
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onPreview(3)}>
+                      <Eye className="mr-2" size={16} />
+                      Level 3 (Admin Panel)
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="w-px h-6 bg-sidebar-border hidden sm:block" />
               <Button variant="outline" size="sm" onClick={handleExportConfig}>
                 <Download size={16} />
               </Button>
