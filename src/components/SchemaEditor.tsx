@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import type { SchemaConfig } from '@/lib/schema-types'
 import { FloppyDisk, X, Warning } from '@phosphor-icons/react'
+import Editor from '@monaco-editor/react'
 
 interface SchemaEditorProps {
   open: boolean
@@ -49,15 +49,31 @@ export function SchemaEditor({ open, onClose, schema, onSave }: SchemaEditorProp
             </Alert>
           )}
           
-          <Textarea
-            value={schemaText}
-            onChange={(e) => {
-              setSchemaText(e.target.value)
-              setError(null)
-            }}
-            className="font-mono text-sm min-h-[500px]"
-            placeholder="Enter JSON schema..."
-          />
+          <div className="border rounded-lg overflow-hidden">
+            <Editor
+              height="500px"
+              language="json"
+              value={schemaText}
+              onChange={(value) => {
+                setSchemaText(value || '')
+                setError(null)
+              }}
+              theme="vs-dark"
+              options={{
+                minimap: { enabled: true },
+                fontSize: 14,
+                fontFamily: 'JetBrains Mono, monospace',
+                lineNumbers: 'on',
+                roundedSelection: true,
+                scrollBeyondLastLine: false,
+                automaticLayout: true,
+                tabSize: 2,
+                wordWrap: 'on',
+                formatOnPaste: true,
+                formatOnType: true,
+              }}
+            />
+          </div>
         </div>
 
         <DialogFooter className="gap-2">

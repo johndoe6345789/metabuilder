@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import {
   Select,
@@ -12,11 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Plus, Trash, Play, CheckCircle, XCircle, Code, FileCode } from '@phosphor-icons/react'
+import { Plus, Trash, Play, CheckCircle, XCircle, FileCode, ArrowsOut } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { createLuaEngine, type LuaExecutionResult } from '@/lib/lua-engine'
 import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua-examples'
 import type { LuaScript } from '@/lib/level-types'
+import Editor, { useMonaco } from '@monaco-editor/react'
+import type { editor } from 'monaco-editor'
 
 interface LuaEditorProps {
   scripts: LuaScript[]
@@ -30,8 +31,104 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
   const [testOutput, setTestOutput] = useState<LuaExecutionResult | null>(null)
   const [testInputs, setTestInputs] = useState<Record<string, any>>({})
   const [isExecuting, setIsExecuting] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
+  const monaco = useMonaco()
 
   const currentScript = scripts.find(s => s.id === selectedScript)
+
+  useEffect(() => {
+    if (monaco) {
+      monaco.languages.registerCompletionItemProvider('lua', {
+        provideCompletionItems: (model, position) => {
+          const word = model.getWordUntilPosition(position)
+          const range = {
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn: word.startColumn,
+            endColumn: word.endColumn
+          }
+
+          const suggestions: any[] = [
+            {
+              label: 'context.data',
+              kind: monaco.languages.CompletionItemKind.Property,
+              insertText: 'context.data',
+              documentation: 'Access input parameters passed to the script',
+              range
+            },
+            {
+              label: 'context.user',
+              kind: monaco.languages.CompletionItemKind.Property,
+              insertText: 'context.user',
+              documentation: 'Current user information (username, role, etc.)',
+              range
+            },
+            {
+              label: 'context.kv',
+              kind: monaco.languages.CompletionItemKind.Property,
+              insertText: 'context.kv',
+              documentation: 'Key-value storage interface',
+              range
+            },
+            {
+              label: 'context.log',
+              kind: monaco.languages.CompletionItemKind.Function,
+              insertText: 'context.log(${1:message})',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Log a message to the output console',
+              range
+            },
+            {
+              label: 'log',
+              kind: monaco.languages.CompletionItemKind.Function,
+              insertText: 'log(${1:message})',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Log a message (shortcut for context.log)',
+              range
+            },
+            {
+              label: 'print',
+              kind: monaco.languages.CompletionItemKind.Function,
+              insertText: 'print(${1:message})',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Print a message to output',
+              range
+            },
+            {
+              label: 'return',
+              kind: monaco.languages.CompletionItemKind.Keyword,
+              insertText: 'return ${1:result}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Return a value from the script',
+              range
+            },
+          ]
+
+          return { suggestions }
+        }
+      })
+
+      monaco.languages.setLanguageConfiguration('lua', {
+        comments: {
+          lineComment: '--',
+          blockComment: ['--[[', ']]']
+        },
+        brackets: [
+          ['{', '}'],
+          ['[', ']'],
+          ['(', ')']
+        ],
+        autoClosingPairs: [
+          { open: '{', close: '}' },
+          { open: '[', close: ']' },
+          { open: '(', close: ')' },
+          { open: '"', close: '"' },
+          { open: "'", close: "'" }
+        ]
+      })
+    }
+  }, [monaco])
 
   useEffect(() => {
     if (currentScript) {
@@ -316,37 +413,70 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label>Lua Code</Label>
-                  <Select
-                    onValueChange={(value) => {
-                      const exampleCode = getLuaExampleCode(value as any)
-                      handleUpdateScript({ code: exampleCode })
-                      toast.success('Example loaded')
-                    }}
-                  >
-                    <SelectTrigger className="w-[200px]">
-                      <FileCode size={16} className="mr-2" />
-                      <SelectValue placeholder="Load example" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {getLuaExamplesList().map((example) => (
-                        <SelectItem key={example.key} value={example.key}>
-                          <div>
-                            <div className="font-medium">{example.name}</div>
-                            <div className="text-xs text-muted-foreground">{example.description}</div>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="flex gap-2">
+                    <Select
+                      onValueChange={(value) => {
+                        const exampleCode = getLuaExampleCode(value as any)
+                        handleUpdateScript({ code: exampleCode })
+                        toast.success('Example loaded')
+                      }}
+                    >
+                      <SelectTrigger className="w-[200px]">
+                        <FileCode size={16} className="mr-2" />
+                        <SelectValue placeholder="Load example" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {getLuaExamplesList().map((example) => (
+                          <SelectItem key={example.key} value={example.key}>
+                            <div>
+                              <div className="font-medium">{example.name}</div>
+                              <div className="text-xs text-muted-foreground">{example.description}</div>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsFullscreen(!isFullscreen)}
+                    >
+                      <ArrowsOut size={16} />
+                    </Button>
+                  </div>
                 </div>
-                <Textarea
-                  value={currentScript.code}
-                  onChange={(e) => handleUpdateScript({ code: e.target.value })}
-                  className="font-mono text-sm min-h-[300px]"
-                  placeholder="-- Lua script&#10;log('Hello from Lua!')&#10;return {success = true}"
-                />
+                <div className={`border rounded-lg overflow-hidden ${isFullscreen ? 'fixed inset-4 z-50 bg-background' : ''}`}>
+                  <Editor
+                    height={isFullscreen ? 'calc(100vh - 8rem)' : '400px'}
+                    language="lua"
+                    value={currentScript.code}
+                    onChange={(value) => handleUpdateScript({ code: value || '' })}
+                    onMount={(editor) => {
+                      editorRef.current = editor
+                    }}
+                    theme="vs-dark"
+                    options={{
+                      minimap: { enabled: isFullscreen },
+                      fontSize: 14,
+                      fontFamily: 'JetBrains Mono, monospace',
+                      lineNumbers: 'on',
+                      roundedSelection: true,
+                      scrollBeyondLastLine: false,
+                      automaticLayout: true,
+                      tabSize: 2,
+                      wordWrap: 'on',
+                      quickSuggestions: true,
+                      suggestOnTriggerCharacters: true,
+                      acceptSuggestionOnEnter: 'on',
+                      snippetSuggestions: 'inline',
+                      parameterHints: { enabled: true },
+                      formatOnPaste: true,
+                      formatOnType: true,
+                    }}
+                  />
+                </div>
                 <p className="text-xs text-muted-foreground">
-                  Write Lua code. Access parameters via <code className="font-mono">context.data</code>. Use <code className="font-mono">log()</code> or <code className="font-mono">print()</code> for output.
+                  Write Lua code. Access parameters via <code className="font-mono">context.data</code>. Use <code className="font-mono">log()</code> or <code className="font-mono">print()</code> for output. Press <code className="font-mono">Ctrl+Space</code> for autocomplete.
                 </p>
               </div>
 

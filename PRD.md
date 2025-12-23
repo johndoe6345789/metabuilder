@@ -55,11 +55,11 @@ This is a 4-tier meta-application builder: a public website layer, authenticated
 - **Success criteria**: Nodes connect smoothly; execution order clear; can branch/merge; error handling; logs show execution path; integrates with Lua
 
 ### Lua Lambda System (Level 4)
-- **Functionality**: Real Lua interpreter (fengari-web) with full language support, parameter handling, context API access, and comprehensive execution feedback
-- **Purpose**: Provide safe, sandboxed scripting for custom transformations, validations, and business logic with real Lua execution beyond declarative capabilities
+- **Functionality**: Real Lua interpreter (fengari-web) with full language support, Monaco editor with syntax highlighting and autocomplete, parameter handling, context API access, and comprehensive execution feedback
+- **Purpose**: Provide safe, sandboxed scripting for custom transformations, validations, and business logic with real Lua execution beyond declarative capabilities, enhanced by professional code editing experience
 - **Trigger**: User adds "Lua Action" node in workflow or creates Lua script in scripts tab
-- **Progression**: Open Lua editor → Define parameters → Write Lua code → Access context.data/user/kv → Test with sample inputs → View execution logs → Return structured results → Integrate into workflows
-- **Success criteria**: Real Lua execution via fengari; parameter type validation; context API available (data, user, kv, log); execution logs captured; return values parsed; syntax/runtime errors shown; can transform JSON data; integrates with workflow nodes
+- **Progression**: Open Monaco-based Lua editor → Define parameters → Write Lua code with syntax highlighting and autocomplete → Access context.data/user/kv via intelligent suggestions → Test with sample inputs → View execution logs → Return structured results → Integrate into workflows
+- **Success criteria**: Monaco editor integrated with Lua language support; autocomplete provides context API suggestions (context.data, context.user, context.kv, log, print); syntax highlighting active; real Lua execution via fengari; parameter type validation; execution logs captured; return values parsed; syntax/runtime errors shown with line numbers; can transform JSON data; fullscreen editing mode available; integrates with workflow nodes
 
 ## Edge Case Handling
 - **Invalid User Credentials**: Show clear error message; rate limit after 5 attempts; support password reset flow
@@ -71,7 +71,8 @@ This is a 4-tier meta-application builder: a public website layer, authenticated
 - **Large Comment Threads**: Paginate comments; lazy load older entries; virtualize long lists
 - **Schema Migration Conflicts**: Detect breaking changes; show migration preview; allow rollback
 - **Lost Sessions Across Levels**: Auto-save state; restore context; show reconnection indicator
-- **Monaco/Lua Library Load Failure**: Fallback to basic textarea; show degraded mode warning
+- **Monaco Editor Load Failure**: Fallback loading indicator; retry mechanism; graceful degradation if CDN unavailable
+- **Large Lua Scripts**: Monaco virtual scrolling handles performance; minimap provides navigation; syntax parsing optimized
 
 ## Design Direction
 The design should evoke creativity and power - a professional design tool that feels both approachable and capable. Think Figma meets VS Code: clean, modern, with clear visual hierarchy and purposeful spacing. The canvas should feel like a creative workspace, not a cluttered IDE.
@@ -118,11 +119,13 @@ Animations should feel responsive and purposeful - immediate visual feedback for
   - Sonner for notifications
 - **Customizations**: 
   - Custom drag-and-drop canvas with drop zone highlighting
-  - Monaco Editor wrapper component with TypeScript support
+  - Monaco Editor wrapper for Lua scripts with custom autocomplete provider
+  - Monaco Editor wrapper for JSON schema editing with validation
   - Component tree view with expand/collapse
   - Property editor that dynamically renders based on component type
   - Canvas ruler and grid overlay
   - Component outline overlay on hover
+  - Fullscreen mode for Monaco editor instances
 - **States**: 
   - Canvas: neutral state shows dotted grid, hover shows drop zones, dragging shows blue outlines
   - Components: default has subtle border, hover shows blue glow, selected shows thick accent border with resize handles
