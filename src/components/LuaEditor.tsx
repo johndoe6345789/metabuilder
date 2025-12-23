@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Plus, Trash, Play, CheckCircle, XCircle, FileCode, ArrowsOut, BookOpen } from '@phosphor-icons/react'
+import { Plus, Trash, Play, CheckCircle, XCircle, FileCode, ArrowsOut, BookOpen, ShieldCheck } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { createLuaEngine, type LuaExecutionResult } from '@/lib/lua-engine'
 import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua-examples'
@@ -20,6 +20,8 @@ import Editor, { useMonaco } from '@monaco-editor/react'
 import type { editor } from 'monaco-editor'
 import { LuaSnippetLibrary } from '@/components/LuaSnippetLibrary'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
+import { SecurityWarningDialog } from '@/components/SecurityWarningDialog'
 
 interface LuaEditorProps {
   scripts: LuaScript[]
@@ -35,6 +37,8 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
   const [isExecuting, setIsExecuting] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showSnippetLibrary, setShowSnippetLibrary] = useState(false)
+  const [securityScanResult, setSecurityScanResult] = useState<SecurityScanResult | null>(null)
+  const [showSecurityDialog, setShowSecurityDialog] = useState(false)
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const monaco = useMonaco()
 
@@ -174,6 +178,19 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
   const handleTestScript = async () => {
     if (!currentScript) return
 
+    const scanResult = securityScanner.scanLua(currentScript.code)
+    setSecurityScanResult(scanResult)
+
+    if (scanResult.severity === 'critical' || scanResult.severity === 'high') {
+      setShowSecurityDialog(true)
+      toast.warning('Security issues detected in script')
+      return
+    }
+
+    if (scanResult.severity === 'medium' && scanResult.issues.length > 0) {
+      toast.warning(`${scanResult.issues.length} security warning(s) detected`)
+    }
+
     setIsExecuting(true)
     setTestOutput(null)
 
@@ -210,6 +227,64 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
     } finally {
       setIsExecuting(false)
     }
+  }
+
+  const handleScanCode = () => {
+    if (!currentScript) return
+    
+    const scanResult = securityScanner.scanLua(currentScript.code)
+    setSecurityScanResult(scanResult)
+    setShowSecurityDialog(true)
+    
+    if (scanResult.safe) {
+      toast.success('No security issues detected')
+    } else {
+      toast.warning(`${scanResult.issues.length} security issue(s) detected`)
+    }
+  }
+
+  const handleProceedWithExecution = () => {
+    setShowSecurityDialog(false)
+    if (!currentScript) return
+
+    setIsExecuting(true)
+    setTestOutput(null)
+
+    setTimeout(async () => {
+      try {
+        const engine = createLuaEngine()
+        
+        const contextData: any = {}
+        currentScript.parameters.forEach((param) => {
+          contextData[param.name] = testInputs[param.name]
+        })
+
+        const result = await engine.execute(currentScript.code, {
+          data: contextData,
+          user: { username: 'test_user', role: 'god' },
+          log: (...args: any[]) => console.log('[Lua]', ...args)
+        })
+
+        setTestOutput(result)
+        
+        if (result.success) {
+          toast.success('Script executed successfully')
+        } else {
+          toast.error('Script execution failed')
+        }
+
+        engine.destroy()
+      } catch (error) {
+        toast.error('Execution error: ' + (error instanceof Error ? error.message : String(error)))
+        setTestOutput({
+          success: false,
+          error: error instanceof Error ? error.message : String(error),
+          logs: []
+        })
+      } finally {
+        setIsExecuting(false)
+      }
+    }, 100)
   }
 
   const handleAddParameter = () => {
@@ -332,10 +407,16 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
                   <CardTitle>Edit Script: {currentScript.name}</CardTitle>
                   <CardDescription>Write custom Lua logic</CardDescription>
                 </div>
-                <Button onClick={handleTestScript} disabled={isExecuting}>
-                  <Play className="mr-2" size={16} />
-                  {isExecuting ? 'Executing...' : 'Test Script'}
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={handleScanCode}>
+                    <ShieldCheck className="mr-2" size={16} />
+                    Security Scan
+                  </Button>
+                  <Button onClick={handleTestScript} disabled={isExecuting}>
+                    <Play className="mr-2" size={16} />
+                    {isExecuting ? 'Executing...' : 'Test Script'}
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -588,6 +669,18 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
           </>
         )}
       </Card>
+
+      {securityScanResult && (
+        <SecurityWarningDialog
+          open={showSecurityDialog}
+          onOpenChange={setShowSecurityDialog}
+          scanResult={securityScanResult}
+          onProceed={handleProceedWithExecution}
+          onCancel={() => setShowSecurityDialog(false)}
+          codeType="Lua script"
+          showProceedButton={true}
+        />
+      )}
     </div>
   )
 }

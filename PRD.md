@@ -234,6 +234,24 @@ Elevate MetaBuilder to support multi-tenant architecture with a Super God level 
 - Includes code examples where relevant
 - Provides best practices and tips
 
+### 8. Security Scanning & Sandboxing
+**Functionality:** Comprehensive code security analysis with sandboxed execution for Lua scripts
+**Purpose:** Protect against malicious code, XSS attacks, SQL injection, and other vulnerabilities
+**Trigger:** Automatic scan on save/execute, manual scan via Security Scan button
+**Progression:** User writes code → Clicks save/execute → System scans for security issues → If critical/high severity detected → Show security warning dialog → Display all issues with details → User reviews and either fixes code or force-proceeds (non-critical only) → System logs security events
+**Success Criteria:**
+- All JavaScript code scanned for: eval(), innerHTML, XSS patterns, prototype pollution
+- All Lua code scanned for: os/io module usage, file loading, infinite loops, global manipulation
+- All JSON scanned for: __proto__ injection, script tags, malformed data
+- Critical severity blocks execution/saving completely
+- High severity requires user acknowledgment to proceed
+- Medium/Low severity shows warnings but allows operation
+- Each issue shows: type, severity, message, line number, code pattern, recommendation
+- Lua scripts execute in sandbox with: disabled os/io/debug modules, 5s timeout, restricted globals
+- Security scan button available in: Lua Editor, Code Editor, JSON Editor
+- Security dialog shows color-coded severity levels with icons
+- Sandboxed Lua engine blocks file system, OS commands, and package loading
+
 ## Edge Case Handling
 - **Multiple supergod attempts** - Database constraint ensures only one supergod role exists; attempting to create second fails
 - **Power transfer to self** - UI prevents selecting current supergod user as transfer target
@@ -257,9 +275,17 @@ Elevate MetaBuilder to support multi-tenant architecture with a Super God level 
 - **Empty dropdown options** - Validation prevents saving dropdowns with zero options
 - **Duplicate class selection** - System prevents selecting same class twice
 - **Import/export conflicts** - Monaco editor validates JSON before import, shows detailed errors
+- **Malicious code injection** - Security scanner blocks critical threats, warns on suspicious patterns
+- **XSS attacks via innerHTML** - Scanner detects and prevents dangerous HTML injection patterns
+- **Lua sandbox escape attempts** - Sandboxed engine disables os/io modules and dangerous functions
+- **Infinite loops in Lua** - Execution timeout (5s) prevents resource exhaustion
+- **SQL injection in strings** - Pattern matching detects and warns about SQL injection attempts
+- **Prototype pollution** - Scanner detects __proto__ manipulation in JavaScript and JSON
 
 ## Design Direction
 The Level 5 interface should feel like a command center with regal, powerful aesthetics distinct from the purple god-tier panel. Use amber/gold accents to signify supreme authority. The multi-tenant view uses card-based layouts with organizational emphasis. Power transfer UI employs serious warning states with amber colors to communicate irreversibility. The interface balances grandeur with usability—never sacrificing clarity for visual flair. Color hierarchy: amber for supergod actions, purple for god-level previews, standard accent colors for tenant management.
+
+**Security UX:** Security warnings use shield icons and color-coded severity badges. Critical issues display prominent red warnings with block actions. The security scan dialog provides educational content explaining each issue with recommendations. Warnings are never dismissive—they empower users to write better, safer code.
 
 ## Color Selection
 

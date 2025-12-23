@@ -1,4 +1,4 @@
-import { createLuaEngine, type LuaExecutionContext } from './lua-engine'
+import { createSandboxedLuaEngine, type SandboxedLuaResult } from './sandboxed-lua-engine'
 import type { Workflow, WorkflowNode, LuaScript } from './level-types'
 
 export interface WorkflowExecutionContext {
@@ -12,16 +12,19 @@ export interface WorkflowExecutionResult {
   outputs: Record<string, any>
   logs: string[]
   error?: string
+  securityWarnings?: string[]
 }
 
 export class WorkflowEngine {
   private logs: string[] = []
+  private securityWarnings: string[] = []
 
   async executeWorkflow(
     workflow: Workflow,
     context: WorkflowExecutionContext
   ): Promise<WorkflowExecutionResult> {
     this.logs = []
+    this.securityWarnings = []
     const outputs: Record<string, any> = {}
     let currentData = context.data
 
@@ -40,6 +43,7 @@ export class WorkflowEngine {
             outputs,
             logs: this.logs,
             error: `Node "${node.label}" failed: ${nodeResult.error}`,
+            securityWarnings: this.securityWarnings,
           }
         }
 
@@ -58,6 +62,7 @@ export class WorkflowEngine {
         success: true,
         outputs,
         logs: this.logs,
+        securityWarnings: this.securityWarnings,
       }
     } catch (error) {
       return {
@@ -65,6 +70,7 @@ export class WorkflowEngine {
         outputs,
         logs: this.logs,
         error: error instanceof Error ? error.message : String(error),
+        securityWarnings: this.securityWarnings,
       }
     }
   }
@@ -164,27 +170,31 @@ export class WorkflowEngine {
     data: any,
     context: WorkflowExecutionContext
   ): Promise<{ success: boolean; output?: any; error?: string }> {
-    const engine = createLuaEngine()
+    const engine = createSandboxedLuaEngine()
 
     try {
-      const luaContext: LuaExecutionContext = {
+      const luaContext = {
         data,
         user: context.user,
         log: (...args: any[]) => this.log(...args),
       }
 
-      const result = await engine.execute(code, luaContext)
+      const result: SandboxedLuaResult = await engine.executeWithSandbox(code, luaContext)
 
-      result.logs.forEach((log) => this.log(`[Lua] ${log}`))
+      if (result.security.severity === 'critical' || result.security.severity === 'high') {
+        this.securityWarnings.push(`Security issues detected: ${result.security.issues.map(i => i.message).join(', ')}`)
+      }
 
-      if (!result.success) {
+      result.execution.logs.forEach((log) => this.log(`[Lua] ${log}`))
+
+      if (!result.execution.success) {
         return {
           success: false,
-          error: result.error,
+          error: result.execution.error,
         }
       }
 
-      return { success: true, output: result.result }
+      return { success: true, output: result.execution.result }
     } finally {
       engine.destroy()
     }
