@@ -10,7 +10,7 @@ import { User, ChatCircle, SignOut, House, Trash, Envelope } from '@phosphor-ico
 import { toast } from 'sonner'
 import { Database, hashPassword } from '@/lib/database'
 import { generateScrambledPassword, simulateEmailSend } from '@/lib/password-utils'
-import { IRCWebchat } from './IRCWebchat'
+import { IRCWebchatDeclarative } from './IRCWebchatDeclarative'
 import type { User as UserType, Comment } from '@/lib/level-types'
 
 interface Level2Props {
@@ -333,7 +333,7 @@ export function Level2({ user, onLogout, onNavigate }: Level2Props) {
           </TabsContent>
 
           <TabsContent value="chat" className="space-y-6">
-            <IRCWebchat user={currentUser} channelName="general" />
+            <IRCWebchatDeclarative user={currentUser} channelName="general" />
           </TabsContent>
         </Tabs>
       </div>

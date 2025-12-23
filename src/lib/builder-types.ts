@@ -24,6 +24,8 @@ export type ComponentType =
   | 'Stack'
   | 'Text'
   | 'Heading'
+  | 'IRCWebchat'
+  | string
 
 export interface ComponentProps {
   [key: string]: any
@@ -31,7 +33,7 @@ export interface ComponentProps {
 
 export interface ComponentInstance {
   id: string
-  type: ComponentType
+  type: ComponentType | string
   props: ComponentProps
   children: ComponentInstance[]
   customCode?: string

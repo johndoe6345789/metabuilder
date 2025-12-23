@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import { canAccessLevel } from '@/lib/auth'
 import { Database, hashPassword } from '@/lib/database'
 import { seedDatabase } from '@/lib/seed-data'
+import { initializePackageSystem } from '@/lib/package-loader'
 import type { User, AppLevel } from '@/lib/level-types'
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
 
   useEffect(() => {
     const initDatabase = async () => {
+      await initializePackageSystem()
       await Database.initializeDatabase()
       await seedDatabase()
       const loadedUsers = await Database.getUsers()

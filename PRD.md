@@ -91,7 +91,22 @@ Elevate MetaBuilder to support multi-tenant architecture with a Super God level 
 - Credentials hidden after password change
 - Alert distinguishes Level 5 from Level 4
 
-### 7. Docker-Style Package System
+### 7. Declarative Component System (IRC Implementation)
+**Functionality:** Components defined declaratively via JSON configuration and Lua scripts instead of TSX files, enabling package-based component distribution
+**Purpose:** Allow components to be part of packages, enabling dynamic loading and better separation of concerns
+**Trigger:** Component type registered in package catalog, loaded at app initialization
+**Progression:** Package defines component config in JSON → Lua scripts handle logic → Component renderer uses config → User adds component to page → Component renders using declarative definition
+**Success Criteria:**
+- IRC Webchat fully implemented as declarative component
+- Component configuration stored in package catalog
+- Lua scripts handle message sending, commands, user join/leave
+- Component props defined in JSON schema
+- UI layout defined in JSON structure
+- Original IRCWebchat.tsx removed
+- Declarative version fully functional in Level 2
+- Package system loads all component definitions on startup
+
+### 8. Docker-Style Package System
 **Functionality:** Browse, install, and manage pre-built applications (forum, guestbook, video platform, music streaming, games, e-commerce) that integrate with existing infrastructure
 **Purpose:** Allow users to rapidly deploy complete applications without building from scratch, leveraging existing database and workflow systems
 **Trigger:** User navigates to "Packages" tab in god-tier panel

@@ -13,14 +13,19 @@ import { Progress } from '@/components/ui/progress'
 import { Slider } from '@/components/ui/slider'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { IRCWebchatDeclarative } from '@/components/IRCWebchatDeclarative'
+import type { User } from '@/lib/level-types'
+import { getDeclarativeRenderer } from '@/lib/declarative-component-renderer'
 
 interface RenderComponentProps {
   component: ComponentInstance
   isSelected: boolean
   onSelect: (id: string) => void
+  user?: User
+  contextData?: Record<string, any>
 }
 
-export function RenderComponent({ component, isSelected, onSelect }: RenderComponentProps) {
+export function RenderComponent({ component, isSelected, onSelect, user, contextData }: RenderComponentProps) {
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     onSelect(component.id)
@@ -34,6 +39,8 @@ export function RenderComponent({ component, isSelected, onSelect }: RenderCompo
         component={child}
         isSelected={isSelected}
         onSelect={onSelect}
+        user={user}
+        contextData={contextData}
       />
     ))
   }
@@ -42,6 +49,28 @@ export function RenderComponent({ component, isSelected, onSelect }: RenderCompo
 
   const renderComponentByType = () => {
     const { type, props } = component
+    const renderer = getDeclarativeRenderer()
+
+    if (renderer.hasComponentConfig(type)) {
+      if (type === 'IRCWebchat' && user) {
+        return (
+          <IRCWebchatDeclarative
+            user={user}
+            channelName={props.channelName || 'general'}
+            onClose={props.onClose}
+          />
+        )
+      }
+      
+      return (
+        <div className="p-4 border-2 border-dashed border-accent">
+          Declarative Component: {type}
+          <div className="text-xs text-muted-foreground mt-2">
+            This is a package-defined component
+          </div>
+        </div>
+      )
+    }
 
     switch (type) {
       case 'Container':

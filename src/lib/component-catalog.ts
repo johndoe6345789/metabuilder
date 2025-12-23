@@ -321,4 +321,17 @@ export const componentCatalog: ComponentDefinition[] = [
     defaultProps: {},
     propSchema: [],
   },
+  {
+    type: 'IRCWebchat',
+    label: 'IRC Webchat',
+    icon: 'Chat',
+    category: 'Display',
+    allowsChildren: false,
+    defaultProps: {
+      channelName: 'general',
+    },
+    propSchema: [
+      { name: 'channelName', label: 'Channel Name', type: 'string', defaultValue: 'general' },
+    ],
+  },
 ]
