@@ -119,7 +119,7 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
 
       case 'select':
         return (
-          <Select value={value || ''} onValueChange={onChange}>
+          <Select value={value || undefined} onValueChange={onChange}>
             <SelectTrigger id={field.name} className={error ? 'border-destructive' : ''}>
               <SelectValue placeholder={`Select ${label}`} />
             </SelectTrigger>
@@ -145,7 +145,7 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
         const displayField = relatedModel.fields.find(f => f.name === 'name' || f.name === 'title')?.name || 'id'
 
         return (
-          <Select value={value || ''} onValueChange={onChange}>
+          <Select value={value || undefined} onValueChange={onChange}>
             <SelectTrigger id={field.name} className={error ? 'border-destructive' : ''}>
               <SelectValue placeholder={`Select ${label}`} />
             </SelectTrigger>

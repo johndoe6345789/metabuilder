@@ -173,14 +173,14 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
               return (
                 <Select
                   key={fieldName}
-                  value={filters[fieldName] || ''}
-                  onValueChange={(value) => setFilters({ ...filters, [fieldName]: value || null })}
+                  value={filters[fieldName] || '__all__'}
+                  onValueChange={(value) => setFilters({ ...filters, [fieldName]: value === '__all__' ? null : value })}
                 >
                   <SelectTrigger className="w-40">
                     <SelectValue placeholder={getFieldLabel(field)} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All</SelectItem>
+                    <SelectItem value="__all__">All</SelectItem>
                     {field.choices?.map(choice => (
                       <SelectItem key={choice.value} value={choice.value}>
                         {choice.label}
@@ -195,14 +195,14 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
               return (
                 <Select
                   key={fieldName}
-                  value={filters[fieldName] === true ? 'true' : filters[fieldName] === false ? 'false' : ''}
+                  value={filters[fieldName] === true ? 'true' : filters[fieldName] === false ? 'false' : '__all__'}
                   onValueChange={(value) => setFilters({ ...filters, [fieldName]: value === 'true' ? true : value === 'false' ? false : null })}
                 >
                   <SelectTrigger className="w-40">
                     <SelectValue placeholder={getFieldLabel(field)} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All</SelectItem>
+                    <SelectItem value="__all__">All</SelectItem>
                     <SelectItem value="true">Yes</SelectItem>
                     <SelectItem value="false">No</SelectItem>
                   </SelectContent>
