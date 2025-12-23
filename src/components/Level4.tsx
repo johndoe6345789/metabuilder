@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { SignOut, Database as DatabaseIcon, Lightning, Code, Eye, House, Download, Upload, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear } from '@phosphor-icons/react'
+import { SignOut, Database as DatabaseIcon, Lightning, Code, Eye, House, Download, Upload, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear, Palette, ListDashes, Sparkle } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { SchemaEditorLevel4 } from './SchemaEditorLevel4'
 import { WorkflowEditor } from './WorkflowEditor'
@@ -19,6 +19,9 @@ import { PageRoutesManager } from './PageRoutesManager'
 import { ComponentHierarchyEditor } from './ComponentHierarchyEditor'
 import { UserManagement } from './UserManagement'
 import { GodCredentialsSettings } from './GodCredentialsSettings'
+import { CssClassManager } from './CssClassManager'
+import { DropdownConfigManager } from './DropdownConfigManager'
+import { QuickGuide } from './QuickGuide'
 import { Database } from '@/lib/database'
 import { seedDatabase } from '@/lib/seed-data'
 import type { User as UserType, AppConfiguration } from '@/lib/level-types'
@@ -200,8 +203,12 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
           </p>
         </div>
 
-        <Tabs defaultValue="pages" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-9 max-w-full">
+        <Tabs defaultValue="guide" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-12 max-w-full">
+            <TabsTrigger value="guide">
+              <Sparkle className="mr-2" size={16} />
+              Guide
+            </TabsTrigger>
             <TabsTrigger value="pages">
               <MapTrifold className="mr-2" size={16} />
               Page Routes
@@ -230,6 +237,14 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
               <BookOpen className="mr-2" size={16} />
               Snippets
             </TabsTrigger>
+            <TabsTrigger value="css">
+              <Palette className="mr-2" size={16} />
+              CSS Classes
+            </TabsTrigger>
+            <TabsTrigger value="dropdowns">
+              <ListDashes className="mr-2" size={16} />
+              Dropdowns
+            </TabsTrigger>
             <TabsTrigger value="database">
               <HardDrives className="mr-2" size={16} />
               Database
@@ -239,6 +254,10 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
               Settings
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="guide" className="space-y-6">
+            <QuickGuide />
+          </TabsContent>
 
           <TabsContent value="pages" className="space-y-6">
             <PageRoutesManager />
@@ -288,6 +307,14 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
 
           <TabsContent value="snippets" className="space-y-6">
             <LuaSnippetLibrary />
+          </TabsContent>
+
+          <TabsContent value="css" className="space-y-6">
+            <CssClassManager />
+          </TabsContent>
+
+          <TabsContent value="dropdowns" className="space-y-6">
+            <DropdownConfigManager />
           </TabsContent>
 
           <TabsContent value="database" className="space-y-6">

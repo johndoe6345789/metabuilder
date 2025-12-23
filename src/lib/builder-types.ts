@@ -55,9 +55,10 @@ export interface ComponentDefinition {
 export interface PropDefinition {
   name: string
   label: string
-  type: 'string' | 'number' | 'boolean' | 'select' | 'color'
+  type: 'string' | 'number' | 'boolean' | 'select' | 'color' | 'dynamic-select'
   defaultValue?: any
   options?: Array<{ value: string; label: string }>
+  dynamicSource?: string
   description?: string
 }
 

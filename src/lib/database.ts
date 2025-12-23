@@ -8,6 +8,18 @@ import type {
 } from './level-types'
 import type { ModelSchema } from './schema-types'
 
+export interface CssCategory {
+  name: string
+  classes: string[]
+}
+
+export interface DropdownConfig {
+  id: string
+  name: string
+  label: string
+  options: Array<{ value: string; label: string }>
+}
+
 export interface DatabaseSchema {
   users: User[]
   credentials: Record<string, string>
@@ -23,6 +35,8 @@ export interface DatabaseSchema {
   passwordChangeTimestamps: Record<string, number>
   firstLoginFlags: Record<string, boolean>
   godCredentialsExpiryDuration: number
+  cssClasses: CssCategory[]
+  dropdownConfigs: DropdownConfig[]
 }
 
 export interface ComponentNode {
@@ -61,6 +75,8 @@ export const DB_KEYS = {
   PASSWORD_CHANGE_TIMESTAMPS: 'db_password_change_timestamps',
   FIRST_LOGIN_FLAGS: 'db_first_login_flags',
   GOD_CREDENTIALS_EXPIRY_DURATION: 'db_god_credentials_expiry_duration',
+  CSS_CLASSES: 'db_css_classes',
+  DROPDOWN_CONFIGS: 'db_dropdown_configs',
 } as const
 
 export async function hashPassword(password: string): Promise<string> {
@@ -407,6 +423,92 @@ export class Database {
       }
       await this.setAppConfig(defaultConfig)
     }
+
+    const cssClasses = await this.getCssClasses()
+    if (cssClasses.length === 0) {
+      const defaultCssClasses: CssCategory[] = [
+        {
+          name: 'Layout',
+          classes: ['flex', 'flex-col', 'flex-row', 'grid', 'grid-cols-2', 'grid-cols-3', 'grid-cols-4', 'block', 'inline-block', 'inline', 'hidden'],
+        },
+        {
+          name: 'Spacing',
+          classes: ['p-0', 'p-1', 'p-2', 'p-3', 'p-4', 'p-6', 'p-8', 'm-0', 'm-1', 'm-2', 'm-3', 'm-4', 'm-6', 'm-8', 'gap-1', 'gap-2', 'gap-3', 'gap-4', 'gap-6', 'gap-8'],
+        },
+        {
+          name: 'Sizing',
+          classes: ['w-full', 'w-1/2', 'w-1/3', 'w-1/4', 'w-auto', 'h-full', 'h-screen', 'h-auto', 'min-h-screen', 'max-w-xs', 'max-w-sm', 'max-w-md', 'max-w-lg', 'max-w-xl', 'max-w-2xl', 'max-w-4xl', 'max-w-6xl', 'max-w-7xl'],
+        },
+        {
+          name: 'Typography',
+          classes: ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl', 'text-4xl', 'font-normal', 'font-medium', 'font-semibold', 'font-bold', 'text-left', 'text-center', 'text-right', 'uppercase', 'lowercase', 'capitalize'],
+        },
+        {
+          name: 'Colors',
+          classes: ['text-primary', 'text-secondary', 'text-accent', 'text-muted-foreground', 'bg-primary', 'bg-secondary', 'bg-accent', 'bg-background', 'bg-card', 'bg-muted', 'border-primary', 'border-secondary', 'border-accent', 'border-border'],
+        },
+        {
+          name: 'Borders',
+          classes: ['border', 'border-2', 'border-4', 'border-t', 'border-b', 'border-l', 'border-r', 'rounded', 'rounded-sm', 'rounded-md', 'rounded-lg', 'rounded-xl', 'rounded-2xl', 'rounded-full'],
+        },
+        {
+          name: 'Effects',
+          classes: ['shadow', 'shadow-sm', 'shadow-md', 'shadow-lg', 'shadow-xl', 'hover:shadow-lg', 'opacity-0', 'opacity-50', 'opacity-75', 'opacity-100', 'transition', 'transition-all', 'duration-200', 'duration-300', 'duration-500'],
+        },
+        {
+          name: 'Positioning',
+          classes: ['relative', 'absolute', 'fixed', 'sticky', 'top-0', 'bottom-0', 'left-0', 'right-0', 'z-10', 'z-20', 'z-30', 'z-40', 'z-50'],
+        },
+        {
+          name: 'Alignment',
+          classes: ['items-start', 'items-center', 'items-end', 'justify-start', 'justify-center', 'justify-end', 'justify-between', 'justify-around', 'self-start', 'self-center', 'self-end'],
+        },
+        {
+          name: 'Interactivity',
+          classes: ['cursor-pointer', 'cursor-default', 'pointer-events-none', 'select-none', 'hover:bg-accent', 'hover:text-accent-foreground', 'active:scale-95', 'disabled:opacity-50'],
+        },
+      ]
+      await this.setCssClasses(defaultCssClasses)
+    }
+
+    const dropdowns = await this.getDropdownConfigs()
+    if (dropdowns.length === 0) {
+      const defaultDropdowns: DropdownConfig[] = [
+        {
+          id: 'dropdown_status',
+          name: 'status_options',
+          label: 'Status',
+          options: [
+            { value: 'draft', label: 'Draft' },
+            { value: 'published', label: 'Published' },
+            { value: 'archived', label: 'Archived' },
+          ],
+        },
+        {
+          id: 'dropdown_priority',
+          name: 'priority_options',
+          label: 'Priority',
+          options: [
+            { value: 'low', label: 'Low' },
+            { value: 'medium', label: 'Medium' },
+            { value: 'high', label: 'High' },
+            { value: 'urgent', label: 'Urgent' },
+          ],
+        },
+        {
+          id: 'dropdown_category',
+          name: 'category_options',
+          label: 'Category',
+          options: [
+            { value: 'general', label: 'General' },
+            { value: 'technical', label: 'Technical' },
+            { value: 'business', label: 'Business' },
+            { value: 'personal', label: 'Personal' },
+          ],
+        },
+      ]
+      await this.setDropdownConfigs(defaultDropdowns)
+    }
   }
 
   static async exportDatabase(): Promise<string> {
@@ -494,6 +596,64 @@ export class Database {
     await this.setGodCredentialsExpiry(expiryTime)
   }
 
+  static async getCssClasses(): Promise<CssCategory[]> {
+    return (await window.spark.kv.get<CssCategory[]>(DB_KEYS.CSS_CLASSES)) || []
+  }
+
+  static async setCssClasses(classes: CssCategory[]): Promise<void> {
+    await window.spark.kv.set(DB_KEYS.CSS_CLASSES, classes)
+  }
+
+  static async addCssCategory(category: CssCategory): Promise<void> {
+    const classes = await this.getCssClasses()
+    classes.push(category)
+    await this.setCssClasses(classes)
+  }
+
+  static async updateCssCategory(categoryName: string, classes: string[]): Promise<void> {
+    const categories = await this.getCssClasses()
+    const index = categories.findIndex(c => c.name === categoryName)
+    if (index !== -1) {
+      categories[index].classes = classes
+      await this.setCssClasses(categories)
+    }
+  }
+
+  static async deleteCssCategory(categoryName: string): Promise<void> {
+    const categories = await this.getCssClasses()
+    const filtered = categories.filter(c => c.name !== categoryName)
+    await this.setCssClasses(filtered)
+  }
+
+  static async getDropdownConfigs(): Promise<DropdownConfig[]> {
+    return (await window.spark.kv.get<DropdownConfig[]>(DB_KEYS.DROPDOWN_CONFIGS)) || []
+  }
+
+  static async setDropdownConfigs(configs: DropdownConfig[]): Promise<void> {
+    await window.spark.kv.set(DB_KEYS.DROPDOWN_CONFIGS, configs)
+  }
+
+  static async addDropdownConfig(config: DropdownConfig): Promise<void> {
+    const configs = await this.getDropdownConfigs()
+    configs.push(config)
+    await this.setDropdownConfigs(configs)
+  }
+
+  static async updateDropdownConfig(id: string, updates: DropdownConfig): Promise<void> {
+    const configs = await this.getDropdownConfigs()
+    const index = configs.findIndex(c => c.id === id)
+    if (index !== -1) {
+      configs[index] = updates
+      await this.setDropdownConfigs(configs)
+    }
+  }
+
+  static async deleteDropdownConfig(id: string): Promise<void> {
+    const configs = await this.getDropdownConfigs()
+    const filtered = configs.filter(c => c.id !== id)
+    await this.setDropdownConfigs(filtered)
+  }
+
   static async clearDatabase(): Promise<void> {
     await window.spark.kv.delete(DB_KEYS.USERS)
     await window.spark.kv.delete(DB_KEYS.CREDENTIALS)
@@ -509,5 +669,7 @@ export class Database {
     await window.spark.kv.delete(DB_KEYS.PASSWORD_CHANGE_TIMESTAMPS)
     await window.spark.kv.delete(DB_KEYS.FIRST_LOGIN_FLAGS)
     await window.spark.kv.delete(DB_KEYS.GOD_CREDENTIALS_EXPIRY_DURATION)
+    await window.spark.kv.delete(DB_KEYS.CSS_CLASSES)
+    await window.spark.kv.delete(DB_KEYS.DROPDOWN_CONFIGS)
   }
 }

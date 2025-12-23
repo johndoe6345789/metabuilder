@@ -1,176 +1,186 @@
-# Planning Guide
+# PRD: MetaBuilder Visual Configuration System
 
-A meta-architecture system with 4 distinct levels: Level 1 (public-facing website with sample content), Level 2 (user area with profiles and comments), Level 3 (Django-style admin panel for data management), and Level 4 (god-tier builder where all previous levels can be designed, developed, and tested through visual workflows, GUI editors for JSON schemas, and Lua scripting).
+## Mission Statement
+Transform the MetaBuilder god-tier panel from a technical, code-heavy interface into an intuitive visual configuration system that empowers both technical and non-technical users to build sophisticated applications through GUI-based tools.
 
-**Experience Qualities**: 
-1. **Layered** - Clear separation between public, user, admin, and meta-builder levels with intuitive navigation between tiers
-2. **Generative** - Level 4 can procedurally generate entire applications for Levels 1-3 through declarative JSON schemas and visual workflows
-3. **Powerful** - Lua lambdas for custom logic, visual JSON schema editor, workflow system for complex processes, all through an intuitive GUI
+## Experience Qualities
+1. **Intuitive** - Users should discover features naturally without extensive documentation, with visual cues guiding them through complex configurations.
+2. **Empowering** - Non-technical users can accomplish sophisticated customization without writing code, while technical users retain full control when needed.
+3. **Efficient** - Common tasks that previously required typing or memorization are now accomplished through point-and-click interactions, dramatically reducing configuration time.
 
-**Complexity Level**: Complex Application (advanced functionality, likely with multiple views)
-This is a 4-tier meta-application builder: a public website layer, authenticated user area, admin panel, and a god-tier visual builder that can procedurally generate all three previous layers using JSON schemas, workflow systems, and embedded Lua scripting.
+## Complexity Level
+**Complex Application** (advanced functionality with multiple views) - This is a meta-framework for building applications with four distinct user levels, database management, visual component builders, and dynamic configuration systems.
 
 ## Essential Features
 
-### Level 1: Public Website
-- **Functionality**: Normal webpage with responsive hamburger menu, hero section, content areas, footer
-- **Purpose**: Public-facing content accessible to anyone without authentication
-- **Trigger**: User visits root URL without authentication
-- **Progression**: Load homepage → Browse content sections → Click hamburger menu → Navigate pages → View sample content
-- **Success criteria**: Responsive design works; hamburger menu collapses on mobile; content is readable; links work; no auth required
+### 1. CSS Class Builder
+**Functionality:** Visual selector for Tailwind CSS classes organized into logical categories
+**Purpose:** Eliminate the need to memorize or type CSS class names, reducing errors and speeding up styling
+**Trigger:** User clicks palette icon next to any className field in PropertyInspector
+**Progression:** Open builder → Browse categories (Layout, Spacing, Typography, etc.) → Click classes to select → See live preview → Apply to component
+**Success Criteria:** 
+- User can style components without typing a single class name
+- Selected classes display in real-time preview
+- 200+ predefined classes organized into 10 categories
+- Custom class input available for edge cases
 
-### Level 2: User Area
-- **Functionality**: Authenticated user dashboard with profile page and comment system
-- **Purpose**: Allow normal users to sign up, manage their profile, and interact through comments
-- **Trigger**: User clicks "Sign Up" or "Login" from Level 1
-- **Progression**: Register account → Verify credentials → Access dashboard → Edit profile → Browse comment sections → Post/edit comments → View own history
-- **Success criteria**: Registration persists in KV; profile edits save; comments are CRUD-able; users can't access admin functions; profile picture upload works
+### 2. Dynamic Dropdown Configuration
+**Functionality:** Centralized management of dropdown option sets usable across multiple components
+**Purpose:** Prevent duplication and ensure consistency when the same options appear in multiple places
+**Trigger:** User navigates to "Dropdowns" tab in god-tier panel or components reference dropdown by name
+**Progression:** Create dropdown config → Name it → Add options (value/label pairs) → Save → Reference in component schemas → Options appear automatically
+**Success Criteria:**
+- Dropdown created once, usable in unlimited component properties
+- Changes to dropdown propagate to all components using it
+- Visual GUI for managing options (no JSON required)
+- Pre-loaded with common examples (status, priority, category)
 
-### Level 3: Django-Style Admin Panel
-- **Functionality**: Full data management interface with model list views, CRUD operations, filtering, search, and bulk actions
-- **Purpose**: Provide admin users comprehensive control over all data models and system configuration
-- **Trigger**: User with admin role logs in or selects "Admin" from navigation
-- **Progression**: Login as admin → View model dashboard → Select model → See filtered list view → Search/filter records → Click record → Edit form → Save changes → View audit trail
-- **Success criteria**: All models from schema rendered; inline editing; validation works; relations display correctly; permissions enforced; export to JSON/CSV
+### 3. CSS Class Library Manager
+**Functionality:** Manage the catalog of CSS classes available in the builder
+**Purpose:** Allow customization of available classes and organization for project-specific needs
+**Trigger:** User navigates to "CSS Classes" tab in god-tier panel
+**Progression:** View categories → Create/edit category → Add/remove classes → Save → Classes appear in CSS Class Builder
+**Success Criteria:**
+- Categories can be added, edited, or deleted
+- Each category contains unlimited class names
+- Changes immediately reflected in CSS Class Builder
+- System initializes with comprehensive Tailwind utilities
 
-### Level 4: God-Tier Builder
-- **Functionality**: Meta-builder with visual JSON schema editor, workflow designer, Lua lambda editor, component catalog, and live preview of Levels 1-3
-- **Purpose**: Allow god-level users to design, configure, and deploy entire applications for Levels 1-3 through declarative configuration
-- **Trigger**: User with god role accesses builder interface
-- **Progression**: Open builder → Design data schema in GUI → Create workflows visually → Write Lua handlers → Configure page templates → Preview generated app → Deploy configuration → Test all levels
-- **Success criteria**: JSON schema editor validates; workflow nodes connect; Lua syntax highlighting; live preview updates; can export/import configurations; changes propagate to all levels
+### 4. Monaco Code Editor Integration
+**Functionality:** Professional-grade code editor for JSON and Lua with syntax highlighting and validation
+**Purpose:** When code editing is necessary, provide best-in-class tooling comparable to VS Code
+**Trigger:** User opens SchemaEditor, LuaEditor, or JsonEditor components
+**Progression:** Open editor → See syntax-highlighted code → Edit with autocomplete → Format code → Validate → Save
+**Success Criteria:**
+- Syntax highlighting for JSON and Lua
+- Real-time error detection and display
+- Code formatting on demand
+- Bracket pair colorization and matching
+- Minimap for navigation
+- Find/replace functionality
 
-### JSON Schema Editor (Level 4)
-- **Functionality**: Visual GUI for defining data models with fields, types, validation rules, relationships
-- **Purpose**: Declaratively define all data structures without writing JSON by hand
-- **Trigger**: User opens "Schema Designer" in Level 4
-- **Progression**: Create new model → Add fields via forms → Set field types/constraints → Define relations → Visualize schema graph → Validate → Generate Level 3 admin interface
-- **Success criteria**: All field types supported; visual relationship mapping; constraint validation; auto-generates CRUD interfaces; imports/exports valid JSON
+### 5. Enhanced Property Inspector
+**Functionality:** Context-aware property editor with specialized controls for different data types
+**Purpose:** Provide the right UI control for each property type automatically
+**Trigger:** User selects component in builder
+**Progression:** Select component → View properties → Use appropriate control (text input, dropdown, CSS builder, etc.) → Changes apply immediately
+**Success Criteria:**
+- String fields use text inputs
+- Boolean fields use dropdowns (true/false)
+- Select fields use static dropdowns
+- Dynamic-select fields load options from dropdown configs
+- className fields have CSS Builder button
+- All changes saved to component props
 
-### Workflow System (Level 4)
-- **Functionality**: Visual node-based workflow editor for defining business logic flows
-- **Purpose**: Create complex processes (approval flows, notifications, data transformations) without code
-- **Trigger**: User opens "Workflow Designer" in Level 4
-- **Progression**: Create workflow → Drag trigger node → Add action nodes → Connect with arrows → Configure conditions → Attach to data events → Test execution → Monitor runs
-- **Success criteria**: Nodes connect smoothly; execution order clear; can branch/merge; error handling; logs show execution path; integrates with Lua
-
-### Lua Lambda System (Level 4)
-- **Functionality**: Real Lua interpreter (fengari-web) with full language support, Monaco editor with syntax highlighting and autocomplete, parameter handling, context API access, comprehensive execution feedback, and extensive snippet library with 30+ pre-built templates
-- **Purpose**: Provide safe, sandboxed scripting for custom transformations, validations, and business logic with real Lua execution beyond declarative capabilities, enhanced by professional code editing experience and reusable code patterns
-- **Trigger**: User adds "Lua Action" node in workflow or creates Lua script in scripts tab
-- **Progression**: Open Monaco-based Lua editor → Define parameters → Browse snippet library by category → Search and preview snippets → Insert template code → Customize with syntax highlighting and autocomplete → Access context.data/user/kv via intelligent suggestions → Test with sample inputs → View execution logs → Return structured results → Integrate into workflows
-- **Success criteria**: Monaco editor integrated with Lua language support; autocomplete provides context API suggestions (context.data, context.user, context.kv, log, print); syntax highlighting active; real Lua execution via fengari; parameter type validation; execution logs captured; return values parsed; syntax/runtime errors shown with line numbers; can transform JSON data; fullscreen editing mode available; snippet library accessible with 30+ templates across 12 categories; snippets insertable at cursor position; integrates with workflow nodes
-
-### Lua Snippet Library (Level 4)
-- **Functionality**: Comprehensive library of 30+ pre-built Lua code templates organized into 12 categories (Data Validation, Data Transformation, Array Operations, String Processing, Math & Calculations, Conditionals & Logic, User Management, Error Handling, API & Networking, Date & Time, File Operations, Utilities)
-- **Purpose**: Accelerate development by providing tested, reusable patterns for common operations; reduce errors; teach best practices
-- **Trigger**: User clicks "Snippet Library" button in Lua editor or opens "Snippet Library" tab in Level 4
-- **Progression**: Open snippet library → Browse by category or search by keyword/tag → Preview snippet details and parameters → View full code in syntax-highlighted display → Copy to clipboard or insert into editor → Customize for specific use case
-- **Success criteria**: 30+ snippets covering common patterns; organized into logical categories; searchable by name, description, and tags; preview shows code, description, and required parameters; one-click copy or insert; snippets include validation, transformation, calculations, conditionals, string operations, array operations, date handling, error handling, and utilities; modal detail view for full inspection
-
-### Database Persistence Layer (All Levels)
-- **Functionality**: Centralized database abstraction layer with SHA-512 password hashing, KV persistence for all entities (users, credentials, workflows, Lua scripts, pages, schemas, comments, component hierarchy, component configs), comprehensive CRUD operations, import/export functionality, and database management UI
-- **Purpose**: Provide secure, persistent storage for all application data with proper password security, enable data portability, and allow god-tier users to inspect and manage the entire database state
-- **Trigger**: Application initialization; any data mutation; user opens Database tab in Level 4
-- **Progression**: App loads → Initialize database with defaults → Load entities from KV → Perform CRUD operations → Hash passwords with SHA-512 → Persist changes to KV → View statistics in Database Manager → Export full database to JSON → Import database from JSON backup → Clear and reinitialize database
-- **Success criteria**: All passwords stored as SHA-512 hashes; KV persistence works across sessions; CRUD operations atomic; database export includes all entities; import validates and restores data; Database Manager shows real-time statistics; clear database requires double confirmation; no plaintext passwords ever stored; all data survives page refresh
-
-### God Credentials Expiry Management (Level 4)
-- **Functionality**: Configurable expiry time for god-tier login credentials displayed on Level 1 (public page), with controls to customize duration, reset timer, and clear expiry
-- **Purpose**: Allow god-tier users to control security by setting custom time limits (1 minute to 24 hours) for credential visibility, balancing convenience with security
-- **Trigger**: User opens Settings tab in Level 4; credentials automatically display on Level 1 based on expiry status
-- **Progression**: Open Settings tab → View current expiry status and time remaining → Adjust duration value and unit (minutes/hours) → Save new duration → Optionally reset timer to restart countdown → Or clear expiry to show credentials on next Level 1 load → View live countdown on both Level 1 and Level 4
-- **Success criteria**: Duration configurable from 1 minute to 24 hours; defaults to 1 hour; timer resets when god user changes password; countdown displays accurately in real-time on Level 1; Settings page shows active/expired status; Reset Timer button restarts countdown with configured duration; Clear Expiry removes timer completely; credentials disappear from Level 1 when expired; new duration persists across sessions
+### 6. Quick Guide System
+**Functionality:** Interactive documentation and tutorials for new features
+**Purpose:** Help users discover and learn new visual configuration tools
+**Trigger:** User opens "Guide" tab (default tab in god-tier panel)
+**Progression:** View overview cards → Expand accordion sections → Read step-by-step instructions → Try features → Reference best practices
+**Success Criteria:**
+- Visible on first load as default tab
+- Covers all major features (CSS Builder, Dropdowns, Monaco)
+- Includes code examples where relevant
+- Provides best practices and tips
 
 ## Edge Case Handling
-- **Invalid User Credentials**: Show clear error message; rate limit after 5 attempts; support password reset flow
-- **Unauthorized Access Attempts**: Redirect to appropriate level; log security events; show "access denied" message
-- **Circular Schema Relations**: Detect and prevent infinite loops in model relationships; warn user
-- **Invalid Lua Scripts**: Catch syntax errors; timeout after 3 seconds; sandbox prevents dangerous operations
-- **Malformed JSON Schemas**: Validate before save; highlight errors with line numbers; provide fix suggestions
-- **Workflow Infinite Loops**: Detect cycles; limit execution steps to 1000; show execution trace
-- **Large Comment Threads**: Paginate comments; lazy load older entries; virtualize long lists
-- **Schema Migration Conflicts**: Detect breaking changes; show migration preview; allow rollback
-- **Lost Sessions Across Levels**: Auto-save state; restore context; show reconnection indicator
-- **Database Import Errors**: Validate JSON structure before import; show detailed error messages; rollback on failure; preserve existing data
-- **Password Hash Collisions**: Use SHA-512 with sufficient entropy; no collision risk in practice; unique salting per deployment
-- **KV Storage Quota**: Monitor storage usage; warn when approaching limits; provide data cleanup tools; optimize JSON serialization
-- **Monaco Editor Load Failure**: Fallback loading indicator; retry mechanism; graceful degradation if CDN unavailable
-- **Large Lua Scripts**: Monaco virtual scrolling handles performance; minimap provides navigation; syntax parsing optimized
-- **Invalid Expiry Duration**: Validate minimum 1 minute, maximum 24 hours; show error for out-of-range values; prevent negative numbers
-- **Expiry Timer Desync**: Recalculate on page load; handle timezone differences; sync between Level 1 and Level 4 displays
-- **Concurrent Expiry Changes**: Last write wins; reload settings after save; show confirmation of active settings
+- **Invalid CSS class names** - Custom class input validates and warns about non-standard classes
+- **Deleted dropdown config still referenced** - PropertyInspector gracefully handles missing configs, shows warning
+- **Large CSS class lists** - Scrollable interface with search/filter to handle 1000+ classes
+- **Concurrent edits** - Changes to dropdown configs immediately reflect in all open PropertyInspectors
+- **Empty dropdown options** - Validation prevents saving dropdowns with zero options
+- **Duplicate class selection** - System prevents selecting same class twice
+- **Import/export conflicts** - Monaco editor validates JSON before import, shows detailed errors
 
 ## Design Direction
-The design should evoke creativity and power - a professional design tool that feels both approachable and capable. Think Figma meets VS Code: clean, modern, with clear visual hierarchy and purposeful spacing. The canvas should feel like a creative workspace, not a cluttered IDE.
+The interface should feel like a professional design tool (Figma, Webflow) rather than a developer IDE. Visual hierarchy emphasizes actions over configuration details. Color coding distinguishes different tool types (CSS = primary purple, Dropdowns = accent cyan, Code = muted gray).
 
 ## Color Selection
-A sophisticated, creative tool palette that balances professionalism with visual energy - inspired by modern design tools.
 
-- **Primary Color**: Deep purple `oklch(0.55 0.18 290)` - Communicates creativity and innovation, used for primary actions and builder chrome
-- **Secondary Colors**: Cool slate `oklch(0.35 0.02 260)` for sidebars and panels; Light lavender `oklch(0.92 0.03 290)` for canvas background
-- **Accent Color**: Electric cyan `oklch(0.70 0.17 195)` - High-energy color for selected states, active drop zones, and CTAs
-- **Foreground/Background Pairings**: 
-  - Primary (Deep Purple `oklch(0.55 0.18 290)`): White text `oklch(0.98 0 0)` - Ratio 6.2:1 ✓
-  - Canvas (Light Lavender `oklch(0.92 0.03 290)`): Dark text `oklch(0.25 0.02 260)` - Ratio 12.1:1 ✓
-  - Accent (Electric Cyan `oklch(0.70 0.17 195)`): Dark slate `oklch(0.2 0.02 260)` - Ratio 9.3:1 ✓
-  - Sidebar (Cool Slate `oklch(0.35 0.02 260)`): Light text `oklch(0.90 0.01 260)` - Ratio 10.8:1 ✓
+**Primary Color:** `oklch(0.55 0.18 290)` - Purple/magenta representing creativity and visual design
+- Used for: CSS-related features, primary actions, selected states
+
+**Secondary Colors:** `oklch(0.35 0.02 260)` - Deep blue-gray for structure
+- Used for: Dropdowns, configuration panels, stable UI elements
+
+**Accent Color:** `oklch(0.70 0.17 195)` - Cyan/teal for interactive elements
+- Used for: Dynamic dropdowns, interactive guides, actionable items
+
+**Foreground/Background Pairings:**
+- Background `oklch(0.92 0.03 290)` with Foreground `oklch(0.25 0.02 260)` - Ratio 14.2:1 ✓
+- Card `oklch(1 0 0)` with Card Foreground `oklch(0.25 0.02 260)` - Ratio 16.4:1 ✓
+- Primary `oklch(0.55 0.18 290)` with Primary Foreground `oklch(0.98 0 0)` - Ratio 7.1:1 ✓
+- Accent `oklch(0.70 0.17 195)` with Accent Foreground `oklch(0.2 0.02 260)` - Ratio 8.9:1 ✓
 
 ## Font Selection
-Modern, clean typography that balances technical precision with creative energy - readable at all scales for a design tool interface.
+Professional and technical feeling with emphasis on code clarity
 
-- **Typographic Hierarchy**: 
-  - H1 (Builder Title): Space Grotesk Bold/28px/tight letter spacing
-  - H2 (Panel Headers): Space Grotesk Semibold/20px/normal spacing
-  - H3 (Component Names): Space Grotesk Medium/14px/normal spacing
-  - Body (UI Labels): IBM Plex Sans Regular/14px/1.5 line height
-  - Code (Monaco Editor): JetBrains Mono Regular/14px/1.4 line height
-  - Small (Property Labels): IBM Plex Sans Medium/12px/uppercase/wide tracking
+- **Typographic Hierarchy:**
+  - H1 (Panel Titles): Space Grotesk Bold/32px/tight tracking
+  - H2 (Section Headers): Space Grotesk SemiBold/24px/normal tracking
+  - H3 (Card Titles): Space Grotesk Medium/18px/normal tracking
+  - Body (Descriptions): IBM Plex Sans Regular/14px/relaxed line height
+  - Labels (Form Fields): IBM Plex Sans Medium/12px/wide tracking/uppercase
+  - Code (Editors): JetBrains Mono Regular/14px/monospace
 
 ## Animations
-Animations should feel responsive and purposeful - immediate visual feedback for drag operations (drag ghost follows cursor at 0ms), smooth 200ms transitions for panel sliding, 150ms micro-interactions on selection changes, and elastic spring physics (tension: 300, friction: 20) for drop animations that make components feel tangible.
+Subtle functionality enhancements with occasional delightful moments
+
+- **Opening dialogs:** 200ms ease-out scale from 0.95 to 1.0 with fade
+- **Selecting CSS classes:** 150ms color transition + 100ms scale pulse on click
+- **Dropdown option add:** 300ms slide-in from top with spring physics
+- **Tab switching:** 200ms cross-fade between content panels
+- **Hover states:** 150ms color/shadow transitions for all interactive elements
+- **Toast notifications:** 400ms slide-up with bounce for user feedback
 
 ## Component Selection
-- **Components**: 
-  - Sidebar with collapsible sections for component catalog
-  - Resizable panels for canvas/inspector layout
-  - Card for component previews in catalog and snippet library
-  - Dialog for login form, settings, and snippet detail view
-  - Sheet for slide-out snippet library panel
-  - Tabs for switching between visual/code views and snippet categories
-  - ScrollArea for component lists, property panels, and snippet browsing
-  - Input, Select, Switch, Slider for property editors
-  - Button throughout for actions
-  - Badge for component type indicators and snippet tags
-  - Separator for visual hierarchy
-  - Tooltip for help text on hover
-  - Sonner for notifications
-- **Customizations**: 
-  - Custom drag-and-drop canvas with drop zone highlighting
-  - Monaco Editor wrapper for Lua scripts with custom autocomplete provider
-  - Monaco Editor wrapper for JSON schema editing with validation
-  - Component tree view with expand/collapse
-  - Property editor that dynamically renders based on component type
-  - Canvas ruler and grid overlay
-  - Component outline overlay on hover
-  - Fullscreen mode for Monaco editor instances
-  - Snippet library with category filtering and search
-  - Snippet card grid with tag display and copy/insert actions
-  - Snippet detail modal with parameter documentation and code highlighting
-- **States**: 
-  - Canvas: neutral state shows dotted grid, hover shows drop zones, dragging shows blue outlines
-  - Components: default has subtle border, hover shows blue glow, selected shows thick accent border with resize handles
-  - Drop zones: hidden by default, appear on drag with dashed accent border and background tint
-  - Property inputs: follow standard focus states with accent color
-- **Icon Selection**: 
-  - Phosphor icons: Layout for layouts, PaintBrush for styling, Code for code editor, Lock/LockOpen for auth, FloppyDisk for save, Eye for preview, ArrowsOutSimple for fullscreen, Plus for add, Trash for delete, Copy for duplicate/copy, CaretRight/Down for tree expand, BookOpen for snippet library, MagnifyingGlass for search, Tag for snippet tags, Check for copied confirmation, ArrowRight for insert action
-- **Spacing**: 
-  - Sidebars: p-4 for sections, gap-2 for component grid
-  - Canvas: p-8 for outer padding, min-h-screen for scrollability
-  - Property panel: p-4 for sections, gap-4 for form fields
-  - Component padding: p-2 minimum for selection targets
-- **Mobile**: 
-  - Not a primary concern for a builder tool, but provide tablet landscape support minimum
-  - Stack panels vertically on small screens
-  - Hide component catalog by default, show via hamburger menu
-  - Full-screen canvas mode for focused editing
+
+**Components:**
+- **Dialog (shadcn)** - For CSS Builder, Dropdown Manager, JSON Editor modals with max-width customizations
+- **Tabs (shadcn)** - For god-tier panel navigation with horizontal scroll on mobile
+- **Select (shadcn)** - For boolean and static dropdown properties
+- **Input (shadcn)** - For text, number, and className fields with custom validation states
+- **Button (shadcn)** - For all actions with icon+text pattern, size variants (sm for toolbars)
+- **Card (shadcn)** - For guide sections, dropdown configs, CSS categories with hover elevations
+- **Badge (shadcn)** - For selected classes, tags, status indicators with color variants
+- **ScrollArea (shadcn)** - For long lists (CSS classes, options) with styled scrollbars
+- **Accordion (shadcn)** - For Quick Guide collapsible sections
+- **Monaco Editor (@monaco-editor/react)** - For JSON/Lua code editing with dark theme
+
+**Customizations:**
+- DialogContent extended to max-w-5xl for JSON/Lua editors
+- Tabs with conditional wrapping and horizontal scroll for 12+ tabs
+- Badge with close button overlay for removable tags
+- Card with 2px border variants for feature highlighting
+- Input with icon button suffix for CSS Builder trigger
+
+**States:**
+- Buttons: default, hover (shadow-md), active (scale-95), disabled (opacity-50)
+- Inputs: default, focus (ring-2), error (border-destructive), disabled (bg-muted)
+- Cards: default, hover (shadow-lg for interactive ones), selected (border-primary)
+- Dropdowns: closed, open (with slide-down animation), disabled
+
+**Icon Selection:**
+- Palette (CSS Builder) - Visual association with styling/design
+- ListDashes (Dropdowns) - Represents list options
+- Code (Monaco editors) - Universal code symbol
+- Sparkle (Quick Guide) - Suggests helpful tips/new features
+- Pencil (Edit actions) - Standard edit metaphor
+- Trash (Delete actions) - Standard delete metaphor
+- Plus (Add actions) - Create new items
+- FloppyDisk (Save) - Nostalgic but clear save icon
+
+**Spacing:**
+- Section gaps: gap-6 (24px) for major sections
+- Card internal: p-4 to p-6 (16-24px) based on content density
+- Form fields: space-y-2 (8px) between label and input
+- Button groups: gap-2 (8px) for related actions
+- Tab list: gap-1 (4px) to feel unified
+
+**Mobile:**
+- Tabs convert to horizontally scrollable list (4 visible, swipe for more)
+- Dialogs use max-w-full with safe area padding
+- CSS Class Builder shows 1 column on mobile, 3 on desktop
+- PropertyInspector becomes bottom drawer on mobile (< 768px)
+- Quick Guide cards stack vertically on mobile
+- Monaco editor height reduces to 400px on mobile
