@@ -19,6 +19,9 @@ export interface DatabaseSchema {
   comments: Comment[]
   componentHierarchy: Record<string, ComponentNode>
   componentConfigs: Record<string, ComponentConfig>
+  godCredentialsExpiry: number
+  passwordChangeTimestamps: Record<string, number>
+  firstLoginFlags: Record<string, boolean>
 }
 
 export interface ComponentNode {
@@ -53,6 +56,9 @@ export const DB_KEYS = {
   COMMENTS: 'db_comments',
   COMPONENT_HIERARCHY: 'db_component_hierarchy',
   COMPONENT_CONFIGS: 'db_component_configs',
+  GOD_CREDENTIALS_EXPIRY: 'db_god_credentials_expiry',
+  PASSWORD_CHANGE_TIMESTAMPS: 'db_password_change_timestamps',
+  FIRST_LOGIN_FLAGS: 'db_first_login_flags',
 } as const
 
 export async function hashPassword(password: string): Promise<string> {
@@ -107,6 +113,18 @@ export class Database {
     const credentials = await this.getCredentials()
     credentials[username] = passwordHash
     await window.spark.kv.set(DB_KEYS.CREDENTIALS, credentials)
+    
+    const timestamps = await this.getPasswordChangeTimestamps()
+    timestamps[username] = Date.now()
+    await this.setPasswordChangeTimestamps(timestamps)
+  }
+
+  static async getPasswordChangeTimestamps(): Promise<Record<string, number>> {
+    return (await window.spark.kv.get<Record<string, number>>(DB_KEYS.PASSWORD_CHANGE_TIMESTAMPS)) || {}
+  }
+
+  static async setPasswordChangeTimestamps(timestamps: Record<string, number>): Promise<void> {
+    await window.spark.kv.set(DB_KEYS.PASSWORD_CHANGE_TIMESTAMPS, timestamps)
   }
 
   static async verifyCredentials(username: string, password: string): Promise<boolean> {
@@ -365,6 +383,10 @@ export class Database {
       await this.setCredential('god', await hashPassword('god123'))
       await this.setCredential('admin', await hashPassword('admin'))
       await this.setCredential('demo', await hashPassword('demo'))
+      
+      await this.setFirstLoginFlag('god', true)
+      await this.setFirstLoginFlag('admin', false)
+      await this.setFirstLoginFlag('demo', false)
     }
 
     const appConfig = await this.getAppConfig()
@@ -418,6 +440,42 @@ export class Database {
     }
   }
 
+  static async getGodCredentialsExpiry(): Promise<number> {
+    return (await window.spark.kv.get<number>(DB_KEYS.GOD_CREDENTIALS_EXPIRY)) || 0
+  }
+
+  static async setGodCredentialsExpiry(timestamp: number): Promise<void> {
+    await window.spark.kv.set(DB_KEYS.GOD_CREDENTIALS_EXPIRY, timestamp)
+  }
+
+  static async getFirstLoginFlags(): Promise<Record<string, boolean>> {
+    return (await window.spark.kv.get<Record<string, boolean>>(DB_KEYS.FIRST_LOGIN_FLAGS)) || {}
+  }
+
+  static async setFirstLoginFlag(username: string, isFirstLogin: boolean): Promise<void> {
+    const flags = await this.getFirstLoginFlags()
+    flags[username] = isFirstLogin
+    await window.spark.kv.set(DB_KEYS.FIRST_LOGIN_FLAGS, flags)
+  }
+
+  static async shouldShowGodCredentials(): Promise<boolean> {
+    const expiry = await this.getGodCredentialsExpiry()
+    const passwordTimestamps = await this.getPasswordChangeTimestamps()
+    const godPasswordChangeTime = passwordTimestamps['god'] || 0
+    
+    if (expiry === 0) {
+      const oneHourFromNow = Date.now() + (60 * 60 * 1000)
+      await this.setGodCredentialsExpiry(oneHourFromNow)
+      return true
+    }
+    
+    if (godPasswordChangeTime > expiry) {
+      return false
+    }
+    
+    return Date.now() < expiry
+  }
+
   static async clearDatabase(): Promise<void> {
     await window.spark.kv.delete(DB_KEYS.USERS)
     await window.spark.kv.delete(DB_KEYS.CREDENTIALS)
@@ -429,5 +487,8 @@ export class Database {
     await window.spark.kv.delete(DB_KEYS.COMMENTS)
     await window.spark.kv.delete(DB_KEYS.COMPONENT_HIERARCHY)
     await window.spark.kv.delete(DB_KEYS.COMPONENT_CONFIGS)
+    await window.spark.kv.delete(DB_KEYS.GOD_CREDENTIALS_EXPIRY)
+    await window.spark.kv.delete(DB_KEYS.PASSWORD_CHANGE_TIMESTAMPS)
+    await window.spark.kv.delete(DB_KEYS.FIRST_LOGIN_FLAGS)
   }
 }

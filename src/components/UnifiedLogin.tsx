@@ -4,15 +4,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { SignIn, UserPlus } from '@phosphor-icons/react'
+import { SignIn, UserPlus, ArrowLeft } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface UnifiedLoginProps {
   onLogin: (credentials: { username: string; password: string }) => void
   onRegister: (username: string, email: string, password: string) => void
+  onBack?: () => void
 }
 
-export function UnifiedLogin({ onLogin, onRegister }: UnifiedLoginProps) {
+export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps) {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' })
   const [registerForm, setRegisterForm] = useState({ username: '', email: '', password: '', confirmPassword: '' })
 
@@ -46,6 +47,17 @@ export function UnifiedLogin({ onLogin, onRegister }: UnifiedLoginProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center p-4">
+      {onBack && (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="fixed top-4 left-4"
+          onClick={onBack}
+        >
+          <ArrowLeft className="mr-2" size={16} />
+          Back to Home
+        </Button>
+      )}
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">

@@ -5,6 +5,8 @@ import { Level1 } from '@/components/Level1'
 import { Level2 } from '@/components/Level2'
 import { Level3 } from '@/components/Level3'
 import { Level4 } from '@/components/Level4'
+import { PasswordChangeDialog } from '@/components/PasswordChangeDialog'
+import { UnifiedLogin } from '@/components/UnifiedLogin'
 import { toast } from 'sonner'
 import { canAccessLevel } from '@/lib/auth'
 import { Database, hashPassword } from '@/lib/database'
@@ -17,6 +19,8 @@ function App() {
   const [currentLevel, setCurrentLevel] = useState<AppLevel>(1)
   const [isInitialized, setIsInitialized] = useState(false)
   const [isPreviewMode, setIsPreviewMode] = useState(false)
+  const [showPasswordChange, setShowPasswordChange] = useState(false)
+  const [isFirstLogin, setIsFirstLogin] = useState(false)
 
   useEffect(() => {
     const initDatabase = async () => {
@@ -46,17 +50,46 @@ function App() {
       return
     }
 
+    const firstLoginFlags = await Database.getFirstLoginFlags()
+    const isFirstLoginFlag = firstLoginFlags[username] === true
+
     setCurrentUser(user)
     
-    if (user.role === 'god') {
+    if (isFirstLoginFlag) {
+      setIsFirstLogin(true)
+      setShowPasswordChange(true)
+    } else {
+      if (user.role === 'god') {
+        setCurrentLevel(4)
+      } else if (user.role === 'admin') {
+        setCurrentLevel(3)
+      } else {
+        setCurrentLevel(2)
+      }
+      
+      toast.success(`Welcome, ${user.username}!`)
+    }
+  }
+
+  const handlePasswordChange = async (newPassword: string) => {
+    if (!currentUser) return
+
+    const passwordHash = await hashPassword(newPassword)
+    await Database.setCredential(currentUser.username, passwordHash)
+    await Database.setFirstLoginFlag(currentUser.username, false)
+    
+    setShowPasswordChange(false)
+    setIsFirstLogin(false)
+    
+    if (currentUser.role === 'god') {
       setCurrentLevel(4)
-    } else if (user.role === 'admin') {
+    } else if (currentUser.role === 'admin') {
       setCurrentLevel(3)
     } else {
       setCurrentLevel(2)
     }
     
-    toast.success(`Welcome, ${user.username}!`)
+    toast.success('Password changed successfully!')
   }
 
   const handleRegister = async (username: string, email: string, password: string) => {
@@ -101,7 +134,7 @@ function App() {
     }
 
     if (level > 1 && !currentUser) {
-      toast.info('Please sign in to access this area')
+      setCurrentLevel(level)
       return
     }
 
@@ -122,9 +155,36 @@ function App() {
   }
 
   if (!currentUser) {
+    if (currentLevel === 1) {
+      return (
+        <>
+          <Level1 onNavigate={handleNavigate} />
+          <Toaster />
+        </>
+      )
+    } else {
+      return (
+        <>
+          <UnifiedLogin 
+            onLogin={handleLogin} 
+            onRegister={handleRegister}
+            onBack={() => setCurrentLevel(1)}
+          />
+          <Toaster />
+        </>
+      )
+    }
+  }
+
+  if (showPasswordChange && currentUser) {
     return (
       <>
-        <Level1 onNavigate={handleNavigate} />
+        <PasswordChangeDialog
+          open={showPasswordChange}
+          username={currentUser.username}
+          onPasswordChanged={handlePasswordChange}
+          isFirstLogin={isFirstLogin}
+        />
         <Toaster />
       </>
     )
