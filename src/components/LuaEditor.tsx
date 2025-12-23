@@ -1,12 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { Plus, Trash, Play } from '@phosphor-icons/react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Plus, Trash, Play, CheckCircle, XCircle, Code, FileCode } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { createLuaEngine, type LuaExecutionResult } from '@/lib/lua-engine'
+import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua-examples'
 import type { LuaScript } from '@/lib/level-types'
 
 interface LuaEditorProps {
@@ -18,15 +27,27 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
   const [selectedScript, setSelectedScript] = useState<string | null>(
     scripts.length > 0 ? scripts[0].id : null
   )
-  const [testOutput, setTestOutput] = useState<string>('')
+  const [testOutput, setTestOutput] = useState<LuaExecutionResult | null>(null)
+  const [testInputs, setTestInputs] = useState<Record<string, any>>({})
+  const [isExecuting, setIsExecuting] = useState(false)
 
   const currentScript = scripts.find(s => s.id === selectedScript)
+
+  useEffect(() => {
+    if (currentScript) {
+      const inputs: Record<string, any> = {}
+      currentScript.parameters.forEach((param) => {
+        inputs[param.name] = param.type === 'number' ? 0 : param.type === 'boolean' ? false : ''
+      })
+      setTestInputs(inputs)
+    }
+  }, [selectedScript, currentScript?.parameters.length])
 
   const handleAddScript = () => {
     const newScript: LuaScript = {
       id: `lua_${Date.now()}`,
       name: 'New Script',
-      code: '-- Lua script\nfunction execute(context)\n  -- Your code here\n  return {success = true}\nend',
+      code: '-- Lua script example\n-- Access input parameters via context.data\n-- Use log() or print() to output messages\n\nlog("Script started")\n\nif context.data then\n  log("Received data:", context.data)\nend\n\nlocal result = {\n  success = true,\n  message = "Script executed successfully"\n}\n\nreturn result',
       parameters: [],
     }
     onScriptsChange([...scripts, newScript])
@@ -50,11 +71,45 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
     )
   }
 
-  const handleTestScript = () => {
+  const handleTestScript = async () => {
     if (!currentScript) return
 
-    setTestOutput('Lua execution simulation:\n\nScript: ' + currentScript.name + '\n\nNote: Actual Lua execution would require a Lua interpreter library.\nFor now, this is a mock test showing your script would execute.\n\nYour code:\n' + currentScript.code)
-    toast.info('Script test simulation complete')
+    setIsExecuting(true)
+    setTestOutput(null)
+
+    try {
+      const engine = createLuaEngine()
+      
+      const contextData: any = {}
+      currentScript.parameters.forEach((param) => {
+        contextData[param.name] = testInputs[param.name]
+      })
+
+      const result = await engine.execute(currentScript.code, {
+        data: contextData,
+        user: { username: 'test_user', role: 'god' },
+        log: (...args: any[]) => console.log('[Lua]', ...args)
+      })
+
+      setTestOutput(result)
+      
+      if (result.success) {
+        toast.success('Script executed successfully')
+      } else {
+        toast.error('Script execution failed')
+      }
+
+      engine.destroy()
+    } catch (error) {
+      toast.error('Execution error: ' + (error instanceof Error ? error.message : String(error)))
+      setTestOutput({
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+        logs: []
+      })
+    } finally {
+      setIsExecuting(false)
+    }
   }
 
   const handleAddParameter = () => {
@@ -151,9 +206,9 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
                   <CardTitle>Edit Script: {currentScript.name}</CardTitle>
                   <CardDescription>Write custom Lua logic</CardDescription>
                 </div>
-                <Button onClick={handleTestScript}>
+                <Button onClick={handleTestScript} disabled={isExecuting}>
                   <Play className="mr-2" size={16} />
-                  Test Script
+                  {isExecuting ? 'Executing...' : 'Test Script'}
                 </Button>
               </div>
             </CardHeader>
@@ -196,52 +251,146 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
                   </Button>
                 </div>
                 <div className="space-y-2">
-                  {currentScript.parameters.map((param, index) => (
-                    <div key={index} className="flex gap-2 items-center">
-                      <Input
-                        value={param.name}
-                        onChange={(e) => handleUpdateParameter(index, { name: e.target.value })}
-                        placeholder="paramName"
-                        className="flex-1 font-mono text-sm"
-                      />
-                      <Input
-                        value={param.type}
-                        onChange={(e) => handleUpdateParameter(index, { type: e.target.value })}
-                        placeholder="string"
-                        className="w-32 text-sm"
-                      />
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteParameter(index)}
-                      >
-                        <Trash size={14} />
-                      </Button>
-                    </div>
-                  ))}
+                  {currentScript.parameters.length === 0 ? (
+                    <p className="text-xs text-muted-foreground text-center py-3 border border-dashed rounded-lg">
+                      No parameters defined
+                    </p>
+                  ) : (
+                    currentScript.parameters.map((param, index) => (
+                      <div key={index} className="flex gap-2 items-center">
+                        <Input
+                          value={param.name}
+                          onChange={(e) => handleUpdateParameter(index, { name: e.target.value })}
+                          placeholder="paramName"
+                          className="flex-1 font-mono text-sm"
+                        />
+                        <Input
+                          value={param.type}
+                          onChange={(e) => handleUpdateParameter(index, { type: e.target.value })}
+                          placeholder="string"
+                          className="w-32 text-sm"
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteParameter(index)}
+                        >
+                          <Trash size={14} />
+                        </Button>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
 
+              {currentScript.parameters.length > 0 && (
+                <div>
+                  <Label className="mb-2 block">Test Input Values</Label>
+                  <div className="space-y-2">
+                    {currentScript.parameters.map((param) => (
+                      <div key={param.name} className="flex gap-2 items-center">
+                        <Label className="w-32 text-sm font-mono">{param.name}</Label>
+                        <Input
+                          value={testInputs[param.name] ?? ''}
+                          onChange={(e) => {
+                            const value = param.type === 'number' 
+                              ? parseFloat(e.target.value) || 0
+                              : param.type === 'boolean'
+                              ? e.target.value === 'true'
+                              : e.target.value
+                            setTestInputs({ ...testInputs, [param.name]: value })
+                          }}
+                          placeholder={`Enter ${param.type} value`}
+                          className="flex-1 text-sm"
+                          type={param.type === 'number' ? 'number' : 'text'}
+                        />
+                        <Badge variant="outline" className="text-xs">
+                          {param.type}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-2">
-                <Label>Lua Code</Label>
+                <div className="flex items-center justify-between">
+                  <Label>Lua Code</Label>
+                  <Select
+                    onValueChange={(value) => {
+                      const exampleCode = getLuaExampleCode(value as any)
+                      handleUpdateScript({ code: exampleCode })
+                      toast.success('Example loaded')
+                    }}
+                  >
+                    <SelectTrigger className="w-[200px]">
+                      <FileCode size={16} className="mr-2" />
+                      <SelectValue placeholder="Load example" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {getLuaExamplesList().map((example) => (
+                        <SelectItem key={example.key} value={example.key}>
+                          <div>
+                            <div className="font-medium">{example.name}</div>
+                            <div className="text-xs text-muted-foreground">{example.description}</div>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <Textarea
                   value={currentScript.code}
                   onChange={(e) => handleUpdateScript({ code: e.target.value })}
                   className="font-mono text-sm min-h-[300px]"
-                  placeholder="-- Lua script&#10;function execute(context)&#10;  -- Your code here&#10;  return {success = true}&#10;end"
+                  placeholder="-- Lua script&#10;log('Hello from Lua!')&#10;return {success = true}"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Write Lua code. The context object provides access to data and utilities.
+                  Write Lua code. Access parameters via <code className="font-mono">context.data</code>. Use <code className="font-mono">log()</code> or <code className="font-mono">print()</code> for output.
                 </p>
               </div>
 
               {testOutput && (
-                <Card className="bg-muted/50">
+                <Card className={testOutput.success ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}>
                   <CardHeader>
-                    <CardTitle className="text-sm">Test Output</CardTitle>
+                    <div className="flex items-center gap-2">
+                      {testOutput.success ? (
+                        <CheckCircle size={20} className="text-green-600" />
+                      ) : (
+                        <XCircle size={20} className="text-red-600" />
+                      )}
+                      <CardTitle className="text-sm">
+                        {testOutput.success ? 'Execution Successful' : 'Execution Failed'}
+                      </CardTitle>
+                    </div>
                   </CardHeader>
-                  <CardContent>
-                    <pre className="text-xs font-mono whitespace-pre-wrap">{testOutput}</pre>
+                  <CardContent className="space-y-3">
+                    {testOutput.error && (
+                      <div>
+                        <Label className="text-xs text-red-600 mb-1">Error</Label>
+                        <pre className="text-xs font-mono whitespace-pre-wrap text-red-700 bg-red-100 p-2 rounded">
+                          {testOutput.error}
+                        </pre>
+                      </div>
+                    )}
+                    
+                    {testOutput.logs.length > 0 && (
+                      <div>
+                        <Label className="text-xs mb-1">Logs</Label>
+                        <pre className="text-xs font-mono whitespace-pre-wrap bg-muted p-2 rounded">
+                          {testOutput.logs.join('\n')}
+                        </pre>
+                      </div>
+                    )}
+                    
+                    {testOutput.result !== null && testOutput.result !== undefined && (
+                      <div>
+                        <Label className="text-xs mb-1">Return Value</Label>
+                        <pre className="text-xs font-mono whitespace-pre-wrap bg-muted p-2 rounded">
+                          {JSON.stringify(testOutput.result, null, 2)}
+                        </pre>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               )}

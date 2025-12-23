@@ -55,11 +55,11 @@ This is a 4-tier meta-application builder: a public website layer, authenticated
 - **Success criteria**: Nodes connect smoothly; execution order clear; can branch/merge; error handling; logs show execution path; integrates with Lua
 
 ### Lua Lambda System (Level 4)
-- **Functionality**: Embedded Lua scripting environment for custom business logic with access to data context and utility functions
-- **Purpose**: Provide safe, sandboxed scripting for custom transformations and validations beyond declarative capabilities
-- **Trigger**: User adds "Lua Action" node in workflow or attaches script to model hook
-- **Progression**: Open Lua editor → Write function → Access data context → Call utility APIs → Test with sample data → Save → Execute on events
-- **Success criteria**: Syntax highlighting; autocomplete for context API; sandboxed execution; timeout protection; error messages clear; can transform JSON data
+- **Functionality**: Real Lua interpreter (fengari-web) with full language support, parameter handling, context API access, and comprehensive execution feedback
+- **Purpose**: Provide safe, sandboxed scripting for custom transformations, validations, and business logic with real Lua execution beyond declarative capabilities
+- **Trigger**: User adds "Lua Action" node in workflow or creates Lua script in scripts tab
+- **Progression**: Open Lua editor → Define parameters → Write Lua code → Access context.data/user/kv → Test with sample inputs → View execution logs → Return structured results → Integrate into workflows
+- **Success criteria**: Real Lua execution via fengari; parameter type validation; context API available (data, user, kv, log); execution logs captured; return values parsed; syntax/runtime errors shown; can transform JSON data; integrates with workflow nodes
 
 ## Edge Case Handling
 - **Invalid User Credentials**: Show clear error message; rate limit after 5 attempts; support password reset flow

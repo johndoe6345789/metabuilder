@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
   SelectContent,
@@ -11,19 +12,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Plus, Trash, Lightning, Code, GitBranch, ArrowRight } from '@phosphor-icons/react'
+import { Plus, Trash, Lightning, Code, GitBranch, ArrowRight, Play, CheckCircle, XCircle } from '@phosphor-icons/react'
 import { toast } from 'sonner'
-import type { Workflow, WorkflowNode, WorkflowEdge } from '@/lib/level-types'
+import { createWorkflowEngine, type WorkflowExecutionResult as WFExecResult } from '@/lib/workflow-engine'
+import type { Workflow, WorkflowNode, WorkflowEdge, LuaScript } from '@/lib/level-types'
 
 interface WorkflowEditorProps {
   workflows: Workflow[]
   onWorkflowsChange: (workflows: Workflow[]) => void
+  scripts?: LuaScript[]
 }
 
-export function WorkflowEditor({ workflows, onWorkflowsChange }: WorkflowEditorProps) {
+export function WorkflowEditor({ workflows, onWorkflowsChange, scripts = [] }: WorkflowEditorProps) {
   const [selectedWorkflow, setSelectedWorkflow] = useState<string | null>(
     workflows.length > 0 ? workflows[0].id : null
   )
+  const [testData, setTestData] = useState<string>('{"example": "data"}')
+  const [testOutput, setTestOutput] = useState<WFExecResult | null>(null)
+  const [isExecuting, setIsExecuting] = useState(false)
 
   const currentWorkflow = workflows.find(w => w.id === selectedWorkflow)
 
@@ -89,6 +95,47 @@ export function WorkflowEditor({ workflows, onWorkflowsChange }: WorkflowEditorP
     handleUpdateWorkflow({
       nodes: currentWorkflow.nodes.map(n => n.id === nodeId ? { ...n, ...updates } : n),
     })
+  }
+
+  const handleTestWorkflow = async () => {
+    if (!currentWorkflow) return
+
+    setIsExecuting(true)
+    setTestOutput(null)
+
+    try {
+      let parsedData: any
+      try {
+        parsedData = JSON.parse(testData)
+      } catch {
+        parsedData = testData
+      }
+
+      const engine = createWorkflowEngine()
+      const result = await engine.executeWorkflow(currentWorkflow, {
+        data: parsedData,
+        user: { username: 'test_user', role: 'god' },
+        scripts,
+      })
+
+      setTestOutput(result)
+
+      if (result.success) {
+        toast.success('Workflow executed successfully')
+      } else {
+        toast.error('Workflow execution failed')
+      }
+    } catch (error) {
+      toast.error('Execution error: ' + (error instanceof Error ? error.message : String(error)))
+      setTestOutput({
+        success: false,
+        outputs: {},
+        logs: [],
+        error: error instanceof Error ? error.message : String(error),
+      })
+    } finally {
+      setIsExecuting(false)
+    }
   }
 
   const getNodeIcon = (type: WorkflowNode['type']) => {
@@ -192,8 +239,16 @@ export function WorkflowEditor({ workflows, onWorkflowsChange }: WorkflowEditorP
         ) : (
           <>
             <CardHeader>
-              <CardTitle>Edit Workflow: {currentWorkflow.name}</CardTitle>
-              <CardDescription>Configure workflow nodes and connections</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Edit Workflow: {currentWorkflow.name}</CardTitle>
+                  <CardDescription>Configure workflow nodes and connections</CardDescription>
+                </div>
+                <Button onClick={handleTestWorkflow} disabled={isExecuting}>
+                  <Play className="mr-2" size={16} />
+                  {isExecuting ? 'Running...' : 'Test Workflow'}
+                </Button>
+              </div>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid gap-4 md:grid-cols-2">
@@ -284,6 +339,64 @@ export function WorkflowEditor({ workflows, onWorkflowsChange }: WorkflowEditorP
                                   </Select>
                                 </div>
                               </div>
+
+                              {node.type === 'lua' && scripts.length > 0 && (
+                                <div className="space-y-2">
+                                  <Label className="text-xs">Lua Script</Label>
+                                  <Select
+                                    value={node.config.scriptId || ''}
+                                    onValueChange={(value) =>
+                                      handleUpdateNode(node.id, { 
+                                        config: { ...node.config, scriptId: value }
+                                      })
+                                    }
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select a script" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {scripts.map((script) => (
+                                        <SelectItem key={script.id} value={script.id}>
+                                          {script.name}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              )}
+
+                              {node.type === 'condition' && (
+                                <div className="space-y-2">
+                                  <Label className="text-xs">Condition Expression</Label>
+                                  <Input
+                                    value={node.config.condition || ''}
+                                    onChange={(e) =>
+                                      handleUpdateNode(node.id, { 
+                                        config: { ...node.config, condition: e.target.value }
+                                      })
+                                    }
+                                    placeholder="data.value > 10"
+                                    className="font-mono text-xs"
+                                  />
+                                </div>
+                              )}
+
+                              {node.type === 'transform' && (
+                                <div className="space-y-2">
+                                  <Label className="text-xs">Transform Expression</Label>
+                                  <Input
+                                    value={node.config.transform || ''}
+                                    onChange={(e) =>
+                                      handleUpdateNode(node.id, { 
+                                        config: { ...node.config, transform: e.target.value }
+                                      })
+                                    }
+                                    placeholder="{ result: data.value * 2 }"
+                                    className="font-mono text-xs"
+                                  />
+                                </div>
+                              )}
+
                               <div className="flex items-center gap-2">
                                 <Badge variant="outline" className="text-xs">
                                   Step {index + 1}
@@ -312,12 +425,69 @@ export function WorkflowEditor({ workflows, onWorkflowsChange }: WorkflowEditorP
               </div>
 
               {currentWorkflow.nodes.length > 0 && (
-                <div className="bg-muted/50 rounded-lg p-4 border border-dashed">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Lightning size={16} />
-                    <span>Workflow execution: {currentWorkflow.nodes.map(n => n.label).join(' → ')}</span>
+                <>
+                  <div className="space-y-2">
+                    <Label>Test Input Data (JSON)</Label>
+                    <Textarea
+                      value={testData}
+                      onChange={(e) => setTestData(e.target.value)}
+                      className="font-mono text-sm min-h-[100px]"
+                      placeholder='{"example": "data"}'
+                    />
                   </div>
-                </div>
+
+                  {testOutput && (
+                    <Card className={testOutput.success ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}>
+                      <CardHeader>
+                        <div className="flex items-center gap-2">
+                          {testOutput.success ? (
+                            <CheckCircle size={20} className="text-green-600" />
+                          ) : (
+                            <XCircle size={20} className="text-red-600" />
+                          )}
+                          <CardTitle className="text-sm">
+                            {testOutput.success ? 'Workflow Execution Successful' : 'Workflow Execution Failed'}
+                          </CardTitle>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        {testOutput.error && (
+                          <div>
+                            <Label className="text-xs text-red-600 mb-1">Error</Label>
+                            <pre className="text-xs font-mono whitespace-pre-wrap text-red-700 bg-red-100 p-2 rounded">
+                              {testOutput.error}
+                            </pre>
+                          </div>
+                        )}
+                        
+                        {testOutput.logs.length > 0 && (
+                          <div>
+                            <Label className="text-xs mb-1">Execution Logs</Label>
+                            <pre className="text-xs font-mono whitespace-pre-wrap bg-muted p-2 rounded max-h-[200px] overflow-y-auto">
+                              {testOutput.logs.join('\n')}
+                            </pre>
+                          </div>
+                        )}
+                        
+                        {Object.keys(testOutput.outputs).length > 0 && (
+                          <div>
+                            <Label className="text-xs mb-1">Node Outputs</Label>
+                            <pre className="text-xs font-mono whitespace-pre-wrap bg-muted p-2 rounded max-h-[200px] overflow-y-auto">
+                              {JSON.stringify(testOutput.outputs, null, 2)}
+                            </pre>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  <div className="bg-muted/50 rounded-lg p-4 border border-dashed">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Lightning size={16} />
+                      <span>Workflow execution: {currentWorkflow.nodes.map(n => n.label).join(' → ')}</span>
+                    </div>
+                  </div>
+                </>
               )}
             </CardContent>
           </>

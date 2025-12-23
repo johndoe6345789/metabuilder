@@ -153,6 +153,7 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
               onWorkflowsChange={(workflows) =>
                 setAppConfig((current) => ({ ...current!, workflows }))
               }
+              scripts={appConfig.luaScripts}
             />
           </TabsContent>
 
