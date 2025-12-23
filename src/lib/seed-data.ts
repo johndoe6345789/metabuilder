@@ -1,11 +1,15 @@
 import { Database, ComponentNode, ComponentConfig } from './database'
 import type { PageConfig, LuaScript, Workflow, Comment } from './level-types'
+import { getPageDefinitionBuilder } from './page-definition-builder'
 
 export async function seedDatabase() {
   const pages = await Database.getPages()
   if (pages.length > 0) {
     return
   }
+
+  const builder = getPageDefinitionBuilder()
+  await builder.initializeDefaultPages()
 
   const samplePages: PageConfig[] = [
     {
