@@ -10,6 +10,7 @@ import type {
 } from './level-types'
 import type { ModelSchema } from './schema-types'
 import type { InstalledPackage } from './package-types'
+import type { SMTPConfig } from './password-utils'
 
 export interface CssCategory {
   name: string
@@ -42,6 +43,8 @@ export interface DatabaseSchema {
   dropdownConfigs: DropdownConfig[]
   tenants: Tenant[]
   powerTransferRequests: PowerTransferRequest[]
+  smtpConfig: SMTPConfig
+  passwordResetTokens: Record<string, string>
 }
 
 export interface ComponentNode {
@@ -86,6 +89,8 @@ export const DB_KEYS = {
   PACKAGE_DATA: 'db_package_data',
   TENANTS: 'db_tenants',
   POWER_TRANSFER_REQUESTS: 'db_power_transfer_requests',
+  SMTP_CONFIG: 'db_smtp_config',
+  PASSWORD_RESET_TOKENS: 'db_password_reset_tokens',
 } as const
 
 export async function hashPassword(password: string): Promise<string> {
@@ -416,10 +421,11 @@ export class Database {
     }
 
     if (Object.keys(credentials).length === 0) {
-      await this.setCredential('supergod', await hashPassword('supergod123'))
-      await this.setCredential('god', await hashPassword('god123'))
-      await this.setCredential('admin', await hashPassword('admin'))
-      await this.setCredential('demo', await hashPassword('demo'))
+      const { getScrambledPassword } = await import('./auth')
+      await this.setCredential('supergod', await hashPassword(getScrambledPassword('supergod')))
+      await this.setCredential('god', await hashPassword(getScrambledPassword('god')))
+      await this.setCredential('admin', await hashPassword(getScrambledPassword('admin')))
+      await this.setCredential('demo', await hashPassword(getScrambledPassword('demo')))
       
       await this.setFirstLoginFlag('supergod', true)
       await this.setFirstLoginFlag('god', true)
@@ -824,5 +830,29 @@ export class Database {
     toUser.isInstanceOwner = true
 
     await this.setUsers(users)
+  }
+
+  static async getSMTPConfig(): Promise<SMTPConfig | null> {
+    return await window.spark.kv.get<SMTPConfig>(DB_KEYS.SMTP_CONFIG) || null
+  }
+
+  static async setSMTPConfig(config: SMTPConfig): Promise<void> {
+    await window.spark.kv.set(DB_KEYS.SMTP_CONFIG, config)
+  }
+
+  static async getPasswordResetTokens(): Promise<Record<string, string>> {
+    return (await window.spark.kv.get<Record<string, string>>(DB_KEYS.PASSWORD_RESET_TOKENS)) || {}
+  }
+
+  static async setPasswordResetToken(username: string, token: string): Promise<void> {
+    const tokens = await this.getPasswordResetTokens()
+    tokens[username] = token
+    await window.spark.kv.set(DB_KEYS.PASSWORD_RESET_TOKENS, tokens)
+  }
+
+  static async deletePasswordResetToken(username: string): Promise<void> {
+    const tokens = await this.getPasswordResetTokens()
+    delete tokens[username]
+    await window.spark.kv.set(DB_KEYS.PASSWORD_RESET_TOKENS, tokens)
   }
 }

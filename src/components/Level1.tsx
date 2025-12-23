@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { List, X, User, ShieldCheck, Eye, EyeSlash, Warning, Copy, Check } from '@phosphor-icons/react'
 import { Database } from '@/lib/database'
+import { getScrambledPassword } from '@/lib/auth'
 
 interface Level1Props {
   onNavigate: (level: number) => void
@@ -54,13 +55,13 @@ export function Level1({ onNavigate }: Level1Props) {
   }, [])
 
   const handleCopyPassword = async () => {
-    await navigator.clipboard.writeText('god123')
+    await navigator.clipboard.writeText(getScrambledPassword('god'))
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
   const handleCopySuperGodPassword = async () => {
-    await navigator.clipboard.writeText('supergod123')
+    await navigator.clipboard.writeText(getScrambledPassword('supergod'))
     setCopiedSuper(true)
     setTimeout(() => setCopiedSuper(false), 2000)
   }
@@ -148,13 +149,13 @@ export function Level1({ onNavigate }: Level1Props) {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-muted-foreground">Password:</span>
-                          <code className="px-2 py-0.5 bg-background/50 rounded font-mono font-semibold">
-                            {showSuperGodPassword ? 'supergod123' : '••••••••••••'}
+                          <code className="px-2 py-0.5 bg-background/50 rounded font-mono font-semibold text-xs break-all">
+                            {showSuperGodPassword ? getScrambledPassword('supergod') : '••••••••••••••••'}
                           </code>
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="h-6 w-6 p-0"
+                            className="h-6 w-6 p-0 shrink-0"
                             onClick={() => setShowSuperGodPassword(!showSuperGodPassword)}
                           >
                             {showSuperGodPassword ? <EyeSlash size={16} /> : <Eye size={16} />}
@@ -162,7 +163,7 @@ export function Level1({ onNavigate }: Level1Props) {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="h-6 px-2 text-xs"
+                            className="h-6 px-2 text-xs shrink-0"
                             onClick={handleCopySuperGodPassword}
                           >
                             {copiedSuper ? <Check size={14} className="mr-1" /> : <Copy size={14} className="mr-1" />}
@@ -197,13 +198,13 @@ export function Level1({ onNavigate }: Level1Props) {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-muted-foreground">Password:</span>
-                          <code className="px-2 py-0.5 bg-background/50 rounded font-mono font-semibold">
-                            {showPassword ? 'god123' : '••••••'}
+                          <code className="px-2 py-0.5 bg-background/50 rounded font-mono font-semibold text-xs break-all">
+                            {showPassword ? getScrambledPassword('god') : '••••••••••••••••'}
                           </code>
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="h-6 w-6 p-0"
+                            className="h-6 w-6 p-0 shrink-0"
                             onClick={() => setShowPassword(!showPassword)}
                           >
                             {showPassword ? <EyeSlash size={16} /> : <Eye size={16} />}
@@ -211,7 +212,7 @@ export function Level1({ onNavigate }: Level1Props) {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="h-6 px-2 text-xs"
+                            className="h-6 px-2 text-xs shrink-0"
                             onClick={handleCopyPassword}
                           >
                             {copied ? <Check size={14} className="mr-1" /> : <Copy size={14} className="mr-1" />}

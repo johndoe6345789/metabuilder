@@ -4,8 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { SignIn, UserPlus, ArrowLeft } from '@phosphor-icons/react'
+import { SignIn, UserPlus, ArrowLeft, Envelope } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { Database, hashPassword } from '@/lib/database'
+import { generateScrambledPassword, simulateEmailSend } from '@/lib/password-utils'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 interface UnifiedLoginProps {
   onLogin: (credentials: { username: string; password: string }) => void
@@ -15,7 +18,8 @@ interface UnifiedLoginProps {
 
 export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps) {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' })
-  const [registerForm, setRegisterForm] = useState({ username: '', email: '', password: '', confirmPassword: '' })
+  const [registerForm, setRegisterForm] = useState({ username: '', email: '' })
+  const [resetEmail, setResetEmail] = useState('')
 
   const handleLogin = () => {
     if (!loginForm.username || !loginForm.password) {
@@ -26,23 +30,54 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
     onLogin(loginForm)
   }
 
-  const handleRegister = () => {
-    if (!registerForm.username || !registerForm.email || !registerForm.password) {
+  const handleRegister = async () => {
+    if (!registerForm.username || !registerForm.email) {
       toast.error('Please fill in all fields')
       return
     }
 
-    if (registerForm.password !== registerForm.confirmPassword) {
-      toast.error('Passwords do not match')
+    const scrambledPassword = generateScrambledPassword(16)
+    
+    const smtpConfig = await Database.getSMTPConfig()
+    await simulateEmailSend(
+      registerForm.email,
+      'Your MetaBuilder Account Password',
+      `Welcome to MetaBuilder!\n\nYour account has been created.\nUsername: ${registerForm.username}\nTemporary Password: ${scrambledPassword}\n\nPlease login and change your password from your profile settings.`,
+      smtpConfig || undefined
+    )
+    
+    toast.success('Account created! Check console for your password (simulated email)')
+    onRegister(registerForm.username, registerForm.email, scrambledPassword)
+  }
+
+  const handlePasswordReset = async () => {
+    if (!resetEmail) {
+      toast.error('Please enter your email address')
       return
     }
 
-    if (registerForm.password.length < 6) {
-      toast.error('Password must be at least 6 characters')
+    const users = await Database.getUsers()
+    const user = users.find(u => u.email === resetEmail)
+    
+    if (!user) {
+      toast.error('No account found with that email address')
       return
     }
 
-    onRegister(registerForm.username, registerForm.email, registerForm.password)
+    const newPassword = generateScrambledPassword(16)
+    const passwordHash = await hashPassword(newPassword)
+    await Database.setCredential(user.username, passwordHash)
+    
+    const smtpConfig = await Database.getSMTPConfig()
+    await simulateEmailSend(
+      resetEmail,
+      'MetaBuilder Password Reset',
+      `Your password has been reset.\n\nUsername: ${user.username}\nNew Password: ${newPassword}\n\nPlease login and change your password from your profile settings.`,
+      smtpConfig || undefined
+    )
+    
+    toast.success('Password reset! Check console for your new password (simulated email)')
+    setResetEmail('')
   }
 
   return (
@@ -68,7 +103,7 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="login">
                 <SignIn className="mr-2" size={16} />
                 Login
@@ -76,6 +111,10 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
               <TabsTrigger value="register">
                 <UserPlus className="mr-2" size={16} />
                 Register
+              </TabsTrigger>
+              <TabsTrigger value="reset">
+                <Envelope className="mr-2" size={16} />
+                Reset
               </TabsTrigger>
             </TabsList>
 
@@ -105,15 +144,20 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
                 <SignIn className="mr-2" size={16} />
                 Sign In
               </Button>
-              <div className="text-xs text-muted-foreground space-y-1 p-3 bg-muted rounded-lg">
-                <p className="font-semibold">Test Credentials:</p>
-                <p>• God: <code className="font-mono">god / god123</code></p>
-                <p>• Admin: <code className="font-mono">admin / admin</code></p>
-                <p>• User: <code className="font-mono">demo / demo</code></p>
-              </div>
+              <Alert>
+                <AlertDescription className="text-xs">
+                  <p className="font-semibold mb-1">Test Credentials:</p>
+                  <p>Check browser console for default user passwords (they are scrambled on first run)</p>
+                </AlertDescription>
+              </Alert>
             </TabsContent>
 
             <TabsContent value="register" className="space-y-4 mt-6">
+              <Alert>
+                <AlertDescription className="text-sm">
+                  No password required! A secure random password will be emailed to you after registration.
+                </AlertDescription>
+              </Alert>
               <div className="space-y-2">
                 <Label htmlFor="register-username">Username</Label>
                 <Input
@@ -131,26 +175,6 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
                   value={registerForm.email}
                   onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
                   placeholder="your@email.com"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="register-password">Password</Label>
-                <Input
-                  id="register-password"
-                  type="password"
-                  value={registerForm.password}
-                  onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
-                  placeholder="Choose a password"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="register-confirm">Confirm Password</Label>
-                <Input
-                  id="register-confirm"
-                  type="password"
-                  value={registerForm.confirmPassword}
-                  onChange={(e) => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
-                  placeholder="Confirm your password"
                   onKeyDown={(e) => e.key === 'Enter' && handleRegister()}
                 />
               </div>
@@ -158,6 +182,35 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
                 <UserPlus className="mr-2" size={16} />
                 Create Account
               </Button>
+              <p className="text-xs text-muted-foreground text-center">
+                Your password will be sent to your email address
+              </p>
+            </TabsContent>
+
+            <TabsContent value="reset" className="space-y-4 mt-6">
+              <Alert>
+                <AlertDescription className="text-sm">
+                  Enter your email address to receive a new password. Contact administrator if you need help.
+                </AlertDescription>
+              </Alert>
+              <div className="space-y-2">
+                <Label htmlFor="reset-email">Email Address</Label>
+                <Input
+                  id="reset-email"
+                  type="email"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  onKeyDown={(e) => e.key === 'Enter' && handlePasswordReset()}
+                />
+              </div>
+              <Button className="w-full" onClick={handlePasswordReset}>
+                <Envelope className="mr-2" size={16} />
+                Reset Password
+              </Button>
+              <p className="text-xs text-muted-foreground text-center">
+                Need help? Contact your system administrator
+              </p>
             </TabsContent>
           </Tabs>
         </CardContent>

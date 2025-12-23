@@ -6,9 +6,11 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { User, ChatCircle, SignOut, House, Trash } from '@phosphor-icons/react'
+import { User, ChatCircle, SignOut, House, Trash, Envelope } from '@phosphor-icons/react'
 import { toast } from 'sonner'
-import { Database } from '@/lib/database'
+import { Database, hashPassword } from '@/lib/database'
+import { generateScrambledPassword, simulateEmailSend } from '@/lib/password-utils'
+import { IRCWebchat } from './IRCWebchat'
 import type { User as UserType, Comment } from '@/lib/level-types'
 
 interface Level2Props {
@@ -81,6 +83,22 @@ export function Level2({ user, onLogout, onNavigate }: Level2Props) {
     toast.success('Comment deleted')
   }
 
+  const handleRequestPasswordReset = async () => {
+    const newPassword = generateScrambledPassword(16)
+    const passwordHash = await hashPassword(newPassword)
+    await Database.setCredential(currentUser.username, passwordHash)
+    
+    const smtpConfig = await Database.getSMTPConfig()
+    await simulateEmailSend(
+      currentUser.email,
+      'Your New MetaBuilder Password',
+      `Your password has been reset at your request.\n\nUsername: ${currentUser.username}\nNew Password: ${newPassword}\n\nPlease login with this password and change it from your profile settings if desired.`,
+      smtpConfig || undefined
+    )
+    
+    toast.success('New password sent to your email! Check console (simulated email)')
+  }
+
   const userComments = comments.filter(c => c.userId === user.id)
   const allComments = comments
 
@@ -119,7 +137,7 @@ export function Level2({ user, onLogout, onNavigate }: Level2Props) {
         <h1 className="text-3xl font-bold mb-8">User Dashboard</h1>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 max-w-md">
+          <TabsList className="grid w-full grid-cols-3 max-w-lg">
             <TabsTrigger value="profile">
               <User className="mr-2" size={16} />
               Profile
@@ -127,6 +145,10 @@ export function Level2({ user, onLogout, onNavigate }: Level2Props) {
             <TabsTrigger value="comments">
               <ChatCircle className="mr-2" size={16} />
               Comments
+            </TabsTrigger>
+            <TabsTrigger value="chat">
+              <ChatCircle className="mr-2" size={16} />
+              Webchat
             </TabsTrigger>
           </TabsList>
 
@@ -203,6 +225,17 @@ export function Level2({ user, onLogout, onNavigate }: Level2Props) {
                       disabled
                       className="mt-2"
                     />
+                  </div>
+
+                  <div className="pt-4 border-t border-border">
+                    <Label className="mb-3 block">Security</Label>
+                    <Button onClick={handleRequestPasswordReset} variant="outline" className="gap-2">
+                      <Envelope size={16} />
+                      Request New Password via Email
+                    </Button>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      A new randomly generated password will be sent to your email address
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -297,6 +330,10 @@ export function Level2({ user, onLogout, onNavigate }: Level2Props) {
                 )}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="chat" className="space-y-6">
+            <IRCWebchat user={currentUser} channelName="general" />
           </TabsContent>
         </Tabs>
       </div>

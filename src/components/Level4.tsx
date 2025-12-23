@@ -24,6 +24,8 @@ import { DropdownConfigManager } from './DropdownConfigManager'
 import { QuickGuide } from './QuickGuide'
 import { PackageManager } from './PackageManager'
 import { NerdModeIDE } from './NerdModeIDE'
+import { ThemeEditor } from './ThemeEditor'
+import { SMTPConfigEditor } from './SMTPConfigEditor'
 import { Database } from '@/lib/database'
 import { seedDatabase } from '@/lib/seed-data'
 import type { User as UserType, AppConfiguration } from '@/lib/level-types'
@@ -357,6 +359,8 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
 
           <TabsContent value="settings" className="space-y-6">
             <GodCredentialsSettings />
+            <ThemeEditor />
+            <SMTPConfigEditor />
           </TabsContent>
         </Tabs>
 

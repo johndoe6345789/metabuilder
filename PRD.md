@@ -149,6 +149,122 @@ Elevate MetaBuilder to support multi-tenant architecture with a Super God level 
 - Responsive layout adapts to available space
 - Z-index ensures IDE floats above other content
 
+### 10. Theme Editor with Dark/Light Mode
+**Functionality:** Visual theme customization interface allowing full control over application colors, border radius, and light/dark mode switching
+**Purpose:** Enable administrators to customize the visual identity of the application without writing CSS, and provide users with dark/light mode preferences
+**Trigger:** God or Super God user navigates to Settings tab and views Theme Editor section
+**Progression:** Open Settings → Scroll to Theme Editor → Toggle between Light/Dark theme editing → Modify color values (oklch format) → Adjust border radius → Preview changes in real-time → Save theme → Toggle dark mode switch to test
+**Success Criteria:**
+- Live theme editor accessible in Level 4/5 Settings tab
+- Separate configuration for Light and Dark themes
+- All shadcn color variables editable (background, foreground, card, primary, secondary, muted, accent, destructive, border, input, ring)
+- Color preview swatches show current values
+- Border radius configuration with live preview
+- Dark/Light mode toggle switch with persistent state
+- Theme preview section showing buttons and cards
+- Changes apply immediately to entire application
+- Theme configuration stored in KV storage
+- Reset to defaults button restores original theme
+- Color values use oklch format for consistency
+- Color groups organized by purpose (Base, Action, Supporting)
+
+### 11. SMTP Email Configuration
+**Functionality:** Configuration interface for SMTP email settings used for password reset and system notifications
+**Purpose:** Allow administrators to configure email delivery for password reset, registration, and system notifications
+**Trigger:** God or Super God user navigates to Settings tab and views SMTP Configuration section
+**Progression:** Open Settings → Scroll to SMTP Config → Enter SMTP host and port → Add username/password → Configure from email/name → Toggle secure connection → Save configuration → Send test email to verify
+**Success Criteria:**
+- SMTP configuration form in Level 4/5 Settings tab
+- Fields for host, port, username, password, from email, from name
+- Secure connection (TLS/SSL) toggle
+- Configuration stored in database (KV storage)
+- Test email functionality with simulated send
+- Test email displays in browser console (simulated mode)
+- Form validation for required fields
+- Password field masked by default
+- Configuration persists between sessions
+- Used by password reset and registration flows
+
+### 12. Password Reset via Email
+**Functionality:** Email-based password reset system using scrambled 16-character passwords, available from login screen and user profile
+**Purpose:** Enable secure password recovery without administrator intervention
+**Trigger:** User clicks Reset tab on login screen, or clicks "Request New Password" button in user profile
+**Progression:** Enter email address → Click Reset Password → System finds user by email → Generate 16-char scrambled password → Email sent (simulated) → Password shown in console → User logs in with new password → Change password in profile if desired
+**Success Criteria:**
+- Password Reset tab on login screen alongside Login/Register
+- "Request New Password via Email" button in Level 2 user profile
+- Email lookup by address to find matching user
+- 16-character scrambled password generation using crypto.getRandomValues
+- Simulated email send displays in browser console
+- Toast notification confirms email sent
+- Password immediately active (hash updated in database)
+- Help text mentions contacting administrator if needed
+- Works for all user types (user, admin, god, supergod)
+- Secure password generation using charset with letters, numbers, symbols
+
+### 13. Registration Without Password Input
+**Functionality:** Simplified registration requiring only username and email, with password automatically generated and emailed
+**Purpose:** Streamline registration process and ensure strong passwords by default
+**Trigger:** User navigates to Register tab on login screen
+**Progression:** Enter username → Enter email → Click Create Account → System validates inputs → Generate 16-char scrambled password → Create user account → Email password (simulated) → Password shown in console → User notified to check email → Login with emailed password
+**Success Criteria:**
+- Register tab shows only username and email fields
+- No password/confirm password inputs
+- Alert explains password will be emailed
+- 16-character scrambled password auto-generated
+- Simulated email displayed in console with username and password
+- Toast notification: "Account created! Check console for password"
+- Help text: "Your password will be sent to your email address"
+- User account immediately active
+- First login does NOT force password change (optional feature)
+- Strong password guaranteed by generation algorithm
+
+### 14. Scrambled Default Passwords
+**Functionality:** System-generated scrambled passwords for default accounts (supergod, god, admin, demo)
+**Purpose:** Improve security by removing hardcoded weak passwords, while still displaying them on first login
+**Trigger:** Database initialization on first application load
+**Progression:** App loads → Database initializes → Check if credentials exist → Generate scrambled passwords for default users → Store hashed passwords → Set first login flags → Display credentials on Level 1 homepage → User copies password → Login → Change password
+**Success Criteria:**
+- Default passwords generated using crypto.getRandomValues (16 chars)
+- Passwords displayed on Level 1 homepage in alerts for god/supergod
+- Show/hide password toggle with eye icon
+- Copy button to copy password to clipboard
+- Passwords visible until first password change
+- God credentials disappear after expiry timer or password change
+- Super God credentials disappear after password change
+- Passwords use mix of uppercase, lowercase, numbers, symbols
+- Same scrambled password generation function used throughout app
+- Console logs display default passwords for reference during development
+
+### 15. IRC-Style Webchat Package
+**Functionality:** Real-time IRC-style text chat with channels, user presence, commands, and persistent message history
+**Purpose:** Provide built-in communication system for community discussion and collaboration
+**Trigger:** Level 2 user clicks Webchat tab in their dashboard
+**Progression:** Open Webchat tab → Join #general channel → See online users → Type message → Send message → View scrolling chat history → Use commands (/help, /users, /clear, /me) → Toggle user list panel → Leave channel on navigation
+**Success Criteria:**
+- Webchat tab accessible in Level 2 user area
+- IRC-style monospace font display
+- Timestamp on every message (HH:MM format)
+- Username displayed with angle brackets: <username> message
+- System messages in italics (join/leave/actions)
+- Join/leave notifications with colored arrows
+- Online user count badge
+- User list panel (toggleable)
+- Commands: /help, /users, /clear, /me <action>
+- /help shows available commands
+- /users lists online users with count
+- /clear removes all messages from view
+- /me creates action message: * username action
+- Enter key sends message
+- Message persistence using KV storage per channel
+- User presence tracking (online users list)
+- Auto-scroll to bottom on new message
+- Collapsible settings/users sidebar
+- Channel name displayed with # prefix
+- 600px height card with scrollable message area
+- Color coding: system messages, join (green), leave (orange)
+- Unknown command error handling
+
 ### 10. CSS Class Builder
 **Functionality:** Visual selector for Tailwind CSS classes organized into logical categories
 **Purpose:** Eliminate the need to memorize or type CSS class names, reducing errors and speeding up styling

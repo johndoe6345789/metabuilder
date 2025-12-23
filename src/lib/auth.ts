@@ -1,4 +1,12 @@
 import type { User, UserRole } from './level-types'
+import { generateScrambledPassword } from './password-utils'
+
+const SCRAMBLED_PASSWORDS = {
+  supergod: generateScrambledPassword(16),
+  god: generateScrambledPassword(16),
+  admin: generateScrambledPassword(16),
+  demo: generateScrambledPassword(16),
+}
 
 export const DEFAULT_USERS: User[] = [
   {
@@ -36,11 +44,10 @@ export const DEFAULT_USERS: User[] = [
   },
 ]
 
-export const DEFAULT_CREDENTIALS: Record<string, string> = {
-  supergod: 'supergod123',
-  god: 'god123',
-  admin: 'admin',
-  demo: 'demo',
+export const DEFAULT_CREDENTIALS: Record<string, string> = SCRAMBLED_PASSWORDS
+
+export function getScrambledPassword(username: string): string {
+  return SCRAMBLED_PASSWORDS[username as keyof typeof SCRAMBLED_PASSWORDS] || ''
 }
 
 export function canAccessLevel(userRole: UserRole, level: number): boolean {
