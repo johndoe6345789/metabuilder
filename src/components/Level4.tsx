@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { SignOut, Database as DatabaseIcon, Lightning, Code, Eye, House, Download, Upload, BookOpen, HardDrives, MapTrifold, Tree, Users } from '@phosphor-icons/react'
+import { SignOut, Database as DatabaseIcon, Lightning, Code, Eye, House, Download, Upload, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { SchemaEditorLevel4 } from './SchemaEditorLevel4'
 import { WorkflowEditor } from './WorkflowEditor'
@@ -18,6 +18,7 @@ import { DatabaseManager } from './DatabaseManager'
 import { PageRoutesManager } from './PageRoutesManager'
 import { ComponentHierarchyEditor } from './ComponentHierarchyEditor'
 import { UserManagement } from './UserManagement'
+import { GodCredentialsSettings } from './GodCredentialsSettings'
 import { Database } from '@/lib/database'
 import { seedDatabase } from '@/lib/seed-data'
 import type { User as UserType, AppConfiguration } from '@/lib/level-types'
@@ -200,7 +201,7 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
         </div>
 
         <Tabs defaultValue="pages" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 max-w-full">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-9 max-w-full">
             <TabsTrigger value="pages">
               <MapTrifold className="mr-2" size={16} />
               Page Routes
@@ -232,6 +233,10 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
             <TabsTrigger value="database">
               <HardDrives className="mr-2" size={16} />
               Database
+            </TabsTrigger>
+            <TabsTrigger value="settings">
+              <Gear className="mr-2" size={16} />
+              Settings
             </TabsTrigger>
           </TabsList>
 
@@ -287,6 +292,10 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
 
           <TabsContent value="database" className="space-y-6">
             <DatabaseManager />
+          </TabsContent>
+
+          <TabsContent value="settings" className="space-y-6">
+            <GodCredentialsSettings />
           </TabsContent>
         </Tabs>
 

@@ -22,6 +22,7 @@ export interface DatabaseSchema {
   godCredentialsExpiry: number
   passwordChangeTimestamps: Record<string, number>
   firstLoginFlags: Record<string, boolean>
+  godCredentialsExpiryDuration: number
 }
 
 export interface ComponentNode {
@@ -59,6 +60,7 @@ export const DB_KEYS = {
   GOD_CREDENTIALS_EXPIRY: 'db_god_credentials_expiry',
   PASSWORD_CHANGE_TIMESTAMPS: 'db_password_change_timestamps',
   FIRST_LOGIN_FLAGS: 'db_first_login_flags',
+  GOD_CREDENTIALS_EXPIRY_DURATION: 'db_god_credentials_expiry_duration',
 } as const
 
 export async function hashPassword(password: string): Promise<string> {
@@ -464,8 +466,9 @@ export class Database {
     const godPasswordChangeTime = passwordTimestamps['god'] || 0
     
     if (expiry === 0) {
-      const oneHourFromNow = Date.now() + (60 * 60 * 1000)
-      await this.setGodCredentialsExpiry(oneHourFromNow)
+      const duration = await this.getGodCredentialsExpiryDuration()
+      const expiryTime = Date.now() + duration
+      await this.setGodCredentialsExpiry(expiryTime)
       return true
     }
     
@@ -474,6 +477,21 @@ export class Database {
     }
     
     return Date.now() < expiry
+  }
+
+  static async getGodCredentialsExpiryDuration(): Promise<number> {
+    const duration = await window.spark.kv.get<number>(DB_KEYS.GOD_CREDENTIALS_EXPIRY_DURATION)
+    return duration || (60 * 60 * 1000)
+  }
+
+  static async setGodCredentialsExpiryDuration(durationMs: number): Promise<void> {
+    await window.spark.kv.set(DB_KEYS.GOD_CREDENTIALS_EXPIRY_DURATION, durationMs)
+  }
+
+  static async resetGodCredentialsExpiry(): Promise<void> {
+    const duration = await this.getGodCredentialsExpiryDuration()
+    const expiryTime = Date.now() + duration
+    await this.setGodCredentialsExpiry(expiryTime)
   }
 
   static async clearDatabase(): Promise<void> {
@@ -490,5 +508,6 @@ export class Database {
     await window.spark.kv.delete(DB_KEYS.GOD_CREDENTIALS_EXPIRY)
     await window.spark.kv.delete(DB_KEYS.PASSWORD_CHANGE_TIMESTAMPS)
     await window.spark.kv.delete(DB_KEYS.FIRST_LOGIN_FLAGS)
+    await window.spark.kv.delete(DB_KEYS.GOD_CREDENTIALS_EXPIRY_DURATION)
   }
 }

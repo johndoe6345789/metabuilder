@@ -75,6 +75,13 @@ This is a 4-tier meta-application builder: a public website layer, authenticated
 - **Progression**: App loads → Initialize database with defaults → Load entities from KV → Perform CRUD operations → Hash passwords with SHA-512 → Persist changes to KV → View statistics in Database Manager → Export full database to JSON → Import database from JSON backup → Clear and reinitialize database
 - **Success criteria**: All passwords stored as SHA-512 hashes; KV persistence works across sessions; CRUD operations atomic; database export includes all entities; import validates and restores data; Database Manager shows real-time statistics; clear database requires double confirmation; no plaintext passwords ever stored; all data survives page refresh
 
+### God Credentials Expiry Management (Level 4)
+- **Functionality**: Configurable expiry time for god-tier login credentials displayed on Level 1 (public page), with controls to customize duration, reset timer, and clear expiry
+- **Purpose**: Allow god-tier users to control security by setting custom time limits (1 minute to 24 hours) for credential visibility, balancing convenience with security
+- **Trigger**: User opens Settings tab in Level 4; credentials automatically display on Level 1 based on expiry status
+- **Progression**: Open Settings tab → View current expiry status and time remaining → Adjust duration value and unit (minutes/hours) → Save new duration → Optionally reset timer to restart countdown → Or clear expiry to show credentials on next Level 1 load → View live countdown on both Level 1 and Level 4
+- **Success criteria**: Duration configurable from 1 minute to 24 hours; defaults to 1 hour; timer resets when god user changes password; countdown displays accurately in real-time on Level 1; Settings page shows active/expired status; Reset Timer button restarts countdown with configured duration; Clear Expiry removes timer completely; credentials disappear from Level 1 when expired; new duration persists across sessions
+
 ## Edge Case Handling
 - **Invalid User Credentials**: Show clear error message; rate limit after 5 attempts; support password reset flow
 - **Unauthorized Access Attempts**: Redirect to appropriate level; log security events; show "access denied" message
@@ -90,6 +97,9 @@ This is a 4-tier meta-application builder: a public website layer, authenticated
 - **KV Storage Quota**: Monitor storage usage; warn when approaching limits; provide data cleanup tools; optimize JSON serialization
 - **Monaco Editor Load Failure**: Fallback loading indicator; retry mechanism; graceful degradation if CDN unavailable
 - **Large Lua Scripts**: Monaco virtual scrolling handles performance; minimap provides navigation; syntax parsing optimized
+- **Invalid Expiry Duration**: Validate minimum 1 minute, maximum 24 hours; show error for out-of-range values; prevent negative numbers
+- **Expiry Timer Desync**: Recalculate on page load; handle timezone differences; sync between Level 1 and Level 4 displays
+- **Concurrent Expiry Changes**: Last write wins; reload settings after save; show confirmation of active settings
 
 ## Design Direction
 The design should evoke creativity and power - a professional design tool that feels both approachable and capable. Think Figma meets VS Code: clean, modern, with clear visual hierarchy and purposeful spacing. The canvas should feel like a creative workspace, not a cluttered IDE.
