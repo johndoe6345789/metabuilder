@@ -12,7 +12,8 @@ import { toast } from 'sonner'
 import { Database } from '@/lib/database'
 import { PACKAGE_CATALOG } from '@/lib/package-catalog'
 import type { PackageManifest, PackageContent, InstalledPackage } from '@/lib/package-types'
-import { Package, Download, Trash, Power, MagnifyingGlass, Star, Tag, User, TrendUp, Funnel } from '@phosphor-icons/react'
+import { Package, Download, Trash, Power, MagnifyingGlass, Star, Tag, User, TrendUp, Funnel, Export, ArrowSquareIn } from '@phosphor-icons/react'
+import { PackageImportExport } from './PackageImportExport'
 
 interface PackageManagerProps {
   onClose?: () => void
@@ -27,6 +28,8 @@ export function PackageManager({ onClose }: PackageManagerProps) {
   const [sortBy, setSortBy] = useState<'name' | 'downloads' | 'rating'>('downloads')
   const [showDetails, setShowDetails] = useState(false)
   const [installing, setInstalling] = useState(false)
+  const [showImportExport, setShowImportExport] = useState(false)
+  const [importExportMode, setImportExportMode] = useState<'import' | 'export'>('export')
 
   useEffect(() => {
     loadPackages()
@@ -198,11 +201,33 @@ export function PackageManager({ onClose }: PackageManagerProps) {
             <p className="text-sm text-muted-foreground">Install pre-built applications and features</p>
           </div>
         </div>
-        {onClose && (
-          <Button variant="ghost" onClick={onClose}>
-            Close
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              setImportExportMode('import')
+              setShowImportExport(true)
+            }}
+          >
+            <ArrowSquareIn size={16} className="mr-2" />
+            Import
           </Button>
-        )}
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              setImportExportMode('export')
+              setShowImportExport(true)
+            }}
+          >
+            <Export size={16} className="mr-2" />
+            Export
+          </Button>
+          {onClose && (
+            <Button variant="ghost" onClick={onClose}>
+              Close
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="flex-1 overflow-hidden">
@@ -453,6 +478,17 @@ export function PackageManager({ onClose }: PackageManagerProps) {
           )}
         </DialogContent>
       </Dialog>
+
+      <PackageImportExport 
+        open={showImportExport}
+        onOpenChange={(open) => {
+          setShowImportExport(open)
+          if (!open) {
+            loadPackages()
+          }
+        }}
+        mode={importExportMode}
+      />
     </div>
   )
 }

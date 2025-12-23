@@ -104,7 +104,25 @@ Elevate MetaBuilder to support multi-tenant architecture with a Super God level 
 - Search and filter by category, rating, downloads
 - Seed data automatically loaded with packages
 
-### 2. CSS Class Builder
+### 8. Package Import/Export System
+**Functionality:** Export database configurations and packages as ZIP files, import packages from ZIP files, including support for assets (images, videos, audio, documents)
+**Purpose:** Enable sharing of complete application packages, backing up database configurations, and distributing reusable modules across MetaBuilder instances
+**Trigger:** User clicks Import/Export buttons in Package Manager
+**Progression:** 
+- **Export**: Click Export → Choose Custom Package or Full Snapshot → Enter metadata (name, version, author, description, tags) → Select export options → Click Export Package → ZIP downloads
+- **Import**: Click Import → Select/drag ZIP file → Package validated → Data merged with existing database → Assets restored → Success notification
+**Success Criteria:**
+- Export packages as ZIP files with manifest.json, content.json, README.md, and assets folder
+- Import packages from ZIP files with validation
+- Selective export options (schemas, pages, workflows, Lua scripts, components, CSS, dropdowns, seed data, assets)
+- Full database snapshot export for backup
+- Non-destructive import (merges with existing data)
+- Asset support for images, videos, audio, and documents
+- Auto-generated README in packages
+- Import/Export accessible from Package Manager
+- Visual feedback during import/export operations
+
+### 9. CSS Class Builder
 **Functionality:** Visual selector for Tailwind CSS classes organized into logical categories
 **Purpose:** Eliminate the need to memorize or type CSS class names, reducing errors and speeding up styling
 **Trigger:** User clicks palette icon next to any className field in PropertyInspector
@@ -115,7 +133,7 @@ Elevate MetaBuilder to support multi-tenant architecture with a Super God level 
 - 200+ predefined classes organized into 10 categories
 - Custom class input available for edge cases
 
-### 3. Dynamic Dropdown Configuration
+### 10. Dynamic Dropdown Configuration
 **Functionality:** Centralized management of dropdown option sets usable across multiple components
 **Purpose:** Prevent duplication and ensure consistency when the same options appear in multiple places
 **Trigger:** User navigates to "Dropdowns" tab in god-tier panel or components reference dropdown by name
@@ -126,7 +144,7 @@ Elevate MetaBuilder to support multi-tenant architecture with a Super God level 
 - Visual GUI for managing options (no JSON required)
 - Pre-loaded with common examples (status, priority, category)
 
-### 4. CSS Class Library Manager
+### 11. CSS Class Library Manager
 **Functionality:** Manage the catalog of CSS classes available in the builder
 **Purpose:** Allow customization of available classes and organization for project-specific needs
 **Trigger:** User navigates to "CSS Classes" tab in god-tier panel
@@ -137,7 +155,7 @@ Elevate MetaBuilder to support multi-tenant architecture with a Super God level 
 - Changes immediately reflected in CSS Class Builder
 - System initializes with comprehensive Tailwind utilities
 
-### 5. Monaco Code Editor Integration
+### 12. Monaco Code Editor Integration
 **Functionality:** Professional-grade code editor for JSON and Lua with syntax highlighting and validation
 **Purpose:** When code editing is necessary, provide best-in-class tooling comparable to VS Code
 **Trigger:** User opens SchemaEditor, LuaEditor, or JsonEditor components
