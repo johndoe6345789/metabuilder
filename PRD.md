@@ -195,6 +195,21 @@ Elevate MetaBuilder to support multi-tenant architecture with a Super God level 
 - Minimap for navigation
 - Find/replace functionality
 
+### 14. Simplified UI with Nerd Mode Toggle
+**Functionality:** Toggle between simplified user-friendly mode and advanced technical mode
+**Purpose:** Hide complex code editors and technical tabs from non-technical users while keeping them accessible to developers
+**Trigger:** User clicks "Nerd" button in top navigation bar
+**Progression:** Default simple mode → Shows only Guide, Packages, Pages, Components, Users, Schemas, Settings → Click Nerd button → Reveals Workflows, Lua Scripts, Snippets, CSS Classes, Dropdowns, Database tabs → Shows full IDE panel → Advanced JSON editors in component config → Click Nerd again to hide
+**Success Criteria:**
+- Simple mode (default) hides: Workflows, Lua Scripts, Snippets, CSS Classes, Dropdowns, Database tabs
+- Simple mode hides: JSON property editors, CSS-in-JS editors, Event handlers tab in component config
+- Simple mode hides: Nerd Mode IDE floating panel at bottom
+- Nerd mode shows all tabs and advanced features
+- Toggle persists in KV storage across sessions
+- Quick Guide explains the toggle and what each mode offers
+- Tab bar adjusts grid layout based on visible tab count
+- Configuration summary hides workflow/Lua metrics in simple mode
+
 ### 6. Enhanced Property Inspector
 **Functionality:** Context-aware property editor with specialized controls for different data types
 **Purpose:** Provide the right UI control for each property type automatically

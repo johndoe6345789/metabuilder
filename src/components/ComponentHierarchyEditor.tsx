@@ -149,7 +149,7 @@ function TreeNode({
   )
 }
 
-export function ComponentHierarchyEditor() {
+export function ComponentHierarchyEditor({ nerdMode = false }: { nerdMode?: boolean }) {
   const [pages, setPages] = useState<PageConfig[]>([])
   const [selectedPageId, setSelectedPageId] = useState<string>('')
   const [hierarchy, setHierarchy] = useState<Record<string, ComponentNode>>({})
@@ -469,6 +469,7 @@ export function ComponentHierarchyEditor() {
             await loadHierarchy()
             setConfigNodeId(null)
           }}
+          nerdMode={nerdMode}
         />
       )}
     </div>

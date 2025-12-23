@@ -18,9 +18,10 @@ interface ComponentConfigDialogProps {
   isOpen: boolean
   onClose: () => void
   onSave: () => void
+  nerdMode?: boolean
 }
 
-export function ComponentConfigDialog({ node, isOpen, onClose, onSave }: ComponentConfigDialogProps) {
+export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode = false }: ComponentConfigDialogProps) {
   const [config, setConfig] = useState<ComponentConfig | null>(null)
   const [props, setProps] = useState<Record<string, any>>({})
   const [styles, setStyles] = useState<Record<string, any>>({})
@@ -137,10 +138,10 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave }: Compone
         </DialogHeader>
 
         <Tabs defaultValue="props" className="flex-1">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className={nerdMode ? "grid w-full grid-cols-3" : "grid w-full grid-cols-2"}>
             <TabsTrigger value="props">Properties</TabsTrigger>
             <TabsTrigger value="styles">Styles</TabsTrigger>
-            <TabsTrigger value="events">Events</TabsTrigger>
+            {nerdMode && <TabsTrigger value="events">Events</TabsTrigger>}
           </TabsList>
 
           <ScrollArea className="h-[500px] mt-4">
@@ -158,51 +159,31 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave }: Compone
                 </div>
               )}
 
-              <Card className="mt-6">
-                <CardHeader>
-                  <CardTitle className="text-sm">Custom Properties (JSON)</CardTitle>
-                  <CardDescription className="text-xs">
-                    Add additional props as JSON
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Textarea
-                    value={JSON.stringify(props, null, 2)}
-                    onChange={(e) => {
-                      try {
-                        setProps(JSON.parse(e.target.value))
-                      } catch {}
-                    }}
-                    className="font-mono text-xs"
-                    rows={6}
-                  />
-                </CardContent>
-              </Card>
+              {nerdMode && (
+                <Card className="mt-6">
+                  <CardHeader>
+                    <CardTitle className="text-sm">Custom Properties (JSON)</CardTitle>
+                    <CardDescription className="text-xs">
+                      Add additional props as JSON
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Textarea
+                      value={JSON.stringify(props, null, 2)}
+                      onChange={(e) => {
+                        try {
+                          setProps(JSON.parse(e.target.value))
+                        } catch {}
+                      }}
+                      className="font-mono text-xs"
+                      rows={6}
+                    />
+                  </CardContent>
+                </Card>
+              )}
             </TabsContent>
 
             <TabsContent value="styles" className="space-y-4 px-1">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-sm">Custom Styles (CSS-in-JS)</CardTitle>
-                  <CardDescription className="text-xs">
-                    Define inline styles as JSON object
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Textarea
-                    value={JSON.stringify(styles, null, 2)}
-                    onChange={(e) => {
-                      try {
-                        setStyles(JSON.parse(e.target.value))
-                      } catch {}
-                    }}
-                    className="font-mono text-xs"
-                    rows={12}
-                    placeholder='{\n  "backgroundColor": "#fff",\n  "padding": "16px"\n}'
-                  />
-                </CardContent>
-              </Card>
-
               <div className="space-y-2">
                 <Label htmlFor="className">Tailwind Classes</Label>
                 <Input
@@ -212,52 +193,78 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave }: Compone
                   placeholder="p-4 bg-white rounded-lg"
                 />
               </div>
+
+              {nerdMode && (
+                <Card className="mt-6">
+                  <CardHeader>
+                    <CardTitle className="text-sm">Custom Styles (CSS-in-JS)</CardTitle>
+                    <CardDescription className="text-xs">
+                      Define inline styles as JSON object
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Textarea
+                      value={JSON.stringify(styles, null, 2)}
+                      onChange={(e) => {
+                        try {
+                          setStyles(JSON.parse(e.target.value))
+                        } catch {}
+                      }}
+                      className="font-mono text-xs"
+                      rows={12}
+                      placeholder='{\n  "backgroundColor": "#fff",\n  "padding": "16px"\n}'
+                    />
+                  </CardContent>
+                </Card>
+              )}
             </TabsContent>
 
-            <TabsContent value="events" className="space-y-4 px-1">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-sm">Event Handlers</CardTitle>
-                  <CardDescription className="text-xs">
-                    Map events to Lua script IDs
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {['onClick', 'onChange', 'onSubmit', 'onFocus', 'onBlur'].map((eventName) => (
-                    <div key={eventName} className="space-y-2">
-                      <Label htmlFor={eventName}>{eventName}</Label>
-                      <Input
-                        id={eventName}
-                        value={events[eventName] || ''}
-                        onChange={(e) => setEvents({ ...events, [eventName]: e.target.value })}
-                        placeholder="lua_script_id"
-                      />
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+            {nerdMode && (
+              <TabsContent value="events" className="space-y-4 px-1">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Event Handlers</CardTitle>
+                    <CardDescription className="text-xs">
+                      Map events to Lua script IDs
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {['onClick', 'onChange', 'onSubmit', 'onFocus', 'onBlur'].map((eventName) => (
+                      <div key={eventName} className="space-y-2">
+                        <Label htmlFor={eventName}>{eventName}</Label>
+                        <Input
+                          id={eventName}
+                          value={events[eventName] || ''}
+                          onChange={(e) => setEvents({ ...events, [eventName]: e.target.value })}
+                          placeholder="lua_script_id"
+                        />
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-sm">Custom Events (JSON)</CardTitle>
-                  <CardDescription className="text-xs">
-                    Define additional event handlers
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Textarea
-                    value={JSON.stringify(events, null, 2)}
-                    onChange={(e) => {
-                      try {
-                        setEvents(JSON.parse(e.target.value))
-                      } catch {}
-                    }}
-                    className="font-mono text-xs"
-                    rows={6}
-                  />
-                </CardContent>
-              </Card>
-            </TabsContent>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Custom Events (JSON)</CardTitle>
+                    <CardDescription className="text-xs">
+                      Define additional event handlers
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Textarea
+                      value={JSON.stringify(events, null, 2)}
+                      onChange={(e) => {
+                        try {
+                          setEvents(JSON.parse(e.target.value))
+                        } catch {}
+                      }}
+                      className="font-mono text-xs"
+                      rows={6}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            )}
           </ScrollArea>
         </Tabs>
 

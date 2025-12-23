@@ -1,7 +1,8 @@
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { Palette, ListDashes, Code, Sparkle, Package } from '@phosphor-icons/react'
+import { Palette, ListDashes, Code, Sparkle, Package, Terminal } from '@phosphor-icons/react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export function QuickGuide() {
   return (
@@ -10,6 +11,20 @@ export function QuickGuide() {
         <h2 className="text-2xl font-bold mb-2">Quick Guide</h2>
         <p className="text-sm text-muted-foreground">Learn how to use the new visual configuration tools</p>
       </div>
+
+      <Alert className="border-primary/50 bg-primary/5">
+        <Terminal className="h-5 w-5 text-primary" />
+        <AlertDescription className="ml-2">
+          <p className="font-semibold mb-2 text-primary">Nerd Mode Toggle</p>
+          <p className="text-sm text-muted-foreground">
+            Click the <strong>"Nerd"</strong> button in the top navigation to toggle between simple and advanced modes:
+          </p>
+          <ul className="mt-2 space-y-1 text-sm text-muted-foreground ml-4 list-disc list-inside">
+            <li><strong>Simple Mode (Default):</strong> Focus on visual tools - Pages, Components, Users, Schemas, and Settings</li>
+            <li><strong>Nerd Mode:</strong> Access advanced features - Workflows, Lua Scripts, CSS Classes, Database tools, and the full IDE</li>
+          </ul>
+        </AlertDescription>
+      </Alert>
 
       <div className="grid md:grid-cols-3 gap-4">
         <Card className="p-6 space-y-3 border-2 border-purple-500/20 bg-purple-500/5">

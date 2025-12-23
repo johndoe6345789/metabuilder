@@ -214,12 +214,15 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Application Builder</h1>
           <p className="text-muted-foreground">
-            Design your application declaratively. Define schemas, create workflows, and write Lua scripts.
+            {nerdMode 
+              ? "Design your application declaratively. Define schemas, create workflows, and write Lua scripts."
+              : "Build your application visually. Configure pages, users, and data models with simple forms."
+            }
           </p>
         </div>
 
         <Tabs defaultValue="guide" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-13 max-w-full">
+          <TabsList className={nerdMode ? "grid w-full grid-cols-4 lg:grid-cols-13 max-w-full" : "grid w-full grid-cols-3 lg:grid-cols-7 max-w-full"}>
             <TabsTrigger value="guide">
               <Sparkle className="mr-2" size={16} />
               Guide
@@ -244,30 +247,34 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
               <DatabaseIcon className="mr-2" size={16} />
               Schemas
             </TabsTrigger>
-            <TabsTrigger value="workflows">
-              <Lightning className="mr-2" size={16} />
-              Workflows
-            </TabsTrigger>
-            <TabsTrigger value="lua">
-              <Code className="mr-2" size={16} />
-              Lua Scripts
-            </TabsTrigger>
-            <TabsTrigger value="snippets">
-              <BookOpen className="mr-2" size={16} />
-              Snippets
-            </TabsTrigger>
-            <TabsTrigger value="css">
-              <Palette className="mr-2" size={16} />
-              CSS Classes
-            </TabsTrigger>
-            <TabsTrigger value="dropdowns">
-              <ListDashes className="mr-2" size={16} />
-              Dropdowns
-            </TabsTrigger>
-            <TabsTrigger value="database">
-              <HardDrives className="mr-2" size={16} />
-              Database
-            </TabsTrigger>
+            {nerdMode && (
+              <>
+                <TabsTrigger value="workflows">
+                  <Lightning className="mr-2" size={16} />
+                  Workflows
+                </TabsTrigger>
+                <TabsTrigger value="lua">
+                  <Code className="mr-2" size={16} />
+                  Lua Scripts
+                </TabsTrigger>
+                <TabsTrigger value="snippets">
+                  <BookOpen className="mr-2" size={16} />
+                  Snippets
+                </TabsTrigger>
+                <TabsTrigger value="css">
+                  <Palette className="mr-2" size={16} />
+                  CSS Classes
+                </TabsTrigger>
+                <TabsTrigger value="dropdowns">
+                  <ListDashes className="mr-2" size={16} />
+                  Dropdowns
+                </TabsTrigger>
+                <TabsTrigger value="database">
+                  <HardDrives className="mr-2" size={16} />
+                  Database
+                </TabsTrigger>
+              </>
+            )}
             <TabsTrigger value="settings">
               <Gear className="mr-2" size={16} />
               Settings
@@ -287,7 +294,7 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
           </TabsContent>
 
           <TabsContent value="hierarchy" className="space-y-6">
-            <ComponentHierarchyEditor />
+            <ComponentHierarchyEditor nerdMode={nerdMode} />
           </TabsContent>
 
           <TabsContent value="users" className="space-y-6">
@@ -305,44 +312,48 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
             />
           </TabsContent>
 
-          <TabsContent value="workflows" className="space-y-6">
-            <WorkflowEditor
-              workflows={appConfig.workflows}
-              onWorkflowsChange={async (workflows) => {
-                const newConfig = { ...appConfig, workflows }
-                setAppConfig(newConfig)
-                await Database.setAppConfig(newConfig)
-              }}
-              scripts={appConfig.luaScripts}
-            />
-          </TabsContent>
+          {nerdMode && (
+            <>
+              <TabsContent value="workflows" className="space-y-6">
+                <WorkflowEditor
+                  workflows={appConfig.workflows}
+                  onWorkflowsChange={async (workflows) => {
+                    const newConfig = { ...appConfig, workflows }
+                    setAppConfig(newConfig)
+                    await Database.setAppConfig(newConfig)
+                  }}
+                  scripts={appConfig.luaScripts}
+                />
+              </TabsContent>
 
-          <TabsContent value="lua" className="space-y-6">
-            <LuaEditor
-              scripts={appConfig.luaScripts}
-              onScriptsChange={async (scripts) => {
-                const newConfig = { ...appConfig, luaScripts: scripts }
-                setAppConfig(newConfig)
-                await Database.setAppConfig(newConfig)
-              }}
-            />
-          </TabsContent>
+              <TabsContent value="lua" className="space-y-6">
+                <LuaEditor
+                  scripts={appConfig.luaScripts}
+                  onScriptsChange={async (scripts) => {
+                    const newConfig = { ...appConfig, luaScripts: scripts }
+                    setAppConfig(newConfig)
+                    await Database.setAppConfig(newConfig)
+                  }}
+                />
+              </TabsContent>
 
-          <TabsContent value="snippets" className="space-y-6">
-            <LuaSnippetLibrary />
-          </TabsContent>
+              <TabsContent value="snippets" className="space-y-6">
+                <LuaSnippetLibrary />
+              </TabsContent>
 
-          <TabsContent value="css" className="space-y-6">
-            <CssClassManager />
-          </TabsContent>
+              <TabsContent value="css" className="space-y-6">
+                <CssClassManager />
+              </TabsContent>
 
-          <TabsContent value="dropdowns" className="space-y-6">
-            <DropdownConfigManager />
-          </TabsContent>
+              <TabsContent value="dropdowns" className="space-y-6">
+                <DropdownConfigManager />
+              </TabsContent>
 
-          <TabsContent value="database" className="space-y-6">
-            <DatabaseManager />
-          </TabsContent>
+              <TabsContent value="database" className="space-y-6">
+                <DatabaseManager />
+              </TabsContent>
+            </>
+          )}
 
           <TabsContent value="settings" className="space-y-6">
             <GodCredentialsSettings />
@@ -362,20 +373,24 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
                 {appConfig.schemas.reduce((acc, s) => acc + s.fields.length, 0)}
               </span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Workflows:</span>
-              <span className="font-medium">{appConfig.workflows.length}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Workflow Nodes:</span>
-              <span className="font-medium">
-                {appConfig.workflows.reduce((acc, w) => acc + w.nodes.length, 0)}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Lua Scripts:</span>
-              <span className="font-medium">{appConfig.luaScripts.length}</span>
-            </div>
+            {nerdMode && (
+              <>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Workflows:</span>
+                  <span className="font-medium">{appConfig.workflows.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Workflow Nodes:</span>
+                  <span className="font-medium">
+                    {appConfig.workflows.reduce((acc, w) => acc + w.nodes.length, 0)}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Lua Scripts:</span>
+                  <span className="font-medium">{appConfig.luaScripts.length}</span>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
