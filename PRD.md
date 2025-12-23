@@ -1,119 +1,139 @@
 # Planning Guide
 
-A declarative admin panel generator that allows developers to define data models and UI configuration through JSON schemas, automatically generating a complete CRUD interface similar to Django's admin panel.
+A visual drag-and-drop GUI builder that allows developers to create custom admin panels and applications by arranging components visually, with an integrated Monaco code editor for advanced customization and scripting. The system includes authentication to protect the builder interface.
 
 **Experience Qualities**: 
-1. **Declarative** - Configuration-driven development where JSON schemas define the entire admin interface without manual component creation
-2. **Intuitive** - Familiar Django-admin-style patterns that feel immediately recognizable to developers who've worked with backend admin panels
-3. **Powerful** - Full-featured CRUD operations with filtering, sorting, validation, and relationships handled automatically from schema definitions
+1. **Visual** - Intuitive drag-and-drop interface where components can be placed, configured, and connected without writing code
+2. **Flexible** - Seamlessly switch between visual building and code editing with Monaco editor for advanced customization
+3. **Secure** - Login system protecting the admin builder with default credentials, ensuring only authorized users can modify the interface
 
 **Complexity Level**: Complex Application (advanced functionality, likely with multiple views)
-This is a code generation and admin panel system that dynamically creates fully functional interfaces from JSON schemas, including list views, detail views, forms, validation, and data persistence - requiring sophisticated state management and dynamic rendering.
+This is a visual application builder with drag-and-drop UI composition, component property editors, Monaco code editor integration, authentication system, and dynamic rendering - requiring sophisticated state management, component catalog, and code execution environment.
 
 ## Essential Features
 
-### Schema Definition System
-- **Functionality**: Parse JSON schema files that define data models with fields, types, validation rules, and UI hints
-- **Purpose**: Enable developers to define entire admin panels declaratively without writing component code
-- **Trigger**: JSON schema files loaded at application startup or hot-reloaded during development
-- **Progression**: Load JSON schema → Parse model definitions → Validate schema structure → Generate TypeScript types → Initialize data stores → Render admin interface
-- **Success criteria**: Valid JSON schemas produce working admin panels; invalid schemas show clear error messages with schema validation feedback
+### Authentication System
+- **Functionality**: Login page with username/password authentication protecting the GUI builder
+- **Purpose**: Ensure only authorized users can access and modify the admin panel builder
+- **Trigger**: Application loads without valid session
+- **Progression**: Show login page → User enters credentials → Validate against stored credentials → Store session in KV → Redirect to builder
+- **Success criteria**: Invalid credentials show error; successful login persists session; logout clears session; default credentials (admin/admin) work initially
 
-### Dynamic Model List View
-- **Functionality**: Auto-generated table/list view showing all records for a model with sortable columns, filters, search, and pagination
-- **Purpose**: Provide quick overview and management of all records in a data model
-- **Trigger**: User selects a model from the navigation sidebar
-- **Progression**: Select model → Load records from KV store → Render table with columns from schema → Apply filters/search/sort → Click row for detail view
-- **Success criteria**: All defined fields display correctly; sorting, filtering, and search work; pagination handles large datasets; empty states guide users to create first record
+### Component Catalog
+- **Functionality**: Sidebar showing all available shadcn components (Button, Input, Card, Table, etc.) that can be dragged onto canvas
+- **Purpose**: Provide visual discovery and easy access to all UI building blocks
+- **Trigger**: Builder loads with authenticated session
+- **Progression**: Display component list → User searches/filters → Drag component → Drop on canvas → Component appears with default props
+- **Success criteria**: All shadcn components cataloged; search/filter works; drag preview shows; drop zones highlight; components render correctly
 
-### Dynamic Form Generation
-- **Functionality**: Automatically generate create/edit forms based on field types and validation rules in the schema
-- **Purpose**: Eliminate boilerplate form code while ensuring data integrity through schema-defined validation
-- **Trigger**: User clicks "Create New" button or "Edit" on existing record
-- **Progression**: Open form dialog → Render fields based on schema → User inputs data → Validate on blur/submit → Save to KV store → Update list view → Show success toast
-- **Success criteria**: All field types render appropriate inputs; validation rules enforced; error messages clear; optimistic updates feel instant
+### Drag-and-Drop Canvas
+- **Functionality**: Visual workspace where components can be dragged, dropped, positioned, and nested
+- **Purpose**: Enable intuitive visual composition of UI without code
+- **Trigger**: User drags component from catalog or rearranges existing components
+- **Progression**: Drag component → Hover over drop zones → Visual feedback shows valid targets → Drop → Component inserted → Selection updates
+- **Success criteria**: Smooth drag experience; clear drop zone indicators; nested layouts work; undo/redo functions; component selection/multi-select
 
-### Relationship Management
-- **Functionality**: Handle foreign keys and many-to-many relationships with select dropdowns and relationship tables
-- **Purpose**: Support relational data models common in admin panels
-- **Trigger**: Form fields defined with relationship types in schema
-- **Progression**: Render relationship field → Load related model records → Display searchable select → Save relationship IDs → Update related records view
-- **Success criteria**: Related records load and display; cascade operations work correctly; relationship changes persist
+### Property Inspector
+- **Functionality**: Right sidebar showing editable properties for selected component (text, colors, sizes, variants, etc.)
+- **Purpose**: Configure component appearance and behavior without touching code
+- **Trigger**: Component selected on canvas
+- **Progression**: Select component → Inspector loads props → User edits values → Component updates live → Changes persist
+- **Success criteria**: All component props exposed; appropriate input types; live preview; validation feedback; reset to defaults
 
-### Field Type System
-- **Functionality**: Support common field types (text, number, boolean, date, email, URL, select, textarea, rich text, file reference, relationship)
-- **Purpose**: Cover the majority of admin panel use cases with appropriate input controls
-- **Trigger**: Field type specified in schema
-- **Progression**: Parse field type → Select appropriate input component → Apply type-specific validation → Render with schema-defined options
-- **Success criteria**: Each field type has appropriate UI control; validation matches type; special types (date, color) use enhanced inputs
+### Monaco Code Editor
+- **Functionality**: Integrated Monaco editor (VS Code engine) for writing custom JavaScript/TypeScript logic
+- **Purpose**: Enable advanced customization beyond visual building - event handlers, data transformations, custom logic
+- **Trigger**: User clicks "Code" tab or "Edit Handler" in property inspector
+- **Progression**: Open code editor → View/edit component code → Syntax highlighting → Autocomplete → Save → Code executes in sandbox
+- **Success criteria**: Syntax highlighting works; autocomplete for available APIs; error detection; safe sandboxed execution; code persists
+
+### Safe Script Execution
+- **Functionality**: Sandboxed JavaScript execution environment for custom code with access to limited APIs (Spark KV, component methods, utility functions)
+- **Purpose**: Allow custom logic while preventing malicious code execution
+- **Trigger**: Custom code attached to component event handlers or lifecycle
+- **Progression**: User writes code → Parser validates → Execute in isolated context → Limited API access → Results render → Errors caught and displayed
+- **Success criteria**: Cannot access globals; cannot make arbitrary network requests; errors don't crash app; performance limits enforced
+
+### Layout System
+- **Functionality**: Pre-built layout components (Grid, Flex, Stack, Container) for organizing components spatially
+- **Purpose**: Enable responsive, structured layouts without CSS knowledge
+- **Trigger**: User drags layout component onto canvas
+- **Progression**: Drop layout → Configure columns/gaps → Drag children into layout → Auto-responsive → Preview mobile view
+- **Success criteria**: Flexbox/Grid layouts work; responsive breakpoints; gap/padding controls; nested layouts; alignment tools
 
 ## Edge Case Handling
-- **Invalid Schema Structure**: Display detailed validation errors in a dev-friendly overlay with line numbers and suggestions
-- **Missing Required Fields**: Prevent form submission and highlight missing fields with clear error messages
-- **Circular Relationships**: Detect and warn about circular dependencies in schema definitions
-- **Large Datasets**: Implement virtual scrolling and pagination for tables with 1000+ records
-- **Concurrent Edits**: Show warnings when data has been modified since form opened
-- **Migration Scenarios**: Handle schema changes gracefully with field mapping suggestions
+- **Invalid Credentials**: Show clear error message with retry; rate limit login attempts after 5 failures
+- **Malicious Code in Editor**: Sandbox prevents DOM access, network requests, and infinite loops; timeout after 5 seconds
+- **Circular Component Nesting**: Detect and prevent infinite nesting; show warning when depth exceeds 10 levels
+- **Large Component Trees**: Virtualize component tree view; lazy load property panels; debounce updates
+- **Unsupported Component Props**: Gracefully ignore invalid props; show warnings in dev panel; provide prop documentation
+- **Lost Session**: Auto-save builder state every 10 seconds; restore on session loss; show "reconnecting" state
+- **Monaco Loading Failure**: Fallback to basic textarea editor; show notification about reduced functionality
 
 ## Design Direction
-The design should evoke efficiency, clarity, and developer familiarity - similar to the no-nonsense utility of Django admin but with modern polish and visual refinement. Think "power tool" rather than "pretty toy" - dense information displays, keyboard shortcuts, and rapid workflows prioritized over decorative elements.
+The design should evoke creativity and power - a professional design tool that feels both approachable and capable. Think Figma meets VS Code: clean, modern, with clear visual hierarchy and purposeful spacing. The canvas should feel like a creative workspace, not a cluttered IDE.
 
 ## Color Selection
-A technical, code-editor-inspired palette with high contrast for data clarity and professional development tool aesthetic.
+A sophisticated, creative tool palette that balances professionalism with visual energy - inspired by modern design tools.
 
-- **Primary Color**: Deep indigo `oklch(0.45 0.15 265)` - Communicates technical sophistication and authority, used for primary actions and active states
-- **Secondary Colors**: Cool gray `oklch(0.65 0.02 250)` for secondary UI elements and subtle backgrounds; Slate `oklch(0.25 0.03 250)` for sidebar and chrome
-- **Accent Color**: Bright cyan `oklch(0.75 0.15 195)` - High-visibility color for CTAs, links, and "create new" actions that demand attention
+- **Primary Color**: Deep purple `oklch(0.55 0.18 290)` - Communicates creativity and innovation, used for primary actions and builder chrome
+- **Secondary Colors**: Cool slate `oklch(0.35 0.02 260)` for sidebars and panels; Light lavender `oklch(0.92 0.03 290)` for canvas background
+- **Accent Color**: Electric cyan `oklch(0.70 0.17 195)` - High-energy color for selected states, active drop zones, and CTAs
 - **Foreground/Background Pairings**: 
-  - Primary (Deep Indigo): White text `oklch(0.98 0 0)` - Ratio 7.8:1 ✓
-  - Background (Near White `oklch(0.98 0 0)`): Charcoal text `oklch(0.25 0 0)` - Ratio 14.2:1 ✓
-  - Accent (Bright Cyan): Dark slate text `oklch(0.2 0.05 250)` - Ratio 8.1:1 ✓
-  - Sidebar (Slate): Light gray text `oklch(0.85 0.01 250)` - Ratio 9.4:1 ✓
+  - Primary (Deep Purple `oklch(0.55 0.18 290)`): White text `oklch(0.98 0 0)` - Ratio 6.2:1 ✓
+  - Canvas (Light Lavender `oklch(0.92 0.03 290)`): Dark text `oklch(0.25 0.02 260)` - Ratio 12.1:1 ✓
+  - Accent (Electric Cyan `oklch(0.70 0.17 195)`): Dark slate `oklch(0.2 0.02 260)` - Ratio 9.3:1 ✓
+  - Sidebar (Cool Slate `oklch(0.35 0.02 260)`): Light text `oklch(0.90 0.01 260)` - Ratio 10.8:1 ✓
 
 ## Font Selection
-Technical clarity with a code-adjacent aesthetic that reinforces the developer tool positioning while maintaining readability for dense data tables.
+Modern, clean typography that balances technical precision with creative energy - readable at all scales for a design tool interface.
 
 - **Typographic Hierarchy**: 
-  - H1 (Panel Title): Space Grotesk Bold/32px/tight letter spacing
-  - H2 (Section Headers): Space Grotesk Semibold/24px/normal spacing
-  - H3 (Field Labels): Space Grotesk Medium/14px/uppercase/wide letter spacing
-  - Body (Table Data): IBM Plex Sans Regular/15px/1.5 line height
-  - Code (IDs, Technical Values): JetBrains Mono Regular/14px/1.4 line height
-  - Small (Hints, Metadata): IBM Plex Sans Regular/13px/muted color
+  - H1 (Builder Title): Space Grotesk Bold/28px/tight letter spacing
+  - H2 (Panel Headers): Space Grotesk Semibold/20px/normal spacing
+  - H3 (Component Names): Space Grotesk Medium/14px/normal spacing
+  - Body (UI Labels): IBM Plex Sans Regular/14px/1.5 line height
+  - Code (Monaco Editor): JetBrains Mono Regular/14px/1.4 line height
+  - Small (Property Labels): IBM Plex Sans Medium/12px/uppercase/wide tracking
 
 ## Animations
-Animations should prioritize immediate feedback for data operations and subtle spatial awareness during navigation - instant response to clicks/inputs with 150ms micro-animations for state changes, 250ms smooth transitions between list/detail views, and purposeful loading states that communicate progress.
+Animations should feel responsive and purposeful - immediate visual feedback for drag operations (drag ghost follows cursor at 0ms), smooth 200ms transitions for panel sliding, 150ms micro-interactions on selection changes, and elastic spring physics (tension: 300, friction: 20) for drop animations that make components feel tangible.
 
 ## Component Selection
 - **Components**: 
-  - Table with Select, Checkbox, and Badge for list views
-  - Dialog for create/edit forms with Form, Input, Textarea, Select, Switch, Calendar components
-  - Sidebar for model navigation with collapsible groups
-  - Command palette (cmdk) for quick model/record search
-  - Breadcrumb for navigation context
-  - Tabs for organizing related model groups
-  - Sheet for sliding detail panels
-  - Sonner for success/error toasts
-  - Skeleton for loading states
+  - Sidebar with collapsible sections for component catalog
+  - Resizable panels for canvas/inspector layout
+  - Card for component previews in catalog
+  - Dialog for login form and settings
+  - Tabs for switching between visual/code views
+  - ScrollArea for component lists and property panels
+  - Input, Select, Switch, Slider for property editors
+  - Button throughout for actions
+  - Badge for component type indicators
+  - Separator for visual hierarchy
+  - Tooltip for help text on hover
+  - Sonner for notifications
 - **Customizations**: 
-  - Custom JSON schema editor with syntax highlighting
-  - Dynamic field renderer component that maps schema types to inputs
-  - Virtualized table component for large datasets
-  - Relationship selector with async search
+  - Custom drag-and-drop canvas with drop zone highlighting
+  - Monaco Editor wrapper component with TypeScript support
+  - Component tree view with expand/collapse
+  - Property editor that dynamically renders based on component type
+  - Canvas ruler and grid overlay
+  - Component outline overlay on hover
 - **States**: 
-  - Tables: hover highlights entire row with subtle background shift, selected rows show accent border
-  - Buttons: primary actions use filled accent color with slight scale on press, secondary use outline
-  - Inputs: focused state shows accent border with subtle glow, error state shows destructive color
-  - Forms: dirty state indicators on modified fields
+  - Canvas: neutral state shows dotted grid, hover shows drop zones, dragging shows blue outlines
+  - Components: default has subtle border, hover shows blue glow, selected shows thick accent border with resize handles
+  - Drop zones: hidden by default, appear on drag with dashed accent border and background tint
+  - Property inputs: follow standard focus states with accent color
 - **Icon Selection**: 
-  - Phosphor icons throughout: List/Table for views, Plus for create, Pencil for edit, Trash for delete, MagnifyingGlass for search, Funnel for filters, ArrowsDownUp for sort, Database for models, FloppyDisk for save
+  - Phosphor icons: Layout for layouts, PaintBrush for styling, Code for code editor, Lock/LockOpen for auth, FloppyDisk for save, Eye for preview, ArrowsOutSimple for fullscreen, Plus for add, Trash for delete, Copy for duplicate, CaretRight/Down for tree expand
 - **Spacing**: 
-  - Dense mode: p-2 for cells, p-4 for cards, gap-2 for tight groups
-  - Standard: p-4 for containers, p-6 for dialogs, gap-4 for form fields, gap-6 for sections
-  - Generous whitespace in sidebar (p-6) and around primary actions
+  - Sidebars: p-4 for sections, gap-2 for component grid
+  - Canvas: p-8 for outer padding, min-h-screen for scrollability
+  - Property panel: p-4 for sections, gap-4 for form fields
+  - Component padding: p-2 minimum for selection targets
 - **Mobile**: 
-  - Sidebar collapses to hamburger menu, stacks on small screens with slide-out drawer
-  - Tables switch to card-based layout with key fields only, expandable for full details
-  - Forms switch to full-screen sheets on mobile
-  - Touch-friendly 44px minimum tap targets on all interactive elements
-  - Bottom navigation bar for primary actions on mobile
+  - Not a primary concern for a builder tool, but provide tablet landscape support minimum
+  - Stack panels vertically on small screens
+  - Hide component catalog by default, show via hamburger menu
+  - Full-screen canvas mode for focused editing
