@@ -1,74 +1,77 @@
 # Planning Guide
 
-A visual drag-and-drop GUI builder that allows developers to create custom admin panels and applications by arranging components visually, with an integrated Monaco code editor for advanced customization and scripting. The system includes authentication to protect the builder interface.
+A meta-architecture system with 4 distinct levels: Level 1 (public-facing website with sample content), Level 2 (user area with profiles and comments), Level 3 (Django-style admin panel for data management), and Level 4 (god-tier builder where all previous levels can be designed, developed, and tested through visual workflows, GUI editors for JSON schemas, and Lua scripting).
 
 **Experience Qualities**: 
-1. **Visual** - Intuitive drag-and-drop interface where components can be placed, configured, and connected without writing code
-2. **Flexible** - Seamlessly switch between visual building and code editing with Monaco editor for advanced customization
-3. **Secure** - Login system protecting the admin builder with default credentials, ensuring only authorized users can modify the interface
+1. **Layered** - Clear separation between public, user, admin, and meta-builder levels with intuitive navigation between tiers
+2. **Generative** - Level 4 can procedurally generate entire applications for Levels 1-3 through declarative JSON schemas and visual workflows
+3. **Powerful** - Lua lambdas for custom logic, visual JSON schema editor, workflow system for complex processes, all through an intuitive GUI
 
 **Complexity Level**: Complex Application (advanced functionality, likely with multiple views)
-This is a visual application builder with drag-and-drop UI composition, component property editors, Monaco code editor integration, authentication system, and dynamic rendering - requiring sophisticated state management, component catalog, and code execution environment.
+This is a 4-tier meta-application builder: a public website layer, authenticated user area, admin panel, and a god-tier visual builder that can procedurally generate all three previous layers using JSON schemas, workflow systems, and embedded Lua scripting.
 
 ## Essential Features
 
-### Authentication System
-- **Functionality**: Login page with username/password authentication protecting the GUI builder
-- **Purpose**: Ensure only authorized users can access and modify the admin panel builder
-- **Trigger**: Application loads without valid session
-- **Progression**: Show login page → User enters credentials → Validate against stored credentials → Store session in KV → Redirect to builder
-- **Success criteria**: Invalid credentials show error; successful login persists session; logout clears session; default credentials (admin/admin) work initially
+### Level 1: Public Website
+- **Functionality**: Normal webpage with responsive hamburger menu, hero section, content areas, footer
+- **Purpose**: Public-facing content accessible to anyone without authentication
+- **Trigger**: User visits root URL without authentication
+- **Progression**: Load homepage → Browse content sections → Click hamburger menu → Navigate pages → View sample content
+- **Success criteria**: Responsive design works; hamburger menu collapses on mobile; content is readable; links work; no auth required
 
-### Component Catalog
-- **Functionality**: Sidebar showing all available shadcn components (Button, Input, Card, Table, etc.) that can be dragged onto canvas
-- **Purpose**: Provide visual discovery and easy access to all UI building blocks
-- **Trigger**: Builder loads with authenticated session
-- **Progression**: Display component list → User searches/filters → Drag component → Drop on canvas → Component appears with default props
-- **Success criteria**: All shadcn components cataloged; search/filter works; drag preview shows; drop zones highlight; components render correctly
+### Level 2: User Area
+- **Functionality**: Authenticated user dashboard with profile page and comment system
+- **Purpose**: Allow normal users to sign up, manage their profile, and interact through comments
+- **Trigger**: User clicks "Sign Up" or "Login" from Level 1
+- **Progression**: Register account → Verify credentials → Access dashboard → Edit profile → Browse comment sections → Post/edit comments → View own history
+- **Success criteria**: Registration persists in KV; profile edits save; comments are CRUD-able; users can't access admin functions; profile picture upload works
 
-### Drag-and-Drop Canvas
-- **Functionality**: Visual workspace where components can be dragged, dropped, positioned, and nested
-- **Purpose**: Enable intuitive visual composition of UI without code
-- **Trigger**: User drags component from catalog or rearranges existing components
-- **Progression**: Drag component → Hover over drop zones → Visual feedback shows valid targets → Drop → Component inserted → Selection updates
-- **Success criteria**: Smooth drag experience; clear drop zone indicators; nested layouts work; undo/redo functions; component selection/multi-select
+### Level 3: Django-Style Admin Panel
+- **Functionality**: Full data management interface with model list views, CRUD operations, filtering, search, and bulk actions
+- **Purpose**: Provide admin users comprehensive control over all data models and system configuration
+- **Trigger**: User with admin role logs in or selects "Admin" from navigation
+- **Progression**: Login as admin → View model dashboard → Select model → See filtered list view → Search/filter records → Click record → Edit form → Save changes → View audit trail
+- **Success criteria**: All models from schema rendered; inline editing; validation works; relations display correctly; permissions enforced; export to JSON/CSV
 
-### Property Inspector
-- **Functionality**: Right sidebar showing editable properties for selected component (text, colors, sizes, variants, etc.)
-- **Purpose**: Configure component appearance and behavior without touching code
-- **Trigger**: Component selected on canvas
-- **Progression**: Select component → Inspector loads props → User edits values → Component updates live → Changes persist
-- **Success criteria**: All component props exposed; appropriate input types; live preview; validation feedback; reset to defaults
+### Level 4: God-Tier Builder
+- **Functionality**: Meta-builder with visual JSON schema editor, workflow designer, Lua lambda editor, component catalog, and live preview of Levels 1-3
+- **Purpose**: Allow god-level users to design, configure, and deploy entire applications for Levels 1-3 through declarative configuration
+- **Trigger**: User with god role accesses builder interface
+- **Progression**: Open builder → Design data schema in GUI → Create workflows visually → Write Lua handlers → Configure page templates → Preview generated app → Deploy configuration → Test all levels
+- **Success criteria**: JSON schema editor validates; workflow nodes connect; Lua syntax highlighting; live preview updates; can export/import configurations; changes propagate to all levels
 
-### Monaco Code Editor
-- **Functionality**: Integrated Monaco editor (VS Code engine) for writing custom JavaScript/TypeScript logic
-- **Purpose**: Enable advanced customization beyond visual building - event handlers, data transformations, custom logic
-- **Trigger**: User clicks "Code" tab or "Edit Handler" in property inspector
-- **Progression**: Open code editor → View/edit component code → Syntax highlighting → Autocomplete → Save → Code executes in sandbox
-- **Success criteria**: Syntax highlighting works; autocomplete for available APIs; error detection; safe sandboxed execution; code persists
+### JSON Schema Editor (Level 4)
+- **Functionality**: Visual GUI for defining data models with fields, types, validation rules, relationships
+- **Purpose**: Declaratively define all data structures without writing JSON by hand
+- **Trigger**: User opens "Schema Designer" in Level 4
+- **Progression**: Create new model → Add fields via forms → Set field types/constraints → Define relations → Visualize schema graph → Validate → Generate Level 3 admin interface
+- **Success criteria**: All field types supported; visual relationship mapping; constraint validation; auto-generates CRUD interfaces; imports/exports valid JSON
 
-### Safe Script Execution
-- **Functionality**: Sandboxed JavaScript execution environment for custom code with access to limited APIs (Spark KV, component methods, utility functions)
-- **Purpose**: Allow custom logic while preventing malicious code execution
-- **Trigger**: Custom code attached to component event handlers or lifecycle
-- **Progression**: User writes code → Parser validates → Execute in isolated context → Limited API access → Results render → Errors caught and displayed
-- **Success criteria**: Cannot access globals; cannot make arbitrary network requests; errors don't crash app; performance limits enforced
+### Workflow System (Level 4)
+- **Functionality**: Visual node-based workflow editor for defining business logic flows
+- **Purpose**: Create complex processes (approval flows, notifications, data transformations) without code
+- **Trigger**: User opens "Workflow Designer" in Level 4
+- **Progression**: Create workflow → Drag trigger node → Add action nodes → Connect with arrows → Configure conditions → Attach to data events → Test execution → Monitor runs
+- **Success criteria**: Nodes connect smoothly; execution order clear; can branch/merge; error handling; logs show execution path; integrates with Lua
 
-### Layout System
-- **Functionality**: Pre-built layout components (Grid, Flex, Stack, Container) for organizing components spatially
-- **Purpose**: Enable responsive, structured layouts without CSS knowledge
-- **Trigger**: User drags layout component onto canvas
-- **Progression**: Drop layout → Configure columns/gaps → Drag children into layout → Auto-responsive → Preview mobile view
-- **Success criteria**: Flexbox/Grid layouts work; responsive breakpoints; gap/padding controls; nested layouts; alignment tools
+### Lua Lambda System (Level 4)
+- **Functionality**: Embedded Lua scripting environment for custom business logic with access to data context and utility functions
+- **Purpose**: Provide safe, sandboxed scripting for custom transformations and validations beyond declarative capabilities
+- **Trigger**: User adds "Lua Action" node in workflow or attaches script to model hook
+- **Progression**: Open Lua editor → Write function → Access data context → Call utility APIs → Test with sample data → Save → Execute on events
+- **Success criteria**: Syntax highlighting; autocomplete for context API; sandboxed execution; timeout protection; error messages clear; can transform JSON data
 
 ## Edge Case Handling
-- **Invalid Credentials**: Show clear error message with retry; rate limit login attempts after 5 failures
-- **Malicious Code in Editor**: Sandbox prevents DOM access, network requests, and infinite loops; timeout after 5 seconds
-- **Circular Component Nesting**: Detect and prevent infinite nesting; show warning when depth exceeds 10 levels
-- **Large Component Trees**: Virtualize component tree view; lazy load property panels; debounce updates
-- **Unsupported Component Props**: Gracefully ignore invalid props; show warnings in dev panel; provide prop documentation
-- **Lost Session**: Auto-save builder state every 10 seconds; restore on session loss; show "reconnecting" state
-- **Monaco Loading Failure**: Fallback to basic textarea editor; show notification about reduced functionality
+- **Invalid User Credentials**: Show clear error message; rate limit after 5 attempts; support password reset flow
+- **Unauthorized Access Attempts**: Redirect to appropriate level; log security events; show "access denied" message
+- **Circular Schema Relations**: Detect and prevent infinite loops in model relationships; warn user
+- **Invalid Lua Scripts**: Catch syntax errors; timeout after 3 seconds; sandbox prevents dangerous operations
+- **Malformed JSON Schemas**: Validate before save; highlight errors with line numbers; provide fix suggestions
+- **Workflow Infinite Loops**: Detect cycles; limit execution steps to 1000; show execution trace
+- **Large Comment Threads**: Paginate comments; lazy load older entries; virtualize long lists
+- **Schema Migration Conflicts**: Detect breaking changes; show migration preview; allow rollback
+- **Lost Sessions Across Levels**: Auto-save state; restore context; show reconnection indicator
+- **Monaco/Lua Library Load Failure**: Fallback to basic textarea; show degraded mode warning
 
 ## Design Direction
 The design should evoke creativity and power - a professional design tool that feels both approachable and capable. Think Figma meets VS Code: clean, modern, with clear visual hierarchy and purposeful spacing. The canvas should feel like a creative workspace, not a cluttered IDE.
