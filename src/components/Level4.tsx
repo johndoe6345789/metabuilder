@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { SignOut, Database as DatabaseIcon, Lightning, Code, Eye, House, Download, Upload, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear, Palette, ListDashes, Sparkle } from '@phosphor-icons/react'
+import { SignOut, Database as DatabaseIcon, Lightning, Code, Eye, House, Download, Upload, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear, Palette, ListDashes, Sparkle, Package } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { SchemaEditorLevel4 } from './SchemaEditorLevel4'
 import { WorkflowEditor } from './WorkflowEditor'
@@ -22,6 +22,7 @@ import { GodCredentialsSettings } from './GodCredentialsSettings'
 import { CssClassManager } from './CssClassManager'
 import { DropdownConfigManager } from './DropdownConfigManager'
 import { QuickGuide } from './QuickGuide'
+import { PackageManager } from './PackageManager'
 import { Database } from '@/lib/database'
 import { seedDatabase } from '@/lib/seed-data'
 import type { User as UserType, AppConfiguration } from '@/lib/level-types'
@@ -204,10 +205,14 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
         </div>
 
         <Tabs defaultValue="guide" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-12 max-w-full">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-13 max-w-full">
             <TabsTrigger value="guide">
               <Sparkle className="mr-2" size={16} />
               Guide
+            </TabsTrigger>
+            <TabsTrigger value="packages">
+              <Package className="mr-2" size={16} />
+              Packages
             </TabsTrigger>
             <TabsTrigger value="pages">
               <MapTrifold className="mr-2" size={16} />
@@ -257,6 +262,10 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
 
           <TabsContent value="guide" className="space-y-6">
             <QuickGuide />
+          </TabsContent>
+
+          <TabsContent value="packages" className="space-y-6">
+            <PackageManager />
           </TabsContent>
 
           <TabsContent value="pages" className="space-y-6">

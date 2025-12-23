@@ -1,7 +1,7 @@
-# PRD: MetaBuilder Visual Configuration System
+# PRD: MetaBuilder Visual Configuration & Package System
 
 ## Mission Statement
-Transform the MetaBuilder god-tier panel from a technical, code-heavy interface into an intuitive visual configuration system that empowers both technical and non-technical users to build sophisticated applications through GUI-based tools.
+Transform the MetaBuilder god-tier panel into an intuitive visual configuration system with a Docker-style package manager that allows users to instantly deploy complete pre-built applications while retaining full customization capabilities.
 
 ## Experience Qualities
 1. **Intuitive** - Users should discover features naturally without extensive documentation, with visual cues guiding them through complex configurations.
@@ -9,11 +9,25 @@ Transform the MetaBuilder god-tier panel from a technical, code-heavy interface 
 3. **Efficient** - Common tasks that previously required typing or memorization are now accomplished through point-and-click interactions, dramatically reducing configuration time.
 
 ## Complexity Level
-**Complex Application** (advanced functionality with multiple views) - This is a meta-framework for building applications with four distinct user levels, database management, visual component builders, and dynamic configuration systems.
+**Complex Application** (advanced functionality with multiple views) - This is a meta-framework for building applications with four distinct user levels, database management, visual component builders, dynamic configuration systems, and a package management system for deploying pre-built applications.
 
 ## Essential Features
 
-### 1. CSS Class Builder
+### 1. Docker-Style Package System
+**Functionality:** Browse, install, and manage pre-built applications (forum, guestbook, video platform, music streaming, games, e-commerce) that integrate with existing infrastructure
+**Purpose:** Allow users to rapidly deploy complete applications without building from scratch, leveraging existing database and workflow systems
+**Trigger:** User navigates to "Packages" tab in god-tier panel
+**Progression:** Browse packages → Filter by category → View details (schemas, pages, workflows included) → Install package → Schemas/pages/workflows automatically added → Enable/disable as needed → Uninstall to remove
+**Success Criteria:** 
+- 6+ pre-built packages available (Forum, Guestbook, Video Platform, Music Platform, Games Arcade, E-Commerce)
+- One-click installation adds all schemas, pages, workflows, and Lua scripts
+- Packages can be enabled/disabled without uninstalling
+- Package data stored separately from core application data
+- Clear visualization of what each package includes
+- Search and filter by category, rating, downloads
+- Seed data automatically loaded with packages
+
+### 2. CSS Class Builder
 **Functionality:** Visual selector for Tailwind CSS classes organized into logical categories
 **Purpose:** Eliminate the need to memorize or type CSS class names, reducing errors and speeding up styling
 **Trigger:** User clicks palette icon next to any className field in PropertyInspector
@@ -24,7 +38,7 @@ Transform the MetaBuilder god-tier panel from a technical, code-heavy interface 
 - 200+ predefined classes organized into 10 categories
 - Custom class input available for edge cases
 
-### 2. Dynamic Dropdown Configuration
+### 3. Dynamic Dropdown Configuration
 **Functionality:** Centralized management of dropdown option sets usable across multiple components
 **Purpose:** Prevent duplication and ensure consistency when the same options appear in multiple places
 **Trigger:** User navigates to "Dropdowns" tab in god-tier panel or components reference dropdown by name
@@ -35,7 +49,7 @@ Transform the MetaBuilder god-tier panel from a technical, code-heavy interface 
 - Visual GUI for managing options (no JSON required)
 - Pre-loaded with common examples (status, priority, category)
 
-### 3. CSS Class Library Manager
+### 4. CSS Class Library Manager
 **Functionality:** Manage the catalog of CSS classes available in the builder
 **Purpose:** Allow customization of available classes and organization for project-specific needs
 **Trigger:** User navigates to "CSS Classes" tab in god-tier panel
@@ -46,7 +60,7 @@ Transform the MetaBuilder god-tier panel from a technical, code-heavy interface 
 - Changes immediately reflected in CSS Class Builder
 - System initializes with comprehensive Tailwind utilities
 
-### 4. Monaco Code Editor Integration
+### 5. Monaco Code Editor Integration
 **Functionality:** Professional-grade code editor for JSON and Lua with syntax highlighting and validation
 **Purpose:** When code editing is necessary, provide best-in-class tooling comparable to VS Code
 **Trigger:** User opens SchemaEditor, LuaEditor, or JsonEditor components
@@ -59,7 +73,7 @@ Transform the MetaBuilder god-tier panel from a technical, code-heavy interface 
 - Minimap for navigation
 - Find/replace functionality
 
-### 5. Enhanced Property Inspector
+### 6. Enhanced Property Inspector
 **Functionality:** Context-aware property editor with specialized controls for different data types
 **Purpose:** Provide the right UI control for each property type automatically
 **Trigger:** User selects component in builder
@@ -72,7 +86,7 @@ Transform the MetaBuilder god-tier panel from a technical, code-heavy interface 
 - className fields have CSS Builder button
 - All changes saved to component props
 
-### 6. Quick Guide System
+### 7. Quick Guide System
 **Functionality:** Interactive documentation and tutorials for new features
 **Purpose:** Help users discover and learn new visual configuration tools
 **Trigger:** User opens "Guide" tab (default tab in god-tier panel)
@@ -84,6 +98,11 @@ Transform the MetaBuilder god-tier panel from a technical, code-heavy interface 
 - Provides best practices and tips
 
 ## Edge Case Handling
+- **Package conflicts** - System prevents installing packages with conflicting schema names, shows warning
+- **Package uninstall with dependencies** - Warns if other packages depend on the one being uninstalled
+- **Disabled package schemas** - Schemas from disabled packages remain in database but are marked inactive
+- **Package version mismatches** - System tracks installed version, warns if updates available
+- **Corrupted package data** - Validation ensures package manifests are complete before installation
 - **Invalid CSS class names** - Custom class input validates and warns about non-standard classes
 - **Deleted dropdown config still referenced** - PropertyInspector gracefully handles missing configs, shows warning
 - **Large CSS class lists** - Scrollable interface with search/filter to handle 1000+ classes
@@ -93,7 +112,7 @@ Transform the MetaBuilder god-tier panel from a technical, code-heavy interface 
 - **Import/export conflicts** - Monaco editor validates JSON before import, shows detailed errors
 
 ## Design Direction
-The interface should feel like a professional design tool (Figma, Webflow) rather than a developer IDE. Visual hierarchy emphasizes actions over configuration details. Color coding distinguishes different tool types (CSS = primary purple, Dropdowns = accent cyan, Code = muted gray).
+The interface should feel like a professional design tool (Figma, Webflow) with the convenience of a package manager (Docker, npm). The package system uses card-based layouts with rich metadata (download counts, ratings, categories) to help users make informed decisions. Visual hierarchy emphasizes actions over configuration details. Color coding distinguishes different tool types (Packages = purple gradient, CSS = primary purple, Dropdowns = accent cyan, Code = muted gray).
 
 ## Color Selection
 

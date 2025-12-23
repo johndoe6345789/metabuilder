@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { Palette, ListDashes, Code, Sparkle } from '@phosphor-icons/react'
+import { Palette, ListDashes, Code, Sparkle, Package } from '@phosphor-icons/react'
 
 export function QuickGuide() {
   return (
@@ -11,7 +11,36 @@ export function QuickGuide() {
         <p className="text-sm text-muted-foreground">Learn how to use the new visual configuration tools</p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-3 gap-4">
+        <Card className="p-6 space-y-3 border-2 border-purple-500/20 bg-purple-500/5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+              <Package className="text-purple-600" size={20} weight="duotone" />
+            </div>
+            <div>
+              <h3 className="font-semibold">Package System</h3>
+              <Badge variant="secondary" className="text-xs">Docker-Style Apps</Badge>
+            </div>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Install complete pre-built applications like forums, guestbooks, video platforms, and e-commerce stores with one click!
+          </p>
+          <div className="pt-2 space-y-1 text-xs">
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-purple-600" />
+              <span>6+ ready-to-use applications</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-purple-600" />
+              <span>Automatic schema & workflow setup</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-purple-600" />
+              <span>Enable/disable packages anytime</span>
+            </div>
+          </div>
+        </Card>
+
         <Card className="p-6 space-y-3 border-2 border-primary/20 bg-primary/5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
@@ -73,6 +102,54 @@ export function QuickGuide() {
 
       <Card className="p-6">
         <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="packages">
+            <AccordionTrigger className="text-base font-semibold">
+              <div className="flex items-center gap-2">
+                <Package size={18} weight="duotone" />
+                How to use the Package System
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="space-y-3 text-sm">
+              <div className="space-y-2">
+                <p className="font-medium">Step 1: Browse available packages</p>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground ml-4">
+                  <li>Go to the "Packages" tab</li>
+                  <li>Browse packages by category (Social, Entertainment, Gaming, E-Commerce)</li>
+                  <li>Use search and filters to find what you need</li>
+                  <li>Click "View Details" to see what's included in each package</li>
+                </ul>
+              </div>
+              <div className="space-y-2">
+                <p className="font-medium">Step 2: Install a package</p>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground ml-4">
+                  <li>Click "Install Package" in the details dialog</li>
+                  <li>The system automatically adds schemas, pages, workflows, and Lua scripts</li>
+                  <li>Seed data is loaded if included with the package</li>
+                  <li>Package is enabled by default after installation</li>
+                </ul>
+              </div>
+              <div className="space-y-2">
+                <p className="font-medium">Step 3: Manage installed packages</p>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground ml-4">
+                  <li>View installed packages in the "Installed" tab</li>
+                  <li>Enable/disable packages with the power button</li>
+                  <li>Uninstall packages to remove all associated data</li>
+                  <li>Customize package schemas and pages as needed</li>
+                </ul>
+              </div>
+              <div className="p-4 bg-muted rounded-lg mt-3">
+                <p className="text-xs font-medium mb-2">Available Packages:</p>
+                <ul className="text-xs text-muted-foreground space-y-1">
+                  <li>• <strong>Classic Forum</strong> - Discussion boards with threads and categories</li>
+                  <li>• <strong>Retro Guestbook</strong> - 90s-style visitor messages</li>
+                  <li>• <strong>Video Platform</strong> - YouTube-style video sharing</li>
+                  <li>• <strong>Music Streaming</strong> - Spotify-style music platform</li>
+                  <li>• <strong>Retro Games Arcade</strong> - Classic games with leaderboards</li>
+                  <li>• <strong>E-Commerce Store</strong> - Complete online shop</li>
+                </ul>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
           <AccordionItem value="css">
             <AccordionTrigger className="text-base font-semibold">
               <div className="flex items-center gap-2">

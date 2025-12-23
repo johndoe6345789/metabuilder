@@ -7,6 +7,7 @@ import type {
   Comment,
 } from './level-types'
 import type { ModelSchema } from './schema-types'
+import type { InstalledPackage } from './package-types'
 
 export interface CssCategory {
   name: string
@@ -77,6 +78,8 @@ export const DB_KEYS = {
   GOD_CREDENTIALS_EXPIRY_DURATION: 'db_god_credentials_expiry_duration',
   CSS_CLASSES: 'db_css_classes',
   DROPDOWN_CONFIGS: 'db_dropdown_configs',
+  INSTALLED_PACKAGES: 'db_installed_packages',
+  PACKAGE_DATA: 'db_package_data',
 } as const
 
 export async function hashPassword(password: string): Promise<string> {
@@ -671,5 +674,54 @@ export class Database {
     await window.spark.kv.delete(DB_KEYS.GOD_CREDENTIALS_EXPIRY_DURATION)
     await window.spark.kv.delete(DB_KEYS.CSS_CLASSES)
     await window.spark.kv.delete(DB_KEYS.DROPDOWN_CONFIGS)
+  }
+
+  static async getInstalledPackages(): Promise<InstalledPackage[]> {
+    return (await window.spark.kv.get<InstalledPackage[]>(DB_KEYS.INSTALLED_PACKAGES)) || []
+  }
+
+  static async setInstalledPackages(packages: InstalledPackage[]): Promise<void> {
+    await window.spark.kv.set(DB_KEYS.INSTALLED_PACKAGES, packages)
+  }
+
+  static async installPackage(packageData: InstalledPackage): Promise<void> {
+    const packages = await this.getInstalledPackages()
+    const exists = packages.find(p => p.packageId === packageData.packageId)
+    if (!exists) {
+      packages.push(packageData)
+      await this.setInstalledPackages(packages)
+    }
+  }
+
+  static async uninstallPackage(packageId: string): Promise<void> {
+    const packages = await this.getInstalledPackages()
+    const filtered = packages.filter(p => p.packageId !== packageId)
+    await this.setInstalledPackages(filtered)
+  }
+
+  static async togglePackageEnabled(packageId: string, enabled: boolean): Promise<void> {
+    const packages = await this.getInstalledPackages()
+    const pkg = packages.find(p => p.packageId === packageId)
+    if (pkg) {
+      pkg.enabled = enabled
+      await this.setInstalledPackages(packages)
+    }
+  }
+
+  static async getPackageData(packageId: string): Promise<Record<string, any[]>> {
+    const allData = (await window.spark.kv.get<Record<string, Record<string, any[]>>>(DB_KEYS.PACKAGE_DATA)) || {}
+    return allData[packageId] || {}
+  }
+
+  static async setPackageData(packageId: string, data: Record<string, any[]>): Promise<void> {
+    const allData = (await window.spark.kv.get<Record<string, Record<string, any[]>>>(DB_KEYS.PACKAGE_DATA)) || {}
+    allData[packageId] = data
+    await window.spark.kv.set(DB_KEYS.PACKAGE_DATA, allData)
+  }
+
+  static async deletePackageData(packageId: string): Promise<void> {
+    const allData = (await window.spark.kv.get<Record<string, Record<string, any[]>>>(DB_KEYS.PACKAGE_DATA)) || {}
+    delete allData[packageId]
+    await window.spark.kv.set(DB_KEYS.PACKAGE_DATA, allData)
   }
 }
