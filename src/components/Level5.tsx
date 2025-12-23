@@ -25,10 +25,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Crown, Users, House, ArrowsLeftRight, Shield, Eye, SignOut, Buildings } from '@phosphor-icons/react'
+import { Crown, Users, House, ArrowsLeftRight, Shield, Eye, SignOut, Buildings, Terminal } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import type { User, AppLevel, Tenant, PowerTransferRequest } from '@/lib/level-types'
 import { Database } from '@/lib/database'
+import { NerdModeIDE } from './NerdModeIDE'
+import { useKV } from '@github/spark/hooks'
 
 interface Level5Props {
   user: User
@@ -47,6 +49,7 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
   const [selectedUserId, setSelectedUserId] = useState('')
   const [newTenantName, setNewTenantName] = useState('')
   const [showCreateTenant, setShowCreateTenant] = useState(false)
+  const [nerdMode, setNerdMode] = useKV<boolean>('level5-nerd-mode', false)
 
   useEffect(() => {
     loadData()
@@ -150,6 +153,18 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
               <Crown className="w-3 h-3 mr-1" weight="fill" />
               {user.username}
             </Badge>
+            <Button 
+              variant={nerdMode ? "default" : "outline"} 
+              size="sm" 
+              onClick={() => {
+                setNerdMode(!nerdMode)
+                toast.info(nerdMode ? 'Nerd Mode disabled' : 'Nerd Mode enabled')
+              }}
+              className="text-white border-white/20 hover:bg-white/10"
+            >
+              <Terminal className="w-4 h-4 mr-2" />
+              Nerd
+            </Button>
             <Button variant="outline" size="sm" onClick={onLogout} className="text-white border-white/20 hover:bg-white/10">
               <SignOut className="w-4 h-4 mr-2" />
               Logout
@@ -479,6 +494,12 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {nerdMode && (
+        <div className="fixed bottom-4 right-4 w-[calc(100%-2rem)] max-w-[1400px] h-[600px] z-50 shadow-2xl">
+          <NerdModeIDE />
+        </div>
+      )}
     </div>
   )
 }

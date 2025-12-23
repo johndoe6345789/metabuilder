@@ -1,12 +1,13 @@
-# PRD: MetaBuilder Multi-Tenant Architecture with Super God Level
+# PRD: MetaBuilder Multi-Tenant Architecture with Super God Level & Nerd Mode IDE
 
 ## Mission Statement
-Elevate MetaBuilder to support multi-tenant architecture with a Super God level (Level 5) that enables supreme administrators to manage multiple tenant instances, assign custom homepages to different god users, and transfer supreme power while maintaining system-wide control and preventing conflicts over homepage ownership.
+Elevate MetaBuilder to support multi-tenant architecture with a Super God level (Level 5) that enables supreme administrators to manage multiple tenant instances, assign custom homepages to different god users, and transfer supreme power while maintaining system-wide control and preventing conflicts over homepage ownership. Additionally, provide advanced developers with a powerful Nerd Mode IDE for direct code access, version control integration, and professional debugging tools.
 
 ## Experience Qualities
 1. **Hierarchical** - Clear power structure with Super God at the apex, preventing homepage conflicts between god-level users through tenant-based isolation
 2. **Controlled** - Power transfer mechanism ensures only one Super God exists, with explicit downgrade and upgrade paths that maintain system integrity
 3. **Flexible** - Multi-tenant architecture allows multiple god users to operate independently with their own homepage configurations
+4. **Professional** - Nerd Mode provides advanced developers with full IDE capabilities for fine-grained control and professional workflows
 
 ## Complexity Level
 **Complex Application** (advanced functionality with multiple views) - This extends the existing 4-level meta-framework with a 5th supreme administrator level, adding multi-tenant management, power transfer workflows, tenant-specific homepage configuration, and cross-level preview capabilities for all user roles.
@@ -122,7 +123,33 @@ Elevate MetaBuilder to support multi-tenant architecture with a Super God level 
 - Import/Export accessible from Package Manager
 - Visual feedback during import/export operations
 
-### 9. CSS Class Builder
+### 9. Nerd Mode IDE
+**Functionality:** Toggleable full-featured web IDE with virtual file tree, Monaco code editor, GitHub/GitLab integration, test runner, and debugging console
+**Purpose:** Provide advanced developers with professional development tools for direct code access, version control, and comprehensive testing workflows while maintaining the visual builder for rapid prototyping
+**Trigger:** God or Super God user clicks "Nerd" button in Level 4 or Level 5 toolbar
+**Progression:** Click Nerd button → Toggle activates IDE panel → Virtual file explorer appears → Select file → Edit code in Monaco editor → Configure Git integration → Push/pull changes → Run tests → Debug in console → Toggle off to hide
+**Success Criteria:**
+- Nerd Mode toggle button visible in Level 4 (God) and Level 5 (Super God) toolbars
+- State persists between sessions using KV storage
+- Fixed position panel in bottom-right corner (600px height, max 1400px width)
+- Virtual file tree with folder expansion/collapse
+- File CRUD operations (create, edit, save, delete files and folders)
+- Monaco editor with syntax highlighting for TypeScript, JavaScript, Lua, JSON, HTML, CSS, Python, Markdown
+- Tabbed interface for Editor, Console, Tests, and Git views
+- Console output panel with command history
+- Test runner with mock test execution and visual results (pass/fail/duration)
+- Git integration dialog for configuring GitHub/GitLab credentials
+- Push/Pull operations with commit message input
+- Repository URL, branch, and access token configuration
+- File language detection from extension
+- Run code button executes selected file
+- Visual terminal-style console output
+- Delete file confirmation
+- Toast notifications for all operations
+- Responsive layout adapts to available space
+- Z-index ensures IDE floats above other content
+
+### 10. CSS Class Builder
 **Functionality:** Visual selector for Tailwind CSS classes organized into logical categories
 **Purpose:** Eliminate the need to memorize or type CSS class names, reducing errors and speeding up styling
 **Trigger:** User clicks palette icon next to any className field in PropertyInspector
@@ -133,7 +160,7 @@ Elevate MetaBuilder to support multi-tenant architecture with a Super God level 
 - 200+ predefined classes organized into 10 categories
 - Custom class input available for edge cases
 
-### 10. Dynamic Dropdown Configuration
+### 11. Dynamic Dropdown Configuration
 **Functionality:** Centralized management of dropdown option sets usable across multiple components
 **Purpose:** Prevent duplication and ensure consistency when the same options appear in multiple places
 **Trigger:** User navigates to "Dropdowns" tab in god-tier panel or components reference dropdown by name
@@ -144,7 +171,7 @@ Elevate MetaBuilder to support multi-tenant architecture with a Super God level 
 - Visual GUI for managing options (no JSON required)
 - Pre-loaded with common examples (status, priority, category)
 
-### 11. CSS Class Library Manager
+### 12. CSS Class Library Manager
 **Functionality:** Manage the catalog of CSS classes available in the builder
 **Purpose:** Allow customization of available classes and organization for project-specific needs
 **Trigger:** User navigates to "CSS Classes" tab in god-tier panel
@@ -155,7 +182,7 @@ Elevate MetaBuilder to support multi-tenant architecture with a Super God level 
 - Changes immediately reflected in CSS Class Builder
 - System initializes with comprehensive Tailwind utilities
 
-### 12. Monaco Code Editor Integration
+### 13. Monaco Code Editor Integration
 **Functionality:** Professional-grade code editor for JSON and Lua with syntax highlighting and validation
 **Purpose:** When code editing is necessary, provide best-in-class tooling comparable to VS Code
 **Trigger:** User opens SchemaEditor, LuaEditor, or JsonEditor components

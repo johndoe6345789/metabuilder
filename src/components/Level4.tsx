@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { SignOut, Database as DatabaseIcon, Lightning, Code, Eye, House, Download, Upload, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear, Palette, ListDashes, Sparkle, Package } from '@phosphor-icons/react'
+import { SignOut, Database as DatabaseIcon, Lightning, Code, Eye, House, Download, Upload, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear, Palette, ListDashes, Sparkle, Package, Terminal } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { SchemaEditorLevel4 } from './SchemaEditorLevel4'
 import { WorkflowEditor } from './WorkflowEditor'
@@ -23,10 +23,12 @@ import { CssClassManager } from './CssClassManager'
 import { DropdownConfigManager } from './DropdownConfigManager'
 import { QuickGuide } from './QuickGuide'
 import { PackageManager } from './PackageManager'
+import { NerdModeIDE } from './NerdModeIDE'
 import { Database } from '@/lib/database'
 import { seedDatabase } from '@/lib/seed-data'
 import type { User as UserType, AppConfiguration } from '@/lib/level-types'
 import type { ModelSchema } from '@/lib/schema-types'
+import { useKV } from '@github/spark/hooks'
 
 interface Level4Props {
   user: UserType
@@ -38,6 +40,7 @@ interface Level4Props {
 export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
   const [appConfig, setAppConfig] = useState<AppConfiguration | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [nerdMode, setNerdMode] = useKV<boolean>('level4-nerd-mode', false)
 
   useEffect(() => {
     const loadConfig = async () => {
@@ -181,6 +184,17 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
                 </DropdownMenu>
               </div>
               <div className="w-px h-6 bg-sidebar-border hidden sm:block" />
+              <Button 
+                variant={nerdMode ? "default" : "outline"} 
+                size="sm" 
+                onClick={() => {
+                  setNerdMode(!nerdMode)
+                  toast.info(nerdMode ? 'Nerd Mode disabled' : 'Nerd Mode enabled')
+                }}
+              >
+                <Terminal className="mr-2" size={16} />
+                Nerd
+              </Button>
               <Button variant="outline" size="sm" onClick={handleExportConfig}>
                 <Download size={16} />
               </Button>
@@ -364,6 +378,12 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
             </div>
           </div>
         </div>
+
+        {nerdMode && (
+          <div className="fixed bottom-4 right-4 w-[calc(100%-2rem)] max-w-[1400px] h-[600px] z-50 shadow-2xl">
+            <NerdModeIDE />
+          </div>
+        )}
       </div>
     </div>
   )
