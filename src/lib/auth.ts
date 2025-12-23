@@ -2,6 +2,15 @@ import type { User, UserRole } from './level-types'
 
 export const DEFAULT_USERS: User[] = [
   {
+    id: 'user_supergod',
+    username: 'supergod',
+    email: 'supergod@builder.com',
+    role: 'supergod',
+    bio: 'Supreme administrator with multi-tenant control',
+    createdAt: Date.now(),
+    isInstanceOwner: true,
+  },
+  {
     id: 'user_god',
     username: 'god',
     email: 'god@builder.com',
@@ -28,6 +37,7 @@ export const DEFAULT_USERS: User[] = [
 ]
 
 export const DEFAULT_CREDENTIALS: Record<string, string> = {
+  supergod: 'supergod123',
   god: 'god123',
   admin: 'admin',
   demo: 'demo',
@@ -39,6 +49,7 @@ export function canAccessLevel(userRole: UserRole, level: number): boolean {
     user: 2,
     admin: 3,
     god: 4,
+    supergod: 5,
   }
   
   return roleHierarchy[userRole] >= level
@@ -50,6 +61,7 @@ export function getRoleDisplayName(role: UserRole): string {
     user: 'User',
     admin: 'Administrator',
     god: 'System Architect',
+    supergod: 'Supreme Administrator',
   }
   return names[role]
 }

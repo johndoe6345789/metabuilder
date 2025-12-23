@@ -1,6 +1,6 @@
-export type UserRole = 'public' | 'user' | 'admin' | 'god'
+export type UserRole = 'public' | 'user' | 'admin' | 'god' | 'supergod'
 
-export type AppLevel = 1 | 2 | 3 | 4
+export type AppLevel = 1 | 2 | 3 | 4 | 5
 
 export interface User {
   id: string
@@ -10,6 +10,8 @@ export interface User {
   profilePicture?: string
   bio?: string
   createdAt: number
+  tenantId?: string
+  isInstanceOwner?: boolean
 }
 
 export interface Comment {
@@ -64,6 +66,17 @@ export interface PageConfig {
   requiredRole?: UserRole
 }
 
+export interface Tenant {
+  id: string
+  name: string
+  ownerId: string
+  createdAt: number
+  homepageConfig?: {
+    pageId: string
+    customContent?: any
+  }
+}
+
 export interface AppConfiguration {
   id: string
   name: string
@@ -75,4 +88,13 @@ export interface AppConfiguration {
     colors: Record<string, string>
     fonts: Record<string, string>
   }
+}
+
+export interface PowerTransferRequest {
+  id: string
+  fromUserId: string
+  toUserId: string
+  status: 'pending' | 'accepted' | 'rejected'
+  createdAt: number
+  expiresAt: number
 }

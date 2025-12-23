@@ -5,6 +5,8 @@ import type {
   PageConfig,
   AppConfiguration,
   Comment,
+  Tenant,
+  PowerTransferRequest,
 } from './level-types'
 import type { ModelSchema } from './schema-types'
 import type { InstalledPackage } from './package-types'
@@ -38,6 +40,8 @@ export interface DatabaseSchema {
   godCredentialsExpiryDuration: number
   cssClasses: CssCategory[]
   dropdownConfigs: DropdownConfig[]
+  tenants: Tenant[]
+  powerTransferRequests: PowerTransferRequest[]
 }
 
 export interface ComponentNode {
@@ -80,6 +84,8 @@ export const DB_KEYS = {
   DROPDOWN_CONFIGS: 'db_dropdown_configs',
   INSTALLED_PACKAGES: 'db_installed_packages',
   PACKAGE_DATA: 'db_package_data',
+  TENANTS: 'db_tenants',
+  POWER_TRANSFER_REQUESTS: 'db_power_transfer_requests',
 } as const
 
 export async function hashPassword(password: string): Promise<string> {
@@ -372,6 +378,15 @@ export class Database {
     if (users.length === 0) {
       const defaultUsers: User[] = [
         {
+          id: 'user_supergod',
+          username: 'supergod',
+          email: 'supergod@builder.com',
+          role: 'supergod',
+          bio: 'Supreme administrator with multi-tenant control',
+          createdAt: Date.now(),
+          isInstanceOwner: true,
+        },
+        {
           id: 'user_god',
           username: 'god',
           email: 'god@builder.com',
@@ -401,10 +416,12 @@ export class Database {
     }
 
     if (Object.keys(credentials).length === 0) {
+      await this.setCredential('supergod', await hashPassword('supergod123'))
       await this.setCredential('god', await hashPassword('god123'))
       await this.setCredential('admin', await hashPassword('admin'))
       await this.setCredential('demo', await hashPassword('demo'))
       
+      await this.setFirstLoginFlag('supergod', true)
       await this.setFirstLoginFlag('god', true)
       await this.setFirstLoginFlag('admin', false)
       await this.setFirstLoginFlag('demo', false)
@@ -723,5 +740,89 @@ export class Database {
     const allData = (await window.spark.kv.get<Record<string, Record<string, any[]>>>(DB_KEYS.PACKAGE_DATA)) || {}
     delete allData[packageId]
     await window.spark.kv.set(DB_KEYS.PACKAGE_DATA, allData)
+  }
+
+  static async getTenants(): Promise<Tenant[]> {
+    return (await window.spark.kv.get<Tenant[]>(DB_KEYS.TENANTS)) || []
+  }
+
+  static async setTenants(tenants: Tenant[]): Promise<void> {
+    await window.spark.kv.set(DB_KEYS.TENANTS, tenants)
+  }
+
+  static async addTenant(tenant: Tenant): Promise<void> {
+    const tenants = await this.getTenants()
+    tenants.push(tenant)
+    await this.setTenants(tenants)
+  }
+
+  static async updateTenant(tenantId: string, updates: Partial<Tenant>): Promise<void> {
+    const tenants = await this.getTenants()
+    const index = tenants.findIndex(t => t.id === tenantId)
+    if (index !== -1) {
+      tenants[index] = { ...tenants[index], ...updates }
+      await this.setTenants(tenants)
+    }
+  }
+
+  static async deleteTenant(tenantId: string): Promise<void> {
+    const tenants = await this.getTenants()
+    const filtered = tenants.filter(t => t.id !== tenantId)
+    await this.setTenants(filtered)
+  }
+
+  static async getPowerTransferRequests(): Promise<PowerTransferRequest[]> {
+    return (await window.spark.kv.get<PowerTransferRequest[]>(DB_KEYS.POWER_TRANSFER_REQUESTS)) || []
+  }
+
+  static async setPowerTransferRequests(requests: PowerTransferRequest[]): Promise<void> {
+    await window.spark.kv.set(DB_KEYS.POWER_TRANSFER_REQUESTS, requests)
+  }
+
+  static async addPowerTransferRequest(request: PowerTransferRequest): Promise<void> {
+    const requests = await this.getPowerTransferRequests()
+    requests.push(request)
+    await this.setPowerTransferRequests(requests)
+  }
+
+  static async updatePowerTransferRequest(requestId: string, updates: Partial<PowerTransferRequest>): Promise<void> {
+    const requests = await this.getPowerTransferRequests()
+    const index = requests.findIndex(r => r.id === requestId)
+    if (index !== -1) {
+      requests[index] = { ...requests[index], ...updates }
+      await this.setPowerTransferRequests(requests)
+    }
+  }
+
+  static async deletePowerTransferRequest(requestId: string): Promise<void> {
+    const requests = await this.getPowerTransferRequests()
+    const filtered = requests.filter(r => r.id !== requestId)
+    await this.setPowerTransferRequests(filtered)
+  }
+
+  static async getSuperGod(): Promise<User | null> {
+    const users = await this.getUsers()
+    return users.find(u => u.role === 'supergod') || null
+  }
+
+  static async transferSuperGodPower(fromUserId: string, toUserId: string): Promise<void> {
+    const users = await this.getUsers()
+    const fromUser = users.find(u => u.id === fromUserId)
+    const toUser = users.find(u => u.id === toUserId)
+    
+    if (!fromUser || !toUser) {
+      throw new Error('User not found')
+    }
+
+    if (fromUser.role !== 'supergod') {
+      throw new Error('Only supergod can transfer power')
+    }
+
+    fromUser.role = 'god'
+    fromUser.isInstanceOwner = false
+    toUser.role = 'supergod'
+    toUser.isInstanceOwner = true
+
+    await this.setUsers(users)
   }
 }

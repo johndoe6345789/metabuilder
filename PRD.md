@@ -1,19 +1,96 @@
-# PRD: MetaBuilder Visual Configuration & Package System
+# PRD: MetaBuilder Multi-Tenant Architecture with Super God Level
 
 ## Mission Statement
-Transform the MetaBuilder god-tier panel into an intuitive visual configuration system with a Docker-style package manager that allows users to instantly deploy complete pre-built applications while retaining full customization capabilities.
+Elevate MetaBuilder to support multi-tenant architecture with a Super God level (Level 5) that enables supreme administrators to manage multiple tenant instances, assign custom homepages to different god users, and transfer supreme power while maintaining system-wide control and preventing conflicts over homepage ownership.
 
 ## Experience Qualities
-1. **Intuitive** - Users should discover features naturally without extensive documentation, with visual cues guiding them through complex configurations.
-2. **Empowering** - Non-technical users can accomplish sophisticated customization without writing code, while technical users retain full control when needed.
-3. **Efficient** - Common tasks that previously required typing or memorization are now accomplished through point-and-click interactions, dramatically reducing configuration time.
+1. **Hierarchical** - Clear power structure with Super God at the apex, preventing homepage conflicts between god-level users through tenant-based isolation
+2. **Controlled** - Power transfer mechanism ensures only one Super God exists, with explicit downgrade and upgrade paths that maintain system integrity
+3. **Flexible** - Multi-tenant architecture allows multiple god users to operate independently with their own homepage configurations
 
 ## Complexity Level
-**Complex Application** (advanced functionality with multiple views) - This is a meta-framework for building applications with four distinct user levels, database management, visual component builders, dynamic configuration systems, and a package management system for deploying pre-built applications.
+**Complex Application** (advanced functionality with multiple views) - This extends the existing 4-level meta-framework with a 5th supreme administrator level, adding multi-tenant management, power transfer workflows, tenant-specific homepage configuration, and cross-level preview capabilities for all user roles.
 
 ## Essential Features
 
-### 1. Docker-Style Package System
+### 1. Super God Level (Level 5)
+**Functionality:** Supreme administrator panel with multi-tenant management, power transfer, and system-wide oversight
+**Purpose:** Solve the homepage ownership conflict by allowing multiple isolated tenant instances, each with their own god-level owner
+**Trigger:** User logs in with supergod role credentials
+**Progression:** Login with supergod credentials → Access Level 5 panel → View tenant management tab → Create/manage tenants → Assign god users to tenants → Configure tenant-specific homepages → Preview all levels → Transfer power if needed
+**Success Criteria:**
+- Only one supergod user exists at any time
+- Supergod can create unlimited tenant instances
+- Each tenant can have a custom homepage configuration
+- Power transfer downgrades current supergod to god role
+- Power transfer upgrades selected user to supergod role
+- Confirmation dialog prevents accidental transfers
+- All god users visible in dedicated management tab
+- Preview mode works for all 5 levels from supergod panel
+
+### 2. Multi-Tenant Architecture
+**Functionality:** Isolated tenant instances with independent homepage configurations
+**Purpose:** Allow multiple god-level users to coexist without fighting over the single homepage
+**Trigger:** Supergod creates new tenant in Level 5 panel
+**Progression:** Open tenant tab → Click create tenant → Enter tenant name → Assign owner (god user) → Configure homepage for tenant → Save tenant
+**Success Criteria:**
+- Tenants stored in database with unique IDs
+- Each tenant has owner reference (user ID)
+- Tenant homepage config stored independently
+- Tenant creation/deletion only available to supergod
+- Tenant list shows owner username
+- Homepage assignment updates tenant config
+
+### 3. Power Transfer System
+**Functionality:** One-way transfer of supergod privileges to another user
+**Purpose:** Enable supergod succession without requiring direct database access
+**Trigger:** Supergod opens power transfer tab and selects target user
+**Progression:** Open power transfer tab → View all eligible users → Select target user → Click initiate transfer → Review confirmation warning → Confirm transfer → Current supergod downgraded to god → Target user upgraded to supergod → Automatic logout
+**Success Criteria:**
+- Transfer request confirms selected user details
+- Warning explains irreversibility clearly
+- Transfer atomically updates both user roles
+- isInstanceOwner flag transferred to new supergod
+- Only non-supergod users appear as transfer targets
+- System enforces single supergod constraint
+
+### 4. God User Management
+**Functionality:** View and monitor all god-level users in the system
+**Purpose:** Provide supergod visibility into who has god access
+**Trigger:** Supergod opens god users tab
+**Progression:** Navigate to god users tab → View list of all god users → See username, email, creation date
+**Success Criteria:**
+- All users with god role displayed
+- Username and email visible
+- Visual distinction from other user roles
+- Scrollable list for many god users
+
+### 5. Cross-Level Preview
+**Functionality:** Preview how each level appears from supergod panel
+**Purpose:** Allow supergod to validate functionality at all levels without logging in as different users
+**Trigger:** Supergod clicks preview button for any level (1-4)
+**Progression:** Open preview tab → Click level to preview → Enter preview mode → View level with preview banner → Click exit preview → Return to Level 5
+**Success Criteria:**
+- Preview mode accessible for levels 1, 2, 3, 4
+- Preview banner clearly indicates preview mode
+- Exit preview returns to Level 5
+- Preview mode toast notification on entry
+- Preview inherits supergod permissions
+
+### 6. Supergod Credentials Display
+**Functionality:** Show supergod login credentials on Level 1 homepage for first-time login
+**Purpose:** Provide initial access to supergod account
+**Trigger:** Page load when supergod first login flag is true
+**Progression:** Visit homepage → See supergod credentials alert → Copy credentials → Login → Change password → Credentials disappear
+**Success Criteria:**
+- Supergod credentials shown in amber-themed alert box
+- Separate from god credentials display
+- Username and password displayed with show/hide toggle
+- Copy button for password
+- Credentials hidden after password change
+- Alert distinguishes Level 5 from Level 4
+
+### 7. Docker-Style Package System
 **Functionality:** Browse, install, and manage pre-built applications (forum, guestbook, video platform, music streaming, games, e-commerce) that integrate with existing infrastructure
 **Purpose:** Allow users to rapidly deploy complete applications without building from scratch, leveraging existing database and workflow systems
 **Trigger:** User navigates to "Packages" tab in god-tier panel
@@ -98,6 +175,16 @@ Transform the MetaBuilder god-tier panel into an intuitive visual configuration 
 - Provides best practices and tips
 
 ## Edge Case Handling
+- **Multiple supergod attempts** - Database constraint ensures only one supergod role exists; attempting to create second fails
+- **Power transfer to self** - UI prevents selecting current supergod user as transfer target
+- **Power transfer interruption** - Atomic database transaction ensures both role changes succeed or neither does
+- **Deleted tenant with god owner** - Tenant deletion doesn't affect god user's role or permissions
+- **Tenant without homepage** - System gracefully handles undefined homepage config, shows default or placeholder
+- **God user viewing tenant list** - God users cannot access Level 5, tenant management exclusive to supergod
+- **Concurrent power transfers** - First-login flag and role checks prevent race conditions
+- **Supergod logout during transfer** - Transfer completes before logout, new supergod can login immediately
+- **Tenant name conflicts** - System allows duplicate names (IDs are unique), but UI warns user
+- **Preview mode navigation** - Deep linking disabled in preview, back navigation returns to Level 5
 - **Package conflicts** - System prevents installing packages with conflicting schema names, shows warning
 - **Package uninstall with dependencies** - Warns if other packages depend on the one being uninstalled
 - **Disabled package schemas** - Schemas from disabled packages remain in database but are marked inactive
@@ -112,12 +199,15 @@ Transform the MetaBuilder god-tier panel into an intuitive visual configuration 
 - **Import/export conflicts** - Monaco editor validates JSON before import, shows detailed errors
 
 ## Design Direction
-The interface should feel like a professional design tool (Figma, Webflow) with the convenience of a package manager (Docker, npm). The package system uses card-based layouts with rich metadata (download counts, ratings, categories) to help users make informed decisions. Visual hierarchy emphasizes actions over configuration details. Color coding distinguishes different tool types (Packages = purple gradient, CSS = primary purple, Dropdowns = accent cyan, Code = muted gray).
+The Level 5 interface should feel like a command center with regal, powerful aesthetics distinct from the purple god-tier panel. Use amber/gold accents to signify supreme authority. The multi-tenant view uses card-based layouts with organizational emphasis. Power transfer UI employs serious warning states with amber colors to communicate irreversibility. The interface balances grandeur with usability—never sacrificing clarity for visual flair. Color hierarchy: amber for supergod actions, purple for god-level previews, standard accent colors for tenant management.
 
 ## Color Selection
 
-**Primary Color:** `oklch(0.55 0.18 290)` - Purple/magenta representing creativity and visual design
-- Used for: CSS-related features, primary actions, selected states
+**Primary Color:** `oklch(0.55 0.18 290)` - Purple/magenta representing creativity and visual design (Levels 1-4)
+- Used for: CSS-related features, primary actions, selected states, god-tier panel
+
+**Super God Accent:** `oklch(0.70 0.16 70)` - Amber/gold representing supreme authority (Level 5 only)
+- Used for: Super god panel highlights, power transfer actions, supreme badges
 
 **Secondary Colors:** `oklch(0.35 0.02 260)` - Deep blue-gray for structure
 - Used for: Dropdowns, configuration panels, stable UI elements
@@ -130,6 +220,7 @@ The interface should feel like a professional design tool (Figma, Webflow) with 
 - Card `oklch(1 0 0)` with Card Foreground `oklch(0.25 0.02 260)` - Ratio 16.4:1 ✓
 - Primary `oklch(0.55 0.18 290)` with Primary Foreground `oklch(0.98 0 0)` - Ratio 7.1:1 ✓
 - Accent `oklch(0.70 0.17 195)` with Accent Foreground `oklch(0.2 0.02 260)` - Ratio 8.9:1 ✓
+- Super God Amber `oklch(0.70 0.16 70)` with Dark Background `oklch(0.15 0.02 260)` - Ratio 9.2:1 ✓
 
 ## Font Selection
 Professional and technical feeling with emphasis on code clarity

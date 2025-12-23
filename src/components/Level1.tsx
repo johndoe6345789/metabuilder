@@ -12,14 +12,21 @@ interface Level1Props {
 export function Level1({ onNavigate }: Level1Props) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [showGodCredentials, setShowGodCredentials] = useState(false)
+  const [showSuperGodCredentials, setShowSuperGodCredentials] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [showSuperGodPassword, setShowSuperGodPassword] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [copiedSuper, setCopiedSuper] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState('')
 
   useEffect(() => {
     const checkCredentials = async () => {
       const shouldShow = await Database.shouldShowGodCredentials()
       setShowGodCredentials(shouldShow)
+      
+      const superGod = await Database.getSuperGod()
+      const firstLoginFlags = await Database.getFirstLoginFlags()
+      setShowSuperGodCredentials(superGod !== null && firstLoginFlags['supergod'] === true)
       
       if (shouldShow) {
         const expiry = await Database.getGodCredentialsExpiry()
@@ -50,6 +57,12 @@ export function Level1({ onNavigate }: Level1Props) {
     await navigator.clipboard.writeText('god123')
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  const handleCopySuperGodPassword = async () => {
+    await navigator.clipboard.writeText('supergod123')
+    setCopiedSuper(true)
+    setTimeout(() => setCopiedSuper(false), 2000)
   }
 
   return (
@@ -116,54 +129,105 @@ export function Level1({ onNavigate }: Level1Props) {
         )}
       </nav>
 
-      {showGodCredentials && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-          <Alert className="bg-gradient-to-br from-purple-500/10 to-orange-500/10 border-2 border-purple-500/50">
-            <Warning className="h-5 w-5 text-orange-500" />
-            <AlertDescription className="ml-2">
-              <div className="space-y-3">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-2 flex-1">
-                    <p className="font-semibold text-base text-foreground">
-                      God-Tier Admin Credentials
-                    </p>
-                    <div className="space-y-1 text-sm">
-                      <div className="flex items-center gap-2">
-                        <span className="text-muted-foreground">Username:</span>
-                        <code className="px-2 py-0.5 bg-background/50 rounded font-mono font-semibold">god</code>
+      {(showGodCredentials || showSuperGodCredentials) && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-4">
+          {showSuperGodCredentials && (
+            <Alert className="bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border-2 border-amber-500/50">
+              <Warning className="h-5 w-5 text-amber-500" />
+              <AlertDescription className="ml-2">
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-2 flex-1">
+                      <p className="font-semibold text-base text-foreground">
+                        Super God Credentials (Level 5)
+                      </p>
+                      <div className="space-y-1 text-sm">
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted-foreground">Username:</span>
+                          <code className="px-2 py-0.5 bg-background/50 rounded font-mono font-semibold">supergod</code>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted-foreground">Password:</span>
+                          <code className="px-2 py-0.5 bg-background/50 rounded font-mono font-semibold">
+                            {showSuperGodPassword ? 'supergod123' : '••••••••••••'}
+                          </code>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-6 w-6 p-0"
+                            onClick={() => setShowSuperGodPassword(!showSuperGodPassword)}
+                          >
+                            {showSuperGodPassword ? <EyeSlash size={16} /> : <Eye size={16} />}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-6 px-2 text-xs"
+                            onClick={handleCopySuperGodPassword}
+                          >
+                            {copiedSuper ? <Check size={14} className="mr-1" /> : <Copy size={14} className="mr-1" />}
+                            {copiedSuper ? 'Copied!' : 'Copy'}
+                          </Button>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-muted-foreground">Password:</span>
-                        <code className="px-2 py-0.5 bg-background/50 rounded font-mono font-semibold">
-                          {showPassword ? 'god123' : '••••••'}
-                        </code>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-6 w-6 p-0"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? <EyeSlash size={16} /> : <Eye size={16} />}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-6 px-2 text-xs"
-                          onClick={handleCopyPassword}
-                        >
-                          {copied ? <Check size={14} className="mr-1" /> : <Copy size={14} className="mr-1" />}
-                          {copied ? 'Copied!' : 'Copy'}
-                        </Button>
-                      </div>
+                      <p className="text-xs text-amber-600 dark:text-amber-400 font-semibold mt-2">
+                        ⚠️ Supreme Administrator - Multi-tenant control. Login and change password IMMEDIATELY!
+                      </p>
                     </div>
-                    <p className="text-xs text-orange-600 dark:text-orange-400 font-semibold mt-2">
-                      ⚠️ Login and change your password IMMEDIATELY! These credentials will disappear in {timeRemaining}.
-                    </p>
                   </div>
                 </div>
-              </div>
-            </AlertDescription>
-          </Alert>
+              </AlertDescription>
+            </Alert>
+          )}
+          
+          {showGodCredentials && (
+            <Alert className="bg-gradient-to-br from-purple-500/10 to-orange-500/10 border-2 border-purple-500/50">
+              <Warning className="h-5 w-5 text-orange-500" />
+              <AlertDescription className="ml-2">
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-2 flex-1">
+                      <p className="font-semibold text-base text-foreground">
+                        God-Tier Admin Credentials (Level 4)
+                      </p>
+                      <div className="space-y-1 text-sm">
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted-foreground">Username:</span>
+                          <code className="px-2 py-0.5 bg-background/50 rounded font-mono font-semibold">god</code>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted-foreground">Password:</span>
+                          <code className="px-2 py-0.5 bg-background/50 rounded font-mono font-semibold">
+                            {showPassword ? 'god123' : '••••••'}
+                          </code>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-6 w-6 p-0"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? <EyeSlash size={16} /> : <Eye size={16} />}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-6 px-2 text-xs"
+                            onClick={handleCopyPassword}
+                          >
+                            {copied ? <Check size={14} className="mr-1" /> : <Copy size={14} className="mr-1" />}
+                            {copied ? 'Copied!' : 'Copy'}
+                          </Button>
+                        </div>
+                      </div>
+                      <p className="text-xs text-orange-600 dark:text-orange-400 font-semibold mt-2">
+                        ⚠️ Login and change your password IMMEDIATELY! These credentials will disappear in {timeRemaining}.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
       )}
 
@@ -173,7 +237,7 @@ export function Level1({ onNavigate }: Level1Props) {
             Build Anything, Visually
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            A 4-level meta-architecture for creating entire applications through visual workflows, 
+            A 5-level meta-architecture for creating entire applications through visual workflows, 
             schema editors, and embedded scripting. No code required.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
@@ -188,8 +252,8 @@ export function Level1({ onNavigate }: Level1Props) {
       </section>
 
       <section id="features" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <h2 className="text-3xl font-bold text-center mb-12">Four Levels of Power</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <h2 className="text-3xl font-bold text-center mb-12">Five Levels of Power</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card className="border-2 hover:border-primary transition-colors">
             <CardHeader>
               <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-xl mb-4">
@@ -247,6 +311,24 @@ export function Level1({ onNavigate }: Level1Props) {
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
               Design and generate entire applications procedurally
+            </CardContent>
+          </Card>
+
+          <Card className="border-2 hover:border-amber-500 transition-colors bg-gradient-to-br from-amber-50/50 to-yellow-50/50 dark:from-amber-950/20 dark:to-yellow-950/20">
+            <CardHeader>
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center text-white font-bold text-xl mb-4">
+                5
+              </div>
+              <CardTitle className="flex items-center gap-2">
+                Super God Panel
+                <span className="text-xs px-2 py-0.5 bg-amber-500/20 text-amber-700 dark:text-amber-300 rounded-full font-normal">NEW</span>
+              </CardTitle>
+              <CardDescription>
+                Multi-tenant control with power transfer and homepage management
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              Supreme administrator access for multi-tenant architecture
             </CardContent>
           </Card>
         </div>

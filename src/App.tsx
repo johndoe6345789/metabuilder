@@ -5,6 +5,7 @@ import { Level1 } from '@/components/Level1'
 import { Level2 } from '@/components/Level2'
 import { Level3 } from '@/components/Level3'
 import { Level4 } from '@/components/Level4'
+import { Level5 } from '@/components/Level5'
 import { PasswordChangeDialog } from '@/components/PasswordChangeDialog'
 import { UnifiedLogin } from '@/components/UnifiedLogin'
 import { toast } from 'sonner'
@@ -59,7 +60,9 @@ function App() {
       setIsFirstLogin(true)
       setShowPasswordChange(true)
     } else {
-      if (user.role === 'god') {
+      if (user.role === 'supergod') {
+        setCurrentLevel(5)
+      } else if (user.role === 'god') {
         setCurrentLevel(4)
       } else if (user.role === 'admin') {
         setCurrentLevel(3)
@@ -81,7 +84,9 @@ function App() {
     setShowPasswordChange(false)
     setIsFirstLogin(false)
     
-    if (currentUser.role === 'god') {
+    if (currentUser.role === 'supergod') {
+      setCurrentLevel(5)
+    } else if (currentUser.role === 'god') {
       setCurrentLevel(4)
     } else if (currentUser.role === 'admin') {
       setCurrentLevel(3)
@@ -150,7 +155,11 @@ function App() {
 
   const handleExitPreview = () => {
     setIsPreviewMode(false)
-    setCurrentLevel(4)
+    if (currentUser?.role === 'supergod') {
+      setCurrentLevel(5)
+    } else {
+      setCurrentLevel(4)
+    }
     toast.info('Returning to Builder')
   }
 
@@ -278,6 +287,15 @@ function App() {
     return (
       <>
         <Level4 user={currentUser} onLogout={handleLogout} onNavigate={handleNavigate} onPreview={handlePreview} />
+        <Toaster />
+      </>
+    )
+  }
+
+  if (currentLevel === 5 && canAccessLevel(currentUser.role, 5)) {
+    return (
+      <>
+        <Level5 user={currentUser} onLogout={handleLogout} onNavigate={handleNavigate} onPreview={handlePreview} />
         <Toaster />
       </>
     )
