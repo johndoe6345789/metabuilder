@@ -62,13 +62,20 @@ export class DeclarativeComponentRenderer {
       }
     })
 
+    const paramAssignments = script.parameters
+      .map(p => `local ${p.name} = context.data.params["${p.name}"]`)
+      .join('\n')
+
+    const paramList = script.parameters.map(p => p.name).join(', ')
+
     const wrappedCode = `
+${paramAssignments}
+
 ${script.code}
-local fn = ...
-if fn then
-  local args = {}
-  ${script.parameters.map(p => `table.insert(args, context.params.${p.name})`).join('\n  ')}
-  return fn(table.unpack(args))
+
+local result_fn = sendMessage or handleCommand or formatTime or userJoin or userLeave or countThreads
+if result_fn and type(result_fn) == "function" then
+  return result_fn(${paramList})
 end
 `
 
@@ -77,7 +84,7 @@ end
     })
     
     if (!result.success) {
-      console.error(`Lua script error (${scriptId}):`, result.error)
+      console.error(`Lua script error (${scriptId}):`, result.error, result.logs)
       throw new Error(result.error || 'Lua script execution failed')
     }
 
