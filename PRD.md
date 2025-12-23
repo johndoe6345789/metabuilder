@@ -68,6 +68,13 @@ This is a 4-tier meta-application builder: a public website layer, authenticated
 - **Progression**: Open snippet library → Browse by category or search by keyword/tag → Preview snippet details and parameters → View full code in syntax-highlighted display → Copy to clipboard or insert into editor → Customize for specific use case
 - **Success criteria**: 30+ snippets covering common patterns; organized into logical categories; searchable by name, description, and tags; preview shows code, description, and required parameters; one-click copy or insert; snippets include validation, transformation, calculations, conditionals, string operations, array operations, date handling, error handling, and utilities; modal detail view for full inspection
 
+### Database Persistence Layer (All Levels)
+- **Functionality**: Centralized database abstraction layer with SHA-512 password hashing, KV persistence for all entities (users, credentials, workflows, Lua scripts, pages, schemas, comments, component hierarchy, component configs), comprehensive CRUD operations, import/export functionality, and database management UI
+- **Purpose**: Provide secure, persistent storage for all application data with proper password security, enable data portability, and allow god-tier users to inspect and manage the entire database state
+- **Trigger**: Application initialization; any data mutation; user opens Database tab in Level 4
+- **Progression**: App loads → Initialize database with defaults → Load entities from KV → Perform CRUD operations → Hash passwords with SHA-512 → Persist changes to KV → View statistics in Database Manager → Export full database to JSON → Import database from JSON backup → Clear and reinitialize database
+- **Success criteria**: All passwords stored as SHA-512 hashes; KV persistence works across sessions; CRUD operations atomic; database export includes all entities; import validates and restores data; Database Manager shows real-time statistics; clear database requires double confirmation; no plaintext passwords ever stored; all data survives page refresh
+
 ## Edge Case Handling
 - **Invalid User Credentials**: Show clear error message; rate limit after 5 attempts; support password reset flow
 - **Unauthorized Access Attempts**: Redirect to appropriate level; log security events; show "access denied" message
@@ -78,6 +85,9 @@ This is a 4-tier meta-application builder: a public website layer, authenticated
 - **Large Comment Threads**: Paginate comments; lazy load older entries; virtualize long lists
 - **Schema Migration Conflicts**: Detect breaking changes; show migration preview; allow rollback
 - **Lost Sessions Across Levels**: Auto-save state; restore context; show reconnection indicator
+- **Database Import Errors**: Validate JSON structure before import; show detailed error messages; rollback on failure; preserve existing data
+- **Password Hash Collisions**: Use SHA-512 with sufficient entropy; no collision risk in practice; unique salting per deployment
+- **KV Storage Quota**: Monitor storage usage; warn when approaching limits; provide data cleanup tools; optimize JSON serialization
 - **Monaco Editor Load Failure**: Fallback loading indicator; retry mechanism; graceful degradation if CDN unavailable
 - **Large Lua Scripts**: Monaco virtual scrolling handles performance; minimap provides navigation; syntax parsing optimized
 

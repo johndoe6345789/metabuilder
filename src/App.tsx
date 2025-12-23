@@ -1,27 +1,37 @@
-import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useState, useEffect } from 'react'
 import { Toaster } from '@/components/ui/sonner'
-import { UnifiedLogin } from '@/components/UnifiedLogin'
 import { Level1 } from '@/components/Level1'
 import { Level2 } from '@/components/Level2'
 import { Level3 } from '@/components/Level3'
 import { Level4 } from '@/components/Level4'
 import { toast } from 'sonner'
-import { DEFAULT_USERS, DEFAULT_CREDENTIALS, canAccessLevel } from '@/lib/auth'
+import { canAccessLevel } from '@/lib/auth'
+import { Database, hashPassword } from '@/lib/database'
 import type { User, AppLevel } from '@/lib/level-types'
 
 function App() {
-  const [users, setUsers] = useKV<User[]>('app_users', DEFAULT_USERS)
-  const [currentUser, setCurrentUser] = useKV<User | null>('current_user', null)
+  const [users, setUsers] = useState<User[]>([])
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [currentLevel, setCurrentLevel] = useState<AppLevel>(1)
+  const [isInitialized, setIsInitialized] = useState(false)
 
-  if (!users) return null
+  useEffect(() => {
+    const initDatabase = async () => {
+      await Database.initializeDatabase()
+      const loadedUsers = await Database.getUsers()
+      setUsers(loadedUsers)
+      setIsInitialized(true)
+    }
+    initDatabase()
+  }, [])
 
-  const handleLogin = (credentials: { username: string; password: string }) => {
+  if (!isInitialized) return null
+
+  const handleLogin = async (credentials: { username: string; password: string }) => {
     const { username, password } = credentials
 
-    const storedPassword = DEFAULT_CREDENTIALS[username]
-    if (!storedPassword || storedPassword !== password) {
+    const isValid = await Database.verifyCredentials(username, password)
+    if (!isValid) {
       toast.error('Invalid credentials')
       return
     }
@@ -45,7 +55,7 @@ function App() {
     toast.success(`Welcome, ${user.username}!`)
   }
 
-  const handleRegister = (username: string, email: string, password: string) => {
+  const handleRegister = async (username: string, email: string, password: string) => {
     if (users.some(u => u.username === username)) {
       toast.error('Username already exists')
       return
@@ -64,7 +74,11 @@ function App() {
       createdAt: Date.now(),
     }
 
-    setUsers((current) => [...(current || []), newUser])
+    const passwordHash = await hashPassword(password)
+    await Database.setCredential(username, passwordHash)
+    await Database.addUser(newUser)
+    
+    setUsers((current) => [...current, newUser])
     setCurrentUser(newUser)
     setCurrentLevel(2)
     toast.success('Account created successfully!')
@@ -142,7 +156,7 @@ function App() {
 
   return (
     <>
-      <UnifiedLogin onLogin={handleLogin} onRegister={handleRegister} />
+      <Level1 onNavigate={handleNavigate} />
       <Toaster />
     </>
   )

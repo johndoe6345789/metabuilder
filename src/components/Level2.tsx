@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -9,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { User, ChatCircle, SignOut, House, Trash } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { Database } from '@/lib/database'
 import type { User as UserType, Comment } from '@/lib/level-types'
 
 interface Level2Props {
@@ -18,8 +18,9 @@ interface Level2Props {
 }
 
 export function Level2({ user, onLogout, onNavigate }: Level2Props) {
-  const [users, setUsers] = useKV<UserType[]>('app_users', [])
-  const [comments, setComments] = useKV<Comment[]>('app_comments', [])
+  const [currentUser, setCurrentUser] = useState<UserType>(user)
+  const [users, setUsers] = useState<UserType[]>([])
+  const [comments, setComments] = useState<Comment[]>([])
   const [newComment, setNewComment] = useState('')
   const [editingProfile, setEditingProfile] = useState(false)
   const [profileForm, setProfileForm] = useState({
@@ -27,21 +28,35 @@ export function Level2({ user, onLogout, onNavigate }: Level2Props) {
     email: user.email,
   })
 
-  const currentUser = users?.find(u => u.id === user.id) || user
+  useEffect(() => {
+    const loadData = async () => {
+      const loadedUsers = await Database.getUsers()
+      setUsers(loadedUsers)
+      const foundUser = loadedUsers.find(u => u.id === user.id)
+      if (foundUser) {
+        setCurrentUser(foundUser)
+        setProfileForm({
+          bio: foundUser.bio || '',
+          email: foundUser.email,
+        })
+      }
+      const loadedComments = await Database.getComments()
+      setComments(loadedComments)
+    }
+    loadData()
+  }, [user.id])
 
-  const handleProfileSave = () => {
-    setUsers((current) => 
-      current?.map(u => 
-        u.id === user.id 
-          ? { ...u, bio: profileForm.bio, email: profileForm.email }
-          : u
-      ) || []
-    )
+  const handleProfileSave = async () => {
+    await Database.updateUser(user.id, {
+      bio: profileForm.bio,
+      email: profileForm.email,
+    })
+    setCurrentUser({ ...currentUser, bio: profileForm.bio, email: profileForm.email })
     setEditingProfile(false)
     toast.success('Profile updated successfully')
   }
 
-  const handlePostComment = () => {
+  const handlePostComment = async () => {
     if (!newComment.trim()) {
       toast.error('Comment cannot be empty')
       return
@@ -54,18 +69,20 @@ export function Level2({ user, onLogout, onNavigate }: Level2Props) {
       createdAt: Date.now(),
     }
 
-    setComments((current) => [...(current || []), comment])
+    await Database.addComment(comment)
+    setComments((current) => [...current, comment])
     setNewComment('')
     toast.success('Comment posted')
   }
 
-  const handleDeleteComment = (commentId: string) => {
-    setComments((current) => current?.filter(c => c.id !== commentId) || [])
+  const handleDeleteComment = async (commentId: string) => {
+    await Database.deleteComment(commentId)
+    setComments((current) => current.filter(c => c.id !== commentId))
     toast.success('Comment deleted')
   }
 
-  const userComments = comments?.filter(c => c.userId === user.id) || []
-  const allComments = comments || []
+  const userComments = comments.filter(c => c.userId === user.id)
+  const allComments = comments
 
   return (
     <div className="min-h-screen bg-background">

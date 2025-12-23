@@ -1,14 +1,15 @@
-import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { SignOut, Database, Lightning, Code, Eye, House, Download, Upload, BookOpen } from '@phosphor-icons/react'
+import { SignOut, Database as DatabaseIcon, Lightning, Code, Eye, House, Download, Upload, BookOpen, HardDrives } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { SchemaEditorLevel4 } from './SchemaEditorLevel4'
 import { WorkflowEditor } from './WorkflowEditor'
 import { LuaEditor } from './LuaEditor'
 import { LuaSnippetLibrary } from './LuaSnippetLibrary'
+import { DatabaseManager } from './DatabaseManager'
+import { Database } from '@/lib/database'
 import type { User as UserType, AppConfiguration } from '@/lib/level-types'
 import type { ModelSchema } from '@/lib/schema-types'
 
@@ -20,30 +21,52 @@ interface Level4Props {
 }
 
 export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
-  const [appConfig, setAppConfig] = useKV<AppConfiguration>('app_configuration', {
-    id: 'app_001',
-    name: 'MetaBuilder App',
-    schemas: [],
-    workflows: [],
-    luaScripts: [],
-    pages: [],
-    theme: {
-      colors: {},
-      fonts: {},
-    },
-  })
+  const [appConfig, setAppConfig] = useState<AppConfiguration | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  if (!appConfig) return null
+  useEffect(() => {
+    const loadConfig = async () => {
+      const config = await Database.getAppConfig()
+      if (config) {
+        setAppConfig(config)
+      } else {
+        const defaultConfig: AppConfiguration = {
+          id: 'app_001',
+          name: 'MetaBuilder App',
+          schemas: [],
+          workflows: [],
+          luaScripts: [],
+          pages: [],
+          theme: {
+            colors: {},
+            fonts: {},
+          },
+        }
+        await Database.setAppConfig(defaultConfig)
+        setAppConfig(defaultConfig)
+      }
+      setIsLoading(false)
+    }
+    loadConfig()
+  }, [])
 
-  const handleExportConfig = () => {
-    const dataStr = JSON.stringify(appConfig, null, 2)
+  if (isLoading || !appConfig) return null
+
+  const updateAppConfig = async (updates: Partial<AppConfiguration>) => {
+    const newConfig = { ...appConfig, ...updates }
+    setAppConfig(newConfig)
+    await Database.setAppConfig(newConfig)
+  }
+
+  const handleExportConfig = async () => {
+    const dataStr = await Database.exportDatabase()
     const dataBlob = new Blob([dataStr], { type: 'application/json' })
     const url = URL.createObjectURL(dataBlob)
     const link = document.createElement('a')
     link.href = url
-    link.download = 'app-config.json'
+    link.download = 'database-export.json'
     link.click()
-    toast.success('Configuration exported')
+    toast.success('Database exported')
   }
 
   const handleImportConfig = () => {
@@ -56,11 +79,14 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
 
       const text = await file.text()
       try {
-        const config = JSON.parse(text)
-        setAppConfig(config)
-        toast.success('Configuration imported')
+        await Database.importDatabase(text)
+        const newConfig = await Database.getAppConfig()
+        if (newConfig) {
+          setAppConfig(newConfig)
+        }
+        toast.success('Database imported successfully')
       } catch (error) {
-        toast.error('Invalid configuration file')
+        toast.error('Invalid database file')
       }
     }
     input.click()
@@ -121,9 +147,9 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
         </div>
 
         <Tabs defaultValue="schemas" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 max-w-3xl">
+          <TabsList className="grid w-full grid-cols-5 max-w-4xl">
             <TabsTrigger value="schemas">
-              <Database className="mr-2" size={16} />
+              <DatabaseIcon className="mr-2" size={16} />
               Data Schemas
               <Badge variant="secondary" className="ml-2">{appConfig.schemas.length}</Badge>
             </TabsTrigger>
@@ -141,23 +167,31 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
               <BookOpen className="mr-2" size={16} />
               Snippet Library
             </TabsTrigger>
+            <TabsTrigger value="database">
+              <HardDrives className="mr-2" size={16} />
+              Database
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="schemas" className="space-y-6">
             <SchemaEditorLevel4
               schemas={appConfig.schemas}
-              onSchemasChange={(schemas) =>
-                setAppConfig((current) => ({ ...current!, schemas }))
-              }
+              onSchemasChange={async (schemas) => {
+                const newConfig = { ...appConfig, schemas }
+                setAppConfig(newConfig)
+                await Database.setAppConfig(newConfig)
+              }}
             />
           </TabsContent>
 
           <TabsContent value="workflows" className="space-y-6">
             <WorkflowEditor
               workflows={appConfig.workflows}
-              onWorkflowsChange={(workflows) =>
-                setAppConfig((current) => ({ ...current!, workflows }))
-              }
+              onWorkflowsChange={async (workflows) => {
+                const newConfig = { ...appConfig, workflows }
+                setAppConfig(newConfig)
+                await Database.setAppConfig(newConfig)
+              }}
               scripts={appConfig.luaScripts}
             />
           </TabsContent>
@@ -165,14 +199,20 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
           <TabsContent value="lua" className="space-y-6">
             <LuaEditor
               scripts={appConfig.luaScripts}
-              onScriptsChange={(luaScripts) =>
-                setAppConfig((current) => ({ ...current!, luaScripts }))
-              }
+              onScriptsChange={async (luaScripts) => {
+                const newConfig = { ...appConfig, luaScripts }
+                setAppConfig(newConfig)
+                await Database.setAppConfig(newConfig)
+              }}
             />
           </TabsContent>
 
           <TabsContent value="snippets" className="space-y-6">
             <LuaSnippetLibrary />
+          </TabsContent>
+
+          <TabsContent value="database" className="space-y-6">
+            <DatabaseManager />
           </TabsContent>
         </Tabs>
 

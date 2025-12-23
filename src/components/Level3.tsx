@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -22,6 +21,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SignOut, MagnifyingGlass, Plus, PencilSimple, Trash, Users, ChatCircle, House } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { Database } from '@/lib/database'
 import type { User as UserType, Comment } from '@/lib/level-types'
 import type { ModelSchema } from '@/lib/schema-types'
 
@@ -32,15 +32,25 @@ interface Level3Props {
 }
 
 export function Level3({ user, onLogout, onNavigate }: Level3Props) {
-  const [users, setUsers] = useKV<UserType[]>('app_users', [])
-  const [comments, setComments] = useKV<Comment[]>('app_comments', [])
+  const [users, setUsers] = useState<UserType[]>([])
+  const [comments, setComments] = useState<Comment[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedModel, setSelectedModel] = useState<'users' | 'comments'>('users')
   const [editingItem, setEditingItem] = useState<any>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  const allUsers = users || []
-  const allComments = comments || []
+  useEffect(() => {
+    const loadData = async () => {
+      const loadedUsers = await Database.getUsers()
+      setUsers(loadedUsers)
+      const loadedComments = await Database.getComments()
+      setComments(loadedComments)
+    }
+    loadData()
+  }, [])
+
+  const allUsers = users
+  const allComments = comments
 
   const filteredUsers = allUsers.filter(u =>
     u.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -51,17 +61,19 @@ export function Level3({ user, onLogout, onNavigate }: Level3Props) {
     c.content.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const handleDeleteUser = (userId: string) => {
+  const handleDeleteUser = async (userId: string) => {
     if (userId === user.id) {
       toast.error("You cannot delete your own account")
       return
     }
-    setUsers((current) => current?.filter(u => u.id !== userId) || [])
+    await Database.deleteUser(userId)
+    setUsers((current) => current.filter(u => u.id !== userId))
     toast.success('User deleted')
   }
 
-  const handleDeleteComment = (commentId: string) => {
-    setComments((current) => current?.filter(c => c.id !== commentId) || [])
+  const handleDeleteComment = async (commentId: string) => {
+    await Database.deleteComment(commentId)
+    setComments((current) => current.filter(c => c.id !== commentId))
     toast.success('Comment deleted')
   }
 
@@ -70,11 +82,12 @@ export function Level3({ user, onLogout, onNavigate }: Level3Props) {
     setDialogOpen(true)
   }
 
-  const handleSaveUser = () => {
+  const handleSaveUser = async () => {
     if (!editingItem) return
     
+    await Database.updateUser(editingItem.id, editingItem)
     setUsers((current) =>
-      current?.map(u => u.id === editingItem.id ? editingItem : u) || []
+      current.map(u => u.id === editingItem.id ? editingItem : u)
     )
     setDialogOpen(false)
     setEditingItem(null)
