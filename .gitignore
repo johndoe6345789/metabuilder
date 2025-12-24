@@ -26,6 +26,7 @@ dist-ssr
 
 .env
 **/agent-eval-report*
+# Local packages folder - see packages/README.md for structure
 packages
 pids
 .file-manifest
