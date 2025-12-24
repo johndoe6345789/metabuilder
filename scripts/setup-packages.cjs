@@ -134,7 +134,35 @@ if (packageName) {
   createPackage(pkg);
   console.log('\n✅ Package created successfully!');
 } else {
-  // No package name provided - this is likely postinstall, just exit silently
-  console.log('✓ Packages folder exists and is committed to the repository.');
+  // No package name provided - verification mode (postinstall or manual check)
+  // Verify that all required packages exist
+  const requiredPackages = Object.keys(packageTemplates);
+  const missingPackages = [];
+  
+  if (!fs.existsSync(packagesDir)) {
+    console.error('Error: packages folder does not exist!');
+    console.log('Run this script with a package name to create packages.');
+    process.exit(1);
+  }
+  
+  for (const pkgId of requiredPackages) {
+    const componentsPath = path.join(packagesDir, pkgId, 'seed', 'components.json');
+    const metadataPath = path.join(packagesDir, pkgId, 'seed', 'metadata.json');
+    
+    if (!fs.existsSync(componentsPath) || !fs.existsSync(metadataPath)) {
+      missingPackages.push(pkgId);
+    }
+  }
+  
+  if (missingPackages.length > 0) {
+    console.error('Error: Missing required packages:', missingPackages.join(', '));
+    console.log('\nCreate missing packages with:');
+    missingPackages.forEach(pkg => {
+      console.log(`  npm run setup-packages ${pkg}`);
+    });
+    process.exit(1);
+  }
+  
+  console.log('✓ All required packages exist and are committed to the repository.');
 }
 
