@@ -90,6 +90,11 @@ export function GitHubActionsFetcher() {
     const cancelled = data.filter(r => r.conclusion === 'cancelled').length
     const inProgress = data.filter(r => r.status !== 'completed').length
     
+    const mostRecent = data[0]
+    const mostRecentPassed = mostRecent?.conclusion === 'success'
+    const mostRecentFailed = mostRecent?.conclusion === 'failure'
+    const mostRecentRunning = mostRecent?.status !== 'completed'
+    
     const successRate = completed > 0 ? Math.round((successful / completed) * 100) : 0
     const recentRuns = data.slice(0, 5)
     const recentSuccessful = recentRuns.filter(r => r.conclusion === 'success').length
@@ -109,7 +114,11 @@ export function GitHubActionsFetcher() {
       health,
       trend,
       recentSuccessful,
-      recentFailed
+      recentFailed,
+      mostRecent,
+      mostRecentPassed,
+      mostRecentFailed,
+      mostRecentRunning
     }
   }, [data])
 
@@ -133,89 +142,154 @@ export function GitHubActionsFetcher() {
       </div>
 
       {conclusion && (
-        <Card className="border-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              {conclusion.health === 'healthy' && <CheckCircle className="text-green-600" size={24} />}
-              {conclusion.health === 'warning' && <Warning className="text-yellow-600" size={24} />}
-              {conclusion.health === 'critical' && <XCircle className="text-red-600" size={24} />}
-              Pipeline Health Summary
-            </CardTitle>
-            <CardDescription>
-              Analysis of recent workflow runs
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex flex-wrap gap-2">
-                <Badge 
-                  variant={conclusion.health === 'healthy' ? 'default' : conclusion.health === 'warning' ? 'outline' : 'destructive'}
-                  className="text-sm px-3 py-1"
-                >
-                  {conclusion.successRate}% Success Rate
-                </Badge>
-                
-                <Badge variant="secondary" className="text-sm px-3 py-1">
-                  <CheckCircle size={14} className="mr-1" />
-                  {conclusion.successful} Passed
-                </Badge>
-                
-                {conclusion.failed > 0 && (
-                  <Badge variant="destructive" className="text-sm px-3 py-1">
-                    <XCircle size={14} className="mr-1" />
-                    {conclusion.failed} Failed
-                  </Badge>
-                )}
-                
-                {conclusion.inProgress > 0 && (
-                  <Badge variant="outline" className="text-sm px-3 py-1">
-                    <ArrowClockwise size={14} className="mr-1" />
-                    {conclusion.inProgress} Running
-                  </Badge>
-                )}
-                
-                {conclusion.cancelled > 0 && (
-                  <Badge variant="outline" className="text-sm px-3 py-1 opacity-60">
-                    {conclusion.cancelled} Cancelled
-                  </Badge>
-                )}
-
-                <Badge 
-                  variant={conclusion.trend === 'up' ? 'default' : 'destructive'}
-                  className="text-sm px-3 py-1"
-                >
-                  {conclusion.trend === 'up' ? (
-                    <TrendUp size={14} className="mr-1" />
-                  ) : (
-                    <TrendDown size={14} className="mr-1" />
-                  )}
-                  Recent: {conclusion.recentSuccessful}/{conclusion.recentSuccessful + conclusion.recentFailed}
-                </Badge>
-              </div>
-
-              <div className="text-sm text-muted-foreground">
-                {conclusion.health === 'healthy' && (
-                  <p className="flex items-center gap-2">
-                    <CheckCircle size={16} className="text-green-600" />
-                    Pipeline is healthy. Most recent runs are passing consistently.
-                  </p>
-                )}
-                {conclusion.health === 'warning' && (
-                  <p className="flex items-center gap-2">
-                    <Warning size={16} className="text-yellow-600" />
-                    Pipeline health is moderate. Some failures detected in recent runs.
-                  </p>
-                )}
-                {conclusion.health === 'critical' && (
-                  <p className="flex items-center gap-2">
-                    <XCircle size={16} className="text-red-600" />
-                    Pipeline health is critical. High failure rate detected.
-                  </p>
-                )}
+        <>
+          <Alert 
+            className={`border-4 ${
+              conclusion.mostRecentPassed 
+                ? 'border-green-500 bg-green-50 dark:bg-green-950/20' 
+                : conclusion.mostRecentFailed
+                ? 'border-red-500 bg-red-50 dark:bg-red-950/20'
+                : 'border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20'
+            }`}
+          >
+            <div className="flex items-start gap-4">
+              {conclusion.mostRecentPassed && (
+                <CheckCircle size={48} weight="fill" className="text-green-600 flex-shrink-0" />
+              )}
+              {conclusion.mostRecentFailed && (
+                <XCircle size={48} weight="fill" className="text-red-600 flex-shrink-0" />
+              )}
+              {conclusion.mostRecentRunning && (
+                <ArrowClockwise size={48} weight="bold" className="text-yellow-600 flex-shrink-0 animate-spin" />
+              )}
+              <div className="flex-1">
+                <AlertTitle className="text-2xl font-bold mb-2">
+                  {conclusion.mostRecentPassed && 'Most Recent Build: PASSED ✓'}
+                  {conclusion.mostRecentFailed && 'Most Recent Build: FAILED ✗'}
+                  {conclusion.mostRecentRunning && 'Most Recent Build: RUNNING...'}
+                </AlertTitle>
+                <AlertDescription className="space-y-2">
+                  <div className="text-lg font-medium">
+                    {conclusion.mostRecent.name}
+                  </div>
+                  <div className="flex flex-wrap gap-3 text-sm">
+                    <span className="flex items-center gap-1">
+                      <span className="font-semibold">Branch:</span>
+                      <code className="bg-background/60 px-2 py-0.5 rounded text-xs font-mono">
+                        {conclusion.mostRecent.head_branch}
+                      </code>
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <span className="font-semibold">Updated:</span>
+                      <span>{new Date(conclusion.mostRecent.updated_at).toLocaleString()}</span>
+                    </span>
+                  </div>
+                  <div className="pt-2">
+                    <Button
+                      variant={conclusion.mostRecentPassed ? 'default' : 'destructive'}
+                      size="sm"
+                      asChild
+                    >
+                      <a
+                        href={conclusion.mostRecent.html_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2"
+                      >
+                        View Details on GitHub
+                        <ArrowSquareOut size={16} />
+                      </a>
+                    </Button>
+                  </div>
+                </AlertDescription>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </Alert>
+
+          <Card className="border-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                {conclusion.health === 'healthy' && <CheckCircle className="text-green-600" size={24} />}
+                {conclusion.health === 'warning' && <Warning className="text-yellow-600" size={24} />}
+                {conclusion.health === 'critical' && <XCircle className="text-red-600" size={24} />}
+                Pipeline Health Summary
+              </CardTitle>
+              <CardDescription>
+                Analysis of recent workflow runs
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  <Badge 
+                    variant={conclusion.health === 'healthy' ? 'default' : conclusion.health === 'warning' ? 'outline' : 'destructive'}
+                    className="text-sm px-3 py-1"
+                  >
+                    {conclusion.successRate}% Success Rate
+                  </Badge>
+                  
+                  <Badge variant="secondary" className="text-sm px-3 py-1">
+                    <CheckCircle size={14} className="mr-1" />
+                    {conclusion.successful} Passed
+                  </Badge>
+                  
+                  {conclusion.failed > 0 && (
+                    <Badge variant="destructive" className="text-sm px-3 py-1">
+                      <XCircle size={14} className="mr-1" />
+                      {conclusion.failed} Failed
+                    </Badge>
+                  )}
+                  
+                  {conclusion.inProgress > 0 && (
+                    <Badge variant="outline" className="text-sm px-3 py-1">
+                      <ArrowClockwise size={14} className="mr-1" />
+                      {conclusion.inProgress} Running
+                    </Badge>
+                  )}
+                  
+                  {conclusion.cancelled > 0 && (
+                    <Badge variant="outline" className="text-sm px-3 py-1 opacity-60">
+                      {conclusion.cancelled} Cancelled
+                    </Badge>
+                  )}
+
+                  <Badge 
+                    variant={conclusion.trend === 'up' ? 'default' : 'destructive'}
+                    className="text-sm px-3 py-1"
+                  >
+                    {conclusion.trend === 'up' ? (
+                      <TrendUp size={14} className="mr-1" />
+                    ) : (
+                      <TrendDown size={14} className="mr-1" />
+                    )}
+                    Recent: {conclusion.recentSuccessful}/{conclusion.recentSuccessful + conclusion.recentFailed}
+                  </Badge>
+                </div>
+
+                <div className="text-sm text-muted-foreground">
+                  {conclusion.health === 'healthy' && (
+                    <p className="flex items-center gap-2">
+                      <CheckCircle size={16} className="text-green-600" />
+                      Pipeline is healthy. Most recent runs are passing consistently.
+                    </p>
+                  )}
+                  {conclusion.health === 'warning' && (
+                    <p className="flex items-center gap-2">
+                      <Warning size={16} className="text-yellow-600" />
+                      Pipeline health is moderate. Some failures detected in recent runs.
+                    </p>
+                  )}
+                  {conclusion.health === 'critical' && (
+                    <p className="flex items-center gap-2">
+                      <XCircle size={16} className="text-red-600" />
+                      Pipeline health is critical. High failure rate detected.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </>
       )}
 
       {needsAuth && (
