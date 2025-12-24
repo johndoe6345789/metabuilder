@@ -5,9 +5,10 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CheckCircle, XCircle, ArrowClockwise, ArrowSquareOut, Info, Warning, TrendUp, TrendDown, Robot, Download } from '@phosphor-icons/react'
+import { CheckCircle, XCircle, ArrowClockwise, ArrowSquareOut, Info, Warning, TrendUp, TrendDown, Robot, Download, FileText } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Octokit } from 'octokit'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 interface WorkflowRun {
   id: number
@@ -19,6 +20,26 @@ interface WorkflowRun {
   html_url: string
   head_branch: string
   event: string
+  jobs_url?: string
+}
+
+interface Job {
+  id: number
+  name: string
+  status: string
+  conclusion: string | null
+  started_at: string
+  completed_at: string | null
+  steps: JobStep[]
+}
+
+interface JobStep {
+  name: string
+  status: string
+  conclusion: string | null
+  number: number
+  started_at?: string | null
+  completed_at?: string | null
 }
 
 export function GitHubActionsFetcher() {
@@ -31,6 +52,10 @@ export function GitHubActionsFetcher() {
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true)
   const [analysis, setAnalysis] = useState<string | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [selectedRunId, setSelectedRunId] = useState<number | null>(null)
+  const [runJobs, setRunJobs] = useState<Job[]>([])
+  const [runLogs, setRunLogs] = useState<string | null>(null)
+  const [isLoadingLogs, setIsLoadingLogs] = useState(false)
 
   const fetchGitHubActions = async () => {
     setIsLoading(true)
@@ -150,6 +175,141 @@ Format your response in markdown with clear sections and bullet points.`
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
     toast.success('Downloaded workflow data')
+  }
+
+  const downloadRunLogs = async (runId: number, runName: string) => {
+    setIsLoadingLogs(true)
+    setSelectedRunId(runId)
+    setRunLogs(null)
+    setRunJobs([])
+
+    try {
+      const octokit = new Octokit()
+      
+      const { data: jobs } = await octokit.rest.actions.listJobsForWorkflowRun({
+        owner: 'johndoe6345789',
+        repo: 'metabuilder',
+        run_id: runId
+      })
+
+      setRunJobs(jobs.jobs as Job[])
+
+      const allLogs: string[] = []
+      allLogs.push(`=================================================`)
+      allLogs.push(`WORKFLOW RUN: ${runName}`)
+      allLogs.push(`RUN ID: ${runId}`)
+      allLogs.push(`JOBS COUNT: ${jobs.jobs.length}`)
+      allLogs.push(`=================================================\n`)
+
+      for (const job of jobs.jobs) {
+        allLogs.push(`\n${'='.repeat(80)}`)
+        allLogs.push(`JOB: ${job.name}`)
+        allLogs.push(`JOB ID: ${job.id}`)
+        allLogs.push(`STATUS: ${job.status}`)
+        allLogs.push(`CONCLUSION: ${job.conclusion || 'N/A'}`)
+        allLogs.push(`STARTED: ${job.started_at}`)
+        allLogs.push(`COMPLETED: ${job.completed_at || 'Running...'}`)
+        allLogs.push(`${'='.repeat(80)}`)
+
+        try {
+          const { data: logData } = await octokit.rest.actions.downloadJobLogsForWorkflowRun({
+            owner: 'johndoe6345789',
+            repo: 'metabuilder',
+            job_id: job.id
+          })
+
+          if (typeof logData === 'string') {
+            allLogs.push(logData)
+          } else {
+            allLogs.push(`[Log data returned in binary format - ${job.steps?.length || 0} steps]`)
+            
+            if (job.steps && job.steps.length > 0) {
+              job.steps.forEach((step: JobStep) => {
+                allLogs.push(`\n  Step ${step.number}: ${step.name}`)
+                allLogs.push(`    Status: ${step.status} | Conclusion: ${step.conclusion || 'N/A'}`)
+                if (step.started_at) allLogs.push(`    Started: ${step.started_at}`)
+                if (step.completed_at) allLogs.push(`    Completed: ${step.completed_at}`)
+              })
+            }
+          }
+        } catch (logErr) {
+          allLogs.push(`\n[Could not fetch logs for this job - ${(logErr as Error).message}]`)
+          
+          if (job.steps && job.steps.length > 0) {
+            allLogs.push(`\nSteps in this job:`)
+            job.steps.forEach((step: JobStep) => {
+              allLogs.push(`  ${step.number}. ${step.name}`)
+              allLogs.push(`     Status: ${step.status} | Conclusion: ${step.conclusion || 'N/A'}`)
+            })
+          }
+        }
+
+        allLogs.push('')
+      }
+
+      const logsText = allLogs.join('\n')
+      setRunLogs(logsText)
+
+      const blob = new Blob([logsText], { type: 'text/plain' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `workflow-logs-${runId}-${new Date().toISOString()}.txt`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+
+      toast.success('Workflow logs downloaded successfully')
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to download logs'
+      toast.error(errorMessage)
+      setRunLogs(`Error fetching logs: ${errorMessage}`)
+    } finally {
+      setIsLoadingLogs(false)
+    }
+  }
+
+  const analyzeRunLogs = async () => {
+    if (!runLogs || !selectedRunId) {
+      toast.error('No logs to analyze')
+      return
+    }
+
+    setIsAnalyzing(true)
+    try {
+      const selectedRun = data?.find(r => r.id === selectedRunId)
+      const prompt = spark.llmPrompt`You are a DevOps expert analyzing GitHub Actions workflow logs.
+
+Workflow: ${selectedRun?.name || 'Unknown'}
+Run ID: ${selectedRunId}
+Status: ${selectedRun?.status}
+Conclusion: ${selectedRun?.conclusion || 'N/A'}
+
+=== COMPLETE WORKFLOW LOGS ===
+${runLogs}
+=== END LOGS ===
+
+Provide a comprehensive analysis including:
+1. **Root Cause Analysis**: Identify the specific error(s) that caused failures
+2. **Error Details**: Extract exact error messages, line numbers, and stack traces
+3. **Failed Steps**: List which jobs/steps failed and why
+4. **Dependencies Issues**: Any missing packages, version conflicts, or dependency problems
+5. **Configuration Problems**: Issues with workflow configuration, environment variables, secrets
+6. **Recommended Fixes**: Specific, actionable steps to fix each issue with code examples where applicable
+7. **Prevention**: How to prevent similar issues in the future
+
+Format your response in clear markdown with code blocks for any suggested fixes.`
+
+      const result = await spark.llm(prompt, 'gpt-4o')
+      setAnalysis(result)
+      toast.success('Log analysis complete')
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Analysis failed'
+      toast.error(errorMessage)
+    } finally {
+      setIsAnalyzing(false)
+    }
   }
 
   const conclusion = useMemo(() => {
@@ -425,6 +585,7 @@ Format your response in markdown with clear sections and bullet points.`
       <Tabs defaultValue="workflows" className="space-y-4">
         <TabsList>
           <TabsTrigger value="workflows">Workflow Runs</TabsTrigger>
+          {runLogs && <TabsTrigger value="logs">Downloaded Logs</TabsTrigger>}
           <TabsTrigger value="analysis">AI Analysis</TabsTrigger>
         </TabsList>
 
@@ -486,21 +647,32 @@ Format your response in markdown with clear sections and bullet points.`
                               Updated: {new Date(run.updated_at).toLocaleString()}
                             </div>
                           </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            asChild
-                          >
-                            <a
-                              href={run.html_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1"
+                          <div className="flex flex-col gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => downloadRunLogs(run.id, run.name)}
+                              disabled={isLoadingLogs && selectedRunId === run.id}
                             >
-                              View
-                              <ArrowSquareOut size={14} />
-                            </a>
-                          </Button>
+                              <Download size={14} />
+                              {isLoadingLogs && selectedRunId === run.id ? 'Loading...' : 'Download Logs'}
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              asChild
+                            >
+                              <a
+                                href={run.html_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1"
+                              >
+                                View
+                                <ArrowSquareOut size={14} />
+                              </a>
+                            </Button>
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -527,6 +699,67 @@ Format your response in markdown with clear sections and bullet points.`
           </Card>
         </TabsContent>
 
+        {runLogs && (
+          <TabsContent value="logs" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText size={24} />
+                  Workflow Logs
+                  {selectedRunId && (
+                    <Badge variant="secondary">Run #{selectedRunId}</Badge>
+                  )}
+                </CardTitle>
+                <CardDescription>
+                  Complete logs from workflow run including all jobs and steps
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {runJobs.length > 0 && (
+                  <div className="space-y-3 mb-4">
+                    <h3 className="font-semibold text-sm">Jobs Summary</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {runJobs.map((job) => (
+                        <Badge
+                          key={job.id}
+                          variant={job.conclusion === 'success' ? 'default' : job.conclusion === 'failure' ? 'destructive' : 'outline'}
+                        >
+                          {job.name}: {job.conclusion || job.status}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <ScrollArea className="h-[600px] w-full border rounded-md">
+                  <pre className="p-4 text-xs font-mono whitespace-pre-wrap break-words">
+                    {runLogs}
+                  </pre>
+                </ScrollArea>
+
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => {
+                      navigator.clipboard.writeText(runLogs)
+                      toast.success('Logs copied to clipboard')
+                    }}
+                    variant="outline"
+                  >
+                    Copy to Clipboard
+                  </Button>
+                  <Button
+                    onClick={analyzeRunLogs}
+                    disabled={isAnalyzing}
+                  >
+                    <Robot className={isAnalyzing ? 'animate-pulse' : ''} />
+                    {isAnalyzing ? 'Analyzing Logs...' : 'Analyze Logs with AI'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
+
         <TabsContent value="analysis" className="space-y-4">
           <Card>
             <CardHeader>
@@ -535,19 +768,33 @@ Format your response in markdown with clear sections and bullet points.`
                 AI-Powered Workflow Analysis
               </CardTitle>
               <CardDescription>
-                Deep analysis of your CI/CD pipeline using GPT-4
+                {runLogs 
+                  ? 'Deep analysis of downloaded workflow logs using GPT-4' 
+                  : 'Deep analysis of your CI/CD pipeline using GPT-4'}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button
-                onClick={analyzeWorkflows}
-                disabled={isAnalyzing || !data || data.length === 0}
-                size="lg"
-                className="w-full"
-              >
-                <Robot className={isAnalyzing ? 'animate-pulse' : ''} />
-                {isAnalyzing ? 'Analyzing...' : 'Analyze Workflows with AI'}
-              </Button>
+              {runLogs ? (
+                <Button
+                  onClick={analyzeRunLogs}
+                  disabled={isAnalyzing}
+                  size="lg"
+                  className="w-full"
+                >
+                  <Robot className={isAnalyzing ? 'animate-pulse' : ''} />
+                  {isAnalyzing ? 'Analyzing Logs...' : 'Analyze Downloaded Logs with AI'}
+                </Button>
+              ) : (
+                <Button
+                  onClick={analyzeWorkflows}
+                  disabled={isAnalyzing || !data || data.length === 0}
+                  size="lg"
+                  className="w-full"
+                >
+                  <Robot className={isAnalyzing ? 'animate-pulse' : ''} />
+                  {isAnalyzing ? 'Analyzing...' : 'Analyze Workflows with AI'}
+                </Button>
+              )}
 
               {isAnalyzing && (
                 <div className="space-y-3">
@@ -570,7 +817,9 @@ Format your response in markdown with clear sections and bullet points.`
                   <Info className="text-blue-600" />
                   <AlertTitle>No Analysis Yet</AlertTitle>
                   <AlertDescription>
-                    Click the button above to run an AI analysis of your workflow data. The AI will examine patterns, identify issues, and provide actionable recommendations.
+                    {runLogs 
+                      ? 'Click the button above to run an AI analysis of the downloaded logs. The AI will identify errors, provide root cause analysis, and suggest fixes.' 
+                      : 'Download logs from a specific workflow run using the "Download Logs" button, or click above to analyze overall workflow patterns.'}
                   </AlertDescription>
                 </Alert>
               )}
