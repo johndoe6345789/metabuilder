@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
-import { CheckCircle, XCircle, ArrowClockwise, ArrowSquareOut, Info, Warning, TrendUp, TrendDown } from '@phosphor-icons/react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { CheckCircle, XCircle, ArrowClockwise, ArrowSquareOut, Info, Warning, TrendUp, TrendDown, Robot, Download } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Octokit } from 'octokit'
 
@@ -28,6 +29,8 @@ export function GitHubActionsFetcher() {
   const [needsAuth, setNeedsAuth] = useState(false)
   const [secondsUntilRefresh, setSecondsUntilRefresh] = useState(30)
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true)
+  const [analysis, setAnalysis] = useState<string | null>(null)
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
 
   const fetchGitHubActions = async () => {
     setIsLoading(true)
@@ -99,6 +102,56 @@ export function GitHubActionsFetcher() {
     return <XCircle className="text-red-600" />
   }
 
+  const analyzeWorkflows = async () => {
+    if (!data || data.length === 0) {
+      toast.error('No data to analyze')
+      return
+    }
+
+    setIsAnalyzing(true)
+    try {
+      const prompt = spark.llmPrompt`You are a DevOps expert analyzing GitHub Actions workflow data.
+
+Given the following workflow runs data:
+${JSON.stringify(data, null, 2)}
+
+Provide a comprehensive analysis including:
+1. **Overall Build Health**: Current state of the CI/CD pipeline
+2. **Recent Failures**: List any failed builds and potential root causes
+3. **Patterns**: Identify any patterns in failures (specific branches, times, events)
+4. **Performance**: Comment on build frequency and completion times
+5. **Recommendations**: Specific actionable steps to improve the pipeline
+6. **Risk Assessment**: Any immediate concerns that need attention
+
+Format your response in markdown with clear sections and bullet points.`
+
+      const result = await spark.llm(prompt, 'gpt-4o')
+      setAnalysis(result)
+      toast.success('Analysis complete')
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Analysis failed'
+      toast.error(errorMessage)
+    } finally {
+      setIsAnalyzing(false)
+    }
+  }
+
+  const downloadWorkflowData = () => {
+    if (!data) return
+    
+    const jsonData = JSON.stringify(data, null, 2)
+    const blob = new Blob([jsonData], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `github-actions-${new Date().toISOString()}.json`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+    toast.success('Downloaded workflow data')
+  }
+
   const conclusion = useMemo(() => {
     if (!data || data.length === 0) return null
 
@@ -151,6 +204,15 @@ export function GitHubActionsFetcher() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <Button
+            onClick={downloadWorkflowData}
+            disabled={!data || data.length === 0}
+            variant="outline"
+            size="sm"
+          >
+            <Download />
+            Download JSON
+          </Button>
           <div className="flex flex-col items-end gap-1">
             <div className="flex items-center gap-2">
               <Badge variant={autoRefreshEnabled ? "default" : "outline"} className="text-xs">
@@ -360,102 +422,162 @@ export function GitHubActionsFetcher() {
         </Alert>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            Workflow Runs
-            <a
-              href="https://github.com/johndoe6345789/metabuilder/actions"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm font-normal text-primary hover:underline flex items-center gap-2"
-            >
-              Open in GitHub
-              <ArrowSquareOut size={16} />
-            </a>
-          </CardTitle>
-          <CardDescription>
-            Recent workflow runs via GitHub REST API
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="space-y-3">
-              <Skeleton className="h-20 w-full" />
-              <Skeleton className="h-20 w-full" />
-              <Skeleton className="h-20 w-full" />
-              <Skeleton className="h-20 w-full" />
-            </div>
-          ) : data && data.length > 0 ? (
-            <div className="space-y-3">
-              {data.map((run) => (
-                <Card key={run.id} className="border-l-4" style={{ borderLeftColor: run.conclusion === 'success' ? '#16a34a' : '#dc2626' }}>
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          {getStatusIcon(run.status, run.conclusion)}
-                          <h3 className="font-semibold text-foreground truncate">{run.name}</h3>
-                        </div>
-                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <span className="font-medium">Branch:</span>
-                            <code className="bg-muted px-1 rounded text-xs">{run.head_branch}</code>
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <span className="font-medium">Event:</span>
-                            <span>{run.event}</span>
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <span className="font-medium">Status:</span>
-                            <span className={getStatusColor(run.status, run.conclusion)}>
-                              {run.status === 'completed' ? run.conclusion : run.status}
-                            </span>
-                          </span>
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-2">
-                          Updated: {new Date(run.updated_at).toLocaleString()}
-                        </div>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        asChild
-                      >
-                        <a
-                          href={run.html_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1"
-                        >
-                          View
-                          <ArrowSquareOut size={14} />
-                        </a>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-              <div className="text-center pt-4">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    const jsonData = JSON.stringify(data, null, 2)
-                    navigator.clipboard.writeText(jsonData)
-                    toast.success('JSON data copied to clipboard')
-                  }}
+      <Tabs defaultValue="workflows" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="workflows">Workflow Runs</TabsTrigger>
+          <TabsTrigger value="analysis">AI Analysis</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="workflows" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                Workflow Runs
+                <a
+                  href="https://github.com/johndoe6345789/metabuilder/actions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-normal text-primary hover:underline flex items-center gap-2"
                 >
-                  Copy All as JSON
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center text-muted-foreground py-8">
-              No workflow runs found. Click refresh to fetch data.
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                  Open in GitHub
+                  <ArrowSquareOut size={16} />
+                </a>
+              </CardTitle>
+              <CardDescription>
+                Recent workflow runs via GitHub REST API
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isLoading ? (
+                <div className="space-y-3">
+                  <Skeleton className="h-20 w-full" />
+                  <Skeleton className="h-20 w-full" />
+                  <Skeleton className="h-20 w-full" />
+                  <Skeleton className="h-20 w-full" />
+                </div>
+              ) : data && data.length > 0 ? (
+                <div className="space-y-3">
+                  {data.map((run) => (
+                    <Card key={run.id} className="border-l-4" style={{ borderLeftColor: run.conclusion === 'success' ? '#16a34a' : '#dc2626' }}>
+                      <CardContent className="p-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              {getStatusIcon(run.status, run.conclusion)}
+                              <h3 className="font-semibold text-foreground truncate">{run.name}</h3>
+                            </div>
+                            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <span className="font-medium">Branch:</span>
+                                <code className="bg-muted px-1 rounded text-xs">{run.head_branch}</code>
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <span className="font-medium">Event:</span>
+                                <span>{run.event}</span>
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <span className="font-medium">Status:</span>
+                                <span className={getStatusColor(run.status, run.conclusion)}>
+                                  {run.status === 'completed' ? run.conclusion : run.status}
+                                </span>
+                              </span>
+                            </div>
+                            <div className="text-xs text-muted-foreground mt-2">
+                              Updated: {new Date(run.updated_at).toLocaleString()}
+                            </div>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            asChild
+                          >
+                            <a
+                              href={run.html_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1"
+                            >
+                              View
+                              <ArrowSquareOut size={14} />
+                            </a>
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                  <div className="text-center pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        const jsonData = JSON.stringify(data, null, 2)
+                        navigator.clipboard.writeText(jsonData)
+                        toast.success('JSON data copied to clipboard')
+                      }}
+                    >
+                      Copy All as JSON
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center text-muted-foreground py-8">
+                  No workflow runs found. Click refresh to fetch data.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="analysis" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Robot size={24} />
+                AI-Powered Workflow Analysis
+              </CardTitle>
+              <CardDescription>
+                Deep analysis of your CI/CD pipeline using GPT-4
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button
+                onClick={analyzeWorkflows}
+                disabled={isAnalyzing || !data || data.length === 0}
+                size="lg"
+                className="w-full"
+              >
+                <Robot className={isAnalyzing ? 'animate-pulse' : ''} />
+                {isAnalyzing ? 'Analyzing...' : 'Analyze Workflows with AI'}
+              </Button>
+
+              {isAnalyzing && (
+                <div className="space-y-3">
+                  <Skeleton className="h-32 w-full" />
+                  <Skeleton className="h-32 w-full" />
+                  <Skeleton className="h-32 w-full" />
+                </div>
+              )}
+
+              {analysis && !isAnalyzing && (
+                <div className="prose prose-sm max-w-none dark:prose-invert">
+                  <div className="bg-muted/50 p-6 rounded-lg border whitespace-pre-wrap">
+                    {analysis}
+                  </div>
+                </div>
+              )}
+
+              {!analysis && !isAnalyzing && (
+                <Alert>
+                  <Info className="text-blue-600" />
+                  <AlertTitle>No Analysis Yet</AlertTitle>
+                  <AlertDescription>
+                    Click the button above to run an AI analysis of your workflow data. The AI will examine patterns, identify issues, and provide actionable recommendations.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
