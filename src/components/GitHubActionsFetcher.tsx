@@ -739,7 +739,7 @@ Format your response in clear markdown with code blocks for any suggested fixes.
 
                 <div className="flex gap-2">
                   <Button
-                  <Info className="text-blue-600" />
+                    onClick={() => {
                       navigator.clipboard.writeText(runLogs)
                       toast.success('Logs copied to clipboard')
                     }}
