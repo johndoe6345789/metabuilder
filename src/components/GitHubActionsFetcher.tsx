@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
-import { CheckCircle, XCircle, ArrowClockwise, ArrowSquareOut, Info } from '@phosphor-icons/react'
+import { Badge } from '@/components/ui/badge'
+import { CheckCircle, XCircle, ArrowClockwise, ArrowSquareOut, Info, Warning, TrendUp, TrendDown } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Octokit } from 'octokit'
 
@@ -79,6 +80,39 @@ export function GitHubActionsFetcher() {
     return <XCircle className="text-red-600" />
   }
 
+  const conclusion = useMemo(() => {
+    if (!data || data.length === 0) return null
+
+    const total = data.length
+    const completed = data.filter(r => r.status === 'completed').length
+    const successful = data.filter(r => r.conclusion === 'success').length
+    const failed = data.filter(r => r.conclusion === 'failure').length
+    const cancelled = data.filter(r => r.conclusion === 'cancelled').length
+    const inProgress = data.filter(r => r.status !== 'completed').length
+    
+    const successRate = completed > 0 ? Math.round((successful / completed) * 100) : 0
+    const recentRuns = data.slice(0, 5)
+    const recentSuccessful = recentRuns.filter(r => r.conclusion === 'success').length
+    const recentFailed = recentRuns.filter(r => r.conclusion === 'failure').length
+    
+    const health = successRate >= 80 ? 'healthy' : successRate >= 60 ? 'warning' : 'critical'
+    const trend = recentSuccessful >= recentFailed ? 'up' : 'down'
+
+    return {
+      total,
+      completed,
+      successful,
+      failed,
+      cancelled,
+      inProgress,
+      successRate,
+      health,
+      trend,
+      recentSuccessful,
+      recentFailed
+    }
+  }, [data])
+
   return (
     <div className="space-y-6 py-6">
       <div className="flex items-center justify-between">
@@ -97,6 +131,92 @@ export function GitHubActionsFetcher() {
           {isLoading ? 'Fetching...' : 'Refresh'}
         </Button>
       </div>
+
+      {conclusion && (
+        <Card className="border-2">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              {conclusion.health === 'healthy' && <CheckCircle className="text-green-600" size={24} />}
+              {conclusion.health === 'warning' && <Warning className="text-yellow-600" size={24} />}
+              {conclusion.health === 'critical' && <XCircle className="text-red-600" size={24} />}
+              Pipeline Health Summary
+            </CardTitle>
+            <CardDescription>
+              Analysis of recent workflow runs
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex flex-wrap gap-2">
+                <Badge 
+                  variant={conclusion.health === 'healthy' ? 'default' : conclusion.health === 'warning' ? 'outline' : 'destructive'}
+                  className="text-sm px-3 py-1"
+                >
+                  {conclusion.successRate}% Success Rate
+                </Badge>
+                
+                <Badge variant="secondary" className="text-sm px-3 py-1">
+                  <CheckCircle size={14} className="mr-1" />
+                  {conclusion.successful} Passed
+                </Badge>
+                
+                {conclusion.failed > 0 && (
+                  <Badge variant="destructive" className="text-sm px-3 py-1">
+                    <XCircle size={14} className="mr-1" />
+                    {conclusion.failed} Failed
+                  </Badge>
+                )}
+                
+                {conclusion.inProgress > 0 && (
+                  <Badge variant="outline" className="text-sm px-3 py-1">
+                    <ArrowClockwise size={14} className="mr-1" />
+                    {conclusion.inProgress} Running
+                  </Badge>
+                )}
+                
+                {conclusion.cancelled > 0 && (
+                  <Badge variant="outline" className="text-sm px-3 py-1 opacity-60">
+                    {conclusion.cancelled} Cancelled
+                  </Badge>
+                )}
+
+                <Badge 
+                  variant={conclusion.trend === 'up' ? 'default' : 'destructive'}
+                  className="text-sm px-3 py-1"
+                >
+                  {conclusion.trend === 'up' ? (
+                    <TrendUp size={14} className="mr-1" />
+                  ) : (
+                    <TrendDown size={14} className="mr-1" />
+                  )}
+                  Recent: {conclusion.recentSuccessful}/{conclusion.recentSuccessful + conclusion.recentFailed}
+                </Badge>
+              </div>
+
+              <div className="text-sm text-muted-foreground">
+                {conclusion.health === 'healthy' && (
+                  <p className="flex items-center gap-2">
+                    <CheckCircle size={16} className="text-green-600" />
+                    Pipeline is healthy. Most recent runs are passing consistently.
+                  </p>
+                )}
+                {conclusion.health === 'warning' && (
+                  <p className="flex items-center gap-2">
+                    <Warning size={16} className="text-yellow-600" />
+                    Pipeline health is moderate. Some failures detected in recent runs.
+                  </p>
+                )}
+                {conclusion.health === 'critical' && (
+                  <p className="flex items-center gap-2">
+                    <XCircle size={16} className="text-red-600" />
+                    Pipeline health is critical. High failure rate detected.
+                  </p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {needsAuth && (
         <Alert>
