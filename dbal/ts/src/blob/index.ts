@@ -2,6 +2,7 @@ export * from './blob-storage'
 export { MemoryStorage } from './memory-storage'
 export { S3Storage } from './s3-storage'
 export { FilesystemStorage } from './filesystem-storage'
+export { TenantAwareBlobStorage } from './tenant-aware-storage'
 
 import type { BlobStorage, BlobStorageConfig } from './blob-storage'
 import { MemoryStorage } from './memory-storage'
