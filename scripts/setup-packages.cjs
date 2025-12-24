@@ -164,5 +164,16 @@ if (packageName) {
   }
   
   console.log('✓ All required packages exist and are committed to the repository.');
+  
+  // Generate Prisma Client
+  const { execSync } = require('child_process');
+  console.log('\nGenerating Prisma Client...');
+  try {
+    execSync('npx prisma generate', { stdio: 'inherit' });
+    console.log('✓ Prisma Client generated successfully');
+  } catch (error) {
+    console.error('⚠️ Failed to generate Prisma Client:', error.message);
+    console.log('You may need to run "npm run db:generate" manually');
+  }
 }
 

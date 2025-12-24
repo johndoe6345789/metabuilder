@@ -105,7 +105,7 @@ jobs:
               ref: pr.head.sha
             });
             
-            const requiredChecks = ['lint', 'build', 'test-e2e'];
+            const requiredChecks = ['Lint Code', 'Build Application', 'E2E Tests'];
             const checkStatuses = {};
             
             for (const check of checks.check_runs) {
