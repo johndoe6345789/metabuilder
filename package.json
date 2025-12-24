@@ -8,8 +8,12 @@
         "kill": "fuser -k 5000/tcp",
         "build": "tsc -b --noCheck && vite build",
         "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
         "optimize": "vite optimize",
         "preview": "vite preview",
+        "test:e2e": "playwright test",
+        "test:e2e:ui": "playwright test --ui",
+        "test:e2e:headed": "playwright test --headed",
         "setup-packages": "node scripts/setup-packages.cjs",
         "postinstall": "node scripts/setup-packages.cjs"
     },
@@ -83,6 +87,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.21.0",
+        "@playwright/test": "^1.57.0",
         "@tailwindcss/postcss": "^4.1.8",
         "@types/react": "^19.0.10",
         "@types/react-dom": "^19.0.4",

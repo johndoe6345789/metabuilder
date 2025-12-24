@@ -31,3 +31,14 @@ pids
 .devcontainer/
 
 .spark-workbench-id
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/e2e-results/
+
+# Test artifacts
+*.spec.js.map
+*.spec.ts.map
+lint-output.txt
