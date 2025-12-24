@@ -41,10 +41,10 @@ test.describe('Basic Smoke Tests', () => {
     );
     
     // Should have no critical console errors
-    if (criticalErrors.length > 0) {
-      console.log('Console errors found:', criticalErrors);
-    }
-    expect(criticalErrors.length).toBe(0);
+    expect(
+      criticalErrors,
+      `Console errors found: ${criticalErrors.join('\n')}`
+    ).toEqual([]);
   });
 
   test('should have viewport properly configured', async ({ page }) => {
