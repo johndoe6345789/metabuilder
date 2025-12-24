@@ -1,0 +1,94 @@
+error_codes:
+  NOT_FOUND:
+    code: 404
+    message: "Resource not found"
+    description: "The requested entity does not exist"
+    http_status: 404
+    
+  CONFLICT:
+    code: 409
+    message: "Resource conflict"
+    description: "The operation conflicts with existing data (e.g., duplicate key)"
+    http_status: 409
+    
+  UNAUTHORIZED:
+    code: 401
+    message: "Authentication required"
+    description: "User must be authenticated to access this resource"
+    http_status: 401
+    
+  FORBIDDEN:
+    code: 403
+    message: "Access forbidden"
+    description: "User does not have permission to perform this operation"
+    http_status: 403
+    
+  VALIDATION_ERROR:
+    code: 422
+    message: "Validation failed"
+    description: "Input data failed validation checks"
+    http_status: 422
+    fields:
+      - field: string
+        error: string
+        
+  RATE_LIMIT_EXCEEDED:
+    code: 429
+    message: "Rate limit exceeded"
+    description: "Too many requests in a given time window"
+    http_status: 429
+    retry_after: integer
+    
+  INTERNAL_ERROR:
+    code: 500
+    message: "Internal server error"
+    description: "An unexpected error occurred"
+    http_status: 500
+    
+  TIMEOUT:
+    code: 504
+    message: "Operation timeout"
+    description: "The operation took too long to complete"
+    http_status: 504
+    
+  DATABASE_ERROR:
+    code: 503
+    message: "Database unavailable"
+    description: "Cannot connect to database"
+    http_status: 503
+    
+  CAPABILITY_NOT_SUPPORTED:
+    code: 501
+    message: "Feature not supported"
+    description: "The backend does not support this operation"
+    http_status: 501
+    
+  SANDBOX_VIOLATION:
+    code: 403
+    message: "Sandbox security violation"
+    description: "Operation attempted to access restricted resources"
+    http_status: 403
+    security_incident: true
+    
+  MALICIOUS_CODE_DETECTED:
+    code: 403
+    message: "Malicious code detected"
+    description: "Input contains potentially harmful code"
+    http_status: 403
+    security_incident: true
+
+error_handling:
+  retry_strategy:
+    retryable_codes: [TIMEOUT, DATABASE_ERROR]
+    max_retries: 3
+    backoff: exponential
+    initial_delay_ms: 100
+    max_delay_ms: 5000
+    
+  logging:
+    always_log: [INTERNAL_ERROR, SANDBOX_VIOLATION, MALICIOUS_CODE_DETECTED]
+    include_stack_trace: [INTERNAL_ERROR, DATABASE_ERROR]
+    
+  security:
+    audit_required: [SANDBOX_VIOLATION, MALICIOUS_CODE_DETECTED, UNAUTHORIZED]
+    alert_admin: [SANDBOX_VIOLATION, MALICIOUS_CODE_DETECTED]

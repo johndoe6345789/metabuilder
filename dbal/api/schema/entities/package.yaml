@@ -1,0 +1,75 @@
+entity: Package
+version: "1.0"
+description: "Installable package definitions (forum, chat, etc.)"
+
+fields:
+  id:
+    type: uuid
+    primary: true
+    generated: true
+    
+  name:
+    type: string
+    required: true
+    unique: true
+    max_length: 255
+    
+  version:
+    type: string
+    required: true
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+    description: "Semantic version"
+    
+  description:
+    type: text
+    optional: true
+    
+  author:
+    type: string
+    required: true
+    max_length: 255
+    
+  manifest:
+    type: json
+    required: true
+    description: "Package manifest with dependencies"
+    
+  is_installed:
+    type: boolean
+    required: true
+    default: false
+    
+  installed_at:
+    type: datetime
+    optional: true
+    
+  installed_by:
+    type: uuid
+    optional: true
+    foreign_key:
+      entity: User
+      field: id
+      
+  created_at:
+    type: datetime
+    generated: true
+    immutable: true
+    
+  updated_at:
+    type: datetime
+    auto_update: true
+
+indexes:
+  - fields: [name, version]
+    unique: true
+  - fields: [is_installed]
+
+acl:
+  create:
+    role: [supergod]
+  read:
+    role: [god, supergod]
+  update:
+    role: [supergod]
+  delete:
+    role: [supergod]

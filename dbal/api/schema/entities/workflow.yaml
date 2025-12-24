@@ -1,0 +1,73 @@
+entity: Workflow
+version: "1.0"
+description: "Workflow definitions for automation"
+
+fields:
+  id:
+    type: uuid
+    primary: true
+    generated: true
+    
+  name:
+    type: string
+    required: true
+    unique: true
+    max_length: 255
+    
+  description:
+    type: text
+    optional: true
+    
+  trigger:
+    type: enum
+    required: true
+    values: [manual, schedule, event, webhook]
+    description: "Workflow trigger type"
+    
+  trigger_config:
+    type: json
+    required: true
+    description: "Trigger configuration"
+    
+  steps:
+    type: json
+    required: true
+    description: "Workflow steps definition"
+    
+  is_active:
+    type: boolean
+    required: true
+    default: true
+    
+  created_by:
+    type: uuid
+    required: true
+    foreign_key:
+      entity: User
+      field: id
+      
+  created_at:
+    type: datetime
+    generated: true
+    immutable: true
+    
+  updated_at:
+    type: datetime
+    auto_update: true
+
+indexes:
+  - fields: [name]
+    unique: true
+  - fields: [trigger]
+  - fields: [is_active]
+  - fields: [created_by]
+
+acl:
+  create:
+    role: [god, supergod]
+  read:
+    role: [admin, god, supergod]
+  update:
+    role: [god, supergod]
+  delete:
+    role: [god, supergod]

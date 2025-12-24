@@ -1,0 +1,80 @@
+entity: LuaScript
+version: "1.0"
+description: "Lua script storage and execution tracking"
+
+fields:
+  id:
+    type: uuid
+    primary: true
+    generated: true
+    
+  name:
+    type: string
+    required: true
+    unique: true
+    max_length: 255
+    
+  description:
+    type: text
+    optional: true
+    
+  code:
+    type: text
+    required: true
+    description: "Lua script code"
+    
+  is_sandboxed:
+    type: boolean
+    required: true
+    default: true
+    description: "Whether script runs in sandbox"
+    
+  allowed_globals:
+    type: json
+    required: true
+    default: []
+    description: "List of allowed global functions"
+    
+  timeout_ms:
+    type: integer
+    required: true
+    default: 5000
+    min: 100
+    max: 30000
+    description: "Execution timeout in milliseconds"
+    
+  created_by:
+    type: uuid
+    required: true
+    foreign_key:
+      entity: User
+      field: id
+      
+  created_at:
+    type: datetime
+    generated: true
+    immutable: true
+    
+  updated_at:
+    type: datetime
+    auto_update: true
+
+indexes:
+  - fields: [name]
+    unique: true
+  - fields: [created_by]
+  - fields: [is_sandboxed]
+
+acl:
+  create:
+    role: [god, supergod]
+  read:
+    role: [admin, god, supergod]
+  update:
+    role: [god, supergod]
+  delete:
+    role: [god, supergod]
+
+security:
+  scan_for_malicious: true
+  sandbox_required: true
