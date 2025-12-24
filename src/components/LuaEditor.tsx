@@ -16,8 +16,8 @@ import { toast } from 'sonner'
 import { createLuaEngine, type LuaExecutionResult } from '@/lib/lua-engine'
 import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua-examples'
 import type { LuaScript } from '@/lib/level-types'
-import Editor, { useMonaco } from '@monaco-editor/react'
-import type { editor } from 'monaco-editor'
+import Editor from '@monaco-editor/react'
+import { useMonaco } from '@monaco-editor/react'
 import { LuaSnippetLibrary } from '@/components/LuaSnippetLibrary'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
@@ -39,7 +39,7 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
   const [showSnippetLibrary, setShowSnippetLibrary] = useState(false)
   const [securityScanResult, setSecurityScanResult] = useState<SecurityScanResult | null>(null)
   const [showSecurityDialog, setShowSecurityDialog] = useState(false)
-  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
+  const editorRef = useRef<any>(null)
   const monaco = useMonaco()
 
   const currentScript = scripts.find(s => s.id === selectedScript)
