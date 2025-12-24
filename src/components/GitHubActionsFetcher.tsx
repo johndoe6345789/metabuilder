@@ -317,20 +317,21 @@ Format your response in clear markdown with code blocks for any suggested fixes.
 
     const total = data.length
     const completed = data.filter(r => r.status === 'completed').length
-    const successful = data.filter(r => r.conclusion === 'success').length
-    const failed = data.filter(r => r.conclusion === 'failure').length
-    const cancelled = data.filter(r => r.conclusion === 'cancelled').length
+    const successful = data.filter(r => r.status === 'completed' && r.conclusion === 'success').length
+    const failed = data.filter(r => r.status === 'completed' && r.conclusion === 'failure').length
+    const cancelled = data.filter(r => r.status === 'completed' && r.conclusion === 'cancelled').length
     const inProgress = data.filter(r => r.status !== 'completed').length
     
     const mostRecent = data[0]
-    const mostRecentPassed = mostRecent?.conclusion === 'success'
-    const mostRecentFailed = mostRecent?.conclusion === 'failure'
+    const mostRecentPassed = mostRecent?.status === 'completed' && mostRecent?.conclusion === 'success'
+    const mostRecentFailed = mostRecent?.status === 'completed' && mostRecent?.conclusion === 'failure'
     const mostRecentRunning = mostRecent?.status !== 'completed'
     
     const successRate = completed > 0 ? Math.round((successful / completed) * 100) : 0
     const recentRuns = data.slice(0, 5)
-    const recentSuccessful = recentRuns.filter(r => r.conclusion === 'success').length
-    const recentFailed = recentRuns.filter(r => r.conclusion === 'failure').length
+    const recentCompleted = recentRuns.filter(r => r.status === 'completed')
+    const recentSuccessful = recentCompleted.filter(r => r.conclusion === 'success').length
+    const recentFailed = recentCompleted.filter(r => r.conclusion === 'failure').length
     
     const health = successRate >= 80 ? 'healthy' : successRate >= 60 ? 'warning' : 'critical'
     const trend = recentSuccessful >= recentFailed ? 'up' : 'down'
