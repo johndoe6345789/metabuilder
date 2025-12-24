@@ -173,7 +173,9 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode 
                       onChange={(e) => {
                         try {
                           setProps(JSON.parse(e.target.value))
-                        } catch {}
+                        } catch {
+                          // Ignore invalid JSON during typing
+                        }
                       }}
                       className="font-mono text-xs"
                       rows={6}
@@ -208,7 +210,9 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode 
                       onChange={(e) => {
                         try {
                           setStyles(JSON.parse(e.target.value))
-                        } catch {}
+                        } catch {
+                          // Ignore invalid JSON during typing
+                        }
                       }}
                       className="font-mono text-xs"
                       rows={12}
@@ -256,7 +260,9 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode 
                       onChange={(e) => {
                         try {
                           setEvents(JSON.parse(e.target.value))
-                        } catch {}
+                        } catch {
+                          // Ignore invalid JSON during typing
+                        }
                       }}
                       className="font-mono text-xs"
                       rows={6}

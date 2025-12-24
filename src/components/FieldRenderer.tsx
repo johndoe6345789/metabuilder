@@ -133,7 +133,7 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
           </Select>
         )
 
-      case 'relation':
+      case 'relation': {
         if (!relatedModel || !relatedModelRecords || relatedModelRecords.length === 0) {
           return (
             <div className="text-sm text-muted-foreground p-2 border border-dashed rounded">
@@ -158,6 +158,7 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
             </SelectContent>
           </Select>
         )
+      }
 
       case 'json':
         return (

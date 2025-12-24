@@ -236,7 +236,7 @@ const LUA_MALICIOUS_PATTERNS = [
     recommendation: 'Use with extreme caution'
   },
   {
-    pattern: /\.\.\s*[\[\]]/gi,
+    pattern: /\.\.\s*[[\]]/gi,
     type: 'suspicious' as const,
     severity: 'medium' as const,
     message: 'Potential Lua table manipulation',
