@@ -1,0 +1,378 @@
+name: Development Assistance
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - master
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  
+jobs:
+  code-quality-feedback:
+    name: Continuous Quality Feedback
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' || 
+      (github.event_name == 'pull_request' && !github.event.pull_request.draft)
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Analyze code quality
+        id: quality
+        run: |
+          # Run lint and capture output
+          npm run lint > lint-output.txt 2>&1 || echo "LINT_FAILED=true" >> $GITHUB_OUTPUT
+          
+          # Count TypeScript files and their sizes
+          TOTAL_TS_FILES=$(find src -name "*.ts" -o -name "*.tsx" | wc -l)
+          LARGE_FILES=$(find src -name "*.ts" -o -name "*.tsx" -exec wc -l {} \; | awk '$1 > 150 {print $2}' | wc -l)
+          
+          echo "total_ts_files=$TOTAL_TS_FILES" >> $GITHUB_OUTPUT
+          echo "large_files=$LARGE_FILES" >> $GITHUB_OUTPUT
+          
+          # Check for declarative vs imperative balance
+          JSON_FILES=$(find src packages -name "*.json" 2>/dev/null | wc -l)
+          LUA_SCRIPTS=$(find src packages -name "*.lua" 2>/dev/null | wc -l)
+          
+          echo "json_files=$JSON_FILES" >> $GITHUB_OUTPUT
+          echo "lua_scripts=$LUA_SCRIPTS" >> $GITHUB_OUTPUT
+          
+          cat lint-output.txt
+
+      - name: Check architectural compliance
+        id: architecture
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            let issues = [];
+            let suggestions = [];
+            
+            // Get changed files
+            let changedFiles = [];
+            if (context.eventName === 'pull_request') {
+              const { data: files } = await github.rest.pulls.listFiles({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+              });
+              changedFiles = files.map(f => f.filename);
+            }
+            
+            // Check for hardcoded components outside ui/
+            const hardcodedComponents = changedFiles.filter(f => 
+              f.endsWith('.tsx') && 
+              f.includes('src/components/') && 
+              !f.includes('src/components/ui/') &&
+              !f.includes('src/components/shared/') &&
+              !['RenderComponent', 'FieldRenderer', 'GenericPage'].some(g => f.includes(g))
+            );
+            
+            if (hardcodedComponents.length > 0) {
+              suggestions.push(`Consider if these components could be declarative: ${hardcodedComponents.join(', ')}`);
+            }
+            
+            // Check for database changes without seed data
+            const schemaChanged = changedFiles.some(f => f.includes('schema.prisma'));
+            const seedChanged = changedFiles.some(f => f.includes('seed'));
+            
+            if (schemaChanged && !seedChanged) {
+              suggestions.push('Database schema changed but no seed data updates detected. Consider updating seed data.');
+            }
+            
+            // Check for new routes without PageRoutes table updates
+            const routeFiles = changedFiles.filter(f => f.includes('Route') || f.includes('route'));
+            if (routeFiles.length > 0) {
+              suggestions.push('Route changes detected. Ensure PageRoutes table is updated for dynamic routing.');
+            }
+            
+            // Check for large TypeScript files
+            const largeFiles = parseInt('${{ steps.quality.outputs.large_files }}');
+            if (largeFiles > 0) {
+              issues.push(`${largeFiles} TypeScript files exceed 150 lines. Consider breaking them into smaller components.`);
+            }
+            
+            return { issues, suggestions };
+
+      - name: Provide development feedback
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const analysis = JSON.parse('${{ steps.architecture.outputs.result }}');
+            const totalFiles = parseInt('${{ steps.quality.outputs.total_ts_files }}');
+            const largeFiles = parseInt('${{ steps.quality.outputs.large_files }}');
+            const jsonFiles = parseInt('${{ steps.quality.outputs.json_files }}');
+            const luaScripts = parseInt('${{ steps.quality.outputs.lua_scripts }}');
+            
+            let comment = `## 💻 Development Quality Feedback\n\n`;
+            
+            comment += `### 📊 Code Metrics\n\n`;
+            comment += `- TypeScript files: ${totalFiles}\n`;
+            comment += `- Files >150 LOC: ${largeFiles} ${largeFiles > 0 ? '⚠️' : '✅'}\n`;
+            comment += `- JSON config files: ${jsonFiles}\n`;
+            comment += `- Lua scripts: ${luaScripts}\n`;
+            comment += `- Declarative ratio: ${((jsonFiles + luaScripts) / Math.max(totalFiles, 1) * 100).toFixed(1)}%\n\n`;
+            
+            if (analysis.issues.length > 0) {
+              comment += `### ⚠️ Architectural Issues\n\n`;
+              analysis.issues.forEach(issue => comment += `- ${issue}\n`);
+              comment += '\n';
+            }
+            
+            if (analysis.suggestions.length > 0) {
+              comment += `### 💡 Suggestions\n\n`;
+              analysis.suggestions.forEach(suggestion => comment += `- ${suggestion}\n`);
+              comment += '\n';
+            }
+            
+            comment += `### 🎯 Project Goals Reminder\n\n`;
+            comment += `- **Declarative First:** Prefer JSON + Lua over TypeScript\n`;
+            comment += `- **Component Size:** Keep files under 150 LOC\n`;
+            comment += `- **Generic Renderers:** Use RenderComponent for dynamic components\n`;
+            comment += `- **Database-Driven:** Store configuration in database, not code\n`;
+            comment += `- **Package-Based:** Organize features as importable packages\n\n`;
+            
+            comment += `**@copilot** can help refactor code to better align with these principles.\n\n`;
+            comment += `📖 See [Architecture Guidelines](/.github/copilot-instructions.md)`;
+            
+            // Check if we already commented
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(c => 
+              c.user.type === 'Bot' && c.body.includes('Development Quality Feedback')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
+
+  copilot-interaction:
+    name: Handle Copilot Mentions
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'issue_comment' && 
+      contains(github.event.comment.body, '@copilot')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Parse Copilot request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = context.payload.comment.body.toLowerCase();
+            const issue = context.payload.issue;
+            
+            let response = `## 🤖 Copilot Assistance\n\n`;
+            
+            // Determine what the user is asking for
+            if (comment.includes('implement') || comment.includes('fix this')) {
+              response += `To implement this with Copilot assistance:\n\n`;
+              response += `1. **Create a branch:** \`git checkout -b feature/issue-${issue.number}\`\n`;
+              response += `2. **Use Copilot in your IDE** to generate code with context from:\n`;
+              response += `   - [Copilot Instructions](/.github/copilot-instructions.md)\n`;
+              response += `   - [PRD.md](/PRD.md)\n`;
+              response += `   - Existing package structure in \`/packages/\`\n`;
+              response += `3. **Follow the architectural principles:**\n`;
+              response += `   - Declarative over imperative\n`;
+              response += `   - Database-driven configuration\n`;
+              response += `   - Generic renderers vs hardcoded components\n`;
+              response += `4. **Test your changes:** \`npm run lint && npm run test:e2e\`\n`;
+              response += `5. **Create a PR** - The automated workflows will review it\n\n`;
+            }
+            
+            if (comment.includes('review') || comment.includes('check')) {
+              response += `Copilot can review this through:\n\n`;
+              response += `- **Automated Code Review** workflow (runs on PRs)\n`;
+              response += `- **Development Assistance** workflow (runs on pushes)\n`;
+              response += `- **Planning & Design** workflow (runs on feature requests)\n\n`;
+              response += `Create a PR to trigger comprehensive review!\n\n`;
+            }
+            
+            if (comment.includes('architecture') || comment.includes('design')) {
+              response += `### 🏗️ Architectural Guidance\n\n`;
+              response += `MetaBuilder follows these principles:\n\n`;
+              response += `1. **5-Level Architecture:** User → Admin → God → SuperGod levels\n`;
+              response += `2. **Multi-Tenant:** Isolated tenant instances with independent configs\n`;
+              response += `3. **Declarative Components:** JSON config + Lua scripts, not TSX\n`;
+              response += `4. **Package System:** Self-contained, importable feature bundles\n`;
+              response += `5. **Database-First:** All config in Prisma, not hardcoded\n\n`;
+              response += `📖 Full details: [PRD.md](/PRD.md)\n\n`;
+            }
+            
+            if (comment.includes('test') || comment.includes('e2e')) {
+              response += `### 🧪 Testing with Copilot\n\n`;
+              response += `\`\`\`bash\n`;
+              response += `# Run E2E tests\n`;
+              response += `npm run test:e2e\n\n`;
+              response += `# Run with UI\n`;
+              response += `npm run test:e2e:ui\n\n`;
+              response += `# Run linter\n`;
+              response += `npm run lint\n`;
+              response += `\`\`\`\n\n`;
+              response += `Use Copilot in your IDE to:\n`;
+              response += `- Generate test cases based on user stories\n`;
+              response += `- Write Playwright selectors and assertions\n`;
+              response += `- Create mock data for tests\n\n`;
+            }
+            
+            if (comment.includes('help') || (!comment.includes('implement') && !comment.includes('review') && !comment.includes('architecture') && !comment.includes('test'))) {
+              response += `### 🆘 How to Use Copilot\n\n`;
+              response += `Mention **@copilot** in comments with:\n\n`;
+              response += `- \`@copilot implement this\` - Get implementation guidance\n`;
+              response += `- \`@copilot review this\` - Request code review\n`;
+              response += `- \`@copilot architecture\` - Get architectural guidance\n`;
+              response += `- \`@copilot test this\` - Get testing guidance\n`;
+              response += `- \`@copilot fix this issue\` - Request automated fix\n\n`;
+              response += `**In your IDE:**\n`;
+              response += `- Use GitHub Copilot with context from [Copilot Instructions](/.github/copilot-instructions.md)\n`;
+              response += `- Reference the [PRD](/PRD.md) when prompting\n`;
+              response += `- Follow patterns from existing packages in \`/packages/\`\n\n`;
+            }
+            
+            response += `---\n`;
+            response += `*This is an automated response. For detailed Copilot assistance, use the extension in your IDE with project context.*`;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: response
+            });
+
+  suggest-refactoring:
+    name: Suggest Refactoring Opportunities
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && !github.event.pull_request.draft
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Analyze refactoring opportunities
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            
+            let opportunities = [];
+            
+            // Look for opportunities in changed files
+            for (const file of files) {
+              const patch = file.patch || '';
+              
+              // Check for repeated code patterns
+              if (patch.split('\n').length > 100) {
+                opportunities.push({
+                  file: file.filename,
+                  type: 'Size',
+                  suggestion: 'Large changeset - consider breaking into smaller PRs or extracting common utilities'
+                });
+              }
+              
+              // Check for hardcoded values
+              if (patch.match(/['"][A-Z_]{3,}['"]\s*:/)) {
+                opportunities.push({
+                  file: file.filename,
+                  type: 'Configuration',
+                  suggestion: 'Hardcoded constants detected - consider moving to database configuration'
+                });
+              }
+              
+              // Check for new TSX components
+              if (file.filename.includes('components/') && file.filename.endsWith('.tsx') && file.status === 'added') {
+                opportunities.push({
+                  file: file.filename,
+                  type: 'Architecture',
+                  suggestion: 'New component added - could this be implemented declaratively with JSON + Lua?'
+                });
+              }
+              
+              // Check for inline styles or complex class strings
+              if (patch.includes('style={{') || patch.match(/className="[^"]{50,}"/)) {
+                opportunities.push({
+                  file: file.filename,
+                  type: 'Styling',
+                  suggestion: 'Complex styling detected - consider extracting to theme configuration'
+                });
+              }
+            }
+            
+            if (opportunities.length > 0) {
+              let comment = `## 🔄 Refactoring Opportunities\n\n`;
+              comment += `**@copilot** identified potential improvements:\n\n`;
+              
+              const grouped = {};
+              opportunities.forEach(opp => {
+                if (!grouped[opp.type]) grouped[opp.type] = [];
+                grouped[opp.type].push(opp);
+              });
+              
+              for (const [type, opps] of Object.entries(grouped)) {
+                comment += `### ${type}\n\n`;
+                opps.forEach(opp => {
+                  comment += `- **${opp.file}**: ${opp.suggestion}\n`;
+                });
+                comment += '\n';
+              }
+              
+              comment += `---\n`;
+              comment += `These are suggestions, not requirements. Consider them as part of continuous improvement.\n\n`;
+              comment += `Use **@copilot** in your IDE to help implement these refactorings.`;
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }

@@ -1,0 +1,416 @@
+name: Deployment & Monitoring
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  pre-deployment-check:
+    name: Pre-Deployment Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Validate database schema
+        run: npx prisma validate
+
+      - name: Check for breaking changes
+        id: breaking-changes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get recent commits
+            const commits = await github.rest.repos.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 10
+            });
+            
+            let hasBreaking = false;
+            let breakingChanges = [];
+            
+            for (const commit of commits.data) {
+              const message = commit.commit.message.toLowerCase();
+              if (message.includes('breaking') || message.includes('breaking:')) {
+                hasBreaking = true;
+                breakingChanges.push({
+                  sha: commit.sha.substring(0, 7),
+                  message: commit.commit.message.split('\n')[0]
+                });
+              }
+            }
+            
+            core.setOutput('has_breaking', hasBreaking);
+            
+            if (hasBreaking) {
+              console.log('⚠️ Breaking changes detected:');
+              breakingChanges.forEach(c => console.log(`  - ${c.sha}: ${c.message}`));
+            }
+            
+            return { hasBreaking, breakingChanges };
+
+      - name: Run security audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Check package size
+        run: |
+          npm run build
+          du -sh dist/
+          
+          # Check if dist is larger than 10MB
+          SIZE=$(du -sm dist/ | cut -f1)
+          if [ $SIZE -gt 10 ]; then
+            echo "⚠️ Warning: Build size is ${SIZE}MB (>10MB). Consider optimizing."
+          else
+            echo "✅ Build size is ${SIZE}MB"
+          fi
+
+      - name: Validate environment configuration
+        run: |
+          echo "Checking for required environment variables..."
+          
+          # Check .env.example exists
+          if [ ! -f .env.example ]; then
+            echo "❌ .env.example not found"
+            exit 1
+          fi
+          
+          echo "✅ Environment configuration validated"
+
+  deployment-summary:
+    name: Create Deployment Summary
+    runs-on: ubuntu-latest
+    needs: pre-deployment-check
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate deployment notes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Get commits since last release
+            let commits = [];
+            try {
+              const result = await github.rest.repos.listCommits({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: 20
+              });
+              commits = result.data;
+            } catch (e) {
+              console.log('Could not fetch commits:', e.message);
+            }
+            
+            // Categorize commits
+            const features = [];
+            const fixes = [];
+            const breaking = [];
+            const other = [];
+            
+            for (const commit of commits) {
+              const message = commit.commit.message;
+              const firstLine = message.split('\n')[0];
+              const sha = commit.sha.substring(0, 7);
+              
+              if (message.toLowerCase().includes('breaking')) {
+                breaking.push(`- ${firstLine} (${sha})`);
+              } else if (firstLine.match(/^feat|^feature|^add/i)) {
+                features.push(`- ${firstLine} (${sha})`);
+              } else if (firstLine.match(/^fix|^bug/i)) {
+                fixes.push(`- ${firstLine} (${sha})`);
+              } else {
+                other.push(`- ${firstLine} (${sha})`);
+              }
+            }
+            
+            // Create deployment notes
+            let notes = `# Deployment Summary\n\n`;
+            notes += `**Date:** ${new Date().toISOString()}\n`;
+            notes += `**Branch:** ${context.ref}\n`;
+            notes += `**Commit:** ${context.sha.substring(0, 7)}\n\n`;
+            
+            if (breaking.length > 0) {
+              notes += `## ⚠️ Breaking Changes\n\n${breaking.join('\n')}\n\n`;
+            }
+            
+            if (features.length > 0) {
+              notes += `## ✨ New Features\n\n${features.slice(0, 10).join('\n')}\n\n`;
+            }
+            
+            if (fixes.length > 0) {
+              notes += `## 🐛 Bug Fixes\n\n${fixes.slice(0, 10).join('\n')}\n\n`;
+            }
+            
+            if (other.length > 0) {
+              notes += `## 🔧 Other Changes\n\n${other.slice(0, 5).join('\n')}\n\n`;
+            }
+            
+            notes += `---\n`;
+            notes += `**Total commits:** ${commits.length}\n\n`;
+            notes += `**@copilot** Review the deployment for any potential issues.`;
+            
+            console.log(notes);
+            
+            // Save to file for artifact
+            fs.writeFileSync('DEPLOYMENT_NOTES.md', notes);
+
+      - name: Upload deployment notes
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-notes
+          path: DEPLOYMENT_NOTES.md
+          retention-days: 90
+
+  post-deployment-health:
+    name: Post-Deployment Health Check
+    runs-on: ubuntu-latest
+    needs: deployment-summary
+    if: github.event_name == 'push' || github.event_name == 'release'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Verify build integrity
+        run: |
+          npm run build
+          
+          # Check critical files exist
+          if [ ! -f "dist/index.html" ]; then
+            echo "❌ Critical file missing: dist/index.html"
+            exit 1
+          fi
+          
+          echo "✅ Build integrity verified"
+
+      - name: Create health check report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const report = `## 🏥 Post-Deployment Health Check
+            
+            **Status:** ✅ Healthy
+            **Timestamp:** ${new Date().toISOString()}
+            **Environment:** ${context.ref}
+            
+            ### Checks Performed
+            - ✅ Build integrity verified
+            - ✅ Database schema valid
+            - ✅ Dependencies installed
+            - ✅ Critical files present
+            
+            ### Monitoring
+            - Monitor application logs for errors
+            - Check database connection stability  
+            - Verify user authentication flows
+            - Test multi-tenant isolation
+            - Validate package system operations
+            
+            **@copilot** Assist with monitoring and troubleshooting if issues arise.
+            `;
+            
+            console.log(report);
+
+  create-deployment-issue:
+    name: Track Deployment
+    runs-on: ubuntu-latest
+    needs: [pre-deployment-check, post-deployment-health]
+    if: github.event_name == 'release'
+    steps:
+      - name: Create deployment tracking issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const release = context.payload.release;
+            
+            const issueBody = `## 🚀 Deployment Tracking: ${release.name || release.tag_name}
+            
+            **Release:** [${release.tag_name}](${release.html_url})
+            **Published:** ${release.published_at}
+            **Published by:** @${release.author.login}
+            
+            ### Deployment Checklist
+            
+            - [x] Pre-deployment validation completed
+            - [x] Build successful
+            - [x] Health checks passed
+            - [ ] Database migrations applied (if any)
+            - [ ] Smoke tests completed
+            - [ ] User acceptance testing
+            - [ ] Production monitoring confirmed
+            - [ ] Documentation updated
+            
+            ### Post-Deployment Monitoring
+            
+            Monitor the following for 24-48 hours:
+            - Application error rates
+            - Database query performance
+            - User authentication success rate
+            - Multi-tenant operations
+            - Package system functionality
+            - Memory and CPU usage
+            
+            ### Rollback Plan
+            
+            If critical issues are detected:
+            1. Document the issue with logs and reproduction steps
+            2. Notify team members
+            3. Execute rollback: \`git revert ${context.sha}\`
+            4. Deploy previous stable version
+            5. Create incident report
+            
+            **@copilot** Monitor this deployment and assist with any issues that arise.
+            
+            ---
+            
+            Close this issue once deployment is verified stable after 48 hours.`;
+            
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Deployment: ${release.tag_name}`,
+              body: issueBody,
+              labels: ['deployment', 'monitoring']
+            });
+            
+            console.log(`Created tracking issue: #${issue.data.number}`);
+
+  dependency-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    needs: pre-deployment-check
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Audit dependencies
+        id: audit
+        run: |
+          npm audit --json > audit-report.json || true
+          
+          # Check for critical vulnerabilities
+          CRITICAL=$(cat audit-report.json | grep -o '"critical":[0-9]*' | grep -o '[0-9]*' || echo "0")
+          HIGH=$(cat audit-report.json | grep -o '"high":[0-9]*' | grep -o '[0-9]*' || echo "0")
+          
+          echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
+          echo "high=$HIGH" >> $GITHUB_OUTPUT
+          
+          if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+            echo "⚠️ Security vulnerabilities found: $CRITICAL critical, $HIGH high"
+          else
+            echo "✅ No critical or high security vulnerabilities"
+          fi
+
+      - name: Create security issue if vulnerabilities found
+        if: steps.audit.outputs.critical > 0 || steps.audit.outputs.high > 0
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const critical = ${{ steps.audit.outputs.critical }};
+            const high = ${{ steps.audit.outputs.high }};
+            
+            const issueBody = `## 🔒 Security Audit Alert
+            
+            Security vulnerabilities detected in dependencies:
+            - **Critical:** ${critical}
+            - **High:** ${high}
+            
+            ### Action Required
+            
+            1. Review the vulnerabilities: \`npm audit\`
+            2. Update affected packages: \`npm audit fix\`
+            3. Test the application after updates
+            4. If auto-fix doesn't work, manually update packages
+            5. Consider alternatives for packages with unfixable issues
+            
+            ### Review Process
+            
+            \`\`\`bash
+            # View detailed audit
+            npm audit
+            
+            # Attempt automatic fix
+            npm audit fix
+            
+            # Force fix (may introduce breaking changes)
+            npm audit fix --force
+            
+            # Check results
+            npm audit
+            \`\`\`
+            
+            **@copilot** Suggest safe dependency updates to resolve these vulnerabilities.
+            
+            ---
+            
+            **Priority:** ${critical > 0 ? 'CRITICAL' : 'HIGH'}  
+            **Created:** ${new Date().toISOString()}
+            `;
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Security: ${critical} critical, ${high} high vulnerabilities`,
+              body: issueBody,
+              labels: ['security', 'dependencies', critical > 0 ? 'priority: high' : 'priority: medium']
+            });
