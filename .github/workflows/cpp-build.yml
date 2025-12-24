@@ -15,10 +15,15 @@ on:
       - '.github/workflows/cpp-build.yml'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   check-implementation:
     name: Check C++ Implementation Status
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       has_sources: ${{ steps.check.outputs.has_sources }}
     steps:
