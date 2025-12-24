@@ -19,9 +19,10 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { SignOut, MagnifyingGlass, Plus, PencilSimple, Trash, Users, ChatCircle, House } from '@phosphor-icons/react'
+import { MagnifyingGlass, Plus, PencilSimple, Trash, Users, ChatCircle } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Database } from '@/lib/database'
+import { AppHeader } from './shared/AppHeader'
 import type { User as UserType, Comment } from '@/lib/level-types'
 import type { ModelSchema } from '@/lib/schema-types'
 
@@ -96,29 +97,14 @@ export function Level3({ user, onLogout, onNavigate }: Level3Props) {
 
   return (
     <div className="min-h-screen bg-background">
-      <nav className="border-b border-border bg-sidebar sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600" />
-                <span className="font-bold text-xl text-sidebar-foreground">Admin Panel</span>
-              </div>
-              <Button variant="ghost" size="sm" onClick={() => onNavigate(1)} className="text-sidebar-foreground">
-                <House className="mr-2" size={16} />
-                Home
-              </Button>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary">{user.username}</Badge>
-              <Button variant="ghost" size="sm" onClick={onLogout} className="text-sidebar-foreground">
-                <SignOut size={16} />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <AppHeader
+        title="Admin Panel"
+        username={user.username}
+        showBadge={true}
+        onNavigateHome={() => onNavigate(1)}
+        onLogout={onLogout}
+        variant="admin"
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">

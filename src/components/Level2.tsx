@@ -3,14 +3,14 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { User, ChatCircle, SignOut, House } from '@phosphor-icons/react'
+import { User, ChatCircle } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Database, hashPassword } from '@/lib/database'
 import { generateScrambledPassword, simulateEmailSend } from '@/lib/password-utils'
 import { IRCWebchatDeclarative } from './IRCWebchatDeclarative'
 import { ProfileCard } from './level2/ProfileCard'
 import { CommentsList } from './level2/CommentsList'
+import { AppHeader } from './shared/AppHeader'
 import type { User as UserType, Comment } from '@/lib/level-types'
 
 interface Level2Props {
@@ -104,34 +104,13 @@ export function Level2({ user, onLogout, onNavigate }: Level2Props) {
 
   return (
     <div className="min-h-screen bg-background">
-      <nav className="border-b border-border bg-card sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent" />
-                <span className="font-bold text-xl">MetaBuilder</span>
-              </div>
-              <Button variant="ghost" size="sm" onClick={() => onNavigate(1)}>
-                <House className="mr-2" size={16} />
-                Home
-              </Button>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground hidden sm:inline">
-                {currentUser.username}
-              </span>
-              <Avatar className="w-8 h-8">
-                <AvatarFallback>{currentUser.username[0].toUpperCase()}</AvatarFallback>
-              </Avatar>
-              <Button variant="ghost" size="sm" onClick={onLogout}>
-                <SignOut size={16} />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <AppHeader
+        username={currentUser.username}
+        showAvatar={true}
+        onNavigateHome={() => onNavigate(1)}
+        onLogout={onLogout}
+        variant="user"
+      />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold mb-8">User Dashboard</h1>

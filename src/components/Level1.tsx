@@ -6,6 +6,7 @@ import { GodCredentialsBanner } from './level1/GodCredentialsBanner'
 import { HeroSection } from './level1/HeroSection'
 import { FeaturesSection } from './level1/FeaturesSection'
 import { ContactSection } from './level1/ContactSection'
+import { AppFooter } from './shared/AppFooter'
 
 interface Level1Props {
   onNavigate: (level: number) => void
@@ -121,11 +122,7 @@ export function Level1({ onNavigate }: Level1Props) {
 
       <ContactSection />
 
-      <footer className="border-t border-border bg-muted/30 py-8 mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-muted-foreground">
-          <p>© 2024 MetaBuilder. Built with the power of visual workflows and declarative schemas.</p>
-        </div>
-      </footer>
+      <AppFooter />
     </div>
   )
 }

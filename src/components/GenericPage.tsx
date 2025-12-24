@@ -6,6 +6,7 @@ import { RenderComponent } from '@/components/RenderComponent'
 import { SignOut, House, List, X } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { getPageRenderer, type PageDefinition, type PageContext } from '@/lib/page-renderer'
+import { AppFooter } from './shared/AppFooter'
 import type { User } from '@/lib/level-types'
 
 interface GenericPageProps {
@@ -262,11 +263,7 @@ export function GenericPage({
               {renderContent()}
             </main>
             {page.metadata?.showFooter !== false && (
-              <footer className="border-t border-border mt-12 py-6">
-                <div className="max-w-7xl mx-auto px-4 text-center text-sm text-muted-foreground">
-                  <p>Powered by MetaBuilder</p>
-                </div>
-              </footer>
+              <AppFooter text="Powered by MetaBuilder" />
             )}
           </div>
         )
