@@ -17,7 +17,11 @@ jobs:
   auto-merge:
     name: Auto Merge PR
     runs-on: ubuntu-latest
-    if: github.event.review.state == 'approved' || github.event.workflow_run.conclusion == 'success'
+    if: >
+      ${{
+        (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') ||
+        (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+      }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
