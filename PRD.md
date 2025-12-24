@@ -14,6 +14,8 @@ Create a fully declarative, procedurally-generated multi-tenant application plat
 
 **Database Layer**: Phase 2 Hybrid Mode implemented with complete TypeScript DBAL client providing ACL, audit logging, and preparation for future C++ daemon integration.
 
+**Component Architecture**: Atomic Design Pattern implementation with 60+ components organized into Atoms (basic UI elements from shadcn/ui), Molecules (6 simple composites), Organisms (40+ complex features), and Pages (5 levels). This structure ensures modularity, reusability, and clear component hierarchy.
+
 ## Essential Features
 
 ### 1. Super God Level (Level 5)
@@ -513,3 +515,84 @@ Subtle functionality enhancements with occasional delightful moments
 - PropertyInspector becomes bottom drawer on mobile (< 768px)
 - Quick Guide cards stack vertically on mobile
 - Monaco editor height reduces to 400px on mobile
+
+## Component Architecture
+
+MetaBuilder uses **Atomic Design** principles for component organization, creating a clear hierarchy from simple to complex:
+
+### Atoms (12+ components)
+Basic UI elements from shadcn/ui that cannot be divided further:
+- Button, Input, Label, Badge, Avatar, Separator, Skeleton
+- Switch, Slider, Progress, Checkbox, RadioGroup
+- Imported via: `import { Button, Input } from '@/components/atoms'`
+
+### Molecules (6 components)
+Simple composites of 2-5 atoms with focused purposes:
+- **AppHeader** - Logo and navigation buttons
+- **AppFooter** - Links and copyright
+- **GodCredentialsBanner** - Alert with credentials display
+- **ProfileCard** - User profile information card
+- **SecurityWarningDialog** - Security warning modal
+- **PasswordChangeDialog** - Password change form modal
+- Imported via: `import { AppHeader, ProfileCard } from '@/components/molecules'`
+
+### Organisms (40+ components)
+Complex features with business logic and full functionality:
+
+**Core Builders:**
+- Builder, Canvas, ComponentCatalog, PropertyInspector, ComponentConfigDialog
+
+**Code Editors:**
+- SchemaEditor, CodeEditor, LuaEditor, JsonEditor, NerdModeIDE
+
+**Configuration Managers:**
+- CssClassBuilder, CssClassManager, DropdownConfigManager, ThemeEditor
+- SMTPConfigEditor, GodCredentialsSettings, PageRoutesManager
+
+**Data Management:**
+- DatabaseManager, UserManagement, ModelListView, FieldRenderer, RecordForm
+
+**Package System:**
+- PackageManager, PackageImportExport
+
+**Features:**
+- IRCWebchat, IRCWebchatDeclarative, WorkflowEditor
+- AuditLogViewer, ScreenshotAnalyzer, GitHubActionsFetcher
+
+**Page Sections:**
+- HeroSection, FeaturesSection, ContactSection, NavigationBar (Level 1)
+- CommentsList (Level 2)
+
+**Auth:**
+- UnifiedLogin, Login
+
+- Imported via: `import { ComponentCatalog, SchemaEditor } from '@/components/organisms'`
+
+### Pages (5 components)
+Top-level views that compose organisms:
+- Level1 (Landing page), Level2 (User dashboard), Level3 (Admin panel)
+- Level4 (God builder), Level5 (Super God panel)
+- Imported via: `import Level4 from '@/components/Level4'`
+
+### Dependency Rules
+- ✅ Atoms → No custom dependencies (React/external only)
+- ✅ Molecules → Can use Atoms
+- ✅ Organisms → Can use Atoms, Molecules, other Organisms
+- ✅ Pages → Can use Atoms, Molecules, Organisms
+- ❌ Atoms cannot import Molecules or Organisms
+- ❌ Molecules cannot import Organisms
+
+### Benefits
+1. **Modularity** - Self-contained, reusable components
+2. **Discoverability** - Easy to find components by complexity
+3. **Testability** - Atoms/molecules test in isolation
+4. **Documentation** - Structure serves as living documentation
+5. **Consistency** - Shared atoms ensure visual uniformity
+6. **Maintainability** - Changes to atoms propagate automatically
+7. **Onboarding** - Clear hierarchy for new developers
+
+### Documentation
+- `ATOMIC_DESIGN.md` - Principles and migration guide
+- `COMPONENT_MAP.md` - Complete component classification
+- `ATOMIC_STRUCTURE.md` - Visual hierarchy diagram
+- Component README files in each folder
