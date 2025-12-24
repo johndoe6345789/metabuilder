@@ -119,7 +119,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const analysis = ${{ steps.analyze.outputs.result }};
+            const analysis = JSON.parse('${{ steps.analyze.outputs.result }}');
             
             let comment = '## 🤖 Automated Code Review\n\n';
             comment += `**Changes Summary:**\n`;
