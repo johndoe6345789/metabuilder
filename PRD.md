@@ -1,16 +1,16 @@
-# PRD: MetaBuilder Multi-Tenant Architecture with Super God Level & Nerd Mode IDE
+# PRD: MetaBuilder - Data-Driven Multi-Tenant Application Platform
 
 ## Mission Statement
-Elevate MetaBuilder to support multi-tenant architecture with a Super God level (Level 5) that enables supreme administrators to manage multiple tenant instances, assign custom homepages to different god users, and transfer supreme power while maintaining system-wide control and preventing conflicts over homepage ownership. Additionally, provide advanced developers with a powerful Nerd Mode IDE for direct code access, version control integration, and professional debugging tools.
+Create a fully declarative, procedurally-generated multi-tenant application platform where 95% of functionality is defined through JSON and Lua, minimizing TypeScript dependencies to only essential infrastructure components.
 
 ## Experience Qualities
-1. **Hierarchical** - Clear power structure with Super God at the apex, preventing homepage conflicts between god-level users through tenant-based isolation
-2. **Controlled** - Power transfer mechanism ensures only one Super God exists, with explicit downgrade and upgrade paths that maintain system integrity
-3. **Flexible** - Multi-tenant architecture allows multiple god users to operate independently with their own homepage configurations
-4. **Professional** - Nerd Mode provides advanced developers with full IDE capabilities for fine-grained control and professional workflows
+1. **Declarative** - Everything from pages to workflows defined as data, not code
+2. **Modular** - Clear separation of concerns with isolated, maintainable modules
+3. **Scalable** - Architecture supports massive applications without becoming unwieldy
+4. **Procedural** - UI and logic generated from configuration, not hardcoded files
 
 ## Complexity Level
-**Complex Application** (advanced functionality with multiple views) - This extends the existing 4-level meta-framework with a 5th supreme administrator level, adding multi-tenant management, power transfer workflows, tenant-specific homepage configuration, and cross-level preview capabilities for all user roles.
+**Complex Application** (advanced functionality with meta-programming capabilities) - This is a platform for building platforms, featuring a 5-level architecture where levels 4 and 5 procedurally generate levels 1-3 from pure data definitions stored in a modular seed system.
 
 ## Essential Features
 
