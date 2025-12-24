@@ -15,33 +15,22 @@ A declarative admin panel generator that creates full-featured CRUD interfaces f
 
 1. Clone the repository
 2. Install dependencies: `npm install`
-3. Set up the packages folder: `npm run setup-packages` (or see [Packages Setup](#packages-setup))
-4. Launch the app: `npm run dev`
-5. Use the sidebar to navigate between models
-6. Click "Create New" to add records
-7. Edit or delete records using the action buttons
-8. Click "Edit Schema" to customize your data models
+3. Launch the app: `npm run dev`
+4. Use the sidebar to navigate between models
+5. Click "Create New" to add records
+6. Edit or delete records using the action buttons
+7. Click "Edit Schema" to customize your data models
 
-## Packages Setup
+## Packages
 
-This project uses a modular package system. The `packages/` folder contains component packages and is gitignored (local only). 
+This project uses a modular package system. The `packages/` folder contains component packages that are committed to the repository.
 
-To set up the packages folder, you have two options:
-
-### Option 1: Use the setup script (recommended)
+If you need to add a new package, use:
 ```bash
-npm run setup-packages
+npm run setup-packages <package-name>
 ```
 
-### Option 2: Manual setup
-Create the packages folder structure manually. See `packages/README.md` for details on the expected structure.
-
-Each package should have:
-- `seed/components.json` - Component definitions (can be empty array)
-- `seed/metadata.json` - Package metadata
-- `static_content/examples.json` - Optional examples (can be empty object)
-
-The packages folder is automatically created during the build process if it doesn't exist, with placeholder content.
+This will create the required package structure with placeholder files.
 
 ## Schema Structure
 

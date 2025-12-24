@@ -1,0 +1,12 @@
+{
+  "packageId": "nav_menu",
+  "name": "Navigation Menu",
+  "version": "1.0.0",
+  "description": "Navigation menu components",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [],
+  "exports": {
+    "components": []
+  }
+}

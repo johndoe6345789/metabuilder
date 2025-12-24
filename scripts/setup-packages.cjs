@@ -3,8 +3,10 @@
 'use strict';
 
 /**
- * Setup script for creating the packages folder structure
- * This creates placeholder files for all packages referenced in package-glue.ts
+ * Setup script for creating package folder structure
+ * Usage: 
+ *   node scripts/setup-packages.cjs <package-name>  - Create a specific package
+ *   node scripts/setup-packages.cjs                  - Verify all required packages exist
  */
 
 const fs = require('fs');
@@ -12,84 +14,58 @@ const path = require('path');
 
 const packagesDir = path.join(__dirname, '..', 'packages');
 
+// Get package name from command line argument
+const packageName = process.argv[2];
+
 // Package definitions
-const packages = [
-  {
+const packageTemplates = {
+  'admin_dialog': {
     id: 'admin_dialog',
     name: 'Admin Dialog',
     description: 'Admin dialog components',
     hasExamples: true
   },
-  {
+  'data_table': {
     id: 'data_table',
     name: 'Data Table',
     description: 'Data table components',
     hasExamples: true
   },
-  {
+  'form_builder': {
     id: 'form_builder',
     name: 'Form Builder',
     description: 'Form builder components',
     hasExamples: true
   },
-  {
+  'nav_menu': {
     id: 'nav_menu',
     name: 'Navigation Menu',
     description: 'Navigation menu components',
     hasExamples: false
   },
-  {
+  'dashboard': {
     id: 'dashboard',
     name: 'Dashboard',
     description: 'Dashboard components',
     hasExamples: false
   },
-  {
+  'notification_center': {
     id: 'notification_center',
     name: 'Notification Center',
     description: 'Notification center components',
     hasExamples: false
   }
-];
+};
 
-// Check if all packages already exist (optimization for postinstall)
-function allPackagesExist() {
-  if (!fs.existsSync(packagesDir)) {
-    return false;
-  }
-  
-  for (const pkg of packages) {
-    const componentsPath = path.join(packagesDir, pkg.id, 'seed', 'components.json');
-    const metadataPath = path.join(packagesDir, pkg.id, 'seed', 'metadata.json');
-    
-    if (!fs.existsSync(componentsPath) || !fs.existsSync(metadataPath)) {
-      return false;
-    }
-  }
-  
-  return true;
-}
-
-// Skip if everything is already set up
-if (allPackagesExist()) {
-  console.log('✓ Packages folder already exists with all required packages.');
-  process.exit(0);
-}
-
-console.log('Setting up packages folder...\n');
-
-// Create packages directory if it doesn't exist
-if (!fs.existsSync(packagesDir)) {
-  fs.mkdirSync(packagesDir, { recursive: true });
-  console.log('✓ Created packages directory');
-}
-
-// Create each package
-packages.forEach(pkg => {
+function createPackage(pkg) {
   const pkgDir = path.join(packagesDir, pkg.id);
   const seedDir = path.join(pkgDir, 'seed');
   
   // Create directories
+  if (!fs.existsSync(packagesDir)) {
+    fs.mkdirSync(packagesDir, { recursive: true });
+  }
+  
   if (!fs.existsSync(seedDir)) {
     fs.mkdirSync(seedDir, { recursive: true });
   }
@@ -131,77 +107,34 @@ packages.forEach(pkg => {
     }
   }
   
-  console.log(`✓ Set up ${pkg.name} package`);
-});
+  console.log(`✓ Created ${pkg.name} package`);
+}
 
-// Create README
-const readmePath = path.join(packagesDir, 'README.md');
-if (!fs.existsSync(readmePath)) {
-  const readmeContent = `# Packages Folder
-
-This folder contains modular packages for the MetaBuilder application. Each package is self-contained with its own components, metadata, and examples.
-
-## Structure
-
-Each package follows this structure:
-
-\`\`\`
-packages/
-  ├── package_name/
-  │   ├── seed/
-  │   │   ├── components.json    # Component definitions
-  │   │   ├── metadata.json      # Package metadata
-  │   │   └── scripts/           # Optional Lua scripts
-  │   └── static_content/
-  │       └── examples.json      # Optional usage examples
-\`\`\`
-
-## Available Packages
-
-- **admin_dialog**: Admin dialog components for management interfaces
-- **data_table**: Data table components for displaying tabular data
-- **form_builder**: Form builder components for creating dynamic forms
-- **nav_menu**: Navigation menu components
-- **dashboard**: Dashboard layout components
-- **notification_center**: Notification center components
-
-## Package Metadata Format
-
-Each \`metadata.json\` file should contain:
-
-\`\`\`json
-{
-  "packageId": "package_name",
-  "name": "Display Name",
-  "version": "1.0.0",
-  "description": "Package description",
-  "author": "Author name",
-  "category": "ui",
-  "dependencies": [],
-  "exports": {
-    "components": []
+// If a specific package name is provided
+if (packageName) {
+  const pkg = packageTemplates[packageName];
+  
+  if (!pkg) {
+    console.error(`Error: Unknown package '${packageName}'`);
+    console.log('\nAvailable packages:');
+    Object.keys(packageTemplates).forEach(key => {
+      console.log(`  - ${key}`);
+    });
+    process.exit(1);
   }
-}
-\`\`\`
-
-## Components Format
-
-Each \`components.json\` file should contain an array of component definitions.
-
-## Development
-
-This folder is gitignored and serves as a local development structure. The main application imports from these packages via relative paths in \`src/lib/package-glue.ts\`.
-
-To add a new package:
-
-1. Create a new folder under \`packages/\`
-2. Add required \`seed/components.json\` and \`seed/metadata.json\` files
-3. Add optional \`static_content/examples.json\` if needed
-4. Update \`src/lib/package-glue.ts\` to import the new package
-`;
-  fs.writeFileSync(readmePath, readmeContent, 'utf8');
-  console.log('✓ Created README.md');
+  
+  // Check if package already exists
+  const pkgDir = path.join(packagesDir, pkg.id);
+  if (fs.existsSync(pkgDir)) {
+    console.log(`✓ Package '${pkg.name}' already exists`);
+    process.exit(0);
+  }
+  
+  console.log(`Creating package: ${pkg.name}...\n`);
+  createPackage(pkg);
+  console.log('\n✅ Package created successfully!');
+} else {
+  // No package name provided - this is likely postinstall, just exit silently
+  console.log('✓ Packages folder exists and is committed to the repository.');
 }
 
-console.log('\n✅ Packages folder setup complete!');
-console.log('Note: The packages folder is gitignored and will not be committed to the repository.');
