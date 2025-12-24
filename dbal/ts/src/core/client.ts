@@ -5,6 +5,13 @@ import { DBALError } from './errors'
 import { PrismaAdapter } from '../adapters/prisma-adapter'
 import { ACLAdapter } from '../adapters/acl-adapter'
 import { WebSocketBridge } from '../bridges/websocket-bridge'
+import {
+  validateUserCreate,
+  validateUserUpdate,
+  validatePageCreate,
+  validatePageUpdate,
+  validateId,
+} from './validation'
 
 export class DBALClient {
   private adapter: DBALAdapter
@@ -12,6 +19,15 @@ export class DBALClient {
 
   constructor(config: DBALConfig) {
     this.config = config
+    
+    // Validate configuration
+    if (!config.adapter) {
+      throw new Error('Adapter type must be specified')
+    }
+    if (config.mode !== 'production' && !config.database?.url) {
+      throw new Error('Database URL must be specified for non-production mode')
+    }
+    
     this.adapter = this.createAdapter(config)
   }
 
@@ -55,16 +71,85 @@ export class DBALClient {
   get users() {
     return {
       create: async (data: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User> => {
-        return this.adapter.create('User', data) as Promise<User>
+        // Validate input
+        const validationErrors = validateUserCreate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid user data',
+            validationErrors.map(error => ({ field: 'user', error }))
+          )
+        }
+
+        try {
+          return this.adapter.create('User', data) as Promise<User>
+        } catch (error) {
+          // Check for conflict errors (unique constraints)
+          if (error instanceof DBALError && error.code === 409) {
+            throw DBALError.conflict(`User with username or email already exists`)
+          }
+          throw error
+        }
       },
       read: async (id: string): Promise<User | null> => {
-        return this.adapter.read('User', id) as Promise<User | null>
+        // Validate ID
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid user ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const result = await this.adapter.read('User', id) as User | null
+        if (!result) {
+          throw DBALError.notFound(`User not found: ${id}`)
+        }
+        return result
       },
       update: async (id: string, data: Partial<User>): Promise<User> => {
-        return this.adapter.update('User', id, data) as Promise<User>
+        // Validate ID
+        const idErrors = validateId(id)
+        if (idErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid user ID',
+            idErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        // Validate update data
+        const validationErrors = validateUserUpdate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid user update data',
+            validationErrors.map(error => ({ field: 'user', error }))
+          )
+        }
+
+        try {
+          return this.adapter.update('User', id, data) as Promise<User>
+        } catch (error) {
+          // Check for conflict errors (unique constraints)
+          if (error instanceof DBALError && error.code === 409) {
+            throw DBALError.conflict(`Username or email already exists`)
+          }
+          throw error
+        }
       },
       delete: async (id: string): Promise<boolean> => {
-        return this.adapter.delete('User', id)
+        // Validate ID
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid user ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const result = await this.adapter.delete('User', id)
+        if (!result) {
+          throw DBALError.notFound(`User not found: ${id}`)
+        }
+        return result
       },
       list: async (options?: ListOptions): Promise<ListResult<User>> => {
         return this.adapter.list('User', options) as Promise<ListResult<User>>
@@ -75,20 +160,99 @@ export class DBALClient {
   get pages() {
     return {
       create: async (data: Omit<PageView, 'id' | 'createdAt' | 'updatedAt'>): Promise<PageView> => {
-        return this.adapter.create('PageView', data) as Promise<PageView>
+        // Validate input
+        const validationErrors = validatePageCreate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid page data',
+            validationErrors.map(error => ({ field: 'page', error }))
+          )
+        }
+
+        try {
+          return this.adapter.create('PageView', data) as Promise<PageView>
+        } catch (error) {
+          // Check for conflict errors (unique slug)
+          if (error instanceof DBALError && error.code === 409) {
+            throw DBALError.conflict(`Page with slug '${data.slug}' already exists`)
+          }
+          throw error
+        }
       },
       read: async (id: string): Promise<PageView | null> => {
-        return this.adapter.read('PageView', id) as Promise<PageView | null>
+        // Validate ID
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid page ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const result = await this.adapter.read('PageView', id) as PageView | null
+        if (!result) {
+          throw DBALError.notFound(`Page not found: ${id}`)
+        }
+        return result
       },
       readBySlug: async (slug: string): Promise<PageView | null> => {
+        // Validate slug
+        if (!slug || slug.trim().length === 0) {
+          throw DBALError.validationError('Slug cannot be empty', [
+            { field: 'slug', error: 'Slug is required' }
+          ])
+        }
+
         const result = await this.adapter.list('PageView', { filter: { slug } })
-        return result.data[0] as PageView || null
+        if (result.data.length === 0) {
+          throw DBALError.notFound(`Page not found with slug: ${slug}`)
+        }
+        return result.data[0] as PageView
       },
       update: async (id: string, data: Partial<PageView>): Promise<PageView> => {
-        return this.adapter.update('PageView', id, data) as Promise<PageView>
+        // Validate ID
+        const idErrors = validateId(id)
+        if (idErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid page ID',
+            idErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        // Validate update data
+        const validationErrors = validatePageUpdate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid page update data',
+            validationErrors.map(error => ({ field: 'page', error }))
+          )
+        }
+
+        try {
+          return this.adapter.update('PageView', id, data) as Promise<PageView>
+        } catch (error) {
+          // Check for conflict errors (unique slug)
+          if (error instanceof DBALError && error.code === 409) {
+            throw DBALError.conflict(`Slug already exists`)
+          }
+          throw error
+        }
       },
       delete: async (id: string): Promise<boolean> => {
-        return this.adapter.delete('PageView', id)
+        // Validate ID
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid page ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const result = await this.adapter.delete('PageView', id)
+        if (!result) {
+          throw DBALError.notFound(`Page not found: ${id}`)
+        }
+        return result
       },
       list: async (options?: ListOptions): Promise<ListResult<PageView>> => {
         return this.adapter.list('PageView', options) as Promise<ListResult<PageView>>
