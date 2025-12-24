@@ -213,6 +213,7 @@ For teams planning to migrate:
 - `LUA_INTEGRATION.md` - Lua engine docs
 - `SECURITY_GUIDE.md` - Security practices
 - `PACKAGE_IMPORT_EXPORT.md` - Package system
+- `PACKAGE_SCRIPTS_GUIDE.md` - Multi-file Lua scripts (NEW)
 
 ### Code Documentation
 - Inline comments in seed-data modules

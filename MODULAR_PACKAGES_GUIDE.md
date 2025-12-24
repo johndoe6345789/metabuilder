@@ -15,8 +15,14 @@ This architecture allows packages to be **dropped in**, **glued together**, and 
 ├── admin_dialog/
 │   ├── seed/
 │   │   ├── components.json      # Component hierarchy
-│   │   ├── scripts.lua           # Lua business logic
-│   │   └── metadata.json         # Package info & exports
+│   │   ├── metadata.json         # Package info & exports
+│   │   ├── scripts.lua           # Legacy single file (optional)
+│   │   └── scripts/              # NEW: Organized Lua scripts
+│   │       ├── manifest.json     # Script file registry
+│   │       ├── init.lua          # Initialization
+│   │       ├── handlers.lua      # Event handlers
+│   │       ├── validators.lua    # Validation logic
+│   │       └── utils.lua         # Helper functions
 │   ├── static_content/
 │   │   ├── examples.json         # Usage examples
 │   │   └── assets/               # Images, icons
@@ -28,6 +34,9 @@ This architecture allows packages to be **dropped in**, **glued together**, and 
 ├── notification_center/
 └── manifest.json                 # Registry of all packages
 ```
+
+**NEW**: Packages now support multiple organized Lua scripts in a `scripts/` subfolder.
+See [PACKAGE_SCRIPTS_GUIDE.md](./PACKAGE_SCRIPTS_GUIDE.md) for details.
 
 ## 🎯 Core Concept: Drop & Glue
 

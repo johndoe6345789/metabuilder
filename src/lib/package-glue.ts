@@ -21,6 +21,14 @@ import dashboardMetadata from '../../packages/dashboard/seed/metadata.json'
 import notificationCenterComponents from '../../packages/notification_center/seed/components.json'
 import notificationCenterMetadata from '../../packages/notification_center/seed/metadata.json'
 
+export interface LuaScriptFile {
+  name: string
+  path: string
+  code: string
+  category?: string
+  description?: string
+}
+
 export interface PackageDefinition {
   packageId: string
   name: string
@@ -38,6 +46,7 @@ export interface PackageDefinition {
   shadowcnComponents?: string[]
   components: any[]
   scripts?: string
+  scriptFiles?: LuaScriptFile[]
   examples?: any
 }
 
@@ -45,7 +54,7 @@ export interface PackageRegistry {
   [packageId: string]: PackageDefinition
 }
 
-// Load Lua scripts for packages
+// Load single Lua script file (legacy support)
 async function loadLuaScript(packageId: string): Promise<string> {
   try {
     const response = await fetch(`/packages/${packageId}/seed/scripts.lua`)
@@ -57,61 +66,137 @@ async function loadLuaScript(packageId: string): Promise<string> {
   }
 }
 
+// Load all Lua scripts from scripts folder
+async function loadLuaScriptsFolder(packageId: string): Promise<LuaScriptFile[]> {
+  const scriptFiles: LuaScriptFile[] = []
+  
+  try {
+    // Try to load scripts manifest (lists all script files in the folder)
+    const manifestResponse = await fetch(`/packages/${packageId}/seed/scripts/manifest.json`)
+    
+    if (manifestResponse.ok) {
+      const manifest = await manifestResponse.json()
+      
+      // Load each script file listed in the manifest
+      for (const scriptInfo of manifest.scripts || []) {
+        try {
+          const scriptResponse = await fetch(`/packages/${packageId}/seed/scripts/${scriptInfo.file}`)
+          if (scriptResponse.ok) {
+            const code = await scriptResponse.text()
+            scriptFiles.push({
+              name: scriptInfo.name || scriptInfo.file,
+              path: `scripts/${scriptInfo.file}`,
+              code,
+              category: scriptInfo.category,
+              description: scriptInfo.description
+            })
+          }
+        } catch (error) {
+          console.warn(`Could not load script ${scriptInfo.file} for package ${packageId}:`, error)
+        }
+      }
+    } else {
+      // Fallback: try to load common script names
+      const commonScriptNames = [
+        'init.lua',
+        'handlers.lua',
+        'validators.lua',
+        'utils.lua',
+        'state.lua',
+        'actions.lua'
+      ]
+      
+      for (const filename of commonScriptNames) {
+        try {
+          const scriptResponse = await fetch(`/packages/${packageId}/seed/scripts/${filename}`)
+          if (scriptResponse.ok) {
+            const code = await scriptResponse.text()
+            scriptFiles.push({
+              name: filename.replace('.lua', ''),
+              path: `scripts/${filename}`,
+              code,
+              category: 'auto-discovered'
+            })
+          }
+        } catch (error) {
+          // Silently skip missing files in fallback mode
+        }
+      }
+    }
+  } catch (error) {
+    console.warn(`Could not load scripts folder for package ${packageId}:`, error)
+  }
+  
+  return scriptFiles
+}
+
 // Build package registry
 export async function buildPackageRegistry(): Promise<PackageRegistry> {
   const registry: PackageRegistry = {}
 
   // Admin Dialog Package
   const adminDialogScripts = await loadLuaScript('admin_dialog')
+  const adminDialogScriptFiles = await loadLuaScriptsFolder('admin_dialog')
   registry['admin_dialog'] = {
     ...adminDialogMetadata,
     components: adminDialogComponents,
     scripts: adminDialogScripts,
+    scriptFiles: adminDialogScriptFiles,
     examples: adminDialogExamples
   }
 
   // Data Table Package
   const dataTableScripts = await loadLuaScript('data_table')
+  const dataTableScriptFiles = await loadLuaScriptsFolder('data_table')
   registry['data_table'] = {
     ...dataTableMetadata,
     components: dataTableComponents,
     scripts: dataTableScripts,
+    scriptFiles: dataTableScriptFiles,
     examples: dataTableExamples
   }
 
   // Form Builder Package
   const formBuilderScripts = await loadLuaScript('form_builder')
+  const formBuilderScriptFiles = await loadLuaScriptsFolder('form_builder')
   registry['form_builder'] = {
     ...formBuilderMetadata,
     components: formBuilderComponents,
     scripts: formBuilderScripts,
+    scriptFiles: formBuilderScriptFiles,
     examples: formBuilderExamples
   }
 
   // Navigation Menu Package
   const navMenuScripts = await loadLuaScript('nav_menu')
+  const navMenuScriptFiles = await loadLuaScriptsFolder('nav_menu')
   registry['nav_menu'] = {
     ...navMenuMetadata,
     components: navMenuComponents,
     scripts: navMenuScripts,
+    scriptFiles: navMenuScriptFiles,
     examples: {}
   }
 
   // Dashboard Package
   const dashboardScripts = await loadLuaScript('dashboard')
+  const dashboardScriptFiles = await loadLuaScriptsFolder('dashboard')
   registry['dashboard'] = {
     ...dashboardMetadata,
     components: dashboardComponents,
     scripts: dashboardScripts,
+    scriptFiles: dashboardScriptFiles,
     examples: {}
   }
 
   // Notification Center Package
   const notificationCenterScripts = await loadLuaScript('notification_center')
+  const notificationCenterScriptFiles = await loadLuaScriptsFolder('notification_center')
   registry['notification_center'] = {
     ...notificationCenterMetadata,
     components: notificationCenterComponents,
     scripts: notificationCenterScripts,
+    scriptFiles: notificationCenterScriptFiles,
     examples: {}
   }
 
@@ -136,6 +221,19 @@ export function getPackageComponents(pkg: PackageDefinition): any[] {
 // Get package scripts (Lua code)
 export function getPackageScripts(pkg: PackageDefinition): string {
   return pkg.scripts || ''
+}
+
+// Get package script files (multiple Lua files)
+export function getPackageScriptFiles(pkg: PackageDefinition): LuaScriptFile[] {
+  return pkg.scriptFiles || []
+}
+
+// Get all scripts combined (legacy + new format)
+export function getAllPackageScripts(pkg: PackageDefinition): { legacy: string; files: LuaScriptFile[] } {
+  return {
+    legacy: pkg.scripts || '',
+    files: pkg.scriptFiles || []
+  }
 }
 
 // Get package examples
@@ -177,15 +275,30 @@ export async function installPackageComponents(pkg: PackageDefinition, db: any):
 
 // Install package scripts into database
 export async function installPackageScripts(pkg: PackageDefinition, db: any): Promise<void> {
-  const scripts = getPackageScripts(pkg)
-  
-  if (scripts) {
+  // Install legacy single script file if it exists
+  const legacyScripts = getPackageScripts(pkg)
+  if (legacyScripts) {
     await db.set('lua_scripts', `package_${pkg.packageId}`, {
       id: `package_${pkg.packageId}`,
       name: `${pkg.name} Scripts`,
-      code: scripts,
+      code: legacyScripts,
       category: 'package',
       packageId: pkg.packageId
+    })
+  }
+
+  // Install new multi-file scripts
+  const scriptFiles = getPackageScriptFiles(pkg)
+  for (const scriptFile of scriptFiles) {
+    const scriptId = `package_${pkg.packageId}_${scriptFile.name}`
+    await db.set('lua_scripts', scriptId, {
+      id: scriptId,
+      name: `${pkg.name} - ${scriptFile.name}`,
+      code: scriptFile.code,
+      category: scriptFile.category || 'package',
+      packageId: pkg.packageId,
+      path: scriptFile.path,
+      description: scriptFile.description
     })
   }
 }
@@ -301,15 +414,29 @@ export function exportAllPackagesForSeed(registry: PackageRegistry) {
     // Add components
     seedData.components.push(...getPackageComponents(pkg))
 
-    // Add script
-    const scripts = getPackageScripts(pkg)
-    if (scripts) {
+    // Add legacy single script
+    const legacyScripts = getPackageScripts(pkg)
+    if (legacyScripts) {
       seedData.scripts.push({
         id: `package_${packageId}`,
         name: `${pkg.name} Scripts`,
-        code: scripts,
+        code: legacyScripts,
         category: 'package',
         packageId
+      })
+    }
+
+    // Add multi-file scripts
+    const scriptFiles = getPackageScriptFiles(pkg)
+    for (const scriptFile of scriptFiles) {
+      seedData.scripts.push({
+        id: `package_${packageId}_${scriptFile.name}`,
+        name: `${pkg.name} - ${scriptFile.name}`,
+        code: scriptFile.code,
+        category: scriptFile.category || 'package',
+        packageId,
+        path: scriptFile.path,
+        description: scriptFile.description
       })
     }
 

@@ -28,6 +28,14 @@ export interface PackageContent {
   seedData?: Record<string, any[]>
 }
 
+export interface LuaScriptFile {
+  name: string
+  path: string
+  code: string
+  category?: string
+  description?: string
+}
+
 export interface InstalledPackage {
   packageId: string
   installedAt: number
