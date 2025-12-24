@@ -24,6 +24,10 @@ dist-ssr
 *.sln
 *.sw?
 
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+
 .env
 **/agent-eval-report*
 pids
