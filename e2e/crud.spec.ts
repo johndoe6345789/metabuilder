@@ -1,11 +1,15 @@
 import { test, expect } from '@playwright/test';
 
+// Test credentials for e2e login. Override via env vars to match seed data/fixtures.
+const TEST_USERNAME = process.env.E2E_TEST_USERNAME ?? 'user';
+const TEST_PASSWORD = process.env.E2E_TEST_PASSWORD ?? 'password123';
+
 test.describe('CRUD Operations', () => {
   test.beforeEach(async ({ page }) => {
     // Login as user with appropriate permissions
     await page.goto('/');
-    await page.getByLabel(/username/i).fill('user');
-    await page.getByLabel(/password/i).fill('password123');
+    await page.getByLabel(/username/i).fill(TEST_USERNAME);
+    await page.getByLabel(/password/i).fill(TEST_PASSWORD);
     await page.getByRole('button', { name: /login/i }).click();
     await expect(page.getByText(/welcome/i)).toBeVisible({ timeout: 10000 });
     
