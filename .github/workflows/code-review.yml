@@ -76,7 +76,7 @@ jobs:
               if (patch.match(/debugger/)) {
                 issues.push(`🐛 **Debug Code**: Debugger statement found in ${filename}. Remove before merging.`);
               }
-              if (patch.match(/any\s*[>;:\)]/)) {
+              if (patch.match(/(:\s*any\b|\bany\s*[>;,\)])/)) {
                 suggestions.push(`💡 **Type Safety**: Consider replacing \`any\` types with specific types in ${filename}`);
               }
               
