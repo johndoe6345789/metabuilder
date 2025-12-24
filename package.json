@@ -36,7 +36,8 @@
         "cpp:test": "node dbal/tools/cpp-build-assistant.js test",
         "cpp:clean": "node dbal/tools/cpp-build-assistant.js clean",
         "cpp:rebuild": "node dbal/tools/cpp-build-assistant.js rebuild",
-        "cpp:full": "node dbal/tools/cpp-build-assistant.js full"
+        "cpp:full": "node dbal/tools/cpp-build-assistant.js full",
+        "screenshot": "npx playwright install chromium && npx tsx scripts/capture-screenshot.ts"
     },
     "dependencies": {
         "@github/spark": ">=0.43.1 <1",

@@ -21,13 +21,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Crown, Buildings, Users, ArrowsLeftRight, Eye } from '@phosphor-icons/react'
+import { Crown, Buildings, Users, ArrowsLeftRight, Eye, Camera } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Level5Header } from './level5/Level5Header'
 import { TenantsTab } from './level5/TenantsTab'
 import { GodUsersTab } from './level5/GodUsersTab'
 import { PowerTransferTab } from './level5/PowerTransferTab'
 import { PreviewTab } from './level5/PreviewTab'
+import { ScreenshotAnalyzer } from './ScreenshotAnalyzer'
 import { NerdModeIDE } from './NerdModeIDE'
 import type { User, AppLevel, Tenant, PowerTransferRequest } from '@/lib/level-types'
 import { Database } from '@/lib/database'
@@ -169,6 +170,10 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
               <Eye className="w-4 h-4 mr-2" />
               Preview Levels
             </TabsTrigger>
+            <TabsTrigger value="screenshot" className="data-[state=active]:bg-purple-600">
+              <Camera className="w-4 h-4 mr-2" />
+              Screenshot
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="tenants" className="space-y-4">
@@ -194,6 +199,10 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
 
           <TabsContent value="preview" className="space-y-4">
             <PreviewTab onPreview={onPreview} />
+          </TabsContent>
+
+          <TabsContent value="screenshot" className="space-y-4">
+            <ScreenshotAnalyzer />
           </TabsContent>
         </Tabs>
       </main>
