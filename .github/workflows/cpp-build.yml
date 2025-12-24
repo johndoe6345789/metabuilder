@@ -5,13 +5,13 @@ on:
     branches: [ main, develop ]
     paths:
       - 'dbal/cpp/**'
-      - 'dbal/tools/cpp-build-assistant.js'
+      - 'dbal/tools/cpp-build-assistant.cjs'
       - '.github/workflows/cpp-build.yml'
   pull_request:
     branches: [ main, develop ]
     paths:
       - 'dbal/cpp/**'
-      - 'dbal/tools/cpp-build-assistant.js'
+      - 'dbal/tools/cpp-build-assistant.cjs'
       - '.github/workflows/cpp-build.yml'
   workflow_dispatch:
 
@@ -151,7 +151,7 @@ jobs:
           CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
         run: |
           if [ "${{ matrix.build_type }}" = "Debug" ]; then
-            node dbal/tools/cpp-build-assistant.js full --debug
+            node dbal/tools/cpp-build-assistant.cjs full --debug
           else
             npm run cpp:full
           fi
@@ -206,7 +206,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.build_type }}" = "Debug" ]; then
-            node dbal/tools/cpp-build-assistant.js full --debug
+            node dbal/tools/cpp-build-assistant.cjs full --debug
           else
             npm run cpp:full
           fi
