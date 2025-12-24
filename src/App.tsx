@@ -8,6 +8,7 @@ import { Level4 } from '@/components/Level4'
 import { Level5 } from '@/components/Level5'
 import { PasswordChangeDialog } from '@/components/PasswordChangeDialog'
 import { UnifiedLogin } from '@/components/UnifiedLogin'
+import { GitHubActionsFetcher } from '@/components/GitHubActionsFetcher'
 import { toast } from 'sonner'
 import { canAccessLevel } from '@/lib/auth'
 import { Database, hashPassword } from '@/lib/database'
@@ -16,6 +17,15 @@ import { initializePackageSystem } from '@/lib/package-loader'
 import type { User, AppLevel } from '@/lib/level-types'
 
 function App() {
+  return (
+    <>
+      <GitHubActionsFetcher />
+      <Toaster />
+    </>
+  )
+}
+
+function AppOriginal() {
   const [users, setUsers] = useState<User[]>([])
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [currentLevel, setCurrentLevel] = useState<AppLevel>(1)
