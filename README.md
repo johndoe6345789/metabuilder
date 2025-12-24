@@ -13,11 +13,24 @@ A declarative admin panel generator that creates full-featured CRUD interfaces f
 
 ## Quick Start
 
-1. Launch the app
-2. Use the sidebar to navigate between models
-3. Click "Create New" to add records
-4. Edit or delete records using the action buttons
-5. Click "Edit Schema" to customize your data models
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Launch the app: `npm run dev`
+4. Use the sidebar to navigate between models
+5. Click "Create New" to add records
+6. Edit or delete records using the action buttons
+7. Click "Edit Schema" to customize your data models
+
+## Packages
+
+This project uses a modular package system. The `packages/` folder contains component packages that are committed to the repository.
+
+If you need to add a new package, use:
+```bash
+npm run setup-packages <package-name>
+```
+
+This will create the required package structure with placeholder files.
 
 ## Schema Structure
 

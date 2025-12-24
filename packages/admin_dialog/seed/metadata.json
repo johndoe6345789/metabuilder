@@ -1,0 +1,12 @@
+{
+  "packageId": "admin_dialog",
+  "name": "Admin Dialog",
+  "version": "1.0.0",
+  "description": "Admin dialog components",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [],
+  "exports": {
+    "components": []
+  }
+}
