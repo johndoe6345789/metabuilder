@@ -118,6 +118,26 @@ The project uses ESLint with TypeScript support and React-specific rules:
 
 ## Usage
 
+### Testing Workflows Locally with Act
+
+Before pushing to GitHub, test workflows locally using [act](https://github.com/nektos/act):
+
+```bash
+# Quick diagnostics (no act required)
+./scripts/diagnose-workflows.sh
+
+# Interactive workflow testing
+./scripts/test-workflows.sh
+
+# Or use act directly
+act -l                    # List all workflows
+act push                  # Run CI pipeline
+act -j lint              # Test linting job
+act -j build             # Test build job
+```
+
+**📖 See [ACT_TESTING.md](../../docs/ACT_TESTING.md) for comprehensive act testing guide**
+
 ### Running Locally
 
 ```bash
@@ -175,6 +195,23 @@ npm run build
 
 ## Troubleshooting
 
+### Running Act to Find Workflow Issues
+
+Use act to test workflows locally and identify issues before pushing:
+
+```bash
+# Run full diagnostics
+./scripts/diagnose-workflows.sh
+
+# Test specific failing job
+act -j <job-name> -v
+
+# Test entire CI pipeline
+./scripts/test-workflows.sh
+```
+
+**📖 Complete guide:** [ACT_TESTING.md](../../docs/ACT_TESTING.md)
+
 ### PR Not Auto-Merging
 - Check that all CI checks passed
 - Verify PR has approval
@@ -185,11 +222,25 @@ npm run build
 - Run tests locally: `npm run test:e2e`
 - Check test report artifacts in GitHub Actions
 - Ensure dev server starts correctly
+- Test with act: `act -j test-e2e`
 
 ### Linting Errors
 - Run `npm run lint:fix` to auto-fix
 - Review errors: `npm run lint`
 - Check `eslint.config.js` for rule configuration
+- Test with act: `act -j lint`
+
+### Build Failures
+- Test locally: `npm run build`
+- Check for TypeScript errors
+- Verify all dependencies are installed
+- Test with act: `act -j build`
+
+### Prisma Issues
+- Ensure schema exists: `prisma/schema.prisma`
+- Generate client: `npx prisma generate`
+- Run migrations: `npx prisma migrate dev`
+- Test with act: `act -j prisma-check`
 
 ## Contributing
 

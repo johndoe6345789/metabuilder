@@ -56,25 +56,37 @@ The project now uses Prisma with a SQLite database for local development.
 
 GitHub Actions runs `prisma generate` and `prisma migrate deploy` to validate the schema on every pull request.
 
-### Testing GitHub Actions Locally
+### Testing GitHub Actions Locally with Act
 
-You can test GitHub Actions workflows locally before pushing using [act](https://github.com/nektos/act):
+Test workflows locally before pushing to catch issues early:
 
 ```bash
-# Install act (macOS)
-brew install act
+# Quick diagnostics (no act installation required)
+./scripts/diagnose-workflows.sh
 
-# Run CI workflow locally
-npm run act
+# Interactive workflow testing menu
+./scripts/test-workflows.sh
 
-# Run specific jobs
-npm run act:lint
-npm run act:e2e
-
-# See scripts/README.md for more options
+# Or use act directly
+act -l                    # List all workflows
+act push                  # Run full CI pipeline
+act -j lint              # Test specific job
 ```
 
-This is useful for debugging workflow issues without repeatedly pushing to GitHub.
+**Installation:**
+```bash
+# macOS
+brew install act
+
+# Linux
+curl -s https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
+
+# Windows
+choco install act-cli
+```
+
+**📖 Complete Guide:** [ACT_TESTING.md](docs/ACT_TESTING.md)  
+**⚡ Quick Reference:** [ACT_QUICK_REFERENCE.md](docs/ACT_QUICK_REFERENCE.md)
 
 ### Code Quality
 
