@@ -72,11 +72,13 @@ When you're ready to implement the C++ codebase:
 
 2. **Create a minimal main.cpp to test the build**:
    ```bash
-   echo '#include <iostream>
-   int main() {
-       std::cout << "DBAL Daemon v0.1.0" << std::endl;
-       return 0;
-   }' > dbal/cpp/src/daemon/main.cpp
+   cat > dbal/cpp/src/daemon/main.cpp << 'EOF'
+#include <iostream>
+int main() {
+    std::cout << "DBAL Daemon v0.1.0" << std::endl;
+    return 0;
+}
+EOF
    ```
 
 3. **Add stub implementations** for files referenced in CMakeLists.txt
