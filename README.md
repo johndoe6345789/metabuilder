@@ -37,7 +37,30 @@ npm run test:e2e         # Run Playwright e2e tests
 npm run test:e2e:ui      # Run tests with Playwright UI
 npm run test:e2e:headed  # Run tests in headed browser mode
 npm run preview          # Preview production build
+npm run act              # Run GitHub Actions workflows locally with act
+npm run act:lint         # Run only lint job locally
+npm run act:e2e          # Run only e2e tests job locally
 ```
+
+### Testing GitHub Actions Locally
+
+You can test GitHub Actions workflows locally before pushing using [act](https://github.com/nektos/act):
+
+```bash
+# Install act (macOS)
+brew install act
+
+# Run CI workflow locally
+npm run act
+
+# Run specific jobs
+npm run act:lint
+npm run act:e2e
+
+# See scripts/README.md for more options
+```
+
+This is useful for debugging workflow issues without repeatedly pushing to GitHub.
 
 ### Code Quality
 
