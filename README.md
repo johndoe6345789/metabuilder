@@ -40,7 +40,21 @@ npm run preview          # Preview production build
 npm run act              # Run GitHub Actions workflows locally with act
 npm run act:lint         # Run only lint job locally
 npm run act:e2e          # Run only e2e tests job locally
+npm run db:generate      # Generate Prisma client from schema
+npm run db:push          # Apply schema changes to the local SQLite database
+npm run db:migrate       # Apply migrations in CI/production environments
 ```
+
+### Database (Prisma)
+
+The project now uses Prisma with a SQLite database for local development.
+
+1. Copy the sample environment file: `cp .env.example .env`
+2. Ensure `DATABASE_URL` points to the SQLite database (default: `file:./dev.db` relative to `prisma/`)
+3. Generate the client: `npm run db:generate`
+4. Create or update the local database schema: `npm run db:push`
+
+GitHub Actions runs `prisma generate` and `prisma migrate deploy` to validate the schema on every pull request.
 
 ### Testing GitHub Actions Locally
 
