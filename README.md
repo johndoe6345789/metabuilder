@@ -33,9 +33,15 @@ npm run dev              # Start development server
 npm run build            # Build for production
 npm run lint             # Run ESLint
 npm run lint:fix         # Auto-fix linting issues
+npm run test             # Run unit tests in watch mode
+npm run test:unit        # Run unit tests once
+npm run test:unit:watch  # Run unit tests in watch mode
+npm run test:unit:ui     # Run unit tests with UI
+npm run test:unit:coverage # Run unit tests with coverage report
 npm run test:e2e         # Run Playwright e2e tests
 npm run test:e2e:ui      # Run tests with Playwright UI
 npm run test:e2e:headed  # Run tests in headed browser mode
+npm run test:all         # Run all tests (unit + e2e)
 npm run preview          # Preview production build
 npm run act              # Run GitHub Actions workflows locally with act
 npm run act:lint         # Run only lint job locally
@@ -100,12 +106,25 @@ Run `npm run lint:fix` before committing to auto-fix issues.
 
 ### Testing
 
-The project includes comprehensive E2E tests using Playwright:
+The project includes comprehensive testing at multiple levels:
+
+#### Unit Tests (Vitest)
+- Package metadata validation
+- Component structure tests
+- Configuration validation
+- Run with `npm run test:unit`
+- Coverage reports with `npm run test:unit:coverage`
+- Interactive UI with `npm run test:unit:ui`
+
+Each package in `/packages` has a `tests/` folder with unit tests. See [PACKAGE_TESTS.md](docs/PACKAGE_TESTS.md) for details.
+
+#### E2E Tests (Playwright)
 - Login and authentication flows
 - Navigation between sections
 - CRUD operations
 - Form validation
 - Schema editor functionality
+- Run with `npm run test:e2e`
 
 Tests run automatically on every PR via GitHub Actions.
 
