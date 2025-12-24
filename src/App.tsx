@@ -17,12 +17,7 @@ import { initializePackageSystem } from '@/lib/package-loader'
 import type { User, AppLevel } from '@/lib/level-types'
 
 function App() {
-  return (
-    <>
-      <GitHubActionsFetcher />
-      <Toaster />
-    </>
-  )
+  return <AppOriginal />
 }
 
 function AppOriginal() {

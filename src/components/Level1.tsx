@@ -7,6 +7,8 @@ import { HeroSection } from './level1/HeroSection'
 import { FeaturesSection } from './level1/FeaturesSection'
 import { ContactSection } from './level1/ContactSection'
 import { AppFooter } from './shared/AppFooter'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { GitHubActionsFetcher } from './GitHubActionsFetcher'
 
 interface Level1Props {
   onNavigate: (level: number) => void
@@ -102,25 +104,40 @@ export function Level1({ onNavigate }: Level1Props) {
         </div>
       )}
 
-      <HeroSection onNavigate={onNavigate} />
-      <FeaturesSection />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <Tabs defaultValue="home" className="w-full">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
+            <TabsTrigger value="home">Home</TabsTrigger>
+            <TabsTrigger value="github-actions">GitHub Actions</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="home" className="mt-0">
+            <HeroSection onNavigate={onNavigate} />
+            <FeaturesSection />
 
-      <section id="about" className="bg-muted/30 py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <h2 className="text-3xl font-bold">About MetaBuilder</h2>
-          <p className="text-lg text-muted-foreground">
-            MetaBuilder is a revolutionary platform that lets you build entire application stacks 
-            through visual interfaces. From public websites to complex admin panels, everything 
-            is generated from declarative configurations, workflows, and embedded scripts.
-          </p>
-          <p className="text-lg text-muted-foreground">
-            Whether you're a designer who wants to create without code, or a developer who wants 
-            to work at a higher level of abstraction, MetaBuilder adapts to your needs.
-          </p>
-        </div>
-      </section>
+            <section id="about" className="bg-muted/30 py-20 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+              <div className="max-w-4xl mx-auto text-center space-y-6">
+                <h2 className="text-3xl font-bold">About MetaBuilder</h2>
+                <p className="text-lg text-muted-foreground">
+                  MetaBuilder is a revolutionary platform that lets you build entire application stacks 
+                  through visual interfaces. From public websites to complex admin panels, everything 
+                  is generated from declarative configurations, workflows, and embedded scripts.
+                </p>
+                <p className="text-lg text-muted-foreground">
+                  Whether you're a designer who wants to create without code, or a developer who wants 
+                  to work at a higher level of abstraction, MetaBuilder adapts to your needs.
+                </p>
+              </div>
+            </section>
 
-      <ContactSection />
+            <ContactSection />
+          </TabsContent>
+          
+          <TabsContent value="github-actions" className="mt-0">
+            <GitHubActionsFetcher />
+          </TabsContent>
+        </Tabs>
+      </div>
 
       <AppFooter />
     </div>
