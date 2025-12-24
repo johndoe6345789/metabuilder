@@ -49,6 +49,13 @@ npm run act:e2e          # Run only e2e tests job locally
 npm run db:generate      # Generate Prisma client from schema
 npm run db:push          # Apply schema changes to the local SQLite database
 npm run db:migrate       # Apply migrations in CI/production environments
+
+# C++ Build Assistant (for DBAL daemon)
+npm run cpp:check        # Check C++ build dependencies
+npm run cpp:full         # Complete C++ build workflow
+npm run cpp:build        # Build C++ project with Ninja
+npm run cpp:test         # Run C++ tests
+npm run cpp:clean        # Clean C++ build artifacts
 ```
 
 ### Database (Prisma)
@@ -93,6 +100,37 @@ choco install act-cli
 
 **📖 Complete Guide:** [ACT_TESTING.md](docs/ACT_TESTING.md)  
 **⚡ Quick Reference:** [ACT_QUICK_REFERENCE.md](docs/ACT_QUICK_REFERENCE.md)
+
+### C++ Build System
+
+The project includes a C++ daemon (DBAL) with integrated build automation using Conan and Ninja:
+
+```bash
+# First time setup
+npm run cpp:full
+
+# Daily development
+npm run cpp:build       # Incremental build
+npm run cpp:test        # Run C++ tests
+npm run cpp:rebuild     # Clean rebuild
+```
+
+**Prerequisites:** CMake, Conan, Ninja, GCC/Clang
+
+```bash
+# macOS
+brew install cmake conan ninja gcc
+
+# Linux
+sudo apt-get install cmake ninja-build g++
+pip install conan
+
+# Windows
+choco install cmake conan ninja
+```
+
+**📖 Complete Guide:** [CPP_BUILD_ASSISTANT.md](docs/CPP_BUILD_ASSISTANT.md)  
+**⚡ Quick Reference:** [CPP_BUILD_QUICK_REF.md](docs/CPP_BUILD_QUICK_REF.md)
 
 ### Code Quality
 

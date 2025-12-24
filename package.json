@@ -27,7 +27,16 @@
         "postinstall": "node scripts/setup-packages.cjs",
         "db:generate": "prisma generate",
         "db:push": "prisma db push",
-        "db:migrate": "prisma migrate deploy"
+        "db:migrate": "prisma migrate deploy",
+        "cpp:check": "node dbal/tools/cpp-build-assistant.js check",
+        "cpp:init": "node dbal/tools/cpp-build-assistant.js init",
+        "cpp:install": "node dbal/tools/cpp-build-assistant.js install",
+        "cpp:configure": "node dbal/tools/cpp-build-assistant.js configure",
+        "cpp:build": "node dbal/tools/cpp-build-assistant.js build",
+        "cpp:test": "node dbal/tools/cpp-build-assistant.js test",
+        "cpp:clean": "node dbal/tools/cpp-build-assistant.js clean",
+        "cpp:rebuild": "node dbal/tools/cpp-build-assistant.js rebuild",
+        "cpp:full": "node dbal/tools/cpp-build-assistant.js full"
     },
     "dependencies": {
         "@github/spark": ">=0.43.1 <1",
