@@ -2,227 +2,158 @@
 
 Welcome to the MetaBuilder documentation. This directory contains comprehensive documentation organized into logical categories.
 
-## Directory Structure
+## 🚀 Quick Start
+
+**New to the project?** Start here:
+1. [Platform Guide](reference/platform-guide.md) - Overview of the 5-level system
+2. [Quick Reference](reference/quick-reference.md) - Common tasks and patterns
+3. [Data-Driven Architecture](architecture/data-driven-architecture.md) - Core concepts
+
+**Ready to build?**
+- [Package System](packages/package-system.md) - Create and use packages
+- [Lua Integration](lua/integration.md) - Add custom logic
+- [Generic Page System](architecture/generic-page-system.md) - Build pages without code
+
+## 📁 Current Directory Structure
 
 ```
 docs/
 ├── README.md (this file)
-├── getting-started/
-│   ├── README.md
-│   ├── quick-start/
-│   │   └── first-steps.md
-│   ├── installation/
-│   │   └── setup-guide.md
-│   └── core-concepts/
-│       ├── overview.md
-│       ├── five-level-architecture.md
-│       └── declarative-design.md
+├── RELOCATION_SUMMARY.md        # Guide for organizing docs
+├── FILE_RELOCATION_GUIDE.md     # Detailed relocation instructions
 │
-├── architecture/
-│   ├── README.md
-│   ├── system-design/
-│   │   ├── overview.md
-│   │   ├── data-driven-architecture.md
-│   │   └── generic-page-system.md
-│   ├── levels/
-│   │   ├── level-1-public.md
-│   │   ├── level-2-user.md
-│   │   ├── level-3-admin.md
-│   │   ├── level-4-god.md
-│   │   └── level-5-supergod.md
-│   └── multi-tenancy/
-│       ├── overview.md
-│       └── tenant-isolation.md
+├── architecture/                 # System Architecture
+│   ├── data-driven-architecture.md
+│   ├── declarative-components.md
+│   └── generic-page-system.md
 │
-├── features/
-│   ├── README.md
-│   ├── authentication/
-│   │   ├── login-system.md
-│   │   ├── password-management.md
-│   │   ├── god-credentials.md
-│   │   └── first-login-flow.md
-│   ├── database/
-│   │   ├── overview.md
-│   │   ├── schema-design.md
-│   │   └── kv-persistence.md
-│   ├── packages/
-│   │   ├── system-overview.md
-│   │   ├── structure-guide.md
-│   │   ├── import-export.md
-│   │   └── creating-packages.md
-│   ├── lua-integration/
-│   │   ├── overview.md
-│   │   ├── runtime-guide.md
-│   │   ├── snippet-library.md
-│   │   └── best-practices.md
-│   ├── workflows/
-│   │   ├── system-overview.md
-│   │   └── creating-workflows.md
-│   └── theming/
-│       ├── theme-editor.md
-│       ├── dark-mode.md
-│       └── customization.md
+├── database/                     # Database Documentation
+│   └── overview.md
 │
-├── development/
-│   ├── README.md
-│   ├── declarative-components/
-│   │   ├── overview.md
-│   │   ├── component-hierarchy.md
-│   │   ├── configuration.md
-│   │   └── rendering.md
-│   ├── modular-seed-data/
-│   │   ├── overview.md
-│   │   ├── package-structure.md
-│   │   └── best-practices.md
-│   ├── typescript-reduction/
-│   │   ├── strategy.md
-│   │   └── migration-guide.md
-│   ├── nerd-mode/
-│   │   ├── overview.md
-│   │   ├── ide-features.md
-│   │   └── github-integration.md
-│   └── cruft-removal/
-│       └── report.md
+├── development/                  # Development Guides
+│   ├── typescript-reduction-guide.md
+│   ├── cruft-removal-report.md
+│   └── improvements.md
 │
-├── guides/
-│   ├── README.md
-│   ├── user-guides/
-│   │   ├── getting-started.md
-│   │   ├── profile-management.md
-│   │   └── using-packages.md
-│   ├── admin-guides/
-│   │   ├── user-management.md
-│   │   ├── content-moderation.md
-│   │   └── system-configuration.md
-│   ├── god-guides/
-│   │   ├── page-builder.md
-│   │   ├── component-hierarchy-editor.md
-│   │   ├── workflow-editor.md
-│   │   ├── schema-editor.md
-│   │   ├── lua-editor.md
-│   │   └── preview-mode.md
-│   └── supergod-guides/
-│       ├── tenant-management.md
-│       ├── package-management.md
-│       └── system-administration.md
+├── iterations/                   # Project History
+│   ├── iteration-24-summary.md
+│   ├── iteration-25-summary.md
+│   ├── iteration-25-complete.md
+│   ├── iteration-26-summary.md
+│   └── the-transformation.md
 │
-├── packages/
-│   ├── README.md
-│   ├── built-in/
-│   │   ├── irc-webchat.md
-│   │   ├── forum.md
-│   │   ├── guestbook.md
-│   │   └── user-profile.md
-│   └── creating-custom/
-│       ├── overview.md
-│       ├── folder-structure.md
-│       ├── seed-data.md
-│       ├── lua-scripts.md
-│       └── static-content.md
+├── lua/                         # Lua Integration
+│   ├── integration.md
+│   └── snippets-guide.md
 │
-├── api-reference/
-│   ├── README.md
-│   ├── database/
-│   │   ├── overview.md
-│   │   ├── users.md
-│   │   ├── pages.md
-│   │   ├── components.md
-│   │   ├── workflows.md
-│   │   ├── lua-scripts.md
-│   │   └── routes.md
-│   ├── lua-api/
-│   │   ├── standard-library.md
-│   │   ├── custom-functions.md
-│   │   └── component-api.md
-│   └── component-catalog/
-│       ├── overview.md
-│       ├── layout-components.md
-│       ├── form-components.md
-│       ├── data-display.md
-│       └── navigation.md
+├── packages/                    # Package System
+│   ├── package-system.md
+│   ├── import-export.md
+│   ├── scripts-guide.md
+│   ├── modular-packages-guide.md
+│   ├── modular-seed-data-guide.md
+│   └── irc-conversion-guide.md
 │
-├── security/
-│   ├── README.md
-│   ├── overview.md
-│   ├── authentication.md
-│   ├── authorization.md
-│   ├── sandboxing/
-│   │   ├── lua-sandbox.md
-│   │   └── code-scanning.md
-│   ├── best-practices/
-│   │   ├── password-security.md
-│   │   ├── data-protection.md
-│   │   └── malicious-code-detection.md
-│   └── email-security/
-│       └── smtp-configuration.md
+├── reference/                   # Quick Reference
+│   ├── quick-reference.md
+│   ├── documentation-index.md
+│   └── platform-guide.md
 │
-├── configuration/
-│   ├── README.md
-│   ├── smtp/
-│   │   └── setup-guide.md
-│   ├── credentials/
-│   │   ├── default-passwords.md
-│   │   └── expiry-settings.md
-│   └── system/
-│       ├── environment-variables.md
-│       └── runtime-config.md
-│
-├── tutorials/
-│   ├── README.md
-│   ├── beginner/
-│   │   ├── creating-first-page.md
-│   │   ├── adding-components.md
-│   │   └── basic-workflows.md
-│   ├── intermediate/
-│   │   ├── custom-lua-scripts.md
-│   │   ├── complex-workflows.md
-│   │   └── package-creation.md
-│   └── advanced/
-│       ├── procedural-generation.md
-│       ├── custom-renderers.md
-│       └── system-extensions.md
-│
-├── migration/
-│   ├── README.md
-│   ├── from-iteration-25/
-│   │   └── changes.md
-│   ├── from-iteration-26/
-│   │   └── changes.md
-│   └── version-history/
-│       └── changelog.md
-│
-├── troubleshooting/
-│   ├── README.md
-│   ├── common-issues/
-│   │   ├── login-problems.md
-│   │   ├── package-errors.md
-│   │   └── lua-runtime-errors.md
-│   └── debugging/
-│       ├── developer-tools.md
-│       └── log-analysis.md
-│
-└── reference/
-    ├── README.md
-    ├── quick-reference.md
-    ├── glossary.md
-    ├── complete-iterations/
-    │   ├── iteration-24.md
-    │   ├── iteration-25.md
-    │   └── iteration-26.md
-    └── roadmap/
-        └── future-features.md
+└── security/                    # Security
+    └── guide.md
 ```
 
-## Quick Links
+## 📖 Documentation Categories
 
-- [Quick Start Guide](./getting-started/quick-start/first-steps.md)
-- [Five Level Architecture](./getting-started/core-concepts/five-level-architecture.md)
-- [Package System Overview](./features/packages/system-overview.md)
-- [Lua Integration Guide](./features/lua-integration/overview.md)
-- [Security Best Practices](./security/best-practices/password-security.md)
-- [API Reference](./api-reference/README.md)
+### Architecture
+Deep dives into system design and implementation patterns:
+- **Data-Driven Architecture** - How the system minimizes TypeScript dependencies
+- **Declarative Components** - Component system built on JSON + Lua
+- **Generic Page System** - Dynamic page rendering from configuration
 
-## Documentation Standards
+### Database
+Database layer documentation:
+- **Overview** - KV persistence, schemas, and CRUD operations
+
+### Development
+Guides for contributors and developers:
+- **TypeScript Reduction Guide** - Strategy for data-driven approach
+- **Improvements** - UI/UX enhancements and builder tools
+- **Cruft Removal Report** - Cleanup and maintenance history
+
+### Iterations
+Project evolution and milestone documentation:
+- **Iteration Summaries** - What was accomplished in each iteration
+- **The Transformation** - Before/after comparison of the data-driven shift
+
+### Lua
+Lua scripting integration:
+- **Integration** - How Lua works in MetaBuilder
+- **Snippets Guide** - Reusable Lua patterns and examples
+
+### Packages
+Package system documentation:
+- **Package System** - Overview and architecture
+- **Import/Export** - Sharing and distributing packages
+- **Modular Guides** - Creating modular, reusable components
+- **IRC Conversion** - Case study of converting components to declarative
+
+### Reference
+Quick lookup and overview materials:
+- **Quick Reference** - Common tasks and code snippets
+- **Documentation Index** - Finding the right docs for your needs
+- **Platform Guide** - High-level overview of the 5-level system
+
+### Security
+Security practices and guidelines:
+- **Guide** - Authentication, authorization, and best practices
+```
+
+## 🔗 Quick Links
+
+**Getting Started:**
+- [Platform Guide](reference/platform-guide.md) - 5-level architecture overview
+- [Quick Reference](reference/quick-reference.md) - Common tasks
+- [Documentation Index](reference/documentation-index.md) - Find what you need
+
+**Core Concepts:**
+- [Data-Driven Architecture](architecture/data-driven-architecture.md)
+- [Generic Page System](architecture/generic-page-system.md)
+- [Declarative Components](architecture/declarative-components.md)
+
+**Building With MetaBuilder:**
+- [Package System](packages/package-system.md)
+- [Lua Integration](lua/integration.md)
+- [Modular Seed Data](packages/modular-seed-data-guide.md)
+
+**Development:**
+- [TypeScript Reduction Strategy](development/typescript-reduction-guide.md)
+- [Recent Improvements](development/improvements.md)
+- [Security Guide](security/guide.md)
+
+**Project History:**
+- [The Transformation](iterations/the-transformation.md)
+- [Iteration 25 Complete](iterations/iteration-25-complete.md)
+- [Iteration 26 Summary](iterations/iteration-26-summary.md)
+
+## 🎯 Find What You Need
+
+### I want to understand...
+- **The big picture**: [Platform Guide](reference/platform-guide.md)
+- **How data-driven works**: [Data-Driven Architecture](architecture/data-driven-architecture.md)
+- **Project evolution**: [The Transformation](iterations/the-transformation.md)
+
+### I want to build...
+- **A new package**: [Package System](packages/package-system.md) → [Modular Packages](packages/modular-packages-guide.md)
+- **Custom logic**: [Lua Integration](lua/integration.md) → [Lua Snippets](lua/snippets-guide.md)
+- **A new page**: [Generic Page System](architecture/generic-page-system.md)
+
+### I want to learn from...
+- **Examples**: [IRC Conversion Guide](packages/irc-conversion-guide.md)
+- **Quick patterns**: [Quick Reference](reference/quick-reference.md)
+- **History**: Browse [iterations/](iterations/)
+
+## 📝 Documentation Standards
 
 All documentation in this directory follows these standards:
 
@@ -232,12 +163,27 @@ All documentation in this directory follows these standards:
 4. **Up-to-Date**: Documentation is updated with each iteration
 5. **Comprehensive**: Cover both basic and advanced use cases
 
-## Contributing to Documentation
+## 🔄 Relocating Documentation
+
+If documentation files need to be organized from the root:
+
+1. See [RELOCATION_SUMMARY.md](RELOCATION_SUMMARY.md) for overview
+2. Run the provided `move-docs.sh` script from the project root
+3. Or follow [FILE_RELOCATION_GUIDE.md](FILE_RELOCATION_GUIDE.md) for manual steps
+
+## 🤝 Contributing to Documentation
 
 When adding new documentation:
 
 1. Place it in the appropriate category directory
-2. Update the README.md in that directory
+2. Follow the naming convention: lowercase-with-hyphens.md
 3. Add cross-references to related docs
 4. Include code examples where applicable
-5. Update this main README if adding new top-level categories
+5. Update this README's Quick Links if adding important docs
+
+## 📊 Documentation Metrics
+
+- **Total Categories**: 8 (Architecture, Database, Development, Iterations, Lua, Packages, Reference, Security)
+- **Key Documents**: 20+ comprehensive guides
+- **Iteration History**: 4 detailed summaries
+- **Last Updated**: Iteration 27
