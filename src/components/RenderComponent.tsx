@@ -134,7 +134,7 @@ export function RenderComponent({ component, isSelected, onSelect, user, context
       case 'Label':
         return <Label>{props.children || 'Label'}</Label>
 
-      case 'Heading':
+      case 'Heading': {
         const level = props.level || '1'
         const className = props.className
         const text = props.children || 'Heading'
@@ -144,6 +144,7 @@ export function RenderComponent({ component, isSelected, onSelect, user, context
         if (level === '3') return <h3 className={className}>{text}</h3>
         if (level === '4') return <h4 className={className}>{text}</h4>
         return <h1 className={className}>{text}</h1>
+      }
 
       case 'Text':
         return (

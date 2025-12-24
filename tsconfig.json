@@ -28,6 +28,10 @@
     },
   },
   "include": [
-    "src"
+    "src",
+    "packages",
+    "e2e",
+    "playwright.config.ts",
+    "vite.config.ts"
   ]
 }

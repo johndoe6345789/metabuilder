@@ -10,14 +10,141 @@ A declarative admin panel generator that creates full-featured CRUD interfaces f
 - **Advanced Features** - Sorting, filtering, search, validation, relationships
 - **Persistent Storage** - Data automatically saved using Spark KV storage
 - **Live Schema Editing** - Edit schemas in real-time through the UI
+- **CI/CD Pipeline** - Automated testing, linting, and deployment
+- **AI-Assisted Development** - Automated code reviews and issue triage
+- **E2E Testing** - Comprehensive Playwright test suite
 
 ## Quick Start
 
-1. Launch the app
-2. Use the sidebar to navigate between models
-3. Click "Create New" to add records
-4. Edit or delete records using the action buttons
-5. Click "Edit Schema" to customize your data models
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Launch the app: `npm run dev`
+4. Use the sidebar to navigate between models
+5. Click "Create New" to add records
+6. Edit or delete records using the action buttons
+7. Click "Edit Schema" to customize your data models
+
+## Development
+
+### Available Scripts
+
+```bash
+npm run dev              # Start development server
+npm run build            # Build for production
+npm run lint             # Run ESLint
+npm run lint:fix         # Auto-fix linting issues
+npm run test:e2e         # Run Playwright e2e tests
+npm run test:e2e:ui      # Run tests with Playwright UI
+npm run test:e2e:headed  # Run tests in headed browser mode
+npm run preview          # Preview production build
+npm run act              # Run GitHub Actions workflows locally with act
+npm run act:lint         # Run only lint job locally
+npm run act:e2e          # Run only e2e tests job locally
+```
+
+### Testing GitHub Actions Locally
+
+You can test GitHub Actions workflows locally before pushing using [act](https://github.com/nektos/act):
+
+```bash
+# Install act (macOS)
+brew install act
+
+# Run CI workflow locally
+npm run act
+
+# Run specific jobs
+npm run act:lint
+npm run act:e2e
+
+# See scripts/README.md for more options
+```
+
+This is useful for debugging workflow issues without repeatedly pushing to GitHub.
+
+### Code Quality
+
+This project uses strict ESLint rules with TypeScript support:
+- No explicit `any` types (warnings)
+- Promise handling required
+- React hooks dependencies validated
+- Console statements flagged (except warn/error)
+
+Run `npm run lint:fix` before committing to auto-fix issues.
+
+### Testing
+
+The project includes comprehensive E2E tests using Playwright:
+- Login and authentication flows
+- Navigation between sections
+- CRUD operations
+- Form validation
+- Schema editor functionality
+
+Tests run automatically on every PR via GitHub Actions.
+
+## CI/CD & Automation
+
+### Automated Workflows
+
+1. **CI/CD Pipeline** - Runs on every push and PR
+   - Linting with ESLint
+   - TypeScript compilation
+   - Production build
+   - E2E tests with Playwright
+   - Code quality checks
+
+2. **Automated Code Review** - Reviews every PR
+   - Security vulnerability checks
+   - Code quality analysis
+   - Type safety validation
+   - Best practices enforcement
+   - **Auto-approves** PRs with no issues
+
+3. **Auto-Merge** - Merges approved PRs automatically
+   - Waits for all CI checks to pass
+   - Requires PR approval
+   - Uses squash merge
+   - Automatically deletes branch after merge
+
+4. **Issue Triage** - Categorizes and labels issues
+   - Auto-labels by type (bug, feature, docs)
+   - Assigns priority levels
+   - Flags AI-fixable issues
+   - Welcomes contributors
+
+5. **PR Management** - Organizes pull requests
+   - Auto-labels based on changed files
+   - Validates PR descriptions
+   - Links related issues
+   - Size indicators (small/medium/large)
+
+See [.github/workflows/README.md](.github/workflows/README.md) for detailed workflow documentation.
+
+### Contributing
+
+1. Create a branch for your changes
+2. Make your changes and test locally
+3. Push your branch - workflows run automatically
+4. Address any review comments
+5. Once approved and tests pass, PR merges automatically
+
+The automated workflows will:
+- Review your code
+- Run tests
+- Approve if everything looks good
+- Merge and cleanup after approval
+
+## Packages
+
+This project uses a modular package system. The `packages/` folder contains component packages that are committed to the repository.
+
+If you need to add a new package, use:
+```bash
+npm run setup-packages <package-name>
+```
+
+This will create the required package structure with placeholder files.
 
 ## Schema Structure
 

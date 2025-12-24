@@ -1,0 +1,12 @@
+{
+  "packageId": "dashboard",
+  "name": "Dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard components",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [],
+  "exports": {
+    "components": []
+  }
+}

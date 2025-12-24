@@ -32,7 +32,8 @@ export class LuaEngine {
   }
 
   private setupContextAPI() {
-    const self = this
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _self = this
     
     const logFunction = function(L: any) {
       const nargs = lua.lua_gettop(L)
@@ -50,7 +51,7 @@ export class LuaEngine {
         }
       }
       
-      self.logs.push(messages.join(' '))
+      _self.logs.push(messages.join(' '))
       return 0
     }
 
@@ -73,7 +74,7 @@ export class LuaEngine {
         }
       }
       
-      self.logs.push(messages.join('\t'))
+      _self.logs.push(messages.join('\t'))
       return 0
     }
 
