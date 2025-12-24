@@ -191,7 +191,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const analysis = ${{ steps.analyze.outputs.result }};
+            const analysis = JSON.parse('${{ steps.analyze.outputs.result }}');
             
             let labels = [];
             
