@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict';
+
 /**
  * Setup script for creating the packages folder structure
  * This creates placeholder files for all packages referenced in package-glue.ts
@@ -49,6 +51,30 @@ const packages = [
     hasExamples: false
   }
 ];
+
+// Check if all packages already exist (optimization for postinstall)
+function allPackagesExist() {
+  if (!fs.existsSync(packagesDir)) {
+    return false;
+  }
+  
+  for (const pkg of packages) {
+    const componentsPath = path.join(packagesDir, pkg.id, 'seed', 'components.json');
+    const metadataPath = path.join(packagesDir, pkg.id, 'seed', 'metadata.json');
+    
+    if (!fs.existsSync(componentsPath) || !fs.existsSync(metadataPath)) {
+      return false;
+    }
+  }
+  
+  return true;
+}
+
+// Skip if everything is already set up
+if (allPackagesExist()) {
+  console.log('✓ Packages folder already exists with all required packages.');
+  process.exit(0);
+}
 
 console.log('Setting up packages folder...\n');
 
