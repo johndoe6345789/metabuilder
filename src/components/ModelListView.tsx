@@ -121,9 +121,10 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
       case 'datetime':
         return new Date(value).toLocaleString()
       
-      case 'select':
+      case 'select': {
         const choice = field.choices?.find(c => c.value === value)
         return <Badge variant="secondary">{choice?.label || value}</Badge>
+      }
       
       case 'relation':
         return (
