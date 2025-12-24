@@ -26,6 +26,8 @@ export function GitHubActionsFetcher() {
   const [error, setError] = useState<string | null>(null)
   const [lastFetched, setLastFetched] = useState<Date | null>(null)
   const [needsAuth, setNeedsAuth] = useState(false)
+  const [secondsUntilRefresh, setSecondsUntilRefresh] = useState(30)
+  const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true)
 
   const fetchGitHubActions = async () => {
     setIsLoading(true)
@@ -50,6 +52,7 @@ export function GitHubActionsFetcher() {
 
       setData(workflows.workflow_runs as WorkflowRun[])
       setLastFetched(new Date())
+      setSecondsUntilRefresh(30)
       toast.success(`Fetched ${workflows.workflow_runs.length} workflow runs`)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
@@ -63,6 +66,22 @@ export function GitHubActionsFetcher() {
   useEffect(() => {
     fetchGitHubActions()
   }, [])
+
+  useEffect(() => {
+    if (!autoRefreshEnabled) return
+
+    const countdownInterval = setInterval(() => {
+      setSecondsUntilRefresh((prev) => {
+        if (prev <= 1) {
+          fetchGitHubActions()
+          return 30
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(countdownInterval)
+  }, [autoRefreshEnabled])
 
   const getStatusColor = (status: string, conclusion: string | null) => {
     if (status === 'completed') {
@@ -131,14 +150,35 @@ export function GitHubActionsFetcher() {
             Repository: <code className="text-sm bg-muted px-2 py-1 rounded">johndoe6345789/metabuilder</code>
           </p>
         </div>
-        <Button
-          onClick={fetchGitHubActions}
-          disabled={isLoading}
-          size="lg"
-        >
-          <ArrowClockwise className={isLoading ? 'animate-spin' : ''} />
-          {isLoading ? 'Fetching...' : 'Refresh'}
-        </Button>
+        <div className="flex items-center gap-3">
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex items-center gap-2">
+              <Badge variant={autoRefreshEnabled ? "default" : "outline"} className="text-xs">
+                Auto-refresh {autoRefreshEnabled ? 'ON' : 'OFF'}
+              </Badge>
+              {autoRefreshEnabled && (
+                <span className="text-xs text-muted-foreground font-mono">
+                  Next refresh: {secondsUntilRefresh}s
+                </span>
+              )}
+            </div>
+            <Button
+              onClick={() => setAutoRefreshEnabled(!autoRefreshEnabled)}
+              variant="outline"
+              size="sm"
+            >
+              {autoRefreshEnabled ? 'Disable' : 'Enable'} Auto-refresh
+            </Button>
+          </div>
+          <Button
+            onClick={fetchGitHubActions}
+            disabled={isLoading}
+            size="lg"
+          >
+            <ArrowClockwise className={isLoading ? 'animate-spin' : ''} />
+            {isLoading ? 'Fetching...' : 'Refresh'}
+          </Button>
+        </div>
       </div>
 
       {conclusion && (
