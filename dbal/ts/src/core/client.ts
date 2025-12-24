@@ -2,6 +2,9 @@ import type { DBALConfig } from '../runtime/config'
 import type { DBALAdapter } from '../adapters/adapter'
 import type { User, PageView, ComponentHierarchy, ListOptions, ListResult } from './types'
 import { DBALError } from './errors'
+import { PrismaAdapter } from '../adapters/prisma-adapter'
+import { ACLAdapter } from '../adapters/acl-adapter'
+import { WebSocketBridge } from '../bridges/websocket-bridge'
 
 export class DBALClient {
   private adapter: DBALAdapter
@@ -13,20 +16,40 @@ export class DBALClient {
   }
 
   private createAdapter(config: DBALConfig): DBALAdapter {
+    let baseAdapter: DBALAdapter
+
     if (config.mode === 'production' && config.endpoint) {
-      throw new Error('Production mode with remote endpoint not yet implemented')
+      baseAdapter = new WebSocketBridge(config.endpoint, config.auth)
+    } else {
+      switch (config.adapter) {
+        case 'prisma':
+          baseAdapter = new PrismaAdapter(
+            config.database?.url,
+            {
+              queryTimeout: config.performance?.queryTimeout
+            }
+          )
+          break
+        case 'sqlite':
+          throw new Error('SQLite adapter to be implemented in Phase 3')
+        case 'mongodb':
+          throw new Error('MongoDB adapter to be implemented in Phase 3')
+        default:
+          throw DBALError.internal('Unknown adapter type')
+      }
     }
 
-    switch (config.adapter) {
-      case 'prisma':
-        throw new Error('Prisma adapter to be implemented')
-      case 'sqlite':
-        throw new Error('SQLite adapter to be implemented')
-      case 'mongodb':
-        throw new Error('MongoDB adapter to be implemented')
-      default:
-        throw DBALError.internal('Unknown adapter type')
+    if (config.auth?.user && config.security?.sandbox !== 'disabled') {
+      return new ACLAdapter(
+        baseAdapter,
+        config.auth.user,
+        {
+          auditLog: config.security?.enableAuditLog ?? true
+        }
+      )
     }
+
+    return baseAdapter
   }
 
   get users() {
