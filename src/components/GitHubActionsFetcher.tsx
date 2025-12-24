@@ -323,9 +323,21 @@ Format your response in clear markdown with code blocks for any suggested fixes.
     const inProgress = data.filter(r => r.status !== 'completed').length
     
     const mostRecent = data[0]
-    const mostRecentPassed = mostRecent?.status === 'completed' && mostRecent?.conclusion === 'success'
-    const mostRecentFailed = mostRecent?.status === 'completed' && mostRecent?.conclusion === 'failure'
-    const mostRecentRunning = mostRecent?.status !== 'completed'
+    const mostRecentTimestamp = new Date(mostRecent.updated_at).getTime()
+    const timeThreshold = 5 * 60 * 1000
+    
+    const recentWorkflows = data.filter(r => {
+      const runTime = new Date(r.updated_at).getTime()
+      return Math.abs(runTime - mostRecentTimestamp) < timeThreshold
+    })
+    
+    const hasAnyFailed = recentWorkflows.some(r => r.status === 'completed' && r.conclusion === 'failure')
+    const hasAnyRunning = recentWorkflows.some(r => r.status !== 'completed')
+    const allPassed = recentWorkflows.every(r => r.status === 'completed' && r.conclusion === 'success')
+    
+    const mostRecentPassed = allPassed && recentWorkflows.length > 0
+    const mostRecentFailed = hasAnyFailed
+    const mostRecentRunning = hasAnyRunning && !hasAnyFailed
     
     const successRate = completed > 0 ? Math.round((successful / completed) * 100) : 0
     const recentRuns = data.slice(0, 5)
@@ -351,7 +363,8 @@ Format your response in clear markdown with code blocks for any suggested fixes.
       mostRecent,
       mostRecentPassed,
       mostRecentFailed,
-      mostRecentRunning
+      mostRecentRunning,
+      recentWorkflows
     }
   }, [data])
 
@@ -427,26 +440,53 @@ Format your response in clear markdown with code blocks for any suggested fixes.
               )}
               <div className="flex-1">
                 <AlertTitle className="text-2xl font-bold mb-2">
-                  {conclusion.mostRecentPassed && 'Most Recent Build: PASSED ✓'}
-                  {conclusion.mostRecentFailed && 'Most Recent Build: FAILED ✗'}
-                  {conclusion.mostRecentRunning && 'Most Recent Build: RUNNING...'}
+                  {conclusion.mostRecentPassed && 'Most Recent Builds: ALL PASSED ✓'}
+                  {conclusion.mostRecentFailed && 'Most Recent Builds: FAILURES DETECTED ✗'}
+                  {conclusion.mostRecentRunning && 'Most Recent Builds: RUNNING...'}
                 </AlertTitle>
-                <AlertDescription className="space-y-2">
-                  <div className="text-lg font-medium">
-                    {conclusion.mostRecent.name}
+                <AlertDescription className="space-y-3">
+                  <div className="text-sm">
+                    {conclusion.recentWorkflows.length > 1 ? (
+                      <span>Showing {conclusion.recentWorkflows.length} workflows from the most recent run:</span>
+                    ) : (
+                      <span>Most recent workflow:</span>
+                    )}
                   </div>
-                  <div className="flex flex-wrap gap-3 text-sm">
-                    <span className="flex items-center gap-1">
-                      <span className="font-semibold">Branch:</span>
-                      <code className="bg-background/60 px-2 py-0.5 rounded text-xs font-mono">
-                        {conclusion.mostRecent.head_branch}
-                      </code>
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <span className="font-semibold">Updated:</span>
-                      <span>{new Date(conclusion.mostRecent.updated_at).toLocaleString()}</span>
-                    </span>
-                  </div>
+                  {conclusion.recentWorkflows.map((workflow) => (
+                    <div key={workflow.id} className="bg-background/60 rounded-lg p-3 space-y-2">
+                      <div className="flex items-center gap-2">
+                        {workflow.status === 'completed' && workflow.conclusion === 'success' && (
+                          <CheckCircle size={20} className="text-green-600 flex-shrink-0" />
+                        )}
+                        {workflow.status === 'completed' && workflow.conclusion === 'failure' && (
+                          <XCircle size={20} className="text-red-600 flex-shrink-0" />
+                        )}
+                        {workflow.status !== 'completed' && (
+                          <ArrowClockwise size={20} className="text-yellow-600 flex-shrink-0" />
+                        )}
+                        <span className="font-semibold">{workflow.name}</span>
+                        <Badge variant={
+                          workflow.conclusion === 'success' ? 'default' : 
+                          workflow.conclusion === 'failure' ? 'destructive' : 
+                          'outline'
+                        } className="text-xs">
+                          {workflow.status === 'completed' ? workflow.conclusion : workflow.status}
+                        </Badge>
+                      </div>
+                      <div className="flex flex-wrap gap-3 text-xs">
+                        <span className="flex items-center gap-1">
+                          <span className="font-semibold">Branch:</span>
+                          <code className="bg-background px-1.5 py-0.5 rounded text-xs font-mono">
+                            {workflow.head_branch}
+                          </code>
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <span className="font-semibold">Updated:</span>
+                          <span>{new Date(workflow.updated_at).toLocaleString()}</span>
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                   <div className="pt-2">
                     <Button
                       variant={conclusion.mostRecentPassed ? 'default' : 'destructive'}
@@ -454,12 +494,12 @@ Format your response in clear markdown with code blocks for any suggested fixes.
                       asChild
                     >
                       <a
-                        href={conclusion.mostRecent.html_url}
+                        href="https://github.com/johndoe6345789/metabuilder/actions"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2"
                       >
-                        View Details on GitHub
+                        View All Workflows on GitHub
                         <ArrowSquareOut size={16} />
                       </a>
                     </Button>
