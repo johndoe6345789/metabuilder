@@ -1,5 +1,3 @@
-// Prisma schema for metabuilder project
-// Default database uses SQLite for local development.
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,21 +7,172 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Project {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  owner       User?    @relation(fields: [ownerId], references: [id])
-  ownerId     Int?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model User {
+  id                      String                 @id
+  username                String                 @unique
+  email                   String                 @unique
+  role                    String
+  profilePicture          String?
+  bio                     String?
+  createdAt               BigInt
+  tenantId                String?
+  isInstanceOwner         Boolean                @default(false)
+  tenant                  Tenant?                @relation(fields: [tenantId], references: [id])
+  ownedTenants            Tenant[]               @relation("TenantOwner")
+  comments                Comment[]
+  powerTransfersFrom      PowerTransferRequest[] @relation("PowerTransferFrom")
+  powerTransfersTo        PowerTransferRequest[] @relation("PowerTransferTo")
+  passwordChangeTimestamp BigInt?
+  firstLogin              Boolean                @default(false)
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  projects  Project[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Credential {
+  username     String @id
+  passwordHash String
+}
+
+model Workflow {
+  id          String  @id
+  name        String
+  description String?
+  nodes       String
+  edges       String
+  enabled     Boolean
+}
+
+model LuaScript {
+  id          String  @id
+  name        String
+  description String?
+  code        String
+  parameters  String
+  returnType  String?
+}
+
+model PageConfig {
+  id            String  @id
+  path          String
+  title         String
+  level         Int
+  componentTree String
+  requiresAuth  Boolean
+  requiredRole  String?
+}
+
+model ModelSchema {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  label       String?
+  labelPlural String?
+  icon        String?
+  fields      String
+  listDisplay String?
+  listFilter  String?
+  searchFields String?
+  ordering    String?
+}
+
+model AppConfiguration {
+  id          String @id
+  name        String
+  schemas     String
+  workflows   String
+  luaScripts  String
+  pages       String
+  theme       String
+}
+
+model Comment {
+  id        String   @id
+  userId    String
+  content   String
+  createdAt BigInt
+  updatedAt BigInt?
+  parentId  String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ComponentNode {
+  id        String  @id
+  type      String
+  parentId  String?
+  childIds  String
+  order     Int
+  pageId    String
+}
+
+model ComponentConfig {
+  id                    String  @id
+  componentId           String
+  props                 String
+  styles                String
+  events                String
+  conditionalRendering  String?
+}
+
+model CssCategory {
+  id      String @id @default(cuid())
+  name    String @unique
+  classes String
+}
+
+model DropdownConfig {
+  id      String @id
+  name    String @unique
+  label   String
+  options String
+}
+
+model InstalledPackage {
+  packageId   String  @id
+  installedAt BigInt
+  version     String
+  enabled     Boolean
+}
+
+model PackageData {
+  packageId String @id
+  data      String
+}
+
+model Tenant {
+  id             String  @id
+  name           String
+  ownerId        String
+  createdAt      BigInt
+  homepageConfig String?
+  owner          User    @relation("TenantOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  users          User[]
+}
+
+model PowerTransferRequest {
+  id         String @id
+  fromUserId String
+  toUserId   String
+  status     String
+  createdAt  BigInt
+  expiresAt  BigInt
+  fromUser   User   @relation("PowerTransferFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser     User   @relation("PowerTransferTo", fields: [toUserId], references: [id], onDelete: Cascade)
+}
+
+model SystemConfig {
+  key   String @id
+  value String
+}
+
+model SMTPConfig {
+  id        String  @id @default("default")
+  host      String
+  port      Int
+  secure    Boolean
+  username  String
+  password  String
+  fromEmail String
+  fromName  String
+}
+
+model PasswordResetToken {
+  username String @id
+  token    String
 }
