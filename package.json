@@ -14,6 +14,9 @@
         "test:e2e": "playwright test",
         "test:e2e:ui": "playwright test --ui",
         "test:e2e:headed": "playwright test --headed",
+        "act": "bash scripts/run-act.sh",
+        "act:lint": "bash scripts/run-act.sh -w ci.yml -j lint",
+        "act:e2e": "bash scripts/run-act.sh -w ci.yml -j test-e2e",
         "setup-packages": "node scripts/setup-packages.cjs",
         "postinstall": "node scripts/setup-packages.cjs"
     },

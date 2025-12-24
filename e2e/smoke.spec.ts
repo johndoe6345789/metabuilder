@@ -22,6 +22,16 @@ test.describe('Basic Smoke Tests', () => {
     expect(title).toBeTruthy();
   });
 
+  test('should display MetaBuilder landing page', async ({ page }) => {
+    await page.goto('/');
+    
+    // Check if the MetaBuilder branding is visible
+    await expect(page.getByText('MetaBuilder')).toBeVisible();
+    
+    // Check if navigation buttons are present
+    await expect(page.getByRole('button', { name: /sign in|get started/i })).toBeVisible();
+  });
+
   test('should not have console errors on load', async ({ page }) => {
     const consoleErrors: string[] = [];
     

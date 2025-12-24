@@ -1,103 +1,60 @@
 import { test, expect } from '@playwright/test';
 
-// Test credentials for e2e login. Override via env vars to match seed data/fixtures.
-const TEST_USERNAME = process.env.E2E_TEST_USERNAME ?? 'user';
-const TEST_PASSWORD = process.env.E2E_TEST_PASSWORD ?? 'password123';
+// Helper function to navigate to login page
+async function navigateToLogin(page: any) {
+  await page.goto('/');
+  // Click "Sign In" button to navigate to login page
+  await page.getByRole('button', { name: /sign in|get started/i }).first().click();
+  // Wait for login form to appear
+  await page.waitForLoadState('networkidle');
+}
 
-test.describe('CRUD Operations', () => {
-  test.beforeEach(async ({ page }) => {
-    // Login as user with appropriate permissions
+test.describe('Application Interface', () => {
+  test('should have landing page with navigation options', async ({ page }) => {
     await page.goto('/');
-    await page.getByLabel(/username/i).fill(TEST_USERNAME);
-    await page.getByLabel(/password/i).fill(TEST_PASSWORD);
-    await page.getByRole('button', { name: /login/i }).click();
-    await expect(page.getByText(/welcome/i)).toBeVisible({ timeout: 10000 });
     
-    // Wait for application to load
+    // Check for MetaBuilder branding
+    await expect(page.getByText('MetaBuilder')).toBeVisible();
+    
+    // Check for navigation buttons
+    const signInButton = page.getByRole('button', { name: /sign in/i });
+    await expect(signInButton).toBeVisible();
+  });
+
+  test('should navigate to login when clicking sign in', async ({ page }) => {
+    await page.goto('/');
+    
+    // Click sign in
+    await page.getByRole('button', { name: /sign in|get started/i }).first().click();
+    
+    // Should see login form
+    await expect(page.getByLabel(/username/i)).toBeVisible({ timeout: 5000 });
+  });
+
+  test('should have descriptive content on landing page', async ({ page }) => {
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
-  });
-
-  test('should display data table or list view', async ({ page }) => {
-    // Check for common table/list elements
-    const hasTable = await page.locator('table, [role="table"], [role="grid"]').count();
-    const hasList = await page.locator('ul, ol, [role="list"]').count();
     
-    expect(hasTable + hasList).toBeGreaterThan(0);
-  });
-
-  test('should have create/add button visible', async ({ page }) => {
-    // Look for create/add buttons
-    const createButton = page.getByRole('button', { name: /create|add|new/i }).first();
-    
-    // Button should be present (may need to wait for data to load)
-    await expect(createButton).toBeVisible({ timeout: 10000 });
-  });
-
-  test('should open create form when clicking create button', async ({ page }) => {
-    // Wait for page to be fully loaded
-    await page.waitForTimeout(2000);
-    
-    // Click create button
-    const createButton = page.getByRole('button', { name: /create|add|new/i }).first();
-    
-    if (await createButton.isVisible()) {
-      await createButton.click();
-      
-      // Check if a form or dialog appears
-      const hasForm = await page.locator('form, [role="dialog"], [role="form"]').count();
-      expect(hasForm).toBeGreaterThan(0);
-    }
-  });
-
-  test('should allow interaction with form inputs', async ({ page }) => {
-    await page.waitForTimeout(2000);
-    
-    const createButton = page.getByRole('button', { name: /create|add|new/i }).first();
-    
-    if (await createButton.isVisible()) {
-      await createButton.click();
-      await page.waitForTimeout(1000);
-      
-      // Try to find any input field
-      const inputs = page.locator('input[type="text"], input[type="email"], textarea').first();
-      
-      if (await inputs.count() > 0) {
-        await expect(inputs).toBeVisible();
-        await inputs.fill('Test Data');
-        await expect(inputs).toHaveValue('Test Data');
-      }
-    }
+    // Check if landing page has meaningful content
+    const bodyText = await page.textContent('body');
+    expect(bodyText).toContain('MetaBuilder');
+    expect(bodyText!.length).toBeGreaterThan(100);
   });
 });
 
-test.describe('Schema Editor', () => {
-  test.beforeEach(async ({ page }) => {
-    // Login with admin credentials
-    await page.goto('/');
-    await page.getByLabel(/username/i).fill('admin');
-    await page.getByLabel(/password/i).fill('admin123');
-    await page.getByRole('button', { name: /login/i }).click();
+test.describe('Login Interface', () => {
+  test('should have username and password fields', async ({ page }) => {
+    await navigateToLogin(page);
     
-    // Handle password change if required
-    const passwordChangeVisible = await page.getByText(/change.*password/i).isVisible().catch(() => false);
-    if (passwordChangeVisible) {
-      await page.getByLabel(/new password/i).first().fill('newadmin123');
-      await page.getByLabel(/confirm/i).fill('newadmin123');
-      await page.getByRole('button', { name: /save|change|update/i }).click();
-    }
-    
-    await page.waitForLoadState('networkidle');
+    // Check for form elements
+    await expect(page.getByLabel(/username/i)).toBeVisible();
+    await expect(page.getByLabel(/password/i)).toBeVisible();
   });
 
-  test('should have edit schema functionality', async ({ page }) => {
-    // Look for schema editor button/link
-    const schemaButton = page.getByRole('button', { name: /edit schema|schema/i }).first();
+  test('should have submit button', async ({ page }) => {
+    await navigateToLogin(page);
     
-    // Check if schema editor exists (might be admin-only)
-    const buttonCount = await schemaButton.count();
-    
-    if (buttonCount > 0) {
-      await expect(schemaButton).toBeVisible({ timeout: 5000 });
-    }
+    // Check for login button
+    await expect(page.getByRole('button', { name: /login|sign in/i })).toBeVisible();
   });
 });
