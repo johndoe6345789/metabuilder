@@ -13,10 +13,12 @@ Add a new component using the declarative pattern (not hardcoded TSX):
   ],
   "config": {
     "layout": "vertical",
-    "styling": { "className": "p-4" }
+    "styling": { "className": "myComponentRoot" }
   }
 }
 ```
+
+Note: `styling.className` should reference a real CSS class (SCSS/modules), not Tailwind utility classes.
 
 2. **Register** via `DeclarativeComponentRenderer.registerComponentConfig()`
 

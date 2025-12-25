@@ -13,7 +13,7 @@ Review code against MetaBuilder standards:
 - [ ] Uses declarative pattern where possible
 - [ ] No hardcoded values that belong in DB
 - [ ] Uses `@/` absolute imports
-- [ ] Uses shadcn/ui components from `@/components/ui`
+- [ ] Uses Material UI (`@mui/*`) and `sx`/SCSS modules (no Radix UI / Tailwind)
 
 ## Testing
 - [ ] Parameterized tests with `it.each()`
