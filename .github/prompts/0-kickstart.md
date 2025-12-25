@@ -32,6 +32,8 @@ Run app workflows from `frontends/nextjs/`:
 - Lint: `npm run lint` / `npm run lint:fix`
 - Typecheck: `npm run typecheck`
 - Unit: `npm run test:unit` / `npm run test:coverage`
+- Function coverage: `npm run test:check-functions`
+- Coverage report: `npm run test:coverage:report`
 - E2E: `npm run test:e2e`
 - Prisma: `npm run db:generate` / `npm run db:push` / `npm run db:migrate`
 - Coverage output: `frontends/nextjs/coverage/`
