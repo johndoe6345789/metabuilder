@@ -1,7 +1,7 @@
 [requires]
 sqlite3/3.45.0
 fmt/10.2.1
-spdlog/1.13.0
+spdlog/1.16.0
 nlohmann_json/3.11.3
 
 [generators]
