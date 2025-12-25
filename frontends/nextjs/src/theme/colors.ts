@@ -1,5 +1,3 @@
-/** Design tokens - colors, spacing, typography */
-
 export const colors = {
   primary: {
     light: { main: '#8b5cf6', light: '#a78bfa', dark: '#7c3aed', contrastText: '#ffffff' },
@@ -30,18 +28,4 @@ export const colors = {
     400: '#a1a1aa', 500: '#71717a', 600: '#52525b', 700: '#3f3f46',
     800: '#27272a', 900: '#18181b', 950: '#09090b',
   },
-}
-
-export const fonts = {
-  body: ['IBM Plex Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'].join(','),
-  heading: ['Space Grotesk', 'IBM Plex Sans', 'sans-serif'].join(','),
-  mono: ['JetBrains Mono', 'Consolas', 'Monaco', 'monospace'].join(','),
-}
-
-export const layout = {
-  spacing: 8,
-  borderRadius: { none: 0, sm: 4, md: 8, lg: 12, xl: 16, full: 9999 },
-  contentWidth: { sm: '640px', md: '768px', lg: '1024px', xl: '1280px', full: '100%' },
-  sidebar: { width: 280, collapsedWidth: 72 },
-  header: { height: 64 },
 }

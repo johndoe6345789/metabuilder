@@ -1,7 +1,6 @@
-/** Component style overrides for MUI */
-
 import { ThemeOptions, alpha } from '@mui/material/styles'
-import { colors, fonts } from './tokens'
+import { colors } from './colors'
+import { fonts } from './fonts'
 
 export const getComponentOverrides = (mode: 'light' | 'dark'): ThemeOptions['components'] => {
   const isDark = mode === 'dark'
@@ -26,20 +25,12 @@ export const getComponentOverrides = (mode: 'light' | 'dark'): ThemeOptions['com
         root: { borderRadius: 8, textTransform: 'none', fontWeight: 500, padding: '8px 16px' },
         sizeSmall: { padding: '4px 12px', fontSize: '0.8125rem' },
         sizeLarge: { padding: '12px 24px', fontSize: '0.9375rem' },
-        containedPrimary: {
-          '&:hover': { boxShadow: `0 4px 12px ${alpha(isDark ? colors.primary.dark.main : colors.primary.light.main, 0.4)}` },
-        },
+        containedPrimary: { '&:hover': { boxShadow: `0 4px 12px ${alpha(isDark ? colors.primary.dark.main : colors.primary.light.main, 0.4)}` } },
       },
     },
     MuiCard: {
       defaultProps: { elevation: 0 },
-      styleOverrides: {
-        root: {
-          borderRadius: 12,
-          border: `1px solid ${isDark ? n[800] : n[200]}`,
-          backgroundImage: 'none',
-        },
-      },
+      styleOverrides: { root: { borderRadius: 12, border: `1px solid ${isDark ? n[800] : n[200]}`, backgroundImage: 'none' } },
     },
     MuiCardHeader: {
       styleOverrides: {
