@@ -1,4 +1,4 @@
-import type { ModelSchema } from '../types/schema-types'
+import type { ModelSchema } from '@/lib/schema-types'
 
 /**
  * Get the display label for a model

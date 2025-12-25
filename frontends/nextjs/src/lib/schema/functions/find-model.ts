@@ -1,4 +1,4 @@
-import type { ModelSchema, SchemaConfig } from '../types/schema-types'
+import type { ModelSchema, SchemaConfig } from '@/lib/schema-types'
 
 /**
  * Find a model by name within a schema configuration

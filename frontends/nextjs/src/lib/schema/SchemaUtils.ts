@@ -1,4 +1,4 @@
-import type { FieldSchema, ModelSchema, SchemaConfig } from './types/schema-types'
+import type { FieldSchema, ModelSchema, SchemaConfig } from '@/lib/schema-types'
 
 // Import individual functions (lambdas)
 import { getModelKey } from './functions/get-model-key'

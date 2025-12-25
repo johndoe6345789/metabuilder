@@ -1,4 +1,4 @@
-import type { ModelSchema } from '../types/schema-types'
+import type { ModelSchema } from '@/lib/schema-types'
 import { getModelLabel } from './get-model-label'
 
 /**

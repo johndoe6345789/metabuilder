@@ -10,12 +10,12 @@ describe('validateUserCreate', () => {
     },
     {
       data: { username: 'bad name', email: 'user@example.com', role: 'user' },
-      expected: ['Invalid username format (alphanumeric, underscore, hyphen only, 1-50 chars)'],
+      expected: ['Invalid username format (alphanumeric, underscore, hyphen only, 3-50 chars)'],
       description: 'invalid username',
     },
     {
       data: { username: 'user', email: 'invalid', role: 'user' },
-      expected: ['Invalid email format'],
+      expected: ['Invalid email format (max 255 chars)'],
       description: 'invalid email',
     },
     {

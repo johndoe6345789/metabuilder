@@ -1,4 +1,4 @@
-import type { FieldSchema } from '../types/schema-types'
+import type { FieldSchema } from '@/lib/schema-types'
 
 /**
  * Get the default value for a field based on its type
