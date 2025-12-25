@@ -1,5 +1,6 @@
-import { Badge } from '@/components/ui/badge'
-import { CheckCircle, XCircle } from '@phosphor-icons/react'
+import { Chip, Stack, Typography } from '@mui/material'
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
+import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined'
 
 interface WorkflowRunStatusProps {
   status: string
@@ -12,11 +13,13 @@ export function WorkflowRunStatus({ status, conclusion }: WorkflowRunStatusProps
   const isInProgress = status === 'in_progress'
 
   return (
-    <div className="flex items-center gap-2">
-      {isSuccess && <CheckCircle size={20} className="text-green-500" />}
-      {isFailure && <XCircle size={20} className="text-red-500" />}
-      {isInProgress && <Badge variant="outline">Running...</Badge>}
-      <span className="text-sm font-medium capitalize">{conclusion || status}</span>
-    </div>
+    <Stack direction="row" spacing={1} alignItems="center">
+      {isSuccess && <CheckCircleOutlineIcon sx={{ color: 'success.main', fontSize: 20 }} />}
+      {isFailure && <HighlightOffOutlinedIcon sx={{ color: 'error.main', fontSize: 20 }} />}
+      {isInProgress && <Chip label="Running..." size="small" variant="outlined" />}
+      <Typography variant="body2" sx={{ fontWeight: 600, textTransform: 'capitalize' }}>
+        {conclusion || status}
+      </Typography>
+    </Stack>
   )
 }

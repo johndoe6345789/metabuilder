@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card'
+import { Box, Card, CardContent, Stack, Typography } from '@mui/material'
 import { WorkflowRunStatus } from './WorkflowRunStatus'
 
 export { WorkflowRunStatus } from './WorkflowRunStatus'
@@ -22,18 +22,31 @@ export function WorkflowRunCard({
 }: WorkflowRunCardProps) {
   return (
     <Card
-      className="cursor-pointer hover:shadow-md transition-shadow"
+      variant="outlined"
       onClick={onClick}
+      sx={{
+        cursor: onClick ? 'pointer' : 'default',
+        transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
+        '&:hover': onClick
+          ? { boxShadow: 3, borderColor: 'primary.light' }
+          : undefined,
+      }}
     >
-      <CardContent className="pt-4">
-        <div className="space-y-2">
-          <h3 className="font-semibold">{name}</h3>
+      <CardContent sx={{ pt: 2 }}>
+        <Stack spacing={1}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+            {name}
+          </Typography>
           <WorkflowRunStatus status={status} conclusion={conclusion} />
-          <div className="text-xs text-gray-500 space-y-1">
-            <p>Branch: {branch}</p>
-            <p>Created: {new Date(createdAt).toLocaleString()}</p>
-          </div>
-        </div>
+          <Box sx={{ color: 'text.secondary' }}>
+            <Typography variant="caption" display="block">
+              Branch: {branch}
+            </Typography>
+            <Typography variant="caption" display="block">
+              Created: {new Date(createdAt).toLocaleString()}
+            </Typography>
+          </Box>
+        </Stack>
       </CardContent>
     </Card>
   )
