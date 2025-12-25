@@ -1,53 +1,99 @@
-# 🚀 QUICK START: MetaBuilder Improvement Initiative
+# 🚀 START HERE: MetaBuilder Getting Started
 
-**Start Here** → All improvement documents are ready to use.
-
----
-
-## 📋 What You're Getting
-
-**6 comprehensive documents** that provide everything needed to execute a 10-week improvement initiative addressing:
-- 8 components exceeding 150 LOC (4,146 LOC over)
-- Scattered state management (no unified pattern)
-- 30% incomplete package system
-- Fragmented documentation (50+ files)
+Welcome to MetaBuilder! This file helps you navigate to where you need to go.
 
 ---
 
-## 🎯 Choose Your Starting Point
+## 📚 Documentation is Organized
 
-### 👨‍💼 You're a Project Manager or Executive
-**Read this first (5-10 minutes):**
-```
-EXECUTIVE_BRIEF.md
-├─ Problem overview
-├─ Solution summary
-├─ Timeline (10 weeks)
-├─ Team requirements (2 devs, 1 QA, 1 tech lead)
-├─ ROI (30-40% faster development)
-└─ Next steps
-```
+**All MetaBuilder documentation is in the `/docs` folder.**
 
-**Then:** Review PRIORITY_ACTION_PLAN.md "Week-by-Week Execution Plan"
+### 👤 For New Team Members
+**[→ Read: docs/getting-started/NEW_CONTRIBUTOR_PATH.md](./docs/getting-started/NEW_CONTRIBUTOR_PATH.md)**
+- Structured 2-3 hour learning path
+- Learn architecture, testing, development workflow
+- Get familiar with codebase patterns
+- ✅ **START HERE** if you're new
+
+### 🗺️ For Finding Specific Topics  
+**[→ Use: docs/NAVIGATION.md](./docs/NAVIGATION.md)**
+- Complete guide to all documentation
+- Organized by category
+- Quick links to common tasks
+- 144+ documentation files indexed
+
+### 📖 For General Navigation
+**[→ Go to: docs/INDEX.md](./docs/INDEX.md)**
+- Quick navigation hub
+- Category overview
+- Fast access to key documents
+
+### 📋 For Full Organization Guide
+**[→ See: DOCS_ORGANIZATION_GUIDE.md](./DOCS_ORGANIZATION_GUIDE.md)** ← You are here!  
+**[→ See: docs/ORGANIZATION.md](./docs/ORGANIZATION.md)**
+- How documentation is structured
+- Directory breakdown
+- Contributing guidelines
 
 ---
 
-### 👨‍💻 You're a Developer Starting Phase 1
-**Read this first (30 minutes):**
+## 🎯 What Are You Trying to Do?
+
+| Goal | Link | Time |
+|------|------|------|
+| **I'm new to MetaBuilder** | [NEW_CONTRIBUTOR_PATH](./docs/getting-started/NEW_CONTRIBUTOR_PATH.md) | 2-3 hrs |
+| **I want to set up dev environment** | [getting-started/README](./docs/getting-started/README.md) | 30 min |
+| **I need to understand the architecture** | [architecture/5-level-system](./docs/architecture/5-level-system.md) | 15 min |
+| **I need to write tests** | [testing/TESTING_GUIDELINES](./docs/testing/TESTING_GUIDELINES.md) | 10 min |
+| **I need to create a component** | [guides/getting-started](./docs/guides/getting-started.md) | 20 min |
+| **I need to work with the database** | [DBAL_INTEGRATION](./docs/implementation/DBAL_INTEGRATION.md) | 30 min |
+| **I need to deploy** | [deployments/README](./docs/deployments/README.md) | 15 min |
+| **I'm stuck - troubleshooting** | [troubleshooting/README](./docs/troubleshooting/README.md) | varies |
+| **I need project overview** | [README](./README.md) | 10 min |
+
+---
+
+## 🚀 Next Steps
+
+### Step 1: Choose Your Path
+- **New to MetaBuilder?** → [NEW_CONTRIBUTOR_PATH](./docs/getting-started/NEW_CONTRIBUTOR_PATH.md)
+- **Need a specific topic?** → [NAVIGATION.md](./docs/NAVIGATION.md)
+
+### Step 2: Jump In
+Follow the guides for your role and tasks.
+
+### Step 3: Keep These Handy
+- [Copilot Instructions](./docs/../../.github/copilot-instructions.md) - Development standards
+- [NAVIGATION.md](./docs/NAVIGATION.md) - Find anything
+- [troubleshooting/README](./docs/troubleshooting/README.md) - Solve problems
+
+---
+
+## 📂 Quick File Locations
+
+**At root level** (kept minimal):
+- `README.md` - Project overview
+- `CONTRIBUTING.md` - How to contribute
+- `START_HERE.md` - This file
+- `DOCS_ORGANIZATION_GUIDE.md` - Docs navigation guide
+
+**Everything else** is in `/docs/` folder:
 ```
-PRIORITY_ACTION_PLAN.md - PHASE 1 section
-├─ Component refactoring overview
-├─ Your assigned component
-└─ First tasks
+docs/
+├── getting-started/       ← Start here!
+├── architecture/          ← System design
+├── testing/               ← How to test
+├── implementation/        ← Implementation guides
+├── refactoring/           ← Code quality
+├── packages/              ← Package system
+├── guides/                ← How-to guides
+└── [18+ other categories]
 ```
 
-**Then:** Review your component in COMPONENT_VIOLATION_ANALYSIS.md
-```
-COMPONENT_VIOLATION_ANALYSIS.md
-├─ Your component's current architecture
-├─ Refactoring strategy (with diagrams)
-├─ Step-by-step implementation (8-10 steps)
-├─ Code examples
+---
+
+**👉 Ready to start?**  
+→ **[Go to docs/getting-started/NEW_CONTRIBUTOR_PATH.md](./docs/getting-started/NEW_CONTRIBUTOR_PATH.md)**
 └─ Testing approach
 ```
 
