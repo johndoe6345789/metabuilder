@@ -36,7 +36,7 @@ import {
 import { toast } from 'sonner'
 import { createWorkflowEngine, type WorkflowExecutionResult as WFExecResult } from '@/lib/workflow-engine'
 import type { Workflow, WorkflowNode, WorkflowEdge, LuaScript } from '@/lib/level-types'
-import { Input, Label, Badge } from '@/components/ui'
+import { Input, Label, Badge, Select as UISelect, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui'
 import { CardTitle, CardDescription } from '@/components/ui'
 
 interface WorkflowEditorProps {
