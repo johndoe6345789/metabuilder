@@ -35,7 +35,13 @@ Run app workflows from `frontends/nextjs/`:
 - Function coverage: `npm run test:check-functions`
 - Coverage report: `npm run test:coverage:report`
 - E2E: `npm run test:e2e`
-- Prisma: `npm run db:generate` / `npm run db:push` / `npm run db:migrate`
+- Prisma (schema is in `prisma/schema.prisma`; requires `DATABASE_URL`):
+  - If `npm run db:*` can’t find the schema from `frontends/nextjs/`, run:
+    - `DATABASE_URL="file:./dev.db" npx prisma generate --schema ../../prisma/schema.prisma`
+    - `DATABASE_URL="file:./dev.db" npx prisma db push --schema ../../prisma/schema.prisma`
+    - `DATABASE_URL="file:./dev.db" npx prisma migrate deploy --schema ../../prisma/schema.prisma`
+    - `DATABASE_URL="file:./dev.db" npx prisma validate --schema ../../prisma/schema.prisma`
+  - Otherwise: `npm run db:generate` / `npm run db:push` / `npm run db:migrate`
 - Coverage output: `frontends/nextjs/coverage/`
 
 DBAL workflows live in `dbal/ts/` (`npm run build`, `npm run test:unit`).
@@ -63,6 +69,6 @@ DBAL workflows live in `dbal/ts/` (`npm run build`, `npm run test:unit`).
 - Package metadata: keep `packages/*/seed/metadata.json` `packageId` in `snake_case` and versions semver (e.g. `1.2.3`).
 
 ## CI / Workflows
-- Use `act` to reproduce and debug GitHub Actions locally (see `npm run act`, `npm run act:diagnose`, `docs/guides/ACT_TESTING.md`).
+- Use `act` to reproduce and debug GitHub Actions locally (from `frontends/nextjs/`: `npm run act`, `npm run act:diagnose`; see `docs/guides/ACT_TESTING.md`).
 
 If you get stuck, see `.github/prompts/EEK-STUCK.md`.
