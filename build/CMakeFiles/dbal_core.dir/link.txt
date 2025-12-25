@@ -1,0 +1,2 @@
+/usr/bin/llvm-ar qc libdbal_core.a CMakeFiles/dbal_core.dir/src/client.cpp.o CMakeFiles/dbal_core.dir/src/errors.cpp.o CMakeFiles/dbal_core.dir/src/capabilities.cpp.o CMakeFiles/dbal_core.dir/src/query/ast.cpp.o CMakeFiles/dbal_core.dir/src/query/builder.cpp.o CMakeFiles/dbal_core.dir/src/query/normalize.cpp.o CMakeFiles/dbal_core.dir/src/util/uuid.cpp.o CMakeFiles/dbal_core.dir/src/util/backoff.cpp.o
+/usr/bin/llvm-ranlib libdbal_core.a

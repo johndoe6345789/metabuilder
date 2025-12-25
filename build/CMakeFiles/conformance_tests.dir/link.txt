@@ -1,0 +1,1 @@
+/usr/bin/clang++ -g CMakeFiles/conformance_tests.dir/tests/conformance/runner.cpp.o -o conformance_tests  -Wl,-rpath,/opt/conda/lib libdbal_core.a libdbal_adapters.a /opt/conda/lib/libspdlog.so.1.11.0 /opt/conda/lib/libfmt.so.9.1.0 

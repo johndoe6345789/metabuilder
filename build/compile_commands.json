@@ -1,0 +1,110 @@
+[
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/dbal_core.dir/src/client.cpp.o -c /workspaces/metabuilder/dbal/cpp/src/client.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/src/client.cpp",
+  "output": "CMakeFiles/dbal_core.dir/src/client.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/dbal_core.dir/src/errors.cpp.o -c /workspaces/metabuilder/dbal/cpp/src/errors.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/src/errors.cpp",
+  "output": "CMakeFiles/dbal_core.dir/src/errors.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/dbal_core.dir/src/capabilities.cpp.o -c /workspaces/metabuilder/dbal/cpp/src/capabilities.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/src/capabilities.cpp",
+  "output": "CMakeFiles/dbal_core.dir/src/capabilities.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/dbal_core.dir/src/query/ast.cpp.o -c /workspaces/metabuilder/dbal/cpp/src/query/ast.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/src/query/ast.cpp",
+  "output": "CMakeFiles/dbal_core.dir/src/query/ast.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/dbal_core.dir/src/query/builder.cpp.o -c /workspaces/metabuilder/dbal/cpp/src/query/builder.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/src/query/builder.cpp",
+  "output": "CMakeFiles/dbal_core.dir/src/query/builder.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/dbal_core.dir/src/query/normalize.cpp.o -c /workspaces/metabuilder/dbal/cpp/src/query/normalize.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/src/query/normalize.cpp",
+  "output": "CMakeFiles/dbal_core.dir/src/query/normalize.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/dbal_core.dir/src/util/uuid.cpp.o -c /workspaces/metabuilder/dbal/cpp/src/util/uuid.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/src/util/uuid.cpp",
+  "output": "CMakeFiles/dbal_core.dir/src/util/uuid.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/dbal_core.dir/src/util/backoff.cpp.o -c /workspaces/metabuilder/dbal/cpp/src/util/backoff.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/src/util/backoff.cpp",
+  "output": "CMakeFiles/dbal_core.dir/src/util/backoff.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++  -I/workspaces/metabuilder/dbal/cpp/include -g -std=gnu++17 -o CMakeFiles/dbal_adapters.dir/src/adapters/sqlite/sqlite_adapter.cpp.o -c /workspaces/metabuilder/dbal/cpp/src/adapters/sqlite/sqlite_adapter.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/src/adapters/sqlite/sqlite_adapter.cpp",
+  "output": "CMakeFiles/dbal_adapters.dir/src/adapters/sqlite/sqlite_adapter.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++  -I/workspaces/metabuilder/dbal/cpp/include -g -std=gnu++17 -o CMakeFiles/dbal_adapters.dir/src/adapters/sqlite/sqlite_pool.cpp.o -c /workspaces/metabuilder/dbal/cpp/src/adapters/sqlite/sqlite_pool.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/src/adapters/sqlite/sqlite_pool.cpp",
+  "output": "CMakeFiles/dbal_adapters.dir/src/adapters/sqlite/sqlite_pool.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/dbal_daemon.dir/src/daemon/main.cpp.o -c /workspaces/metabuilder/dbal/cpp/src/daemon/main.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/src/daemon/main.cpp",
+  "output": "CMakeFiles/dbal_daemon.dir/src/daemon/main.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/dbal_daemon.dir/src/daemon/server.cpp.o -c /workspaces/metabuilder/dbal/cpp/src/daemon/server.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/src/daemon/server.cpp",
+  "output": "CMakeFiles/dbal_daemon.dir/src/daemon/server.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/dbal_daemon.dir/src/daemon/security.cpp.o -c /workspaces/metabuilder/dbal/cpp/src/daemon/security.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/src/daemon/security.cpp",
+  "output": "CMakeFiles/dbal_daemon.dir/src/daemon/security.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/client_test.dir/tests/unit/client_test.cpp.o -c /workspaces/metabuilder/dbal/cpp/tests/unit/client_test.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/tests/unit/client_test.cpp",
+  "output": "CMakeFiles/client_test.dir/tests/unit/client_test.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/query_test.dir/tests/unit/query_test.cpp.o -c /workspaces/metabuilder/dbal/cpp/tests/unit/query_test.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/tests/unit/query_test.cpp",
+  "output": "CMakeFiles/query_test.dir/tests/unit/query_test.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/integration_tests.dir/tests/integration/sqlite_test.cpp.o -c /workspaces/metabuilder/dbal/cpp/tests/integration/sqlite_test.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/tests/integration/sqlite_test.cpp",
+  "output": "CMakeFiles/integration_tests.dir/tests/integration/sqlite_test.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++ -DFMT_SHARED -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/workspaces/metabuilder/dbal/cpp/include -isystem /opt/conda/include -g -std=gnu++17 -o CMakeFiles/conformance_tests.dir/tests/conformance/runner.cpp.o -c /workspaces/metabuilder/dbal/cpp/tests/conformance/runner.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/tests/conformance/runner.cpp",
+  "output": "CMakeFiles/conformance_tests.dir/tests/conformance/runner.cpp.o"
+},
+{
+  "directory": "/workspaces/metabuilder/build",
+  "command": "/usr/bin/clang++  -I/workspaces/metabuilder/dbal/cpp/include -g -std=gnu++17 -o CMakeFiles/http_server_security_test.dir/tests/security/http_server_security_test.cpp.o -c /workspaces/metabuilder/dbal/cpp/tests/security/http_server_security_test.cpp",
+  "file": "/workspaces/metabuilder/dbal/cpp/tests/security/http_server_security_test.cpp",
+  "output": "CMakeFiles/http_server_security_test.dir/tests/security/http_server_security_test.cpp.o"
+}
+]

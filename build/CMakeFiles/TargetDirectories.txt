@@ -1,0 +1,15 @@
+/workspaces/metabuilder/build/CMakeFiles/dbal_core.dir
+/workspaces/metabuilder/build/CMakeFiles/dbal_adapters.dir
+/workspaces/metabuilder/build/CMakeFiles/dbal_daemon.dir
+/workspaces/metabuilder/build/CMakeFiles/client_test.dir
+/workspaces/metabuilder/build/CMakeFiles/query_test.dir
+/workspaces/metabuilder/build/CMakeFiles/integration_tests.dir
+/workspaces/metabuilder/build/CMakeFiles/conformance_tests.dir
+/workspaces/metabuilder/build/CMakeFiles/http_server_security_test.dir
+/workspaces/metabuilder/build/CMakeFiles/test.dir
+/workspaces/metabuilder/build/CMakeFiles/edit_cache.dir
+/workspaces/metabuilder/build/CMakeFiles/rebuild_cache.dir
+/workspaces/metabuilder/build/CMakeFiles/list_install_components.dir
+/workspaces/metabuilder/build/CMakeFiles/install.dir
+/workspaces/metabuilder/build/CMakeFiles/install/local.dir
+/workspaces/metabuilder/build/CMakeFiles/install/strip.dir

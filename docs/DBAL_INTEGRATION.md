@@ -1,169 +1,406 @@
 # DBAL Integration Guide
 
+This document explains how the C++ and TypeScript DBAL (Database Abstraction Layer) components are integrated into the MetaBuilder project.
+
 ## Overview
 
-The MetaBuilder application now has DBAL (Database Abstraction Layer) wired up and ready for use. DBAL provides a unified interface for database operations with support for multiple adapters, ACL, audit logging, and more.
+The DBAL system provides a unified interface for data storage and retrieval across the MetaBuilder application. It consists of:
+
+1. **C++ DBAL Daemon** - Production-ready HTTP server with database abstraction
+2. **TypeScript DBAL Client** - Browser-compatible client for development
+3. **Integration Layer** - Bridges the DBAL with existing MetaBuilder components
 
 ## Architecture
 
-### Current Setup
-
-- **DBAL Layer**: Located in `dbal/ts/src/` - provides the core abstraction with Prisma adapter support
-- **Server-Side Integration**: `src/lib/database-dbal.server.ts` - server-only module that initializes and exports DBAL operations
-- **Database Class**: `src/lib/database.ts` - maintains backward compatibility with existing code using Prisma directly
-- **API Routes**: Demonstrate DBAL usage (e.g., `app/api/users/route.ts`)
-
-### Why Two Approaches?
-
-1. **Database Class (Prisma Direct)**: Used by client components and existing code for backward compatibility
-2. **DBAL (Server-Only)**: Used in API routes and server components for:
-   - Multi-adapter support
-   - ACL/permission checking
-   - Audit logging
-   - WebSocket bridge capability
-
-## Using DBAL in Your Code
-
-### ✅ Server-Side Usage (API Routes, Server Components, Server Actions)
-
-```typescript
-import { dbalGetUsers, dbalAddUser, initializeDBAL } from '@/lib/database-dbal.server'
-
-// In an API route
-export async function GET() {
-  await initializeDBAL()
-  const users = await dbalGetUsers()
-  return NextResponse.json({ users })
-}
-
-// In a Server Action
-'use server'
-export async function createUser(formData: FormData) {
-  await initializeDBAL()
-  const user = await dbalAddUser({
-    username: formData.get('username'),
-    email: formData.get('email'),
-    role: 'user'
-  })
-  return user
-}
+```
+┌─────────────────────────────────────────────────────────┐
+│                   MetaBuilder App                       │
+│                                                         │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐ │
+│  │ React Hooks  │  │ Integration  │  │   Database   │ │
+│  │  (useDBAL)   │→ │    Layer     │→ │    Class     │ │
+│  └──────────────┘  └──────────────┘  └──────────────┘ │
+│         ↓                  ↓                            │
+│  ┌─────────────────────────────────┐                   │
+│  │    TypeScript DBAL Client        │                  │
+│  │  - KV Store (In-Memory)          │                  │
+│  │  - Blob Storage (In-Memory)      │                  │
+│  │  - Tenant Management             │                  │
+│  └─────────────────────────────────┘                   │
+└─────────────────────────────────────────────────────────┘
+                       │
+                       │ HTTP API
+                       ↓
+┌─────────────────────────────────────────────────────────┐
+│              C++ DBAL Daemon (Production)                │
+│  - HTTP/1.1 Server (Nginx-compatible)                   │
+│  - PostgreSQL Adapter                                    │
+│  - Blob Storage (S3/Filesystem)                          │
+│  - Multi-tenant System                                   │
+│  - Access Control & Quotas                               │
+└─────────────────────────────────────────────────────────┘
 ```
 
-### ❌ Client-Side (Will Not Work)
+## Directory Structure
+
+```
+metabuilder/
+├── dbal/
+│   ├── cpp/                      # C++ DBAL Daemon
+│   │   ├── src/
+│   │   │   ├── daemon/           # HTTP server & main
+│   │   │   ├── core/             # Core DBAL logic
+│   │   │   ├── adapters/         # Database adapters
+│   │   │   └── blob/             # Blob storage
+│   │   ├── include/
+│   │   ├── tests/
+│   │   ├── Dockerfile
+│   │   └── CMakeLists.txt
+│   └── ts/                       # TypeScript DBAL Client
+│       └── src/
+│           ├── core/             # Client, types, validation
+│           ├── adapters/         # Memory adapter
+│           ├── blob/             # Blob storage implementations
+│           └── runtime/          # Runtime utilities
+├── src/
+│   ├── lib/
+│   │   └── dbal-integration.ts   # Integration layer
+│   ├── hooks/
+│   │   └── useDBAL.ts            # React hooks
+│   └── components/
+│       └── DBALDemo.tsx          # Demo component
+└── deployment/                   # Docker deployment configs
+```
+
+## Integration Components
+
+### 1. DBAL Integration Layer (`src/lib/dbal-integration.ts`)
+
+The integration layer provides a singleton interface to the DBAL system:
 
 ```typescript
-// DON'T DO THIS - will cause build errors
-import { dbalGetUsers } from '@/lib/database-dbal.server' // ❌ server-only module
+import { dbal } from '@/lib/dbal-integration'
 
+// Initialize DBAL (happens automatically)
+await dbal.initialize()
+
+// Key-Value operations
+await dbal.kvSet('user-preferences', { theme: 'dark' })
+const prefs = await dbal.kvGet('user-preferences')
+
+// Blob storage operations
+await dbal.blobUpload('avatar.png', imageData)
+const data = await dbal.blobDownload('avatar.png')
+
+// List operations
+await dbal.kvListAdd('recent-files', ['file1.txt', 'file2.txt'])
+const files = await dbal.kvListGet('recent-files')
+```
+
+### 2. React Hooks (`src/hooks/useDBAL.ts`)
+
+React hooks for easy DBAL access in components:
+
+```typescript
+import { useKVStore, useBlobStorage, useCachedData } from '@/hooks/useDBAL'
+
+// In your component
 function MyComponent() {
-  const users = await dbalGetUsers() // ❌ can't use DBAL on client
+  // KV Store hook
+  const kv = useKVStore()
+  await kv.set('key', 'value')
+  const value = await kv.get('key')
+
+  // Blob Storage hook
+  const blob = useBlobStorage()
+  await blob.upload('file.txt', data)
+  const fileData = await blob.download('file.txt')
+
+  // Cached Data hook (automatic serialization)
+  const { data, save, clear } = useCachedData('user-settings')
+  await save({ theme: 'light' })
 }
 ```
 
-For client-side code, use:
-- The existing `Database` class (which uses Prisma directly)
-- API routes that use DBAL internally
-- Server Components with DBAL
+### 3. Demo Component (`src/components/DBALDemo.tsx`)
 
-## DBAL Features
+A comprehensive demonstration component showing all DBAL features:
 
-### 1. Multi-Adapter Support
+- Key-Value store operations
+- List management
+- Blob storage upload/download
+- Cached data with React hooks
+
+Access it by importing:
+
 ```typescript
-const config = {
-  adapter: 'prisma', // or 'sqlite', 'mongodb' (when implemented)
-  database: { url: process.env.DATABASE_URL }
-}
+import { DBALDemo } from '@/components/DBALDemo'
+
+<DBALDemo />
 ```
 
-### 2. ACL Integration
-DBAL includes built-in access control:
+## Usage Examples
+
+### Storing User Preferences
+
 ```typescript
-const config = {
-  auth: {
-    user: currentUser,
-    session: currentSession
-  },
-  security: {
-    sandbox: 'strict', // or 'permissive', 'disabled'
-    enableAuditLog: true
+import { useKVStore } from '@/hooks/useDBAL'
+
+function UserSettings() {
+  const kv = useKVStore()
+
+  const savePreferences = async () => {
+    await kv.set('user-preferences', {
+      theme: 'dark',
+      language: 'en',
+      notifications: true
+    }, 3600) // Cache for 1 hour
+  }
+
+  const loadPreferences = async () => {
+    const prefs = await kv.get('user-preferences')
+    return prefs
   }
 }
 ```
 
-### 3. Validation
-All DBAL operations include automatic validation:
+### Uploading Files
+
 ```typescript
-// Automatic validation of user data
-await dbal.users.create({
-  username: 'john', // validated
-  email: 'invalid',  // throws validation error
+import { useBlobStorage } from '@/hooks/useDBAL'
+
+function FileUploader() {
+  const blob = useBlobStorage()
+
+  const handleUpload = async (file: File) => {
+    const arrayBuffer = await file.arrayBuffer()
+    const data = new Uint8Array(arrayBuffer)
+    
+    await blob.upload(`uploads/${file.name}`, data, {
+      'content-type': file.type,
+      'uploaded-at': new Date().toISOString()
+    })
+  }
+}
+```
+
+### Managing Lists
+
+```typescript
+import { useKVStore } from '@/hooks/useDBAL'
+
+function RecentFiles() {
+  const kv = useKVStore()
+
+  const addRecentFile = async (filename: string) => {
+    await kv.listAdd('recent-files', [filename])
+  }
+
+  const getRecentFiles = async () => {
+    const files = await kv.listGet('recent-files', 0, 10) // Get first 10
+    return files
+  }
+}
+```
+
+### Automatic Caching
+
+```typescript
+import { useCachedData } from '@/hooks/useDBAL'
+
+function UserProfile() {
+  const { data, loading, save } = useCachedData('user-profile')
+
+  // data is automatically loaded from cache on mount
+  // save() automatically updates both cache and local state
+
+  const updateProfile = async (newData) => {
+    await save(newData, 7200) // Cache for 2 hours
+  }
+}
+```
+
+## Multi-Tenant Support
+
+The DBAL system includes full multi-tenant support with isolation, access control, and quotas:
+
+```typescript
+import { dbal } from '@/lib/dbal-integration'
+
+// Create a new tenant
+const tenantManager = dbal.getTenantManager()
+await tenantManager.createTenant('company-123', {
+  maxBlobStorageBytes: 1024 * 1024 * 1024, // 1GB
+  maxBlobCount: 10000,
+  maxRecords: 100000
+})
+
+// Use tenant-specific storage
+const kv = useKVStore('company-123', 'user-456')
+await kv.set('company-data', { ... })
+```
+
+## Production Deployment
+
+In production, the TypeScript client can connect to the C++ DBAL daemon via HTTP:
+
+```typescript
+// Configure DBAL to use remote server
+await dbal.initialize({
+  adapter: 'http',
+  endpoint: 'http://dbal-daemon:8080'
 })
 ```
 
-### 4. Error Handling
-DBAL provides consistent error types:
-```typescript
-try {
-  await dbal.users.create(userData)
-} catch (error) {
-  if (error instanceof DBALError) {
-    if (error.code === 409) {
-      // Handle conflict (duplicate username/email)
-    }
+The C++ daemon provides:
+- High-performance HTTP/1.1 server
+- PostgreSQL adapter for persistent storage
+- S3/Filesystem blob storage
+- Nginx-compatible reverse proxy headers
+- Health checks and monitoring
+- Multi-tenant isolation
+- Access control and quotas
+
+## Testing
+
+Run the DBAL demo component to test all features:
+
+```bash
+# Start the development server
+npm run dev
+
+# Navigate to the DBAL Demo page
+# Or import <DBALDemo /> in any component
+```
+
+## Configuration
+
+### Environment Variables
+
+```bash
+# For TypeScript client
+DBAL_ADAPTER=memory  # or 'http' for production
+DBAL_ENDPOINT=http://dbal-daemon:8080  # if using HTTP adapter
+
+# For C++ daemon (see deployment/README.md)
+DBAL_BIND_ADDRESS=0.0.0.0
+DBAL_PORT=8080
+DBAL_LOG_LEVEL=info
+DBAL_MODE=production
+```
+
+### TypeScript Configuration
+
+The DBAL module is aliased in `tsconfig.json` and `vite.config.ts`:
+
+```json
+{
+  "paths": {
+    "@/*": ["./src/*"],
+    "@/dbal/*": ["./dbal/*"]
   }
 }
 ```
 
-## Migration Path
+## API Reference
 
-### Current State
-- ✅ DBAL is initialized and working
-- ✅ Prisma adapter is configured  
-- ✅ Server-side API routes can use DBAL
-- ⏳ Database class still uses Prisma directly (backward compatibility)
+### DBALIntegration
 
-### Future Enhancements
-1. Gradually migrate Database class methods to use DBAL internally
-2. Add support for SQLite and MongoDB adapters
-3. Implement full audit logging
-4. Add WebSocket bridge for C++ daemon communication
+Main singleton class for DBAL access.
 
-## Testing DBAL
+**Methods:**
+- `initialize(config?)` - Initialize DBAL system
+- `getClient()` - Get DBAL client instance
+- `getTenantManager()` - Get tenant manager
+- `getKVStore()` - Get KV store instance
+- `getBlobStorage()` - Get blob storage instance
+- `kvSet(key, value, ttl?, tenantId?, userId?)` - Store key-value data
+- `kvGet(key, tenantId?, userId?)` - Retrieve key-value data
+- `kvDelete(key, tenantId?, userId?)` - Delete key-value data
+- `kvListAdd(key, items, tenantId?, userId?)` - Add items to list
+- `kvListGet(key, tenantId?, userId?, start?, end?)` - Get list items
+- `blobUpload(key, data, metadata?)` - Upload blob data
+- `blobDownload(key)` - Download blob data
+- `blobDelete(key)` - Delete blob data
+- `blobList(prefix?)` - List all blobs
+- `blobGetMetadata(key)` - Get blob metadata
 
-Test the DBAL integration using the API route:
+### React Hooks
 
+**useDBAL()**
+- Returns: `{ isReady, error }`
+- Ensures DBAL is initialized
+
+**useKVStore(tenantId?, userId?)**
+- Returns: `{ isReady, set, get, delete, listAdd, listGet }`
+- KV store operations with automatic error handling
+
+**useBlobStorage()**
+- Returns: `{ isReady, upload, download, delete, list, getMetadata }`
+- Blob storage operations with automatic error handling
+
+**useCachedData(key, tenantId?, userId?)**
+- Returns: `{ data, loading, error, save, clear, isReady }`
+- Automatic caching with React state management
+
+## Troubleshooting
+
+### DBAL not initializing
+
+Check browser console for errors. Common issues:
+- Path alias not configured correctly in vite.config.ts
+- TypeScript path mapping missing in tsconfig.json
+
+### Can't import DBAL modules
+
+Ensure path aliases are configured:
+```typescript
+// Should work
+import { dbal } from '@/lib/dbal-integration'
+import { DBALClient } from '@/dbal/ts/src'
+```
+
+### Type errors
+
+Run `npm run build` to check for TypeScript errors:
 ```bash
-# Start the dev server
-npm run dev
-
-# Test the DBAL-powered users endpoint
-curl http://localhost:3000/api/users
+npm run build
 ```
 
-Expected response:
-```json
-{
-  "users": [...],
-  "source": "DBAL"
-}
-```
+### Memory adapter limitations
 
-## Benefits of DBAL
+The in-memory adapter stores data in browser memory:
+- Data is lost on page reload
+- Limited by browser memory constraints
+- For production, use HTTP adapter with C++ daemon
 
-1. **Abstraction**: Switch database backends without changing application code
-2. **Type Safety**: Full TypeScript support with validation
-3. **Security**: Built-in ACL, sandboxing, and audit logging
-4. **Performance**: Connection pooling, query timeouts, caching support
-5. **Testing**: Easy to mock and test with different adapters
-6. **Multi-tenancy**: Built-in tenant isolation and quota management
+## Future Enhancements
 
-## Next Steps
+- [ ] HTTP adapter for TypeScript client
+- [ ] Prisma integration for SQL queries
+- [ ] Real-time sync between clients
+- [ ] Offline support with sync
+- [ ] Encryption at rest
+- [ ] Advanced query builder
+- [ ] GraphQL API layer
+- [ ] WebSocket support for real-time updates
 
-To fully adopt DBAL throughout the codebase:
+## Related Documentation
 
-1. Create API routes for all database operations
-2. Update client components to call API routes instead of using Database class directly
-3. Migrate server components to use DBAL
-4. Eventually refactor Database class to use DBAL internally
+- [C++ DBAL Documentation](../dbal/cpp/README.md)
+- [TypeScript DBAL Documentation](../dbal/ts/README.md)
+- [Docker Deployment](../deployment/README.md)
+- [Multi-Tenant System](../MULTI_TENANT_SYSTEM.md)
+- [Blob Storage](../BLOB_STORAGE_IMPLEMENTATION.md)
 
-This gradual approach ensures backward compatibility while enabling new code to leverage DBAL's advanced features.
+## Support
+
+For issues or questions:
+1. Check this documentation
+2. Review the demo component (`src/components/DBALDemo.tsx`)
+3. Check the integration tests
+4. Create a GitHub issue
+
+## License
+
+See LICENSE file in project root.
