@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 const mockGetSystemConfigValue = vi.fn()
+const ENV_RATE_LIMIT_WINDOW_MS = 'MB_RATE_LIMIT_WINDOW_MS'
+const ENV_MAX_REQUESTS = 'MB_RATE_LIMIT_MAX_REQUESTS'
 
 vi.mock('@/lib/db/system-config/get-system-config-value', () => ({
   getSystemConfigValue: (key: string) => mockGetSystemConfigValue(key),
@@ -14,14 +16,21 @@ import {
   resetRateLimitConfig,
 } from './rate-limit-store'
 
+const resetRateLimitEnv = () => {
+  delete process.env[ENV_RATE_LIMIT_WINDOW_MS]
+  delete process.env[ENV_MAX_REQUESTS]
+}
+
 describe('rate limit config loading', () => {
   beforeEach(() => {
     mockGetSystemConfigValue.mockReset()
+    resetRateLimitEnv()
     resetRateLimitConfig()
   })
 
   afterEach(() => {
     resetRateLimitConfig()
+    resetRateLimitEnv()
   })
 
   it('keeps env defaults when config is missing', async () => {
