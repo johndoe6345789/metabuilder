@@ -1,0 +1,34 @@
+# Build artifacts
+build/
+cmake-build-*/
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+docs/
+
+# Tests (not needed in production image)
+tests/
+
+# Conan cache
+.conan/
+
+# Temporary files
+*.log
+*.tmp

@@ -1,0 +1,192 @@
+# MetaBuilder Production Deployment
+# Fire-and-forget production stack with all services
+# Usage: docker-compose -f deployment/docker-compose.production.yml up -d
+
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: metabuilder-postgres-prod
+    environment:
+      POSTGRES_DB: metabuilder
+      POSTGRES_USER: metabuilder
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme_prod_password}
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U metabuilder"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - metabuilder-network
+
+  # C++ DBAL Daemon
+  dbal-daemon:
+    build:
+      context: ../dbal/cpp
+      dockerfile: Dockerfile
+      args:
+        BUILD_TYPE: Release
+    container_name: metabuilder-dbal-prod
+    environment:
+      DBAL_BIND_ADDRESS: 0.0.0.0
+      DBAL_PORT: 8080
+      DBAL_LOG_LEVEL: info
+      DBAL_MODE: production
+      DBAL_DAEMON: "true"
+      DBAL_CONFIG: /app/config/config.yaml
+    volumes:
+      - ./config/dbal:/app/config:ro
+      - dbal_data:/app/data
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - metabuilder-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+  # MetaBuilder Frontend & API
+  metabuilder-app:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.app
+      args:
+        NODE_ENV: production
+    container_name: metabuilder-app-prod
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://metabuilder:${POSTGRES_PASSWORD:-changeme_prod_password}@postgres:5432/metabuilder
+      PORT: 3000
+      DBAL_API_URL: http://dbal-daemon:8080
+    volumes:
+      - app_uploads:/app/uploads
+      - app_cache:/app/.cache
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      dbal-daemon:
+        condition: service_healthy
+    networks:
+      - metabuilder-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Nginx Reverse Proxy with SSL
+  nginx:
+    image: nginx:alpine
+    container_name: metabuilder-nginx-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx/production.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_cache:/var/cache/nginx
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - metabuilder-app
+      - dbal-daemon
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - metabuilder-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+  # Redis Cache (Optional but recommended)
+  redis:
+    image: redis:7-alpine
+    container_name: metabuilder-redis-prod
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-changeme_redis_password}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - metabuilder-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+volumes:
+  postgres_data:
+    driver: local
+  dbal_data:
+    driver: local
+  app_uploads:
+    driver: local
+  app_cache:
+    driver: local
+  redis_data:
+    driver: local
+  nginx_cache:
+    driver: local
+  nginx_logs:
+    driver: local
+
+networks:
+  metabuilder-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

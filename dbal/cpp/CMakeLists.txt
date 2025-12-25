@@ -9,6 +9,12 @@ find_package(Threads REQUIRED)
 
 include_directories(include)
 
+# Try to find Conan dependencies, but don't fail if they're not available
+find_package(fmt QUIET)
+find_package(spdlog QUIET)
+find_package(nlohmann_json QUIET)
+find_package(SQLite3 QUIET)
+
 add_library(dbal_core STATIC
     src/client.cpp
     src/errors.cpp
@@ -37,10 +43,22 @@ target_link_libraries(dbal_daemon
     Threads::Threads
 )
 
+# Link optional dependencies if available
+if(fmt_FOUND)
+    target_link_libraries(dbal_core fmt::fmt)
+endif()
+
+if(spdlog_FOUND)
+    target_link_libraries(dbal_core spdlog::spdlog)
+endif()
+
 enable_testing()
 
-add_executable(unit_tests
+add_executable(client_test
     tests/unit/client_test.cpp
+)
+
+add_executable(query_test
     tests/unit/query_test.cpp
 )
 
@@ -52,11 +70,13 @@ add_executable(conformance_tests
     tests/conformance/runner.cpp
 )
 
-target_link_libraries(unit_tests dbal_core dbal_adapters)
+target_link_libraries(client_test dbal_core dbal_adapters)
+target_link_libraries(query_test dbal_core dbal_adapters)
 target_link_libraries(integration_tests dbal_core dbal_adapters)
 target_link_libraries(conformance_tests dbal_core dbal_adapters)
 
-add_test(NAME unit_tests COMMAND unit_tests)
+add_test(NAME client_test COMMAND client_test)
+add_test(NAME query_test COMMAND query_test)
 add_test(NAME integration_tests COMMAND integration_tests)
 add_test(NAME conformance_tests COMMAND conformance_tests)
 

@@ -9,7 +9,7 @@ CMakeDeps
 CMakeToolchain
 
 [options]
-sqlite3:shared=False
+sqlite3/*:shared=False
 
 [layout]
 cmake_layout
