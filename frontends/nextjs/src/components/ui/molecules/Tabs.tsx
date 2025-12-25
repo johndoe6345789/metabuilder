@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef, ReactNode, useState, SyntheticEvent } from 'react'
-import { Tabs as MuiTabs, Tab as MuiTab, Box, TabsProps as MuiTabsProps } from '@mui/material'
+import { forwardRef, ReactNode, useState } from 'react'
+import { Box } from '@mui/material'
 
 interface TabsProps {
   children: ReactNode
@@ -14,11 +14,11 @@ interface TabsProps {
 const Tabs = forwardRef<HTMLDivElement, TabsProps>(
   ({ children, defaultValue, value, onValueChange, ...props }, ref) => {
     const [internalValue, setInternalValue] = useState(defaultValue ?? '')
-    const currentValue = value ?? internalValue
+    const _currentValue = value ?? internalValue
 
-    const handleChange = (_: SyntheticEvent, newValue: string) => {
-      if (!value) setInternalValue(newValue)
-      onValueChange?.(newValue)
+    const _handleChange = (_newValue: string) => {
+      if (!value) setInternalValue(_newValue)
+      onValueChange?.(_newValue)
     }
 
     return (
