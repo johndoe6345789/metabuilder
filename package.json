@@ -8,6 +8,7 @@
         "build": "next build",
         "start": "next start",
         "kill": "fuser -k 3000/tcp",
+        "typecheck": "tsc --noEmit",
         "lint": "next lint && eslint .",
         "lint:fix": "eslint . --fix",
         "preview": "next start",

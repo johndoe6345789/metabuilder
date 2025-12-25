@@ -11,6 +11,8 @@ export enum DBALErrorCode {
   CAPABILITY_NOT_SUPPORTED = 501,
   SANDBOX_VIOLATION = 403,
   MALICIOUS_CODE_DETECTED = 403,
+  QUOTA_EXCEEDED = 507,
+  PERMISSION_DENIED = 403,
 }
 
 export class DBALError extends Error {
@@ -76,5 +78,13 @@ export class DBALError extends Error {
 
   static maliciousCode(message: string): DBALError {
     return new DBALError(DBALErrorCode.MALICIOUS_CODE_DETECTED, message)
+  }
+
+  static quotaExceeded(message = 'Storage quota exceeded'): DBALError {
+    return new DBALError(DBALErrorCode.QUOTA_EXCEEDED, message)
+  }
+
+  static permissionDenied(message = 'Permission denied'): DBALError {
+    return new DBALError(DBALErrorCode.PERMISSION_DENIED, message)
   }
 }
