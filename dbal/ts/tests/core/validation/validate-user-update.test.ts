@@ -6,12 +6,12 @@ describe('validateUserUpdate', () => {
     { data: {}, expected: [], description: 'no updates' },
     {
       data: { username: 'bad name' },
-      expected: ['Invalid username format'],
+      expected: ['Invalid username format (alphanumeric, underscore, hyphen only, 3-50 chars)'],
       description: 'invalid username',
     },
     {
       data: { email: 'invalid' },
-      expected: ['Invalid email format'],
+      expected: ['Invalid email format (max 255 chars)'],
       description: 'invalid email',
     },
     {
