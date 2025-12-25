@@ -3,7 +3,7 @@
 Use this as the default workflow when starting work in this repo.
 
 ## Workflow
-1. Skim `docs/INDEX.md` and relevant items in `docs/todo/`.
+1. Skim `docs/START_HERE.md` (if new), `docs/INDEX.md`, and relevant items in `docs/todo/`.
 2. Check for scoped rules in nested `AGENTS.md` files (e.g. `dbal/AGENTS.md`) before editing those areas.
 3. Use the prompts in `.github/prompts/` as needed:
    - Plan: `1-plan-feature.prompt.md`
@@ -55,12 +55,12 @@ DBAL workflows live in `dbal/ts/` (`npm run build`, `npm run test:unit`).
 - PRs should include: what/why, linked issue (if any), screenshots for UI changes, and notes on DB/schema changes.
 
 ## Architecture Guardrails
-- Route data access through DBAL / the `Database` wrapper; don’t bypass it.
+- Route data access through DBAL / the `Database` wrapper (`frontends/nextjs/src/lib/db/` or `@/lib/db`); don’t bypass it.
 - Assume multi-tenancy: include `tenantId` filtering and isolate per-tenant data.
 - UI uses Material UI (`@mui/*`) and SCSS/modules as needed; don’t introduce Radix UI or Tailwind. See `docs/RADIX_TO_MUI_MIGRATION.md` and `UI_STANDARDS.md`.
 - Package metadata: keep `packages/*/seed/metadata.json` `packageId` in `snake_case` and versions semver (e.g. `1.2.3`).
 
 ## CI / Workflows
-- Use `act` to reproduce and debug GitHub Actions locally (see `npm run act`, `npm run act:diagnose`).
+- Use `act` to reproduce and debug GitHub Actions locally (see `npm run act`, `npm run act:diagnose`, `docs/guides/ACT_TESTING.md`).
 
 If you get stuck, see `.github/prompts/EEK-STUCK.md`.
