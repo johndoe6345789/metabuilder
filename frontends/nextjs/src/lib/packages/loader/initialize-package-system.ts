@@ -1,5 +1,5 @@
 import { PACKAGE_CATALOG } from '../package-catalog'
-import { loadPackageComponents } from '../declarative-component-renderer'
+import { loadPackageComponents } from '../../declarative-component-renderer'
 import { buildPackageRegistry, exportAllPackagesForSeed } from '../package-glue'
 import { setPackageRegistry } from './set-package-registry'
 import { packageSystemState } from './package-system-state'
