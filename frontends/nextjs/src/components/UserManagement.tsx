@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
@@ -10,7 +12,7 @@ import { Badge } from '@/components/ui'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui'
 import { Avatar, AvatarFallback } from '@/components/ui'
 import { Plus, Pencil, Trash, UserCircle } from '@phosphor-icons/react'
-import { Database, hashPassword } from '@/lib/database'
+import { createUser, deleteUser, listUsers, updateUser } from '@/lib/api/users'
 import { toast } from 'sonner'
 import type { User, UserRole } from '@/lib/level-types'
 
@@ -30,8 +32,12 @@ export function UserManagement() {
   }, [])
 
   const loadUsers = async () => {
-    const loadedUsers = await Database.getUsers({ scope: 'all' })
-    setUsers(loadedUsers)
+    try {
+      const loadedUsers = await listUsers()
+      setUsers(loadedUsers)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to load users')
+    }
   }
 
   const handleOpenDialog = (user?: User) => {
@@ -68,42 +74,37 @@ export function UserManagement() {
       return
     }
 
-    if (editingUser) {
-      await Database.updateUser(editingUser.id, {
-        username: formData.username,
-        email: formData.email,
-        role: formData.role,
-        bio: formData.bio,
-        profilePicture: formData.profilePicture,
-      })
+    try {
+      if (editingUser) {
+        await updateUser(editingUser.id, {
+          email: formData.email,
+          role: formData.role,
+          bio: formData.bio,
+          profilePicture: formData.profilePicture,
+          password: formData.password || undefined,
+        })
 
-      if (formData.password) {
-        const passwordHash = await hashPassword(formData.password)
-        await Database.setCredential(formData.username, passwordHash)
+        toast.success('User updated successfully')
+      } else {
+        if (!formData.password) {
+          toast.error('Password is required for new users')
+          return
+        }
+
+        await createUser({
+          username: formData.username,
+          email: formData.email,
+          role: formData.role as UserRole,
+          bio: formData.bio,
+          profilePicture: formData.profilePicture,
+          password: formData.password,
+        })
+
+        toast.success('User created successfully')
       }
-
-      toast.success('User updated successfully')
-    } else {
-      if (!formData.password) {
-        toast.error('Password is required for new users')
-        return
-      }
-
-      const newUser: User = {
-        id: `user_${Date.now()}`,
-        username: formData.username,
-        email: formData.email,
-        role: formData.role as UserRole,
-        bio: formData.bio,
-        profilePicture: formData.profilePicture,
-        createdAt: Date.now(),
-      }
-
-      const passwordHash = await hashPassword(formData.password)
-      await Database.setCredential(formData.username, passwordHash)
-      await Database.addUser(newUser)
-
-      toast.success('User created successfully')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to save user')
+      return
     }
 
     handleCloseDialog()
@@ -112,12 +113,13 @@ export function UserManagement() {
 
   const handleDeleteUser = async (userId: string, username: string) => {
     if (confirm(`Are you sure you want to delete user "${username}"?`)) {
-      await Database.deleteUser(userId)
-      const credentials = await Database.getCredentials()
-      delete credentials[username]
-      await Database.setCredential(username, '')
-      toast.success('User deleted')
-      loadUsers()
+      try {
+        await deleteUser(userId)
+        toast.success('User deleted')
+        loadUsers()
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : 'Failed to delete user')
+      }
     }
   }
 

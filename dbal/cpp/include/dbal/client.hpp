@@ -46,6 +46,24 @@ public:
     Result<bool> deleteWorkflow(const std::string& id);
     Result<std::vector<Workflow>> listWorkflows(const ListOptions& options);
 
+    Result<Session> createSession(const CreateSessionInput& input);
+    Result<Session> getSession(const std::string& id);
+    Result<Session> updateSession(const std::string& id, const UpdateSessionInput& input);
+    Result<bool> deleteSession(const std::string& id);
+    Result<std::vector<Session>> listSessions(const ListOptions& options);
+
+    Result<LuaScript> createLuaScript(const CreateLuaScriptInput& input);
+    Result<LuaScript> getLuaScript(const std::string& id);
+    Result<LuaScript> updateLuaScript(const std::string& id, const UpdateLuaScriptInput& input);
+    Result<bool> deleteLuaScript(const std::string& id);
+    Result<std::vector<LuaScript>> listLuaScripts(const ListOptions& options);
+
+    Result<Package> createPackage(const CreatePackageInput& input);
+    Result<Package> getPackage(const std::string& id);
+    Result<Package> updatePackage(const std::string& id, const UpdatePackageInput& input);
+    Result<bool> deletePackage(const std::string& id);
+    Result<std::vector<Package>> listPackages(const ListOptions& options);
+
     void close();
 
 private:

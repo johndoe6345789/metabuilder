@@ -21,6 +21,60 @@ app/api/
     └── logout/route.ts
 ```
 
+## Users API (DBAL-backed)
+
+The users endpoints run on the server and use DBAL helpers + credential storage.
+
+### Create User
+
+```
+POST /api/users
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "email": "newuser@example.com",
+  "role": "admin",
+  "password": "s3cret",
+  "bio": "Short bio",
+  "profilePicture": "https://example.com/avatar.png"
+}
+```
+
+Response:
+
+```
+{
+  "user": {
+    "id": "user_123",
+    "username": "newuser",
+    "email": "newuser@example.com",
+    "role": "admin",
+    "bio": "Short bio",
+    "profilePicture": "https://example.com/avatar.png",
+    "createdAt": 1715612345678
+  }
+}
+```
+
+### Update User
+
+```
+PATCH /api/users/{id}
+Content-Type: application/json
+
+{
+  "email": "updated@example.com",
+  "password": "new-secret"
+}
+```
+
+### Delete User
+
+```
+DELETE /api/users/{id}
+```
+
 ## Creating an API Endpoint
 
 ### 1. Create Route File

@@ -2,6 +2,7 @@
 #include "dbal/errors.hpp"
 #include <iostream>
 #include <cassert>
+#include <chrono>
 
 void test_client_creation() {
     std::cout << "Testing client creation..." << std::endl;
@@ -460,6 +461,281 @@ void test_workflow_validation() {
     std::cout << "  ✓ Duplicate workflow name rejected" << std::endl;
 }
 
+void test_session_crud() {
+    std::cout << "Testing session CRUD operations..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreateUserInput userInput;
+    userInput.username = "session_owner";
+    userInput.email = "session_owner@example.com";
+    auto userResult = client.createUser(userInput);
+    assert(userResult.isOk());
+
+    dbal::CreateSessionInput input;
+    input.user_id = userResult.value().id;
+    input.token = "session-token";
+    input.expires_at = std::chrono::system_clock::now() + std::chrono::hours(1);
+
+    auto createResult = client.createSession(input);
+    assert(createResult.isOk());
+    std::string sessionId = createResult.value().id;
+    std::cout << "  ✓ Session created with ID: " << sessionId << std::endl;
+
+    auto getResult = client.getSession(sessionId);
+    assert(getResult.isOk());
+    assert(getResult.value().token == "session-token");
+    std::cout << "  ✓ Retrieved session by ID" << std::endl;
+
+    dbal::UpdateSessionInput updateInput;
+    updateInput.last_activity = std::chrono::system_clock::now() + std::chrono::hours(2);
+    auto updateResult = client.updateSession(sessionId, updateInput);
+    assert(updateResult.isOk());
+    std::cout << "  ✓ Session updated" << std::endl;
+
+    dbal::ListOptions listOptions;
+    listOptions.filter["user_id"] = userResult.value().id;
+    auto listResult = client.listSessions(listOptions);
+    assert(listResult.isOk());
+    assert(listResult.value().size() >= 1);
+    std::cout << "  ✓ Listed sessions (filtered by user_id)" << std::endl;
+
+    auto deleteResult = client.deleteSession(sessionId);
+    assert(deleteResult.isOk());
+
+    auto notFoundResult = client.getSession(sessionId);
+    assert(notFoundResult.isError());
+    std::cout << "  ✓ Session deleted" << std::endl;
+}
+
+void test_session_validation() {
+    std::cout << "Testing session validation..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreateUserInput userInput;
+    userInput.username = "session_validator";
+    userInput.email = "session_validator@example.com";
+    auto userResult = client.createUser(userInput);
+    assert(userResult.isOk());
+
+    dbal::CreateSessionInput input1;
+    input1.user_id = userResult.value().id;
+    input1.token = "";
+    input1.expires_at = std::chrono::system_clock::now() + std::chrono::hours(1);
+    auto result1 = client.createSession(input1);
+    assert(result1.isError());
+    assert(result1.error().code() == dbal::ErrorCode::ValidationError);
+    std::cout << "  ✓ Empty token rejected" << std::endl;
+
+    dbal::CreateSessionInput input2;
+    input2.user_id = userResult.value().id;
+    input2.token = "dup-token";
+    input2.expires_at = std::chrono::system_clock::now() + std::chrono::hours(1);
+    auto result2 = client.createSession(input2);
+    assert(result2.isOk());
+
+    dbal::CreateSessionInput input3 = input2;
+    auto result3 = client.createSession(input3);
+    assert(result3.isError());
+    assert(result3.error().code() == dbal::ErrorCode::Conflict);
+    std::cout << "  ✓ Duplicate token rejected" << std::endl;
+}
+
+void test_lua_script_crud() {
+    std::cout << "Testing Lua script CRUD operations..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreateUserInput userInput;
+    userInput.username = "lua_owner";
+    userInput.email = "lua_owner@example.com";
+    auto userResult = client.createUser(userInput);
+    assert(userResult.isOk());
+
+    dbal::CreateLuaScriptInput input;
+    input.name = "health_check";
+    input.description = "Health check";
+    input.code = "return true";
+    input.is_sandboxed = true;
+    input.allowed_globals = {"math"};
+    input.timeout_ms = 1000;
+    input.created_by = userResult.value().id;
+
+    auto createResult = client.createLuaScript(input);
+    assert(createResult.isOk());
+    std::string scriptId = createResult.value().id;
+    std::cout << "  ✓ Lua script created with ID: " << scriptId << std::endl;
+
+    auto getResult = client.getLuaScript(scriptId);
+    assert(getResult.isOk());
+    assert(getResult.value().name == "health_check");
+    std::cout << "  ✓ Retrieved Lua script by ID" << std::endl;
+
+    dbal::UpdateLuaScriptInput updateInput;
+    updateInput.timeout_ms = 2000;
+    updateInput.is_sandboxed = false;
+    auto updateResult = client.updateLuaScript(scriptId, updateInput);
+    assert(updateResult.isOk());
+    assert(updateResult.value().timeout_ms == 2000);
+    std::cout << "  ✓ Lua script updated" << std::endl;
+
+    dbal::ListOptions listOptions;
+    listOptions.filter["is_sandboxed"] = "false";
+    auto listResult = client.listLuaScripts(listOptions);
+    assert(listResult.isOk());
+    assert(listResult.value().size() >= 1);
+    std::cout << "  ✓ Listed Lua scripts (filtered by is_sandboxed=false)" << std::endl;
+
+    auto deleteResult = client.deleteLuaScript(scriptId);
+    assert(deleteResult.isOk());
+
+    auto notFoundResult = client.getLuaScript(scriptId);
+    assert(notFoundResult.isError());
+    std::cout << "  ✓ Lua script deleted" << std::endl;
+}
+
+void test_lua_script_validation() {
+    std::cout << "Testing Lua script validation..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreateUserInput userInput;
+    userInput.username = "lua_validator";
+    userInput.email = "lua_validator@example.com";
+    auto userResult = client.createUser(userInput);
+    assert(userResult.isOk());
+
+    dbal::CreateLuaScriptInput input1;
+    input1.name = "invalid-timeout";
+    input1.code = "return true";
+    input1.is_sandboxed = true;
+    input1.allowed_globals = {"math"};
+    input1.timeout_ms = 50;
+    input1.created_by = userResult.value().id;
+    auto result1 = client.createLuaScript(input1);
+    assert(result1.isError());
+    assert(result1.error().code() == dbal::ErrorCode::ValidationError);
+    std::cout << "  ✓ Invalid timeout rejected" << std::endl;
+
+    dbal::CreateLuaScriptInput input2;
+    input2.name = "duplicate-script";
+    input2.code = "return true";
+    input2.is_sandboxed = true;
+    input2.allowed_globals = {"math"};
+    input2.timeout_ms = 1000;
+    input2.created_by = userResult.value().id;
+    auto result2 = client.createLuaScript(input2);
+    assert(result2.isOk());
+
+    dbal::CreateLuaScriptInput input3 = input2;
+    auto result3 = client.createLuaScript(input3);
+    assert(result3.isError());
+    assert(result3.error().code() == dbal::ErrorCode::Conflict);
+    std::cout << "  ✓ Duplicate script name rejected" << std::endl;
+}
+
+void test_package_crud() {
+    std::cout << "Testing package CRUD operations..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreateUserInput userInput;
+    userInput.username = "package_owner";
+    userInput.email = "package_owner@example.com";
+    auto userResult = client.createUser(userInput);
+    assert(userResult.isOk());
+
+    dbal::CreatePackageInput input;
+    input.name = "forum";
+    input.version = "1.2.3";
+    input.description = "Forum package";
+    input.author = "MetaBuilder";
+    input.manifest = {{"entry", "index.lua"}};
+    input.is_installed = false;
+
+    auto createResult = client.createPackage(input);
+    assert(createResult.isOk());
+    std::string packageId = createResult.value().id;
+    std::cout << "  ✓ Package created with ID: " << packageId << std::endl;
+
+    auto getResult = client.getPackage(packageId);
+    assert(getResult.isOk());
+    assert(getResult.value().name == "forum");
+    std::cout << "  ✓ Retrieved package by ID" << std::endl;
+
+    dbal::UpdatePackageInput updateInput;
+    updateInput.is_installed = true;
+    updateInput.installed_by = userResult.value().id;
+    updateInput.installed_at = std::chrono::system_clock::now();
+    auto updateResult = client.updatePackage(packageId, updateInput);
+    assert(updateResult.isOk());
+    assert(updateResult.value().is_installed == true);
+    std::cout << "  ✓ Package updated" << std::endl;
+
+    dbal::ListOptions listOptions;
+    listOptions.filter["is_installed"] = "true";
+    auto listResult = client.listPackages(listOptions);
+    assert(listResult.isOk());
+    assert(listResult.value().size() >= 1);
+    std::cout << "  ✓ Listed packages (filtered by is_installed=true)" << std::endl;
+
+    auto deleteResult = client.deletePackage(packageId);
+    assert(deleteResult.isOk());
+
+    auto notFoundResult = client.getPackage(packageId);
+    assert(notFoundResult.isError());
+    std::cout << "  ✓ Package deleted" << std::endl;
+}
+
+void test_package_validation() {
+    std::cout << "Testing package validation..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreatePackageInput input1;
+    input1.name = "invalid-package";
+    input1.version = "bad";
+    input1.author = "MetaBuilder";
+    input1.manifest = {{"entry", "index.lua"}};
+    auto result1 = client.createPackage(input1);
+    assert(result1.isError());
+    assert(result1.error().code() == dbal::ErrorCode::ValidationError);
+    std::cout << "  ✓ Invalid semver rejected" << std::endl;
+
+    dbal::CreatePackageInput input2;
+    input2.name = "duplicate-package";
+    input2.version = "1.0.0";
+    input2.author = "MetaBuilder";
+    input2.manifest = {{"entry", "index.lua"}};
+    auto result2 = client.createPackage(input2);
+    assert(result2.isOk());
+
+    dbal::CreatePackageInput input3 = input2;
+    auto result3 = client.createPackage(input3);
+    assert(result3.isError());
+    assert(result3.error().code() == dbal::ErrorCode::Conflict);
+    std::cout << "  ✓ Duplicate package version rejected" << std::endl;
+}
+
 void test_error_handling() {
     std::cout << "Testing comprehensive error handling..." << std::endl;
     
@@ -501,11 +777,17 @@ int main() {
         test_page_validation();
         test_workflow_crud();
         test_workflow_validation();
+        test_session_crud();
+        test_session_validation();
+        test_lua_script_crud();
+        test_lua_script_validation();
+        test_package_crud();
+        test_package_validation();
         test_error_handling();
         
         std::cout << std::endl;
         std::cout << "==================================================" << std::endl;
-        std::cout << "✅ All 14 test suites passed!" << std::endl;
+        std::cout << "✅ All 20 test suites passed!" << std::endl;
         std::cout << "==================================================" << std::endl;
         return 0;
     } catch (const std::exception& e) {

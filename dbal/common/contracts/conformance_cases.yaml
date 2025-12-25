@@ -193,3 +193,165 @@
       expected:
         status: success
         output: true
+
+- name: "LuaScript CRUD operations"
+  description: "Test basic create, read, update, delete operations for LuaScript entity"
+  operations:
+    - action: create
+      entity: User
+      input:
+        username: "lua_owner"
+        email: "lua_owner@example.com"
+        role: "admin"
+      expected:
+        status: success
+
+    - action: create
+      entity: LuaScript
+      input:
+        name: "health_check"
+        description: "Simple health check"
+        code: "return true"
+        isSandboxed: true
+        allowedGlobals: ["math"]
+        timeoutMs: 1000
+        createdBy: "$steps[0].id"
+      expected:
+        status: success
+        output:
+          name: "health_check"
+          isSandboxed: true
+
+    - action: read
+      entity: LuaScript
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output:
+          name: "health_check"
+
+    - action: update
+      entity: LuaScript
+      input:
+        id: "$steps[1].id"
+        isSandboxed: false
+        timeoutMs: 2000
+      expected:
+        status: success
+        output:
+          isSandboxed: false
+          timeoutMs: 2000
+
+    - action: delete
+      entity: LuaScript
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output: true
+
+- name: "Package CRUD operations"
+  description: "Test basic create, read, update, delete operations for Package entity"
+  operations:
+    - action: create
+      entity: User
+      input:
+        username: "package_owner"
+        email: "package_owner@example.com"
+        role: "admin"
+      expected:
+        status: success
+
+    - action: create
+      entity: Package
+      input:
+        name: "forum"
+        version: "1.2.3"
+        description: "Forum package"
+        author: "MetaBuilder"
+        manifest:
+          entry: "index.lua"
+        isInstalled: false
+      expected:
+        status: success
+        output:
+          name: "forum"
+          version: "1.2.3"
+
+    - action: read
+      entity: Package
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output:
+          name: "forum"
+
+    - action: update
+      entity: Package
+      input:
+        id: "$steps[1].id"
+        isInstalled: true
+        installedBy: "$steps[0].id"
+        installedAt: "2099-01-01T00:00:00Z"
+      expected:
+        status: success
+        output:
+          isInstalled: true
+
+    - action: delete
+      entity: Package
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output: true
+
+- name: "Session CRUD operations"
+  description: "Test basic create, read, update, delete operations for Session entity"
+  operations:
+    - action: create
+      entity: User
+      input:
+        username: "session_owner"
+        email: "session_owner@example.com"
+        role: "admin"
+      expected:
+        status: success
+
+    - action: create
+      entity: Session
+      input:
+        userId: "$steps[0].id"
+        token: "session-token-123"
+        expiresAt: "2099-01-01T00:00:00Z"
+      expected:
+        status: success
+        output:
+          token: "session-token-123"
+
+    - action: read
+      entity: Session
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output:
+          token: "session-token-123"
+
+    - action: update
+      entity: Session
+      input:
+        id: "$steps[1].id"
+        lastActivity: "2099-01-02T00:00:00Z"
+      expected:
+        status: success
+
+    - action: delete
+      entity: Session
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output: true

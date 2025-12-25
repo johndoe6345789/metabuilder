@@ -1,6 +1,6 @@
 import type { DBALConfig } from '../runtime/config'
 import type { DBALAdapter } from '../adapters/adapter'
-import type { User, PageView, ComponentHierarchy, Workflow, ListOptions, ListResult } from './types'
+import type { User, PageView, ComponentHierarchy, Workflow, LuaScript, Package, Session, ListOptions, ListResult } from './types'
 import { DBALError } from './errors'
 import { PrismaAdapter } from '../adapters/prisma-adapter'
 import { ACLAdapter } from '../adapters/acl-adapter'
@@ -14,6 +14,12 @@ import {
   validateComponentHierarchyUpdate,
   validateWorkflowCreate,
   validateWorkflowUpdate,
+  validateLuaScriptCreate,
+  validateLuaScriptUpdate,
+  validatePackageCreate,
+  validatePackageUpdate,
+  validateSessionCreate,
+  validateSessionUpdate,
   validateId,
 } from './validation'
 
@@ -411,6 +417,252 @@ export class DBALClient {
       },
       list: async (options?: ListOptions): Promise<ListResult<Workflow>> => {
         return this.adapter.list('Workflow', options) as Promise<ListResult<Workflow>>
+      },
+    }
+  }
+
+  get luaScripts() {
+    return {
+      create: async (data: Omit<LuaScript, 'id' | 'createdAt' | 'updatedAt'>): Promise<LuaScript> => {
+        const validationErrors = validateLuaScriptCreate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid Lua script data',
+            validationErrors.map(error => ({ field: 'luaScript', error }))
+          )
+        }
+
+        try {
+          return this.adapter.create('LuaScript', data) as Promise<LuaScript>
+        } catch (error) {
+          if (error instanceof DBALError && error.code === 409) {
+            throw DBALError.conflict(`Lua script with name '${data.name}' already exists`)
+          }
+          throw error
+        }
+      },
+      read: async (id: string): Promise<LuaScript | null> => {
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid Lua script ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const result = await this.adapter.read('LuaScript', id) as LuaScript | null
+        if (!result) {
+          throw DBALError.notFound(`Lua script not found: ${id}`)
+        }
+        return result
+      },
+      update: async (id: string, data: Partial<LuaScript>): Promise<LuaScript> => {
+        const idErrors = validateId(id)
+        if (idErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid Lua script ID',
+            idErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const validationErrors = validateLuaScriptUpdate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid Lua script update data',
+            validationErrors.map(error => ({ field: 'luaScript', error }))
+          )
+        }
+
+        try {
+          return this.adapter.update('LuaScript', id, data) as Promise<LuaScript>
+        } catch (error) {
+          if (error instanceof DBALError && error.code === 409) {
+            throw DBALError.conflict('Lua script name already exists')
+          }
+          throw error
+        }
+      },
+      delete: async (id: string): Promise<boolean> => {
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid Lua script ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const result = await this.adapter.delete('LuaScript', id)
+        if (!result) {
+          throw DBALError.notFound(`Lua script not found: ${id}`)
+        }
+        return result
+      },
+      list: async (options?: ListOptions): Promise<ListResult<LuaScript>> => {
+        return this.adapter.list('LuaScript', options) as Promise<ListResult<LuaScript>>
+      },
+    }
+  }
+
+  get packages() {
+    return {
+      create: async (data: Omit<Package, 'id' | 'createdAt' | 'updatedAt'>): Promise<Package> => {
+        const validationErrors = validatePackageCreate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid package data',
+            validationErrors.map(error => ({ field: 'package', error }))
+          )
+        }
+
+        try {
+          return this.adapter.create('Package', data) as Promise<Package>
+        } catch (error) {
+          if (error instanceof DBALError && error.code === 409) {
+            throw DBALError.conflict(`Package ${data.name}@${data.version} already exists`)
+          }
+          throw error
+        }
+      },
+      read: async (id: string): Promise<Package | null> => {
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid package ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const result = await this.adapter.read('Package', id) as Package | null
+        if (!result) {
+          throw DBALError.notFound(`Package not found: ${id}`)
+        }
+        return result
+      },
+      update: async (id: string, data: Partial<Package>): Promise<Package> => {
+        const idErrors = validateId(id)
+        if (idErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid package ID',
+            idErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const validationErrors = validatePackageUpdate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid package update data',
+            validationErrors.map(error => ({ field: 'package', error }))
+          )
+        }
+
+        try {
+          return this.adapter.update('Package', id, data) as Promise<Package>
+        } catch (error) {
+          if (error instanceof DBALError && error.code === 409) {
+            throw DBALError.conflict('Package name+version already exists')
+          }
+          throw error
+        }
+      },
+      delete: async (id: string): Promise<boolean> => {
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid package ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const result = await this.adapter.delete('Package', id)
+        if (!result) {
+          throw DBALError.notFound(`Package not found: ${id}`)
+        }
+        return result
+      },
+      list: async (options?: ListOptions): Promise<ListResult<Package>> => {
+        return this.adapter.list('Package', options) as Promise<ListResult<Package>>
+      },
+    }
+  }
+
+  get sessions() {
+    return {
+      create: async (data: Omit<Session, 'id' | 'createdAt' | 'lastActivity'>): Promise<Session> => {
+        const validationErrors = validateSessionCreate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid session data',
+            validationErrors.map(error => ({ field: 'session', error }))
+          )
+        }
+
+        try {
+          return this.adapter.create('Session', data) as Promise<Session>
+        } catch (error) {
+          if (error instanceof DBALError && error.code === 409) {
+            throw DBALError.conflict('Session token already exists')
+          }
+          throw error
+        }
+      },
+      read: async (id: string): Promise<Session | null> => {
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid session ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const result = await this.adapter.read('Session', id) as Session | null
+        if (!result) {
+          throw DBALError.notFound(`Session not found: ${id}`)
+        }
+        return result
+      },
+      update: async (id: string, data: Partial<Session>): Promise<Session> => {
+        const idErrors = validateId(id)
+        if (idErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid session ID',
+            idErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const validationErrors = validateSessionUpdate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid session update data',
+            validationErrors.map(error => ({ field: 'session', error }))
+          )
+        }
+
+        try {
+          return this.adapter.update('Session', id, data) as Promise<Session>
+        } catch (error) {
+          if (error instanceof DBALError && error.code === 409) {
+            throw DBALError.conflict('Session token already exists')
+          }
+          throw error
+        }
+      },
+      delete: async (id: string): Promise<boolean> => {
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid session ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const result = await this.adapter.delete('Session', id)
+        if (!result) {
+          throw DBALError.notFound(`Session not found: ${id}`)
+        }
+        return result
+      },
+      list: async (options?: ListOptions): Promise<ListResult<Session>> => {
+        return this.adapter.list('Session', options) as Promise<ListResult<Session>>
       },
     }
   }

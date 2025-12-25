@@ -58,6 +58,7 @@ export function GitHubActionsFetcher() {
   const [runJobs, setRunJobs] = useState<Job[]>([])
   const [runLogs, setRunLogs] = useState<string | null>(null)
   const [isLoadingLogs, setIsLoadingLogs] = useState(false)
+  const repoLabel = repoInfo ? `${repoInfo.owner}/${repoInfo.repo}` : 'johndoe6345789/metabuilder'
 
   const fetchGitHubActions = async () => {
     setIsLoading(true)
@@ -337,7 +338,7 @@ export function GitHubActionsFetcher() {
         <div>
           <h2 className="text-3xl font-bold text-foreground">GitHub Actions Monitor</h2>
           <p className="text-muted-foreground mt-2">
-            Repository: <code className="text-sm bg-muted px-2 py-1 rounded">johndoe6345789/metabuilder</code>
+            Repository: <code className="text-sm bg-muted px-2 py-1 rounded">{repoLabel}</code>
           </p>
         </div>
         <div className="flex items-center gap-3">

@@ -75,6 +75,8 @@ coverage/
 # Logs
 logs/
 *.log
+!frontends/nextjs/src/app/api/github/actions/runs/\[runId\]/logs/
+!frontends/nextjs/src/app/api/github/actions/runs/\[runId\]/logs/route.ts
 
 # Cache/Temp
 pids/

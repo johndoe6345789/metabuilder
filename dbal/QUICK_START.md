@@ -125,12 +125,16 @@ Check browser console for `[DBAL Audit]` logs.
 Full TypeScript support:
 
 ```typescript
-import type { User, PageView, ComponentHierarchy } from '../../dbal/ts/src'
+import type { User, PageView, ComponentHierarchy, Workflow, LuaScript, Package, Session } from '../../dbal/ts/src'
 
 // Type-safe entities
 const user: User = await client.users.create({ ... })
 const page: PageView = await client.pages.create({ ... })
 const component: ComponentHierarchy = await client.components.create({ ... })
+const workflow: Workflow = await client.workflows.create({ ... })
+const script: LuaScript = await client.luaScripts.create({ ... })
+const pkg: Package = await client.packages.create({ ... })
+const session: Session = await client.sessions.create({ ... })
 
 // Type-safe list results
 const result = await client.users.list()
@@ -176,6 +180,33 @@ client.workflows.read(id)
 client.workflows.update(id, data)
 client.workflows.delete(id)
 client.workflows.list(options)
+```
+
+### Lua Scripts
+```typescript
+client.luaScripts.create(data)
+client.luaScripts.read(id)
+client.luaScripts.update(id, data)
+client.luaScripts.delete(id)
+client.luaScripts.list(options)
+```
+
+### Packages
+```typescript
+client.packages.create(data)
+client.packages.read(id)
+client.packages.update(id, data)
+client.packages.delete(id)
+client.packages.list(options)
+```
+
+### Sessions (system-only)
+```typescript
+client.sessions.create(data)
+client.sessions.read(id)
+client.sessions.update(id, data)
+client.sessions.delete(id)
+client.sessions.list(options)
 ```
 
 ## Common Patterns

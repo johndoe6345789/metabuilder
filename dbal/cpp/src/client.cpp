@@ -14,9 +14,18 @@ struct InMemoryStore {
     std::map<std::string, std::string> page_slugs; // slug -> id mapping
     std::map<std::string, Workflow> workflows;
     std::map<std::string, std::string> workflow_names; // name -> id mapping
+    std::map<std::string, Session> sessions;
+    std::map<std::string, std::string> session_tokens; // token -> id mapping
+    std::map<std::string, LuaScript> lua_scripts;
+    std::map<std::string, std::string> lua_script_names; // name -> id mapping
+    std::map<std::string, Package> packages;
+    std::map<std::string, std::string> package_keys; // name@version -> id mapping
     int user_counter = 0;
     int page_counter = 0;
     int workflow_counter = 0;
+    int session_counter = 0;
+    int lua_script_counter = 0;
+    int package_counter = 0;
 };
 
 static InMemoryStore& getStore() {
@@ -49,6 +58,31 @@ static bool isValidWorkflowName(const std::string& name) {
 static bool isValidWorkflowTrigger(const std::string& trigger) {
     static const std::array<std::string, 4> allowed = {"manual", "schedule", "event", "webhook"};
     return std::find(allowed.begin(), allowed.end(), trigger) != allowed.end();
+}
+
+static bool isValidLuaScriptName(const std::string& name) {
+    return !name.empty() && name.length() <= 255;
+}
+
+static bool isValidLuaScriptCode(const std::string& code) {
+    return !code.empty();
+}
+
+static bool isValidLuaTimeout(int timeout_ms) {
+    return timeout_ms >= 100 && timeout_ms <= 30000;
+}
+
+static bool isValidPackageName(const std::string& name) {
+    return !name.empty() && name.length() <= 255;
+}
+
+static bool isValidSemver(const std::string& version) {
+    static const std::regex semver_pattern(R"(^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$)");
+    return std::regex_match(version, semver_pattern);
+}
+
+static std::string packageKey(const std::string& name, const std::string& version) {
+    return name + "@" + version;
 }
 
 static std::string generateId(const std::string& prefix, int counter) {
@@ -592,6 +626,537 @@ Result<std::vector<Workflow>> Client::listWorkflows(const ListOptions& options) 
     }
 
     return Result<std::vector<Workflow>>(std::vector<Workflow>());
+}
+
+Result<Session> Client::createSession(const CreateSessionInput& input) {
+    if (input.user_id.empty()) {
+        return Error::validationError("user_id is required");
+    }
+    if (input.token.empty()) {
+        return Error::validationError("token is required");
+    }
+
+    auto& store = getStore();
+    if (store.users.find(input.user_id) == store.users.end()) {
+        return Error::validationError("User not found: " + input.user_id);
+    }
+    if (store.session_tokens.find(input.token) != store.session_tokens.end()) {
+        return Error::conflict("Session token already exists: " + input.token);
+    }
+
+    Session session;
+    session.id = generateId("session", ++store.session_counter);
+    session.user_id = input.user_id;
+    session.token = input.token;
+    session.expires_at = input.expires_at;
+    session.created_at = std::chrono::system_clock::now();
+    session.last_activity = session.created_at;
+
+    store.sessions[session.id] = session;
+    store.session_tokens[session.token] = session.id;
+
+    return Result<Session>(session);
+}
+
+Result<Session> Client::getSession(const std::string& id) {
+    if (id.empty()) {
+        return Error::validationError("Session ID cannot be empty");
+    }
+
+    auto& store = getStore();
+    auto it = store.sessions.find(id);
+
+    if (it == store.sessions.end()) {
+        return Error::notFound("Session not found: " + id);
+    }
+
+    return Result<Session>(it->second);
+}
+
+Result<Session> Client::updateSession(const std::string& id, const UpdateSessionInput& input) {
+    if (id.empty()) {
+        return Error::validationError("Session ID cannot be empty");
+    }
+
+    auto& store = getStore();
+    auto it = store.sessions.find(id);
+
+    if (it == store.sessions.end()) {
+        return Error::notFound("Session not found: " + id);
+    }
+
+    Session& session = it->second;
+
+    if (input.user_id.has_value()) {
+        if (input.user_id.value().empty()) {
+            return Error::validationError("user_id is required");
+        }
+        if (store.users.find(input.user_id.value()) == store.users.end()) {
+            return Error::validationError("User not found: " + input.user_id.value());
+        }
+        session.user_id = input.user_id.value();
+    }
+
+    if (input.token.has_value()) {
+        if (input.token.value().empty()) {
+            return Error::validationError("token is required");
+        }
+        auto token_it = store.session_tokens.find(input.token.value());
+        if (token_it != store.session_tokens.end() && token_it->second != id) {
+            return Error::conflict("Session token already exists: " + input.token.value());
+        }
+        store.session_tokens.erase(session.token);
+        store.session_tokens[input.token.value()] = id;
+        session.token = input.token.value();
+    }
+
+    if (input.expires_at.has_value()) {
+        session.expires_at = input.expires_at.value();
+    }
+
+    if (input.last_activity.has_value()) {
+        session.last_activity = input.last_activity.value();
+    }
+
+    return Result<Session>(session);
+}
+
+Result<bool> Client::deleteSession(const std::string& id) {
+    if (id.empty()) {
+        return Error::validationError("Session ID cannot be empty");
+    }
+
+    auto& store = getStore();
+    auto it = store.sessions.find(id);
+
+    if (it == store.sessions.end()) {
+        return Error::notFound("Session not found: " + id);
+    }
+
+    store.session_tokens.erase(it->second.token);
+    store.sessions.erase(it);
+
+    return Result<bool>(true);
+}
+
+Result<std::vector<Session>> Client::listSessions(const ListOptions& options) {
+    auto& store = getStore();
+    std::vector<Session> sessions;
+
+    for (const auto& [id, session] : store.sessions) {
+        bool matches = true;
+
+        if (options.filter.find("user_id") != options.filter.end()) {
+            if (session.user_id != options.filter.at("user_id")) matches = false;
+        }
+
+        if (options.filter.find("token") != options.filter.end()) {
+            if (session.token != options.filter.at("token")) matches = false;
+        }
+
+        if (matches) {
+            sessions.push_back(session);
+        }
+    }
+
+    if (options.sort.find("created_at") != options.sort.end()) {
+        std::sort(sessions.begin(), sessions.end(), [](const Session& a, const Session& b) {
+            return a.created_at < b.created_at;
+        });
+    } else if (options.sort.find("expires_at") != options.sort.end()) {
+        std::sort(sessions.begin(), sessions.end(), [](const Session& a, const Session& b) {
+            return a.expires_at < b.expires_at;
+        });
+    }
+
+    int start = (options.page - 1) * options.limit;
+    int end = std::min(start + options.limit, static_cast<int>(sessions.size()));
+
+    if (start < static_cast<int>(sessions.size())) {
+        return Result<std::vector<Session>>(std::vector<Session>(sessions.begin() + start, sessions.begin() + end));
+    }
+
+    return Result<std::vector<Session>>(std::vector<Session>());
+}
+
+Result<LuaScript> Client::createLuaScript(const CreateLuaScriptInput& input) {
+    if (!isValidLuaScriptName(input.name)) {
+        return Error::validationError("Lua script name must be 1-255 characters");
+    }
+    if (!isValidLuaScriptCode(input.code)) {
+        return Error::validationError("Lua script code must be a non-empty string");
+    }
+    if (!isValidLuaTimeout(input.timeout_ms)) {
+        return Error::validationError("Timeout must be between 100 and 30000 ms");
+    }
+    if (input.created_by.empty()) {
+        return Error::validationError("created_by is required");
+    }
+
+    for (const auto& entry : input.allowed_globals) {
+        if (entry.empty()) {
+            return Error::validationError("allowed_globals must contain non-empty strings");
+        }
+    }
+
+    auto& store = getStore();
+    if (store.lua_script_names.find(input.name) != store.lua_script_names.end()) {
+        return Error::conflict("Lua script name already exists: " + input.name);
+    }
+
+    LuaScript script;
+    script.id = generateId("lua", ++store.lua_script_counter);
+    script.name = input.name;
+    script.description = input.description;
+    script.code = input.code;
+    script.is_sandboxed = input.is_sandboxed;
+    script.allowed_globals = input.allowed_globals;
+    script.timeout_ms = input.timeout_ms;
+    script.created_by = input.created_by;
+    script.created_at = std::chrono::system_clock::now();
+    script.updated_at = script.created_at;
+
+    store.lua_scripts[script.id] = script;
+    store.lua_script_names[script.name] = script.id;
+
+    return Result<LuaScript>(script);
+}
+
+Result<LuaScript> Client::getLuaScript(const std::string& id) {
+    if (id.empty()) {
+        return Error::validationError("Lua script ID cannot be empty");
+    }
+
+    auto& store = getStore();
+    auto it = store.lua_scripts.find(id);
+
+    if (it == store.lua_scripts.end()) {
+        return Error::notFound("Lua script not found: " + id);
+    }
+
+    return Result<LuaScript>(it->second);
+}
+
+Result<LuaScript> Client::updateLuaScript(const std::string& id, const UpdateLuaScriptInput& input) {
+    if (id.empty()) {
+        return Error::validationError("Lua script ID cannot be empty");
+    }
+
+    auto& store = getStore();
+    auto it = store.lua_scripts.find(id);
+
+    if (it == store.lua_scripts.end()) {
+        return Error::notFound("Lua script not found: " + id);
+    }
+
+    LuaScript& script = it->second;
+    std::string old_name = script.name;
+
+    if (input.name.has_value()) {
+        if (!isValidLuaScriptName(input.name.value())) {
+            return Error::validationError("Lua script name must be 1-255 characters");
+        }
+        auto name_it = store.lua_script_names.find(input.name.value());
+        if (name_it != store.lua_script_names.end() && name_it->second != id) {
+            return Error::conflict("Lua script name already exists: " + input.name.value());
+        }
+        store.lua_script_names.erase(old_name);
+        store.lua_script_names[input.name.value()] = id;
+        script.name = input.name.value();
+    }
+
+    if (input.description.has_value()) {
+        script.description = input.description.value();
+    }
+
+    if (input.code.has_value()) {
+        if (!isValidLuaScriptCode(input.code.value())) {
+            return Error::validationError("Lua script code must be a non-empty string");
+        }
+        script.code = input.code.value();
+    }
+
+    if (input.is_sandboxed.has_value()) {
+        script.is_sandboxed = input.is_sandboxed.value();
+    }
+
+    if (input.allowed_globals.has_value()) {
+        for (const auto& entry : input.allowed_globals.value()) {
+            if (entry.empty()) {
+                return Error::validationError("allowed_globals must contain non-empty strings");
+            }
+        }
+        script.allowed_globals = input.allowed_globals.value();
+    }
+
+    if (input.timeout_ms.has_value()) {
+        if (!isValidLuaTimeout(input.timeout_ms.value())) {
+            return Error::validationError("Timeout must be between 100 and 30000 ms");
+        }
+        script.timeout_ms = input.timeout_ms.value();
+    }
+
+    if (input.created_by.has_value()) {
+        if (input.created_by.value().empty()) {
+            return Error::validationError("created_by is required");
+        }
+        script.created_by = input.created_by.value();
+    }
+
+    script.updated_at = std::chrono::system_clock::now();
+
+    return Result<LuaScript>(script);
+}
+
+Result<bool> Client::deleteLuaScript(const std::string& id) {
+    if (id.empty()) {
+        return Error::validationError("Lua script ID cannot be empty");
+    }
+
+    auto& store = getStore();
+    auto it = store.lua_scripts.find(id);
+
+    if (it == store.lua_scripts.end()) {
+        return Error::notFound("Lua script not found: " + id);
+    }
+
+    store.lua_script_names.erase(it->second.name);
+    store.lua_scripts.erase(it);
+
+    return Result<bool>(true);
+}
+
+Result<std::vector<LuaScript>> Client::listLuaScripts(const ListOptions& options) {
+    auto& store = getStore();
+    std::vector<LuaScript> scripts;
+
+    for (const auto& [id, script] : store.lua_scripts) {
+        bool matches = true;
+
+        if (options.filter.find("created_by") != options.filter.end()) {
+            if (script.created_by != options.filter.at("created_by")) matches = false;
+        }
+
+        if (options.filter.find("is_sandboxed") != options.filter.end()) {
+            bool filter_sandboxed = options.filter.at("is_sandboxed") == "true";
+            if (script.is_sandboxed != filter_sandboxed) matches = false;
+        }
+
+        if (matches) {
+            scripts.push_back(script);
+        }
+    }
+
+    if (options.sort.find("name") != options.sort.end()) {
+        std::sort(scripts.begin(), scripts.end(), [](const LuaScript& a, const LuaScript& b) {
+            return a.name < b.name;
+        });
+    } else if (options.sort.find("created_at") != options.sort.end()) {
+        std::sort(scripts.begin(), scripts.end(), [](const LuaScript& a, const LuaScript& b) {
+            return a.created_at < b.created_at;
+        });
+    }
+
+    int start = (options.page - 1) * options.limit;
+    int end = std::min(start + options.limit, static_cast<int>(scripts.size()));
+
+    if (start < static_cast<int>(scripts.size())) {
+        return Result<std::vector<LuaScript>>(std::vector<LuaScript>(scripts.begin() + start, scripts.begin() + end));
+    }
+
+    return Result<std::vector<LuaScript>>(std::vector<LuaScript>());
+}
+
+Result<Package> Client::createPackage(const CreatePackageInput& input) {
+    if (!isValidPackageName(input.name)) {
+        return Error::validationError("Package name must be 1-255 characters");
+    }
+    if (!isValidSemver(input.version)) {
+        return Error::validationError("Version must be valid semver");
+    }
+    if (input.author.empty()) {
+        return Error::validationError("author is required");
+    }
+
+    auto& store = getStore();
+    std::string key = packageKey(input.name, input.version);
+    if (store.package_keys.find(key) != store.package_keys.end()) {
+        return Error::conflict("Package name+version already exists: " + key);
+    }
+
+    Package package;
+    package.id = generateId("package", ++store.package_counter);
+    package.name = input.name;
+    package.version = input.version;
+    package.description = input.description;
+    package.author = input.author;
+    package.manifest = input.manifest;
+    package.is_installed = input.is_installed;
+    package.installed_at = input.installed_at;
+    package.installed_by = input.installed_by;
+    package.created_at = std::chrono::system_clock::now();
+    package.updated_at = package.created_at;
+
+    store.packages[package.id] = package;
+    store.package_keys[key] = package.id;
+
+    return Result<Package>(package);
+}
+
+Result<Package> Client::getPackage(const std::string& id) {
+    if (id.empty()) {
+        return Error::validationError("Package ID cannot be empty");
+    }
+
+    auto& store = getStore();
+    auto it = store.packages.find(id);
+
+    if (it == store.packages.end()) {
+        return Error::notFound("Package not found: " + id);
+    }
+
+    return Result<Package>(it->second);
+}
+
+Result<Package> Client::updatePackage(const std::string& id, const UpdatePackageInput& input) {
+    if (id.empty()) {
+        return Error::validationError("Package ID cannot be empty");
+    }
+
+    auto& store = getStore();
+    auto it = store.packages.find(id);
+
+    if (it == store.packages.end()) {
+        return Error::notFound("Package not found: " + id);
+    }
+
+    Package& package = it->second;
+
+    std::string next_name = input.name.value_or(package.name);
+    std::string next_version = input.version.value_or(package.version);
+
+    if (!isValidPackageName(next_name)) {
+        return Error::validationError("Package name must be 1-255 characters");
+    }
+    if (!isValidSemver(next_version)) {
+        return Error::validationError("Version must be valid semver");
+    }
+
+    std::string current_key = packageKey(package.name, package.version);
+    std::string next_key = packageKey(next_name, next_version);
+
+    if (next_key != current_key) {
+        auto key_it = store.package_keys.find(next_key);
+        if (key_it != store.package_keys.end() && key_it->second != id) {
+            return Error::conflict("Package name+version already exists: " + next_key);
+        }
+        store.package_keys.erase(current_key);
+        store.package_keys[next_key] = id;
+    }
+
+    package.name = next_name;
+    package.version = next_version;
+
+    if (input.description.has_value()) {
+        package.description = input.description.value();
+    }
+
+    if (input.author.has_value()) {
+        if (input.author.value().empty()) {
+            return Error::validationError("author is required");
+        }
+        package.author = input.author.value();
+    }
+
+    if (input.manifest.has_value()) {
+        package.manifest = input.manifest.value();
+    }
+
+    if (input.is_installed.has_value()) {
+        package.is_installed = input.is_installed.value();
+    }
+
+    if (input.installed_at.has_value()) {
+        package.installed_at = input.installed_at.value();
+    }
+
+    if (input.installed_by.has_value()) {
+        if (input.installed_by.value().empty()) {
+            return Error::validationError("installed_by is required");
+        }
+        package.installed_by = input.installed_by.value();
+    }
+
+    package.updated_at = std::chrono::system_clock::now();
+
+    return Result<Package>(package);
+}
+
+Result<bool> Client::deletePackage(const std::string& id) {
+    if (id.empty()) {
+        return Error::validationError("Package ID cannot be empty");
+    }
+
+    auto& store = getStore();
+    auto it = store.packages.find(id);
+
+    if (it == store.packages.end()) {
+        return Error::notFound("Package not found: " + id);
+    }
+
+    store.package_keys.erase(packageKey(it->second.name, it->second.version));
+    store.packages.erase(it);
+
+    return Result<bool>(true);
+}
+
+Result<std::vector<Package>> Client::listPackages(const ListOptions& options) {
+    auto& store = getStore();
+    std::vector<Package> packages;
+
+    for (const auto& [id, package] : store.packages) {
+        bool matches = true;
+
+        if (options.filter.find("name") != options.filter.end()) {
+            if (package.name != options.filter.at("name")) matches = false;
+        }
+
+        if (options.filter.find("version") != options.filter.end()) {
+            if (package.version != options.filter.at("version")) matches = false;
+        }
+
+        if (options.filter.find("author") != options.filter.end()) {
+            if (package.author != options.filter.at("author")) matches = false;
+        }
+
+        if (options.filter.find("is_installed") != options.filter.end()) {
+            bool filter_installed = options.filter.at("is_installed") == "true";
+            if (package.is_installed != filter_installed) matches = false;
+        }
+
+        if (matches) {
+            packages.push_back(package);
+        }
+    }
+
+    if (options.sort.find("name") != options.sort.end()) {
+        std::sort(packages.begin(), packages.end(), [](const Package& a, const Package& b) {
+            return a.name < b.name;
+        });
+    } else if (options.sort.find("created_at") != options.sort.end()) {
+        std::sort(packages.begin(), packages.end(), [](const Package& a, const Package& b) {
+            return a.created_at < b.created_at;
+        });
+    }
+
+    int start = (options.page - 1) * options.limit;
+    int end = std::min(start + options.limit, static_cast<int>(packages.size()));
+
+    if (start < static_cast<int>(packages.size())) {
+        return Result<std::vector<Package>>(std::vector<Package>(packages.begin() + start, packages.begin() + end));
+    }
+
+    return Result<std::vector<Package>>(std::vector<Package>());
 }
 
 void Client::close() {

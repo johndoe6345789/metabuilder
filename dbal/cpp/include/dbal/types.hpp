@@ -103,6 +103,97 @@ struct UpdateWorkflowInput {
     std::optional<std::string> created_by;
 };
 
+struct Session {
+    std::string id;
+    std::string user_id;
+    std::string token;
+    Timestamp expires_at;
+    Timestamp created_at;
+    Timestamp last_activity;
+};
+
+struct CreateSessionInput {
+    std::string user_id;
+    std::string token;
+    Timestamp expires_at;
+};
+
+struct UpdateSessionInput {
+    std::optional<std::string> user_id;
+    std::optional<std::string> token;
+    std::optional<Timestamp> expires_at;
+    std::optional<Timestamp> last_activity;
+};
+
+struct LuaScript {
+    std::string id;
+    std::string name;
+    std::optional<std::string> description;
+    std::string code;
+    bool is_sandboxed;
+    std::vector<std::string> allowed_globals;
+    int timeout_ms;
+    std::string created_by;
+    Timestamp created_at;
+    Timestamp updated_at;
+};
+
+struct CreateLuaScriptInput {
+    std::string name;
+    std::optional<std::string> description;
+    std::string code;
+    bool is_sandboxed = true;
+    std::vector<std::string> allowed_globals;
+    int timeout_ms = 5000;
+    std::string created_by;
+};
+
+struct UpdateLuaScriptInput {
+    std::optional<std::string> name;
+    std::optional<std::string> description;
+    std::optional<std::string> code;
+    std::optional<bool> is_sandboxed;
+    std::optional<std::vector<std::string>> allowed_globals;
+    std::optional<int> timeout_ms;
+    std::optional<std::string> created_by;
+};
+
+struct Package {
+    std::string id;
+    std::string name;
+    std::string version;
+    std::optional<std::string> description;
+    std::string author;
+    Json manifest;
+    bool is_installed;
+    std::optional<Timestamp> installed_at;
+    std::optional<std::string> installed_by;
+    Timestamp created_at;
+    Timestamp updated_at;
+};
+
+struct CreatePackageInput {
+    std::string name;
+    std::string version;
+    std::optional<std::string> description;
+    std::string author;
+    Json manifest;
+    bool is_installed = false;
+    std::optional<Timestamp> installed_at;
+    std::optional<std::string> installed_by;
+};
+
+struct UpdatePackageInput {
+    std::optional<std::string> name;
+    std::optional<std::string> version;
+    std::optional<std::string> description;
+    std::optional<std::string> author;
+    std::optional<Json> manifest;
+    std::optional<bool> is_installed;
+    std::optional<Timestamp> installed_at;
+    std::optional<std::string> installed_by;
+};
+
 struct ListOptions {
     std::map<std::string, std::string> filter;
     std::map<std::string, std::string> sort;

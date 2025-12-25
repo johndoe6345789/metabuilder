@@ -1,0 +1,58 @@
+operations:
+  create:
+    description: "Create a new package definition"
+    input:
+      required: [name, version, author, manifest]
+      optional: [description, is_installed, installed_at, installed_by]
+    output: Package
+    acl_required: ["package:create"]
+    validation:
+      - semver_format: "Version must be valid semver"
+      - name_version_unique: "Package name+version must be unique"
+    errors:
+      - CONFLICT: "Package with name and version already exists"
+      - VALIDATION_ERROR: "Invalid package input"
+      
+  read:
+    description: "Get package by ID"
+    input:
+      required: [id]
+    output: Package
+    acl_required: ["package:read"]
+    errors:
+      - NOT_FOUND: "Package not found"
+      
+  update:
+    description: "Update package"
+    input:
+      required: [id]
+      optional: [name, version, description, author, manifest, is_installed, installed_at, installed_by]
+    output: Package
+    acl_required: ["package:update"]
+    validation:
+      - semver_format: "Version must be valid semver"
+    errors:
+      - NOT_FOUND: "Package not found"
+      - CONFLICT: "Package name+version already exists"
+      - VALIDATION_ERROR: "Invalid package update"
+      
+  delete:
+    description: "Delete package"
+    input:
+      required: [id]
+    output: boolean
+    acl_required: ["package:delete"]
+    errors:
+      - NOT_FOUND: "Package not found"
+      
+  list:
+    description: "List packages with filtering and pagination"
+    input:
+      optional: [name, version, author, is_installed, page, limit, sort]
+    output: Package[]
+    acl_required: ["package:read"]
+    pagination: true
+    max_limit: 100
+    default_limit: 20
+    errors:
+      - VALIDATION_ERROR: "Invalid pagination parameters"
