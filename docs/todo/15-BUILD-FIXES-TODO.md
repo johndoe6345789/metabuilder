@@ -5,6 +5,7 @@
 - [x] Fix TypeScript config error: `exactOptionalPropertyTypes` requires `strictNullChecks` (dbd8e49)
 - [x] Resolve Next.js build failures in `frontends/nextjs` (Dec 25 2025 - fixed MUI component issues)
 - [x] Fix module resolution issues preventing successful build (Dec 25 2025 - fixed lib exports)
+- [ ] Fix Prisma schema discovery for `frontends/nextjs` (`cd frontends/nextjs && npx prisma validate` → "Could not find Prisma Schema")
 - [ ] Address any circular dependency issues
 - [x] Resolve import path errors (Dec 25 2025 - fixed WorkflowEditor, page-renderer test mocks)
 

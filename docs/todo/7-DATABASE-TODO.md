@@ -18,6 +18,7 @@
 
 ## Migrations
 
+- [ ] Fix Prisma CLI schema path for `frontends/nextjs` (currently `cd frontends/nextjs && npx prisma validate` cannot find `schema.prisma`)
 - [ ] Review pending migrations for production readiness
 - [ ] Add rollback scripts for all migrations
 - [ ] Create migration testing pipeline
