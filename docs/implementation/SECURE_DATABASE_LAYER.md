@@ -298,6 +298,14 @@ The rate limit map automatically cleans old entries:
 - Prevents memory bloat
 - O(n) cleanup per request (minimal overhead)
 
+### Rate Limit Configuration
+
+Rate limit thresholds are loaded from `SystemConfig` when secure queries execute:
+- `rate_limit_window_ms` (default: `60000`)
+- `rate_limit_max_requests` (default: `100`)
+
+If a key is missing or invalid, env overrides (`MB_RATE_LIMIT_WINDOW_MS`, `MB_RATE_LIMIT_MAX_REQUESTS`) are used, then defaults.
+
 ### Audit Log Rotation
 
 Audit logs are capped at 10,000 entries:
