@@ -2,7 +2,12 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { checkRateLimit } from './check-rate-limit'
 import { clearRateLimit } from './clear-rate-limit'
 import { clearAllRateLimits } from './clear-all-rate-limits'
-import { DEFAULT_MAX_REQUESTS_PER_WINDOW, DEFAULT_RATE_LIMIT_WINDOW_MS, getRateLimitConfig } from './rate-limit-store'
+import {
+  DEFAULT_MAX_REQUESTS_PER_WINDOW,
+  DEFAULT_RATE_LIMIT_WINDOW_MS,
+  getRateLimitConfig,
+  resetRateLimitConfig,
+} from './rate-limit-store'
 
 const BASE_TIME = new Date('2024-01-01T00:00:00Z')
 const ENV_RATE_LIMIT_WINDOW_MS = 'MB_RATE_LIMIT_WINDOW_MS'
@@ -11,6 +16,7 @@ const ENV_MAX_REQUESTS = 'MB_RATE_LIMIT_MAX_REQUESTS'
 const resetRateLimitEnv = () => {
   delete process.env[ENV_RATE_LIMIT_WINDOW_MS]
   delete process.env[ENV_MAX_REQUESTS]
+  resetRateLimitConfig()
 }
 
 describe('rate limit helpers', () => {
@@ -38,6 +44,7 @@ describe('rate limit helpers', () => {
     it('uses env overrides when valid', () => {
       process.env[ENV_RATE_LIMIT_WINDOW_MS] = '120000'
       process.env[ENV_MAX_REQUESTS] = '250'
+      resetRateLimitConfig()
 
       const { windowMs, maxRequests } = getRateLimitConfig()
 
@@ -48,6 +55,7 @@ describe('rate limit helpers', () => {
     it('falls back to defaults for invalid env values', () => {
       process.env[ENV_RATE_LIMIT_WINDOW_MS] = '-10'
       process.env[ENV_MAX_REQUESTS] = 'not-a-number'
+      resetRateLimitConfig()
 
       const { windowMs, maxRequests } = getRateLimitConfig()
 
@@ -91,6 +99,7 @@ describe('rate limit helpers', () => {
     it('respects env-configured limits', () => {
       process.env[ENV_RATE_LIMIT_WINDOW_MS] = '1000'
       process.env[ENV_MAX_REQUESTS] = '2'
+      resetRateLimitConfig()
       const userId = 'user-env'
 
       expect(checkRateLimit(userId)).toBe(true)
