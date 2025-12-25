@@ -1,7 +1,7 @@
 # TODO List Status
 
-- Generated: `2025-12-25 20:56:07Z` (UTC)
-- Directory: `/Users/rmac/Documents/GitHub/metabuilder/docs/todo`
+- Generated: `2025-12-25 20:57:28Z` (UTC)
+- Directory: `docs/todo`
 - Total items: **852** (`open`=829, `done`=23)
 
 | File | Open | Done | Total |

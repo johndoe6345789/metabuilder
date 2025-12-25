@@ -1,7 +1,7 @@
 # TODO Scan Report
 
-- Generated: `2025-12-25 20:56:07Z` (UTC)
-- Repo root: `/Users/rmac/Documents/GitHub/metabuilder`
+- Generated: `2025-12-25 20:57:28Z` (UTC)
+- Report directory: `docs/todo`
 - Pattern: `\b(TODO|FIXME|HACK|XXX)\b`
 - Excludes: `docs/todo/`, `**/node_modules/`, `**/.next/`, `**/coverage/`, `**/dist/`, `**/build/`, `**/.git/`
 

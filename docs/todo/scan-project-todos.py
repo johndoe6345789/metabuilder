@@ -102,6 +102,8 @@ def _render_scan_report(
     repo_root: Path, out_path: Path, matches: list[TodoMatch]
 ) -> None:
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%SZ")
+    report_dir = out_path.parent
+    report_dir_display = str(report_dir.relative_to(repo_root))
 
     by_dir: dict[str, list[TodoMatch]] = defaultdict(list)
     for match in matches:
@@ -114,7 +116,7 @@ def _render_scan_report(
     lines.append("# TODO Scan Report")
     lines.append("")
     lines.append(f"- Generated: `{now}` (UTC)")
-    lines.append(f"- Repo root: `{repo_root}`")
+    lines.append(f"- Report directory: `{report_dir_display}`")
     lines.append(f"- Pattern: `{PATTERN}`")
     lines.append(
         "- Excludes: `docs/todo/`, `**/node_modules/`, `**/.next/`, `**/coverage/`, `**/dist/`, `**/build/`, `**/.git/`"
@@ -176,7 +178,11 @@ def _render_todo_status(todo_dir: Path, out_path: Path) -> None:
     lines.append("# TODO List Status")
     lines.append("")
     lines.append(f"- Generated: `{now}` (UTC)")
-    lines.append(f"- Directory: `{todo_dir}`")
+    try:
+        directory_display = str(todo_dir.relative_to(_repo_root(todo_dir)))
+    except ValueError:
+        directory_display = str(todo_dir)
+    lines.append(f"- Directory: `{directory_display}`")
     lines.append(f"- Total items: **{total_open + total_done}** (`open`={total_open}, `done`={total_done})")
     lines.append("")
     lines.append("| File | Open | Done | Total |")
@@ -202,4 +208,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

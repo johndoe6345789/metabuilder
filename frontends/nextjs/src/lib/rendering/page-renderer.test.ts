@@ -5,7 +5,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import type { PageDefinition } from './page-renderer'
-import type { User } from '../types/level-types'
+import type { User, UserRole } from '../types/level-types'
 
 // Mock Database
 const { Database, MockLuaEngine } = vi.hoisted(() => {
