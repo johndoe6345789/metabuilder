@@ -343,9 +343,8 @@ Copilot generates:
 **Files:**
 - `.github/workflows/README.md` - Workflow documentation
 - `docs/getting-started/PRD.md` - Product requirements
-TODO: SECURITY.md lives at docs/security/SECURITY.md and project overview is docs/README.md; update paths here.
-- `SECURITY.md` - Security policies
-- `README.md` - Project overview
+- `docs/security/SECURITY.md` - Security policies
+- `docs/README.md` - Project overview
 
 ---
 
