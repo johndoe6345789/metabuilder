@@ -10,7 +10,7 @@
 
 ## Authentication & Authorization
 
-- [ ] Complete auth hook implementation (`src/hooks/useAuth.ts`)
+- [ ] Complete auth hook implementation (`frontends/nextjs/src/hooks/useAuth.ts`, TODO at `frontends/nextjs/src/hooks/useAuth.ts:28`)
 - [ ] Add OAuth provider support (GitHub, Google, etc.)
 - [ ] Implement session refresh logic with token rotation
 - [ ] Add multi-factor authentication support
@@ -18,7 +18,7 @@
 
 ## State Management
 
-- [ ] Complete KV store hook implementation (`src/hooks/useKV.ts`)
+- [ ] Complete KV store hook implementation (`frontends/nextjs/src/hooks/useKV.ts`, TODO at `frontends/nextjs/src/hooks/useKV.ts:9`)
 - [ ] Add optimistic updates for better UX
 - [ ] Implement proper cache invalidation strategies
 - [ ] Add offline support with local storage fallback
@@ -42,17 +42,26 @@
 
 ## Screenshots & Analysis
 
-- [ ] Complete ScreenshotAnalyzer component implementation
+- [ ] Complete ScreenshotAnalyzer component implementation (`frontends/nextjs/src/components/ScreenshotAnalyzer.tsx`, TODO at `frontends/nextjs/src/components/ScreenshotAnalyzer.tsx:64`)
 - [ ] Add image optimization pipeline
 - [ ] Implement visual diff comparison
 - [ ] Create annotation overlay system
 
 ## GitHub Actions Integration
 
-- [ ] Complete GitHubActionsFetcher component
+- [ ] Complete GitHubActionsFetcher component (`frontends/nextjs/src/components/GitHubActionsFetcher.tsx`, TODOs at `:66`, `:140`, `:291`)
 - [ ] Add webhook integration for real-time updates
 - [ ] Implement action log streaming
 - [ ] Create action re-run functionality
+
+## UI Component Wrappers
+
+- [ ] Remove TODO markers in `frontends/nextjs/src/components/ui/*` re-export files (import conventions)
+- [ ] Implement `sonner` dismiss-by-ID (`frontends/nextjs/src/components/ui/sonner.tsx:94`)
+
+## References
+
+- Scan results: `docs/todo/TODO_SCAN_REPORT.md`
 
 ## Build & Performance
 
