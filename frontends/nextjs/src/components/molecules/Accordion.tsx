@@ -1,13 +1,11 @@
 'use client'
 
-import { forwardRef, ReactNode, useState } from 'react'
+import { forwardRef, ReactNode } from 'react'
 import {
   Accordion as MuiAccordion,
   AccordionProps as MuiAccordionProps,
   AccordionSummary as MuiAccordionSummary,
-  AccordionSummaryProps as MuiAccordionSummaryProps,
   AccordionDetails as MuiAccordionDetails,
-  AccordionDetailsProps as MuiAccordionDetailsProps,
   Typography,
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'

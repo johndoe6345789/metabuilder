@@ -19,7 +19,7 @@ describe('getUsers', () => {
       name: 'empty array when no users',
       dbData: [],
       expected: [],
-      options: { scope: 'all' },
+      options: { scope: 'all' as const },
       expectedArgs: ['User'],
     },
     {
@@ -50,7 +50,7 @@ describe('getUsers', () => {
           isInstanceOwner: false,
         },
       ],
-      options: { scope: 'all' },
+      options: { scope: 'all' as const },
       expectedArgs: ['User'],
     },
     {
@@ -103,7 +103,7 @@ describe('getUsers', () => {
           isInstanceOwner: true,
         },
       ],
-      options: { scope: 'all' },
+      options: { scope: 'all' as const },
       expectedArgs: ['User'],
     },
     {
