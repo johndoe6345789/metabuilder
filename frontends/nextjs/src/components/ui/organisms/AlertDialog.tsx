@@ -20,19 +20,24 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 // AlertDialog Root
 interface AlertDialogProps {
   open: boolean
-  onClose: () => void
+  onClose?: () => void
+  onOpenChange?: (open: boolean) => void
   children: ReactNode
   maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   fullWidth?: boolean
 }
 
 const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
-  ({ open, onClose, children, maxWidth = 'sm', fullWidth = true, ...props }, ref) => {
+  ({ open, onClose, onOpenChange, children, maxWidth = 'sm', fullWidth = true, ...props }, ref) => {
+    const handleClose = () => {
+      onClose?.()
+      onOpenChange?.(false)
+    }
     return (
       <Dialog
         ref={ref}
         open={open}
-        onClose={onClose}
+        onClose={handleClose}
         maxWidth={maxWidth}
         fullWidth={fullWidth}
         aria-labelledby="alert-dialog-title"
