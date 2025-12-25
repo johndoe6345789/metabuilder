@@ -8,8 +8,6 @@ import {
   Typography,
   Chip,
   MenuItem,
-  FormControl,
-  InputLabel,
   IconButton,
 } from '@mui/material'
 import {
