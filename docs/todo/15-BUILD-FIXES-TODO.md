@@ -3,15 +3,15 @@
 ## Critical Build Issues
 
 - [x] Fix TypeScript config error: `exactOptionalPropertyTypes` requires `strictNullChecks` (dbd8e49)
-- [ ] Resolve Next.js build failures in `frontends/nextjs`
-- [ ] Fix module resolution issues preventing successful build
+- [x] Resolve Next.js build failures in `frontends/nextjs` (Dec 25 2025 - fixed MUI component issues)
+- [x] Fix module resolution issues preventing successful build (Dec 25 2025 - fixed lib exports)
 - [ ] Address any circular dependency issues
-- [ ] Resolve import path errors
+- [x] Resolve import path errors (Dec 25 2025 - fixed WorkflowEditor, page-renderer test mocks)
 
 ## TypeScript Configuration
 
 - [x] Enable `strictNullChecks` in tsconfig.json (dbd8e49)
-- [ ] Review and fix all null/undefined type errors
+- [x] Review and fix all null/undefined type errors (Dec 25 2025 - typecheck passes)
 - [ ] Update type definitions for strict mode
 - [ ] Add strict mode to all sub-packages
 - [ ] Configure path aliases consistently
