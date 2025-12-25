@@ -1,0 +1,29 @@
+# Environment files with secrets
+.env
+.env.local
+.env.production
+.env.development
+*.env
+
+# SSL certificates
+config/nginx/ssl/*.pem
+config/nginx/ssl/*.key
+config/nginx/ssl/*.crt
+
+# Backup files
+*.sql
+*.dump
+backups/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

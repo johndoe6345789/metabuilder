@@ -1,0 +1,36 @@
+# DBAL Daemon Configuration (Production)
+server:
+  bind_address: "0.0.0.0"
+  port: 8080
+  mode: production
+  max_connections: 1000
+  timeout: 30
+
+logging:
+  level: info
+  format: json
+  output: stdout
+
+database:
+  type: postgres
+  host: postgres
+  port: 5432
+  database: metabuilder
+  user: metabuilder
+  # Password should be set via environment variable
+
+security:
+  enable_cors: true
+  allowed_origins:
+    - "https://yourdomain.com"
+  rate_limit:
+    enabled: true
+    requests_per_minute: 100
+
+multi_tenant:
+  enabled: true
+  isolation: strict
+  default_quota:
+    max_blob_storage_bytes: 1073741824  # 1GB
+    max_blob_count: 10000
+    max_records: 100000
