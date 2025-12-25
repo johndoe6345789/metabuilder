@@ -264,7 +264,7 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    await this.blobStorage.upload(key, data, metadata)
+    await this.blobStorage.upload(key, data as Buffer, metadata)
   }
 
   /**
@@ -297,7 +297,8 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    return this.blobStorage.list(prefix)
+    const result = await this.blobStorage.list({ prefix })
+    return result.items.map(item => item.key)
   }
 
   /**
@@ -308,7 +309,8 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    return this.blobStorage.getMetadata(key)
+    const metadata = await this.blobStorage.getMetadata(key)
+    return metadata.customMetadata || {}
   }
 
   /**

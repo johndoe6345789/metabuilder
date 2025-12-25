@@ -161,14 +161,13 @@ export class SecureDatabase {
     }
     
     try {
-      const existingLogs = await spark.kv.get<AuditLog[]>('audit_logs') || []
-      existingLogs.push(log)
-      
-      if (existingLogs.length > 10000) {
-        existingLogs.splice(0, existingLogs.length - 10000)
+      // TODO: Replace with proper audit log storage
+      // For now, just log to console in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[AUDIT]', log)
       }
-      
-      await spark.kv.set('audit_logs', existingLogs)
+      // In production, this would write to a persistent audit log table
+      // await Database.addAuditLog(log)
     } catch (error) {
       console.error('Failed to log operation:', error)
     }
@@ -215,7 +214,7 @@ export class SecureDatabase {
           id: u.id,
           username: u.username,
           email: u.email,
-          role: u.role,
+          role: u.role as any,
           profilePicture: u.profilePicture || undefined,
           bio: u.bio || undefined,
           createdAt: Number(u.createdAt),
@@ -239,7 +238,7 @@ export class SecureDatabase {
           id: user.id,
           username: user.username,
           email: user.email,
-          role: user.role,
+          role: user.role as any,
           profilePicture: user.profilePicture || undefined,
           bio: user.bio || undefined,
           createdAt: Number(user.createdAt),
@@ -276,7 +275,7 @@ export class SecureDatabase {
           id: user.id,
           username: user.username,
           email: user.email,
-          role: user.role,
+          role: user.role as any,
           profilePicture: user.profilePicture || undefined,
           bio: user.bio || undefined,
           createdAt: Number(user.createdAt),
@@ -311,7 +310,7 @@ export class SecureDatabase {
           id: user.id,
           username: user.username,
           email: user.email,
-          role: user.role,
+          role: user.role as any,
           profilePicture: user.profilePicture || undefined,
           bio: user.bio || undefined,
           createdAt: Number(user.createdAt),
@@ -384,8 +383,9 @@ export class SecureDatabase {
       throw new Error('Access denied. Only god-tier users can view audit logs.')
     }
 
-    const logs = await spark.kv.get<AuditLog[]>('audit_logs') || []
-    return logs.slice(-limit).reverse()
+    // TODO: Replace with proper database query
+    // return await Database.getAuditLogs({ limit })
+    return []
   }
 
   static async getWorkflows(ctx: SecurityContext) {

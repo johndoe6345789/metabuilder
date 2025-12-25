@@ -15,10 +15,16 @@ export async function initializePackageSystem() {
     // Export seed data from modular packages
     const seedData = exportAllPackagesForSeed(packageRegistry)
     
-    // Store modular package data in KV for later use
-    await window.spark.kv.set('modular_packages_components', seedData.components)
-    await window.spark.kv.set('modular_packages_scripts', seedData.scripts)
-    await window.spark.kv.set('modular_packages_metadata', seedData.packages)
+    // TODO: Replace with proper persistent storage (currently no-op)
+    // Modular package data would be stored in database or KV store
+    // await Database.setModularPackageComponents(seedData.components)
+    // await Database.setModularPackageScripts(seedData.scripts)
+    // await Database.setModularPackageMetadata(seedData.packages)
+    console.log('Loaded modular package data:', {
+      components: seedData.components?.length || 0,
+      scripts: seedData.scripts?.length || 0,
+      packages: seedData.packages?.length || 0
+    })
     
     console.log(`✅ Loaded ${seedData.packages.length} modular packages:`, 
       seedData.packages.map(p => p.name).join(', '))
@@ -55,13 +61,19 @@ export function getPackageRegistry(): PackageRegistry | null {
 }
 
 export async function getModularPackageComponents() {
-  return await window.spark.kv.get('modular_packages_components') || []
+  // TODO: Replace with proper database query
+  // return await Database.getModularPackageComponents() || []
+  return []
 }
 
 export async function getModularPackageScripts() {
-  return await window.spark.kv.get('modular_packages_scripts') || []
+  // TODO: Replace with proper database query
+  // return await Database.getModularPackageScripts() || []
+  return []
 }
 
 export async function getModularPackageMetadata() {
-  return await window.spark.kv.get('modular_packages_metadata') || []
+  // TODO: Replace with proper database query
+  // return await Database.getModularPackageMetadata() || []
+  return []
 }
