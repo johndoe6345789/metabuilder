@@ -1,5 +1,4 @@
-import type { LuaExecutionContext, LuaExecutionResult } from '../types'
-import type { LuaEngine } from '../../LuaEngine'
+import type { LuaExecutionContext, LuaExecutionResult, LuaEngineState } from '../types'
 import { executeLuaCode } from '../execution/execute-lua-code'
 
 /**
@@ -9,7 +8,7 @@ import { executeLuaCode } from '../execution/execute-lua-code'
  * @returns Execution result
  */
 export async function execute(
-  this: LuaEngine,
+  this: LuaEngineState,
   code: string,
   context: LuaExecutionContext = {}
 ): Promise<LuaExecutionResult> {

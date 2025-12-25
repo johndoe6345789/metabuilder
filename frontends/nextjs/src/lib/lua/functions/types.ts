@@ -19,3 +19,14 @@ export interface LuaExecutionResult {
   error?: string
   logs: string[]
 }
+
+/**
+ * Interface representing the Lua engine state
+ * Used to avoid circular dependencies in engine method files
+ */
+export interface LuaEngineState {
+  /** The Fengari Lua state */
+  L: any
+  /** Logs captured during execution */
+  logs: string[]
+}
