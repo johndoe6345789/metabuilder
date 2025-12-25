@@ -4,4 +4,6 @@ Keep unit tests parameterised and make new test files where possible.
 
 Leave TODO comments for missing functionality.
 
+Check /docs/TODO/*
+
 Use 'act' workflow runner to diagnose the github workflow process.
