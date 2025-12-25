@@ -35,7 +35,7 @@ def _repo_root(script_dir: Path) -> Path:
 
 
 def _run_rg(repo_root: Path) -> list[TodoMatch]:
-    cmd = ["rg", "-n", "-S", PATTERN]
+    cmd = ["rg", "-n", "-S", "--hidden", PATTERN]
     for glob in RG_GLOBS:
         cmd.extend(["--glob", glob])
     cmd.append(".")

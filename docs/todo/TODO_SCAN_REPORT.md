@@ -1,20 +1,33 @@
 # TODO Scan Report
 
-- Generated: `2025-12-25 21:04:28Z` (UTC)
+- Generated: `2025-12-25 21:06:12Z` (UTC)
 - Report directory: `docs/todo`
 - Pattern: `\b(TODO|FIXME|HACK|XXX)\b`
 - Excludes: `docs/todo/`, `**/node_modules/`, `**/.next/`, `**/coverage/`, `**/dist/`, `**/build/`, `**/.git/`
 
 ## Summary
-- Total matches: **152**
-- By marker: `TODO`=152
+- Total matches: **162**
+- By marker: `TODO`=162
 - By top-level directory:
+  - `.github`: 10
   - `dbal`: 6
   - `docs`: 95
   - `frontends`: 36
   - `tools`: 15
 
 ## Matches
+
+### `.github` (10)
+- `.github/copilot-instructions.md:20` — - Leave TODO comments for missing functionality.
+- `.github/copilot-instructions.md:211` — ❌ **Missing TODO for unfinished behavior** → Leave a TODO comment where functionality is pending
+- `.github/prompts/EEK-STUCK.md:3` — Go through codebase and read docs and code, write some TODO statements.
+- `.github/workflows/README.md:27` — - **Quality Check**: Checks for console.log statements and TODO comments
+- `.github/workflows/ci.yml:254` — - name: Check for TODO comments
+- `.github/workflows/ci.yml:256` — TODO_COUNT=$(git diff origin/${{ github.base_ref }}...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' | grep -E '^\+.*TODO|FIXME' | wc -l)
+- `.github/workflows/ci.yml:258` — echo "⚠️ Found $TODO_COUNT TODO/FIXME comments in the changes"
+- `.github/workflows/ci.yml:259` — echo "Please address TODO comments before merging or create issues for them"
+- `.github/workflows/detect-stubs.yml:70` — grep -E '^\+.*(TODO|FIXME|not implemented|stub|placeholder|mock)' | \
+- `.github/workflows/detect-stubs.yml:133` — comment += '- [ ] Replace TODO comments with GitHub issues\n';
 
 ### `dbal` (6)
 - `dbal/cpp/README.Linting.md:306` — - TODO/FIXME comments count
