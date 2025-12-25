@@ -1,12 +1,19 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useKV } from '@/hooks/useKV'
 
 describe('useKV', () => {
   beforeEach(() => {
-    // Clear any stored values before each test
-    const map = new Map()
-    localStorage.clear()
+    // Mock localStorage
+    const store: Record<string, string> = {}
+    vi.stubGlobal('localStorage', {
+      getItem: vi.fn((key: string) => store[key] ?? null),
+      setItem: vi.fn((key: string, value: string) => { store[key] = value }),
+      removeItem: vi.fn((key: string) => { delete store[key] }),
+      clear: vi.fn(() => { Object.keys(store).forEach(k => delete store[k]) }),
+      length: 0,
+      key: vi.fn(() => null),
+    })
   })
 
   it.each([
@@ -112,12 +119,12 @@ describe('useKV', () => {
   })
 
   it.each([
-    { initialValue: null, description: 'null value' },
-    { initialValue: false, description: 'false boolean' },
-    { initialValue: 0, description: 'zero number' },
-    { initialValue: '', description: 'empty string' },
-  ])('should handle falsy $description correctly', ({ initialValue }) => {
-    const { result } = renderHook(() => useKV('falsy_key', initialValue))
+    { initialValue: null, key: 'falsy_key_null', description: 'null value' },
+    { initialValue: false, key: 'falsy_key_false', description: 'false boolean' },
+    { initialValue: 0, key: 'falsy_key_zero', description: 'zero number' },
+    { initialValue: '', key: 'falsy_key_empty', description: 'empty string' },
+  ])('should handle falsy $description correctly', ({ initialValue, key }) => {
+    const { result } = renderHook(() => useKV(key, initialValue))
     const [value] = result.current
 
     expect(value).toBe(initialValue)

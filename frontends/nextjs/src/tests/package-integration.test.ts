@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import adminDialogMetadata from '../../packages/admin_dialog/seed/metadata.json'
-import dashboardMetadata from '../../packages/dashboard/seed/metadata.json'
-import dataTableMetadata from '../../packages/data_table/seed/metadata.json'
-import formBuilderMetadata from '../../packages/form_builder/seed/metadata.json'
-import navMenuMetadata from '../../packages/nav_menu/seed/metadata.json'
-import notificationCenterMetadata from '../../packages/notification_center/seed/metadata.json'
+import adminDialogMetadata from '../../../../packages/admin_dialog/seed/metadata.json'
+import dashboardMetadata from '../../../../packages/dashboard/seed/metadata.json'
+import dataTableMetadata from '../../../../packages/data_table/seed/metadata.json'
+import formBuilderMetadata from '../../../../packages/form_builder/seed/metadata.json'
+import navMenuMetadata from '../../../../packages/nav_menu/seed/metadata.json'
+import notificationCenterMetadata from '../../../../packages/notification_center/seed/metadata.json'
 
 const packages = [
   adminDialogMetadata,
