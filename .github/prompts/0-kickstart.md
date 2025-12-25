@@ -3,3 +3,5 @@ Work your way through prompts folder, skip if not needed. Figure it out as you g
 Keep unit tests parameterised and make new test files where possible.
 
 Leave TODO comments for missing functionality.
+
+Use 'act' workflow runner to diagnose the github workflow process.
