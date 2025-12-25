@@ -6,12 +6,12 @@
  * new DBAL system.
  */
 
-import { DBALClient, DBALError, DBALErrorCode } from '@/dbal/ts/src'
-import type { DBALConfig } from '@/dbal/ts/src'
-import { InMemoryTenantManager } from '@/dbal/ts/src/core/tenant-context'
-import { InMemoryKVStore } from '@/dbal/ts/src/core/kv-store'
-import { createBlobStorage } from '@/dbal/ts/src/blob'
-import { TenantAwareBlobStorage } from '@/dbal/ts/src/blob/tenant-aware-storage'
+import { DBALClient, DBALError, DBALErrorCode } from '@/lib/dbal-stub'
+import type { DBALConfig } from '@/lib/dbal-stub'
+import { InMemoryTenantManager } from '@/lib/dbal-stub/core/tenant-context'
+import { InMemoryKVStore } from '@/lib/dbal-stub/core/kv-store'
+import { createBlobStorage } from '@/lib/dbal-stub/blob'
+import { TenantAwareBlobStorage } from '@/lib/dbal-stub/blob/tenant-aware-storage'
 
 /**
  * DBAL Integration Manager
