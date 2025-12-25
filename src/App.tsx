@@ -1,6 +1,15 @@
+/**
+ * App Component - Main application entry point
+ * 
+ * Implements a 5-level multi-tenant architecture where access control
+ * is determined by user permissions. Manages authentication, authorization,
+ * and dynamic content rendering based on user roles.
+ */
+
 import { useState, useEffect } from 'react'
 import { Toaster } from '@/components/ui/sonner'
 import { Button } from '@/components/ui/button'
+// Import level-specific UI components
 import { Level1 } from '@/components/Level1'
 import { Level2 } from '@/components/Level2'
 import { Level3 } from '@/components/Level3'
@@ -10,12 +19,17 @@ import { PasswordChangeDialog } from '@/components/PasswordChangeDialog'
 import { UnifiedLogin } from '@/components/UnifiedLogin'
 import { GitHubActionsFetcher } from '@/components/GitHubActionsFetcher'
 import { toast } from 'sonner'
+// Authentication and database utilities
 import { canAccessLevel } from '@/lib/auth'
 import { Database, hashPassword } from '@/lib/database'
+// Data initialization and package system
 import { seedDatabase } from '@/lib/seed-data'
 import { initializePackageSystem } from '@/lib/package-loader'
 import type { User, AppLevel } from '@/lib/level-types'
 
+/**
+ * App wrapper component - delegates to AppOriginal implementation
+ */
 function App() {
   return <AppOriginal />
 }

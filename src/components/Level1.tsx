@@ -1,5 +1,21 @@
 "use client"
 
+/**
+ * Level1 Component - Public/Unauthenticated Interface
+ * 
+ * The Level1 component serves as the main entry point for unauthenticated users.
+ * It displays the public-facing interface with features, hero sections, and
+ * navigation to login or other public pages.
+ * 
+ * Key Features:
+ * - Navigation bar for public users
+ * - Hero section with marketing content
+ * - Features overview
+ * - Contact form
+ * - Credentials display (god/supergod) during setup
+ * - Login prompt for authenticated access
+ */
+
 import { useState, useEffect } from 'react'
 import { Database } from '@/lib/database'
 import { getScrambledPassword } from '@/lib/auth'
@@ -12,39 +28,59 @@ import { AppFooter } from './shared/AppFooter'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { GitHubActionsFetcher } from './GitHubActionsFetcher'
 
+// Props for Level1 component
 interface Level1Props {
+  // Callback when user navigates to another level
   onNavigate: (level: number) => void
 }
 
+/**
+ * Level1 - Public interface component
+ * @param props - Component props
+ */
 export function Level1({ onNavigate }: Level1Props) {
+  // Menu visibility state
   const [menuOpen, setMenuOpen] = useState(false)
+  // Show god credentials banner during setup
   const [showGodCredentials, setShowGodCredentials] = useState(false)
+  // Show supergod credentials banner during setup
   const [showSuperGodCredentials, setShowSuperGodCredentials] = useState(false)
+  // Password visibility toggle for god credentials
   const [showPassword, setShowPassword] = useState(false)
+  // Password visibility toggle for supergod credentials
   const [showSuperGodPassword, setShowSuperGodPassword] = useState(false)
+  // Track clipboard copy state for god credentials
   const [copied, setCopied] = useState(false)
+  // Track clipboard copy state for supergod credentials
   const [copiedSuper, setCopiedSuper] = useState(false)
+  // Display remaining time for god credentials expiry
   const [timeRemaining, setTimeRemaining] = useState('')
 
+  // Initialize component state on mount
   useEffect(() => {
     const checkCredentials = async () => {
+      // Check if god credentials should be displayed
       const shouldShow = await Database.shouldShowGodCredentials()
       setShowGodCredentials(shouldShow)
       
+      // Get supergod account if exists
       const superGod = await Database.getSuperGod()
       const firstLoginFlags = await Database.getFirstLoginFlags()
       setShowSuperGodCredentials(superGod !== null && firstLoginFlags['supergod'] === true)
       
+      // Update timer for god credentials expiry
       if (shouldShow) {
         const expiry = await Database.getGodCredentialsExpiry()
         const updateTimer = () => {
           const now = Date.now()
           const diff = expiry - now
           
+          // Hide credentials when expired
           if (diff <= 0) {
             setShowGodCredentials(false)
             setTimeRemaining('')
           } else {
+            // Display remaining time in minutes and seconds
             const minutes = Math.floor(diff / 60000)
             const seconds = Math.floor((diff % 60000) / 1000)
             setTimeRemaining(`${minutes}m ${seconds}s`)

@@ -1,18 +1,45 @@
+/**
+ * Package Loader Module
+ * 
+ * Handles the initialization and loading of the modular package system.
+ * Discovers packages from the /packages directory, builds a registry,
+ * and exports seed data for components, scripts, and metadata.
+ * 
+ * Supports both modular packages (new) and legacy packages from catalog.
+ */
+
 import { PACKAGE_CATALOG } from './package-catalog'
 import { loadPackageComponents } from './declarative-component-renderer'
 import { buildPackageRegistry, exportAllPackagesForSeed, type PackageRegistry } from './package-glue'
 
+// Track initialization state to prevent duplicate loading
 let isInitialized = false
+// Cache the package registry after first load
 let packageRegistry: PackageRegistry | null = null
 
+/**
+ * Initializes the package system by loading all available packages
+ * This function is idempotent - calling multiple times is safe
+ * 
+ * Steps:
+ * 1. Check if already initialized (return early if so)
+ * 2. Build package registry from /packages directory
+ * 3. Extract and export seed data
+ * 4. Load package components into renderer
+ * 5. Load legacy packages from catalog
+ * 
+ * @async
+ * @returns {Promise<void>}
+ */
 export async function initializePackageSystem() {
   if (isInitialized) return
 
   // Load modular packages from /packages folder structure
   try {
+    // Build registry with all packages found in /packages
     packageRegistry = await buildPackageRegistry()
     
-    // Export seed data from modular packages
+    // Extract seed data from modular packages (components, scripts, metadata)
     const seedData = exportAllPackagesForSeed(packageRegistry)
     
     // TODO: Replace with proper persistent storage (currently no-op)
@@ -32,7 +59,7 @@ export async function initializePackageSystem() {
     console.warn('⚠️ Could not load modular packages:', error)
   }
 
-  // Load legacy packages from catalog
+  // Load legacy packages from catalog for backward compatibility
   Object.values(PACKAGE_CATALOG).forEach(pkg => {
     if (pkg.content) {
       loadPackageComponents(pkg.content)

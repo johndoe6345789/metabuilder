@@ -1,8 +1,77 @@
 # Scripts Directory
 
-This directory contains utility scripts for development and testing.
+This directory contains utility scripts for development, testing, database management, and quality assurance.
 
-## Available Scripts
+## 📋 Overview
+
+Scripts organized by function:
+
+### Quality & Documentation
+
+- **`doc-quality-checker.sh`** - Documentation quality assessment tool (0-100% scoring)
+
+### Database
+
+- **`migrate-to-prisma.sh`** - Migrate existing database to Prisma ORM
+- **`migrate-to-prisma.cjs`** - CJS-based migration utility
+- **`setup-packages.cjs`** - Initialize package structure
+
+### Testing & Deployment
+
+- **`run-act.sh`** - Run GitHub Actions workflows locally
+- **`test-workflows.sh`** - Validate workflow definitions
+
+### Debugging
+
+- **`diagnose-workflows.sh`** - Diagnose workflow issues
+- **`capture-screenshot.ts`** - Capture UI screenshots
+
+## 🚀 Common Tasks
+
+### Check Documentation Quality
+
+```bash
+# Basic check
+./scripts/doc-quality-checker.sh /workspaces/metabuilder
+
+# Detailed output
+./scripts/doc-quality-checker.sh /workspaces/metabuilder true
+```
+
+Returns:
+- README Coverage (%)
+- Documentation Structure (%)
+- Code Comments (%)
+- JSDoc Coverage (%)
+- Type Annotations (%)
+- Examples/Guides (%)
+- Architecture Docs (%)
+- Security Docs (%)
+- **Overall Quality Score & Recommendations**
+
+Quality Rating:
+- 90-100%: Excellent
+- 80-89%: Good
+- 70-79%: Fair
+- 60-69%: Poor
+- 0-59%: Very Poor
+
+### Run GitHub Actions Locally
+
+```bash
+# Run all workflows
+./scripts/run-act.sh
+
+# Requires 'act' tool: https://github.com/nektos/act
+```
+
+### Migrate to Prisma
+
+```bash
+./scripts/migrate-to-prisma.sh
+```
+
+## 📚 Available Scripts
 
 ### `run-act.sh`
 

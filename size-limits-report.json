@@ -1,0 +1,42 @@
+{
+  "timestamp": "2025-12-25T12:28:51.482Z",
+  "errors": 0,
+  "warnings": 5,
+  "violations": [
+    {
+      "file": "/workspaces/metabuilder/eslint.config.js",
+      "metric": "Max Nesting Depth",
+      "current": 6,
+      "limit": 3,
+      "severity": "warning"
+    },
+    {
+      "file": "/workspaces/metabuilder/middleware.ts",
+      "metric": "Max Nesting Depth",
+      "current": 5,
+      "limit": 3,
+      "severity": "warning"
+    },
+    {
+      "file": "/workspaces/metabuilder/next.config.ts",
+      "metric": "Max Nesting Depth",
+      "current": 6,
+      "limit": 3,
+      "severity": "warning"
+    },
+    {
+      "file": "/workspaces/metabuilder/playwright.config.ts",
+      "metric": "Max Nesting Depth",
+      "current": 6,
+      "limit": 3,
+      "severity": "warning"
+    },
+    {
+      "file": "/workspaces/metabuilder/vitest.config.ts",
+      "metric": "Max Nesting Depth",
+      "current": 5,
+      "limit": 3,
+      "severity": "warning"
+    }
+  ]
+}

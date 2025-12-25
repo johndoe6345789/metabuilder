@@ -1,6 +1,16 @@
+/**
+ * Authentication and Authorization Module
+ * 
+ * Handles user authentication, permission checking, and role-based access control.
+ * Implements a 5-level hierarchical permission system where each level inherits
+ * permissions from lower levels.
+ */
+
 import type { User, UserRole } from './level-types'
 import { generateScrambledPassword } from './password-utils'
 
+// Pre-generated scrambled passwords for default user accounts
+// Each role has a unique scrambled password for authentication
 const SCRAMBLED_PASSWORDS = {
   supergod: generateScrambledPassword(16),
   god: generateScrambledPassword(16),
@@ -8,6 +18,8 @@ const SCRAMBLED_PASSWORDS = {
   demo: generateScrambledPassword(16),
 }
 
+// Default users created during application initialization
+// These provide initial access points for different permission levels
 export const DEFAULT_USERS: User[] = [
   {
     id: 'user_supergod',
@@ -44,8 +56,14 @@ export const DEFAULT_USERS: User[] = [
   },
 ]
 
+// Maps usernames to their scrambled passwords for authentication
 export const DEFAULT_CREDENTIALS: Record<string, string> = SCRAMBLED_PASSWORDS
 
+/**
+ * Gets the scrambled password for a given username
+ * @param username - The username to look up
+ * @returns The scrambled password, or empty string if not found
+ */
 export function getScrambledPassword(username: string): string {
   return SCRAMBLED_PASSWORDS[username as keyof typeof SCRAMBLED_PASSWORDS] || ''
 }

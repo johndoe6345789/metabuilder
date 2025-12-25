@@ -1,13 +1,14 @@
 # E2E Testing Guide
 
-This directory contains end-to-end tests for the metabuilder application using Playwright.
+This directory contains comprehensive end-to-end tests for MetaBuilder using Playwright.
 
-## Test Files
+## 📋 Test Files
 
+- **`smoke.spec.ts`** - Basic smoke tests verifying core functionality
 - **`login.spec.ts`** - Tests for login functionality, authentication, and password changes
 - **`crud.spec.ts`** - Tests for CRUD operations, data tables, and schema editing
 
-## Running Tests
+## 🚀 Running Tests
 
 ### Prerequisites
 
@@ -18,6 +19,116 @@ npm install
 # Install Playwright browsers (if not already installed)
 npx playwright install chromium
 ```
+
+### Running All Tests
+
+```bash
+npm run test:e2e
+```
+
+### Running Specific Test
+
+```bash
+npm run test:e2e -- login.spec.ts
+```
+
+### Running in UI Mode
+
+```bash
+npm run test:e2e:ui
+```
+
+Launches interactive Playwright Inspector with UI controls.
+
+### Running in Headed Mode
+
+```bash
+npm run test:e2e:headed
+```
+
+Runs tests with visible browser window (useful for debugging).
+
+### Debug Mode
+
+```bash
+npx playwright test --debug
+```
+
+Step through tests line by line with debugger.
+
+## 🧪 Test Structure
+
+Each test file follows this pattern:
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('user action description', async ({ page }) => {
+  // 1. Navigate to page
+  await page.goto('/');
+  
+  // 2. Interact with elements
+  await page.fill('[data-testid="input"]', 'value');
+  
+  // 3. Assert results
+  await expect(page.locator('text=expected')).toBeVisible();
+});
+```
+
+### Key Test Patterns
+
+**Login Test**
+```typescript
+test('user can log in', async ({ page }) => {
+  await page.goto('/login');
+  await page.fill('[name="password"]', 'password');
+  await page.click('button[type="submit"]');
+  await expect(page).toHaveURL('/');
+});
+```
+
+**CRUD Test**
+```typescript
+test('user can create item', async ({ page }) => {
+  await page.goto('/items');
+  await page.click('button:has-text("Create")');
+  await page.fill('[name="title"]', 'New Item');
+  await page.click('button:has-text("Save")');
+  await expect(page.locator('text=New Item')).toBeVisible();
+});
+```
+
+**Permission Test**
+```typescript
+test('unauthorized users cannot access admin', async ({ page }) => {
+  await page.goto('/admin');
+  await expect(page).toHaveURL(/login|unauthorized/);
+});
+```
+
+## 🔧 Configuration
+
+Tests are configured in `playwright.config.ts`:
+
+- **Base URL**: `http://localhost:5173`
+- **Browsers**: Chromium, Firefox, WebKit
+- **Timeout**: 30 seconds per test
+- **Retries**: 2 attempts on failure
+- **Headless**: true (set false to see browser)
+
+## 📊 Test Coverage
+
+Current tests verify:
+
+- ✅ **Authentication** - Login with various credentials
+- ✅ **Permission Levels** - User, Admin, God access control
+- ✅ **CRUD Operations** - Create, Read, Update, Delete
+- ✅ **Data Tables** - Sorting, filtering, pagination
+- ✅ **Navigation** - Menu and route transitions
+- ✅ **Error Handling** - Error messages and recovery
+- ✅ **Schema Management** - Dynamic schema editing
+
+## 🐛 Debugging Failed Tests
 
 ### Running Tests Locally
 
