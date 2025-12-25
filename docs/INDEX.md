@@ -69,6 +69,41 @@ Completed phases and historical work.
 
 - **[PHASE2_SUMMARY.md](archive/PHASE2_SUMMARY.md)** - Phase 2 completion summary
 
+## Code-to-Documentation Mapping
+
+### [Source Code (src/)](src/)
+Documentation for TypeScript/React source code
+
+- **[components/](src/components/)** - React components (atoms, molecules, organisms)
+- **[lib/](src/lib/)** - Core library modules (auth, database, lua, packages)
+- **[hooks/](src/hooks/)** - React custom hooks
+- **[seed-data/](src/seed-data/)** - Database seed data
+- **[types/](src/types/)** - TypeScript type definitions
+- **[styles/](src/styles/)** - Styling system and Tailwind configuration
+- **[tests/](src/tests/)** - Unit and integration tests
+
+### [DBAL (Data Abstraction Layer)](dbal/)
+Documentation for C++ and TypeScript database layer
+
+- **[api/](dbal/api/)** - API schemas and versioning
+- **[backends/](dbal/backends/)** - Database backend implementations (Prisma, SQLite)
+- **[common/](dbal/common/)** - Shared DBAL utilities
+- **[cpp/](dbal/cpp/)** - C++ implementation
+- **[ts/](dbal/ts/)** - TypeScript implementation
+- **[tools/](dbal/tools/)** - Development tools
+- **[scripts/](dbal/scripts/)** - Automation scripts
+
+### [Packages](packages/)
+Documentation for feature packages
+
+- **[admin_dialog.md](packages/admin_dialog.md)** - Admin dialog components
+- **[dashboard.md](packages/dashboard.md)** - Dashboard components
+- **[data_table.md](packages/data_table.md)** - Data table component
+- **[form_builder.md](packages/form_builder.md)** - Form builder system
+- **[nav_menu.md](packages/nav_menu.md)** - Navigation menu components
+- **[notification_center.md](packages/notification_center.md)** - Notification system
+- **[spark-tools.md](packages/spark-tools.md)** - Development tools package
+
 ## Additional Topics
 
 ### Architecture
