@@ -1,5 +1,3 @@
-import { getSystemConfigValue } from '@/lib/db/system-config/get-system-config-value'
-
 const RATE_LIMIT_WINDOW_KEY = 'rate_limit_window_ms'
 const MAX_REQUESTS_KEY = 'rate_limit_max_requests'
 
@@ -33,6 +31,7 @@ export async function loadRateLimitConfig(): Promise<void> {
   configLoadPromise = (async () => {
     try {
       const envConfig = getEnvRateLimitConfig()
+      const { getSystemConfigValue } = await import('@/lib/db/system-config/get-system-config-value')
       const [windowValue, maxRequestsValue] = await Promise.all([
         getSystemConfigValue(RATE_LIMIT_WINDOW_KEY),
         getSystemConfigValue(MAX_REQUESTS_KEY),
