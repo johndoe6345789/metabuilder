@@ -1,54 +1,9 @@
-import { useState, type ComponentType } from 'react'
-import { Box, Card, InputAdornment, Stack, TextField, Typography } from '@mui/material'
-import type { SvgIconProps } from '@mui/material'
-import CropFreeIcon from '@mui/icons-material/CropFree'
-import ViewColumnIcon from '@mui/icons-material/ViewColumn'
-import GridViewIcon from '@mui/icons-material/GridView'
-import ViewStreamIcon from '@mui/icons-material/ViewStream'
-import CropPortraitIcon from '@mui/icons-material/CropPortrait'
-import TouchAppIcon from '@mui/icons-material/TouchApp'
-import TextFieldsIcon from '@mui/icons-material/TextFields'
-import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft'
-import LocalOfferIcon from '@mui/icons-material/LocalOffer'
-import LooksOneIcon from '@mui/icons-material/LooksOne'
-import ArticleIcon from '@mui/icons-material/Article'
-import VerifiedIcon from '@mui/icons-material/Verified'
-import ToggleOnIcon from '@mui/icons-material/ToggleOn'
-import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import RemoveIcon from '@mui/icons-material/Remove'
-import WarningAmberIcon from '@mui/icons-material/WarningAmber'
-import AutorenewIcon from '@mui/icons-material/Autorenew'
-import TuneIcon from '@mui/icons-material/Tune'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import TableChartIcon from '@mui/icons-material/TableChart'
-import ChatIcon from '@mui/icons-material/Chat'
+import { useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search'
-import { componentCatalog } from '@/lib/component-catalog'
+import { Box, Card, InputAdornment, Stack, TextField, Typography } from '@mui/material'
+import { getComponentIcon } from '@/components/get-component-icon'
 import type { ComponentDefinition } from '@/lib/builder-types'
-
-const iconMap: Record<string, ComponentType<SvgIconProps>> = {
-  FrameCorners: CropFreeIcon,
-  Columns: ViewColumnIcon,
-  GridFour: GridViewIcon,
-  Stack: ViewStreamIcon,
-  Card: CropPortraitIcon,
-  CursorClick: TouchAppIcon,
-  TextT: TextFieldsIcon,
-  TextAlignLeft: FormatAlignLeftIcon,
-  Tag: LocalOfferIcon,
-  TextHOne: LooksOneIcon,
-  Article: ArticleIcon,
-  Seal: VerifiedIcon,
-  ToggleRight: ToggleOnIcon,
-  CheckSquare: CheckBoxIcon,
-  Minus: RemoveIcon,
-  Warning: WarningAmberIcon,
-  CircleNotch: AutorenewIcon,
-  SlidersHorizontal: TuneIcon,
-  UserCircle: AccountCircleIcon,
-  Table: TableChartIcon,
-  Chat: ChatIcon,
-}
+import { componentCatalog } from '@/lib/component-catalog'
 
 interface ComponentCatalogProps {
   onDragStart: (component: ComponentDefinition) => void
@@ -63,11 +18,6 @@ export function ComponentCatalog({ onDragStart }: ComponentCatalogProps) {
   )
 
   const categories = Array.from(new Set(componentCatalog.map(c => c.category)))
-
-  const getIcon = (iconName: string) => {
-    const Icon = iconMap[iconName]
-    return Icon ? <Icon sx={{ fontSize: 20 }} /> : null
-  }
 
   return (
     <Box
@@ -142,7 +92,7 @@ export function ComponentCatalog({ onDragStart }: ComponentCatalogProps) {
                     >
                       <Stack spacing={1} alignItems="center" textAlign="center">
                         <Box sx={{ color: 'primary.main', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          {getIcon(component.icon)}
+                          {getComponentIcon(component.icon, { sx: { fontSize: 20 } })}
                         </Box>
                         <Typography variant="caption" sx={{ fontWeight: 600 }}>
                           {component.label}
