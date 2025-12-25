@@ -1,53 +1,191 @@
-# Documentation Index
+# MetaBuilder Documentation Index
 
-Welcome to MetaBuilder documentation. This guide helps you find what you need.
+Welcome to the MetaBuilder documentation. This is your central hub for all project information, organized by category for easy navigation.
 
-## Start Here
+## 📚 Quick Navigation
 
-- **[README.md](README.md)** - Project overview and quick start
-- **[PRD.md](PRD.md)** - Product requirements and feature specifications
-- **[SECURITY.md](SECURITY.md)** - Security policies and best practices
+### 🚀 [Getting Started](./getting-started/)
+Start here if you're new to the project:
+- **[README](./README.md)** - Project overview
+- **[PRD.md](./getting-started/PRD.md)** - Product requirements & features
+- **[QUICK_START.md](./getting-started/QUICK_START.md)** - Set up your development environment
 
-## Documentation by Topic
+### 🏗️ [Architecture](./architecture/)
+Understand the system design:
+- **[5-Level System](./architecture/5-level-system.md)** - Core architecture layers
+- **[Data-Driven Architecture](./architecture/data-driven-architecture.md)** - Declarative design patterns
+- **[Database Design](./architecture/database.md)** - Database schema and structure
+- **[Packages System](./architecture/packages.md)** - Package-based components
+- **[Generic Components](./architecture/generic-page-system.md)** - Rendering architecture
 
-### [Guides](guides/)
-Quick references and setup instructions for developers.
+### 🧪 [Testing](./testing/)
+Everything about testing the application:
+- **[Testing Guidelines](./testing/TESTING_GUIDELINES.md)** - Best practices and standards
+- **[Unit Tests](./testing/UNIT_TESTS_IMPLEMENTATION.md)** - Test implementation guide
+- **[Quick Reference](./testing/quick-reference.md)** - Common testing patterns
 
-- **[IMPLEMENTATION_ROADMAP.md](guides/IMPLEMENTATION_ROADMAP.md)** - Feature development timeline
-- **[ATOMIC_QUICKSTART.md](guides/ATOMIC_QUICKSTART.md)** - Get started with atomic design patterns
-- **[ACT_QUICK_REFERENCE.md](guides/ACT_QUICK_REFERENCE.md)** - GitHub Actions testing quick ref
-- **[SASS_QUICKSTART.md](guides/SASS_QUICKSTART.md)** - SASS/SCSS quick start
-- **[SASS_QUICK_REFERENCE.md](guides/SASS_QUICK_REFERENCE.md)** - SASS/SCSS styling guide
-- **[SASS_DOCUMENTATION_INDEX.md](guides/SASS_DOCUMENTATION_INDEX.md)** - SASS documentation index
-- **[SASS_EXAMPLES.md](guides/SASS_EXAMPLES.md)** - SASS code examples
-- **[github-actions-local-testing.md](guides/github-actions-local-testing.md)** - Test workflows locally
+### 🔒 [Security](./security/)
+Security documentation and standards:
+- **[Security Guide](./security/SECURITY.md)** - Security best practices
+- **[Secure Database Layer](./security/SECURE_DATABASE_LAYER.md)** - Database security
+- **[Database Security](./security/secure-db-implementation.md)** - Implementation details
 
-### [Implementation Guides](implementation/)
-Deep-dive documentation on implemented features and architecture.
+### 🔧 [API Reference](./api/)
+API documentation and integration guides:
+- **[Platform Guide](./api/platform-guide.md)** - Complete API reference
+- **[Quick Reference](./api/quick-reference.md)** - Common API patterns
+- **[DBAL Integration](./api/DBAL_INTEGRATION.md)** - Database abstraction layer
 
-- **[COMPONENT_MAP.md](implementation/COMPONENT_MAP.md)** - Component structure and organization
-- **[ATOMIC_DESIGN.md](implementation/ATOMIC_DESIGN.md)** - Atomic design system
-- **[MULTI_TENANT_SYSTEM.md](implementation/MULTI_TENANT_SYSTEM.md)** - Multi-tenancy architecture
-- **[PRISMA_IMPLEMENTATION_COMPLETE.md](implementation/PRISMA_IMPLEMENTATION_COMPLETE.md)** - Database layer
-- **[DBAL_INTEGRATION.md](implementation/DBAL_INTEGRATION.md)** - Data abstraction layer
-- **[SECURE_DATABASE_LAYER.md](implementation/SECURE_DATABASE_LAYER.md)** - Database security
-- **[BLOB_STORAGE_IMPLEMENTATION.md](implementation/BLOB_STORAGE_IMPLEMENTATION.md)** - File storage
-- **[NEXTJS_MIGRATION.md](implementation/NEXTJS_MIGRATION.md)** - Next.js migration
-- **[UNIT_TESTS_IMPLEMENTATION.md](implementation/UNIT_TESTS_IMPLEMENTATION.md)** - Testing strategy
+### 📋 [Implementation Guides](./implementation/)
+Detailed implementation documentation:
+- **[Component Map](./implementation/COMPONENT_MAP.md)** - Component structure
+- **[Multi-Tenant System](./implementation/MULTI_TENANT_SYSTEM.md)** - Multi-tenancy guide
+- **[Prisma Implementation](./implementation/PRISMA_IMPLEMENTATION_COMPLETE.md)** - ORM setup
+- **[TypeScript Enhancements](./implementation/TYPESCRIPT_DBAL_ENHANCEMENTS.md)** - Type system improvements
 
-### [Build System](builds/)
-C++ build, compilation, and cross-platform setup.
+### 🔄 [Refactoring](./refactoring/)
+Refactoring guides and tracking:
+- **[Refactoring Strategy](./refactoring/REFACTORING_STRATEGY.md)** - Overall strategy
+- **[Quick Reference](./refactoring/REFACTORING_QUICK_REFERENCE.md)** - Common patterns
+- **[Enforcement Guide](./refactoring/REFACTORING_ENFORCEMENT_GUIDE.md)** - Standards
+- **[Checklist](./refactoring/REFACTORING_CHECKLIST.md)** - Implementation checklist
 
-- **[CROSS_PLATFORM_BUILD.md](builds/CROSS_PLATFORM_BUILD.md)** - Cross-platform compilation
-- **[CPP_BUILD_QUICK_REF.md](builds/CPP_BUILD_QUICK_REF.md)** - C++ build quick reference
-- **[CPP_BUILD_ASSISTANT.md](builds/CPP_BUILD_ASSISTANT.md)** - Build troubleshooting
+### 🚨 [Troubleshooting](./troubleshooting/)
+Solutions to common issues:
+- Check for known issues and solutions
+- Database setup problems
+- Build and deployment issues
 
-### [Deployments & CI/CD](deployments/)
-Production deployment, containerization, and continuous integration.
+### 📚 [Reference Documentation](./reference/)
+Additional references:
+- **[Documentation Index](./reference/documentation-index.md)** - Detailed doc structure
+- Architecture and design patterns
+- Lua scripting guide
+- Database migration guides
 
-- **[NGINX_INTEGRATION.md](deployments/NGINX_INTEGRATION.md)** - Web server configuration
-- **[GITHUB_WORKFLOWS_AUDIT.md](deployments/GITHUB_WORKFLOWS_AUDIT.md)** - CI/CD pipeline review
-- **[CI_CD_SUMMARY.md](deployments/CI_CD_SUMMARY.md)** - Build & deployment overview
+---
+
+## 🎯 Common Tasks
+
+### I want to...
+
+**...get started with development**
+→ Go to [Getting Started](./getting-started/README.md)
+
+**...understand the architecture**
+→ Read [5-Level System](./architecture/5-level-system.md)
+
+**...write tests**
+→ Check [Testing Guidelines](./testing/TESTING_GUIDELINES.md)
+
+**...secure my code**
+→ Review [Security Guide](./security/SECURITY.md)
+
+**...refactor code**
+→ See [Refactoring Strategy](./refactoring/REFACTORING_STRATEGY.md)
+
+**...integrate with the database**
+→ Learn about [DBAL Integration](./api/DBAL_INTEGRATION.md)
+
+**...create a new package**
+→ Follow [Packages System](./architecture/packages.md)
+
+---
+
+## 📂 Documentation Structure
+
+```
+docs/
+├── README.md                          # Project overview
+├── INDEX.md                           # This file - documentation map
+│
+├── getting-started/                   # For new developers
+│   ├── PRD.md
+│   └── QUICK_START.md
+│
+├── architecture/                      # System design
+│   ├── 5-level-system.md
+│   ├── data-driven-architecture.md
+│   ├── database.md
+│   ├── packages.md
+│   └── generic-page-system.md
+│
+├── testing/                           # Test documentation
+│   ├── TESTING_GUIDELINES.md
+│   ├── UNIT_TESTS_IMPLEMENTATION.md
+│   └── quick-reference.md
+│
+├── security/                          # Security docs
+│   ├── SECURITY.md
+│   └── SECURE_DATABASE_LAYER.md
+│
+├── api/                               # API documentation
+│   ├── platform-guide.md
+│   ├── quick-reference.md
+│   └── DBAL_INTEGRATION.md
+│
+├── implementation/                    # Detailed guides
+│   ├── COMPONENT_MAP.md
+│   ├── MULTI_TENANT_SYSTEM.md
+│   ├── PRISMA_IMPLEMENTATION_COMPLETE.md
+│   └── TYPESCRIPT_DBAL_ENHANCEMENTS.md
+│
+├── refactoring/                       # Refactoring guides
+│   ├── REFACTORING_STRATEGY.md
+│   ├── REFACTORING_QUICK_REFERENCE.md
+│   ├── REFACTORING_ENFORCEMENT_GUIDE.md
+│   └── REFACTORING_CHECKLIST.md
+│
+├── development/                       # Development guides
+│   └── typescript-reduction-guide.md
+│
+├── troubleshooting/                   # Troubleshooting
+│   └── (Known issues and solutions)
+│
+└── reference/                         # Additional references
+    ├── documentation-index.md
+    └── (Other reference materials)
+```
+
+---
+
+## 🏆 Key Concepts
+
+### Five-Level Architecture
+MetaBuilder uses a sophisticated 5-level architecture:
+1. **Level 0**: Global system configuration
+2. **Level 1**: Tenant-specific features
+3. **Level 2**: Module and package definitions
+4. **Level 3**: Entity and form configurations
+5. **Level 4**: Individual records and data
+
+→ Learn more: [5-Level System](./architecture/5-level-system.md)
+
+### Data-Driven Design
+95% of functionality is defined through JSON and Lua, not TypeScript.
+→ Learn more: [Data-Driven Architecture](./architecture/data-driven-architecture.md)
+
+### Package System
+Components are organized as self-contained packages with seeds, scripts, and assets.
+→ Learn more: [Packages System](./architecture/packages.md)
+
+### Multi-Tenancy
+Each tenant has isolated configurations, data, and customizations.
+→ Learn more: [Multi-Tenant System](./implementation/MULTI_TENANT_SYSTEM.md)
+
+---
+
+## 📞 Support
+
+If you can't find what you're looking for:
+1. Use the search feature in your editor (Ctrl+F)
+2. Check the [Reference Documentation](./reference/)
+3. Look at existing code examples
+4. Review the [Troubleshooting](./troubleshooting/) section
+
+---
+
+**Last Updated**: December 2025
 
 ### [Migrations](migrations/)
 Data migrations, code refactoring, and relocation guides.
