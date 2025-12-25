@@ -1,6 +1,6 @@
 import type { PageDefinition } from './page-renderer'
 import type { ComponentInstance } from './builder-types'
-import { Database } from './database'
+import { Database } from '@/lib/database'
 
 export class PageDefinitionBuilder {
   private pages: PageDefinition[] = []

@@ -1,5 +1,5 @@
 import { Database } from '@/lib/database'
-import { getPageDefinitionBuilder } from '@/lib/page-definition-builder'
+import { getPageDefinitionBuilder } from '@/lib/rendering/page-definition-builder'
 
 export async function initializePages() {
   const existingPages = await Database.getPages()
