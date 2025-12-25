@@ -2,7 +2,7 @@
 
 ## Critical Build Issues
 
-- [ ] Fix TypeScript config error: `exactOptionalPropertyTypes` requires `strictNullChecks`
+- [x] Fix TypeScript config error: `exactOptionalPropertyTypes` requires `strictNullChecks` (dbd8e49)
 - [ ] Resolve Next.js build failures in `frontends/nextjs`
 - [ ] Fix module resolution issues preventing successful build
 - [ ] Address any circular dependency issues
@@ -10,7 +10,7 @@
 
 ## TypeScript Configuration
 
-- [ ] Enable `strictNullChecks` in tsconfig.json
+- [x] Enable `strictNullChecks` in tsconfig.json (dbd8e49)
 - [ ] Review and fix all null/undefined type errors
 - [ ] Update type definitions for strict mode
 - [ ] Add strict mode to all sub-packages
