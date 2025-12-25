@@ -3,9 +3,12 @@ import { renderHook, act, waitFor } from '@testing-library/react'
 import { useKV } from '@/hooks/useKV'
 
 describe('useKV', () => {
+  const STORAGE_PREFIX = 'mb_kv:'
+  let store: Record<string, string>
+
   beforeEach(() => {
     // Mock localStorage
-    const store: Record<string, string> = {}
+    store = {}
     vi.stubGlobal('localStorage', {
       getItem: vi.fn((key: string) => store[key] ?? null),
       setItem: vi.fn((key: string, value: string) => { store[key] = value }),
@@ -36,13 +39,23 @@ describe('useKV', () => {
   })
 
   it('should load value from localStorage when available', async () => {
-    localStorage.setItem('stored_key', JSON.stringify('stored'))
+    localStorage.setItem(`${STORAGE_PREFIX}stored_key`, JSON.stringify('stored'))
 
     const { result } = renderHook(() => useKV('stored_key', 'default'))
 
     await waitFor(() => {
       expect(result.current[0]).toBe('stored')
     })
+  })
+
+  it('should migrate legacy localStorage entries to namespaced keys', () => {
+    localStorage.setItem('legacy_key', JSON.stringify('legacy'))
+
+    const { result } = renderHook(() => useKV('legacy_key', 'default'))
+
+    expect(result.current[0]).toBe('legacy')
+    expect(localStorage.getItem(`${STORAGE_PREFIX}legacy_key`)).toBe(JSON.stringify('legacy'))
+    expect(localStorage.getItem('legacy_key')).toBeNull()
   })
 
   it('should update value when using updater function', async () => {
@@ -178,6 +191,6 @@ describe('useKV', () => {
       await updateValue('next')
     })
 
-    expect(localStorage.setItem).toHaveBeenCalledWith('persist_key', JSON.stringify('next'))
+    expect(localStorage.setItem).toHaveBeenCalledWith(`${STORAGE_PREFIX}persist_key`, JSON.stringify('next'))
   })
 })
