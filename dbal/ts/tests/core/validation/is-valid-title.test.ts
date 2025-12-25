@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { isValidTitle } from '../../../src/core/validation/is-valid-title'
 
-const maxTitle = 'a'.repeat(200)
-const tooLongTitle = 'a'.repeat(201)
+const maxTitle = 'a'.repeat(255)
+const tooLongTitle = 'a'.repeat(256)
 
 describe('isValidTitle', () => {
   it.each([

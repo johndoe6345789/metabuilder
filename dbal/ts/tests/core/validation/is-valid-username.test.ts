@@ -6,6 +6,7 @@ const fiftyOneChars = 'a'.repeat(51)
 
 describe('isValidUsername', () => {
   it.each([
+    { username: 'ab', expected: false, description: 'too short' },
     { username: 'user', expected: true, description: 'simple username' },
     { username: 'user_name-123', expected: true, description: 'allowed symbols' },
     { username: fiftyChars, expected: true, description: 'max length' },

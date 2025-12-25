@@ -1,12 +1,13 @@
 import { describe, it, expect } from 'vitest'
 import { isValidSlug } from '../../../src/core/validation/is-valid-slug'
 
-const maxSlug = 'a'.repeat(100)
-const tooLongSlug = 'a'.repeat(101)
+const maxSlug = 'a'.repeat(255)
+const tooLongSlug = 'a'.repeat(256)
 
 describe('isValidSlug', () => {
   it.each([
     { slug: 'my-page-1', expected: true, description: 'lowercase with hyphens' },
+    { slug: 'docs/getting-started', expected: true, description: 'includes slashes' },
     { slug: 'a', expected: true, description: 'single character' },
     { slug: maxSlug, expected: true, description: 'max length' },
     { slug: '', expected: false, description: 'empty string' },
