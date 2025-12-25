@@ -1,16 +1,16 @@
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Input } from '@/components/ui'
+import { Label } from '@/components/ui'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
+} from '@/components/ui'
+import { Switch } from '@/components/ui'
 import { Plus, Trash } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import type { ModelSchema, FieldSchema, FieldType } from '@/lib/schema-types'

@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui'
+import { Avatar, AvatarFallback } from '@/components/ui'
+import { Badge } from '@/components/ui'
 import { SignOut, House } from '@phosphor-icons/react'
 
 interface AppHeaderProps {

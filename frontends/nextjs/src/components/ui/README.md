@@ -29,10 +29,10 @@ ui/
 ## Usage
 
 ```tsx
-// Import from the main index
+// Prefer the main barrel import
 import { Button, Card, Table, Dialog } from '@/components/ui'
 
-// Or import from specific category
+// Category imports are available when you want stricter layering
 import { Button, Input } from '@/components/ui/atoms'
 import { Card, Select } from '@/components/ui/molecules'
 import { Table, Form } from '@/components/ui/organisms'
@@ -79,8 +79,8 @@ import styles from './MyComponent.module.scss'
 
 ## Legacy Files
 
-⚠️ **Files in the root of this directory (like `button.tsx`, `dialog.tsx`, etc.) are LEGACY** 
-and will be removed. Only use components from:
+⚠️ **Root wrapper files (like `button.tsx`, `dialog.tsx`, etc.) are legacy** and exist for
+backward compatibility. Avoid `@/components/ui/<component>` imports and use:
 - `atoms/`
 - `molecules/`
 - `organisms/`

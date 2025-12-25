@@ -1,14 +1,14 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Button } from '@/components/ui'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui'
+import { Skeleton } from '@/components/ui'
+import { Badge } from '@/components/ui'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { CheckCircle, XCircle, ArrowClockwise, ArrowSquareOut, Info, Warning, TrendUp, TrendDown, Robot, Download, FileText } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Octokit } from 'octokit'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { ScrollArea } from '@/components/ui'
 
 interface WorkflowRun {
   id: number

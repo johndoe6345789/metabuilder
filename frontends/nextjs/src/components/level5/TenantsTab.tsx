@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { ScrollArea } from '@/components/ui'
+import { Badge } from '@/components/ui'
 import { Buildings, House } from '@phosphor-icons/react'
 import type { Tenant, User } from '@/lib/level-types'
 

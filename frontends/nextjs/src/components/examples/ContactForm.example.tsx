@@ -2,8 +2,8 @@
 // This file serves as a reference for building well-documented components
 
 import { useState, useCallback } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui'
+import { Input } from '@/components/ui'
 import { useAuth } from '@/hooks'
 
 /**

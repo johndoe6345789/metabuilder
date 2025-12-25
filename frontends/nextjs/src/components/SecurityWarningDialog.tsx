@@ -6,12 +6,12 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
+} from '@/components/ui'
+import { Button } from '@/components/ui'
+import { Alert, AlertDescription } from '@/components/ui'
+import { ScrollArea } from '@/components/ui'
+import { Badge } from '@/components/ui'
+import { Separator } from '@/components/ui'
 import { ShieldWarning, Warning, Info, CheckCircle } from '@phosphor-icons/react'
 import type { SecurityScanResult, SecurityIssue } from '@/lib/security-scanner'
 import { getSeverityColor, getSeverityIcon } from '@/lib/security-scanner'

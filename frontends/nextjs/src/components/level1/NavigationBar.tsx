@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui'
 import { List, X, User, ShieldCheck } from '@phosphor-icons/react'
 
 interface NavigationBarProps {

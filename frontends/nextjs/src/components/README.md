@@ -236,7 +236,7 @@ import { ComponentCatalog } from '@/components/ComponentCatalog'
 
 ### New Way (recommended)
 ```typescript
-import { Button } from '@/components/atoms'
+import { Button } from '@/components/ui'
 import { ComponentCatalog } from '@/components/organisms'
 ```
 
@@ -271,7 +271,7 @@ export function FormField({ label, error, ...props }: FormFieldProps) {
 // Organism handling data fetching and display
 import { useKV } from '@github/spark/hooks'
 import { Button } from '@/components/atoms'
-import { Card } from '@/components/ui/card'
+import { Card } from '@/components/ui'
 
 export function UserList() {
   const [users] = useKV('users', [])

@@ -8,7 +8,7 @@
 
 import { useState, useEffect } from 'react'
 import { Toaster } from '@/components/ui/sonner'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui'
 // Import level-specific UI components
 import { Level1 } from '@/components/Level1'
 import { Level2 } from '@/components/Level2'

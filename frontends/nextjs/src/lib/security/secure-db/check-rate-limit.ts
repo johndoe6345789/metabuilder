@@ -1,17 +1,18 @@
-import { RATE_LIMIT_WINDOW, MAX_REQUESTS_PER_WINDOW, rateLimitMap } from './rate-limit-store'
+import { getRateLimitConfig, rateLimitMap } from './rate-limit-store'
 
 /**
  * Check if user is within rate limits
  */
 export function checkRateLimit(userId: string): boolean {
+  const { windowMs, maxRequests } = getRateLimitConfig()
   const now = Date.now()
   const userRequests = rateLimitMap.get(userId) || []
   
   const recentRequests = userRequests.filter(
-    timestamp => now - timestamp < RATE_LIMIT_WINDOW
+    timestamp => now - timestamp < windowMs
   )
   
-  if (recentRequests.length >= MAX_REQUESTS_PER_WINDOW) {
+  if (recentRequests.length >= maxRequests) {
     return false
   }
   

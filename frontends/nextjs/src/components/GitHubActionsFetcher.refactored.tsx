@@ -1,14 +1,14 @@
 import { useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Button } from '@/components/ui'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui'
+import { Skeleton } from '@/components/ui'
+import { Badge } from '@/components/ui'
 import { ArrowClockwise, Info, Warning } from '@phosphor-icons/react'
 import { useGitHubFetcher } from '@/hooks/useGitHubFetcher'
 import { useAutoRefresh } from '@/hooks/useAutoRefresh'
 import { WorkflowRunCard } from '@/components/WorkflowRunCard'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { ScrollArea } from '@/components/ui'
 
 /**
  * Refactored GitHub Actions Fetcher Component

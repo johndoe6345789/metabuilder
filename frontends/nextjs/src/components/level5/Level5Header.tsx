@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui'
+import { Badge } from '@/components/ui'
 import { Crown, SignOut, Terminal } from '@phosphor-icons/react'
 
 interface Level5HeaderProps {

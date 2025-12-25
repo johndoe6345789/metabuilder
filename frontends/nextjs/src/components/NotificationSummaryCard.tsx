@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
-import { Badge } from '@/components/ui/badge'
-import { Card } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
+import { Badge } from '@/components/ui'
+import { Card } from '@/components/ui'
+import { Separator } from '@/components/ui'
 
 export type NotificationSeverity = 'info' | 'warning' | 'critical'
 

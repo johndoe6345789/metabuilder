@@ -1,4 +1,4 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { Database as DatabaseIcon, Lightning, Code, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear, Palette, ListDashes, Sparkle, Package } from '@phosphor-icons/react'
 import { SchemaEditorLevel4 } from '@/components/SchemaEditorLevel4'
 import { WorkflowEditor } from '@/components/WorkflowEditor'

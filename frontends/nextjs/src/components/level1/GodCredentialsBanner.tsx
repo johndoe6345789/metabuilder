@@ -1,5 +1,5 @@
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui'
+import { Button } from '@/components/ui'
 import { Warning, Eye, EyeSlash, Copy, Check } from '@phosphor-icons/react'
 
 interface GodCredentialsBannerProps {

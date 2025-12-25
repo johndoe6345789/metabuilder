@@ -17,7 +17,6 @@
  */
 
 import { useState, useEffect } from 'react'
-import { Database } from '@/lib/database'
 import { getScrambledPassword } from '@/lib/auth'
 import { NavigationBar } from './level1/NavigationBar'
 import { GodCredentialsBanner } from './level1/GodCredentialsBanner'
@@ -25,7 +24,7 @@ import { HeroSection } from './level1/HeroSection'
 import { FeaturesSection } from './level1/FeaturesSection'
 import { ContactSection } from './level1/ContactSection'
 import { AppFooter } from './shared/AppFooter'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { GitHubActionsFetcher } from './GitHubActionsFetcher'
 
 // Props for Level1 component
@@ -58,42 +57,56 @@ export function Level1({ onNavigate }: Level1Props) {
 
   // Initialize component state on mount
   useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | undefined
+
     const checkCredentials = async () => {
-      // Check if god credentials should be displayed
-      const shouldShow = await Database.shouldShowGodCredentials()
-      setShowGodCredentials(shouldShow)
-      
-      // Get supergod account if exists
-      const superGod = await Database.getSuperGod()
-      const firstLoginFlags = await Database.getFirstLoginFlags()
-      setShowSuperGodCredentials(superGod !== null && firstLoginFlags['supergod'] === true)
-      
-      // Update timer for god credentials expiry
-      if (shouldShow) {
-        const expiry = await Database.getGodCredentialsExpiry()
-        const updateTimer = () => {
-          const now = Date.now()
-          const diff = expiry - now
-          
-          // Hide credentials when expired
-          if (diff <= 0) {
-            setShowGodCredentials(false)
-            setTimeRemaining('')
-          } else {
+      try {
+        const { Database } = await import('@/lib/database')
+
+        // Check if god credentials should be displayed
+        const shouldShow = await Database.shouldShowGodCredentials()
+        setShowGodCredentials(shouldShow)
+
+        // Get supergod account if exists
+        const superGod = await Database.getSuperGod()
+        const firstLoginFlags = await Database.getFirstLoginFlags()
+        setShowSuperGodCredentials(superGod !== null && firstLoginFlags['supergod'] === true)
+
+        // Update timer for god credentials expiry
+        if (shouldShow) {
+          const expiry = await Database.getGodCredentialsExpiry()
+          const updateTimer = () => {
+            const now = Date.now()
+            const diff = expiry - now
+
+            // Hide credentials when expired
+            if (diff <= 0) {
+              setShowGodCredentials(false)
+              setTimeRemaining('')
+              return
+            }
+
             // Display remaining time in minutes and seconds
             const minutes = Math.floor(diff / 60000)
             const seconds = Math.floor((diff % 60000) / 1000)
             setTimeRemaining(`${minutes}m ${seconds}s`)
           }
+
+          updateTimer()
+          interval = setInterval(updateTimer, 1000)
         }
-        
-        updateTimer()
-        const interval = setInterval(updateTimer, 1000)
-        return () => clearInterval(interval)
+      } catch {
+        setShowGodCredentials(false)
+        setShowSuperGodCredentials(false)
+        setTimeRemaining('')
       }
     }
-    
-    checkCredentials()
+
+    void checkCredentials()
+
+    return () => {
+      if (interval) clearInterval(interval)
+    }
   }, [])
 
   const handleCopyPassword = async () => {

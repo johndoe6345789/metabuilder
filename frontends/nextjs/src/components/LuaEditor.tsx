@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Input } from '@/components/ui'
+import { Label } from '@/components/ui'
+import { Badge } from '@/components/ui'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/components/ui'
 import { Plus, Trash, Play, CheckCircle, XCircle, FileCode, ArrowsOut, BookOpen, ShieldCheck } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { createLuaEngine, type LuaExecutionResult } from '@/lib/lua-engine'
@@ -19,7 +19,7 @@ import type { LuaScript } from '@/lib/level-types'
 import Editor from '@monaco-editor/react'
 import { useMonaco } from '@monaco-editor/react'
 import { LuaSnippetLibrary } from '@/components/LuaSnippetLibrary'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui'
 import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
 import { SecurityWarningDialog } from '@/components/SecurityWarningDialog'
 

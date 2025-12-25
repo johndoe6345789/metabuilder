@@ -1,6 +1,6 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { ScrollArea } from '@/components/ui'
+import { Badge } from '@/components/ui'
 import { Shield, Users } from '@phosphor-icons/react'
 import type { User } from '@/lib/level-types'
 

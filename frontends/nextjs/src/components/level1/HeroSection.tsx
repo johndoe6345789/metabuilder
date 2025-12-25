@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui'
 
 interface HeroSectionProps {
   onNavigate: (level: number) => void

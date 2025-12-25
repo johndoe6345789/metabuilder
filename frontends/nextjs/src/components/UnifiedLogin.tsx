@@ -1,14 +1,14 @@
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Button } from '@/components/ui'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Input } from '@/components/ui'
+import { Label } from '@/components/ui'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { SignIn, UserPlus, ArrowLeft, Envelope } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Database, hashPassword } from '@/lib/database'
 import { generateScrambledPassword, simulateEmailSend } from '@/lib/password-utils'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Alert, AlertDescription } from '@/components/ui'
 
 interface UnifiedLoginProps {
   onLogin: (credentials: { username: string; password: string }) => void
