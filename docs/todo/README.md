@@ -43,6 +43,13 @@ This folder contains comprehensive TODO lists organized by area of the MetaBuild
 3. **Adding tasks**: Add to the appropriate category file
 4. **Large initiatives**: Create a new numbered TODO file
 
+## Reports (Auto-Generated)
+
+- Run: `python3 scan-project-todos.py`
+- Output:
+  - [TODO_SCAN_REPORT.md](TODO_SCAN_REPORT.md) - repo-wide `TODO/FIXME/HACK/XXX` markers (excluding `docs/todo/` and build artifacts)
+  - [TODO_STATUS.md](TODO_STATUS.md) - open vs done checkbox counts per TODO file
+
 ## Current Critical Issues
 
 1. ✅ **Build Issues Fixed**: TypeScript build now passes (Dec 25, 2025)
