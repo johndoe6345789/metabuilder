@@ -51,6 +51,10 @@ export {
   type ToggleProps,
   type ToggleVariant,
   type ToggleSize,
+  // ScrollArea
+  ScrollArea,
+  ScrollBar,
+  type ScrollAreaProps,
 } from './atoms'
 
 // ============================================================================
