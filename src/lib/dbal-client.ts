@@ -1,6 +1,6 @@
-import { DBALClient } from '../dbal/ts/src'
-import type { User as DBALUser } from '../dbal/ts/src/core/types'
-import type { User, Session } from './level-types'
+import { DBALClient } from '@/dbal/ts/src'
+import type { User as DBALUser } from '@/dbal/ts/src/core/types'
+import type { User } from './level-types'
 
 let dbalInstance: DBALClient | null = null
 

@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from 'react'
 import { Database } from '@/lib/database'
 import { getScrambledPassword } from '@/lib/auth'

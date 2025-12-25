@@ -92,7 +92,7 @@ export class PrismaAdapter implements DBALAdapter {
         this.withTimeout(
           model.count({ where: where as never })
         )
-      ])
+      ]) as [unknown[], number]
 
       return {
         data: data as unknown[],
@@ -122,9 +122,9 @@ export class PrismaAdapter implements DBALAdapter {
     await this.prisma.$disconnect()
   }
 
-  private getModel(entity: string): never {
+  private getModel(entity: string): any {
     const modelName = entity.charAt(0).toLowerCase() + entity.slice(1)
-    const model = (this.prisma as never)[modelName]
+    const model = (this.prisma as any)[modelName]
     
     if (!model) {
       throw DBALError.notFound(`Entity ${entity} not found`)
