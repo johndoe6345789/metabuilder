@@ -4,11 +4,28 @@ How to contribute to MetaBuilder development.
 
 ## 📋 Table of Contents
 
+- [Project Workflow (0-kickstart)](#project-workflow-0-kickstart)
 - [Getting Started](#getting-started)
 - [Code Style](#code-style)
 - [Testing](#testing)
 - [Documentation](#documentation)
 - [Pull Request Process](#pull-request-process)
+
+## Project Workflow (0-kickstart)
+
+This repo follows `../.github/prompts/0-kickstart.md` as the current workflow source of truth. If anything here conflicts, prefer `0-kickstart.md`.
+
+Key rules:
+- Start with `../.github/prompts/0-kickstart.md` and other prompts as needed.
+- Commit as you go with descriptive messages; default to trunk-based work on `main` unless a PR flow is required.
+- Use `act` to diagnose GitHub workflows (`npm run act`, `npm run act:diagnose`).
+- Keep unit tests parameterized; create new test files where possible; keep 1:1 source-to-test naming.
+- Leave TODO comments for missing functionality.
+- Check `./todo/` before starting.
+- One lambda per file; classes are containers for related lambdas (see `../.github/prompts/LAMBDA_PROMPT.md`).
+- Route data access through DBAL; treat it as the trusted layer.
+- Design for flexibility, modularity, and containerization.
+- UI work follows `./RADIX_TO_MUI_MIGRATION.md` and `../UI_STANDARDS.md`.
 
 ## Getting Started
 
@@ -52,7 +69,7 @@ How to contribute to MetaBuilder development.
 
 ### TypeScript/React Conventions
 
-1. **Component Size** - Keep components under 150 lines of code
+1. **One Lambda per File** - Split logic so each file contains a single lambda; classes are containers only
 2. **Naming** - Use PascalCase for components, camelCase for functions
 3. **Imports** - Use absolute imports with `@/` prefix
 4. **Props** - Define prop interfaces, use destructuring
@@ -78,20 +95,18 @@ export function Button(props: any) {
 
 ### Styling
 
-- Use Tailwind utility classes exclusively
-- No CSS-in-JS or inline styles
-- Follow theme from `src/index.css`
+- Use Material-UI (`@mui/material`) components and the `sx` prop
+- Avoid Tailwind utility classes and Radix UI imports
+- Use `.module.scss` for custom component styles when needed
+- Follow `../UI_STANDARDS.md` and `./UI_MIGRATION.md`
 
 ```typescript
 // ✅ Good
-<button className="px-4 py-2 bg-blue-500 text-white rounded">
-  Click me
-</button>
+import { Button, Box } from '@mui/material'
 
-// ❌ Bad
-<button style={{ padding: "8px 16px", backgroundColor: "blue" }}>
-  Click me
-</button>
+<Box sx={{ display: 'flex', gap: 2 }}>
+  <Button variant="contained">Click me</Button>
+</Box>
 ```
 
 ### Hooks & State Management
@@ -117,11 +132,14 @@ npm run test:all
 
 ### Writing Tests
 
-1. **Unit Tests** - Test individual functions in isolation
+1. **Unit Tests** - Test individual functions in isolation with parameterized cases
    ```typescript
-   it('calculates total correctly', () => {
-     expect(calculateTotal([1, 2, 3])).toBe(6);
-   });
+   it.each([
+     { input: [1, 2, 3], expected: 6 },
+     { input: [], expected: 0 },
+   ])('calculates total correctly', ({ input, expected }) => {
+     expect(calculateTotal(input)).toBe(expected)
+   })
    ```
 
 2. **E2E Tests** - Test complete user flows
@@ -135,6 +153,7 @@ npm run test:all
    ```
 
 3. **Coverage** - Aim for 80%+ coverage on critical paths
+4. **File Mapping** - Keep tests next to sources with matching names (`foo.ts` + `foo.test.ts`)
 
 ## Documentation
 
@@ -163,6 +182,7 @@ npm run test:all
 3. **Architecture Docs** - Document complex systems in `docs/architecture/`
 
 4. **Examples** - Create `.example.tsx` files showing how to use components
+5. **TODOs** - Leave TODO comments for missing functionality
 
 ### Running Quality Checker
 
@@ -177,6 +197,8 @@ npm run test:all
 Target: **80%+** quality score
 
 ## Pull Request Process
+
+Trunk-based work on `main` is the default. Use the PR process below only when a PR/feature branch flow is explicitly required (external contributions, review gates, or automation).
 
 ### Before Creating PR
 

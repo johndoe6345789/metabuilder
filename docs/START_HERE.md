@@ -6,6 +6,19 @@ TODO: This file is in docs/ so ./docs/ links are broken; the root-level file lis
 
 ---
 
+## Current Workflow (0-kickstart)
+
+If you're unsure which workflow to follow, start with `../.github/prompts/0-kickstart.md`. Key expectations:
+- Work through `.github/prompts/` as needed.
+- Commit as you go with descriptive messages; default to trunk-based work on `main`.
+- Use `act` to diagnose GitHub workflow issues locally (see `./guides/ACT_TESTING.md`).
+- Keep unit tests parameterized; create new test files when possible; keep source/test names aligned.
+- Leave TODO comments for missing functionality.
+- Check `./todo/` before starting.
+- One lambda per file; classes are containers for related lambdas (see `../.github/prompts/LAMBDA_PROMPT.md`).
+- UI work follows `./RADIX_TO_MUI_MIGRATION.md`.
+- Treat DBAL as the trusted data layer; wire data access through it.
+
 ## 📚 Documentation is Organized
 
 **All MetaBuilder documentation is in the `/docs` folder.**
