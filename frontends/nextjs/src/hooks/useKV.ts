@@ -3,9 +3,11 @@
  * Uses in-memory storage with localStorage persistence in the browser
  * API compatible with @github/spark/hooks
  */
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 
 type Subscriber = (value: unknown) => void
+
+const STORAGE_PREFIX = 'mb_kv:'
 
 const kvStore = new Map<string, unknown>()
 const kvSubscribers = new Map<string, Set<Subscriber>>()
@@ -20,11 +22,15 @@ function getLocalStorage(): Storage | null {
   }
 }
 
-function safeParse(raw: string): unknown | undefined {
+function getStorageKey(key: string): string {
+  return `${STORAGE_PREFIX}${key}`
+}
+
+function safeParse(raw: string): unknown {
   try {
     return JSON.parse(raw) as unknown
   } catch {
-    return undefined
+    return raw
   }
 }
 
@@ -45,42 +51,66 @@ function readStoredValue<T>(key: string): T | undefined {
   const storage = getLocalStorage()
   if (!storage) return undefined
 
-  const raw = storage.getItem(key)
-  if (raw === null) return undefined
-
-  const parsed = safeParse(raw)
-  if (parsed === undefined) {
-    storage.removeItem(key)
-    return undefined
+  const storageKey = getStorageKey(key)
+  const raw = storage.getItem(storageKey)
+  if (raw !== null) {
+    const parsed = safeParse(raw)
+    kvStore.set(key, parsed)
+    return parsed as T
   }
 
-  kvStore.set(key, parsed)
-  return parsed as T
+  const legacyRaw = storage.getItem(key)
+  if (legacyRaw === null) return undefined
+
+  const parsedLegacy = safeParse(legacyRaw)
+  kvStore.set(key, parsedLegacy)
+
+  const serialized = safeStringify(parsedLegacy)
+  if (serialized !== null) {
+    try {
+      storage.setItem(storageKey, serialized)
+      storage.removeItem(key)
+    } catch (error) {
+      console.error('Error migrating legacy KV value:', error)
+    }
+  }
+
+  return parsedLegacy as T
 }
 
 function writeStoredValue<T>(key: string, value: T | undefined): void {
   const storage = getLocalStorage()
+  const storageKey = getStorageKey(key)
 
   if (value === undefined) {
     kvStore.delete(key)
+    storage?.removeItem(storageKey)
     storage?.removeItem(key)
+    notifySubscribers(key, value)
     return
   }
 
   kvStore.set(key, value)
-  if (!storage) return
+  if (!storage) {
+    notifySubscribers(key, value)
+    return
+  }
 
   const serialized = safeStringify(value)
   if (serialized === null) {
     console.error('Error serializing KV value for storage:', key)
+    notifySubscribers(key, value)
     return
   }
 
   try {
-    storage.setItem(key, serialized)
+    storage.setItem(storageKey, serialized)
+    storage.removeItem(key)
   } catch (error) {
     console.error('Error persisting KV value:', error)
   }
+
+  notifySubscribers(key, value)
 }
 
 function notifySubscribers(key: string, value: unknown): void {
@@ -104,6 +134,16 @@ function subscribeToKey(key: string, subscriber: Subscriber): () => void {
   }
 }
 
+function resolveStorageKey(storageKey: string): string | null {
+  if (storageKey.startsWith(STORAGE_PREFIX)) {
+    return storageKey.slice(STORAGE_PREFIX.length)
+  }
+  if (kvSubscribers.has(storageKey)) {
+    return storageKey
+  }
+  return null
+}
+
 function ensureStorageListener(): void {
   if (storageListenerRegistered) return
   const storage = getLocalStorage()
@@ -113,23 +153,32 @@ function ensureStorageListener(): void {
   window.addEventListener('storage', (event: StorageEvent) => {
     if (!event.key) return
     if (event.storageArea && event.storageArea !== storage) return
+    const resolvedKey = resolveStorageKey(event.key)
+    if (!resolvedKey) return
 
-    const nextValue = event.newValue ? safeParse(event.newValue) : undefined
+    const nextValue = event.newValue === null ? undefined : safeParse(event.newValue)
     if (nextValue === undefined) {
-      kvStore.delete(event.key)
+      kvStore.delete(resolvedKey)
     } else {
-      kvStore.set(event.key, nextValue)
+      kvStore.set(resolvedKey, nextValue)
     }
-    notifySubscribers(event.key, nextValue)
+    notifySubscribers(resolvedKey, nextValue)
   })
 
   storageListenerRegistered = true
 }
 
 export function useKV<T = any>(key: string, defaultValue?: T): [T | undefined, (newValueOrUpdater: T | ((prev: T | undefined) => T)) => Promise<void>] {
-  const [value, setValue] = useState<T | undefined>(defaultValue)
+  const [value, setValue] = useState<T | undefined>(() => {
+    const storedValue = readStoredValue<T>(key)
+    return storedValue !== undefined ? storedValue : defaultValue
+  })
+  const valueRef = useRef<T | undefined>(value)
 
-  // Load initial value
+  useEffect(() => {
+    valueRef.current = value
+  }, [value])
+
   useEffect(() => {
     ensureStorageListener()
 
@@ -158,18 +207,17 @@ export function useKV<T = any>(key: string, defaultValue?: T): [T | undefined, (
   const updateValue = useCallback(async (newValueOrUpdater: T | ((prev: T | undefined) => T)) => {
     try {
       // Handle updater function
-      const currentValue = kvStore.has(key) ? (kvStore.get(key) as T | undefined) : value
+      const currentValue = kvStore.has(key) ? (kvStore.get(key) as T | undefined) : valueRef.current
       const newValue = typeof newValueOrUpdater === 'function' 
         ? (newValueOrUpdater as (prev: T | undefined) => T)(currentValue)
         : newValueOrUpdater
 
       writeStoredValue(key, newValue)
       setValue(newValue)
-      notifySubscribers(key, newValue)
     } catch (err) {
       console.error('Error saving KV value:', err)
     }
-  }, [key, value])
+  }, [key])
 
   return [value, updateValue]
 }
