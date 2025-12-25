@@ -8,7 +8,7 @@
  * - Virtual root directories
  */
 
-import { BlobStorage, BlobMetadata, UploadOptions, ListOptions, ListResult } from './blob-storage'
+import { BlobStorage, BlobMetadata, UploadOptions, DownloadOptions, BlobListOptions, BlobListResult } from './blob-storage'
 import { TenantContext, TenantManager } from '../core/tenant-context'
 import { DBALError } from '../core/errors'
 import { Readable } from 'stream'
@@ -43,13 +43,13 @@ export class TenantAwareBlobStorage implements BlobStorage {
     
     // Check permissions
     if (!context.canWrite('blob')) {
-      throw new DBALError('Permission denied: cannot upload blobs', 403)
+      throw DBALError.forbidden('Permission denied: cannot upload blobs')
     }
     
     // Check quota
     const size = data.length
     if (!context.canUploadBlob(size)) {
-      throw new DBALError('Quota exceeded: cannot upload blob', 429)
+      throw DBALError.rateLimitExceeded()
     }
     
     const scopedKey = this.getScopedKey(key, context.namespace)
@@ -70,12 +70,12 @@ export class TenantAwareBlobStorage implements BlobStorage {
     
     // Check permissions
     if (!context.canWrite('blob')) {
-      throw new DBALError('Permission denied: cannot upload blobs', 403)
+      throw DBALError.forbidden('Permission denied: cannot upload blobs')
     }
     
     // Check quota
     if (!context.canUploadBlob(size)) {
-      throw new DBALError('Quota exceeded: cannot upload blob', 429)
+      throw DBALError.rateLimitExceeded()
     }
     
     const scopedKey = this.getScopedKey(key, context.namespace)
@@ -96,23 +96,23 @@ export class TenantAwareBlobStorage implements BlobStorage {
     
     // Check permissions
     if (!context.canRead('blob')) {
-      throw new DBALError('Permission denied: cannot download blobs', 403)
+      throw DBALError.forbidden('Permission denied: cannot download blobs')
     }
     
     const scopedKey = this.getScopedKey(key, context.namespace)
     return this.baseStorage.download(scopedKey)
   }
   
-  async downloadStream(key: string, start?: number, end?: number): Promise<Readable> {
+  async downloadStream(key: string, options?: DownloadOptions): Promise<ReadableStream | NodeJS.ReadableStream> {
     const context = await this.getContext()
     
     // Check permissions
     if (!context.canRead('blob')) {
-      throw new DBALError('Permission denied: cannot download blobs', 403)
+      throw DBALError.forbidden('Permission denied: cannot download blobs')
     }
     
     const scopedKey = this.getScopedKey(key, context.namespace)
-    return this.baseStorage.downloadStream(scopedKey, start, end)
+    return this.baseStorage.downloadStream(scopedKey, options)
   }
   
   async delete(key: string): Promise<boolean> {
@@ -120,7 +120,7 @@ export class TenantAwareBlobStorage implements BlobStorage {
     
     // Check permissions
     if (!context.canDelete('blob')) {
-      throw new DBALError('Permission denied: cannot delete blobs', 403)
+      throw DBALError.forbidden('Permission denied: cannot delete blobs')
     }
     
     const scopedKey = this.getScopedKey(key, context.namespace)
@@ -147,7 +147,7 @@ export class TenantAwareBlobStorage implements BlobStorage {
     
     // Check permissions
     if (!context.canRead('blob')) {
-      throw new DBALError('Permission denied: cannot check blob existence', 403)
+      throw DBALError.forbidden('Permission denied: cannot check blob existence')
     }
     
     const scopedKey = this.getScopedKey(key, context.namespace)
@@ -159,7 +159,7 @@ export class TenantAwareBlobStorage implements BlobStorage {
     
     // Check permissions
     if (!context.canRead('blob') || !context.canWrite('blob')) {
-      throw new DBALError('Permission denied: cannot copy blobs', 403)
+      throw DBALError.forbidden('Permission denied: cannot copy blobs')
     }
     
     // Get source metadata to check quota
@@ -168,7 +168,7 @@ export class TenantAwareBlobStorage implements BlobStorage {
     
     // Check quota for destination
     if (!context.canUploadBlob(sourceMetadata.size)) {
-      throw new DBALError('Quota exceeded: cannot copy blob', 429)
+      throw DBALError.rateLimitExceeded()
     }
     
     const destScoped = this.getScopedKey(destKey, context.namespace)
@@ -183,16 +183,16 @@ export class TenantAwareBlobStorage implements BlobStorage {
     }
   }
   
-  async list(options?: ListOptions): Promise<ListResult> {
+  async list(options?: BlobListOptions): Promise<BlobListResult> {
     const context = await this.getContext()
     
     // Check permissions
     if (!context.canRead('blob')) {
-      throw new DBALError('Permission denied: cannot list blobs', 403)
+      throw DBALError.forbidden('Permission denied: cannot list blobs')
     }
     
     // Add namespace prefix to options
-    const scopedOptions: ListOptions = {
+    const scopedOptions: BlobListOptions = {
       ...options,
       prefix: options?.prefix 
         ? this.getScopedKey(options.prefix, context.namespace)
@@ -204,10 +204,9 @@ export class TenantAwareBlobStorage implements BlobStorage {
     // Unscope keys in results
     return {
       ...result,
-      keys: result.keys.map(key => this.unscopeKey(key, context.namespace)),
-      metadata: result.metadata?.map(meta => ({
-        ...meta,
-        key: this.unscopeKey(meta.key, context.namespace)
+      items: result.items.map(item => ({
+        ...item,
+        key: this.unscopeKey(item.key, context.namespace)
       }))
     }
   }
@@ -217,7 +216,7 @@ export class TenantAwareBlobStorage implements BlobStorage {
     
     // Check permissions
     if (!context.canRead('blob')) {
-      throw new DBALError('Permission denied: cannot get blob metadata', 403)
+      throw DBALError.forbidden('Permission denied: cannot get blob metadata')
     }
     
     const scopedKey = this.getScopedKey(key, context.namespace)
@@ -244,10 +243,18 @@ export class TenantAwareBlobStorage implements BlobStorage {
     
     // Check permissions
     if (!context.canRead('blob')) {
-      throw new DBALError('Permission denied: cannot generate presigned URL', 403)
+      throw DBALError.forbidden('Permission denied: cannot generate presigned URL')
     }
     
     const scopedKey = this.getScopedKey(key, context.namespace)
     return this.baseStorage.generatePresignedUrl(scopedKey, expiresIn)
+  }
+  
+  async getTotalSize(): Promise<number> {
+    return this.baseStorage.getTotalSize()
+  }
+  
+  async getObjectCount(): Promise<number> {
+    return this.baseStorage.getObjectCount()
   }
 }

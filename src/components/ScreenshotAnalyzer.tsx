@@ -48,27 +48,33 @@ export function ScreenshotAnalyzer() {
       const bodyContent = document.body.innerText.substring(0, 3000)
       const htmlStructure = document.body.innerHTML.substring(0, 2000)
       
-      const prompt = spark.llmPrompt`Analyze this webpage and provide a detailed assessment:
-
-Page Title: ${document.title}
-URL: ${window.location.href}
-Viewport: ${window.innerWidth}x${window.innerHeight}
-
-Body Text Preview (first 3000 chars):
-${bodyContent}
-
-HTML Structure Preview (first 2000 chars):
-${htmlStructure}
-
-Please provide:
-1. A summary of what this page does
-2. Key UI elements visible
-3. Any potential issues or improvements
-4. Overall assessment of the design and functionality`
-
-      const result = await spark.llm(prompt)
-      setAnalysis(result)
-      toast.success('Analysis complete!')
+      // TODO: Replace with Next.js API route that calls an LLM service
+      const placeholderAnalysis = `**Screenshot Analysis Feature Unavailable**\n\nThe AI-powered screenshot analysis feature is currently being migrated to work with Next.js. This will be available soon.\n\n**Page**: ${document.title}\n**URL**: ${window.location.href}\n**Viewport**: ${window.innerWidth}x${window.innerHeight}`
+      
+      // Original Spark LLM code (commented out):
+      // const prompt = spark.llmPrompt`Analyze this webpage and provide a detailed assessment:
+      // 
+      // Page Title: ${document.title}
+      // URL: ${window.location.href}
+      // Viewport: ${window.innerWidth}x${window.innerHeight}
+      // 
+      // Body Text Preview (first 3000 chars):
+      // ${bodyContent}
+      // 
+      // HTML Structure Preview (first 2000 chars):
+      // ${htmlStructure}
+      // 
+      // Please provide:
+      // 1. A summary of what this page does
+      // 2. Key UI elements visible
+      // 3. Any potential issues or improvements
+      // 4. Overall assessment of the design and functionality`
+      // 
+      // const result = await spark.llm(prompt)
+      // setAnalysis(result)
+      
+      setAnalysis(placeholderAnalysis)
+      toast.info('Analysis feature temporarily disabled during migration')
     } catch (error) {
       console.error('Error analyzing:', error)
       toast.error('Failed to analyze screenshot')

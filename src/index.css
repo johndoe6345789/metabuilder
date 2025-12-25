@@ -1,5 +1,6 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
+/* TODO: Re-enable tw-animate-css after fixing import resolution */
+/* @import "tw-animate-css"; */
 
 @layer base {
   * {

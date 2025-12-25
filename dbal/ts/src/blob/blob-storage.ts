@@ -29,7 +29,7 @@ export interface DownloadOptions {
   length?: number
 }
 
-export interface ListOptions {
+export interface BlobListOptions {
   prefix?: string
   continuationToken?: string
   maxKeys?: number
@@ -112,7 +112,7 @@ export interface BlobStorage {
   /**
    * List blobs with optional prefix filter
    */
-  list(options?: ListOptions): Promise<BlobListResult>
+  list(options?: BlobListOptions): Promise<BlobListResult>
 
   /**
    * Generate presigned URL for temporary access (S3 only)

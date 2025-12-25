@@ -77,7 +77,8 @@ export class DBALIntegration {
 
       // Initialize DBAL client
       const dbalConfig: DBALConfig = {
-        adapter: 'memory', // Use in-memory adapter for browser
+        mode: 'development',
+        adapter: 'prisma', // Use Prisma adapter
         ...config,
       }
 
@@ -163,7 +164,7 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    const context = this.tenantManager.getTenantContext(tenantId, userId)
+    const context = await this.tenantManager.getTenantContext(tenantId, userId)
     if (!context) {
       throw new Error(`Tenant context not found: ${tenantId}`)
     }
@@ -183,7 +184,7 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    const context = this.tenantManager.getTenantContext(tenantId, userId)
+    const context = await this.tenantManager.getTenantContext(tenantId, userId)
     if (!context) {
       throw new Error(`Tenant context not found: ${tenantId}`)
     }
@@ -203,7 +204,7 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    const context = this.tenantManager.getTenantContext(tenantId, userId)
+    const context = await this.tenantManager.getTenantContext(tenantId, userId)
     if (!context) {
       throw new Error(`Tenant context not found: ${tenantId}`)
     }
@@ -224,7 +225,7 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    const context = this.tenantManager.getTenantContext(tenantId, userId)
+    const context = await this.tenantManager.getTenantContext(tenantId, userId)
     if (!context) {
       throw new Error(`Tenant context not found: ${tenantId}`)
     }
@@ -243,7 +244,7 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    const context = this.tenantManager.getTenantContext(tenantId, userId)
+    const context = await this.tenantManager.getTenantContext(tenantId, userId)
     if (!context) {
       throw new Error(`Tenant context not found: ${tenantId}`)
     }
@@ -263,7 +264,7 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    await this.blobStorage.upload(key, data, metadata)
+    await this.blobStorage.upload(key, data as Buffer, metadata)
   }
 
   /**
@@ -296,7 +297,8 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    return this.blobStorage.list(prefix)
+    const result = await this.blobStorage.list({ prefix })
+    return result.items.map(item => item.key)
   }
 
   /**
@@ -307,7 +309,8 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    return this.blobStorage.getMetadata(key)
+    const metadata = await this.blobStorage.getMetadata(key)
+    return metadata.customMetadata || {}
   }
 
   /**
