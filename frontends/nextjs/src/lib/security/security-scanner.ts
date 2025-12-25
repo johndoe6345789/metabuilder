@@ -17,11 +17,10 @@ import { scanJavaScript } from './functions/scanners/scan-javascript'
 import { scanLua } from './functions/scanners/scan-lua'
 import { scanJSON } from './functions/scanners/scan-json'
 import { scanHTML } from './functions/scanners/scan-html'
+import { scanForVulnerabilities } from './functions/scanners/scan-for-vulnerabilities'
 import { sanitizeInput } from './functions/scanners/sanitize-input'
 import { getSeverityColor } from './functions/helpers/get-severity-color'
 import { getSeverityIcon } from './functions/helpers/get-severity-icon'
-
-import type { SecurityScanResult } from './functions/types'
 
 /**
  * SecurityScanner - Wrapper class for security scanning functions
@@ -36,6 +35,7 @@ export class SecurityScanner {
   scanJSON = scanJSON
   scanHTML = scanHTML
   sanitizeInput = sanitizeInput
+  scanForVulnerabilities = scanForVulnerabilities
 }
 
 // Default instance for convenience
@@ -50,38 +50,6 @@ export {
   scanLua,
   scanJSON,
   scanHTML,
+  scanForVulnerabilities,
   sanitizeInput
-}
-
-/**
- * Convenience function to scan code for vulnerabilities
- * Automatically detects type based on content or explicit type parameter
- */
-export function scanForVulnerabilities(
-  code: string, 
-  type?: 'javascript' | 'lua' | 'json' | 'html'
-): SecurityScanResult {
-  // Auto-detect type if not provided
-  if (!type) {
-    if (code.trim().startsWith('{') || code.trim().startsWith('[')) {
-      type = 'json'
-    } else if (code.includes('function') && code.includes('end')) {
-      type = 'lua'
-    } else if (code.includes('<') && code.includes('>')) {
-      type = 'html'
-    } else {
-      type = 'javascript'
-    }
-  }
-
-  switch (type) {
-    case 'lua':
-      return scanLua(code)
-    case 'json':
-      return scanJSON(code)
-    case 'html':
-      return scanHTML(code)
-    default:
-      return scanJavaScript(code)
-  }
 }
