@@ -3,29 +3,15 @@
 ## Unit Testing
 
 - [x] Achieve 80%+ code coverage across all modules ✅ (91% achieved)
-- [x] Add parameterized tests using `it.each()` pattern ✅ (403 tests across 25 files)
+- [x] Add parameterized tests using `it.each()` pattern ✅ (576 tests across 83 files)
 - [ ] Create test utilities for common setup/teardown
 - [ ] Add snapshot tests for component rendering
 - [ ] Implement property-based testing for validation logic
 
-### Test Coverage Summary
-| File | Tests | Coverage |
-|------|-------|----------|
-| schema-utils.test.ts | 63 | 95% |
-| lua-engine.test.ts | 51 | 92% |
-| package-glue.test.ts | 45 | 89% |
-| declarative-component-renderer.test.ts | 41 | 96% |
-| auth.test.ts | 40 | 100% |
-| security-scanner.test.ts | 24 | 88% |
-| workflow-engine.test.ts | 22 | 85% |
-| page-renderer.test.ts | 16 | 82% |
-| package-loader.test.ts | 16 | 78% |
-| useKV.test.ts | 16 | 95% |
-| password-utils.test.ts | 12 | 100% |
-| component-registry.test.ts | 10 | 90% |
-| use-mobile.test.ts | 8 | 100% |
-| utils.test.ts | 8 | 100% |
-| Other test files | 31 | Various |
+### Test Coverage Summary (Updated Dec 25, 2025)
+- **Total Tests**: 576 passing
+- **Test Files**: 83 files
+- Tests updated to reflect MUI migration (removed Tailwind class merging expectations)
 
 ## Integration Testing
 
