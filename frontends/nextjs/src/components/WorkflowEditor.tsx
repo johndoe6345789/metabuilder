@@ -193,7 +193,7 @@ export function WorkflowEditor({ workflows, onWorkflowsChange, scripts = [] }: W
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">Workflows</CardTitle>
             <Button size="sm" onClick={handleAddWorkflow}>
-              <Plus size={16} />
+              <AddIcon sx={{ fontSize: 16 }} />
             </Button>
           </div>
           <CardDescription>Automation workflows</CardDescription>
@@ -233,7 +233,7 @@ export function WorkflowEditor({ workflows, onWorkflowsChange, scripts = [] }: W
                         handleDeleteWorkflow(workflow.id)
                       }}
                     >
-                      <Trash size={14} />
+                      <DeleteIcon sx={{ fontSize: 14 }} />
                     </Button>
                   </div>
                 </div>
@@ -259,7 +259,7 @@ export function WorkflowEditor({ workflows, onWorkflowsChange, scripts = [] }: W
                   <CardDescription>Configure workflow nodes and connections</CardDescription>
                 </div>
                 <Button onClick={handleTestWorkflow} disabled={isExecuting}>
-                  <Play className="mr-2" size={16} />
+                  <PlayIcon sx={{ fontSize: 16, mr: 1 }} />
                   {isExecuting ? 'Running...' : 'Test Workflow'}
                 </Button>
               </div>
