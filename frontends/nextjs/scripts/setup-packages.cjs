@@ -1,1 +1,1 @@
-../../../scripts/setup-packages.cjs
+../../../tools/setup-packages.cjs
