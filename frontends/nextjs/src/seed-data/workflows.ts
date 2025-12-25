@@ -1,5 +1,5 @@
 import { Database } from '@/lib/database'
-import type { Workflow, WorkflowNode, WorkflowEdge } from '@/lib/level-types'
+import type { Workflow } from '@/lib/level-types'
 
 export async function initializeWorkflows() {
   const existingWorkflows = await Database.getWorkflows()
