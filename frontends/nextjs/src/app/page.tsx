@@ -1,4 +1,3 @@
-import { Level1 } from '@/components/Level1'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
