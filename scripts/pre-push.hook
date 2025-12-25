@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# Pre-push git hook for MetaBuilder
+# Runs act checks before pushing
+# Install: cp scripts/pre-push.hook .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+
+set -e
+
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${GREEN}Pre-Push Workflow Validation${NC}"
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
+
+if [ -n "$SKIP_ACT_PRE_PUSH" ]; then
+    echo "SKIP_ACT_PRE_PUSH set, skipping checks"
+    exit 0
+fi
+
+if ! command -v npm &> /dev/null; then
+    echo "npm not found, skipping pre-push checks"
+    exit 0
+fi
+
+if ! command -v act &> /dev/null; then
+    echo "act not installed, skipping pre-push checks"
+    exit 0
+fi
+
+if ! docker info &> /dev/null; then
+    echo "Docker is not running, skipping pre-push checks"
+    exit 0
+fi
+
+if [ -f "scripts/diagnose-workflows.sh" ]; then
+    chmod +x scripts/diagnose-workflows.sh
+    if ! ./scripts/diagnose-workflows.sh; then
+        echo ""
+        echo -e "${YELLOW}⚠️  Workflow issues detected. Review above before pushing.${NC}"
+        echo "To skip this check: git push --no-verify"
+        exit 1
+    fi
+fi
+
+echo -e "${YELLOW}Running act lint...${NC}"
+if ! npm run act:lint; then
+    echo ""
+    echo -e "${YELLOW}⚠️  act:lint failed. Fix issues before pushing.${NC}"
+    echo "To skip this check: git push --no-verify"
+    exit 1
+fi
+
+echo ""
+echo -e "${GREEN}✓ Pre-push checks passed!${NC}"
+echo ""
+
+exit 0

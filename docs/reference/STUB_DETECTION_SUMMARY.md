@@ -227,6 +227,8 @@ Works with:
 
 ## 🎯 Next Steps
 
+TODO: Stub-detection doc references below should be relative to docs/reference (use ../stub-detection/...).
+
 1. **Try it now**: `npx tsx scripts/detect-stub-implementations.ts`
 2. **Review findings**: Check the JSON output
 3. **Read docs**: See `docs/stub-detection/README.md`

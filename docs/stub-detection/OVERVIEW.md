@@ -74,6 +74,7 @@ npx tsx scripts/detect-stub-implementations.ts | jq '.details[] | select(.file |
 ## 📚 Documentation
 
 ### Full Guides
+TODO: Links below should be relative to docs/stub-detection (drop docs/ prefix).
 - [Complete Guide](docs/stub-detection/README.md) - 300+ lines covering everything
 - [Quick Reference](docs/stub-detection/QUICK_REFERENCE.md) - Key patterns and fixes
 

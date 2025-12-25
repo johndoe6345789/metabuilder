@@ -146,6 +146,8 @@ gh workflow run detect-stubs.yml
 
 ## 📚 Documentation
 
+TODO: doc links below should be relative to docs/reference (use ../stub-detection/...).
+
 ### Full Details
 - **[Complete Guide](docs/stub-detection/README.md)** - Everything explained
 - **[Quick Reference](docs/stub-detection/QUICK_REFERENCE.md)** - Patterns & fixes

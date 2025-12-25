@@ -374,6 +374,7 @@ grep -v "mock" stub-patterns.json
 
 ## References
 
+TODO: Update reference links to correct repo-relative paths from docs/reference (stub-detection docs, workflows, scripts).
 - [Full Documentation](docs/stub-detection/README.md)
 - [Quick Reference](docs/stub-detection/QUICK_REFERENCE.md)
 - [Workflow Definition](.github/workflows/detect-stubs.yml)

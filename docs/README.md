@@ -227,6 +227,8 @@ metabuilder/
 
 ### Directory Guide
 
+TODO: src/README.md does not exist under docs/; confirm correct location or add missing docs/src.
+
 - **src/** - See [src/README.md](./src/README.md)
 - **packages/** - See [packages/README.md](./packages/README.md)
 - **docs/** - See [docs/README.md](./docs/README.md)
@@ -256,6 +258,7 @@ docker-compose -f deployment/docker-compose.production.yml up
 
 ### Manual Deployment
 
+TODO: Manual deployment docs are not under docs/deployment; update this link to the correct location.
 See [deployment/README.md](./deployment/README.md) for detailed instructions.
 
 ## 🤝 Contributing

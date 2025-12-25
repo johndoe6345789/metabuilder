@@ -140,6 +140,7 @@ Build and compilation:
 
 ### 📁 Source Code Documentation
 Source code structure:
+TODO: docs/src/ is missing; add the folder or update/remove the src links below.
 - [src/README.md](./src/README.md) - Source overview
 - [src/components/](./src/components/) - Component docs
 - [src/lib/](./src/lib/) - Library docs

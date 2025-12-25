@@ -282,6 +282,7 @@ npm run dev
 DBAL_ADAPTER=memory  # or 'http' for production
 DBAL_ENDPOINT=http://dbal-daemon:8080  # if using HTTP adapter
 
+# TODO: deployment docs live under docs/deployments/; update this reference.
 # For C++ daemon (see deployment/README.md)
 DBAL_BIND_ADDRESS=0.0.0.0
 DBAL_PORT=8080
@@ -387,6 +388,7 @@ The in-memory adapter stores data in browser memory:
 
 ## Related Documentation
 
+TODO: Fix related doc links (deployments path and local implementation docs).
 - [C++ DBAL Documentation](../dbal/cpp/README.md)
 - [TypeScript DBAL Documentation](../dbal/ts/README.md)
 - [Docker Deployment](../deployment/README.md)
@@ -403,4 +405,5 @@ For issues or questions:
 
 ## License
 
+TODO: No LICENSE file exists at repo root; update to correct location (e.g., docs/LICENSE) or add one.
 See LICENSE file in project root.

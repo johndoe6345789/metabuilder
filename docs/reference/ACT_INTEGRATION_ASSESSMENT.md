@@ -221,19 +221,14 @@ npm run act             # Run all CI jobs
 
 ## Recommendations for Improvement
 
-### 1. ⭐ **Create `.actrc` Configuration File**
+### 1. ✅ **`.actrc` Configuration File**
 
-Add a `.actrc` file to the repository root for consistent configuration:
+`.actrc` is included in the repository root for consistent configuration:
 
 ```env
-# Use smaller Docker image for faster downloads
 -P ubuntu-latest=catthehacker/ubuntu:act-latest
-
-# Set default event type
---event-path=/dev/null
-
-# Set container runtime memory limit
---container-cap-add=SYS_PTRACE
+--env ACT=true
+-v
 ```
 
 **Benefit:** Users get consistent behavior without manual `-P` flags.
@@ -254,19 +249,15 @@ To run GitHub Actions workflows locally before pushing:
 See [comprehensive guide](docs/guides/ACT_TESTING.md) for details.
 ```
 
-### 3. ⭐ **Add `.secrets` Template**
+### 3. ✅ **`.secrets` Template**
 
-Create `.secrets.example` for secrets management:
+`.secrets.example` is included for local secrets management:
 
 ```env
-# GitHub token for workflow authentication
 GITHUB_TOKEN=ghp_your_token_here
-
-# Add other secrets as needed
-DATABASE_URL=file:./dev.db
 ```
 
-Add `.secrets` to `.gitignore` for security.
+Copy to `.secrets` and keep it gitignored.
 
 ### 4. **GHA → NPM Script Mapping**
 
@@ -283,23 +274,27 @@ Consider adding:
 - `npm run act:prisma` → Database setup
 - `npm run act:all` → All checks (lint + build + tests)
 
-### 5. **Pre-commit Hook** (Optional)
+### 5. ✅ **Pre-commit Hook** (Optional)
 
-Add a git hook to run diagnostics before commits:
+Install the provided hook:
 
 ```bash
-#!/bin/bash
-# .git/hooks/pre-commit
-
-echo "Running workflow diagnostics..."
-./scripts/diagnose-workflows.sh
-
-if [ $? -ne 0 ]; then
-    echo "⚠️  Workflow issues detected. Review above before committing."
-fi
+cp scripts/pre-commit.hook .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
 ```
 
-### 6. **CI Documentation Update**
+### 6. ✅ **Pre-push Hook** (Optional)
+
+Install the provided hook:
+
+```bash
+cp scripts/pre-push.hook .git/hooks/pre-push
+chmod +x .git/hooks/pre-push
+```
+
+Skip with `git push --no-verify` or `SKIP_ACT_PRE_PUSH=1` when needed.
+
+### 7. **CI Documentation Update**
 
 In `.github/workflows/README.md`, add section:
 
@@ -410,11 +405,9 @@ git push origin feature-branch
 | **Diagnostics** | ✅ Ready | 95% | Pre-flight validation working |
 | **Testing Tools** | ✅ Ready | 90% | Interactive menu available |
 | **Workflow Support** | ✅ Ready | 95% | 16 workflows configured |
-| **Secrets Management** | ⚠️ Partial | 70% | Manual `.secrets` file setup needed |
-| **`.actrc` Config** | ⚠️ Missing | 0% | Recommend creating |
-| **Git Hooks** | ⚠️ Missing | 0% | Optional enhancement |
-
-TODO(SDLC): Provide a default `.actrc`, streamline local secrets setup, and document optional git hooks for pre-push checks.
+| **Secrets Management** | ✅ Ready | 90% | Template provided; `.secrets` stays local |
+| **`.actrc` Config** | ✅ Ready | 100% | Default config committed |
+| **Git Hooks** | ✅ Ready | 100% | Pre-commit + pre-push hooks available |
 
 ---
 
@@ -431,10 +424,8 @@ TODO(SDLC): Provide a default `.actrc`, streamline local secrets setup, and docu
 - Clear troubleshooting documentation
 
 ⚠️ **Areas for Enhancement:**
-- Add `.actrc` file for consistent Docker image selection
-- Create `.secrets.example` template
 - Add more npm script mappings (typecheck, prisma, build)
-- Optional: pre-commit git hooks for automated validation
+- Optional: install pre-commit/pre-push hooks for automated validation
 
 💡 **Next Steps:**
 1. Install act: `brew install act` (or equivalent)

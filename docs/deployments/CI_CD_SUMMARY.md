@@ -324,6 +324,7 @@ webServer: {
 - [ESLint Documentation](https://eslint.org/)
 - [Playwright Documentation](https://playwright.dev/)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
+TODO: Links below are repo-relative but this file is in docs/deployments; update paths for workflow README and E2E guide.
 - [Workflow README](.github/workflows/README.md)
 - [E2E Testing Guide](e2e/README.md)
 

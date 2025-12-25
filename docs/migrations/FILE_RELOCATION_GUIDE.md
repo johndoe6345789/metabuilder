@@ -80,6 +80,7 @@ mv PLATFORM_GUIDE.md docs/reference/platform-guide.md
 
 ## Files to Keep in Root
 
+TODO: This repo does not have root README/PRD/SECURITY/LIMITED files as listed; update for current structure (docs/* locations).
 These files should remain in the project root:
 - `README.md` - Main project readme
 - `PRD.md` - Product Requirements Document
@@ -87,6 +88,8 @@ These files should remain in the project root:
 - `SECURITY.md` - GitHub security policy
 
 ## Directory Structure After Move
+
+TODO: Example path uses /workspaces/spark-template and root file list no longer matches this repo.
 
 ```
 /workspaces/spark-template/

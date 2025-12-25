@@ -254,6 +254,7 @@ TODO: Links below use ../docs/... from docs/CONTRIBUTING.md and resolve to docs/
 
 - **Architecture Questions**: See [docs/architecture/](../docs/architecture/)
 - **API Questions**: See [API Development Guide](../docs/guides/api-development.md)
+TODO: E2E tests guide lives under frontends/nextjs/e2e; update this link.
 - **Testing Questions**: See [E2E Tests Guide](../../e2e/README.md)
 - **Security Questions**: See [Security Guidelines](../docs/SECURITY.md)
 

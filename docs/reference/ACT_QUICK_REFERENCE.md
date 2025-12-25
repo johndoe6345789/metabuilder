@@ -112,11 +112,11 @@ npm run act:all         # Run full CI (alias for `npm run act`)
 - 💬 **Troubleshooting** (solutions for common issues)
 - 🎯 **Best practices** (workflow recommendations)
 
-### 5. Optional Git Hook
-- ⛔ **Pre-commit validation** (catch issues early)
-- 💡 **Runs diagnostics** (no Docker needed)
-- ⏭️ **Skippable** (when needed)
-- 📋 **Setup:** `cp scripts/pre-commit.hook .git/hooks/pre-commit`
+### 5. Optional Git Hooks
+- ⛔ **Pre-commit validation** (diagnostics before commit)
+- 🚀 **Pre-push checks** (act lint before push)
+- ⏭️ **Skippable** (`git commit --no-verify`, `git push --no-verify`)
+- 📋 **Setup:** `cp scripts/pre-commit.hook .git/hooks/pre-commit` and `cp scripts/pre-push.hook .git/hooks/pre-push`
 
 ### 6. Secrets Management
 - 🔐 **Template provided** (`.secrets.example`)
