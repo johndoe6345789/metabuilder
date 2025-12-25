@@ -1,3 +1,15 @@
+/**
+ * @file server.cpp
+ * @brief Cross-platform HTTP/1.1 server implementation with nginx reverse proxy support
+ *
+ * Provides a production-ready HTTP server with:
+ * - Cross-platform socket support (Windows/Linux/macOS)
+ * - Multi-threaded request handling
+ * - Nginx reverse proxy header parsing
+ * - Health check endpoints
+ * - Graceful shutdown
+ */
+
 #include <string>
 #include <thread>
 #include <vector>
@@ -43,11 +55,19 @@
 namespace dbal {
 namespace daemon {
 
+/**
+ * @struct HttpRequest
+ * @brief Parsed HTTP request structure
+ *
+ * Contains all components of an HTTP request including method,
+ * path, version, and headers. Used internally for request processing.
+ */
 struct HttpRequest {
-    std::string method;
-    std::string path;
-    std::string version;
-    std::map<std::string, std::string> headers;
+    std::string method;   ///< HTTP method (GET, POST, etc.)
+    std::string path;     ///< Request path (e.g., /api/health)
+    std::string version;  ///< HTTP version (e.g., HTTP/1.1)
+    std::map<std::string, std::string> headers;  ///< Request headers
+};
     std::string body;
     
     // Nginx reverse proxy headers
