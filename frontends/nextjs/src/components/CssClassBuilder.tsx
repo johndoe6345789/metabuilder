@@ -22,7 +22,7 @@ interface CssCategory {
   classes: string[]
 }
 
-const CLASS_TOKEN_PATTERN = /^[A-Za-z0-9:_/.[\]()%#!,=+-]+$/
+const CLASS_TOKEN_PATTERN = /^[A-Za-z0-9:_/.\[\]()%#!,=+-]+$/
 const parseClassList = (value: string) => Array.from(new Set(value.split(/\s+/).filter(Boolean)))
 
 export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: CssClassBuilderProps) {
@@ -77,6 +77,10 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
 
     if (filteredCategories.length === 0) {
       setActiveTab('custom')
+      return
+    }
+
+    if (activeTab === 'custom') {
       return
     }
 

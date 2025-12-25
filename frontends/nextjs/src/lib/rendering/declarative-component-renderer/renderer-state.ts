@@ -1,4 +1,4 @@
-import { LuaEngine } from '../lua-engine'
+import { LuaEngine } from '../../lua-engine'
 import type { DeclarativeComponentConfig, LuaScriptDefinition } from './types'
 
 export interface DeclarativeRendererState {

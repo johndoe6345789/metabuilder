@@ -11,7 +11,7 @@ import { Database, CssCategory } from '@/lib/database'
 import { Plus, X, Pencil, Trash, FloppyDisk } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
-const CLASS_TOKEN_PATTERN = /^[A-Za-z0-9:_/.[\]()%#!,=+-]+$/
+const CLASS_TOKEN_PATTERN = /^[A-Za-z0-9:_/.\[\]()%#!,=+-]+$/
 const uniqueClasses = (classes: string[]) => Array.from(new Set(classes))
 
 export function CssClassManager() {

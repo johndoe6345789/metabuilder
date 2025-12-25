@@ -10,10 +10,10 @@ export {
   logToWorkflow,
   WorkflowEngine,
   createWorkflowEngine,
-} from './workflow'
+} from './index'
 
 export type {
   WorkflowExecutionContext,
   WorkflowExecutionResult,
   WorkflowState,
-} from './workflow'
+} from './index'
