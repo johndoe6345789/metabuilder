@@ -35,7 +35,6 @@ export const ACCESS_RULES: AccessRule[] = [
   { resource: 'smtpConfig', operation: 'UPDATE', allowedRoles: ['supergod'] },
   
   { resource: 'credential', operation: 'READ', allowedRoles: ['public', 'user', 'admin', 'god', 'supergod'] },
-  { resource: 'credential', operation: 'READ', allowedRoles: ['public', 'user', 'admin', 'god', 'supergod'] },
   { resource: 'credential', operation: 'UPDATE', allowedRoles: ['user', 'admin', 'god', 'supergod'] },
   
   { resource: 'tenant', operation: 'READ', allowedRoles: ['god', 'supergod'] },

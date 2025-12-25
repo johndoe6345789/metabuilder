@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const mockRead = vi.fn()
-const mockAdapter = { read: mockRead }
+const mockFindFirst = vi.fn()
+const mockAdapter = { read: mockRead, findFirst: mockFindFirst }
 
 vi.mock('../dbal-client', () => ({
   getAdapter: () => mockAdapter,
@@ -12,6 +13,7 @@ import { getUserById } from './get-user-by-id'
 describe('getUserById', () => {
   beforeEach(() => {
     mockRead.mockReset()
+    mockFindFirst.mockReset()
   })
 
   it.each([
@@ -79,6 +81,45 @@ describe('getUserById', () => {
     const result = await getUserById(userId)
 
     expect(mockRead).toHaveBeenCalledWith('User', userId)
+    expect(mockFindFirst).not.toHaveBeenCalled()
+    expect(result).toEqual(expected)
+  })
+
+  it.each([
+    {
+      name: 'use tenant filter when provided',
+      userId: 'user_3',
+      tenantId: 'tenant_2',
+      dbData: {
+        id: 'user_3',
+        username: 'tenant-user',
+        email: 'tenant@example.com',
+        role: 'admin',
+        profilePicture: null,
+        bio: null,
+        createdAt: BigInt(3000),
+        tenantId: 'tenant_2',
+        isInstanceOwner: false,
+      },
+      expected: {
+        id: 'user_3',
+        username: 'tenant-user',
+        email: 'tenant@example.com',
+        role: 'admin',
+        profilePicture: undefined,
+        bio: undefined,
+        createdAt: 3000,
+        tenantId: 'tenant_2',
+        isInstanceOwner: false,
+      },
+    },
+  ])('should $name', async ({ userId, tenantId, dbData, expected }) => {
+    mockFindFirst.mockResolvedValue(dbData)
+
+    const result = await getUserById(userId, { tenantId })
+
+    expect(mockFindFirst).toHaveBeenCalledWith('User', { where: { id: userId, tenantId } })
+    expect(mockRead).not.toHaveBeenCalled()
     expect(result).toEqual(expected)
   })
 })
