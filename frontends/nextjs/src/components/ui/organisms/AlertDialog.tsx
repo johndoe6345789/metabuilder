@@ -176,12 +176,13 @@ AlertDialogTitle.displayName = 'AlertDialogTitle'
 // AlertDialogDescription
 interface AlertDialogDescriptionProps {
   children: ReactNode
+  className?: string
 }
 
 const AlertDialogDescription = forwardRef<HTMLDivElement, AlertDialogDescriptionProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <DialogContent ref={ref} sx={{ pt: 2 }} {...props}>
+      <DialogContent ref={ref} className={className} sx={{ pt: 2 }} {...props}>
         <DialogContentText id="alert-dialog-description">
           {children}
         </DialogContentText>
@@ -211,12 +212,13 @@ AlertDialogFooter.displayName = 'AlertDialogFooter'
 interface AlertDialogCancelProps {
   children?: ReactNode
   onClick?: () => void
+  className?: string
 }
 
 const AlertDialogCancel = forwardRef<HTMLButtonElement, AlertDialogCancelProps>(
-  ({ children = 'Cancel', onClick, ...props }, ref) => {
+  ({ children = 'Cancel', onClick, className, ...props }, ref) => {
     return (
-      <Button ref={ref} onClick={onClick} color="inherit" {...props}>
+      <Button ref={ref} onClick={onClick} color="inherit" className={className} {...props}>
         {children}
       </Button>
     )
@@ -231,10 +233,11 @@ interface AlertDialogActionProps {
   color?: 'primary' | 'error' | 'warning' | 'success' | 'info'
   variant?: 'text' | 'outlined' | 'contained'
   autoFocus?: boolean
+  className?: string
 }
 
 const AlertDialogAction = forwardRef<HTMLButtonElement, AlertDialogActionProps>(
-  ({ children = 'Confirm', onClick, color = 'primary', variant = 'contained', autoFocus = true, ...props }, ref) => {
+  ({ children = 'Confirm', onClick, color = 'primary', variant = 'contained', autoFocus = true, className, ...props }, ref) => {
     return (
       <Button
         ref={ref}
@@ -242,6 +245,7 @@ const AlertDialogAction = forwardRef<HTMLButtonElement, AlertDialogActionProps>(
         color={color}
         variant={variant}
         autoFocus={autoFocus}
+        className={className}
         {...props}
       >
         {children}
