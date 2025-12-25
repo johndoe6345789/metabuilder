@@ -20,6 +20,7 @@ export * from './pages'
 export * from './schemas'
 export * from './comments'
 export * from './app-config'
+export * from './system-config'
 export * from './components'
 export * from './css-classes'
 export * from './dropdown-configs'
@@ -42,6 +43,7 @@ import * as pages from './pages'
 import * as schemas from './schemas'
 import * as comments from './comments'
 import * as appConfig from './app-config'
+import * as systemConfig from './system-config'
 import * as components from './components'
 import * as cssClasses from './css-classes'
 import * as dropdownConfigs from './dropdown-configs'
@@ -120,6 +122,9 @@ export class Database {
   // App Config
   static getAppConfig = appConfig.getAppConfig
   static setAppConfig = appConfig.setAppConfig
+
+  // System Config
+  static getSystemConfigValue = systemConfig.getSystemConfigValue
 
   // Components
   static getComponentHierarchy = components.getComponentHierarchy

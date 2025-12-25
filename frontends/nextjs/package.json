@@ -3,9 +3,6 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
-    "prisma": {
-        "schema": "../../prisma/schema.prisma"
-    },
     "scripts": {
         "dev": "next dev",
         "build": "next build --webpack",
