@@ -1,0 +1,1 @@
+../../../tools/generate-test-coverage-report.js

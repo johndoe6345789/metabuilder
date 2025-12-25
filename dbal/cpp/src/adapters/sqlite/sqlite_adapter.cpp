@@ -75,6 +75,39 @@ public:
         std::vector<PageView> pages;
         return Result<std::vector<PageView>>(pages);
     }
+
+    Result<Workflow> createWorkflow(const CreateWorkflowInput& input) override {
+        Workflow workflow;
+        workflow.id = "workflow_" + input.name;
+        workflow.name = input.name;
+        workflow.description = input.description;
+        workflow.trigger = input.trigger;
+        workflow.trigger_config = input.trigger_config;
+        workflow.steps = input.steps;
+        workflow.is_active = input.is_active;
+        workflow.created_by = input.created_by;
+        workflow.created_at = std::chrono::system_clock::now();
+        workflow.updated_at = workflow.created_at;
+
+        return Result<Workflow>(workflow);
+    }
+
+    Result<Workflow> getWorkflow(const std::string& id) override {
+        return Error::notFound("Workflow not found: " + id);
+    }
+
+    Result<Workflow> updateWorkflow(const std::string& id, const UpdateWorkflowInput& input) override {
+        return Error::notFound("Workflow not found: " + id);
+    }
+
+    Result<bool> deleteWorkflow(const std::string& id) override {
+        return Result<bool>(true);
+    }
+
+    Result<std::vector<Workflow>> listWorkflows(const ListOptions& options) override {
+        std::vector<Workflow> workflows;
+        return Result<std::vector<Workflow>>(workflows);
+    }
     
     void close() override {
         // Cleanup

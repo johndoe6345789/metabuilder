@@ -1,6 +1,6 @@
 import type { DBALConfig } from '../runtime/config'
 import type { DBALAdapter } from '../adapters/adapter'
-import type { User, PageView, ComponentHierarchy, ListOptions, ListResult } from './types'
+import type { User, PageView, ComponentHierarchy, Workflow, ListOptions, ListResult } from './types'
 import { DBALError } from './errors'
 import { PrismaAdapter } from '../adapters/prisma-adapter'
 import { ACLAdapter } from '../adapters/acl-adapter'
@@ -10,6 +10,10 @@ import {
   validateUserUpdate,
   validatePageCreate,
   validatePageUpdate,
+  validateComponentHierarchyCreate,
+  validateComponentHierarchyUpdate,
+  validateWorkflowCreate,
+  validateWorkflowUpdate,
   validateId,
 } from './validation'
 
@@ -263,20 +267,150 @@ export class DBALClient {
   get components() {
     return {
       create: async (data: Omit<ComponentHierarchy, 'id' | 'createdAt' | 'updatedAt'>): Promise<ComponentHierarchy> => {
+        const validationErrors = validateComponentHierarchyCreate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid component data',
+            validationErrors.map(error => ({ field: 'component', error }))
+          )
+        }
+
         return this.adapter.create('ComponentHierarchy', data) as Promise<ComponentHierarchy>
       },
       read: async (id: string): Promise<ComponentHierarchy | null> => {
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid component ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
         return this.adapter.read('ComponentHierarchy', id) as Promise<ComponentHierarchy | null>
       },
       update: async (id: string, data: Partial<ComponentHierarchy>): Promise<ComponentHierarchy> => {
+        const idErrors = validateId(id)
+        if (idErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid component ID',
+            idErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const validationErrors = validateComponentHierarchyUpdate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid component update data',
+            validationErrors.map(error => ({ field: 'component', error }))
+          )
+        }
+
         return this.adapter.update('ComponentHierarchy', id, data) as Promise<ComponentHierarchy>
       },
       delete: async (id: string): Promise<boolean> => {
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid component ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
         return this.adapter.delete('ComponentHierarchy', id)
       },
       getTree: async (pageId: string): Promise<ComponentHierarchy[]> => {
+        const validationErrors = validateId(pageId)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid page ID',
+            validationErrors.map(error => ({ field: 'pageId', error }))
+          )
+        }
+
         const result = await this.adapter.list('ComponentHierarchy', { filter: { pageId } })
         return result.data as ComponentHierarchy[]
+      },
+    }
+  }
+
+  get workflows() {
+    return {
+      create: async (data: Omit<Workflow, 'id' | 'createdAt' | 'updatedAt'>): Promise<Workflow> => {
+        const validationErrors = validateWorkflowCreate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid workflow data',
+            validationErrors.map(error => ({ field: 'workflow', error }))
+          )
+        }
+
+        try {
+          return this.adapter.create('Workflow', data) as Promise<Workflow>
+        } catch (error) {
+          if (error instanceof DBALError && error.code === 409) {
+            throw DBALError.conflict(`Workflow with name '${data.name}' already exists`)
+          }
+          throw error
+        }
+      },
+      read: async (id: string): Promise<Workflow | null> => {
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid workflow ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const result = await this.adapter.read('Workflow', id) as Workflow | null
+        if (!result) {
+          throw DBALError.notFound(`Workflow not found: ${id}`)
+        }
+        return result
+      },
+      update: async (id: string, data: Partial<Workflow>): Promise<Workflow> => {
+        const idErrors = validateId(id)
+        if (idErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid workflow ID',
+            idErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const validationErrors = validateWorkflowUpdate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid workflow update data',
+            validationErrors.map(error => ({ field: 'workflow', error }))
+          )
+        }
+
+        try {
+          return this.adapter.update('Workflow', id, data) as Promise<Workflow>
+        } catch (error) {
+          if (error instanceof DBALError && error.code === 409) {
+            throw DBALError.conflict('Workflow name already exists')
+          }
+          throw error
+        }
+      },
+      delete: async (id: string): Promise<boolean> => {
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid workflow ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const result = await this.adapter.delete('Workflow', id)
+        if (!result) {
+          throw DBALError.notFound(`Workflow not found: ${id}`)
+        }
+        return result
+      },
+      list: async (options?: ListOptions): Promise<ListResult<Workflow>> => {
+        return this.adapter.list('Workflow', options) as Promise<ListResult<Workflow>>
       },
     }
   }

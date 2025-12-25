@@ -1,0 +1,9 @@
+import { getAdapter } from '../dbal-client'
+
+/**
+ * Delete a power transfer request
+ */
+export async function deletePowerTransferRequest(requestId: string): Promise<void> {
+  const adapter = getAdapter()
+  await adapter.delete('PowerTransferRequest', requestId)
+}

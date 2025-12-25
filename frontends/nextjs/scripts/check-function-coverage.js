@@ -1,0 +1,1 @@
+../../../tools/check-function-coverage.js

@@ -12,8 +12,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-package-lock.json
-yarn.lock
 .pnp
 .pnp.js
 
@@ -31,6 +29,7 @@ next-env.d.ts
 .env
 .env.local
 .env.*.local
+.secrets
 
 # Editor
 .vscode/*

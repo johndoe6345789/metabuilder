@@ -336,7 +336,10 @@ const newWorkflow: Workflow = {
       id: 'process',
       type: 'lua',
       label: 'Process Data',
-      config: { scriptId: 'script_my_logic' },
+      config: {
+        scriptId: 'script_my_logic',
+        retry: { maxAttempts: 3, delayMs: 250, backoffMultiplier: 2 }
+      },
       position: { x: 100, y: 200 }
     }
   ],
@@ -347,6 +350,8 @@ const newWorkflow: Workflow = {
 
 await Database.addWorkflow(newWorkflow)
 ```
+
+Note: Workflow nodes can include an optional `retry` config block to automatically retry failed nodes. Supported fields are `maxAttempts`, `delayMs`, `backoffMultiplier`, and `jitterMs`.
 
 ### Add a New Component Configuration
 

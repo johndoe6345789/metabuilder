@@ -1,2 +1,0 @@
-/usr/bin/llvm-ar qc libdbal_adapters.a CMakeFiles/dbal_adapters.dir/src/adapters/sqlite/sqlite_adapter.cpp.o CMakeFiles/dbal_adapters.dir/src/adapters/sqlite/sqlite_pool.cpp.o
-/usr/bin/llvm-ranlib libdbal_adapters.a

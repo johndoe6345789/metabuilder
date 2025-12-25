@@ -229,7 +229,7 @@ Copilot generates:
 
 **Response:** Context-aware guidance based on:
 - Copilot Instructions (.github/copilot-instructions.md)
-- PRD.md project mission
+- docs/getting-started/PRD.md project mission
 - Existing package structure
 - Architectural principles
 
@@ -252,12 +252,12 @@ Copilot generates:
 
 **Context Files:**
 - `.github/copilot-instructions.md` - Comprehensive project guidelines
-- `PRD.md` - Feature context and project mission
+- `docs/getting-started/PRD.md` - Feature context and project mission
 - `/packages/*/seed/` - Existing patterns to follow
 - `prisma/schema.prisma` - Database structure
 
 **Best Practices:**
-- Reference PRD when asking about features
+- Reference docs/getting-started/PRD.md when asking about features
 - Show existing patterns when requesting new code
 - Ask about architectural decisions before implementing
 - Request declarative approaches explicitly
@@ -342,9 +342,9 @@ Copilot generates:
 ### 3. Documentation
 **Files:**
 - `.github/workflows/README.md` - Workflow documentation
-- `PRD.md` - Product requirements
-- `SECURITY.md` - Security policies
-- `README.md` - Project overview
+- `docs/getting-started/PRD.md` - Product requirements
+- `docs/security/SECURITY.md` - Security policies
+- `docs/README.md` - Project overview
 
 ---
 

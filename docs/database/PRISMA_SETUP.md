@@ -137,4 +137,5 @@ Delete `prisma/migrations/` and `dev.db`, then run `npm run db:push`
 
 - [Prisma Documentation](https://www.prisma.io/docs)
 - [Prisma Schema Reference](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference)
+TODO: The migration guide link should be relative to docs/database (remove ./docs/).
 - [Migration Guide](./docs/PRISMA_MIGRATION.md)

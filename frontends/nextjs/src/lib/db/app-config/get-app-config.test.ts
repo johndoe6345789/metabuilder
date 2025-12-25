@@ -1,0 +1,43 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+
+const mockList = vi.fn()
+const mockAdapter = { list: mockList }
+
+vi.mock('../dbal-client', () => ({
+  getAdapter: () => mockAdapter,
+}))
+
+import { getAppConfig } from './get-app-config'
+
+describe('getAppConfig', () => {
+  beforeEach(() => {
+    mockList.mockReset()
+  })
+
+  it.each([
+    { name: 'null when empty', dbData: [], expected: null },
+    {
+      name: 'parsed config',
+      dbData: [{
+        id: 'app1',
+        name: 'Test App',
+        schemas: '[]',
+        workflows: '[]',
+        luaScripts: '[]',
+        pages: '[]',
+        theme: '{}',
+      }],
+      expected: { id: 'app1', name: 'Test App' },
+    },
+  ])('should return $name', async ({ dbData, expected }) => {
+    mockList.mockResolvedValue({ data: dbData })
+
+    const result = await getAppConfig()
+
+    if (expected) {
+      expect(result).toMatchObject(expected)
+    } else {
+      expect(result).toBeNull()
+    }
+  })
+})

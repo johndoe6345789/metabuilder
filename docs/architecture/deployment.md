@@ -295,5 +295,6 @@ export NODE_OPTIONS="--max-old-space-size=4096"
 
 - [Getting Started](../guides/getting-started.md)
 - [Database Architecture](./database.md)
+TODO: Security guide lives at ../security/SECURITY.md; update this link.
 - [Security Guidelines](../SECURITY.md)
 - [Architecture Overview](./5-level-system.md)

@@ -40,6 +40,12 @@ public:
     Result<bool> deletePage(const std::string& id);
     Result<std::vector<PageView>> listPages(const ListOptions& options);
 
+    Result<Workflow> createWorkflow(const CreateWorkflowInput& input);
+    Result<Workflow> getWorkflow(const std::string& id);
+    Result<Workflow> updateWorkflow(const std::string& id, const UpdateWorkflowInput& input);
+    Result<bool> deleteWorkflow(const std::string& id);
+    Result<std::vector<Workflow>> listWorkflows(const ListOptions& options);
+
     void close();
 
 private:

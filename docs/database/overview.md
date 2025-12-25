@@ -330,6 +330,8 @@ Previous versions used `useKV` hooks directly. The new Database layer provides:
 5. **Easier Testing**: Mockable database layer
 6. **Data Portability**: Export/import functionality
 
+Note: `useKV` now persists to browser `localStorage` with `mb_kv:`-prefixed keys and syncs updates across tabs when available, but it remains client-only. Use the Database layer or `useKVStore` for server-side, multi-tenant, or durable data.
+
 ### Migration Example
 
 **Before:**

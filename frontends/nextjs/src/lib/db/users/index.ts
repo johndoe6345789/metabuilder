@@ -1,0 +1,8 @@
+export { getUsers } from './get-users'
+export { getUserById } from './get-user-by-id'
+export { setUsers } from './set-users'
+export { addUser } from './add-user'
+export { updateUser } from './update-user'
+export { deleteUser } from './delete-user'
+export { getSuperGod } from './get-super-god'
+export { transferSuperGodPower } from './transfer-super-god-power'

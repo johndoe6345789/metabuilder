@@ -110,7 +110,7 @@ jobs:
             const issue = context.payload.issue;
             
             try {
-              const prd = fs.readFileSync('PRD.md', 'utf8');
+              const prd = fs.readFileSync('docs/getting-started/PRD.md', 'utf8');
               
               // Extract key terms from issue
               const issueText = (issue.title + ' ' + issue.body).toLowerCase();
@@ -122,7 +122,7 @@ jobs:
               
               if (foundKeywords.length > 0) {
                 comment += `This feature relates to the following PRD concepts: **${foundKeywords.join(', ')}**\n\n`;
-                comment += `Please review [PRD.md](/PRD.md) to ensure alignment with the project mission and existing features.\n\n`;
+                comment += `Please review [docs/getting-started/PRD.md](/docs/getting-started/PRD.md) to ensure alignment with the project mission and existing features.\n\n`;
               }
               
               comment += `### 🎯 Mission Statement\n\n`;

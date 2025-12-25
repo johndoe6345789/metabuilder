@@ -240,6 +240,7 @@ See `.github/workflows/` for configuration.
 
 ## 🔗 Related
 
+TODO: E2E tests live under frontends/nextjs/e2e; update this link.
 - [E2E Tests Directory](../../e2e/README.md)
 - [Development Guide](../guides/api-development.md)
 - [Getting Started](../guides/getting-started.md)

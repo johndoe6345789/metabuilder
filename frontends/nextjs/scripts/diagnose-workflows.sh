@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# Diagnose GitHub Actions workflow setup for local execution with act
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+
+echo "🔍 GitHub Actions Workflow Diagnostics"
+echo "======================================="
+echo
+
+# Check if act is installed
+echo "📦 Checking act installation..."
+if ! command -v act &> /dev/null; then
+    echo "❌ act is not installed"
+    echo "   Install with: brew install act"
+    exit 1
+fi
+echo "✅ act version: $(act --version)"
+echo
+
+# Check Docker
+echo "🐳 Checking Docker..."
+if ! command -v docker &> /dev/null; then
+    echo "❌ Docker is not installed"
+    exit 1
+fi
+if ! docker info &> /dev/null; then
+    echo "❌ Docker daemon is not running"
+    exit 1
+fi
+echo "✅ Docker is running"
+echo
+
+# List workflows
+echo "📋 Available workflows in $PROJECT_ROOT/.github/workflows:"
+if [ -d "$PROJECT_ROOT/.github/workflows" ]; then
+    ls -1 "$PROJECT_ROOT/.github/workflows"/*.yml 2>/dev/null | while read -r workflow; do
+        echo "   - $(basename "$workflow")"
+    done
+else
+    echo "❌ No .github/workflows directory found"
+    exit 1
+fi
+echo
+
+# List jobs in main CI workflow
+echo "🏗️  Jobs in ci.yml:"
+if [ -f "$PROJECT_ROOT/.github/workflows/ci.yml" ]; then
+    act -l -W "$PROJECT_ROOT/.github/workflows/ci.yml" 2>/dev/null || echo "   (Failed to parse workflow)"
+else
+    echo "❌ ci.yml not found"
+fi
+echo
+
+# Check for .actrc or .secrets
+echo "🔐 Checking for act configuration..."
+if [ -f "$PROJECT_ROOT/.actrc" ]; then
+    echo "✅ Found .actrc"
+else
+    echo "⚠️  No .actrc found (optional)"
+fi
+
+if [ -f "$PROJECT_ROOT/.secrets" ]; then
+    echo "✅ Found .secrets"
+else
+    echo "⚠️  No .secrets found (optional)"
+fi
+echo
+
+echo "✅ Diagnostics complete!"
+echo
+echo "💡 Tips:"
+echo "   - Run specific job: npm run act:lint"
+echo "   - List all jobs: act -l"
+echo "   - Run with specific platform: act -P ubuntu-latest=catthehacker/ubuntu:act-latest"

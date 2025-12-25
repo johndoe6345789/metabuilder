@@ -320,6 +320,10 @@ git push
 
 Check GitHub Actions tab to see if workflows pass.
 
+If you're inside the app, the GitHub Actions Monitor (Level 1) can fetch run logs,
+download them locally, and surface common error signals. For private repos or higher
+rate limits, set `GITHUB_TOKEN`.
+
 ---
 
 ## Summary

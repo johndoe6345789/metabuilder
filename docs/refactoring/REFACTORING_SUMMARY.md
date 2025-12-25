@@ -447,6 +447,7 @@ Complex logic      → Lua (runtime-modifiable)
 - [REFACTORING_STRATEGY.md](./REFACTORING_STRATEGY.md) - Comprehensive technical strategy
 - [REFACTORING_CHECKLIST.md](./REFACTORING_CHECKLIST.md) - Implementation checklist
 - [REFACTORING_QUICK_REFERENCE.md](./REFACTORING_QUICK_REFERENCE.md) - Quick lookup guide
+TODO: Update copilot instructions and PRD links to correct relative paths from docs/refactoring.
 - [copilot-instructions.md](../.github/copilot-instructions.md) - Project architecture guide
 - [PRD.md](./PRD.md) - Product requirements
 

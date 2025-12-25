@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Pre-commit git hook for MetaBuilder
+# Validates workflows before commits
+# Install: cp scripts/pre-commit.hook .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+
+set -e
+
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${GREEN}Pre-Commit Workflow Validation${NC}"
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
+
+# Check if any workflow files were modified
+if ! git diff --cached --name-only | grep -q '^\.github/workflows/'; then
+    echo "ℹ️  No workflow files changed, skipping validation"
+    exit 0
+fi
+
+# Run diagnostics if workflow files changed
+echo -e "${YELLOW}Validating workflow files...${NC}"
+
+if command -v ./scripts/diagnose-workflows.sh &> /dev/null; then
+    chmod +x scripts/diagnose-workflows.sh
+    ./scripts/diagnose-workflows.sh
+    
+    if [ $? -ne 0 ]; then
+        echo ""
+        echo -e "${YELLOW}⚠️  Workflow issues detected. Review above before committing.${NC}"
+        echo "To skip this check: git commit --no-verify"
+        exit 1
+    fi
+else
+    echo "Diagnostic script not found, skipping workflow validation"
+fi
+
+echo ""
+echo -e "${GREEN}✓ Pre-commit checks passed!${NC}"
+echo ""
+
+exit 0

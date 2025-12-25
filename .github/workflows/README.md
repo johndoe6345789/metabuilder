@@ -131,6 +131,14 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 
 **SDLC Phase:** Deployment & Operations
 
+### 10. Code Size Limits (`size-limits.yml`)
+**Triggered on:** Pull requests, pushes to main (when source files change)
+
+**Features:**
+- Enforces file size limits and posts PR comments on violations
+- Uploads a size report artifact
+- Monitors `frontends/nextjs/src/**` and runs `scripts/enforce-size-limits.ts` from `frontends/nextjs`
+
 ## SDLC Coverage
 
 ### 🎯 Complete Lifecycle Support
@@ -232,7 +240,7 @@ The project uses ESLint with TypeScript support and React-specific rules:
 
 **In Your IDE:**
 - Reference `.github/copilot-instructions.md` for context
-- Use PRD.md for feature context
+- Use docs/getting-started/PRD.md for feature context
 - Follow existing patterns in `/packages/`
 - Ask Copilot about architectural decisions
 
@@ -336,7 +344,7 @@ npm run build
 
 **In Your IDE:**
 - Use GitHub Copilot extension with context from `.github/copilot-instructions.md`
-- Reference PRD.md when prompting for features
+- Reference docs/getting-started/PRD.md when prompting for features
 - Follow patterns from existing packages
 - Ask about architectural decisions before implementing
 
@@ -370,7 +378,7 @@ npm run build
 
 ### For Issues
 1. **Use clear, descriptive titles** - Helps with automatic categorization
-2. **Provide context** - Link to PRD sections, mention permission levels
+2. **Provide context** - Link to docs/getting-started/PRD.md sections, mention permission levels
 3. **Consider architecture** - Is this declarative? Package-worthy? Multi-tenant?
 4. **Use labels appropriately** - Triggers relevant workflow automation
 5. **Engage with @copilot** - Get AI assistance throughout implementation

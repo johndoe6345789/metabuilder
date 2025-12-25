@@ -76,6 +76,7 @@ docs/
 
 ## Files That Remain in Root
 
+TODO: This repo does not have root README/PRD/SECURITY as listed; update to current docs locations.
 The following files stay in the project root as they are primary project files:
 - `README.md` - Main project overview
 - `PRD.md` - Product Requirements Document

@@ -1,0 +1,2 @@
+cd /Users/rmac/Documents/GitHub/metabuilder
+while :; do sleep 90 && codex exec --cd="/Users/rmac/Documents/GitHub/metabuilder" --sandbox workspace-write "Open and follow the file named docs/todo/0-kickstart.md in the current directory exactly. You may modify any relevant source, config, or build files. Do not ask questions. Make the smallest safe assumption if ambiguous. If no changes are required, halt immediately." || break; done

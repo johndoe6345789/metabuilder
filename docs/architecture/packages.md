@@ -493,7 +493,9 @@ npm run db:reset && npm run seed
 
 ## Related Documentation
 
+TODO: Development guide link should point to docs/guides/getting-started.md (current file does not exist).
 - [Development Guide](./getting-started.md)
+TODO: Component guidelines link points to a non-existent docs/components/README.md; update to correct location.
 - [Component Guidelines](../components/README.md)
 - [Database Architecture](./database.md)
 - [5-Level System](./5-level-system.md)

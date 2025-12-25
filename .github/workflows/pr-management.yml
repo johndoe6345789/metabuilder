@@ -118,20 +118,23 @@ jobs:
             }
             
             if (issues.length > 0) {
-              const comment = `## 📋 PR Description Checklist
-
-The following items could improve this PR:
-
-${issues.map(i => `- [ ] ${i}`).join('\n')}
-
-**Good PR descriptions include:**
-- What changes were made and why
-- How to test the changes
-- Any breaking changes or special considerations
-- Links to related issues
-- Screenshots (for UI changes)
-
-This is a friendly reminder to help maintain code quality! 😊`;
+              const issueList = issues.map(i => '- [ ] ' + i).join('\n');
+              const comment = [
+                '## \uD83D\uDCCB PR Description Checklist',
+                '',
+                'The following items could improve this PR:',
+                '',
+                issueList,
+                '',
+                '**Good PR descriptions include:**',
+                '- What changes were made and why',
+                '- How to test the changes',
+                '- Any breaking changes or special considerations',
+                '- Links to related issues',
+                '- Screenshots (for UI changes)',
+                '',
+                'This is a friendly reminder to help maintain code quality! \uD83D\uDE0A'
+              ].join('\n');
               
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
@@ -158,11 +161,14 @@ This is a friendly reminder to help maintain code quality! 😊`;
             const issueNumbers = [...body.matchAll(/#(\d+)/g)].map(m => m[1]);
             
             if (issueNumbers.length > 0) {
-              const comment = `🔗 **Related Issues**
-
-This PR is related to: ${issueNumbers.map(n => `#${n}`).join(', ')}
-
-These issues will be automatically closed when this PR is merged.`;
+              const relatedList = issueNumbers.map(n => '#' + n).join(', ');
+              const comment = [
+                '\uD83D\uDD17 **Related Issues**',
+                '',
+                'This PR is related to: ' + relatedList,
+                '',
+                'These issues will be automatically closed when this PR is merged.'
+              ].join('\n');
               
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
@@ -178,10 +184,10 @@ These issues will be automatically closed when this PR is merged.`;
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     issue_number: parseInt(issueNum),
-                    body: `🔗 Pull request #${pr.number} has been created to address this issue.`
+                    body: '\uD83D\uDD17 Pull request #' + pr.number + ' has been created to address this issue.'
                   });
                 } catch (e) {
-                  console.log(`Could not comment on issue #${issueNum}`);
+                  console.log('Could not comment on issue #' + issueNum);
                 }
               }
             }

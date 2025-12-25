@@ -80,19 +80,19 @@ jobs:
             }
             
             // Post welcome comment
-            const comment = `👋 Thank you for opening this issue!
-
-This issue has been automatically labeled as: ${labels.join(', ')}
-
-${labels.includes('ai-fixable') ? '🤖 This issue appears to be something AI can help with! A fix may be automatically attempted.' : ''}
-
-A maintainer will review this issue soon. In the meantime, please make sure you've provided:
-- A clear description of the issue
-- Steps to reproduce (for bugs)
-- Expected vs actual behavior
-- Any relevant error messages or screenshots
-
-@copilot may be able to help with this issue.`;
+            const aiHelpText = labels.includes('ai-fixable') 
+              ? '\n\n🤖 This issue appears to be something AI can help with! A fix may be automatically attempted.' 
+              : '';
+            
+            const comment = '👋 Thank you for opening this issue!\n\n' +
+              'This issue has been automatically labeled as: ' + labels.join(', ') +
+              aiHelpText + '\n\n' +
+              'A maintainer will review this issue soon. In the meantime, please make sure you have provided:\n' +
+              '- A clear description of the issue\n' +
+              '- Steps to reproduce (for bugs)\n' +
+              '- Expected vs actual behavior\n' +
+              '- Any relevant error messages or screenshots\n\n' +
+              'Copilot may be able to help with this issue.';
             
             await github.rest.issues.createComment({
               owner: context.repo.owner,
@@ -116,28 +116,23 @@ A maintainer will review this issue soon. In the meantime, please make sure you'
         with:
           script: |
             const issue = context.payload.issue;
+            const labelList = issue.labels.map(l => l.name).join(', ');
             
-            const comment = `🤖 **AI-Assisted Fix Attempt**
-
-I've analyzed this issue and here are my suggestions:
-
-**Issue Type:** ${issue.labels.map(l => l.name).join(', ')}
-
-**Suggested Actions:**
-1. Review the issue description carefully
-2. Check for similar issues in the repository history
-3. Consider using @copilot to help implement the fix
-
-**To request an automated fix:**
-- Add the \`auto-fix\` label to this issue
-- Ensure the issue description clearly explains:
-  - What needs to be fixed
-  - Where the issue is located (file/line if known)
-  - Expected behavior
-
-**Note:** Complex issues may require human review before implementation.
-
-Would you like me to attempt an automated fix? If so, please confirm by commenting "@copilot fix this issue".`;
+            const comment = '🤖 **AI-Assisted Fix Attempt**\n\n' +
+              'I have analyzed this issue and here are my suggestions:\n\n' +
+              '**Issue Type:** ' + labelList + '\n\n' +
+              '**Suggested Actions:**\n' +
+              '1. Review the issue description carefully\n' +
+              '2. Check for similar issues in the repository history\n' +
+              '3. Consider using Copilot to help implement the fix\n\n' +
+              '**To request an automated fix:**\n' +
+              '- Add the auto-fix label to this issue\n' +
+              '- Ensure the issue description clearly explains:\n' +
+              '  - What needs to be fixed\n' +
+              '  - Where the issue is located (file/line if known)\n' +
+              '  - Expected behavior\n\n' +
+              '**Note:** Complex issues may require human review before implementation.\n\n' +
+              'Would you like me to attempt an automated fix? If so, please confirm by commenting "Copilot fix this issue".';
             
             await github.rest.issues.createComment({
               owner: context.repo.owner,
@@ -165,26 +160,19 @@ Would you like me to attempt an automated fix? If so, please confirm by commenti
         with:
           script: |
             const issue = context.payload.issue;
-            const branchName = `auto-fix/issue-${issue.number}`;
+            const branchName = 'auto-fix/issue-' + issue.number;
             
-            const comment = `🤖 **Automated Fix PR Creation**
-
-I've created a branch \`${branchName}\` for this fix.
-
-**Next Steps:**
-1. A developer or @copilot will work on the fix in this branch
-2. A pull request will be created automatically
-3. The PR will be linked to this issue
-
-**Branch:** \`${branchName}\`
-
-To work on this fix:
-\`\`\`bash
-git fetch origin
-git checkout ${branchName}
-\`\`\`
-
-This issue will be automatically closed when the PR is merged.`;
+            const comment = '🤖 **Automated Fix PR Creation**\n\n' +
+              'I have created a branch ' + branchName + ' for this fix.\n\n' +
+              '**Next Steps:**\n' +
+              '1. A developer or Copilot will work on the fix in this branch\n' +
+              '2. A pull request will be created automatically\n' +
+              '3. The PR will be linked to this issue\n\n' +
+              '**Branch:** ' + branchName + '\n\n' +
+              'To work on this fix:\n' +
+              'git fetch origin\n' +
+              'git checkout ' + branchName + '\n\n' +
+              'This issue will be automatically closed when the PR is merged.';
             
             await github.rest.issues.createComment({
               owner: context.repo.owner,

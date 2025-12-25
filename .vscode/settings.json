@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "/workspaces/metabuilder/dbal/cpp",
+    "cmake.sourceDirectory": "/Users/rmac/Documents/GitHub/metabuilder/dbal/cpp",
     "chat.mcp.discovery.enabled": {
         "claude-desktop": true,
         "windsurf": true,
@@ -16,5 +16,46 @@
         "*": true
     },
     "editor.inlineSuggest.enabled": true,
-    "chat.experimental.yolo": true
+    "chat.experimental.yolo": true,
+    "github.copilot.chat.agent.autoApprove": true,
+    "chat.tools.autoApprove": true,
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.pythonProjects": [],
+    "chat.mcp.serverSampling": {
+        "metabuilder/.vscode/mcp.json: codebase-context": {
+            "allowedModels": [
+                "copilot/claude-sonnet-4.5",
+                "copilot/auto",
+                "copilot/claude-haiku-4.5",
+                "copilot/claude-opus-41",
+                "copilot/claude-opus-4.5",
+                "copilot/claude-sonnet-4",
+                "copilot/gemini-2.5-pro",
+                "copilot/gemini-3-flash-preview",
+                "copilot/gemini-3-pro-preview",
+                "copilot/gpt-4.1",
+                "copilot/gpt-4o",
+                "copilot/gpt-5",
+                "copilot/gpt-5-mini",
+                "copilot/gpt-5-codex",
+                "copilot/gpt-5.1",
+                "copilot/gpt-5.1-codex",
+                "copilot/gpt-5.1-codex-max",
+                "copilot/gpt-5.1-codex-mini",
+                "copilot/gpt-5.2",
+                "copilot/grok-code-fast-1",
+                "copilot/oswe-vscode-prime"
+            ]
+        }
+    },
+"chat.tools.urls.autoApprove": {
+    "http://localhost:*": true,
+    "http://127.0.0.1:*": true,
+    "https://localhost:*": true,
+    "https://github.com/rmac/*": true,
+    "https://api.github.com/*": true,
+    "https://docs.github.com/*": true,
+    "https://www.npmjs.com/*": true,
+    "https://registry.npmjs.org/*": true
+}
 }

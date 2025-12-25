@@ -169,6 +169,15 @@ client.components.delete(id)
 client.components.getTree(pageId)  // Special: get all components for a page
 ```
 
+### Workflows
+```typescript
+client.workflows.create(data)
+client.workflows.read(id)
+client.workflows.update(id, data)
+client.workflows.delete(id)
+client.workflows.list(options)
+```
+
 ## Common Patterns
 
 ### List with Pagination

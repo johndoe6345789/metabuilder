@@ -1,238 +1,306 @@
-# MetaBuilder Documentation
+# MetaBuilder - Enterprise Data Platform
 
-Complete documentation for the MetaBuilder data-driven application platform.
+MetaBuilder is a powerful, declarative enterprise data platform built on a 5-level permission system. It enables rapid development of multi-tenant data applications with JSON configurations and Lua scripting.
 
-## 📚 Start Here
+TODO: This file lives under docs/; links that start with ./docs/ are broken and PRD/SECURITY paths are outdated.
 
-**New to MetaBuilder?** Start with the [Getting Started](./getting-started/) section.
+## 📋 Table of Contents
 
-Already know what you're doing? Jump to the [Documentation Index](./INDEX.md) for detailed navigation.
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [Architecture](#architecture)
+- [Documentation](#documentation)
+- [Development](#development)
+- [Project Structure](#project-structure)
 
-## Quick Links
+## ✨ Features
 
-| Section | Purpose |
-|---------|---------|
-| 🚀 [Getting Started](./getting-started/) | Setup, quickstart, and product overview |
-| 🏗️ [Architecture](./architecture/) | System design and five-level architecture |
-| 🧪 [Testing](./testing/) | Testing guidelines and best practices |
-| 🔒 [Security](./security/) | Security practices and implementation |
-| 🔧 [API Reference](./api/) | API documentation and integration guides |
-| 📋 [Implementation](./implementation/) | Detailed implementation guides |
-| 🔄 [Refactoring](./refactoring/) | Refactoring strategies and patterns |
-| 💻 [Development](./development/) | Development tools and guides |
+- **5-Level Permission System** - Granular access control (User, Admin, God, SuperGod, SystemRoot)
+- **Multi-Tenant Architecture** - Built-in support for tenant isolation
+- **Declarative Configuration** - Define features in JSON, not code
+- **Lua Scripting** - Dynamic business logic without recompilation
+- **Database-Driven** - All configuration stored and managed in database
+- **Package System** - Modular, reusable feature packages
+- **Type-Safe** - Full TypeScript support throughout
+- **CI/CD Ready** - Automated testing, linting, and deployment workflows
 
-## What is MetaBuilder?
+## 🧪 Testing Workflows Locally
 
-MetaBuilder is a **data-driven, multi-tenant application platform** where:
-
-- **95% of functionality** is defined through JSON and Lua, not TypeScript
-- **Configuration lives** in the database, not in code
-- **Features are modular** as self-contained packages
-- **Multi-tenancy** is built in by default
-- **Customization** happens without code changes
-
-### Key Features
-
-✅ **5-Level Architecture** - Sophisticated hierarchy for global, tenant, module, entity, and record levels
-✅ **Data-Driven Design** - Define functionality declaratively in JSON and Lua
-✅ **Multi-Tenant Ready** - Built-in tenant isolation and configuration
-✅ **Package System** - Self-contained, importable/exportable packages
-✅ **Generic Components** - Render complex UIs from configuration
-✅ **Lua Scripting** - Business logic without redeploying
-✅ **Secure Database Layer** - Type-safe ORM with built-in security
-✅ **Comprehensive Testing** - Unit, integration, and E2E test suites
-
-## Documentation Structure
-
-```
-docs/
-├── README.md (this file)           # Overview
-├── INDEX.md                        # Complete documentation index
-│
-├── getting-started/                # For new developers
-│   ├── README.md
-│   ├── PRD.md                      # Product requirements
-│   └── QUICK_START.md              # Setup guide
-│
-├── architecture/                   # System design
-│   ├── 5-level-system.md
-│   ├── data-driven-architecture.md
-│   ├── packages.md
-│   └── ...
-│
-├── testing/                        # Testing docs
-│   ├── TESTING_GUIDELINES.md
-│   ├── UNIT_TESTS_IMPLEMENTATION.md
-│   └── ...
-│
-├── security/                       # Security docs
-│   ├── SECURITY.md
-│   └── SECURE_DATABASE_LAYER.md
-│
-├── api/                            # API documentation
-│   ├── platform-guide.md
-│   ├── DBAL_INTEGRATION.md
-│   └── ...
-│
-├── implementation/                 # Detailed guides
-│   ├── COMPONENT_MAP.md
-│   ├── MULTI_TENANT_SYSTEM.md
-│   └── ...
-│
-├── refactoring/                    # Refactoring guides
-│   ├── REFACTORING_STRATEGY.md
-│   └── ...
-│
-└── ...other directories
-```
-
-## Common Tasks
-
-### I'm new to MetaBuilder
-→ Go to [Getting Started](./getting-started/)
-
-### I need to understand the architecture
-→ Read [5-Level System](./architecture/5-level-system.md)
-
-### I need to write tests
-→ Check [Testing Guidelines](./testing/TESTING_GUIDELINES.md)
-
-### I need to implement a feature
-→ See [Implementation Guides](./implementation/)
-
-### I need to set up security
-→ Read [Security Guide](./security/SECURITY.md)
-
-### I need to refactor code
-→ Check [Refactoring Strategy](./refactoring/REFACTORING_STRATEGY.md)
-
-## Key Concepts
-
-### Five-Level Architecture
-MetaBuilder organizes configuration and functionality across five levels:
-
-1. **Level 0 (Global)** - Platform-wide settings
-2. **Level 1 (Tenant)** - Tenant-specific customization
-3. **Level 2 (Modules)** - Package definitions
-4. **Level 3 (Entities)** - Schemas and forms
-5. **Level 4 (Records)** - Individual data records
-
-[Learn more](./architecture/5-level-system.md)
-
-### Data-Driven Design
-Instead of coding everything, MetaBuilder uses:
-- **JSON** for configuration
-- **Lua** for business logic
-- **Database** as source of truth
-
-Benefits: Multi-tenancy, flexibility, no redeployment needed.
-
-[Learn more](./architecture/data-driven-architecture.md)
-
-### Package System
-Features are self-contained packages with:
-- Configuration (seeds)
-- Components
-- Scripts
-- Assets
-
-[Learn more](./architecture/packages.md)
-
-## Development Workflow
-
-### 1. Plan
-- Review the PRD and architecture docs
-- Design your solution
-- Create a feature branch
-
-### 2. Implement
-- Start with database schema (Prisma)
-- Add seed data and configuration
-- Create generic components
-- Add Lua scripts for logic
-
-### 3. Test
-- Write unit tests
-- Run `npm run test:coverage`
-- Test with different permission levels
-- Run E2E tests
-
-### 4. Document
-- Update relevant doc files
-- Add code comments
-- Update this README if needed
-
-### 5. Deploy
-- Run linting: `npm run lint:fix`
-- Test in staging
-- Deploy to production
-
-## Useful Commands
+**New:** Test GitHub Actions workflows locally before pushing!
 
 ```bash
-# Development
-npm run dev                    # Start dev server
-npm run build                  # Production build
+# Quick start - runs full CI pipeline
+npm run act
 
-# Database
-npm run db:generate           # Generate Prisma client
-npm run db:push              # Sync schema
-npm run db:studio            # Prisma Studio
+# Test specific components
+npm run act:lint        # ESLint linting
+npm run act:build       # Production build
+npm run act:e2e         # End-to-end tests
+npm run act:typecheck   # TypeScript validation
 
-# Testing
-npm test                      # Watch mode
-npm test -- --run             # Run once
-npm run test:coverage         # With coverage
-npm run test:e2e              # E2E tests
+# Interactive testing
+npm run act:test        # Menu-driven testing
 
-# Code Quality
-npm run lint                  # Check
-npm run lint:fix              # Auto-fix
+# Diagnostics
+npm run act:diagnose    # Check setup (no Docker required)
 ```
 
-## System Requirements
+See [ACT Cheat Sheet](docs/guides/ACT_CHEAT_SHEET.md) for quick reference or [Act Testing Guide](docs/guides/ACT_TESTING.md) for detailed documentation.
 
-- Node.js 18+
-- npm 9+
-- PostgreSQL 14+
-
-## Getting Help
-
-1. **Read the docs** - Start with the [Documentation Index](./INDEX.md)
-2. **Search the docs** - Use Ctrl+F to search
-3. **Check examples** - Look at existing code
-4. **Ask the team** - Connect with other developers
-
-## Contributing
-
-When contributing to MetaBuilder:
-1. Follow the [Refactoring Guide](./refactoring/)
-2. Write tests for your code
-3. Follow security best practices
-4. Update documentation
-5. Get code review before merging
-
-## Key Resources
-
-- 📖 [Documentation Index](./INDEX.md) - Complete navigation
-- 🏗️ [Architecture Overview](./architecture/5-level-system.md)
-- 🧪 [Testing Guide](./testing/TESTING_GUIDELINES.md)
-- 🔒 [Security Guide](./security/SECURITY.md)
-- 🔄 [Refactoring Guide](./refactoring/REFACTORING_STRATEGY.md)
-
-## Status
-
-✅ **Architecture** - Complete and documented
-✅ **Core Features** - Fully implemented
-✅ **Testing** - Comprehensive test suite
-✅ **Security** - Production-ready
-✅ **Documentation** - Well-organized and detailed
-
-## License
-
-See [LICENSE](../LICENSE) file for details.
+**Benefits:**
+- ✅ Catch CI failures before pushing to GitHub
+- ✅ No more "fix CI" commits
+- ✅ Fast feedback loop (5-10 minutes per run)
+- ✅ Works offline after first run
 
 ---
 
-**Last Updated**: December 2025
-**Questions?** Check [INDEX.md](./INDEX.md) for detailed navigation
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+- Docker (optional, for deployment)
+
+### Development Setup
+
+```bash
+# Clone repository
+git clone <repo>
+cd metabuilder
+
+# Install dependencies
+npm install
+
+# Set up database
+npm run db:generate
+npm run db:push
+
+# Start development server
+npm run dev
+```
+
+Visit `http://localhost:5173` to access the application.
+
+### Build for Production
+
+```bash
+npm run build
+npm run preview  # Preview production build locally
+```
+
+## 📐 Architecture
+
+MetaBuilder uses a **5-level permission system**:
+
+```
+SuperGod (Level 5) - System administrator, full access
+   ↓
+God (Level 4) - Power user, can modify system configuration
+   ↓
+Admin (Level 3) - Tenant administrator, manage users and data
+   ↓
+User (Level 2) - Regular user, standard data access
+   ↓
+Guest (Level 1) - Read-only access (not implemented)
+```
+
+### Key Components
+
+- **Prisma ORM** - Type-safe database queries
+- **React + TypeScript** - Modern UI framework
+- **Vite** - Fast build tool
+- **Tailwind CSS** - Utility-first CSS framework
+- **Lua (Fengari)** - Embedded scripting
+
+For detailed architecture information, see [Architecture Documentation](./docs/architecture/).
+
+## 📚 Documentation
+
+### Getting Started
+
+- [Getting Started Guide](./docs/guides/getting-started.md) - Setup and first steps
+- [5-Level Permission System](./docs/architecture/5-level-system.md) - Understanding permissions
+
+### Development Guides
+
+- [API Development](./docs/guides/api-development.md) - Creating API routes
+- [Package System](./docs/architecture/packages.md) - Building packages
+- [Database Guide](./docs/architecture/database.md) - Working with Prisma
+
+### Reference
+
+- [Project Requirements (PRD)](./docs/PRD.md)
+- [Security Guidelines](./docs/SECURITY.md)
+- [Code Documentation Index](./docs/CODE_DOCS_MAPPING.md)
+
+### Local Testing with Act
+
+- [Act Cheat Sheet](./docs/guides/ACT_CHEAT_SHEET.md) - Quick reference for common commands
+- [Act Testing Guide](./docs/guides/ACT_TESTING.md) - Complete documentation
+- [GitHub Actions Reference](./docs/guides/github-actions-local-testing.md) - Technical details
+
+### Full Documentation
+
+See [docs/README.md](./docs/README.md) for the complete documentation index.
+
+## 🔧 Development
+
+### Available Scripts
+
+```bash
+# Development & Building
+npm run dev              # Start dev server
+npm run build            # Production build
+npm run preview          # Preview production build
+
+# Testing
+npm run test             # Run tests in watch mode
+npm run test:e2e         # Run end-to-end tests
+npm run test:e2e:ui      # Run e2e tests with UI
+npm run lint             # Check code quality
+npm run lint:fix         # Auto-fix linting issues
+
+# Local Workflow Testing (Act)
+npm run act              # Run full CI pipeline locally
+npm run act:lint         # Test linting
+npm run act:build        # Test production build
+npm run act:e2e          # Test E2E tests
+npm run act:test         # Interactive testing menu
+npm run act:diagnose     # Check setup (no Docker)
+
+# Database
+npm run db:generate      # Generate Prisma client
+npm run db:push          # Apply schema changes
+npm run db:studio        # Open database UI
+
+# Other
+npm run act              # Run GitHub Actions locally
+```
+
+### Code Quality
+
+```bash
+# Run linter
+npm run lint
+
+# Fix linting issues
+npm run lint:fix
+
+# Run all tests
+npm run test:e2e
+```
+
+## 📁 Project Structure
+
+```
+metabuilder/
+├── src/                    # React application source
+│   ├── app/               # App layout and pages
+│   ├── components/        # React components
+│   ├── lib/              # Utility libraries
+│   ├── hooks/            # Custom React hooks
+│   ├── types/            # TypeScript type definitions
+│   └── seed-data/        # Database initialization data
+├── prisma/               # Database schema & migrations
+│   └── schema.prisma     # Prisma schema
+├── packages/             # Modular feature packages
+│   ├── admin_dialog/
+│   ├── dashboard/
+│   ├── data_table/
+│   ├── form_builder/
+│   └── ...
+├── docs/                 # Documentation
+│   ├── architecture/     # Architecture guides
+│   ├── guides/          # Development guides
+│   └── ...
+├── e2e/                 # End-to-end tests
+├── scripts/             # Utility scripts
+│   └── doc-quality-checker.sh  # Documentation quality assessment
+├── deployment/          # Deployment configurations
+├── vite.config.ts       # Vite configuration
+├── tsconfig.json        # TypeScript configuration
+├── middleware.ts        # Next.js middleware
+└── package.json         # Dependencies & scripts
+```
+
+### Directory Guide
+
+TODO: src/README.md does not exist under docs/; confirm correct location or add missing docs/src.
+
+- **src/** - See [src/README.md](./src/README.md)
+- **packages/** - See [packages/README.md](./packages/README.md)
+- **docs/** - See [docs/README.md](./docs/README.md)
+- **prisma/** - Database schema and migrations
+- **e2e/** - Playwright end-to-end tests
+- **scripts/** - Utility scripts including documentation quality checker
+
+## 🔐 Security
+
+- All credentials stored as SHA-512 hashes
+- 5-level permission system for granular access control
+- Sandboxed Lua script execution
+- Type-safe database queries with Prisma
+- Security documentation: [SECURITY.md](./docs/SECURITY.md)
+
+## 📦 Deployment
+
+### Docker
+
+```bash
+# Development
+docker-compose -f deployment/docker-compose.development.yml up
+
+# Production
+docker-compose -f deployment/docker-compose.production.yml up
+```
+
+### Manual Deployment
+
+TODO: Manual deployment docs are not under docs/deployment; update this link to the correct location.
+See [deployment/README.md](./deployment/README.md) for detailed instructions.
+
+## 🤝 Contributing
+
+1. Check [documentation guidelines](./docs/guides/api-development.md)
+2. Follow code conventions in [Copilot instructions](./.github/copilot-instructions.md)
+3. Run linter: `npm run lint:fix`
+4. Run tests: `npm run test:e2e`
+5. Update documentation as needed
+
+## 📊 Documentation Quality
+
+This project maintains high documentation standards:
+
+```bash
+# Check documentation quality
+./scripts/doc-quality-checker.sh /workspaces/metabuilder
+```
+
+Current metrics:
+- README Coverage: 60%+
+- JSDoc Coverage: 100%
+- Type Annotations: 80%+
+- Security Docs: 100%
+
+## 📄 License
+
+See [LICENSE](./LICENSE) file.
+
+## 📞 Support
+
+For questions or issues:
+
+1. Check the [documentation](./docs/)
+2. Review [example code](./src/components/examples/)
+3. Check [existing tests](./e2e/) for patterns
+4. Review [SECURITY.md](./docs/SECURITY.md) for security questions
+
+## Quick Links
+
+- **Permission Model**: [5-Level System](./docs/architecture/5-level-system.md)
+- **Database Schema**: [Prisma Schema](./prisma/schema.prisma)
+- **API Patterns**: [API Development Guide](./docs/guides/api-development.md)
+- **Security**: [Security Guidelines](./docs/SECURITY.md)
+- **Packages**: [Package System](./docs/architecture/packages.md)

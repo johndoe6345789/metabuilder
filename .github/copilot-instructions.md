@@ -10,6 +10,20 @@ MetaBuilder is a **data-driven, multi-tenant platform** with 95% functionality i
 - **Package System**: Self-contained modules in `/packages/{name}/seed/` with metadata, components, scripts
 - **Multi-Tenancy**: All data queries filter by `tenantId`; each tenant has isolated configurations
 
+## 0-kickstart Operating Rules
+
+Follow `.github/prompts/0-kickstart.md` as the current workflow source of truth. Key rules:
+- Work through `.github/prompts/` as needed; start with `0-kickstart.md`.
+- Commit as you go with descriptive messages; default to trunking on `main`.
+- Use `act` to diagnose GitHub workflow issues locally.
+- Keep unit tests parameterized; create new test files where possible; use 1:1 source-to-test naming.
+- Leave TODO comments for missing functionality.
+- Check `docs/todo/` before starting.
+- One lambda per file; classes only serve as containers for related lambdas (see `.github/prompts/LAMBDA_PROMPT.md`).
+- Route data access through DBAL; treat it as the trusted layer.
+- Design for flexibility, modularity, and containerization.
+- See `docs/RADIX_TO_MUI_MIGRATION.md` for UI migration guidance.
+
 ## Critical Patterns
 
 ### 1. API-First DBAL Development
@@ -76,11 +90,43 @@ Always test scripts with `DeclarativeComponentRenderer.executeLuaScript()`
 
 ## Code Conventions
 
+### UI Components & Styling
+
+**⚠️ CRITICAL: This project does NOT use Radix UI or Tailwind CSS**
+
+- ❌ **NEVER import from `@radix-ui/*`** - These dependencies have been removed
+- ❌ **NEVER use Tailwind utility classes** in `className` props
+- ✅ **ALWAYS use Material-UI** (`@mui/material`) for UI components
+- ✅ **Use MUI's `sx` prop** for inline styles with theme access
+- ✅ **Create `.module.scss` files** for component-specific custom styles
+- ✅ **Use `@mui/icons-material`** for icons, not lucide-react or heroicons
+
+```tsx
+// ❌ Wrong: Using Radix UI or Tailwind
+import { Dialog } from '@radix-ui/react-dialog'
+<button className="bg-blue-500 text-white px-4 py-2">Click</button>
+
+// ✅ Right: Using Material-UI
+import { Dialog, Button } from '@mui/material'
+<Button variant="contained" color="primary">Click</Button>
+<Box sx={{ display: 'flex', gap: 2, p: 3 }}>Content</Box>
+```
+
+**Component Mapping:**
+- Radix Dialog → MUI Dialog
+- Radix Select → MUI Select
+- Radix Checkbox → MUI Checkbox
+- Radix Switch → MUI Switch
+- Tailwind classes → MUI `sx` prop or SCSS modules
+
+**See:** `UI_STANDARDS.md` and `docs/UI_MIGRATION.md` for complete reference
+
 ### TypeScript/React
-- Max 150 LOC per component (check `RenderComponent.tsx` ← 221 LOC is exception using recursive pattern)
-- Use `@/` absolute paths and shadcn/ui from `@/components/ui`
+- One lambda per file; classes are containers for related lambdas.
+- Keep files small and focused; split by responsibility when they grow.
+- Use `@/` absolute paths
 - Functional components with hooks; avoid class components
-- Test files next to source: `utils.ts` + `utils.test.ts` using parameterized `it.each()`
+- Test files next to source with matching names: `utils.ts` + `utils.test.ts`, using parameterized `it.each()`
 
 ### Tests
 All functions need coverage with parameterized tests:
@@ -101,25 +147,27 @@ Run `npm run test:coverage:report` to auto-generate coverage markdown.
 - Queries must include `where('tenantId', currentTenant.id)` for multi-tenancy
 
 ### Styling
-Tailwind only; theme in `src/index.css` with colors defined in oklch space. Font families: IBM Plex Sans (body), Space Grotesk (headings), JetBrains Mono (code).
+Material-UI with SASS; theme in `src/theme/mui-theme.ts` with light/dark mode support. Font families: IBM Plex Sans (body), Space Grotesk (headings), JetBrains Mono (code). Use MUI's `sx` prop for inline styles or create `.module.scss` files for custom component styles.
 
 ## Development Checklist
 
-**Before implementing**: Check `docs/` for relevant guides, especially `docs/architecture/5-level-system.md` for permission logic.
+**Before implementing**: Check `docs/` and `docs/todo/`, and review `.github/prompts/0-kickstart.md` for current workflow rules.
 
 **During implementation**:
 1. Define database schema changes first (Prisma)
 2. Add seed data to `src/seed-data/` or package `/seed/`
 3. Use generic renderers (`RenderComponent`) not hardcoded JSX
 4. Add Lua scripts in `src/lib/lua-snippets.ts` or package `/seed/scripts/`
-5. Keep components < 150 LOC
-6. Add parameterized tests in `.test.ts` files
+5. Keep one lambda per file and split as needed
+6. Add parameterized tests in `.test.ts` files with matching names
 
 **Before commit**:
 - `npm run lint:fix` (fixes ESLint issues)
 - `npm test -- --run` (all tests pass)
 - `npm run test:coverage:report` (verify new functions have tests)
 - `npm run test:e2e` (critical workflows still work)
+- Use `npm run act:diagnose` or `npm run act` when investigating CI/workflow failures
+- Commit with a descriptive message on `main` unless a PR workflow is explicitly required
 
 ## Multi-Tenant Safety
 
@@ -158,8 +206,9 @@ If fixing a DBAL bug:
 ❌ **Forgetting tenantId filter** → Breaks multi-tenancy
 ❌ **Adding fields without Prisma generate** → Type errors in DB helper
 ❌ **Plain JS loops over Fengari tables** → Use Lua, not TS, for Lua data
-❌ **Components > 150 LOC** → Refactor to composition + `RenderComponent`
+❌ **Multiple lambdas per file** → Split into single-lambda files and wrap with a class only when needed
 ❌ **New function without test** → `npm run test:check-functions` will fail
+❌ **Missing TODO for unfinished behavior** → Leave a TODO comment where functionality is pending
 
 ## Key Files
 
@@ -176,6 +225,6 @@ If fixing a DBAL bug:
 2. Could a generic component render this instead of custom TSX?
 3. Does this query filter by tenantId?
 4. Could Lua handle this without code changes?
-5. Is the component < 150 LOC? (If not, refactor)
+5. Is this one lambda per file (and test file name matches)?
 6. Does this function have a parameterized test?
 7. Is this DBAL change reflected in YAML schema first?

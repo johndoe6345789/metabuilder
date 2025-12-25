@@ -87,14 +87,13 @@ Every database operation requires:
 ### 2. Rate Limiting
 
 Prevents abuse by limiting requests per user:
-- **100 requests per 60 seconds** per user
+- **100 requests per 60 seconds** per user (defaults)
 - Automatic cleanup of old timestamps
 - Tracks per userId, not IP (more accurate)
 
-```typescript
-private static readonly RATE_LIMIT_WINDOW = 60000 // 1 minute
-private static readonly MAX_REQUESTS_PER_WINDOW = 100
-```
+Override defaults with environment variables:
+- `MB_RATE_LIMIT_WINDOW_MS` (milliseconds)
+- `MB_RATE_LIMIT_MAX_REQUESTS` (positive integer)
 
 ### 3. Input Sanitization
 
@@ -298,6 +297,14 @@ The rate limit map automatically cleans old entries:
 - Only keeps timestamps within the window
 - Prevents memory bloat
 - O(n) cleanup per request (minimal overhead)
+
+### Rate Limit Configuration
+
+Rate limit thresholds are loaded from `SystemConfig` when secure queries execute:
+- `rate_limit_window_ms` (default: `60000`)
+- `rate_limit_max_requests` (default: `100`)
+
+If a key is missing or invalid, env overrides (`MB_RATE_LIMIT_WINDOW_MS`, `MB_RATE_LIMIT_MAX_REQUESTS`) are used, then defaults.
 
 ### Audit Log Rotation
 

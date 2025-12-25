@@ -1,0 +1,10 @@
+/**
+ * Comments Index
+ * Exports all comment functions
+ */
+
+export { getComments } from './get-comments'
+export { setComments } from './set-comments'
+export { addComment } from './add-comment'
+export { updateComment } from './update-comment'
+export { deleteComment } from './delete-comment'

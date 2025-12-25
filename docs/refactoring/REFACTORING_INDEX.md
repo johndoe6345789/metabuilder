@@ -357,6 +357,7 @@ useLuaSecurity()
 
 ## 📚 Related Resources
 
+TODO: Paths below are wrong from docs/refactoring; update copilot/PRD and schema/src references to valid locations.
 - **[copilot-instructions.md](../.github/copilot-instructions.md)** - MetaBuilder architecture guide
 - **[PRD.md](./PRD.md)** - Product requirements
 - **[prisma/schema.prisma](../prisma/schema.prisma)** - Current database schema
