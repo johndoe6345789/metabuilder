@@ -158,7 +158,7 @@ const DialogClose = forwardRef<HTMLButtonElement, { children?: ReactNode; onClic
   ({ children, onClick, ...props }, ref) => {
     if (children) {
       return (
-        <Box ref={ref as React.Ref<HTMLDivElement>} onClick={onClick} sx={{ display: 'inline-flex', cursor: 'pointer' }}>
+        <Box ref={ref as unknown as React.Ref<HTMLDivElement>} onClick={onClick} sx={{ display: 'inline-flex', cursor: 'pointer' }}>
           {children}
         </Box>
       )
