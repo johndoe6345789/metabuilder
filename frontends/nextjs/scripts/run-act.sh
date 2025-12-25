@@ -59,6 +59,12 @@ fi
 # Add platform specification for better compatibility
 ACT_CMD+=(-P ubuntu-latest=catthehacker/ubuntu:act-latest)
 
+# Use bind mount for proper directory mapping (important for workspaces)
+ACT_CMD+=(--bind)
+
+# Disable cache server since it's not available locally
+ACT_CMD+=(--no-cache-server)
+
 # Add any additional arguments
 ACT_CMD+=("${ACT_ARGS[@]}")
 
