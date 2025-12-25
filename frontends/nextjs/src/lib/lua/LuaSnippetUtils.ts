@@ -2,6 +2,8 @@ import { LUA_SNIPPETS, LUA_SNIPPET_CATEGORIES, type LuaSnippet } from './snippet
 import { getSnippetsByCategory } from './functions/get-snippets-by-category'
 import { searchSnippets } from './functions/search-snippets'
 import { getSnippetById } from './functions/get-snippet-by-id'
+import { getSnippetCategoryCounts } from './functions/get-snippet-category-counts'
+import { getAllSnippetTags } from './functions/get-all-snippet-tags'
 
 /**
  * LuaSnippetUtils - Class wrapper for Lua snippet utility functions
@@ -39,30 +41,12 @@ export class LuaSnippetUtils {
   /**
    * Get count of snippets per category
    */
-  static getCategoryCounts(): Record<string, number> {
-    const counts: Record<string, number> = { All: LUA_SNIPPETS.length }
-    
-    for (const snippet of LUA_SNIPPETS) {
-      counts[snippet.category] = (counts[snippet.category] || 0) + 1
-    }
-    
-    return counts
-  }
+  static getCategoryCounts = getSnippetCategoryCounts
 
   /**
    * Get all unique tags across snippets
    */
-  static getAllTags(): string[] {
-    const tagSet = new Set<string>()
-    
-    for (const snippet of LUA_SNIPPETS) {
-      for (const tag of snippet.tags) {
-        tagSet.add(tag)
-      }
-    }
-    
-    return Array.from(tagSet).sort()
-  }
+  static getAllTags = getAllSnippetTags
 }
 
 // Re-export types for convenience
