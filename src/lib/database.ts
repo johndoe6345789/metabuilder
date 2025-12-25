@@ -13,6 +13,14 @@ import type { ModelSchema } from './schema-types'
 import type { InstalledPackage } from './package-types'
 import type { SMTPConfig } from './password-utils'
 
+/**
+ * Database class - provides data access layer
+ * 
+ * NOTE: DBAL integration is available server-side only. 
+ * For server-side code (API routes, server components), import and use database-dbal.server.ts directly.
+ * This class currently uses Prisma directly but maintains compatibility with DBAL for server contexts.
+ */
+
 export interface CssCategory {
   name: string
   classes: string[]
@@ -109,6 +117,22 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 }
 
 export class Database {
+  /**
+   * Initialize database connection
+   * Note: DBAL can be initialized separately in server contexts via database-dbal.server.ts
+   */
+  static async initializeDatabase(): Promise<void> {
+    try {
+      // Test Prisma connection
+      await prisma.$connect()
+      console.log('Database initialized successfully')
+    } catch (error) {
+      console.error('Failed to initialize database:', error)
+      throw error
+    }
+  }
+
+  // User operations
   static async getUsers(): Promise<User[]> {
     const users = await prisma.user.findMany()
     return users.map(u => ({
@@ -698,7 +722,7 @@ export class Database {
     await prisma.componentConfig.delete({ where: { id: configId } })
   }
 
-  static async initializeDatabase(): Promise<void> {
+  static async seedDefaultData(): Promise<void> {
     const users = await this.getUsers()
     const credentials = await this.getCredentials()
 

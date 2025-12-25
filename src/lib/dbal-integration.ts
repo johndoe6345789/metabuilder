@@ -184,7 +184,7 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    const context = this.tenantManager.getTenantContext(tenantId, userId)
+    const context = await this.tenantManager.getTenantContext(tenantId, userId)
     if (!context) {
       throw new Error(`Tenant context not found: ${tenantId}`)
     }
@@ -204,7 +204,7 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    const context = this.tenantManager.getTenantContext(tenantId, userId)
+    const context = await this.tenantManager.getTenantContext(tenantId, userId)
     if (!context) {
       throw new Error(`Tenant context not found: ${tenantId}`)
     }
@@ -225,7 +225,7 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    const context = this.tenantManager.getTenantContext(tenantId, userId)
+    const context = await this.tenantManager.getTenantContext(tenantId, userId)
     if (!context) {
       throw new Error(`Tenant context not found: ${tenantId}`)
     }
@@ -244,7 +244,7 @@ export class DBALIntegration {
       throw new Error('DBAL not initialized')
     }
 
-    const context = this.tenantManager.getTenantContext(tenantId, userId)
+    const context = await this.tenantManager.getTenantContext(tenantId, userId)
     if (!context) {
       throw new Error(`Tenant context not found: ${tenantId}`)
     }
