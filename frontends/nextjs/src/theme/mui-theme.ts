@@ -1,6 +1,7 @@
 'use client'
 
-import { createTheme, ThemeOptions, alpha } from '@mui/material/styles'
+import { createTheme, ThemeOptions, alpha, Theme } from '@mui/material/styles'
+import './theme.d.ts' // Import type extensions
 
 // ========================================
 // Design Tokens - Unified color system
