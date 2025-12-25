@@ -1,11 +1,11 @@
 import type { LuaExecutionContext, LuaExecutionResult } from '../types'
-import type { SandboxedLuaEngine } from '../../sandboxed-lua-engine'
+import type { SandboxedLuaEngineState } from './types'
 
 /**
  * Execute Lua code with a timeout guard
  */
 export function executeWithTimeout(
-  this: SandboxedLuaEngine,
+  this: SandboxedLuaEngineState,
   code: string,
   context: LuaExecutionContext
 ): Promise<LuaExecutionResult> {
