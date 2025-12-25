@@ -25,9 +25,6 @@ import {
   CheckCircle,
   Warning,
   Image as ImageIcon,
-  FilmStrip,
-  MusicNote,
-  FileText
 } from '@phosphor-icons/react'
 
 interface PackageImportExportProps {
