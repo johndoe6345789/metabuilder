@@ -30,7 +30,8 @@ function safeParse(raw: string): unknown | undefined {
 
 function safeStringify(value: unknown): string | null {
   try {
-    return JSON.stringify(value)
+    const serialized = JSON.stringify(value)
+    return typeof serialized === 'string' ? serialized : null
   } catch {
     return null
   }
