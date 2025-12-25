@@ -1,12 +1,17 @@
 import { getAdapter } from '../dbal-client'
 import type { User } from '../../types/level-types'
 
+export type GetUsersOptions =
+  | { tenantId: string }
+  | { scope: 'all' }
+
 /**
- * Get all users from database
+ * Get users from database.
+ * Requires explicit scope to avoid accidental cross-tenant access.
  */
-export async function getUsers(options?: { tenantId?: string }): Promise<User[]> {
+export async function getUsers(options: GetUsersOptions): Promise<User[]> {
   const adapter = getAdapter()
-  const listOptions = options?.tenantId ? { filter: { tenantId: options.tenantId } } : undefined
+  const listOptions = 'tenantId' in options ? { filter: { tenantId: options.tenantId } } : undefined
   const result = listOptions ? await adapter.list('User', listOptions) : await adapter.list('User')
   return (result.data as any[]).map((u) => ({
     id: u.id,

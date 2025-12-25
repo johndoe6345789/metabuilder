@@ -13,7 +13,7 @@ import { getComponentHierarchy, getComponentConfigs } from '../components'
  */
 export async function exportDatabase(): Promise<string> {
   const data: Partial<DatabaseSchema> = {
-    users: await getUsers(),
+    users: await getUsers({ scope: 'all' }),
     workflows: await getWorkflows(),
     luaScripts: await getLuaScripts(),
     pages: await getPages(),
