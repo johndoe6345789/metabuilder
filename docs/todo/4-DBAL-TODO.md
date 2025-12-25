@@ -7,7 +7,7 @@
 - [ ] Implement retry logic with exponential backoff for transient failures
 - [ ] Add query execution timeout configuration
 - [ ] Complete blob storage adapter implementation (`dbal/ts/src/blob/index.ts`)
-- [ ] Add validation rules for all entity types (`dbal/ts/src/core/validation.ts`)
+- [x] Add validation rules for all entity types (`dbal/ts/src/core/validation.ts`)
 - [ ] Implement batch operation support (bulk insert, bulk update, bulk delete)
 
 ## C++ Daemon
