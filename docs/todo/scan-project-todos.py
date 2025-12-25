@@ -152,7 +152,9 @@ def _render_scan_report(
 
 def _render_todo_status(todo_dir: Path, out_path: Path) -> None:
     md_files = sorted(
-        p for p in todo_dir.glob("*.md") if p.name not in {"TODO_SCAN_REPORT.md", "TODO_STATUS.md"}
+        p
+        for p in todo_dir.glob("*.md")
+        if p.name not in {"TODO_SCAN_REPORT.md", "TODO_STATUS.md", "22-TODO-SCAN.md"}
     )
 
     checkbox_open_re = re.compile(r"^\s*-\s*\[\s*\]\s+")

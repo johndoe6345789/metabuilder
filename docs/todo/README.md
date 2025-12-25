@@ -28,6 +28,7 @@ This folder contains comprehensive TODO lists organized by area of the MetaBuild
 | [19-PERFORMANCE-TODO.md](19-PERFORMANCE-TODO.md) | Performance optimization | Medium |
 | [20-FUTURE-FEATURES-TODO.md](20-FUTURE-FEATURES-TODO.md) | Future features | Low |
 | [21-SDLC-TODO.md](21-SDLC-TODO.md) | SDLC workflows & Copilot | High |
+| [22-TODO-SCAN.md](22-TODO-SCAN.md) | TODO marker inventory (scan snapshot) | Medium |
 
 ## Priority Legend
 
@@ -49,6 +50,7 @@ This folder contains comprehensive TODO lists organized by area of the MetaBuild
 - Output:
   - [TODO_SCAN_REPORT.md](TODO_SCAN_REPORT.md) - repo-wide `TODO/FIXME/HACK/XXX` markers (excluding `docs/todo/` and build artifacts)
   - [TODO_STATUS.md](TODO_STATUS.md) - open vs done checkbox counts per TODO file
+  - [22-TODO-SCAN.md](22-TODO-SCAN.md) - curated checklist of actionable `// TODO` (code) and `TODO:` (docs) markers
 
 ## Current Critical Issues
 
