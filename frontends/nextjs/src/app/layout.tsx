@@ -1,33 +1,6 @@
 import type { Metadata, Viewport } from 'next'
-// Temporarily disabled Google Fonts due to network restrictions in build environment
-// import { IBM_Plex_Sans, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import { Providers } from './providers'
-import { Toaster } from '@/components/ui/sonner'
 import '@/main.scss'
-
-// Temporarily disabled until fonts can be loaded properly
-/*
-const ibmPlexSans = IBM_Plex_Sans({
-  weight: ['300', '400', '500', '600', '700'],
-  subsets: ['latin'],
-  variable: '--font-ibm-plex-sans',
-  display: 'swap',
-})
-
-const spaceGrotesk = Space_Grotesk({
-  weight: ['300', '400', '500', '600', '700'],
-  subsets: ['latin'],
-  variable: '--font-space-grotesk',
-  display: 'swap',
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  weight: ['400', '500', '600', '700'],
-  subsets: ['latin'],
-  variable: '--font-jetbrains-mono',
-  display: 'swap',
-})
-*/
 
 export const metadata: Metadata = {
   title: {
@@ -68,10 +41,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-sans antialiased">
+      <body>
         <Providers>
           {children}
-          <Toaster />
         </Providers>
       </body>
     </html>

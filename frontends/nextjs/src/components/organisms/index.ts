@@ -1,3 +1,96 @@
+// Organisms - Complex UI sections
+// These are larger components that combine atoms and molecules
+
+// New MUI-based organisms
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableCaption,
+  type TableProps,
+  type TableRowProps,
+  type TableHeadProps,
+  type TableCellProps,
+} from './Table'
+
+export {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandSeparator,
+  CommandShortcut,
+  CommandLoading,
+  type CommandProps,
+} from './Command'
+
+export {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+  SheetPortal,
+  SheetOverlay,
+  SheetClose,
+  type SheetProps,
+} from './Sheet'
+
+export {
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+  SidebarMenuItem,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarSeparator,
+  SidebarTrigger,
+  SidebarRail,
+  SidebarInset,
+  SidebarProvider,
+  type SidebarProps,
+} from './Sidebar'
+
+export {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+  NavigationMenuLink,
+  NavigationMenuIndicator,
+  NavigationMenuViewport,
+  navigationMenuTriggerStyle,
+  type NavigationMenuProps,
+} from './NavigationMenu'
+
+export {
+  Form,
+  FormField as FormFieldController,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  useFormField,
+  useForm,
+  FormProvider,
+} from './Form'
+
+// Legacy feature components
 export { SchemaEditor } from '../SchemaEditor'
 export { ComponentCatalog } from '../ComponentCatalog'
 export { PropertyInspector } from '../PropertyInspector'

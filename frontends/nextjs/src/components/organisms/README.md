@@ -1,85 +1,83 @@
 # Organisms
 
-Organisms are complex components that form distinct sections of an interface.
+Complex UI sections that combine atoms and molecules into complete features. Built on Material UI.
 
-## What belongs here?
+## Layout Components
 
-- **Complex composites** of molecules and atoms
-- **Feature-complete sections** of the UI
-- **Can contain business logic** and data fetching
-- **Often specific to particular features**
-- **Complete, functional units** of the interface
+| Component | Description |
+|-----------|-------------|
+| `Table` | Data table with header/body/footer |
+| `Command` | Command palette (cmdk-style) |
+| `Sheet` | Side panel drawer |
+| `Sidebar` | Navigation sidebar with groups |
+| `NavigationMenu` | Top navigation with dropdowns |
+| `Form` | Form with react-hook-form integration |
 
-## Examples
+## Feature Components
 
 ### Core Builders
-- `SchemaEditor` - Full schema editing interface with Monaco editor
-- `ComponentCatalog` - Component browsing and selection system
-- `PropertyInspector` - Complete component property editor
+- `SchemaEditor` - Full schema editing interface
+- `ComponentCatalog` - Component browsing and selection
+- `PropertyInspector` - Component property editor
 - `Builder` - Visual page builder with drag-and-drop
 - `Canvas` - Rendering canvas for visual builder
 
 ### Configuration Managers
-- `CssClassBuilder` - Visual CSS class selection system
-- `CssClassManager` - CSS class library management panel
-- `DropdownConfigManager` - Dropdown configuration interface
-- `ThemeEditor` - Complete theme customization interface
+- `CssClassBuilder` - Visual CSS class selection
+- `ThemeEditor` - Theme customization interface
 - `SMTPConfigEditor` - SMTP configuration form
 
 ### Code Editors
 - `CodeEditor` - Monaco-based code editor
-- `LuaEditor` - Lua script editor with security scanning
-- `JsonEditor` - JSON editing interface with validation
+- `LuaEditor` - Lua script editor
+- `JsonEditor` - JSON editing with validation
 - `NerdModeIDE` - Full-featured IDE panel
 
 ### Data Management
-- `DatabaseManager` - Database management and querying
+- `DatabaseManager` - Database management
 - `UserManagement` - User CRUD interface
-- `PackageManager` - Package browsing and installation
-- `PackageImportExport` - Import/export functionality
-- `AuditLogViewer` - Audit log display and filtering
-
-### Feature Components
-- `IRCWebchat` - Complete IRC chat interface
-- `WorkflowEditor` - Workflow configuration system
-- `PageRoutesManager` - Page routing management
-- `ScreenshotAnalyzer` - Screenshot analysis tool
-- `GitHubActionsFetcher` - GitHub actions integration
-
-### Auth & Dialogs
-- `UnifiedLogin` - Complete authentication interface
-- `ComponentConfigDialog` - Component configuration modal
-
-### Page Sections
-- `HeroSection` - Hero section for landing page
-- `FeaturesSection` - Features showcase section
-- `ContactSection` - Contact form section
-- `NavigationBar` - Main navigation bar
-- `CommentsList` - Comments list with interactions
+- `PackageManager` - Package management
+- `AuditLogViewer` - Audit log display
 
 ## Usage
 
 ```typescript
 import { 
-  SchemaEditor, 
-  ComponentCatalog, 
-  PropertyInspector,
+  Table, TableHeader, TableBody, TableRow, TableCell,
+  Sidebar, SidebarHeader, SidebarContent,
   UserManagement 
 } from '@/components/organisms'
 
-function GodPanel() {
+function AdminPanel() {
   return (
-    <div className="grid grid-cols-12 gap-4">
-      <aside className="col-span-3">
-        <ComponentCatalog />
-      </aside>
-      <main className="col-span-6">
-        <SchemaEditor schema={currentSchema} />
-      </main>
-      <aside className="col-span-3">
-        <PropertyInspector component={selectedComponent} />
-      </aside>
-    </div>
+    <Box sx={{ display: 'flex', height: '100vh' }}>
+      <Sidebar width={280}>
+        <SidebarHeader>Admin</SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup label="Users">
+            <SidebarMenuItem icon={<PeopleIcon />}>Users</SidebarMenuItem>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+      <Box sx={{ flex: 1, p: 3 }}>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {users.map(user => (
+              <TableRow key={user.id}>
+                <TableCell>{user.name}</TableCell>
+                <TableCell>{user.status}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
+    </Box>
   )
 }
 ```
@@ -89,73 +87,11 @@ function GodPanel() {
 1. ✅ **DO** compose organisms from molecules and atoms
 2. ✅ **DO** include business logic when needed
 3. ✅ **DO** handle data fetching and state management
-4. ✅ **DO** make organisms feature-complete
-5. ✅ **DO** document complex organisms with JSDoc
-6. ✅ **DO** split very large organisms into smaller ones
-7. ❌ **DON'T** make organisms depend on page-specific context unnecessarily
-8. ❌ **DON'T** create organisms that are too granular (use molecules)
-
-## When to use Organisms vs Molecules
-
-- If it's **2-5 simple elements**, it's a **molecule**
-- If it's **a complex feature section**, it's an **organism**
-- If it **contains business logic**, it's an **organism**
-- If it **manages significant state**, it's an **organism**
-- If it's **feature-specific**, it's an **organism**
-
-## Organism Patterns
-
-### Data Management
-```typescript
-export function UserManagement() {
-  const [users, setUsers] = useKV('users', [])
-  const [selectedUser, setSelectedUser] = useState(null)
-  
-  const handleAddUser = async (userData) => {
-    // Complex business logic
-  }
-  
-  return (
-    <Card>
-      <UserList users={users} onSelect={setSelectedUser} />
-      <UserForm onSubmit={handleAddUser} />
-    </Card>
-  )
-}
-```
-
-### Editor Pattern
-```typescript
-export function SchemaEditor({ schema }: SchemaEditorProps) {
-  const [content, setContent] = useState(schema)
-  const [errors, setErrors] = useState([])
-  
-  const handleValidate = () => {
-    // Validation logic
-  }
-  
-  const handleSave = async () => {
-    // Save logic
-  }
-  
-  return (
-    <Dialog>
-      <MonacoEditor 
-        value={content} 
-        onChange={setContent}
-        onValidate={handleValidate}
-      />
-      <DialogFooter>
-        <Button onClick={handleSave}>Save</Button>
-      </DialogFooter>
-    </Dialog>
-  )
-}
-```
+4. ✅ **DO** use MUI `sx` prop for styling
+5. ❌ **DON'T** use Tailwind classes
+6. ❌ **DON'T** create organisms that are too granular (use molecules)
 
 ## Testing
-
-Organisms should be tested with integration tests:
 
 ```typescript
 describe('UserManagement', () => {
@@ -169,29 +105,4 @@ describe('UserManagement', () => {
     expect(screen.getByText('newuser')).toBeInTheDocument()
   })
 })
-```
-
-## Documentation
-
-Complex organisms should include JSDoc comments:
-
-```typescript
-/**
- * SchemaEditor provides a complete interface for editing database schemas
- * with Monaco editor integration, validation, and security scanning.
- * 
- * @param schema - The schema object to edit
- * @param onSave - Callback when schema is saved
- * @param mode - Editor mode ('simple' | 'advanced')
- * 
- * @example
- * <SchemaEditor 
- *   schema={currentSchema}
- *   onSave={handleSave}
- *   mode="advanced"
- * />
- */
-export function SchemaEditor({ schema, onSave, mode }: SchemaEditorProps) {
-  // Implementation
-}
 ```

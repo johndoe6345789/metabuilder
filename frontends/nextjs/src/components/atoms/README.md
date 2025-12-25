@@ -1,36 +1,24 @@
 # Atoms
 
-Atoms are the smallest, indivisible UI elements in the MetaBuilder component library.
+Atoms are the smallest, indivisible UI elements in the MetaBuilder component library. Built on Material UI.
 
-## What belongs here?
+## Components
 
-- **Basic UI elements** that cannot be broken down further without losing meaning
-- **Single responsibility** components
-- **No dependencies** on other custom components (only shadcn/ui primitives)
-- **Highly reusable** across the entire application
-- **Stateless or minimal state**
-
-## Examples
-
-### From shadcn/ui (via index.ts export)
-- `Button` - Basic button element
-- `Input` - Text input field
-- `Label` - Form label
-- `Badge` - Status/tag badge
-- `Avatar` - User avatar image
-- `Separator` - Visual divider
-- `Skeleton` - Loading placeholder
-- `Switch` - Toggle switch
-- `Slider` - Range slider
-- `Progress` - Progress bar
-- `Checkbox` - Checkbox input
-- `RadioGroup` - Radio button group
-
-### Custom Atoms (if needed)
-Custom atoms should only be created when shadcn/ui doesn't provide a suitable primitive. Examples might include:
-- Brand-specific icon components
-- Custom loading indicators
-- Specialized badge variants
+| Component | Description | MUI Base |
+|-----------|-------------|----------|
+| `Button` | Primary action button with variants | `MuiButton` |
+| `Input` | Text input field | `InputBase` |
+| `Label` | Form field label | `Typography` |
+| `Badge` | Status indicator chip | `Chip` |
+| `Checkbox` | Boolean toggle with optional label | `MuiCheckbox` |
+| `Switch` | Toggle switch with optional label | `MuiSwitch` |
+| `Avatar` | User/entity image with fallback | `MuiAvatar` |
+| `Skeleton` | Loading placeholder | `MuiSkeleton` |
+| `Separator` | Visual divider | `Divider` |
+| `Progress` | Progress indicator | `LinearProgress` |
+| `Tooltip` | Hover information | `MuiTooltip` |
+| `Spinner` | Loading spinner | `CircularProgress` |
+| `IconButton` | Icon-only button | `MuiIconButton` |
 
 ## Usage
 
@@ -39,27 +27,45 @@ import { Button, Input, Label, Badge } from '@/components/atoms'
 
 function MyComponent() {
   return (
-    <div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Label>Username</Label>
-      <Input type="text" />
-      <Badge>New</Badge>
-      <Button>Submit</Button>
-    </div>
+      <Input placeholder="Enter username" />
+      <Badge variant="success" label="Active" />
+      <Button variant="contained">Submit</Button>
+    </Box>
   )
 }
 ```
 
-## Rules
+## Design Principles
 
-1. ✅ **DO** keep atoms simple and focused
-2. ✅ **DO** make atoms highly reusable
-3. ✅ **DO** use TypeScript for type safety
-4. ✅ **DO** use Tailwind utilities for styling
-5. ❌ **DON'T** import molecules or organisms
-6. ❌ **DON'T** add business logic
-7. ❌ **DON'T** make atoms context-dependent
-8. ❌ **DON'T** duplicate shadcn components
+1. ✅ **Single responsibility** - Each atom does one thing well
+2. ✅ **MUI-powered** - Built on Material UI for consistency
+3. ✅ **Theme-aware** - Respects light/dark mode via `sx` prop
+4. ✅ **Accessible** - ARIA attributes and keyboard navigation
+5. ✅ **Composable** - Combine to build molecules
+6. ❌ **DON'T** import molecules or organisms
+7. ❌ **DON'T** add business logic
+8. ❌ **DON'T** use Tailwind classes (use MUI `sx` prop instead)
 
-## Notes
+## Styling
 
-Most of our atoms come from shadcn/ui. Only create custom atoms when absolutely necessary and they represent truly atomic, reusable elements.
+All atoms use the MUI `sx` prop for styling, which provides:
+- Theme-aware values (colors, spacing, typography)
+- Responsive breakpoints
+- Dark/light mode support
+- Type-safe CSS properties
+
+```tsx
+<Button 
+  sx={{ 
+    mt: 2,              // theme.spacing(2)
+    bgcolor: 'primary.main',
+    '&:hover': {
+      bgcolor: 'primary.dark'
+    }
+  }}
+>
+  Styled Button
+</Button>
+```

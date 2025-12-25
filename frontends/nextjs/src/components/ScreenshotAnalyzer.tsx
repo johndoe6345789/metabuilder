@@ -1,8 +1,21 @@
-import { useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Camera, Eye, Download, ArrowsClockwise } from '@phosphor-icons/react'
+import { useState } from 'react'
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Chip,
+  CircularProgress,
+  Typography,
+  Grid,
+} from '@mui/material'
+import {
+  CameraAlt as CameraIcon,
+  Visibility as EyeIcon,
+  Download as DownloadIcon,
+  Refresh as RefreshIcon,
+} from '@mui/icons-material'
 import { toast } from 'sonner'
 
 export function ScreenshotAnalyzer() {
@@ -94,28 +107,29 @@ export function ScreenshotAnalyzer() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Screenshot Analyzer</h1>
-          <p className="text-muted-foreground">Capture and analyze the current page</p>
-        </div>
-        <Badge variant="secondary">AI-Powered</Badge>
-      </div>
+    <Box sx={{ maxWidth: 'lg', mx: 'auto', p: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box>
+          <Typography variant="h4" fontWeight={700}>Screenshot Analyzer</Typography>
+          <Typography color="text.secondary">Capture and analyze the current page</Typography>
+        </Box>
+        <Chip label="AI-Powered" color="secondary" />
+      </Box>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Capture & Analyze</CardTitle>
-          <CardDescription>Take a screenshot and get AI-powered insights</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-3">
+        <CardHeader
+          title="Capture & Analyze"
+          subheader="Take a screenshot and get AI-powered insights"
+        />
+        <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ display: 'flex', gap: 1.5 }}>
             <Button 
               onClick={captureScreenshot}
               disabled={isCapturing || isAnalyzing}
-              className="flex-1"
+              variant="contained"
+              startIcon={<CameraIcon />}
+              sx={{ flex: 1 }}
             >
-              <Camera className="mr-2" />
               {isCapturing ? 'Capturing...' : 'Capture & Analyze'}
             </Button>
             
@@ -123,89 +137,93 @@ export function ScreenshotAnalyzer() {
               <>
                 <Button 
                   onClick={downloadScreenshot}
-                  variant="outline"
+                  variant="outlined"
+                  startIcon={<DownloadIcon />}
                 >
-                  <Download className="mr-2" />
                   Download
                 </Button>
                 
                 <Button 
                   onClick={analyzeScreenshot}
-                  variant="outline"
+                  variant="outlined"
                   disabled={isAnalyzing}
+                  startIcon={<RefreshIcon />}
                 >
-                  <ArrowsClockwise className="mr-2" />
                   Re-analyze
                 </Button>
               </>
             )}
-          </div>
+          </Box>
 
           {isAnalyzing && (
-            <div className="flex items-center justify-center p-8">
-              <div className="flex items-center gap-3">
-                <div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent" />
-                <span className="text-muted-foreground">Analyzing with AI...</span>
-              </div>
-            </div>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', p: 4, gap: 1.5 }}>
+              <CircularProgress size={24} />
+              <Typography color="text.secondary">Analyzing with AI...</Typography>
+            </Box>
           )}
 
           {analysis && !isAnalyzing && (
-            <Card className="bg-muted/50">
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Eye />
-                  AI Analysis
-                </CardTitle>
-              </CardHeader>
+            <Card variant="outlined" sx={{ bgcolor: 'action.hover' }}>
+              <CardHeader
+                avatar={<EyeIcon />}
+                title="AI Analysis"
+                titleTypographyProps={{ variant: 'subtitle1' }}
+              />
               <CardContent>
-                <div className="prose prose-sm max-w-none whitespace-pre-wrap">
+                <Typography 
+                  component="pre" 
+                  sx={{ 
+                    whiteSpace: 'pre-wrap', 
+                    fontFamily: 'inherit',
+                    fontSize: '0.875rem',
+                  }}
+                >
                   {analysis}
-                </div>
+                </Typography>
               </CardContent>
             </Card>
           )}
 
           {screenshotData && (
-            <div className="border rounded-lg p-4 bg-muted/30">
-              <h3 className="font-semibold mb-3">Screenshot Preview</h3>
-              <div className="relative max-h-96 overflow-auto border rounded">
-                <img 
-                  src={screenshotData} 
-                  alt="Page screenshot" 
-                  className="w-full"
-                />
-              </div>
-            </div>
+            <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 1, p: 2, bgcolor: 'action.hover' }}>
+              <Typography variant="subtitle2" gutterBottom>Screenshot Preview</Typography>
+              <Box sx={{ maxHeight: 384, overflow: 'auto', border: 1, borderColor: 'divider', borderRadius: 1 }}>
+                <Box component="img" src={screenshotData} alt="Page screenshot" sx={{ width: '100%' }} />
+              </Box>
+            </Box>
           )}
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Page Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <span className="text-sm text-muted-foreground">Title:</span>
-              <p className="font-mono text-sm">{document.title}</p>
-            </div>
-            <div>
-              <span className="text-sm text-muted-foreground">URL:</span>
-              <p className="font-mono text-sm truncate">{window.location.href}</p>
-            </div>
-            <div>
-              <span className="text-sm text-muted-foreground">Viewport:</span>
-              <p className="font-mono text-sm">{window.innerWidth} × {window.innerHeight}</p>
-            </div>
-            <div>
-              <span className="text-sm text-muted-foreground">User Agent:</span>
-              <p className="font-mono text-sm truncate">{navigator.userAgent.substring(0, 50)}...</p>
-            </div>
-          </div>
+        <CardHeader title="Page Information" />
+        <CardContent>
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <Typography variant="caption" color="text.secondary">Title:</Typography>
+              <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>{document.title}</Typography>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <Typography variant="caption" color="text.secondary">URL:</Typography>
+              <Typography variant="body2" sx={{ fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {typeof window !== 'undefined' ? window.location.href : ''}
+              </Typography>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <Typography variant="caption" color="text.secondary">Viewport:</Typography>
+              <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                {typeof window !== 'undefined' ? `${window.innerWidth} × ${window.innerHeight}` : ''}
+              </Typography>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <Typography variant="caption" color="text.secondary">User Agent:</Typography>
+              <Typography variant="body2" sx={{ fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {typeof navigator !== 'undefined' ? navigator.userAgent.substring(0, 50) + '...' : ''}
+              </Typography>
+            </Grid>
+          </Grid>
         </CardContent>
       </Card>
-    </div>
+    </Box>
   )
 }

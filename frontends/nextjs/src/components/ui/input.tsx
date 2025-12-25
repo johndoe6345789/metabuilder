@@ -1,21 +1,50 @@
-import { ComponentProps } from "react"
+'use client'
 
-import { cn } from "@/lib/utils"
+import { forwardRef, InputHTMLAttributes } from 'react'
+import { TextField, TextFieldProps, InputBase, InputBaseProps } from '@mui/material'
 
-function Input({ className, type, ...props }: ComponentProps<"input">) {
-  return (
-    <input
-      type={type}
-      data-slot="input"
-      className={cn(
-        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-        className
-      )}
-      {...props}
-    />
-  )
+// Simple input that matches the original API
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+  error?: boolean
 }
+
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ type, error, ...props }, ref) => {
+    return (
+      <InputBase
+        inputRef={ref}
+        type={type}
+        error={error}
+        sx={{
+          width: '100%',
+          px: 1.5,
+          py: 1,
+          fontSize: '0.875rem',
+          border: 1,
+          borderColor: error ? 'error.main' : 'divider',
+          borderRadius: 1,
+          bgcolor: 'background.paper',
+          '&:hover': {
+            borderColor: error ? 'error.main' : 'text.primary',
+          },
+          '&.Mui-focused': {
+            borderColor: error ? 'error.main' : 'primary.main',
+            boxShadow: (theme) => `0 0 0 2px ${error ? theme.palette.error.main : theme.palette.primary.main}25`,
+          },
+          '&.Mui-disabled': {
+            opacity: 0.5,
+            cursor: 'not-allowed',
+          },
+          '& input': {
+            p: 0,
+          },
+        }}
+        {...props}
+      />
+    )
+  }
+)
+
+Input.displayName = 'Input'
 
 export { Input }

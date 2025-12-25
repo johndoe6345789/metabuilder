@@ -1,0 +1,74 @@
+'use client'
+
+import { forwardRef, ReactNode } from 'react'
+import { 
+  Alert as MuiAlert, 
+  AlertProps as MuiAlertProps,
+  AlertTitle as MuiAlertTitle,
+  Collapse,
+  IconButton,
+} from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+
+export type AlertVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info'
+
+export interface AlertProps extends Omit<MuiAlertProps, 'variant' | 'severity'> {
+  variant?: AlertVariant
+  title?: ReactNode
+  dismissible?: boolean
+  onDismiss?: () => void
+}
+
+const variantMap: Record<AlertVariant, MuiAlertProps['severity']> = {
+  default: 'info',
+  destructive: 'error',
+  success: 'success',
+  warning: 'warning',
+  info: 'info',
+}
+
+const Alert = forwardRef<HTMLDivElement, AlertProps>(
+  ({ variant = 'default', title, dismissible, onDismiss, children, ...props }, ref) => {
+    const severity = variantMap[variant]
+
+    return (
+      <MuiAlert
+        ref={ref}
+        severity={severity}
+        variant="outlined"
+        action={
+          dismissible && onDismiss ? (
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={onDismiss}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          ) : undefined
+        }
+        sx={{ borderRadius: 1 }}
+        {...props}
+      >
+        {title && <MuiAlertTitle>{title}</MuiAlertTitle>}
+        {children}
+      </MuiAlert>
+    )
+  }
+)
+
+Alert.displayName = 'Alert'
+
+// AlertTitle (for direct use)
+const AlertTitle = MuiAlertTitle
+
+// AlertDescription (shadcn compat)
+const AlertDescription = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
+  ({ children, ...props }, ref) => {
+    return <div ref={ref} {...props}>{children}</div>
+  }
+)
+AlertDescription.displayName = 'AlertDescription'
+
+export { Alert, AlertTitle, AlertDescription }

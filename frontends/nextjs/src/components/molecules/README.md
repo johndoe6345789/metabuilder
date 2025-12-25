@@ -1,50 +1,50 @@
 # Molecules
 
-Molecules are simple groups of atoms that function together as a cohesive unit.
+Molecules are simple groups of atoms that function together as a cohesive unit. Built on Material UI.
 
-## What belongs here?
+## Components
 
-- **Composites of 2-5 atoms** working together
-- **Single, focused purpose**
-- **Reusable across multiple contexts**
-- **Can have internal state** but no complex business logic
-- **Self-contained functionality**
+| Component | Description | Atoms Used |
+|-----------|-------------|------------|
+| `Card` | Container with header/content/footer | Box, Typography |
+| `Dialog` | Modal dialog with transitions | MuiDialog |
+| `Alert` | Feedback message with severity | MuiAlert |
+| `Tabs` | Tab navigation | MuiTabs, MuiTab |
+| `Accordion` | Collapsible sections | MuiAccordion |
+| `Select` | Dropdown selection | MuiSelect |
+| `DropdownMenu` | Context/action menu | Menu, MenuItem |
+| `FormField` | Label + input + error | Label, Input |
+| `SearchInput` | Input with search icon | TextField |
+| `Popover` | Floating content panel | MuiPopover |
 
-## Examples
-
-### Current Molecules
+### Application Molecules
 - `AppHeader` - Application header with logo and navigation
 - `AppFooter` - Application footer with links
-- `GodCredentialsBanner` - Alert displaying god credentials
 - `ProfileCard` - User profile display card
 - `SecurityWarningDialog` - Security warning modal
 - `PasswordChangeDialog` - Password change form modal
 
-### Good Molecule Examples
-- **FormField** - Label + Input + Error message
-- **SearchBar** - Input + Search icon + Clear button
-- **CardHeader** - Avatar + Title + Subtitle
-- **PaginationControls** - Previous + Page numbers + Next buttons
-- **TabBar** - Multiple tab buttons working together
-- **EmptyState** - Icon + Message + Action button
-- **ConfirmDialog** - Dialog with title, message, and confirm/cancel buttons
-- **AlertBanner** - Alert with icon, message, and close button
-
 ## Usage
 
 ```typescript
-import { AppHeader, ProfileCard, SecurityWarningDialog } from '@/components/molecules'
+import { Card, CardHeader, CardContent, Dialog, Alert } from '@/components/molecules'
 
 function MyPage() {
   return (
-    <div>
-      <AppHeader />
-      <ProfileCard user={currentUser} />
-      <SecurityWarningDialog 
-        open={showWarning} 
-        onClose={() => setShowWarning(false)} 
-      />
-    </div>
+    <Box>
+      <Card>
+        <CardHeader title="Title" description="Subtitle" />
+        <CardContent>Content here</CardContent>
+      </Card>
+
+      <Alert variant="success" title="Success!">
+        Operation completed.
+      </Alert>
+
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent>Modal content</DialogContent>
+      </Dialog>
+    </Box>
   )
 }
 ```
@@ -53,29 +53,23 @@ function MyPage() {
 
 1. ✅ **DO** compose molecules from atoms
 2. ✅ **DO** keep molecules focused on a single purpose
-3. ✅ **DO** make molecules reusable
-4. ✅ **DO** use props for customization
-5. ✅ **DO** document expected usage
-6. ❌ **DON'T** import organisms
-7. ❌ **DON'T** add complex business logic
-8. ❌ **DON'T** make molecules too large (use organisms instead)
-9. ❌ **DON'T** tightly couple to specific pages
+3. ✅ **DO** use MUI `sx` prop for styling
+4. ✅ **DO** support both controlled and uncontrolled modes
+5. ❌ **DON'T** import organisms
+6. ❌ **DON'T** add complex business logic
+7. ❌ **DON'T** use Tailwind classes (use MUI `sx` prop)
 
-## When to use Molecules vs Atoms
+## Styling
 
-- If it's **one element**, it's an **atom**
-- If it's **2-5 related elements**, it's a **molecule**
-- If it's **a complex feature or section**, it's an **organism**
-
-## Testing
-
-Molecules should be easy to test in isolation:
-
-```typescript
-describe('ProfileCard', () => {
-  it('displays user information', () => {
-    render(<ProfileCard user={mockUser} />)
-    expect(screen.getByText(mockUser.username)).toBeInTheDocument()
-  })
-})
+```tsx
+<Card sx={{ maxWidth: 400, mx: 'auto' }}>
+  <CardHeader 
+    title="User Profile"
+    sx={{ bgcolor: 'primary.light' }}
+  />
+  <CardContent>
+    <Typography>Content with theme colors</Typography>
+  </CardContent>
+</Card>
+```
 ```

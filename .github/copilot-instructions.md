@@ -76,9 +76,40 @@ Always test scripts with `DeclarativeComponentRenderer.executeLuaScript()`
 
 ## Code Conventions
 
+### UI Components & Styling
+
+**⚠️ CRITICAL: This project does NOT use Radix UI or Tailwind CSS**
+
+- ❌ **NEVER import from `@radix-ui/*`** - These dependencies have been removed
+- ❌ **NEVER use Tailwind utility classes** in `className` props
+- ✅ **ALWAYS use Material-UI** (`@mui/material`) for UI components
+- ✅ **Use MUI's `sx` prop** for inline styles with theme access
+- ✅ **Create `.module.scss` files** for component-specific custom styles
+- ✅ **Use `@mui/icons-material`** for icons, not lucide-react or heroicons
+
+```tsx
+// ❌ Wrong: Using Radix UI or Tailwind
+import { Dialog } from '@radix-ui/react-dialog'
+<button className="bg-blue-500 text-white px-4 py-2">Click</button>
+
+// ✅ Right: Using Material-UI
+import { Dialog, Button } from '@mui/material'
+<Button variant="contained" color="primary">Click</Button>
+<Box sx={{ display: 'flex', gap: 2, p: 3 }}>Content</Box>
+```
+
+**Component Mapping:**
+- Radix Dialog → MUI Dialog
+- Radix Select → MUI Select
+- Radix Checkbox → MUI Checkbox
+- Radix Switch → MUI Switch
+- Tailwind classes → MUI `sx` prop or SCSS modules
+
+**See:** `UI_STANDARDS.md` and `docs/UI_MIGRATION.md` for complete reference
+
 ### TypeScript/React
 - Max 150 LOC per component (check `RenderComponent.tsx` ← 221 LOC is exception using recursive pattern)
-- Use `@/` absolute paths and shadcn/ui from `@/components/ui`
+- Use `@/` absolute paths
 - Functional components with hooks; avoid class components
 - Test files next to source: `utils.ts` + `utils.test.ts` using parameterized `it.each()`
 
@@ -101,7 +132,7 @@ Run `npm run test:coverage:report` to auto-generate coverage markdown.
 - Queries must include `where('tenantId', currentTenant.id)` for multi-tenancy
 
 ### Styling
-Tailwind only; theme in `src/index.css` with colors defined in oklch space. Font families: IBM Plex Sans (body), Space Grotesk (headings), JetBrains Mono (code).
+Material-UI with SASS; theme in `src/theme/mui-theme.ts` with light/dark mode support. Font families: IBM Plex Sans (body), Space Grotesk (headings), JetBrains Mono (code). Use MUI's `sx` prop for inline styles or create `.module.scss` files for custom component styles.
 
 ## Development Checklist
 

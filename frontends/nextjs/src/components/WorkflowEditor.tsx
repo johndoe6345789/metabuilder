@@ -1,18 +1,31 @@
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import { Textarea } from '@/components/ui/textarea'
 import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  TextField,
+  Typography,
+  Chip,
+  MenuItem,
   Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Plus, Trash, Lightning, Code, GitBranch, ArrowRight, Play, CheckCircle, XCircle } from '@phosphor-icons/react'
+  FormControl,
+  InputLabel,
+  IconButton,
+  Grid,
+} from '@mui/material'
+import {
+  Add as AddIcon,
+  Delete as DeleteIcon,
+  FlashOn as LightningIcon,
+  Code as CodeIcon,
+  AccountTree as GitBranchIcon,
+  ArrowForward as ArrowRightIcon,
+  PlayArrow as PlayIcon,
+  CheckCircle as CheckCircleIcon,
+  Cancel as XCircleIcon,
+} from '@mui/icons-material'
 import { toast } from 'sonner'
 import { createWorkflowEngine, type WorkflowExecutionResult as WFExecResult } from '@/lib/workflow-engine'
 import type { Workflow, WorkflowNode, WorkflowEdge, LuaScript } from '@/lib/level-types'
@@ -141,34 +154,34 @@ export function WorkflowEditor({ workflows, onWorkflowsChange, scripts = [] }: W
   const getNodeIcon = (type: WorkflowNode['type']) => {
     switch (type) {
       case 'trigger':
-        return <Lightning size={16} />
+        return <LightningIcon fontSize="small" />
       case 'action':
-        return <ArrowRight size={16} />
+        return <ArrowRightIcon fontSize="small" />
       case 'condition':
-        return <GitBranch size={16} />
+        return <GitBranchIcon fontSize="small" />
       case 'lua':
-        return <Code size={16} />
+        return <CodeIcon fontSize="small" />
       case 'transform':
-        return <ArrowRight size={16} />
+        return <ArrowRightIcon fontSize="small" />
       default:
-        return <ArrowRight size={16} />
+        return <ArrowRightIcon fontSize="small" />
     }
   }
 
-  const getNodeColor = (type: WorkflowNode['type']) => {
+  const getNodeColor = (type: WorkflowNode['type']): string => {
     switch (type) {
       case 'trigger':
-        return 'bg-green-500'
+        return 'success.main'
       case 'action':
-        return 'bg-blue-500'
+        return 'primary.main'
       case 'condition':
-        return 'bg-yellow-500'
+        return 'warning.main'
       case 'lua':
-        return 'bg-purple-500'
+        return 'secondary.main'
       case 'transform':
-        return 'bg-cyan-500'
+        return 'info.main'
       default:
-        return 'bg-gray-500'
+        return 'grey.500'
     }
   }
 
