@@ -3,6 +3,7 @@
 #include <map>
 #include <algorithm>
 #include <regex>
+#include <array>
 
 namespace dbal {
 

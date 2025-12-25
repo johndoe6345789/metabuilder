@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include "types.hpp"
+#include "workflow.hpp"
 #include "errors.hpp"
 #include "adapters/adapter.hpp"
 
@@ -39,6 +40,12 @@ public:
     Result<PageView> updatePage(const std::string& id, const UpdatePageInput& input);
     Result<bool> deletePage(const std::string& id);
     Result<std::vector<PageView>> listPages(const ListOptions& options);
+
+    Result<Workflow> createWorkflow(const CreateWorkflowInput& input);
+    Result<Workflow> getWorkflow(const std::string& id);
+    Result<Workflow> updateWorkflow(const std::string& id, const UpdateWorkflowInput& input);
+    Result<bool> deleteWorkflow(const std::string& id);
+    Result<std::vector<Workflow>> listWorkflows(const ListOptions& options);
 
     Result<Workflow> createWorkflow(const CreateWorkflowInput& input);
     Result<Workflow> getWorkflow(const std::string& id);
