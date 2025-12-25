@@ -25,7 +25,12 @@ make -j$(nproc)
 ./unit_tests
 ./integration_tests
 ./conformance_tests
+
+# Security tests (recommended after any HTTP server changes)
+./http_server_security_test
 ```
+
+See [SECURITY_TESTING.md](SECURITY_TESTING.md) for comprehensive security testing guide.
 
 ### Installing
 
@@ -41,7 +46,32 @@ This installs:
 
 ### Security Model
 
-The daemon runs with **minimal privileges**:
+The daemon implements **defense-in-depth security** with multiple layers:
+
+#### HTTP Server Security (Production-Ready)
+
+The HTTP server has been hardened against common CVE patterns (2020-2024):
+
+- **Request Smuggling Prevention** (CVE-2024-1135, CVE-2024-23452)
+  - Rejects duplicate Content-Length headers
+  - Rejects conflicting Transfer-Encoding + Content-Length
+  - RFC 7230 compliant parsing
+
+- **Resource Limits** (CVE-2024-22087)
+  - 64KB max request size
+  - 100 headers max, 8KB per header
+  - 10MB max body size
+  - 1000 max concurrent connections
+
+- **Input Validation**
+  - CRLF injection detection
+  - Null byte detection
+  - Integer overflow protection
+  - Path length validation (2048 bytes)
+
+See [CVE_ANALYSIS.md](CVE_ANALYSIS.md) and [CVE_COMPARISON_SUMMARY.md](CVE_COMPARISON_SUMMARY.md) for detailed security analysis.
+
+#### Process Security
 
 1. **Process Isolation**: Runs in separate process from application
 2. **File System**: Restricted to `/var/lib/dbal/` and `/var/log/dbal/`
