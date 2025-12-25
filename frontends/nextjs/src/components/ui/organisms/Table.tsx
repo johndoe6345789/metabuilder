@@ -100,20 +100,24 @@ TableRow.displayName = 'TableRow'
 interface TableHeadProps {
   children: ReactNode
   className?: string
+  onClick?: () => void
 }
 
 const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, onClick, ...props }, ref) => {
     return (
       <MuiTableCell
         ref={ref}
         component="th"
+        onClick={onClick}
         sx={{
           fontWeight: 600,
           fontSize: '0.75rem',
           color: 'text.secondary',
           textTransform: 'uppercase',
           letterSpacing: '0.05em',
+          cursor: onClick ? 'pointer' : 'default',
+          '&:hover': onClick ? { bgcolor: 'action.hover' } : {},
         }}
         {...props}
       >
