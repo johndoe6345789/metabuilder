@@ -9,7 +9,7 @@
 
 - [ ] Implement secure password hashing (verify SHA-512 implementation)
 - [ ] Add password strength requirements
-- [ ] Implement account lockout after failed attempts
+- [ ] Implement account lockout after failed attempts (`frontends/nextjs/src/lib/security/secure-db/operations/verify-credentials.ts:16`)
 - [ ] Add password reset flow with secure tokens
 - [ ] Create session management with secure cookies
 
@@ -31,7 +31,7 @@
 
 ## API Security
 
-- [ ] Add rate limiting to all API endpoints
+- [ ] Add rate limiting to all API endpoints (`frontends/nextjs/src/lib/security/secure-db/rate-limit-store.ts:1`)
 - [ ] Implement request validation middleware
 - [ ] Add CORS configuration review
 - [ ] Create API key management system
@@ -55,7 +55,7 @@
 
 ## Audit & Compliance
 
-- [ ] Implement comprehensive audit logging
+- [ ] Implement comprehensive audit logging (`frontends/nextjs/src/lib/security/secure-db/log-operation.ts:28`, `frontends/nextjs/src/lib/security/secure-db/operations/get-audit-logs.ts:14`)
 - [ ] Create security event monitoring
 - [ ] Add login/logout activity tracking
 - [ ] Implement data access logging

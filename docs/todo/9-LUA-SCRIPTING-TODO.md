@@ -4,7 +4,7 @@
 
 - [x] Add unit tests for lua-engine.ts ✅ (51 parameterized tests)
 - [ ] Audit sandbox for security vulnerabilities
-- [ ] Add resource limits (memory, CPU time)
+- [ ] Add resource limits (memory, CPU time) (`frontends/nextjs/src/lib/lua/sandboxed-lua-engine.ts:19`)
 - [ ] Implement script execution timeout
 - [ ] Create sandbox escape detection
 - [ ] Add script permission levels
