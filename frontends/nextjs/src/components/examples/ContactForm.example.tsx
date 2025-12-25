@@ -17,7 +17,7 @@ interface FormState {
 /**
  * FormErrors - Type for form validation errors
  */
-interface FormErrors {
+type FormErrors = {
   [K in keyof FormState]?: string
 }
 

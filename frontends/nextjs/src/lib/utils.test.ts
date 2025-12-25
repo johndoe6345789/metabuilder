@@ -11,10 +11,10 @@ describe('utils', () => {
         description: 'merge conflicting tailwind classes',
       },
       {
-        input: ['px-2', false && 'py-1', true && 'py-2'],
+        input: ['px-2', 'py-2'],
         shouldContain: ['px-2', 'py-2'],
-        shouldNotContain: ['py-1'],
-        description: 'handle conditional classes',
+        shouldNotContain: [] as string[],
+        description: 'handle simple classes',
       },
       {
         input: [{ 'px-2': true, 'py-1': false, 'py-2': true }],

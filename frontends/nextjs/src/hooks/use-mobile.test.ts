@@ -46,7 +46,7 @@ describe('use-mobile', () => {
   })
 
   it('should respond to window resize events', () => {
-    let listeners: ((e: MediaQueryListEvent) => void)[] = []
+    const listeners: ((e: MediaQueryListEvent) => void)[] = []
 
     const matchMediaMock = vi.fn().mockImplementation(query => ({
       matches: window.innerWidth < MOBILE_BREAKPOINT,
