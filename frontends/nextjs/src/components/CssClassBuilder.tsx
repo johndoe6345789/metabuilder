@@ -235,14 +235,15 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
             {filteredCategories.map(category => (
               <TabsContent key={category.name} value={category.name}>
                 <ScrollArea className="h-[300px] border rounded-lg p-4">
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                     {category.classes.map(cls => (
                       <button
                         key={cls}
                         onClick={() => toggleClass(cls)}
+                        aria-pressed={selectedClassSet.has(cls)}
                         className={`
-                          px-3 py-2 text-sm rounded border text-left transition-colors
-                          ${selectedClasses.includes(cls)
+                          px-3 py-2 text-sm rounded border text-left font-mono transition-all duration-150 active:scale-95
+                          ${selectedClassSet.has(cls)
                             ? 'bg-primary text-primary-foreground border-primary'
                             : 'bg-card hover:bg-accent hover:text-accent-foreground'
                           }
