@@ -39,5 +39,3 @@ while :; do
   # IMPORTANT: use normal ASCII quotes, not “smart quotes”.
   codex exec --full-auto --cd="/Users/rmac/Documents/GitHub/metabuilder/docs/todo/" "$KICKSTART_FILE" || exit $?
 done
-
-
