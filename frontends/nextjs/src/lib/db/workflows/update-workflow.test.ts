@@ -1,0 +1,27 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+
+const mockUpdate = vi.fn()
+const mockAdapter = { update: mockUpdate }
+
+vi.mock('../dbal-client', () => ({
+  getAdapter: () => mockAdapter,
+}))
+
+import { updateWorkflow } from './update-workflow'
+
+describe('updateWorkflow', () => {
+  beforeEach(() => {
+    mockUpdate.mockReset()
+  })
+
+  it.each([
+    { id: 'w1', updates: { name: 'New Name' } },
+    { id: 'w2', updates: { enabled: false, description: 'Updated' } },
+  ])('should update $id', async ({ id, updates }) => {
+    mockUpdate.mockResolvedValue(undefined)
+
+    await updateWorkflow(id, updates as any)
+
+    expect(mockUpdate).toHaveBeenCalledWith('Workflow', id, expect.any(Object))
+  })
+})

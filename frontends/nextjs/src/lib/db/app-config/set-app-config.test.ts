@@ -1,0 +1,39 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+
+const mockList = vi.fn()
+const mockDelete = vi.fn()
+const mockCreate = vi.fn()
+const mockAdapter = { list: mockList, delete: mockDelete, create: mockCreate }
+
+vi.mock('../dbal-client', () => ({
+  getAdapter: () => mockAdapter,
+}))
+
+import { setAppConfig } from './set-app-config'
+
+describe('setAppConfig', () => {
+  beforeEach(() => {
+    mockList.mockReset()
+    mockDelete.mockReset()
+    mockCreate.mockReset()
+  })
+
+  it('should replace config', async () => {
+    mockList.mockResolvedValue({ data: [{ id: 'old' }] })
+    mockDelete.mockResolvedValue(undefined)
+    mockCreate.mockResolvedValue(undefined)
+
+    await setAppConfig({
+      id: 'app1',
+      name: 'New App',
+      schemas: [],
+      workflows: [],
+      luaScripts: [],
+      pages: [],
+      theme: {},
+    })
+
+    expect(mockDelete).toHaveBeenCalled()
+    expect(mockCreate).toHaveBeenCalledWith('AppConfiguration', expect.objectContaining({ id: 'app1' }))
+  })
+})
