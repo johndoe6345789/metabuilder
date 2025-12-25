@@ -1,6 +1,6 @@
 operations:
   create:
-    description: "Create new workflow definition"
+    description: "Create new workflow"
     input:
       required: [name, trigger, trigger_config, steps, created_by]
       optional: [description, is_active]
@@ -8,11 +8,11 @@ operations:
     acl_required: ["workflow:create"]
     validation:
       - name_unique: "Workflow name must be unique"
-      - trigger_valid: "Trigger must be one of manual, schedule, event, webhook"
+      - trigger_valid: "Trigger must be manual, schedule, event, webhook"
     errors:
       - CONFLICT: "Workflow with this name already exists"
-      - VALIDATION_ERROR: "Invalid input"
-
+      - VALIDATION_ERROR: "Invalid input data"
+      
   read:
     description: "Get workflow by ID"
     input:
@@ -21,32 +21,38 @@ operations:
     acl_required: ["workflow:read"]
     errors:
       - NOT_FOUND: "Workflow not found"
-
+      
   update:
-    description: "Update workflow definition"
+    description: "Update workflow"
     input:
       required: [id]
-      optional: [name, description, trigger, trigger_config, steps, is_active, created_by]
+      optional: [name, description, trigger, trigger_config, steps, is_active]
     output: Workflow
     acl_required: ["workflow:update"]
+    validation:
+      - trigger_valid: "Trigger must be manual, schedule, event, webhook"
     errors:
       - NOT_FOUND: "Workflow not found"
-      - CONFLICT: "Workflow name already exists"
-
+      - CONFLICT: "Workflow name already in use"
+      - VALIDATION_ERROR: "Invalid input data"
+      
   delete:
-    description: "Delete workflow definition"
+    description: "Delete workflow"
     input:
       required: [id]
     output: boolean
     acl_required: ["workflow:delete"]
     errors:
       - NOT_FOUND: "Workflow not found"
-
+      
   list:
-    description: "List workflows with filtering"
+    description: "List workflows with filtering and pagination"
     input:
       optional: [trigger, is_active, created_by, page, limit, sort]
     output: Workflow[]
     acl_required: ["workflow:read"]
     pagination: true
-    errors: []
+    max_limit: 100
+    default_limit: 20
+    errors:
+      - VALIDATION_ERROR: "Invalid pagination parameters"
