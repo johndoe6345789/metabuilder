@@ -2,6 +2,8 @@
 
 Optimize MetaBuilder performance:
 
+Run performance scripts from `frontends/nextjs/` after `npm run build` (requires `tsx` via `npx`).
+
 ## Identify Bottlenecks
 ```bash
 npx tsx ../../tools/analyze-render-performance.ts

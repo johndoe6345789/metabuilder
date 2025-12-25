@@ -28,7 +28,8 @@ Each package needs:
 ## Update Index
 Add to `docs/INDEX.md` or `docs/NAVIGATION.md`
 
-## JSDoc Coverage Check
+## JSDoc Coverage Check (optional)
+Run from `frontends/nextjs/` (requires `tsx` via `npx`).
 ```bash
-npm run check-jsdoc-coverage
+npx tsx ../../tools/check-jsdoc-coverage.ts
 ```

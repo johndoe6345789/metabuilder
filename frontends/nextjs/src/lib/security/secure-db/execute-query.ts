@@ -1,5 +1,6 @@
 import type { SecurityContext, OperationType, ResourceType } from './types'
 import { checkRateLimit } from './check-rate-limit'
+import { loadRateLimitConfig } from './rate-limit-store'
 import { checkAccess } from './check-access'
 import { logOperation } from './log-operation'
 
@@ -13,6 +14,8 @@ export async function executeQuery<T>(
   queryFn: () => Promise<T>,
   resourceId: string = 'unknown'
 ): Promise<T> {
+  await loadRateLimitConfig()
+
   // Check rate limit
   const canProceed = checkRateLimit(ctx.user.id)
   if (!canProceed) {
