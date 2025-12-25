@@ -74,10 +74,11 @@ interface AlertDialogContentProps {
   children: ReactNode
   showCloseButton?: boolean
   onClose?: () => void
+  className?: string
 }
 
 const AlertDialogContent = forwardRef<HTMLDivElement, AlertDialogContentProps>(
-  ({ children, showCloseButton = false, onClose, ...props }, ref) => {
+  ({ children, showCloseButton = false, onClose, className, ...props }, ref) => {
     return (
       <>
         {showCloseButton && onClose && (
@@ -148,15 +149,17 @@ AlertDialogHeader.displayName = 'AlertDialogHeader'
 // AlertDialogTitle
 interface AlertDialogTitleProps {
   children: ReactNode
+  className?: string
 }
 
 const AlertDialogTitle = forwardRef<HTMLHeadingElement, AlertDialogTitleProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
       <Typography
         ref={ref}
         variant="h6"
         component="span"
+        className={className}
         sx={{
           fontWeight: 600,
           textAlign: 'inherit',
