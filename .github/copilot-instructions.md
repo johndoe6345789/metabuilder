@@ -1,188 +1,181 @@
 # GitHub Copilot Instructions for MetaBuilder
 
-## Project Context
+## Architecture Overview
 
-MetaBuilder is a data-driven, multi-tenant application platform where 95% of functionality is defined through JSON and Lua, not TypeScript. This is a 5-level architecture system with advanced meta-programming capabilities.
+MetaBuilder is a **data-driven, multi-tenant platform** with 95% functionality in JSON/Lua, not TypeScript. The system combines:
 
-## Key Architectural Principles
+- **5-Level Permission System**: Public → User → Admin → God → Supergod access hierarchies
+- **DBAL (Database Abstraction Layer)**: TypeScript SDK + C++ daemon, language-agnostic via YAML contracts
+- **Declarative Components**: Render complex UIs from JSON configuration using `RenderComponent`
+- **Package System**: Self-contained modules in `/packages/{name}/seed/` with metadata, components, scripts
+- **Multi-Tenancy**: All data queries filter by `tenantId`; each tenant has isolated configurations
 
-1. **Declarative First**: Prefer JSON configuration and Lua scripts over TypeScript code
-2. **Modular Packages**: Components should be package-based with isolated seed data
-3. **Minimal TSX**: Keep TypeScript files small (<150 LOC), use generic renderers
-4. **Database-Driven**: All configuration, routes, workflows, and schemas in database
-5. **Multi-Tenant**: Support isolated tenant instances with independent configurations
+## Critical Patterns
+
+### 1. API-First DBAL Development
+When adding features to DBAL:
+1. **Define in YAML first**: `api/schema/entities/*.yaml` and `api/schema/operations/*.yaml`
+2. **Generate types**: `python tools/codegen/gen_types.py` (creates TS and C++ types)
+3. **Implement adapters**: TypeScript (`ts/src/adapters/`) for speed, C++ (`cpp/src/adapters/`) for security
+4. **Add conformance tests**: `common/contracts/*_tests.yaml` (runs on both implementations to guarantee parity)
+5. Never add fields/operations directly in code without updating YAML source of truth
+
+**Why**: C++ daemon isolates credentials (users never see DB URLs), enforces row-level security, and protects against malicious queries.
+
+### 2. Generic Component Rendering
+Instead of hardcoded components, use declarative config:
+```tsx
+// ❌ Wrong: Hardcoded
+<UserForm user={user} onSave={handleSave} />
+
+// ✅ Right: Declarative
+<RenderComponent component={{
+  type: 'form',
+  props: { schema: formSchema },
+  children: [/* field components */]
+}} />
+```
+See: `RenderComponent.tsx`, `declarative-component-renderer.ts`
+
+### 3. Package Seed Data Structure
+Each package auto-loads on init:
+```
+packages/{name}/
+├── seed/
+│   ├── metadata.json      # Package info, exports, dependencies
+│   ├── components.json    # Component definitions
+│   ├── scripts/           # Lua scripts organized by function
+│   └── index.ts           # Exports packageSeed object
+├── src/                   # Optional React components
+└── static_content/        # Assets (images, etc.)
+```
+Loaded by `initializePackageSystem()` → `buildPackageRegistry()` → `exportAllPackagesForSeed()`
+
+### 4. Database Helpers Pattern
+Always use `Database` class methods, never raw Prisma:
+```typescript
+// ✅ Right
+const users = await Database.getUsers()
+await Database.setSchemas(schemas)
+
+// ❌ Wrong
+const users = await prisma.user.findMany()
+```
+See: `src/lib/database.ts` (1200+ LOC utility wrapper)
+
+### 5. Lua Sandbox Execution
+Lua scripts run in isolated sandbox without access to `os`, `io`, `require`:
+```typescript
+// Sandbox context provided in script
+function validateEmail(email)
+  -- No file I/O, no system access, no external requires
+  return string.match(email, "^[^@]+@[^@]+$") ~= nil
+end
+```
+Always test scripts with `DeclarativeComponentRenderer.executeLuaScript()`
 
 ## Code Conventions
 
 ### TypeScript/React
-- Keep all components under 150 lines of code
-- Use functional components with hooks
-- Prefer composition over large components
-- Import from `@/` for absolute paths
-- Use shadcn components from `@/components/ui`
+- Max 150 LOC per component (check `RenderComponent.tsx` ← 221 LOC is exception using recursive pattern)
+- Use `@/` absolute paths and shadcn/ui from `@/components/ui`
+- Functional components with hooks; avoid class components
+- Test files next to source: `utils.ts` + `utils.test.ts` using parameterized `it.each()`
+
+### Tests
+All functions need coverage with parameterized tests:
+```typescript
+// From schema-utils.test.ts: 63 tests for 14 functions
+it.each([
+  { input: 'case1', expected: 'result1' },
+  { input: 'case2', expected: 'result2' },
+])('should handle $input', ({ input, expected }) => {
+  expect(myFunction(input)).toBe(expected)
+})
+```
+Run `npm run test:coverage:report` to auto-generate coverage markdown.
+
+### Database
+- Schema in `prisma/schema.prisma`, always run `npm run db:generate` after changes
+- Hash passwords with SHA-512 (see `password-utils.ts`)
+- Queries must include `where('tenantId', currentTenant.id)` for multi-tenancy
 
 ### Styling
-- Use Tailwind utility classes exclusively
-- Follow the theme defined in `src/index.css`
-- Font family: IBM Plex Sans (body), Space Grotesk (headings), JetBrains Mono (code)
-- Colors: Purple/accent theme with oklch color space
+Tailwind only; theme in `src/index.css` with colors defined in oklch space. Font families: IBM Plex Sans (body), Space Grotesk (headings), JetBrains Mono (code).
 
-### Database (Prisma)
-- All schemas in `prisma/schema.prisma`
-- Run `npm run db:generate` after schema changes
-- Use Database helper class from `@/lib/database`
-- Store credentials as SHA-512 hashes
+## Development Checklist
 
-### Lua Integration
-- Use Fengari for Lua execution
-- Lua scripts stored in database
-- Provide sandboxed execution environment
-- Common patterns in Lua snippet library
+**Before implementing**: Check `docs/` for relevant guides, especially `docs/architecture/5-level-system.md` for permission logic.
 
-### Package System
-- Structure: `/packages/{package-name}/seed/` for data
-- Each package is self-contained with scripts, components, assets
-- Use package import/export for distribution
-- Modular seed data glued together at initialization
+**During implementation**:
+1. Define database schema changes first (Prisma)
+2. Add seed data to `src/seed-data/` or package `/seed/`
+3. Use generic renderers (`RenderComponent`) not hardcoded JSX
+4. Add Lua scripts in `src/lib/lua-snippets.ts` or package `/seed/scripts/`
+5. Keep components < 150 LOC
+6. Add parameterized tests in `.test.ts` files
 
-## Development Workflow
+**Before commit**:
+- `npm run lint:fix` (fixes ESLint issues)
+- `npm test -- --run` (all tests pass)
+- `npm run test:coverage:report` (verify new functions have tests)
+- `npm run test:e2e` (critical workflows still work)
 
-### Planning Phase
-- Review existing PRD.md before making changes
-- Check package structure in `/packages/` directory
-- Verify database schema supports new features
-- Consider multi-tenant implications
+## Multi-Tenant Safety
 
-### Implementation Phase
-- Start with database schema changes if needed
-- Create or update seed data in package structure
-- Build generic renderers, not hardcoded components
-- Add Lua scripts for business logic
-- Update UI components last
+Every query must filter by tenant:
+```typescript
+// ❌ Never
+const data = await Database.getData()
 
-### Testing Phase
-- Run `npm run lint` before committing
-- Execute `npm run test:e2e` for end-to-end tests
-- Test at multiple permission levels (user, admin, god, supergod)
-- Verify package import/export works
-- Check security sandbox effectiveness
+// ✅ Always  
+const data = await Database.getData({ tenantId: user.tenantId })
+```
 
-### Documentation Phase
-- Update PRD.md with feature changes
-- Document new Lua APIs in appropriate files
-- Add examples to code snippet library
-- Update workflow documentation if needed
+Permission checks cascade from lowest level:
+```typescript
+if (user.level >= 3) {  // Admin and above
+  showAdminPanel()
+}
+```
 
-## Security Considerations
+## DBAL-Specific Guidance
 
-- **Never** store plaintext passwords
-- **Always** use SHA-512 hashing for credentials
-- **Sandbox** all Lua script execution
-- **Scan** user-uploaded code for malicious patterns
-- **Validate** all user inputs
-- **Escape** HTML content to prevent XSS
-- **Use** parameterized queries (Prisma handles this)
+**TypeScript DBAL**: Fast iteration, development use. Located in `dbal/ts/src/`.
+**C++ DBAL Daemon**: Production security, credential protection. Located in `dbal/cpp/src/`.
+**Conformance Tests**: Guarantee both implementations behave identically. Update `common/contracts/` when changing YAML schemas.
 
-## Common Patterns
+If fixing a DBAL bug:
+1. Verify the bug exists in YAML schema definition
+2. Reproduce in TypeScript implementation first (faster feedback loop)
+3. Apply fix to both TS and C++ adapters
+4. Add/update conformance test in `common/contracts/`
+5. Verify both implementations pass test: `python tools/conformance/run_all.py`
 
-### Adding a New Feature
-1. Define in database schema (Prisma)
-2. Create seed data in package structure
-3. Build generic component renderer if needed
-4. Add Lua scripts for logic
-5. Wire up in appropriate level UI
-6. Add tests
-7. Update documentation
+## Common Mistakes
 
-### Creating a Package
-1. Create `/packages/{name}/` directory
-2. Add `/seed/` subdirectory for data
-3. Define component configurations as JSON
-4. Add Lua scripts in `/seed/scripts/`
-5. Include assets in `/static_content/`
-6. Export package as ZIP with metadata
+❌ **Hardcoding values in TSX** → Move to database or YAML config
+❌ **Forgetting tenantId filter** → Breaks multi-tenancy
+❌ **Adding fields without Prisma generate** → Type errors in DB helper
+❌ **Plain JS loops over Fengari tables** → Use Lua, not TS, for Lua data
+❌ **Components > 150 LOC** → Refactor to composition + `RenderComponent`
+❌ **New function without test** → `npm run test:check-functions` will fail
 
-### Implementing Declarative Component
-1. Define JSON schema for component config
-2. Create Lua scripts for behavior
-3. Register in component catalog
-4. Build generic renderer using RenderComponent
-5. Add to PropertyInspector for editing
-6. Test in canvas/builder
+## Key Files
 
-## AI-Assisted Development Tips
-
-### When Reviewing Code
-- Check for hardcoded values that should be in database
-- Verify component size is under 150 LOC
-- Ensure TypeScript is only used where necessary
-- Look for opportunities to make code more generic
-
-### When Writing Code
-- Prefer database-driven configuration
-- Use existing generic renderers when possible
-- Follow established patterns in codebase
-- Keep functions pure and testable
-
-### When Fixing Bugs
-- Check seed data first (common source of issues)
-- Verify Prisma client is generated
-- Ensure database is initialized
-- Test with different permission levels
-
-### When Suggesting Improvements
-- Favor declarative approaches over imperative
-- Suggest package structure for new features
-- Recommend Lua for business logic when appropriate
-- Consider multi-tenant implications
-
-## Integration with Workflows
-
-This file helps Copilot understand the project during:
-- **Code Review** (`code-review.yml`): Apply these principles when reviewing PRs
-- **Issue Triage** (`issue-triage.yml`): Suggest fixes following these patterns
-- **Auto-Fix** (`issue-triage.yml`): Generate fixes that align with architecture
-- **PR Management** (`pr-management.yml`): Validate changes follow conventions
+- **Architecture**: `docs/architecture/5-level-system.md` (permissions), `docs/architecture/packages.md` (packages)
+- **Components**: `src/components/RenderComponent.tsx` (generic renderer), `src/lib/declarative-component-renderer.ts`
+- **Database**: `src/lib/database.ts` (all DB operations), `prisma/schema.prisma` (schema)
+- **Packages**: `src/lib/package-loader.ts` (initialization), `packages/*/seed/` (definitions)
+- **Tests**: `src/lib/schema-utils.test.ts` (parameterized pattern), `FUNCTION_TEST_COVERAGE.md` (auto-generated report)
+- **DBAL**: `dbal/AGENTS.md` (detailed DBAL agent guide), `api/schema/` (YAML contracts)
 
 ## Questions to Ask
 
-When uncertain, Copilot should consider:
-1. Can this be declarative instead of imperative?
-2. Should this be in the database or in code?
-3. Is this feature package-worthy?
-4. Does this work across all permission levels?
-5. Is the component under 150 LOC?
-6. Could Lua handle this logic instead?
-7. Does this maintain multi-tenant isolation?
-
-## Useful Commands
-
-```bash
-# Database operations
-npm run db:generate
-npm run db:push
-npm run db:studio
-
-# Testing
-npm run lint
-npm run lint:fix
-npm run test:e2e
-npm run test:e2e:ui
-
-# Development
-npm run dev
-npm run build
-
-# Package operations (in app)
-# Use PackageManager component to import/export packages
-```
-
-## Resources
-
-- PRD: `/PRD.md`
-- Database schema: `/prisma/schema.prisma`
-- Packages: `/packages/` directory
-- Seed data: `/src/seed-data/` and package seed directories
-- Documentation: `/docs/` directory
-- Components: `/src/components/` directory
-- Workflows: `/.github/workflows/` directory
+1. Is this hardcoded value better in database?
+2. Could a generic component render this instead of custom TSX?
+3. Does this query filter by tenantId?
+4. Could Lua handle this without code changes?
+5. Is the component < 150 LOC? (If not, refactor)
+6. Does this function have a parameterized test?
+7. Is this DBAL change reflected in YAML schema first?
