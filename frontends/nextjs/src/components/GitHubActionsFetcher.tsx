@@ -63,27 +63,31 @@ export function GitHubActionsFetcher() {
     setNeedsAuth(false)
 
     try {
-      // TODO: Replace with proper GitHub OAuth authentication in Next.js
-      // For now, use Octokit without authentication (rate limited)
-      // const user = await spark.user()
-      
-      // if (!user || !user.id) {
-      //   setNeedsAuth(true)
-      //   throw new Error('GitHub authentication required')
-      // }
+      const response = await fetch('/api/github/actions/runs', { cache: 'no-store' })
+      let payload: { owner?: string; repo?: string; runs?: WorkflowRun[]; fetchedAt?: string; requiresAuth?: boolean } | null = null
 
-      const octokit = new Octokit()
-      
-      const { data: workflows } = await octokit.rest.actions.listWorkflowRunsForRepo({
-        owner: 'johndoe6345789',
-        repo: 'metabuilder',
-        per_page: 20
-      })
+      try {
+        payload = await response.json()
+      } catch (parseError) {
+        payload = null
+      }
 
-      setData(workflows.workflow_runs as WorkflowRun[])
-      setLastFetched(new Date())
+      if (!response.ok) {
+        if (payload?.requiresAuth) {
+          setNeedsAuth(true)
+        }
+        const message = payload?.error || `Failed to fetch workflow runs (${response.status})`
+        throw new Error(message)
+      }
+
+      const runs = payload?.runs || []
+      setData(runs)
+      if (payload?.owner && payload?.repo) {
+        setRepoInfo({ owner: payload.owner, repo: payload.repo })
+      }
+      setLastFetched(payload?.fetchedAt ? new Date(payload.fetchedAt) : new Date())
       setSecondsUntilRefresh(30)
-      toast.success(`Fetched ${workflows.workflow_runs.length} workflow runs`)
+      toast.success(`Fetched ${runs.length} workflow runs`)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
       setError(errorMessage)
