@@ -44,6 +44,7 @@ int main(int argc, char* argv[]) {
     std::string bind_address = "127.0.0.1";
     int port = 8080;
     bool development_mode = false;
+    bool daemon_mode = false;  // Default to interactive mode
     
     // Parse command line arguments
     for (int i = 1; i < argc; i++) {
@@ -58,6 +59,8 @@ int main(int argc, char* argv[]) {
         } else if (arg == "--mode" && i + 1 < argc) {
             std::string mode = argv[++i];
             development_mode = (mode == "development" || mode == "dev");
+        } else if (arg == "--daemon" || arg == "-d") {
+            daemon_mode = true;
         } else if (arg == "--help" || arg == "-h") {
             std::cout << "Usage: " << argv[0] << " [options]" << std::endl;
             std::cout << "Options:" << std::endl;
@@ -65,7 +68,14 @@ int main(int argc, char* argv[]) {
             std::cout << "  --bind <address>   Bind address (default: 127.0.0.1)" << std::endl;
             std::cout << "  --port <port>      Port number (default: 8080)" << std::endl;
             std::cout << "  --mode <mode>      Run mode: production, development (default: production)" << std::endl;
+            std::cout << "  --daemon, -d       Run in daemon mode (default: interactive)" << std::endl;
             std::cout << "  --help, -h         Show this help message" << std::endl;
+            std::cout << std::endl;
+            std::cout << "Interactive mode (default):" << std::endl;
+            std::cout << "  Shows a command prompt with available commands:" << std::endl;
+            std::cout << "    status - Show server status" << std::endl;
+            std::cout << "    help   - Show available commands" << std::endl;
+            std::cout << "    stop   - Stop the server and exit" << std::endl;
             std::cout << std::endl;
             std::cout << "Nginx reverse proxy example:" << std::endl;
             std::cout << "  location /api/ {" << std::endl;
@@ -97,11 +107,62 @@ int main(int argc, char* argv[]) {
     std::cout << "  GET  /version     - Version information" << std::endl;
     std::cout << "  GET  /status      - Server status" << std::endl;
     std::cout << std::endl;
-    std::cout << "Daemon started successfully. Press Ctrl+C to stop." << std::endl;
     
-    // Wait while server is running
-    while (server_instance->isRunning()) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    if (daemon_mode) {
+        // Daemon mode: run in background until signal
+        std::cout << "Daemon mode: Running in background. Press Ctrl+C to stop." << std::endl;
+        
+        while (server_instance->isRunning()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+    } else {
+        // Interactive mode: show command prompt
+        std::cout << "Interactive mode: Type 'help' for available commands, 'stop' to exit." << std::endl;
+        std::cout << std::endl;
+        
+        std::string command;
+        while (server_instance->isRunning()) {
+            std::cout << "dbal> ";
+            std::cout.flush();
+            
+            if (!std::getline(std::cin, command)) {
+                // EOF or error, exit gracefully
+                break;
+            }
+            
+            // Trim whitespace
+            size_t start = command.find_first_not_of(" \t\r\n");
+            size_t end = command.find_last_not_of(" \t\r\n");
+            if (start == std::string::npos) {
+                continue; // Empty line
+            }
+            command = command.substr(start, end - start + 1);
+            
+            if (command.empty()) {
+                continue;
+            }
+            
+            if (command == "help" || command == "?") {
+                std::cout << "Available commands:" << std::endl;
+                std::cout << "  status - Show server status and statistics" << std::endl;
+                std::cout << "  help   - Show this help message" << std::endl;
+                std::cout << "  stop   - Stop the server and exit" << std::endl;
+                std::cout << "  exit   - Alias for stop" << std::endl;
+                std::cout << "  quit   - Alias for stop" << std::endl;
+            } else if (command == "status") {
+                std::cout << "Server status:" << std::endl;
+                std::cout << "  Address: " << bind_address << ":" << port << std::endl;
+                std::cout << "  Mode: " << (development_mode ? "development" : "production") << std::endl;
+                std::cout << "  Status: " << (server_instance->isRunning() ? "running" : "stopped") << std::endl;
+            } else if (command == "stop" || command == "exit" || command == "quit") {
+                std::cout << "Stopping server..." << std::endl;
+                server_instance->stop();
+                break;
+            } else {
+                std::cout << "Unknown command: " << command << std::endl;
+                std::cout << "Type 'help' for available commands." << std::endl;
+            }
+        }
     }
     
     std::cout << "Daemon stopped." << std::endl;
