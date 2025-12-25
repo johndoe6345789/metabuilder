@@ -1,17 +1,19 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import { Alert as MuiAlert, AlertTitle as MuiAlertTitle, AlertProps as MuiAlertProps } from '@mui/material'
+import { Alert as MuiAlert, AlertTitle as MuiAlertTitle, AlertProps as MuiAlertProps, SxProps, Theme } from '@mui/material'
 
 export type AlertVariant = 'default' | 'destructive'
 
-export interface AlertProps extends Omit<MuiAlertProps, 'variant' | 'severity'> {
+export interface AlertProps {
   variant?: AlertVariant
   children?: ReactNode
+  className?: string
+  sx?: SxProps<Theme>
 }
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(
-  ({ variant = 'default', children, sx, ...props }, ref) => {
+  ({ variant = 'default', children, className, sx, ...props }, ref) => {
     const severity = variant === 'destructive' ? 'error' : 'info'
 
     return (
@@ -19,6 +21,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
         ref={ref}
         severity={severity}
         variant="outlined"
+        className={className}
         sx={{
           borderRadius: 2,
           ...sx,
