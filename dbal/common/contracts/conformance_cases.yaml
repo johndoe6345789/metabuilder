@@ -133,3 +133,63 @@
         status: error
         error:
           code: 422
+
+- name: "Workflow CRUD operations"
+  description: "Test basic create, read, update, delete operations for Workflow entity"
+  operations:
+    - action: create
+      entity: User
+      input:
+        username: "workflow_user"
+        email: "workflow@example.com"
+        role: "admin"
+      expected:
+        status: success
+
+    - action: create
+      entity: Workflow
+      input:
+        name: "daily_digest"
+        description: "Daily digest workflow"
+        trigger: "schedule"
+        triggerConfig:
+          cron: "0 9 * * *"
+        steps:
+          actions: ["send_email"]
+        isActive: true
+        createdBy: "$steps[0].id"
+      expected:
+        status: success
+        output:
+          name: "daily_digest"
+          trigger: "schedule"
+          isActive: true
+
+    - action: read
+      entity: Workflow
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output:
+          name: "daily_digest"
+
+    - action: update
+      entity: Workflow
+      input:
+        id: "$steps[1].id"
+        isActive: false
+        description: "Paused for maintenance"
+      expected:
+        status: success
+        output:
+          isActive: false
+          description: "Paused for maintenance"
+
+    - action: delete
+      entity: Workflow
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output: true
