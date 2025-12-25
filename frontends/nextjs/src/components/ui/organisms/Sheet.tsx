@@ -19,9 +19,9 @@ interface SheetProps extends Omit<DrawerProps, 'anchor'> {
 
 const Sheet = forwardRef<HTMLDivElement, SheetProps>(
   ({ children, side = 'right', open, onClose, onOpenChange, ...props }, ref) => {
-    const handleClose = (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => {
+    const handleClose = (_event: React.SyntheticEvent | object, reason: 'backdropClick' | 'escapeKeyDown') => {
       if (typeof onClose === 'function') {
-        onClose(event, reason)
+        onClose(_event, reason)
       }
       onOpenChange?.(false)
     }
