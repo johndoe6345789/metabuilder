@@ -42,7 +42,7 @@ export class LuaEngine {
    * @returns Execution result
    */
   async execute(code: string, context: LuaExecutionContext = {}): Promise<LuaExecutionResult> {
-    this.logs = []
+    this.logs.length = 0
     return executeLuaCode(this.L, code, context, this.logs)
   }
 

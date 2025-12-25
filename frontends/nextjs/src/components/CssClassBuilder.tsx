@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Database } from '@/lib/database'
-import { Plus, X, FloppyDisk, Trash } from '@phosphor-icons/react'
+import { Plus, X, FloppyDisk } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface CssClassBuilderProps {
@@ -23,22 +22,74 @@ interface CssCategory {
   classes: string[]
 }
 
+const CLASS_TOKEN_PATTERN = /^[A-Za-z0-9:_/.[\]()%#!,=+-]+$/
+const parseClassList = (value: string) => Array.from(new Set(value.split(/\s+/).filter(Boolean)))
+
 export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: CssClassBuilderProps) {
   const [selectedClasses, setSelectedClasses] = useState<string[]>([])
   const [categories, setCategories] = useState<CssCategory[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [customClass, setCustomClass] = useState('')
+  const [activeTab, setActiveTab] = useState('custom')
+
+  const knownClassSet = useMemo(
+    () => new Set(categories.flatMap((category) => category.classes)),
+    [categories]
+  )
+  const selectedClassSet = useMemo(() => new Set(selectedClasses), [selectedClasses])
+  const normalizedSearch = searchQuery.trim().toLowerCase()
+  const filteredCategories = useMemo(() => {
+    if (!normalizedSearch) {
+      return categories
+    }
+
+    return categories
+      .map((category) => ({
+        ...category,
+        classes: category.classes.filter((cls) => cls.toLowerCase().includes(normalizedSearch)),
+      }))
+      .filter((category) => category.classes.length > 0)
+  }, [categories, normalizedSearch])
+
+  const customTokens = customClass.trim().split(/\s+/).filter(Boolean)
+  const uniqueCustomTokens = Array.from(new Set(customTokens))
+  const invalidCustomTokens = uniqueCustomTokens.filter((token) => !CLASS_TOKEN_PATTERN.test(token))
+  const duplicateCustomTokens = uniqueCustomTokens.filter((token) => selectedClassSet.has(token))
+  const unknownCustomTokens = uniqueCustomTokens.filter((token) => !knownClassSet.has(token))
+  const canAddCustom =
+    uniqueCustomTokens.length > 0 &&
+    invalidCustomTokens.length === 0 &&
+    uniqueCustomTokens.some((token) => !selectedClassSet.has(token))
 
   useEffect(() => {
     if (open) {
       loadCssClasses()
-      setSelectedClasses(initialValue.split(' ').filter(Boolean))
+      setSelectedClasses(parseClassList(initialValue))
+      setSearchQuery('')
+      setCustomClass('')
     }
   }, [open, initialValue])
 
+  useEffect(() => {
+    if (!open) {
+      return
+    }
+
+    if (filteredCategories.length === 0) {
+      setActiveTab('custom')
+      return
+    }
+
+    const hasActiveTab = filteredCategories.some((category) => category.name === activeTab)
+    if (!hasActiveTab) {
+      setActiveTab(filteredCategories[0]?.name ?? 'custom')
+    }
+  }, [activeTab, filteredCategories, open])
+
   const loadCssClasses = async () => {
     const classes = await Database.getCssClasses()
-    setCategories(classes)
+    const sorted = classes.slice().sort((a, b) => a.name.localeCompare(b.name))
+    setCategories(sorted)
   }
 
   const toggleClass = (cssClass: string) => {
@@ -52,23 +103,33 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
   }
 
   const addCustomClass = () => {
-    if (customClass.trim()) {
-      setSelectedClasses(current => [...current, customClass.trim()])
-      setCustomClass('')
+    if (uniqueCustomTokens.length === 0) {
+      return
     }
+
+    if (invalidCustomTokens.length > 0) {
+      toast.error(`Invalid class name: ${invalidCustomTokens.join(', ')}`)
+      return
+    }
+
+    const newTokens = uniqueCustomTokens.filter((token) => !selectedClassSet.has(token))
+    if (newTokens.length === 0) {
+      toast.info('Those classes are already selected')
+      return
+    }
+
+    setSelectedClasses((current) => [...current, ...newTokens])
+    setCustomClass('')
+  }
+
+  const clearSelectedClasses = () => {
+    setSelectedClasses([])
   }
 
   const handleSave = () => {
     onSave(selectedClasses.join(' '))
     onClose()
   }
-
-  const filteredCategories = categories.map(category => ({
-    ...category,
-    classes: category.classes.filter(cls =>
-      cls.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
-  })).filter(category => category.classes.length > 0)
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

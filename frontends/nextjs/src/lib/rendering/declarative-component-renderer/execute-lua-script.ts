@@ -35,7 +35,7 @@ end
 `
 
   const result = await state.luaEngine.execute(wrappedCode, {
-    data: { params: paramContext },
+    data: { params: paramContext }
   })
 
   if (!result.success) {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { securityScanner, getSeverityColor, getSeverityIcon } from '@/lib/security-scanner'
+import { securityScanner, scanForVulnerabilities, getSeverityColor, getSeverityIcon } from '@/lib/security-scanner'
 
 describe('security-scanner', () => {
   describe('scanJavaScript', () => {
@@ -218,6 +218,40 @@ describe('security-scanner', () => {
       { severity: 'safe', expected: '\u2713' },
     ])('should map $severity to expected icon', ({ severity, expected }) => {
       expect(getSeverityIcon(severity)).toBe(expected)
+    })
+  })
+
+  describe('scanForVulnerabilities', () => {
+    it.each([
+      {
+        name: 'auto-detects JSON and flags prototype pollution',
+        code: '{"__proto__": {"polluted": true}}',
+        expectedSeverity: 'critical',
+      },
+      {
+        name: 'auto-detects Lua when function/end present',
+        code: 'function dangerous() os.execute("rm -rf /") end',
+        expectedSeverity: 'critical',
+      },
+      {
+        name: 'auto-detects HTML and flags script tags',
+        code: '<div><script>alert(1)</script></div>',
+        expectedSeverity: 'critical',
+      },
+      {
+        name: 'falls back to JavaScript scanning',
+        code: 'const result = eval("1 + 1")',
+        expectedSeverity: 'critical',
+      },
+      {
+        name: 'honors explicit type parameter',
+        code: 'return 1',
+        type: 'lua' as const,
+        expectedSeverity: 'safe',
+      },
+    ])('should $name', ({ code, type, expectedSeverity }) => {
+      const result = scanForVulnerabilities(code, type)
+      expect(result.severity).toBe(expectedSeverity)
     })
   })
 })

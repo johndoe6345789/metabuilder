@@ -5,6 +5,6 @@ export function registerComponentConfig(
   state: DeclarativeRendererState,
   componentType: string,
   config: DeclarativeComponentConfig
-): void {
+) {
   state.componentConfigs[componentType] = config
 }

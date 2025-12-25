@@ -1,5 +1,5 @@
 import { LuaEngine, LuaExecutionContext, LuaExecutionResult } from './lua-engine'
-import { securityScanner, SecurityScanResult } from './security-scanner'
+import { securityScanner, type SecurityScanResult } from '../security'
 import * as fengari from 'fengari-web'
 
 const lua = fengari.lua

@@ -21,4 +21,5 @@ export { executeLuaCode } from './execute-lua-code'
 export { logToWorkflow } from './log-to-workflow'
 
 // Namespace class (groups lambdas, no state)
-export { WorkflowEngine, createWorkflowEngine } from './workflow-engine-class'
+export { WorkflowEngine } from './workflow-engine-class'
+export { createWorkflowEngine } from './create-workflow-engine'

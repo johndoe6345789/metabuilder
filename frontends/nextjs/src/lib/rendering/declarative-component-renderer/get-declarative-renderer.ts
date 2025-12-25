@@ -1,6 +1,5 @@
-import { DeclarativeComponentRenderer } from './renderer'
-
-const globalRenderer = new DeclarativeComponentRenderer()
+import type { DeclarativeComponentRenderer } from './renderer-class'
+import { globalRenderer } from './renderer-singleton'
 
 export function getDeclarativeRenderer(): DeclarativeComponentRenderer {
   return globalRenderer
