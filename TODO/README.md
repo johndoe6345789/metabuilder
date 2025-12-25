@@ -26,6 +26,7 @@ This folder contains comprehensive TODO lists organized by area of the MetaBuild
 | [18-ACCESSIBILITY-TODO.md](18-ACCESSIBILITY-TODO.md) | Accessibility (a11y) | Medium |
 | [19-PERFORMANCE-TODO.md](19-PERFORMANCE-TODO.md) | Performance optimization | Medium |
 | [20-FUTURE-FEATURES-TODO.md](20-FUTURE-FEATURES-TODO.md) | Future features | Low |
+| [21-SDLC-TODO.md](21-SDLC-TODO.md) | SDLC workflows & Copilot | High |
 
 ## Priority Legend
 

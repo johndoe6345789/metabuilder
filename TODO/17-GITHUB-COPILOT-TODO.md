@@ -1,5 +1,7 @@
 # TODO 17 - GitHub Copilot & AI Integration
 
+> **See also**: [21-SDLC-TODO.md](21-SDLC-TODO.md) for SDLC workflow integration with Copilot
+
 ## Copilot Instructions
 
 - [ ] Review and update `.github/copilot-instructions.md`
@@ -8,7 +10,7 @@
 - [ ] Document Copilot-friendly code conventions
 - [ ] Add Copilot-aware inline comments
 
-## Prompts
+## Prompts (see 21-SDLC-TODO.md for full list)
 
 - [ ] Review all prompts in `.github/prompts/`
 - [ ] Add new prompts for common development tasks
