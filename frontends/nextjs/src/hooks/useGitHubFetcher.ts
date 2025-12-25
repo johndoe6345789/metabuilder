@@ -48,7 +48,7 @@ export function useGitHubFetcher(): UseGitHubFetcherState & UseGitHubFetcherActi
       }
 
       const octokit = new Octokit({ auth: token })
-      const response = await octokit.rest.actions.listWorkflowRuns({
+      const response = await octokit.rest.actions.listWorkflowRunsForRepo({
         owner: 'johndoe6345789',
         repo: 'metabuilder',
         per_page: 10,
