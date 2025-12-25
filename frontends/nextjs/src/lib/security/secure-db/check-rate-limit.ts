@@ -1,7 +1,4 @@
-const RATE_LIMIT_WINDOW = 60000
-const MAX_REQUESTS_PER_WINDOW = 100
-
-const rateLimitMap = new Map<string, number[]>()
+import { RATE_LIMIT_WINDOW, MAX_REQUESTS_PER_WINDOW, rateLimitMap } from './rate-limit-store'
 
 /**
  * Check if user is within rate limits
@@ -21,18 +18,4 @@ export function checkRateLimit(userId: string): boolean {
   recentRequests.push(now)
   rateLimitMap.set(userId, recentRequests)
   return true
-}
-
-/**
- * Clear rate limit for a user (useful for testing)
- */
-export function clearRateLimit(userId: string): void {
-  rateLimitMap.delete(userId)
-}
-
-/**
- * Clear all rate limits (useful for testing)
- */
-export function clearAllRateLimits(): void {
-  rateLimitMap.clear()
 }
