@@ -14,16 +14,23 @@ import CloseIcon from '@mui/icons-material/Close'
 interface SheetProps extends Omit<DrawerProps, 'anchor'> {
   children: ReactNode
   side?: 'left' | 'right' | 'top' | 'bottom'
+  onOpenChange?: (open: boolean) => void
 }
 
 const Sheet = forwardRef<HTMLDivElement, SheetProps>(
-  ({ children, side = 'right', open, onClose, ...props }, ref) => {
+  ({ children, side = 'right', open, onClose, onOpenChange, ...props }, ref) => {
+    const handleClose = (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => {
+      if (typeof onClose === 'function') {
+        onClose(event, reason)
+      }
+      onOpenChange?.(false)
+    }
     return (
       <Drawer
         ref={ref}
         anchor={side}
         open={open}
-        onClose={onClose}
+        onClose={handleClose}
         {...props}
       >
         {children}
