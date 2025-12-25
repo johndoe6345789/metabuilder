@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { renderHook, act } from '@testing-library/react'
+import { renderHook, act, waitFor } from '@testing-library/react'
 import { useKV } from '@/hooks/useKV'
 
 describe('useKV', () => {
@@ -33,6 +33,16 @@ describe('useKV', () => {
     const [value] = result.current
 
     expect(value).toBeUndefined()
+  })
+
+  it('should load value from localStorage when available', async () => {
+    localStorage.setItem('stored_key', JSON.stringify('stored'))
+
+    const { result } = renderHook(() => useKV('stored_key', 'default'))
+
+    await waitFor(() => {
+      expect(result.current[0]).toBe('stored')
+    })
   })
 
   it('should update value when using updater function', async () => {
@@ -118,6 +128,19 @@ describe('useKV', () => {
     expect(value).toBe('updated')
   })
 
+  it('should sync updates across mounted hooks with same key', async () => {
+    const { result: firstHook } = renderHook(() => useKV('sync_key', 'initial'))
+    const { result: secondHook } = renderHook(() => useKV('sync_key', 'initial'))
+
+    await act(async () => {
+      await firstHook.current[1]('synced')
+    })
+
+    await waitFor(() => {
+      expect(secondHook.current[0]).toBe('synced')
+    })
+  })
+
   it.each([
     { initialValue: null, key: 'falsy_key_null', description: 'null value' },
     { initialValue: false, key: 'falsy_key_false', description: 'false boolean' },
@@ -145,5 +168,16 @@ describe('useKV', () => {
     const [finalValue] = result.current
     expect(typeof finalValue).toBe('number')
     expect(finalValue).toBeGreaterThanOrEqual(1)
+  })
+
+  it('should persist updates to localStorage', async () => {
+    const { result } = renderHook(() => useKV('persist_key', 'initial'))
+    const [, updateValue] = result.current
+
+    await act(async () => {
+      await updateValue('next')
+    })
+
+    expect(localStorage.setItem).toHaveBeenCalledWith('persist_key', JSON.stringify('next'))
   })
 })
