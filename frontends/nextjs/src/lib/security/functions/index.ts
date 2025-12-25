@@ -16,6 +16,7 @@ export { scanJavaScript } from './scanners/scan-javascript'
 export { scanLua } from './scanners/scan-lua'
 export { scanJSON } from './scanners/scan-json'
 export { scanHTML } from './scanners/scan-html'
+export { scanForVulnerabilities } from './scanners/scan-for-vulnerabilities'
 export { sanitizeInput } from './scanners/sanitize-input'
 
 // Utils
