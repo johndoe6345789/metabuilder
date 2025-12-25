@@ -3,6 +3,7 @@
 
 #include "dbal/client.hpp"
 #include "dbal/types.hpp"
+#include "dbal/workflow.hpp"
 #include "dbal/errors.hpp"
 #include "dbal/capabilities.hpp"
 

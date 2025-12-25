@@ -12,8 +12,11 @@ struct InMemoryStore {
     std::map<std::string, User> users;
     std::map<std::string, PageView> pages;
     std::map<std::string, std::string> page_slugs; // slug -> id mapping
+    std::map<std::string, Workflow> workflows;
+    std::map<std::string, std::string> workflow_names; // name -> id mapping
     int user_counter = 0;
     int page_counter = 0;
+    int workflow_counter = 0;
 };
 
 static InMemoryStore& getStore() {
@@ -37,6 +40,15 @@ static bool isValidSlug(const std::string& slug) {
     if (slug.empty() || slug.length() > 100) return false;
     static const std::regex slug_pattern(R"([a-z0-9-]+)");
     return std::regex_match(slug, slug_pattern);
+}
+
+static bool isValidWorkflowName(const std::string& name) {
+    return !name.empty() && name.length() <= 255;
+}
+
+static bool isValidWorkflowTrigger(const std::string& trigger) {
+    static const std::array<std::string, 4> allowed = {"manual", "schedule", "event", "webhook"};
+    return std::find(allowed.begin(), allowed.end(), trigger) != allowed.end();
 }
 
 static std::string generateId(const std::string& prefix, int counter) {

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "../types.hpp"
+#include "../workflow.hpp"
 #include "../errors.hpp"
 
 namespace dbal {
@@ -24,6 +25,12 @@ public:
     virtual Result<PageView> updatePage(const std::string& id, const UpdatePageInput& input) = 0;
     virtual Result<bool> deletePage(const std::string& id) = 0;
     virtual Result<std::vector<PageView>> listPages(const ListOptions& options) = 0;
+
+    virtual Result<Workflow> createWorkflow(const CreateWorkflowInput& input) = 0;
+    virtual Result<Workflow> getWorkflow(const std::string& id) = 0;
+    virtual Result<Workflow> updateWorkflow(const std::string& id, const UpdateWorkflowInput& input) = 0;
+    virtual Result<bool> deleteWorkflow(const std::string& id) = 0;
+    virtual Result<std::vector<Workflow>> listWorkflows(const ListOptions& options) = 0;
 
     virtual Result<Workflow> createWorkflow(const CreateWorkflowInput& input) = 0;
     virtual Result<Workflow> getWorkflow(const std::string& id) = 0;
