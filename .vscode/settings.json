@@ -10,5 +10,10 @@
     "inlineChat.enableV2": true,
     "chat.allowAnonymousAccess": false,
     "chat.mcp.assisted.nuget.enabled": true,
-    "inlineChat.notebookAgent": true
+    "inlineChat.notebookAgent": true,
+    "github.copilot.chat.acceptSuggestionsWithEnter": true,
+    "github.copilot.enable": {
+        "*": true
+    },
+    "editor.inlineSuggest.enabled": true
 }

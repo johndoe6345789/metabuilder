@@ -16,7 +16,10 @@ Quick references and setup instructions for developers.
 - **[IMPLEMENTATION_ROADMAP.md](guides/IMPLEMENTATION_ROADMAP.md)** - Feature development timeline
 - **[ATOMIC_QUICKSTART.md](guides/ATOMIC_QUICKSTART.md)** - Get started with atomic design patterns
 - **[ACT_QUICK_REFERENCE.md](guides/ACT_QUICK_REFERENCE.md)** - GitHub Actions testing quick ref
+- **[SASS_QUICKSTART.md](guides/SASS_QUICKSTART.md)** - SASS/SCSS quick start
 - **[SASS_QUICK_REFERENCE.md](guides/SASS_QUICK_REFERENCE.md)** - SASS/SCSS styling guide
+- **[SASS_DOCUMENTATION_INDEX.md](guides/SASS_DOCUMENTATION_INDEX.md)** - SASS documentation index
+- **[SASS_EXAMPLES.md](guides/SASS_EXAMPLES.md)** - SASS code examples
 - **[github-actions-local-testing.md](guides/github-actions-local-testing.md)** - Test workflows locally
 
 ### [Implementation Guides](implementation/)
