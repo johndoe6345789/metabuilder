@@ -15,5 +15,6 @@
     "github.copilot.enable": {
         "*": true
     },
-    "editor.inlineSuggest.enabled": true
+    "editor.inlineSuggest.enabled": true,
+    "chat.experimental.yolo": true
 }
