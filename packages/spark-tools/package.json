@@ -90,7 +90,7 @@
     "@testing-library/react": "^16.0.1",
     "@types/body-parser": "^1.19.6",
     "@types/express": "^5.0.1",
-    "@types/node": "^22.13.9",
+    "@types/node": "^25.0.3",
     "@types/react": "^19.0.0",
     "jsdom": "^25.0.1",
     "rollup": "^4.35.0",
