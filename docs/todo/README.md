@@ -6,6 +6,7 @@ This folder contains comprehensive TODO lists organized by area of the MetaBuild
 
 | File | Area | Priority |
 |------|------|----------|
+| [0-kickstart.md](0-kickstart.md) | Start here (how to use these TODOs) | High |
 | [1-TODO.md](1-TODO.md) | Workflows & SDLC automation | High |
 | [2-TODO.md](2-TODO.md) | Architecture & refactoring | High |
 | [3-TODO.md](3-TODO.md) | Testing & quality metrics | High |
@@ -37,7 +38,7 @@ This folder contains comprehensive TODO lists organized by area of the MetaBuild
 
 ## How to Use
 
-1. **Starting a task**: Check the relevant TODO file for context
+1. **Starting a task**: Start with [0-kickstart.md](0-kickstart.md), then check the relevant TODO file for context
 2. **Completing a task**: Mark with `[x]` and add commit reference
 3. **Adding tasks**: Add to the appropriate category file
 4. **Large initiatives**: Create a new numbered TODO file

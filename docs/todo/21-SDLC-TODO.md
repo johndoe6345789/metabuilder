@@ -151,16 +151,16 @@
 ## Prompts & Copilot Integration
 
 ### `.github/prompts/` Review
-- [ ] Audit [0-kickstart.md](../.github/prompts/0-kickstart.md) for current accuracy
-- [ ] Update [1-plan-feature.prompt.md](../.github/prompts/1-plan-feature.prompt.md)
-- [ ] Review [2-design-component.prompt.md](../.github/prompts/2-design-component.prompt.md)
+- [ ] Audit [0-kickstart.md](../../.github/prompts/0-kickstart.md) for current accuracy
+- [ ] Update [1-plan-feature.prompt.md](../../.github/prompts/1-plan-feature.prompt.md)
+- [ ] Review [2-design-component.prompt.md](../../.github/prompts/2-design-component.prompt.md)
 - [ ] Update all `3-impl-*.prompt.md` implementation prompts
-- [ ] Review [4-test-*.prompt.md](../.github/prompts/4-test-run.prompt.md) testing prompts
-- [ ] Update [5-review-code.prompt.md](../.github/prompts/5-review-code.prompt.md)
-- [ ] Review [6-deploy-*.prompt.md](../.github/prompts/6-deploy-ci-local.prompt.md) deployment prompts
-- [ ] Update [7-maintain-*.prompt.md](../.github/prompts/7-maintain-debug.prompt.md) maintenance prompts
-- [ ] Review [8-docs-feature.prompt.md](../.github/prompts/8-docs-feature.prompt.md)
-- [ ] Update [EEK-STUCK.md](../.github/prompts/EEK-STUCK.md) troubleshooting guide
+- [ ] Review [4-test-*.prompt.md](../../.github/prompts/4-test-run.prompt.md) testing prompts
+- [ ] Update [5-review-code.prompt.md](../../.github/prompts/5-review-code.prompt.md)
+- [ ] Review [6-deploy-*.prompt.md](../../.github/prompts/6-deploy-ci-local.prompt.md) deployment prompts
+- [ ] Update [7-maintain-*.prompt.md](../../.github/prompts/7-maintain-debug.prompt.md) maintenance prompts
+- [ ] Review [8-docs-feature.prompt.md](../../.github/prompts/8-docs-feature.prompt.md)
+- [ ] Update [EEK-STUCK.md](../../.github/prompts/EEK-STUCK.md) troubleshooting guide
 
 ### Copilot Instructions
 - [ ] Review `.github/copilot-instructions.md` for accuracy
