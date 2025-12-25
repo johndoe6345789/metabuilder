@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { CheckCircle, XCircle, ArrowClockwise, ArrowSquareOut, Info, Warning, TrendUp, TrendDown, Robot, Download, FileText } from '@phosphor-icons/react'
 import { toast } from 'sonner'
-import { Octokit } from 'octokit'
 import { ScrollArea } from '@/components/ui'
 
 interface WorkflowRun {
@@ -48,6 +47,7 @@ export function GitHubActionsFetcher() {
   const [error, setError] = useState<string | null>(null)
   const [lastFetched, setLastFetched] = useState<Date | null>(null)
   const [needsAuth, setNeedsAuth] = useState(false)
+  const [repoInfo, setRepoInfo] = useState<{ owner: string; repo: string } | null>(null)
   const [secondsUntilRefresh, setSecondsUntilRefresh] = useState(30)
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true)
   const [analysis, setAnalysis] = useState<string | null>(null)
