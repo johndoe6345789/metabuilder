@@ -1,4 +1,5 @@
-import { DBALClient, type DBALUser, type DBALConfig } from '@/lib/dbal-stub'
+import { DBALClient } from '@/lib/dbal-stub'
+import type { DBALConfig } from '@/lib/dbal-stub'
 import type { User } from './level-types'
 
 let dbalInstance: DBALClient | null = null
@@ -40,4 +41,4 @@ export async function migrateToDBAL() {
 }
 
 export { DBALClient }
-export type { DBALUser }
+export type { DBALUser } from '@/lib/dbal-stub'

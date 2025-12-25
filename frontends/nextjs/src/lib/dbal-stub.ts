@@ -10,6 +10,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+// Error codes for DBAL operations
+export enum DBALErrorCode {
+  UNKNOWN = 'UNKNOWN',
+  NOT_FOUND = 'NOT_FOUND',
+  VALIDATION = 'VALIDATION',
+  PERMISSION = 'PERMISSION',
+  CONNECTION = 'CONNECTION',
+  TIMEOUT = 'TIMEOUT',
+  DUPLICATE = 'DUPLICATE',
+}
+
+// Custom error class for DBAL operations
+export class DBALError extends Error {
+  code: DBALErrorCode
+
+  constructor(message: string, code: DBALErrorCode = DBALErrorCode.UNKNOWN) {
+    super(message)
+    this.name = 'DBALError'
+    this.code = code
+  }
+}
+
 export interface DBALConfig {
   mode?: 'development' | 'production'
   adapter?: string
