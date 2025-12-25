@@ -2,6 +2,7 @@
 
 ## Sandbox Security
 
+- [x] Add unit tests for lua-engine.ts ✅ (51 parameterized tests)
 - [ ] Audit sandbox for security vulnerabilities
 - [ ] Add resource limits (memory, CPU time)
 - [ ] Implement script execution timeout

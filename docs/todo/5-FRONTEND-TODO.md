@@ -34,7 +34,7 @@
 
 ## Workflow Engine
 
-- [ ] Add unit tests for workflow execution paths (`src/lib/workflow-engine.ts`)
+- [x] Add unit tests for workflow execution paths (`src/lib/workflow-engine.ts`) ✅ (22 tests)
 - [ ] Implement workflow step retry logic
 - [ ] Add parallel node execution support
 - [ ] Create workflow debugging/tracing tools

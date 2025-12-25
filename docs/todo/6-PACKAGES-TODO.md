@@ -2,6 +2,7 @@
 
 ## Core Package Infrastructure
 
+- [x] Add unit tests for package-glue.ts ✅ (45 parameterized tests)
 - [ ] Complete package loader implementation (`src/lib/package-loader.ts`)
 - [ ] Add package dependency resolution
 - [ ] Implement package version management

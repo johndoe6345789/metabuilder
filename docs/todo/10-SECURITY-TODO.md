@@ -1,5 +1,10 @@
 # TODO 10 - Security
 
+## Security Testing
+
+- [x] Add unit tests for security-scanner.ts ✅ (24 parameterized tests)
+- [x] Add unit tests for password-utils.ts ✅ (12 tests)
+
 ## Authentication
 
 - [ ] Implement secure password hashing (verify SHA-512 implementation)
