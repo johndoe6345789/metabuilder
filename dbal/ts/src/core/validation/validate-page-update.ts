@@ -3,7 +3,6 @@ import { isValidLevel } from './is-valid-level'
 import { isValidSlug } from './is-valid-slug'
 import { isValidTitle } from './is-valid-title'
 
-// TODO: add tests for validatePageUpdate (optional field validation).
 export function validatePageUpdate(data: Partial<PageView>): string[] {
   const errors: string[] = []
 

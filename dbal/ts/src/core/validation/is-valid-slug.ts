@@ -1,5 +1,4 @@
 // Slug validation: lowercase alphanumeric with hyphens (1-100 chars)
-// TODO: add tests for isValidSlug (length, lowercase, invalid chars).
 export function isValidSlug(slug: string): boolean {
   if (!slug || slug.length === 0 || slug.length > 100) {
     return false

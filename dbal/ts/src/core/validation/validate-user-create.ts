@@ -5,7 +5,6 @@ import { isValidUsername } from './is-valid-username'
 /**
  * Validation rules for User entity
  */
-// TODO: add tests for validateUserCreate (required fields, invalid formats, role validation).
 export function validateUserCreate(data: Partial<User>): string[] {
   const errors: string[] = []
 

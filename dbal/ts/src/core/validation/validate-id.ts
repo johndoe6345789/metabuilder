@@ -1,4 +1,3 @@
-// TODO: add tests for validateId (empty/whitespace).
 export function validateId(id: string): string[] {
   const errors: string[] = []
 

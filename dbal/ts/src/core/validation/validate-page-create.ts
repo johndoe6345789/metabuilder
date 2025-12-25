@@ -6,7 +6,6 @@ import { isValidTitle } from './is-valid-title'
 /**
  * Validation rules for PageView entity
  */
-// TODO: add tests for validatePageCreate (required fields, invalid formats, bounds).
 export function validatePageCreate(data: Partial<PageView>): string[] {
   const errors: string[] = []
 

@@ -2,7 +2,6 @@ import type { User } from '../types'
 import { isValidEmail } from './is-valid-email'
 import { isValidUsername } from './is-valid-username'
 
-// TODO: add tests for validateUserUpdate (optional field validation).
 export function validateUserUpdate(data: Partial<User>): string[] {
   const errors: string[] = []
 
