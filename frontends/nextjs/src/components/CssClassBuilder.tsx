@@ -159,9 +159,17 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
             )}
           </div>
 
-          {selectedClasses.length > 0 && (
-            <div className="p-4 border rounded-lg bg-muted/50">
-              <Label className="text-xs uppercase tracking-wider mb-2 block">Selected Classes</Label>
+          {selectedClasses.length > 0 ? (
+            <div className="p-4 border rounded-lg bg-muted/50 space-y-3">
+              <div className="flex items-center justify-between">
+                <Label className="text-xs uppercase tracking-wider">Selected Classes</Label>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted-foreground">{selectedClasses.length} selected</span>
+                  <Button size="sm" variant="ghost" onClick={clearSelectedClasses}>
+                    Clear
+                  </Button>
+                </div>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {selectedClasses.map(cls => (
                   <Badge key={cls} variant="secondary" className="gap-2">
@@ -175,15 +183,46 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
                   </Badge>
                 ))}
               </div>
-              <div className="mt-3 p-2 bg-background rounded border font-mono text-sm">
+              <div className="rounded border bg-background p-2 font-mono text-sm">
                 {selectedClasses.join(' ')}
               </div>
             </div>
+          ) : (
+            <div className="p-4 border rounded-lg bg-muted/30 text-sm text-muted-foreground">
+              No classes selected yet. Choose classes to preview and apply.
+            </div>
           )}
 
-          <Tabs defaultValue={filteredCategories[0]?.name || 'custom'} className="flex-1">
-            <ScrollArea className="max-h-[50px]">
-              <TabsList className="w-full">
+          <div className="p-4 border rounded-lg bg-muted/30 space-y-2">
+            <Label className="text-xs uppercase tracking-wider">Preview</Label>
+            <div className="rounded-md border border-dashed bg-background p-3">
+              <div className={`rounded-md p-4 transition-all ${selectedClasses.join(' ')}`}>
+                <div className="text-sm font-semibold">Preview element</div>
+                <div className="text-xs text-muted-foreground">
+                  This sample updates as you add or remove classes.
+                </div>
+                <div className="mt-3 inline-flex items-center rounded-md border px-3 py-1 text-xs">
+                  Sample button
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {filteredCategories.length === 0 && categories.length === 0 && (
+            <div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground">
+              No CSS categories available yet. Add some in the CSS Classes tab.
+            </div>
+          )}
+
+          {filteredCategories.length === 0 && categories.length > 0 && normalizedSearch && (
+            <div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground">
+              No classes match &quot;{searchQuery}&quot;.
+            </div>
+          )}
+
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1">
+            <div className="overflow-x-auto">
+              <TabsList className="w-max">
                 {filteredCategories.map(category => (
                   <TabsTrigger key={category.name} value={category.name}>
                     {category.name}
@@ -191,7 +230,7 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
                 ))}
                 <TabsTrigger value="custom">Custom</TabsTrigger>
               </TabsList>
-            </ScrollArea>
+            </div>
 
             {filteredCategories.map(category => (
               <TabsContent key={category.name} value={category.name}>
