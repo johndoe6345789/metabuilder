@@ -1,39 +1,23 @@
-import { DBALClient } from '@/lib/dbal-stub'
-import type { User as DBALUser } from '@/lib/dbal-stub/core/types'
+import { DBALClient, type DBALUser, type DBALConfig } from '@/lib/dbal-stub'
 import type { User } from './level-types'
 
 let dbalInstance: DBALClient | null = null
 
 export function getDBALClient(user?: User, session?: { id: string; token: string }): DBALClient {
   if (!dbalInstance || user) {
-    const auth = user && session ? {
-      user: {
-        id: user.id,
-        username: user.username,
-        role: user.role as 'user' | 'admin' | 'god' | 'supergod'
-      },
-      session: {
-        id: session.id,
-        token: session.token,
-        expiresAt: new Date(Date.now() + 86400000)
-      }
-    } : undefined
-
-    dbalInstance = new DBALClient({
+    const config: DBALConfig = {
       mode: 'development',
       adapter: 'prisma',
       database: {
         url: process.env.DATABASE_URL
       },
-      auth,
       security: {
-        sandbox: auth ? 'strict' : 'disabled',
+        sandbox: user && session ? 'strict' : 'permissive',
         enableAuditLog: true
-      },
-      performance: {
-        queryTimeout: 30000
       }
-    })
+    }
+
+    dbalInstance = new DBALClient(config)
   }
 
   return dbalInstance
