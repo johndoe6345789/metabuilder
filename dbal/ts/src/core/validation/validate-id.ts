@@ -1,3 +1,5 @@
+import { isValidUuid } from './is-valid-uuid'
+
 export function validateId(id: string): string[] {
   const errors: string[] = []
 
@@ -6,8 +8,7 @@ export function validateId(id: string): string[] {
     return errors
   }
 
-  const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-  if (!uuidPattern.test(id.trim())) {
+  if (!isValidUuid(id.trim())) {
     errors.push('ID must be a valid UUID')
   }
 
