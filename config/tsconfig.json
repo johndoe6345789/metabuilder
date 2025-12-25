@@ -12,6 +12,7 @@
     "skipLibCheck": true,
     /* Strict type checking */
     "strict": true,
+    "strictNullChecks": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "noImplicitOverride": true,
@@ -34,7 +35,6 @@
       ]
     },
     "allowJs": true,
-    "strict": false,
     "incremental": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
