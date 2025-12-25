@@ -1,18 +1,18 @@
 # TODO Scan Report
 
-- Generated: `2025-12-25 21:09:09Z` (UTC)
+- Generated: `2025-12-25 22:27:01Z` (UTC)
 - Report directory: `docs/todo`
 - Pattern: `\b(TODO|FIXME|HACK|XXX)\b`
 - Excludes: `docs/todo/`, `**/node_modules/`, `**/.next/`, `**/coverage/`, `**/dist/`, `**/build/`, `**/.git/`
 
 ## Summary
-- Total matches: **161**
-- By marker: `TODO`=161
+- Total matches: **135**
+- By marker: `TODO`=135
 - By top-level directory:
   - `.github`: 10
   - `dbal`: 6
   - `docs`: 95
-  - `frontends`: 36
+  - `frontends`: 10
   - `tools`: 14
 
 ## Matches
@@ -22,10 +22,10 @@
 - `.github/copilot-instructions.md:211` — ❌ **Missing TODO for unfinished behavior** → Leave a TODO comment where functionality is pending
 - `.github/prompts/EEK-STUCK.md:3` — Go through codebase and read docs and code, write some TODO statements.
 - `.github/workflows/README.md:27` — - **Quality Check**: Checks for console.log statements and TODO comments
-- `.github/workflows/ci.yml:254` — - name: Check for TODO comments
-- `.github/workflows/ci.yml:256` — TODO_COUNT=$(git diff origin/${{ github.base_ref }}...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' | grep -E '^\+.*TODO|FIXME' | wc -l)
-- `.github/workflows/ci.yml:258` — echo "⚠️ Found $TODO_COUNT TODO/FIXME comments in the changes"
-- `.github/workflows/ci.yml:259` — echo "Please address TODO comments before merging or create issues for them"
+- `.github/workflows/ci.yml:275` — - name: Check for TODO comments
+- `.github/workflows/ci.yml:277` — TODO_COUNT=$(git diff origin/${{ github.base_ref }}...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' | grep -E '^\+.*TODO|FIXME' | wc -l)
+- `.github/workflows/ci.yml:279` — echo "⚠️ Found $TODO_COUNT TODO/FIXME comments in the changes"
+- `.github/workflows/ci.yml:280` — echo "Please address TODO comments before merging or create issues for them"
 - `.github/workflows/detect-stubs.yml:70` — grep -E '^\+.*(TODO|FIXME|not implemented|stub|placeholder|mock)' | \
 - `.github/workflows/detect-stubs.yml:133` — comment += '- [ ] Replace TODO comments with GitHub issues\n';
 
@@ -134,43 +134,17 @@
 - `docs/stub-detection/README.md:324` — // TODO: Add real email validation
 - `docs/stub-detection/README.md:389` — // TODO: add caching (#TBD)
 
-### `frontends` (36)
+### `frontends` (10)
 - `frontends/nextjs/src/components/GitHubActionsFetcher.tsx:66` — // TODO: Replace with proper GitHub OAuth authentication in Next.js
 - `frontends/nextjs/src/components/GitHubActionsFetcher.tsx:140` — // TODO: Replace with Next.js API route that calls an LLM service
 - `frontends/nextjs/src/components/GitHubActionsFetcher.tsx:291` — // TODO: Replace with Next.js API route that calls an LLM service
 - `frontends/nextjs/src/components/ScreenshotAnalyzer.tsx:64` — // TODO: Replace with Next.js API route that calls an LLM service
-- `frontends/nextjs/src/components/ui/accordion.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/alert-dialog.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/alert.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/avatar.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/badge.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/button.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/card.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/checkbox.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/dialog.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/dropdown-menu.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/input.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/label.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/progress.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/radio-group.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/scroll-area.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/select.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/separator.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/sheet.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/skeleton.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/slider.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/sonner.tsx:94` — // TODO: Implement dismiss by ID
-- `frontends/nextjs/src/components/ui/switch.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/table.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/tabs.ts:2` — // TODO: Update imports to use @/components/ui directly
-- `frontends/nextjs/src/components/ui/textarea.ts:2` — // TODO: Update imports to use @/components/ui directly
 - `frontends/nextjs/src/hooks/useAuth.ts:28` — // TODO: Implement proper auth with backend/Prisma
 - `frontends/nextjs/src/hooks/useKV.ts:9` — // TODO: Implement proper persistent KV storage with Database/Prisma
 - `frontends/nextjs/src/lib/lua/sandboxed-lua-engine.ts:19` — // TODO: Enforce maxMemory limit in sandbox execution.
 - `frontends/nextjs/src/lib/security/secure-db/log-operation.ts:28` — // TODO: Replace with proper audit log storage
 - `frontends/nextjs/src/lib/security/secure-db/operations/get-audit-logs.ts:14` — // TODO: Replace with proper audit log storage query using the requested limit.
 - `frontends/nextjs/src/lib/security/secure-db/operations/verify-credentials.ts:16` — // TODO: Track failed login attempts and enforce account lockout/backoff.
-- `frontends/nextjs/src/lib/security/secure-db/rate-limit-store.ts:1` — // TODO: Load rate limit settings from config/DB instead of hardcoding.
 
 ### `tools` (14)
 - `tools/analyze-implementation-completeness.ts:104` — if (body.includes('TODO') || body.includes('FIXME')) {
