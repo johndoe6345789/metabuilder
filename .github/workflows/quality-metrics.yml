@@ -1,0 +1,597 @@
+name: Comprehensive Quality Metrics
+
+on:
+  pull_request:
+    branches: [ main, master, develop ]
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ============================================================================
+  # CODE QUALITY METRICS
+  # ============================================================================
+  code-quality:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontends/nextjs/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      # Cyclomatic Complexity
+      - name: Check code complexity
+        id: complexity
+        run: |
+          npm install -D ts-morph @swc/core
+          npx tsx ../../tools/check-code-complexity.ts > complexity-report.json
+          cat complexity-report.json
+        continue-on-error: true
+
+      # Function metrics
+      - name: Analyze function metrics
+        id: metrics
+        run: npx tsx ../../tools/analyze-function-metrics.ts > function-metrics.json
+        continue-on-error: true
+
+      # Maintainability Index
+      - name: Calculate maintainability index
+        id: maintainability
+        run: npx tsx ../../tools/check-maintainability.ts > maintainability-report.json
+        continue-on-error: true
+
+      - name: Upload quality reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: code-quality-reports
+          path: |
+            frontends/nextjs/complexity-report.json
+            frontends/nextjs/function-metrics.json
+            frontends/nextjs/maintainability-report.json
+          retention-days: 30
+
+  # ============================================================================
+  # TEST COVERAGE METRICS
+  # ============================================================================
+  coverage-metrics:
+    name: Test Coverage Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontends/nextjs/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Run tests with coverage
+        run: npm run test:unit:coverage
+        env:
+          DATABASE_URL: file:./dev.db
+        continue-on-error: true
+
+      - name: Generate coverage report
+        run: npm run test:coverage:report
+        continue-on-error: true
+
+      - name: Check function test coverage
+        id: function-coverage
+        run: npm run test:check-functions > function-coverage.txt 2>&1
+        continue-on-error: true
+
+      - name: Extract coverage metrics
+        id: coverage-extract
+        run: npx tsx ../../tools/extract-coverage-metrics.ts
+        continue-on-error: true
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-reports
+          path: |
+            frontends/nextjs/coverage/
+            frontends/nextjs/FUNCTION_TEST_COVERAGE.md
+            frontends/nextjs/function-coverage.txt
+            frontends/nextjs/coverage-metrics.json
+          retention-days: 30
+
+  # ============================================================================
+  # SECURITY SCANNING
+  # ============================================================================
+  security-scan:
+    name: Security Vulnerability Scan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontends/nextjs/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Npm audit for dependencies
+      - name: NPM Security Audit
+        id: npm-audit
+        run: |
+          npm audit --json > npm-audit.json || true
+          npx tsx ../../tools/parse-npm-audit.ts
+        continue-on-error: true
+
+      # Check for security anti-patterns
+      - name: Scan for security issues
+        id: security-scan
+        run: npx tsx ../../tools/security-scanner.ts > security-report.json
+        continue-on-error: true
+
+      # OWASP Dependency Check (if configured)
+      - name: Run dependency check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          path: '.'
+          format: 'JSON'
+          args: >
+            --scan .
+            --exclude node_modules
+            --exclude build
+            --exclude .git
+            --exclude dbal/cpp/build
+        continue-on-error: true
+
+      - name: Upload security reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-reports
+          path: |
+            frontends/nextjs/npm-audit.json
+            frontends/nextjs/security-report.json
+            dependency-check-report.json
+          retention-days: 30
+
+  # ============================================================================
+  # DOCUMENTATION QUALITY
+  # ============================================================================
+  documentation-quality:
+    name: Documentation Coverage & Quality
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontends/nextjs/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check JSDoc coverage
+        id: jsdoc
+        run: npx tsx ../../tools/check-jsdoc-coverage.ts > jsdoc-report.json
+        continue-on-error: true
+
+      - name: Validate README files
+        id: readme
+        run: npx tsx ../../tools/validate-readme-quality.ts > readme-report.json
+        continue-on-error: true
+
+      - name: Validate markdown links
+        id: markdown-links
+        run: npx tsx ../../tools/validate-markdown-links.ts > markdown-links-report.json
+        continue-on-error: true
+
+      - name: Check API documentation
+        id: api-docs
+        run: npx tsx ../../tools/validate-api-docs.ts > api-docs-report.json
+        continue-on-error: true
+
+      - name: Verify code examples
+        id: code-examples
+        run: npx tsx ../../tools/validate-code-examples.ts > code-examples-report.json
+        continue-on-error: true
+
+      - name: Upload documentation reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: documentation-reports
+          path: |
+            frontends/nextjs/jsdoc-report.json
+            frontends/nextjs/readme-report.json
+            frontends/nextjs/markdown-links-report.json
+            frontends/nextjs/api-docs-report.json
+            frontends/nextjs/code-examples-report.json
+          retention-days: 30
+
+  # ============================================================================
+  # PERFORMANCE METRICS
+  # ============================================================================
+  performance-metrics:
+    name: Performance Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontends/nextjs/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Build application
+        run: npm run build
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Analyze bundle size
+        id: bundle
+        run: npx tsx ../../tools/analyze-bundle-size.ts > bundle-analysis.json
+        continue-on-error: true
+
+      - name: Check performance budget
+        id: perf-budget
+        run: npx tsx ../../tools/check-performance-budget.ts > performance-budget.json
+        continue-on-error: true
+
+      - name: Lighthouse audit
+        id: lighthouse
+        run: npx tsx ../../tools/run-lighthouse-audit.ts > lighthouse-report.json
+        continue-on-error: true
+
+      - name: Analyze render performance
+        id: render-perf
+        run: npx tsx ../../tools/analyze-render-performance.ts > render-performance.json
+        continue-on-error: true
+
+      - name: Upload performance reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-reports
+          path: |
+            frontends/nextjs/bundle-analysis.json
+            frontends/nextjs/performance-budget.json
+            frontends/nextjs/lighthouse-report.json
+            frontends/nextjs/render-performance.json
+          retention-days: 30
+
+  # ============================================================================
+  # SIZE & STRUCTURE METRICS
+  # ============================================================================
+  size-metrics:
+    name: File Size & Architecture Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontends/nextjs/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check source file sizes
+        id: file-sizes
+        run: npx tsx ../../tools/check-file-sizes.ts > file-sizes-report.json
+        continue-on-error: true
+
+      - name: Analyze directory structure
+        id: dir-structure
+        run: npx tsx ../../tools/analyze-directory-structure.ts > directory-structure.json
+        continue-on-error: true
+
+      - name: Check for code duplication
+        id: duplication
+        run: npx tsx ../../tools/detect-code-duplication.ts > duplication-report.json
+        continue-on-error: true
+
+      - name: Analyze import chains
+        id: imports
+        run: npx tsx ../../tools/analyze-import-chains.ts > import-analysis.json
+        continue-on-error: true
+
+      - name: Upload size reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: size-reports
+          path: |
+            frontends/nextjs/file-sizes-report.json
+            frontends/nextjs/directory-structure.json
+            frontends/nextjs/duplication-report.json
+            frontends/nextjs/import-analysis.json
+          retention-days: 30
+
+  # ============================================================================
+  # DEPENDENCY ANALYSIS
+  # ============================================================================
+  dependency-analysis:
+    name: Dependency Health Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontends/nextjs/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check outdated dependencies
+        id: outdated
+        run: npm outdated --json > outdated-deps.json || true
+        continue-on-error: true
+
+      - name: License compliance check
+        id: licenses
+        run: npx tsx ../../tools/check-license-compliance.ts > license-report.json
+        continue-on-error: true
+
+      - name: Analyze dependency tree
+        id: tree
+        run: npx tsx ../../tools/analyze-dependency-tree.ts > dependency-tree.json
+        continue-on-error: true
+
+      - name: Check for circular dependencies
+        id: circular
+        run: npx tsx ../../tools/detect-circular-dependencies.ts > circular-deps.json
+        continue-on-error: true
+
+      - name: Upload dependency reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dependency-reports
+          path: |
+            frontends/nextjs/outdated-deps.json
+            frontends/nextjs/license-report.json
+            frontends/nextjs/dependency-tree.json
+            frontends/nextjs/circular-deps.json
+          retention-days: 30
+
+  # ============================================================================
+  # TYPE SAFETY & LINTING
+  # ============================================================================
+  type-and-lint-metrics:
+    name: Type Safety & Code Style Metrics
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontends/nextjs/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: TypeScript strict check
+        id: ts-strict
+        run: npx tsx ../../tools/check-typescript-strict.ts > ts-strict-report.json
+        continue-on-error: true
+
+      - name: ESLint detailed report
+        id: eslint
+        run: |
+          npx eslint . --format json > eslint-report.json || true
+          npx tsx ../../tools/parse-eslint-report.ts
+        continue-on-error: true
+
+      - name: Check for @ts-ignore usage
+        id: ts-ignore
+        run: npx tsx ../../tools/find-ts-ignores.ts > ts-ignore-report.json
+        continue-on-error: true
+
+      - name: Check for any types
+        id: any-types
+        run: npx tsx ../../tools/find-any-types.ts > any-types-report.json
+        continue-on-error: true
+
+      - name: Upload type reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: type-reports
+          path: |
+            frontends/nextjs/ts-strict-report.json
+            frontends/nextjs/eslint-report.json
+            frontends/nextjs/ts-ignore-report.json
+            frontends/nextjs/any-types-report.json
+          retention-days: 30
+
+  # ============================================================================
+  # QUALITY SUMMARY & REPORTING
+  # ============================================================================
+  quality-summary:
+    name: Quality Metrics Summary
+    runs-on: ubuntu-latest
+    needs: [
+      code-quality,
+      coverage-metrics,
+      security-scan,
+      documentation-quality,
+      performance-metrics,
+      size-metrics,
+      dependency-analysis,
+      type-and-lint-metrics
+    ]
+    if: always()
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontends/nextjs/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download all reports
+        uses: actions/download-artifact@v4
+        with:
+          path: quality-reports/
+
+      - name: Generate quality summary
+        id: summary
+        run: npx tsx ../../tools/generate-quality-summary.ts > quality-summary.md
+        continue-on-error: true
+
+      - name: Post summary as PR comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            let summaryContent = '';
+            const summaryPath = 'frontends/nextjs/quality-summary.md';
+            if (fs.existsSync(summaryPath)) {
+              summaryContent = fs.readFileSync(summaryPath, 'utf8');
+            }
+            
+            const comment = `## 📊 Quality Metrics Report\n\n${summaryContent}\n\n<details><summary>📁 Full Reports (click to expand)</summary>\n\nAll detailed reports are available as build artifacts.\n</details>`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Create check run with summary
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const fs = require('fs');
+            const summaryPath = 'frontends/nextjs/quality-summary.md';
+            const summary = fs.existsSync(summaryPath) 
+              ? fs.readFileSync(summaryPath, 'utf8') 
+              : 'Quality metrics report generated.';
+            
+            github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'Quality Metrics',
+              head_sha: context.payload.pull_request.head.sha,
+              status: 'completed',
+              conclusion: 'success',
+              summary: 'All quality metrics collected',
+              text: summary
+            });

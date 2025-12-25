@@ -338,6 +338,128 @@ void test_page_validation() {
     std::cout << "  ✓ Invalid level rejected" << std::endl;
 }
 
+void test_workflow_crud() {
+    std::cout << "Testing workflow CRUD operations..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    // Create user for created_by reference
+    dbal::CreateUserInput userInput;
+    userInput.username = "workflow_owner";
+    userInput.email = "workflow_owner@example.com";
+    auto userResult = client.createUser(userInput);
+    assert(userResult.isOk());
+
+    // Create workflow
+    dbal::CreateWorkflowInput input;
+    input.name = "workflow-crud";
+    input.description = "Test workflow";
+    input.trigger = "schedule";
+    input.trigger_config = {{"cron", "0 0 * * *"}};
+    input.steps = {{"step1", "noop"}};
+    input.is_active = true;
+    input.created_by = userResult.value().id;
+
+    auto createResult = client.createWorkflow(input);
+    assert(createResult.isOk());
+    assert(createResult.value().name == "workflow-crud");
+    std::string workflowId = createResult.value().id;
+    std::cout << "  ✓ Workflow created with ID: " << workflowId << std::endl;
+
+    // Get by ID
+    auto getResult = client.getWorkflow(workflowId);
+    assert(getResult.isOk());
+    assert(getResult.value().name == "workflow-crud");
+    std::cout << "  ✓ Retrieved workflow by ID" << std::endl;
+
+    // Update workflow
+    dbal::UpdateWorkflowInput updateInput;
+    updateInput.name = "workflow-crud-updated";
+    updateInput.is_active = false;
+    auto updateResult = client.updateWorkflow(workflowId, updateInput);
+    assert(updateResult.isOk());
+    assert(updateResult.value().name == "workflow-crud-updated");
+    assert(updateResult.value().is_active == false);
+    std::cout << "  ✓ Workflow updated" << std::endl;
+
+    // List workflows
+    dbal::ListOptions listOptions;
+    listOptions.filter["is_active"] = "false";
+    auto listResult = client.listWorkflows(listOptions);
+    assert(listResult.isOk());
+    assert(listResult.value().size() >= 1);
+    std::cout << "  ✓ Listed workflows (filtered by is_active=false)" << std::endl;
+
+    // Delete workflow
+    auto deleteResult = client.deleteWorkflow(workflowId);
+    assert(deleteResult.isOk());
+
+    // Verify deletion
+    auto notFoundResult = client.getWorkflow(workflowId);
+    assert(notFoundResult.isError());
+    std::cout << "  ✓ Workflow deleted" << std::endl;
+}
+
+void test_workflow_validation() {
+    std::cout << "Testing workflow validation..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    // Create user for created_by reference
+    dbal::CreateUserInput userInput;
+    userInput.username = "workflow_validator";
+    userInput.email = "workflow_validator@example.com";
+    auto userResult = client.createUser(userInput);
+    assert(userResult.isOk());
+
+    // Invalid trigger
+    dbal::CreateWorkflowInput input1;
+    input1.name = "invalid-trigger";
+    input1.trigger = "invalid";
+    input1.trigger_config = {{"cron", "* * * * *"}};
+    input1.steps = {{"step1", "noop"}};
+    input1.created_by = userResult.value().id;
+    auto result1 = client.createWorkflow(input1);
+    assert(result1.isError());
+    assert(result1.error().code() == dbal::ErrorCode::ValidationError);
+    std::cout << "  ✓ Invalid trigger rejected" << std::endl;
+
+    // Empty name
+    dbal::CreateWorkflowInput input2;
+    input2.name = "";
+    input2.trigger = "manual";
+    input2.trigger_config = {{"mode", "test"}};
+    input2.steps = {{"step1", "noop"}};
+    input2.created_by = userResult.value().id;
+    auto result2 = client.createWorkflow(input2);
+    assert(result2.isError());
+    assert(result2.error().code() == dbal::ErrorCode::ValidationError);
+    std::cout << "  ✓ Empty name rejected" << std::endl;
+
+    // Duplicate name
+    dbal::CreateWorkflowInput input3;
+    input3.name = "workflow-duplicate";
+    input3.trigger = "manual";
+    input3.trigger_config = {{"mode", "test"}};
+    input3.steps = {{"step1", "noop"}};
+    input3.created_by = userResult.value().id;
+    auto result3 = client.createWorkflow(input3);
+    assert(result3.isOk());
+
+    dbal::CreateWorkflowInput input4 = input3;
+    input4.created_by = userResult.value().id;
+    auto result4 = client.createWorkflow(input4);
+    assert(result4.isError());
+    assert(result4.error().code() == dbal::ErrorCode::Conflict);
+    std::cout << "  ✓ Duplicate workflow name rejected" << std::endl;
+}
+
 void test_error_handling() {
     std::cout << "Testing comprehensive error handling..." << std::endl;
     
@@ -377,11 +499,13 @@ int main() {
         test_list_users();
         test_page_crud();
         test_page_validation();
+        test_workflow_crud();
+        test_workflow_validation();
         test_error_handling();
         
         std::cout << std::endl;
         std::cout << "==================================================" << std::endl;
-        std::cout << "✅ All 12 test suites passed!" << std::endl;
+        std::cout << "✅ All 14 test suites passed!" << std::endl;
         std::cout << "==================================================" << std::endl;
         return 0;
     } catch (const std::exception& e) {
