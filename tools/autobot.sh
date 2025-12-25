@@ -9,7 +9,7 @@ while :; do
   codex exec --full-auto --sandbox="danger-full-access" --cd="/Users/rmac/Documents/GitHub/metabuilder/docs/todo/" "Please resolve my TODO list, Scan project for TODO items." || exit $?
 
   codex exec \
-  
+    --cd="/Users/rmac/Documents/GitHub/metabuilder/docs/todo/" \
     --sandbox workspace-write \
     0-kickstart.md \
     "Follow 0-kickstart.md exactly.
