@@ -19,7 +19,7 @@ Use this file when you’re not sure what to do next, or you want a quick “mak
 
 Run from `frontends/nextjs/`:
 
-From repo root: `cd frontends/nextjs`
+From repo root: `cd frontends/nextjs` (or from `docs/todo/`: `cd ../../frontends/nextjs`)
 
 - [ ] `npm ci` (or `npm install`)
 - [ ] `npm run typecheck`

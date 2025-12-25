@@ -14,20 +14,21 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 
 // Select wrapper with FormControl
-export interface SelectProps extends Omit<MuiSelectProps, 'onChange'> {
+export interface SelectProps extends Omit<MuiSelectProps<string>, 'onChange'> {
   onValueChange?: (value: string) => void
   helperText?: ReactNode
 }
 
 const Select = forwardRef<HTMLDivElement, SelectProps>(
-  ({ onValueChange, value, defaultValue, label, error, helperText, children, sx, ...props }, ref) => {
+  ({ onValueChange, value, defaultValue, label, error, helperText, children, sx, variant = 'outlined', ...props }, ref) => {
     return (
       <FormControl ref={ref} fullWidth error={error} sx={sx}>
         {label && <InputLabel>{label}</InputLabel>}
-        <MuiSelect
+        <MuiSelect<string>
           value={value}
           defaultValue={defaultValue}
           label={label}
+          variant={variant}
           onChange={(e) => onValueChange?.(e.target.value as string)}
           IconComponent={KeyboardArrowDownIcon}
           {...props}
