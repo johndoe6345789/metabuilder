@@ -2,8 +2,6 @@
 
 Welcome to MetaBuilder! This file helps you navigate to where you need to go.
 
-TODO: This file is in docs/ so ./docs/ links are broken; the root-level file list below is outdated (README/CONTRIBUTING live elsewhere or do not exist).
-
 ---
 
 ## Current Workflow (0-kickstart)
@@ -24,28 +22,28 @@ If you're unsure which workflow to follow, start with `../.github/prompts/0-kick
 **All MetaBuilder documentation is in the `/docs` folder.**
 
 ### 👤 For New Team Members
-**[→ Read: docs/getting-started/NEW_CONTRIBUTOR_PATH.md](./docs/getting-started/NEW_CONTRIBUTOR_PATH.md)**
+**[→ Read: getting-started/NEW_CONTRIBUTOR_PATH.md](./getting-started/NEW_CONTRIBUTOR_PATH.md)**
 - Structured 2-3 hour learning path
 - Learn architecture, testing, development workflow
 - Get familiar with codebase patterns
 - ✅ **START HERE** if you're new
 
 ### 🗺️ For Finding Specific Topics  
-**[→ Use: docs/NAVIGATION.md](./docs/NAVIGATION.md)**
+**[→ Use: NAVIGATION.md](./NAVIGATION.md)**
 - Complete guide to all documentation
 - Organized by category
 - Quick links to common tasks
 - 144+ documentation files indexed
 
 ### 📖 For General Navigation
-**[→ Go to: docs/INDEX.md](./docs/INDEX.md)**
+**[→ Go to: INDEX.md](./INDEX.md)**
 - Quick navigation hub
 - Category overview
 - Fast access to key documents
 
 ### 📋 For Full Organization Guide
 **[→ See: DOCS_ORGANIZATION_GUIDE.md](./DOCS_ORGANIZATION_GUIDE.md)** ← You are here!  
-**[→ See: docs/ORGANIZATION.md](./docs/ORGANIZATION.md)**
+**[→ See: ORGANIZATION.md](./ORGANIZATION.md)**
 - How documentation is structured
 - Directory breakdown
 - Contributing guidelines
@@ -56,14 +54,14 @@ If you're unsure which workflow to follow, start with `../.github/prompts/0-kick
 
 | Goal | Link | Time |
 |------|------|------|
-| **I'm new to MetaBuilder** | [NEW_CONTRIBUTOR_PATH](./docs/getting-started/NEW_CONTRIBUTOR_PATH.md) | 2-3 hrs |
-| **I want to set up dev environment** | [getting-started/README](./docs/getting-started/README.md) | 30 min |
-| **I need to understand the architecture** | [architecture/5-level-system](./docs/architecture/5-level-system.md) | 15 min |
-| **I need to write tests** | [testing/TESTING_GUIDELINES](./docs/testing/TESTING_GUIDELINES.md) | 10 min |
-| **I need to create a component** | [guides/getting-started](./docs/guides/getting-started.md) | 20 min |
-| **I need to work with the database** | [DBAL_INTEGRATION](./docs/implementation/DBAL_INTEGRATION.md) | 30 min |
-| **I need to deploy** | [deployments/README](./docs/deployments/README.md) | 15 min |
-| **I'm stuck - troubleshooting** | [troubleshooting/README](./docs/troubleshooting/README.md) | varies |
+| **I'm new to MetaBuilder** | [NEW_CONTRIBUTOR_PATH](./getting-started/NEW_CONTRIBUTOR_PATH.md) | 2-3 hrs |
+| **I want to set up dev environment** | [getting-started/README](./getting-started/README.md) | 30 min |
+| **I need to understand the architecture** | [architecture/5-level-system](./architecture/5-level-system.md) | 15 min |
+| **I need to write tests** | [testing/TESTING_GUIDELINES](./testing/TESTING_GUIDELINES.md) | 10 min |
+| **I need to create a component** | [guides/getting-started](./guides/getting-started.md) | 20 min |
+| **I need to work with the database** | [DBAL_INTEGRATION](./implementation/DBAL_INTEGRATION.md) | 30 min |
+| **I need to deploy** | [deployments/README](./deployments/README.md) | 15 min |
+| **I'm stuck - troubleshooting** | [troubleshooting/README](./troubleshooting/README.md) | varies |
 | **I need project overview** | [README](./README.md) | 10 min |
 
 ---
@@ -71,28 +69,30 @@ If you're unsure which workflow to follow, start with `../.github/prompts/0-kick
 ## 🚀 Next Steps
 
 ### Step 1: Choose Your Path
-- **New to MetaBuilder?** → [NEW_CONTRIBUTOR_PATH](./docs/getting-started/NEW_CONTRIBUTOR_PATH.md)
-- **Need a specific topic?** → [NAVIGATION.md](./docs/NAVIGATION.md)
+- **New to MetaBuilder?** → [NEW_CONTRIBUTOR_PATH](./getting-started/NEW_CONTRIBUTOR_PATH.md)
+- **Need a specific topic?** → [NAVIGATION.md](./NAVIGATION.md)
 
 ### Step 2: Jump In
 Follow the guides for your role and tasks.
 
 ### Step 3: Keep These Handy
-- [Copilot Instructions](./docs/../../.github/copilot-instructions.md) - Development standards
-- [NAVIGATION.md](./docs/NAVIGATION.md) - Find anything
-- [troubleshooting/README](./docs/troubleshooting/README.md) - Solve problems
+- [Copilot Instructions](../.github/copilot-instructions.md) - Development standards
+- [NAVIGATION.md](./NAVIGATION.md) - Find anything
+- [troubleshooting/README](./troubleshooting/README.md) - Solve problems
 
 ---
 
 ## 📂 Quick File Locations
 
-**At root level** (kept minimal):
-- `README.md` - Project overview
+**At docs root** (kept minimal):
+- `README.md` - Documentation overview
 - `CONTRIBUTING.md` - How to contribute
 - `START_HERE.md` - This file
+- `INDEX.md` - Quick navigation hub
+- `NAVIGATION.md` - Full navigation guide
 - `DOCS_ORGANIZATION_GUIDE.md` - Docs navigation guide
 
-**Everything else** is in `/docs/` folder:
+**Documentation folders**:
 ```
 docs/
 ├── getting-started/       ← Start here!
@@ -108,7 +108,7 @@ docs/
 ---
 
 **👉 Ready to start?**  
-→ **[Go to docs/getting-started/NEW_CONTRIBUTOR_PATH.md](./docs/getting-started/NEW_CONTRIBUTOR_PATH.md)**
+→ **[Go to getting-started/NEW_CONTRIBUTOR_PATH.md](./getting-started/NEW_CONTRIBUTOR_PATH.md)**
 └─ Testing approach
 ```
 
