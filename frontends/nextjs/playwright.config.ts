@@ -1,0 +1,1 @@
+../../config/playwright.config.ts
