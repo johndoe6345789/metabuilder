@@ -1,2 +1,2 @@
 // Seed data exports
-export { seedDatabase, getSeedData } from './seed-data'
+export { seedDatabase } from './seed-data'
