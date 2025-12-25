@@ -455,9 +455,9 @@ export function WorkflowEditor({ workflows, onWorkflowsChange, scripts = [] }: W
                       <CardHeader>
                         <div className="flex items-center gap-2">
                           {testOutput.success ? (
-                            <CheckCircle size={20} className="text-green-600" />
+                            <CheckCircleIcon sx={{ fontSize: 20, color: 'success.main' }} />
                           ) : (
-                            <XCircle size={20} className="text-red-600" />
+                            <XCircleIcon sx={{ fontSize: 20, color: 'error.main' }} />
                           )}
                           <CardTitle className="text-sm">
                             {testOutput.success ? 'Workflow Execution Successful' : 'Workflow Execution Failed'}
