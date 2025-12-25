@@ -46,19 +46,19 @@ jobs:
       # Pattern-based stub detection
       - name: Detect stub patterns
         id: detect-patterns
-        run: npx tsx scripts/detect-stub-implementations.ts > stub-patterns.json
+        run: npx tsx ../../tools/detect-stub-implementations.ts > stub-patterns.json
         continue-on-error: true
 
       # Implementation completeness analysis
       - name: Analyze implementation completeness
         id: analyze-completeness
-        run: npx tsx scripts/analyze-implementation-completeness.ts > implementation-analysis.json
+        run: npx tsx ../../tools/analyze-implementation-completeness.ts > implementation-analysis.json
         continue-on-error: true
 
       # Generate detailed report
       - name: Generate stub report
         id: generate-report
-        run: npx tsx scripts/generate-stub-report.ts > stub-report.md
+        run: npx tsx ../../tools/generate-stub-report.ts > stub-report.md
         continue-on-error: true
 
       # Check for unimplemented TODOs in changed files (PR only)

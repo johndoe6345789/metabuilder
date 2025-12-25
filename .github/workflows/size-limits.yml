@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'frontends/nextjs/src/**/*.{ts,tsx,js,jsx}'
-      - 'scripts/enforce-size-limits.ts'
+      - 'tools/enforce-size-limits.ts'
       - '.github/workflows/size-limits.yml'
   push:
     branches:
@@ -33,7 +33,7 @@ jobs:
         run: npm ci
       
       - name: Check code size limits
-        run: npx tsx ../../scripts/enforce-size-limits.ts
+        run: npx tsx ../../tools/enforce-size-limits.ts
       
       - name: Upload report
         if: always()
