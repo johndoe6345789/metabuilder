@@ -32,7 +32,7 @@ interface Toast {
 
 interface ToastContextValue {
   addToast: (toast: Toast) => void
-  removeToast: (id: string | number) => void
+  removeToast: (id?: string | number) => void
 }
 
 // Context
@@ -40,6 +40,7 @@ const ToastContext = createContext<ToastContextValue | null>(null)
 
 // Global toast queue for when called outside provider
 let globalAddToast: ((toast: Toast) => void) | null = null
+let globalRemoveToast: ((id?: string | number) => void) | null = null
 let toastIdCounter = 0
 
 const generateId = () => `toast-${++toastIdCounter}`
@@ -91,8 +92,7 @@ export const toast = Object.assign(
       return t.id
     },
     dismiss: (id?: string | number) => {
-      // TODO: Implement dismiss by ID
-      console.log('Toast dismiss called', id)
+      globalRemoveToast?.(id)
     },
     promise: async <T,>(
       promise: Promise<T>,
@@ -145,17 +145,23 @@ export function Toaster({
     setToasts(prev => [...prev, toast])
   }, [])
 
-  const removeToast = useCallback((id: string | number) => {
+  const removeToast = useCallback((id?: string | number) => {
+    if (typeof id === 'undefined') {
+      setToasts([])
+      return
+    }
     setToasts(prev => prev.filter(t => t.id !== id))
   }, [])
 
   // Register global handler
   useEffect(() => {
     globalAddToast = addToast
+    globalRemoveToast = removeToast
     return () => {
       globalAddToast = null
+      globalRemoveToast = null
     }
-  }, [addToast])
+  }, [addToast, removeToast])
 
   // Map position to MUI anchor origin
   const getAnchorOrigin = () => {
