@@ -6,5 +6,5 @@ export {
   generateDeterministicScrambledPassword,
   simulateEmailSend,
   DEFAULT_SMTP_CONFIG,
-} from './password'
-export type { SMTPConfig } from './password'
+} from './index'
+export type { SMTPConfig } from './index'

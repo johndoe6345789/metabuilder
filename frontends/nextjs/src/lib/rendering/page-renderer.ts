@@ -1,7 +1,7 @@
-import type { ComponentInstance } from './builder-types'
+import type { ComponentInstance } from '../types/builder-types'
 import type { User } from '../types/level-types'
-import { Database } from './database'
-import { LuaEngine } from './lua-engine'
+import { Database } from '../database'
+import { LuaEngine } from '../lua-engine'
 
 export interface PageDefinition {
   id: string
