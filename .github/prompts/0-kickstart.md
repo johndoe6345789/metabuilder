@@ -16,6 +16,8 @@ See also LAMBDA_PROMPT.md
 
 Go in the dbal and ensure that it is well formed, we trust our users data through that layer. Other parts of the system should be wired through this layer.
 
+Think in a abstract way when designing the system, I want it to be super flexible, modular and containerised.
+
 ---------------------------
 Do what this document says.
 ----------------------------
