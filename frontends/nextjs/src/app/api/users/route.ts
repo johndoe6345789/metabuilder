@@ -6,7 +6,7 @@
  */
 
 import { NextResponse } from 'next/server'
-import { dbalGetUsers, initializeDBAL } from '@/lib/database-dbal.server'
+import { dbalGetUsers, initializeDBAL } from '@/lib/dbal/database-dbal.server'
 
 export async function GET() {
   try {
