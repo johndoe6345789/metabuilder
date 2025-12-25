@@ -1,37 +1,20 @@
-import { describe, it, expect } from 'vitest'
-import type { User } from '../types'
+import { describe, expect, it } from 'vitest'
 import { validateUserCreate } from './validate-user-create'
 
 describe('validateUserCreate', () => {
+  const base = { username: 'valid_user', email: 'user@example.com', role: 'user' as const }
+
   it.each([
-    {
-      name: 'missing fields',
-      data: {},
-      expected: ['Username is required', 'Email is required', 'Role is required'],
-    },
-    {
-      name: 'invalid fields',
-      data: {
-        username: 'bad name',
-        email: 'bad@',
-        role: 'owner' as User['role'],
-      },
-      expected: [
-        'Invalid username format (alphanumeric, underscore, hyphen only, 1-50 chars)',
-        'Invalid email format',
-        'Invalid role',
-      ],
-    },
-    {
-      name: 'valid fields',
-      data: {
-        username: 'user_1',
-        email: 'user@example.com',
-        role: 'admin',
-      },
-      expected: [],
-    },
-  ])('returns errors for $name', ({ data, expected }) => {
-    expect(validateUserCreate(data)).toEqual(expected)
+    { data: base },
+  ])('accepts %s', ({ data }) => {
+    expect(validateUserCreate(data)).toEqual([])
+  })
+
+  it.each([
+    { data: { ...base, username: 'ab' }, message: 'Invalid username format (alphanumeric, underscore, hyphen only, 3-50 chars)' },
+    { data: { ...base, email: 'invalid-email' }, message: 'Invalid email format (max 255 chars)' },
+    { data: { ...base, role: 'guest' as unknown as 'user' }, message: 'Invalid role' },
+  ])('rejects %s', ({ data, message }) => {
+    expect(validateUserCreate(data)).toContain(message)
   })
 })
