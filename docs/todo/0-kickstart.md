@@ -19,9 +19,9 @@ Use this file when you’re not sure what to do next, or you want a quick “mak
 
 From `docs/todo/`:
 
-- [ ] Run `python3 scan-project-todos.py`
-- [ ] Review `TODO_SCAN_REPORT.md` for in-repo `TODO/FIXME/HACK/XXX` markers
-- [ ] Review `TODO_STATUS.md` for open vs done counts across this folder
+- [x] Run `python3 scan-project-todos.py`
+- [x] Review `TODO_SCAN_REPORT.md` for in-repo `TODO/FIXME/HACK/XXX` markers
+- [x] Review `TODO_STATUS.md` for open vs done counts across this folder
 
 ## 15-Minute Local Sanity Check (Frontend)
 

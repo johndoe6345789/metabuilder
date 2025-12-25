@@ -13,6 +13,9 @@
 - [ ] Fix getting-started cross-links TODO in `docs/guides/getting-started.md:313`
 - [ ] Fix DBAL integration doc link TODOs (`docs/implementation/DBAL_INTEGRATION.md:285`, `docs/implementation/DBAL_INTEGRATION.md:391`, `docs/implementation/DBAL_INTEGRATION.md:408`)
 - [ ] Address archived mapping TODO in `docs/archive/src/lib/CODE_TO_DOCS_MAPPING.md:9`
+- [ ] Fix architecture doc link TODOs (`docs/architecture/security.md:260`, `docs/architecture/deployment.md:298`, `docs/architecture/testing.md:243`, `docs/architecture/packages.md:496`, `docs/architecture/packages.md:498`)
+- [ ] Fix migrations/refactoring docs that reference the wrong repo structure (`docs/migrations/FILE_RELOCATION_GUIDE.md:83`, `docs/migrations/FILE_RELOCATION_GUIDE.md:92`, `docs/migrations/RELOCATION_SUMMARY.md:79`, `docs/refactoring/REFACTORING_INDEX.md:360`, `docs/refactoring/REFACTORING_SUMMARY.md:450`)
+- [ ] Review and flesh out `## TODO` section in `docs/architecture/css-as-abstract-system.md:275`
 
 ## Getting Started
 

@@ -48,7 +48,8 @@
 ## Stub Detection
 
 - [ ] Review and fix all detected stub implementations
-- [ ] Convert TODO comments to GitHub issues
+- [x] Update TODO scan to include `.github` ✅ (`scan-project-todos.py` now uses `rg --hidden`)
+- [ ] Convert TODO comments to GitHub issues (use `TODO_SCAN_REPORT.md` as input)
 - [ ] Implement completeness scoring tracking over time
 - [ ] Add stub detection to PR checks (blocking critical stubs)
 - [ ] Create stub-to-implementation tracking dashboard

@@ -61,11 +61,11 @@
 
 ## References
 
-- Scan results: `docs/todo/TODO_SCAN_REPORT.md`
+- Scan results: [TODO_SCAN_REPORT.md](TODO_SCAN_REPORT.md)
 
 ## Build & Performance
 
-- [ ] Fix TypeScript configuration error (strictNullChecks)
+- [x] Fix TypeScript configuration error (strictNullChecks) (dbd8e49)
 - [ ] Resolve build failures in Next.js frontend
 - [ ] Add bundle size monitoring and alerts
 - [ ] Implement tree-shaking optimization
