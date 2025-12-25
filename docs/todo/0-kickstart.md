@@ -1,35 +1,37 @@
-# Kickstart (TODOs)
+# 0 - Kickstart (Start Here)
 
-Use this file to pick your next task from `docs/todo/` and get to a clean “green” baseline quickly.
+Use this file when you’re not sure what to do next, or you want a quick “make it green” loop before starting a larger task.
 
-## Read First (If New Here)
+## The Default Workflow
 
-- Project overview: [`../START_HERE.md`](../START_HERE.md), [`../INDEX.md`](../INDEX.md)
-- Agent workflow: [`../../.github/prompts/0-kickstart.md`](../../.github/prompts/0-kickstart.md)
+- Start with the repo workflow prompt: `../../.github/prompts/0-kickstart.md`
+- Skim: `../START_HERE.md` and `../INDEX.md`
+- Then pick the most relevant TODO file from `./README.md`
 
-## Suggested Order (Highest ROI First)
+## 15-Minute Local Sanity Check (Frontend)
 
-1. **Get the repo building**: [`15-BUILD-FIXES-TODO.md`](15-BUILD-FIXES-TODO.md)
-2. **Fix frontend build/TS issues**: [`5-FRONTEND-TODO.md`](5-FRONTEND-TODO.md)
-3. **Stabilize DB/Prisma workflows**: [`7-DATABASE-TODO.md`](7-DATABASE-TODO.md)
-4. **Security fundamentals**: [`10-SECURITY-TODO.md`](10-SECURITY-TODO.md)
-5. **Testing infrastructure**: [`8-TESTING-TODO.md`](8-TESTING-TODO.md), [`3-TODO.md`](3-TODO.md)
-6. **Workflows/SDLC**: [`1-TODO.md`](1-TODO.md), [`21-SDLC-TODO.md`](21-SDLC-TODO.md)
+Run from `frontends/nextjs/`:
 
-## Definition Of Done (For Most Tasks)
+- [ ] `npm ci` (or `npm install`)
+- [ ] `npm run typecheck`
+- [ ] `npm run lint`
+- [ ] `npm run test:unit`
+- [ ] `npm run build`
 
-- From `frontends/nextjs/`: `npm run lint`, `npm run typecheck`, and relevant tests pass.
-- The relevant checkbox is marked `[x]` in the appropriate TODO file, with a commit hash or PR link.
+If CI/workflows are the goal, validate locally with `npm run act:diagnose` / `npm run act` (from `frontends/nextjs/`).
 
-## Quick Commands
+## If Something Fails, Start Here
 
-Run app workflows from `frontends/nextjs/`:
+- Build/config issues → `15-BUILD-FIXES-TODO.md`
+- Next.js app issues → `5-FRONTEND-TODO.md`
+- Prisma/DB issues → `7-DATABASE-TODO.md`
+- DBAL issues → `4-DBAL-TODO.md`
+- Test infrastructure issues → `8-TESTING-TODO.md`
+- Security concerns → `10-SECURITY-TODO.md`
+- Workflow/SDLC issues → `1-TODO.md` and `21-SDLC-TODO.md`
 
-- `npm ci`
-- `npm run lint`
-- `npm run typecheck`
-- `npm run test:unit`
-- `npm run build`
+## Done Criteria (For Most PRs)
 
-If you need Prisma from `frontends/nextjs/`, the schema is at `../../prisma/schema.prisma` (see the Prisma notes in [`../../.github/prompts/0-kickstart.md`](../../.github/prompts/0-kickstart.md)).
-
+- [ ] The smallest relevant test suite is green (unit/E2E as appropriate)
+- [ ] `npm run lint` and `npm run typecheck` are green
+- [ ] The TODO item(s) you addressed are marked `[x]` with a commit reference
