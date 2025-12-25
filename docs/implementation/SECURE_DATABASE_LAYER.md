@@ -87,14 +87,13 @@ Every database operation requires:
 ### 2. Rate Limiting
 
 Prevents abuse by limiting requests per user:
-- **100 requests per 60 seconds** per user
+- **100 requests per 60 seconds** per user (defaults)
 - Automatic cleanup of old timestamps
 - Tracks per userId, not IP (more accurate)
 
-```typescript
-private static readonly RATE_LIMIT_WINDOW = 60000 // 1 minute
-private static readonly MAX_REQUESTS_PER_WINDOW = 100
-```
+Override defaults with environment variables:
+- `MB_RATE_LIMIT_WINDOW_MS` (milliseconds)
+- `MB_RATE_LIMIT_MAX_REQUESTS` (positive integer)
 
 ### 3. Input Sanitization
 
