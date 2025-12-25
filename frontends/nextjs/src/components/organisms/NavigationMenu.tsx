@@ -1,25 +1,8 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import {
-  Box,
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Menu,
-  MenuItem,
-  Button,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Collapse,
-  Divider,
-} from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu'
+import { Box, Menu, Button } from '@mui/material'
 import ChevronDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 
 // NavigationMenu container
 export interface NavigationMenuProps {
