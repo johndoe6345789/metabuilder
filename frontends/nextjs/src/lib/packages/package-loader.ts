@@ -1,6 +1,6 @@
 /**
  * Package Loader Module
- * @deprecated Import from '@/lib/package-loader' folder instead
+ * @deprecated Import from '@/lib/packages/loader' instead
  */
 
 export {
@@ -12,4 +12,4 @@ export {
   getModularPackageComponents,
   getModularPackageScripts,
   getModularPackageMetadata,
-} from './package-loader/index'
+} from './loader/index'
