@@ -173,6 +173,44 @@ describe('workflow-engine', () => {
       expect(result.error?.toLowerCase()).toContain(expectedError.toLowerCase())
       expect(result.logs.length).toBeGreaterThan(0)
     })
+
+    it('retries a failing node until it succeeds', async () => {
+      const context: any = { data: { value: 10 }, meta: { attempts: 0 } }
+      const workflow = createWorkflow('w-retry', 'Retry Workflow', [
+        createNode('n1', 'trigger', 'Start'),
+        createNode('n2', 'transform', 'Retry Transform', {
+          retry: { maxAttempts: 3, delayMs: 0 },
+          transform:
+            '(() => { context.meta.attempts += 1; if (context.meta.attempts < 2) { throw new Error("boom"); } return data.value + 1; })()',
+        }),
+      ])
+
+      const result = await engine.executeWorkflow(workflow, context)
+
+      expect(result.success).toBe(true)
+      expect(result.outputs.n2).toBe(11)
+      expect(context.meta.attempts).toBe(2)
+      expect(result.logs.some(log => log.includes('Retrying node'))).toBe(true)
+    })
+
+    it('stops retrying after max attempts', async () => {
+      const context: any = { data: { value: 1 }, meta: { attempts: 0 } }
+      const workflow = createWorkflow('w-retry-fail', 'Retry Failure', [
+        createNode('n1', 'trigger', 'Start'),
+        createNode('n2', 'transform', 'Always Fail', {
+          retry: { maxAttempts: 2, delayMs: 0 },
+          transform:
+            '(() => { context.meta.attempts += 1; throw new Error("still failing"); })()',
+        }),
+      ])
+
+      const result = await engine.executeWorkflow(workflow, context)
+
+      expect(result.success).toBe(false)
+      expect(result.error?.toLowerCase()).toContain('transform failed')
+      expect(context.meta.attempts).toBe(2)
+      expect(result.logs.some(log => log.includes('Retrying node'))).toBe(true)
+    })
   })
 
   describe('Lua node execution', () => {
