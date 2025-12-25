@@ -22,7 +22,7 @@ describe('package-loader', () => {
     })
 
     it('should handle initialization without errors', async () => {
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation()
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
       await initializePackageSystem()
       // Should complete without throwing
       expect(true).toBe(true)

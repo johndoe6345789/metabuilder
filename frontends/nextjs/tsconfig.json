@@ -18,9 +18,9 @@
     "incremental": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
+    "types": ["node"],
     "paths": {
-      "@/*": ["./src/*"],
-      "@/dbal/*": ["../../dbal/*"]
+      "@/*": ["./src/*"]
     },
     "plugins": [{ "name": "next" }]
   },
