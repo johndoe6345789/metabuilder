@@ -1,4 +1,4 @@
-import type { SchemaConfig } from './schema-types'
+import type { SchemaConfig } from '../types/schema-types'
 
 export const defaultSchema: SchemaConfig = {
   apps: [

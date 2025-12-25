@@ -1,5 +1,6 @@
-import { prisma } from '../prisma'
+import { getAdapter } from '../dbal-client'
 
 export async function deleteComponentNode(nodeId: string): Promise<void> {
-  await prisma.componentNode.delete({ where: { id: nodeId } })
+  const adapter = getAdapter()
+  await adapter.delete('ComponentNode', nodeId)
 }

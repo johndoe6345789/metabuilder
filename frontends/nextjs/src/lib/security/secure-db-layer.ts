@@ -1,5 +1,5 @@
 import { prisma } from './prisma'
-import type { User } from './level-types'
+import type { User } from '../types/level-types'
 
 export type OperationType = 'CREATE' | 'READ' | 'UPDATE' | 'DELETE'
 export type ResourceType = 'user' | 'workflow' | 'luaScript' | 'pageConfig' | 

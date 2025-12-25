@@ -1,4 +1,4 @@
-import type { LuaScript } from '../level-types'
+import type { LuaScript } from '../types/level-types'
 
 /**
  * Context passed to workflow execution

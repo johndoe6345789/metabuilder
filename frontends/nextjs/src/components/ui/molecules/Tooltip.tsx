@@ -44,10 +44,10 @@ interface TooltipContentProps {
 }
 
 const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
-  ({ children, side = 'top', sideOffset = 4, ...props }, ref) => {
+  ({ children, side = 'top', sideOffset = 4 }, ref) => {
     return (
       <MuiTooltip
-        ref={ref}
+        ref={ref as React.Ref<HTMLDivElement>}
         title={children}
         placement={side}
         arrow
@@ -63,9 +63,8 @@ const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
             },
           },
         }}
-        {...props}
       >
-        <span>{props.children}</span>
+        <span>{children}</span>
       </MuiTooltip>
     )
   }

@@ -1,17 +1,10 @@
-import { prisma } from '../prisma'
+import { getAdapter } from '../dbal-client'
 
 /**
  * Transfer SuperGod power from one user to another
  */
 export async function transferSuperGodPower(fromUserId: string, toUserId: string): Promise<void> {
-  await prisma.$transaction([
-    prisma.user.update({
-      where: { id: fromUserId },
-      data: { isInstanceOwner: false, role: 'god' },
-    }),
-    prisma.user.update({
-      where: { id: toUserId },
-      data: { isInstanceOwner: true, role: 'supergod' },
-    }),
-  ])
+  const adapter = getAdapter()
+  await adapter.update('User', fromUserId, { isInstanceOwner: false, role: 'god' })
+  await adapter.update('User', toUserId, { isInstanceOwner: true, role: 'supergod' })
 }

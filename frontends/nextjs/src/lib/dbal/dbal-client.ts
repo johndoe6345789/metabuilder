@@ -1,6 +1,6 @@
 import { DBALClient } from '@/lib/dbal-stub'
 import type { DBALConfig } from '@/lib/dbal-stub'
-import type { User } from './level-types'
+import type { User } from '../types/level-types'
 
 let dbalInstance: DBALClient | null = null
 

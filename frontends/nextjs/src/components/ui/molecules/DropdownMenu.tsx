@@ -21,7 +21,7 @@ interface DropdownMenuTriggerProps {
 const DropdownMenuTrigger = forwardRef<HTMLButtonElement, DropdownMenuTriggerProps>(
   ({ children, asChild, ...props }, ref) => {
     return (
-      <Box ref={ref as React.Ref<HTMLDivElement>} sx={{ display: 'inline-flex' }} {...props}>
+      <Box ref={ref as unknown as React.Ref<HTMLDivElement>} sx={{ display: 'inline-flex' }} {...props}>
         {children}
       </Box>
     )

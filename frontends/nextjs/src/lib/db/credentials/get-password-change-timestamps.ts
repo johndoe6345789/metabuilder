@@ -1,18 +1,16 @@
-import { prisma } from '../prisma'
+import { getAdapter } from '../dbal-client'
 
 /**
  * Get password change timestamps for all users
  */
 export async function getPasswordChangeTimestamps(): Promise<Record<string, number>> {
-  const users = await prisma.user.findMany({
-    where: { passwordChangeTimestamp: { not: null } },
-    select: { username: true, passwordChangeTimestamp: true },
-  })
-  const result: Record<string, number> = {}
-  for (const user of users) {
+  const adapter = getAdapter()
+  const result = await adapter.list('User')
+  const timestamps: Record<string, number> = {}
+  for (const user of result.data as any[]) {
     if (user.passwordChangeTimestamp) {
-      result[user.username] = Number(user.passwordChangeTimestamp)
+      timestamps[user.username] = Number(user.passwordChangeTimestamp)
     }
   }
-  return result
+  return timestamps
 }

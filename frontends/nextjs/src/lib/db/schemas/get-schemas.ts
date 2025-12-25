@@ -1,12 +1,13 @@
-import { prisma } from '../prisma'
-import type { ModelSchema } from '../../schema-types'
+import { getAdapter } from '../dbal-client'
+import type { ModelSchema } from '../../types/schema-types'
 
 /**
  * Get all schemas
  */
 export async function getSchemas(): Promise<ModelSchema[]> {
-  const schemas = await prisma.modelSchema.findMany()
-  return schemas.map((s) => ({
+  const adapter = getAdapter()
+  const result = await adapter.list('ModelSchema')
+  return (result.data as any[]).map((s) => ({
     name: s.name,
     label: s.label || undefined,
     labelPlural: s.labelPlural || undefined,

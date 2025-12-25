@@ -1,4 +1,4 @@
-import { createSandboxedLuaEngine, type SandboxedLuaResult } from '../sandboxed-lua-engine'
+import { createSandboxedLuaEngine, type SandboxedLuaResult } from '../lua/sandboxed-lua-engine'
 import type { WorkflowExecutionContext } from './workflow-execution-context'
 import type { WorkflowState } from './workflow-state'
 import { logToWorkflow } from './log-to-workflow'

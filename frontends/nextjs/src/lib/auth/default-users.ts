@@ -1,4 +1,4 @@
-import type { User } from '../level-types'
+import type { User } from '../types/level-types'
 
 /**
  * Default users created during application initialization

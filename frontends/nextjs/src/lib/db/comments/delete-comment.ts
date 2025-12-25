@@ -1,5 +1,9 @@
-import { prisma } from '../prisma'
+import { getAdapter } from '../dbal-client'
 
+/**
+ * Delete a comment by ID
+ */
 export async function deleteComment(commentId: string): Promise<void> {
-  await prisma.comment.delete({ where: { id: commentId } })
+  const adapter = getAdapter()
+  await adapter.delete('Comment', commentId)
 }

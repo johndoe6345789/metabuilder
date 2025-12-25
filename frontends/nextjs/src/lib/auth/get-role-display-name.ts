@@ -1,4 +1,4 @@
-import type { UserRole } from '../level-types'
+import type { UserRole } from '../types/level-types'
 
 /**
  * Human-readable display names for user roles

@@ -11,7 +11,7 @@ import {
   canAccessLevel,
   getRoleDisplayName,
 } from './auth'
-import type { UserRole } from './level-types'
+import type { UserRole } from '../types/level-types'
 
 describe('auth', () => {
   describe('DEFAULT_USERS', () => {

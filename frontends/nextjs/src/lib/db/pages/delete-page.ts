@@ -1,8 +1,9 @@
-import { prisma } from '../prisma'
+import { getAdapter } from '../dbal-client'
 
 /**
  * Delete a page by ID
  */
 export async function deletePage(pageId: string): Promise<void> {
-  await prisma.pageConfig.delete({ where: { id: pageId } })
+  const adapter = getAdapter()
+  await adapter.delete('PageConfig', pageId)
 }

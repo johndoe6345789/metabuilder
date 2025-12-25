@@ -1,12 +1,13 @@
-import { prisma } from '../prisma'
-import type { Workflow } from '../../level-types'
+import { getAdapter } from '../dbal-client'
+import type { Workflow } from '../../types/level-types'
 
 /**
  * Get all workflows
  */
 export async function getWorkflows(): Promise<Workflow[]> {
-  const workflows = await prisma.workflow.findMany()
-  return workflows.map((w) => ({
+  const adapter = getAdapter()
+  const result = await adapter.list('Workflow')
+  return (result.data as any[]).map((w) => ({
     id: w.id,
     name: w.name,
     description: w.description || undefined,

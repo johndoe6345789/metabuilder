@@ -1,13 +1,14 @@
-import { prisma } from '../prisma'
+import { getAdapter } from '../dbal-client'
 
 /**
  * Get all credentials as a username->passwordHash map
  */
 export async function getCredentials(): Promise<Record<string, string>> {
-  const credentials = await prisma.credential.findMany()
-  const result: Record<string, string> = {}
-  for (const cred of credentials) {
-    result[cred.username] = cred.passwordHash
+  const adapter = getAdapter()
+  const result = await adapter.list('Credential')
+  const credentials: Record<string, string> = {}
+  for (const cred of result.data as any[]) {
+    credentials[cred.username] = cred.passwordHash
   }
-  return result
+  return credentials
 }

@@ -106,6 +106,108 @@ export class PrismaAdapter implements DBALAdapter {
     }
   }
 
+  async findFirst(entity: string, filter?: Record<string, unknown>): Promise<unknown | null> {
+    try {
+      const model = this.getModel(entity)
+      const where = filter ? this.buildWhereClause(filter) : undefined
+      const result = await this.withTimeout(
+        model.findFirst({ where: where as never })
+      )
+      return result
+    } catch (error) {
+      throw this.handleError(error, 'findFirst', entity)
+    }
+  }
+
+  async findByField(entity: string, field: string, value: unknown): Promise<unknown | null> {
+    try {
+      const model = this.getModel(entity)
+      const result = await this.withTimeout(
+        model.findUnique({ where: { [field]: value } as never })
+      )
+      return result
+    } catch (error) {
+      throw this.handleError(error, 'findByField', entity)
+    }
+  }
+
+  async upsert(
+    entity: string, 
+    uniqueField: string, 
+    uniqueValue: unknown, 
+    createData: Record<string, unknown>, 
+    updateData: Record<string, unknown>
+  ): Promise<unknown> {
+    try {
+      const model = this.getModel(entity)
+      const result = await this.withTimeout(
+        model.upsert({
+          where: { [uniqueField]: uniqueValue } as never,
+          create: createData as never,
+          update: updateData as never,
+        })
+      )
+      return result
+    } catch (error) {
+      throw this.handleError(error, 'upsert', entity)
+    }
+  }
+
+  async updateByField(entity: string, field: string, value: unknown, data: Record<string, unknown>): Promise<unknown> {
+    try {
+      const model = this.getModel(entity)
+      const result = await this.withTimeout(
+        model.update({
+          where: { [field]: value } as never,
+          data: data as never,
+        })
+      )
+      return result
+    } catch (error) {
+      throw this.handleError(error, 'updateByField', entity)
+    }
+  }
+
+  async deleteByField(entity: string, field: string, value: unknown): Promise<boolean> {
+    try {
+      const model = this.getModel(entity)
+      await this.withTimeout(
+        model.delete({ where: { [field]: value } as never })
+      )
+      return true
+    } catch (error) {
+      if (this.isNotFoundError(error)) {
+        return false
+      }
+      throw this.handleError(error, 'deleteByField', entity)
+    }
+  }
+
+  async deleteMany(entity: string, filter?: Record<string, unknown>): Promise<number> {
+    try {
+      const model = this.getModel(entity)
+      const where = filter ? this.buildWhereClause(filter) : undefined
+      const result = await this.withTimeout(
+        model.deleteMany({ where: where as never })
+      )
+      return result.count
+    } catch (error) {
+      throw this.handleError(error, 'deleteMany', entity)
+    }
+  }
+
+  async createMany(entity: string, data: Record<string, unknown>[]): Promise<number> {
+    try {
+      const model = this.getModel(entity)
+      const result = await this.withTimeout(
+        model.createMany({ data: data as never })
+      )
+      return result.count
+    } catch (error) {
+      throw this.handleError(error, 'createMany', entity)
+    }
+  }
+
   async getCapabilities(): Promise<AdapterCapabilities> {
     return {
       transactions: true,

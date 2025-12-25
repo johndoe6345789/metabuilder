@@ -80,7 +80,7 @@ const AccordionTrigger = forwardRef<HTMLButtonElement, AccordionTriggerProps>(
   ({ children, ...props }, ref) => {
     return (
       <AccordionSummary
-        ref={ref as React.Ref<HTMLDivElement>}
+        ref={ref as unknown as React.Ref<HTMLDivElement>}
         expandIcon={<ExpandMoreIcon />}
         sx={{
           '& .MuiAccordionSummary-content': {

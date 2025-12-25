@@ -1,4 +1,4 @@
-import type { WorkflowNode } from '../level-types'
+import type { WorkflowNode } from '../types/level-types'
 import type { WorkflowExecutionContext } from './workflow-execution-context'
 import type { WorkflowState } from './workflow-state'
 import { executeActionNode } from './execute-action-node'

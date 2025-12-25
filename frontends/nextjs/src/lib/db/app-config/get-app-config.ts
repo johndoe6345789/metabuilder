@@ -1,9 +1,11 @@
-import { prisma } from '../prisma'
-import type { AppConfiguration } from '../../level-types'
+import { getAdapter } from '../dbal-client'
+import type { AppConfiguration } from '../../types/level-types'
 
 export async function getAppConfig(): Promise<AppConfiguration | null> {
-  const config = await prisma.appConfiguration.findFirst()
-  if (!config) return null
+  const adapter = getAdapter()
+  const result = await adapter.list('AppConfiguration', { limit: 1 })
+  if (result.data.length === 0) return null
+  const config = result.data[0] as any
   return {
     id: config.id,
     name: config.name,

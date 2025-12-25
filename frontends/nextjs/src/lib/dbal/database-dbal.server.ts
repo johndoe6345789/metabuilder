@@ -7,7 +7,7 @@ import 'server-only'
 
 import { DBALClient } from '@/lib/dbal-stub'
 import type { DBALConfig } from '@/lib/dbal-stub'
-import type { User } from './level-types'
+import type { User } from '../types/level-types'
 
 let dbalClient: DBALClient | null = null
 let initialized = false

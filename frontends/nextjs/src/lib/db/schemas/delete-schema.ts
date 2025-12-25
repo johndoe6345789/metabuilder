@@ -1,8 +1,9 @@
-import { prisma } from '../prisma'
+import { getAdapter } from '../dbal-client'
 
 /**
  * Delete a schema by name
  */
 export async function deleteSchema(schemaName: string): Promise<void> {
-  await prisma.modelSchema.delete({ where: { name: schemaName } })
+  const adapter = getAdapter()
+  await adapter.delete('ModelSchema', schemaName)
 }

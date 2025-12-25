@@ -8,8 +8,8 @@ import type {
   Comment,
   Tenant,
   PowerTransferRequest,
-} from './level-types'
-import type { ModelSchema } from './schema-types'
+} from '../types/level-types'
+import type { ModelSchema } from './types/schema-types'
 import type { InstalledPackage } from './package-types'
 import type { SMTPConfig } from './password-utils'
 

@@ -47,14 +47,14 @@ export interface ComponentConfig {
  * Full database schema type
  */
 export interface DatabaseSchema {
-  users: import('../level-types').User[]
+  users: import('../types/level-types').User[]
   credentials: Record<string, string>
-  workflows: import('../level-types').Workflow[]
-  luaScripts: import('../level-types').LuaScript[]
-  pages: import('../level-types').PageConfig[]
-  schemas: import('../schema-types').ModelSchema[]
-  appConfig: import('../level-types').AppConfiguration
-  comments: import('../level-types').Comment[]
+  workflows: import('../types/level-types').Workflow[]
+  luaScripts: import('../types/level-types').LuaScript[]
+  pages: import('../types/level-types').PageConfig[]
+  schemas: import('../types/schema-types').ModelSchema[]
+  appConfig: import('../types/level-types').AppConfiguration
+  comments: import('../types/level-types').Comment[]
   componentHierarchy: Record<string, ComponentNode>
   componentConfigs: Record<string, ComponentConfig>
   godCredentialsExpiry: number
@@ -63,8 +63,8 @@ export interface DatabaseSchema {
   godCredentialsExpiryDuration: number
   cssClasses: CssCategory[]
   dropdownConfigs: DropdownConfig[]
-  tenants: import('../level-types').Tenant[]
-  powerTransferRequests: import('../level-types').PowerTransferRequest[]
+  tenants: import('../types/level-types').Tenant[]
+  powerTransferRequests: import('../types/level-types').PowerTransferRequest[]
   smtpConfig: import('../password').SMTPConfig
   passwordResetTokens: Record<string, string>
 }

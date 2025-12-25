@@ -1,11 +1,12 @@
-import { prisma } from '../prisma'
+import { getAdapter } from '../dbal-client'
 import type { ComponentNode } from '../types'
 
 export async function getComponentHierarchy(): Promise<Record<string, ComponentNode>> {
-  const nodes = await prisma.componentNode.findMany()
-  const result: Record<string, ComponentNode> = {}
-  for (const node of nodes) {
-    result[node.id] = {
+  const adapter = getAdapter()
+  const result = await adapter.list('ComponentNode')
+  const hierarchy: Record<string, ComponentNode> = {}
+  for (const node of result.data as any[]) {
+    hierarchy[node.id] = {
       id: node.id,
       type: node.type,
       parentId: node.parentId || undefined,
@@ -14,5 +15,5 @@ export async function getComponentHierarchy(): Promise<Record<string, ComponentN
       pageId: node.pageId,
     }
   }
-  return result
+  return hierarchy
 }

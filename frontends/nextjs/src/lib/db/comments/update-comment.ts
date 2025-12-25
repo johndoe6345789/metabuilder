@@ -1,9 +1,13 @@
-import { prisma } from '../prisma'
-import type { Comment } from '../../level-types'
+import { getAdapter } from '../dbal-client'
+import type { Comment } from '../../types/level-types'
 
+/**
+ * Update a comment by ID
+ */
 export async function updateComment(commentId: string, updates: Partial<Comment>): Promise<void> {
-  const data: any = {}
+  const adapter = getAdapter()
+  const data: Record<string, unknown> = {}
   if (updates.content !== undefined) data.content = updates.content
   if (updates.updatedAt !== undefined) data.updatedAt = BigInt(updates.updatedAt)
-  await prisma.comment.update({ where: { id: commentId }, data })
+  await adapter.update('Comment', commentId, data)
 }

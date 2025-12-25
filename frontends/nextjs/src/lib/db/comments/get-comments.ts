@@ -1,9 +1,13 @@
-import { prisma } from '../prisma'
-import type { Comment } from '../../level-types'
+import { getAdapter } from '../dbal-client'
+import type { Comment } from '../../types/level-types'
 
+/**
+ * Get all comments from database
+ */
 export async function getComments(): Promise<Comment[]> {
-  const comments = await prisma.comment.findMany()
-  return comments.map((c) => ({
+  const adapter = getAdapter()
+  const result = await adapter.list('Comment')
+  return (result.data as any[]).map((c) => ({
     id: c.id,
     userId: c.userId,
     content: c.content,

@@ -7,35 +7,50 @@
 export {
   // Button
   Button,
+  type ButtonProps,
+  type ButtonVariant,
+  type ButtonSize,
   // Input
   Input,
+  type InputProps,
   // Textarea
   Textarea,
+  type TextareaProps,
   // Label
   Label,
+  type LabelProps,
   // Checkbox
   Checkbox,
+  type CheckboxProps,
   // Switch
   Switch,
+  type SwitchProps,
   // Badge
   Badge,
+  type BadgeProps,
+  type BadgeVariant,
   // Avatar
   Avatar,
-  AvatarGroup,
+  AvatarImage,
+  AvatarFallback,
+  type AvatarProps,
   // Separator
   Separator,
+  type SeparatorProps,
   // Skeleton
   Skeleton,
-  SkeletonText,
-  SkeletonCircular,
-  SkeletonRectangular,
+  type SkeletonProps,
   // Progress
   Progress,
-  CircularProgress,
+  type ProgressProps,
   // Slider
   Slider,
+  type SliderProps,
   // Toggle
   Toggle,
+  type ToggleProps,
+  type ToggleVariant,
+  type ToggleSize,
 } from './atoms'
 
 // ============================================================================
@@ -49,8 +64,6 @@ export {
   CardFooter,
   CardTitle,
   CardDescription,
-  CardActions,
-  CardMedia,
   // Dialog
   Dialog,
   DialogTrigger,
@@ -60,6 +73,8 @@ export {
   DialogTitle,
   DialogDescription,
   DialogClose,
+  DialogOverlay,
+  DialogPortal,
   // Select
   Select,
   SelectTrigger,
@@ -69,6 +84,8 @@ export {
   SelectLabel,
   SelectSeparator,
   SelectValue,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
   // Tabs
   Tabs,
   TabsList,
@@ -78,10 +95,14 @@ export {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
+  TooltipProvider,
+  SimpleTooltip,
   // Alert
   Alert,
   AlertTitle,
   AlertDescription,
+  type AlertVariant,
+  type AlertProps,
   // Accordion
   Accordion,
   AccordionItem,
@@ -101,7 +122,8 @@ export {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
-  useDropdownMenu,
+  DropdownMenuShortcut,
+  DropdownMenuPortal,
   // RadioGroup
   RadioGroup,
   RadioGroupItem,
@@ -110,7 +132,6 @@ export {
   PopoverTrigger,
   PopoverContent,
   PopoverAnchor,
-  usePopover,
   // ToggleGroup
   ToggleGroup,
   ToggleGroupItem,

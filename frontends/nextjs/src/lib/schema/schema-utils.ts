@@ -1,4 +1,4 @@
-import type { FieldSchema, ModelSchema, SchemaConfig } from './schema-types'
+import type { FieldSchema, ModelSchema, SchemaConfig } from './types/schema-types'
 
 export function getModelKey(appName: string, modelName: string): string {
   return `${appName}_${modelName}`

@@ -1,5 +1,5 @@
 import type { ComponentInstance } from './builder-types'
-import type { User } from './level-types'
+import type { User } from '../types/level-types'
 import { Database } from './database'
 import { LuaEngine } from './lua-engine'
 

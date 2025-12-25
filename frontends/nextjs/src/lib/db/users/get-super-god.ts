@@ -1,15 +1,15 @@
-import { prisma } from '../prisma'
-import type { User } from '../level-types'
+import { getAdapter } from '../dbal-client'
+import type { User } from '../../types/level-types'
 
 /**
  * Get the SuperGod user (instance owner)
  */
 export async function getSuperGod(): Promise<User | null> {
-  const user = await prisma.user.findFirst({
-    where: { isInstanceOwner: true },
-  })
+  const adapter = getAdapter()
+  const result = await adapter.list('User', { filter: { isInstanceOwner: true } })
 
-  if (!user) return null
+  if (result.data.length === 0) return null
+  const user = result.data[0] as any
 
   return {
     id: user.id,

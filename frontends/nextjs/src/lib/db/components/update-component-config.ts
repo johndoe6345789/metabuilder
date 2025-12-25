@@ -1,8 +1,9 @@
-import { prisma } from '../prisma'
+import { getAdapter } from '../dbal-client'
 import type { ComponentConfig } from '../types'
 
 export async function updateComponentConfig(configId: string, updates: Partial<ComponentConfig>): Promise<void> {
-  const data: any = {}
+  const adapter = getAdapter()
+  const data: Record<string, unknown> = {}
   if (updates.componentId !== undefined) data.componentId = updates.componentId
   if (updates.props !== undefined) data.props = JSON.stringify(updates.props)
   if (updates.styles !== undefined) data.styles = JSON.stringify(updates.styles)
@@ -10,5 +11,5 @@ export async function updateComponentConfig(configId: string, updates: Partial<C
   if (updates.conditionalRendering !== undefined) {
     data.conditionalRendering = updates.conditionalRendering ? JSON.stringify(updates.conditionalRendering) : null
   }
-  await prisma.componentConfig.update({ where: { id: configId }, data })
+  await adapter.update('ComponentConfig', configId, data)
 }

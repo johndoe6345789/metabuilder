@@ -246,7 +246,6 @@ const NavigationLink = forwardRef<HTMLElement, NavigationLinkProps>(
 
     return (
       <MenuItem
-        ref={ref}
         onClick={onClick}
         disabled={disabled}
         selected={active}

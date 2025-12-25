@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { WorkflowEngine, createWorkflowEngine } from './workflow-engine'
-import type { Workflow, WorkflowNode, LuaScript } from './level-types'
+import type { Workflow, WorkflowNode, LuaScript } from '../types/level-types'
 
 // Helper to create a minimal valid WorkflowNode
 function createNode(

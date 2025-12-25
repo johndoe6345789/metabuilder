@@ -14,9 +14,33 @@ import {
   Divider,
   Typography,
   Paper,
-  Kbd,
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
+
+// Custom Kbd component since MUI doesn't export one
+const Kbd = ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => (
+  <Box
+    component="kbd"
+    sx={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: 'monospace',
+      fontSize: '0.75rem',
+      fontWeight: 500,
+      px: 0.75,
+      py: 0.25,
+      borderRadius: 0.5,
+      bgcolor: 'action.hover',
+      border: 1,
+      borderColor: 'divider',
+      color: 'text.secondary',
+    }}
+    {...props}
+  >
+    {children}
+  </Box>
+)
 
 // Types
 interface CommandItem {

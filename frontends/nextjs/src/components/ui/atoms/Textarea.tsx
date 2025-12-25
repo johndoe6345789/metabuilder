@@ -1,19 +1,35 @@
 'use client'
 
-import { forwardRef, TextareaHTMLAttributes } from 'react'
-import { InputBase } from '@mui/material'
+import { forwardRef } from 'react'
+import { InputBase, InputBaseProps } from '@mui/material'
 
-export interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'style'> {
+export interface TextareaProps {
   error?: boolean
+  disabled?: boolean
+  placeholder?: string
+  value?: string
+  defaultValue?: string
+  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onBlur?: (event: React.FocusEvent<HTMLTextAreaElement>) => void
+  onFocus?: (event: React.FocusEvent<HTMLTextAreaElement>) => void
+  name?: string
+  id?: string
+  rows?: number
+  minRows?: number
+  maxRows?: number
+  className?: string
+  required?: boolean
+  readOnly?: boolean
+  autoFocus?: boolean
 }
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ error, ...props }, ref) => {
+  ({ error, minRows = 3, ...props }, ref) => {
     return (
       <InputBase
         inputRef={ref}
         multiline
-        minRows={3}
+        minRows={minRows}
         error={error}
         sx={{
           width: '100%',

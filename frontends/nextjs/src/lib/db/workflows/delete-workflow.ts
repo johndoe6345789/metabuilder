@@ -1,8 +1,9 @@
-import { prisma } from '../prisma'
+import { getAdapter } from '../dbal-client'
 
 /**
  * Delete a workflow by ID
  */
 export async function deleteWorkflow(workflowId: string): Promise<void> {
-  await prisma.workflow.delete({ where: { id: workflowId } })
+  const adapter = getAdapter()
+  await adapter.delete('Workflow', workflowId)
 }

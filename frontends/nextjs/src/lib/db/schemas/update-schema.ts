@@ -1,11 +1,12 @@
-import { prisma } from '../prisma'
-import type { ModelSchema } from '../../schema-types'
+import { getAdapter } from '../dbal-client'
+import type { ModelSchema } from '../../types/schema-types'
 
 /**
  * Update a schema by name
  */
 export async function updateSchema(schemaName: string, updates: Partial<ModelSchema>): Promise<void> {
-  const data: any = {}
+  const adapter = getAdapter()
+  const data: Record<string, unknown> = {}
   if (updates.label !== undefined) data.label = updates.label
   if (updates.labelPlural !== undefined) data.labelPlural = updates.labelPlural
   if (updates.icon !== undefined) data.icon = updates.icon
@@ -15,8 +16,5 @@ export async function updateSchema(schemaName: string, updates: Partial<ModelSch
   if (updates.searchFields !== undefined) data.searchFields = JSON.stringify(updates.searchFields)
   if (updates.ordering !== undefined) data.ordering = JSON.stringify(updates.ordering)
 
-  await prisma.modelSchema.update({
-    where: { name: schemaName },
-    data,
-  })
+  await adapter.update('ModelSchema', schemaName, data)
 }

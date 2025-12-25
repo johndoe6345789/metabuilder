@@ -1,12 +1,13 @@
-import { prisma } from '../prisma'
-import type { LuaScript } from '../../level-types'
+import { getAdapter } from '../dbal-client'
+import type { LuaScript } from '../../types/level-types'
 
 /**
  * Get all Lua scripts
  */
 export async function getLuaScripts(): Promise<LuaScript[]> {
-  const scripts = await prisma.luaScript.findMany()
-  return scripts.map((s) => ({
+  const adapter = getAdapter()
+  const result = await adapter.list('LuaScript')
+  return (result.data as any[]).map((s) => ({
     id: s.id,
     name: s.name,
     description: s.description || undefined,

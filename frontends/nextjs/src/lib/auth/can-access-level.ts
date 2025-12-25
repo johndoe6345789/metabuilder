@@ -1,4 +1,4 @@
-import type { UserRole } from '../level-types'
+import type { UserRole } from '../types/level-types'
 
 /**
  * Role hierarchy mapping roles to their numeric permission levels
