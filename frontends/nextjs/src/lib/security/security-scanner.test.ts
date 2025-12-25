@@ -199,11 +199,11 @@ describe('security-scanner', () => {
 
   describe('getSeverityColor', () => {
     it.each([
-      { severity: 'critical', expected: 'text-red-600 bg-red-50 border-red-200' },
-      { severity: 'high', expected: 'text-orange-600 bg-orange-50 border-orange-200' },
-      { severity: 'medium', expected: 'text-yellow-600 bg-yellow-50 border-yellow-200' },
-      { severity: 'low', expected: 'text-blue-600 bg-blue-50 border-blue-200' },
-      { severity: 'safe', expected: 'text-green-600 bg-green-50 border-green-200' },
+      { severity: 'critical', expected: 'error' },
+      { severity: 'high', expected: 'warning' },
+      { severity: 'medium', expected: 'info' },
+      { severity: 'low', expected: 'secondary' },
+      { severity: 'safe', expected: 'success' },
     ])('should map $severity to expected classes', ({ severity, expected }) => {
       expect(getSeverityColor(severity)).toBe(expected)
     })
