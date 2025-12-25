@@ -257,6 +257,7 @@ const hashedKey = sha512(API_KEY);  // Hash for storage
 
 ## 🔗 Related Documentation
 
+TODO: Security guidelines live at ../security/SECURITY.md; update this link.
 - [Security Guidelines](../SECURITY.md) - Security policy
 - [5-Level System](./5-level-system.md) - Permission model
 - [Database Architecture](./database.md) - Data storage

@@ -3,14 +3,14 @@ name: Code Size Limits
 on:
   pull_request:
     paths:
-      - 'src/**/*.{ts,tsx,js,jsx}'
+      - 'frontends/nextjs/src/**/*.{ts,tsx,js,jsx}'
       - 'scripts/enforce-size-limits.ts'
       - '.github/workflows/size-limits.yml'
   push:
     branches:
       - main
     paths:
-      - 'src/**/*.{ts,tsx,js,jsx}'
+      - 'frontends/nextjs/src/**/*.{ts,tsx,js,jsx}'
 
 jobs:
   size-limits:
@@ -33,14 +33,14 @@ jobs:
         run: npm ci
       
       - name: Check code size limits
-        run: npx tsx scripts/enforce-size-limits.ts
+        run: npx tsx ../../scripts/enforce-size-limits.ts
       
       - name: Upload report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: size-limits-report
-          path: size-limits-report.json
+          path: frontends/nextjs/size-limits-report.json
           retention-days: 7
       
       - name: Comment on PR
@@ -49,7 +49,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const report = JSON.parse(fs.readFileSync('size-limits-report.json', 'utf8'));
+            const report = JSON.parse(fs.readFileSync('frontends/nextjs/size-limits-report.json', 'utf8'));
             
             let comment = '## 📏 Code Size Limits\n\n';
             

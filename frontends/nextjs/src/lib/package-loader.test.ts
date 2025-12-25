@@ -7,6 +7,7 @@ import {
   getPackageRegistry,
   getModularPackageComponents,
   getModularPackageScripts,
+  getModularPackageMetadata,
 } from '@/lib/package-loader'
 
 describe('package-loader', () => {
@@ -116,27 +117,20 @@ describe('package-loader', () => {
     })
   })
 
-  describe('getModularPackageComponents', () => {
-    it('should return an array', async () => {
-      const components = await getModularPackageComponents()
-      expect(Array.isArray(components)).toBe(true)
+  describe('modular package seed data', () => {
+    it.each([
+      { label: 'components', loader: getModularPackageComponents },
+      { label: 'scripts', loader: getModularPackageScripts },
+      { label: 'metadata', loader: getModularPackageMetadata },
+    ])('should return an array for $label', async ({ loader }) => {
+      const data = await loader()
+      expect(Array.isArray(data)).toBe(true)
     })
 
-    it('should return empty array (awaiting DB integration)', async () => {
-      const components = await getModularPackageComponents()
-      expect(components.length).toBe(0)
-    })
-  })
-
-  describe('getModularPackageScripts', () => {
-    it('should return an array', async () => {
-      const scripts = await getModularPackageScripts()
-      expect(Array.isArray(scripts)).toBe(true)
-    })
-
-    it('should return empty array (awaiting DB integration)', async () => {
-      const scripts = await getModularPackageScripts()
-      expect(scripts.length).toBe(0)
+    it('should include known package metadata', async () => {
+      const metadata = await getModularPackageMetadata()
+      const packageIds = metadata.map(pkg => pkg.packageId)
+      expect(packageIds).toContain('admin_dialog')
     })
   })
 })

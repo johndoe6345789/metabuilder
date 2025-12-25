@@ -250,6 +250,8 @@ How to test these changes:
 
 ## 🆘 Getting Help
 
+TODO: Links below use ../docs/... from docs/CONTRIBUTING.md and resolve to docs/docs; update to correct relative paths (including security and copilot).
+
 - **Architecture Questions**: See [docs/architecture/](../docs/architecture/)
 - **API Questions**: See [API Development Guide](../docs/guides/api-development.md)
 - **Testing Questions**: See [E2E Tests Guide](../../e2e/README.md)

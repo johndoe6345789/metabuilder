@@ -5,6 +5,8 @@
 **Total Effort:** ~180 hours over 10 weeks  
 **Status:** Ready for implementation
 
+TODO: This file uses ./docs/... links which are broken from docs/reference/; update to correct relative paths.
+
 ---
 
 ## 📚 Complete Documentation Set

@@ -16,6 +16,7 @@ export interface WorkflowExecutionResult {
 }
 
 export class WorkflowEngine {
+  // TODO: Add unit tests for workflow execution paths (node errors, condition short-circuit, Lua security warnings).
   private logs: string[] = []
   private securityWarnings: string[] = []
 

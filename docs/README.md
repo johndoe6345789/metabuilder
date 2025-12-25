@@ -2,6 +2,8 @@
 
 MetaBuilder is a powerful, declarative enterprise data platform built on a 5-level permission system. It enables rapid development of multi-tenant data applications with JSON configurations and Lua scripting.
 
+TODO: This file lives under docs/; links that start with ./docs/ are broken and PRD/SECURITY paths are outdated.
+
 ## 📋 Table of Contents
 
 - [Features](#features)

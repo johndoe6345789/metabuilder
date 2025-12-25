@@ -12,6 +12,7 @@ import { FilesystemStorage } from './filesystem-storage'
 /**
  * Factory function to create blob storage instances
  */
+// TODO: add tests for createBlobStorage (memory, s3, filesystem, unknown type).
 export function createBlobStorage(config: BlobStorageConfig): BlobStorage {
   switch (config.type) {
     case 'memory':

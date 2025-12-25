@@ -4,6 +4,8 @@
 
 This document summarizes the comprehensive unit testing infrastructure implemented to ensure every function maps to at least one unit test.
 
+TODO: This file uses ../docs/... links that resolve to docs/docs; update to correct relative paths.
+
 ## What Was Implemented
 
 ### 1. Test Files Created

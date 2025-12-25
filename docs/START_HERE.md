@@ -2,6 +2,8 @@
 
 Welcome to MetaBuilder! This file helps you navigate to where you need to go.
 
+TODO: This file is in docs/ so ./docs/ links are broken; the root-level file list below is outdated (README/CONTRIBUTING live elsewhere or do not exist).
+
 ---
 
 ## 📚 Documentation is Organized

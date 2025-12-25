@@ -6,6 +6,8 @@
 **Total Effort:** ~180 hours over 8-10 weeks  
 **Priority:** Critical path blocking production readiness
 
+TODO: This file uses ./docs/... links which are broken from docs/reference/; update to correct relative paths.
+
 ---
 
 ## 📊 Executive Summary

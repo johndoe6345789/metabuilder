@@ -16,6 +16,19 @@ import { buildPackageRegistry, exportAllPackagesForSeed, type PackageRegistry } 
 let isInitialized = false
 // Cache the package registry after first load
 let packageRegistry: PackageRegistry | null = null
+type ModularPackageSeedData = {
+  components: any[]
+  scripts: any[]
+  packages: any[]
+}
+
+const emptyModularPackageSeedData: ModularPackageSeedData = {
+  components: [],
+  scripts: [],
+  packages: []
+}
+
+let modularPackageSeedData: ModularPackageSeedData | null = null
 
 /**
  * Initializes the package system by loading all available packages
@@ -41,6 +54,7 @@ export async function initializePackageSystem() {
     
     // Extract seed data from modular packages (components, scripts, metadata)
     const seedData = exportAllPackagesForSeed(packageRegistry)
+    modularPackageSeedData = seedData
     
     // TODO: Replace with proper persistent storage (currently no-op)
     // Modular package data would be stored in database or KV store
@@ -90,17 +104,20 @@ export function getPackageRegistry(): PackageRegistry | null {
 export async function getModularPackageComponents() {
   // TODO: Replace with proper database query
   // return await Database.getModularPackageComponents() || []
-  return []
+  await initializePackageSystem()
+  return (modularPackageSeedData ?? emptyModularPackageSeedData).components
 }
 
 export async function getModularPackageScripts() {
   // TODO: Replace with proper database query
   // return await Database.getModularPackageScripts() || []
-  return []
+  await initializePackageSystem()
+  return (modularPackageSeedData ?? emptyModularPackageSeedData).scripts
 }
 
 export async function getModularPackageMetadata() {
   // TODO: Replace with proper database query
   // return await Database.getModularPackageMetadata() || []
-  return []
+  await initializePackageSystem()
+  return (modularPackageSeedData ?? emptyModularPackageSeedData).packages
 }

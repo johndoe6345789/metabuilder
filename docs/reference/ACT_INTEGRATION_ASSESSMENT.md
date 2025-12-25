@@ -414,6 +414,8 @@ git push origin feature-branch
 | **`.actrc` Config** | ⚠️ Missing | 0% | Recommend creating |
 | **Git Hooks** | ⚠️ Missing | 0% | Optional enhancement |
 
+TODO(SDLC): Provide a default `.actrc`, streamline local secrets setup, and document optional git hooks for pre-push checks.
+
 ---
 
 ## Conclusion

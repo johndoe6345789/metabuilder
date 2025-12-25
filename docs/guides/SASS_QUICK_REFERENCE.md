@@ -284,4 +284,5 @@ No manual compilation needed!
 
 - [Full SASS Configuration Documentation](./SASS_CONFIGURATION.md)
 - [SASS Language Reference](https://sass-lang.com/documentation)
+TODO: The design tokens link should not use ../docs/ from docs/guides; update to the correct relative path.
 - [Design Tokens Overview](../docs/SASS_CONFIGURATION.md)

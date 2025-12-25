@@ -121,12 +121,13 @@ export class PageRenderer {
       return { allowed: false, reason: 'Authentication required' }
     }
 
-    if (page.permissions.requiredRole && user) {
-      const roleHierarchy = ['user', 'admin', 'god', 'supergod']
-      const userRoleIndex = roleHierarchy.indexOf(user.role)
+    if (page.permissions.requiredRole) {
+      const roleHierarchy = ['public', 'user', 'admin', 'god', 'supergod']
+      const userRole = user?.role ?? 'public'
+      const userRoleIndex = roleHierarchy.indexOf(userRole)
       const requiredRoleIndex = roleHierarchy.indexOf(page.permissions.requiredRole)
 
-      if (userRoleIndex < requiredRoleIndex) {
+      if (requiredRoleIndex >= 0 && userRoleIndex >= 0 && userRoleIndex < requiredRoleIndex) {
         return { allowed: false, reason: 'Insufficient permissions' }
       }
     }

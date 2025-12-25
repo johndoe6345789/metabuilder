@@ -2,6 +2,8 @@
 
 Welcome! All MetaBuilder documentation is organized in the `/docs` folder. This guide helps you navigate it effectively.
 
+TODO: This file is already in docs/; links that start with ./docs/ are broken and should be updated to correct relative paths.
+
 ## 🚀 Quick Start (Choose Your Path)
 
 ### 👤 I'm New to MetaBuilder

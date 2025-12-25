@@ -602,6 +602,7 @@ npm run cpp:clean        # Clean build artifacts
 
 ### Core Documentation
 
+TODO: Core doc links below point to docs/reference; update to correct paths under docs/ (README, PRD, SECURITY).
 | File | Purpose |
 |------|---------|
 | [INDEX.md](INDEX.md) | Navigation hub for all documentation |

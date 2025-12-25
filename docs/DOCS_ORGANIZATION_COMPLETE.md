@@ -5,6 +5,8 @@ Successfully organized all MetaBuilder documentation.
 **Date**: December 25, 2025  
 **Status**: ✅ COMPLETE
 
+TODO: This file is in docs/ so ./docs/ links are broken; root-level file list is outdated (README/CONTRIBUTING are not at repo root).
+
 ---
 
 ## 📊 What Was Accomplished

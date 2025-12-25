@@ -310,6 +310,8 @@ npm run type-check
 
 ## Getting Help
 
+TODO: Links in this section use ./ from docs/guides; update to correct relative paths (architecture/reference/troubleshooting) and fix README/SECURITY/COMPONENT_MAP locations below.
+
 - 📖 [Architecture Documentation](./architecture/)
 - 🔍 [API Reference](./reference/)
 - 🐛 [Troubleshooting Guide](./troubleshooting/)

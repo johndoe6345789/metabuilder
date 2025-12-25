@@ -82,9 +82,9 @@ check_docs_structure() {
     fi
     
     # Check for key doc files
-    if [[ -f "$PROJECT_ROOT/docs/PRD.md" ]]; then
+    if [[ -f "$PROJECT_ROOT/docs/getting-started/PRD.md" ]]; then
         ((score += 10))
-        [[ $VERBOSE == "true" ]] && echo "    PRD.md found"
+        [[ $VERBOSE == "true" ]] && echo "    docs/getting-started/PRD.md found"
     fi
     
     (( score > 100 )) && score=100

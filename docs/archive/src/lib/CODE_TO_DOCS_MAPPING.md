@@ -6,6 +6,8 @@ This document provides a unified reference for mapping **all code entities** (fu
 
 **Generated**: December 25, 2025
 
+TODO: Audit component/hook documentation coverage, replace TBD values, and update `/src/` path references to match the current `frontends/nextjs/src` layout.
+
 ---
 
 ## Quick Navigation
@@ -328,4 +330,3 @@ The FUNCTION_MAPPING.md file serves as the primary index and is now updated to i
 - [README.md](./README.md) - Library documentation overview
 - [../INDEX.md](../INDEX.md) - Complete documentation index
 - [../CODE_DOCS_MAPPING.md](../CODE_DOCS_MAPPING.md) - Directory-level mapping
-
