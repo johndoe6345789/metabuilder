@@ -64,11 +64,18 @@ export function GitHubActionsFetcher() {
 
     try {
       const response = await fetch('/api/github/actions/runs', { cache: 'no-store' })
-      let payload: { owner?: string; repo?: string; runs?: WorkflowRun[]; fetchedAt?: string; requiresAuth?: boolean } | null = null
+      let payload: {
+        owner?: string
+        repo?: string
+        runs?: WorkflowRun[]
+        fetchedAt?: string
+        requiresAuth?: boolean
+        error?: string
+      } | null = null
 
       try {
         payload = await response.json()
-      } catch (parseError) {
+      } catch {
         payload = null
       }
 
