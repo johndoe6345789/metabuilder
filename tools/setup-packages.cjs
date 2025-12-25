@@ -169,7 +169,9 @@ if (packageName) {
   const { execSync } = require('child_process');
   console.log('\nGenerating Prisma Client...');
   try {
-    execSync('npx prisma generate', { stdio: 'inherit' });
+    // Try bunx first (faster), fall back to npx
+    const command = process.env.BUN_INSTALL ? 'bunx prisma generate' : 'npx prisma generate';
+    execSync(command, { stdio: 'inherit' });
     console.log('✓ Prisma Client generated successfully');
   } catch (error) {
     console.error('⚠️ Failed to generate Prisma Client:', error.message);
