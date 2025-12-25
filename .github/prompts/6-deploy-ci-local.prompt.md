@@ -1,5 +1,7 @@
 # Run GitHub Actions Locally
 
+Run from `frontends/nextjs/`.
+
 Run the full CI pipeline locally using act to validate changes before pushing.
 
 ```bash

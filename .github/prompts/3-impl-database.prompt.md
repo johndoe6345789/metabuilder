@@ -2,6 +2,8 @@
 
 Always use the `Database` class wrapper, never raw Prisma:
 
+Run app commands from `frontends/nextjs/`.
+
 ```typescript
 // ✅ Correct - with tenant isolation
 const users = await Database.getUsers({ tenantId: user.tenantId })

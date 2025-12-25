@@ -1,5 +1,7 @@
 # Write Parameterized Tests
 
+Run tests from `frontends/nextjs/`.
+
 Add tests using the parameterized `it.each()` pattern:
 
 ```typescript

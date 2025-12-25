@@ -1,5 +1,7 @@
 # Run All Tests
 
+Run app tests from `frontends/nextjs/`. Run DBAL conformance from `dbal/`.
+
 Execute the full test suite:
 
 ## Unit Tests
@@ -30,8 +32,7 @@ npm run typecheck          # TypeScript
 npm run test:check-functions  # Function coverage
 ```
 
-## DBAL Conformance
+## DBAL Conformance (from `dbal/`)
 ```bash
-cd dbal
 python tools/conformance/run_all.py
 ```

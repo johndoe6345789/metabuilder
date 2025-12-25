@@ -2,6 +2,8 @@
 
 Review code against MetaBuilder standards:
 
+Run checks from `frontends/nextjs/`.
+
 ## Architecture
 - [ ] No raw Prisma calls - uses `Database` class
 - [ ] tenantId filter on all data queries
