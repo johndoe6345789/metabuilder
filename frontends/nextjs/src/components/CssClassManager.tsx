@@ -148,19 +148,43 @@ export function CssClassManager() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold">CSS Class Library</h2>
           <p className="text-sm text-muted-foreground">Manage CSS classes available in the builder</p>
+          <p className="text-xs text-muted-foreground">
+            {categories.length} categories • {totalClassCount} classes
+          </p>
         </div>
-        <Button onClick={() => startEdit()}>
-          <Plus className="mr-2" />
-          Add Category
-        </Button>
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+          <div className="flex items-center gap-2">
+            <Input
+              placeholder="Search categories or classes..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="sm:w-64"
+            />
+            {searchQuery && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+              >
+                <X size={16} />
+              </Button>
+            )}
+          </div>
+          <Button onClick={() => startEdit()}>
+            <Plus className="mr-2" />
+            Add Category
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {categories.map(category => (
+        {filteredCategories.map(category => (
           <Card key={category.name} className="p-4 space-y-3">
             <div className="flex items-start justify-between">
               <h3 className="font-semibold text-lg">{category.name}</h3>
@@ -176,8 +200,8 @@ export function CssClassManager() {
             <Separator />
             <ScrollArea className="h-[120px]">
               <div className="flex flex-wrap gap-1">
-                {category.classes.map((cls, i) => (
-                  <Badge key={i} variant="outline" className="text-xs font-mono">
+                {category.classes.map((cls) => (
+                  <Badge key={cls} variant="outline" className="text-xs font-mono">
                     {cls}
                   </Badge>
                 ))}
@@ -189,6 +213,12 @@ export function CssClassManager() {
           </Card>
         ))}
       </div>
+
+      {filteredCategories.length === 0 && categories.length > 0 && (
+        <Card className="p-12 text-center">
+          <p className="text-muted-foreground">No categories match your search.</p>
+        </Card>
+      )}
 
       {categories.length === 0 && (
         <Card className="p-12 text-center">
@@ -209,7 +239,6 @@ export function CssClassManager() {
                 placeholder="e.g., Layout"
                 value={categoryName}
                 onChange={(e) => setCategoryName(e.target.value)}
-                disabled={!!editingCategory}
               />
             </div>
 
@@ -222,23 +251,48 @@ export function CssClassManager() {
                   placeholder="Enter class name"
                   value={newClass}
                   onChange={(e) => setNewClass(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && addClass()}
-                  className="font-mono"
+                  onKeyDown={(e) => e.key === 'Enter' && canAddClass && addClass()}
+                  className={`font-mono ${invalidNewClassTokens.length > 0 ? 'border-destructive focus-visible:ring-destructive' : ''}`}
                 />
-                <Button onClick={addClass} type="button">
+                <Button onClick={addClass} type="button" disabled={!canAddClass}>
                   <Plus size={16} />
                 </Button>
               </div>
+              {invalidNewClassTokens.length > 0 && (
+                <p className="text-xs text-destructive">
+                  Invalid class names: {invalidNewClassTokens.join(', ')}
+                </p>
+              )}
+              {duplicateNewClassTokens.length > 0 && (
+                <p className="text-xs text-muted-foreground">
+                  Already in category: {duplicateNewClassTokens.join(', ')}
+                </p>
+              )}
+              <p className="text-xs text-muted-foreground">
+                You can add multiple classes separated by spaces.
+              </p>
             </div>
+
+            {classes.length > 0 && (
+              <div className="space-y-2">
+                <Label>Filter Classes</Label>
+                <Input
+                  placeholder="Filter classes..."
+                  value={classSearchQuery}
+                  onChange={(e) => setClassSearchQuery(e.target.value)}
+                  className="font-mono"
+                />
+              </div>
+            )}
 
             {classes.length > 0 && (
               <ScrollArea className="h-[200px] border rounded-lg p-3">
                 <div className="flex flex-wrap gap-2">
-                  {classes.map((cls, i) => (
-                    <Badge key={i} variant="secondary" className="gap-2 font-mono">
+                  {filteredEditorClasses.map((cls) => (
+                    <Badge key={cls} variant="secondary" className="gap-2 font-mono">
                       {cls}
                       <button
-                        onClick={() => removeClass(i)}
+                        onClick={() => removeClass(cls)}
                         className="hover:text-destructive"
                       >
                         <X size={14} />
@@ -247,6 +301,12 @@ export function CssClassManager() {
                   ))}
                 </div>
               </ScrollArea>
+            )}
+
+            {classes.length > 0 && filteredEditorClasses.length === 0 && (
+              <div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground">
+                No classes match this filter.
+              </div>
             )}
           </div>
 
