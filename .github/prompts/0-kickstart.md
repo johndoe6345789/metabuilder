@@ -1,23 +1,28 @@
-Work your way through prompts folder, skip if not needed. Figure it out as you go along. Just get on with it. Commit as you go along with descriptive commit messages, do trunking to main. Don't worry if another bot made changes, just send it. Most bots are just working through a unit testing SDLC workflow.
+# Kickstart
 
-Keep unit tests parameterised and make new test files where possible.
+Use this as the default workflow when starting work in this repo.
 
-Leave TODO comments for missing functionality.
+## Workflow
+1. Skim `docs/INDEX.md` and relevant items in `docs/todo/`.
+2. Use the prompts in `.github/prompts/` as needed:
+   - Plan: `1-plan-feature.prompt.md`
+   - Design: `2-design-component.prompt.md`
+   - Implement: `3-impl-*.prompt.md`
+   - Test: `4-test-*.prompt.md`
+   - Review: `5-review-code.prompt.md`
+   - Deploy: `6-deploy-*.prompt.md`
+   - Maintain: `7-maintain-*.prompt.md`
+   - Docs: `8-docs-feature.prompt.md`
+3. Keep changes small and follow existing patterns; avoid dependency churn.
 
-Check /docs/TODO/*
+## Source + Tests
+- Prefer one focused function (“lambda”) per file; use classes only as containers for related functions (see `.github/prompts/LAMBDA_PROMPT.md`).
+- Keep tests parameterized where it improves coverage (`it.each()`), and keep source↔test naming aligned.
+- Leave TODOs only when you’re explicitly deferring follow-up work.
 
-Use 'act' workflow runner to diagnose the github workflow process.
+## Architecture Guardrails
+- Route data access through DBAL / the `Database` wrapper; don’t bypass it.
+- UI uses Material UI (`@mui/*`); don’t introduce Radix UI or Tailwind. See `docs/RADIX_TO_MUI_MIGRATION.md` and `UI_STANDARDS.md`.
 
-A class is just a container for 1 lambda per file. Refactor any files that step out of line. 1:1 mapping from unit test to file here, so unit test and file have similar names. Resolves any arguments about how big a source code file should be.
-
-See also RADIX_TO_MUI_MIGRATION.md
-
-See also LAMBDA_PROMPT.md
-
-Go in the dbal and ensure that it is well formed, we trust our users data through that layer. Other parts of the system should be wired through this layer.
-
-Think in a abstract way when designing the system, I want it to be super flexible, modular and containerised.
-
----------------------------
-Do what this document says.
-----------------------------
+## CI / Workflows
+- Use `act` to reproduce and debug GitHub Actions locally.
