@@ -54,3 +54,6 @@ DBAL workflows live in `dbal/ts/` (`npm run build`, `npm run test:unit`).
 
 ## CI / Workflows
 - Use `act` to reproduce and debug GitHub Actions locally (see `npm run act`, `npm run act:diagnose`).
+
+If you find nothing wrong with the repository, stop what you are doing right away.
+
