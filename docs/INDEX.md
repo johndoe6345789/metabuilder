@@ -2,6 +2,9 @@
 
 Welcome to the MetaBuilder documentation. This is your central hub for all project information, organized by category for easy navigation.
 
+**�️ [MASTER NAVIGATION](./NAVIGATION.md)** - Complete guide to all documentation  
+**�📋 [View Documentation Organization](./ORGANIZATION.md)** - Understand the doc structure and guidelines
+
 ## 📚 Quick Navigation
 
 ### 🚀 [Getting Started](./getting-started/)

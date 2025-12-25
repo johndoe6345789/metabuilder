@@ -1,0 +1,16 @@
+# Act Configuration for MetaBuilder
+# GitHub Actions Local Workflow Runner Configuration
+# https://github.com/nektos/act
+
+# Use optimized Ubuntu image (faster downloads, sufficient tools)
+# Alternative: catthehacker/ubuntu:act-20.04 (smaller, minimal tools)
+-P ubuntu-latest=catthehacker/ubuntu:act-latest
+
+# Verbose output for debugging
+--verbose
+
+# Use event path for custom payloads
+# --event-path=.actrc.event
+
+# Add capabilities for debugging if needed
+# --container-cap-add SYS_PTRACE

@@ -2,32 +2,33 @@
 
 Complete documentation for the MetaBuilder data-driven application platform.
 
-## 📚 Start Here
+## Start Here
 
-**New to MetaBuilder?** Start with the [Getting Started](./getting-started/) section.
+- **New?** → [Getting Started](./getting-started/)
+- **Want quick navigation?** → [Documentation Index](./INDEX.md)
+- **Looking for something specific?** → Use the quick links below
 
-Already know what you're doing? Jump to the [Documentation Index](./INDEX.md) for detailed navigation.
+## Core Documentation
 
-## Quick Links
-
-| Section | Purpose |
-|---------|---------|
-| 🚀 [Getting Started](./getting-started/) | Setup, quickstart, and product overview |
-| 🏗️ [Architecture](./architecture/) | System design and five-level architecture |
-| 🧪 [Testing](./testing/) | Testing guidelines and best practices |
-| 🔒 [Security](./security/) | Security practices and implementation |
-| 🔧 [API Reference](./api/) | API documentation and integration guides |
-| 📋 [Implementation](./implementation/) | Detailed implementation guides |
-| 🔄 [Refactoring](./refactoring/) | Refactoring strategies and patterns |
-| 💻 [Development](./development/) | Development tools and guides |
+| | | |
+|------|---|---|
+| 🚀 **Getting Started** | [Setup & quickstart](./getting-started/) | First time? Start here |
+| 🏗️ **Architecture** | [Design & concepts](./architecture/) | How MetaBuilder works |
+| 🧪 **Testing** | [Quality & best practices](./testing/) | Testing strategies |
+| 🔧 **Development** | [Tools & workflows](./development/) | Dev environment |
+| 📦 **Packages** | [Building packages](./packages/) | Package system |
+| 🛢️ **Database** | [Schema & design](./database/) | Data layer |
+| 🔄 **DBAL** | [Abstraction layer](./dbal/) | TypeScript & C++ |
+| 🔐 **Security** | [Auth & permissions](./security/) | Security practices |
+| 🚢 **Deployments** | [CI/CD & Docker](./deployments/) | Production |
+| 📚 **Reference** | [Guides & materials](./reference/) | Resources |
 
 ## What is MetaBuilder?
 
-MetaBuilder is a **data-driven, multi-tenant application platform** where:
-
-- **95% of functionality** is defined through JSON and Lua, not TypeScript
-- **Configuration lives** in the database, not in code
-- **Features are modular** as self-contained packages
+MetaBuilder is a **data-driven, multi-tenant platform** where:
+- **95% functionality** in JSON/Lua, not TypeScript
+- **Configuration-driven** from database, not hardcoded
+- **Modular packages** for features and components
 - **Multi-tenancy** is built in by default
 - **Customization** happens without code changes
 

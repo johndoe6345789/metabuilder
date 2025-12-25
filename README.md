@@ -22,6 +22,37 @@ MetaBuilder is a powerful, declarative enterprise data platform built on a 5-lev
 - **Type-Safe** - Full TypeScript support throughout
 - **CI/CD Ready** - Automated testing, linting, and deployment workflows
 
+## 🧪 Testing Workflows Locally
+
+**New:** Test GitHub Actions workflows locally before pushing!
+
+```bash
+# Quick start - runs full CI pipeline
+npm run act
+
+# Test specific components
+npm run act:lint        # ESLint linting
+npm run act:build       # Production build
+npm run act:e2e         # End-to-end tests
+npm run act:typecheck   # TypeScript validation
+
+# Interactive testing
+npm run act:test        # Menu-driven testing
+
+# Diagnostics
+npm run act:diagnose    # Check setup (no Docker required)
+```
+
+See [ACT Cheat Sheet](docs/guides/ACT_CHEAT_SHEET.md) for quick reference or [Act Testing Guide](docs/guides/ACT_TESTING.md) for detailed documentation.
+
+**Benefits:**
+- ✅ Catch CI failures before pushing to GitHub
+- ✅ No more "fix CI" commits
+- ✅ Fast feedback loop (5-10 minutes per run)
+- ✅ Works offline after first run
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -102,6 +133,12 @@ For detailed architecture information, see [Architecture Documentation](./docs/a
 - [Security Guidelines](./docs/SECURITY.md)
 - [Code Documentation Index](./docs/CODE_DOCS_MAPPING.md)
 
+### Local Testing with Act
+
+- [Act Cheat Sheet](./docs/guides/ACT_CHEAT_SHEET.md) - Quick reference for common commands
+- [Act Testing Guide](./docs/guides/ACT_TESTING.md) - Complete documentation
+- [GitHub Actions Reference](./docs/guides/github-actions-local-testing.md) - Technical details
+
 ### Full Documentation
 
 See [docs/README.md](./docs/README.md) for the complete documentation index.
@@ -122,6 +159,14 @@ npm run test:e2e         # Run end-to-end tests
 npm run test:e2e:ui      # Run e2e tests with UI
 npm run lint             # Check code quality
 npm run lint:fix         # Auto-fix linting issues
+
+# Local Workflow Testing (Act)
+npm run act              # Run full CI pipeline locally
+npm run act:lint         # Test linting
+npm run act:build        # Test production build
+npm run act:e2e          # Test E2E tests
+npm run act:test         # Interactive testing menu
+npm run act:diagnose     # Check setup (no Docker)
 
 # Database
 npm run db:generate      # Generate Prisma client
