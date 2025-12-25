@@ -70,10 +70,15 @@ add_executable(conformance_tests
     tests/conformance/runner.cpp
 )
 
+add_executable(http_server_security_test
+    tests/security/http_server_security_test.cpp
+)
+
 target_link_libraries(client_test dbal_core dbal_adapters)
 target_link_libraries(query_test dbal_core dbal_adapters)
 target_link_libraries(integration_tests dbal_core dbal_adapters)
 target_link_libraries(conformance_tests dbal_core dbal_adapters)
+target_link_libraries(http_server_security_test Threads::Threads)
 
 add_test(NAME client_test COMMAND client_test)
 add_test(NAME query_test COMMAND query_test)
