@@ -3,7 +3,7 @@
 import { forwardRef } from 'react'
 import { Avatar as MuiAvatar, AvatarProps as MuiAvatarProps } from '@mui/material'
 
-export interface AvatarProps extends MuiAvatarProps {}
+export type AvatarProps = MuiAvatarProps
 
 const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
   ({ sx, ...props }, ref) => {

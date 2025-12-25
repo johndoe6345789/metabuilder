@@ -3,7 +3,7 @@
 import { forwardRef } from 'react'
 import { Skeleton as MuiSkeleton, SkeletonProps as MuiSkeletonProps } from '@mui/material'
 
-export interface SkeletonProps extends MuiSkeletonProps {}
+export type SkeletonProps = MuiSkeletonProps
 
 const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(
   ({ sx, ...props }, ref) => {
