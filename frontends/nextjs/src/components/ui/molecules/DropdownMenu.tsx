@@ -51,17 +51,18 @@ interface DropdownMenuItemProps {
   children: ReactNode
   disabled?: boolean
   onSelect?: () => void
+  onClick?: () => void
   className?: string
   inset?: boolean
 }
 
 const DropdownMenuItem = forwardRef<HTMLLIElement, DropdownMenuItemProps>(
-  ({ children, disabled, onSelect, inset, ...props }, ref) => {
+  ({ children, disabled, onSelect, onClick, inset, ...props }, ref) => {
     return (
       <MenuItem
         ref={ref}
         disabled={disabled}
-        onClick={onSelect}
+        onClick={onSelect || onClick}
         sx={{
           fontSize: '0.875rem',
           py: 1,
