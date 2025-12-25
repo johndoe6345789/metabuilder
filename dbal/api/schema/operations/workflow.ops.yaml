@@ -1,0 +1,52 @@
+operations:
+  create:
+    description: "Create new workflow definition"
+    input:
+      required: [name, trigger, trigger_config, steps, created_by]
+      optional: [description, is_active]
+    output: Workflow
+    acl_required: ["workflow:create"]
+    validation:
+      - name_unique: "Workflow name must be unique"
+      - trigger_valid: "Trigger must be one of manual, schedule, event, webhook"
+    errors:
+      - CONFLICT: "Workflow with this name already exists"
+      - VALIDATION_ERROR: "Invalid input"
+
+  read:
+    description: "Get workflow by ID"
+    input:
+      required: [id]
+    output: Workflow
+    acl_required: ["workflow:read"]
+    errors:
+      - NOT_FOUND: "Workflow not found"
+
+  update:
+    description: "Update workflow definition"
+    input:
+      required: [id]
+      optional: [name, description, trigger, trigger_config, steps, is_active, created_by]
+    output: Workflow
+    acl_required: ["workflow:update"]
+    errors:
+      - NOT_FOUND: "Workflow not found"
+      - CONFLICT: "Workflow name already exists"
+
+  delete:
+    description: "Delete workflow definition"
+    input:
+      required: [id]
+    output: boolean
+    acl_required: ["workflow:delete"]
+    errors:
+      - NOT_FOUND: "Workflow not found"
+
+  list:
+    description: "List workflows with filtering"
+    input:
+      optional: [trigger, is_active, created_by, page, limit, sort]
+    output: Workflow[]
+    acl_required: ["workflow:read"]
+    pagination: true
+    errors: []
