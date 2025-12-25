@@ -1,8 +1,7 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import { Menu, MenuItem, IconButton, MenuProps, ListItemIcon, ListItemText, Divider, Box } from '@mui/material'
-import { useState } from 'react'
+import { MenuItem, Divider, Box } from '@mui/material'
 
 interface DropdownMenuProps {
   children: ReactNode
