@@ -59,11 +59,12 @@ fi
 # Add platform specification for better compatibility
 ACT_CMD+=(-P ubuntu-latest=catthehacker/ubuntu:act-latest)
 
-# Use bind mount for proper directory mapping (important for workspaces)
-ACT_CMD+=(--bind)
-
 # Disable cache server since it's not available locally
 ACT_CMD+=(--no-cache-server)
+
+# Note: --bind is NOT used because it would share node_modules with native binaries
+# compiled for the host OS (macOS ARM), which crash in the Linux x86_64 container.
+# Without --bind, act uses docker cp which is slower but avoids binary compatibility issues.
 
 # Add any additional arguments
 ACT_CMD+=("${ACT_ARGS[@]}")
