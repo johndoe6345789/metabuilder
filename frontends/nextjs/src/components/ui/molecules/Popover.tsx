@@ -1,8 +1,7 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import { Popover as MuiPopover, PopoverProps as MuiPopoverProps, Box } from '@mui/material'
-import { useState } from 'react'
+import { Box } from '@mui/material'
 
 interface PopoverProps {
   children: ReactNode
