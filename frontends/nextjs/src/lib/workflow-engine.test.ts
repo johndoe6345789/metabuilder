@@ -2,6 +2,25 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { WorkflowEngine, createWorkflowEngine } from './workflow-engine'
 import type { Workflow, WorkflowNode, LuaScript } from './level-types'
 
+// Helper to create a minimal valid WorkflowNode
+function createNode(
+  id: string,
+  type: WorkflowNode['type'],
+  label: string,
+  config: Record<string, any> = {}
+): WorkflowNode {
+  return { id, type, label, config, position: { x: 0, y: 0 } }
+}
+
+// Helper to create a minimal valid Workflow
+function createWorkflow(
+  id: string,
+  name: string,
+  nodes: WorkflowNode[]
+): Workflow {
+  return { id, name, nodes, edges: [], enabled: true }
+}
+
 describe('workflow-engine', () => {
   let engine: WorkflowEngine
 
@@ -20,13 +39,9 @@ describe('workflow-engine', () => {
     it.each([
       {
         name: 'simple trigger workflow',
-        workflow: {
-          id: 'w1',
-          name: 'Simple Workflow',
-          nodes: [
-            { id: 'n1', type: 'trigger', label: 'Start', config: {} },
-          ],
-        } as Workflow,
+        workflow: createWorkflow('w1', 'Simple Workflow', [
+          createNode('n1', 'trigger', 'Start'),
+        ]),
         context: { data: { test: 'value' } },
         expected: {
           success: true,
@@ -36,14 +51,10 @@ describe('workflow-engine', () => {
       },
       {
         name: 'workflow with action node',
-        workflow: {
-          id: 'w2',
-          name: 'Action Workflow',
-          nodes: [
-            { id: 'n1', type: 'trigger', label: 'Start', config: {} },
-            { id: 'n2', type: 'action', label: 'Process', config: { action: 'process' } },
-          ],
-        } as Workflow,
+        workflow: createWorkflow('w2', 'Action Workflow', [
+          createNode('n1', 'trigger', 'Start'),
+          createNode('n2', 'action', 'Process', { action: 'process' }),
+        ]),
         context: { data: { value: 42 } },
         expected: {
           success: true,
@@ -53,14 +64,10 @@ describe('workflow-engine', () => {
       },
       {
         name: 'workflow with transform node',
-        workflow: {
-          id: 'w3',
-          name: 'Transform Workflow',
-          nodes: [
-            { id: 'n1', type: 'trigger', label: 'Start', config: {} },
-            { id: 'n2', type: 'transform', label: 'Double', config: { transform: 'data.value * 2' } },
-          ],
-        } as Workflow,
+        workflow: createWorkflow('w3', 'Transform Workflow', [
+          createNode('n1', 'trigger', 'Start'),
+          createNode('n2', 'transform', 'Double', { transform: 'data.value * 2' }),
+        ]),
         context: { data: { value: 5 } },
         expected: {
           success: true,
@@ -81,15 +88,11 @@ describe('workflow-engine', () => {
     it.each([
       {
         name: 'false condition stops execution',
-        workflow: {
-          id: 'w4',
-          name: 'Condition Workflow',
-          nodes: [
-            { id: 'n1', type: 'trigger', label: 'Start', config: {} },
-            { id: 'n2', type: 'condition', label: 'Check', config: { condition: 'false' } },
-            { id: 'n3', type: 'action', label: 'Never Run', config: {} },
-          ],
-        } as Workflow,
+        workflow: createWorkflow('w4', 'Condition Workflow', [
+          createNode('n1', 'trigger', 'Start'),
+          createNode('n2', 'condition', 'Check', { condition: 'false' }),
+          createNode('n3', 'action', 'Never Run'),
+        ]),
         context: { data: {} },
         expected: {
           success: true,
@@ -99,15 +102,11 @@ describe('workflow-engine', () => {
       },
       {
         name: 'true condition continues execution',
-        workflow: {
-          id: 'w5',
-          name: 'Pass Condition',
-          nodes: [
-            { id: 'n1', type: 'trigger', label: 'Start', config: {} },
-            { id: 'n2', type: 'condition', label: 'Check', config: { condition: 'true' } },
-            { id: 'n3', type: 'action', label: 'Should Run', config: {} },
-          ],
-        } as Workflow,
+        workflow: createWorkflow('w5', 'Pass Condition', [
+          createNode('n1', 'trigger', 'Start'),
+          createNode('n2', 'condition', 'Check', { condition: 'true' }),
+          createNode('n3', 'action', 'Should Run'),
+        ]),
         context: { data: {} },
         expected: {
           success: true,
@@ -117,14 +116,10 @@ describe('workflow-engine', () => {
       },
       {
         name: 'data-based condition',
-        workflow: {
-          id: 'w6',
-          name: 'Data Condition',
-          nodes: [
-            { id: 'n1', type: 'trigger', label: 'Start', config: {} },
-            { id: 'n2', type: 'condition', label: 'Check Value', config: { condition: 'data.value > 10' } },
-          ],
-        } as Workflow,
+        workflow: createWorkflow('w6', 'Data Condition', [
+          createNode('n1', 'trigger', 'Start'),
+          createNode('n2', 'condition', 'Check Value', { condition: 'data.value > 10' }),
+        ]),
         context: { data: { value: 5 } },
         expected: {
           success: true,
@@ -146,39 +141,27 @@ describe('workflow-engine', () => {
     it.each([
       {
         name: 'node with unknown type',
-        workflow: {
-          id: 'w7',
-          name: 'Invalid Node',
-          nodes: [
-            { id: 'n1', type: 'unknown' as any, label: 'Bad Node', config: {} },
-          ],
-        } as Workflow,
+        workflow: createWorkflow('w7', 'Invalid Node', [
+          createNode('n1', 'unknown' as any, 'Bad Node'),
+        ]),
         context: { data: {} },
         expectedError: 'Unknown node type',
       },
       {
         name: 'invalid condition syntax',
-        workflow: {
-          id: 'w8',
-          name: 'Bad Condition',
-          nodes: [
-            { id: 'n1', type: 'trigger', label: 'Start', config: {} },
-            { id: 'n2', type: 'condition', label: 'Invalid', config: { condition: 'invalid syntax !' } },
-          ],
-        } as Workflow,
+        workflow: createWorkflow('w8', 'Bad Condition', [
+          createNode('n1', 'trigger', 'Start'),
+          createNode('n2', 'condition', 'Invalid', { condition: 'invalid syntax !' }),
+        ]),
         context: { data: {} },
         expectedError: 'failed',
       },
       {
         name: 'invalid transform syntax',
-        workflow: {
-          id: 'w9',
-          name: 'Bad Transform',
-          nodes: [
-            { id: 'n1', type: 'trigger', label: 'Start', config: {} },
-            { id: 'n2', type: 'transform', label: 'Invalid', config: { transform: 'this is not valid javascript' } },
-          ],
-        } as Workflow,
+        workflow: createWorkflow('w9', 'Bad Transform', [
+          createNode('n1', 'trigger', 'Start'),
+          createNode('n2', 'transform', 'Invalid', { transform: 'this is not valid javascript' }),
+        ]),
         context: { data: {} },
         expectedError: 'Transform failed',
       },
@@ -196,46 +179,27 @@ describe('workflow-engine', () => {
     it.each([
       {
         name: 'simple Lua return',
-        node: {
-          id: 'n1',
-          type: 'lua',
-          label: 'Lua Node',
-          config: { code: 'return 42' },
-        } as WorkflowNode,
+        node: createNode('n1', 'lua', 'Lua Node', { code: 'return 42' }),
         data: {},
         expectedOutput: 42,
         expectedSuccess: true,
       },
       {
         name: 'Lua with data access',
-        node: {
-          id: 'n2',
-          type: 'lua',
-          label: 'Data Access',
-          config: { code: 'return context.data.value * 2' },
-        } as WorkflowNode,
+        node: createNode('n2', 'lua', 'Data Access', { code: 'return context.data.value * 2' }),
         data: { value: 21 },
         expectedOutput: 42,
         expectedSuccess: true,
       },
       {
         name: 'Lua with default code',
-        node: {
-          id: 'n3',
-          type: 'lua',
-          label: 'Default',
-          config: {},
-        } as WorkflowNode,
+        node: createNode('n3', 'lua', 'Default'),
         data: { test: 'value' },
         expectedOutput: { test: 'value' },
         expectedSuccess: true,
       },
     ])('should execute $name', async ({ node, data, expectedOutput, expectedSuccess }) => {
-      const workflow: Workflow = {
-        id: 'w-lua',
-        name: 'Lua Test',
-        nodes: [node],
-      }
+      const workflow = createWorkflow('w-lua', 'Lua Test', [node])
 
       const result = await engine.executeWorkflow(workflow, { data })
 
@@ -249,31 +213,17 @@ describe('workflow-engine', () => {
         scripts: [
           { id: 'script1', name: 'Test Script', code: 'return 100', description: '' },
         ] as LuaScript[],
-        node: {
-          id: 'n1',
-          type: 'lua',
-          label: 'Script Ref',
-          config: { scriptId: 'script1' },
-        } as WorkflowNode,
+        node: createNode('n1', 'lua', 'Script Ref', { scriptId: 'script1' }),
         expectedOutput: 100,
       },
       {
         name: 'Lua with missing script',
         scripts: [] as LuaScript[],
-        node: {
-          id: 'n2',
-          type: 'lua',
-          label: 'Missing Script',
-          config: { scriptId: 'nonexistent' },
-        } as WorkflowNode,
+        node: createNode('n2', 'lua', 'Missing Script', { scriptId: 'nonexistent' }),
         expectedError: 'Script not found',
       },
     ])('should handle $name', async ({ scripts, node, expectedOutput, expectedError }) => {
-      const workflow: Workflow = {
-        id: 'w-script',
-        name: 'Script Test',
-        nodes: [node],
-      }
+      const workflow = createWorkflow('w-script', 'Script Test', [node])
 
       const result = await engine.executeWorkflow(workflow, { data: {}, scripts })
 
@@ -298,18 +248,9 @@ describe('workflow-engine', () => {
         expectedError: true,
       },
     ])('should handle Lua error: $name', async ({ code, expectedError }) => {
-      const workflow: Workflow = {
-        id: 'w-error',
-        name: 'Error Test',
-        nodes: [
-          {
-            id: 'n1',
-            type: 'lua',
-            label: 'Error Node',
-            config: { code },
-          },
-        ],
-      }
+      const workflow = createWorkflow('w-error', 'Error Test', [
+        createNode('n1', 'lua', 'Error Node', { code }),
+      ])
 
       const result = await engine.executeWorkflow(workflow, { data: {} })
 
@@ -321,23 +262,14 @@ describe('workflow-engine', () => {
 
     it('should capture Lua security warnings', async () => {
       // Test with code that might trigger security warnings
-      const workflow: Workflow = {
-        id: 'w-security',
-        name: 'Security Test',
-        nodes: [
-          {
-            id: 'n1',
-            type: 'lua',
-            label: 'Security Check',
-            config: {
-              code: `
-                -- Attempting unsafe operations
-                return 42
-              `,
-            },
-          },
-        ],
-      }
+      const workflow = createWorkflow('w-security', 'Security Test', [
+        createNode('n1', 'lua', 'Security Check', {
+          code: `
+            -- Attempting unsafe operations
+            return 42
+          `,
+        }),
+      ])
 
       const result = await engine.executeWorkflow(workflow, { data: {} })
 
@@ -349,15 +281,11 @@ describe('workflow-engine', () => {
 
   describe('logging and context', () => {
     it('should capture logs from all nodes', async () => {
-      const workflow: Workflow = {
-        id: 'w-log',
-        name: 'Log Test',
-        nodes: [
-          { id: 'n1', type: 'trigger', label: 'Start', config: {} },
-          { id: 'n2', type: 'action', label: 'Action', config: { action: 'test' } },
-          { id: 'n3', type: 'transform', label: 'Transform', config: { transform: '42' } },
-        ],
-      }
+      const workflow = createWorkflow('w-log', 'Log Test', [
+        createNode('n1', 'trigger', 'Start'),
+        createNode('n2', 'action', 'Action', { action: 'test' }),
+        createNode('n3', 'transform', 'Transform', { transform: '42' }),
+      ])
 
       const result = await engine.executeWorkflow(workflow, { data: {} })
 
@@ -369,18 +297,9 @@ describe('workflow-engine', () => {
 
     it('should pass user context to nodes', async () => {
       const user = { id: 'user1', name: 'Test User' }
-      const workflow: Workflow = {
-        id: 'w-user',
-        name: 'User Context',
-        nodes: [
-          {
-            id: 'n1',
-            type: 'lua',
-            label: 'Get User',
-            config: { code: 'return context.user.name' },
-          },
-        ],
-      }
+      const workflow = createWorkflow('w-user', 'User Context', [
+        createNode('n1', 'lua', 'Get User', { code: 'return context.user.name' }),
+      ])
 
       const result = await engine.executeWorkflow(workflow, { data: {}, user })
 
@@ -396,16 +315,12 @@ describe('workflow-engine', () => {
       // n2: transforms data.value to data.value + 10
       // n3: condition evaluates data > 50, passes through boolean (true)
       // n4: transforms data (now true/1) * 2 = 2
-      const workflow: Workflow = {
-        id: 'w-complex',
-        name: 'Complex Workflow',
-        nodes: [
-          { id: 'n1', type: 'trigger', label: 'Start', config: {} },
-          { id: 'n2', type: 'transform', label: 'Add 10', config: { transform: 'data.value + 10' } },
-          { id: 'n3', type: 'condition', label: 'Check > 50', config: { condition: 'data > 50' } },
-          { id: 'n4', type: 'transform', label: 'Double', config: { transform: 'data * 2' } },
-        ],
-      }
+      const workflow = createWorkflow('w-complex', 'Complex Workflow', [
+        createNode('n1', 'trigger', 'Start'),
+        createNode('n2', 'transform', 'Add 10', { transform: 'data.value + 10' }),
+        createNode('n3', 'condition', 'Check > 50', { condition: 'data > 50' }),
+        createNode('n4', 'transform', 'Double', { transform: 'data * 2' }),
+      ])
 
       const result = await engine.executeWorkflow(workflow, { data: { value: 45 } })
 
@@ -417,16 +332,12 @@ describe('workflow-engine', () => {
     })
 
     it('should handle workflow with early termination', async () => {
-      const workflow: Workflow = {
-        id: 'w-early',
-        name: 'Early Stop',
-        nodes: [
-          { id: 'n1', type: 'trigger', label: 'Start', config: {} },
-          { id: 'n2', type: 'condition', label: 'Always False', config: { condition: 'false' } },
-          { id: 'n3', type: 'action', label: 'Never Runs', config: {} },
-          { id: 'n4', type: 'action', label: 'Also Never Runs', config: {} },
-        ],
-      }
+      const workflow = createWorkflow('w-early', 'Early Stop', [
+        createNode('n1', 'trigger', 'Start'),
+        createNode('n2', 'condition', 'Always False', { condition: 'false' }),
+        createNode('n3', 'action', 'Never Runs'),
+        createNode('n4', 'action', 'Also Never Runs'),
+      ])
 
       const result = await engine.executeWorkflow(workflow, { data: {} })
 
