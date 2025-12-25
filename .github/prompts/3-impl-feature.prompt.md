@@ -2,6 +2,8 @@
 
 Implement following MetaBuilder conventions:
 
+Run app commands from `frontends/nextjs/` unless a step says otherwise.
+
 ## Implementation Order
 1. **Schema first**: Update `prisma/schema.prisma` if needed
    ```bash

@@ -1,5 +1,7 @@
 # Add DBAL Entity
 
+Run DBAL commands from `dbal/`.
+
 Add a new entity to the DBAL following the API-first approach:
 
 1. **Define entity** in `dbal/api/schema/entities/{name}.yaml`:

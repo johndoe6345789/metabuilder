@@ -2,6 +2,8 @@
 
 Add or modify database schema:
 
+Run app commands from `frontends/nextjs/` unless a step says otherwise.
+
 ## 1. Update Schema
 Edit `prisma/schema.prisma`:
 ```prisma
