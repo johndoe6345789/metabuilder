@@ -4,9 +4,10 @@ import type { User } from '../../types/level-types'
 /**
  * Get all users from database
  */
-export async function getUsers(): Promise<User[]> {
+export async function getUsers(options?: { tenantId?: string }): Promise<User[]> {
   const adapter = getAdapter()
-  const result = await adapter.list('User')
+  const listOptions = options?.tenantId ? { filter: { tenantId: options.tenantId } } : undefined
+  const result = listOptions ? await adapter.list('User', listOptions) : await adapter.list('User')
   return (result.data as any[]).map((u) => ({
     id: u.id,
     username: u.username,

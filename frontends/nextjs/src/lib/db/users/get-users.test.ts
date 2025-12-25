@@ -19,6 +19,8 @@ describe('getUsers', () => {
       name: 'empty array when no users',
       dbData: [],
       expected: [],
+      options: undefined,
+      expectedArgs: ['User'],
     },
     {
       name: 'single user',
@@ -48,6 +50,8 @@ describe('getUsers', () => {
           isInstanceOwner: false,
         },
       ],
+      options: undefined,
+      expectedArgs: ['User'],
     },
     {
       name: 'multiple users with all fields',
@@ -99,13 +103,46 @@ describe('getUsers', () => {
           isInstanceOwner: true,
         },
       ],
+      options: undefined,
+      expectedArgs: ['User'],
     },
-  ])('should return $name', async ({ dbData, expected }) => {
+    {
+      name: 'filtered by tenant',
+      dbData: [
+        {
+          id: 'user_1',
+          username: 'tenant-user',
+          email: 'tenant@example.com',
+          role: 'admin',
+          profilePicture: null,
+          bio: null,
+          createdAt: BigInt(3000),
+          tenantId: 'tenant_2',
+          isInstanceOwner: false,
+        },
+      ],
+      expected: [
+        {
+          id: 'user_1',
+          username: 'tenant-user',
+          email: 'tenant@example.com',
+          role: 'admin',
+          profilePicture: undefined,
+          bio: undefined,
+          createdAt: 3000,
+          tenantId: 'tenant_2',
+          isInstanceOwner: false,
+        },
+      ],
+      options: { tenantId: 'tenant_2' },
+      expectedArgs: ['User', { filter: { tenantId: 'tenant_2' } }],
+    },
+  ])('should return $name', async ({ dbData, expected, options, expectedArgs }) => {
     mockList.mockResolvedValue({ data: dbData })
 
-    const result = await getUsers()
+    const result = await getUsers(options)
 
-    expect(mockList).toHaveBeenCalledWith('User')
+    expect(mockList).toHaveBeenCalledWith(...expectedArgs)
     expect(result).toEqual(expected)
   })
 })

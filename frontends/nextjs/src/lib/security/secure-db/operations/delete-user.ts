@@ -1,6 +1,6 @@
-import { prisma } from '../../db/prisma'
-import type { SecurityContext } from './types'
-import { executeQuery } from './execute-query'
+import { Database } from '@/lib/db'
+import type { SecurityContext } from '../types'
+import { executeQuery } from '../execute-query'
 
 /**
  * Delete a user with security checks
@@ -11,7 +11,15 @@ export async function deleteUser(ctx: SecurityContext, userId: string): Promise<
     'user',
     'DELETE',
     async () => {
-      await prisma.user.delete({ where: { id: userId } })
+      const tenantId = ctx.user.tenantId
+      if (tenantId) {
+        const existing = await Database.getUserById(userId, { tenantId })
+        if (!existing) {
+          throw new Error('User not found or access denied')
+        }
+      }
+
+      await Database.deleteUser(userId)
     },
     userId
   )

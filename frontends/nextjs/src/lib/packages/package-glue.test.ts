@@ -1,5 +1,5 @@
 /**
- * Tests for package-glue.ts - Package registry utilities
+ * Tests for package-glue module - Package registry utilities
  * Following parameterized test pattern per project conventions
  */
 

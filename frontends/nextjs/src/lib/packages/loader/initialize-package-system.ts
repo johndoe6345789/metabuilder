@@ -1,25 +1,15 @@
 import { PACKAGE_CATALOG } from '../package-catalog'
 import { loadPackageComponents } from '../declarative-component-renderer'
 import { buildPackageRegistry, exportAllPackagesForSeed } from '../package-glue'
-import { setPackageRegistry } from './get-package-registry'
-import { emptyModularPackageSeedData, type ModularPackageSeedData } from './modular-package-seed-data'
-
-let isInitialized = false
-let modularPackageSeedData: ModularPackageSeedData | null = null
-
-/**
- * Get cached modular package seed data
- */
-export function getModularSeedData(): ModularPackageSeedData {
-  return modularPackageSeedData ?? emptyModularPackageSeedData
-}
+import { setPackageRegistry } from './set-package-registry'
+import { packageSystemState } from './package-system-state'
 
 /**
  * Initializes the package system by loading all available packages
  * This function is idempotent - calling multiple times is safe
  */
 export async function initializePackageSystem(): Promise<void> {
-  if (isInitialized) return
+  if (packageSystemState.isInitialized) return
 
   // Load modular packages from /packages folder structure
   try {
@@ -27,7 +17,7 @@ export async function initializePackageSystem(): Promise<void> {
     setPackageRegistry(packageRegistry)
 
     const seedData = exportAllPackagesForSeed(packageRegistry)
-    modularPackageSeedData = seedData
+    packageSystemState.modularPackageSeedData = seedData
 
     console.log('Loaded modular package data:', {
       components: seedData.components?.length || 0,
@@ -50,5 +40,5 @@ export async function initializePackageSystem(): Promise<void> {
     }
   })
 
-  isInitialized = true
+  packageSystemState.isInitialized = true
 }

@@ -28,6 +28,7 @@ Core system architecture:
 - [architecture/database.md](./architecture/database.md) - Database design
 - [architecture/generic-page-system.md](./architecture/generic-page-system.md) - Component rendering
 - [architecture/declarative-components.md](./architecture/declarative-components.md) - Component architecture
+- [architecture/css-as-abstract-system.md](./architecture/css-as-abstract-system.md) - CSS as data and GUI mapping
 - [architecture/deployment.md](./architecture/deployment.md) - Deployment patterns
 - [architecture/ARCHITECTURE_DIAGRAM.md](./architecture/ARCHITECTURE_DIAGRAM.md) - Visual architecture
 
@@ -193,7 +194,7 @@ TODO: docs/src/ is missing; add the folder or update/remove the src links below.
 - **Main Categories**: 23 directories
 - **Quick References**: 10+ cheat sheets
 - **Implementation Guides**: 15+ detailed guides
-- **Architecture Docs**: 8+ architecture files
+- **Architecture Docs**: 9+ architecture files
 
 ---
 

@@ -1,7 +1,7 @@
-import { prisma } from '../../db/prisma'
-import type { User } from '../../types/level-types'
-import type { SecurityContext } from './types'
-import { executeQuery } from './execute-query'
+import { Database } from '@/lib/db'
+import type { User } from '@/lib/types/level-types'
+import type { SecurityContext } from '../types'
+import { executeQuery } from '../execute-query'
 
 /**
  * Get a user by ID with security checks
@@ -11,21 +11,11 @@ export async function getUserById(ctx: SecurityContext, userId: string): Promise
     ctx,
     'user',
     'READ',
-    async () => {
-      const user = await prisma.user.findUnique({ where: { id: userId } })
-      if (!user) return null
-      return {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role as User['role'],
-        profilePicture: user.profilePicture || undefined,
-        bio: user.bio || undefined,
-        createdAt: Number(user.createdAt),
-        tenantId: user.tenantId || undefined,
-        isInstanceOwner: user.isInstanceOwner,
-      }
-    },
+    async () =>
+      Database.getUserById(
+        userId,
+        ctx.user.tenantId ? { tenantId: ctx.user.tenantId } : undefined
+      ),
     userId
   )
 }

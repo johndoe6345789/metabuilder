@@ -20,6 +20,7 @@ Understand the system design:
 - **[Database Design](./architecture/database.md)** - Database schema and structure
 - **[Packages System](./architecture/packages.md)** - Package-based components
 - **[Generic Components](./architecture/generic-page-system.md)** - Rendering architecture
+- **[CSS as an Abstract System](./architecture/css-as-abstract-system.md)** - Styling as data and GUI mapping
 
 ### 🧪 [Testing](./testing/)
 Everything about testing the application:
@@ -111,7 +112,8 @@ docs/
 │   ├── data-driven-architecture.md
 │   ├── database.md
 │   ├── packages.md
-│   └── generic-page-system.md
+│   ├── generic-page-system.md
+│   └── css-as-abstract-system.md
 │
 ├── testing/                           # Test documentation
 │   ├── TESTING_GUIDELINES.md

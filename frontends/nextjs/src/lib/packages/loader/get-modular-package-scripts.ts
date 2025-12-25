@@ -1,4 +1,5 @@
-import { initializePackageSystem, getModularSeedData } from './initialize-package-system'
+import { getModularSeedData } from './get-modular-seed-data'
+import { initializePackageSystem } from './initialize-package-system'
 
 /**
  * Get modular package scripts

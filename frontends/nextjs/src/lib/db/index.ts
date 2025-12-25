@@ -64,6 +64,7 @@ export class Database {
 
   // Users
   static getUsers = users.getUsers
+  static getUserById = users.getUserById
   static setUsers = users.setUsers
   static addUser = users.addUser
   static updateUser = users.updateUser

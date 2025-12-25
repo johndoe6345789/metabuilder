@@ -13,6 +13,7 @@ Comprehensive guides to understanding MetaBuilder's system architecture.
 
 - **[Database Design](./database.md)** - Schema and structure
 - **[Declarative Components](./declarative-components.md)** - Component definition patterns
+- **[CSS as an Abstract System](./css-as-abstract-system.md)** - Styling as data and GUI mapping
 - **[Testing Architecture](./testing.md)** - Testing strategy
 - **[Deployment](./deployment.md)** - Production deployment
 
