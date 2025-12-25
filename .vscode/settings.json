@@ -17,6 +17,8 @@
     },
     "editor.inlineSuggest.enabled": true,
     "chat.experimental.yolo": true,
+    "github.copilot.chat.agent.autoApprove": true,
+    "chat.tools.autoApprove": true,
     "python-envs.defaultEnvManager": "ms-python.python:system",
     "python-envs.pythonProjects": [],
     "chat.mcp.serverSampling": {
