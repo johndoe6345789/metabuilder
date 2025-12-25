@@ -1,4 +1,5 @@
 import type { SecurityContext, OperationType, ResourceType, AuditLog } from './types'
+import { addAuditLog } from './audit-log-store'
 
 /**
  * Log an operation for audit trail
@@ -25,13 +26,10 @@ export async function logOperation(
   }
   
   try {
-    // TODO: Replace with proper audit log storage
-    // For now, just log to console in development
+    addAuditLog(log)
     if (process.env.NODE_ENV === 'development') {
       console.log('[AUDIT]', log)
     }
-    // In production, this would write to a persistent audit log table
-    // await Database.addAuditLog(log)
   } catch (error) {
     console.error('Failed to log operation:', error)
   }

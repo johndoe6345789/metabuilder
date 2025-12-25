@@ -1,4 +1,5 @@
 import type { AuditLog, SecurityContext } from '../types'
+import { listAuditLogs } from '../audit-log-store'
 
 /**
  * Fetch audit logs with role checks
@@ -11,7 +12,5 @@ export async function getAuditLogs(
     throw new Error('Access denied. Only god-tier users can view audit logs.')
   }
 
-  // TODO: Replace with proper audit log storage query using the requested limit.
-  void limit
-  return []
+  return listAuditLogs(limit)
 }
