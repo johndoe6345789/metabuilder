@@ -27,4 +27,5 @@ export class SandboxedLuaEngine {
   destroy = destroy
 }
 
-export { createSandboxedLuaEngine } from './create-sandboxed-lua-engine'
+// Note: createSandboxedLuaEngine is in a separate file to avoid circular deps
+// Import it directly from './create-sandboxed-lua-engine' if needed
