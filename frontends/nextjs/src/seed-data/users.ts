@@ -3,7 +3,7 @@ import type { User } from '@/lib/level-types'
 import { getScrambledPassword } from '@/lib/auth'
 
 export async function initializeUsers() {
-  const existingUsers = await Database.getUsers()
+  const existingUsers = await Database.getUsers({ scope: 'all' })
   if (existingUsers.length > 0) {
     return
   }

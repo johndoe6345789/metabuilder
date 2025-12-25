@@ -34,7 +34,7 @@ export function Level2({ user, onLogout, onNavigate }: Level2Props) {
 
   useEffect(() => {
     const loadData = async () => {
-      const loadedUsers = await Database.getUsers()
+      const loadedUsers = await Database.getUsers({ scope: 'all' })
       setUsers(loadedUsers)
       const foundUser = loadedUsers.find(u => u.id === user.id)
       if (foundUser) {

@@ -53,7 +53,7 @@ export function DatabaseManager() {
         hierarchy,
         configs,
       ] = await Promise.all([
-        Database.getUsers(),
+        Database.getUsers({ scope: 'all' }),
         Database.getCredentials(),
         Database.getWorkflows(),
         Database.getLuaScripts(),

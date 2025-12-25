@@ -48,7 +48,7 @@ function AppOriginal() {
       await initializePackageSystem()
       await Database.initializeDatabase()
       await seedDatabase()
-      const loadedUsers = await Database.getUsers()
+      const loadedUsers = await Database.getUsers({ scope: 'all' })
       setUsers(loadedUsers)
       setIsInitialized(true)
     }

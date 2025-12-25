@@ -30,7 +30,7 @@ export function UserManagement() {
   }, [])
 
   const loadUsers = async () => {
-    const loadedUsers = await Database.getUsers()
+    const loadedUsers = await Database.getUsers({ scope: 'all' })
     setUsers(loadedUsers)
   }
 

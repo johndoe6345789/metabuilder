@@ -62,7 +62,7 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
   const loadData = async () => {
     const [tenantsData, usersData, requestsData] = await Promise.all([
       Database.getTenants(),
-      Database.getUsers(),
+      Database.getUsers({ scope: 'all' }),
       Database.getPowerTransferRequests(),
     ])
     

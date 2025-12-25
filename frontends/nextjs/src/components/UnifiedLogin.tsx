@@ -56,7 +56,7 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
       return
     }
 
-    const users = await Database.getUsers()
+    const users = await Database.getUsers({ scope: 'all' })
     const user = users.find(u => u.email === resetEmail)
     
     if (!user) {

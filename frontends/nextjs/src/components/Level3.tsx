@@ -44,7 +44,7 @@ export function Level3({ user, onLogout, onNavigate }: Level3Props) {
 
   useEffect(() => {
     const loadData = async () => {
-      const loadedUsers = await Database.getUsers()
+      const loadedUsers = await Database.getUsers({ scope: 'all' })
       setUsers(loadedUsers)
       const loadedComments = await Database.getComments()
       setComments(loadedComments)
