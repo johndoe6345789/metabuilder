@@ -35,13 +35,10 @@ Run app workflows from `frontends/nextjs/`:
 - Function coverage: `npm run test:check-functions`
 - Coverage report: `npm run test:coverage:report`
 - E2E: `npm run test:e2e`
-- Prisma (schema is in `prisma/schema.prisma`; requires `DATABASE_URL`):
-  - If `npm run db:*` can’t find the schema from `frontends/nextjs/`, run:
-    - `DATABASE_URL="file:./dev.db" npx prisma generate --schema ../../prisma/schema.prisma`
-    - `DATABASE_URL="file:./dev.db" npx prisma db push --schema ../../prisma/schema.prisma`
-    - `DATABASE_URL="file:./dev.db" npx prisma migrate deploy --schema ../../prisma/schema.prisma`
-    - `DATABASE_URL="file:./dev.db" npx prisma validate --schema ../../prisma/schema.prisma`
-  - Otherwise: `npm run db:generate` / `npm run db:push` / `npm run db:migrate`
+- Prisma (schema in `prisma/schema.prisma`, config in `frontends/nextjs/prisma.config.ts`):
+  - First-time setup: copy `.env.example` to `.env` (or ensure `DATABASE_URL` is set)
+  - Commands: `npm run db:generate` / `npm run db:push` / `npm run db:migrate`
+  - Validate: `npx prisma validate`
 - Coverage output: `frontends/nextjs/coverage/`
 
 DBAL workflows live in `dbal/ts/` (`npm run build`, `npm run test:unit`).
