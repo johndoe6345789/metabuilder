@@ -289,19 +289,19 @@ export function WorkflowEditor({ workflows, onWorkflowsChange, scripts = [] }: W
                   <Label className="text-base">Nodes</Label>
                   <div className="flex gap-2">
                     <Button size="sm" variant="outline" onClick={() => handleAddNode('trigger')}>
-                      <Lightning className="mr-2" size={14} />
+                      <LightningIcon sx={{ fontSize: 14, mr: 1 }} />
                       Trigger
                     </Button>
                     <Button size="sm" variant="outline" onClick={() => handleAddNode('action')}>
-                      <ArrowRight className="mr-2" size={14} />
+                      <ArrowRightIcon sx={{ fontSize: 14, mr: 1 }} />
                       Action
                     </Button>
                     <Button size="sm" variant="outline" onClick={() => handleAddNode('condition')}>
-                      <GitBranch className="mr-2" size={14} />
+                      <GitBranchIcon sx={{ fontSize: 14, mr: 1 }} />
                       Condition
                     </Button>
                     <Button size="sm" variant="outline" onClick={() => handleAddNode('lua')}>
-                      <Code className="mr-2" size={14} />
+                      <CodeIcon sx={{ fontSize: 14, mr: 1 }} />
                       Lua
                     </Button>
                   </div>
@@ -428,7 +428,7 @@ export function WorkflowEditor({ workflows, onWorkflowsChange, scripts = [] }: W
                               size="sm"
                               onClick={() => handleDeleteNode(node.id)}
                             >
-                              <Trash size={16} />
+                              <DeleteIcon sx={{ fontSize: 16 }} />
                             </Button>
                           </div>
                         </CardContent>
