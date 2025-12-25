@@ -37,7 +37,7 @@ while :; do
   sleep 90
 
   # IMPORTANT: use normal ASCII quotes, not “smart quotes”.
-  codex exec --full-auto "$KICKSTART_FILE" || exit $?
+  codex exec --full-auto --cd="" "$KICKSTART_FILE" || exit $?
 done
 
 
