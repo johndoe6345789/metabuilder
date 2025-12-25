@@ -47,5 +47,15 @@
                 "copilot/oswe-vscode-prime"
             ]
         }
-    }
+    },
+"chat.tools.urls.autoApprove": {
+    "http://localhost:*": true,
+    "http://127.0.0.1:*": true,
+    "https://localhost:*": true,
+    "https://github.com/rmac/*": true,
+    "https://api.github.com/*": true,
+    "https://docs.github.com/*": true,
+    "https://www.npmjs.com/*": true,
+    "https://registry.npmjs.org/*": true
+}
 }
