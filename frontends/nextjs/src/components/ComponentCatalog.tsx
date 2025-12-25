@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ComponentType } from 'react'
 import { Box, Card, InputAdornment, Stack, TextField, Typography } from '@mui/material'
 import type { SvgIconProps } from '@mui/material'
 import CropFreeIcon from '@mui/icons-material/CropFree'
@@ -26,7 +26,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import { componentCatalog } from '@/lib/component-catalog'
 import type { ComponentDefinition } from '@/lib/builder-types'
 
-const iconMap: Record<string, React.ComponentType<SvgIconProps>> = {
+const iconMap: Record<string, ComponentType<SvgIconProps>> = {
   FrameCorners: CropFreeIcon,
   Columns: ViewColumnIcon,
   GridFour: GridViewIcon,
