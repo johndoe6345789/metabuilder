@@ -22,8 +22,8 @@ const { Database, MockLuaEngine } = vi.hoisted(() => {
   }
 })
 
-vi.mock('./database', () => ({ Database }))
-vi.mock('./lua-engine', () => ({ LuaEngine: MockLuaEngine }))
+vi.mock('../database', () => ({ Database }))
+vi.mock('../lua-engine', () => ({ LuaEngine: MockLuaEngine }))
 
 import { PageRenderer, getPageRenderer } from './page-renderer'
 
