@@ -1,13 +1,15 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import { Chip, ChipProps } from '@mui/material'
+import { Chip, ChipProps, SxProps, Theme } from '@mui/material'
 
 export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline'
 
-export interface BadgeProps extends Omit<ChipProps, 'variant'> {
+export interface BadgeProps {
   variant?: BadgeVariant
   children?: ReactNode
+  className?: string
+  sx?: SxProps<Theme>
 }
 
 const variantMap: Record<BadgeVariant, { variant: ChipProps['variant']; color?: ChipProps['color']; sx?: object }> = {
@@ -18,7 +20,7 @@ const variantMap: Record<BadgeVariant, { variant: ChipProps['variant']; color?: 
 }
 
 const Badge = forwardRef<HTMLDivElement, BadgeProps>(
-  ({ variant = 'default', children, sx, ...props }, ref) => {
+  ({ variant = 'default', children, className, sx, ...props }, ref) => {
     const config = variantMap[variant]
 
     return (
@@ -28,6 +30,7 @@ const Badge = forwardRef<HTMLDivElement, BadgeProps>(
         variant={config.variant}
         color={config.color}
         size="small"
+        className={className}
         sx={{
           height: 'auto',
           py: 0.25,
@@ -38,7 +41,6 @@ const Badge = forwardRef<HTMLDivElement, BadgeProps>(
           ...config.sx,
           ...sx,
         }}
-        {...props}
       />
     )
   }
