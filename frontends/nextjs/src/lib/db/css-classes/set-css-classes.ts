@@ -9,7 +9,9 @@ export async function setCssClasses(classes: CssCategory[]): Promise<void> {
   // Delete all existing
   const existing = await adapter.list('CssCategory')
   for (const item of existing.data as any[]) {
-    await adapter.delete('CssCategory', item.name)
+    if (item?.id) {
+      await adapter.delete('CssCategory', item.id)
+    }
   }
   // Create new ones
   for (const category of classes) {
