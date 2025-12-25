@@ -116,8 +116,13 @@ declare module '@/dbal/ts/src/blob' {
     [key: string]: any
   }
 
+  export interface BlobListItem {
+    key: string
+    [key: string]: any
+  }
+
   export interface BlobListResult {
-    items: string[]
+    items: BlobListItem[]
     [key: string]: any
   }
 
@@ -135,9 +140,10 @@ declare module '@/dbal/ts/src/blob' {
 
 declare module '@/dbal/ts/src/blob/tenant-aware-storage' {
   import type { BlobStorage, BlobMetadata, BlobListResult } from '@/dbal/ts/src/blob'
+  import type { InMemoryTenantManager } from '@/dbal/ts/src/core/tenant-context'
   
   export class TenantAwareBlobStorage implements BlobStorage {
-    constructor(storage: BlobStorage, tenantId: string)
+    constructor(storage: BlobStorage, tenantManager: InMemoryTenantManager, ...args: any[])
     upload(key: string, data: Buffer | string, metadata?: BlobMetadata): Promise<string>
     download(key: string): Promise<Buffer>
     delete(key: string): Promise<void>
