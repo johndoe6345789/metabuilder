@@ -11,3 +11,10 @@ Use 'act' workflow runner to diagnose the github workflow process.
 A class is just a container for 1 lambda per file. Refactor any files that step out of line.
 
 See also RADIX_TO_MUI_MIGRATION.md
+
+See also LAMBDA_PROMPT.md
+
+
+---------------------------
+Do what this document says.
+----------------------------
