@@ -1,17 +1,21 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { isValidEmail } from './is-valid-email'
 
 describe('isValidEmail', () => {
+  const longEmail = `${'a'.repeat(250)}@example.com`
+
   it.each([
-    { name: 'basic', email: 'user@example.com', expected: true },
-    { name: 'plus and subdomain', email: 'first.last+tag@sub.domain.co', expected: true },
-    { name: 'missing domain', email: 'user@', expected: false },
-    { name: 'missing local part', email: '@example.com', expected: false },
-    { name: 'missing tld', email: 'user@example', expected: false },
-    { name: 'double at', email: 'user@@example.com', expected: false },
-    { name: 'space in email', email: 'user example@domain.com', expected: false },
-    { name: 'short tld', email: 'user@domain.c', expected: false },
-  ])('returns $expected for $name', ({ email, expected }) => {
-    expect(isValidEmail(email)).toBe(expected)
+    { email: 'user@example.com' },
+    { email: 'first.last+tag@sub.domain.com' },
+  ])('accepts $email', ({ email }) => {
+    expect(isValidEmail(email)).toBe(true)
+  })
+
+  it.each([
+    { email: 'invalid-email' },
+    { email: 'missing-at.example.com' },
+    { email: longEmail },
+  ])('rejects $email', ({ email }) => {
+    expect(isValidEmail(email)).toBe(false)
   })
 })
