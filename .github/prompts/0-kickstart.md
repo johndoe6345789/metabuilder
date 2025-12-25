@@ -18,10 +18,11 @@ Use this as the default workflow when starting work in this repo.
 
 ## Where Work Lives
 - Next.js app: `frontends/nextjs/` (source in `src/`, E2E in `e2e/`, local scripts in `scripts/`).
-- Component packages: `packages/` (seed JSON under `packages/*/seed/`, schema checks in `packages/*/tests/`).
+- Component packages: `packages/` (seed JSON under `packages/*/seed/`, optional `static_content/`, schema checks in `packages/*/tests/`).
 - DBAL: `dbal/` (TypeScript library in `dbal/ts/`).
 - Prisma schema/migrations: `prisma/` (`schema.prisma`, `migrations/`).
 - Shared config: `config/` (symlinked into `frontends/nextjs/`).
+- Repo utilities: `tools/`.
 
 ## Common Commands
 Run app workflows from `frontends/nextjs/`:
@@ -33,19 +34,22 @@ Run app workflows from `frontends/nextjs/`:
 - Unit: `npm run test:unit` / `npm run test:coverage`
 - E2E: `npm run test:e2e`
 - Prisma: `npm run db:generate` / `npm run db:push` / `npm run db:migrate`
+- Coverage output: `frontends/nextjs/coverage/`
 
 DBAL workflows live in `dbal/ts/` (`npm run build`, `npm run test:unit`).
 
 ## Source + Tests
 - TypeScript + ESM. Prefer `@/…` imports inside `frontends/nextjs/src/`.
 - React components: `PascalCase.tsx`; hooks: `useThing.ts`; tests: `*.test.ts(x)`.
+- Unit tests: `frontends/nextjs/src/**/*.test.ts(x)` and `packages/*/tests/*.test.ts`; E2E: `frontends/nextjs/e2e/`.
 - Prefer one focused function (“lambda”) per file; use classes only as containers for related functions (see `.github/prompts/LAMBDA_PROMPT.md`).
-- Keep tests deterministic (no network, stable clocks/IDs), and parameterize where it improves coverage (`it.each()`); keep source↔test naming aligned.
+- Add/adjust tests with behavior changes; keep tests deterministic (no network, stable clocks/IDs), and parameterize where it improves coverage (`it.each()`); keep source↔test naming aligned.
 - Leave TODOs only when you’re explicitly deferring follow-up work.
 
 ## Git Hygiene
 - Commit as you go with descriptive (Conventional Commit-style) messages; default to trunk-based work on `main` unless a PR flow is required.
 - If multiple agents are working, merge/rebase carefully and avoid overwriting each other’s changes.
+- Before opening a PR: run `npm run lint`, `npm run typecheck`, and relevant tests; include what/why, linked issue (if any), screenshots for UI changes, and notes on DB/schema changes.
 
 ## Architecture Guardrails
 - Route data access through DBAL / the `Database` wrapper; don’t bypass it.
@@ -56,4 +60,3 @@ DBAL workflows live in `dbal/ts/` (`npm run build`, `npm run test:unit`).
 - Use `act` to reproduce and debug GitHub Actions locally (see `npm run act`, `npm run act:diagnose`).
 
 If you find nothing wrong with the repository, stop what you are doing right away.
-
