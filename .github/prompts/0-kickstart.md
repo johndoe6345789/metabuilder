@@ -46,7 +46,7 @@ DBAL workflows live in `dbal/ts/` (`npm run build`, `npm run test:unit`).
 - Unit tests: `frontends/nextjs/src/**/*.test.ts(x)` and `packages/*/tests/*.test.ts`; E2E: `frontends/nextjs/e2e/`.
 - Prefer one focused function (“lambda”) per file; use classes only as containers for related functions (see `.github/prompts/LAMBDA_PROMPT.md`).
 - Add/adjust tests with behavior changes; keep tests deterministic (no network, stable clocks/IDs), and parameterize where it improves coverage (`it.each()`); keep source↔test naming aligned.
-- Leave TODOs only when you’re explicitly deferring follow-up work.
+- Leave TODOs only when you’re explicitly deferring follow-up work (and include the next step).
 
 ## Git Hygiene
 - Commit as you go with descriptive (Conventional Commit-style) messages; default to trunk-based work on `main` unless a PR flow is required.
@@ -55,6 +55,8 @@ DBAL workflows live in `dbal/ts/` (`npm run build`, `npm run test:unit`).
 - PRs should include: what/why, linked issue (if any), screenshots for UI changes, and notes on DB/schema changes.
 
 ## Architecture Guardrails
+- Prefer data-driven config (JSON/Lua) over hard-coded TS/TSX; start with `packages/*/seed/` and `docs/architecture/data-driven-architecture.md`.
+- Prefer declarative UI via `RenderComponent` / generic renderers (see `docs/architecture/generic-page-system.md`).
 - Route data access through DBAL / the `Database` wrapper (`frontends/nextjs/src/lib/db/` or `@/lib/db`); don’t bypass it.
 - Assume multi-tenancy: include `tenantId` filtering and isolate per-tenant data.
 - UI uses Material UI (`@mui/*`) and SCSS/modules as needed; don’t introduce Radix UI or Tailwind. See `docs/RADIX_TO_MUI_MIGRATION.md` and `UI_STANDARDS.md`.
