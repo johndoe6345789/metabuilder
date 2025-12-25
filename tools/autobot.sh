@@ -37,9 +37,7 @@ while :; do
   sleep 90
 
   # IMPORTANT: use normal ASCII quotes, not “smart quotes”.
-  codex exec "$KICKSTART_FILE" \
-    "Do what it says. If you cannot find anything wrong with the project, halt immediately." \
-    || exit $?
+  codex exec "$KICKSTART_FILE" || exit $?
 done
 
 
