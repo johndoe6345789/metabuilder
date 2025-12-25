@@ -420,6 +420,17 @@ See `example-schemas.json` for complete examples including:
 - No file uploads (use URL fields to reference external files)
 - Maximum recommended records per model: 1000
 
+## Documentation
+
+For comprehensive guides, check the [Documentation Index](INDEX.md). Key resources:
+
+- **Getting Started**: [ATOMIC_QUICKSTART.md](guides/ATOMIC_QUICKSTART.md)
+- **Architecture**: [architecture/](architecture/)
+- **Database**: [database/](database/) and [PRISMA_IMPLEMENTATION_COMPLETE.md](implementation/PRISMA_IMPLEMENTATION_COMPLETE.md)
+- **Development**: [development/](development/) and [guides/](guides/)
+- **Deployment**: [deployments/](deployments/)
+- **Troubleshooting**: [troubleshooting/](troubleshooting/)
+
 ## Architecture
 
 The system consists of:

@@ -1,0 +1,14 @@
+{
+    "cmake.sourceDirectory": "/workspaces/metabuilder/dbal/cpp",
+    "chat.mcp.discovery.enabled": {
+        "claude-desktop": true,
+        "windsurf": true,
+        "cursor-global": true,
+        "cursor-workspace": true
+    },
+    "chat.mcp.gallery.enabled": true,
+    "inlineChat.enableV2": true,
+    "chat.allowAnonymousAccess": false,
+    "chat.mcp.assisted.nuget.enabled": true,
+    "inlineChat.notebookAgent": true
+}
