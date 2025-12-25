@@ -37,5 +37,5 @@ while :; do
   sleep 90
 
   # IMPORTANT: use normal ASCII quotes, not “smart quotes”.
-  codex exec --full-auto danger-full-access" --cd="/Users/rmac/Documents/GitHub/metabuilder/docs/todo/" "$KICKSTART_FILE" || exit $?
+  codex exec --full-auto --sandbox="danger-full-access" --cd="/Users/rmac/Documents/GitHub/metabuilder/docs/todo/" "$KICKSTART_FILE" || exit $?
 done
