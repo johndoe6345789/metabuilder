@@ -8,6 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { CheckCircle, XCircle, ArrowClockwise, ArrowSquareOut, Info, Warning, TrendUp, TrendDown, Robot, Download, FileText } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { ScrollArea } from '@/components/ui'
+import { formatWorkflowRunAnalysis, summarizeWorkflowRuns } from '@/lib/github/analyze-workflow-runs'
+import { formatWorkflowLogAnalysis, summarizeWorkflowLogs } from '@/lib/github/analyze-workflow-logs'
 
 interface WorkflowRun {
   id: number
@@ -148,30 +150,10 @@ export function GitHubActionsFetcher() {
 
     setIsAnalyzing(true)
     try {
-      // TODO: Replace with Next.js API route that calls an LLM service
-      // For now, provide a placeholder message
-      toast.info('AI analysis feature temporarily disabled during migration')
-      setAnalysis('**Analysis Feature Unavailable**\n\nThe AI-powered analysis feature is currently being migrated to work with Next.js. This will be available soon.')
-      
-      // Original Spark LLM code (commented out):
-      // const prompt = spark.llmPrompt`You are a DevOps expert analyzing GitHub Actions workflow data.
-      // 
-      // Given the following workflow runs data:
-      // ${JSON.stringify(data, null, 2)}
-      // 
-      // Provide a comprehensive analysis including:
-      // 1. **Overall Build Health**: Current state of the CI/CD pipeline
-      // 2. **Recent Failures**: List any failed builds and potential root causes
-      // 3. **Patterns**: Identify any patterns in failures (specific branches, times, events)
-      // 4. **Performance**: Comment on build frequency and completion times
-      // 5. **Recommendations**: Specific actionable steps to improve the pipeline
-      // 6. **Risk Assessment**: Any immediate concerns that need attention
-      // 
-      // Format your response in markdown with clear sections and bullet points.`
-      // 
-      // const result = await spark.llm(prompt, 'gpt-4o')
-      // setAnalysis(result)
-      // toast.success('Analysis complete')
+      const summary = summarizeWorkflowRuns(data)
+      const report = formatWorkflowRunAnalysis(summary)
+      setAnalysis(report)
+      toast.success('Analysis complete')
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Analysis failed'
       toast.error(errorMessage)
@@ -203,81 +185,61 @@ export function GitHubActionsFetcher() {
     setRunJobs([])
 
     try {
-      const octokit = new Octokit()
-      
-      const { data: jobs } = await octokit.rest.actions.listJobsForWorkflowRun({
-        owner: 'johndoe6345789',
-        repo: 'metabuilder',
-        run_id: runId
+      const query = new URLSearchParams({
+        runName,
+        includeLogs: 'true',
+        jobLimit: '20',
       })
-
-      setRunJobs(jobs.jobs as Job[])
-
-      const allLogs: string[] = []
-      allLogs.push(`=================================================`)
-      allLogs.push(`WORKFLOW RUN: ${runName}`)
-      allLogs.push(`RUN ID: ${runId}`)
-      allLogs.push(`JOBS COUNT: ${jobs.jobs.length}`)
-      allLogs.push(`=================================================\n`)
-
-      for (const job of jobs.jobs) {
-        allLogs.push(`\n${'='.repeat(80)}`)
-        allLogs.push(`JOB: ${job.name}`)
-        allLogs.push(`JOB ID: ${job.id}`)
-        allLogs.push(`STATUS: ${job.status}`)
-        allLogs.push(`CONCLUSION: ${job.conclusion || 'N/A'}`)
-        allLogs.push(`STARTED: ${job.started_at}`)
-        allLogs.push(`COMPLETED: ${job.completed_at || 'Running...'}`)
-        allLogs.push(`${'='.repeat(80)}`)
-
-        try {
-          const { data: logData } = await octokit.rest.actions.downloadJobLogsForWorkflowRun({
-            owner: 'johndoe6345789',
-            repo: 'metabuilder',
-            job_id: job.id
-          })
-
-          if (typeof logData === 'string') {
-            allLogs.push(logData)
-          } else {
-            allLogs.push(`[Log data returned in binary format - ${job.steps?.length || 0} steps]`)
-            
-            if (job.steps && job.steps.length > 0) {
-              job.steps.forEach((step: JobStep) => {
-                allLogs.push(`\n  Step ${step.number}: ${step.name}`)
-                allLogs.push(`    Status: ${step.status} | Conclusion: ${step.conclusion || 'N/A'}`)
-                if (step.started_at) allLogs.push(`    Started: ${step.started_at}`)
-                if (step.completed_at) allLogs.push(`    Completed: ${step.completed_at}`)
-              })
-            }
-          }
-        } catch (logErr) {
-          allLogs.push(`\n[Could not fetch logs for this job - ${(logErr as Error).message}]`)
-          
-          if (job.steps && job.steps.length > 0) {
-            allLogs.push(`\nSteps in this job:`)
-            job.steps.forEach((step: JobStep) => {
-              allLogs.push(`  ${step.number}. ${step.name}`)
-              allLogs.push(`     Status: ${step.status} | Conclusion: ${step.conclusion || 'N/A'}`)
-            })
-          }
-        }
-
-        allLogs.push('')
+      if (repoInfo) {
+        query.set('owner', repoInfo.owner)
+        query.set('repo', repoInfo.repo)
       }
 
-      const logsText = allLogs.join('\n')
+      const response = await fetch(`/api/github/actions/runs/${runId}/logs?${query.toString()}`, {
+        cache: 'no-store',
+      })
+
+      let payload: {
+        jobs?: Job[]
+        logsText?: string | null
+        truncated?: boolean
+        requiresAuth?: boolean
+        error?: string
+      } | null = null
+
+      try {
+        payload = await response.json()
+      } catch {
+        payload = null
+      }
+
+      if (!response.ok) {
+        if (payload?.requiresAuth) {
+          toast.error('GitHub API requires authentication for logs')
+        }
+        const message = payload?.error || `Failed to download logs (${response.status})`
+        throw new Error(message)
+      }
+
+      const logsText = payload?.logsText ?? null
+      setRunJobs(payload?.jobs ?? [])
       setRunLogs(logsText)
 
-      const blob = new Blob([logsText], { type: 'text/plain' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `workflow-logs-${runId}-${new Date().toISOString()}.txt`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
+      if (logsText) {
+        const blob = new Blob([logsText], { type: 'text/plain' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `workflow-logs-${runId}-${new Date().toISOString()}.txt`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+      }
+
+      if (payload?.truncated) {
+        toast.info('Downloaded logs are truncated. Increase the job limit for more.')
+      }
 
       toast.success('Workflow logs downloaded successfully')
     } catch (err) {
@@ -298,37 +260,13 @@ export function GitHubActionsFetcher() {
     setIsAnalyzing(true)
     try {
       const selectedRun = data?.find(r => r.id === selectedRunId)
-      
-      // TODO: Replace with Next.js API route that calls an LLM service
-      toast.info('AI log analysis feature temporarily disabled during migration')
-      setAnalysis(`**Log Analysis Feature Unavailable**\n\nThe AI-powered log analysis feature is currently being migrated to work with Next.js. This will be available soon.\n\n**Workflow**: ${selectedRun?.name || 'Unknown'}\n**Run ID**: ${selectedRunId}\n**Status**: ${selectedRun?.status}\n**Conclusion**: ${selectedRun?.conclusion || 'N/A'}`)
-      
-      // Original Spark LLM code (commented out):
-      // const prompt = spark.llmPrompt`You are a DevOps expert analyzing GitHub Actions workflow logs.
-      // 
-      // Workflow: ${selectedRun?.name || 'Unknown'}
-      // Run ID: ${selectedRunId}
-      // Status: ${selectedRun?.status}
-      // Conclusion: ${selectedRun?.conclusion || 'N/A'}
-      // 
-      // === COMPLETE WORKFLOW LOGS ===
-      // ${runLogs}
-      // === END LOGS ===
-      // 
-      // Provide a comprehensive analysis including:
-      // 1. **Root Cause Analysis**: Identify the specific error(s) that caused failures
-      // 2. **Error Details**: Extract exact error messages, line numbers, and stack traces
-      // 3. **Failed Steps**: List which jobs/steps failed and why
-      // 4. **Dependencies Issues**: Any missing packages, version conflicts, or dependency problems
-      // 5. **Configuration Problems**: Issues with workflow configuration, environment variables, secrets
-      // 6. **Recommended Fixes**: Specific, actionable steps to fix each issue with code examples where applicable
-      // 7. **Prevention**: How to prevent similar issues in the future
-      // 
-      // Format your response in clear markdown with code blocks for any suggested fixes.`
-      // 
-      // const result = await spark.llm(prompt, 'gpt-4o')
-      // setAnalysis(result)
-      // toast.success('Log analysis complete')
+      const summary = summarizeWorkflowLogs(runLogs)
+      const report = formatWorkflowLogAnalysis(summary, {
+        runName: selectedRun?.name,
+        runId: selectedRunId,
+      })
+      setAnalysis(report)
+      toast.success('Log analysis complete')
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Analysis failed'
       toast.error(errorMessage)
