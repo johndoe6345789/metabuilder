@@ -40,13 +40,36 @@ int main(int argc, char* argv[]) {
     std::signal(SIGINT, signalHandler);
     std::signal(SIGTERM, signalHandler);
     
+    // Load defaults from environment variables (can be overridden by CLI args)
     std::string config_file = "config.yaml";
     std::string bind_address = "127.0.0.1";
     int port = 8080;
     bool development_mode = false;
     bool daemon_mode = false;  // Default to interactive mode
     
-    // Parse command line arguments
+    // Check environment variables
+    const char* env_bind = std::getenv("DBAL_BIND_ADDRESS");
+    if (env_bind) bind_address = env_bind;
+    
+    const char* env_port = std::getenv("DBAL_PORT");
+    if (env_port) port = std::stoi(env_port);
+    
+    const char* env_mode = std::getenv("DBAL_MODE");
+    if (env_mode) {
+        std::string mode_str = env_mode;
+        development_mode = (mode_str == "development" || mode_str == "dev");
+    }
+    
+    const char* env_config = std::getenv("DBAL_CONFIG");
+    if (env_config) config_file = env_config;
+    
+    const char* env_daemon = std::getenv("DBAL_DAEMON");
+    if (env_daemon) {
+        std::string daemon_str = env_daemon;
+        daemon_mode = (daemon_str == "true" || daemon_str == "1" || daemon_str == "yes");
+    }
+    
+    // Parse command line arguments (override environment variables)
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
         
@@ -70,6 +93,14 @@ int main(int argc, char* argv[]) {
             std::cout << "  --mode <mode>      Run mode: production, development (default: production)" << std::endl;
             std::cout << "  --daemon, -d       Run in daemon mode (default: interactive)" << std::endl;
             std::cout << "  --help, -h         Show this help message" << std::endl;
+            std::cout << std::endl;
+            std::cout << "Environment variables (overridden by CLI args):" << std::endl;
+            std::cout << "  DBAL_BIND_ADDRESS  Bind address" << std::endl;
+            std::cout << "  DBAL_PORT          Port number" << std::endl;
+            std::cout << "  DBAL_MODE          Run mode (production/development)" << std::endl;
+            std::cout << "  DBAL_CONFIG        Configuration file path" << std::endl;
+            std::cout << "  DBAL_DAEMON        Run in daemon mode (true/false)" << std::endl;
+            std::cout << "  DBAL_LOG_LEVEL     Log level (trace/debug/info/warn/error/critical)" << std::endl;
             std::cout << std::endl;
             std::cout << "Interactive mode (default):" << std::endl;
             std::cout << "  Shows a command prompt with available commands:" << std::endl;
