@@ -4,7 +4,7 @@ import type {
   BlobListResult,
   UploadOptions,
   DownloadOptions,
-  ListOptions,
+  BlobListOptions,
 } from './blob-storage'
 import { DBALError } from '../core/errors'
 import { createHash } from 'crypto'
@@ -147,7 +147,7 @@ export class MemoryStorage implements BlobStorage {
     return this.makeBlobMetadata(key, blob)
   }
 
-  async list(options: ListOptions = {}): Promise<BlobListResult> {
+  async list(options: BlobListOptions = {}): Promise<BlobListResult> {
     const prefix = options.prefix || ''
     const maxKeys = options.maxKeys || 1000
 

@@ -4,7 +4,7 @@ import type {
   BlobListResult,
   UploadOptions,
   DownloadOptions,
-  ListOptions,
+  BlobListOptions,
   BlobStorageConfig,
 } from './blob-storage'
 import { DBALError } from '../core/errors'
@@ -96,7 +96,7 @@ export class S3Storage implements BlobStorage {
         params: {
           Bucket: this.bucket,
           Key: key,
-          Body: stream,
+          Body: stream as any, // Type compatibility between Node.js and Web streams
           ContentType: options.contentType,
           Metadata: options.metadata,
         },
@@ -229,7 +229,7 @@ export class S3Storage implements BlobStorage {
     }
   }
 
-  async list(options: ListOptions = {}): Promise<BlobListResult> {
+  async list(options: BlobListOptions = {}): Promise<BlobListResult> {
     try {
       const { ListObjectsV2Command } = await import('@aws-sdk/client-s3')
       

@@ -4,7 +4,7 @@ import type {
   BlobListResult,
   UploadOptions,
   DownloadOptions,
-  ListOptions,
+  BlobListOptions,
   BlobStorageConfig,
 } from './blob-storage'
 import { DBALError } from '../core/errors'
@@ -295,7 +295,7 @@ export class FilesystemStorage implements BlobStorage {
     }
   }
 
-  async list(options: ListOptions = {}): Promise<BlobListResult> {
+  async list(options: BlobListOptions = {}): Promise<BlobListResult> {
     const prefix = options.prefix || ''
     const maxKeys = options.maxKeys || 1000
 

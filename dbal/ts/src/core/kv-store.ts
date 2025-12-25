@@ -81,7 +81,7 @@ export class InMemoryKVStore implements KVStore {
   
   async get(key: string, context: TenantContext): Promise<StorableValue | null> {
     if (!context.canRead('kv')) {
-      throw new DBALError('Permission denied: cannot read key-value data', 403)
+      throw DBALError.forbidden('Permission denied: cannot read key-value data')
     }
     
     const scopedKey = this.getScopedKey(key, context)
@@ -100,7 +100,7 @@ export class InMemoryKVStore implements KVStore {
   
   async set(key: string, value: StorableValue, context: TenantContext, ttl?: number): Promise<void> {
     if (!context.canWrite('kv')) {
-      throw new DBALError('Permission denied: cannot write key-value data', 403)
+      throw DBALError.forbidden('Permission denied: cannot write key-value data')
     }
     
     const scopedKey = this.getScopedKey(key, context)
@@ -112,12 +112,12 @@ export class InMemoryKVStore implements KVStore {
     
     if (sizeDelta > 0 && context.quota.maxDataSizeBytes) {
       if (context.quota.currentDataSizeBytes + sizeDelta > context.quota.maxDataSizeBytes) {
-        throw new DBALError('Quota exceeded: maximum data size reached', 429)
+        throw DBALError.forbidden('Quota exceeded: maximum data size reached')
       }
     }
     
     if (!existing && !context.canCreateRecord()) {
-      throw new DBALError('Quota exceeded: maximum record count reached', 429)
+      throw DBALError.forbidden('Quota exceeded: maximum record count reached')
     }
     
     const now = new Date()
@@ -144,7 +144,7 @@ export class InMemoryKVStore implements KVStore {
   
   async delete(key: string, context: TenantContext): Promise<boolean> {
     if (!context.canDelete('kv')) {
-      throw new DBALError('Permission denied: cannot delete key-value data', 403)
+      throw DBALError.forbidden('Permission denied: cannot delete key-value data')
     }
     
     const scopedKey = this.getScopedKey(key, context)
@@ -163,7 +163,7 @@ export class InMemoryKVStore implements KVStore {
   
   async exists(key: string, context: TenantContext): Promise<boolean> {
     if (!context.canRead('kv')) {
-      throw new DBALError('Permission denied: cannot read key-value data', 403)
+      throw DBALError.forbidden('Permission denied: cannot read key-value data')
     }
     
     const value = await this.get(key, context)
@@ -173,11 +173,11 @@ export class InMemoryKVStore implements KVStore {
   // List operations
   async listAdd(key: string, items: any[], context: TenantContext): Promise<number> {
     if (!context.canWrite('kv')) {
-      throw new DBALError('Permission denied: cannot write key-value data', 403)
+      throw DBALError.forbidden('Permission denied: cannot write key-value data')
     }
     
     if (!context.canAddToList(items.length)) {
-      throw new DBALError('Quota exceeded: list length limit reached', 429)
+      throw DBALError.forbidden('Quota exceeded: list length limit reached')
     }
     
     const existing = await this.get(key, context)
@@ -200,7 +200,7 @@ export class InMemoryKVStore implements KVStore {
   
   async listRemove(key: string, valueToRemove: any, context: TenantContext): Promise<number> {
     if (!context.canWrite('kv')) {
-      throw new DBALError('Permission denied: cannot write key-value data', 403)
+      throw DBALError.forbidden('Permission denied: cannot write key-value data')
     }
     
     const existing = await this.get(key, context)
@@ -246,7 +246,7 @@ export class InMemoryKVStore implements KVStore {
   // Query operations
   async list(options: KVListOptions, context: TenantContext): Promise<KVListResult> {
     if (!context.canRead('kv')) {
-      throw new DBALError('Permission denied: cannot read key-value data', 403)
+      throw DBALError.forbidden('Permission denied: cannot read key-value data')
     }
     
     const prefix = options.prefix || ''
@@ -281,7 +281,7 @@ export class InMemoryKVStore implements KVStore {
   
   async clear(context: TenantContext): Promise<number> {
     if (!context.canDelete('kv')) {
-      throw new DBALError('Permission denied: cannot delete key-value data', 403)
+      throw DBALError.forbidden('Permission denied: cannot delete key-value data')
     }
     
     const scopedPrefix = this.getScopedKey('', context)

@@ -4,9 +4,6 @@ import { resolve } from 'path'
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   
-  // Enable SWC minification
-  swcMinify: true,
-  
   // Standalone output for Docker
   output: 'standalone',
   
@@ -57,34 +54,8 @@ const nextConfig: NextConfig = {
     ],
   },
   
-  // Webpack configuration
-  webpack: (config, { isServer }) => {
-    // Add aliases
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@': resolve(__dirname, 'src'),
-      '@/dbal': resolve(__dirname, 'dbal'),
-    }
-    
-    // Add WASM support for Fengari (Lua)
-    config.experiments = {
-      ...config.experiments,
-      asyncWebAssembly: true,
-    }
-    
-    // Handle .node files (for native modules)
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-        crypto: false,
-      }
-    }
-    
-    return config
-  },
+  // Turbopack configuration (empty for now, migrations from webpack can be added later)
+  turbopack: {},
   
   // Redirects for old routes (if needed)
   async redirects() {
@@ -111,12 +82,6 @@ const nextConfig: NextConfig = {
     // Dangerously allow production builds to successfully complete even if
     // your project has type errors.
     ignoreBuildErrors: false,
-  },
-  
-  // ESLint configuration
-  eslint: {
-    // Only run ESLint on these directories during production builds
-    dirs: ['app', 'src', 'lib', 'components'],
   },
   
   // Environment variables exposed to browser
