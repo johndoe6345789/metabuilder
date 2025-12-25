@@ -5,6 +5,15 @@
 #include <chrono>
 #include <memory>
 
+// Cross-platform signal handling
+#ifdef _WIN32
+    #include <windows.h>
+    // Windows doesn't have SIGTERM, use SIGBREAK
+    #ifndef SIGTERM
+    #define SIGTERM SIGBREAK
+    #endif
+#endif
+
 // Include server
 namespace dbal { namespace daemon { class Server; } }
 #include "../daemon/server.cpp"

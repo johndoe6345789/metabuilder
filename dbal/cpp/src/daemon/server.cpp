@@ -7,12 +7,38 @@
 #include <sstream>
 #include <map>
 
-// POSIX socket headers
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <fcntl.h>
+// Cross-platform socket headers
+#ifdef _WIN32
+    // Windows
+    #ifndef WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
+    #endif
+    #include <windows.h>
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+    #pragma comment(lib, "ws2_32.lib")
+    
+    // Windows socket type aliases
+    typedef SOCKET socket_t;
+    typedef int socklen_t;
+    #define CLOSE_SOCKET closesocket
+    #define INVALID_SOCKET_VALUE INVALID_SOCKET
+    #define SOCKET_ERROR_VALUE SOCKET_ERROR
+#else
+    // POSIX (Linux, macOS, Unix)
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+    #include <unistd.h>
+    #include <fcntl.h>
+    #include <errno.h>
+    
+    // POSIX socket type aliases
+    typedef int socket_t;
+    #define CLOSE_SOCKET close
+    #define INVALID_SOCKET_VALUE -1
+    #define SOCKET_ERROR_VALUE -1
+#endif
 
 namespace dbal {
 namespace daemon {
@@ -76,10 +102,23 @@ struct HttpResponse {
 class Server {
 public:
     Server(const std::string& bind_address, int port)
-        : bind_address_(bind_address), port_(port), running_(false), server_fd_(-1) {}
+        : bind_address_(bind_address), port_(port), running_(false), server_fd_(INVALID_SOCKET_VALUE) {
+#ifdef _WIN32
+        // Initialize Winsock on Windows
+        WSADATA wsaData;
+        int result = WSAStartup(MAKEWORD(2, 2), &wsaData);
+        if (result != 0) {
+            std::cerr << "WSAStartup failed: " << result << std::endl;
+        }
+#endif
+    }
     
     ~Server() {
         stop();
+#ifdef _WIN32
+        // Cleanup Winsock on Windows
+        WSACleanup();
+#endif
     }
     
     bool start() {
@@ -87,17 +126,22 @@ public:
         
         // Create socket
         server_fd_ = socket(AF_INET, SOCK_STREAM, 0);
-        if (server_fd_ < 0) {
-            std::cerr << "Failed to create socket: " << strerror(errno) << std::endl;
+        if (server_fd_ == INVALID_SOCKET_VALUE) {
+            std::cerr << "Failed to create socket: " << getLastErrorString() << std::endl;
             return false;
         }
         
         // Set socket options
         int opt = 1;
-        if (setsockopt(server_fd_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-            std::cerr << "Failed to set SO_REUSEADDR: " << strerror(errno) << std::endl;
-            close(server_fd_);
-            server_fd_ = -1;
+#ifdef _WIN32
+        char* opt_ptr = reinterpret_cast<char*>(&opt);
+#else
+        void* opt_ptr = &opt;
+#endif
+        if (setsockopt(server_fd_, SOL_SOCKET, SO_REUSEADDR, opt_ptr, sizeof(opt)) < 0) {
+            std::cerr << "Failed to set SO_REUSEADDR: " << getLastErrorString() << std::endl;
+            CLOSE_SOCKET(server_fd_);
+            server_fd_ = INVALID_SOCKET_VALUE;
             return false;
         }
         
@@ -110,27 +154,38 @@ public:
         if (bind_address_ == "0.0.0.0" || bind_address_ == "::") {
             address.sin_addr.s_addr = INADDR_ANY;
         } else {
-            if (inet_pton(AF_INET, bind_address_.c_str(), &address.sin_addr) <= 0) {
+#ifdef _WIN32
+            // Windows inet_pton
+            if (InetPton(AF_INET, bind_address_.c_str(), &address.sin_addr) <= 0) {
                 std::cerr << "Invalid bind address: " << bind_address_ << std::endl;
-                close(server_fd_);
-                server_fd_ = -1;
+                CLOSE_SOCKET(server_fd_);
+                server_fd_ = INVALID_SOCKET_VALUE;
                 return false;
             }
+#else
+            // POSIX inet_pton
+            if (inet_pton(AF_INET, bind_address_.c_str(), &address.sin_addr) <= 0) {
+                std::cerr << "Invalid bind address: " << bind_address_ << std::endl;
+                CLOSE_SOCKET(server_fd_);
+                server_fd_ = INVALID_SOCKET_VALUE;
+                return false;
+            }
+#endif
         }
         
         if (bind(server_fd_, (struct sockaddr*)&address, sizeof(address)) < 0) {
             std::cerr << "Failed to bind to " << bind_address_ << ":" << port_ 
-                     << ": " << strerror(errno) << std::endl;
-            close(server_fd_);
-            server_fd_ = -1;
+                     << ": " << getLastErrorString() << std::endl;
+            CLOSE_SOCKET(server_fd_);
+            server_fd_ = INVALID_SOCKET_VALUE;
             return false;
         }
         
         // Listen for connections (backlog of 128)
         if (listen(server_fd_, 128) < 0) {
-            std::cerr << "Failed to listen: " << strerror(errno) << std::endl;
-            close(server_fd_);
-            server_fd_ = -1;
+            std::cerr << "Failed to listen: " << getLastErrorString() << std::endl;
+            CLOSE_SOCKET(server_fd_);
+            server_fd_ = INVALID_SOCKET_VALUE;
             return false;
         }
         
@@ -149,9 +204,9 @@ public:
         running_ = false;
         
         // Close server socket to unblock accept()
-        if (server_fd_ >= 0) {
-            close(server_fd_);
-            server_fd_ = -1;
+        if (server_fd_ != INVALID_SOCKET_VALUE) {
+            CLOSE_SOCKET(server_fd_);
+            server_fd_ = INVALID_SOCKET_VALUE;
         }
         
         // Wait for accept thread to finish
@@ -176,11 +231,11 @@ private:
             struct sockaddr_in client_addr;
             socklen_t client_len = sizeof(client_addr);
             
-            int client_fd = accept(server_fd_, (struct sockaddr*)&client_addr, &client_len);
+            socket_t client_fd = accept(server_fd_, (struct sockaddr*)&client_addr, &client_len);
             
-            if (client_fd < 0) {
+            if (client_fd == INVALID_SOCKET_VALUE) {
                 if (running_) {
-                    std::cerr << "Accept failed: " << strerror(errno) << std::endl;
+                    std::cerr << "Accept failed: " << getLastErrorString() << std::endl;
                 }
                 continue;
             }
@@ -190,16 +245,21 @@ private:
         }
     }
     
-    void handleConnection(int client_fd) {
+    void handleConnection(socket_t client_fd) {
         // Set receive timeout
+#ifdef _WIN32
+        DWORD timeout = 30000; // 30 seconds in milliseconds
+        setsockopt(client_fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
+#else
         struct timeval timeout;
         timeout.tv_sec = 30;
         timeout.tv_usec = 0;
         setsockopt(client_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+#endif
         
         HttpRequest request;
         if (!parseRequest(client_fd, request)) {
-            close(client_fd);
+            CLOSE_SOCKET(client_fd);
             return;
         }
         
@@ -211,12 +271,16 @@ private:
         send(client_fd, response_str.c_str(), response_str.length(), 0);
         
         // Close connection (HTTP/1.1 could support keep-alive, but simple close for now)
-        close(client_fd);
+        CLOSE_SOCKET(client_fd);
     }
     
-    bool parseRequest(int client_fd, HttpRequest& request) {
+    bool parseRequest(socket_t client_fd, HttpRequest& request) {
         char buffer[8192];
+#ifdef _WIN32
+        int bytes_read = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
+#else
         ssize_t bytes_read = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
+#endif
         
         if (bytes_read <= 0) {
             return false;
@@ -303,10 +367,26 @@ private:
         return response;
     }
     
+    std::string getLastErrorString() {
+#ifdef _WIN32
+        int error = WSAGetLastError();
+        char* message = nullptr;
+        FormatMessageA(
+            FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+            nullptr, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+            (LPSTR)&message, 0, nullptr);
+        std::string result = message ? message : "Unknown error";
+        if (message) LocalFree(message);
+        return result;
+#else
+        return strerror(errno);
+#endif
+    }
+    
     std::string bind_address_;
     int port_;
     bool running_;
-    int server_fd_;
+    socket_t server_fd_;
     std::thread accept_thread_;
 };
 
