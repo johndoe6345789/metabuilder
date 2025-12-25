@@ -264,13 +264,29 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
                     placeholder="Enter custom class name..."
                     value={customClass}
                     onChange={(e) => setCustomClass(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && addCustomClass()}
+                    onKeyDown={(e) => e.key === 'Enter' && canAddCustom && addCustomClass()}
+                    className={`font-mono ${invalidCustomTokens.length > 0 ? 'border-destructive focus-visible:ring-destructive' : ''}`}
                   />
-                  <Button onClick={addCustomClass}>
+                  <Button onClick={addCustomClass} disabled={!canAddCustom}>
                     <Plus className="mr-2" />
                     Add
                   </Button>
                 </div>
+                {invalidCustomTokens.length > 0 && (
+                  <p className="text-xs text-destructive">
+                    Invalid class names: {invalidCustomTokens.join(', ')}
+                  </p>
+                )}
+                {invalidCustomTokens.length === 0 && unknownCustomTokens.length > 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    Not in library: {unknownCustomTokens.join(', ')}. They will still be added.
+                  </p>
+                )}
+                {duplicateCustomTokens.length > 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    Already selected: {duplicateCustomTokens.join(', ')}
+                  </p>
+                )}
                 <p className="text-xs text-muted-foreground">
                   Add custom CSS classes that aren't in the predefined list.
                 </p>
