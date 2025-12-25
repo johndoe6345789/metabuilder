@@ -2,6 +2,8 @@
 
 Address security vulnerabilities in MetaBuilder:
 
+Run app commands from `frontends/nextjs/`.
+
 ## Common Security Fixes
 
 ### 1. Missing Tenant Isolation
@@ -47,6 +49,6 @@ Database.getUsers({ tenantId })
 
 ## Security Scan
 ```bash
-npm run security-scan  # If available
-npm audit              # Check dependencies
+npm audit
+npm run test:unit -- src/lib/security/security-scanner.test.ts
 ```

@@ -4,9 +4,9 @@ Optimize MetaBuilder performance:
 
 ## Identify Bottlenecks
 ```bash
-npm run analyze-render-performance
-npm run analyze-bundle-size
-npm run check-performance-budget
+npx tsx ../../tools/analyze-render-performance.ts
+npx tsx ../../tools/analyze-bundle-size.ts
+npx tsx ../../tools/check-performance-budget.ts
 ```
 
 ## Common Optimizations
@@ -38,7 +38,7 @@ function List({ items }) {
 
 ### 3. Bundle Size
 - Use dynamic imports for large components
-- Check `reports/size-limits-report.json`
+- Check `docs/reports/size-limits-report.json`
 
 ### 4. Lua Script Caching
 Scripts are compiled once - avoid registering repeatedly

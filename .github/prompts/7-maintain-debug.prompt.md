@@ -2,6 +2,8 @@
 
 Systematic debugging approach for MetaBuilder:
 
+Run app commands from `frontends/nextjs/`. Run DBAL conformance from `dbal/`.
+
 ## 1. Identify Layer
 - **UI**: Check browser console, React DevTools
 - **API/Data**: Check `Database` class calls
@@ -38,5 +40,5 @@ console.log('[Lua]', { result, logs: result.logs })
 
 ## 4. Test in Isolation
 ```bash
-npm run test:unit -- --grep "specific test"
+npm run test:unit -- path/to/test.ts
 ```
