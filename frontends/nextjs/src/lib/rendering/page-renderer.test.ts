@@ -49,8 +49,7 @@ function createMockUser(role: string, id = 'user1'): User {
   return {
     id,
     username: `User ${id}`,
-    role: role as any,
-    level: role === 'public' ? 1 : role === 'user' ? 2 : role === 'admin' ? 3 : role === 'god' ? 4 : 5,
+    role: role as UserRole,
     email: `${id}@test.com`,
     createdAt: Date.now(),
   }
