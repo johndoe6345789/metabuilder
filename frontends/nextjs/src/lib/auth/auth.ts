@@ -9,5 +9,5 @@ export {
   getScrambledPassword,
   DEFAULT_USERS,
   DEFAULT_CREDENTIALS,
-} from './auth/index'
+} from './index'
 
