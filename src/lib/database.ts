@@ -110,277 +110,598 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 
 export class Database {
   static async getUsers(): Promise<User[]> {
-    return (await window.spark.kv.get<User[]>(DB_KEYS.USERS)) || []
+    const users = await prisma.user.findMany()
+    return users.map(u => ({
+      id: u.id,
+      username: u.username,
+      email: u.email,
+      role: u.role as any,
+      profilePicture: u.profilePicture || undefined,
+      bio: u.bio || undefined,
+      createdAt: Number(u.createdAt),
+      tenantId: u.tenantId || undefined,
+      isInstanceOwner: u.isInstanceOwner,
+    }))
   }
 
   static async setUsers(users: User[]): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.USERS, users)
+    await prisma.user.deleteMany()
+    for (const user of users) {
+      await prisma.user.create({
+        data: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          profilePicture: user.profilePicture,
+          bio: user.bio,
+          createdAt: BigInt(user.createdAt),
+          tenantId: user.tenantId,
+          isInstanceOwner: user.isInstanceOwner || false,
+          passwordChangeTimestamp: null,
+          firstLogin: false,
+        },
+      })
+    }
   }
 
   static async addUser(user: User): Promise<void> {
-    const users = await this.getUsers()
-    users.push(user)
-    await this.setUsers(users)
+    await prisma.user.create({
+      data: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        profilePicture: user.profilePicture,
+        bio: user.bio,
+        createdAt: BigInt(user.createdAt),
+        tenantId: user.tenantId,
+        isInstanceOwner: user.isInstanceOwner || false,
+        passwordChangeTimestamp: null,
+        firstLogin: false,
+      },
+    })
   }
 
   static async updateUser(userId: string, updates: Partial<User>): Promise<void> {
-    const users = await this.getUsers()
-    const index = users.findIndex(u => u.id === userId)
-    if (index !== -1) {
-      users[index] = { ...users[index], ...updates }
-      await this.setUsers(users)
-    }
+    const data: any = {}
+    if (updates.username !== undefined) data.username = updates.username
+    if (updates.email !== undefined) data.email = updates.email
+    if (updates.role !== undefined) data.role = updates.role
+    if (updates.profilePicture !== undefined) data.profilePicture = updates.profilePicture
+    if (updates.bio !== undefined) data.bio = updates.bio
+    if (updates.tenantId !== undefined) data.tenantId = updates.tenantId
+    if (updates.isInstanceOwner !== undefined) data.isInstanceOwner = updates.isInstanceOwner
+
+    await prisma.user.update({
+      where: { id: userId },
+      data,
+    })
   }
 
   static async deleteUser(userId: string): Promise<void> {
-    const users = await this.getUsers()
-    const filtered = users.filter(u => u.id !== userId)
-    await this.setUsers(filtered)
+    await prisma.user.delete({ where: { id: userId } })
   }
 
   static async getCredentials(): Promise<Record<string, string>> {
-    return (await window.spark.kv.get<Record<string, string>>(DB_KEYS.CREDENTIALS)) || {}
+    const credentials = await prisma.credential.findMany()
+    const result: Record<string, string> = {}
+    for (const cred of credentials) {
+      result[cred.username] = cred.passwordHash
+    }
+    return result
   }
 
   static async setCredential(username: string, passwordHash: string): Promise<void> {
-    const credentials = await this.getCredentials()
-    credentials[username] = passwordHash
-    await window.spark.kv.set(DB_KEYS.CREDENTIALS, credentials)
-    
-    const timestamps = await this.getPasswordChangeTimestamps()
-    timestamps[username] = Date.now()
-    await this.setPasswordChangeTimestamps(timestamps)
+    await prisma.credential.upsert({
+      where: { username },
+      update: { passwordHash },
+      create: { username, passwordHash },
+    })
+
+    await prisma.user.update({
+      where: { username },
+      data: { passwordChangeTimestamp: BigInt(Date.now()) },
+    })
   }
 
   static async getPasswordChangeTimestamps(): Promise<Record<string, number>> {
-    return (await window.spark.kv.get<Record<string, number>>(DB_KEYS.PASSWORD_CHANGE_TIMESTAMPS)) || {}
+    const users = await prisma.user.findMany({
+      where: { passwordChangeTimestamp: { not: null } },
+      select: { username: true, passwordChangeTimestamp: true },
+    })
+    const result: Record<string, number> = {}
+    for (const user of users) {
+      if (user.passwordChangeTimestamp) {
+        result[user.username] = Number(user.passwordChangeTimestamp)
+      }
+    }
+    return result
   }
 
   static async setPasswordChangeTimestamps(timestamps: Record<string, number>): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.PASSWORD_CHANGE_TIMESTAMPS, timestamps)
+    for (const [username, timestamp] of Object.entries(timestamps)) {
+      await prisma.user.update({
+        where: { username },
+        data: { passwordChangeTimestamp: BigInt(timestamp) },
+      })
+    }
   }
 
   static async verifyCredentials(username: string, password: string): Promise<boolean> {
-    const credentials = await this.getCredentials()
-    const storedHash = credentials[username]
-    if (!storedHash) return false
-    return await verifyPassword(password, storedHash)
+    const credential = await prisma.credential.findUnique({ where: { username } })
+    if (!credential) return false
+    return await verifyPassword(password, credential.passwordHash)
   }
 
   static async getWorkflows(): Promise<Workflow[]> {
-    return (await window.spark.kv.get<Workflow[]>(DB_KEYS.WORKFLOWS)) || []
+    const workflows = await prisma.workflow.findMany()
+    return workflows.map(w => ({
+      id: w.id,
+      name: w.name,
+      description: w.description || undefined,
+      nodes: JSON.parse(w.nodes),
+      edges: JSON.parse(w.edges),
+      enabled: w.enabled,
+    }))
   }
 
   static async setWorkflows(workflows: Workflow[]): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.WORKFLOWS, workflows)
+    await prisma.workflow.deleteMany()
+    for (const workflow of workflows) {
+      await prisma.workflow.create({
+        data: {
+          id: workflow.id,
+          name: workflow.name,
+          description: workflow.description,
+          nodes: JSON.stringify(workflow.nodes),
+          edges: JSON.stringify(workflow.edges),
+          enabled: workflow.enabled,
+        },
+      })
+    }
   }
 
   static async addWorkflow(workflow: Workflow): Promise<void> {
-    const workflows = await this.getWorkflows()
-    workflows.push(workflow)
-    await this.setWorkflows(workflows)
+    await prisma.workflow.create({
+      data: {
+        id: workflow.id,
+        name: workflow.name,
+        description: workflow.description,
+        nodes: JSON.stringify(workflow.nodes),
+        edges: JSON.stringify(workflow.edges),
+        enabled: workflow.enabled,
+      },
+    })
   }
 
   static async updateWorkflow(workflowId: string, updates: Partial<Workflow>): Promise<void> {
-    const workflows = await this.getWorkflows()
-    const index = workflows.findIndex(w => w.id === workflowId)
-    if (index !== -1) {
-      workflows[index] = { ...workflows[index], ...updates }
-      await this.setWorkflows(workflows)
-    }
+    const data: any = {}
+    if (updates.name !== undefined) data.name = updates.name
+    if (updates.description !== undefined) data.description = updates.description
+    if (updates.nodes !== undefined) data.nodes = JSON.stringify(updates.nodes)
+    if (updates.edges !== undefined) data.edges = JSON.stringify(updates.edges)
+    if (updates.enabled !== undefined) data.enabled = updates.enabled
+
+    await prisma.workflow.update({
+      where: { id: workflowId },
+      data,
+    })
   }
 
   static async deleteWorkflow(workflowId: string): Promise<void> {
-    const workflows = await this.getWorkflows()
-    const filtered = workflows.filter(w => w.id !== workflowId)
-    await this.setWorkflows(filtered)
+    await prisma.workflow.delete({ where: { id: workflowId } })
   }
 
   static async getLuaScripts(): Promise<LuaScript[]> {
-    return (await window.spark.kv.get<LuaScript[]>(DB_KEYS.LUA_SCRIPTS)) || []
+    const scripts = await prisma.luaScript.findMany()
+    return scripts.map(s => ({
+      id: s.id,
+      name: s.name,
+      description: s.description || undefined,
+      code: s.code,
+      parameters: JSON.parse(s.parameters),
+      returnType: s.returnType || undefined,
+    }))
   }
 
   static async setLuaScripts(scripts: LuaScript[]): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.LUA_SCRIPTS, scripts)
+    await prisma.luaScript.deleteMany()
+    for (const script of scripts) {
+      await prisma.luaScript.create({
+        data: {
+          id: script.id,
+          name: script.name,
+          description: script.description,
+          code: script.code,
+          parameters: JSON.stringify(script.parameters),
+          returnType: script.returnType,
+        },
+      })
+    }
   }
 
   static async addLuaScript(script: LuaScript): Promise<void> {
-    const scripts = await this.getLuaScripts()
-    scripts.push(script)
-    await this.setLuaScripts(scripts)
+    await prisma.luaScript.create({
+      data: {
+        id: script.id,
+        name: script.name,
+        description: script.description,
+        code: script.code,
+        parameters: JSON.stringify(script.parameters),
+        returnType: script.returnType,
+      },
+    })
   }
 
   static async updateLuaScript(scriptId: string, updates: Partial<LuaScript>): Promise<void> {
-    const scripts = await this.getLuaScripts()
-    const index = scripts.findIndex(s => s.id === scriptId)
-    if (index !== -1) {
-      scripts[index] = { ...scripts[index], ...updates }
-      await this.setLuaScripts(scripts)
-    }
+    const data: any = {}
+    if (updates.name !== undefined) data.name = updates.name
+    if (updates.description !== undefined) data.description = updates.description
+    if (updates.code !== undefined) data.code = updates.code
+    if (updates.parameters !== undefined) data.parameters = JSON.stringify(updates.parameters)
+    if (updates.returnType !== undefined) data.returnType = updates.returnType
+
+    await prisma.luaScript.update({
+      where: { id: scriptId },
+      data,
+    })
   }
 
   static async deleteLuaScript(scriptId: string): Promise<void> {
-    const scripts = await this.getLuaScripts()
-    const filtered = scripts.filter(s => s.id !== scriptId)
-    await this.setLuaScripts(filtered)
+    await prisma.luaScript.delete({ where: { id: scriptId } })
   }
 
   static async getPages(): Promise<PageConfig[]> {
-    return (await window.spark.kv.get<PageConfig[]>(DB_KEYS.PAGES)) || []
+    const pages = await prisma.pageConfig.findMany()
+    return pages.map(p => ({
+      id: p.id,
+      path: p.path,
+      title: p.title,
+      level: p.level as any,
+      componentTree: JSON.parse(p.componentTree),
+      requiresAuth: p.requiresAuth,
+      requiredRole: (p.requiredRole as any) || undefined,
+    }))
   }
 
   static async setPages(pages: PageConfig[]): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.PAGES, pages)
+    await prisma.pageConfig.deleteMany()
+    for (const page of pages) {
+      await prisma.pageConfig.create({
+        data: {
+          id: page.id,
+          path: page.path,
+          title: page.title,
+          level: page.level,
+          componentTree: JSON.stringify(page.componentTree),
+          requiresAuth: page.requiresAuth,
+          requiredRole: page.requiredRole,
+        },
+      })
+    }
   }
 
   static async addPage(page: PageConfig): Promise<void> {
-    const pages = await this.getPages()
-    pages.push(page)
-    await this.setPages(pages)
+    await prisma.pageConfig.create({
+      data: {
+        id: page.id,
+        path: page.path,
+        title: page.title,
+        level: page.level,
+        componentTree: JSON.stringify(page.componentTree),
+        requiresAuth: page.requiresAuth,
+        requiredRole: page.requiredRole,
+      },
+    })
   }
 
   static async updatePage(pageId: string, updates: Partial<PageConfig>): Promise<void> {
-    const pages = await this.getPages()
-    const index = pages.findIndex(p => p.id === pageId)
-    if (index !== -1) {
-      pages[index] = { ...pages[index], ...updates }
-      await this.setPages(pages)
-    }
+    const data: any = {}
+    if (updates.path !== undefined) data.path = updates.path
+    if (updates.title !== undefined) data.title = updates.title
+    if (updates.level !== undefined) data.level = updates.level
+    if (updates.componentTree !== undefined) data.componentTree = JSON.stringify(updates.componentTree)
+    if (updates.requiresAuth !== undefined) data.requiresAuth = updates.requiresAuth
+    if (updates.requiredRole !== undefined) data.requiredRole = updates.requiredRole
+
+    await prisma.pageConfig.update({
+      where: { id: pageId },
+      data,
+    })
   }
 
   static async deletePage(pageId: string): Promise<void> {
-    const pages = await this.getPages()
-    const filtered = pages.filter(p => p.id !== pageId)
-    await this.setPages(filtered)
+    await prisma.pageConfig.delete({ where: { id: pageId } })
   }
 
   static async getSchemas(): Promise<ModelSchema[]> {
-    return (await window.spark.kv.get<ModelSchema[]>(DB_KEYS.SCHEMAS)) || []
+    const schemas = await prisma.modelSchema.findMany()
+    return schemas.map(s => ({
+      name: s.name,
+      label: s.label || undefined,
+      labelPlural: s.labelPlural || undefined,
+      icon: s.icon || undefined,
+      fields: JSON.parse(s.fields),
+      listDisplay: s.listDisplay ? JSON.parse(s.listDisplay) : undefined,
+      listFilter: s.listFilter ? JSON.parse(s.listFilter) : undefined,
+      searchFields: s.searchFields ? JSON.parse(s.searchFields) : undefined,
+      ordering: s.ordering ? JSON.parse(s.ordering) : undefined,
+    }))
   }
 
   static async setSchemas(schemas: ModelSchema[]): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.SCHEMAS, schemas)
+    await prisma.modelSchema.deleteMany()
+    for (const schema of schemas) {
+      await prisma.modelSchema.create({
+        data: {
+          name: schema.name,
+          label: schema.label,
+          labelPlural: schema.labelPlural,
+          icon: schema.icon,
+          fields: JSON.stringify(schema.fields),
+          listDisplay: schema.listDisplay ? JSON.stringify(schema.listDisplay) : null,
+          listFilter: schema.listFilter ? JSON.stringify(schema.listFilter) : null,
+          searchFields: schema.searchFields ? JSON.stringify(schema.searchFields) : null,
+          ordering: schema.ordering ? JSON.stringify(schema.ordering) : null,
+        },
+      })
+    }
   }
 
   static async addSchema(schema: ModelSchema): Promise<void> {
-    const schemas = await this.getSchemas()
-    schemas.push(schema)
-    await this.setSchemas(schemas)
+    await prisma.modelSchema.create({
+      data: {
+        name: schema.name,
+        label: schema.label,
+        labelPlural: schema.labelPlural,
+        icon: schema.icon,
+        fields: JSON.stringify(schema.fields),
+        listDisplay: schema.listDisplay ? JSON.stringify(schema.listDisplay) : null,
+        listFilter: schema.listFilter ? JSON.stringify(schema.listFilter) : null,
+        searchFields: schema.searchFields ? JSON.stringify(schema.searchFields) : null,
+        ordering: schema.ordering ? JSON.stringify(schema.ordering) : null,
+      },
+    })
   }
 
   static async updateSchema(schemaName: string, updates: Partial<ModelSchema>): Promise<void> {
-    const schemas = await this.getSchemas()
-    const index = schemas.findIndex(s => s.name === schemaName)
-    if (index !== -1) {
-      schemas[index] = { ...schemas[index], ...updates }
-      await this.setSchemas(schemas)
-    }
+    const data: any = {}
+    if (updates.label !== undefined) data.label = updates.label
+    if (updates.labelPlural !== undefined) data.labelPlural = updates.labelPlural
+    if (updates.icon !== undefined) data.icon = updates.icon
+    if (updates.fields !== undefined) data.fields = JSON.stringify(updates.fields)
+    if (updates.listDisplay !== undefined) data.listDisplay = JSON.stringify(updates.listDisplay)
+    if (updates.listFilter !== undefined) data.listFilter = JSON.stringify(updates.listFilter)
+    if (updates.searchFields !== undefined) data.searchFields = JSON.stringify(updates.searchFields)
+    if (updates.ordering !== undefined) data.ordering = JSON.stringify(updates.ordering)
+
+    await prisma.modelSchema.update({
+      where: { name: schemaName },
+      data,
+    })
   }
 
   static async deleteSchema(schemaName: string): Promise<void> {
-    const schemas = await this.getSchemas()
-    const filtered = schemas.filter(s => s.name !== schemaName)
-    await this.setSchemas(filtered)
+    await prisma.modelSchema.delete({ where: { name: schemaName } })
   }
 
   static async getAppConfig(): Promise<AppConfiguration | null> {
-    const config = await window.spark.kv.get<AppConfiguration>(DB_KEYS.APP_CONFIG)
-    return config || null
+    const config = await prisma.appConfiguration.findFirst()
+    if (!config) return null
+
+    return {
+      id: config.id,
+      name: config.name,
+      schemas: JSON.parse(config.schemas),
+      workflows: JSON.parse(config.workflows),
+      luaScripts: JSON.parse(config.luaScripts),
+      pages: JSON.parse(config.pages),
+      theme: JSON.parse(config.theme),
+    }
   }
 
   static async setAppConfig(config: AppConfiguration): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.APP_CONFIG, config)
+    await prisma.appConfiguration.deleteMany()
+    await prisma.appConfiguration.create({
+      data: {
+        id: config.id,
+        name: config.name,
+        schemas: JSON.stringify(config.schemas),
+        workflows: JSON.stringify(config.workflows),
+        luaScripts: JSON.stringify(config.luaScripts),
+        pages: JSON.stringify(config.pages),
+        theme: JSON.stringify(config.theme),
+      },
+    })
   }
 
   static async getComments(): Promise<Comment[]> {
-    return (await window.spark.kv.get<Comment[]>(DB_KEYS.COMMENTS)) || []
+    const comments = await prisma.comment.findMany()
+    return comments.map(c => ({
+      id: c.id,
+      userId: c.userId,
+      content: c.content,
+      createdAt: Number(c.createdAt),
+      updatedAt: c.updatedAt ? Number(c.updatedAt) : undefined,
+      parentId: c.parentId || undefined,
+    }))
   }
 
   static async setComments(comments: Comment[]): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.COMMENTS, comments)
+    await prisma.comment.deleteMany()
+    for (const comment of comments) {
+      await prisma.comment.create({
+        data: {
+          id: comment.id,
+          userId: comment.userId,
+          content: comment.content,
+          createdAt: BigInt(comment.createdAt),
+          updatedAt: comment.updatedAt ? BigInt(comment.updatedAt) : null,
+          parentId: comment.parentId,
+        },
+      })
+    }
   }
 
   static async addComment(comment: Comment): Promise<void> {
-    const comments = await this.getComments()
-    comments.push(comment)
-    await this.setComments(comments)
+    await prisma.comment.create({
+      data: {
+        id: comment.id,
+        userId: comment.userId,
+        content: comment.content,
+        createdAt: BigInt(comment.createdAt),
+        updatedAt: comment.updatedAt ? BigInt(comment.updatedAt) : null,
+        parentId: comment.parentId,
+      },
+    })
   }
 
   static async updateComment(commentId: string, updates: Partial<Comment>): Promise<void> {
-    const comments = await this.getComments()
-    const index = comments.findIndex(c => c.id === commentId)
-    if (index !== -1) {
-      comments[index] = { ...comments[index], ...updates }
-      await this.setComments(comments)
-    }
+    const data: any = {}
+    if (updates.content !== undefined) data.content = updates.content
+    if (updates.updatedAt !== undefined) data.updatedAt = BigInt(updates.updatedAt)
+
+    await prisma.comment.update({
+      where: { id: commentId },
+      data,
+    })
   }
 
   static async deleteComment(commentId: string): Promise<void> {
-    const comments = await this.getComments()
-    const filtered = comments.filter(c => c.id !== commentId)
-    await this.setComments(filtered)
+    await prisma.comment.delete({ where: { id: commentId } })
   }
 
   static async getComponentHierarchy(): Promise<Record<string, ComponentNode>> {
-    return (await window.spark.kv.get<Record<string, ComponentNode>>(DB_KEYS.COMPONENT_HIERARCHY)) || {}
+    const nodes = await prisma.componentNode.findMany()
+    const result: Record<string, ComponentNode> = {}
+    for (const node of nodes) {
+      result[node.id] = {
+        id: node.id,
+        type: node.type,
+        parentId: node.parentId || undefined,
+        childIds: JSON.parse(node.childIds),
+        order: node.order,
+        pageId: node.pageId,
+      }
+    }
+    return result
   }
 
   static async setComponentHierarchy(hierarchy: Record<string, ComponentNode>): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.COMPONENT_HIERARCHY, hierarchy)
+    await prisma.componentNode.deleteMany()
+    for (const node of Object.values(hierarchy)) {
+      await prisma.componentNode.create({
+        data: {
+          id: node.id,
+          type: node.type,
+          parentId: node.parentId,
+          childIds: JSON.stringify(node.childIds),
+          order: node.order,
+          pageId: node.pageId,
+        },
+      })
+    }
   }
 
   static async addComponentNode(node: ComponentNode): Promise<void> {
-    const hierarchy = await this.getComponentHierarchy()
-    hierarchy[node.id] = node
-    await this.setComponentHierarchy(hierarchy)
+    await prisma.componentNode.create({
+      data: {
+        id: node.id,
+        type: node.type,
+        parentId: node.parentId,
+        childIds: JSON.stringify(node.childIds),
+        order: node.order,
+        pageId: node.pageId,
+      },
+    })
   }
 
   static async updateComponentNode(nodeId: string, updates: Partial<ComponentNode>): Promise<void> {
-    const hierarchy = await this.getComponentHierarchy()
-    if (hierarchy[nodeId]) {
-      hierarchy[nodeId] = { ...hierarchy[nodeId], ...updates }
-      await this.setComponentHierarchy(hierarchy)
-    }
+    const data: any = {}
+    if (updates.type !== undefined) data.type = updates.type
+    if (updates.parentId !== undefined) data.parentId = updates.parentId
+    if (updates.childIds !== undefined) data.childIds = JSON.stringify(updates.childIds)
+    if (updates.order !== undefined) data.order = updates.order
+    if (updates.pageId !== undefined) data.pageId = updates.pageId
+
+    await prisma.componentNode.update({
+      where: { id: nodeId },
+      data,
+    })
   }
 
   static async deleteComponentNode(nodeId: string): Promise<void> {
-    const hierarchy = await this.getComponentHierarchy()
-    delete hierarchy[nodeId]
-    await this.setComponentHierarchy(hierarchy)
+    await prisma.componentNode.delete({ where: { id: nodeId } })
   }
 
   static async getComponentConfigs(): Promise<Record<string, ComponentConfig>> {
-    return (await window.spark.kv.get<Record<string, ComponentConfig>>(DB_KEYS.COMPONENT_CONFIGS)) || {}
+    const configs = await prisma.componentConfig.findMany()
+    const result: Record<string, ComponentConfig> = {}
+    for (const config of configs) {
+      result[config.id] = {
+        id: config.id,
+        componentId: config.componentId,
+        props: JSON.parse(config.props),
+        styles: JSON.parse(config.styles),
+        events: JSON.parse(config.events),
+        conditionalRendering: config.conditionalRendering ? JSON.parse(config.conditionalRendering) : undefined,
+      }
+    }
+    return result
   }
 
   static async setComponentConfigs(configs: Record<string, ComponentConfig>): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.COMPONENT_CONFIGS, configs)
-  }
-
-  static async addComponentConfig(config: ComponentConfig): Promise<void> {
-    const configs = await this.getComponentConfigs()
-    configs[config.id] = config
-    await this.setComponentConfigs(configs)
-  }
-
-  static async updateComponentConfig(configId: string, updates: Partial<ComponentConfig>): Promise<void> {
-    const configs = await this.getComponentConfigs()
-    if (configs[configId]) {
-      configs[configId] = { ...configs[configId], ...updates }
-      await this.setComponentConfigs(configs)
+    await prisma.componentConfig.deleteMany()
+    for (const config of Object.values(configs)) {
+      await prisma.componentConfig.create({
+        data: {
+          id: config.id,
+          componentId: config.componentId,
+          props: JSON.stringify(config.props),
+          styles: JSON.stringify(config.styles),
+          events: JSON.stringify(config.events),
+          conditionalRendering: config.conditionalRendering ? JSON.stringify(config.conditionalRendering) : null,
+        },
+      })
     }
   }
 
+  static async addComponentConfig(config: ComponentConfig): Promise<void> {
+    await prisma.componentConfig.create({
+      data: {
+        id: config.id,
+        componentId: config.componentId,
+        props: JSON.stringify(config.props),
+        styles: JSON.stringify(config.styles),
+        events: JSON.stringify(config.events),
+        conditionalRendering: config.conditionalRendering ? JSON.stringify(config.conditionalRendering) : null,
+      },
+    })
+  }
+
+  static async updateComponentConfig(configId: string, updates: Partial<ComponentConfig>): Promise<void> {
+    const data: any = {}
+    if (updates.componentId !== undefined) data.componentId = updates.componentId
+    if (updates.props !== undefined) data.props = JSON.stringify(updates.props)
+    if (updates.styles !== undefined) data.styles = JSON.stringify(updates.styles)
+    if (updates.events !== undefined) data.events = JSON.stringify(updates.events)
+    if (updates.conditionalRendering !== undefined) data.conditionalRendering = JSON.stringify(updates.conditionalRendering)
+
+    await prisma.componentConfig.update({
+      where: { id: configId },
+      data,
+    })
+  }
+
   static async deleteComponentConfig(configId: string): Promise<void> {
-    const configs = await this.getComponentConfigs()
-    delete configs[configId]
-    await this.setComponentConfigs(configs)
+    await prisma.componentConfig.delete({ where: { id: configId } })
   }
 
   static async initializeDatabase(): Promise<void> {
     const users = await this.getUsers()
     const credentials = await this.getCredentials()
-    
+
     if (users.length === 0) {
       const defaultUsers: User[] = [
         {
@@ -417,7 +738,7 @@ export class Database {
           createdAt: Date.now(),
         },
       ]
-      
+
       await this.setUsers(defaultUsers)
     }
 
@@ -427,7 +748,7 @@ export class Database {
       await this.setCredential('god', await hashPassword(getScrambledPassword('god')))
       await this.setCredential('admin', await hashPassword(getScrambledPassword('admin')))
       await this.setCredential('demo', await hashPassword(getScrambledPassword('demo')))
-      
+
       await this.setFirstLoginFlag('supergod', true)
       await this.setFirstLoginFlag('god', true)
       await this.setFirstLoginFlag('admin', false)
@@ -556,7 +877,7 @@ export class Database {
   static async importDatabase(jsonData: string): Promise<void> {
     try {
       const data = JSON.parse(jsonData) as Partial<DatabaseSchema>
-      
+
       if (data.users) await this.setUsers(data.users)
       if (data.workflows) await this.setWorkflows(data.workflows)
       if (data.luaScripts) await this.setLuaScripts(data.luaScripts)
@@ -572,49 +893,69 @@ export class Database {
   }
 
   static async getGodCredentialsExpiry(): Promise<number> {
-    return (await window.spark.kv.get<number>(DB_KEYS.GOD_CREDENTIALS_EXPIRY)) || 0
+    const config = await prisma.systemConfig.findUnique({ where: { key: 'god_credentials_expiry' } })
+    return config ? Number(config.value) : 0
   }
 
   static async setGodCredentialsExpiry(timestamp: number): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.GOD_CREDENTIALS_EXPIRY, timestamp)
+    await prisma.systemConfig.upsert({
+      where: { key: 'god_credentials_expiry' },
+      update: { value: timestamp.toString() },
+      create: { key: 'god_credentials_expiry', value: timestamp.toString() },
+    })
   }
 
   static async getFirstLoginFlags(): Promise<Record<string, boolean>> {
-    return (await window.spark.kv.get<Record<string, boolean>>(DB_KEYS.FIRST_LOGIN_FLAGS)) || {}
+    const users = await prisma.user.findMany({
+      select: { username: true, firstLogin: true },
+    })
+    const result: Record<string, boolean> = {}
+    for (const user of users) {
+      result[user.username] = user.firstLogin
+    }
+    return result
   }
 
   static async setFirstLoginFlag(username: string, isFirstLogin: boolean): Promise<void> {
-    const flags = await this.getFirstLoginFlags()
-    flags[username] = isFirstLogin
-    await window.spark.kv.set(DB_KEYS.FIRST_LOGIN_FLAGS, flags)
+    await prisma.user.update({
+      where: { username },
+      data: { firstLogin: isFirstLogin },
+    })
   }
 
   static async shouldShowGodCredentials(): Promise<boolean> {
     const expiry = await this.getGodCredentialsExpiry()
-    const passwordTimestamps = await this.getPasswordChangeTimestamps()
-    const godPasswordChangeTime = passwordTimestamps['god'] || 0
-    
+    const user = await prisma.user.findUnique({
+      where: { username: 'god' },
+      select: { passwordChangeTimestamp: true },
+    })
+    const godPasswordChangeTime = user?.passwordChangeTimestamp ? Number(user.passwordChangeTimestamp) : 0
+
     if (expiry === 0) {
       const duration = await this.getGodCredentialsExpiryDuration()
       const expiryTime = Date.now() + duration
       await this.setGodCredentialsExpiry(expiryTime)
       return true
     }
-    
+
     if (godPasswordChangeTime > expiry) {
       return false
     }
-    
+
     return Date.now() < expiry
   }
 
   static async getGodCredentialsExpiryDuration(): Promise<number> {
-    const duration = await window.spark.kv.get<number>(DB_KEYS.GOD_CREDENTIALS_EXPIRY_DURATION)
-    return duration || (60 * 60 * 1000)
+    const config = await prisma.systemConfig.findUnique({ where: { key: 'god_credentials_expiry_duration' } })
+    return config ? Number(config.value) : (60 * 60 * 1000)
   }
 
   static async setGodCredentialsExpiryDuration(durationMs: number): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.GOD_CREDENTIALS_EXPIRY_DURATION, durationMs)
+    await prisma.systemConfig.upsert({
+      where: { key: 'god_credentials_expiry_duration' },
+      update: { value: durationMs.toString() },
+      create: { key: 'god_credentials_expiry_duration', value: durationMs.toString() },
+    })
   }
 
   static async resetGodCredentialsExpiry(): Promise<void> {
@@ -624,236 +965,371 @@ export class Database {
   }
 
   static async getCssClasses(): Promise<CssCategory[]> {
-    return (await window.spark.kv.get<CssCategory[]>(DB_KEYS.CSS_CLASSES)) || []
+    const categories = await prisma.cssCategory.findMany()
+    return categories.map(c => ({
+      name: c.name,
+      classes: JSON.parse(c.classes),
+    }))
   }
 
   static async setCssClasses(classes: CssCategory[]): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.CSS_CLASSES, classes)
+    await prisma.cssCategory.deleteMany()
+    for (const category of classes) {
+      await prisma.cssCategory.create({
+        data: {
+          name: category.name,
+          classes: JSON.stringify(category.classes),
+        },
+      })
+    }
   }
 
   static async addCssCategory(category: CssCategory): Promise<void> {
-    const classes = await this.getCssClasses()
-    classes.push(category)
-    await this.setCssClasses(classes)
+    await prisma.cssCategory.create({
+      data: {
+        name: category.name,
+        classes: JSON.stringify(category.classes),
+      },
+    })
   }
 
   static async updateCssCategory(categoryName: string, classes: string[]): Promise<void> {
-    const categories = await this.getCssClasses()
-    const index = categories.findIndex(c => c.name === categoryName)
-    if (index !== -1) {
-      categories[index].classes = classes
-      await this.setCssClasses(categories)
-    }
+    await prisma.cssCategory.update({
+      where: { name: categoryName },
+      data: { classes: JSON.stringify(classes) },
+    })
   }
 
   static async deleteCssCategory(categoryName: string): Promise<void> {
-    const categories = await this.getCssClasses()
-    const filtered = categories.filter(c => c.name !== categoryName)
-    await this.setCssClasses(filtered)
+    await prisma.cssCategory.delete({ where: { name: categoryName } })
   }
 
   static async getDropdownConfigs(): Promise<DropdownConfig[]> {
-    return (await window.spark.kv.get<DropdownConfig[]>(DB_KEYS.DROPDOWN_CONFIGS)) || []
+    const configs = await prisma.dropdownConfig.findMany()
+    return configs.map(c => ({
+      id: c.id,
+      name: c.name,
+      label: c.label,
+      options: JSON.parse(c.options),
+    }))
   }
 
   static async setDropdownConfigs(configs: DropdownConfig[]): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.DROPDOWN_CONFIGS, configs)
-  }
-
-  static async addDropdownConfig(config: DropdownConfig): Promise<void> {
-    const configs = await this.getDropdownConfigs()
-    configs.push(config)
-    await this.setDropdownConfigs(configs)
-  }
-
-  static async updateDropdownConfig(id: string, updates: DropdownConfig): Promise<void> {
-    const configs = await this.getDropdownConfigs()
-    const index = configs.findIndex(c => c.id === id)
-    if (index !== -1) {
-      configs[index] = updates
-      await this.setDropdownConfigs(configs)
+    await prisma.dropdownConfig.deleteMany()
+    for (const config of configs) {
+      await prisma.dropdownConfig.create({
+        data: {
+          id: config.id,
+          name: config.name,
+          label: config.label,
+          options: JSON.stringify(config.options),
+        },
+      })
     }
   }
 
+  static async addDropdownConfig(config: DropdownConfig): Promise<void> {
+    await prisma.dropdownConfig.create({
+      data: {
+        id: config.id,
+        name: config.name,
+        label: config.label,
+        options: JSON.stringify(config.options),
+      },
+    })
+  }
+
+  static async updateDropdownConfig(id: string, updates: DropdownConfig): Promise<void> {
+    await prisma.dropdownConfig.update({
+      where: { id },
+      data: {
+        name: updates.name,
+        label: updates.label,
+        options: JSON.stringify(updates.options),
+      },
+    })
+  }
+
   static async deleteDropdownConfig(id: string): Promise<void> {
-    const configs = await this.getDropdownConfigs()
-    const filtered = configs.filter(c => c.id !== id)
-    await this.setDropdownConfigs(filtered)
+    await prisma.dropdownConfig.delete({ where: { id } })
   }
 
   static async clearDatabase(): Promise<void> {
-    await window.spark.kv.delete(DB_KEYS.USERS)
-    await window.spark.kv.delete(DB_KEYS.CREDENTIALS)
-    await window.spark.kv.delete(DB_KEYS.WORKFLOWS)
-    await window.spark.kv.delete(DB_KEYS.LUA_SCRIPTS)
-    await window.spark.kv.delete(DB_KEYS.PAGES)
-    await window.spark.kv.delete(DB_KEYS.SCHEMAS)
-    await window.spark.kv.delete(DB_KEYS.APP_CONFIG)
-    await window.spark.kv.delete(DB_KEYS.COMMENTS)
-    await window.spark.kv.delete(DB_KEYS.COMPONENT_HIERARCHY)
-    await window.spark.kv.delete(DB_KEYS.COMPONENT_CONFIGS)
-    await window.spark.kv.delete(DB_KEYS.GOD_CREDENTIALS_EXPIRY)
-    await window.spark.kv.delete(DB_KEYS.PASSWORD_CHANGE_TIMESTAMPS)
-    await window.spark.kv.delete(DB_KEYS.FIRST_LOGIN_FLAGS)
-    await window.spark.kv.delete(DB_KEYS.GOD_CREDENTIALS_EXPIRY_DURATION)
-    await window.spark.kv.delete(DB_KEYS.CSS_CLASSES)
-    await window.spark.kv.delete(DB_KEYS.DROPDOWN_CONFIGS)
+    await prisma.user.deleteMany()
+    await prisma.credential.deleteMany()
+    await prisma.workflow.deleteMany()
+    await prisma.luaScript.deleteMany()
+    await prisma.pageConfig.deleteMany()
+    await prisma.modelSchema.deleteMany()
+    await prisma.appConfiguration.deleteMany()
+    await prisma.comment.deleteMany()
+    await prisma.componentNode.deleteMany()
+    await prisma.componentConfig.deleteMany()
+    await prisma.systemConfig.deleteMany()
+    await prisma.cssCategory.deleteMany()
+    await prisma.dropdownConfig.deleteMany()
+    await prisma.installedPackage.deleteMany()
+    await prisma.packageData.deleteMany()
+    await prisma.tenant.deleteMany()
+    await prisma.powerTransferRequest.deleteMany()
+    await prisma.sMTPConfig.deleteMany()
+    await prisma.passwordResetToken.deleteMany()
   }
 
   static async getInstalledPackages(): Promise<InstalledPackage[]> {
-    return (await window.spark.kv.get<InstalledPackage[]>(DB_KEYS.INSTALLED_PACKAGES)) || []
+    const packages = await prisma.installedPackage.findMany()
+    return packages.map(p => ({
+      packageId: p.packageId,
+      installedAt: Number(p.installedAt),
+      version: p.version,
+      enabled: p.enabled,
+    }))
   }
 
   static async setInstalledPackages(packages: InstalledPackage[]): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.INSTALLED_PACKAGES, packages)
+    await prisma.installedPackage.deleteMany()
+    for (const pkg of packages) {
+      await prisma.installedPackage.create({
+        data: {
+          packageId: pkg.packageId,
+          installedAt: BigInt(pkg.installedAt),
+          version: pkg.version,
+          enabled: pkg.enabled,
+        },
+      })
+    }
   }
 
   static async installPackage(packageData: InstalledPackage): Promise<void> {
-    const packages = await this.getInstalledPackages()
-    const exists = packages.find(p => p.packageId === packageData.packageId)
+    const exists = await prisma.installedPackage.findUnique({ where: { packageId: packageData.packageId } })
     if (!exists) {
-      packages.push(packageData)
-      await this.setInstalledPackages(packages)
+      await prisma.installedPackage.create({
+        data: {
+          packageId: packageData.packageId,
+          installedAt: BigInt(packageData.installedAt),
+          version: packageData.version,
+          enabled: packageData.enabled,
+        },
+      })
     }
   }
 
   static async uninstallPackage(packageId: string): Promise<void> {
-    const packages = await this.getInstalledPackages()
-    const filtered = packages.filter(p => p.packageId !== packageId)
-    await this.setInstalledPackages(filtered)
+    await prisma.installedPackage.delete({ where: { packageId } })
   }
 
   static async togglePackageEnabled(packageId: string, enabled: boolean): Promise<void> {
-    const packages = await this.getInstalledPackages()
-    const pkg = packages.find(p => p.packageId === packageId)
-    if (pkg) {
-      pkg.enabled = enabled
-      await this.setInstalledPackages(packages)
-    }
+    await prisma.installedPackage.update({
+      where: { packageId },
+      data: { enabled },
+    })
   }
 
   static async getPackageData(packageId: string): Promise<Record<string, any[]>> {
-    const allData = (await window.spark.kv.get<Record<string, Record<string, any[]>>>(DB_KEYS.PACKAGE_DATA)) || {}
-    return allData[packageId] || {}
+    const pkg = await prisma.packageData.findUnique({ where: { packageId } })
+    return pkg ? JSON.parse(pkg.data) : {}
   }
 
   static async setPackageData(packageId: string, data: Record<string, any[]>): Promise<void> {
-    const allData = (await window.spark.kv.get<Record<string, Record<string, any[]>>>(DB_KEYS.PACKAGE_DATA)) || {}
-    allData[packageId] = data
-    await window.spark.kv.set(DB_KEYS.PACKAGE_DATA, allData)
+    await prisma.packageData.upsert({
+      where: { packageId },
+      update: { data: JSON.stringify(data) },
+      create: { packageId, data: JSON.stringify(data) },
+    })
   }
 
   static async deletePackageData(packageId: string): Promise<void> {
-    const allData = (await window.spark.kv.get<Record<string, Record<string, any[]>>>(DB_KEYS.PACKAGE_DATA)) || {}
-    delete allData[packageId]
-    await window.spark.kv.set(DB_KEYS.PACKAGE_DATA, allData)
+    await prisma.packageData.delete({ where: { packageId } })
   }
 
   static async getTenants(): Promise<Tenant[]> {
-    return (await window.spark.kv.get<Tenant[]>(DB_KEYS.TENANTS)) || []
+    const tenants = await prisma.tenant.findMany()
+    return tenants.map(t => ({
+      id: t.id,
+      name: t.name,
+      ownerId: t.ownerId,
+      createdAt: Number(t.createdAt),
+      homepageConfig: t.homepageConfig ? JSON.parse(t.homepageConfig) : undefined,
+    }))
   }
 
   static async setTenants(tenants: Tenant[]): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.TENANTS, tenants)
+    await prisma.tenant.deleteMany()
+    for (const tenant of tenants) {
+      await prisma.tenant.create({
+        data: {
+          id: tenant.id,
+          name: tenant.name,
+          ownerId: tenant.ownerId,
+          createdAt: BigInt(tenant.createdAt),
+          homepageConfig: tenant.homepageConfig ? JSON.stringify(tenant.homepageConfig) : null,
+        },
+      })
+    }
   }
 
   static async addTenant(tenant: Tenant): Promise<void> {
-    const tenants = await this.getTenants()
-    tenants.push(tenant)
-    await this.setTenants(tenants)
+    await prisma.tenant.create({
+      data: {
+        id: tenant.id,
+        name: tenant.name,
+        ownerId: tenant.ownerId,
+        createdAt: BigInt(tenant.createdAt),
+        homepageConfig: tenant.homepageConfig ? JSON.stringify(tenant.homepageConfig) : null,
+      },
+    })
   }
 
   static async updateTenant(tenantId: string, updates: Partial<Tenant>): Promise<void> {
-    const tenants = await this.getTenants()
-    const index = tenants.findIndex(t => t.id === tenantId)
-    if (index !== -1) {
-      tenants[index] = { ...tenants[index], ...updates }
-      await this.setTenants(tenants)
-    }
+    const data: any = {}
+    if (updates.name !== undefined) data.name = updates.name
+    if (updates.ownerId !== undefined) data.ownerId = updates.ownerId
+    if (updates.homepageConfig !== undefined) data.homepageConfig = JSON.stringify(updates.homepageConfig)
+
+    await prisma.tenant.update({
+      where: { id: tenantId },
+      data,
+    })
   }
 
   static async deleteTenant(tenantId: string): Promise<void> {
-    const tenants = await this.getTenants()
-    const filtered = tenants.filter(t => t.id !== tenantId)
-    await this.setTenants(filtered)
+    await prisma.tenant.delete({ where: { id: tenantId } })
   }
 
   static async getPowerTransferRequests(): Promise<PowerTransferRequest[]> {
-    return (await window.spark.kv.get<PowerTransferRequest[]>(DB_KEYS.POWER_TRANSFER_REQUESTS)) || []
+    const requests = await prisma.powerTransferRequest.findMany()
+    return requests.map(r => ({
+      id: r.id,
+      fromUserId: r.fromUserId,
+      toUserId: r.toUserId,
+      status: r.status as any,
+      createdAt: Number(r.createdAt),
+      expiresAt: Number(r.expiresAt),
+    }))
   }
 
   static async setPowerTransferRequests(requests: PowerTransferRequest[]): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.POWER_TRANSFER_REQUESTS, requests)
+    await prisma.powerTransferRequest.deleteMany()
+    for (const request of requests) {
+      await prisma.powerTransferRequest.create({
+        data: {
+          id: request.id,
+          fromUserId: request.fromUserId,
+          toUserId: request.toUserId,
+          status: request.status,
+          createdAt: BigInt(request.createdAt),
+          expiresAt: BigInt(request.expiresAt),
+        },
+      })
+    }
   }
 
   static async addPowerTransferRequest(request: PowerTransferRequest): Promise<void> {
-    const requests = await this.getPowerTransferRequests()
-    requests.push(request)
-    await this.setPowerTransferRequests(requests)
+    await prisma.powerTransferRequest.create({
+      data: {
+        id: request.id,
+        fromUserId: request.fromUserId,
+        toUserId: request.toUserId,
+        status: request.status,
+        createdAt: BigInt(request.createdAt),
+        expiresAt: BigInt(request.expiresAt),
+      },
+    })
   }
 
   static async updatePowerTransferRequest(requestId: string, updates: Partial<PowerTransferRequest>): Promise<void> {
-    const requests = await this.getPowerTransferRequests()
-    const index = requests.findIndex(r => r.id === requestId)
-    if (index !== -1) {
-      requests[index] = { ...requests[index], ...updates }
-      await this.setPowerTransferRequests(requests)
-    }
+    const data: any = {}
+    if (updates.status !== undefined) data.status = updates.status
+
+    await prisma.powerTransferRequest.update({
+      where: { id: requestId },
+      data,
+    })
   }
 
   static async deletePowerTransferRequest(requestId: string): Promise<void> {
-    const requests = await this.getPowerTransferRequests()
-    const filtered = requests.filter(r => r.id !== requestId)
-    await this.setPowerTransferRequests(filtered)
+    await prisma.powerTransferRequest.delete({ where: { id: requestId } })
   }
 
   static async getSuperGod(): Promise<User | null> {
-    const users = await this.getUsers()
-    return users.find(u => u.role === 'supergod') || null
+    const user = await prisma.user.findFirst({
+      where: { role: 'supergod' },
+    })
+    if (!user) return null
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role as any,
+      profilePicture: user.profilePicture || undefined,
+      bio: user.bio || undefined,
+      createdAt: Number(user.createdAt),
+      tenantId: user.tenantId || undefined,
+      isInstanceOwner: user.isInstanceOwner,
+    }
   }
 
   static async transferSuperGodPower(fromUserId: string, toUserId: string): Promise<void> {
-    const users = await this.getUsers()
-    const fromUser = users.find(u => u.id === fromUserId)
-    const toUser = users.find(u => u.id === toUserId)
-    
-    if (!fromUser || !toUser) {
-      throw new Error('User not found')
-    }
+    await prisma.user.update({
+      where: { id: fromUserId },
+      data: { role: 'god', isInstanceOwner: false },
+    })
 
-    if (fromUser.role !== 'supergod') {
-      throw new Error('Only supergod can transfer power')
-    }
-
-    fromUser.role = 'god'
-    fromUser.isInstanceOwner = false
-    toUser.role = 'supergod'
-    toUser.isInstanceOwner = true
-
-    await this.setUsers(users)
+    await prisma.user.update({
+      where: { id: toUserId },
+      data: { role: 'supergod', isInstanceOwner: true },
+    })
   }
 
   static async getSMTPConfig(): Promise<SMTPConfig | null> {
-    return await window.spark.kv.get<SMTPConfig>(DB_KEYS.SMTP_CONFIG) || null
+    const config = await prisma.sMTPConfig.findFirst()
+    if (!config) return null
+
+    return {
+      host: config.host,
+      port: config.port,
+      secure: config.secure,
+      username: config.username,
+      password: config.password,
+      fromEmail: config.fromEmail,
+      fromName: config.fromName,
+    }
   }
 
   static async setSMTPConfig(config: SMTPConfig): Promise<void> {
-    await window.spark.kv.set(DB_KEYS.SMTP_CONFIG, config)
+    await prisma.sMTPConfig.deleteMany()
+    await prisma.sMTPConfig.create({
+      data: {
+        host: config.host,
+        port: config.port,
+        secure: config.secure,
+        username: config.username,
+        password: config.password,
+        fromEmail: config.fromEmail,
+        fromName: config.fromName,
+      },
+    })
   }
 
   static async getPasswordResetTokens(): Promise<Record<string, string>> {
-    return (await window.spark.kv.get<Record<string, string>>(DB_KEYS.PASSWORD_RESET_TOKENS)) || {}
+    const tokens = await prisma.passwordResetToken.findMany()
+    const result: Record<string, string> = {}
+    for (const token of tokens) {
+      result[token.username] = token.token
+    }
+    return result
   }
 
   static async setPasswordResetToken(username: string, token: string): Promise<void> {
-    const tokens = await this.getPasswordResetTokens()
-    tokens[username] = token
-    await window.spark.kv.set(DB_KEYS.PASSWORD_RESET_TOKENS, tokens)
+    await prisma.passwordResetToken.upsert({
+      where: { username },
+      update: { token },
+      create: { username, token },
+    })
   }
 
   static async deletePasswordResetToken(username: string): Promise<void> {
-    const tokens = await this.getPasswordResetTokens()
-    delete tokens[username]
-    await window.spark.kv.set(DB_KEYS.PASSWORD_RESET_TOKENS, tokens)
+    await prisma.passwordResetToken.delete({ where: { username } })
   }
 }

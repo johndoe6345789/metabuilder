@@ -63,12 +63,14 @@ export function GitHubActionsFetcher() {
     setNeedsAuth(false)
 
     try {
-      const user = await spark.user()
+      // TODO: Replace with proper GitHub OAuth authentication in Next.js
+      // For now, use Octokit without authentication (rate limited)
+      // const user = await spark.user()
       
-      if (!user || !user.id) {
-        setNeedsAuth(true)
-        throw new Error('GitHub authentication required')
-      }
+      // if (!user || !user.id) {
+      //   setNeedsAuth(true)
+      //   throw new Error('GitHub authentication required')
+      // }
 
       const octokit = new Octokit()
       
@@ -135,24 +137,30 @@ export function GitHubActionsFetcher() {
 
     setIsAnalyzing(true)
     try {
-      const prompt = spark.llmPrompt`You are a DevOps expert analyzing GitHub Actions workflow data.
-
-Given the following workflow runs data:
-${JSON.stringify(data, null, 2)}
-
-Provide a comprehensive analysis including:
-1. **Overall Build Health**: Current state of the CI/CD pipeline
-2. **Recent Failures**: List any failed builds and potential root causes
-3. **Patterns**: Identify any patterns in failures (specific branches, times, events)
-4. **Performance**: Comment on build frequency and completion times
-5. **Recommendations**: Specific actionable steps to improve the pipeline
-6. **Risk Assessment**: Any immediate concerns that need attention
-
-Format your response in markdown with clear sections and bullet points.`
-
-      const result = await spark.llm(prompt, 'gpt-4o')
-      setAnalysis(result)
-      toast.success('Analysis complete')
+      // TODO: Replace with Next.js API route that calls an LLM service
+      // For now, provide a placeholder message
+      toast.info('AI analysis feature temporarily disabled during migration')
+      setAnalysis('**Analysis Feature Unavailable**\n\nThe AI-powered analysis feature is currently being migrated to work with Next.js. This will be available soon.')
+      
+      // Original Spark LLM code (commented out):
+      // const prompt = spark.llmPrompt`You are a DevOps expert analyzing GitHub Actions workflow data.
+      // 
+      // Given the following workflow runs data:
+      // ${JSON.stringify(data, null, 2)}
+      // 
+      // Provide a comprehensive analysis including:
+      // 1. **Overall Build Health**: Current state of the CI/CD pipeline
+      // 2. **Recent Failures**: List any failed builds and potential root causes
+      // 3. **Patterns**: Identify any patterns in failures (specific branches, times, events)
+      // 4. **Performance**: Comment on build frequency and completion times
+      // 5. **Recommendations**: Specific actionable steps to improve the pipeline
+      // 6. **Risk Assessment**: Any immediate concerns that need attention
+      // 
+      // Format your response in markdown with clear sections and bullet points.`
+      // 
+      // const result = await spark.llm(prompt, 'gpt-4o')
+      // setAnalysis(result)
+      // toast.success('Analysis complete')
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Analysis failed'
       toast.error(errorMessage)
@@ -279,31 +287,37 @@ Format your response in markdown with clear sections and bullet points.`
     setIsAnalyzing(true)
     try {
       const selectedRun = data?.find(r => r.id === selectedRunId)
-      const prompt = spark.llmPrompt`You are a DevOps expert analyzing GitHub Actions workflow logs.
-
-Workflow: ${selectedRun?.name || 'Unknown'}
-Run ID: ${selectedRunId}
-Status: ${selectedRun?.status}
-Conclusion: ${selectedRun?.conclusion || 'N/A'}
-
-=== COMPLETE WORKFLOW LOGS ===
-${runLogs}
-=== END LOGS ===
-
-Provide a comprehensive analysis including:
-1. **Root Cause Analysis**: Identify the specific error(s) that caused failures
-2. **Error Details**: Extract exact error messages, line numbers, and stack traces
-3. **Failed Steps**: List which jobs/steps failed and why
-4. **Dependencies Issues**: Any missing packages, version conflicts, or dependency problems
-5. **Configuration Problems**: Issues with workflow configuration, environment variables, secrets
-6. **Recommended Fixes**: Specific, actionable steps to fix each issue with code examples where applicable
-7. **Prevention**: How to prevent similar issues in the future
-
-Format your response in clear markdown with code blocks for any suggested fixes.`
-
-      const result = await spark.llm(prompt, 'gpt-4o')
-      setAnalysis(result)
-      toast.success('Log analysis complete')
+      
+      // TODO: Replace with Next.js API route that calls an LLM service
+      toast.info('AI log analysis feature temporarily disabled during migration')
+      setAnalysis(`**Log Analysis Feature Unavailable**\n\nThe AI-powered log analysis feature is currently being migrated to work with Next.js. This will be available soon.\n\n**Workflow**: ${selectedRun?.name || 'Unknown'}\n**Run ID**: ${selectedRunId}\n**Status**: ${selectedRun?.status}\n**Conclusion**: ${selectedRun?.conclusion || 'N/A'}`)
+      
+      // Original Spark LLM code (commented out):
+      // const prompt = spark.llmPrompt`You are a DevOps expert analyzing GitHub Actions workflow logs.
+      // 
+      // Workflow: ${selectedRun?.name || 'Unknown'}
+      // Run ID: ${selectedRunId}
+      // Status: ${selectedRun?.status}
+      // Conclusion: ${selectedRun?.conclusion || 'N/A'}
+      // 
+      // === COMPLETE WORKFLOW LOGS ===
+      // ${runLogs}
+      // === END LOGS ===
+      // 
+      // Provide a comprehensive analysis including:
+      // 1. **Root Cause Analysis**: Identify the specific error(s) that caused failures
+      // 2. **Error Details**: Extract exact error messages, line numbers, and stack traces
+      // 3. **Failed Steps**: List which jobs/steps failed and why
+      // 4. **Dependencies Issues**: Any missing packages, version conflicts, or dependency problems
+      // 5. **Configuration Problems**: Issues with workflow configuration, environment variables, secrets
+      // 6. **Recommended Fixes**: Specific, actionable steps to fix each issue with code examples where applicable
+      // 7. **Prevention**: How to prevent similar issues in the future
+      // 
+      // Format your response in clear markdown with code blocks for any suggested fixes.`
+      // 
+      // const result = await spark.llm(prompt, 'gpt-4o')
+      // setAnalysis(result)
+      // toast.success('Log analysis complete')
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Analysis failed'
       toast.error(errorMessage)
