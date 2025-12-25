@@ -15,6 +15,9 @@ on:
 jobs:
   size-limits:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
     
     steps:
       - uses: actions/checkout@v4
@@ -24,6 +27,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: frontends/nextjs/package-lock.json
       
       - name: Install dependencies
         run: npm ci

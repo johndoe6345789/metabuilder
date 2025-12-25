@@ -18,6 +18,9 @@ jobs:
   code-quality:
     name: Code Quality Analysis
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,6 +32,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: frontends/nextjs/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -76,6 +80,9 @@ jobs:
   coverage-metrics:
     name: Test Coverage Analysis
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -85,6 +92,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: frontends/nextjs/package-lock.json
 
       - name: Install dependencies
         run: npm ci
