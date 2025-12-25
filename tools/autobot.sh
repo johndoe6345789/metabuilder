@@ -20,18 +20,6 @@ if [ ! -x "$CODEX_PATH" ]; then
   exit 126
 fi
 
-KICKSTART_FILE="0-kickstart.md"
-if [ ! -f "$KICKSTART_FILE" ]; then
-  echo "ERROR: Missing local file: $KICKSTART_FILE" >&2
-  exit 1
-fi
-
-# Optional: confirm we’re running from the intended directory (e.g., repo root)
-# if [ ! -d .git ]; then
-#   echo "ERROR: Not in a git repo root (no .git directory found)." >&2
-#   exit 1
-# fi
-
 # Polling loop (runs locally, every 90s). Breaks if codex returnson-zero.
 while :; do
   sleep 90
