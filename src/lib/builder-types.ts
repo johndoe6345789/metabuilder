@@ -1,3 +1,9 @@
+/**
+ * ComponentType - All supported UI component types in the builder
+ * @description Union type of all available components
+ * Supports: Layout (Flex, Grid, Container), Input (Input, Select, Switch), 
+ * Display (Text, Heading, Badge), Interactive (Button, Dialog, Tabs)
+ */
 export type ComponentType =
   | 'Button'
   | 'Input'
@@ -27,10 +33,31 @@ export type ComponentType =
   | 'IRCWebchat'
   | string
 
+/**
+ * ComponentProps - Dynamic property object for any component
+ * @description Flexible key-value pairs for component configuration
+ * @example { className: "mt-4", disabled: true, onClick: fn }
+ */
 export interface ComponentProps {
   [key: string]: any
 }
 
+/**
+ * ComponentInstance - A single component in the component tree
+ * @description Represents a rendered component with its properties and children
+ * @property id - Unique identifier for this component instance
+ * @property type - The type of component (Button, Input, etc.)
+ * @property props - Properties passed to the component
+ * @property children - Child component instances (for container components)
+ * @property customCode - Optional custom code/logic for this component
+ * @example
+ * {
+ *   id: "btn-submit",
+ *   type: "Button",
+ *   props: { label: "Submit" },
+ *   children: []
+ * }
+ */
 export interface ComponentInstance {
   id: string
   type: ComponentType | string

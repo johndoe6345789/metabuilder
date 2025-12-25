@@ -1,7 +1,26 @@
+/**
+ * UserRole - User permission levels in MetaBuilder
+ * @description Five-level permission hierarchy
+ * - 'public': Guest access (read-only)
+ * - 'user': Regular user access
+ * - 'admin': Tenant administrator
+ * - 'god': Power user with system configuration access
+ * - 'supergod': System administrator with full access
+ */
 export type UserRole = 'public' | 'user' | 'admin' | 'god' | 'supergod'
 
+/** AppLevel - Numeric representation of permission levels (1-5) */
 export type AppLevel = 1 | 2 | 3 | 4 | 5
 
+/**
+ * User - System user account
+ * @property id - Unique user identifier
+ * @property username - Display username
+ * @property email - Email address for notifications
+ * @property role - Permission level (public|user|admin|god|supergod)
+ * @property tenantId - Tenant isolation identifier
+ * @property isInstanceOwner - Owner of this MetaBuilder instance
+ */
 export interface User {
   id: string
   username: string
@@ -14,6 +33,11 @@ export interface User {
   isInstanceOwner?: boolean
 }
 
+/**
+ * Comment - User comment or annotation
+ * @property userId - Author of the comment
+ * @property parentId - For nested comments/threads
+ */
 export interface Comment {
   id: string
   userId: string
@@ -23,6 +47,12 @@ export interface Comment {
   parentId?: string
 }
 
+/**
+ * WorkflowNode - Individual step in a workflow
+ * @property type - Node type: trigger (event), action (do something), 
+ *                  condition (if/then), lua (execute script), transform (map data)
+ * @property position - X/Y coordinates for visual editor
+ */
 export interface WorkflowNode {
   id: string
   type: 'trigger' | 'action' | 'condition' | 'lua' | 'transform'
@@ -31,13 +61,25 @@ export interface WorkflowNode {
   position: { x: number; y: number }
 }
 
+/** WorkflowEdge - Connection between workflow nodes */
 export interface WorkflowEdge {
   id: string
-  source: string
-  target: string
+  source: string // Source node ID
+  target: string // Target node ID
   label?: string
 }
 
+/**
+ * Workflow - Automation workflow definition
+ * @description Consists of nodes (steps) connected by edges
+ * @example
+ * {
+ *   id: "wf-1",
+ *   name: "Send Welcome Email",
+ *   nodes: [trigger, condition, action],
+ *   edges: [...]
+ * }
+ */
 export interface Workflow {
   id: string
   name: string
@@ -47,6 +89,9 @@ export interface Workflow {
   enabled: boolean
 }
 
+/**
+ * LuaScript - Server-side business logic
+ */
 export interface LuaScript {
   id: string
   name: string

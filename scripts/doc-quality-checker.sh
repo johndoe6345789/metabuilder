@@ -67,17 +67,24 @@ check_docs_structure() {
             ((score += 30))
             [[ $VERBOSE == "true" ]] && echo "    Organized docs structure: $subdirs dirs"
         fi
+        
+        # Check for docs/README.md
+        if [[ -f "$PROJECT_ROOT/docs/README.md" ]]; then
+            ((score += 15))
+            [[ $VERBOSE == "true" ]] && echo "    docs/README.md found"
+        fi
+    fi
+    
+    # Check for root README
+    if [[ -f "$PROJECT_ROOT/README.md" ]]; then
+        ((score += 10))
+        [[ $VERBOSE == "true" ]] && echo "    Root README.md found"
     fi
     
     # Check for key doc files
-    if [[ -f "$PROJECT_ROOT/PRD.md" ]]; then
-        ((score += 15))
+    if [[ -f "$PROJECT_ROOT/docs/PRD.md" ]]; then
+        ((score += 10))
         [[ $VERBOSE == "true" ]] && echo "    PRD.md found"
-    fi
-    
-    if [[ -f "$PROJECT_ROOT/docs/ARCHITECTURE.md" || -f "$PROJECT_ROOT/docs/architecture.md" ]]; then
-        ((score += 20))
-        [[ $VERBOSE == "true" ]] && echo "    Architecture documentation found"
     fi
     
     (( score > 100 )) && score=100
@@ -184,18 +191,32 @@ check_examples() {
     local score=0
     
     if [[ -d "$PROJECT_ROOT/examples" ]]; then
-        ((score += 40))
+        ((score += 25))
         [[ $VERBOSE == "true" ]] && echo "    examples/ directory found"
     fi
     
+    # Check for example components
+    local example_components=$(find "$PROJECT_ROOT" -name "*.example.*" -o -name "*.example*" 2>/dev/null | wc -l)
+    if (( example_components > 0 )); then
+        ((score += 20))
+        [[ $VERBOSE == "true" ]] && echo "    Example components: $example_components"
+    fi
+    
     if [[ -d "$PROJECT_ROOT/docs/guides" ]]; then
-        ((score += 30))
+        ((score += 25))
         [[ $VERBOSE == "true" ]] && echo "    guides/ directory found"
+    fi
+    
+    # Count guide files (more specific)
+    local guide_files=$(find "$PROJECT_ROOT/docs/guides" -name "*.md" 2>/dev/null | wc -l)
+    if (( guide_files > 2 )); then
+        ((score += 15))
+        [[ $VERBOSE == "true" ]] && echo "    Guide files: $guide_files"
     fi
     
     local test_files=$(find "$PROJECT_ROOT" \( -name "*.spec.*" -o -name "*.test.*" \) -not -path "*/node_modules/*" 2>/dev/null | wc -l)
     if (( test_files > 10 )); then
-        ((score += 30))
+        ((score += 15))
         [[ $VERBOSE == "true" ]] && echo "    Test files as examples: $test_files"
     fi
     
@@ -211,15 +232,15 @@ check_architecture() {
     info "Checking architecture documentation..."
     local score=0
     
-    local arch_files=0
-    for pattern in ARCHITECTURE architecture DESIGN design "implementation" "IMPLEMENTATION"; do
-        if [[ -f "$PROJECT_ROOT/docs/${pattern}.md" || -f "$PROJECT_ROOT/$pattern.md" || -d "$PROJECT_ROOT/docs/$pattern" ]]; then
-            ((arch_files++))
-        fi
-    done
+    # Count all .md files in architecture directory
+    local arch_files=$(find "$PROJECT_ROOT/docs/architecture" -name "*.md" -type f 2>/dev/null | wc -l)
+    
+    # Also check for architecture docs in root docs directory
+    arch_files=$((arch_files + $(find "$PROJECT_ROOT/docs" -maxdepth 1 -name "*architecture*.md" -o -name "*design*.md" -o -name "*ARCHITECTURE*.md" 2>/dev/null | wc -l)))
     
     if (( arch_files > 0 )); then
-        score=$((arch_files * 25))
+        # Score: 25% per document up to 100%
+        score=$((arch_files * 15))
         (( score > 100 )) && score=100
         [[ $VERBOSE == "true" ]] && echo "    Architecture documents: $arch_files found"
     fi
