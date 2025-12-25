@@ -1,0 +1,180 @@
+// ========================================
+// Theme Styles
+// ========================================
+
+@use './variables' as *;
+
+// Light theme (default)
+:root {
+  color-scheme: light;
+
+  // Colors
+  --color-primary: #{$color-primary};
+  --color-primary-dark: #{$color-primary-dark};
+  --color-primary-light: #{$color-primary-light};
+
+  --color-secondary: #{$color-secondary};
+  --color-accent: #{$color-accent};
+
+  --color-success: #{$color-success};
+  --color-warning: #{$color-warning};
+  --color-error: #{$color-error};
+  --color-info: #{$color-info};
+
+  --color-neutral-950: #{$color-neutral-950};
+  --color-neutral-900: #{$color-neutral-900};
+  --color-neutral-800: #{$color-neutral-800};
+  --color-neutral-700: #{$color-neutral-700};
+  --color-neutral-600: #{$color-neutral-600};
+  --color-neutral-500: #{$color-neutral-500};
+  --color-neutral-400: #{$color-neutral-400};
+  --color-neutral-300: #{$color-neutral-300};
+  --color-neutral-200: #{$color-neutral-200};
+  --color-neutral-100: #{$color-neutral-100};
+  --color-neutral-50: #{$color-neutral-50};
+
+  // Background & Foreground
+  --bg-primary: #{$bg-primary};
+  --bg-secondary: #{$bg-secondary};
+  --bg-tertiary: #{$bg-tertiary};
+
+  --fg-primary: #{$fg-primary};
+  --fg-secondary: #{$fg-secondary};
+  --fg-tertiary: #{$fg-tertiary};
+
+  // Fonts
+  --font-family-body: #{$font-family-body};
+  --font-family-heading: #{$font-family-heading};
+  --font-family-mono: #{$font-family-mono};
+
+  // Transitions
+  --transition-fast: #{$transition-fast};
+  --transition-base: #{$transition-base};
+  --transition-slow: #{$transition-slow};
+
+  // Z-index
+  --z-dropdown: #{$z-dropdown};
+  --z-sticky: #{$z-sticky};
+  --z-fixed: #{$z-fixed};
+  --z-modal-backdrop: #{$z-modal-backdrop};
+  --z-modal: #{$z-modal};
+  --z-popover: #{$z-popover};
+  --z-tooltip: #{$z-tooltip};
+}
+
+// Dark theme
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg-primary: #{$color-neutral-900};
+  --bg-secondary: #{$color-neutral-950};
+  --bg-tertiary: #{$color-neutral-800};
+
+  --fg-primary: #{$color-neutral-100};
+  --fg-secondary: #{$color-neutral-400};
+  --fg-tertiary: #{$color-neutral-500};
+
+  // Dark theme specific adjustments
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='number'],
+  input[type='search'],
+  textarea,
+  select {
+    background-color: var(--bg-primary);
+    border-color: var(--color-neutral-700);
+    color: var(--fg-primary);
+
+    &::placeholder {
+      color: var(--fg-tertiary);
+    }
+  }
+
+  code {
+    background-color: $color-neutral-800;
+    color: $color-neutral-300;
+  }
+
+  table {
+    th {
+      background-color: $color-neutral-800;
+      border-bottom-color: $color-neutral-700;
+    }
+
+    td {
+      border-bottom-color: $color-neutral-800;
+    }
+
+    tr:hover {
+      background-color: $color-neutral-950;
+    }
+  }
+
+  .card {
+    background-color: $color-neutral-900;
+    border-color: $color-neutral-800;
+  }
+
+  .alert {
+    &-primary {
+      background-color: oklch(25% 0.08 334.61);
+      color: $color-primary-light;
+    }
+
+    &-success {
+      background-color: oklch(28% 0.10 149.47);
+      color: oklch(82% 0.12 149.47);
+    }
+
+    &-warning {
+      background-color: oklch(35% 0.12 70.08);
+      color: oklch(85% 0.14 70.08);
+    }
+
+    &-danger {
+      background-color: oklch(32% 0.16 25.39);
+      color: oklch(77% 0.18 25.39);
+    }
+
+    &-info {
+      background-color: oklch(32% 0.12 204.86);
+      color: oklch(84% 0.13 204.86);
+    }
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: more) {
+  :root {
+    --color-neutral-950: #000000;
+    --color-neutral-50: #ffffff;
+    --fg-primary: #000000;
+    --bg-primary: #ffffff;
+  }
+
+  [data-theme='dark'] {
+    --color-neutral-950: #000000;
+    --color-neutral-100: #ffffff;
+    --fg-primary: #ffffff;
+    --bg-primary: #000000;
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// Reduced transparency
+@media (prefers-reduced-transparency: reduce) {
+  * {
+    background-blend-mode: normal !important;
+    mix-blend-mode: normal !important;
+  }
+}

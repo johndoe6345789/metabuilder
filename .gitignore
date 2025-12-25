@@ -1,3 +1,6 @@
+.venv/
+
+
 # Logs
 logs
 *.log
@@ -51,3 +54,4 @@ pids
 *.spec.js.map
 *.spec.ts.map
 lint-output.txt
+build/

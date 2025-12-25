@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next'
 // import { IBM_Plex_Sans, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import { Providers } from './providers'
 import { Toaster } from '@/components/ui/sonner'
-import '@/index.css'
+import '@/main.scss'
 
 // Temporarily disabled until fonts can be loaded properly
 /*

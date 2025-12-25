@@ -1,0 +1,522 @@
+// ========================================
+// Component Styles
+// ========================================
+
+@use './variables' as *;
+@use './mixins' as *;
+
+// ========================================
+// Button Components
+// ========================================
+
+.btn {
+  @include btn-base;
+  background-color: $color-neutral-200;
+  color: $fg-primary;
+
+  &:hover:not(:disabled) {
+    background-color: $color-neutral-300;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &-primary {
+    @include btn-primary;
+  }
+
+  &-secondary {
+    @include btn-secondary;
+  }
+
+  &-success {
+    @include btn-base;
+    background-color: $color-success;
+    color: #ffffff;
+
+    &:hover:not(:disabled) {
+      opacity: 0.85;
+    }
+  }
+
+  &-danger {
+    @include btn-base;
+    background-color: $color-error;
+    color: #ffffff;
+
+    &:hover:not(:disabled) {
+      opacity: 0.85;
+    }
+  }
+
+  &-warning {
+    @include btn-base;
+    background-color: $color-warning;
+    color: #ffffff;
+
+    &:hover:not(:disabled) {
+      opacity: 0.85;
+    }
+  }
+
+  &-sm {
+    padding: $space-1 $space-3;
+    font-size: $font-size-xs;
+  }
+
+  &-md {
+    padding: $space-2 $space-4;
+    font-size: $font-size-sm;
+  }
+
+  &-lg {
+    padding: $space-3 $space-6;
+    font-size: $font-size-base;
+  }
+
+  &-block {
+    width: 100%;
+  }
+
+  &-icon {
+    @include flex-center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border-radius: 50%;
+  }
+}
+
+// ========================================
+// Card Components
+// ========================================
+
+.card {
+  @include card;
+  padding: $space-6;
+
+  &-header {
+    border-bottom: 1px solid $color-neutral-200;
+    padding-bottom: $space-4;
+    margin-bottom: $space-4;
+
+    h1, h2, h3, h4, h5, h6 {
+      margin-bottom: 0;
+    }
+  }
+
+  &-body {
+    padding: $space-4 0;
+  }
+
+  &-footer {
+    border-top: 1px solid $color-neutral-200;
+    padding-top: $space-4;
+    margin-top: $space-4;
+  }
+
+  &-compact {
+    padding: $space-4;
+  }
+
+  &-elevated {
+    @include elevation(3);
+  }
+}
+
+// ========================================
+// Form Components
+// ========================================
+
+.form {
+  &-group {
+    margin-bottom: $space-6;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &-label {
+    display: block;
+    margin-bottom: $space-2;
+    font-weight: $font-weight-medium;
+    color: $fg-primary;
+  }
+
+  &-help {
+    display: block;
+    margin-top: $space-1;
+    font-size: $font-size-xs;
+    color: $fg-tertiary;
+  }
+
+  &-error {
+    display: block;
+    margin-top: $space-1;
+    font-size: $font-size-xs;
+    color: $color-error;
+  }
+
+  &-success {
+    display: block;
+    margin-top: $space-1;
+    font-size: $font-size-xs;
+    color: $color-success;
+  }
+}
+
+// ========================================
+// Badge Components
+// ========================================
+
+.badge {
+  @include badge;
+  background-color: $color-neutral-200;
+  color: $fg-primary;
+
+  &-primary {
+    @include badge;
+    background-color: $color-primary;
+    color: #ffffff;
+  }
+
+  &-success {
+    @include badge;
+    background-color: $color-success;
+    color: #ffffff;
+  }
+
+  &-danger {
+    @include badge;
+    background-color: $color-error;
+    color: #ffffff;
+  }
+
+  &-warning {
+    @include badge;
+    background-color: $color-warning;
+    color: #ffffff;
+  }
+
+  &-info {
+    @include badge;
+    background-color: $color-info;
+    color: #ffffff;
+  }
+}
+
+// ========================================
+// Alert Components
+// ========================================
+
+.alert {
+  padding: $space-4;
+  border-radius: $radius-md;
+  margin-bottom: $space-4;
+  border-left: 4px solid;
+
+  &-primary {
+    background-color: oklch(94% 0.1 334.61);
+    border-color: $color-primary;
+    color: $color-primary-dark;
+  }
+
+  &-success {
+    background-color: oklch(93% 0.12 149.47);
+    border-color: $color-success;
+    color: oklch(62% 0.14 149.47);
+  }
+
+  &-warning {
+    background-color: oklch(95% 0.15 70.08);
+    border-color: $color-warning;
+    color: oklch(65% 0.17 70.08);
+  }
+
+  &-danger {
+    background-color: oklch(92% 0.2 25.39);
+    border-color: $color-error;
+    color: oklch(47% 0.24 25.39);
+  }
+
+  &-info {
+    background-color: oklch(92% 0.15 204.86);
+    border-color: $color-info;
+    color: oklch(54% 0.17 204.86);
+  }
+
+  &-title {
+    font-weight: $font-weight-semibold;
+    margin-bottom: $space-2;
+  }
+
+  &-message {
+    margin-bottom: 0;
+  }
+
+  &-close {
+    float: right;
+    cursor: pointer;
+    font-size: 1.5em;
+    line-height: 1;
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// ========================================
+// Container Components
+// ========================================
+
+.container {
+  width: 100%;
+  padding: 0 $space-4;
+  margin: 0 auto;
+
+  @include breakpoint-sm {
+    max-width: 540px;
+  }
+
+  @include breakpoint-md {
+    max-width: 720px;
+  }
+
+  @include breakpoint-lg {
+    max-width: 960px;
+  }
+
+  @include breakpoint-xl {
+    max-width: 1140px;
+  }
+
+  @include breakpoint-2xl {
+    max-width: 1320px;
+  }
+}
+
+// ========================================
+// Grid Components
+// ========================================
+
+.grid {
+  display: grid;
+  gap: $space-4;
+
+  @for $i from 1 through 12 {
+    &-cols-#{$i} {
+      grid-template-columns: repeat($i, 1fr);
+    }
+  }
+
+  @for $i from 1 through 6 {
+    &-gap-#{$i} {
+      gap: $space-4 * $i;
+    }
+  }
+}
+
+// ========================================
+// Flex Components
+// ========================================
+
+.flex {
+  display: flex;
+
+  &-center {
+    @include flex-center;
+  }
+
+  &-between {
+    @include flex-between;
+  }
+
+  &-column {
+    @include flex-column;
+  }
+
+  &-column-center {
+    @include flex-column-center;
+  }
+
+  @for $i from 1 through 4 {
+    &-gap-#{$i} {
+      gap: $space-4 * $i;
+    }
+  }
+}
+
+// ========================================
+// Text Utilities
+// ========================================
+
+.text {
+  &-primary {
+    color: $color-primary;
+  }
+
+  &-success {
+    color: $color-success;
+  }
+
+  &-danger {
+    color: $color-error;
+  }
+
+  &-warning {
+    color: $color-warning;
+  }
+
+  &-muted {
+    color: $fg-tertiary;
+  }
+
+  &-center {
+    text-align: center;
+  }
+
+  &-left {
+    text-align: left;
+  }
+
+  &-right {
+    text-align: right;
+  }
+
+  &-justify {
+    text-align: justify;
+  }
+
+  &-truncate {
+    @include truncate;
+  }
+
+  &-lowercase {
+    text-transform: lowercase;
+  }
+
+  &-uppercase {
+    text-transform: uppercase;
+  }
+
+  &-capitalize {
+    text-transform: capitalize;
+  }
+}
+
+// ========================================
+// Spacing Utilities
+// ========================================
+
+$spacing-values: (
+  0: 0,
+  1: $space-1,
+  2: $space-2,
+  3: $space-3,
+  4: $space-4,
+  5: $space-5,
+  6: $space-6,
+  7: $space-7,
+  8: $space-8,
+  10: $space-10,
+  12: $space-12,
+  16: $space-16,
+  20: $space-20,
+  24: $space-24,
+);
+
+@each $key, $value in $spacing-values {
+  .mt-#{$key} { margin-top: $value; }
+  .mb-#{$key} { margin-bottom: $value; }
+  .ml-#{$key} { margin-left: $value; }
+  .mr-#{$key} { margin-right: $value; }
+  .mx-#{$key} { margin-left: $value; margin-right: $value; }
+  .my-#{$key} { margin-top: $value; margin-bottom: $value; }
+  .m-#{$key} { margin: $value; }
+
+  .pt-#{$key} { padding-top: $value; }
+  .pb-#{$key} { padding-bottom: $value; }
+  .pl-#{$key} { padding-left: $value; }
+  .pr-#{$key} { padding-right: $value; }
+  .px-#{$key} { padding-left: $value; padding-right: $value; }
+  .py-#{$key} { padding-top: $value; padding-bottom: $value; }
+  .p-#{$key} { padding: $value; }
+}
+
+// ========================================
+// Visibility Utilities
+// ========================================
+
+.hidden {
+  display: none !important;
+}
+
+.invisible {
+  visibility: hidden !important;
+}
+
+.sr-only {
+  @include visually-hidden;
+}
+
+// ========================================
+// Responsive Display Utilities
+// ========================================
+
+@include breakpoint-sm {
+  .sm\:hidden {
+    display: none !important;
+  }
+
+  .sm\:block {
+    display: block !important;
+  }
+
+  .sm\:flex {
+    display: flex !important;
+  }
+
+  .sm\:grid {
+    display: grid !important;
+  }
+}
+
+@include breakpoint-md {
+  .md\:hidden {
+    display: none !important;
+  }
+
+  .md\:block {
+    display: block !important;
+  }
+
+  .md\:flex {
+    display: flex !important;
+  }
+
+  .md\:grid {
+    display: grid !important;
+  }
+}
+
+@include breakpoint-lg {
+  .lg\:hidden {
+    display: none !important;
+  }
+
+  .lg\:block {
+    display: block !important;
+  }
+
+  .lg\:flex {
+    display: flex !important;
+  }
+
+  .lg\:grid {
+    display: grid !important;
+  }
+}
