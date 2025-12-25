@@ -18,7 +18,7 @@ vi.mock('@/lib/database', () => ({
   },
 }))
 
-vi.mock('@/lib/page-definition-builder', () => ({
+vi.mock('@/lib/rendering/page-definition-builder', () => ({
   getPageDefinitionBuilder,
 }))
 
