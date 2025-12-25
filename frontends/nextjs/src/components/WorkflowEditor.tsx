@@ -417,7 +417,7 @@ export function WorkflowEditor({ workflows, onWorkflowsChange, scripts = [] }: W
                                 </Badge>
                                 {index < currentWorkflow.nodes.length - 1 && (
                                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <ArrowRight size={12} />
+                                    <ArrowRightIcon sx={{ fontSize: 12 }} />
                                     <span>Next</span>
                                   </div>
                                 )}
@@ -497,7 +497,7 @@ export function WorkflowEditor({ workflows, onWorkflowsChange, scripts = [] }: W
 
                   <div className="bg-muted/50 rounded-lg p-4 border border-dashed">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Lightning size={16} />
+                      <LightningIcon sx={{ fontSize: 16 }} />
                       <span>Workflow execution: {currentWorkflow.nodes.map(n => n.label).join(' → ')}</span>
                     </div>
                   </div>
