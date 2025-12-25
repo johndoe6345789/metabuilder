@@ -1,5 +1,9 @@
 # TODO 13 - Declarative UI System
 
+## Testing
+
+- [x] Add unit tests for declarative-component-renderer.ts ✅ (41 tests, 96% coverage)
+
 ## RenderComponent
 
 - [ ] Audit RenderComponent.tsx (221 LOC - exception with recursive pattern)
