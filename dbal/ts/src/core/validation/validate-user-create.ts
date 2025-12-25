@@ -11,13 +11,13 @@ export function validateUserCreate(data: Partial<User>): string[] {
   if (!data.username) {
     errors.push('Username is required')
   } else if (!isValidUsername(data.username)) {
-    errors.push('Invalid username format (alphanumeric, underscore, hyphen only, 1-50 chars)')
+    errors.push('Invalid username format (alphanumeric, underscore, hyphen only, 3-50 chars)')
   }
 
   if (!data.email) {
     errors.push('Email is required')
   } else if (!isValidEmail(data.email)) {
-    errors.push('Invalid email format')
+    errors.push('Invalid email format (max 255 chars)')
   }
 
   if (!data.role) {
