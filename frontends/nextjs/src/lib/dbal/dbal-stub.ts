@@ -52,6 +52,9 @@ export interface DBALUser {
   role?: string
   level?: number
   tenantId?: string
+  profilePicture?: string
+  bio?: string
+  isInstanceOwner?: boolean
   createdAt?: number | Date
   updatedAt?: number | Date
 }
@@ -62,12 +65,22 @@ export interface ListResult<T> {
 }
 
 // In-memory store for development
-const userStore = new Map<string, DBALUser>([
-  ['1', { id: '1', email: 'admin@example.com', username: 'admin', role: 'admin', level: 4 }],
-  ['2', { id: '2', email: 'user@example.com', username: 'user', role: 'user', level: 1 }],
-])
+const defaultUsers: DBALUser[] = [
+  { id: '1', email: 'admin@example.com', username: 'admin', role: 'admin', level: 4 },
+  { id: '2', email: 'user@example.com', username: 'user', role: 'user', level: 1 },
+]
 
-let nextId = 3
+const userStore = new Map<string, DBALUser>(
+  defaultUsers.map((user) => [user.id, { ...user }])
+)
+
+let nextId = defaultUsers.length + 1
+
+export function resetDBALStubState(): void {
+  userStore.clear()
+  defaultUsers.forEach((user) => userStore.set(user.id, { ...user }))
+  nextId = defaultUsers.length + 1
+}
 
 export class DBALClient {
   private config: DBALConfig
@@ -94,6 +107,9 @@ export class DBALClient {
         role: data.role || 'user',
         level: data.level || 1,
         tenantId: data.tenantId,
+        profilePicture: data.profilePicture,
+        bio: data.bio,
+        isInstanceOwner: data.isInstanceOwner,
         createdAt: Date.now(),
         updatedAt: Date.now(),
       }
