@@ -146,6 +146,17 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1"
             />
+            {searchQuery && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+              >
+                <X size={16} />
+              </Button>
+            )}
           </div>
 
           {selectedClasses.length > 0 && (
