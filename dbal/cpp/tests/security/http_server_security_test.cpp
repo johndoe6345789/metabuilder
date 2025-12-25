@@ -225,7 +225,8 @@ public:
         std::string part1 = "GET /api/status HTTP/1.1\r\n";
         send(sock, part1.c_str(), part1.length(), 0);
         
-        std::this_thread::sleep_for(std::chrono::seconds(5));
+        // Wait 2 seconds (reduced for faster tests)
+        std::this_thread::sleep_for(std::chrono::seconds(2));
         
         std::string part2 = "Host: localhost\r\n";
         int result = send(sock, part2.c_str(), part2.length(), 0);
@@ -293,10 +294,14 @@ public:
         if (bytes > 0) {
             buffer[bytes] = '\0';
             std::string response(buffer);
-            // Should not expose filesystem
+            // Should get 400 Bad Request for null byte
+            bool rejected = response.find("400") != std::string::npos || 
+                           response.find("Bad Request") != std::string::npos;
+            // Also verify no sensitive content exposed
             bool safe = response.find("passwd") == std::string::npos;
-            std::cout << "  " << (safe ? "PASS: Safe" : "FAIL: Vulnerable") << std::endl;
-            return safe;
+            bool pass = rejected && safe;
+            std::cout << "  " << (pass ? "PASS: Null byte rejected" : "FAIL: Vulnerable") << std::endl;
+            return pass;
         }
         
         return false;

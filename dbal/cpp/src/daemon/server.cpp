@@ -275,13 +275,14 @@ private:
             }
             
             // Check connection limit to prevent thread exhaustion DoS
-            if (active_connections_.load() >= MAX_CONCURRENT_CONNECTIONS) {
+            // Use atomic fetch_add to avoid race condition
+            size_t prev_count = active_connections_.fetch_add(1);
+            if (prev_count >= MAX_CONCURRENT_CONNECTIONS) {
                 std::cerr << "Connection limit reached, rejecting connection" << std::endl;
+                active_connections_--;
                 CLOSE_SOCKET(client_fd);
                 continue;
             }
-            
-            active_connections_++;
             
             // Handle connection in a new thread
             std::thread(&Server::handleConnection, this, client_fd).detach();
@@ -484,6 +485,13 @@ private:
                             error_response.status_code = 413;
                             error_response.status_text = "Request Entity Too Large";
                             error_response.body = R"({"error":"Content-Length too large"})";
+                            return false;
+                        }
+                        // Validate fits in size_t (platform dependent)
+                        if (cl > std::numeric_limits<size_t>::max()) {
+                            error_response.status_code = 413;
+                            error_response.status_text = "Request Entity Too Large";
+                            error_response.body = R"({"error":"Content-Length exceeds platform limit"})";
                             return false;
                         }
                         content_length = static_cast<size_t>(cl);
