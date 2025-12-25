@@ -58,11 +58,11 @@ export interface TabsTriggerProps extends Omit<MuiTabProps, 'value'> {
   value: string
 }
 
-const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
+const TabsTrigger = forwardRef<HTMLDivElement, TabsTriggerProps>(
   ({ value, label, children, sx, ...props }, ref) => {
     return (
       <MuiTab
-        ref={ref}
+        ref={ref as React.Ref<HTMLDivElement>}
         value={value}
         label={label || children}
         sx={{

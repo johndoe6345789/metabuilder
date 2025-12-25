@@ -8,7 +8,9 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ type, error, ...props }, ref) => {
+  ({ type, error, className, style, ...props }, ref) => {
+    // Filter out HTML-specific props that conflict with MUI
+    const { color, ...restProps } = props as InputProps & { color?: string }
     return (
       <InputBase
         inputRef={ref}
@@ -38,7 +40,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             p: 0,
           },
         }}
-        {...props}
+        {...restProps}
       />
     )
   }

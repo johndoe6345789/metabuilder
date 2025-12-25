@@ -8,11 +8,19 @@ Use this file when you’re not sure what to do next, or you want a quick “mak
 - Skim: [../START_HERE.md](../START_HERE.md) and [../INDEX.md](../INDEX.md)
 - Then pick the most relevant TODO file from [./README.md](README.md)
 
+## How These TODOs Work
+
+- Keep items small and actionable (one change set per checkbox when possible)
+- When you complete an item, mark it `[x]` and add a short reference (commit hash or PR)
+- If an item grows, split it into follow-ups (or a new numbered TODO file) and link it from [./README.md](README.md)
+- Prefer including concrete file paths and commands in TODO items
+
 ## 15-Minute Local Sanity Check (Frontend)
 
 Run from `frontends/nextjs/`:
 
-- [ ] `cd frontends/nextjs`
+From repo root: `cd frontends/nextjs`
+
 - [ ] `npm ci` (or `npm install`)
 - [ ] `npm run typecheck`
 - [ ] `npm run lint`

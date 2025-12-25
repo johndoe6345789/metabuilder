@@ -41,8 +41,8 @@ export function PasswordChangeDialog({ open, username, onPasswordChanged, isFirs
   }
 
   return (
-    <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()}>
+    <Dialog open={open} onOpenChange={() => {}} disableEscapeKeyDown>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {isFirstLogin && <Warning className="text-orange-500" size={24} />}

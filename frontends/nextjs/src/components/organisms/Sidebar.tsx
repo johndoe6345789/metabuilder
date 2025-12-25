@@ -235,9 +235,11 @@ SidebarGroupLabel.displayName = 'SidebarGroupLabel'
 const SidebarGroupContent = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
   ({ children, ...props }, ref) => {
     return (
-      <List ref={ref} dense disablePadding {...props}>
-        {children}
-      </List>
+      <Box ref={ref} {...props}>
+        <List dense disablePadding>
+          {children}
+        </List>
+      </Box>
     )
   }
 )
@@ -255,12 +257,13 @@ interface SidebarMenuItemProps {
   className?: string
 }
 
-const SidebarMenuItem = forwardRef<HTMLLIElement, SidebarMenuItemProps>(
+const SidebarMenuItem = forwardRef<HTMLDivElement, SidebarMenuItemProps>(
   ({ children, icon, label, href, active, disabled, onClick, ...props }, ref) => {
     const content = children || label
 
     return (
-      <ListItem ref={ref} disablePadding {...props}>
+      <ListItem disablePadding>
+        <Box ref={ref} sx={{ width: '100%' }} {...props}>
         <ListItemButton
           selected={active}
           disabled={disabled}
@@ -288,6 +291,7 @@ const SidebarMenuItem = forwardRef<HTMLLIElement, SidebarMenuItemProps>(
             primaryTypographyProps={{ fontSize: '0.875rem' }}
           />
         </ListItemButton>
+        </Box>
       </ListItem>
     )
   }
@@ -295,12 +299,14 @@ const SidebarMenuItem = forwardRef<HTMLLIElement, SidebarMenuItemProps>(
 SidebarMenuItem.displayName = 'SidebarMenuItem'
 
 // SidebarMenu (alias for List)
-const SidebarMenu = forwardRef<HTMLUListElement, { children: ReactNode; className?: string }>(
+const SidebarMenu = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
   ({ children, ...props }, ref) => {
     return (
-      <List ref={ref} dense disablePadding {...props}>
-        {children}
-      </List>
+      <Box ref={ref} {...props}>
+        <List dense disablePadding>
+          {children}
+        </List>
+      </Box>
     )
   }
 )
