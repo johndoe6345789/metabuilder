@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "/workspaces/metabuilder/dbal/cpp",
+    "cmake.sourceDirectory": "/Users/rmac/Documents/GitHub/metabuilder/dbal/cpp",
     "chat.mcp.discovery.enabled": {
         "claude-desktop": true,
         "windsurf": true,
