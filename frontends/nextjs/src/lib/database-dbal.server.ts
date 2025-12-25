@@ -5,8 +5,8 @@
 
 import 'server-only'
 
-import { DBALClient } from '@/dbal/ts/src'
-import type { DBALConfig } from '@/dbal/ts/src'
+import { DBALClient } from '@/lib/dbal-stub'
+import type { DBALConfig } from '@/lib/dbal-stub'
 import type { User } from './level-types'
 
 let dbalClient: DBALClient | null = null
