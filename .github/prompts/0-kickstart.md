@@ -8,7 +8,7 @@ Check /docs/TODO/*
 
 Use 'act' workflow runner to diagnose the github workflow process.
 
-A class is just a container for 1 lambda per file. Refactor any files that step out of line. 1:1 mapping from unit test to file here, so unit test and file have similar names.
+A class is just a container for 1 lambda per file. Refactor any files that step out of line. 1:1 mapping from unit test to file here, so unit test and file have similar names. Resolves any arguments about how big a source code file should be.
 
 See also RADIX_TO_MUI_MIGRATION.md
 
