@@ -57,8 +57,9 @@
 
 ## CI/CD Scripts
 
-- [ ] Complete `diagnose-workflows.sh` implementation
-- [ ] Add workflow testing script
+- [x] Complete `diagnose-workflows.sh` implementation ✅
+- [x] Add workflow testing script ✅ (`test-workflows.sh`)
+- [x] Add `run-act.sh` for local workflow testing ✅
 - [ ] Create release automation script
 - [ ] Add version bump script
 - [ ] Create deployment verification script

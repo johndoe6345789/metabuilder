@@ -196,7 +196,8 @@
 
 ## Local Development Validation
 
-- [ ] Run `npm run act:diagnose` to verify local Actions setup
+- [x] Run `npm run act:diagnose` to verify local Actions setup ✅
+- [x] Configure `.actrc` for Apple Silicon Macs ✅
 - [ ] Run `npm run act` to test workflows locally
 - [ ] Validate all workflow files syntax
 - [ ] Test workflow triggers manually
