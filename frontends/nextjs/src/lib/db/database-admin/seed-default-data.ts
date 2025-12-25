@@ -410,7 +410,7 @@ const DEFAULT_DROPDOWN_CONFIGS: DropdownConfig[] = [
  */
 export async function seedDefaultData(): Promise<void> {
   // Create default users if none exist
-  const users = await getUsers()
+  const users = await getUsers({ scope: 'all' })
   if (users.length === 0) {
     const defaultUsers: User[] = [
       {

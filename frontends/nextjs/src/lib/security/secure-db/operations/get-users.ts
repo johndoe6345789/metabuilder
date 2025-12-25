@@ -12,7 +12,7 @@ export async function getUsers(ctx: SecurityContext): Promise<User[]> {
     'user',
     'READ',
     async () =>
-      Database.getUsers(ctx.user.tenantId ? { tenantId: ctx.user.tenantId } : undefined),
+      Database.getUsers(ctx.user.tenantId ? { tenantId: ctx.user.tenantId } : { scope: 'all' }),
     'all_users'
   )
 }
