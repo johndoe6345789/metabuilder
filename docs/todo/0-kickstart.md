@@ -15,6 +15,14 @@ Use this file when you’re not sure what to do next, or you want a quick “mak
 - If an item grows, split it into follow-ups (or a new numbered TODO file) and link it from [./README.md](README.md)
 - Prefer including concrete file paths and commands in TODO items
 
+## Project TODO Scan (Code + Docs)
+
+From `docs/todo/`:
+
+- [ ] Run `python3 scan-project-todos.py`
+- [ ] Review `TODO_SCAN_REPORT.md` for in-repo `TODO/FIXME/HACK/XXX` markers
+- [ ] Review `TODO_STATUS.md` for open vs done counts across this folder
+
 ## 15-Minute Local Sanity Check (Frontend)
 
 Run from `frontends/nextjs/`:
