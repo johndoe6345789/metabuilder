@@ -7,16 +7,21 @@ import {
   AlertTitle as MuiAlertTitle,
   Collapse,
   IconButton,
+  SxProps,
+  Theme,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 
 export type AlertVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info'
 
-export interface AlertProps extends Omit<MuiAlertProps, 'variant' | 'severity'> {
+export interface AlertProps {
   variant?: AlertVariant
   title?: ReactNode
   dismissible?: boolean
   onDismiss?: () => void
+  children?: ReactNode
+  className?: string
+  sx?: SxProps<Theme>
 }
 
 const variantMap: Record<AlertVariant, MuiAlertProps['severity']> = {
@@ -28,7 +33,7 @@ const variantMap: Record<AlertVariant, MuiAlertProps['severity']> = {
 }
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(
-  ({ variant = 'default', title, dismissible, onDismiss, children, ...props }, ref) => {
+  ({ variant = 'default', title, dismissible, onDismiss, children, className, sx, ...props }, ref) => {
     const severity = variantMap[variant]
 
     return (
@@ -36,6 +41,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
         ref={ref}
         severity={severity}
         variant="outlined"
+        className={className}
         action={
           dismissible && onDismiss ? (
             <IconButton
@@ -48,8 +54,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
             </IconButton>
           ) : undefined
         }
-        sx={{ borderRadius: 1 }}
-        {...props}
+        sx={{ borderRadius: 1, ...sx }}
       >
         {title && <MuiAlertTitle>{title}</MuiAlertTitle>}
         {children}
