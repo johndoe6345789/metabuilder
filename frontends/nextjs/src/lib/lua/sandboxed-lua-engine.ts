@@ -1,17 +1,13 @@
 import { LuaEngine } from './lua-engine'
-import type { LuaExecutionResult } from './lua-engine'
-import type { SecurityScanResult } from '../security-scanner'
-import { executeWithSandbox } from './functions/sandbox/execute-with-sandbox'
+import { executeWithSandbox, type SandboxedLuaResult } from './functions/sandbox/execute-with-sandbox'
 import { disableDangerousFunctions } from './functions/sandbox/disable-dangerous-functions'
 import { setupSandboxedEnvironment } from './functions/sandbox/setup-sandboxed-environment'
 import { executeWithTimeout } from './functions/sandbox/execute-with-timeout'
 import { setExecutionTimeout } from './functions/sandbox/set-execution-timeout'
 import { destroy } from './functions/sandbox/destroy'
 
-export interface SandboxedLuaResult {
-  execution: LuaExecutionResult
-  security: SecurityScanResult
-}
+// Re-export the result type
+export type { SandboxedLuaResult }
 
 export class SandboxedLuaEngine {
   engine: LuaEngine | null = null
