@@ -222,7 +222,7 @@ const outputPath = process.argv[2] || 'implementation-analysis.json'
 
 try {
   writeFileSync(outputPath, serialized)
-  console.log(`Implementation analysis written to ${outputPath}`)
+  console.error(`Implementation analysis written to ${outputPath}`)
 } catch (error) {
   console.error(`Failed to write implementation analysis to ${outputPath}:`, error)
 }

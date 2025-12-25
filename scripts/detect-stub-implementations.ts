@@ -207,7 +207,7 @@ const outputPath = process.argv[2] || 'stub-patterns.json'
 
 try {
   writeFileSync(outputPath, serialized)
-  console.log(`Stub summary written to ${outputPath}`)
+  console.error(`Stub summary written to ${outputPath}`)
 } catch (error) {
   console.error(`Failed to write stub summary to ${outputPath}:`, error)
 }
