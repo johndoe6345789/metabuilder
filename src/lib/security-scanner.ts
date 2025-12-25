@@ -264,7 +264,7 @@ const LUA_MALICIOUS_PATTERNS = [
     recommendation: 'Ensure proper break conditions exist'
   },
   {
-    pattern: /function\s+\w+\s*\([^)]*\)\s*\1\s*\(/gi,
+    pattern: /function\s+(\w+)\s*\([^)]*\)\s*\{[^}]*\1\s*\(/gi,
     type: 'warning' as const,
     severity: 'low' as const,
     message: 'Potential recursive function',
