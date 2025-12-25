@@ -1,6 +1,6 @@
 /**
  * Custom useKV hook - replacement for @github/spark/hooks
- * Uses our Database KV store implementation
+ * Uses in-memory storage with localStorage persistence in the browser
  * API compatible with @github/spark/hooks
  */
 import { useState, useEffect, useCallback } from 'react'
