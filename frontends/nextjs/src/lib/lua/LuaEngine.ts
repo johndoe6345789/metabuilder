@@ -13,9 +13,9 @@
 import * as fengari from 'fengari-web'
 import type { LuaExecutionContext, LuaExecutionResult } from './functions/types'
 import { setupContextAPI } from './functions/setup/setup-context-api'
-import { executeLuaCode } from './functions/execution/execute-lua-code'
+import { execute } from './functions/engine/execute'
+import { destroy } from './functions/engine/destroy'
 
-const lua = fengari.lua
 const lauxlib = fengari.lauxlib
 const lualib = fengari.lualib
 
@@ -26,8 +26,8 @@ export type { LuaExecutionContext, LuaExecutionResult }
  * LuaEngine class wraps individual Lua execution lambdas
  */
 export class LuaEngine {
-  private L: any
-  private logs: string[] = []
+  L: any
+  logs: string[] = []
 
   constructor() {
     this.L = lauxlib.luaL_newstate()
@@ -35,33 +35,11 @@ export class LuaEngine {
     setupContextAPI(this.L, this.logs)
   }
 
-  /**
-   * Execute Lua code with a context
-   * @param code - Lua code to execute
-   * @param context - Execution context
-   * @returns Execution result
-   */
-  async execute(code: string, context: LuaExecutionContext = {}): Promise<LuaExecutionResult> {
-    this.logs.length = 0
-    return executeLuaCode(this.L, code, context, this.logs)
-  }
+  /** Execute Lua code with a context */
+  execute = execute
 
-  /**
-   * Destroy the Lua state
-   */
-  destroy(): void {
-    if (this.L) {
-      lua.lua_close(this.L)
-    }
-  }
-}
-
-/**
- * Factory function to create a new LuaEngine instance
- * @returns New LuaEngine instance
- */
-export const createLuaEngine = (): LuaEngine => {
-  return new LuaEngine()
+  /** Destroy the Lua state */
+  destroy = destroy
 }
 
 // Re-export individual functions for direct imports

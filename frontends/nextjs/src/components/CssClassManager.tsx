@@ -11,6 +11,9 @@ import { Database, CssCategory } from '@/lib/database'
 import { Plus, X, Pencil, Trash, FloppyDisk } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
+const CLASS_TOKEN_PATTERN = /^[A-Za-z0-9:_/.[\]()%#!,=+-]+$/
+const uniqueClasses = (classes: string[]) => Array.from(new Set(classes))
+
 export function CssClassManager() {
   const [categories, setCategories] = useState<CssCategory[]>([])
   const [isEditing, setIsEditing] = useState(false)
@@ -18,61 +21,121 @@ export function CssClassManager() {
   const [categoryName, setCategoryName] = useState('')
   const [classes, setClasses] = useState<string[]>([])
   const [newClass, setNewClass] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [classSearchQuery, setClassSearchQuery] = useState('')
 
   useEffect(() => {
     loadCategories()
   }, [])
 
+  const normalizedSearch = searchQuery.trim().toLowerCase()
+  const filteredCategories = normalizedSearch
+    ? categories.filter((category) =>
+        category.name.toLowerCase().includes(normalizedSearch) ||
+        category.classes.some((cls) => cls.toLowerCase().includes(normalizedSearch))
+      )
+    : categories
+  const totalClassCount = categories.reduce((total, category) => total + category.classes.length, 0)
+
+  const newClassTokens = newClass.trim().split(/\s+/).filter(Boolean)
+  const uniqueNewClassTokens = Array.from(new Set(newClassTokens))
+  const invalidNewClassTokens = uniqueNewClassTokens.filter((token) => !CLASS_TOKEN_PATTERN.test(token))
+  const duplicateNewClassTokens = uniqueNewClassTokens.filter((token) => classes.includes(token))
+  const canAddClass =
+    uniqueNewClassTokens.length > 0 &&
+    invalidNewClassTokens.length === 0 &&
+    uniqueNewClassTokens.some((token) => !classes.includes(token))
+
+  const normalizedClassSearch = classSearchQuery.trim().toLowerCase()
+  const filteredEditorClasses = normalizedClassSearch
+    ? classes.filter((cls) => cls.toLowerCase().includes(normalizedClassSearch))
+    : classes
+
   const loadCategories = async () => {
     const cats = await Database.getCssClasses()
-    setCategories(cats)
+    const normalized = cats.map((category) => ({
+      ...category,
+      classes: uniqueClasses(category.classes),
+    }))
+    const sorted = normalized.slice().sort((a, b) => a.name.localeCompare(b.name))
+    setCategories(sorted)
   }
 
   const startEdit = (category?: CssCategory) => {
     if (category) {
       setEditingCategory(category)
       setCategoryName(category.name)
-      setClasses([...category.classes])
+      setClasses(uniqueClasses(category.classes))
     } else {
       setEditingCategory(null)
       setCategoryName('')
       setClasses([])
     }
+    setNewClass('')
+    setClassSearchQuery('')
     setIsEditing(true)
   }
 
   const addClass = () => {
-    if (newClass.trim()) {
-      setClasses(current => [...current, newClass.trim()])
-      setNewClass('')
+    if (uniqueNewClassTokens.length === 0) {
+      return
     }
+
+    if (invalidNewClassTokens.length > 0) {
+      toast.error(`Invalid class name: ${invalidNewClassTokens.join(', ')}`)
+      return
+    }
+
+    const newTokens = uniqueNewClassTokens.filter((token) => !classes.includes(token))
+    if (newTokens.length === 0) {
+      toast.info('Those classes already exist in this category')
+      return
+    }
+
+    setClasses((current) => uniqueClasses([...current, ...newTokens]))
+    setNewClass('')
   }
 
-  const removeClass = (index: number) => {
-    setClasses(current => current.filter((_, i) => i !== index))
+  const removeClass = (cssClass: string) => {
+    setClasses(current => current.filter((cls) => cls !== cssClass))
   }
 
   const handleSave = async () => {
-    if (!categoryName || classes.length === 0) {
+    const trimmedName = categoryName.trim()
+    const normalizedClasses = uniqueClasses(classes)
+    if (!trimmedName || normalizedClasses.length === 0) {
       toast.error('Please provide a category name and at least one class')
       return
     }
 
+    const nameConflict = categories.some((category) =>
+      category.name.toLowerCase() === trimmedName.toLowerCase() &&
+      category.name !== editingCategory?.name
+    )
+    if (nameConflict) {
+      toast.error('A category with this name already exists')
+      return
+    }
+
     const newCategory: CssCategory = {
-      name: categoryName,
-      classes,
+      name: trimmedName,
+      classes: normalizedClasses,
     }
 
-    if (editingCategory) {
-      await Database.updateCssCategory(categoryName, classes)
-      toast.success('Category updated successfully')
-    } else {
-      await Database.addCssCategory(newCategory)
-      toast.success('Category created successfully')
-    }
+    try {
+      if (editingCategory) {
+        await Database.updateCssCategory(editingCategory.name, newCategory)
+        toast.success('Category updated successfully')
+      } else {
+        await Database.addCssCategory(newCategory)
+        toast.success('Category created successfully')
+      }
 
-    setIsEditing(false)
-    loadCategories()
+      setIsEditing(false)
+      loadCategories()
+    } catch (error) {
+      toast.error('Failed to save category')
+    }
   }
 
   const handleDelete = async (categoryName: string) => {

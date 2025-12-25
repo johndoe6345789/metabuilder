@@ -15,25 +15,28 @@ import { installPackageScripts } from './install-package-scripts'
 import { isPackageInstalled } from './is-package-installed'
 import { uninstallPackage } from './uninstall-package'
 
-export type { LuaScriptFile, PackageDefinition, PackageRegistry } from './types'
-
-export {
-  buildPackageRegistry,
-  checkDependencies,
-  exportAllPackagesForSeed,
-  getAllPackageScripts,
-  getInstalledPackages,
-  getPackage,
-  getPackageComponents,
-  getPackageExamples,
-  getPackageScriptFiles,
-  getPackageScripts,
-  getPackagesByCategory,
-  installPackage,
-  installPackageComponents,
-  installPackageScripts,
-  isPackageInstalled,
-  uninstallPackage,
+/**
+ * PackageGlue - Wrapper class for package registry helpers
+ *
+ * Each method delegates to a single-function module.
+ */
+export class PackageGlue {
+  buildPackageRegistry = buildPackageRegistry
+  getPackage = getPackage
+  getPackagesByCategory = getPackagesByCategory
+  getPackageComponents = getPackageComponents
+  getPackageScripts = getPackageScripts
+  getPackageScriptFiles = getPackageScriptFiles
+  getAllPackageScripts = getAllPackageScripts
+  getPackageExamples = getPackageExamples
+  checkDependencies = checkDependencies
+  installPackageComponents = installPackageComponents
+  installPackageScripts = installPackageScripts
+  installPackage = installPackage
+  uninstallPackage = uninstallPackage
+  getInstalledPackages = getInstalledPackages
+  isPackageInstalled = isPackageInstalled
+  exportAllPackagesForSeed = exportAllPackagesForSeed
 }
-export { PackageGlue, packageGlue } from './package-glue'
-export { getPackageGlue } from './get-package-glue'
+
+export const packageGlue = new PackageGlue()
