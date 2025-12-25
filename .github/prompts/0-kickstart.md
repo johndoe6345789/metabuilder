@@ -49,7 +49,8 @@ DBAL workflows live in `dbal/ts/` (`npm run build`, `npm run test:unit`).
 ## Git Hygiene
 - Commit as you go with descriptive (Conventional Commit-style) messages; default to trunk-based work on `main` unless a PR flow is required.
 - If multiple agents are working, merge/rebase carefully and avoid overwriting each other’s changes.
-- Before opening a PR: run `npm run lint`, `npm run typecheck`, and relevant tests; include what/why, linked issue (if any), screenshots for UI changes, and notes on DB/schema changes.
+- Before opening a PR, run `npm run lint`, `npm run typecheck`, and the relevant tests (from `frontends/nextjs/`).
+- PRs should include: what/why, linked issue (if any), screenshots for UI changes, and notes on DB/schema changes.
 
 ## Architecture Guardrails
 - Route data access through DBAL / the `Database` wrapper; don’t bypass it.
