@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -17,26 +16,19 @@ import {
 } from '@mui/material'
 import {
   Add as AddIcon,
-  Add as Plus,
   Delete as DeleteIcon,
-  Delete as Trash,
   FlashOn as LightningIcon,
-  FlashOn as Lightning,
   Code as CodeIcon,
-  Code,
   AccountTree as GitBranchIcon,
-  AccountTree as GitBranch,
   ArrowForward as ArrowRightIcon,
-  ArrowForward as ArrowRight,
   PlayArrow as PlayIcon,
-  PlayArrow as Play,
   CheckCircle as CheckCircleIcon,
   Cancel as XCircleIcon,
 } from '@mui/icons-material'
 import { toast } from 'sonner'
 import { createWorkflowEngine, type WorkflowExecutionResult as WFExecResult } from '@/lib/workflow-engine'
 import type { Workflow, WorkflowNode, WorkflowEdge, LuaScript } from '@/lib/level-types'
-import { Input, Label, Badge, Select as UISelect, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui'
+import { Input, Label, Badge, Button, Textarea, Select as UISelect, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui'
 import { CardTitle, CardDescription } from '@/components/ui'
 
 interface WorkflowEditorProps {
