@@ -2,14 +2,14 @@
 
 Deploy MetaBuilder to production:
 
-## Pre-Deployment Checks
+## Pre-Deployment Checks (from `frontends/nextjs/`)
 ```bash
 npm run act              # Full CI locally
 npm run build            # Verify build succeeds
 npm run typecheck        # No type errors
 ```
 
-## Docker Deployment
+## Docker Deployment (from repo root)
 ```bash
 # Development
 docker-compose -f deployment/docker-compose.development.yml up
@@ -18,7 +18,7 @@ docker-compose -f deployment/docker-compose.development.yml up
 docker-compose -f deployment/docker-compose.production.yml up -d
 ```
 
-## Database Migration
+## Database Migration (from `frontends/nextjs/`)
 ```bash
 npm run db:migrate       # Apply migrations
 ```
