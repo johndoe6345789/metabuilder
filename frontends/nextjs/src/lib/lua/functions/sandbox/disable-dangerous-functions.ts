@@ -1,12 +1,12 @@
 import * as fengari from 'fengari-web'
-import type { SandboxedLuaEngine } from '../../sandboxed-lua-engine'
+import type { SandboxedLuaEngineState } from './types'
 
 const lua = fengari.lua
 
 /**
  * Disable dangerous global functions in the Lua sandbox
  */
-export function disableDangerousFunctions(this: SandboxedLuaEngine): void {
+export function disableDangerousFunctions(this: SandboxedLuaEngineState): void {
   if (!this.engine) return
 
   const { L } = this.engine
