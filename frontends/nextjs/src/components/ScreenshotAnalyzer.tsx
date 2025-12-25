@@ -8,7 +8,7 @@ import {
   Chip,
   CircularProgress,
   Typography,
-  Grid,
+  Grid2 as Grid,
 } from '@mui/material'
 import {
   CameraAlt as CameraIcon,
