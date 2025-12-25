@@ -8,6 +8,7 @@
  * - Nginx reverse proxy header parsing
  * - Health check endpoints
  * - Graceful shutdown
+ * - Security hardening against CVE patterns (CVE-2024-1135, CVE-2024-40725, etc.)
  */
 
 #include <string>
@@ -18,6 +19,11 @@
 #include <cstring>
 #include <sstream>
 #include <map>
+#include <mutex>
+#include <atomic>
+#include <algorithm>
+#include <cctype>
+#include <limits>
 
 // Cross-platform socket headers
 #ifdef _WIN32
@@ -55,6 +61,14 @@
 namespace dbal {
 namespace daemon {
 
+// Security limits to prevent CVE-style attacks
+const size_t MAX_REQUEST_SIZE = 65536;      // 64KB max request (prevent buffer overflow)
+const size_t MAX_HEADERS = 100;              // Max 100 headers (prevent header bomb)
+const size_t MAX_HEADER_SIZE = 8192;         // 8KB max per header
+const size_t MAX_PATH_LENGTH = 2048;         // Max URL path length
+const size_t MAX_BODY_SIZE = 10485760;       // 10MB max body size
+const size_t MAX_CONCURRENT_CONNECTIONS = 1000; // Prevent thread exhaustion
+
 /**
  * @struct HttpRequest
  * @brief Parsed HTTP request structure
@@ -67,7 +81,6 @@ struct HttpRequest {
     std::string path;     ///< Request path (e.g., /api/health)
     std::string version;  ///< HTTP version (e.g., HTTP/1.1)
     std::map<std::string, std::string> headers;  ///< Request headers
-};
     std::string body;
     
     // Nginx reverse proxy headers
@@ -122,7 +135,8 @@ struct HttpResponse {
 class Server {
 public:
     Server(const std::string& bind_address, int port)
-        : bind_address_(bind_address), port_(port), running_(false), server_fd_(INVALID_SOCKET_VALUE) {
+        : bind_address_(bind_address), port_(port), running_(false), 
+          server_fd_(INVALID_SOCKET_VALUE), active_connections_(0) {
 #ifdef _WIN32
         // Initialize Winsock on Windows
         WSADATA wsaData;
@@ -260,6 +274,15 @@ private:
                 continue;
             }
             
+            // Check connection limit to prevent thread exhaustion DoS
+            if (active_connections_.load() >= MAX_CONCURRENT_CONNECTIONS) {
+                std::cerr << "Connection limit reached, rejecting connection" << std::endl;
+                CLOSE_SOCKET(client_fd);
+                continue;
+            }
+            
+            active_connections_++;
+            
             // Handle connection in a new thread
             std::thread(&Server::handleConnection, this, client_fd).detach();
         }
@@ -270,21 +293,31 @@ private:
 #ifdef _WIN32
         DWORD timeout = 30000; // 30 seconds in milliseconds
         setsockopt(client_fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
+        setsockopt(client_fd, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
 #else
         struct timeval timeout;
         timeout.tv_sec = 30;
         timeout.tv_usec = 0;
         setsockopt(client_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+        setsockopt(client_fd, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
 #endif
         
         HttpRequest request;
-        if (!parseRequest(client_fd, request)) {
+        HttpResponse response;
+        
+        if (!parseRequest(client_fd, request, response)) {
+            // Send error response if one was set
+            if (response.status_code != 200) {
+                std::string response_str = response.serialize();
+                send(client_fd, response_str.c_str(), response_str.length(), 0);
+            }
             CLOSE_SOCKET(client_fd);
+            active_connections_--;
             return;
         }
         
         // Process request and generate response
-        HttpResponse response = processRequest(request);
+        response = processRequest(request);
         
         // Send response
         std::string response_str = response.serialize();
@@ -292,42 +325,116 @@ private:
         
         // Close connection (HTTP/1.1 could support keep-alive, but simple close for now)
         CLOSE_SOCKET(client_fd);
+        active_connections_--;
     }
     
-    bool parseRequest(socket_t client_fd, HttpRequest& request) {
-        char buffer[8192];
-#ifdef _WIN32
-        int bytes_read = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
-#else
-        ssize_t bytes_read = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
-#endif
+    bool parseRequest(socket_t client_fd, HttpRequest& request, HttpResponse& error_response) {
+        // Use larger buffer but still enforce limits
+        std::string request_data;
+        request_data.reserve(8192);
         
-        if (bytes_read <= 0) {
+        char buffer[8192];
+        size_t total_read = 0;
+        bool headers_complete = false;
+        
+        // Read request with size limit
+        while (total_read < MAX_REQUEST_SIZE && !headers_complete) {
+#ifdef _WIN32
+            int bytes_read = recv(client_fd, buffer, sizeof(buffer), 0);
+#else
+            ssize_t bytes_read = recv(client_fd, buffer, sizeof(buffer), 0);
+#endif
+            
+            if (bytes_read <= 0) {
+                return false;
+            }
+            
+            request_data.append(buffer, bytes_read);
+            total_read += bytes_read;
+            
+            // Check if headers are complete
+            if (request_data.find("\r\n\r\n") != std::string::npos) {
+                headers_complete = true;
+            }
+        }
+        
+        // Check if request is too large
+        if (total_read >= MAX_REQUEST_SIZE && !headers_complete) {
+            error_response.status_code = 413;
+            error_response.status_text = "Request Entity Too Large";
+            error_response.body = R"({"error":"Request too large"})";
             return false;
         }
         
-        buffer[bytes_read] = '\0';
-        std::string request_str(buffer, bytes_read);
-        
         // Parse request line
-        size_t line_end = request_str.find("\r\n");
-        if (line_end == std::string::npos) return false;
+        size_t line_end = request_data.find("\r\n");
+        if (line_end == std::string::npos) {
+            error_response.status_code = 400;
+            error_response.status_text = "Bad Request";
+            error_response.body = R"({"error":"Invalid request format"})";
+            return false;
+        }
         
-        std::string request_line = request_str.substr(0, line_end);
+        std::string request_line = request_data.substr(0, line_end);
         std::istringstream line_stream(request_line);
         line_stream >> request.method >> request.path >> request.version;
         
+        // Validate method, path, and version
+        if (request.method.empty() || request.path.empty() || request.version.empty()) {
+            error_response.status_code = 400;
+            error_response.status_text = "Bad Request";
+            error_response.body = R"({"error":"Invalid request line"})";
+            return false;
+        }
+        
+        // Check for null bytes in path (CVE pattern)
+        if (request.path.find('\0') != std::string::npos) {
+            error_response.status_code = 400;
+            error_response.status_text = "Bad Request";
+            error_response.body = R"({"error":"Null byte in path"})";
+            return false;
+        }
+        
+        // Validate path length
+        if (request.path.length() > MAX_PATH_LENGTH) {
+            error_response.status_code = 414;
+            error_response.status_text = "URI Too Long";
+            error_response.body = R"({"error":"Path too long"})";
+            return false;
+        }
+        
         // Parse headers
         size_t pos = line_end + 2;
-        while (pos < request_str.length()) {
-            line_end = request_str.find("\r\n", pos);
+        size_t header_count = 0;
+        bool has_content_length = false;
+        bool has_transfer_encoding = false;
+        size_t content_length = 0;
+        
+        while (pos < request_data.length()) {
+            line_end = request_data.find("\r\n", pos);
             if (line_end == std::string::npos) break;
             
-            std::string header_line = request_str.substr(pos, line_end - pos);
+            std::string header_line = request_data.substr(pos, line_end - pos);
             if (header_line.empty()) {
                 // End of headers
                 pos = line_end + 2;
                 break;
+            }
+            
+            // Check header bomb protection
+            if (++header_count > MAX_HEADERS) {
+                error_response.status_code = 431;
+                error_response.status_text = "Request Header Fields Too Large";
+                error_response.body = R"({"error":"Too many headers"})";
+                return false;
+            }
+            
+            // Check header size
+            if (header_line.length() > MAX_HEADER_SIZE) {
+                error_response.status_code = 431;
+                error_response.status_text = "Request Header Fields Too Large";
+                error_response.body = R"({"error":"Header too large"})";
+                return false;
             }
             
             size_t colon = header_line.find(':');
@@ -339,15 +446,87 @@ private:
                 while (!value.empty() && value[0] == ' ') value = value.substr(1);
                 while (!value.empty() && value[value.length()-1] == ' ') value.pop_back();
                 
+                // Check for CRLF injection in header values
+                if (value.find("\r\n") != std::string::npos) {
+                    error_response.status_code = 400;
+                    error_response.status_text = "Bad Request";
+                    error_response.body = R"({"error":"CRLF in header value"})";
+                    return false;
+                }
+                
+                // Check for null bytes in headers
+                if (value.find('\0') != std::string::npos) {
+                    error_response.status_code = 400;
+                    error_response.status_text = "Bad Request";
+                    error_response.body = R"({"error":"Null byte in header"})";
+                    return false;
+                }
+                
+                // Detect duplicate Content-Length headers (CVE-2024-1135 pattern)
+                std::string key_lower = key;
+                std::transform(key_lower.begin(), key_lower.end(), key_lower.begin(), ::tolower);
+                
+                if (key_lower == "content-length") {
+                    if (has_content_length) {
+                        // Multiple Content-Length headers - request smuggling attempt
+                        error_response.status_code = 400;
+                        error_response.status_text = "Bad Request";
+                        error_response.body = R"({"error":"Multiple Content-Length headers"})";
+                        return false;
+                    }
+                    has_content_length = true;
+                    
+                    // Validate Content-Length is a valid number
+                    try {
+                        // Check for integer overflow
+                        unsigned long long cl = std::stoull(value);
+                        if (cl > MAX_BODY_SIZE) {
+                            error_response.status_code = 413;
+                            error_response.status_text = "Request Entity Too Large";
+                            error_response.body = R"({"error":"Content-Length too large"})";
+                            return false;
+                        }
+                        content_length = static_cast<size_t>(cl);
+                    } catch (...) {
+                        error_response.status_code = 400;
+                        error_response.status_text = "Bad Request";
+                        error_response.body = R"({"error":"Invalid Content-Length"})";
+                        return false;
+                    }
+                }
+                
+                // Detect Transfer-Encoding header (CVE-2024-23452 pattern)
+                if (key_lower == "transfer-encoding") {
+                    has_transfer_encoding = true;
+                }
+                
                 request.headers[key] = value;
             }
             
             pos = line_end + 2;
         }
         
+        // Check for request smuggling: Transfer-Encoding + Content-Length
+        // Per RFC 7230: "If a message is received with both a Transfer-Encoding 
+        // and a Content-Length header field, the Transfer-Encoding overrides the Content-Length"
+        if (has_transfer_encoding && has_content_length) {
+            error_response.status_code = 400;
+            error_response.status_text = "Bad Request";
+            error_response.body = R"({"error":"Both Transfer-Encoding and Content-Length present"})";
+            return false;
+        }
+        
+        // We don't support Transfer-Encoding (chunked), return 501 Not Implemented
+        if (has_transfer_encoding) {
+            error_response.status_code = 501;
+            error_response.status_text = "Not Implemented";
+            error_response.body = R"({"error":"Transfer-Encoding not supported"})";
+            return false;
+        }
+        
         // Parse body if present
-        if (pos < request_str.length()) {
-            request.body = request_str.substr(pos);
+        if (pos < request_data.length()) {
+            request.body = request_data.substr(pos);
         }
         
         return true;
@@ -408,6 +587,7 @@ private:
     bool running_;
     socket_t server_fd_;
     std::thread accept_thread_;
+    std::atomic<size_t> active_connections_;
 };
 
 }
