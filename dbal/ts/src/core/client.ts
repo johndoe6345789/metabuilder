@@ -10,6 +10,8 @@ import {
   validateUserUpdate,
   validatePageCreate,
   validatePageUpdate,
+  validateComponentHierarchyCreate,
+  validateComponentHierarchyUpdate,
   validateId,
 } from './validation'
 
@@ -263,18 +265,66 @@ export class DBALClient {
   get components() {
     return {
       create: async (data: Omit<ComponentHierarchy, 'id' | 'createdAt' | 'updatedAt'>): Promise<ComponentHierarchy> => {
+        const validationErrors = validateComponentHierarchyCreate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid component data',
+            validationErrors.map(error => ({ field: 'component', error }))
+          )
+        }
+
         return this.adapter.create('ComponentHierarchy', data) as Promise<ComponentHierarchy>
       },
       read: async (id: string): Promise<ComponentHierarchy | null> => {
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid component ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
         return this.adapter.read('ComponentHierarchy', id) as Promise<ComponentHierarchy | null>
       },
       update: async (id: string, data: Partial<ComponentHierarchy>): Promise<ComponentHierarchy> => {
+        const idErrors = validateId(id)
+        if (idErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid component ID',
+            idErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
+        const validationErrors = validateComponentHierarchyUpdate(data)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid component update data',
+            validationErrors.map(error => ({ field: 'component', error }))
+          )
+        }
+
         return this.adapter.update('ComponentHierarchy', id, data) as Promise<ComponentHierarchy>
       },
       delete: async (id: string): Promise<boolean> => {
+        const validationErrors = validateId(id)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid component ID',
+            validationErrors.map(error => ({ field: 'id', error }))
+          )
+        }
+
         return this.adapter.delete('ComponentHierarchy', id)
       },
       getTree: async (pageId: string): Promise<ComponentHierarchy[]> => {
+        const validationErrors = validateId(pageId)
+        if (validationErrors.length > 0) {
+          throw DBALError.validationError(
+            'Invalid page ID',
+            validationErrors.map(error => ({ field: 'pageId', error }))
+          )
+        }
+
         const result = await this.adapter.list('ComponentHierarchy', { filter: { pageId } })
         return result.data as ComponentHierarchy[]
       },
