@@ -10,11 +10,15 @@
     "declarationMap": true,
     "sourceMap": true,
     "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
+    "types": ["node"],
     "paths": {
       "@/*": ["./src/*"]
     }

@@ -9,12 +9,12 @@ export interface BlobMetadata {
   contentType: string
   etag: string
   lastModified: Date
-  customMetadata?: Record<string, string>
+  customMetadata?: Record<string, string> | undefined
 }
 
 export interface BlobListResult {
   items: BlobMetadata[]
-  nextToken?: string
+  nextToken?: string | undefined
   isTruncated: boolean
 }
 
