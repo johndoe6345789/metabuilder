@@ -1,0 +1,3 @@
+// Re-export for backward compatibility
+// TODO: Update imports to use @/components/ui directly
+export { Input, type InputProps } from './atoms/Input'
