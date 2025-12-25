@@ -1,13 +1,20 @@
 import type { LuaExecutionContext } from '../types'
+import type { LuaExecutionResult } from '../types'
+import type { SecurityScanResult } from '../../../security-scanner'
 import { securityScanner } from '../../../security-scanner'
 import { LuaEngine } from '../../LuaEngine'
-import type { SandboxedLuaEngine, SandboxedLuaResult } from '../../sandboxed-lua-engine'
+import type { SandboxedLuaEngineState } from './types'
+
+export interface SandboxedLuaResult {
+  execution: LuaExecutionResult
+  security: SecurityScanResult
+}
 
 /**
  * Execute Lua code with sandbox restrictions and security scanning
  */
 export async function executeWithSandbox(
-  this: SandboxedLuaEngine,
+  this: SandboxedLuaEngineState,
   code: string,
   context: LuaExecutionContext = {}
 ): Promise<SandboxedLuaResult> {
