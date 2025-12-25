@@ -131,4 +131,62 @@ export class Database {
   static addComponentConfig = components.addComponentConfig
   static updateComponentConfig = components.updateComponentConfig
   static deleteComponentConfig = components.deleteComponentConfig
+
+  // CSS Classes
+  static getCssClasses = cssClasses.getCssClasses
+  static setCssClasses = cssClasses.setCssClasses
+  static addCssCategory = cssClasses.addCssCategory
+  static updateCssCategory = cssClasses.updateCssCategory
+  static deleteCssCategory = cssClasses.deleteCssCategory
+
+  // Dropdown Configs
+  static getDropdownConfigs = dropdownConfigs.getDropdownConfigs
+  static setDropdownConfigs = dropdownConfigs.setDropdownConfigs
+  static addDropdownConfig = dropdownConfigs.addDropdownConfig
+  static updateDropdownConfig = dropdownConfigs.updateDropdownConfig
+  static deleteDropdownConfig = dropdownConfigs.deleteDropdownConfig
+
+  // Tenants
+  static getTenants = tenants.getTenants
+  static setTenants = tenants.setTenants
+  static addTenant = tenants.addTenant
+  static updateTenant = tenants.updateTenant
+  static deleteTenant = tenants.deleteTenant
+
+  // Packages
+  static getInstalledPackages = packages.getInstalledPackages
+  static setInstalledPackages = packages.setInstalledPackages
+  static installPackage = packages.installPackage
+  static uninstallPackage = packages.uninstallPackage
+  static togglePackageEnabled = packages.togglePackageEnabled
+  static getPackageData = packages.getPackageData
+  static setPackageData = packages.setPackageData
+  static deletePackageData = packages.deletePackageData
+
+  // Power Transfers
+  static getPowerTransferRequests = powerTransfers.getPowerTransferRequests
+  static setPowerTransferRequests = powerTransfers.setPowerTransferRequests
+  static addPowerTransferRequest = powerTransfers.addPowerTransferRequest
+  static updatePowerTransferRequest = powerTransfers.updatePowerTransferRequest
+  static deletePowerTransferRequest = powerTransfers.deletePowerTransferRequest
+
+  // SMTP Config
+  static getSMTPConfig = smtpConfig.getSMTPConfig
+  static setSMTPConfig = smtpConfig.setSMTPConfig
+
+  // God Credentials
+  static getGodCredentialsExpiry = godCredentials.getGodCredentialsExpiry
+  static setGodCredentialsExpiry = godCredentials.setGodCredentialsExpiry
+  static getFirstLoginFlags = godCredentials.getFirstLoginFlags
+  static setFirstLoginFlag = godCredentials.setFirstLoginFlag
+  static getGodCredentialsExpiryDuration = godCredentials.getGodCredentialsExpiryDuration
+  static setGodCredentialsExpiryDuration = godCredentials.setGodCredentialsExpiryDuration
+  static shouldShowGodCredentials = godCredentials.shouldShowGodCredentials
+  static resetGodCredentialsExpiry = godCredentials.resetGodCredentialsExpiry
+
+  // Database Admin
+  static clearDatabase = databaseAdmin.clearDatabase
+  static exportDatabase = databaseAdmin.exportDatabase
+  static importDatabase = databaseAdmin.importDatabase
+  static seedDefaultData = databaseAdmin.seedDefaultData
 }

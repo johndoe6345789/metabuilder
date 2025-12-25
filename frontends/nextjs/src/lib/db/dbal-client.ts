@@ -31,6 +31,8 @@ export interface DBALAdapter {
   update(entity: string, id: string, data: Record<string, unknown>): Promise<unknown>
   delete(entity: string, id: string): Promise<boolean>
   list(entity: string, options?: ListOptions): Promise<ListResult<unknown>>
+  findFirst(entity: string, options?: { where?: Record<string, unknown> }): Promise<unknown | null>
+  upsert(entity: string, options: { where: Record<string, unknown>; update: Record<string, unknown>; create: Record<string, unknown> }): Promise<unknown>
   close(): Promise<void>
 }
 
@@ -120,6 +122,21 @@ const prismaAdapter: DBALAdapter = {
       limit,
       hasMore: skip + limit < total,
     }
+  },
+
+  async findFirst(entity: string, options?: { where?: Record<string, unknown> }): Promise<unknown | null> {
+    const model = getModel(entity)
+    const where = options?.where ? buildWhereClause(options.where) : undefined
+    return model.findFirst({ where })
+  },
+
+  async upsert(entity: string, options: { where: Record<string, unknown>; update: Record<string, unknown>; create: Record<string, unknown> }): Promise<unknown> {
+    const model = getModel(entity)
+    return model.upsert({
+      where: options.where,
+      update: options.update,
+      create: options.create,
+    })
   },
 
   async close(): Promise<void> {

@@ -8,7 +8,7 @@ export async function setFirstLoginFlag(username: string, isFirstLogin: boolean)
   // Find the user first
   const user = await adapter.findFirst('User', {
     where: { username },
-  })
+  }) as { id: string } | null
   if (user) {
     await adapter.update('User', user.id, { firstLogin: isFirstLogin })
   }

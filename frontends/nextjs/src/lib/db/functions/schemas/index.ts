@@ -1,5 +1,0 @@
-export { getSchemas } from './get-schemas'
-export { setSchemas } from './set-schemas'
-export { addSchema } from './add-schema'
-export { updateSchema } from './update-schema'
-export { deleteSchema } from './delete-schema'

@@ -1,5 +1,5 @@
 import { getAdapter } from '../dbal-client'
-import type { SMTPConfig } from '../../password-utils'
+import type { SMTPConfig } from '../../password'
 
 /**
  * Get SMTP configuration

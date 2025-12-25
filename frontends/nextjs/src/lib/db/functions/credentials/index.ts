@@ -1,5 +1,0 @@
-export { getCredentials } from './get-credentials'
-export { setCredential } from './set-credential'
-export { verifyCredentials } from './verify-credentials'
-export { getPasswordChangeTimestamps } from './get-password-change-timestamps'
-export { setPasswordChangeTimestamps } from './set-password-change-timestamps'

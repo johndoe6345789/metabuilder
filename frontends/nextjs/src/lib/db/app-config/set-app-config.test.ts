@@ -30,7 +30,7 @@ describe('setAppConfig', () => {
       workflows: [],
       luaScripts: [],
       pages: [],
-      theme: {},
+      theme: { colors: {}, fonts: {} },
     })
 
     expect(mockDelete).toHaveBeenCalled()

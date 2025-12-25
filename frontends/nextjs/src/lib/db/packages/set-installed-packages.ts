@@ -1,5 +1,5 @@
 import { getAdapter } from '../dbal-client'
-import type { InstalledPackage } from '../../package-types'
+import type { InstalledPackage } from '../../packages/package-types'
 
 /**
  * Set all installed packages (replaces existing)
