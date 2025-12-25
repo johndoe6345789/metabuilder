@@ -16,9 +16,18 @@ export { prisma } from './prisma'
 // Authentication
 export * from './auth'
 
-// Database (single source - db.ts)
+// Database (single source - db folder)
 export { Database } from './db'
-export type { DBConfig, DBStats } from './db'
+export type { 
+  CssCategory, 
+  DropdownConfig, 
+  DatabaseSchema, 
+  ComponentNode, 
+  ComponentConfig,
+  DBALAdapter,
+  ListOptions,
+  ListResult
+} from './db'
 
 // DBAL
 export * from './dbal'
