@@ -46,10 +46,13 @@
   },
   "include": [
     "src",
+    "app",
+    "dbal",
     "packages",
     "e2e",
     "playwright.config.ts",
     "vite.config.ts",
+    "scripts/**/*.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
