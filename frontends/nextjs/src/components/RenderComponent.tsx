@@ -14,6 +14,7 @@ import { Slider } from '@/components/ui/slider'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { IRCWebchatDeclarative } from '@/components/IRCWebchatDeclarative'
+import { NotificationSummaryCard } from '@/components/NotificationSummaryCard'
 import type { User } from '@/lib/level-types'
 import { getDeclarativeRenderer } from '@/lib/declarative-component-renderer'
 
@@ -106,6 +107,16 @@ export function RenderComponent({ component, isSelected, onSelect, user, context
           <Card className={props.className || 'p-6'}>
             {renderChildren()}
           </Card>
+        )
+
+      case 'NotificationSummary':
+        return (
+          <NotificationSummaryCard
+            title={props.title}
+            subtitle={props.subtitle}
+            totalLabel={props.totalLabel}
+            items={props.items}
+          />
         )
 
       case 'Button':

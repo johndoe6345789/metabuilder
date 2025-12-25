@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 
-import { readdirSync, readFileSync, statSync } from 'fs'
+import { readdirSync, readFileSync, statSync, writeFileSync } from 'fs'
 import { join, extname } from 'path'
 
 interface ComponentAnalysis {
@@ -217,4 +217,14 @@ const summary = {
   timestamp: new Date().toISOString()
 }
 
-console.log(JSON.stringify(summary, null, 2))
+const serialized = JSON.stringify(summary, null, 2)
+const outputPath = process.argv[2] || 'implementation-analysis.json'
+
+try {
+  writeFileSync(outputPath, serialized)
+  console.log(`Implementation analysis written to ${outputPath}`)
+} catch (error) {
+  console.error(`Failed to write implementation analysis to ${outputPath}:`, error)
+}
+
+console.log(serialized)
