@@ -21,14 +21,20 @@ const expectedConfigs = [
     props: {
       level: 1,
       children: 'Welcome to MetaBuilder',
+      className: 'text-6xl font-bold text-foreground mb-4',
     },
+    styles: {},
+    events: {},
   },
   {
     id: 'config_home_subtitle',
     componentId: 'node_home_subtitle',
     props: {
       children: 'Build multi-tenant applications without writing code',
+      className: 'text-xl text-muted-foreground mb-8',
     },
+    styles: {},
+    events: {},
   },
   {
     id: 'config_home_button',
@@ -37,7 +43,10 @@ const expectedConfigs = [
       children: 'Get Started',
       variant: 'default',
       size: 'lg',
+      className: 'px-8 py-3',
     },
+    styles: {},
+    events: {},
   },
 ]
 
