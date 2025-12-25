@@ -1,0 +1,5 @@
+export { getPages } from './get-pages'
+export { setPages } from './set-pages'
+export { addPage } from './add-page'
+export { updatePage } from './update-page'
+export { deletePage } from './delete-page'

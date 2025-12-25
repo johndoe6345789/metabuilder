@@ -1,5 +1,6 @@
 // Types
 export type { CssCategory, DropdownConfig, DatabaseSchema, ComponentNode, ComponentConfig } from './types'
+export { DB_KEYS } from './types'
 
 // DBAL Client
 export { getAdapter, closeAdapter } from './dbal-client'
@@ -20,6 +21,14 @@ export * from './schemas'
 export * from './comments'
 export * from './app-config'
 export * from './components'
+export * from './css-classes'
+export * from './dropdown-configs'
+export * from './tenants'
+export * from './packages'
+export * from './power-transfers'
+export * from './smtp-config'
+export * from './god-credentials'
+export * from './database-admin'
 
 // Import all for namespace class
 import { initializeDatabase } from './initialize-database'
@@ -34,6 +43,14 @@ import * as schemas from './schemas'
 import * as comments from './comments'
 import * as appConfig from './app-config'
 import * as components from './components'
+import * as cssClasses from './css-classes'
+import * as dropdownConfigs from './dropdown-configs'
+import * as tenants from './tenants'
+import * as packages from './packages'
+import * as powerTransfers from './power-transfers'
+import * as smtpConfig from './smtp-config'
+import * as godCredentials from './god-credentials'
+import * as databaseAdmin from './database-admin'
 
 /**
  * Database namespace class - groups all DB operations as static methods
