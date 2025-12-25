@@ -1,19 +1,19 @@
 # TODO Scan Report
 
-- Generated: `2025-12-25 21:08:50Z` (UTC)
+- Generated: `2025-12-25 21:09:09Z` (UTC)
 - Report directory: `docs/todo`
 - Pattern: `\b(TODO|FIXME|HACK|XXX)\b`
 - Excludes: `docs/todo/`, `**/node_modules/`, `**/.next/`, `**/coverage/`, `**/dist/`, `**/build/`, `**/.git/`
 
 ## Summary
-- Total matches: **162**
-- By marker: `TODO`=162
+- Total matches: **161**
+- By marker: `TODO`=161
 - By top-level directory:
   - `.github`: 10
   - `dbal`: 6
   - `docs`: 95
   - `frontends`: 36
-  - `tools`: 15
+  - `tools`: 14
 
 ## Matches
 
@@ -172,11 +172,10 @@
 - `frontends/nextjs/src/lib/security/secure-db/operations/verify-credentials.ts:16` — // TODO: Track failed login attempts and enforce account lockout/backoff.
 - `frontends/nextjs/src/lib/security/secure-db/rate-limit-store.ts:1` — // TODO: Load rate limit settings from config/DB instead of hardcoding.
 
-### `tools` (15)
+### `tools` (14)
 - `tools/analyze-implementation-completeness.ts:104` — if (body.includes('TODO') || body.includes('FIXME')) {
 - `tools/analyze-test-coverage.ts:292` — // Generate TODO items
 - `tools/analyze-test-coverage.ts:294` — console.log("TODO - CREATE TESTS FOR:");
-- `tools/autobot.sh:9` — codex exec --full-auto --sandbox="danger-full-access" --cd="/Users/rmac/Documents/GitHub/metabuilder/docs/todo/" "Please resolve my TODO list, Scan project for TODO items." || e...
 - `tools/check-function-coverage.js:184` — console.log(`🎯 TODO - CREATE TESTS FOR:`);
 - `tools/detect-stub-implementations.ts:24` — name: 'TODO comment in function',
 - `tools/detect-stub-implementations.ts:25` — pattern: /\/\/\s*TODO|\/\/\s*FIXME|\/\/\s*XXX|\/\/\s*HACK/i,
