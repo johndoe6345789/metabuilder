@@ -24,6 +24,7 @@ public:
 
 private:
     void registerRoutes();
+    void runServer();
 
     std::string bind_address_;
     int port_;
