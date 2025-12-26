@@ -66,6 +66,8 @@ Full-featured sections with business logic:
 
 **Editors:** SchemaEditor, CodeEditor, LuaEditor, JsonEditor, NerdModeIDE
 
+`NerdModeIDE` is a thin wrapper that re-exports the modular implementation under `components/nerd-mode-ide/`.
+
 **Managers:** DatabaseManager, UserManagement, PackageManager, ThemeEditor
 
 **Features:** IRCWebchat, WorkflowEditor, AuditLogViewer, ScreenshotAnalyzer
