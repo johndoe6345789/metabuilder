@@ -17,13 +17,13 @@ This reference ties every Material UI component that the Next.js frontend curren
 | ChipProps | `Material.MaterialChip` | Accepts `text` + optional prefix/utility slots. |
 | CircularProgress | `Material.MaterialCircularProgress` | `BusyIndicator`-based circle, colored via palette. |
 | Collapse | `Material.MaterialCollapse` | Generic collapse container animated via height transitions. |
-| Container | `Material.MaterialContainer` | Width-constraining `Rectangle` that honors layout margins. |
+| Container | `Material.MaterialContainer` | Width-constraining `Rectangle` with column layout and consistent spacing. |
 | CssBaseline | `Material.MaterialCssBaseline` | Background/typography reset that sets root window colors. |
 | Dialog / DialogActions / DialogContent / DialogTitle | `Material.MaterialDialog` | Wraps `QtQuick.Controls.Dialog` + slot for actions, sections, icons. |
 | Divider | `Material.MaterialDivider` | Simple horizontal line with palette color. |
 | Drawer | `Material.MaterialDrawer` | `Drawer` from Qt Quick Controls with custom surface look. |
 | FormControl / FormControlLabel / FormHelperText / FormLabel | `Material.MaterialFormField` | Label + helper text wrappers around `Material.MaterialTextField`. |
-| Grid | `QtQuick.Layouts.GridLayout` | `Material.MaterialGrid` simply forwards to `GridLayout` with spacing defaults. |
+| Grid | `Material.MaterialGrid` | GridLayout wrapper exposing columns and spacing defaults. |
 | IconButton | `Material.MaterialIconButton` | Icon+button with circular touch target and ripple. |
 | InputAdornment | `Material.MaterialInputAdornment` | `RowLayout` that positions adornments next to text fields. |
 | InputBase / TextField / TextFieldProps | `Material.MaterialTextField` | Material text field with outlined background, focused border, and caret colors. |
@@ -32,6 +32,7 @@ This reference ties every Material UI component that the Next.js frontend curren
 | Link | `Material.MaterialLink` | `Text` with underline + hover opacity + `MouseArea`; clicking opens `href` via `Qt.openUrlExternally`. |
 | List / ListItem / ListItemButton / ListItemIcon / ListItemText | `Material.MaterialList` set of `Repeater` + `Material.MaterialListItem` | Compose vertical menus with icons and text. |
 | Menu / MenuItem | `Material.MaterialMenu` / `Material.MaterialMenuItem` | Wraps Qt Quick `Menu` so you can customize menu labels/icons. |
+| MenuProps | `Material.MaterialMenuProps` | Props wrapper that forwards to Qt Quick `Menu` and exposes action tracking. |
 | Pagination / PaginationItem | `Material.MaterialPagination` | Row of buttons that mirror Next.js `Pagination` styles. |
 | Paper | `Material.MaterialPaper` | Surface `Rectangle` that uses `surface` palette + outline. |
 | Popover | `Material.MaterialPopover` | `Popup` with arrow and surface coloring. |
