@@ -13,14 +13,14 @@
 export type { SecurityScanResult, SecurityIssue, SecurityPattern } from './functions/types'
 
 // Import individual lambda functions
-import { scanJavaScript } from './functions/scanners/scan-javascript'
-import { scanLua } from './functions/scanners/scan-lua'
-import { scanJSON } from './functions/scanners/scan-json'
-import { scanHTML } from './functions/scanners/scan-html'
-import { scanForVulnerabilities } from './functions/scanners/scan-for-vulnerabilities'
-import { sanitizeInput } from './functions/scanners/sanitize-input'
-import { getSeverityColor } from './functions/helpers/get-severity-color'
-import { getSeverityIcon } from './functions/helpers/get-severity-icon'
+import { scanJavaScript } from '../functions/scanners/language-scanners/scan-javascript'
+import { scanLua } from '../functions/scanners/language-scanners/scan-lua'
+import { scanJSON } from '../functions/scanners/language-scanners/scan-json'
+import { scanHTML } from '../functions/scanners/language-scanners/scan-html'
+import { scanForVulnerabilities } from '../functions/scanners/scan-for-vulnerabilities'
+import { sanitizeInput } from '../functions/scanners/sanitize-input'
+import { getSeverityColor } from '../functions/helpers/get-severity-color'
+import { getSeverityIcon } from '../functions/helpers/get-severity-icon'
 
 /**
  * SecurityScanner - Wrapper class for security scanning functions
