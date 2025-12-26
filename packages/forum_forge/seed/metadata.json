@@ -1,0 +1,12 @@
+{
+  "packageId": "forum_forge",
+  "name": "Forum Forge",
+  "version": "1.0.0",
+  "description": "Modern forum starter with categories, threads, and moderation lanes.",
+  "author": "MetaBuilder",
+  "category": "social",
+  "dependencies": [],
+  "exports": {
+    "components": []
+  }
+}
