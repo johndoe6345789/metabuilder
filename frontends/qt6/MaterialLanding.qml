@@ -62,6 +62,38 @@ ApplicationWindow {
             Material.MaterialChip { text: "Automation" }
         }
 
+        Material.MaterialDivider {
+            width: parent.width
+        }
+
+        Material.MaterialSurface {
+            Layout.fillWidth: true
+            elevation: 14
+            contentComponent: ColumnLayout {
+                spacing: 14
+
+                Text {
+                    text: "Material surface"
+                    font.pixelSize: 20
+                    color: Material.MaterialPalette.onSurface
+                    font.bold: true
+                }
+
+                Text {
+                    text: "Use surfaces to group related controls, apply elevation, and keep spacing consistent with Material principles."
+                    font.pixelSize: 15
+                    color: Material.MaterialPalette.onSurface
+                    wrapMode: Text.Wrap
+                }
+
+                RowLayout {
+                    spacing: 12
+                    Material.MaterialButton { text: "Continue" }
+                    Material.MaterialButton { text: "Cancel" ; outlined: true }
+                }
+            }
+        }
+
         Material.MaterialCard {
             Layout.fillWidth: true
             contentItem: ColumnLayout {

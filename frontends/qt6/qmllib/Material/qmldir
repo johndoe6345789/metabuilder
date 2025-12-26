@@ -4,3 +4,5 @@ MaterialButton 1.0 MaterialButton.qml
 MaterialCard 1.0 MaterialCard.qml
 MaterialTextField 1.0 MaterialTextField.qml
 MaterialChip 1.0 MaterialChip.qml
+MaterialSurface 1.0 MaterialSurface.qml
+MaterialDivider 1.0 MaterialDivider.qml
