@@ -1,4 +1,3 @@
-export { setUsers } from './set-users'
 import { getAdapter } from '../core/dbal-client'
 import type { User } from '../../types/level-types'
 

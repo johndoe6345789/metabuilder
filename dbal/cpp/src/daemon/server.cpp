@@ -228,7 +228,7 @@ void Server::registerRoutes() {
     drogon::app().registerHandler("/healthz", health_handler, {drogon::HttpMethod::Get});
     drogon::app().registerHandler("/version", version_handler, {drogon::HttpMethod::Get});
     drogon::app().registerHandler("/api/version", version_handler, {drogon::HttpMethod::Get});
-++ 
+    
     auto rpc_handler = [this](const drogon::HttpRequestPtr& request,
                               std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
         auto send_error = [&callback](const std::string& message, int status = 400) {
@@ -397,9 +397,6 @@ void Server::registerRoutes() {
     drogon::app().registerHandler("/status", status_handler, {drogon::HttpMethod::Get});
     drogon::app().registerHandler("/api/status", status_handler, {drogon::HttpMethod::Get});
     drogon::app().registerHandler("/api/dbal", rpc_handler, {drogon::HttpMethod::Post});
-
-    drogon::app().registerHandler("/status", status_handler, {drogon::HttpMethod::Get});
-    drogon::app().registerHandler("/api/status", status_handler, {drogon::HttpMethod::Get});
 
     routes_registered_ = true;
 }
