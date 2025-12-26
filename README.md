@@ -7,19 +7,22 @@ A **data-driven, multi-tenant platform** where 95% of functionality lives in JSO
 ## Table of Contents
 
 1. [Quick Start](#quick-start)
-2. [Architecture](#architecture)
-3. [6-Level Permission System](#6-level-permission-system)
-4. [Package System](#package-system)
-5. [Database](#database)
-6. [Multi-Tenant System](#multi-tenant-system)
-7. [Lua Scripting](#lua-scripting)
-8. [API Reference](#api-reference)
-9. [Testing](#testing)
-10. [Development](#development)
-11. [Security](#security)
-12. [Deployment](#deployment)
-13. [Contributing](#contributing)
-14. [Troubleshooting](#troubleshooting)
+2. [Quick Overview](#quick-overview)
+3. [Refactor Plan](#refactor-plan)
+4. [Architecture](#architecture)
+5. [6-Level Permission System](#6-level-permission-system)
+6. [Package System](#package-system)
+7. [Database](#database)
+8. [Multi-Tenant System](#multi-tenant-system)
+9. [Lua Scripting](#lua-scripting)
+10. [API Reference](#api-reference)
+11. [Testing](#testing)
+12. [Development](#development)
+13. [Security](#security)
+14. [Deployment](#deployment)
+15. [Contributing](#contributing)
+16. [Troubleshooting](#troubleshooting)
+17. [Key Files Reference](#key-files-reference)
 
 ---
 
@@ -71,6 +74,8 @@ MetaBuilder is a **data-driven, multi-tenant platform** with these core features
 - **Type-Safe Workflow**: TypeScript, Act local CI, comprehensive testing
 
 ---
+
+## Refactor Plan
 
 ### Next.js to Lua Conversion TODO
 
