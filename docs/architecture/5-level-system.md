@@ -249,7 +249,7 @@ export function AppOriginal() {
 
 ✅ **Do:**
 - Check permissions at component entry point
-- Use consistent level numbers (1-5)
+- Use consistent level numbers (1-6)
 - Document which level can access features
 - Audit high-level operations
 - Test with different permission levels
