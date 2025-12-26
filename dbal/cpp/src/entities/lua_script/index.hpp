@@ -5,10 +5,10 @@
 #ifndef DBAL_LUA_SCRIPT_INDEX_HPP
 #define DBAL_LUA_SCRIPT_INDEX_HPP
 
-#include "create_lua_script.hpp"
-#include "get_lua_script.hpp"
-#include "update_lua_script.hpp"
-#include "delete_lua_script.hpp"
-#include "list_lua_scripts.hpp"
+#include "crud/create_lua_script.hpp"
+#include "crud/get_lua_script.hpp"
+#include "crud/update_lua_script.hpp"
+#include "crud/delete_lua_script.hpp"
+#include "crud/list_lua_scripts.hpp"
 
 #endif

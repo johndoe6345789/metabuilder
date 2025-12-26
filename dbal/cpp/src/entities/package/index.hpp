@@ -5,11 +5,11 @@
 #ifndef DBAL_PACKAGE_INDEX_HPP
 #define DBAL_PACKAGE_INDEX_HPP
 
-#include "create_package.hpp"
-#include "get_package.hpp"
-#include "update_package.hpp"
-#include "delete_package.hpp"
-#include "list_packages.hpp"
-#include "batch_packages.hpp"
+#include "crud/create_package.hpp"
+#include "crud/get_package.hpp"
+#include "crud/update_package.hpp"
+#include "crud/delete_package.hpp"
+#include "crud/list_packages.hpp"
+#include "batch/batch_packages.hpp"
 
 #endif
