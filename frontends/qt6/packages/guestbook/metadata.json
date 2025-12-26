@@ -1,0 +1,7 @@
+{
+  "packageId": "guestbook",
+  "name": "Guestbook",
+  "version": "1.0.0",
+  "description": "Simple contributions feed for visitors to leave messages.",
+  "dependencies": []
+}
