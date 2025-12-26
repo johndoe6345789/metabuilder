@@ -1,5 +1,5 @@
-import { getAdapter } from '../dbal-client'
-import { verifyPassword } from '../verify-password'
+import { getAdapter } from '../../../core/dbal-client'
+import { verifyPassword } from '../../../verify-password'
 
 /**
  * Verify username/password combination
