@@ -1,0 +1,7 @@
+{
+  "packageId": "supergod_panel",
+  "name": "SuperGod Panel",
+  "version": "1.0.0",
+  "description": "Overlord console that orchestrates daemons, migrations, and meta workflows.",
+  "dependencies": ["god_panel", "retro_games"]
+}

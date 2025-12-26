@@ -1,0 +1,7 @@
+{
+  "packageId": "analytics",
+  "name": "Analytics Studio",
+  "version": "1.0.0",
+  "description": "Realtime dashboards for usage, telemetry, and forum health.",
+  "dependencies": ["god_panel", "blog"]
+}
