@@ -181,20 +181,7 @@ export function ComponentHierarchyEditor({ nerdMode = false }: { nerdMode?: bool
     if (selectedPageId) {
       loadHierarchy()
     }
-  }, [selectedPageId])
-
-  const loadPages = async () => {
-    const loadedPages = await Database.getPages()
-    setPages(loadedPages)
-    if (loadedPages.length > 0 && !selectedPageId) {
-      setSelectedPageId(loadedPages[0].id)
-    }
-  }
-
-  const loadHierarchy = async () => {
-    const allHierarchy = await Database.getComponentHierarchy()
-    setHierarchy(allHierarchy)
-  }
+  }, [selectedPageId, loadHierarchy])
 
   const getRootNodes = () => {
     return Object.values(hierarchy)
@@ -212,7 +199,7 @@ export function ComponentHierarchyEditor({ nerdMode = false }: { nerdMode?: bool
     if (!componentDef) return
 
     const newNode: ComponentNode = {
-      id: `node_${Date.now()}`,
+      id: `node_${componentIdPrefix}_${Object.keys(hierarchy).length}`,
       type: componentType,
       parentId: parentId,
       childIds: [],
