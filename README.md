@@ -267,7 +267,6 @@ MetaBuilder is a **data-driven, multi-tenant platform** with these core features
 - `PackageManager` loads `PACKAGE_CATALOG`, drives the install/toggle APIs, and feeds catalog entries back into the God panel (`frontends/nextjs/src/lib/packages/package-catalog.ts` and `frontends/nextjs/src/components/PackageManager.tsx`).
 - Catalog metadata mirrors the `packages/*/seed/metadata.json` format described in `packages/README.md`; new packages must follow that structure (metadata, components, optional static content) so the God panel can surface them.
 - Default package metadata is pre-defined under `frontends/nextjs/src/lib/packages/package-glue/default-packages.ts` (admin_dialog, dashboard, forum_forge, etc.) to keep UI, Lua loaders, and catalog definitions aligned.
-- See `docx/REFACTOR_PLAN.md` for the living plan that covers package design, metadata schema, tracking templates, tooling, and phase-by-phase deliverables for porting the frontend to Lua/metadata.
  
 #### Package Design Notes
 
