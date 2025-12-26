@@ -1,3 +1,4 @@
+#include "server_helpers/role.hpp"
 #include "server_helpers/serialization.hpp"
 
 #include <chrono>
