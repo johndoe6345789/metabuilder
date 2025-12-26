@@ -30,7 +30,7 @@ describe('summarizeWorkflowLogs', () => {
     )
     expect(summary.jobErrors[0]).toEqual({
       job: 'test',
-      error: 'Error: Something bad happened',
+      error: 'CONCLUSION: failure',
     })
   })
 
