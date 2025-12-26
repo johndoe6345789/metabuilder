@@ -55,7 +55,7 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode 
     void loadConfig()
   }, [node.id, node.type])
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     const newConfig: ComponentConfig = {
       id: config?.id || `config_${Date.now()}`,
       componentId: node.id,
@@ -70,20 +70,20 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode 
     
     toast.success('Configuration saved')
     onSave()
-  }
+  }, [config, node.id, props, styles, events, onSave])
 
   const componentDef = componentCatalog.find(c => c.type === node.type)
 
-  const renderPropEditor = (propSchema: any) => {
+  const renderPropEditor = (propSchema: PropDefinition) => {
     const value = props[propSchema.name] ?? propSchema.defaultValue
 
     switch (propSchema.type) {
       case 'string':
         return (
           <Input
-            value={value || ''}
+            value={String(value || '')}
             onChange={(e) => setProps({ ...props, [propSchema.name]: e.target.value })}
-            placeholder={propSchema.defaultValue}
+            placeholder={String(propSchema.defaultValue || '')}
           />
         )
       
@@ -91,7 +91,7 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode 
         return (
           <Input
             type="number"
-            value={value || ''}
+            value={String(value || '')}
             onChange={(e) => setProps({ ...props, [propSchema.name]: Number(e.target.value) })}
           />
         )
@@ -99,7 +99,7 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode 
       case 'boolean':
         return (
           <Switch
-            checked={value || false}
+            checked={Boolean(value)}
             onCheckedChange={(checked) => setProps({ ...props, [propSchema.name]: checked })}
           />
         )
@@ -107,14 +107,14 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode 
       case 'select':
         return (
           <Select
-            value={value || propSchema.defaultValue}
+            value={String(value || propSchema.defaultValue || '')}
             onValueChange={(val) => setProps({ ...props, [propSchema.name]: val })}
           >
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {propSchema.options?.map((opt: any) => (
+              {propSchema.options?.map((opt: SelectOption) => (
                 <SelectItem key={opt.value} value={opt.value}>
                   {opt.label}
                 </SelectItem>
@@ -126,7 +126,7 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode 
       default:
         return (
           <Input
-            value={value || ''}
+            value={String(value || '')}
             onChange={(e) => setProps({ ...props, [propSchema.name]: e.target.value })}
           />
         )
@@ -282,7 +282,7 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode 
 
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={handleSave}>Save Configuration</Button>
+          <Button onClick={() => void handleSave()}>Save Configuration</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
