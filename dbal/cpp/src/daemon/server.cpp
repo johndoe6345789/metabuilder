@@ -148,12 +148,12 @@ void Server::registerRoutes() {
         server_address
     );
 
-    drogon::app().registerHandler("/health", handle_health, {drogon::Get});
-    drogon::app().registerHandler("/healthz", handle_health, {drogon::Get});
-    drogon::app().registerHandler("/version", handle_version, {drogon::Get});
-    drogon::app().registerHandler("/api/version", handle_version, {drogon::Get});
-    drogon::app().registerHandler("/status", status_handler, {drogon::Get});
-    drogon::app().registerHandler("/api/status", status_handler, {drogon::Get});
+    drogon::app().registerHandler("/health", handle_health, {drogon::HttpMethod::Get});
+    drogon::app().registerHandler("/healthz", handle_health, {drogon::HttpMethod::Get});
+    drogon::app().registerHandler("/version", handle_version, {drogon::HttpMethod::Get});
+    drogon::app().registerHandler("/api/version", handle_version, {drogon::HttpMethod::Get});
+    drogon::app().registerHandler("/status", status_handler, {drogon::HttpMethod::Get});
+    drogon::app().registerHandler("/api/status", status_handler, {drogon::HttpMethod::Get});
 
     routes_registered_ = true;
 }

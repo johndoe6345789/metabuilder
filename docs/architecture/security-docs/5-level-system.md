@@ -85,6 +85,8 @@ Each level **inherits all permissions from lower levels** and adds additional ca
 | 6 | `/supergod` | Supergod console |
 | - | `/login` | Unified sign-in and registration |
 
+The `/moderator` desk is powered by `ModeratorPanel`, which runs inside `AuthGate` bound to `requiredRole="moderator"` so Level 3 reviewers can triage flags before promoting requests to admin or god-mode workflows.
+
 ## Implementation
 
 ### Checking Permissions
