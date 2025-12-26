@@ -461,7 +461,7 @@ protected:
     }
 
     std::string placeholder(size_t index) const {
-        if (dialect_ == Dialect::Postgres) {
+        if (dialect_ == Dialect::Postgres || dialect_ == Dialect::Prisma) {
             return "$" + std::to_string(index);
         }
         return "?";
