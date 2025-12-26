@@ -34,12 +34,11 @@ Material.MaterialSurface {
             wrapMode: Text.WordWrap
         }
 
-        GridLayout {
-            columns: 3
-            rowSpacing: 8
-            columnSpacing: 8
-            Material.MaterialChip { text: "Feature highlight" }
-['Adaptive layout', 'Realtime telemetry', 'Community moderation']
+        RowLayout {
+            spacing: 8
+            Material.MaterialChip { text: "Adaptive layout" }
+            Material.MaterialChip { text: "Realtime telemetry" }
+            Material.MaterialChip { text: "Community moderation" }
         }
 
         RowLayout {
