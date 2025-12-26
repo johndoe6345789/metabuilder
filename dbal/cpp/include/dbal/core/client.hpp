@@ -2,6 +2,7 @@
 #define DBAL_CLIENT_HPP
 
 #include <memory>
+#include <optional>
 #include <string>
 #include "types.hpp"
 #include "errors.hpp"
@@ -35,6 +36,9 @@ public:
     Result<int> batchCreateUsers(const std::vector<CreateUserInput>& inputs);
     Result<int> batchUpdateUsers(const std::vector<UpdateUserBatchItem>& updates);
     Result<int> batchDeleteUsers(const std::vector<std::string>& ids);
+
+    Result<std::vector<User>> searchUsers(const std::string& query, int limit = 20);
+    Result<int> countUsers(const std::optional<UserRole>& role = std::nullopt);
 
     Result<bool> setCredential(const CreateCredentialInput& input);
     Result<bool> verifyCredential(const std::string& username, const std::string& password);

@@ -1,0 +1,12 @@
+[requires]
+cpr/1.10.0
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[options]
+cpr:ssl_backend=openssl
+
+[tool_requires]
+cmake/3.27.1

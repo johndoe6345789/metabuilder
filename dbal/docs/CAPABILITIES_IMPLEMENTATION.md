@@ -19,7 +19,7 @@ This document maps the capabilities declared in `api/schema/capabilities.yaml` t
 
 ## Cross-Cutting Features
 
-- **Native Prisma bridge** – `NativePrismaAdapter` calls `frontends/nextjs/src/app/api/native-prisma/route.ts`, which runs Prisma queries and returns JSON rows so the C++ daemon can "speak native Prisma" without embedding Node.  
+- **Native Prisma bridge** – `NativePrismaAdapter` calls `frontends/nextjs/src/app/api/native-prisma/route.ts`, which validates `DBAL_NATIVE_PRISMA_TOKEN`, translates `$n`/`?` placeholders into a `Prisma.sql` template, and executes the request through the shared Prisma client so the daemon can "speak native Prisma" without embedding Node.  
 - **Capability detection** – `dbal/tools/conformance` scripts run both TypeScript and C++ implementations against shared YAML contracts for `api/schema`.  
 - **Graceful degradation** – SQL adapters default to returning meaningful `dbal::Error` values (`sql_adapter.hpp`), ensuring non-supported features degrade with clear error messages.
 

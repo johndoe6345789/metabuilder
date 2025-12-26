@@ -134,6 +134,10 @@ services:
       - DBAL_SANDBOX=strict
 ```
 
+## Monitoring & Daemon UI
+
+`frontends/dbal` is a dedicated Next.js mini-app that showcases the C++ daemon's architecture, deployment readiness, and the `ServerStatusPanel`. The main `frontends/nextjs` app re-exports the `@dbal-ui` component at `/dbal-daemon`, and the panel polls `/api/status` (the shared feed lives in `frontends/dbal/src/status.ts`). Keep this page covered with `frontends/nextjs/e2e/dbal-daemon/daemon.spec.ts` and `playwright.dbal-daemon.config.ts`, or run `npm run test:e2e:dbal-daemon` after touching the UI.
+
 ## Security Model
 
 ### Sandboxing Strategy
