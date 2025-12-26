@@ -1,6 +1,6 @@
 import { getAdapter } from '../../core/dbal-client'
 import type { User } from '../../types/level-types'
-import { mapUserRecord } from './map-user-record'
+import { mapUserRecord } from '../map-user-record'
 
 /**
  * Get the SuperGod user (instance owner)
