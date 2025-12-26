@@ -6,7 +6,7 @@ import { executeLuaScriptWithProfile } from '../lua/execute-lua-script-with-prof
 
 export interface PageDefinition {
   id: string
-  level: 1 | 2 | 3 | 4 | 5
+  level: 1 | 2 | 3 | 4 | 5 | 6
   title: string
   description?: string
   layout: 'default' | 'sidebar' | 'dashboard' | 'blank'
@@ -69,7 +69,7 @@ export class PageRenderer {
     savedPages.forEach(page => {
       const pageDef: PageDefinition = {
         id: page.id,
-        level: page.level as 1 | 2 | 3 | 4 | 5,
+        level: page.level as 1 | 2 | 3 | 4 | 5 | 6,
         title: page.title,
         layout: 'default',
         components: page.componentTree,
@@ -118,7 +118,7 @@ export class PageRenderer {
     }
 
     if (page.permissions.requiredRole) {
-      const roleHierarchy = ['public', 'user', 'admin', 'god', 'supergod']
+      const roleHierarchy = ['public', 'user', 'moderator', 'admin', 'god', 'supergod']
       const userRole = user?.role ?? 'public'
       const userRoleIndex = roleHierarchy.indexOf(userRole)
       const requiredRoleIndex = roleHierarchy.indexOf(page.permissions.requiredRole)
