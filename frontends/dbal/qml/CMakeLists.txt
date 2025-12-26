@@ -23,6 +23,13 @@ target_link_libraries(dbal-qml PRIVATE Qt6::Core Qt6::Gui Qt6::Quick)
 
 qt_finalize_executable(dbal-qml)
 
+if(NOT "${CMAKE_GENERATOR}" STREQUAL "Ninja")
+  message(
+    STATUS
+    "dbal-qml is designed for Ninja; configure with `cmake -G Ninja` so the Conan Ninja toolchain is used."
+  )
+endif()
+
 install(TARGETS dbal-qml
     RUNTIME DESTINATION bin
 )
