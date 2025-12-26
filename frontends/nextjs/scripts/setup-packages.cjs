@@ -1,1 +1,0 @@
-../../../tools/setup-packages.cjs
