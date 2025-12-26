@@ -1,0 +1,7 @@
+{
+  "packageId": "package_manager",
+  "name": "Package Manager",
+  "version": "1.0.0",
+  "description": "Ubuntu Store style manager that hosts repositories and installer UI.",
+  "dependencies": ["storybook", "frontpage", "analytics"]
+}
