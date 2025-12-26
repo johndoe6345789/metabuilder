@@ -82,6 +82,10 @@ DELETE /api/users/{id}
 Authentication uses a database-backed session with an httpOnly cookie (`mb_session`).
 Sessions default to a 7 day TTL and are refreshed on `/api/auth/session`.
 
+Notes:
+- Seeded accounts set `firstLogin=true` to force an immediate password change on first sign-in.
+- Updating credentials clears `firstLogin` and updates `passwordChangeTimestamp` on the user.
+
 ### Login
 
 ```
