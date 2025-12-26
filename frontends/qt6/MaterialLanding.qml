@@ -1,0 +1,83 @@
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+
+import "qmllib/Material" as Material
+
+ApplicationWindow {
+    visible: true
+    width: 1100
+    height: 700
+    title: "Material Inspo"
+    color: Material.MaterialPalette.palette.background
+
+    Rectangle {
+        anchors.fill: parent
+        color: Material.MaterialPalette.palette.background
+    }
+
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 32
+        spacing: 24
+
+        Text {
+            text: "Material-style UI in Qt Quick"
+            font.pixelSize: 28
+            color: Material.MaterialPalette.palette.onSurface
+            font.bold: true
+        }
+
+        RowLayout {
+            spacing: 16
+            Material.MaterialButton {
+                text: "Primary action"
+                onClicked: console.log("primary")
+            }
+            Material.MaterialButton {
+                text: "Outlined action"
+                outlined: true
+                font.pixelSize: 14
+                onClicked: console.log("outlined")
+            }
+        }
+
+        RowLayout {
+            spacing: 16
+            Material.MaterialTextField {
+                placeholderText: "Email address"
+                width: parent.width / 3
+            }
+            Material.MaterialTextField {
+                placeholderText: "Your role"
+                width: parent.width / 4
+            }
+        }
+
+        RowLayout {
+            spacing: 12
+            Material.MaterialChip { text: "Design" }
+            Material.MaterialChip { text: "Data" }
+            Material.MaterialChip { text: "Runtime" }
+            Material.MaterialChip { text: "Automation" }
+        }
+
+        Material.MaterialCard {
+            Layout.fillWidth: true
+            contentItem: ColumnLayout {
+                spacing: 10
+                Text {
+                    text: "Card headline"
+                    font.pixelSize: 20
+                    color: Material.MaterialPalette.palette.onSurface
+                }
+                Text {
+                    text: "Cards can load any content, here we show simple stacked text with Material spacing."
+                    font.pixelSize: 15
+                    color: Material.MaterialPalette.palette.onSurface
+                    wrapMode: Text.Wrap
+                }
+            }
+        }
+    }
+}
