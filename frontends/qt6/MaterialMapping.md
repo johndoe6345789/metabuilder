@@ -6,8 +6,8 @@ This reference ties every Material UI component that the Next.js frontend curren
 | --- | --- | --- |
 | Accordion / AccordionSummary / AccordionDetails | `QtQuick.Controls` `ExpandableList` (custom `MaterialAccordion` planned) | Use `ColumnLayout` + `MouseArea` to expand/collapse; we mimic this in templates. |
 | Alert / AlertTitle | `Material.MaterialAlert` | Custom `Rectangle` + `Text` + optional icon slot. |
-| AppBar / Toolbar | `Material.MaterialAppBar` / `Material.MaterialToolbar` | Fixed `Rectangle` with `RowLayout`; exposes elevation and brand slot. |
-| Avatar / AvatarGroup | `Material.MaterialAvatar` | Circular `Image`/`Rectangle`; we’ll build grouping helper if needed. |
+| AppBar / Toolbar | `Material.MaterialAppBar` / `Material.MaterialToolbar` | Fixed `Rectangle` with `RowLayout`; exposes elevation, drop shadow, and toolbar slot for navigation actions. |
+| Avatar / AvatarGroup | `Material.MaterialAvatar` | Circular `Image`/`Rectangle` that surfaces initials when no source is provided; group helpers can stack avatars. |
 | Badge / Chip | `Material.MaterialBadge` / `Material.MaterialChip` | Already wired; badges accept accent/dense/outlined variants (and optional `iconSource`). |
 | Box / Container | `Material.MaterialBox` | Simple layout container that mirrors Material spacing defaults. |
 | Breadcrumbs | `Material.MaterialBreadcrumbs` | Horizontal `RowLayout` of text/buttons separated by dividers. |
