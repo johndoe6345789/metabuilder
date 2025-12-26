@@ -1,6 +1,6 @@
-import { getAdapter } from '../../core/dbal-client'
+import { getAdapter } from '../core/dbal-client'
 import type { LuaScript } from '../../types/level-types'
-import { deserializeLuaScript } from './deserialize-lua-script'
+import { deserializeLuaScript } from './serialization/deserialize-lua-script'
 
 /**
  * Get all Lua scripts
