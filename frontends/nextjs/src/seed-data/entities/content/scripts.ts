@@ -67,10 +67,12 @@ return validateEmail
       code: `
 function checkPermission(userRole, requiredRole)
   local roleHierarchy = {
-    user = 1,
-    admin = 2,
-    god = 3,
-    supergod = 4
+    public = 1,
+    user = 2,
+    moderator = 3,
+    admin = 4,
+    god = 5,
+    supergod = 6
   }
   
   local userLevel = roleHierarchy[userRole] or 0

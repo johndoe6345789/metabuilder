@@ -611,10 +611,12 @@ return {
 local requiredRole = context.data.requiredRole or "user"
 
 local roles = {
-  user = 1,
-  moderator = 2,
-  admin = 3,
-  god = 4
+  public = 1,
+  user = 2,
+  moderator = 3,
+  admin = 4,
+  god = 5,
+  supergod = 6
 }
 
 local userLevel = roles[user.role] or 0
