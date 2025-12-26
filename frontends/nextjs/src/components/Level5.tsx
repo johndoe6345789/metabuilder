@@ -32,8 +32,9 @@ import { PowerTransferTab } from './level5/PowerTransferTab'
 import { PreviewTab } from './level5/PreviewTab'
 import { ScreenshotAnalyzer } from './ScreenshotAnalyzer'
 import { NerdModeIDE } from './NerdModeIDE'
-import type { User, AppLevel, Tenant, PowerTransferRequest } from '@/lib/level-types'
+import type { User, AppLevel, Tenant } from '@/lib/level-types'
 import { Database } from '@/lib/database'
+import { createPowerTransferRequest } from '@/lib/api/power-transfers'
 import { useKV } from '@github/spark/hooks'
 
 interface Level5Props {

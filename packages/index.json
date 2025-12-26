@@ -1,0 +1,167 @@
+{
+  "generatedAt": "2025-12-26T01:12:07.934Z",
+  "packages": [
+    {
+      "packageId": "admin_dialog",
+      "name": "Admin Dialog",
+      "version": "1.0.0",
+      "description": "Admin dialog components",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": []
+      }
+    },
+    {
+      "packageId": "arcade_lobby",
+      "name": "Arcade Lobby",
+      "version": "1.0.0",
+      "description": "Gaming lobby for tournaments, party queues, and highlights.",
+      "author": "MetaBuilder",
+      "category": "gaming",
+      "dependencies": [],
+      "exports": {
+        "components": []
+      }
+    },
+    {
+      "packageId": "codegen_studio",
+      "name": "Codegen Studio",
+      "version": "1.0.0",
+      "description": "Generate Next.js, React, and CLI starters from configurable templates.",
+      "author": "MetaBuilder",
+      "category": "tools",
+      "dependencies": [],
+      "exports": {
+        "components": []
+      }
+    },
+    {
+      "packageId": "dashboard",
+      "name": "Dashboard",
+      "version": "1.0.0",
+      "description": "Dashboard components",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": []
+      }
+    },
+    {
+      "packageId": "data_table",
+      "name": "Data Table",
+      "version": "1.0.0",
+      "description": "Data table components",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": []
+      }
+    },
+    {
+      "packageId": "form_builder",
+      "name": "Form Builder",
+      "version": "1.0.0",
+      "description": "Form builder components",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": []
+      }
+    },
+    {
+      "packageId": "forum_forge",
+      "name": "Forum Forge",
+      "version": "1.0.0",
+      "description": "Modern forum starter with categories, threads, and moderation lanes.",
+      "author": "MetaBuilder",
+      "category": "social",
+      "dependencies": [],
+      "exports": {
+        "components": []
+      }
+    },
+    {
+      "packageId": "nav_menu",
+      "name": "Navigation Menu",
+      "version": "1.0.0",
+      "description": "Navigation menu components",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": []
+      }
+    },
+    {
+      "packageId": "notification_center",
+      "name": "Notification Center",
+      "version": "1.0.0",
+      "description": "Notification center components",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": []
+      }
+    },
+    {
+      "packageId": "social_hub",
+      "name": "Social Hub",
+      "version": "1.0.0",
+      "description": "Modern social feed with creator tools and live rooms",
+      "author": "MetaBuilder",
+      "category": "social",
+      "dependencies": [],
+      "exports": {
+        "components": [
+          "social_hub_root",
+          "social_hub_hero",
+          "social_hub_heading",
+          "social_hub_subtitle",
+          "social_hub_stats",
+          "social_hub_stat_1",
+          "social_hub_stat_label_1",
+          "social_hub_stat_value_1",
+          "social_hub_stat_2",
+          "social_hub_stat_label_2",
+          "social_hub_stat_value_2",
+          "social_hub_stat_3",
+          "social_hub_stat_label_3",
+          "social_hub_stat_value_3",
+          "social_hub_composer",
+          "social_hub_composer_label",
+          "social_hub_composer_input",
+          "social_hub_composer_actions",
+          "social_hub_composer_publish",
+          "social_hub_composer_media",
+          "social_hub_feed",
+          "social_hub_feed_post_1",
+          "social_hub_feed_post_1_title",
+          "social_hub_feed_post_1_body",
+          "social_hub_feed_post_1_badge",
+          "social_hub_feed_post_2",
+          "social_hub_feed_post_2_title",
+          "social_hub_feed_post_2_body",
+          "social_hub_feed_post_2_badge"
+        ]
+      }
+    },
+    {
+      "packageId": "stream_cast",
+      "name": "Stream Cast",
+      "version": "1.0.0",
+      "description": "Live streaming control room with schedules, scenes, and audience pulse.",
+      "author": "MetaBuilder",
+      "category": "media",
+      "dependencies": [],
+      "exports": {
+        "components": []
+      }
+    }
+  ]
+}
