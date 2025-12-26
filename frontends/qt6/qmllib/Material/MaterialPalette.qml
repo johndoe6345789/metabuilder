@@ -3,7 +3,6 @@ import QtQuick 2.15
 pragma Singleton
 
 QtObject {
-    id: palette
 
     property color primary: "#6750A4"
     property color primaryContainer: "#EADDFF"

@@ -23,4 +23,5 @@ You can also embed `main.qml` into a Qt Quick Application project and expose C++
 
 - Material-inspired components live under `frontends/qt6/qmllib/Material` and provide palette tokens plus buttons, cards, text fields, chips, and sample layouts.
 - Import them with `import "qmllib/Material" as Material` and reference `Material.MaterialButton`, `Material.MaterialCard`, `Material.MaterialTextField`, `Material.MaterialChip`, and the singleton palette `Material.MaterialPalette`.
+- Use `Material.MaterialSurface` and `Material.MaterialDivider` to group controls with Material elevation, spacing, and dividers.
 - Preview the Material view with `qmlscene frontends/qt6/MaterialLanding.qml` or embed it into your Qt Quick application to reuse the tokens and components across other screens.

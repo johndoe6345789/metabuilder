@@ -69,10 +69,11 @@ ApplicationWindow {
         Material.MaterialSurface {
             Layout.fillWidth: true
             elevation: 14
-            contentComponent: ColumnLayout {
-                spacing: 14
+            contentComponent: Component {
+                ColumnLayout {
+                    spacing: 14
 
-                Text {
+                    Text {
                     text: "Material surface"
                     font.pixelSize: 20
                     color: Material.MaterialPalette.onSurface
