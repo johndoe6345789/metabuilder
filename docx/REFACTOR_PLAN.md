@@ -12,8 +12,8 @@
 
 ### Phase 0 – Foundation
 
-[ ] Audit all `frontends/nextjs/src/` entry points (pages, components, hooks, lib) so we know exactly what needs to be ported or adapted.
-[ ] Document the Lua boundary—what metadata/static/seed assets we expect to own and what runtime API each function will expose.
+- [ ] Audit all `frontends/nextjs/src/` entry points (pages, components, hooks, lib). Determine what goes to Lua.
+- [ ] Define the Lua boundary. List metadata, static, and seed assets plus their API surface.
 
 ### Phase 1 – Mapping
 
