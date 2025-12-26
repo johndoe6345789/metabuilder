@@ -136,10 +136,17 @@ void Server::registerRoutes() {
         return handle_status(request, server_address);
     };
 
-    drogon::app().registerHandler("/health", handle_health, {drogon::HttpMethod::Get});
-    drogon::app().registerHandler("/healthz", handle_health, {drogon::HttpMethod::Get});
-    drogon::app().registerHandler("/version", handle_version, {drogon::HttpMethod::Get});
-    drogon::app().registerHandler("/api/version", handle_version, {drogon::HttpMethod::Get});
+    auto health_handler = [](const drogon::HttpRequestPtr& request) {
+        return handle_health(request);
+    };
+    auto version_handler = [](const drogon::HttpRequestPtr& request) {
+        return handle_version(request);
+    };
+
+    drogon::app().registerHandler("/health", health_handler, {drogon::HttpMethod::Get});
+    drogon::app().registerHandler("/healthz", health_handler, {drogon::HttpMethod::Get});
+    drogon::app().registerHandler("/version", version_handler, {drogon::HttpMethod::Get});
+    drogon::app().registerHandler("/api/version", version_handler, {drogon::HttpMethod::Get});
     drogon::app().registerHandler("/status", status_handler, {drogon::HttpMethod::Get});
     drogon::app().registerHandler("/api/status", status_handler, {drogon::HttpMethod::Get});
 
