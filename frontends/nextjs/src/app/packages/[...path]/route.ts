@@ -7,7 +7,7 @@ interface PackageParams {
   path?: string[]
 }
 
-export async function GET(request: Request, { params }: { params: PackageParams }) {
+export async function GET(_request: Request, { params }: { params: PackageParams }) {
   const segments = params.path ?? []
   const filePath = resolvePackageFilePath(segments)
 

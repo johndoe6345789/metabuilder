@@ -26,6 +26,7 @@ packages/
 - **dashboard**: Dashboard layout components
 - **notification_center**: Notification center components
 - **social_hub**: Social feed components with creator tools and live rooms
+- **codegen_studio**: Code generation studio with template-driven exports
 
 ## Package Metadata Format
 
