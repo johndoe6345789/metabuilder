@@ -4,9 +4,11 @@ export type ApiError = {
 }
 
 export async function requestJson<T>(url: string, init?: RequestInit): Promise<T> {
+  const apiKey = process.env.NEXT_PUBLIC_DBAL_API_KEY
   const response = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
+      ...(apiKey ? { 'x-dbal-api-key': apiKey } : {}),
       ...(init?.headers ?? {}),
     },
     ...init,

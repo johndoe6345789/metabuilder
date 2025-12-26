@@ -80,6 +80,7 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_DBAL_API_URL: process.env.DBAL_API_URL || 'http://localhost:8080',
     NEXT_PUBLIC_DBAL_WS_URL: process.env.DBAL_WS_URL || 'ws://localhost:50051',
+    NEXT_PUBLIC_DBAL_API_KEY: process.env.DBAL_API_KEY || '',
   },
   webpack(config) {
     config.resolve.alias = {
