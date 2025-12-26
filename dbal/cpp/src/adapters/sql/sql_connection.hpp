@@ -15,6 +15,7 @@ namespace sql {
 enum class Dialect {
     Postgres,
     MySQL,
+    Prisma,
 };
 
 struct SqlConnectionConfig {
