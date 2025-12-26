@@ -4,6 +4,8 @@
 
 - [TODOs by Phase](#todos-by-phase)
 - [Audit Results](#audit-results)
+- [Quick File References](#quick-file-references)
+- [Next Steps](#next-steps)
 
 
 ## TODOs by Phase
@@ -15,10 +17,6 @@
 
 ### Phase 1 – Mapping
 
-- [ ] Map reusable TypeScript helpers to single-function Lua targets (one file, one function) and describe their inputs/outputs for future porting.
-- [ ] Categorize each file as “port to Lua”, “adapter only”, or “keep in TypeScript”.
-
-###
 - [ ] Map reusable TypeScript helpers to single-function Lua targets (one file, one function) and describe their inputs/outputs for future porting.
 - [ ] Categorize each file as “port to Lua”, “adapter only”, or “keep in TypeScript”.
 
