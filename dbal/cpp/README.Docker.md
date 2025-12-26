@@ -9,6 +9,8 @@ cd dbal/cpp
 docker build -t dbal-daemon:latest .
 ```
 
+Note: The Dockerfile uses Conan to fetch build dependencies (including Drogon). Ensure the build environment has network access.
+
 ### Run with Docker
 
 ```bash
