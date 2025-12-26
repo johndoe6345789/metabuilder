@@ -2,25 +2,26 @@
  * @file delete-lua-script.ts
  * @description Delete Lua script operation
  */
-import type { DBALAdapter } from '../../../adapters/adapter'
-import { DBALError } from '../../errors'
-import { validateId } from '../../validation'
+import type { Result } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
+import { validateId } from '../../validation/validate-id'
 
 /**
  * Delete a Lua script by ID
  */
-export async function deleteLuaScript(adapter: DBALAdapter, id: string): Promise<boolean> {
-  const validationErrors = validateId(id)
-  if (validationErrors.length > 0) {
-    throw DBALError.validationError(
-      'Invalid Lua script ID',
-      validationErrors.map(error => ({ field: 'id', error }))
-    )
+export const deleteLuaScript = async (store: InMemoryStore, id: string): Promise<Result<boolean>> => {
+  const idErrors = validateId(id)
+  if (idErrors.length > 0) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
   }
 
-  const result = await adapter.delete('LuaScript', id)
-  if (!result) {
-    throw DBALError.notFound(`Lua script not found: ${id}`)
+  const script = store.luaScripts.get(id)
+  if (!script) {
+    return { success: false, error: { code: 'NOT_FOUND', message: `Lua script not found: ${id}` } }
   }
-  return result
+
+  store.luaScripts.delete(id)
+  store.luaScriptNames.delete(script.name)
+
+  return { success: true, data: true }
 }
