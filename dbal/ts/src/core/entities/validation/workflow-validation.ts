@@ -3,11 +3,8 @@
  * @description Workflow validation functions
  */
 
-const VALID_WORKFLOW_TYPES = ['manual', 'automated', 'scheduled', 'triggered'];
+const VALID_WORKFLOW_TYPES = ['manual', 'schedule', 'event', 'webhook'] as const
 
-/**
- * Validate workflow type
- */
-export function validateWorkflowType(type: string): boolean {
-  return VALID_WORKFLOW_TYPES.includes(type);
+export const validateWorkflowType = (type: string): boolean => {
+  return VALID_WORKFLOW_TYPES.includes(type as (typeof VALID_WORKFLOW_TYPES)[number])
 }
