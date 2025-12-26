@@ -1,5 +1,15 @@
 import type { ScreenshotAnalysisPayload, ScreenshotAnalysisResult } from './types'
 
+function isValidResult(data: unknown): data is ScreenshotAnalysisResult {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'report' in data &&
+    'metrics' in data &&
+    'warnings' in data
+  )
+}
+
 export async function requestScreenshotAnalysis(
   payload: ScreenshotAnalysisPayload
 ): Promise<ScreenshotAnalysisResult> {
@@ -9,10 +19,12 @@ export async function requestScreenshotAnalysis(
     body: JSON.stringify(payload),
   })
 
-  const data = (await response.json().catch(() => null)) as ScreenshotAnalysisResult | { error?: string } | null
+  const data = (await response.json().catch(() => null)) as unknown
 
-  if (!response.ok || !data || 'error' in data) {
-    const message = (data && 'error' in data && data.error) ? data.error : 'Analysis failed'
+  if (!response.ok || !isValidResult(data)) {
+    const message = (typeof data === 'object' && data !== null && 'error' in data && typeof data.error === 'string')
+      ? data.error
+      : 'Analysis failed'
     throw new Error(message)
   }
 
