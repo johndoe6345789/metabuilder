@@ -12,7 +12,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const packagesDir = path.join(__dirname, '..', 'packages');
+const repoRoot = path.resolve(__dirname, '..', '..', '..');
+const packagesDir = path.join(repoRoot, 'packages');
 
 // Get package name from command line argument
 const packageName = process.argv[2];
@@ -178,4 +179,3 @@ if (packageName) {
     console.log('You may need to run "npm run db:generate" manually');
   }
 }
-

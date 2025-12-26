@@ -1,0 +1,1 @@
+../../../tools/misc/migrate/setup-packages.cjs
