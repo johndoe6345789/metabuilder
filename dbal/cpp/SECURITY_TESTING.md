@@ -2,11 +2,11 @@
 
 ## Overview
 
-This document provides instructions for testing the security improvements made to the HTTP server in `dbal/cpp/src/daemon/server.cpp`.
+This document provides instructions for testing the HTTP handling in the DBAL daemon now that it uses Drogon in `dbal/cpp/src/daemon/server.cpp`.
 
 ## Security Fixes Implemented
 
-The server now protects against the following CVE patterns:
+The daemon relies on Drogon's hardened HTTP parser and connection handling, which addresses the CVE patterns previously found in the custom server:
 
 1. **CVE-2024-1135** - Request Smuggling via Multiple Content-Length
 2. **CVE-2024-40725** - Request Smuggling via Header Parsing
@@ -41,7 +41,7 @@ The following tests can be run manually using `nc` (netcat):
 echo -ne "POST /api/status HTTP/1.1\r\nHost: localhost\r\nContent-Length: 6\r\nContent-Length: 100\r\n\r\n" | nc 127.0.0.1 8080
 ```
 
-**Expected**: HTTP 400 Bad Request with error message about multiple Content-Length headers
+**Expected**: HTTP 400 Bad Request or connection closed by server
 
 #### Test 2: Transfer-Encoding + Content-Length (CVE-2024-23452)
 
@@ -49,7 +49,7 @@ echo -ne "POST /api/status HTTP/1.1\r\nHost: localhost\r\nContent-Length: 6\r\nC
 echo -ne "POST /api/status HTTP/1.1\r\nHost: localhost\r\nTransfer-Encoding: chunked\r\nContent-Length: 100\r\n\r\n" | nc 127.0.0.1 8080
 ```
 
-**Expected**: HTTP 400 Bad Request (both headers present) or HTTP 501 Not Implemented (Transfer-Encoding)
+**Expected**: HTTP 400 Bad Request, HTTP 501 Not Implemented, or connection closed by server
 
 #### Test 3: Integer Overflow in Content-Length
 
@@ -57,7 +57,7 @@ echo -ne "POST /api/status HTTP/1.1\r\nHost: localhost\r\nTransfer-Encoding: chu
 echo -ne "POST /api/status HTTP/1.1\r\nHost: localhost\r\nContent-Length: 9999999999999999999\r\n\r\n" | nc 127.0.0.1 8080
 ```
 
-**Expected**: HTTP 413 Request Entity Too Large
+**Expected**: HTTP 413 Request Entity Too Large or connection closed by server
 
 #### Test 4: Oversized Request
 
@@ -65,7 +65,7 @@ echo -ne "POST /api/status HTTP/1.1\r\nHost: localhost\r\nContent-Length: 999999
 python3 -c "print('GET /' + 'A'*70000 + ' HTTP/1.1\r\nHost: localhost\r\n\r\n')" | nc 127.0.0.1 8080
 ```
 
-**Expected**: HTTP 413 Request Entity Too Large
+**Expected**: HTTP 413 Request Entity Too Large or connection closed by server
 
 #### Test 5: Header Bomb
 
@@ -79,7 +79,7 @@ python3 -c "print('GET /' + 'A'*70000 + ' HTTP/1.1\r\nHost: localhost\r\n\r\n')"
 } | nc 127.0.0.1 8080
 ```
 
-**Expected**: HTTP 431 Request Header Fields Too Large
+**Expected**: HTTP 431 Request Header Fields Too Large or connection closed by server
 
 #### Test 6: Normal Health Check (Should Work)
 
@@ -91,26 +91,15 @@ echo -ne "GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n" | nc 127.0.0.1 8080
 
 ## Security Limits
 
-The following limits are enforced by the server:
-
-```cpp
-const size_t MAX_REQUEST_SIZE = 65536;           // 64KB max request
-const size_t MAX_HEADERS = 100;                   // Max 100 headers
-const size_t MAX_HEADER_SIZE = 8192;              // 8KB max per header
-const size_t MAX_PATH_LENGTH = 2048;              // Max URL path length
-const size_t MAX_BODY_SIZE = 10485760;            // 10MB max body size
-const size_t MAX_CONCURRENT_CONNECTIONS = 1000;   // Max concurrent connections
-```
-
-These can be adjusted in `server.cpp` if needed for your use case.
+Drogon enforces parser-level limits and connection controls. Tune limits in Drogon configuration or via `drogon::app()` settings if your deployment requires stricter caps.
 
 ## Error Responses
 
-The server returns appropriate HTTP status codes for security violations:
+The server returns appropriate HTTP status codes for security violations, or closes the connection during parsing:
 
 - **400 Bad Request**: Malformed requests, duplicate headers, CRLF injection, null bytes
 - **413 Request Entity Too Large**: Request exceeds size limits
-- **414 URI Too Long**: Path exceeds MAX_PATH_LENGTH
+- **414 URI Too Long**: Path exceeds parser limits
 - **431 Request Header Fields Too Large**: Too many headers or header too large
 - **501 Not Implemented**: Transfer-Encoding (chunked) not supported
 
