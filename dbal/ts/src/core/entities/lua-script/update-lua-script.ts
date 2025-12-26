@@ -2,41 +2,68 @@
  * @file update-lua-script.ts
  * @description Update Lua script operation
  */
-import type { DBALAdapter } from '../../../adapters/adapter'
-import type { LuaScript } from '../../types'
-import { DBALError } from '../../errors'
-import { validateId, validateLuaScriptUpdate } from '../../validation'
+import type { LuaScript, Result, UpdateLuaScriptInput } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
+import { validateId } from '../../validation/validate-id'
+import { validateLuaScriptUpdate } from '../../validation/validate-lua-script-update'
 
 /**
  * Update an existing Lua script
  */
-export async function updateLuaScript(
-  adapter: DBALAdapter,
+export const updateLuaScript = async (
+  store: InMemoryStore,
   id: string,
-  data: Partial<LuaScript>
-): Promise<LuaScript> {
+  input: UpdateLuaScriptInput
+): Promise<Result<LuaScript>> => {
   const idErrors = validateId(id)
   if (idErrors.length > 0) {
-    throw DBALError.validationError(
-      'Invalid Lua script ID',
-      idErrors.map(error => ({ field: 'id', error }))
-    )
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
   }
 
-  const validationErrors = validateLuaScriptUpdate(data)
+  const script = store.luaScripts.get(id)
+  if (!script) {
+    return { success: false, error: { code: 'NOT_FOUND', message: `Lua script not found: ${id}` } }
+  }
+
+  const validationErrors = validateLuaScriptUpdate(input)
   if (validationErrors.length > 0) {
-    throw DBALError.validationError(
-      'Invalid Lua script update data',
-      validationErrors.map(error => ({ field: 'luaScript', error }))
-    )
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
   }
 
-  try {
-    return adapter.update('LuaScript', id, data) as Promise<LuaScript>
-  } catch (error) {
-    if (error instanceof DBALError && error.code === 409) {
-      throw DBALError.conflict('Lua script name already exists')
+  if (input.name !== undefined && input.name !== script.name) {
+    if (store.luaScriptNames.has(input.name)) {
+      return { success: false, error: { code: 'CONFLICT', message: 'Lua script name already exists' } }
     }
-    throw error
+    store.luaScriptNames.delete(script.name)
+    store.luaScriptNames.set(input.name, id)
+    script.name = input.name
   }
+
+  if (input.description !== undefined) {
+    script.description = input.description
+  }
+
+  if (input.code !== undefined) {
+    script.code = input.code
+  }
+
+  if (input.isSandboxed !== undefined) {
+    script.isSandboxed = input.isSandboxed
+  }
+
+  if (input.allowedGlobals !== undefined) {
+    script.allowedGlobals = [...input.allowedGlobals]
+  }
+
+  if (input.timeoutMs !== undefined) {
+    script.timeoutMs = input.timeoutMs
+  }
+
+  if (input.createdBy !== undefined) {
+    script.createdBy = input.createdBy
+  }
+
+  script.updatedAt = new Date()
+
+  return { success: true, data: script }
 }
