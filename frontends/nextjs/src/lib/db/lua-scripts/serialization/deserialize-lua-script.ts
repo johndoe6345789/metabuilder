@@ -1,5 +1,5 @@
 import type { LuaScript } from '../../types/level-types'
-import { normalizeAllowedGlobals } from '../../lua/functions/sandbox/normalize-allowed-globals'
+import { normalizeAllowedGlobals } from '../../../lua/functions/sandbox/normalize-allowed-globals'
 import { parseJsonArray } from './parse-json-array'
 
 export function deserializeLuaScript(raw: Record<string, unknown>): LuaScript {
