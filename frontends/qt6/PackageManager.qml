@@ -18,11 +18,11 @@ ApplicationWindow {
     ]
 
     property var packages: [
-        { name: "Material UI Kit", repo: "Official", version: "2.1.0", description: "Shared Material components for Qt.", installed: true, size: "4.1 MB" },
-        { name: "Qt DB Connector", repo: "Community", version: "1.4.2", description: "Live DBAL observability widgets.", installed: false, size: "2.7 MB" },
-        { name: "Prisma Console", repo: "Official", version: "0.9.0", description: "Prisma schema preview and migrations view.", installed: false, size: "3.2 MB" },
-        { name: "Storybook Themes", repo: "Local", version: "1.0.3", description: "Additional Storybook scenes + theming", installed: true, size: "1.8 MB" },
-        { name: "Telemetry Metrics", repo: "Community", version: "0.4.1", description: "CPU/RAM/Latency dashboards for daemons.", installed: false, size: "5.6 MB" }
+        { id: "material_ui", name: "Material UI Kit", repo: "Official", version: "2.1.0", description: "Shared Material components for Qt.", installed: true, size: "4.1 MB" },
+        { id: "db_connector", name: "Qt DB Connector", repo: "Community", version: "1.4.2", description: "Live DBAL observability widgets.", installed: false, size: "2.7 MB" },
+        { id: "prisma_console", name: "Prisma Console", repo: "Official", version: "0.9.0", description: "Prisma schema preview and migrations view.", installed: false, size: "3.2 MB" },
+        { id: "storybook_themes", name: "Storybook Themes", repo: "Local", version: "1.0.3", description: "Additional Storybook scenes + theming", installed: true, size: "1.8 MB" },
+        { id: "telemetry", name: "Telemetry Metrics", repo: "Community", version: "0.4.1", description: "CPU/RAM/Latency dashboards for daemons.", installed: false, size: "5.6 MB" }
     ]
 
     property int selectedRepoIndex: 0
@@ -181,7 +181,13 @@ ApplicationWindow {
                                             text: model.installed ? "Installed" : "Install"
                                             outlined: !model.installed
                                             enabled: !model.installed
-                                            onClicked: togglePackage(model.name, true)
+                                            onClicked: {
+                                                if (PackageRegistry.loadPackage(model.id)) {
+                                                    togglePackage(model.id, true)
+                                                } else {
+                                                    console.warn("Failed to load package", model.id)
+                                                }
+                                            }
                                         }
                                         Material.MaterialButton {
                                             text: "Uninstall"
