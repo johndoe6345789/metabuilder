@@ -20,8 +20,10 @@ struct RequestsResponse {
 
 class RequestsClient {
 public:
-    explicit RequestsClient(std::string baseURL)
-        : baseUrl_(trimTrailingSlash(std::move(baseURL))) {}
+    explicit RequestsClient(std::string baseURL,
+                            std::unordered_map<std::string, std::string> defaultHeaders = {})
+        : baseUrl_(trimTrailingSlash(std::move(baseURL))),
+          defaultHeaders_(std::move(defaultHeaders)) {}
 
     RequestsResponse get(const std::string& path,
                          const std::unordered_map<std::string, std::string>& headers = {},
@@ -43,7 +45,7 @@ public:
                              int timeoutMs = 30'000) {
         const cpr::Url url = cpr::Url{makeUrl(path)};
         cpr::Header cprHeaders;
-        for (const auto& [key, value] : headers) {
+        for (const auto& [key, value] : mergeHeaders(headers)) {
             cprHeaders.insert({key, value});
         }
 
@@ -97,6 +99,16 @@ private:
     }
 
     std::string baseUrl_;
+    std::unordered_map<std::string, std::string> defaultHeaders_;
+
+    std::unordered_map<std::string, std::string> mergeHeaders(
+        const std::unordered_map<std::string, std::string>& headers) const {
+        auto merged = defaultHeaders_;
+        for (const auto& [key, value] : headers) {
+            merged[key] = value;
+        }
+        return merged;
+    }
 };
 
 }

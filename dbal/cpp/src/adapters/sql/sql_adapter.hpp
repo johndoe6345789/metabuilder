@@ -496,15 +496,14 @@ class NativePrismaAdapter : public SqlAdapter {
 public:
     explicit NativePrismaAdapter(const SqlConnectionConfig& config)
         : SqlAdapter(config, Dialect::Prisma),
-          requestsClient_(resolveBridgeUrl(config)),
-          bridgeHeaders_(buildBridgeHeaders(resolveBridgeToken(config))) {}
+          requestsClient_(resolveBridgeUrl(config), buildBridgeHeaders(resolveBridgeToken(config))) {}
 
     std::vector<SqlRow> runQuery(SqlConnection* connection,
                                  const std::string& sql,
                                  const std::vector<SqlParam>& params) override {
         (void)connection;
         const auto payload = buildPayload(sql, params, "query");
-        const auto response = requestsClient_.post("/api/native-prisma", payload.dump(), bridgeHeaders_);
+        const auto response = requestsClient_.post("/api/native-prisma", payload.dump());
         if (response.statusCode != 200) {
             throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge request failed"};
         }
@@ -527,7 +526,7 @@ public:
                     const std::vector<SqlParam>& params) override {
         (void)connection;
         const auto payload = buildPayload(sql, params, "nonquery");
-        const auto response = requestsClient_.post("/api/native-prisma", payload.dump(), bridgeHeaders_);
+        const auto response = requestsClient_.post("/api/native-prisma", payload.dump());
         if (response.statusCode != 200) {
             throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge request failed"};
         }
@@ -568,8 +567,6 @@ private:
     }
 
     runtime::RequestsClient requestsClient_;
-    std::unordered_map<std::string, std::string> bridgeHeaders_;
-
     drogon::Json::Value buildPayload(const std::string& sql,
                                      const std::vector<SqlParam>& params,
                                      const std::string& type) const {
