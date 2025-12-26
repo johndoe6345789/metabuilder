@@ -1,6 +1,6 @@
-# 5-Level Architecture Guide
+# 6-Level Architecture Guide
 
-MetaBuilder implements a sophisticated **5-level permission system** that controls access to features and functionality based on user authorization levels.
+MetaBuilder implements a sophisticated **6-level permission system** that controls access to features and functionality based on user authorization levels.
 
 ## Overview
 

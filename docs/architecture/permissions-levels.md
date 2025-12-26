@@ -1,6 +1,6 @@
 # Permission Levels Reference
 
-MetaBuilder runs on a six-tier permission stack that spans the public surface, authenticated experiences, moderation, governance, system design, and governance.
+MetaBuilder runs on a six-tier permission stack that spans the public surface, authenticated experiences, moderation, system design, and governance.
 
 ## Tier breakdown
 
