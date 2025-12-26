@@ -87,6 +87,9 @@ public:
     Result<LuaScript> updateLuaScript(const std::string& id, const UpdateLuaScriptInput& input);
     Result<bool> deleteLuaScript(const std::string& id);
     Result<std::vector<LuaScript>> listLuaScripts(const ListOptions& options);
+    Result<std::vector<LuaScript>> searchLuaScripts(const std::string& query,
+                                                    const std::optional<std::string>& created_by = std::nullopt,
+                                                    int limit = 20);
 
     Result<Package> createPackage(const CreatePackageInput& input);
     Result<Package> getPackage(const std::string& id);

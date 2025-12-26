@@ -10,5 +10,6 @@
 #include "crud/update_lua_script.hpp"
 #include "crud/delete_lua_script.hpp"
 #include "crud/list_lua_scripts.hpp"
+#include "crud/search_lua_scripts.hpp"
 
 #endif

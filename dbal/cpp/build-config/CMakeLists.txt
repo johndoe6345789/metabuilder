@@ -20,6 +20,7 @@ find_package(spdlog QUIET)
 find_package(nlohmann_json QUIET)
 find_package(SQLite3 QUIET)
 find_package(Drogon REQUIRED CONFIG)
+find_package(cpr REQUIRED CONFIG)
 
 add_library(dbal_core STATIC
     ${DBAL_SRC_DIR}/client.cpp
@@ -88,6 +89,8 @@ target_link_libraries(query_test dbal_core dbal_adapters)
 target_link_libraries(integration_tests dbal_core dbal_adapters)
 target_link_libraries(conformance_tests dbal_core dbal_adapters)
 target_link_libraries(http_server_security_test Threads::Threads)
+
+target_link_libraries(dbal_adapters PRIVATE cpr::cpr)
 
 add_test(NAME client_test COMMAND client_test)
 add_test(NAME query_test COMMAND query_test)

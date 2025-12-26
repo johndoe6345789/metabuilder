@@ -4,6 +4,7 @@ fmt/12.0.0
 spdlog/1.16.0
 nlohmann_json/3.11.3
 drogon/1.9.7
+cpr/1.14.1
 
 [generators]
 CMakeDeps
