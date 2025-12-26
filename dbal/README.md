@@ -48,6 +48,22 @@ A language-agnostic database abstraction layer that provides a secure interface 
            └────────────────┘       └────────────────┘
 ```
 
+## Supported Databases
+
+The Prisma adapter behind DBAL already targets the databases you care about: PostgreSQL, MySQL, SQLite, and any other engine Prisma supports (SQL Server, CockroachDB, MongoDB, etc.). Switch between them by pointing `DATABASE_URL` at the desired backend and regenerating the Prisma client for your schema.
+
+```bash
+# PostgreSQL
+export DATABASE_URL="postgresql://user:pass@db:5432/metabuilder"
+
+# MySQL
+export DATABASE_URL="mysql://user:pass@db:3306/metabuilder"
+
+npx prisma generate
+```
+
+With `config.adapter = 'prisma'`, DBAL sends every request through `PrismaAdapter`, and Prisma handles dialect differences, migrations, and connection pooling defined in `prisma/schema.prisma` and `prisma/migrations/`. That keeps DBAL focused on validation, ACLs, and audit logging while it can still drive PostgreSQL, MySQL, or any other Prisma-supported store.
+
 ## Design Principles
 
 1. **Language Agnostic**: API contracts defined in YAML/Proto, not tied to any language
