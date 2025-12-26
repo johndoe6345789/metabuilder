@@ -15,6 +15,7 @@
 - [ ] Implement session refresh logic with token rotation
 - [ ] Add multi-factor authentication support
 - [ ] Create protected route wrapper with level-based access control
+- [x] Persist and surface power-transfer requests via the new API + Level 5 UI for auditability
 
 ## State Management
 
