@@ -163,7 +163,7 @@ import { useAuth } from '@/hooks'
 export const AdminPanel = () => {
   const { user } = useAuth()
   
-  if (!canAccessLevel(user.level, 3)) {
+  if (!canAccessLevel(user.level, 4)) {
     return <AccessDenied />
   }
   
@@ -174,9 +174,10 @@ export const AdminPanel = () => {
 const features = {
   basicDashboard: true,
   contentEditor: user.level >= 2,
-  userManagement: user.level >= 3,
-  workflowEngine: user.level >= 4,
-  systemConfig: user.level === 5,
+  moderationDesk: user.level >= 3,
+  userManagement: user.level >= 4,
+  workflowEngine: user.level >= 5,
+  systemConfig: user.level === 6,
 }
 ```
 
@@ -188,7 +189,7 @@ import { validateRequest } from '@/lib/auth'
 export async function POST(req: Request) {
   const user = await validateRequest(req)
   
-  if (!canAccessLevel(user.level, 3)) {
+  if (!canAccessLevel(user.level, 4)) {
     return Response.json({ error: 'Forbidden' }, { status: 403 })
   }
   
@@ -862,17 +863,27 @@ DEBUG=metabuilder:* npm run dev
 | Development prompts | `.github/prompts/` |
 
 ---
+ 
+## Documentation Resources
 
-# new text
+- [`docs/README.md`](./docs/README.md) is the master index for architecture, deployment, testing, and contribution guidance.
+- [`docs/guides/getting-started.md`](./docs/guides/getting-started.md) walks through initial setup, the sanity checklist, and environment tips.
+- [`docs/architecture/packages.md`](./docs/architecture/packages.md) and [`docs/architecture/database.md`](./docs/architecture/database.md) cover package metadata, seed expectations, and tenant-safe Prisma patterns.
+- [`docs/security/README.md`](./docs/security/README.md) plus [`docs/security/SECURITY.md`](./docs/security/SECURITY.md) summarize sandboxed Lua rules, credential handling, and scanning policies.
+- [`docs/guides/ACT_CHEAT_SHEET.md`](./docs/guides/ACT_CHEAT_SHEET.md) with [`docs/guides/ACT_TESTING.md`](./docs/guides/ACT_TESTING.md) explain how to mirror GitHub Actions workflows locally via Act.
 
-## Documentation ...
+## Documentation Quality
 
-...
+- Run `./scripts/doc-quality-checker.sh` whenever you touch docs to keep coverage metrics in sync.
+- The documentation hub cites 60%+ README coverage, 100% JSDoc coverage, 80%+ type annotations, and 100% security documentation targets.
 
 ## Quick Links
 
-- ...
-
+- Permission model: [`docs/architecture/5-level-system.md`](./docs/architecture/5-level-system.md)
+- Database schema: [`prisma/schema.prisma`](./prisma/schema.prisma)
+- API conventions: [`docs/guides/api-development.md`](./docs/guides/api-development.md)
+- Security guidelines: [`docs/security/SECURITY.md`](./docs/security/SECURITY.md)
+- Package system: [`docs/architecture/packages.md`](./docs/architecture/packages.md)
 
 ## License
 
