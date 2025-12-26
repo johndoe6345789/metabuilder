@@ -75,6 +75,32 @@ struct UpdatePageInput {
     std::optional<bool> is_active;
 };
 
+struct ComponentHierarchy {
+    std::string id;
+    std::string page_id;
+    std::optional<std::string> parent_id;
+    std::string component_type;
+    int order = 0;
+    Json props;
+    Timestamp created_at;
+    Timestamp updated_at;
+};
+
+struct CreateComponentHierarchyInput {
+    std::string page_id;
+    std::optional<std::string> parent_id;
+    std::string component_type;
+    int order = 0;
+    Json props;
+};
+
+struct UpdateComponentHierarchyInput {
+    std::optional<std::string> parent_id;
+    std::optional<std::string> component_type;
+    std::optional<int> order;
+    std::optional<Json> props;
+};
+
 struct Workflow {
     std::string id;
     std::string name;
