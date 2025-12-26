@@ -1,11 +1,12 @@
 'use client'
 
-import { forwardRef } from 'react'
+import { forwardRef, type ComponentProps } from 'react'
 import { 
   Switch as MuiSwitch, 
-  SwitchProps as MuiSwitchProps,
   FormControlLabel,
 } from '@mui/material'
+
+type MuiSwitchProps = ComponentProps<typeof MuiSwitch>
 
 export interface SwitchProps extends MuiSwitchProps {
   label?: string
