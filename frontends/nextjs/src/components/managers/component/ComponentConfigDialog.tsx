@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
 import { Database, ComponentNode, ComponentConfig } from '@/lib/database'
-import { componentCatalog } from '@/lib/component-catalog'
+import { componentCatalog } from '@/lib/components/component-catalog'
 import { toast } from 'sonner'
 import type { PropDefinition } from '@/lib/builder-types'
 

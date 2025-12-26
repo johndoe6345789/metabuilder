@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import { Separator } from '@/components/ui'
 import { toast } from 'sonner'
-import { PACKAGE_CATALOG } from '@/lib/package-catalog'
+import { PACKAGE_CATALOG } from '@/lib/packages/core/package-catalog'
 import type { PackageManifest, PackageContent, InstalledPackage } from '@/lib/package-types'
 import { installPackage, listInstalledPackages, togglePackageEnabled, uninstallPackage } from '@/lib/api/packages'
 import { Package, Download, Trash, Power, MagnifyingGlass, Star, Tag, User, TrendUp, Funnel, Export, ArrowSquareIn } from '@phosphor-icons/react'

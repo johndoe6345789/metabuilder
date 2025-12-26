@@ -16,7 +16,7 @@ import {
   Cursor
 } from '@phosphor-icons/react'
 import { Database, ComponentNode } from '@/lib/database'
-import { componentCatalog } from '@/lib/component-catalog'
+import { componentCatalog } from '@/lib/components/component-catalog'
 import { toast } from 'sonner'
 import type { PageConfig } from '@/lib/level-types'
 import { ComponentConfigDialog } from './ComponentConfigDialog'

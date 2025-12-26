@@ -10,9 +10,9 @@ import { ScrollArea } from '@/components/ui'
 import { Separator } from '@/components/ui'
 import { toast } from 'sonner'
 import { Database } from '@/lib/database'
-import { exportPackageAsZip, importPackageFromZip, downloadZip, exportDatabaseSnapshot } from '@/lib/package-export'
+import { exportPackageAsZip, importPackageFromZip, downloadZip, exportDatabaseSnapshot } from '@/lib/packages/core/package-export'
 import type { PackageManifest, PackageContent } from '@/lib/package-types'
-import type { ExportPackageOptions } from '@/lib/package-export'
+import type { ExportPackageOptions } from '@/lib/packages/core/package-export'
 import { installPackage } from '@/lib/api/packages'
 import { 
   Export, 
