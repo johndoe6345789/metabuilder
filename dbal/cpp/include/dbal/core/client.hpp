@@ -69,6 +69,7 @@ public:
     Result<std::vector<ComponentHierarchy>> searchComponents(const std::string& query,
                                                              const std::optional<std::string>& page_id = std::nullopt,
                                                              int limit = 20);
+    Result<std::vector<ComponentHierarchy>> getComponentChildren(const std::string& parent_id);
 
     Result<Workflow> createWorkflow(const CreateWorkflowInput& input);
     Result<Workflow> getWorkflow(const std::string& id);
