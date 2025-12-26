@@ -12,6 +12,7 @@ This directory contains a minimal Qt Quick replica of the public MetaBuilder lan
 1. Install Qt 6 (e.g., via [the official installer](https://www.qt.io/download)) if you don’t already have it.
 2. Run the scene with `qmlscene frontends/qt6/FrontPage.qml` (or build the Qt6 project and run `frontends/qt6/main` so the C++ entry point loads `FrontPage.qml`).
 3. Launch `qmlscene frontends/qt6/Storybook.qml` to explore the Storybook clone and toggle the components interactively.
+4. Open `qmlscene frontends/qt6/PackageManager.qml` to browse the Ubuntu-Store-style package catalog (with repository controls, search, and install/uninstall actions).
 
 You can also embed `main.qml` into a Qt Quick Application project and expose C++ integrations for live data later.
 
