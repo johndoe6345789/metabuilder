@@ -13,6 +13,7 @@ import { Database } from '@/lib/database'
 import { exportPackageAsZip, importPackageFromZip, downloadZip, exportDatabaseSnapshot } from '@/lib/package-export'
 import type { PackageManifest, PackageContent } from '@/lib/package-types'
 import type { ExportPackageOptions } from '@/lib/package-export'
+import { installPackage } from '@/lib/api/packages'
 import { 
   Export, 
   ArrowSquareIn, 
@@ -160,49 +161,7 @@ export function PackageImportExport({ open, onOpenChange, mode }: PackageImportE
     try {
       const { manifest: importedManifest, content, assets } = await importPackageFromZip(file)
 
-      const currentSchemas = await Database.getSchemas()
-      const currentPages = await Database.getPages()
-      const currentWorkflows = await Database.getWorkflows()
-      const currentLuaScripts = await Database.getLuaScripts()
-      const currentHierarchy = await Database.getComponentHierarchy()
-      const currentConfigs = await Database.getComponentConfigs()
-
-      const newSchemas = [...currentSchemas, ...content.schemas]
-      const newPages = [...currentPages, ...content.pages]
-      const newWorkflows = [...currentWorkflows, ...content.workflows]
-      const newLuaScripts = [...currentLuaScripts, ...content.luaScripts]
-      const newHierarchy = { ...currentHierarchy, ...content.componentHierarchy }
-      const newConfigs = { ...currentConfigs, ...content.componentConfigs }
-
-      await Database.setSchemas(newSchemas)
-      await Database.setPages(newPages)
-      await Database.setWorkflows(newWorkflows)
-      await Database.setLuaScripts(newLuaScripts)
-      await Database.setComponentHierarchy(newHierarchy)
-      await Database.setComponentConfigs(newConfigs)
-
-      if (content.cssClasses) {
-        const currentCssClasses = await Database.getCssClasses()
-        await Database.setCssClasses([...currentCssClasses, ...content.cssClasses])
-      }
-
-      if (content.dropdownConfigs) {
-        const currentDropdowns = await Database.getDropdownConfigs()
-        await Database.setDropdownConfigs([...currentDropdowns, ...content.dropdownConfigs])
-      }
-
-      if (content.seedData) {
-        await Database.setPackageData(importedManifest.id, content.seedData)
-      }
-
-      const installedPackage = {
-        packageId: importedManifest.id,
-        installedAt: Date.now(),
-        version: importedManifest.version,
-        enabled: true,
-      }
-
-      await Database.installPackage(installedPackage)
+      await installPackage(importedManifest.id, { manifest: importedManifest, content })
 
       toast.success(`Package "${importedManifest.name}" imported successfully!`)
       toast.info(`Imported: ${content.schemas.length} schemas, ${content.pages.length} pages, ${content.workflows.length} workflows, ${assets.length} assets`)
