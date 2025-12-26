@@ -345,20 +345,47 @@ metabuilder/
 │   │   │   ├── atoms/         # Basic UI elements
 │   │   │   ├── molecules/     # Simple composites (2-5 atoms)
 │   │   │   ├── organisms/     # Complex features with business logic
-│   │   │   └── Level1-5.tsx   # Page-level components
+│   │   │   └── level1-5/      # Page-level components
 │   │   ├── lib/               # Core libraries
 │   │   ├── hooks/             # Custom React hooks
-│   │   └── seed-data/         # Database seeds
+│   │   ├── seed-data/         # Database seeds
+│   │   ├── theme/             # MUI theme configuration
+│   │   └── types/             # TypeScript type definitions
 │   └── e2e/                   # Playwright E2E tests
-├── packages/                  # Feature packages
+├── packages/                  # Feature packages (JSON/Lua-driven)
 ├── dbal/                      # Database Abstraction Layer
 │   ├── ts/                    # TypeScript implementation
 │   ├── cpp/                   # C++ daemon (production)
-│   └── api/schema/            # YAML contracts
-├── prisma/                    # Database schema
-├── config/                    # Shared config files
-├── tools/                     # Repo utilities
-└── deployment/                # Docker configs
+│   │   ├── src/               # Source code
+│   │   ├── include/           # Header files
+│   │   ├── build-config/      # CMake, Docker configs
+│   │   ├── lint-config/       # Clang format/tidy configs
+│   │   └── docs/              # Implementation docs
+│   ├── api/                   # YAML contracts
+│   └── docs/                  # DBAL documentation
+├── prisma/                    # Database schema & migrations
+├── config/                    # Shared configuration
+│   ├── build/                 # Next.js, TypeScript configs
+│   ├── lint/                  # ESLint config
+│   ├── test/                  # Vitest, Playwright configs
+│   └── misc/                  # Other configs (JSON, env)
+├── tools/                     # Repository utilities
+│   ├── analysis/              # Code analysis scripts
+│   ├── detection/             # Stub/pattern detection
+│   ├── generation/            # Code generation
+│   ├── quality/               # Quality metrics
+│   ├── security/              # Security scanning
+│   └── validation/            # Validation scripts
+├── docs/                      # Documentation
+│   ├── architecture/          # System design docs
+│   ├── guides/                # How-to guides
+│   ├── security/              # Security documentation
+│   ├── todo/                  # Task tracking
+│   └── navigation/            # Doc navigation files
+├── deployment/                # Docker configs
+└── .github/                   # GitHub workflows & prompts
+    ├── workflows/             # CI/CD pipelines
+    └── prompts/               # AI prompt templates
 ```
 
 ### Component Architecture (Atomic Design)
@@ -1103,9 +1130,18 @@ DEBUG=metabuilder:* npm run dev
 | Package seeds | `packages/*/seed/` |
 | DBAL TypeScript | `dbal/ts/src/` |
 | DBAL C++ | `dbal/cpp/src/` |
+| DBAL docs | `dbal/cpp/docs/` |
 | E2E tests | `frontends/nextjs/e2e/` |
 | Shared config | `config/` |
+| Build config | `config/build/` |
+| Lint config | `config/lint/` |
+| Test config | `config/test/` |
+| Analysis tools | `tools/analysis/` |
+| Security tools | `tools/security/` |
+| Documentation | `docs/` |
+| Architecture docs | `docs/architecture/` |
 | Development prompts | `.github/prompts/` |
+| CI workflows | `.github/workflows/` |
 
 ---
 
