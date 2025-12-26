@@ -60,43 +60,17 @@ npm run build
 
 ---
 
-## System Information
+## Quick Overview
 
-Captured from this machine to document the local development environment:
+MetaBuilder is a **data-driven, multi-tenant platform** with these core features:
 
-| Item | Detail |
-| --- | --- |
-| Repository path | `/Users/rmac/Documents/GitHub/metabuilder` |
-| Operating system | `Darwin rmacs-MacBook-Pro.local 25.1.0` (arm64) |
-| Default shell | `zsh` |
-| Node.js | `v25.2.1` |
-| npm | `11.6.2` |
-| Commands used to collect data | `pwd`, `uname -a`, `node -v`, `npm -v` |
+- **6-Level Permission System**: Public → User → Moderator → Admin → God → Supergod hierarchy
+- **Multi-Tenant Data**: All queries filter by `tenantId`; each tenant has isolated config
+- **Declarative Packages**: Ship UI/features via JSON/Lua in `packages/*/seed/`
+- **Lua Sandbox**: Safe runtime execution with blocked system access
+- **Type-Safe Workflow**: TypeScript, Act local CI, comprehensive testing
 
 ---
-
-- **6-Level Permission System**: Each user level from Public to SuperGod maps to documented routes, policies, and role inheritance so you can reason about features before touching code ([docs/architecture/security-docs/5-level-system.md](./docs/architecture/security-docs/5-level-system.md)).
-- **Multi-tenant data platform**: Prisma, tenant-aware storage, and quota management patterns keep all queries scoped by `tenantId` while keeping schema evolution safe ([docs/architecture/database.md](./docs/architecture/database.md)).
-- **Declarative packages & Lua logic**: Modular `packages/*/seed` definitions let you ship UI/features via JSON/Lua, while the Lua sandbox protects the runtime ([docs/architecture/packages.md](./docs/architecture/packages.md), [docs/lua/README.md](./docs/lua/README.md)).
-- **Type-safe + CI-ready workflow**: TypeScript tooling, Act local workflows, and targeted scripts keep linting, testing, and deploy checks consistent with the documentation hub ([docs/navigation/README.md](./docs/navigation/README.md)).
-
-## Developer Persona
-
-- **New contributors** follow the 2‑3 hour path in [docs/getting-started/NEW_CONTRIBUTOR_PATH.md](./docs/getting-started/NEW_CONTRIBUTOR_PATH.md), which guides them through overview → architecture → testing → practical tasks to build confidence quickly.
-- **Core mindset**: favor declarative JSON/Lua configuration, filter every query by `tenantId`, keep components under 150 LOC, and rely on `RenderComponent` plus Prisma helpers instead of hardcoded UI/data layer logic.
-- **Roles**: dashboards/authn (Level 2), admin control panels (Level 3), builder/IDE workflows (Level 4), and SuperGod tenant operations (Level 5) are the main focus areas when shaping experiences for developers, architects, and operators.
-
-## TODO List
-
-- The curated checklist at [docs/todo/README.md](./docs/todo/README.md) lists every area (architecture, frontend, DBAL, packages, security, deployment, docs, tooling, etc.) with numbered TODO files ordered by priority.
-- Pick the list that matches your work, mark tasks with `[x]`, and consult the generated reports in `docs/todo/TODO_STATUS.md` and `docs/todo/22-TODO-SCAN.md` for repo-wide tracking.
-
-## AI Prompts
-
-- `.github/prompts/` stores curated prompts for planning, designing, implementing, testing, reviewing, deploying, and maintaining features; [docs/todo/core/21-SDLC-TODO.md](./docs/todo/core/21-SDLC-TODO.md) describes which prompts need review or updates.
-- Keep `.github/copilot-instructions.md` aligned with architecture/docs changes so Copilot-based automation and review prompts stay accurate.
-
-## Refactor Plan Snapshot
 
 ### Next.js to Lua Conversion TODO
 
