@@ -39,21 +39,6 @@ export function PowerTransferTab({
     (u) => u.id !== currentUser.id && u.role !== 'supergod'
   )
 
-  const loadRequests = async () => {
-    setIsLoadingRequests(true)
-    setRequestError(null)
-    try {
-      const payload = await fetchPowerTransferRequests()
-      setRequests(payload)
-    } catch (error) {
-      setRequestError(
-        error instanceof Error ? error.message : 'Unable to load transfer history'
-      )
-    } finally {
-      setIsLoadingRequests(false)
-    }
-  }
-
   useEffect(() => {
     let isActive = true
     const reload = async () => {

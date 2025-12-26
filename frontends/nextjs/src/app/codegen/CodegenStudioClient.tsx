@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ChangeEvent } from 'react'
 
 import {
   Alert,
@@ -112,7 +112,7 @@ export default function CodegenStudioClient() {
           <Typography variant="h3" component="h1">
             Codegen Studio Export
           </Typography>
-          <Typography variant="body1" color="textSecondary">
+          <Typography variant="body1" color="text.secondary">
             Configure a starter bundle for MetaBuilder packages and download it instantly.
           </Typography>
         </Stack>
@@ -143,7 +143,7 @@ export default function CodegenStudioClient() {
               </MenuItem>
             ))}
           </TextField>
-          <Typography variant="body2" color="textSecondary">
+          <Typography variant="body2" color="text.secondary">
             {runtimeDescription}
           </Typography>
           <TextField
