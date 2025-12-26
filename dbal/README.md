@@ -160,6 +160,8 @@ permissions:
 
 For outbound integrations the daemon can use the new requests-inspired helper `runtime::RequestsClient`. It wraps Drogon’s `HttpClient`, exposes `get`/`post` helpers, parses JSON responses, and throws clean timeouts so code paths stay predictable.
 
+Native Prisma calls route through `NativePrismaAdapter`, which currently POSTs to the `/api/native-prisma` Next.js API and returns the raw JSON rows or affected count using that helper. When the daemon calls `runQuery`/`runNonQuery`, the response is mapped back into `SqlRow` results so the rest of the stack stays unaware of the HTTP transport.
+
 ```cpp
 using namespace dbal::runtime;
 
