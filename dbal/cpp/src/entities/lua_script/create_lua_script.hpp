@@ -30,10 +30,9 @@ inline Result<LuaScript> create(InMemoryStore& store, const CreateLuaScriptInput
     if (input.created_by.empty()) {
         return Error::validationError("created_by is required");
     }
-    for (const auto& entry : input.allowed_globals) {
-        if (entry.empty()) {
-            return Error::validationError("allowed_globals must contain non-empty strings");
-        }
+    std::string globals_error;
+    if (!validation::validateLuaAllowedGlobals(input.allowed_globals, globals_error)) {
+        return Error::validationError(globals_error);
     }
 
     if (store.lua_script_names.find(input.name) != store.lua_script_names.end()) {
@@ -46,7 +45,7 @@ inline Result<LuaScript> create(InMemoryStore& store, const CreateLuaScriptInput
     script.description = input.description;
     script.code = input.code;
     script.is_sandboxed = input.is_sandboxed;
-    script.allowed_globals = input.allowed_globals;
+    script.allowed_globals = validation::dedupeLuaAllowedGlobals(input.allowed_globals);
     script.timeout_ms = input.timeout_ms;
     script.created_by = input.created_by;
     script.created_at = std::chrono::system_clock::now();

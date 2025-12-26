@@ -59,12 +59,11 @@ inline Result<LuaScript> update(InMemoryStore& store, const std::string& id, con
     }
 
     if (input.allowed_globals.has_value()) {
-        for (const auto& entry : input.allowed_globals.value()) {
-            if (entry.empty()) {
-                return Error::validationError("allowed_globals must contain non-empty strings");
-            }
+        std::string globals_error;
+        if (!validation::validateLuaAllowedGlobals(input.allowed_globals.value(), globals_error)) {
+            return Error::validationError(globals_error);
         }
-        script.allowed_globals = input.allowed_globals.value();
+        script.allowed_globals = validation::dedupeLuaAllowedGlobals(input.allowed_globals.value());
     }
 
     if (input.timeout_ms.has_value()) {

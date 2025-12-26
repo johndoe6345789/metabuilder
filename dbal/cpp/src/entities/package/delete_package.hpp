@@ -8,6 +8,7 @@
 #include "dbal/types.hpp"
 #include "dbal/errors.hpp"
 #include "../../store/in_memory_store.hpp"
+#include "../../validation/package_validation.hpp"
 
 namespace dbal {
 namespace entities {
@@ -20,15 +21,15 @@ inline Result<bool> remove(InMemoryStore& store, const std::string& id) {
     if (id.empty()) {
         return Error::validationError("Package ID cannot be empty");
     }
-    
+
     auto it = store.packages.find(id);
     if (it == store.packages.end()) {
         return Error::notFound("Package not found: " + id);
     }
-    
-    store.package_ids.erase(it->second.package_id);
+
+    store.package_keys.erase(validation::packageKey(it->second.name, it->second.version));
     store.packages.erase(it);
-    
+
     return Result<bool>(true);
 }
 

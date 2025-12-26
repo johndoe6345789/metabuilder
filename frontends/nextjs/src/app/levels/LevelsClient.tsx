@@ -10,6 +10,7 @@ import {
   Container,
   Divider,
   Grid,
+  LinearProgress,
   Paper,
   Stack,
   Typography,
@@ -35,6 +36,11 @@ export default function LevelsClient() {
   const nextLevel = useMemo(
     () => PERMISSION_LEVELS.find((level) => level.id === selectedLevelId + 1) ?? null,
     [selectedLevelId]
+  )
+
+  const maxCapabilityCount = useMemo(
+    () => Math.max(...PERMISSION_LEVELS.map((level) => level.capabilities.length)),
+    []
   )
 
   const handleSelect = (levelId: number) => {
@@ -118,6 +124,16 @@ export default function LevelsClient() {
                   sx={{ borderColor: highlightColor(selectedLevel) }}
                 />
               ))}
+            </Stack>
+            <Stack spacing={1}>
+              <LinearProgress
+                variant="determinate"
+                value={(selectedLevel.capabilities.length / maxCapabilityCount) * 100}
+                sx={{ height: 10, borderRadius: 2 }}
+              />
+              <Typography variant="body2" color="text.secondary">
+                {selectedLevel.capabilities.length} of {maxCapabilityCount} capability tiers unlocked
+              </Typography>
             </Stack>
             <Divider />
             <Box>
