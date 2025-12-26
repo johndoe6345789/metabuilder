@@ -112,5 +112,22 @@ ApplicationWindow {
                 }
             }
         }
+
+        ColumnLayout {
+            spacing: 10
+            Text {
+                text: "Badge samples"
+                font.pixelSize: 18
+                color: Material.MaterialPalette.onSurface
+                font.bold: true
+            }
+
+            RowLayout {
+                spacing: 10
+                Material.MaterialBadge { text: "alpha"; accent: true }
+                Material.MaterialBadge { text: "stable"; dense: true }
+                Material.MaterialBadge { text: "live"; outlined: true }
+            }
+        }
     }
 }
