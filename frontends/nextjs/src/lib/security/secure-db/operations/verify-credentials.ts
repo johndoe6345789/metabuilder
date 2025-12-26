@@ -12,7 +12,7 @@ export async function verifyCredentials(
   username: string, 
   password: string
 ): Promise<boolean> {
-  const sanitizedUsername = sanitizeInput(username)
+  const sanitizedUsername = sanitizeInput(username).trim()
 
   if (loginAttemptTracker.isLocked(sanitizedUsername)) {
     return false

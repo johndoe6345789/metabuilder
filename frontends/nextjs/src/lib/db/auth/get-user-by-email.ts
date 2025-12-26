@@ -1,5 +1,6 @@
 import { getAdapter } from '../dbal-client'
 import type { User } from '../../types/level-types'
+import { mapUserRecord } from '../users/map-user-record'
 
 /**
  * Get user by email from DBAL.
@@ -22,17 +23,5 @@ export const getUserByEmail = async (
     return null
   }
 
-  const userData = record as Record<string, unknown>
-
-  return {
-    id: String(userData.id),
-    username: String(userData.username),
-    email: String(userData.email),
-    role: userData.role as User['role'],
-    profilePicture: userData.profilePicture ? String(userData.profilePicture) : undefined,
-    bio: userData.bio ? String(userData.bio) : undefined,
-    createdAt: Number(userData.createdAt),
-    tenantId: userData.tenantId ? String(userData.tenantId) : undefined,
-    isInstanceOwner: Boolean(userData.isInstanceOwner),
-  }
+  return mapUserRecord(record as Record<string, unknown>)
 }
