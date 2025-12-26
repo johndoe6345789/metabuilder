@@ -121,6 +121,17 @@ struct UpdateComponentHierarchyInput {
     std::optional<Json> props;
 };
 
+struct ComponentOrderUpdate {
+    std::string id;
+    int order = 0;
+};
+
+struct MoveComponentInput {
+    std::string id;
+    std::string new_parent_id;
+    int order = 0;
+};
+
 struct Workflow {
     std::string id;
     std::string name;
