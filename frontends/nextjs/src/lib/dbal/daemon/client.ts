@@ -11,9 +11,16 @@ export interface DaemonRpcRequest {
 }
 
 export async function callDaemon<T = unknown>(request: DaemonRpcRequest): Promise<T> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  }
+  if (process.env.DBAL_API_KEY) {
+    headers['x-dbal-api-key'] = process.env.DBAL_API_KEY
+  }
+
   const response = await fetch(DEFAULT_DAEMON_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(request),
   })
 
