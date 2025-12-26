@@ -3,7 +3,7 @@ import { setCredential } from '../credentials'
 import { getAppConfig, setAppConfig } from '../app-config'
 import { getCssClasses, setCssClasses } from '../css-classes'
 import { getDropdownConfigs, setDropdownConfigs } from '../dropdown-configs'
-import { hashPassword } from '../hash-password'
+import { hashPassword } from '../password/hash-password'
 import type { CssCategory, DropdownConfig } from '../types'
 import type { User, AppConfiguration } from '../../types/level-types'
 
