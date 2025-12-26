@@ -2,6 +2,7 @@
 
 #include <cpr/cpr.h>
 #include <iostream>
+#include <vector>
 
 namespace {
 
