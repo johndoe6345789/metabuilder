@@ -19,6 +19,10 @@ export function useAuth(): UseAuthReturn {
     await authStore.login(identifier, password)
   }, [])
 
+  const register = useCallback(async (username: string, email: string, password: string) => {
+    await authStore.register(username, email, password)
+  }, [])
+
   const logout = useCallback(async () => {
     await authStore.logout()
   }, [])
@@ -30,6 +34,7 @@ export function useAuth(): UseAuthReturn {
   return {
     ...state,
     login,
+    register,
     logout,
     refresh,
   }
