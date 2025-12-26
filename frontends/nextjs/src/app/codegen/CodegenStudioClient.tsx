@@ -93,6 +93,21 @@ export default function CodegenStudioClient() {
     }
   }, [form.runtime])
 
+  const previewFiles = useMemo(() => {
+    const root = form.projectName
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9_-]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'metabuilder-starter'
+    return [
+      `${root}/README.md`,
+      `${root}/package.json`,
+      `${root}/src/app/page.tsx`,
+      `${root}/cli/main.cpp`,
+      `${root}/spec.json`,
+    ]
+  }, [form.projectName])
+
   const handleChange = (key: keyof FormState) => (event: ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [key]: event.target.value }))
   }
@@ -209,6 +224,14 @@ export default function CodegenStudioClient() {
               </Stack>
             </Paper>
           )}
+          <Stack spacing={0.5}>
+            <Typography variant="subtitle2">Bundle contents</Typography>
+            {previewFiles.map((entry) => (
+              <Typography key={entry} variant="body2" color="text.secondary">
+                • {entry}
+              </Typography>
+            ))}
+          </Stack>
         </Stack>
       </Paper>
     </Container>

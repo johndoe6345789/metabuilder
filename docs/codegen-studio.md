@@ -35,6 +35,7 @@ The runtime-specific paragraph is drawn from the `runtime` value, and the CLI st
 - **Experience**: A Material UI-powered scaffold designer that bundles the same payload used by the API and streams the ZIP for download.
 - **Feedback**: Inline alerts surface success or failure so teams can iteratively tune briefs before sharing the starter kit with collaborators.
 - **Preview**: A manifest panel summarizes the generated values (runtime, tone, package, timestamp) after each export.
+- **Bundle contents**: The UI also renders the file list that will land inside the archive so creators can make last-second adjustments.
 
 ## Development tooling
 

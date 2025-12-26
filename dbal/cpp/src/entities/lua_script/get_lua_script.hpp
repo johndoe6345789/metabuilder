@@ -18,7 +18,7 @@ namespace lua_script {
  */
 inline Result<LuaScript> get(InMemoryStore& store, const std::string& id) {
     if (id.empty()) {
-        return Error::validationError("Script ID cannot be empty");
+        return Error::validationError("Lua script ID cannot be empty");
     }
     
     auto it = store.lua_scripts.find(id);

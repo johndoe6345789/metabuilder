@@ -99,6 +99,9 @@ export interface LuaScript {
   code: string
   parameters: Array<{ name: string; type: string }>
   returnType?: string
+  isSandboxed?: boolean
+  allowedGlobals?: string[]
+  timeoutMs?: number
 }
 
 export interface PageConfig {
