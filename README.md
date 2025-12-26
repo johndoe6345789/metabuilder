@@ -1147,11 +1147,11 @@ DEBUG=metabuilder:* npm run dev
 
 ## Documentation Resources
 
-- [`docs/README.md`](./docs/README.md) is the master index for architecture, deployment, testing, and contribution guidance.
-- [`docs/guides/getting-started.md`](./docs/guides/getting-started.md) walks through initial setup, the sanity checklist, and environment tips.
-- [`docs/architecture/packages.md`](./docs/architecture/packages.md) and [`docs/architecture/database.md`](./docs/architecture/database.md) cover package metadata, seed expectations, and tenant-safe Prisma patterns.
-- [`docs/security/README.md`](./docs/security/README.md) plus [`docs/security/SECURITY.md`](./docs/security/SECURITY.md) summarize sandboxed Lua rules, credential handling, and scanning policies.
-- [`docs/guides/ACT_CHEAT_SHEET.md`](./docs/guides/ACT_CHEAT_SHEET.md) with [`docs/guides/ACT_TESTING.md`](./docs/guides/ACT_TESTING.md) explain how to mirror GitHub Actions workflows locally via Act.
+- [docs/navigation/README.md](./docs/navigation/README.md) is the master index for architecture, deployment, testing, and contribution guidance.
+- [docs/guides/getting-started.md](./docs/guides/getting-started.md) walks through initial setup, the sanity checklist, and environment tips.
+- [docs/architecture/packages.md](./docs/architecture/packages.md) and [docs/architecture/database.md](./docs/architecture/database.md) cover package metadata, seed expectations, and tenant-safe Prisma patterns.
+- [docs/security/README.md](./docs/security/README.md) plus [docs/security/SECURITY.md](./docs/security/SECURITY.md) summarize sandboxed Lua rules, credential handling, and scanning policies.
+- [docs/guides/ACT_CHEAT_SHEET.md](./docs/guides/ACT_CHEAT_SHEET.md) with [docs/guides/ACT_TESTING.md](./docs/guides/ACT_TESTING.md) explain how to mirror GitHub Actions workflows locally via Act.
 
 ## Documentation Quality
 
@@ -1160,11 +1160,13 @@ DEBUG=metabuilder:* npm run dev
 
 ## Quick Links
 
-- Permission model: [`docs/architecture/security-docs/5-level-system.md`](./docs/architecture/security-docs/5-level-system.md)
-- Database schema: [`prisma/schema.prisma`](./prisma/schema.prisma)
-- API conventions: [`docs/guides/api-development.md`](./docs/guides/api-development.md)
-- Security guidelines: [`docs/security/SECURITY.md`](./docs/security/SECURITY.md)
-- Package system: [`docs/architecture/packages.md`](./docs/architecture/packages.md)
+- Permission model: [docs/architecture/security-docs/5-level-system.md](./docs/architecture/security-docs/5-level-system.md)
+- Database schema: [prisma/schema.prisma](./prisma/schema.prisma)
+- API conventions: [docs/guides/api-development.md](./docs/guides/api-development.md)
+- Security guidelines: [docs/security/SECURITY.md](./docs/security/SECURITY.md)
+- Package system: [docs/architecture/packages.md](./docs/architecture/packages.md)
+- DBAL documentation: [dbal/README.md](./dbal/README.md)
+- Tools documentation: [tools/README.md](./tools/README.md)
 
 ## License
 
