@@ -2,7 +2,7 @@ import { getAdapter } from '../../core/dbal-client'
 import { verifyPassword } from '../../password/verify-password'
 import type { User } from '../../types/level-types'
 import { mapUserRecord } from '../../users/map-user-record'
-import { getUserFirstLoginFlag } from '../../users/get-user-first-login-flag'
+import { getUserFirstLoginFlag } from '../../users/getters/get-user-first-login-flag'
 
 export interface AuthenticateResult {
   success: boolean
