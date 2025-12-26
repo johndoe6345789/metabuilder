@@ -1,0 +1,489 @@
+# DBAL Security Analysis - December 2025
+
+## Executive Summary
+
+This security analysis evaluates the DBAL (Database Abstraction Layer) codebase against known CVE patterns and common vulnerabilities affecting similar database abstraction, HTTP server, and storage systems. The DBAL is a bespoke multi-language (TypeScript + C++) system, so analysis approximates CVE patterns from comparable production systems.
+
+**Overall Risk Assessment**: 🟡 **MEDIUM** (Previous: HIGH)
+
+**Previous fixes applied**: The C++ HTTP server implementation has been hardened against CVE-2024-1135, CVE-2024-40725, CVE-2024-23452, and other HTTP-layer vulnerabilities as documented in `CVE_ANALYSIS.md`.
+
+---
+
+## 1. New Vulnerabilities Identified (This Analysis)
+
+### 1.1 TypeScript DBAL Client
+
+#### DBAL-2025-001: WebSocket Message Origin Bypass (HIGH)
+**Location**: [websocket-bridge.ts](../ts/src/bridges/websocket-bridge.ts#L47-L78)
+**Pattern**: CWE-346 (Origin Validation Error)
+
+```typescript
+// ISSUE: No WebSocket origin validation
+this.ws = new WebSocket(this.endpoint)
+```
+
+**Risk**: 
+- WebSocket connections don't validate origin
+- Could allow cross-site WebSocket hijacking in browser contexts
+- Attacker-controlled page could connect to DBAL daemon
+
+**Recommendation**:
+```typescript
+// Add origin validation in C++ daemon
+// Add Sec-WebSocket-Protocol for authentication
+this.ws = new WebSocket(this.endpoint, ['dbal-v1', authToken])
+```
+
+---
+
+#### DBAL-2025-002: JSON.parse DOS via Prototype Pollution (MEDIUM)
+**Location**: [websocket-bridge.ts](../ts/src/bridges/websocket-bridge.ts#L58-L72)
+
+```typescript
+private handleMessage(data: string): void {
+  try {
+    const response: RPCResponse = JSON.parse(data) // No prototype sanitization
+```
+
+**Risk**:
+- Attacker-controlled JSON could inject `__proto__`, `constructor`, `prototype`
+- Could modify Object prototype affecting all objects in process
+- Pattern: CVE-2019-10744 (lodash prototype pollution)
+
+**Recommendation**:
+```typescript
+import { safeJsonParse } from './security-utils'
+
+const response = safeJsonParse(data, {
+  protoAction: 'remove',
+  constructorAction: 'remove'
+})
+```
+
+---
+
+#### DBAL-2025-003: Request ID Enumeration (LOW)
+**Location**: [websocket-bridge.ts](../ts/src/bridges/websocket-bridge.ts#L88)
+
+```typescript
+private requestIdCounter = 0
+// ...
+const id = `req_${++this.requestIdCounter}`
+```
+
+**Risk**:
+- Sequential, predictable request IDs
+- Could aid in request correlation attacks
+- Timing analysis of request frequency
+
+**Recommendation**:
+```typescript
+import { randomBytes } from 'crypto'
+const id = `req_${randomBytes(16).toString('hex')}`
+```
+
+---
+
+### 1.2 Blob Storage Layer
+
+#### DBAL-2025-004: Path Traversal Incomplete Mitigation (MEDIUM)
+**Location**: [filesystem-storage.ts](../ts/src/blob/filesystem-storage.ts#L27-L30)
+
+```typescript
+private getFullPath(key: string): string {
+  // ISSUE: normalize() then replace is not sufficient
+  const normalized = path.normalize(key).replace(/^(\.\.(\/|\\|$))+/, '')
+  return path.join(this.basePath, normalized)
+}
+```
+
+**Risk**:
+- Pattern doesn't catch all traversal patterns:
+  - `....//....//etc/passwd`
+  - URL-encoded sequences `%2e%2e%2f`
+  - Unicode normalization bypasses
+- Similar to CVE-2024-4068 (path traversal patterns)
+
+**Recommendation**:
+```typescript
+private getFullPath(key: string): string {
+  // Decode any URL encoding
+  let decoded = decodeURIComponent(key)
+  
+  // Normalize Unicode
+  decoded = decoded.normalize('NFKC')
+  
+  // Remove all path traversal patterns
+  const sanitized = decoded
+    .replace(/\\/g, '/')           // Normalize slashes
+    .replace(/\/+/g, '/')          // Collapse multiple slashes
+    .split('/')
+    .filter(segment => segment !== '..' && segment !== '.')
+    .join('/')
+    .replace(/^\/+/, '')           // Remove leading slashes
+  
+  const fullPath = path.join(this.basePath, sanitized)
+  
+  // Final validation: ensure result is under basePath
+  const resolved = path.resolve(fullPath)
+  if (!resolved.startsWith(path.resolve(this.basePath) + path.sep)) {
+    throw DBALError.forbidden('Path traversal detected')
+  }
+  
+  return resolved
+}
+```
+
+---
+
+#### DBAL-2025-005: S3 Bucket Policy Not Validated (MEDIUM)
+**Location**: [s3-storage.ts](../ts/src/blob/s3-storage.ts)
+
+**Risk**:
+- S3Storage doesn't validate bucket exists before operations
+- No server-side encryption enforcement
+- No bucket policy validation for public access
+
+**Recommendation**:
+```typescript
+async validateBucketSecurity(): Promise<void> {
+  const { GetBucketPolicyStatusCommand, GetBucketEncryptionCommand } = 
+    await import('@aws-sdk/client-s3')
+  
+  // Check bucket isn't public
+  const policyStatus = await this.s3Client.send(
+    new GetBucketPolicyStatusCommand({ Bucket: this.bucket })
+  )
+  if (policyStatus.PolicyStatus?.IsPublic) {
+    throw DBALError.internal('S3 bucket must not be public')
+  }
+  
+  // Verify encryption
+  const encryption = await this.s3Client.send(
+    new GetBucketEncryptionCommand({ Bucket: this.bucket })
+  )
+  // Validate encryption settings...
+}
+```
+
+---
+
+### 1.3 ACL/Authorization Layer
+
+#### DBAL-2025-006: Race Condition in Row-Level Security (HIGH)
+**Location**: [acl-adapter.ts](../ts/src/adapters/acl-adapter.ts#L187-L203)
+
+```typescript
+async update(entity: string, id: string, data: Record<string, unknown>): Promise<unknown> {
+  this.checkPermission(entity, 'update')
+  
+  const existing = await this.baseAdapter.read(entity, id)  // TOCTOU race
+  if (existing) {
+    this.checkRowLevelAccess(entity, 'update', existing as Record<string, unknown>)
+  }
+  
+  // Time gap here - record could be modified by another request
+  
+  try {
+    const result = await this.baseAdapter.update(entity, id, data)
+```
+
+**Risk**:
+- Time-of-check to time-of-use (TOCTOU) vulnerability
+- Pattern: CWE-367
+- Between checking `existing` and calling `update`, another process could modify the record
+- Could allow updating records that should be blocked by row-level security
+
+**Recommendation**:
+```typescript
+async update(entity: string, id: string, data: Record<string, unknown>): Promise<unknown> {
+  this.checkPermission(entity, 'update')
+  
+  // Use database transaction for atomic check-and-update
+  return await this.baseAdapter.withTransaction(async (tx) => {
+    const existing = await tx.read(entity, id, { forUpdate: true }) // SELECT FOR UPDATE
+    if (existing) {
+      this.checkRowLevelAccess(entity, 'update', existing as Record<string, unknown>)
+    }
+    return tx.update(entity, id, data)
+  })
+}
+```
+
+---
+
+#### DBAL-2025-007: Mass Assignment via Unvalidated Fields (MEDIUM)
+**Location**: [prisma-adapter.ts](../ts/src/adapters/prisma-adapter.ts#L32-L39)
+
+```typescript
+async create(entity: string, data: Record<string, unknown>): Promise<unknown> {
+  try {
+    const model = this.getModel(entity)
+    const result = await this.withTimeout(
+      model.create({ data: data as never })  // All fields passed through
+    )
+```
+
+**Risk**:
+- No field-level filtering before database operations
+- Attacker could include sensitive fields: `isAdmin`, `role`, `permissions`
+- Pattern: CWE-915 (Mass Assignment)
+
+**Recommendation**:
+```typescript
+// Add field allowlist per entity
+const ALLOWED_FIELDS: Record<string, Set<string>> = {
+  User: new Set(['username', 'email', 'displayName']),
+  // ...
+}
+
+async create(entity: string, data: Record<string, unknown>): Promise<unknown> {
+  const allowedFields = ALLOWED_FIELDS[entity]
+  if (allowedFields) {
+    data = Object.fromEntries(
+      Object.entries(data).filter(([key]) => allowedFields.has(key))
+    )
+  }
+  // ...
+}
+```
+
+---
+
+### 1.4 Key-Value Store
+
+#### DBAL-2025-008: JSON Injection in Deep Equals (LOW)
+**Location**: [kv-store.ts](../ts/src/core/kv-store.ts#L284-L286)
+
+```typescript
+private deepEquals(a: any, b: any): boolean {
+  return JSON.stringify(a) === JSON.stringify(b)
+}
+```
+
+**Risk**:
+- JSON.stringify order is not guaranteed for all objects
+- Could allow subtle bypass of list removal
+- DoS via circular reference (though TypeScript type system helps)
+
+**Recommendation**:
+```typescript
+import { isDeepStrictEqual } from 'util'
+
+private deepEquals(a: any, b: any): boolean {
+  return isDeepStrictEqual(a, b)
+}
+```
+
+---
+
+#### DBAL-2025-009: Quota Bypass via Concurrent Requests (MEDIUM)
+**Location**: [kv-store.ts](../ts/src/core/kv-store.ts#L101-L140)
+
+```typescript
+async set(key: string, value: StorableValue, context: TenantContext, ttl?: number): Promise<void> {
+  // ...
+  const sizeDelta = existing ? sizeBytes - existing.sizeBytes : sizeBytes
+  
+  // RACE: Check and update are not atomic
+  if (sizeDelta > 0 && context.quota.maxDataSizeBytes) {
+    if (context.quota.currentDataSizeBytes + sizeDelta > context.quota.maxDataSizeBytes) {
+      throw DBALError.forbidden('Quota exceeded: maximum data size reached')
+    }
+  }
+  // ... data is set ...
+  
+  // Quota updated after data written - not atomic
+  context.quota.currentDataSizeBytes += sizeDelta
+```
+
+**Risk**:
+- Concurrent requests can exceed quota by writing simultaneously
+- Pattern: CWE-362 (Concurrent Execution)
+
+**Recommendation**:
+- Use atomic quota reservation before write
+- Implement distributed locking for multi-node deployments
+- Consider Redis-based quota with Lua scripts for atomicity
+
+---
+
+### 1.5 Input Validation
+
+#### DBAL-2025-010: ReDoS in Email Validation (LOW)
+**Location**: Validation functions in [validation/](../ts/src/core/validation/)
+
+**Risk**:
+- Complex regex patterns in email/username validation could be vulnerable to ReDoS
+- Pattern: CWE-1333 (Inefficient Regular Expression Complexity)
+
+**Recommendation**:
+- Audit all regex patterns with tools like `safe-regex`
+- Set validation timeout limits
+- Use linear-time validation libraries
+
+---
+
+## 2. Previously Fixed Vulnerabilities (Status Check)
+
+### C++ HTTP Server - All Fixes Verified ✅
+
+| CVE Pattern | Status | Location |
+|-------------|--------|----------|
+| CVE-2024-1135 (Duplicate Content-Length) | ✅ Fixed | server.cpp:489-497 |
+| CVE-2024-40725 (Request Smuggling) | ✅ Fixed | server.cpp:507-512 |
+| CVE-2024-23452 (Transfer-Encoding) | ✅ Fixed | server.cpp:515-519 |
+| CVE-2024-22087 (Buffer Overflow) | ✅ Fixed | server.cpp:88 (MAX_REQUEST_SIZE) |
+| Thread Exhaustion | ✅ Fixed | server.cpp:93, 254-260 |
+| CRLF Injection | ✅ Fixed | server.cpp:454-460 |
+| Null Byte Injection | ✅ Fixed | server.cpp:391-396, 463-468 |
+
+---
+
+## 3. Dependency Vulnerability Analysis
+
+### TypeScript Dependencies (package.json)
+
+| Package | Version | Known CVEs | Status |
+|---------|---------|------------|--------|
+| @prisma/client | ^6.19.1 | None known | ✅ Secure |
+| zod | ^4.2.1 | None known | ✅ Secure |
+| tsx | ^4.21.0 (dev) | None known | ✅ Secure |
+| vitest | ^4.0.16 (dev) | None known | ✅ Secure |
+
+**Recommendation**: Run `npm audit` weekly and enable Dependabot alerts
+
+### C++ Dependencies (conanfile.txt)
+
+Verify all C++ dependencies are current and patched.
+
+---
+
+## 4. Architecture-Level Recommendations
+
+### 4.1 Add Security Headers to HTTP Responses
+```cpp
+// In server.cpp HttpResponse constructor
+headers["X-Content-Type-Options"] = "nosniff";
+headers["X-Frame-Options"] = "DENY";
+headers["Cache-Control"] = "no-store";
+headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains";
+```
+
+### 4.2 Implement Request Signing
+For WebSocket bridge, add HMAC request signing:
+```typescript
+interface SignedRPCMessage extends RPCMessage {
+  timestamp: number
+  signature: string  // HMAC-SHA256(id + method + timestamp, sharedSecret)
+}
+```
+
+### 4.3 Add Audit Log Tamper Protection
+```typescript
+// Hash-chain audit logs to detect tampering
+interface AuditEntry {
+  // ... existing fields ...
+  previousHash: string
+  entryHash: string  // SHA-256(previousHash + timestamp + user + operation)
+}
+```
+
+### 4.4 Implement Rate Limiting at All Layers
+| Layer | Current | Recommended |
+|-------|---------|-------------|
+| HTTP Server | MAX_CONCURRENT_CONNECTIONS | Add per-IP rate limiting |
+| WebSocket Bridge | 30s timeout only | Add requests/minute limit |
+| DBAL Client | None | Add retry with exponential backoff |
+| KV Store | Quota only | Add operations/second limit |
+
+---
+
+## 5. Testing Recommendations
+
+### 5.1 Security Test Suite Gaps
+
+**Missing Tests**:
+1. Prototype pollution injection tests
+2. Path traversal fuzzing with encoding variations
+3. TOCTOU race condition tests
+4. Quota bypass under concurrent load
+5. Unicode normalization bypass tests
+
+### 5.2 Fuzzing Targets
+
+```bash
+# Add to CI/CD
+# HTTP parser fuzzing
+./fuzz_http_parser --corpus=corpus/ --runs=100000
+
+# Path traversal fuzzing  
+npm run test:fuzz -- --target=filesystem-storage
+
+# JSON parsing fuzzing
+npm run test:fuzz -- --target=websocket-bridge
+```
+
+---
+
+## 6. Compliance Mapping
+
+| Requirement | Status | Notes |
+|-------------|--------|-------|
+| CWE-89 (SQL Injection) | ✅ Mitigated | Prisma ORM handles parameterization |
+| CWE-79 (XSS) | N/A | No HTML rendering in DBAL |
+| CWE-287 (Auth Bypass) | 🟡 Partial | ACL exists, TOCTOU issue |
+| CWE-434 (File Upload) | ✅ Mitigated | Content-type validation present |
+| CWE-918 (SSRF) | ✅ Mitigated | No user-controlled URLs |
+| CWE-502 (Deserialization) | 🟡 Review | JSON.parse needs sanitization |
+
+---
+
+## 7. Severity Summary
+
+| Severity | Count | Issues |
+|----------|-------|--------|
+| 🔴 Critical | 0 | - |
+| 🟠 High | 2 | DBAL-2025-001 (WebSocket), DBAL-2025-006 (TOCTOU) |
+| 🟡 Medium | 5 | DBAL-2025-002, 004, 005, 007, 009 |
+| 🟢 Low | 3 | DBAL-2025-003, 008, 010 |
+
+---
+
+## 8. Remediation Priority
+
+### Immediate (Sprint 1)
+1. **DBAL-2025-006**: Fix TOCTOU race in ACL adapter with transactions
+2. **DBAL-2025-001**: Add WebSocket origin validation
+
+### Short-term (Sprint 2)
+3. **DBAL-2025-004**: Strengthen path traversal protection
+4. **DBAL-2025-002**: Add prototype pollution protection to JSON parsing
+5. **DBAL-2025-007**: Implement field allowlisting
+
+### Medium-term (Sprint 3-4)
+6. **DBAL-2025-009**: Add atomic quota operations
+7. **DBAL-2025-005**: S3 bucket policy validation
+8. All LOW severity items
+
+---
+
+## 9. Appendix: CVE Reference Patterns
+
+| CVE | Year | Type | Relevance to DBAL |
+|-----|------|------|-------------------|
+| CVE-2024-1135 | 2024 | HTTP Smuggling | HTTP Server ✅ Fixed |
+| CVE-2024-40725 | 2024 | Request Smuggling | HTTP Server ✅ Fixed |
+| CVE-2024-23452 | 2024 | Transfer-Encoding | HTTP Server ✅ Fixed |
+| CVE-2024-4068 | 2024 | Path Traversal | Blob Storage 🟡 Needs work |
+| CVE-2019-10744 | 2019 | Prototype Pollution | JSON Parsing 🟡 Needs work |
+| CVE-2023-32002 | 2023 | Permissions | ACL Layer 🟡 Needs work |
+| CVE-2021-23337 | 2021 | Command Injection | N/A (no shell exec) |
+
+---
+
+**Document Version**: 2.0.0  
+**Last Updated**: 2025-12-26  
+**Analyst**: Automated Security Review  
+**Next Review**: 2026-01-26
