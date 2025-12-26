@@ -7,11 +7,13 @@ MetaBuilder implements a sophisticated **6-level permission system** that contro
 The 5-level architecture provides granular access control, allowing a single application instance to serve multiple user types with different capabilities:
 
 ```
-Level 5: Supergod     └─ Complete system control, all features
+Level 6: Supergod     └─ Complete system control, all features
         ↑
-Level 4: God Mode     └─ Advanced system features, workflow execution
+Level 5: God Mode     └─ Advanced system features, workflow execution
         ↑
-Level 3: Admin        └─ Administrative functions, user management
+Level 4: Admin        └─ Administrative functions, tenant management
+        ↑
+Level 3: Moderator    └─ Moderation desk, flag resolution, report review
         ↑
 Level 2: User         └─ Standard authenticated user features
         ↑
