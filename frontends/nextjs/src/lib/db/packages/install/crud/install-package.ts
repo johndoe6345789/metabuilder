@@ -1,4 +1,4 @@
-import { getAdapter } from '../../core/dbal-client'
+import { getAdapter } from '../../../core/dbal-client'
 import type { InstalledPackage } from '../../packages/package-types'
 
 /**
