@@ -1,0 +1,7 @@
+{
+  "packageId": "escape_room",
+  "name": "Escape Room",
+  "version": "1.0.0",
+  "description": "Puzzle-driven escape room within the Qt UI for team-building.",
+  "dependencies": ["retro_games", "microthread"]
+}

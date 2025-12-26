@@ -1,0 +1,7 @@
+{
+  "packageId": "watchtower",
+  "name": "Watchtower",
+  "version": "1.0.0",
+  "description": "Mission control for logging, alerts, and daemon orchestration.",
+  "dependencies": ["analytics", "god_panel"]
+}
