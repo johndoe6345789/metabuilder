@@ -48,7 +48,7 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
   const [tenants, setTenants] = useState<Tenant[]>([])
   const [allUsers, setAllUsers] = useState<User[]>([])
   const [godUsers, setGodUsers] = useState<User[]>([])
-  const [transferRequests, setTransferRequests] = useState<PowerTransferRequest[]>([])
+  const [transferRefresh, setTransferRefresh] = useState(0)
   const [showTransferDialog, setShowTransferDialog] = useState(false)
   const [showConfirmTransfer, setShowConfirmTransfer] = useState(false)
   const [selectedUserId, setSelectedUserId] = useState('')
@@ -61,16 +61,14 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
   }, [])
 
   const loadData = async () => {
-    const [tenantsData, usersData, requestsData] = await Promise.all([
+    const [tenantsData, usersData] = await Promise.all([
       Database.getTenants(),
       Database.getUsers({ scope: 'all' }),
-      Database.getPowerTransferRequests(),
     ])
     
     setTenants(tenantsData)
     setAllUsers(usersData)
     setGodUsers(usersData.filter(u => u.role === 'god'))
-    setTransferRequests(requestsData.filter(r => r.status === 'pending' && r.expiresAt > Date.now()))
   }
 
   const handleCreateTenant = async () => {
