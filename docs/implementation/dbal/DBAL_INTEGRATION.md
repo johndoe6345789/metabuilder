@@ -316,6 +316,9 @@ DBAL_BIND_ADDRESS=0.0.0.0
 DBAL_PORT=8080
 DBAL_LOG_LEVEL=info
 DBAL_MODE=production
+DBAL_SQL_ENGINE=postgres  # Override with 'mysql' when targeting the MySQL daemon
+DBAL_API_KEY=super-secret-key  # API key shared with trusted frontends and daemon clients
+NEXT_PUBLIC_DBAL_API_KEY=super-secret-key  # Expose key to trusted Next frontends only
 ```
 
 ### TypeScript Configuration
