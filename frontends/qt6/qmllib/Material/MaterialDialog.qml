@@ -23,6 +23,7 @@ Dialog {
             anchors.fill: parent
             anchors.margins: 24
             spacing: 12
+            default property alias actionItems: actionsRow.data
 
             RowLayout {
                 spacing: 12
@@ -57,12 +58,6 @@ Dialog {
                 id: actionsRow
                 spacing: 10
                 Layout.alignment: Qt.AlignRight
-                default property alias buttons: buttonsLoader.data
-
-                Loader {
-                    id: buttonsLoader
-                    asynchronous: true
-                }
             }
         }
     }
