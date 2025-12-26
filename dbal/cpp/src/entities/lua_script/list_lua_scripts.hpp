@@ -19,10 +19,10 @@ namespace lua_script {
  */
 inline Result<std::vector<LuaScript>> list(InMemoryStore& store, const ListOptions& options) {
     std::vector<LuaScript> scripts;
-    
+
     for (const auto& [id, script] : store.lua_scripts) {
         bool matches = true;
-        
+
         if (options.filter.find("created_by") != options.filter.end()) {
             if (script.created_by != options.filter.at("created_by")) matches = false;
         }
@@ -31,10 +31,12 @@ inline Result<std::vector<LuaScript>> list(InMemoryStore& store, const ListOptio
             bool filter_sandboxed = options.filter.at("is_sandboxed") == "true";
             if (script.is_sandboxed != filter_sandboxed) matches = false;
         }
-        
-        if (matches) scripts.push_back(script);
+
+        if (matches) {
+            scripts.push_back(script);
+        }
     }
-    
+
     if (options.sort.find("name") != options.sort.end()) {
         std::sort(scripts.begin(), scripts.end(), [](const LuaScript& a, const LuaScript& b) {
             return a.name < b.name;
@@ -44,14 +46,14 @@ inline Result<std::vector<LuaScript>> list(InMemoryStore& store, const ListOptio
             return a.created_at < b.created_at;
         });
     }
-    
+
     int start = (options.page - 1) * options.limit;
     int end = std::min(start + options.limit, static_cast<int>(scripts.size()));
-    
+
     if (start < static_cast<int>(scripts.size())) {
         return Result<std::vector<LuaScript>>(std::vector<LuaScript>(scripts.begin() + start, scripts.begin() + end));
     }
-    
+
     return Result<std::vector<LuaScript>>(std::vector<LuaScript>());
 }
 
