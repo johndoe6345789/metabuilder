@@ -1,5 +1,5 @@
-import { buildWhereClause } from './build-where-clause'
-import { getModel } from './get-model'
+import { buildWhereClause } from '../../utils/build-where-clause'
+import { getModel } from '../../utils/get-model'
 
 export async function findFirstEntity(
   entity: string,
