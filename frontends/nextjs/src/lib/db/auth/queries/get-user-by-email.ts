@@ -1,6 +1,6 @@
-import { getAdapter } from '../dbal-client'
+import { getAdapter } from '../../core/dbal-client'
 import type { User } from '../../types/level-types'
-import { mapUserRecord } from '../users/map-user-record'
+import { mapUserRecord } from '../../users/map-user-record'
 
 /**
  * Get user by email from DBAL.
