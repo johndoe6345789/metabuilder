@@ -18,6 +18,10 @@
 - [ ] Map reusable TypeScript helpers to single-function Lua targets (one file, one function) and describe their inputs/outputs for future porting.
 - [ ] Categorize each file as “port to Lua”, “adapter only”, or “keep in TypeScript”.
 
+###
+- [ ] Map reusable TypeScript helpers to single-function Lua targets (one file, one function) and describe their inputs/outputs for future porting.
+- [ ] Categorize each file as “port to Lua”, “adapter only”, or “keep in TypeScript”.
+
 ### Phase 2 – Framework Bridge
 
 - [ ] Extend the core framework only where gaps remain (data loading, metadata resolution, routing) with tiny TypeScript adapters to Lua if needed.
