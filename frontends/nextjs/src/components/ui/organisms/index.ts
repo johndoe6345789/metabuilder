@@ -11,7 +11,7 @@ export {
   TableHead,
   TableCell,
   TableCaption,
-} from './Table'
+} from './data/Table'
 
 // Form
 export {
@@ -23,7 +23,7 @@ export {
   FormDescription,
   FormMessage,
   useFormField,
-} from './Form'
+} from './data/Form'
 
 // Sheet (Drawer)
 export {
@@ -35,7 +35,7 @@ export {
   SheetTitle,
   SheetDescription,
   SheetClose,
-} from './Sheet'
+} from './dialogs/Sheet'
 
 // Sidebar
 export {
@@ -47,8 +47,8 @@ export {
   SidebarSection,
   SidebarSeparator,
   SidebarToggle,
-} from './Sidebar'
-export type { SidebarItem, SidebarProps } from './Sidebar'
+} from './navigation/Sidebar'
+export type { SidebarItem, SidebarProps } from './navigation/Sidebar'
 
 // Command Palette
 export {
@@ -61,7 +61,7 @@ export {
   CommandSeparator,
   CommandShortcut,
   useCommandShortcut,
-} from './Command'
+} from './dialogs/Command'
 
 // Pagination
 export {
@@ -74,7 +74,7 @@ export {
   PaginationEllipsis,
   PaginationPrevious,
   PaginationNext,
-} from './Pagination'
+} from './navigation/Pagination'
 
 // Navigation
 export {
@@ -90,7 +90,7 @@ export {
   NavigationSpacer,
   NavigationMobileToggle,
   useNavigationDropdown,
-} from './Navigation'
+} from './navigation/Navigation'
 
 // Alert Dialog
 export {
@@ -103,4 +103,4 @@ export {
   AlertDialogFooter,
   AlertDialogCancel,
   AlertDialogAction,
-} from './AlertDialog'
+} from './dialogs/AlertDialog'
