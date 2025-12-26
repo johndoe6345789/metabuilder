@@ -8,7 +8,7 @@
  * providing a migration path to the full DBAL when ready.
  */
 
-export type { DBALAdapter, ListOptions, ListResult } from './dbal-client/types'
+export type { DBALAdapter, ListOptions, ListResult } from '../dbal-client/types'
 
-export { getAdapter } from './dbal-client/get-adapter'
-export { closeAdapter } from './dbal-client/close-adapter'
+export { getAdapter } from '../dbal-client/get-adapter'
+export { closeAdapter } from '../dbal-client/close-adapter'
