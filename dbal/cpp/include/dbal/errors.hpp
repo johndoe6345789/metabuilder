@@ -1,6 +1,3 @@
-#ifndef DBAL_ERRORS_WRAPPER_HPP
-#define DBAL_ERRORS_WRAPPER_HPP
+#pragma once
 
 #include "dbal/core/errors.hpp"
-
-#endif // DBAL_ERRORS_WRAPPER_HPP

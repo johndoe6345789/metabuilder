@@ -12,7 +12,7 @@ set(DBAL_INCLUDE_DIR ${DBAL_ROOT}/include)
 
 find_package(Threads REQUIRED)
 
-include_directories(${DBAL_INCLUDE_DIR} ${DBAL_SRC_DIR})
+include_directories(${DBAL_INCLUDE_DIR} ${DBAL_INCLUDE_DIR}/dbal ${DBAL_SRC_DIR})
 
 # Try to find Conan dependencies, but don't fail if they're not available
 find_package(fmt QUIET)
