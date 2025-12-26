@@ -53,6 +53,7 @@ ApplicationWindow {
                         ListElement { name: "Snackbar"; desc: "Transient notices" }
                         ListElement { name: "Menu"; desc: "Dropdown actions" }
                         ListElement { name: "Avatar"; desc: "Identity badges" }
+                        ListElement { name: "MOD Player"; desc: "Play tracker tunes" }
                         ListElement { name: "Typography"; desc: "Styled text" }
                     }
                     delegate: Rectangle {
