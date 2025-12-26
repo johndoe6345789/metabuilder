@@ -126,6 +126,90 @@ void test_user_conflicts() {
     std::cout << "  ✓ Duplicate email rejected" << std::endl;
 }
 
+void test_credential_crud() {
+    std::cout << "Testing credential lifecycle..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreateUserInput userInput;
+    userInput.username = "cred_user";
+    userInput.email = "cred_user@example.com";
+    auto userResult = client.createUser(userInput);
+    assert(userResult.isOk());
+
+    dbal::CreateCredentialInput credentialInput;
+    credentialInput.username = userInput.username;
+    credentialInput.password_hash = "hash123";
+
+    auto setResult = client.setCredential(credentialInput);
+    assert(setResult.isOk());
+    std::cout << "  ✓ Credential stored" << std::endl;
+
+    auto verifyResult = client.verifyCredential(userInput.username, "hash123");
+    assert(verifyResult.isOk());
+    std::cout << "  ✓ Verified credential" << std::endl;
+
+    auto invalidVerify = client.verifyCredential(userInput.username, "wrong");
+    assert(invalidVerify.isError());
+    assert(invalidVerify.error().code() == dbal::ErrorCode::Unauthorized);
+    std::cout << "  ✓ Unauthorized for wrong password" << std::endl;
+
+    credentialInput.password_hash = "hash456";
+    auto updateResult = client.setCredential(credentialInput);
+    assert(updateResult.isOk());
+    std::cout << "  ✓ Credential updated" << std::endl;
+
+    auto flagResult = client.setCredentialFirstLoginFlag(userInput.username, false);
+    assert(flagResult.isOk());
+    auto firstLogin = client.getCredentialFirstLoginFlag(userInput.username);
+    assert(firstLogin.isOk());
+    assert(firstLogin.value() == false);
+    std::cout << "  ✓ First login flag toggled" << std::endl;
+
+    auto deleteResult = client.deleteCredential(userInput.username);
+    assert(deleteResult.isOk());
+    std::cout << "  ✓ Credential deleted" << std::endl;
+
+    auto missingFlag = client.getCredentialFirstLoginFlag(userInput.username);
+    assert(missingFlag.isError());
+    assert(missingFlag.error().code() == dbal::ErrorCode::NotFound);
+    std::cout << "  ✓ Deleted credential no longer accessible" << std::endl;
+}
+
+void test_credential_validation() {
+    std::cout << "Testing credential validation..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreateCredentialInput missingUser;
+    missingUser.username = "missing_user";
+    missingUser.password_hash = "hash";
+    auto missingResult = client.setCredential(missingUser);
+    assert(missingResult.isError());
+    assert(missingResult.error().code() == dbal::ErrorCode::NotFound);
+    std::cout << "  ✓ Missing user rejected" << std::endl;
+
+    dbal::CreateUserInput userInput;
+    userInput.username = "validation_user";
+    userInput.email = "validation_user@example.com";
+    auto userResult = client.createUser(userInput);
+    assert(userResult.isOk());
+
+    dbal::CreateCredentialInput invalidPassword;
+    invalidPassword.username = userInput.username;
+    invalidPassword.password_hash = "";
+    auto invalidResult = client.setCredential(invalidPassword);
+    assert(invalidResult.isError());
+    assert(invalidResult.error().code() == dbal::ErrorCode::ValidationError);
+    std::cout << "  ✓ Empty password hash rejected" << std::endl;
+}
+
 void test_get_user() {
     std::cout << "Testing get user..." << std::endl;
     
@@ -1024,6 +1108,8 @@ int main() {
         test_create_user();
         test_user_validation();
         test_user_conflicts();
+        test_credential_crud();
+        test_credential_validation();
         test_get_user();
         test_update_user();
         test_delete_user();
@@ -1046,7 +1132,7 @@ int main() {
         
         std::cout << std::endl;
         std::cout << "==================================================" << std::endl;
-        std::cout << "✅ All 24 test suites passed!" << std::endl;
+        std::cout << "✅ All 26 test suites passed!" << std::endl;
         std::cout << "==================================================" << std::endl;
         return 0;
     } catch (const std::exception& e) {
