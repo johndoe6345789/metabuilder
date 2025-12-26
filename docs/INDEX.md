@@ -47,6 +47,7 @@ Detailed implementation documentation:
 - **[Multi-Tenant System](./implementation/MULTI_TENANT_SYSTEM.md)** - Multi-tenancy guide
 - **[Prisma Implementation](./implementation/PRISMA_IMPLEMENTATION_COMPLETE.md)** - ORM setup
 - **[TypeScript Enhancements](./implementation/TYPESCRIPT_DBAL_ENHANCEMENTS.md)** - Type system improvements
+- **[Nerd Mode IDE](./implementation/NERD_MODE_IDE.md)** - Package templates and zip exports
 
 ### 🔄 [Refactoring](./refactoring/)
 Refactoring guides and tracking:
