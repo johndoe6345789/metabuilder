@@ -36,6 +36,12 @@ add_library(dbal_adapters STATIC
 add_executable(dbal_daemon
     ${DBAL_SRC_DIR}/daemon/main.cpp
     ${DBAL_SRC_DIR}/daemon/server.cpp
+    ${DBAL_SRC_DIR}/daemon/server_routes.cpp
+    ${DBAL_SRC_DIR}/daemon/server_helpers/network.cpp
+    ${DBAL_SRC_DIR}/daemon/server_helpers/role.cpp
+    ${DBAL_SRC_DIR}/daemon/server_helpers/serialization.cpp
+    ${DBAL_SRC_DIR}/daemon/server_helpers/response.cpp
+    ${DBAL_SRC_DIR}/daemon/rpc_user_actions.cpp
     ${DBAL_SRC_DIR}/daemon/security.cpp
 )
 
