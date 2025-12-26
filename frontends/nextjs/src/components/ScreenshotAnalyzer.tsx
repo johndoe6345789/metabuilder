@@ -7,8 +7,9 @@ import {
   CardHeader,
   Chip,
   CircularProgress,
+  Stack,
   Typography,
-  Grid,
+  Grid2 as Grid,
 } from '@mui/material'
 import {
   CameraAlt as CameraIcon,
@@ -17,35 +18,25 @@ import {
   Refresh as RefreshIcon,
 } from '@mui/icons-material'
 import { toast } from 'sonner'
+import { captureDomSnapshot } from '@/lib/screenshot/capture-dom-snapshot'
+import { requestScreenshotAnalysis } from '@/lib/screenshot/request-screenshot-analysis'
+import type { ScreenshotAnalysisResult } from '@/lib/screenshot/types'
 
 export function ScreenshotAnalyzer() {
   const [isCapturing, setIsCapturing] = useState(false)
   const [screenshotData, setScreenshotData] = useState<string | null>(null)
-  const [analysis, setAnalysis] = useState<string>('')
+  const [analysisReport, setAnalysisReport] = useState('')
+  const [analysisResult, setAnalysisResult] = useState<ScreenshotAnalysisResult | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
 
   const captureScreenshot = async () => {
     setIsCapturing(true)
     try {
       toast.info('Capturing screenshot...')
-      
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-      
-      canvas.width = window.innerWidth
-      canvas.height = document.documentElement.scrollHeight
-      
-      if (!ctx) {
-        throw new Error('Failed to get canvas context')
-      }
-
-      const response = await fetch(window.location.href)
-      const blob = await response.blob()
-      const dataUrl = canvas.toDataURL('image/png')
-      
+      const dataUrl = await captureDomSnapshot()
       setScreenshotData(dataUrl)
       toast.success('Screenshot captured!')
-      
+
       await analyzeScreenshot()
     } catch (error) {
       console.error('Error capturing screenshot:', error)
@@ -58,38 +49,27 @@ export function ScreenshotAnalyzer() {
   const analyzeScreenshot = async () => {
     setIsAnalyzing(true)
     try {
-      const bodyContent = document.body.innerText.substring(0, 3000)
-      const htmlStructure = document.body.innerHTML.substring(0, 2000)
-      
-      // TODO: Replace with Next.js API route that calls an LLM service
-      const placeholderAnalysis = `**Screenshot Analysis Feature Unavailable**\n\nThe AI-powered screenshot analysis feature is currently being migrated to work with Next.js. This will be available soon.\n\n**Page**: ${document.title}\n**URL**: ${window.location.href}\n**Viewport**: ${window.innerWidth}x${window.innerHeight}`
-      
-      // Original Spark LLM code (commented out):
-      // const prompt = spark.llmPrompt`Analyze this webpage and provide a detailed assessment:
-      // 
-      // Page Title: ${document.title}
-      // URL: ${window.location.href}
-      // Viewport: ${window.innerWidth}x${window.innerHeight}
-      // 
-      // Body Text Preview (first 3000 chars):
-      // ${bodyContent}
-      // 
-      // HTML Structure Preview (first 2000 chars):
-      // ${htmlStructure}
-      // 
-      // Please provide:
-      // 1. A summary of what this page does
-      // 2. Key UI elements visible
-      // 3. Any potential issues or improvements
-      // 4. Overall assessment of the design and functionality`
-      // 
-      // const result = await spark.llm(prompt)
-      // setAnalysis(result)
-      
-      setAnalysis(placeholderAnalysis)
-      toast.info('Analysis feature temporarily disabled during migration')
+      const textSample = document.body.innerText.substring(0, 3000)
+      const htmlSample = document.body.innerHTML.substring(0, 3000)
+
+      const result = await requestScreenshotAnalysis({
+        title: document.title,
+        url: window.location.href,
+        viewport: {
+          width: window.innerWidth,
+          height: window.innerHeight,
+        },
+        textSample,
+        htmlSample,
+      })
+
+      setAnalysisReport(result.report)
+      setAnalysisResult(result)
+      toast.success('Analysis complete')
     } catch (error) {
       console.error('Error analyzing:', error)
+      setAnalysisReport('')
+      setAnalysisResult(null)
       toast.error('Failed to analyze screenshot')
     } finally {
       setIsAnalyzing(false)
@@ -98,7 +78,7 @@ export function ScreenshotAnalyzer() {
 
   const downloadScreenshot = () => {
     if (!screenshotData) return
-    
+
     const link = document.createElement('a')
     link.href = screenshotData
     link.download = `screenshot-${Date.now()}.png`
@@ -113,17 +93,17 @@ export function ScreenshotAnalyzer() {
           <Typography variant="h4" fontWeight={700}>Screenshot Analyzer</Typography>
           <Typography color="text.secondary">Capture and analyze the current page</Typography>
         </Box>
-        <Chip label="AI-Powered" color="secondary" />
+        <Chip label="Local Analysis" color="secondary" />
       </Box>
 
       <Card>
         <CardHeader
           title="Capture & Analyze"
-          subheader="Take a screenshot and get AI-powered insights"
+          subheader="Create a DOM snapshot and run heuristic checks"
         />
         <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Box sx={{ display: 'flex', gap: 1.5 }}>
-            <Button 
+            <Button
               onClick={captureScreenshot}
               disabled={isCapturing || isAnalyzing}
               variant="contained"
@@ -132,18 +112,18 @@ export function ScreenshotAnalyzer() {
             >
               {isCapturing ? 'Capturing...' : 'Capture & Analyze'}
             </Button>
-            
+
             {screenshotData && (
               <>
-                <Button 
+                <Button
                   onClick={downloadScreenshot}
                   variant="outlined"
                   startIcon={<DownloadIcon />}
                 >
                   Download
                 </Button>
-                
-                <Button 
+
+                <Button
                   onClick={analyzeScreenshot}
                   variant="outlined"
                   disabled={isAnalyzing}
@@ -158,27 +138,51 @@ export function ScreenshotAnalyzer() {
           {isAnalyzing && (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', p: 4, gap: 1.5 }}>
               <CircularProgress size={24} />
-              <Typography color="text.secondary">Analyzing with AI...</Typography>
+              <Typography color="text.secondary">Analyzing with heuristics...</Typography>
             </Box>
           )}
 
-          {analysis && !isAnalyzing && (
+          {analysisReport && !isAnalyzing && (
             <Card variant="outlined" sx={{ bgcolor: 'action.hover' }}>
               <CardHeader
                 avatar={<EyeIcon />}
-                title="AI Analysis"
+                title="Heuristic Analysis"
                 titleTypographyProps={{ variant: 'subtitle1' }}
               />
-              <CardContent>
-                <Typography 
-                  component="pre" 
-                  sx={{ 
-                    whiteSpace: 'pre-wrap', 
+              <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {analysisResult && (
+                  <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                    <Chip size="small" label={`Words: ${analysisResult.metrics.wordCount}`} />
+                    <Chip size="small" label={`Headings: ${analysisResult.metrics.headingCount}`} />
+                    <Chip size="small" label={`Links: ${analysisResult.metrics.linkCount}`} />
+                    <Chip size="small" label={`Buttons: ${analysisResult.metrics.buttonCount}`} />
+                    <Chip size="small" label={`Images: ${analysisResult.metrics.imgCount}`} />
+                    <Chip size="small" label={`Missing alt: ${analysisResult.metrics.imgMissingAltCount}`} />
+                  </Stack>
+                )}
+
+                {analysisResult?.warnings.length ? (
+                  <Box>
+                    <Typography variant="subtitle2" gutterBottom>Warnings</Typography>
+                    <Box component="ul" sx={{ pl: 3, m: 0 }}>
+                      {analysisResult.warnings.map((warning) => (
+                        <li key={warning}>
+                          <Typography variant="body2">{warning}</Typography>
+                        </li>
+                      ))}
+                    </Box>
+                  </Box>
+                ) : null}
+
+                <Typography
+                  component="pre"
+                  sx={{
+                    whiteSpace: 'pre-wrap',
                     fontFamily: 'inherit',
                     fontSize: '0.875rem',
                   }}
                 >
-                  {analysis}
+                  {analysisReport}
                 </Typography>
               </CardContent>
             </Card>

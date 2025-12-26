@@ -1,33 +1,5 @@
 import type { User, UserRole } from '@/lib/level-types'
-
-type ApiError = {
-  error?: string
-  details?: string
-}
-
-async function requestJson<T>(url: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(init?.headers ?? {}),
-    },
-    ...init,
-  })
-
-  if (!response.ok) {
-    let payload: ApiError | null = null
-    try {
-      payload = (await response.json()) as ApiError
-    } catch {
-      payload = null
-    }
-
-    const message = payload?.error || `Request failed (${response.status})`
-    throw new Error(message)
-  }
-
-  return (await response.json()) as T
-}
+import { requestJson } from '@/lib/api/request-json'
 
 export async function listUsers(): Promise<User[]> {
   const payload = await requestJson<{ users: User[] }>('/api/users')
