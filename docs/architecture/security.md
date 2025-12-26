@@ -144,6 +144,7 @@ require("unsafe_module") -- ❌ NOT allowed
 | Network | ❌ No | Security |
 | System calls | ❌ No | Containment |
 | Database queries | ✅ Yes | Business logic |
+| Memory usage | ✅ Limited | Max heap enforced |
 | JSON parsing | ✅ Yes | Data transformation |
 | Math operations | ✅ Yes | Calculations |
 
