@@ -12,7 +12,7 @@ set(DBAL_INCLUDE_DIR ${DBAL_ROOT}/include)
 
 find_package(Threads REQUIRED)
 
-include_directories(${DBAL_INCLUDE_DIR})
+include_directories(${DBAL_INCLUDE_DIR} ${DBAL_SRC_DIR})
 
 # Try to find Conan dependencies, but don't fail if they're not available
 find_package(fmt QUIET)
@@ -24,11 +24,6 @@ find_package(Drogon REQUIRED CONFIG)
 add_library(dbal_core STATIC
     ${DBAL_SRC_DIR}/client.cpp
     ${DBAL_SRC_DIR}/errors.cpp
-    ${DBAL_SRC_DIR}/query/ast.cpp
-    ${DBAL_SRC_DIR}/query/builder.cpp
-    ${DBAL_SRC_DIR}/query/normalize.cpp
-    ${DBAL_SRC_DIR}/util/uuid.cpp
-    ${DBAL_SRC_DIR}/util/backoff.cpp
 )
 
 add_library(dbal_adapters STATIC
