@@ -456,6 +456,10 @@ protected:
         return out.str();
     }
 
+    static std::string userFields() {
+        return "id, username, email, role, created_at, updated_at";
+    }
+
     std::string placeholder(size_t index) const {
         if (dialect_ == Dialect::Postgres) {
             return "$" + std::to_string(index);
