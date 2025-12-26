@@ -2,6 +2,7 @@
 #define DBAL_CLIENT_HPP
 
 #include <memory>
+#include <map>
 #include <optional>
 #include <string>
 #include "types.hpp"
@@ -39,6 +40,9 @@ public:
 
     Result<std::vector<User>> searchUsers(const std::string& query, int limit = 20);
     Result<int> countUsers(const std::optional<UserRole>& role = std::nullopt);
+    Result<int> updateManyUsers(const std::map<std::string, std::string>& filter,
+                                const UpdateUserInput& updates);
+    Result<int> deleteManyUsers(const std::map<std::string, std::string>& filter);
 
     Result<bool> setCredential(const CreateCredentialInput& input);
     Result<bool> verifyCredential(const std::string& username, const std::string& password);

@@ -58,6 +58,15 @@ Result<int> Client::countUsers(const std::optional<UserRole>& role) {
     return entities::user::count(getStore(), role);
 }
 
+Result<int> Client::updateManyUsers(const std::map<std::string, std::string>& filter,
+                                   const UpdateUserInput& updates) {
+    return entities::user::updateMany(getStore(), filter, updates);
+}
+
+Result<int> Client::deleteManyUsers(const std::map<std::string, std::string>& filter) {
+    return entities::user::deleteMany(getStore(), filter);
+}
+
 Result<bool> Client::setCredential(const CreateCredentialInput& input) {
     return entities::credential::set(getStore(), input);
 }
