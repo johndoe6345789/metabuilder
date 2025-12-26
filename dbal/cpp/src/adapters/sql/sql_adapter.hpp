@@ -160,6 +160,18 @@ protected:
     Dialect dialect_;
 };
 
+class PostgresAdapter : public SqlAdapter {
+public:
+    explicit PostgresAdapter(const SqlConnectionConfig& config)
+        : SqlAdapter(config, Dialect::Postgres) {}
+};
+
+class MySQLAdapter : public SqlAdapter {
+public:
+    explicit MySQLAdapter(const SqlConnectionConfig& config)
+        : SqlAdapter(config, Dialect::MySQL) {}
+};
+
 }
 }
 }
