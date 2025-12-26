@@ -119,9 +119,10 @@ if (canAccessLevel(user.level, 4)) {
 const features = {
   basicDashboard: true,  // All levels
   contentEditor: user.level >= 2,
-  userManagement: user.level >= 3,
-  workflowEngine: user.level >= 4,
-  systemConfig: user.level === 5,
+  moderationDesk: user.level >= 3,
+  userManagement: user.level >= 4,
+  workflowEngine: user.level >= 5,
+  systemConfig: user.level === 6,
 }
 ```
 
@@ -134,8 +135,8 @@ import { validateRequest } from '@/lib/auth'
 export async function POST(req: Request) {
   const user = await validateRequest(req)
   
-  // Require Level 3 access
-  if (!canAccessLevel(user.level, 3)) {
+  // Require Level 4 access
+  if (!canAccessLevel(user.level, 4)) {
     return Response.json({ error: 'Forbidden' }, { status: 403 })
   }
   
