@@ -191,3 +191,22 @@
 - Version metadata files to make rollbacks easier and ensure seeds stay synchronized with database migrations.
 - Use small, focused metadata files so the single-function Lua helpers can import only the data they need.
 - Track metadata ownership (which team, file) inside each descriptor to simplify future audits.
+
+## Reference Resources
+
+- **AGENTS.md**: follow repo guidelines and nested agent notes before touching `dbal/` or other special folders.
+- **UI_STANDARDS.md**: reference for UI design rules while documenting Lua metadata that may affect styling.
+- **packages/**: inspect existing JSON-driven package structure for inspiration (seed/metadata.json, static_content/).
+- **tools/**: reuse scripts from this folder when building new metadata loaders or conversion helpers.
+- **frontends/nextjs/src/lib/packages/package-glue/**: examine default packages and loaders to keep Lua metadata compatible.
+
+## Decision Log
+
+- Document every key decision (phase changes, Lua structure choices, package additions) below with date/owner for easy onboarding.
+  1. [date] - [owner] - [decision summary]
+  2. ...
+
+## Collaboration Notes
+
+- Post updates to this doc before merging any changes, especially new folder names or metadata formats.
+- Tag @owner in relevant PR comments when handing off a phase or requesting review.
