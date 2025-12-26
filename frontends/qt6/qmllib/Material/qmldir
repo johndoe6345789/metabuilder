@@ -27,6 +27,7 @@ MaterialCollapse 1.0 MaterialCollapse.qml
 MaterialCheckbox 1.0 MaterialCheckbox.qml
 MaterialGrid 1.0 MaterialGrid.qml
 MaterialMenu 1.0 MaterialMenu.qml
+MaterialMenuItem 1.0 MaterialMenuItem.qml
 MaterialMenuProps 1.0 MaterialMenuProps.qml
 MaterialPopover 1.0 MaterialPopover.qml
 MaterialPopoverProps 1.0 MaterialPopoverProps.qml
