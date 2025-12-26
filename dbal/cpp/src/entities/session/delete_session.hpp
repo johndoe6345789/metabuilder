@@ -14,21 +14,21 @@ namespace entities {
 namespace session {
 
 /**
- * Delete a session by ID (logout)
+ * Delete a session by ID
  */
 inline Result<bool> remove(InMemoryStore& store, const std::string& id) {
     if (id.empty()) {
         return Error::validationError("Session ID cannot be empty");
     }
-    
+
     auto it = store.sessions.find(id);
     if (it == store.sessions.end()) {
         return Error::notFound("Session not found: " + id);
     }
-    
+
     store.session_tokens.erase(it->second.token);
     store.sessions.erase(it);
-    
+
     return Result<bool>(true);
 }
 
