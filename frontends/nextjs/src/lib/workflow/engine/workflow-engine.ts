@@ -3,11 +3,7 @@
  * @deprecated Import from '@/lib/workflow' instead
  */
 
-export {
-  executeWorkflow,
-  executeNode,
-} from '../execution/execute-workflow'
-
+export { executeWorkflow } from '../execution/execute-workflow'
 export { executeNode } from '../execution/execute-node'
 export { executeActionNode } from '../nodes/execute-action-node'
 export { executeConditionNode } from '../nodes/execute-condition-node'
