@@ -82,6 +82,22 @@ Captured from this machine to document the local development environment:
 - **Declarative packages & Lua logic**: Modular `packages/*/seed` definitions let you ship UI/features via JSON/Lua, while the Lua sandbox protects the runtime ([`docs/architecture/packages.md`](./docs/architecture/packages.md), [`docs/lua/README.md`](./docs/lua/README.md)).
 - **Type-safe + CI-ready workflow**: TypeScript tooling, Act local workflows, and targeted scripts keep linting, testing, and deploy checks consistent with the documentation hub ([`docs/README.md`](./docs/README.md)).
 
+## Developer Persona
+
+- **New contributors** follow the 2‑3 hour path in [`docs/getting-started/NEW_CONTRIBUTOR_PATH.md`](./docs/getting-started/NEW_CONTRIBUTOR_PATH.md), which guides them through overview → architecture → testing → practical tasks to build confidence quickly.
+- **Core mindset**: favor declarative JSON/Lua configuration, filter every query by `tenantId`, keep components under 150 LOC, and rely on `RenderComponent` plus Prisma helpers instead of hardcoded UI/data layer logic.
+- **Roles**: dashboards/authn (Level 2), admin control panels (Level 3), builder/IDE workflows (Level 4), and SuperGod tenant operations (Level 5) are the main focus areas when shaping experiences for developers, architects, and operators.
+
+## TODO List
+
+- The curated checklist at [`docs/todo/README.md`](./docs/todo/README.md) lists every area (architecture, frontend, DBAL, packages, security, deployment, docs, tooling, etc.) with numbered TODO files ordered by priority.
+- Pick the list that matches your work, mark tasks with `[x]`, and consult the generated reports in `docs/todo/TODO_STATUS.md` and `docs/todo/22-TODO-SCAN.md` for repo-wide tracking.
+
+## AI Prompts
+
+- `.github/prompts/` stores curated prompts for planning, designing, implementing, testing, reviewing, deploying, and maintaining features; [`docs/todo/core/21-SDLC-TODO.md`](./docs/todo/core/21-SDLC-TODO.md) describes which prompts need review or updates.
+- Keep `.github/copilot-instructions.md` aligned with architecture/docs changes so Copilot-based automation and review prompts stay accurate.
+
 ## Architecture
 
 MetaBuilder combines:

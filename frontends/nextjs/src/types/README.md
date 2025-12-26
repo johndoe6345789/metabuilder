@@ -6,18 +6,18 @@ TypeScript type definitions for the MetaBuilder application.
 
 ### level-types.ts
 
-Core types for the 5-level system:
+Core types for the 6-level system:
 
 ```typescript
 interface User {
   id: string
   email: string
-  level: 1 | 2 | 3 | 4 | 5
+  level: 1 | 2 | 3 | 4 | 5 | 6
   tenant: Tenant
 }
 
 // Level-specific types
-type Level = 'public' | 'user' | 'admin' | 'god' | 'supergod'
+type Level = 'public' | 'user' | 'moderator' | 'admin' | 'god' | 'supergod'
 ```
 
 ### schema-types.ts

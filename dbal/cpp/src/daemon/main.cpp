@@ -15,8 +15,7 @@
 #endif
 
 // Include server
-namespace dbal { namespace daemon { class Server; } }
-#include "../daemon/server.cpp"
+#include "server.hpp"
 
 namespace {
     std::unique_ptr<dbal::daemon::Server> server_instance;

@@ -14,6 +14,7 @@ find_package(fmt QUIET)
 find_package(spdlog QUIET)
 find_package(nlohmann_json QUIET)
 find_package(SQLite3 QUIET)
+find_package(Drogon REQUIRED CONFIG)
 
 add_library(dbal_core STATIC
     src/client.cpp
@@ -41,6 +42,7 @@ target_link_libraries(dbal_daemon
     dbal_core
     dbal_adapters
     Threads::Threads
+    Drogon::Drogon
 )
 
 # Link optional dependencies if available
