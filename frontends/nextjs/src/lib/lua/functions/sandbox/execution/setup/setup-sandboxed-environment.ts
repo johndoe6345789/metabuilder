@@ -1,6 +1,6 @@
 import * as fengari from 'fengari-web'
 import type { SandboxedLuaEngineState } from './types'
-import { normalizeAllowedGlobals } from './normalize-allowed-globals'
+import { normalizeAllowedGlobals } from '../../globals/normalize-allowed-globals'
 
 const lua = fengari.lua
 
