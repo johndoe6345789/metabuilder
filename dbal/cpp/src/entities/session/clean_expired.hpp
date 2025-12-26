@@ -21,13 +21,13 @@ namespace session {
 inline Result<int> cleanExpired(InMemoryStore& store) {
     auto now = std::chrono::system_clock::now();
     std::vector<std::string> expired_ids;
-    
+
     for (const auto& [id, session] : store.sessions) {
-        if (session.expires_at < now) {
+        if (session.expires_at <= now) {
             expired_ids.push_back(id);
         }
     }
-    
+
     for (const auto& id : expired_ids) {
         auto it = store.sessions.find(id);
         if (it != store.sessions.end()) {
@@ -35,7 +35,7 @@ inline Result<int> cleanExpired(InMemoryStore& store) {
             store.sessions.erase(it);
         }
     }
-    
+
     return Result<int>(static_cast<int>(expired_ids.size()));
 }
 
