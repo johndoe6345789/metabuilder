@@ -156,6 +156,21 @@ permissions:
 
 ## API Contract Example
 
+### HTTP Utilities
+
+For outbound integrations the daemon can use the new requests-inspired helper `runtime::RequestsClient`. It wraps Drogon’s `HttpClient`, exposes `get`/`post` helpers, parses JSON responses, and throws clean timeouts so code paths stay predictable.
+
+```cpp
+using namespace dbal::runtime;
+
+RequestsClient http("https://api.prisma.example");
+auto response = http.post("/rpc/execute", jsonPayload.dump(), {{"Authorization", "Bearer ..."}});
+if (response.statusCode == 200) {
+  const auto result = response.json["result"];
+  // handle Prisma response
+}
+```
+
 ### Entity Definition (YAML)
 
 ```yaml
