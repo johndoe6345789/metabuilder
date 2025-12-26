@@ -111,25 +111,34 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
   const handleConfirmTransfer = async () => {
     if (!selectedUserId) return
 
-    try {
-      const newSuperGodUser = allUsers.find(u => u.id === selectedUserId)
-      if (!newSuperGodUser) {
-        toast.error('Selected user not found')
-        return
-      }
+    const targetUser = allUsers.find((u) => u.id === selectedUserId)
+    if (!targetUser) {
+      toast.error('Selected user not found')
+      setShowConfirmTransfer(false)
+      return
+    }
 
-      await Database.transferSuperGodPower(user.id, selectedUserId)
-      
-      toast.success(`Power transferred to ${newSuperGodUser.username}. You are now a God user.`)
-      
+    try {
+      await createPowerTransferRequest({
+        fromUserId: user.id,
+        toUserId: selectedUserId,
+      })
+
+      toast.success(
+        `Power transferred to ${targetUser.username}. You are now a God user and will be logged out shortly.`
+      )
+      setTransferRefresh((prev) => prev + 1)
+      await loadData()
+
       setTimeout(() => {
         onLogout()
       }, 2000)
     } catch (error) {
       toast.error('Failed to transfer power: ' + (error as Error).message)
+    } finally {
+      setShowConfirmTransfer(false)
+      setSelectedUserId('')
     }
-    
-    setShowConfirmTransfer(false)
   }
 
   const handleDeleteTenant = async (tenantId: string) => {
@@ -191,11 +200,12 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
           </TabsContent>
 
           <TabsContent value="power" className="space-y-4">
-            <PowerTransferTab
-              currentUser={user}
-              allUsers={allUsers}
-              onInitiateTransfer={handleInitiateTransfer}
-            />
+          <PowerTransferTab
+            currentUser={user}
+            allUsers={allUsers}
+            onInitiateTransfer={handleInitiateTransfer}
+            refreshSignal={transferRefresh}
+          />
           </TabsContent>
 
           <TabsContent value="preview" className="space-y-4">
