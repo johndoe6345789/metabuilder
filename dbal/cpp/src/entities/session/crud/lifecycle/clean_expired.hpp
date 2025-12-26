@@ -7,7 +7,7 @@
 
 #include "dbal/types.hpp"
 #include "dbal/errors.hpp"
-#include "../../store/in_memory_store.hpp"
+#include "../../../store/in_memory_store.hpp"
 #include <vector>
 
 namespace dbal {

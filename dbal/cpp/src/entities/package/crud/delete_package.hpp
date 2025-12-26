@@ -7,8 +7,8 @@
 
 #include "dbal/types.hpp"
 #include "dbal/errors.hpp"
-#include "../../store/in_memory_store.hpp"
-#include "../../validation/package_validation.hpp"
+#include "../../../store/in_memory_store.hpp"
+#include "../../../validation/package_validation.hpp"
 
 namespace dbal {
 namespace entities {
