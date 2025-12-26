@@ -1,36 +1,44 @@
 /**
  * @file list-sessions.ts
- * @description List sessions with filtering
+ * @description List sessions with filtering and pagination
  */
-import type { Session, ListOptions, Result } from '../types';
-import type { InMemoryStore } from '../store/in-memory-store';
+import type { ListOptions, Result, Session } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
+import { cleanExpiredSessions } from './clean-expired'
 
 /**
  * List sessions with filtering and pagination
  */
-export async function listSessions(
+export const listSessions = async (
   store: InMemoryStore,
   options: ListOptions = {}
-): Promise<Result<Session[]>> {
-  const { filter = {}, page = 1, limit = 20 } = options;
-  const now = new Date();
+): Promise<Result<Session[]>> => {
+  await cleanExpiredSessions(store)
 
-  let sessions = Array.from(store.sessions.values());
+  const { filter = {}, sort = {}, page = 1, limit = 20 } = options
 
-  // Apply filters
+  let sessions = Array.from(store.sessions.values())
+
   if (filter.userId !== undefined) {
-    sessions = sessions.filter((s) => s.userId === filter.userId);
-  }
-  if (filter.activeOnly) {
-    sessions = sessions.filter((s) => s.expiresAt > now);
+    sessions = sessions.filter((session) => session.userId === filter.userId)
   }
 
-  // Sort by created_at descending (newest first)
-  sessions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  if (filter.token !== undefined) {
+    sessions = sessions.filter((session) => session.token === filter.token)
+  }
 
-  // Apply pagination
-  const start = (page - 1) * limit;
-  const paginated = sessions.slice(start, start + limit);
+  if (sort.createdAt) {
+    sessions.sort((a, b) =>
+      sort.createdAt === 'asc' ? a.createdAt.getTime() - b.createdAt.getTime() : b.createdAt.getTime() - a.createdAt.getTime()
+    )
+  } else if (sort.expiresAt) {
+    sessions.sort((a, b) =>
+      sort.expiresAt === 'asc' ? a.expiresAt.getTime() - b.expiresAt.getTime() : b.expiresAt.getTime() - a.expiresAt.getTime()
+    )
+  }
 
-  return { success: true, data: paginated };
+  const start = (page - 1) * limit
+  const paginated = sessions.slice(start, start + limit)
+
+  return { success: true, data: paginated }
 }
