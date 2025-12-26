@@ -30,3 +30,7 @@ METABUILDER_BASE_URL=http://localhost:3000 ./build/bin/metabuilder-cli user list
 ```
 
 Available commands are listed when running without arguments or with an unrecognized command.
+
+## Continuous Integration
+
+Changes under `frontends/cli/` now trigger `.github/workflows/ci/cli.yml`, which runs Conan, configures/ninja-build the project, and validates that `metabuilder-cli --help` exits cleanly.
