@@ -1,15 +1,11 @@
 import type { FileEntry, FileNode } from './types'
 
-const splitExportPath = (exportPath: string): string[] => {
-  return exportPath.split('/').filter(Boolean)
-}
-
 export function collectFileEntries(nodes: FileNode[]): FileEntry[] {
   const entries: FileEntry[] = []
 
   const walk = (node: FileNode, rootSegments: string[], exportSegments: string[]): void => {
     const nextExportSegments = node.exportPath
-      ? [...rootSegments, ...splitExportPath(node.exportPath)]
+      ? [...rootSegments, ...node.exportPath.split('/').filter(Boolean)]
       : [...exportSegments, node.name]
 
     if (node.type === 'file') {
