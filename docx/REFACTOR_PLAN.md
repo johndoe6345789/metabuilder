@@ -10,6 +10,8 @@
 - [Phase Deliverables](#phase-deliverables)
 - [Support Notes](#support-notes)
 - [Tracking & Templates](#tracking--templates)
+- [Package Design Notes](#package-design-notes)
+- [Metadata Design Notes](#metadata-design-notes)
 
 
 ## TODOs by Phase
