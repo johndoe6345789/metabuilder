@@ -2,45 +2,68 @@
  * @file update-workflow.ts
  * @description Update workflow operation
  */
-import type { Workflow, UpdateWorkflowInput, Result } from '../types';
-import type { InMemoryStore } from '../store/in-memory-store';
-import { validateWorkflowType } from '../validation/workflow-validation';
+import type { Result, UpdateWorkflowInput, Workflow } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
+import { validateId } from '../../validation/validate-id'
+import { validateWorkflowUpdate } from '../../validation/validate-workflow-update'
 
 /**
  * Update an existing workflow
  */
-export async function updateWorkflow(
+export const updateWorkflow = async (
   store: InMemoryStore,
   id: string,
   input: UpdateWorkflowInput
-): Promise<Result<Workflow>> {
-  if (!id) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'ID required' } };
+): Promise<Result<Workflow>> => {
+  const idErrors = validateId(id)
+  if (idErrors.length > 0) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
   }
 
-  const workflow = store.workflows.get(id);
+  const workflow = store.workflows.get(id)
   if (!workflow) {
-    return { success: false, error: { code: 'NOT_FOUND', message: `Workflow not found: ${id}` } };
+    return { success: false, error: { code: 'NOT_FOUND', message: `Workflow not found: ${id}` } }
   }
 
-  if (input.name !== undefined) {
-    if (!input.name || input.name.length > 100) {
-      return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid name' } };
+  const validationErrors = validateWorkflowUpdate(input)
+  if (validationErrors.length > 0) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
+  }
+
+  if (input.name && input.name !== workflow.name) {
+    if (store.workflowNames.has(input.name)) {
+      return { success: false, error: { code: 'CONFLICT', message: 'Workflow name already exists' } }
     }
-    workflow.name = input.name;
+    store.workflowNames.delete(workflow.name)
+    store.workflowNames.set(input.name, id)
+    workflow.name = input.name
   }
 
-  if (input.type !== undefined) {
-    if (!validateWorkflowType(input.type)) {
-      return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid type' } };
-    }
-    workflow.type = input.type;
+  if (input.description !== undefined) {
+    workflow.description = input.description
   }
 
-  if (input.description !== undefined) workflow.description = input.description;
-  if (input.config !== undefined) workflow.config = input.config;
-  if (input.isActive !== undefined) workflow.isActive = input.isActive;
+  if (input.trigger !== undefined) {
+    workflow.trigger = input.trigger
+  }
 
-  workflow.updatedAt = new Date();
-  return { success: true, data: workflow };
+  if (input.triggerConfig !== undefined) {
+    workflow.triggerConfig = input.triggerConfig
+  }
+
+  if (input.steps !== undefined) {
+    workflow.steps = input.steps
+  }
+
+  if (input.isActive !== undefined) {
+    workflow.isActive = input.isActive
+  }
+
+  if (input.createdBy !== undefined) {
+    workflow.createdBy = input.createdBy
+  }
+
+  workflow.updatedAt = new Date()
+
+  return { success: true, data: workflow }
 }
