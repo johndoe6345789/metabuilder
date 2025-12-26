@@ -1,4 +1,4 @@
-import { getAdapter } from '../dbal-client'
+import { getAdapter } from '../../core/dbal-client'
 import type { User } from '../../types/level-types'
 import { mapUserRecord } from './map-user-record'
 

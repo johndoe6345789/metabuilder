@@ -1,4 +1,4 @@
-import { getAdapter } from '../dbal-client'
+import { getAdapter } from '../../core/dbal-client'
 import type { PowerTransferRequest } from '../../types/level-types'
 
 /**
