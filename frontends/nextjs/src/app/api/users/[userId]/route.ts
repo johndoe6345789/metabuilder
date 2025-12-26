@@ -8,6 +8,7 @@ import {
 } from '@/lib/dbal/database-dbal.server'
 import { hashPassword } from '@/lib/db/hash-password'
 import { setCredential } from '@/lib/db/credentials/set-credential'
+import { requireDBALApiKey } from '@/lib/api/require-dbal-api-key'
 import type { UserRole } from '@/lib/level-types'
 
 function normalizeRole(role?: string): UserRole | undefined {
@@ -30,7 +31,11 @@ interface RouteParams {
   }
 }
 
-export async function GET(_request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: RouteParams) {
+  const unauthorized = requireDBALApiKey(request)
+  if (unauthorized) {
+    return unauthorized
+  }
   try {
     await initializeDBAL()
     const user = await dbalGetUserById(params.userId)
@@ -53,6 +58,10 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
 }
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
+  const unauthorized = requireDBALApiKey(request)
+  if (unauthorized) {
+    return unauthorized
+  }
   try {
     await initializeDBAL()
 
@@ -112,7 +121,11 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(_request: NextRequest, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
+  const unauthorized = requireDBALApiKey(request)
+  if (unauthorized) {
+    return unauthorized
+  }
   try {
     await initializeDBAL()
 
