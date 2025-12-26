@@ -1,4 +1,4 @@
-import { getAdapter } from '../../dbal-client'
+import { getAdapter } from '../../../../core/dbal-client'
 
 export async function deleteComponentNode(nodeId: string): Promise<void> {
   const adapter = getAdapter()
