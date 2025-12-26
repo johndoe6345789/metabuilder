@@ -550,6 +550,48 @@ void test_page_validation() {
     std::cout << "  ✓ Invalid level rejected" << std::endl;
 }
 
+void test_page_search() {
+    std::cout << "Testing page search..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreatePageInput page1;
+    page1.slug = "search-page";
+    page1.title = "Search Page";
+    page1.level = 1;
+    page1.layout = {{"row", "one"}};
+    page1.is_active = true;
+    auto result1 = client.createPage(page1);
+    assert(result1.isOk());
+
+    dbal::CreatePageInput page2;
+    page2.slug = "other-page";
+    page2.title = "Other Search";
+    page2.level = 1;
+    page2.layout = {{"row", "two"}};
+    page2.is_active = true;
+    auto result2 = client.createPage(page2);
+    assert(result2.isOk());
+
+    auto matches = client.searchPages("search", 10);
+    assert(matches.isOk());
+    assert(matches.value().size() >= 2);
+    std::cout << "  ✓ Search finds both pages" << std::endl;
+
+    auto limited = client.searchPages("search", 1);
+    assert(limited.isOk());
+    assert(limited.value().size() == 1);
+    std::cout << "  ✓ Search respects limit" << std::endl;
+
+    auto caseInsensitive = client.searchPages("SEARCH", 10);
+    assert(caseInsensitive.isOk());
+    assert(!caseInsensitive.value().empty());
+    std::cout << "  ✓ Search is case-insensitive" << std::endl;
+}
+
 void test_component_crud() {
     std::cout << "Testing component CRUD operations..." << std::endl;
 
