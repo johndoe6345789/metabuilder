@@ -61,8 +61,14 @@ export function splitSqlTemplate(sql: string, params: unknown[]) {
     return { strings: segments, values }
   }
 
-  if (params.length === 0) {
+  const hasQuestionMarks = sql.includes('?')
+
+  if (params.length === 0 && !hasQuestionMarks) {
     return { strings: [sql], values: [] }
+  }
+
+  if (!hasQuestionMarks) {
+    throw new Error('Native Prisma bridge parameter mismatch')
   }
 
   const questionSegments = sql.split('?')

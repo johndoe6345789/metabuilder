@@ -616,6 +616,25 @@ void test_component_crud() {
     assert(treeResult.value().size() == 3);
     std::cout << "  ✓ Retrieved component tree" << std::endl;
 
+    dbal::ListOptions parentFilter;
+    parentFilter.filter["pageId"] = pageId;
+    parentFilter.filter["parent_id"] = rootId;
+    auto parentList = client.listComponents(parentFilter);
+    assert(parentList.isOk());
+    assert(parentList.value().size() == 2);
+    std::cout << "  ✓ Parent filter works" << std::endl;
+
+    dbal::ListOptions typeFilter;
+    typeFilter.filter["pageId"] = pageId;
+    typeFilter.filter["component_type"] = "Text";
+    auto typeList = client.listComponents(typeFilter);
+    assert(typeList.isOk());
+    assert(!typeList.value().empty());
+    for (const auto& entry : typeList.value()) {
+        assert(entry.component_type == "Text");
+    }
+    std::cout << "  ✓ Component type filter works" << std::endl;
+
     std::vector<ComponentOrderUpdate> reorderUpdates = {
         {childId, 5},
         {siblingId, 1},
