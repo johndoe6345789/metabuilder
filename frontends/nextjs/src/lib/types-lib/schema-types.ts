@@ -1,1 +1,1 @@
-export * from './types/schema-types'
+export * from '../types/schema-types'
