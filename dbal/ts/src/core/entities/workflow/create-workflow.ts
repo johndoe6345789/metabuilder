@@ -2,35 +2,51 @@
  * @file create-workflow.ts
  * @description Create workflow operation
  */
-import type { Workflow, CreateWorkflowInput, Result } from '../types';
-import type { InMemoryStore } from '../store/in-memory-store';
-import { validateWorkflowType } from '../validation/workflow-validation';
+import type { CreateWorkflowInput, Result, Workflow } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
+import { validateWorkflowCreate } from '../../validation/validate-workflow-create'
 
 /**
  * Create a new workflow in the store
  */
-export async function createWorkflow(
+export const createWorkflow = async (
   store: InMemoryStore,
   input: CreateWorkflowInput
-): Promise<Result<Workflow>> {
-  if (!input.name || input.name.length > 100) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Name required (max 100)' } };
+): Promise<Result<Workflow>> => {
+  const isActive = input.isActive ?? true
+  const validationErrors = validateWorkflowCreate({
+    name: input.name,
+    description: input.description,
+    trigger: input.trigger,
+    triggerConfig: input.triggerConfig,
+    steps: input.steps,
+    isActive,
+    createdBy: input.createdBy
+  })
+
+  if (validationErrors.length > 0) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
   }
-  if (!input.type || !validateWorkflowType(input.type)) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid workflow type' } };
+
+  if (store.workflowNames.has(input.name)) {
+    return { success: false, error: { code: 'CONFLICT', message: 'Workflow name already exists' } }
   }
 
   const workflow: Workflow = {
     id: store.generateId('workflow'),
     name: input.name,
-    description: input.description ?? '',
-    type: input.type,
-    config: input.config ?? {},
-    isActive: input.isActive ?? true,
+    description: input.description,
+    trigger: input.trigger,
+    triggerConfig: input.triggerConfig,
+    steps: input.steps,
+    isActive,
+    createdBy: input.createdBy,
     createdAt: new Date(),
-    updatedAt: new Date(),
-  };
+    updatedAt: new Date()
+  }
 
-  store.workflows.set(workflow.id, workflow);
-  return { success: true, data: workflow };
+  store.workflows.set(workflow.id, workflow)
+  store.workflowNames.set(workflow.name, workflow.id)
+
+  return { success: true, data: workflow }
 }
