@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
@@ -12,6 +12,13 @@ import { ScrollArea } from '@/components/ui'
 import { Database, ComponentNode, ComponentConfig } from '@/lib/database'
 import { componentCatalog } from '@/lib/component-catalog'
 import { toast } from 'sonner'
+import type { PropDefinition } from '@/lib/builder-types'
+
+/** Select option type for property schema options */
+interface SelectOption {
+  value: string
+  label: string
+}
 
 interface ComponentConfigDialogProps {
   node: ComponentNode
