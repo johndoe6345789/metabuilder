@@ -122,7 +122,7 @@ export function NerdModeIDE({ className }: NerdModeIDEProps) {
     setTimeout(() => {
       setConsoleOutput((current) => [
         ...current,
-        '✓ Code executed successfully',
+        'OK Code executed successfully',
         '> Output: Hello from MetaBuilder IDE!',
       ])
       setIsRunning(false)
@@ -144,8 +144,8 @@ export function NerdModeIDE({ className }: NerdModeIDEProps) {
       setTestResults(mockTests)
       setConsoleOutput((current) => [
         ...current,
-        `✓ ${mockTests.filter((test) => test.status === 'passed').length} tests passed`,
-        `✗ ${mockTests.filter((test) => test.status === 'failed').length} tests failed`,
+        `OK ${mockTests.filter((test) => test.status === 'passed').length} tests passed`,
+        `FAIL ${mockTests.filter((test) => test.status === 'failed').length} tests failed`,
       ])
       toast.success('Tests completed')
     }, 1500)
@@ -173,7 +173,7 @@ export function NerdModeIDE({ className }: NerdModeIDEProps) {
     setTimeout(() => {
       setConsoleOutput((current) => [
         ...current,
-        `✓ Pushed to ${gitConfig.provider} (${gitConfig.repoUrl})`,
+        `OK Pushed to ${gitConfig.provider} (${gitConfig.repoUrl})`,
       ])
       setGitCommitMessage('')
       toast.success('Changes pushed to repository')
@@ -192,7 +192,7 @@ export function NerdModeIDE({ className }: NerdModeIDEProps) {
     setTimeout(() => {
       setConsoleOutput((current) => [
         ...current,
-        `✓ Pulled latest changes from ${gitConfig.branch}`,
+        `OK Pulled latest changes from ${gitConfig.branch}`,
       ])
       toast.success('Repository updated')
     }, 1000)
