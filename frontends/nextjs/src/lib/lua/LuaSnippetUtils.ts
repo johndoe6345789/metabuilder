@@ -1,9 +1,9 @@
 import { LUA_SNIPPETS, LUA_SNIPPET_CATEGORIES, type LuaSnippet } from './snippets/lua-snippets-data'
-import { getSnippetsByCategory } from './functions/get-snippets-by-category'
-import { searchSnippets } from './functions/search-snippets'
-import { getSnippetById } from './functions/get-snippet-by-id'
-import { getSnippetCategoryCounts } from './functions/get-snippet-category-counts'
-import { getAllSnippetTags } from './functions/get-all-snippet-tags'
+import { getSnippetsByCategory } from './functions/snippets/get-snippets-by-category'
+import { searchSnippets } from './functions/snippets/search-snippets'
+import { getSnippetById } from './functions/snippets/get-snippet-by-id'
+import { getSnippetCategoryCounts } from './functions/snippets/get-snippet-category-counts'
+import { getAllSnippetTags } from './functions/snippets/get-all-snippet-tags'
 
 /**
  * LuaSnippetUtils - Class wrapper for Lua snippet utility functions
