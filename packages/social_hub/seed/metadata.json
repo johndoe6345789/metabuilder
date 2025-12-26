@@ -1,0 +1,42 @@
+{
+  "packageId": "social_hub",
+  "name": "Social Hub",
+  "version": "1.0.0",
+  "description": "Modern social feed with creator tools and live rooms",
+  "author": "MetaBuilder",
+  "category": "social",
+  "dependencies": [],
+  "exports": {
+    "components": [
+      "social_hub_root",
+      "social_hub_hero",
+      "social_hub_heading",
+      "social_hub_subtitle",
+      "social_hub_stats",
+      "social_hub_stat_1",
+      "social_hub_stat_label_1",
+      "social_hub_stat_value_1",
+      "social_hub_stat_2",
+      "social_hub_stat_label_2",
+      "social_hub_stat_value_2",
+      "social_hub_stat_3",
+      "social_hub_stat_label_3",
+      "social_hub_stat_value_3",
+      "social_hub_composer",
+      "social_hub_composer_label",
+      "social_hub_composer_input",
+      "social_hub_composer_actions",
+      "social_hub_composer_publish",
+      "social_hub_composer_media",
+      "social_hub_feed",
+      "social_hub_feed_post_1",
+      "social_hub_feed_post_1_title",
+      "social_hub_feed_post_1_body",
+      "social_hub_feed_post_1_badge",
+      "social_hub_feed_post_2",
+      "social_hub_feed_post_2_title",
+      "social_hub_feed_post_2_body",
+      "social_hub_feed_post_2_badge"
+    ]
+  }
+}

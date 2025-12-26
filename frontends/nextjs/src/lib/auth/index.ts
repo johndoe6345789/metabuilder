@@ -1,4 +1,6 @@
 export { canAccessLevel } from './can-access-level'
+export { getRoleLevel } from './get-role-level'
+export { getRoleHomePath } from './get-role-home-path'
 export { getRoleDisplayName } from './get-role-display-name'
 export { getScrambledPassword } from './get-scrambled-password'
 export { DEFAULT_USERS } from './default-users'
