@@ -196,7 +196,7 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode 
                 <Label htmlFor="className">Tailwind Classes</Label>
                 <Input
                   id="className"
-                  value={props.className || ''}
+                  value={String(props.className || '')}
                   onChange={(e) => setProps({ ...props, className: e.target.value })}
                   placeholder="p-4 bg-white rounded-lg"
                 />
