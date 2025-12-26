@@ -28,6 +28,7 @@ Visit `/levels` to step through each tier. The page renders a grid of cards, hig
 ## Tooling
 
 - Run `tsx tools/list-permissions.ts` to dump the level definitions and capabilities into the console. This script ensures workflows or automation agents always align with the same data that powers the UI.
+- Run `tsx tools/levels-csv-export.ts` to emit the permission catalog as comma-separated values for spreadsheets and data pipelines.
 - The CLI at `packages/codegen_studio/static_content/cli/main.cpp --levels` also prints this list so legacy tooling and C++ guardians share the same glossary.
 
 ## Testing

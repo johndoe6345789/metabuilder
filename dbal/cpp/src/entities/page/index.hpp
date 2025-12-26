@@ -7,6 +7,7 @@
 
 #include "create_page.hpp"
 #include "get_page.hpp"
+#include "get_page_by_slug.hpp"
 #include "update_page.hpp"
 #include "delete_page.hpp"
 #include "list_pages.hpp"
