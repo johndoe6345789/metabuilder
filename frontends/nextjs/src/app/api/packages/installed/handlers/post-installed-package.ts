@@ -1,0 +1,60 @@
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { readJson } from '@/lib/api/read-json'
+import { getInstalledPackages } from '@/lib/db/packages/get-installed-packages'
+import { installPackage } from '@/lib/db/packages/install-package'
+import type { InstalledPackage } from '@/lib/package-types'
+import { getPackageCatalogEntry } from '@/lib/packages/server/get-package-catalog-entry'
+import { installPackageContent } from '@/lib/packages/server/install-package-content'
+
+type InstallPackagePayload = {
+  packageId?: string
+  installedAt?: number
+  enabled?: boolean
+  version?: string
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await readJson<InstallPackagePayload>(request)
+    if (!body) {
+      return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 })
+    }
+
+    const packageId = typeof body.packageId === 'string' ? body.packageId.trim() : ''
+    if (!packageId) {
+      return NextResponse.json({ error: 'Package ID is required' }, { status: 400 })
+    }
+
+    const entry = getPackageCatalogEntry(packageId)
+    if (!entry) {
+      return NextResponse.json({ error: 'Package not found' }, { status: 404 })
+    }
+
+    const installed = await getInstalledPackages()
+    if (installed.some((pkg) => pkg.packageId === packageId)) {
+      return NextResponse.json({ error: 'Package already installed' }, { status: 409 })
+    }
+
+    await installPackageContent(packageId, entry.content)
+
+    const installedPackage: InstalledPackage = {
+      packageId,
+      installedAt: typeof body.installedAt === 'number' ? body.installedAt : Date.now(),
+      version: typeof body.version === 'string' ? body.version : entry.manifest.version,
+      enabled: typeof body.enabled === 'boolean' ? body.enabled : true,
+    }
+
+    await installPackage(installedPackage)
+    return NextResponse.json({ installed: installedPackage }, { status: 201 })
+  } catch (error) {
+    console.error('Error installing package:', error)
+    return NextResponse.json(
+      {
+        error: 'Failed to install package',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    )
+  }
+}

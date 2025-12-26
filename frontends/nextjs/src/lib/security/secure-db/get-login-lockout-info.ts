@@ -1,4 +1,5 @@
 import { loginAttemptTracker } from './login-attempt-tracker'
+import { sanitizeInput } from './sanitize-input'
 
 export interface LoginLockoutInfo {
   locked: boolean
@@ -7,12 +8,13 @@ export interface LoginLockoutInfo {
 }
 
 export const getLoginLockoutInfo = (username: string): LoginLockoutInfo => {
-  const locked = loginAttemptTracker.isLocked(username)
+  const sanitizedUsername = sanitizeInput(username).trim()
+  const locked = loginAttemptTracker.isLocked(sanitizedUsername)
   if (!locked) {
     return { locked: false }
   }
 
-  const state = loginAttemptTracker.getState(username)
+  const state = loginAttemptTracker.getState(sanitizedUsername)
   if (!state?.lockedUntil) {
     return { locked: true }
   }
