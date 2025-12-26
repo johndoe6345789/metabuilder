@@ -28,3 +28,4 @@ You can also embed `main.qml` into a Qt Quick Application project and expose C++
 - Material badges live in `Material.MaterialBadge` for lightweight status chips (accented, dense, or outlined).
 - `Material.MaterialBadge` also accepts `iconSource` so you can anchor a micro icon beside the label.
 - Preview the Material view with `qmlscene frontends/qt6/MaterialLanding.qml` or embed it into your Qt Quick application to reuse the tokens and components across other screens.
+- Consult `frontends/qt6/MaterialMapping.md` for a 1:1 mapping between the Material UI components used in `frontends/nextjs` and their QML counterparts (including notes on planned wrappers).
