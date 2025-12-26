@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import { getUserFirstLoginFlag } from '../users/get-user-first-login-flag'
+import { getUserFirstLoginFlag } from '../../users/get-user-first-login-flag'
 
 /**
  * Get first login flags for all users
