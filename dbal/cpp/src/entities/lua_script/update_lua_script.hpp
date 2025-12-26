@@ -82,6 +82,7 @@ inline Result<LuaScript> update(InMemoryStore& store, const std::string& id, con
     }
 
     script.updated_at = std::chrono::system_clock::now();
+
     return Result<LuaScript>(script);
 }
 

@@ -18,4 +18,12 @@ describe('GET /api/levels', () => {
     expect(payload.levels).toHaveLength(1)
     expect(payload.levels[0].key).toBe('supergod')
   })
+
+  it('filters results by capability keyword', async () => {
+    const response = await GET(new Request('http://example.com/api/levels?cap=front page'))
+    const payload = await response.json()
+
+    expect(payload.levels).toHaveLength(1)
+    expect(payload.levels[0].key).toBe('god')
+  })
 })
