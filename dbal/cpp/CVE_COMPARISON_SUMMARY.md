@@ -1,14 +1,18 @@
 # HTTP Server CVE Comparison - Summary Report
 
 **Date**: 2025-12-25
-**Component**: C++ DBAL HTTP Server (`dbal/cpp/src/daemon/server.cpp`)
+**Component**: Drogon-based C++ DBAL HTTP Server (`dbal/cpp/src/daemon/server.cpp`)
 **Security Analysis**: Comparison against common HTTP server CVE patterns (2020-2024)
+
+## Migration Note (Drogon)
+
+The legacy custom HTTP server has been replaced with **Drogon**. The vulnerability analysis below documents the historical issues and is preserved for reference; the migration mitigates these risks by delegating HTTP parsing and connection handling to Drogon.
 
 ## Executive Summary
 
-The HTTP server implementation was analyzed against recent CVE patterns affecting production HTTP servers. **10 security vulnerabilities** were identified, ranging from CRITICAL to LOW severity. All vulnerabilities have been **fixed and validated**.
+The legacy HTTP server implementation was analyzed against recent CVE patterns affecting production HTTP servers. **10 security vulnerabilities** were identified, ranging from CRITICAL to LOW severity. These risks are now **mitigated** by the Drogon migration and validated by the security test suite.
 
-## Vulnerabilities Found and Fixed
+## Vulnerabilities Found and Fixed (Legacy Server)
 
 ### Critical Severity (2)
 
@@ -110,11 +114,9 @@ MAX_CONCURRENT_CONNECTIONS = 1000 // 1000 connections
 
 ## Files Changed
 
-1. **dbal/cpp/src/daemon/server.cpp** (196 lines changed)
-   - Added security limits and validation
-   - Enhanced parseRequest with comprehensive checks
-   - Added connection tracking and limits
-   - Added send timeout
+1. **dbal/cpp/src/daemon/server.cpp** (replaced)
+   - Migrated HTTP handling to Drogon
+   - Simplified routing and response handling
 
 2. **dbal/cpp/CVE_ANALYSIS.md** (new, 9426 bytes)
    - Detailed vulnerability analysis

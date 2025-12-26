@@ -75,9 +75,7 @@ Captured from this machine to document the local development environment:
 
 ---
 
-## Key Highlights
-
-- **6-Level Permission System**: Each user level from Public to SuperGod maps to documented routes, policies, and role inheritance so you can reason about features before touching code ([`docs/architecture/security-docs/5-level-system.md`](./docs/architecture/security-docs/5-level-system.md)).
+- **5-Level Permission System**: Each user level from Public to SuperGod maps to documented routes, policies, and role inheritance so you can reason about features before touching code ([`docs/architecture/5-level-system.md`](./docs/architecture/5-level-system.md)).
 - **Multi-tenant data platform**: Prisma, tenant-aware storage, and quota management patterns keep all queries scoped by `tenantId` while keeping schema evolution safe ([`docs/architecture/database.md`](./docs/architecture/database.md)).
 - **Declarative packages & Lua logic**: Modular `packages/*/seed` definitions let you ship UI/features via JSON/Lua, while the Lua sandbox protects the runtime ([`docs/architecture/packages.md`](./docs/architecture/packages.md), [`docs/lua/README.md`](./docs/lua/README.md)).
 - **Type-safe + CI-ready workflow**: TypeScript tooling, Act local workflows, and targeted scripts keep linting, testing, and deploy checks consistent with the documentation hub ([`docs/README.md`](./docs/README.md)).
@@ -97,6 +95,14 @@ Captured from this machine to document the local development environment:
 
 - `.github/prompts/` stores curated prompts for planning, designing, implementing, testing, reviewing, deploying, and maintaining features; [`docs/todo/core/21-SDLC-TODO.md`](./docs/todo/core/21-SDLC-TODO.md) describes which prompts need review or updates.
 - Keep `.github/copilot-instructions.md` aligned with architecture/docs changes so Copilot-based automation and review prompts stay accurate.
+
+## Refactor Plan Snapshot
+
+- [`docs/todo/REFACTOR_PLAN.md`](./docs/todo/REFACTOR_PLAN.md) captures the “Next.js to Lua Conversion” strategy with phased TODOs, prep checklist, audit notes, and tracking templates.
+- Phases span foundation (audit + Lua boundary), mapping (helper tagging), framework bridge (adapters + metadata structure), pilot conversion (proof-of-concept helper), and stabilization (docs/tests updates + consensus).
+- Prep checklist includes tooling verification (`luacheck`), backups, team reviews for new folders (`lua/`, `packages/static_content`), and selecting a safe first helper.
+- Quick file references highlight routes, components, hooks, libs, and seeds requiring metadata or Lua adapters, while the plan tracks dependencies for God panel/package manager integration.
+- Support notes remind teams to keep TypeScript builds/tests running until Lua equivalents stabilize, update docs as metadata moves, and log decisions for each phase.
 
 ## Architecture
 
