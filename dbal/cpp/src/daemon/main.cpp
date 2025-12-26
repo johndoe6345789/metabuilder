@@ -16,6 +16,7 @@
 
 // Include server
 #include "server.hpp"
+#include "dbal/core/client.hpp"
 
 namespace {
     std::unique_ptr<dbal::daemon::Server> server_instance;
@@ -123,8 +124,23 @@ int main(int argc, char* argv[]) {
     std::cout << "Mode: " << (development_mode ? "development" : "production") << std::endl;
     std::cout << std::endl;
     
+    dbal::ClientConfig client_config;
+    client_config.mode = development_mode ? "development" : "production";
+    const char* adapter_env = std::getenv("DBAL_ADAPTER");
+    client_config.adapter = adapter_env ? adapter_env : "sqlite";
+    const char* database_env = std::getenv("DBAL_DATABASE_URL");
+    if (!database_env) {
+        database_env = std::getenv("DATABASE_URL");
+    }
+    client_config.database_url = database_env ? database_env : ":memory:";
+    client_config.sandbox_enabled = true;
+    const char* endpoint_env = std::getenv("DBAL_ENDPOINT");
+    if (endpoint_env) {
+        client_config.endpoint = endpoint_env;
+    }
+
     // Create and start HTTP server
-    server_instance = std::make_unique<dbal::daemon::Server>(bind_address, port);
+    server_instance = std::make_unique<dbal::daemon::Server>(bind_address, port, client_config);
     
     if (!server_instance->start()) {
         std::cerr << "Failed to start server" << std::endl;
