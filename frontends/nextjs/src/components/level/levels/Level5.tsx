@@ -35,6 +35,7 @@ import { NerdModeIDE } from '../../misc/NerdModeIDE'
 import type { User, AppLevel, Tenant } from '@/lib/level-types'
 import { Database } from '@/lib/database'
 import { createPowerTransferRequest } from '@/lib/api/power-transfers'
+import { fetchUsers } from '@/lib/api/users/fetch-users'
 import { useKV } from '@github/spark/hooks'
 
 export interface Level5Props {
@@ -63,7 +64,7 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
   const loadData = async () => {
     const [tenantsData, usersData] = await Promise.all([
       Database.getTenants(),
-      Database.getUsers({ scope: 'all' }),
+      fetchUsers(),
     ])
     
     setTenants(tenantsData)

@@ -8,6 +8,7 @@ import {
   getPowerTransferRequests,
   updatePowerTransferRequest,
 } from '@/lib/db/power-transfers'
+import { dbalGetUserById } from '@/lib/dbal/database-dbal/users/dbal-get-user-by-id.server'
 
 const REQUEST_EXPIRY_MS = 60 * 60 * 1000
 
@@ -34,12 +35,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Cannot transfer power to the same user' }, { status: 400 })
     }
 
-    const fromUser = await Database.getUserById(fromUserId)
+    const fromUser = await dbalGetUserById(fromUserId)
     if (!fromUser || fromUser.role !== 'supergod') {
       return NextResponse.json({ error: 'Only an active supergod can initiate transfers' }, { status: 403 })
     }
 
-    const toUser = await Database.getUserById(toUserId)
+    const toUser = await dbalGetUserById(toUserId)
     if (!toUser) {
       return NextResponse.json({ error: 'Target user not found' }, { status: 404 })
     }
