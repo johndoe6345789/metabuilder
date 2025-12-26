@@ -16,6 +16,9 @@ export function loadPackageComponents(packageContent: any) {
         code: script.code,
         parameters: script.parameters || [],
         returnType: script.returnType || 'any',
+        isSandboxed: script.isSandboxed,
+        allowedGlobals: script.allowedGlobals,
+        timeoutMs: script.timeoutMs,
       })
     })
   }

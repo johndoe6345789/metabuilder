@@ -16,6 +16,11 @@ MetaBuilder runs on a five-tier permission stack that spans the public surface, 
 
 Visit `/levels` to step through each tier. The page renders a grid of cards, highlights the selected level, and previews the bundle of privileges that accompany it. A promotion button demonstrates the jump to the next level while providing contextual messaging.
 
+## API
+
+- `GET /api/levels` echoes the permission catalog as JSON.
+- Add `?level=<key|id>` to narrow the response to a single tier when wiring helpers or automation into the UI.
+
 ## Tooling
 
 - Run `tsx tools/list-permissions.ts` to dump the level definitions and capabilities into the console. This script ensures workflows or automation agents always align with the same data that powers the UI.
