@@ -22,12 +22,44 @@ Response:
 ```
 
 ### POST `/api/packages/installed`
-Installs a package by ID using the server-side catalog and seeds.
+Installs a package by ID using the server-side catalog and seeds. For imported packages, include `manifest` and `content`.
 
 Request:
 ```json
 {
   "packageId": "social_forum"
+}
+```
+
+Import example:
+```json
+{
+  "packageId": "custom_pkg",
+  "manifest": {
+    "id": "custom_pkg",
+    "name": "Custom Package",
+    "version": "1.0.0",
+    "description": "",
+    "author": "Anonymous",
+    "category": "other",
+    "icon": "📦",
+    "screenshots": [],
+    "tags": [],
+    "dependencies": [],
+    "createdAt": 1735140000000,
+    "updatedAt": 1735140000000,
+    "downloadCount": 0,
+    "rating": 0,
+    "installed": false
+  },
+  "content": {
+    "schemas": [],
+    "pages": [],
+    "workflows": [],
+    "luaScripts": [],
+    "componentHierarchy": {},
+    "componentConfigs": {}
+  }
 }
 ```
 
