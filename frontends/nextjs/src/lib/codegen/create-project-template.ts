@@ -1,4 +1,4 @@
-import { CodegenProjectTemplate } from './codegen-types'
+import { CodegenProjectTemplate, CodegenSpec } from './codegen-types'
 
 const sanitizeProjectName = (value: string) =>
   value
@@ -22,10 +22,10 @@ const describeRuntime = (runtime: string) => {
   }
 }
 
-export const createProjectTemplate = (spec: Parameters<CodegenProjectTemplate['files']>[0] & { projectName: string } & { packageId: string } & { runtime: string }) => {
+export const createProjectTemplate = (spec: CodegenSpec): CodegenProjectTemplate => {
   const baseName = sanitizeProjectName(spec.projectName || 'metabuilder-starter')
   const rootDir = baseName || 'metabuilder-starter'
-  const manifest = {
+  const manifest: CodegenProjectTemplate['manifest'] = {
     projectName: spec.projectName,
     packageId: spec.packageId,
     runtime: spec.runtime,
