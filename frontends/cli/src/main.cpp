@@ -1,6 +1,7 @@
 #include "commands/command_dispatch.h"
 #include "utils/http_client.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
 #include <string>
