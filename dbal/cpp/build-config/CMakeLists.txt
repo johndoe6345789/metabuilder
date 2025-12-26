@@ -34,6 +34,7 @@ add_library(dbal_adapters STATIC
     ${DBAL_SRC_DIR}/adapters/sql/mysql_adapter.cpp
 )
 
+target_link_libraries(dbal_adapters PRIVATE cpr::cpr)
 add_executable(dbal_daemon
     ${DBAL_SRC_DIR}/daemon/main.cpp
     ${DBAL_SRC_DIR}/daemon/server.cpp
