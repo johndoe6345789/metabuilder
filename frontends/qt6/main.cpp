@@ -7,6 +7,7 @@
 #include <QQmlContext>
 
 #include "src/PackageRegistry.h"
+#include "src/ModPlayer.h"
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
@@ -20,8 +21,10 @@ int main(int argc, char *argv[]) {
                          }
                      });
     PackageRegistry registry;
+    ModPlayer modPlayer;
     registry.loadPackage("frontpage");
     engine.rootContext()->setContextProperty(QStringLiteral("PackageRegistry"), &registry);
+    engine.rootContext()->setContextProperty(QStringLiteral("ModPlayer"), &modPlayer);
 
     engine.load(url);
     return app.exec();

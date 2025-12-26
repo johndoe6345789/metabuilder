@@ -4,9 +4,6 @@
 #include <QAudioOutput>
 #include <QDir>
 #include <QFile>
-#include <QQmlEngine>
-#include <QScopeGuard>
-#include <QTimer>
 
 #include <libopenmpt/libopenmpt.hpp>
 
