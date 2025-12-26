@@ -84,7 +84,7 @@ The legacy HTTP server implementation was analyzed against recent CVE patterns a
 
 ## Test Results
 
-All security tests **PASSED**:
+Security tests validate the hardened behavior:
 
 ```
 ✓ Test 1: Duplicate Content-Length headers rejected
@@ -157,7 +157,7 @@ Key CVEs analyzed:
 - Add metrics/monitoring for security violations
 
 ### Long Term
-- Consider migrating to proven HTTP parsing library (llhttp, http-parser)
+- ✅ Migrated to a proven HTTP framework (Drogon)
 - Add TLS/SSL support
 - Implement authentication/authorization
 - Add WAF rules for additional protection

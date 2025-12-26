@@ -75,7 +75,7 @@ Captured from this machine to document the local development environment:
 
 ---
 
-- **5-Level Permission System**: Each user level from Public to SuperGod maps to documented routes, policies, and role inheritance so you can reason about features before touching code ([`docs/architecture/5-level-system.md`](./docs/architecture/5-level-system.md)).
+- **6-Level Permission System**: Each user level from Public to SuperGod maps to documented routes, policies, and role inheritance so you can reason about features before touching code ([`docs/architecture/security-docs/5-level-system.md`](./docs/architecture/security-docs/5-level-system.md)).
 - **Multi-tenant data platform**: Prisma, tenant-aware storage, and quota management patterns keep all queries scoped by `tenantId` while keeping schema evolution safe ([`docs/architecture/database.md`](./docs/architecture/database.md)).
 - **Declarative packages & Lua logic**: Modular `packages/*/seed` definitions let you ship UI/features via JSON/Lua, while the Lua sandbox protects the runtime ([`docs/architecture/packages.md`](./docs/architecture/packages.md), [`docs/lua/README.md`](./docs/lua/README.md)).
 - **Type-safe + CI-ready workflow**: TypeScript tooling, Act local workflows, and targeted scripts keep linting, testing, and deploy checks consistent with the documentation hub ([`docs/README.md`](./docs/README.md)).
@@ -901,7 +901,7 @@ DEBUG=metabuilder:* npm run dev
 
 ## Quick Links
 
-- Permission model: [`docs/architecture/5-level-system.md`](./docs/architecture/5-level-system.md)
+- Permission model: [`docs/architecture/security-docs/5-level-system.md`](./docs/architecture/security-docs/5-level-system.md)
 - Database schema: [`prisma/schema.prisma`](./prisma/schema.prisma)
 - API conventions: [`docs/guides/api-development.md`](./docs/guides/api-development.md)
 - Security guidelines: [`docs/security/SECURITY.md`](./docs/security/SECURITY.md)
