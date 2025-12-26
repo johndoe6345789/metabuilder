@@ -1,4 +1,4 @@
-import { getModel } from './get-model'
+import { getModel } from '../../utils/get-model'
 
 export async function upsertEntity(
   entity: string,

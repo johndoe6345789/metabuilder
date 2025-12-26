@@ -1,5 +1,5 @@
-import { getModel } from './get-model'
-import { getPrimaryKeyField } from './get-primary-key-field'
+import { getModel } from '../../utils/get-model'
+import { getPrimaryKeyField } from '../../utils/get-primary-key-field'
 
 export async function updateEntity(
   entity: string,
