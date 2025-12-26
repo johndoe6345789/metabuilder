@@ -8,6 +8,8 @@
 - [ ] Implement package version management
 - [ ] Create package installation/uninstallation API
 - [ ] Add package compatibility validation
+- [ ] Add API-backed package export/snapshot endpoints to remove client DB reads (`frontends/nextjs/src/components/PackageImportExport.tsx`)
+- [ ] Add tests for packages API routes (`frontends/nextjs/src/app/api/packages/*`)
 
 ## Admin Dialog Package
 
