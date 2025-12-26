@@ -1,14 +1,11 @@
 import { NextResponse } from 'next/server'
 import { getRequestIp } from '@/lib/api/get-request-ip'
 import { readJson } from '@/lib/api/read-json'
-import { getUserByEmail } from '@/lib/db/auth/get-user-by-email'
-import { getUserByUsername } from '@/lib/db/auth/get-user-by-username'
+import { getUserByEmail, getUserByUsername } from '@/lib/db/auth'
 import { createSession } from '@/lib/db/sessions/create-session'
 import { DEFAULT_SESSION_TTL_MS } from '@/lib/auth/session-constants'
 import { setSessionCookie } from '@/lib/auth/set-session-cookie'
-import { createLoginSecurityContext } from '@/lib/security/secure-db/create-login-security-context'
-import { getLoginLockoutInfo } from '@/lib/security/secure-db/get-login-lockout-info'
-import { verifyCredentials } from '@/lib/security/secure-db/operations/verify-credentials'
+import { createLoginSecurityContext, getLoginLockoutInfo, verifyCredentials } from '@/lib/security/secure-db'
 
 interface LoginPayload {
   identifier?: string
