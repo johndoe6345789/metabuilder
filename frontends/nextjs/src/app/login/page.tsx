@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { UnifiedLogin } from '@/components/UnifiedLogin'
-import { getRoleHomePath } from '@/lib/auth/get-role-home-path'
+import { getRoleHomePath } from '@/lib/auth'
 import { useAuth } from '@/hooks/useAuth'
 
 export default function LoginPage() {
