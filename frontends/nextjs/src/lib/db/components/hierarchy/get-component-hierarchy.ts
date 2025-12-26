@@ -1,4 +1,4 @@
-import { getAdapter } from '../dbal-client'
+import { getAdapter } from '../../dbal-client'
 import type { ComponentNode } from '../types'
 
 export async function getComponentHierarchy(): Promise<Record<string, ComponentNode>> {
