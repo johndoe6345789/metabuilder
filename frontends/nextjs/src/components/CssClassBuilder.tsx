@@ -97,12 +97,6 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
     }
   }, [activeTab, filteredCategories, open])
 
-  const loadCssClasses = async () => {
-    const classes = await Database.getCssClasses()
-    const sorted = classes.slice().sort((a, b) => a.name.localeCompare(b.name))
-    setCategories(sorted)
-  }
-
   const toggleClass = (cssClass: string) => {
     setSelectedClasses(current => {
       if (current.includes(cssClass)) {
