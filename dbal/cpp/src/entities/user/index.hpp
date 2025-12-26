@@ -10,6 +10,8 @@
 #include "crud/update_user.hpp"
 #include "crud/delete_user.hpp"
 #include "crud/list_users.hpp"
+#include "crud/search_users.hpp"
+#include "crud/count_users.hpp"
 #include "batch/batch_users.hpp"
 
 #endif

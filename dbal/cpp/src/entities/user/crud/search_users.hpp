@@ -5,6 +5,7 @@
 #include "../../../store/in_memory_store.hpp"
 #include <algorithm>
 #include <cctype>
+#include <iterator>
 #include <string>
 #include <vector>
 

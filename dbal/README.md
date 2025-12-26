@@ -68,6 +68,10 @@ With `config.adapter = 'prisma'`, DBAL sends every request through `PrismaAdapte
 
 The C++ daemon still resides in Phase 3—the current implementation is backed by the in-memory store described in `dbal/cpp/docs/PHASE3_DAEMON.md`, so Postgres/MySQL adapters for the daemon are still future work.
 
+### Native Prisma bridge
+
+The Phase 3 daemon can still leverage Prisma without bundling Node by calling `NativePrismaAdapter`. Each SQL plan is serialized as a JSON payload with the `$n` or `?` placeholders plus parameters and sent to `/api/native-prisma` on the Next.js server. The API route validates `DBAL_NATIVE_PRISMA_TOKEN`, reconstructs a `Prisma.sql` template, executes the query through the shared Prisma client, and returns rows or affected counts so the daemon sees the same `SqlRow`/`int` values as a regular SQL adapter. Set the same `DBAL_NATIVE_PRISMA_TOKEN` (mirrored in `frontends/nextjs/.env.example`) when running the daemon so the bridge rejects unauthorized callers.
+
 ## Design Principles
 
 1. **Language Agnostic**: API contracts defined in YAML/Proto, not tied to any language
