@@ -21,4 +21,4 @@ export { createPackageOperations } from './package-operations';
 export { createSessionOperations } from './session-operations';
 
 // Validation utilities
-export * from './validation';
+export * from '../validation';
