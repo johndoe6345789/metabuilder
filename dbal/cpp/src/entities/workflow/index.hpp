@@ -5,10 +5,10 @@
 #ifndef DBAL_WORKFLOW_INDEX_HPP
 #define DBAL_WORKFLOW_INDEX_HPP
 
-#include "create_workflow.hpp"
-#include "get_workflow.hpp"
-#include "update_workflow.hpp"
-#include "delete_workflow.hpp"
-#include "list_workflows.hpp"
+#include "crud/create_workflow.hpp"
+#include "crud/get_workflow.hpp"
+#include "crud/update_workflow.hpp"
+#include "crud/delete_workflow.hpp"
+#include "crud/list_workflows.hpp"
 
 #endif

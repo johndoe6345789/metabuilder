@@ -5,11 +5,11 @@
 #ifndef DBAL_USER_INDEX_HPP
 #define DBAL_USER_INDEX_HPP
 
-#include "create_user.hpp"
-#include "get_user.hpp"
-#include "update_user.hpp"
-#include "delete_user.hpp"
-#include "list_users.hpp"
-#include "batch_users.hpp"
+#include "crud/create_user.hpp"
+#include "crud/get_user.hpp"
+#include "crud/update_user.hpp"
+#include "crud/delete_user.hpp"
+#include "crud/list_users.hpp"
+#include "batch/batch_users.hpp"
 
 #endif
