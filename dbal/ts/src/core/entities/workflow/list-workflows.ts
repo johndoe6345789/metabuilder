@@ -2,42 +2,44 @@
  * @file list-workflows.ts
  * @description List workflows with filtering and pagination
  */
-import type { Workflow, ListOptions, Result } from '../types';
-import type { InMemoryStore } from '../store/in-memory-store';
+import type { ListOptions, Result, Workflow } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
 
 /**
  * List workflows with filtering and pagination
  */
-export async function listWorkflows(
+export const listWorkflows = async (
   store: InMemoryStore,
   options: ListOptions = {}
-): Promise<Result<Workflow[]>> {
-  const { filter = {}, sort = {}, page = 1, limit = 20 } = options;
+): Promise<Result<Workflow[]>> => {
+  const { filter = {}, sort = {}, page = 1, limit = 20 } = options
 
-  let workflows = Array.from(store.workflows.values());
+  let workflows = Array.from(store.workflows.values())
 
-  // Apply filters
   if (filter.isActive !== undefined) {
-    workflows = workflows.filter((w) => w.isActive === filter.isActive);
-  }
-  if (filter.type !== undefined) {
-    workflows = workflows.filter((w) => w.type === filter.type);
+    workflows = workflows.filter((workflow) => workflow.isActive === filter.isActive)
   }
 
-  // Apply sorting
+  if (filter.trigger !== undefined) {
+    workflows = workflows.filter((workflow) => workflow.trigger === filter.trigger)
+  }
+
+  if (filter.createdBy !== undefined) {
+    workflows = workflows.filter((workflow) => workflow.createdBy === filter.createdBy)
+  }
+
   if (sort.name) {
-    workflows.sort((a, b) => (sort.name === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)));
+    workflows.sort((a, b) =>
+      sort.name === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+    )
   } else if (sort.createdAt) {
     workflows.sort((a, b) =>
-      sort.createdAt === 'asc'
-        ? a.createdAt.getTime() - b.createdAt.getTime()
-        : b.createdAt.getTime() - a.createdAt.getTime()
-    );
+      sort.createdAt === 'asc' ? a.createdAt.getTime() - b.createdAt.getTime() : b.createdAt.getTime() - a.createdAt.getTime()
+    )
   }
 
-  // Apply pagination
-  const start = (page - 1) * limit;
-  const paginated = workflows.slice(start, start + limit);
+  const start = (page - 1) * limit
+  const paginated = workflows.slice(start, start + limit)
 
-  return { success: true, data: paginated };
+  return { success: true, data: paginated }
 }
