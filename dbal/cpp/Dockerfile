@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y \
     cmake \
     ninja-build \
     git \
+    python3 \
+    python3-pip \
     libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
 
@@ -22,9 +24,14 @@ COPY include/ include/
 COPY src/ src/
 COPY tests/ tests/
 
+# Install Conan and dependencies
+RUN pip3 install --no-cache-dir conan && \
+    conan profile detect --force
+
 # Build the daemon
-RUN cmake -G Ninja -DCMAKE_BUILD_TYPE=Release . && \
-    ninja dbal_daemon
+RUN conan install . --output-folder=build --build=missing && \
+    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -S . -B build -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake && \
+    cmake --build build --target dbal_daemon
 
 # Stage 2: Runtime
 FROM ubuntu:22.04
@@ -42,7 +49,7 @@ RUN useradd -r -u 1000 -m -s /bin/bash dbal
 WORKDIR /app
 
 # Copy binary from builder
-COPY --from=builder /build/dbal_daemon /app/dbal_daemon
+COPY --from=builder /build/build/dbal_daemon /app/dbal_daemon
 
 # Copy default config (can be overridden with volume mount)
 RUN echo "# DBAL Configuration" > /app/config.yaml
