@@ -29,6 +29,8 @@ add_library(dbal_core STATIC
 add_library(dbal_adapters STATIC
     ${DBAL_SRC_DIR}/adapters/sqlite/sqlite_adapter.cpp
     ${DBAL_SRC_DIR}/adapters/sqlite/sqlite_pool.cpp
+    ${DBAL_SRC_DIR}/adapters/sql/postgres_adapter.cpp
+    ${DBAL_SRC_DIR}/adapters/sql/mysql_adapter.cpp
 )
 
 add_executable(dbal_daemon
