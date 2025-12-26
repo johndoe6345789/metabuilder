@@ -9,9 +9,9 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import { Separator } from '@/components/ui'
 import { toast } from 'sonner'
-import { Database } from '@/lib/database'
 import { PACKAGE_CATALOG } from '@/lib/package-catalog'
 import type { PackageManifest, PackageContent, InstalledPackage } from '@/lib/package-types'
+import { installPackage, listInstalledPackages, togglePackageEnabled, uninstallPackage } from '@/lib/api/packages'
 import { Package, Download, Trash, Power, MagnifyingGlass, Star, Tag, User, TrendUp, Funnel, Export, ArrowSquareIn } from '@phosphor-icons/react'
 import { PackageImportExport } from './PackageImportExport'
 
@@ -36,7 +36,7 @@ export function PackageManager({ onClose }: PackageManagerProps) {
   }, [])
 
   const loadPackages = async () => {
-    const installed = await Database.getInstalledPackages()
+    const installed = await listInstalledPackages()
     setInstalledPackages(installed)
 
     const allPackages = Object.values(PACKAGE_CATALOG).map(pkg => ({
@@ -56,53 +56,9 @@ export function PackageManager({ onClose }: PackageManagerProps) {
         return
       }
 
-      const { content, manifest } = packageEntry
+      await installPackage(packageId)
 
-      const currentSchemas = await Database.getSchemas()
-      const currentPages = await Database.getPages()
-      const currentWorkflows = await Database.getWorkflows()
-      const currentLuaScripts = await Database.getLuaScripts()
-      const currentHierarchy = await Database.getComponentHierarchy()
-      const currentConfigs = await Database.getComponentConfigs()
-
-      const newSchemas = [...currentSchemas, ...content.schemas]
-      const newPages = [...currentPages, ...content.pages]
-      const newWorkflows = [...currentWorkflows, ...content.workflows]
-      const newLuaScripts = [...currentLuaScripts, ...content.luaScripts]
-      const newHierarchy = { ...currentHierarchy, ...content.componentHierarchy }
-      const newConfigs = { ...currentConfigs, ...content.componentConfigs }
-
-      await Database.setSchemas(newSchemas)
-      await Database.setPages(newPages)
-      await Database.setWorkflows(newWorkflows)
-      await Database.setLuaScripts(newLuaScripts)
-      await Database.setComponentHierarchy(newHierarchy)
-      await Database.setComponentConfigs(newConfigs)
-
-      if (content.cssClasses) {
-        const currentCssClasses = await Database.getCssClasses()
-        await Database.setCssClasses([...currentCssClasses, ...content.cssClasses])
-      }
-
-      if (content.dropdownConfigs) {
-        const currentDropdowns = await Database.getDropdownConfigs()
-        await Database.setDropdownConfigs([...currentDropdowns, ...content.dropdownConfigs])
-      }
-
-      if (content.seedData) {
-        await Database.setPackageData(packageId, content.seedData)
-      }
-
-      const installedPackage: InstalledPackage = {
-        packageId: manifest.id,
-        installedAt: Date.now(),
-        version: manifest.version,
-        enabled: true,
-      }
-
-      await Database.installPackage(installedPackage)
-
-      toast.success(`${manifest.name} installed successfully!`)
+      toast.success(`${packageEntry.manifest.name} installed successfully!`)
       await loadPackages()
       setShowDetails(false)
     } catch (error) {
@@ -121,32 +77,9 @@ export function PackageManager({ onClose }: PackageManagerProps) {
         return
       }
 
-      const { content, manifest } = packageEntry
+      await uninstallPackage(packageId)
 
-      const currentSchemas = await Database.getSchemas()
-      const currentPages = await Database.getPages()
-      const currentWorkflows = await Database.getWorkflows()
-      const currentLuaScripts = await Database.getLuaScripts()
-
-      const packageSchemaNames = content.schemas.map(s => s.name)
-      const packagePageIds = content.pages.map(p => p.id)
-      const packageWorkflowIds = content.workflows.map(w => w.id)
-      const packageLuaIds = content.luaScripts.map(l => l.id)
-
-      const filteredSchemas = currentSchemas.filter(s => !packageSchemaNames.includes(s.name))
-      const filteredPages = currentPages.filter(p => !packagePageIds.includes(p.id))
-      const filteredWorkflows = currentWorkflows.filter(w => !packageWorkflowIds.includes(w.id))
-      const filteredLuaScripts = currentLuaScripts.filter(l => !packageLuaIds.includes(l.id))
-
-      await Database.setSchemas(filteredSchemas)
-      await Database.setPages(filteredPages)
-      await Database.setWorkflows(filteredWorkflows)
-      await Database.setLuaScripts(filteredLuaScripts)
-
-      await Database.deletePackageData(packageId)
-      await Database.uninstallPackage(packageId)
-
-      toast.success(`${manifest.name} uninstalled successfully!`)
+      toast.success(`${packageEntry.manifest.name} uninstalled successfully!`)
       await loadPackages()
       setShowDetails(false)
     } catch (error) {
@@ -157,7 +90,7 @@ export function PackageManager({ onClose }: PackageManagerProps) {
 
   const handleTogglePackage = async (packageId: string, enabled: boolean) => {
     try {
-      await Database.togglePackageEnabled(packageId, enabled)
+      await togglePackageEnabled(packageId, enabled)
       toast.success(enabled ? 'Package enabled' : 'Package disabled')
       await loadPackages()
     } catch (error) {

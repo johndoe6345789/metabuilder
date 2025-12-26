@@ -50,9 +50,9 @@ export async function initializeUsers() {
   for (const user of users) {
     const scrambledPassword = getScrambledPassword(user.username)
     const passwordHash = await hashPassword(scrambledPassword)
+    await Database.addUser(user)
     await Database.setCredential(user.username, passwordHash)
     await Database.setFirstLoginFlag(user.username, true)
-    await Database.addUser(user)
   }
 
   await Database.setGodCredentialsExpiry(Date.now() + 60 * 60 * 1000)
