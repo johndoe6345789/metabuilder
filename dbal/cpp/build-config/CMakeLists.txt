@@ -24,7 +24,6 @@ find_package(Drogon REQUIRED CONFIG)
 add_library(dbal_core STATIC
     ${DBAL_SRC_DIR}/client.cpp
     ${DBAL_SRC_DIR}/errors.cpp
-    ${DBAL_SRC_DIR}/capabilities.cpp
     ${DBAL_SRC_DIR}/query/ast.cpp
     ${DBAL_SRC_DIR}/query/builder.cpp
     ${DBAL_SRC_DIR}/query/normalize.cpp
