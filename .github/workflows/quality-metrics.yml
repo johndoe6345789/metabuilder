@@ -63,6 +63,11 @@ jobs:
         run: npx tsx ../../tools/check-maintainability.ts > maintainability-report.json
         continue-on-error: true
 
+      - name: Detect stub implementations
+        id: stub-detection
+        run: npx tsx ../../tools/detect-stub-implementations.ts > stub-report.json
+        continue-on-error: true
+
       - name: Upload quality reports
         uses: actions/upload-artifact@v4
         if: always()
@@ -72,6 +77,7 @@ jobs:
             frontends/nextjs/complexity-report.json
             frontends/nextjs/function-metrics.json
             frontends/nextjs/maintainability-report.json
+            frontends/nextjs/stub-report.json
           retention-days: 30
 
   # ============================================================================

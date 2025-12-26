@@ -1,37 +1,68 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { renderHook, act } from '@testing-library/react'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { renderHook, act, waitFor } from '@testing-library/react'
+import type { User } from '@/lib/level-types'
+
+const mockFetchSession = vi.fn()
+const mockLogin = vi.fn()
+const mockLogout = vi.fn()
+
+vi.mock('@/lib/auth/api/fetch-session', () => ({
+  fetchSession: mockFetchSession,
+}))
+
+vi.mock('@/lib/auth/api/login', () => ({
+  login: mockLogin,
+}))
+
+vi.mock('@/lib/auth/api/logout', () => ({
+  logout: mockLogout,
+}))
+
 import { useAuth } from '@/hooks/useAuth'
 
+const createUser = (overrides?: Partial<User>): User => ({
+  id: 'user_1',
+  username: 'alice',
+  email: 'alice@example.com',
+  role: 'user',
+  createdAt: 1000,
+  tenantId: undefined,
+  profilePicture: undefined,
+  bio: undefined,
+  isInstanceOwner: false,
+  ...overrides,
+})
+
+const waitForIdle = async (result: { current: { isLoading: boolean } }) => {
+  await waitFor(() => {
+    expect(result.current.isLoading).toBe(false)
+  })
+}
+
 describe('useAuth', () => {
-  const completeAuthAction = async (action: () => Promise<void>) => {
-    await act(async () => {
-      const promise = action()
-      vi.advanceTimersByTime(100)
-      await promise
-    })
-  }
-
-  beforeEach(() => {
-    vi.useFakeTimers()
-  })
-
-  afterEach(() => {
-    vi.runOnlyPendingTimers()
-    vi.useRealTimers()
-  })
-
   beforeEach(async () => {
+    mockFetchSession.mockReset()
+    mockLogin.mockReset()
+    mockLogout.mockReset()
+    mockFetchSession.mockResolvedValue(null)
+    mockLogout.mockResolvedValue(undefined)
+
     const { result, unmount } = renderHook(() => useAuth())
-    await completeAuthAction(() => result.current.logout())
+    await waitForIdle(result)
+    await act(async () => {
+      await result.current.logout()
+    })
+    await waitForIdle(result)
     unmount()
   })
 
-  it('should start unauthenticated', () => {
+  it('should start unauthenticated after session check', async () => {
     const { result, unmount } = renderHook(() => useAuth())
+
+    await waitForIdle(result)
 
     expect(result.current.user).toBeNull()
     expect(result.current.isAuthenticated).toBe(false)
-    expect(result.current.isLoading).toBe(false)
 
     unmount()
   })
@@ -42,15 +73,25 @@ describe('useAuth', () => {
   ])('should authenticate $email', async ({ email, expectedName }) => {
     const { result, unmount } = renderHook(() => useAuth())
 
-    await completeAuthAction(() => result.current.login(email, 'password'))
+    mockLogin.mockResolvedValue(createUser({
+      id: 'user_1',
+      username: expectedName,
+      email,
+    }))
+
+    await waitForIdle(result)
+    await act(async () => {
+      await result.current.login(email, 'password')
+    })
 
     expect(result.current.user).toMatchObject({
-      id: '1',
+      id: 'user_1',
       email,
       name: expectedName,
+      username: expectedName,
+      level: 2,
     })
     expect(result.current.isAuthenticated).toBe(true)
-    expect(result.current.isLoading).toBe(false)
 
     unmount()
   })
@@ -58,12 +99,19 @@ describe('useAuth', () => {
   it('should clear user on logout', async () => {
     const { result, unmount } = renderHook(() => useAuth())
 
-    await completeAuthAction(() => result.current.login('logout@example.com', 'password'))
-    await completeAuthAction(() => result.current.logout())
+    mockLogin.mockResolvedValue(createUser())
+
+    await waitForIdle(result)
+    await act(async () => {
+      await result.current.login('alice@example.com', 'password')
+    })
+
+    await act(async () => {
+      await result.current.logout()
+    })
 
     expect(result.current.user).toBeNull()
     expect(result.current.isAuthenticated).toBe(false)
-    expect(result.current.isLoading).toBe(false)
 
     unmount()
   })
@@ -72,12 +120,21 @@ describe('useAuth', () => {
     const first = renderHook(() => useAuth())
     const second = renderHook(() => useAuth())
 
-    await completeAuthAction(() => first.result.current.login('sync@example.com', 'password'))
+    mockLogin.mockResolvedValue(createUser({ email: 'sync@example.com', username: 'sync' }))
+
+    await waitForIdle(first.result)
+    await waitForIdle(second.result)
+
+    await act(async () => {
+      await first.result.current.login('sync@example.com', 'password')
+    })
 
     expect(second.result.current.isAuthenticated).toBe(true)
     expect(second.result.current.user?.email).toBe('sync@example.com')
 
-    await completeAuthAction(() => second.result.current.logout())
+    await act(async () => {
+      await second.result.current.logout()
+    })
 
     expect(first.result.current.isAuthenticated).toBe(false)
     expect(first.result.current.user).toBeNull()

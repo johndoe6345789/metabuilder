@@ -1,5 +1,7 @@
 export { getUsers } from './get-users'
 export { getUserById } from './get-user-by-id'
+export { getUserByUsername } from './get-user-by-username'
+export { getUserByEmail } from './get-user-by-email'
 export { setUsers } from './set-users'
 export { addUser } from './add-user'
 export { updateUser } from './update-user'

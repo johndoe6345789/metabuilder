@@ -115,6 +115,17 @@ const result = await dbalQuery({
 | **Validation** | Schema | Custom rules |
 | **Performance** | Good | Optimized |
 
+### Primary Key Mapping
+
+DBAL adapters normalize primary key lookups for Prisma models that use non-`id` keys. The adapter maps the entity name to its primary key field so standard `read`/`update`/`delete` calls work correctly.
+
+Non-`id` primary keys in this repo:
+- `Credential.username`
+- `InstalledPackage.packageId`
+- `PackageData.packageId`
+- `PasswordResetToken.username`
+- `SystemConfig.key`
+
 ## Database Operations
 
 ### Create (Insert)

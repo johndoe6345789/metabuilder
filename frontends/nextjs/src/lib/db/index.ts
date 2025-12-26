@@ -12,8 +12,10 @@ export { verifyPassword } from './verify-password'
 export { initializeDatabase } from './initialize-database'
 
 // Domain re-exports
+export * from './auth'
 export * from './users'
 export * from './credentials'
+export * from './sessions'
 export * from './workflows'
 export * from './lua-scripts'
 export * from './pages'
@@ -35,8 +37,10 @@ export * from './database-admin'
 import { initializeDatabase } from './initialize-database'
 import { hashPassword } from './hash-password'
 import { verifyPassword } from './verify-password'
+import * as auth from './auth'
 import * as users from './users'
 import * as credentials from './credentials'
+import * as sessions from './sessions'
 import * as workflows from './workflows'
 import * as luaScripts from './lua-scripts'
 import * as pages from './pages'
@@ -64,6 +68,11 @@ export class Database {
   static hashPassword = hashPassword
   static verifyPassword = verifyPassword
 
+  // Auth
+  static authenticateUser = auth.authenticateUser
+  static getUserByUsername = auth.getUserByUsername
+  static getUserByEmail = auth.getUserByEmail
+
   // Users
   static getUsers = users.getUsers
   static getUserById = users.getUserById
@@ -83,6 +92,15 @@ export class Database {
   static getPasswordResetTokens = credentials.getPasswordResetTokens
   static setPasswordResetToken = credentials.setPasswordResetToken
   static deletePasswordResetToken = credentials.deletePasswordResetToken
+  
+  // Sessions
+  static createSession = sessions.createSession
+  static getSessionById = sessions.getSessionById
+  static getSessionByToken = sessions.getSessionByToken
+  static updateSession = sessions.updateSession
+  static deleteSession = sessions.deleteSession
+  static deleteSessionByToken = sessions.deleteSessionByToken
+  static listSessions = sessions.listSessions
 
   // Workflows
   static getWorkflows = workflows.getWorkflows

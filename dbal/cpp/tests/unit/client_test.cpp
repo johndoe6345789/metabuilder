@@ -248,6 +248,63 @@ void test_list_users() {
     std::cout << "  ✓ Pagination works (page 1, limit 2)" << std::endl;
 }
 
+void test_user_batch_operations() {
+    std::cout << "Testing user batch operations..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    std::vector<dbal::CreateUserInput> users;
+    dbal::CreateUserInput user1;
+    user1.username = "batch_user_1";
+    user1.email = "batch_user_1@example.com";
+    users.push_back(user1);
+
+    dbal::CreateUserInput user2;
+    user2.username = "batch_user_2";
+    user2.email = "batch_user_2@example.com";
+    user2.role = dbal::UserRole::Admin;
+    users.push_back(user2);
+
+    auto createResult = client.batchCreateUsers(users);
+    assert(createResult.isOk());
+    assert(createResult.value() == 2);
+    std::cout << "  ✓ Batch created users" << std::endl;
+
+    dbal::ListOptions listOptions;
+    listOptions.limit = 10;
+    auto listResult = client.listUsers(listOptions);
+    assert(listResult.isOk());
+    assert(listResult.value().size() >= 2);
+
+    std::vector<dbal::UpdateUserBatchItem> updates;
+    dbal::UpdateUserBatchItem update1;
+    update1.id = listResult.value()[0].id;
+    update1.data.email = "batch_updated_1@example.com";
+    updates.push_back(update1);
+
+    dbal::UpdateUserBatchItem update2;
+    update2.id = listResult.value()[1].id;
+    update2.data.role = dbal::UserRole::God;
+    updates.push_back(update2);
+
+    auto updateResult = client.batchUpdateUsers(updates);
+    assert(updateResult.isOk());
+    assert(updateResult.value() == 2);
+    std::cout << "  ✓ Batch updated users" << std::endl;
+
+    std::vector<std::string> ids;
+    ids.push_back(listResult.value()[0].id);
+    ids.push_back(listResult.value()[1].id);
+
+    auto deleteResult = client.batchDeleteUsers(ids);
+    assert(deleteResult.isOk());
+    assert(deleteResult.value() == 2);
+    std::cout << "  ✓ Batch deleted users" << std::endl;
+}
+
 void test_page_crud() {
     std::cout << "Testing page CRUD operations..." << std::endl;
     
@@ -736,6 +793,66 @@ void test_package_validation() {
     std::cout << "  ✓ Duplicate package version rejected" << std::endl;
 }
 
+void test_package_batch_operations() {
+    std::cout << "Testing package batch operations..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    std::vector<dbal::CreatePackageInput> packages;
+    dbal::CreatePackageInput package1;
+    package1.name = "batch-package-1";
+    package1.version = "1.0.0";
+    package1.author = "MetaBuilder";
+    package1.manifest = {{"entry", "index.lua"}};
+    packages.push_back(package1);
+
+    dbal::CreatePackageInput package2;
+    package2.name = "batch-package-2";
+    package2.version = "2.0.0";
+    package2.author = "MetaBuilder";
+    package2.manifest = {{"entry", "chat.lua"}};
+    packages.push_back(package2);
+
+    auto createResult = client.batchCreatePackages(packages);
+    assert(createResult.isOk());
+    assert(createResult.value() == 2);
+    std::cout << "  ✓ Batch created packages" << std::endl;
+
+    dbal::ListOptions listOptions;
+    listOptions.limit = 10;
+    auto listResult = client.listPackages(listOptions);
+    assert(listResult.isOk());
+    assert(listResult.value().size() >= 2);
+
+    std::vector<dbal::UpdatePackageBatchItem> updates;
+    dbal::UpdatePackageBatchItem update1;
+    update1.id = listResult.value()[0].id;
+    update1.data.is_installed = true;
+    updates.push_back(update1);
+
+    dbal::UpdatePackageBatchItem update2;
+    update2.id = listResult.value()[1].id;
+    update2.data.is_installed = true;
+    updates.push_back(update2);
+
+    auto updateResult = client.batchUpdatePackages(updates);
+    assert(updateResult.isOk());
+    assert(updateResult.value() == 2);
+    std::cout << "  ✓ Batch updated packages" << std::endl;
+
+    std::vector<std::string> ids;
+    ids.push_back(listResult.value()[0].id);
+    ids.push_back(listResult.value()[1].id);
+
+    auto deleteResult = client.batchDeletePackages(ids);
+    assert(deleteResult.isOk());
+    assert(deleteResult.value() == 2);
+    std::cout << "  ✓ Batch deleted packages" << std::endl;
+}
+
 void test_error_handling() {
     std::cout << "Testing comprehensive error handling..." << std::endl;
     
@@ -773,6 +890,7 @@ int main() {
         test_update_user();
         test_delete_user();
         test_list_users();
+        test_user_batch_operations();
         test_page_crud();
         test_page_validation();
         test_workflow_crud();
@@ -783,11 +901,12 @@ int main() {
         test_lua_script_validation();
         test_package_crud();
         test_package_validation();
+        test_package_batch_operations();
         test_error_handling();
         
         std::cout << std::endl;
         std::cout << "==================================================" << std::endl;
-        std::cout << "✅ All 20 test suites passed!" << std::endl;
+        std::cout << "✅ All 22 test suites passed!" << std::endl;
         std::cout << "==================================================" << std::endl;
         return 0;
     } catch (const std::exception& e) {

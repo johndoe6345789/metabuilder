@@ -15,6 +15,7 @@ const mockAdapter = vi.hoisted(() => ({
   deleteByField: vi.fn(),
   deleteMany: vi.fn(),
   createMany: vi.fn(),
+  updateMany: vi.fn(),
   getCapabilities: vi.fn(),
   close: vi.fn(),
 }))

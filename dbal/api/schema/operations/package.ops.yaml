@@ -12,6 +12,20 @@ operations:
     errors:
       - CONFLICT: "Package with name and version already exists"
       - VALIDATION_ERROR: "Invalid package input"
+
+  create_many:
+    description: "Bulk create package definitions"
+    input:
+      required: [items]
+      optional: []
+    output: integer
+    acl_required: ["package:create"]
+    validation:
+      - semver_format: "Version must be valid semver"
+      - name_version_unique: "Package name+version must be unique"
+    errors:
+      - CONFLICT: "Package with name and version already exists"
+      - VALIDATION_ERROR: "Invalid package input"
       
   read:
     description: "Get package by ID"
@@ -35,6 +49,17 @@ operations:
       - NOT_FOUND: "Package not found"
       - CONFLICT: "Package name+version already exists"
       - VALIDATION_ERROR: "Invalid package update"
+
+  update_many:
+    description: "Bulk update packages matching a filter"
+    input:
+      required: [filter, data]
+    output: integer
+    acl_required: ["package:update"]
+    validation:
+      - semver_format: "Version must be valid semver"
+    errors:
+      - VALIDATION_ERROR: "Invalid package update"
       
   delete:
     description: "Delete package"
@@ -44,6 +69,15 @@ operations:
     acl_required: ["package:delete"]
     errors:
       - NOT_FOUND: "Package not found"
+
+  delete_many:
+    description: "Bulk delete packages matching a filter"
+    input:
+      required: [filter]
+    output: integer
+    acl_required: ["package:delete"]
+    errors:
+      - VALIDATION_ERROR: "Invalid delete filter"
       
   list:
     description: "List packages with filtering and pagination"

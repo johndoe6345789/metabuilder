@@ -31,6 +31,19 @@ model Credential {
   passwordHash String
 }
 
+model Session {
+  id           String @id
+  userId       String
+  token        String @unique
+  expiresAt    BigInt
+  createdAt    BigInt
+  lastActivity BigInt
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
 model Workflow {
   id          String  @id
   name        String

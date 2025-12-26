@@ -84,6 +84,24 @@ export class ACLAdapter implements DBALAdapter {
     this.auditLog = options?.auditLog ?? true
   }
 
+  private resolvePermissionOperation(operation: string): string {
+    switch (operation) {
+      case 'findFirst':
+      case 'findByField':
+        return 'read'
+      case 'createMany':
+        return 'create'
+      case 'updateByField':
+      case 'updateMany':
+        return 'update'
+      case 'deleteByField':
+      case 'deleteMany':
+        return 'delete'
+      default:
+        return operation
+    }
+  }
+
   private checkPermission(entity: string, operation: string): void {
     const matchingRules = this.rules.filter(rule => 
       rule.entity === entity && 
@@ -239,6 +257,187 @@ export class ACLAdapter implements DBALAdapter {
     } catch (error) {
       if (this.auditLog) {
         this.logAudit(entity, 'list', false, error instanceof Error ? error.message : 'Unknown error')
+      }
+      throw error
+    }
+  }
+
+  async findFirst(entity: string, filter?: Record<string, unknown>): Promise<unknown | null> {
+    const permissionOperation = this.resolvePermissionOperation('findFirst')
+    this.checkPermission(entity, permissionOperation)
+
+    try {
+      const result = await this.baseAdapter.findFirst(entity, filter)
+      if (result) {
+        this.checkRowLevelAccess(entity, permissionOperation, result as Record<string, unknown>)
+      }
+      if (this.auditLog) {
+        this.logAudit(entity, 'findFirst', true)
+      }
+      return result
+    } catch (error) {
+      if (this.auditLog) {
+        this.logAudit(entity, 'findFirst', false, error instanceof Error ? error.message : 'Unknown error')
+      }
+      throw error
+    }
+  }
+
+  async findByField(entity: string, field: string, value: unknown): Promise<unknown | null> {
+    const permissionOperation = this.resolvePermissionOperation('findByField')
+    this.checkPermission(entity, permissionOperation)
+
+    try {
+      const result = await this.baseAdapter.findByField(entity, field, value)
+      if (result) {
+        this.checkRowLevelAccess(entity, permissionOperation, result as Record<string, unknown>)
+      }
+      if (this.auditLog) {
+        this.logAudit(entity, 'findByField', true)
+      }
+      return result
+    } catch (error) {
+      if (this.auditLog) {
+        this.logAudit(entity, 'findByField', false, error instanceof Error ? error.message : 'Unknown error')
+      }
+      throw error
+    }
+  }
+
+  async upsert(
+    entity: string,
+    uniqueField: string,
+    uniqueValue: unknown,
+    createData: Record<string, unknown>,
+    updateData: Record<string, unknown>
+  ): Promise<unknown> {
+    try {
+      const existing = await this.baseAdapter.findByField(entity, uniqueField, uniqueValue)
+      if (existing) {
+        this.checkPermission(entity, 'update')
+        this.checkRowLevelAccess(entity, 'update', existing as Record<string, unknown>)
+      } else {
+        this.checkPermission(entity, 'create')
+      }
+
+      const result = await this.baseAdapter.upsert(entity, uniqueField, uniqueValue, createData, updateData)
+      if (this.auditLog) {
+        this.logAudit(entity, 'upsert', true)
+      }
+      return result
+    } catch (error) {
+      if (this.auditLog) {
+        this.logAudit(entity, 'upsert', false, error instanceof Error ? error.message : 'Unknown error')
+      }
+      throw error
+    }
+  }
+
+  async updateByField(entity: string, field: string, value: unknown, data: Record<string, unknown>): Promise<unknown> {
+    const permissionOperation = this.resolvePermissionOperation('updateByField')
+    this.checkPermission(entity, permissionOperation)
+
+    const existing = await this.baseAdapter.findByField(entity, field, value)
+    if (existing) {
+      this.checkRowLevelAccess(entity, permissionOperation, existing as Record<string, unknown>)
+    }
+
+    try {
+      const result = await this.baseAdapter.updateByField(entity, field, value, data)
+      if (this.auditLog) {
+        this.logAudit(entity, 'updateByField', true)
+      }
+      return result
+    } catch (error) {
+      if (this.auditLog) {
+        this.logAudit(entity, 'updateByField', false, error instanceof Error ? error.message : 'Unknown error')
+      }
+      throw error
+    }
+  }
+
+  async deleteByField(entity: string, field: string, value: unknown): Promise<boolean> {
+    const permissionOperation = this.resolvePermissionOperation('deleteByField')
+    this.checkPermission(entity, permissionOperation)
+
+    const existing = await this.baseAdapter.findByField(entity, field, value)
+    if (existing) {
+      this.checkRowLevelAccess(entity, permissionOperation, existing as Record<string, unknown>)
+    }
+
+    try {
+      const result = await this.baseAdapter.deleteByField(entity, field, value)
+      if (this.auditLog) {
+        this.logAudit(entity, 'deleteByField', true)
+      }
+      return result
+    } catch (error) {
+      if (this.auditLog) {
+        this.logAudit(entity, 'deleteByField', false, error instanceof Error ? error.message : 'Unknown error')
+      }
+      throw error
+    }
+  }
+
+  async createMany(entity: string, data: Record<string, unknown>[]): Promise<number> {
+    const permissionOperation = this.resolvePermissionOperation('createMany')
+    this.checkPermission(entity, permissionOperation)
+
+    try {
+      const result = await this.baseAdapter.createMany(entity, data)
+      if (this.auditLog) {
+        this.logAudit(entity, 'createMany', true)
+      }
+      return result
+    } catch (error) {
+      if (this.auditLog) {
+        this.logAudit(entity, 'createMany', false, error instanceof Error ? error.message : 'Unknown error')
+      }
+      throw error
+    }
+  }
+
+  async updateMany(entity: string, filter: Record<string, unknown>, data: Record<string, unknown>): Promise<number> {
+    const permissionOperation = this.resolvePermissionOperation('updateMany')
+    this.checkPermission(entity, permissionOperation)
+
+    const listResult = await this.baseAdapter.list(entity, { filter })
+    for (const item of listResult.data) {
+      this.checkRowLevelAccess(entity, permissionOperation, item as Record<string, unknown>)
+    }
+
+    try {
+      const result = await this.baseAdapter.updateMany(entity, filter, data)
+      if (this.auditLog) {
+        this.logAudit(entity, 'updateMany', true)
+      }
+      return result
+    } catch (error) {
+      if (this.auditLog) {
+        this.logAudit(entity, 'updateMany', false, error instanceof Error ? error.message : 'Unknown error')
+      }
+      throw error
+    }
+  }
+
+  async deleteMany(entity: string, filter?: Record<string, unknown>): Promise<number> {
+    const permissionOperation = this.resolvePermissionOperation('deleteMany')
+    this.checkPermission(entity, permissionOperation)
+
+    const listResult = await this.baseAdapter.list(entity, { filter })
+    for (const item of listResult.data) {
+      this.checkRowLevelAccess(entity, permissionOperation, item as Record<string, unknown>)
+    }
+
+    try {
+      const result = await this.baseAdapter.deleteMany(entity, filter)
+      if (this.auditLog) {
+        this.logAudit(entity, 'deleteMany', true)
+      }
+      return result
+    } catch (error) {
+      if (this.auditLog) {
+        this.logAudit(entity, 'deleteMany', false, error instanceof Error ? error.message : 'Unknown error')
       }
       throw error
     }

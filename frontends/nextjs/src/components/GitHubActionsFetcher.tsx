@@ -1,13 +1,39 @@
-import { useState, useEffect, useMemo } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
-import { Button } from '@/components/ui'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui'
-import { Skeleton } from '@/components/ui'
-import { Badge } from '@/components/ui'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { CheckCircle, XCircle, ArrowClockwise, ArrowSquareOut, Info, Warning, TrendUp, TrendDown, Robot, Download, FileText } from '@phosphor-icons/react'
+import { useEffect, useMemo, useState } from 'react'
+import { Box, Stack, Typography } from '@mui/material'
+import { alpha } from '@mui/material/styles'
+import {
+  Autorenew as RunningIcon,
+  Cancel as FailureIcon,
+  CheckCircle as SuccessIcon,
+  Description as FileTextIcon,
+  Download as DownloadIcon,
+  Info as InfoIcon,
+  OpenInNew as OpenInNewIcon,
+  Refresh as RefreshIcon,
+  SmartToy as RobotIcon,
+  TrendingDown as TrendDownIcon,
+  TrendingUp as TrendUpIcon,
+  Warning as WarningIcon,
+} from '@mui/icons-material'
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  ScrollArea,
+  Skeleton,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui'
 import { toast } from 'sonner'
-import { ScrollArea } from '@/components/ui'
 import { formatWorkflowRunAnalysis, summarizeWorkflowRuns } from '@/lib/github/analyze-workflow-runs'
 import { formatWorkflowLogAnalysis, summarizeWorkflowLogs } from '@/lib/github/analyze-workflow-logs'
 
@@ -41,6 +67,22 @@ interface JobStep {
   number: number
   started_at?: string | null
   completed_at?: string | null
+}
+
+const spinSx = {
+  animation: 'spin 1s linear infinite',
+  '@keyframes spin': {
+    from: { transform: 'rotate(0deg)' },
+    to: { transform: 'rotate(360deg)' },
+  },
+}
+
+const pulseSx = {
+  animation: 'pulse 1.4s ease-in-out infinite',
+  '@keyframes pulse': {
+    '0%, 100%': { opacity: 0.6 },
+    '50%': { opacity: 1 },
+  },
 }
 
 export function GitHubActionsFetcher() {
@@ -129,18 +171,27 @@ export function GitHubActionsFetcher() {
 
   const getStatusColor = (status: string, conclusion: string | null) => {
     if (status === 'completed') {
-      if (conclusion === 'success') return 'text-green-600'
-      if (conclusion === 'failure') return 'text-red-600'
-      if (conclusion === 'cancelled') return 'text-gray-600'
+      if (conclusion === 'success') return 'success.main'
+      if (conclusion === 'failure') return 'error.main'
+      if (conclusion === 'cancelled') return 'text.secondary'
     }
-    return 'text-yellow-600'
+    return 'warning.main'
   }
 
   const getStatusIcon = (status: string, conclusion: string | null) => {
-    if (status === 'completed' && conclusion === 'success') {
-      return <CheckCircle className="text-green-600" />
+    if (status === 'completed') {
+      if (conclusion === 'success') {
+        return <SuccessIcon sx={{ color: 'success.main', fontSize: 20 }} />
+      }
+      if (conclusion === 'failure') {
+        return <FailureIcon sx={{ color: 'error.main', fontSize: 20 }} />
+      }
+      if (conclusion === 'cancelled') {
+        return <FailureIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
+      }
     }
-    return <XCircle className="text-red-600" />
+
+    return <RunningIcon sx={{ color: 'warning.main', fontSize: 20, ...spinSx }} />
   }
 
   const analyzeWorkflows = async () => {
@@ -165,16 +216,16 @@ export function GitHubActionsFetcher() {
 
   const downloadWorkflowData = () => {
     if (!data) return
-    
+
     const jsonData = JSON.stringify(data, null, 2)
     const blob = new Blob([jsonData], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `github-actions-${new Date().toISOString()}.json`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = `github-actions-${new Date().toISOString()}.json`
+    document.body.appendChild(anchor)
+    anchor.click()
+    document.body.removeChild(anchor)
     URL.revokeObjectURL(url)
     toast.success('Downloaded workflow data')
   }
@@ -229,12 +280,12 @@ export function GitHubActionsFetcher() {
       if (logsText) {
         const blob = new Blob([logsText], { type: 'text/plain' })
         const url = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `workflow-logs-${runId}-${new Date().toISOString()}.txt`
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
+        const anchor = document.createElement('a')
+        anchor.href = url
+        anchor.download = `workflow-logs-${runId}-${new Date().toISOString()}.txt`
+        document.body.appendChild(anchor)
+        anchor.click()
+        document.body.removeChild(anchor)
         URL.revokeObjectURL(url)
       }
 
@@ -285,30 +336,30 @@ export function GitHubActionsFetcher() {
     const failed = data.filter(r => r.status === 'completed' && r.conclusion === 'failure').length
     const cancelled = data.filter(r => r.status === 'completed' && r.conclusion === 'cancelled').length
     const inProgress = data.filter(r => r.status !== 'completed').length
-    
+
     const mostRecent = data[0]
     const mostRecentTimestamp = new Date(mostRecent.updated_at).getTime()
     const timeThreshold = 5 * 60 * 1000
-    
+
     const recentWorkflows = data.filter(r => {
       const runTime = new Date(r.updated_at).getTime()
       return Math.abs(runTime - mostRecentTimestamp) < timeThreshold
     })
-    
+
     const hasAnyFailed = recentWorkflows.some(r => r.status === 'completed' && r.conclusion === 'failure')
     const hasAnyRunning = recentWorkflows.some(r => r.status !== 'completed')
     const allPassed = recentWorkflows.every(r => r.status === 'completed' && r.conclusion === 'success')
-    
+
     const mostRecentPassed = allPassed && recentWorkflows.length > 0
     const mostRecentFailed = hasAnyFailed
     const mostRecentRunning = hasAnyRunning && !hasAnyFailed
-    
+
     const successRate = completed > 0 ? Math.round((successful / completed) * 100) : 0
     const recentRuns = data.slice(0, 5)
     const recentCompleted = recentRuns.filter(r => r.status === 'completed')
     const recentSuccessful = recentCompleted.filter(r => r.conclusion === 'success').length
     const recentFailed = recentCompleted.filter(r => r.conclusion === 'failure').length
-    
+
     const health = successRate >= 80 ? 'healthy' : successRate >= 60 ? 'warning' : 'critical'
     const trend = recentSuccessful >= recentFailed ? 'up' : 'down'
 
@@ -328,40 +379,77 @@ export function GitHubActionsFetcher() {
       mostRecentPassed,
       mostRecentFailed,
       mostRecentRunning,
-      recentWorkflows
+      recentWorkflows,
     }
   }, [data])
 
+  const summaryTone = conclusion
+    ? conclusion.mostRecentPassed
+      ? 'success'
+      : conclusion.mostRecentFailed
+      ? 'error'
+      : 'warning'
+    : 'warning'
+
   return (
-    <div className="space-y-6 py-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold text-foreground">GitHub Actions Monitor</h2>
-          <p className="text-muted-foreground mt-2">
-            Repository: <code className="text-sm bg-muted px-2 py-1 rounded">{repoLabel}</code>
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
+    <Stack spacing={3} sx={{ py: 3 }}>
+      <Stack
+        direction={{ xs: 'column', lg: 'row' }}
+        spacing={2}
+        alignItems={{ xs: 'flex-start', lg: 'center' }}
+        justifyContent="space-between"
+      >
+        <Stack spacing={1}>
+          <Typography variant="h4" fontWeight={700}>
+            GitHub Actions Monitor
+          </Typography>
+          <Typography color="text.secondary">
+            Repository:{' '}
+            <Box
+              component="code"
+              sx={{
+                ml: 1,
+                px: 1,
+                py: 0.5,
+                borderRadius: 1,
+                bgcolor: 'action.hover',
+                fontSize: '0.875rem',
+              }}
+            >
+              {repoLabel}
+            </Box>
+          </Typography>
+        </Stack>
+
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          spacing={2}
+          alignItems={{ xs: 'flex-start', md: 'center' }}
+        >
           <Button
             onClick={downloadWorkflowData}
             disabled={!data || data.length === 0}
             variant="outline"
             size="sm"
+            startIcon={<DownloadIcon sx={{ fontSize: 18 }} />}
           >
-            <Download />
             Download JSON
           </Button>
-          <div className="flex flex-col items-end gap-1">
-            <div className="flex items-center gap-2">
-              <Badge variant={autoRefreshEnabled ? "default" : "outline"} className="text-xs">
+
+          <Stack spacing={1} alignItems={{ xs: 'flex-start', md: 'flex-end' }}>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Badge
+                variant={autoRefreshEnabled ? 'default' : 'outline'}
+                sx={{ fontSize: '0.75rem' }}
+              >
                 Auto-refresh {autoRefreshEnabled ? 'ON' : 'OFF'}
               </Badge>
               {autoRefreshEnabled && (
-                <span className="text-xs text-muted-foreground font-mono">
+                <Typography variant="caption" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
                   Next refresh: {secondsUntilRefresh}s
-                </span>
+                </Typography>
               )}
-            </div>
+            </Stack>
             <Button
               onClick={() => setAutoRefreshEnabled(!autoRefreshEnabled)}
               variant="outline"
@@ -369,191 +457,241 @@ export function GitHubActionsFetcher() {
             >
               {autoRefreshEnabled ? 'Disable' : 'Enable'} Auto-refresh
             </Button>
-          </div>
+          </Stack>
+
           <Button
             onClick={fetchGitHubActions}
             disabled={isLoading}
             size="lg"
+            startIcon={<RefreshIcon sx={isLoading ? spinSx : undefined} />}
           >
-            <ArrowClockwise className={isLoading ? 'animate-spin' : ''} />
             {isLoading ? 'Fetching...' : 'Refresh'}
           </Button>
-        </div>
-      </div>
+        </Stack>
+      </Stack>
 
       {conclusion && (
         <>
-          <Alert 
-            className={`border-4 ${
-              conclusion.mostRecentPassed 
-                ? 'border-green-500 bg-green-50 dark:bg-green-950/20' 
-                : conclusion.mostRecentFailed
-                ? 'border-red-500 bg-red-50 dark:bg-red-950/20'
-                : 'border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20'
-            }`}
+          <Alert
+            sx={(theme) => ({
+              borderWidth: 2,
+              borderColor: theme.palette[summaryTone].main,
+              bgcolor: alpha(theme.palette[summaryTone].main, 0.08),
+              alignItems: 'flex-start',
+            })}
           >
-            <div className="flex items-start gap-4">
-              {conclusion.mostRecentPassed && (
-                <CheckCircle size={48} weight="fill" className="text-green-600 flex-shrink-0" />
+            <Stack direction="row" spacing={2} alignItems="flex-start">
+              {summaryTone === 'success' && (
+                <SuccessIcon sx={{ color: 'success.main', fontSize: 48 }} />
               )}
-              {conclusion.mostRecentFailed && (
-                <XCircle size={48} weight="fill" className="text-red-600 flex-shrink-0" />
+              {summaryTone === 'error' && (
+                <FailureIcon sx={{ color: 'error.main', fontSize: 48 }} />
               )}
-              {conclusion.mostRecentRunning && (
-                <ArrowClockwise size={48} weight="bold" className="text-yellow-600 flex-shrink-0 animate-spin" />
+              {summaryTone === 'warning' && (
+                <RunningIcon sx={{ color: 'warning.main', fontSize: 48, ...spinSx }} />
               )}
-              <div className="flex-1">
-                <AlertTitle className="text-2xl font-bold mb-2">
-                  {conclusion.mostRecentPassed && 'Most Recent Builds: ALL PASSED ✓'}
-                  {conclusion.mostRecentFailed && 'Most Recent Builds: FAILURES DETECTED ✗'}
-                  {conclusion.mostRecentRunning && 'Most Recent Builds: RUNNING...'}
+              <Box flex={1}>
+                <AlertTitle>
+                  <Box sx={{ fontSize: '1.25rem', fontWeight: 700, mb: 1 }}>
+                    {conclusion.mostRecentPassed && 'Most Recent Builds: ALL PASSED'}
+                    {conclusion.mostRecentFailed && 'Most Recent Builds: FAILURES DETECTED'}
+                    {conclusion.mostRecentRunning && 'Most Recent Builds: RUNNING'}
+                  </Box>
                 </AlertTitle>
-                <AlertDescription className="space-y-3">
-                  <div className="text-sm">
-                    {conclusion.recentWorkflows.length > 1 ? (
-                      <span>Showing {conclusion.recentWorkflows.length} workflows from the most recent run:</span>
-                    ) : (
-                      <span>Most recent workflow:</span>
-                    )}
-                  </div>
-                  {conclusion.recentWorkflows.map((workflow) => (
-                    <div key={workflow.id} className="bg-background/60 rounded-lg p-3 space-y-2">
-                      <div className="flex items-center gap-2">
-                        {workflow.status === 'completed' && workflow.conclusion === 'success' && (
-                          <CheckCircle size={20} className="text-green-600 flex-shrink-0" />
-                        )}
-                        {workflow.status === 'completed' && workflow.conclusion === 'failure' && (
-                          <XCircle size={20} className="text-red-600 flex-shrink-0" />
-                        )}
-                        {workflow.status !== 'completed' && (
-                          <ArrowClockwise size={20} className="text-yellow-600 flex-shrink-0" />
-                        )}
-                        <span className="font-semibold">{workflow.name}</span>
-                        <Badge variant={
-                          workflow.conclusion === 'success' ? 'default' : 
-                          workflow.conclusion === 'failure' ? 'destructive' : 
-                          'outline'
-                        } className="text-xs">
-                          {workflow.status === 'completed' ? workflow.conclusion : workflow.status}
-                        </Badge>
-                      </div>
-                      <div className="flex flex-wrap gap-3 text-xs">
-                        <span className="flex items-center gap-1">
-                          <span className="font-semibold">Branch:</span>
-                          <code className="bg-background px-1.5 py-0.5 rounded text-xs font-mono">
-                            {workflow.head_branch}
-                          </code>
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <span className="font-semibold">Updated:</span>
-                          <span>{new Date(workflow.updated_at).toLocaleString()}</span>
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                  <div className="pt-2">
-                    <Button
-                      variant={conclusion.mostRecentPassed ? 'default' : 'destructive'}
-                      size="sm"
-                      asChild
-                    >
-                      <a
+                <AlertDescription>
+                  <Stack spacing={2}>
+                    <Typography variant="body2">
+                      {conclusion.recentWorkflows.length > 1
+                        ? `Showing ${conclusion.recentWorkflows.length} workflows from the most recent run:`
+                        : 'Most recent workflow:'}
+                    </Typography>
+                    <Stack spacing={1.5}>
+                      {conclusion.recentWorkflows.map((workflow) => {
+                        const statusLabel = workflow.status === 'completed'
+                          ? workflow.conclusion
+                          : workflow.status
+                        const badgeVariant = workflow.conclusion === 'success'
+                          ? 'default'
+                          : workflow.conclusion === 'failure'
+                          ? 'destructive'
+                          : 'outline'
+
+                        return (
+                          <Box
+                            key={workflow.id}
+                            sx={{
+                              bgcolor: 'background.paper',
+                              borderRadius: 2,
+                              p: 2,
+                              boxShadow: 1,
+                            }}
+                          >
+                            <Stack spacing={1}>
+                              <Stack direction="row" spacing={1} alignItems="center">
+                                {workflow.status === 'completed' && workflow.conclusion === 'success' && (
+                                  <SuccessIcon sx={{ color: 'success.main', fontSize: 20 }} />
+                                )}
+                                {workflow.status === 'completed' && workflow.conclusion === 'failure' && (
+                                  <FailureIcon sx={{ color: 'error.main', fontSize: 20 }} />
+                                )}
+                                {workflow.status !== 'completed' && (
+                                  <RunningIcon sx={{ color: 'warning.main', fontSize: 20, ...spinSx }} />
+                                )}
+                                <Typography fontWeight={600}>{workflow.name}</Typography>
+                                <Badge variant={badgeVariant} sx={{ fontSize: '0.75rem' }}>
+                                  {statusLabel}
+                                </Badge>
+                              </Stack>
+                              <Stack
+                                direction="row"
+                                spacing={2}
+                                flexWrap="wrap"
+                                sx={{ color: 'text.secondary', fontSize: '0.75rem' }}
+                              >
+                                <Stack direction="row" spacing={0.5} alignItems="center">
+                                  <Typography fontWeight={600}>Branch:</Typography>
+                                  <Box
+                                    component="code"
+                                    sx={{
+                                      px: 0.75,
+                                      py: 0.25,
+                                      bgcolor: 'action.hover',
+                                      borderRadius: 1,
+                                      fontFamily: 'monospace',
+                                    }}
+                                  >
+                                    {workflow.head_branch}
+                                  </Box>
+                                </Stack>
+                                <Stack direction="row" spacing={0.5} alignItems="center">
+                                  <Typography fontWeight={600}>Updated:</Typography>
+                                  <Typography>{new Date(workflow.updated_at).toLocaleString()}</Typography>
+                                </Stack>
+                              </Stack>
+                            </Stack>
+                          </Box>
+                        )
+                      })}
+                    </Stack>
+                    <Box>
+                      <Button
+                        variant={conclusion.mostRecentPassed ? 'default' : 'destructive'}
+                        size="sm"
+                        component="a"
                         href="https://github.com/johndoe6345789/metabuilder/actions"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2"
+                        endIcon={<OpenInNewIcon sx={{ fontSize: 18 }} />}
                       >
                         View All Workflows on GitHub
-                        <ArrowSquareOut size={16} />
-                      </a>
-                    </Button>
-                  </div>
+                      </Button>
+                    </Box>
+                  </Stack>
                 </AlertDescription>
-              </div>
-            </div>
+              </Box>
+            </Stack>
           </Alert>
 
-          <Card className="border-2">
+          <Card sx={{ borderWidth: 2, borderColor: 'divider' }}>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                {conclusion.health === 'healthy' && <CheckCircle className="text-green-600" size={24} />}
-                {conclusion.health === 'warning' && <Warning className="text-yellow-600" size={24} />}
-                {conclusion.health === 'critical' && <XCircle className="text-red-600" size={24} />}
-                Pipeline Health Summary
-              </CardTitle>
-              <CardDescription>
-                Analysis of recent workflow runs
-              </CardDescription>
+              <Stack direction="row" spacing={1} alignItems="center">
+                {conclusion.health === 'healthy' && (
+                  <SuccessIcon sx={{ color: 'success.main', fontSize: 24 }} />
+                )}
+                {conclusion.health === 'warning' && (
+                  <WarningIcon sx={{ color: 'warning.main', fontSize: 24 }} />
+                )}
+                {conclusion.health === 'critical' && (
+                  <FailureIcon sx={{ color: 'error.main', fontSize: 24 }} />
+                )}
+                <CardTitle>Pipeline Health Summary</CardTitle>
+              </Stack>
+              <CardDescription>Analysis of recent workflow runs</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex flex-wrap gap-2">
-                  <Badge 
-                    variant={conclusion.health === 'healthy' ? 'default' : conclusion.health === 'warning' ? 'outline' : 'destructive'}
-                    className="text-sm px-3 py-1"
+              <Stack spacing={2}>
+                <Stack direction="row" spacing={1} flexWrap="wrap">
+                  <Badge
+                    variant={
+                      conclusion.health === 'healthy'
+                        ? 'default'
+                        : conclusion.health === 'warning'
+                        ? 'outline'
+                        : 'destructive'
+                    }
+                    sx={{ fontSize: '0.875rem', px: 1.5, py: 0.5 }}
                   >
                     {conclusion.successRate}% Success Rate
                   </Badge>
-                  
-                  <Badge variant="secondary" className="text-sm px-3 py-1">
-                    <CheckCircle size={14} className="mr-1" />
+
+                  <Badge variant="secondary" sx={{ fontSize: '0.875rem', px: 1.5, py: 0.5 }}>
+                    <SuccessIcon sx={{ fontSize: 14, mr: 0.5 }} />
                     {conclusion.successful} Passed
                   </Badge>
-                  
+
                   {conclusion.failed > 0 && (
-                    <Badge variant="destructive" className="text-sm px-3 py-1">
-                      <XCircle size={14} className="mr-1" />
+                    <Badge variant="destructive" sx={{ fontSize: '0.875rem', px: 1.5, py: 0.5 }}>
+                      <FailureIcon sx={{ fontSize: 14, mr: 0.5 }} />
                       {conclusion.failed} Failed
                     </Badge>
                   )}
-                  
+
                   {conclusion.inProgress > 0 && (
-                    <Badge variant="outline" className="text-sm px-3 py-1">
-                      <ArrowClockwise size={14} className="mr-1" />
+                    <Badge variant="outline" sx={{ fontSize: '0.875rem', px: 1.5, py: 0.5 }}>
+                      <RunningIcon sx={{ fontSize: 14, mr: 0.5, ...spinSx }} />
                       {conclusion.inProgress} Running
                     </Badge>
                   )}
-                  
+
                   {conclusion.cancelled > 0 && (
-                    <Badge variant="outline" className="text-sm px-3 py-1 opacity-60">
+                    <Badge
+                      variant="outline"
+                      sx={{ fontSize: '0.875rem', px: 1.5, py: 0.5, opacity: 0.7 }}
+                    >
                       {conclusion.cancelled} Cancelled
                     </Badge>
                   )}
 
-                  <Badge 
+                  <Badge
                     variant={conclusion.trend === 'up' ? 'default' : 'destructive'}
-                    className="text-sm px-3 py-1"
+                    sx={{ fontSize: '0.875rem', px: 1.5, py: 0.5 }}
                   >
                     {conclusion.trend === 'up' ? (
-                      <TrendUp size={14} className="mr-1" />
+                      <TrendUpIcon sx={{ fontSize: 14, mr: 0.5 }} />
                     ) : (
-                      <TrendDown size={14} className="mr-1" />
+                      <TrendDownIcon sx={{ fontSize: 14, mr: 0.5 }} />
                     )}
                     Recent: {conclusion.recentSuccessful}/{conclusion.recentSuccessful + conclusion.recentFailed}
                   </Badge>
-                </div>
+                </Stack>
 
-                <div className="text-sm text-muted-foreground">
+                <Stack spacing={1} sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
                   {conclusion.health === 'healthy' && (
-                    <p className="flex items-center gap-2">
-                      <CheckCircle size={16} className="text-green-600" />
-                      Pipeline is healthy. Most recent runs are passing consistently.
-                    </p>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <SuccessIcon sx={{ color: 'success.main', fontSize: 18 }} />
+                      <Typography variant="body2">
+                        Pipeline is healthy. Most recent runs are passing consistently.
+                      </Typography>
+                    </Stack>
                   )}
                   {conclusion.health === 'warning' && (
-                    <p className="flex items-center gap-2">
-                      <Warning size={16} className="text-yellow-600" />
-                      Pipeline health is moderate. Some failures detected in recent runs.
-                    </p>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <WarningIcon sx={{ color: 'warning.main', fontSize: 18 }} />
+                      <Typography variant="body2">
+                        Pipeline health is moderate. Some failures detected in recent runs.
+                      </Typography>
+                    </Stack>
                   )}
                   {conclusion.health === 'critical' && (
-                    <p className="flex items-center gap-2">
-                      <XCircle size={16} className="text-red-600" />
-                      Pipeline health is critical. High failure rate detected.
-                    </p>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <FailureIcon sx={{ color: 'error.main', fontSize: 18 }} />
+                      <Typography variant="body2">
+                        Pipeline health is critical. High failure rate detected.
+                      </Typography>
+                    </Stack>
                   )}
-                </div>
-              </div>
+                </Stack>
+              </Stack>
             </CardContent>
           </Card>
         </>
@@ -561,128 +699,180 @@ export function GitHubActionsFetcher() {
 
       {needsAuth && (
         <Alert>
-          <Info className="text-blue-600" />
-          <AlertTitle>Authentication Note</AlertTitle>
-          <AlertDescription>
-            This app uses the GitHub API to fetch workflow data. The public API allows anonymous access with rate limits.
-          </AlertDescription>
+          <Stack direction="row" spacing={1.5} alignItems="flex-start">
+            <InfoIcon sx={{ color: 'info.main', fontSize: 20 }} />
+            <Box>
+              <AlertTitle>Authentication Note</AlertTitle>
+              <AlertDescription>
+                This app uses the GitHub API to fetch workflow data. The public API allows anonymous access with rate
+                limits.
+              </AlertDescription>
+            </Box>
+          </Stack>
         </Alert>
       )}
 
       {lastFetched && (
         <Alert>
-          <CheckCircle className="text-green-600" />
-          <AlertTitle>Last Fetched</AlertTitle>
-          <AlertDescription>
-            {lastFetched.toLocaleString()}
-          </AlertDescription>
+          <Stack direction="row" spacing={1.5} alignItems="flex-start">
+            <SuccessIcon sx={{ color: 'success.main', fontSize: 20 }} />
+            <Box>
+              <AlertTitle>Last Fetched</AlertTitle>
+              <AlertDescription>{lastFetched.toLocaleString()}</AlertDescription>
+            </Box>
+          </Stack>
         </Alert>
       )}
 
       {error && (
         <Alert variant="destructive">
-          <XCircle />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
+          <Stack direction="row" spacing={1.5} alignItems="flex-start">
+            <FailureIcon sx={{ fontSize: 20 }} />
+            <Box>
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Box>
+          </Stack>
         </Alert>
       )}
 
-      <Tabs defaultValue="workflows" className="space-y-4">
+      <Tabs defaultValue="workflows" sx={{ gap: 2 }}>
         <TabsList>
           <TabsTrigger value="workflows">Workflow Runs</TabsTrigger>
           {runLogs && <TabsTrigger value="logs">Downloaded Logs</TabsTrigger>}
           <TabsTrigger value="analysis">AI Analysis</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="workflows" className="space-y-4">
+        <TabsContent value="workflows" sx={{ mt: 2 }}>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                Workflow Runs
-                <a
+              <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
+                <CardTitle>Workflow Runs</CardTitle>
+                <Button
+                  variant="link"
+                  size="sm"
+                  component="a"
                   href="https://github.com/johndoe6345789/metabuilder/actions"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-normal text-primary hover:underline flex items-center gap-2"
+                  endIcon={<OpenInNewIcon sx={{ fontSize: 16 }} />}
                 >
                   Open in GitHub
-                  <ArrowSquareOut size={16} />
-                </a>
-              </CardTitle>
-              <CardDescription>
-                Recent workflow runs via GitHub REST API
-              </CardDescription>
+                </Button>
+              </Stack>
+              <CardDescription>Recent workflow runs via GitHub REST API</CardDescription>
             </CardHeader>
             <CardContent>
               {isLoading ? (
-                <div className="space-y-3">
-                  <Skeleton className="h-20 w-full" />
-                  <Skeleton className="h-20 w-full" />
-                  <Skeleton className="h-20 w-full" />
-                  <Skeleton className="h-20 w-full" />
-                </div>
+                <Stack spacing={2}>
+                  <Skeleton sx={{ height: 80 }} />
+                  <Skeleton sx={{ height: 80 }} />
+                  <Skeleton sx={{ height: 80 }} />
+                  <Skeleton sx={{ height: 80 }} />
+                </Stack>
               ) : data && data.length > 0 ? (
-                <div className="space-y-3">
-                  {data.map((run) => (
-                    <Card key={run.id} className="border-l-4" style={{ borderLeftColor: run.conclusion === 'success' ? '#16a34a' : '#dc2626' }}>
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              {getStatusIcon(run.status, run.conclusion)}
-                              <h3 className="font-semibold text-foreground truncate">{run.name}</h3>
-                            </div>
-                            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-                              <span className="flex items-center gap-1">
-                                <span className="font-medium">Branch:</span>
-                                <code className="bg-muted px-1 rounded text-xs">{run.head_branch}</code>
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <span className="font-medium">Event:</span>
-                                <span>{run.event}</span>
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <span className="font-medium">Status:</span>
-                                <span className={getStatusColor(run.status, run.conclusion)}>
-                                  {run.status === 'completed' ? run.conclusion : run.status}
-                                </span>
-                              </span>
-                            </div>
-                            <div className="text-xs text-muted-foreground mt-2">
-                              Updated: {new Date(run.updated_at).toLocaleString()}
-                            </div>
-                          </div>
-                          <div className="flex flex-col gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => downloadRunLogs(run.id, run.name)}
-                              disabled={isLoadingLogs && selectedRunId === run.id}
-                            >
-                              <Download size={14} />
-                              {isLoadingLogs && selectedRunId === run.id ? 'Loading...' : 'Download Logs'}
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              asChild
-                            >
-                              <a
+                <Stack spacing={2}>
+                  {data.map((run) => {
+                    const isRunLoading = isLoadingLogs && selectedRunId === run.id
+                    const borderColor = run.conclusion === 'success'
+                      ? 'success.main'
+                      : run.conclusion === 'failure'
+                      ? 'error.main'
+                      : 'warning.main'
+
+                    return (
+                      <Card
+                        key={run.id}
+                        sx={{
+                          borderLeftWidth: 4,
+                          borderLeftStyle: 'solid',
+                          borderLeftColor: borderColor,
+                        }}
+                      >
+                        <CardContent>
+                          <Stack
+                            direction={{ xs: 'column', md: 'row' }}
+                            spacing={2}
+                            alignItems={{ xs: 'flex-start', md: 'center' }}
+                            justifyContent="space-between"
+                          >
+                            <Box flex={1} minWidth={0}>
+                              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
+                                {getStatusIcon(run.status, run.conclusion)}
+                                <Typography variant="subtitle1" fontWeight={600} noWrap>
+                                  {run.name}
+                                </Typography>
+                              </Stack>
+                              <Stack
+                                direction="row"
+                                spacing={2}
+                                flexWrap="wrap"
+                                sx={{ color: 'text.secondary', fontSize: '0.875rem' }}
+                              >
+                                <Stack direction="row" spacing={0.5} alignItems="center">
+                                  <Typography fontWeight={600}>Branch:</Typography>
+                                  <Box
+                                    component="code"
+                                    sx={{
+                                      px: 0.75,
+                                      py: 0.25,
+                                      borderRadius: 1,
+                                      bgcolor: 'action.hover',
+                                      fontFamily: 'monospace',
+                                      fontSize: '0.75rem',
+                                    }}
+                                  >
+                                    {run.head_branch}
+                                  </Box>
+                                </Stack>
+                                <Stack direction="row" spacing={0.5} alignItems="center">
+                                  <Typography fontWeight={600}>Event:</Typography>
+                                  <Typography>{run.event}</Typography>
+                                </Stack>
+                                <Stack direction="row" spacing={0.5} alignItems="center">
+                                  <Typography fontWeight={600}>Status:</Typography>
+                                  <Typography sx={{ color: getStatusColor(run.status, run.conclusion) }}>
+                                    {run.status === 'completed' ? run.conclusion : run.status}
+                                  </Typography>
+                                </Stack>
+                              </Stack>
+                              <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                                Updated: {new Date(run.updated_at).toLocaleString()}
+                              </Typography>
+                            </Box>
+
+                            <Stack spacing={1} alignItems={{ xs: 'flex-start', md: 'flex-end' }}>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => downloadRunLogs(run.id, run.name)}
+                                disabled={isRunLoading}
+                                startIcon={
+                                  isRunLoading
+                                    ? <RunningIcon sx={{ fontSize: 16, ...spinSx }} />
+                                    : <DownloadIcon sx={{ fontSize: 16 }} />
+                                }
+                              >
+                                {isRunLoading ? 'Loading...' : 'Download Logs'}
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                component="a"
                                 href={run.html_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-1"
+                                endIcon={<OpenInNewIcon sx={{ fontSize: 16 }} />}
                               >
                                 View
-                                <ArrowSquareOut size={14} />
-                              </a>
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                  <div className="text-center pt-4">
+                              </Button>
+                            </Stack>
+                          </Stack>
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
+                  <Box sx={{ textAlign: 'center', pt: 2 }}>
                     <Button
                       variant="outline"
                       onClick={() => {
@@ -693,145 +883,187 @@ export function GitHubActionsFetcher() {
                     >
                       Copy All as JSON
                     </Button>
-                  </div>
-                </div>
+                  </Box>
+                </Stack>
               ) : (
-                <div className="text-center text-muted-foreground py-8">
+                <Box sx={{ textAlign: 'center', py: 6, color: 'text.secondary' }}>
                   No workflow runs found. Click refresh to fetch data.
-                </div>
+                </Box>
               )}
             </CardContent>
           </Card>
         </TabsContent>
 
         {runLogs && (
-          <TabsContent value="logs" className="space-y-4">
+          <TabsContent value="logs" sx={{ mt: 2 }}>
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText size={24} />
-                  Workflow Logs
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <FileTextIcon sx={{ fontSize: 24 }} />
+                  <CardTitle>Workflow Logs</CardTitle>
                   {selectedRunId && (
-                    <Badge variant="secondary">Run #{selectedRunId}</Badge>
+                    <Badge variant="secondary" sx={{ fontSize: '0.75rem' }}>
+                      Run #{selectedRunId}
+                    </Badge>
                   )}
-                </CardTitle>
+                </Stack>
                 <CardDescription>
                   Complete logs from workflow run including all jobs and steps
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {runJobs.length > 0 && (
-                  <div className="space-y-3 mb-4">
-                    <h3 className="font-semibold text-sm">Jobs Summary</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {runJobs.map((job) => (
-                        <Badge
-                          key={job.id}
-                          variant={job.conclusion === 'success' ? 'default' : job.conclusion === 'failure' ? 'destructive' : 'outline'}
-                        >
-                          {job.name}: {job.conclusion || job.status}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
+              <CardContent>
+                <Stack spacing={3}>
+                  {runJobs.length > 0 && (
+                    <Stack spacing={1.5}>
+                      <Typography variant="subtitle2">Jobs Summary</Typography>
+                      <Stack direction="row" spacing={1} flexWrap="wrap">
+                        {runJobs.map((job) => (
+                          <Badge
+                            key={job.id}
+                            variant={
+                              job.conclusion === 'success'
+                                ? 'default'
+                                : job.conclusion === 'failure'
+                                ? 'destructive'
+                                : 'outline'
+                            }
+                            sx={{ fontSize: '0.75rem' }}
+                          >
+                            {job.name}: {job.conclusion || job.status}
+                          </Badge>
+                        ))}
+                      </Stack>
+                    </Stack>
+                  )}
 
-                <ScrollArea className="h-[600px] w-full border rounded-md">
-                  <pre className="p-4 text-xs font-mono whitespace-pre-wrap break-words">
-                    {runLogs}
-                  </pre>
-                </ScrollArea>
-
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() => {
-                      navigator.clipboard.writeText(runLogs)
-                      toast.success('Logs copied to clipboard')
+                  <ScrollArea
+                    sx={{
+                      height: 600,
+                      width: '100%',
+                      border: 1,
+                      borderColor: 'divider',
+                      borderRadius: 1,
                     }}
-                    variant="outline"
                   >
-                    Copy to Clipboard
-                  </Button>
-                  <Button
-                    onClick={analyzeRunLogs}
-                    disabled={isAnalyzing}
-                  >
-                    <Robot className={isAnalyzing ? 'animate-pulse' : ''} />
-                    {isAnalyzing ? 'Analyzing Logs...' : 'Analyze Logs with AI'}
-                  </Button>
-                </div>
+                    <Box
+                      component="pre"
+                      sx={{
+                        m: 0,
+                        p: 2,
+                        fontSize: '0.75rem',
+                        fontFamily: 'monospace',
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word',
+                      }}
+                    >
+                      {runLogs}
+                    </Box>
+                  </ScrollArea>
+
+                  <Stack direction="row" spacing={2} flexWrap="wrap">
+                    <Button
+                      onClick={() => {
+                        navigator.clipboard.writeText(runLogs)
+                        toast.success('Logs copied to clipboard')
+                      }}
+                      variant="outline"
+                    >
+                      Copy to Clipboard
+                    </Button>
+                    <Button
+                      onClick={analyzeRunLogs}
+                      disabled={isAnalyzing}
+                      startIcon={<RobotIcon sx={isAnalyzing ? pulseSx : undefined} />}
+                    >
+                      {isAnalyzing ? 'Analyzing Logs...' : 'Analyze Logs with AI'}
+                    </Button>
+                  </Stack>
+                </Stack>
               </CardContent>
             </Card>
           </TabsContent>
         )}
 
-        <TabsContent value="analysis" className="space-y-4">
+        <TabsContent value="analysis" sx={{ mt: 2 }}>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Robot size={24} />
-                AI-Powered Workflow Analysis
-              </CardTitle>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <RobotIcon sx={{ fontSize: 24 }} />
+                <CardTitle>AI-Powered Workflow Analysis</CardTitle>
+              </Stack>
               <CardDescription>
-                {runLogs 
-                  ? 'Deep analysis of downloaded workflow logs using GPT-4' 
+                {runLogs
+                  ? 'Deep analysis of downloaded workflow logs using GPT-4'
                   : 'Deep analysis of your CI/CD pipeline using GPT-4'}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              {runLogs ? (
-                <Button
-                  onClick={analyzeRunLogs}
-                  disabled={isAnalyzing}
-                  size="lg"
-                  className="w-full"
-                >
-                  <Robot className={isAnalyzing ? 'animate-pulse' : ''} />
-                  {isAnalyzing ? 'Analyzing Logs...' : 'Analyze Downloaded Logs with AI'}
-                </Button>
-              ) : (
-                <Button
-                  onClick={analyzeWorkflows}
-                  disabled={isAnalyzing || !data || data.length === 0}
-                  size="lg"
-                  className="w-full"
-                >
-                  <Robot className={isAnalyzing ? 'animate-pulse' : ''} />
-                  {isAnalyzing ? 'Analyzing...' : 'Analyze Workflows with AI'}
-                </Button>
-              )}
+            <CardContent>
+              <Stack spacing={3}>
+                {runLogs ? (
+                  <Button
+                    onClick={analyzeRunLogs}
+                    disabled={isAnalyzing}
+                    size="lg"
+                    fullWidth
+                    startIcon={<RobotIcon sx={isAnalyzing ? pulseSx : undefined} />}
+                  >
+                    {isAnalyzing ? 'Analyzing Logs...' : 'Analyze Downloaded Logs with AI'}
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={analyzeWorkflows}
+                    disabled={isAnalyzing || !data || data.length === 0}
+                    size="lg"
+                    fullWidth
+                    startIcon={<RobotIcon sx={isAnalyzing ? pulseSx : undefined} />}
+                  >
+                    {isAnalyzing ? 'Analyzing...' : 'Analyze Workflows with AI'}
+                  </Button>
+                )}
 
-              {isAnalyzing && (
-                <div className="space-y-3">
-                  <Skeleton className="h-32 w-full" />
-                  <Skeleton className="h-32 w-full" />
-                  <Skeleton className="h-32 w-full" />
-                </div>
-              )}
+                {isAnalyzing && (
+                  <Stack spacing={2}>
+                    <Skeleton sx={{ height: 128 }} />
+                    <Skeleton sx={{ height: 128 }} />
+                    <Skeleton sx={{ height: 128 }} />
+                  </Stack>
+                )}
 
-              {analysis && !isAnalyzing && (
-                <div className="prose prose-sm max-w-none dark:prose-invert">
-                  <div className="bg-muted/50 p-6 rounded-lg border whitespace-pre-wrap">
+                {analysis && !isAnalyzing && (
+                  <Box
+                    sx={{
+                      bgcolor: 'action.hover',
+                      p: 3,
+                      borderRadius: 2,
+                      border: 1,
+                      borderColor: 'divider',
+                      whiteSpace: 'pre-wrap',
+                    }}
+                  >
                     {analysis}
-                  </div>
-                </div>
-              )}
+                  </Box>
+                )}
 
-              {!analysis && !isAnalyzing && (
-                <Alert>
-                  <Info className="text-blue-600" />
-                  <AlertTitle>No Analysis Yet</AlertTitle>
-                  <AlertDescription>
-                    {runLogs 
-                      ? 'Click the button above to run an AI analysis of the downloaded logs. The AI will identify errors, provide root cause analysis, and suggest fixes.' 
-                      : 'Download logs from a specific workflow run using the "Download Logs" button, or click above to analyze overall workflow patterns.'}
-                  </AlertDescription>
-                </Alert>
-              )}
+                {!analysis && !isAnalyzing && (
+                  <Alert>
+                    <Stack direction="row" spacing={1.5} alignItems="flex-start">
+                      <InfoIcon sx={{ color: 'info.main', fontSize: 20 }} />
+                      <Box>
+                        <AlertTitle>No Analysis Yet</AlertTitle>
+                        <AlertDescription>
+                          {runLogs
+                            ? 'Click the button above to run an AI analysis of the downloaded logs. The AI will identify errors, provide root cause analysis, and suggest fixes.'
+                            : 'Download logs from a specific workflow run using the "Download Logs" button, or click above to analyze overall workflow patterns.'}
+                        </AlertDescription>
+                      </Box>
+                    </Stack>
+                  </Alert>
+                )}
+              </Stack>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </Stack>
   )
 }

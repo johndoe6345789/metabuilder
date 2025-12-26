@@ -311,12 +311,20 @@ performance:
 
 ### Batch Operations
 
-Use batch APIs for bulk inserts:
+Use batch APIs for bulk operations (return count of affected rows):
 
 ```cpp
 std::vector<CreateUserInput> users = {...};
-auto result = client.batchCreateUsers(users);
+auto created = client.batchCreateUsers(users);
+
+std::vector<UpdateUserBatchItem> updates = {...};
+auto updated = client.batchUpdateUsers(updates);
+
+std::vector<std::string> ids = {...};
+auto deleted = client.batchDeleteUsers(ids);
 ```
+
+Package equivalents are available via `batchCreatePackages`, `batchUpdatePackages`, and `batchDeletePackages`.
 
 ## Security Hardening
 

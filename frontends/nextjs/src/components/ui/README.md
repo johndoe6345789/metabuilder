@@ -58,6 +58,9 @@ Simple groups of atoms working together:
 - DropdownMenu, RadioGroup, Popover
 - ToggleGroup, Breadcrumb
 
+### Tabs
+`Tabs` manages selection state. Provide `defaultValue` for uncontrolled usage or `value`/`onValueChange` for controlled usage. `TabsContent` hides inactive panels while keeping them mounted.
+
 ### Organisms
 Complex, distinct UI sections:
 - Table, Form, Sheet

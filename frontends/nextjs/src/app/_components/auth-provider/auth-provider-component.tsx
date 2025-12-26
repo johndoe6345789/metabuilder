@@ -3,6 +3,10 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { User } from '@/lib/level-types'
+import { fetchSession } from '@/lib/auth/api/fetch-session'
+import { login as loginRequest } from '@/lib/auth/api/login'
+import { logout as logoutRequest } from '@/lib/auth/api/logout'
+import { register as registerRequest } from '@/lib/auth/api/register'
 import { AuthContext } from './auth-context'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -17,11 +21,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const checkAuth = async () => {
     try {
-      const res = await fetch('/api/auth/session')
-      if (res.ok) {
-        const data = await res.json()
-        setUser(data.user)
-      }
+      const sessionUser = await fetchSession()
+      setUser(sessionUser)
     } catch (error) {
       console.error('Auth check failed:', error)
     } finally {
@@ -30,26 +31,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const login = async (username: string, password: string) => {
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-    })
-
-    if (!res.ok) {
-      const error = await res.json()
-      throw new Error(error.message || 'Login failed')
-    }
-
-    const data = await res.json()
-    setUser(data.user)
+    const authenticated = await loginRequest(username, password)
+    setUser(authenticated)
 
     // Redirect based on role
-    if (data.user.role === 'supergod') {
+    if (authenticated.role === 'supergod') {
       router.push('/(auth)/supergod')
-    } else if (data.user.role === 'god') {
+    } else if (authenticated.role === 'god') {
       router.push('/(auth)/builder')
-    } else if (data.user.role === 'admin') {
+    } else if (authenticated.role === 'admin') {
       router.push('/(auth)/admin')
     } else {
       router.push('/(auth)/dashboard')
@@ -57,24 +47,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const register = async (username: string, email: string, password: string) => {
-    const res = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password }),
-    })
-
-    if (!res.ok) {
-      const error = await res.json()
-      throw new Error(error.message || 'Registration failed')
-    }
-
-    const data = await res.json()
-    setUser(data.user)
+    const registered = await registerRequest(username, email, password)
+    setUser(registered)
     router.push('/(auth)/dashboard')
   }
 
   const logout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' })
+    await logoutRequest()
     setUser(null)
     router.push('/')
   }

@@ -4,7 +4,7 @@ import { createGitHubClient } from '@/lib/github/create-github-client'
 import { resolveGitHubRepo } from '@/lib/github/resolve-github-repo'
 import { listWorkflowRuns } from '@/lib/github/list-workflow-runs'
 
-export async function GET(request: NextRequest) {
+export const GET = async (request: NextRequest) => {
   try {
     const { owner, repo } = resolveGitHubRepo(request.nextUrl.searchParams)
     const perPageParam = request.nextUrl.searchParams.get('perPage')

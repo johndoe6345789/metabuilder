@@ -129,6 +129,44 @@ export class WebSocketBridge implements DBALAdapter {
     return this.call('list', entity, options) as Promise<ListResult<unknown>>
   }
 
+  async findFirst(entity: string, filter?: Record<string, unknown>): Promise<unknown | null> {
+    return this.call('findFirst', entity, filter) as Promise<unknown | null>
+  }
+
+  async findByField(entity: string, field: string, value: unknown): Promise<unknown | null> {
+    return this.call('findByField', entity, field, value) as Promise<unknown | null>
+  }
+
+  async upsert(
+    entity: string,
+    uniqueField: string,
+    uniqueValue: unknown,
+    createData: Record<string, unknown>,
+    updateData: Record<string, unknown>
+  ): Promise<unknown> {
+    return this.call('upsert', entity, uniqueField, uniqueValue, createData, updateData)
+  }
+
+  async updateByField(entity: string, field: string, value: unknown, data: Record<string, unknown>): Promise<unknown> {
+    return this.call('updateByField', entity, field, value, data)
+  }
+
+  async deleteByField(entity: string, field: string, value: unknown): Promise<boolean> {
+    return this.call('deleteByField', entity, field, value) as Promise<boolean>
+  }
+
+  async deleteMany(entity: string, filter?: Record<string, unknown>): Promise<number> {
+    return this.call('deleteMany', entity, filter) as Promise<number>
+  }
+
+  async createMany(entity: string, data: Record<string, unknown>[]): Promise<number> {
+    return this.call('createMany', entity, data) as Promise<number>
+  }
+
+  async updateMany(entity: string, filter: Record<string, unknown>, data: Record<string, unknown>): Promise<number> {
+    return this.call('updateMany', entity, filter, data) as Promise<number>
+  }
+
   async getCapabilities(): Promise<AdapterCapabilities> {
     return this.call('getCapabilities') as Promise<AdapterCapabilities>
   }

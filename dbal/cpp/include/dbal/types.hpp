@@ -40,6 +40,11 @@ struct UpdateUserInput {
     std::optional<UserRole> role;
 };
 
+struct UpdateUserBatchItem {
+    std::string id;
+    UpdateUserInput data;
+};
+
 struct PageView {
     std::string id;
     std::string slug;
@@ -192,6 +197,11 @@ struct UpdatePackageInput {
     std::optional<bool> is_installed;
     std::optional<Timestamp> installed_at;
     std::optional<std::string> installed_by;
+};
+
+struct UpdatePackageBatchItem {
+    std::string id;
+    UpdatePackageInput data;
 };
 
 struct ListOptions {

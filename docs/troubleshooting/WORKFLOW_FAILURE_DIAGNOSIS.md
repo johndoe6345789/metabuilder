@@ -324,7 +324,8 @@ If you're inside the app, the GitHub Actions Monitor (Level 1) can fetch run log
 download them locally, and surface common error signals. For private repos or higher
 rate limits, set `GITHUB_TOKEN`. To target a different repository, set
 `GITHUB_OWNER` and `GITHUB_REPO` (used by the `/api/github/actions/runs` and
-`/api/github/actions/runs/{runId}/logs` endpoints).
+`/api/github/actions/runs/{runId}/logs` endpoints). The logs endpoint also accepts
+`jobLimit` and `includeLogs` query parameters.
 
 ---
 

@@ -196,6 +196,19 @@ export class PrismaAdapter implements DBALAdapter {
     }
   }
 
+  async updateMany(entity: string, filter: Record<string, unknown>, data: Record<string, unknown>): Promise<number> {
+    try {
+      const model = this.getModel(entity)
+      const where = this.buildWhereClause(filter)
+      const result = await this.withTimeout(
+        model.updateMany({ where: where as never, data: data as never })
+      )
+      return result.count
+    } catch (error) {
+      throw this.handleError(error, 'updateMany', entity)
+    }
+  }
+
   async createMany(entity: string, data: Record<string, unknown>[]): Promise<number> {
     try {
       const model = this.getModel(entity)

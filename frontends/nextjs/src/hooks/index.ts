@@ -7,7 +7,7 @@ export { useGitHubFetcher } from './useGitHubFetcher'
 export { useKV } from './useKV'
 export { useIsMobile } from './use-mobile'
 
-export type { AuthUser, AuthState, UseAuthReturn } from './useAuth'
+export type { AuthUser, AuthState, UseAuthReturn } from './auth/auth-types'
 export type { EditorFile } from './useCodeEditor'
 export type { FileNode } from './useFileTree'
 export type { WorkflowRun } from './useGitHubFetcher'

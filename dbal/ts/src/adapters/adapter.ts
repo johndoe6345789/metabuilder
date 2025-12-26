@@ -28,6 +28,7 @@ export interface DBALAdapter {
   deleteByField(entity: string, field: string, value: unknown): Promise<boolean>
   deleteMany(entity: string, filter?: Record<string, unknown>): Promise<number>
   createMany(entity: string, data: Record<string, unknown>[]): Promise<number>
+  updateMany(entity: string, filter: Record<string, unknown>, data: Record<string, unknown>): Promise<number>
   
   getCapabilities(): Promise<AdapterCapabilities>
   close(): Promise<void>

@@ -1,4 +1,5 @@
 import { getModel } from './get-model'
+import { getPrimaryKeyField } from './get-primary-key-field'
 
 export async function updateEntity(
   entity: string,
@@ -6,6 +7,7 @@ export async function updateEntity(
   data: Record<string, unknown>
 ): Promise<unknown> {
   const model = getModel(entity)
+  const primaryKeyField = getPrimaryKeyField(entity)
   // Filter out undefined values
   const cleanData: Record<string, unknown> = {}
   for (const [key, value] of Object.entries(data)) {
@@ -13,5 +15,5 @@ export async function updateEntity(
       cleanData[key] = value
     }
   }
-  return model.update({ where: { id }, data: cleanData })
+  return model.update({ where: { [primaryKeyField]: id }, data: cleanData })
 }

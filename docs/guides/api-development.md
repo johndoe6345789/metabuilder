@@ -18,6 +18,8 @@ app/api/
 │       └── route.ts
 └── auth/
     ├── login/route.ts
+    ├── register/route.ts
+    ├── session/route.ts
     └── logout/route.ts
 ```
 
@@ -73,6 +75,70 @@ Content-Type: application/json
 
 ```
 DELETE /api/users/{id}
+```
+
+## Auth API (Session-backed)
+
+Authentication uses a database-backed session with an httpOnly cookie (`mb_session`).
+Sessions default to a 7 day TTL and are refreshed on `/api/auth/session`.
+
+### Login
+
+```
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "identifier": "alice@example.com",
+  "password": "s3cret"
+}
+```
+
+Response:
+
+```
+{
+  "user": {
+    "id": "user_123",
+    "username": "alice",
+    "email": "alice@example.com",
+    "role": "user",
+    "createdAt": 1715612345678
+  }
+}
+```
+
+### Register
+
+```
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "email": "newuser@example.com",
+  "password": "s3cret"
+}
+```
+
+### Session Check
+
+```
+GET /api/auth/session
+```
+
+Response:
+
+```
+{
+  "user": null
+}
+```
+
+### Logout
+
+```
+POST /api/auth/logout
 ```
 
 ## Creating an API Endpoint

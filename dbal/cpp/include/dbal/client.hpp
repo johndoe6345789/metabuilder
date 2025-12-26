@@ -32,6 +32,9 @@ public:
     Result<User> updateUser(const std::string& id, const UpdateUserInput& input);
     Result<bool> deleteUser(const std::string& id);
     Result<std::vector<User>> listUsers(const ListOptions& options);
+    Result<int> batchCreateUsers(const std::vector<CreateUserInput>& inputs);
+    Result<int> batchUpdateUsers(const std::vector<UpdateUserBatchItem>& updates);
+    Result<int> batchDeleteUsers(const std::vector<std::string>& ids);
 
     Result<PageView> createPage(const CreatePageInput& input);
     Result<PageView> getPage(const std::string& id);
@@ -63,6 +66,9 @@ public:
     Result<Package> updatePackage(const std::string& id, const UpdatePackageInput& input);
     Result<bool> deletePackage(const std::string& id);
     Result<std::vector<Package>> listPackages(const ListOptions& options);
+    Result<int> batchCreatePackages(const std::vector<CreatePackageInput>& inputs);
+    Result<int> batchUpdatePackages(const std::vector<UpdatePackageBatchItem>& updates);
+    Result<int> batchDeletePackages(const std::vector<std::string>& ids);
 
     void close();
 

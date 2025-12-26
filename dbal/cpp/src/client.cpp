@@ -259,6 +259,61 @@ Result<std::vector<User>> Client::listUsers(const ListOptions& options) {
     return Result<std::vector<User>>(std::vector<User>());
 }
 
+Result<int> Client::batchCreateUsers(const std::vector<CreateUserInput>& inputs) {
+    if (inputs.empty()) {
+        return Result<int>(0);
+    }
+
+    std::vector<std::string> created_ids;
+    for (const auto& input : inputs) {
+        auto result = createUser(input);
+        if (result.isError()) {
+            auto& store = getStore();
+            for (const auto& id : created_ids) {
+                store.users.erase(id);
+            }
+            return result.error();
+        }
+        created_ids.push_back(result.value().id);
+    }
+
+    return Result<int>(static_cast<int>(created_ids.size()));
+}
+
+Result<int> Client::batchUpdateUsers(const std::vector<UpdateUserBatchItem>& updates) {
+    if (updates.empty()) {
+        return Result<int>(0);
+    }
+
+    int updated = 0;
+    for (const auto& item : updates) {
+        auto result = updateUser(item.id, item.data);
+        if (result.isError()) {
+            return result.error();
+        }
+        updated++;
+    }
+
+    return Result<int>(updated);
+}
+
+Result<int> Client::batchDeleteUsers(const std::vector<std::string>& ids) {
+    if (ids.empty()) {
+        return Result<int>(0);
+    }
+
+    int deleted = 0;
+    for (const auto& id : ids) {
+        auto result = deleteUser(id);
+        if (result.isError()) {
+            return result.error();
+        }
+        deleted++;
+    }
+
+    return Result<int>(deleted);
+}
+
 Result<PageView> Client::createPage(const CreatePageInput& input) {
     // Validation
     if (!isValidSlug(input.slug)) {
@@ -670,6 +725,13 @@ Result<Session> Client::getSession(const std::string& id) {
         return Error::notFound("Session not found: " + id);
     }
 
+    auto now = std::chrono::system_clock::now();
+    if (it->second.expires_at <= now) {
+        store.session_tokens.erase(it->second.token);
+        store.sessions.erase(it);
+        return Error::notFound("Session expired: " + id);
+    }
+
     return Result<Session>(it->second);
 }
 
@@ -741,6 +803,24 @@ Result<bool> Client::deleteSession(const std::string& id) {
 
 Result<std::vector<Session>> Client::listSessions(const ListOptions& options) {
     auto& store = getStore();
+    auto now = std::chrono::system_clock::now();
+    std::vector<std::string> expired_sessions;
+
+    for (const auto& [id, session] : store.sessions) {
+        if (session.expires_at <= now) {
+            expired_sessions.push_back(id);
+        }
+    }
+
+    for (const auto& id : expired_sessions) {
+        auto expired_it = store.sessions.find(id);
+        if (expired_it == store.sessions.end()) {
+            continue;
+        }
+        store.session_tokens.erase(expired_it->second.token);
+        store.sessions.erase(expired_it);
+    }
+
     std::vector<Session> sessions;
 
     for (const auto& [id, session] : store.sessions) {
@@ -1157,6 +1237,65 @@ Result<std::vector<Package>> Client::listPackages(const ListOptions& options) {
     }
 
     return Result<std::vector<Package>>(std::vector<Package>());
+}
+
+Result<int> Client::batchCreatePackages(const std::vector<CreatePackageInput>& inputs) {
+    if (inputs.empty()) {
+        return Result<int>(0);
+    }
+
+    std::vector<std::string> created_ids;
+    for (const auto& input : inputs) {
+        auto result = createPackage(input);
+        if (result.isError()) {
+            auto& store = getStore();
+            for (const auto& id : created_ids) {
+                auto it = store.packages.find(id);
+                if (it != store.packages.end()) {
+                    store.package_keys.erase(packageKey(it->second.name, it->second.version));
+                    store.packages.erase(it);
+                }
+            }
+            return result.error();
+        }
+        created_ids.push_back(result.value().id);
+    }
+
+    return Result<int>(static_cast<int>(created_ids.size()));
+}
+
+Result<int> Client::batchUpdatePackages(const std::vector<UpdatePackageBatchItem>& updates) {
+    if (updates.empty()) {
+        return Result<int>(0);
+    }
+
+    int updated = 0;
+    for (const auto& item : updates) {
+        auto result = updatePackage(item.id, item.data);
+        if (result.isError()) {
+            return result.error();
+        }
+        updated++;
+    }
+
+    return Result<int>(updated);
+}
+
+Result<int> Client::batchDeletePackages(const std::vector<std::string>& ids) {
+    if (ids.empty()) {
+        return Result<int>(0);
+    }
+
+    int deleted = 0;
+    for (const auto& id : ids) {
+        auto result = deletePackage(id);
+        if (result.isError()) {
+            return result.error();
+        }
+        deleted++;
+    }
+
+    return Result<int>(deleted);
 }
 
 void Client::close() {
