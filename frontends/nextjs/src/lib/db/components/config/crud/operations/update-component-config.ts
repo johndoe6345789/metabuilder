@@ -1,4 +1,4 @@
-import { getAdapter } from '../dbal-client'
+import { getAdapter } from '../../../../core/dbal-client'
 import type { ComponentConfig } from '../types'
 
 export async function updateComponentConfig(configId: string, updates: Partial<ComponentConfig>): Promise<void> {
