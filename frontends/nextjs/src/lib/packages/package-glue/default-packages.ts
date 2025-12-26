@@ -136,6 +136,19 @@ const arcadeLobbyMetadata: PackageSeedConfig['metadata'] = {
 }
 const arcadeLobbyExamples: any = {}
 
+const streamCastComponents: any[] = []
+const streamCastMetadata: PackageSeedConfig['metadata'] = {
+  packageId: 'stream_cast',
+  name: 'Stream Cast',
+  version: '1.0.0',
+  description: 'Live streaming control room with schedules and scene control',
+  author: 'MetaBuilder',
+  category: 'media',
+  dependencies: [],
+  exports: { components: [] },
+}
+const streamCastExamples: any = {}
+
 export const DEFAULT_PACKAGES: Record<string, PackageSeedConfig> = {
   admin_dialog: {
     metadata: adminDialogMetadata,
@@ -186,5 +199,10 @@ export const DEFAULT_PACKAGES: Record<string, PackageSeedConfig> = {
     metadata: arcadeLobbyMetadata,
     components: arcadeLobbyComponents,
     examples: arcadeLobbyExamples,
+  },
+  stream_cast: {
+    metadata: streamCastMetadata,
+    components: streamCastComponents,
+    examples: streamCastExamples,
   },
 }
