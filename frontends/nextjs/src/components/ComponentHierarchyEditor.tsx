@@ -157,11 +157,25 @@ export function ComponentHierarchyEditor({ nerdMode = false }: { nerdMode?: bool
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set())
   const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null)
   const [configNodeId, setConfigNodeId] = useState<string | null>(null)
+  const componentIdPrefix = useId()
+
+  const loadPages = useCallback(async () => {
+    const loadedPages = await Database.getPages()
+    setPages(loadedPages)
+    if (loadedPages.length > 0 && !selectedPageId) {
+      setSelectedPageId(loadedPages[0].id)
+    }
+  }, [selectedPageId])
+
+  const loadHierarchy = useCallback(async () => {
+    const allHierarchy = await Database.getComponentHierarchy()
+    setHierarchy(allHierarchy)
+  }, [])
 
   useEffect(() => {
     loadPages()
     loadHierarchy()
-  }, [])
+  }, [loadPages, loadHierarchy])
 
   useEffect(() => {
     if (selectedPageId) {
