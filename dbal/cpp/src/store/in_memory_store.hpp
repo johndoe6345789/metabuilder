@@ -26,6 +26,7 @@ struct InMemoryStore {
     std::map<std::string, Session> sessions;
     std::map<std::string, LuaScript> lua_scripts;
     std::map<std::string, Package> packages;
+    std::map<std::string, Credential> credentials;
     
     // Secondary indexes (unique field -> id mappings)
     std::map<std::string, std::string> page_slugs;      // slug -> id
@@ -41,6 +42,7 @@ struct InMemoryStore {
     int session_counter = 0;
     int lua_script_counter = 0;
     int package_counter = 0;
+    int credential_counter = 0;
     
     std::map<std::string, ComponentHierarchy> components;
     std::map<std::string, std::vector<std::string>> components_by_page;
@@ -71,6 +73,7 @@ struct InMemoryStore {
         lua_script_names.clear();
         packages.clear();
         package_keys.clear();
+        credentials.clear();
         components.clear();
         components_by_page.clear();
         components_by_parent.clear();
@@ -81,6 +84,7 @@ struct InMemoryStore {
         session_counter = 0;
         lua_script_counter = 0;
         package_counter = 0;
+        credential_counter = 0;
         component_counter = 0;
     }
 };
