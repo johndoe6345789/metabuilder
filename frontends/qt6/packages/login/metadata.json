@@ -1,0 +1,7 @@
+{
+  "packageId": "login",
+  "name": "Login Shell",
+  "version": "1.0.0",
+  "description": "Authentication gate with credential helpers and shortcuts to God-level panels.",
+  "dependencies": []
+}
