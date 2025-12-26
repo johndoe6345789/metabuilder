@@ -2,6 +2,7 @@ import type { User } from '@/lib/level-types'
 import { fetchSession } from '@/lib/auth/api/fetch-session'
 import { login as loginRequest } from '@/lib/auth/api/login'
 import { logout as logoutRequest } from '@/lib/auth/api/logout'
+import { register as registerRequest } from '@/lib/auth/api/register'
 import type { AuthState, AuthUser } from './auth-types'
 
 const roleLevels: Record<string, number> = {
@@ -50,6 +51,28 @@ export class AuthStore {
 
     try {
       const user = await loginRequest(identifier, password)
+      this.setState({
+        user: this.mapUserToAuthUser(user),
+        isAuthenticated: true,
+        isLoading: false,
+      })
+    } catch (error) {
+      this.setState({
+        ...this.state,
+        isLoading: false,
+      })
+      throw error
+    }
+  }
+
+  async register(username: string, email: string, password: string): Promise<void> {
+    this.setState({
+      ...this.state,
+      isLoading: true,
+    })
+
+    try {
+      const user = await registerRequest(username, email, password)
       this.setState({
         user: this.mapUserToAuthUser(user),
         isAuthenticated: true,

@@ -21,6 +21,7 @@ export interface AuthState {
 
 export interface UseAuthReturn extends AuthState {
   login: (identifier: string, password: string) => Promise<void>
+  register: (username: string, email: string, password: string) => Promise<void>
   logout: () => Promise<void>
   refresh: () => Promise<void>
 }

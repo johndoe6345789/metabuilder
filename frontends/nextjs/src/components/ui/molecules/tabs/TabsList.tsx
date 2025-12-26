@@ -5,7 +5,7 @@ import { Box } from '@mui/material'
 import type { BoxProps } from '@mui/material'
 import { TabsContext } from './tabs-context'
 
-export interface TabsListProps extends BoxProps {}
+export type TabsListProps = BoxProps
 
 const TabsList = forwardRef<HTMLDivElement, TabsListProps>(
   ({ children, sx, ...props }, ref) => {
