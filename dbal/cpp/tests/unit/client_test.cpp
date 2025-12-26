@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cassert>
 #include <chrono>
+#include <vector>
 
 void test_client_creation() {
     std::cout << "Testing client creation..." << std::endl;
@@ -520,7 +521,19 @@ void test_component_crud() {
     auto childResult = client.createComponent(childInput);
     assert(childResult.isOk());
     std::string childId = childResult.value().id;
-    std::cout << "  ✓ Child component created" << std::endl;
+    std::cout << "  ✓ First child component created" << std::endl;
+
+    dbal::CreateComponentHierarchyInput siblingInput;
+    siblingInput.page_id = pageId;
+    siblingInput.parent_id = rootId;
+    siblingInput.component_type = "Text";
+    siblingInput.order = 3;
+    siblingInput.props = {{"content", "sidebar"}};
+
+    auto siblingResult = client.createComponent(siblingInput);
+    assert(siblingResult.isOk());
+    std::string siblingId = siblingResult.value().id;
+    std::cout << "  ✓ Second child component created" << std::endl;
 
     dbal::UpdateComponentHierarchyInput updateInput;
     updateInput.order = 2;
@@ -531,15 +544,55 @@ void test_component_crud() {
 
     auto treeResult = client.getComponentTree(pageId);
     assert(treeResult.isOk());
-    assert(treeResult.value().size() == 2);
+    assert(treeResult.value().size() == 3);
     std::cout << "  ✓ Retrieved component tree" << std::endl;
+
+    std::vector<ComponentOrderUpdate> reorderUpdates = {
+        {childId, 5},
+        {siblingId, 1},
+    };
+    auto reorderResult = client.reorderComponents(reorderUpdates);
+    assert(reorderResult.isOk());
+    auto childAfter = client.getComponent(childId);
+    auto siblingAfter = client.getComponent(siblingId);
+    assert(childAfter.isOk() && childAfter.value().order == 5);
+    assert(siblingAfter.isOk() && siblingAfter.value().order == 1);
+    std::cout << "  ✓ Components reordered" << std::endl;
+
+    dbal::CreateComponentHierarchyInput otherRootInput;
+    otherRootInput.page_id = pageId;
+    otherRootInput.component_type = "Sidebar";
+    otherRootInput.order = 0;
+    otherRootInput.props = {{"region", "secondary"}};
+
+    auto otherRootResult = client.createComponent(otherRootInput);
+    assert(otherRootResult.isOk());
+    std::string otherRootId = otherRootResult.value().id;
+    std::cout << "  ✓ Secondary root created" << std::endl;
+
+    dbal::MoveComponentInput moveInput;
+    moveInput.id = siblingId;
+    moveInput.new_parent_id = otherRootId;
+    moveInput.order = 0;
+    auto moveResult = client.moveComponent(moveInput);
+    assert(moveResult.isOk());
+    auto movedSibling = client.getComponent(siblingId);
+    assert(movedSibling.isOk());
+    assert(movedSibling.value().parent_id.has_value());
+    assert(movedSibling.value().parent_id.value() == otherRootId);
+    assert(movedSibling.value().order == 0);
+    std::cout << "  ✓ Component moved to new parent" << std::endl;
 
     auto deleteResult = client.deleteComponent(rootId);
     assert(deleteResult.isOk());
     auto childLookup = client.getComponent(childId);
     assert(childLookup.isError());
     assert(childLookup.error().code() == dbal::ErrorCode::NotFound);
-    std::cout << "  ✓ Cascading delete removed child" << std::endl;
+    std::cout << "  ✓ Cascading delete removed first child" << std::endl;
+
+    auto stillExists = client.getComponent(siblingId);
+    assert(stillExists.isOk());
+    std::cout << "  ✓ Moved sibling survived root deletion" << std::endl;
 }
 
 void test_component_validation() {
