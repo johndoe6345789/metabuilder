@@ -18,34 +18,37 @@ namespace package {
  * Create a new package in the store
  */
 inline Result<Package> create(InMemoryStore& store, const CreatePackageInput& input) {
-    if (input.name.empty() || input.name.length() > 100) {
-        return Error::validationError("Name must be between 1 and 100 characters");
+    if (!validation::isValidPackageName(input.name)) {
+        return Error::validationError("Package name must be 1-255 characters");
     }
-    if (!validation::isValidPackageId(input.package_id)) {
-        return Error::validationError("Invalid package ID format (lowercase, alphanumeric, underscores)");
+    if (!validation::isValidSemver(input.version)) {
+        return Error::validationError("Version must be valid semver");
     }
-    if (!validation::isValidVersion(input.version)) {
-        return Error::validationError("Invalid version format (semver: x.y.z)");
+    if (input.author.empty()) {
+        return Error::validationError("author is required");
     }
-    
-    if (store.package_ids.find(input.package_id) != store.package_ids.end()) {
-        return Error::conflict("Package with ID already exists: " + input.package_id);
+
+    std::string key = validation::packageKey(input.name, input.version);
+    if (store.package_keys.find(key) != store.package_keys.end()) {
+        return Error::conflict("Package name+version already exists: " + key);
     }
-    
+
     Package pkg;
     pkg.id = store.generateId("package", ++store.package_counter);
-    pkg.package_id = input.package_id;
     pkg.name = input.name;
-    pkg.description = input.description;
     pkg.version = input.version;
-    pkg.metadata = input.metadata;
-    pkg.is_active = input.is_active;
+    pkg.description = input.description;
+    pkg.author = input.author;
+    pkg.manifest = input.manifest;
+    pkg.is_installed = input.is_installed;
+    pkg.installed_at = input.installed_at;
+    pkg.installed_by = input.installed_by;
     pkg.created_at = std::chrono::system_clock::now();
     pkg.updated_at = pkg.created_at;
-    
+
     store.packages[pkg.id] = pkg;
-    store.package_ids[pkg.package_id] = pkg.id;
-    
+    store.package_keys[key] = pkg.id;
+
     return Result<Package>(pkg);
 }
 
