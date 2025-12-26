@@ -682,7 +682,7 @@ class SecureS3Storage implements BlobStorage {
 
 ### 1.3 ACL/Authorization Layer
 
-#### DBAL-2025-006: Race Condition in Row-Level Security (HIGH)
+#### DBAL-2025-006: Race Condition in Row-Level Security (HIGH → CRITICAL)
 **Location**: [acl-adapter.ts](../ts/src/adapters/acl-adapter.ts#L187-L203)
 
 ```typescript
@@ -706,21 +706,201 @@ async update(entity: string, id: string, data: Record<string, unknown>): Promise
 - Between checking `existing` and calling `update`, another process could modify the record
 - Could allow updating records that should be blocked by row-level security
 
-**Recommendation**:
+**🏰 Fort Knox Remediation**:
 ```typescript
-async update(entity: string, id: string, data: Record<string, unknown>): Promise<unknown> {
-  this.checkPermission(entity, 'update')
+import { PrismaClient, Prisma } from '@prisma/client'
+
+/**
+ * Fort Knox ACL Adapter with Atomic Operations
+ * Eliminates all TOCTOU vulnerabilities through database-level locking
+ */
+class FortKnoxACLAdapter implements DBALAdapter {
+  private prisma: PrismaClient
+  private user: User
+  private rules: ACLRule[]
+  private auditLogger: AuditLogger
   
-  // Use database transaction for atomic check-and-update
-  return await this.baseAdapter.withTransaction(async (tx) => {
-    const existing = await tx.read(entity, id, { forUpdate: true }) // SELECT FOR UPDATE
-    if (existing) {
-      this.checkRowLevelAccess(entity, 'update', existing as Record<string, unknown>)
+  /**
+   * Atomic update with row-level security
+   * Uses SELECT FOR UPDATE to prevent race conditions
+   */
+  async update(entity: string, id: string, data: Record<string, unknown>): Promise<unknown> {
+    // Pre-flight permission check (fail fast)
+    this.checkEntityPermission(entity, 'update')
+    
+    // Validate update data against schema
+    const validatedData = await this.validateUpdateData(entity, data)
+    
+    // Execute in serializable transaction for maximum isolation
+    return await this.prisma.$transaction(async (tx) => {
+      // ATOMIC: Lock row and read in same statement
+      // SELECT ... FOR UPDATE prevents concurrent modifications
+      const existing = await this.selectForUpdate(tx, entity, id)
+      
+      if (!existing) {
+        throw DBALError.notFound(`${entity} not found: ${id}`)
+      }
+      
+      // Row-level security check (on locked data)
+      this.enforceRowLevelSecurity(entity, 'update', existing)
+      
+      // Verify no forbidden fields in update
+      this.validateFieldLevelPermissions(entity, 'update', validatedData)
+      
+      // Log before modification (audit trail)
+      await this.auditLogger.logOperation({
+        operation: 'UPDATE',
+        entity,
+        entityId: id,
+        userId: this.user.id,
+        tenantId: this.user.tenantId,
+        before: existing,
+        after: validatedData,
+        timestamp: new Date(),
+        transactionId: tx.id
+      })
+      
+      // Perform update within transaction
+      const result = await this.doUpdate(tx, entity, id, validatedData)
+      
+      // Post-update verification (defense in depth)
+      await this.verifyUpdateIntegrity(tx, entity, id, result)
+      
+      return result
+    }, {
+      isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      timeout: 30000,  // 30 second timeout
+      maxWait: 5000,   // 5 second max wait for lock
+    })
+  }
+  
+  /**
+   * SELECT FOR UPDATE with entity-specific handling
+   */
+  private async selectForUpdate(
+    tx: Prisma.TransactionClient, 
+    entity: string, 
+    id: string
+  ): Promise<Record<string, unknown> | null> {
+    // Use raw query for FOR UPDATE - Prisma doesn't support it natively
+    const tableName = this.entityToTable(entity)
+    
+    // Parameterized query to prevent SQL injection
+    const rows = await tx.$queryRaw<Record<string, unknown>[]>`
+      SELECT * FROM ${Prisma.raw(`"${tableName}"`)} 
+      WHERE id = ${id} 
+      FOR UPDATE NOWAIT
+    `
+    
+    return rows[0] || null
+  }
+  
+  /**
+   * Enforce row-level security with user context
+   */
+  private enforceRowLevelSecurity(
+    entity: string, 
+    operation: string, 
+    record: Record<string, unknown>
+  ): void {
+    const applicableRules = this.rules.filter(rule =>
+      rule.entity === entity &&
+      rule.roles.includes(this.user.role) &&
+      rule.operations.includes(operation)
+    )
+    
+    if (applicableRules.length === 0) {
+      throw DBALError.forbidden(
+        `No matching ACL rule for ${this.user.role} to ${operation} ${entity}`
+      )
     }
-    return tx.update(entity, id, data)
-  })
+    
+    // Check all row-level filters
+    for (const rule of applicableRules) {
+      if (rule.rowLevelFilter) {
+        const hasAccess = rule.rowLevelFilter(this.user, record)
+        if (!hasAccess) {
+          this.auditLogger.logSecurityViolation({
+            type: 'ROW_LEVEL_ACCESS_DENIED',
+            user: this.user,
+            entity,
+            operation,
+            recordId: record.id as string,
+            rule: rule.id
+          })
+          throw DBALError.forbidden(
+            `Row-level access denied for ${entity}:${record.id}`
+          )
+        }
+      }
+    }
+  }
+  
+  /**
+   * Validate field-level permissions (prevent privilege escalation)
+   */
+  private validateFieldLevelPermissions(
+    entity: string,
+    operation: string,
+    data: Record<string, unknown>
+  ): void {
+    const sensitiveFields = this.getSensitiveFields(entity)
+    const attemptedSensitiveFields = Object.keys(data).filter(f => sensitiveFields.has(f))
+    
+    if (attemptedSensitiveFields.length > 0) {
+      // Only supergod can modify sensitive fields
+      if (this.user.role !== 'supergod') {
+        this.auditLogger.logSecurityViolation({
+          type: 'PRIVILEGE_ESCALATION_ATTEMPT',
+          user: this.user,
+          entity,
+          operation,
+          attemptedFields: attemptedSensitiveFields
+        })
+        throw DBALError.forbidden(
+          `Cannot modify sensitive fields: ${attemptedSensitiveFields.join(', ')}`
+        )
+      }
+    }
+  }
+  
+  private getSensitiveFields(entity: string): Set<string> {
+    const SENSITIVE_FIELDS: Record<string, string[]> = {
+      User: ['role', 'level', 'permissions', 'passwordHash', 'tenantId'],
+      Session: ['token', 'userId'],
+      Package: ['isCore', 'trustLevel'],
+    }
+    return new Set(SENSITIVE_FIELDS[entity] || [])
+  }
+  
+  /**
+   * Verify update didn't violate invariants
+   */
+  private async verifyUpdateIntegrity(
+    tx: Prisma.TransactionClient,
+    entity: string,
+    id: string,
+    result: Record<string, unknown>
+  ): Promise<void> {
+    // Example: Verify user didn't escalate their own privileges
+    if (entity === 'User' && result.id === this.user.id) {
+      const newLevel = result.level as number
+      const originalLevel = this.user.level
+      
+      if (newLevel > originalLevel) {
+        // Rollback will happen automatically when we throw
+        throw DBALError.forbidden('Cannot escalate own privileges')
+      }
+    }
+  }
 }
 ```
+
+**Additional Protections**:
+- [ ] Add optimistic locking with version column
+- [ ] Implement distributed locks for multi-node deployments
+- [ ] Add circuit breaker for repeated auth failures
+- [ ] Monitor for privilege escalation patterns
 
 ---
 

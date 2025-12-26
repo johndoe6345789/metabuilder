@@ -18,16 +18,17 @@ namespace lua_script {
  */
 inline Result<bool> remove(InMemoryStore& store, const std::string& id) {
     if (id.empty()) {
-        return Error::validationError("Script ID cannot be empty");
+        return Error::validationError("Lua script ID cannot be empty");
     }
-    
+
     auto it = store.lua_scripts.find(id);
     if (it == store.lua_scripts.end()) {
         return Error::notFound("Lua script not found: " + id);
     }
-    
+
+    store.lua_script_names.erase(it->second.name);
     store.lua_scripts.erase(it);
-    
+
     return Result<bool>(true);
 }
 

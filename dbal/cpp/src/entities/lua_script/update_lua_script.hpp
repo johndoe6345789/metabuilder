@@ -19,37 +19,68 @@ namespace lua_script {
  */
 inline Result<LuaScript> update(InMemoryStore& store, const std::string& id, const UpdateLuaScriptInput& input) {
     if (id.empty()) {
-        return Error::validationError("Script ID cannot be empty");
+        return Error::validationError("Lua script ID cannot be empty");
     }
-    
+
     auto it = store.lua_scripts.find(id);
     if (it == store.lua_scripts.end()) {
         return Error::notFound("Lua script not found: " + id);
     }
-    
+
     LuaScript& script = it->second;
-    
+    std::string old_name = script.name;
+
     if (input.name.has_value()) {
-        if (input.name.value().empty() || input.name.value().length() > 100) {
-            return Error::validationError("Name must be between 1 and 100 characters");
+        if (!validation::isValidLuaScriptName(input.name.value())) {
+            return Error::validationError("Lua script name must be 1-255 characters");
         }
+        auto name_it = store.lua_script_names.find(input.name.value());
+        if (name_it != store.lua_script_names.end() && name_it->second != id) {
+            return Error::conflict("Lua script name already exists: " + input.name.value());
+        }
+        store.lua_script_names.erase(old_name);
+        store.lua_script_names[input.name.value()] = id;
         script.name = input.name.value();
     }
-    
+
+    if (input.description.has_value()) {
+        script.description = input.description.value();
+    }
+
     if (input.code.has_value()) {
-        if (input.code.value().empty()) {
-            return Error::validationError("Script code cannot be empty");
-        }
-        if (!validation::isValidLuaSyntax(input.code.value())) {
-            return Error::validationError("Invalid Lua syntax");
+        if (!validation::isValidLuaScriptCode(input.code.value())) {
+            return Error::validationError("Lua script code must be a non-empty string");
         }
         script.code = input.code.value();
     }
-    
-    if (input.description.has_value()) script.description = input.description.value();
-    if (input.category.has_value()) script.category = input.category.value();
-    if (input.is_active.has_value()) script.is_active = input.is_active.value();
-    
+
+    if (input.is_sandboxed.has_value()) {
+        script.is_sandboxed = input.is_sandboxed.value();
+    }
+
+    if (input.allowed_globals.has_value()) {
+        for (const auto& entry : input.allowed_globals.value()) {
+            if (entry.empty()) {
+                return Error::validationError("allowed_globals must contain non-empty strings");
+            }
+        }
+        script.allowed_globals = input.allowed_globals.value();
+    }
+
+    if (input.timeout_ms.has_value()) {
+        if (!validation::isValidLuaTimeout(input.timeout_ms.value())) {
+            return Error::validationError("Timeout must be between 100 and 30000 ms");
+        }
+        script.timeout_ms = input.timeout_ms.value();
+    }
+
+    if (input.created_by.has_value()) {
+        if (input.created_by.value().empty()) {
+            return Error::validationError("created_by is required");
+        }
+        script.created_by = input.created_by.value();
+    }
+
     script.updated_at = std::chrono::system_clock::now();
     return Result<LuaScript>(script);
 }
