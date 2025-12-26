@@ -23,31 +23,30 @@ interface ComponentConfigDialogProps {
 
 export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode = false }: ComponentConfigDialogProps) {
   const [config, setConfig] = useState<ComponentConfig | null>(null)
-  const [props, setProps] = useState<Record<string, any>>({})
-  const [styles, setStyles] = useState<Record<string, any>>({})
+  const [props, setProps] = useState<Record<string, unknown>>({})
+  const [styles, setStyles] = useState<Record<string, unknown>>({})
   const [events, setEvents] = useState<Record<string, string>>({})
 
   useEffect(() => {
-    loadConfig()
-  }, [node.id])
+    const loadConfig = async () => {
+      const allConfigs = await Database.getComponentConfigs()
+      const existingConfig = allConfigs[node.id]
 
-  const loadConfig = async () => {
-    const allConfigs = await Database.getComponentConfigs()
-    const existingConfig = allConfigs[node.id]
-
-    if (existingConfig) {
-      setConfig(existingConfig)
-      setProps(existingConfig.props || {})
-      setStyles(existingConfig.styles || {})
-      setEvents(existingConfig.events || {})
-    } else {
-      const componentDef = componentCatalog.find(c => c.type === node.type)
-      setProps(componentDef?.defaultProps || {})
-      setStyles({})
-      setEvents({})
-      setConfig(null)
+      if (existingConfig) {
+        setConfig(existingConfig)
+        setProps(existingConfig.props || {})
+        setStyles(existingConfig.styles || {})
+        setEvents(existingConfig.events || {})
+      } else {
+        const componentDef = componentCatalog.find(c => c.type === node.type)
+        setProps(componentDef?.defaultProps || {})
+        setStyles({})
+        setEvents({})
+        setConfig(null)
+      }
     }
-  }
+    void loadConfig()
+  }, [node.id, node.type])
 
   const handleSave = async () => {
     const newConfig: ComponentConfig = {
