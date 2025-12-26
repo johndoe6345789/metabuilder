@@ -495,14 +495,16 @@ public:
 class NativePrismaAdapter : public SqlAdapter {
 public:
     explicit NativePrismaAdapter(const SqlConnectionConfig& config)
-        : SqlAdapter(config, Dialect::Prisma), requestsClient_("http://localhost:3000") {}
+        : SqlAdapter(config, Dialect::Prisma),
+          requestsClient_(resolveBridgeUrl(config)),
+          bridgeHeaders_(buildBridgeHeaders(resolveBridgeToken(config))) {}
 
     std::vector<SqlRow> runQuery(SqlConnection* connection,
                                  const std::string& sql,
                                  const std::vector<SqlParam>& params) override {
         (void)connection;
         const auto payload = buildPayload(sql, params, "query");
-        const auto response = requestsClient_.post("/api/native-prisma", payload.dump(), {{"Content-Type", "application/json"}});
+        const auto response = requestsClient_.post("/api/native-prisma", payload.dump(), bridgeHeaders_);
         if (response.statusCode != 200) {
             throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge request failed"};
         }
@@ -525,7 +527,7 @@ public:
                     const std::vector<SqlParam>& params) override {
         (void)connection;
         const auto payload = buildPayload(sql, params, "nonquery");
-        const auto response = requestsClient_.post("/api/native-prisma", payload.dump(), {{"Content-Type", "application/json"}});
+        const auto response = requestsClient_.post("/api/native-prisma", payload.dump(), bridgeHeaders_);
         if (response.statusCode != 200) {
             throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge request failed"};
         }
@@ -536,7 +538,37 @@ public:
     }
 
 private:
+    static std::string resolveBridgeUrl(const SqlConnectionConfig& config) {
+        if (!config.prisma_bridge_url.empty()) {
+            return config.prisma_bridge_url;
+        }
+        if (const char* env_url = std::getenv("DBAL_NATIVE_PRISMA_URL")) {
+            return std::string(env_url);
+        }
+        return "http://localhost:3000";
+    }
+
+    static std::string resolveBridgeToken(const SqlConnectionConfig& config) {
+        if (!config.prisma_bridge_token.empty()) {
+            return config.prisma_bridge_token;
+        }
+        if (const char* env_token = std::getenv("DBAL_NATIVE_PRISMA_TOKEN")) {
+            return std::string(env_token);
+        }
+        return "";
+    }
+
+    static std::unordered_map<std::string, std::string> buildBridgeHeaders(const std::string& token) {
+        std::unordered_map<std::string, std::string> headers;
+        headers["Content-Type"] = "application/json";
+        if (!token.empty()) {
+            headers["x-dbal-native-prisma-token"] = token;
+        }
+        return headers;
+    }
+
     runtime::RequestsClient requestsClient_;
+    std::unordered_map<std::string, std::string> bridgeHeaders_;
 
     drogon::Json::Value buildPayload(const std::string& sql,
                                      const std::vector<SqlParam>& params,
