@@ -172,7 +172,7 @@ This system uses **levels** (hierarchical) rather than roles (flat):
 
 ```
 // Hierarchical (Levels) - Used in MetaBuilder
-if (user.level >= 3) { /* Has all lower permissions too */ }
+if (user.level >= 4) { /* Has all lower permissions too */ }
 
 // Flat (Roles) - Not used
 if (user.hasRole('admin')) { /* Only admin, no inheritance */ }
@@ -187,7 +187,7 @@ model User {
   id       String @id @default(cuid())
   email    String @unique
   password String
-  level    Int    // 1-5
+  level    Int    // 1-6
   tenant   Tenant @relation(fields: [tenantId], references: [id])
   tenantId String
 }
