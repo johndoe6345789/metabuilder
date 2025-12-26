@@ -3,7 +3,7 @@
 import { forwardRef, useContext } from 'react'
 import { Box } from '@mui/material'
 import type { BoxProps } from '@mui/material'
-import { TabsContext } from './tabs-context'
+import { TabsContext } from '../core/tabs-context'
 
 export interface TabsContentProps extends BoxProps {
   value: string

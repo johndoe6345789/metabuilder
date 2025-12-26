@@ -12,7 +12,7 @@ export {
   CardAction,
   type CardProps,
   type CardHeaderProps,
-} from './Card'
+} from './display/Card'
 
 export {
   Dialog,
@@ -26,7 +26,7 @@ export {
   DialogPortal,
   DialogOverlay,
   type DialogProps,
-} from './Dialog'
+} from './overlay/Dialog'
 
 export {
   Alert,
@@ -34,7 +34,7 @@ export {
   AlertDescription,
   type AlertProps,
   type AlertVariant,
-} from './Alert'
+} from './display/Alert'
 
 export {
   Tabs,
@@ -43,7 +43,7 @@ export {
   TabsContent,
   type TabsProps,
   type TabsTriggerProps,
-} from './Tabs'
+} from './form/Tabs'
 
 export {
   Accordion,
@@ -51,7 +51,7 @@ export {
   AccordionTrigger,
   AccordionContent,
   type AccordionProps,
-} from './Accordion'
+} from './display/Accordion'
 
 export {
   Select,
@@ -64,7 +64,7 @@ export {
   SelectSeparator,
   type SelectProps,
   type SelectItemProps,
-} from './Select'
+} from './form/Select'
 
 export {
   DropdownMenu,
@@ -85,7 +85,7 @@ export {
   type DropdownMenuProps,
   type DropdownMenuContentProps,
   type DropdownMenuItemProps,
-} from './DropdownMenu'
+} from './overlay/DropdownMenu'
 
 export {
   FormField,
@@ -94,7 +94,7 @@ export {
   type FormFieldProps,
   type SearchInputProps,
   type TextAreaProps,
-} from './FormField'
+} from './form/FormField'
 
 export {
   Popover,
@@ -103,7 +103,7 @@ export {
   PopoverAnchor,
   type PopoverProps,
   type PopoverContentProps,
-} from './Popover'
+} from './overlay/Popover'
 
 // Legacy shared components
 export { AppHeader } from '../shared/AppHeader'
