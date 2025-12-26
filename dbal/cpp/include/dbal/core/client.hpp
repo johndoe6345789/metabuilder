@@ -62,6 +62,9 @@ public:
     Result<std::vector<ComponentHierarchy>> getComponentTree(const std::string& page_id);
     Result<bool> reorderComponents(const std::vector<ComponentOrderUpdate>& updates);
     Result<ComponentHierarchy> moveComponent(const MoveComponentInput& input);
+    Result<std::vector<ComponentHierarchy>> searchComponents(const std::string& query,
+                                                             const std::optional<std::string>& page_id = std::nullopt,
+                                                             int limit = 20);
 
     Result<Workflow> createWorkflow(const CreateWorkflowInput& input);
     Result<Workflow> getWorkflow(const std::string& id);
