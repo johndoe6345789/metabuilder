@@ -63,6 +63,17 @@ Each level **inherits all permissions from lower levels** and adds additional ca
 - **Example Users**: System owner, database administrator
 - **Restrictions**: None (complete access)
 
+## Frontend Routes
+
+| Level | Route | Notes |
+| --- | --- | --- |
+| 1 | `/` | Public landing page |
+| 2 | `/dashboard` | User workspace |
+| 3 | `/admin` | Admin panel |
+| 4 | `/builder` | God-tier builder |
+| 5 | `/supergod` | Supergod console |
+| - | `/login` | Unified sign-in and registration |
+
 ## Implementation
 
 ### Checking Permissions
