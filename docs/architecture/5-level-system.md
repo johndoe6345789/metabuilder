@@ -24,14 +24,16 @@ Level 1: Public       └─ Unauthenticated access, read-only
 
 Each level **inherits all permissions from lower levels** and adds additional capabilities:
 
-| Feature | Level 1 | Level 2 | Level 3 | Level 4 | Level 5 |
-|---------|---------|---------|---------|---------|---------|
-| View Public Data | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Authenticate | | ✓ | ✓ | ✓ | ✓ |
-| Create Content | | ✓ | ✓ | ✓ | ✓ |
-| Manage Users | | | ✓ | ✓ | ✓ |
-| Run Workflows | | | | ✓ | ✓ |
-| System Configuration | | | | | ✓ |
+| Feature | Level 1 | Level 2 | Level 3 | Level 4 | Level 5 | Level 6 |
+|---------|---------|---------|---------|---------|---------|---------|
+| View Public Data | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Authenticate | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Create Content | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Moderate Content | | | ✓ | ✓ | ✓ | ✓ |
+| Manage Users | | | | ✓ | ✓ | ✓ |
+| Run Workflows | | | | | ✓ | ✓ |
+| System Configuration | | | | | | ✓ |
+| System Monitoring | | | | | | ✓ |
 
 ## Level Descriptions
 
@@ -47,22 +49,28 @@ Each level **inherits all permissions from lower levels** and adds additional ca
 - **Example Users**: Regular users, content creators
 - **Restrictions**: Can only manage own content
 
-### Level 3: Admin
-- **Access**: Administrator account
-- **Features**: User management, system settings, content moderation
-- **Example Users**: System administrators
-- **Restrictions**: System configuration remains restricted
+### Level 3: Moderator
+- **Access**: Moderator workspace (authenticated identity with community oversight)
+- **Features**: Resolve flags, review reports, curate shared discussions, and apply warning paths
+- **Example Users**: Community managers, trust and safety analysts
+- **Restrictions**: No tenant-wide configuration or workflow authoring
 
-### Level 4: God Mode
+### Level 4: Admin
+- **Access**: Tenant administrator
+- **Features**: Manage users, tenants, policies, and escalate moderation events
+- **Example Users**: Tenant owners, ops leads
+- **Restrictions**: System-wide configuration reserved for higher tiers
+
+### Level 5: God Mode
 - **Access**: Power user with advanced features
-- **Features**: Workflow execution, advanced scripting, system tools
+- **Features**: Workflow execution, advanced scripting, builder tooling, and package seeding
 - **Example Users**: Technical leads, automation specialists
-- **Restrictions**: Some system core features still restricted
+- **Restrictions**: Some infrastructure controls still blocked
 
-### Level 5: Supergod
+### Level 6: Supergod
 - **Access**: Full system control
-- **Features**: All features including system configuration, DBAL access
-- **Example Users**: System owner, database administrator
+- **Features**: All features including system configuration, DBAL access, role assignments, and audits
+- **Example Users**: Instance owner, platform operator
 - **Restrictions**: None (complete access)
 
 ## Frontend Routes
