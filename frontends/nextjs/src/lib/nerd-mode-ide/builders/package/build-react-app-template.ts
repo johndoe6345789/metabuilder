@@ -1,5 +1,5 @@
-import { createFileNode } from './create-file-node'
-import { createFolderNode } from './create-folder-node'
+import { createFileNode } from '../../nodes/create/create-file-node'
+import { createFolderNode } from '../../nodes/create/create-folder-node'
 import type { PackageTemplate, ReactAppTemplateConfig } from './types'
 
 const appLayout = [

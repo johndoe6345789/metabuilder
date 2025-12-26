@@ -1,10 +1,10 @@
-import { appendNode } from './append-node'
-import { createFileNode } from './create-file-node'
-import { createFolderNode } from './create-folder-node'
-import { deleteNode } from './delete-node'
-import { findFirstFile } from './find-first-file'
-import { findNodeById } from './find-node-by-id'
-import { updateNode } from './update-node'
+import { appendNode } from '../../nodes/modify/append-node'
+import { createFileNode } from '../../nodes/create/create-file-node'
+import { createFolderNode } from '../../nodes/create/create-folder-node'
+import { deleteNode } from '../../nodes/modify/delete-node'
+import { findFirstFile } from '../export/find-first-file'
+import { findNodeById } from '../../nodes/find-node-by-id'
+import { updateNode } from '../../nodes/modify/update-node'
 
 export class FileTreeOperations {
   appendNode = appendNode
