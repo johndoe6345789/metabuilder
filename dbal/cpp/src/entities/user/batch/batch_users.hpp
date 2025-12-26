@@ -11,6 +11,7 @@
 #include "../crud/create_user.hpp"
 #include "../crud/update_user.hpp"
 #include "../crud/delete_user.hpp"
+#include <map>
 
 namespace dbal {
 namespace entities {
@@ -61,6 +62,102 @@ inline Result<int> batchDelete(InMemoryStore& store, const std::vector<std::stri
     for (const auto& id : ids) {
         auto result = remove(store, id);
         if (result.isError()) return result.error();
+        deleted++;
+    }
+    return Result<int>(deleted);
+}
+
+inline std::optional<UserRole> roleFromString(const std::string& value) {
+    if (value == "user") return UserRole::User;
+    if (value == "admin") return UserRole::Admin;
+    if (value == "god") return UserRole::God;
+    if (value == "supergod") return UserRole::SuperGod;
+    return std::nullopt;
+}
+
+inline Result<int> updateMany(InMemoryStore& store,
+                              const std::map<std::string, std::string>& filter,
+                              const UpdateUserInput& updates) {
+    if (filter.empty()) {
+        return Error::validationError("filter is required for bulk updates");
+    }
+
+    std::optional<UserRole> role_filter;
+    if (filter.find("role") != filter.end()) {
+        role_filter = roleFromString(filter.at("role"));
+        if (!role_filter.has_value()) {
+            return Error::validationError("invalid role filter");
+        }
+    }
+
+    std::optional<std::string> username_filter;
+    if (filter.find("username") != filter.end()) {
+        username_filter = filter.at("username");
+    }
+
+    std::vector<std::string> targets;
+    for (const auto& [id, user] : store.users) {
+        bool matches = true;
+        if (role_filter.has_value() && user.role != role_filter.value()) {
+            matches = false;
+        }
+        if (username_filter.has_value() && user.username != username_filter.value()) {
+            matches = false;
+        }
+        if (matches) {
+            targets.push_back(id);
+        }
+    }
+
+    int updated = 0;
+    for (const auto& id : targets) {
+        auto result = update(store, id, updates);
+        if (result.isError()) {
+            return result.error();
+        }
+        updated++;
+    }
+    return Result<int>(updated);
+}
+
+inline Result<int> deleteMany(InMemoryStore& store, const std::map<std::string, std::string>& filter) {
+    if (filter.empty()) {
+        return Error::validationError("filter is required for bulk deletes");
+    }
+
+    std::optional<UserRole> role_filter;
+    if (filter.find("role") != filter.end()) {
+        role_filter = roleFromString(filter.at("role"));
+        if (!role_filter.has_value()) {
+            return Error::validationError("invalid role filter");
+        }
+    }
+
+    std::optional<std::string> username_filter;
+    if (filter.find("username") != filter.end()) {
+        username_filter = filter.at("username");
+    }
+
+    std::vector<std::string> targets;
+    for (const auto& [id, user] : store.users) {
+        bool matches = true;
+        if (role_filter.has_value() && user.role != role_filter.value()) {
+            matches = false;
+        }
+        if (username_filter.has_value() && user.username != username_filter.value()) {
+            matches = false;
+        }
+        if (matches) {
+            targets.push_back(id);
+        }
+    }
+
+    int deleted = 0;
+    for (const auto& id : targets) {
+        auto result = remove(store, id);
+        if (result.isError()) {
+            return result.error();
+        }
         deleted++;
     }
     return Result<int>(deleted);
