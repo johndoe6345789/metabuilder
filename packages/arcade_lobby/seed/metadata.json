@@ -1,0 +1,12 @@
+{
+  "packageId": "arcade_lobby",
+  "name": "Arcade Lobby",
+  "version": "1.0.0",
+  "description": "Gaming lobby for tournaments, party queues, and highlights.",
+  "author": "MetaBuilder",
+  "category": "gaming",
+  "dependencies": [],
+  "exports": {
+    "components": []
+  }
+}
