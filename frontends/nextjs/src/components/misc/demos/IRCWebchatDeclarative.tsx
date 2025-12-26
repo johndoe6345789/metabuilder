@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui'
 import { PaperPlaneTilt, Users, SignOut, Gear } from '@phosphor-icons/react'
 import { useKV } from '@github/spark/hooks'
 import type { User } from '@/lib/level-types'
-import { getDeclarativeRenderer } from '@/lib/declarative-component-renderer'
+import { getDeclarativeRenderer } from '@/lib/rendering-lib/declarative-component-renderer'
 
 interface ChatMessage {
   id: string

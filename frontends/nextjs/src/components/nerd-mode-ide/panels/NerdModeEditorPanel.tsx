@@ -2,11 +2,11 @@ import Editor from '@monaco-editor/react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import type { FileNode } from '@/lib/nerd-mode-ide'
 import { NerdModeConsolePanel } from './NerdModeConsolePanel'
-import { NerdModeEditorHeader } from './NerdModeEditorHeader'
-import { NerdModeEmptyState } from './NerdModeEmptyState'
+import { NerdModeEditorHeader } from '../components/NerdModeEditorHeader'
+import { NerdModeEmptyState } from '../components/NerdModeEmptyState'
 import { NerdModeGitPanel } from './NerdModeGitPanel'
 import { NerdModeTestsPanel } from './NerdModeTestsPanel'
-import type { GitConfig, TestResult } from './types'
+import type { GitConfig, TestResult } from '../core/types'
 
 interface NerdModeEditorPanelProps {
   selectedFile: FileNode | null
