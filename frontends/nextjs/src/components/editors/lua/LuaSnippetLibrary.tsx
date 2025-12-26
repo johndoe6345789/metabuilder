@@ -28,7 +28,7 @@ import {
   getSnippetsByCategory, 
   searchSnippets,
   type LuaSnippet 
-} from '@/lib/lua-snippets'
+} from '@/lib/lua/lua-snippets'
 
 interface LuaSnippetLibraryProps {
   onInsertSnippet?: (code: string) => void
