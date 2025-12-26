@@ -1,1 +1,1 @@
-export * from './types/level-types'
+export * from '../types/level-types'
