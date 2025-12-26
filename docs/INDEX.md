@@ -39,6 +39,7 @@ API documentation and integration guides:
 - **[Platform Guide](./api/platform-guide.md)** - Complete API reference
 - **[Quick Reference](./api/quick-reference.md)** - Common API patterns
 - **[DBAL Integration](./api/DBAL_INTEGRATION.md)** - Database abstraction layer
+- **[Packages API](./api/packages.md)** - Package installation and seed data endpoints
 
 ### 📋 [Implementation Guides](./implementation/)
 Detailed implementation documentation:
