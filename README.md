@@ -75,10 +75,10 @@ Captured from this machine to document the local development environment:
 
 ---
 
-- **6-Level Permission System**: Each user level from Public to SuperGod maps to documented routes, policies, and role inheritance so you can reason about features before touching code ([`docs/architecture/security-docs/5-level-system.md`](./docs/architecture/security-docs/5-level-system.md)).
-- **Multi-tenant data platform**: Prisma, tenant-aware storage, and quota management patterns keep all queries scoped by `tenantId` while keeping schema evolution safe ([`docs/architecture/database.md`](./docs/architecture/database.md)).
-- **Declarative packages & Lua logic**: Modular `packages/*/seed` definitions let you ship UI/features via JSON/Lua, while the Lua sandbox protects the runtime ([`docs/architecture/packages.md`](./docs/architecture/packages.md), [`docs/lua/README.md`](./docs/lua/README.md)).
-- **Type-safe + CI-ready workflow**: TypeScript tooling, Act local workflows, and targeted scripts keep linting, testing, and deploy checks consistent with the documentation hub ([`docs/README.md`](./docs/README.md)).
+- **6-Level Permission System**: Each user level from Public to SuperGod maps to documented routes, policies, and role inheritance so you can reason about features before touching code ([docs/architecture/security-docs/5-level-system.md](./docs/architecture/security-docs/5-level-system.md)).
+- **Multi-tenant data platform**: Prisma, tenant-aware storage, and quota management patterns keep all queries scoped by `tenantId` while keeping schema evolution safe ([docs/architecture/database.md](./docs/architecture/database.md)).
+- **Declarative packages & Lua logic**: Modular `packages/*/seed` definitions let you ship UI/features via JSON/Lua, while the Lua sandbox protects the runtime ([docs/architecture/packages.md](./docs/architecture/packages.md), [docs/lua/README.md](./docs/lua/README.md)).
+- **Type-safe + CI-ready workflow**: TypeScript tooling, Act local workflows, and targeted scripts keep linting, testing, and deploy checks consistent with the documentation hub ([docs/navigation/README.md](./docs/navigation/README.md)).
 
 ## Developer Persona
 
