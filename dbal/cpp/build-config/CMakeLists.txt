@@ -5,9 +5,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(DBAL_ROOT ${CMAKE_CURRENT_LIST_DIR}/..)
+set(DBAL_SRC_DIR ${DBAL_ROOT}/src)
+set(DBAL_TEST_DIR ${DBAL_ROOT}/tests)
+set(DBAL_INCLUDE_DIR ${DBAL_ROOT}/include)
+
 find_package(Threads REQUIRED)
 
-include_directories(include)
+include_directories(${DBAL_INCLUDE_DIR})
 
 # Try to find Conan dependencies, but don't fail if they're not available
 find_package(fmt QUIET)
@@ -17,25 +22,25 @@ find_package(SQLite3 QUIET)
 find_package(Drogon REQUIRED CONFIG)
 
 add_library(dbal_core STATIC
-    src/client.cpp
-    src/errors.cpp
-    src/capabilities.cpp
-    src/query/ast.cpp
-    src/query/builder.cpp
-    src/query/normalize.cpp
-    src/util/uuid.cpp
-    src/util/backoff.cpp
+    ${DBAL_SRC_DIR}/client.cpp
+    ${DBAL_SRC_DIR}/errors.cpp
+    ${DBAL_SRC_DIR}/capabilities.cpp
+    ${DBAL_SRC_DIR}/query/ast.cpp
+    ${DBAL_SRC_DIR}/query/builder.cpp
+    ${DBAL_SRC_DIR}/query/normalize.cpp
+    ${DBAL_SRC_DIR}/util/uuid.cpp
+    ${DBAL_SRC_DIR}/util/backoff.cpp
 )
 
 add_library(dbal_adapters STATIC
-    src/adapters/sqlite/sqlite_adapter.cpp
-    src/adapters/sqlite/sqlite_pool.cpp
+    ${DBAL_SRC_DIR}/adapters/sqlite/sqlite_adapter.cpp
+    ${DBAL_SRC_DIR}/adapters/sqlite/sqlite_pool.cpp
 )
 
 add_executable(dbal_daemon
-    src/daemon/main.cpp
-    src/daemon/server.cpp
-    src/daemon/security.cpp
+    ${DBAL_SRC_DIR}/daemon/main.cpp
+    ${DBAL_SRC_DIR}/daemon/server.cpp
+    ${DBAL_SRC_DIR}/daemon/security.cpp
 )
 
 target_link_libraries(dbal_daemon
@@ -57,23 +62,23 @@ endif()
 enable_testing()
 
 add_executable(client_test
-    tests/unit/client_test.cpp
+    ${DBAL_TEST_DIR}/unit/client_test.cpp
 )
 
 add_executable(query_test
-    tests/unit/query_test.cpp
+    ${DBAL_TEST_DIR}/unit/query_test.cpp
 )
 
 add_executable(integration_tests
-    tests/integration/sqlite_test.cpp
+    ${DBAL_TEST_DIR}/integration/sqlite_test.cpp
 )
 
 add_executable(conformance_tests
-    tests/conformance/runner.cpp
+    ${DBAL_TEST_DIR}/conformance/runner.cpp
 )
 
 add_executable(http_server_security_test
-    tests/security/http_server_security_test.cpp
+    ${DBAL_TEST_DIR}/security/http_server_security_test.cpp
 )
 
 target_link_libraries(client_test dbal_core dbal_adapters)
