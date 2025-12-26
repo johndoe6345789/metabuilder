@@ -10,12 +10,12 @@ import {
   getPackageTemplateById,
   getPackageTemplates,
 } from '@/lib/nerd-mode-ide'
-import { GitConfigDialog } from './GitConfigDialog'
-import { NerdModeEditorPanel } from './NerdModeEditorPanel'
-import { NerdModeIDEFileExplorer } from './NerdModeIDEFileExplorer'
-import { NerdModeIDEHeader } from './NerdModeIDEHeader'
-import { NewItemDialog } from './NewItemDialog'
-import { TemplateDialog } from './TemplateDialog'
+import { GitConfigDialog } from '../dialogs/GitConfigDialog'
+import { NerdModeEditorPanel } from '../panels/NerdModeEditorPanel'
+import { NerdModeIDEFileExplorer } from '../components/NerdModeIDEFileExplorer'
+import { NerdModeIDEHeader } from '../components/NerdModeIDEHeader'
+import { NewItemDialog } from '../dialogs/NewItemDialog'
+import { TemplateDialog } from '../dialogs/TemplateDialog'
 import type { GitConfig, TestResult } from './types'
 
 interface NerdModeIDEProps {
