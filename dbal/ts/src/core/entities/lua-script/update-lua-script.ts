@@ -2,45 +2,41 @@
  * @file update-lua-script.ts
  * @description Update Lua script operation
  */
-import type { LuaScript, UpdateLuaScriptInput, Result } from '../types';
-import type { InMemoryStore } from '../store/in-memory-store';
-import { validateLuaSyntax } from '../validation/lua-script-validation';
+import type { DBALAdapter } from '../../../adapters/adapter'
+import type { LuaScript } from '../../types'
+import { DBALError } from '../../errors'
+import { validateId, validateLuaScriptUpdate } from '../../validation'
 
 /**
  * Update an existing Lua script
  */
 export async function updateLuaScript(
-  store: InMemoryStore,
+  adapter: DBALAdapter,
   id: string,
-  input: UpdateLuaScriptInput
-): Promise<Result<LuaScript>> {
-  if (!id) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'ID required' } };
+  data: Partial<LuaScript>
+): Promise<LuaScript> {
+  const idErrors = validateId(id)
+  if (idErrors.length > 0) {
+    throw DBALError.validationError(
+      'Invalid Lua script ID',
+      idErrors.map(error => ({ field: 'id', error }))
+    )
   }
 
-  const script = store.luaScripts.get(id);
-  if (!script) {
-    return { success: false, error: { code: 'NOT_FOUND', message: `Lua script not found: ${id}` } };
+  const validationErrors = validateLuaScriptUpdate(data)
+  if (validationErrors.length > 0) {
+    throw DBALError.validationError(
+      'Invalid Lua script update data',
+      validationErrors.map(error => ({ field: 'luaScript', error }))
+    )
   }
 
-  if (input.name !== undefined) {
-    if (!input.name || input.name.length > 100) {
-      return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid name' } };
+  try {
+    return adapter.update('LuaScript', id, data) as Promise<LuaScript>
+  } catch (error) {
+    if (error instanceof DBALError && error.code === 409) {
+      throw DBALError.conflict('Lua script name already exists')
     }
-    script.name = input.name;
+    throw error
   }
-
-  if (input.code !== undefined) {
-    if (!input.code || !validateLuaSyntax(input.code)) {
-      return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid Lua code' } };
-    }
-    script.code = input.code;
-  }
-
-  if (input.description !== undefined) script.description = input.description;
-  if (input.category !== undefined) script.category = input.category;
-  if (input.isActive !== undefined) script.isActive = input.isActive;
-
-  script.updatedAt = new Date();
-  return { success: true, data: script };
 }
