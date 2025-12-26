@@ -12,6 +12,7 @@
 #include "../crud/update_user.hpp"
 #include "../crud/delete_user.hpp"
 #include <map>
+#include <optional>
 
 namespace dbal {
 namespace entities {
