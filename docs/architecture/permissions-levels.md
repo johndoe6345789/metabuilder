@@ -1,16 +1,17 @@
 # Permission Levels Reference
 
-MetaBuilder runs on a five-tier permission stack that spans the public surface, authenticated experiences, moderation, system design, and governance.
+MetaBuilder runs on a six-tier permission stack that spans the public surface, authenticated experiences, moderation, governance, system design, and governance.
 
 ## Tier breakdown
 
 | Level | Name | Responsibilities |
 |-------|------|------------------|
-| 1 | Guest | Browse marketing content, view stories, consume public dashboards without any write access.
-| 2 | Regular User | Maintain a profile, tune personal settings, launch saved dashboards, and participate in public workflows.
-| 3 | Moderator | Keep the community healthy by resolving flags, reviewing reports, and adjusting shared spaces.
-| 4 | God | Author blueprints, edit the front page, seed packages, and design workflows for the multiverse.
-| 5 | Super God | Transfer front page ownership, promote gods, run audits, and override safety nets when necessary.
+| 1 | Public | Browse marketing content, view stories, and consume public dashboards without any write access. |
+| 2 | Regular User | Maintain a profile, tune personal settings, launch saved dashboards, and participate in community workflows. |
+| 3 | Moderator | Keep the community healthy by resolving flags, reviewing reports, and guiding shared spaces. |
+| 4 | Admin | Manage tenant policies, approve shared content, and coordinate escalation paths. |
+| 5 | God | Author blueprints, edit the front page, seed packages, and design workflows for the multiverse. |
+| 6 | Super God | Transfer front page ownership, promote gods, run audits, and override safety nets when necessary. |
 
 ## Interactive view
 
