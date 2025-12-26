@@ -1,0 +1,28 @@
+{
+  "scripts": [
+    {
+      "file": "init.lua",
+      "name": "init",
+      "category": "lifecycle",
+      "description": "Lifecycle hooks for installation and removal"
+    },
+    {
+      "file": "schedule.lua",
+      "name": "schedule",
+      "category": "automation",
+      "description": "Resolve the next scene based on the run of show"
+    },
+    {
+      "file": "scene_router.lua",
+      "name": "scene_router",
+      "category": "broadcast",
+      "description": "Map scene names to output destinations"
+    },
+    {
+      "file": "permissions.lua",
+      "name": "permissions",
+      "category": "security",
+      "description": "Role checks for publishing and moderation"
+    }
+  ]
+}
