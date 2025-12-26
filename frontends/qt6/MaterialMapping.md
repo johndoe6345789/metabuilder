@@ -9,7 +9,7 @@ This reference ties every Material UI component that the Next.js frontend curren
 | AppBar / Toolbar | `Material.MaterialAppBar` / `Material.MaterialToolbar` | Fixed `Rectangle` with `RowLayout`; exposes elevation, drop shadow, and toolbar slot for navigation actions. |
 | Avatar / AvatarGroup | `Material.MaterialAvatar` | Circular `Image`/`Rectangle` that surfaces initials when no source is provided; group helpers can stack avatars. |
 | Badge / Chip | `Material.MaterialBadge` / `Material.MaterialChip` | Already wired; badges accept accent/dense/outlined variants (and optional `iconSource`). |
-| Box / Container | `Material.MaterialBox` | Simple layout container that mirrors Material spacing defaults. |
+| Box / Container | `Material.MaterialBox` / `Material.MaterialPaper` | `Material.MaterialBox` offers a simple column container, while `Material.MaterialPaper` wraps `MaterialSurface` for paper-like elevation/outline. |
 | Breadcrumbs | `Material.MaterialBreadcrumbs` | Horizontal `RowLayout` of text/buttons separated by dividers. |
 | Button / ButtonProps | `Material.MaterialButton` | Supports contained, outlined, and icon-enabled styles with ripple and disabled handling. |
 | Card / CardContent / CardHeader / CardActions / CardMedia | `Material.MaterialCard` + `Box`/`ColumnLayout` | Cards already exist with padding/border/elevation tokens. |
@@ -29,7 +29,7 @@ This reference ties every Material UI component that the Next.js frontend curren
 | InputBase / TextField / TextFieldProps | `Material.MaterialTextField` | Material text field with outlined background, focused border, and caret colors. |
 | InputLabel | `Material.MaterialInputLabel` | Styled `Text` placed above inputs. |
 | LinearProgress | `Material.MaterialLinearProgress` | `Rectangle` with animated gradient track. |
-| Link | `Material.MaterialLink` | `Text` with underline + hover opacity + `MouseArea`. |
+| Link | `Material.MaterialLink` | `Text` with underline + hover opacity + `MouseArea`; clicking opens `href` via `Qt.openUrlExternally`. |
 | List / ListItem / ListItemButton / ListItemIcon / ListItemText | `Material.MaterialList` set of `Repeater` + `Material.MaterialListItem` | Compose vertical menus with icons and text. |
 | Menu / MenuItem | `Material.MaterialMenu` / `Material.MaterialMenuItem` | Wraps Qt Quick `Menu` so you can customize menu labels/icons. |
 | Pagination / PaginationItem | `Material.MaterialPagination` | Row of buttons that mirror Next.js `Pagination` styles. |
