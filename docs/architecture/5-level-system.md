@@ -4,7 +4,7 @@ MetaBuilder implements a sophisticated **6-level permission system** that contro
 
 ## Overview
 
-The 5-level architecture provides granular access control, allowing a single application instance to serve multiple user types with different capabilities:
+The 6-level architecture provides granular access control, allowing a single application instance to serve multiple user types with different capabilities:
 
 ```
 Level 6: Supergod     └─ Complete system control, all features
@@ -206,14 +206,17 @@ export function AppOriginal() {
     return <Level1 />  // Public interface
   }
   
-  if (canAccessLevel(user.level, 5)) {
+  if (canAccessLevel(user.level, 6)) {
     return <Level5 />  // Supergod interface
   }
-  if (canAccessLevel(user.level, 4)) {
+  if (canAccessLevel(user.level, 5)) {
     return <Level4 />  // God mode interface
   }
-  if (canAccessLevel(user.level, 3)) {
+  if (canAccessLevel(user.level, 4)) {
     return <Level3 />  // Admin interface
+  }
+  if (canAccessLevel(user.level, 3)) {
+    return <ModeratorPanel />  // Moderator desk
   }
   
   return <Level2 />  // User interface
