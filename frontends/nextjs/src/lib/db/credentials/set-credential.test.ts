@@ -55,6 +55,7 @@ describe('setCredential', () => {
     // Should always update user's password change timestamp
     expect(mockUpdate).toHaveBeenCalledWith('User', existingUser[0].id, expect.objectContaining({
       passwordChangeTimestamp: expect.any(BigInt),
+      firstLogin: false,
     }))
   })
 })

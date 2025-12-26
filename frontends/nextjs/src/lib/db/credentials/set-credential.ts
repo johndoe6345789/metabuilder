@@ -22,6 +22,9 @@ export async function setCredential(username: string, passwordHash: string): Pro
   const users = await adapter.list('User', { filter: { username } })
   if (users.data.length > 0) {
     const user = users.data[0] as any
-    await adapter.update('User', user.id, { passwordChangeTimestamp: BigInt(Date.now()) })
+    await adapter.update('User', user.id, {
+      passwordChangeTimestamp: BigInt(Date.now()),
+      firstLogin: false,
+    })
   }
 }
