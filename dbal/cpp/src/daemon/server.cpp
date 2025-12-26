@@ -78,6 +78,12 @@ drogon::HttpResponsePtr handle_status(
     return build_json_response(body);
 }
 
+std::string g_server_address;
+
+drogon::HttpResponsePtr status_handler(const drogon::HttpRequestPtr& request) {
+    return handle_status(request, g_server_address);
+}
+
 } // namespace
 
 namespace dbal {
