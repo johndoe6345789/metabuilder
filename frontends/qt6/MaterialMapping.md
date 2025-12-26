@@ -21,6 +21,7 @@ This reference ties every Material UI component that the Next.js frontend curren
 | CssBaseline | `Material.MaterialCssBaseline` | Background/typography reset that sets root window colors. |
 | Dialog / DialogActions / DialogContent / DialogTitle | `Material.MaterialDialog` | Wraps `QtQuick.Controls.Dialog` + slot for actions, sections, icons. |
 | Divider | `Material.MaterialDivider` | Simple horizontal line with palette color. |
+| DividerProps | `Material.MaterialDividerProps` | Provides thickness/color helpers for divider props. |
 | Drawer | `Material.MaterialDrawer` | `Drawer` from Qt Quick Controls with custom surface look. |
 | FormControl / FormControlLabel / FormHelperText / FormLabel | `Material.MaterialFormField` | Label + helper text wrappers around `Material.MaterialTextField`. |
 | Grid | `Material.MaterialGrid` | GridLayout wrapper exposing columns and spacing defaults. |
@@ -36,6 +37,7 @@ This reference ties every Material UI component that the Next.js frontend curren
 | Pagination / PaginationItem | `Material.MaterialPagination` | Row of buttons that mirror Next.js `Pagination` styles. |
 | Paper | `Material.MaterialPaper` | Surface `Rectangle` that uses `surface` palette + outline. |
 | Popover | `Material.MaterialPopover` | `Popup` with arrow and surface coloring. |
+| PopoverProps | `Material.MaterialPopoverProps` | Props helper for popover-specific flags like arrow visibility. |
 | Radio / RadioGroup | `QtQuick.Controls` `RadioButton` plus `Material.MaterialRadioGroup` | `RowLayout` that keeps buttons themed. |
 | Select / SelectChangeEvent | `Material.MaterialSelect` | `ComboBox` shim with label/input slot. |
 | Skeleton | `Material.MaterialSkeleton` | Animated gradient `Rectangle` for loading placeholders. |
