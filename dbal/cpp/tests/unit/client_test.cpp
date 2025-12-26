@@ -871,6 +871,70 @@ void test_component_search() {
     std::cout << "  ✓ Component prop search works" << std::endl;
 }
 
+void test_component_children() {
+    std::cout << "Testing component children retrieval..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreatePageInput pageInput;
+    pageInput.slug = "component-children";
+    pageInput.title = "Component Children";
+    pageInput.level = 1;
+    pageInput.layout = {{"tree", "root"}};
+    pageInput.is_active = true;
+    auto pageResult = client.createPage(pageInput);
+    assert(pageResult.isOk());
+    std::string pageId = pageResult.value().id;
+
+    dbal::CreateComponentHierarchyInput rootInput;
+    rootInput.page_id = pageId;
+    rootInput.component_type = "Root";
+    rootInput.order = 0;
+    rootInput.props = {{"depth", "0"}};
+    auto rootResult = client.createComponent(rootInput);
+    assert(rootResult.isOk());
+    std::string rootId = rootResult.value().id;
+
+    dbal::CreateComponentHierarchyInput childInput;
+    childInput.page_id = pageId;
+    childInput.parent_id = rootId;
+    childInput.component_type = "Child";
+    childInput.order = 0;
+    childInput.props = {{"depth", "1"}};
+    auto childResult = client.createComponent(childInput);
+    assert(childResult.isOk());
+    std::string childId = childResult.value().id;
+
+    dbal::CreateComponentHierarchyInput grandchildInput;
+    grandchildInput.page_id = pageId;
+    grandchildInput.parent_id = childId;
+    grandchildInput.component_type = "Grandchild";
+    grandchildInput.order = 0;
+    grandchildInput.props = {{"depth", "2"}};
+    auto grandchildResult = client.createComponent(grandchildInput);
+    assert(grandchildResult.isOk());
+
+    auto rootChildren = client.getComponentChildren(rootId);
+    assert(rootChildren.isOk());
+    assert(rootChildren.value().size() == 1);
+    assert(rootChildren.value()[0].id == childId);
+    std::cout << "  ✓ Retrieved direct children of root" << std::endl;
+
+    auto childChildren = client.getComponentChildren(childId);
+    assert(childChildren.isOk());
+    assert(childChildren.value().size() == 1);
+    assert(childChildren.value()[0].component_type == "Grandchild");
+    std::cout << "  ✓ Retrieved grandchildren for child" << std::endl;
+
+    auto missing = client.getComponentChildren("nonexistent");
+    assert(missing.isError());
+    assert(missing.error().code() == dbal::ErrorCode::NotFound);
+    std::cout << "  ✓ Missing component returns not found" << std::endl;
+}
+
 void test_workflow_crud() {
     std::cout << "Testing workflow CRUD operations..." << std::endl;
 
@@ -1442,6 +1506,7 @@ int main() {
         test_component_crud();
         test_component_validation();
         test_component_search();
+        test_component_children();
         test_workflow_crud();
         test_workflow_validation();
         test_session_crud();
@@ -1456,7 +1521,7 @@ int main() {
         
         std::cout << std::endl;
         std::cout << "==================================================" << std::endl;
-        std::cout << "✅ All 32 test suites passed!" << std::endl;
+        std::cout << "✅ All 33 test suites passed!" << std::endl;
         std::cout << "==================================================" << std::endl;
         return 0;
     } catch (const std::exception& e) {
