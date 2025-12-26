@@ -269,9 +269,10 @@ Test features at each level:
 const testLevels = [
   { level: 1, expect: 'public' },
   { level: 2, expect: 'user' },
-  { level: 3, expect: 'admin' },
-  { level: 4, expect: 'godmode' },
-  { level: 5, expect: 'supergod' },
+  { level: 3, expect: 'moderator' },
+  { level: 4, expect: 'admin' },
+  { level: 5, expect: 'godmode' },
+  { level: 6, expect: 'supergod' },
 ]
 
 testLevels.forEach(({ level, expect }) => {
