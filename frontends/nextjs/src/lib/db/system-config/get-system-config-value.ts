@@ -1,4 +1,4 @@
-import { getAdapter } from '../../core/dbal-client'
+import { getAdapter } from '../core/dbal-client'
 
 /**
  * Fetch a SystemConfig value by key.
