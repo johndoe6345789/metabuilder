@@ -13,5 +13,6 @@
 #include "workflow_validation.hpp"
 #include "lua_script_validation.hpp"
 #include "package_validation.hpp"
+#include "entity/credential_validation.hpp"
 
 #endif
