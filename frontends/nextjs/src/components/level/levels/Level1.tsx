@@ -24,6 +24,7 @@ import { HeroSection } from '../../level1/HeroSection'
 import { FeaturesSection } from '../../level1/FeaturesSection'
 import { ContactSection } from '../../level1/ContactSection'
 import { AppFooter } from '../../shared/AppFooter'
+import { ServerStatusPanel } from '../../status/ServerStatusPanel'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { GitHubActionsFetcher } from '../../misc/github/GitHubActionsFetcher'
 
@@ -157,10 +158,11 @@ export function Level1({ onNavigate }: Level1Props) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <Tabs defaultValue="home" className="w-full">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
-            <TabsTrigger value="home">Home</TabsTrigger>
-            <TabsTrigger value="github-actions">GitHub Actions</TabsTrigger>
-          </TabsList>
+        <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-3 mb-8">
+          <TabsTrigger value="home">Home</TabsTrigger>
+          <TabsTrigger value="github-actions">GitHub Actions</TabsTrigger>
+          <TabsTrigger value="status">Server Status</TabsTrigger>
+        </TabsList>
           
           <TabsContent value="home" className="mt-0">
             <HeroSection onNavigate={onNavigate} />
@@ -186,6 +188,20 @@ export function Level1({ onNavigate }: Level1Props) {
           
           <TabsContent value="github-actions" className="mt-0">
             <GitHubActionsFetcher />
+          </TabsContent>
+
+          <TabsContent value="status" className="mt-0">
+            <section className="space-y-6">
+              <div className="text-center space-y-1">
+                <p className="text-sm text-muted-foreground">Runtime observability</p>
+                <h2 className="text-3xl font-bold">Server Status</h2>
+                <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+                  Monitor the DBAL stack, Prisma schema, and the C++ daemon from this interface—so you
+                  can see how the daemon is progressing toward production readiness.
+                </p>
+              </div>
+              <ServerStatusPanel />
+            </section>
           </TabsContent>
         </Tabs>
       </div>

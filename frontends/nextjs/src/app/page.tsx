@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Home',
-  description: 'Welcome to MetaBuilder - Your data-driven application platform',
+  description: 'Welcome to MetaBuilder - Your data-driven platform with live server status insights',
 }
 
 export default function HomePage() {
