@@ -57,7 +57,7 @@ public:
 
         const std::string sql = "INSERT INTO users (username, email, role) "
                                 "VALUES (" + placeholder(1) + ", " + placeholder(2) + ", " + placeholder(3) + ") "
-                                "RETURNING id, username, email, role, created_at, updated_at";
+                                "RETURNING " + userFields();
         const std::vector<SqlParam> params = {
             {"username", input.username},
             {"email", input.email},
@@ -82,8 +82,8 @@ public:
         }
         ConnectionGuard guard(pool_, conn);
 
-        const std::string sql = "SELECT id, username, email, role, created_at, updated_at "
-                                "FROM users WHERE id = " + placeholder(1);
+        const std::string sql = "SELECT " + userFields() +
+                                " FROM users WHERE id = " + placeholder(1);
         const std::vector<SqlParam> params = {{"id", id}};
 
         try {
@@ -129,7 +129,7 @@ public:
 
         const std::string sql = "UPDATE users SET " + joinFragments(setFragments, ", ") +
                                 " WHERE id = " + placeholder(1) +
-                                " RETURNING id, username, email, role, created_at, updated_at";
+                                " RETURNING " + userFields();
 
         try {
             const auto rows = executeQuery(conn, sql, params);
@@ -172,8 +172,8 @@ public:
 
         const int limit = options.limit > 0 ? options.limit : 50;
         const int offset = options.page > 1 ? (options.page - 1) * limit : 0;
-        const std::string sql = "SELECT id, username, email, role, created_at, updated_at "
-                                "FROM users ORDER BY created_at DESC LIMIT " + placeholder(1) +
+        const std::string sql = "SELECT " + userFields() +
+                                " FROM users ORDER BY created_at DESC LIMIT " + placeholder(1) +
                                 " OFFSET " + placeholder(2);
         const std::vector<SqlParam> params = {
             {"limit", std::to_string(limit)},
