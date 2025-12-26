@@ -1,5 +1,6 @@
 'use client'
 
+import type { CodegenManifest } from '@/lib/codegen/codegen-types'
 import { useMemo, useState, type ChangeEvent } from 'react'
 
 import {
@@ -63,7 +64,11 @@ const fetchZip = async (values: FormState) => {
   const blob = await response.blob()
   const filename = createFilename(response.headers.get('content-disposition'), `${values.projectName}.zip`)
   downloadBlob(blob, filename)
-  return filename
+  const manifestHeader = response.headers.get('x-codegen-manifest')
+  const manifest = manifestHeader
+    ? (JSON.parse(decodeURIComponent(manifestHeader)) as CodegenManifest)
+    : null
+  return { filename, manifest }
 }
 
 export default function CodegenStudioClient() {
@@ -71,6 +76,7 @@ export default function CodegenStudioClient() {
   const [status, setStatus] = useState<FetchStatus>('idle')
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [manifest, setManifest] = useState<CodegenManifest | null>(null)
 
   const runtimeDescription = useMemo(() => {
     switch (form.runtime) {

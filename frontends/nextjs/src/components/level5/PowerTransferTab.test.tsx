@@ -64,9 +64,9 @@ describe('PowerTransferTab', () => {
     renderComponent()
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalled())
-    expect(await screen.findByText(/Recent transfers/i)).toBeInTheDocument()
-    expect(screen.getByText(/Transfer to target-god/i)).toBeInTheDocument()
-    expect(screen.getByText(/Requested by supergod/i)).toBeInTheDocument()
+    await screen.findByText(/Recent transfers/i)
+    expect(screen.getByText(/Transfer to target-god/i)).toBeDefined()
+    expect(screen.getByText(/Requested by supergod/i)).toBeDefined()
   })
 
   it('fires onInitiateTransfer when a user card is clicked', async () => {
