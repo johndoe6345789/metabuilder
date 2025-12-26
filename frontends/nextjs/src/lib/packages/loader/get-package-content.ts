@@ -1,4 +1,4 @@
-import { PACKAGE_CATALOG } from '../package-catalog'
+import { PACKAGE_CATALOG } from '../../package-lib/package-catalog'
 
 /**
  * Get the content of a package by its ID
