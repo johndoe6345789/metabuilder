@@ -1,3 +1,4 @@
+import { executeLuaScriptWithProfile } from '../../lua/execute-lua-script-with-profile'
 import type { DeclarativeRendererState } from './renderer-state'
 
 export async function executeLuaScript(
@@ -34,9 +35,11 @@ if result_fn and type(result_fn) == "function" then
 end
 `
 
-  const result = await state.luaEngine.execute(wrappedCode, {
-    data: { params: paramContext }
-  })
+  const result = await executeLuaScriptWithProfile(
+    wrappedCode,
+    { data: { params: paramContext } },
+    script
+  )
 
   if (!result.success) {
     console.error(`Lua script error (${scriptId}):`, result.error, result.logs)
