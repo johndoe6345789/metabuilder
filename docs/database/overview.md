@@ -55,6 +55,9 @@ The database manages the following entity types:
   - `code`: Lua source code
   - `parameters`: Array of parameter definitions
   - `returnType`: Expected return type
+  - `isSandboxed`: Whether script runs in sandbox
+  - `allowedGlobals`: Allowed global functions/modules
+  - `timeoutMs`: Execution timeout in milliseconds
 
 #### Pages
 - **Key**: `db_pages`
