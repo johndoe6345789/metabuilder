@@ -18,14 +18,14 @@
 
 import { useState, useEffect } from 'react'
 import { getScrambledPassword } from '@/lib/auth'
-import { NavigationBar } from './level1/NavigationBar'
-import { GodCredentialsBanner } from './level1/GodCredentialsBanner'
-import { HeroSection } from './level1/HeroSection'
-import { FeaturesSection } from './level1/FeaturesSection'
-import { ContactSection } from './level1/ContactSection'
-import { AppFooter } from './shared/AppFooter'
+import { NavigationBar } from '../../level1/NavigationBar'
+import { GodCredentialsBanner } from '../../level1/GodCredentialsBanner'
+import { HeroSection } from '../../level1/HeroSection'
+import { FeaturesSection } from '../../level1/FeaturesSection'
+import { ContactSection } from '../../level1/ContactSection'
+import { AppFooter } from '../../shared/AppFooter'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { GitHubActionsFetcher } from './GitHubActionsFetcher'
+import { GitHubActionsFetcher } from '../../misc/github/GitHubActionsFetcher'
 
 // Props for Level1 component
 interface Level1Props {
