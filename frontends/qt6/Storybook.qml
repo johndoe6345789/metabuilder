@@ -163,6 +163,7 @@ ApplicationWindow {
         case "Snackbar": return snackbarSample
         case "Menu": return menuSample
         case "Avatar": return avatarSample
+        case "MOD Player": return modPlayerSample
         case "Typography": return typographySample
         default: return emptySample
         }
@@ -280,6 +281,11 @@ ApplicationWindow {
             Material.MaterialTypography { variant: "h3"; text: "Section title" }
             Material.MaterialTypography { variant: "body1"; text: "Body copy demonstrates Material font styling." }
         }
+    }
+
+    Component {
+        id: modPlayerSample
+        ModPlayerPanel {}
     }
 
     Component {
