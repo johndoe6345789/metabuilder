@@ -1,0 +1,83 @@
+#ifndef DBAL_SEARCH_COMPONENTS_HPP
+#define DBAL_SEARCH_COMPONENTS_HPP
+
+#include "dbal/errors.hpp"
+#include "../../../store/in_memory_store.hpp"
+#include <algorithm>
+#include <cctype>
+#include <iterator>
+#include <optional>
+#include <string>
+#include <vector>
+
+namespace dbal {
+namespace entities {
+namespace component {
+
+namespace {
+
+inline std::string toLower(const std::string& value) {
+    std::string lowered;
+    lowered.reserve(value.size());
+    std::transform(value.begin(), value.end(), std::back_inserter(lowered), [](unsigned char c) {
+        return static_cast<char>(std::tolower(c));
+    });
+    return lowered;
+}
+
+inline bool containsInsensitive(const std::string& text, const std::string& query) {
+    if (query.empty()) {
+        return false;
+    }
+    return toLower(text).find(toLower(query)) != std::string::npos;
+}
+
+} // namespace
+
+inline Result<std::vector<ComponentHierarchy>> search(InMemoryStore& store,
+                                                     const std::string& query,
+                                                     const std::optional<std::string>& page_id = std::nullopt,
+                                                     int limit = 20) {
+    if (query.empty()) {
+        return Error::validationError("search query is required");
+    }
+
+    std::vector<ComponentHierarchy> matches;
+    for (const auto& [id, component] : store.components) {
+        (void)id;
+        if (page_id.has_value() && component.page_id != page_id.value()) {
+            continue;
+        }
+        bool matchesQuery = containsInsensitive(component.component_type, query);
+        if (!matchesQuery) {
+            for (const auto& [key, value] : component.props) {
+                if (containsInsensitive(key, query) || containsInsensitive(value, query)) {
+                    matchesQuery = true;
+                    break;
+                }
+            }
+        }
+        if (matchesQuery) {
+            matches.push_back(component);
+        }
+    }
+
+    std::sort(matches.begin(), matches.end(), [](const ComponentHierarchy& a, const ComponentHierarchy& b) {
+        if (a.component_type != b.component_type) {
+            return a.component_type < b.component_type;
+        }
+        return a.order < b.order;
+    });
+
+    if (limit > 0 && static_cast<int>(matches.size()) > limit) {
+        matches.resize(limit);
+    }
+
+    return Result<std::vector<ComponentHierarchy>>(matches);
+}
+
+} // namespace component
+} // namespace entities
+} // namespace dbal
+
+#endif
