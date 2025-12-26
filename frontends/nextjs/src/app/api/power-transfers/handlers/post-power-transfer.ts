@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { readJson } from '@/lib/api/read-json'
+import { requireDBALApiKey } from '@/lib/api/require-dbal-api-key'
 import { Database } from '@/lib/database'
 import {
   addPowerTransferRequest,
@@ -18,6 +19,11 @@ interface CreatePowerTransferPayload {
 }
 
 export async function POST(request: NextRequest) {
+  const unauthorized = requireDBALApiKey(request)
+  if (unauthorized) {
+    return unauthorized
+  }
+
   try {
     const body = await readJson<CreatePowerTransferPayload>(request)
     if (!body) {
