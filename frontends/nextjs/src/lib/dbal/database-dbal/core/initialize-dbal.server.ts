@@ -1,7 +1,9 @@
 import 'server-only'
 
-import { DBALClient } from '@/lib/dbal-stub'
-import type { DBALConfig } from '@/lib/dbal-stub'
+import { DBALClient as StubDBALClient } from '@/lib/dbal-stub'
+import type { DBALConfig as StubDBALConfig } from '@/lib/dbal-stub'
+import { DBALClient as RealDBALClient } from '@/dbal/ts/src'
+import type { DBALConfig as RealDBALConfig } from '@/dbal/ts/src/runtime/config'
 import { dbalState } from './dbal-state.server'
 
 /**
@@ -12,25 +14,41 @@ export async function initializeDBAL(): Promise<void> {
     return
   }
 
+  const endpoint = process.env.DBAL_WS_URL || process.env.NEXT_PUBLIC_DBAL_WS_URL
+  const mode = endpoint ? 'production' : process.env.DBAL_MODE === 'production' ? 'production' : 'development'
+  const databaseUrl = process.env.DATABASE_URL || 'file:./prisma/dev.db'
+
+  const config: RealDBALConfig = {
+    mode,
+    adapter: 'prisma',
+    endpoint: endpoint ?? undefined,
+    database: {
+      url: databaseUrl,
+    },
+    security: {
+      sandbox: endpoint ? 'strict' : 'permissive',
+      enableAuditLog: false,
+    },
+  }
+
   try {
-    const config: DBALConfig = {
-      mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+    dbalState.client = new RealDBALClient(config)
+    dbalState.initialized = true
+    console.log('Real DBAL client initialized successfully')
+  } catch (error) {
+    console.warn('Falling back to stub DBAL client:', error)
+    const stubConfig: StubDBALConfig = {
+      mode,
       adapter: 'prisma',
       database: {
-        url: process.env.DATABASE_URL || 'file:./prisma/dev.db',
+        url: databaseUrl,
       },
       security: {
         sandbox: 'permissive',
         enableAuditLog: false,
       },
     }
-
-    dbalState.client = new DBALClient(config)
-    dbalState.initialized = true
-    console.log('DBAL client initialized successfully')
-  } catch (error) {
-    console.error('Failed to initialize DBAL client:', error)
-    dbalState.client = null
+    dbalState.client = new StubDBALClient(stubConfig)
     dbalState.initialized = true
   }
 }

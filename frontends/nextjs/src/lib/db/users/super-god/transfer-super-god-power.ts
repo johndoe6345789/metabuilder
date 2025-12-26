@@ -1,10 +1,9 @@
-import { getAdapter } from '../../core/dbal-client'
+import { dbalUpdateUser } from '@/lib/dbal/database-dbal/users/dbal-update-user.server'
 
 /**
  * Transfer SuperGod power from one user to another
  */
 export async function transferSuperGodPower(fromUserId: string, toUserId: string): Promise<void> {
-  const adapter = getAdapter()
-  await adapter.update('User', fromUserId, { isInstanceOwner: false, role: 'god' })
-  await adapter.update('User', toUserId, { isInstanceOwner: true, role: 'supergod' })
+  await dbalUpdateUser(fromUserId, { isInstanceOwner: false, role: 'god' })
+  await dbalUpdateUser(toUserId, { isInstanceOwner: true, role: 'supergod' })
 }
