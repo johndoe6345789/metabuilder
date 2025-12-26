@@ -17,11 +17,14 @@ export async function initializeDBAL(): Promise<void> {
   const endpoint = process.env.DBAL_WS_URL || process.env.NEXT_PUBLIC_DBAL_WS_URL
   const mode = endpoint ? 'production' : process.env.DBAL_MODE === 'production' ? 'production' : 'development'
   const databaseUrl = process.env.DATABASE_URL || 'file:./prisma/dev.db'
+  const engine = process.env.DBAL_SQL_ENGINE?.toLowerCase() === 'mysql' ? 'mysql' : 'postgres'
+  const auth = process.env.DBAL_API_KEY ? { apiKey: process.env.DBAL_API_KEY } : undefined
 
   const config: RealDBALConfig = {
     mode,
-    adapter: 'prisma',
+    adapter: endpoint ? 'prisma' : engine,
     endpoint: endpoint ?? undefined,
+    auth,
     database: {
       url: databaseUrl,
     },
@@ -39,7 +42,8 @@ export async function initializeDBAL(): Promise<void> {
     console.warn('Falling back to stub DBAL client:', error)
     const stubConfig: StubDBALConfig = {
       mode,
-      adapter: 'prisma',
+      adapter: engine,
+      auth,
       database: {
         url: databaseUrl,
       },
