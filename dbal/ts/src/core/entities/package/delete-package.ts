@@ -2,24 +2,26 @@
  * @file delete-package.ts
  * @description Delete package operation
  */
-import type { Result } from '../types';
-import type { InMemoryStore } from '../store/in-memory-store';
+import type { Result } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
+import { validateId } from '../../validation/validate-id'
 
 /**
  * Delete a package by ID
  */
-export async function deletePackage(store: InMemoryStore, id: string): Promise<Result<boolean>> {
-  if (!id) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'ID required' } };
+export const deletePackage = async (store: InMemoryStore, id: string): Promise<Result<boolean>> => {
+  const idErrors = validateId(id)
+  if (idErrors.length > 0) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
   }
 
-  const pkg = store.packages.get(id);
+  const pkg = store.packages.get(id)
   if (!pkg) {
-    return { success: false, error: { code: 'NOT_FOUND', message: `Package not found: ${id}` } };
+    return { success: false, error: { code: 'NOT_FOUND', message: `Package not found: ${id}` } }
   }
 
-  store.packageIds.delete(pkg.packageId);
-  store.packages.delete(id);
+  store.packages.delete(id)
+  store.packageKeys.delete(`${pkg.name}@${pkg.version}`)
 
-  return { success: true, data: true };
+  return { success: true, data: true }
 }
