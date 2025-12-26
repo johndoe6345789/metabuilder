@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Database } from '@/lib/database'
 import type { User } from '@/lib/level-types'
-import { useAuth } from './useAuth'
+import { useAuth } from '@/hooks/useAuth'
 
 export interface ResolvedUserState {
   user: User | null

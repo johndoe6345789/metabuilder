@@ -22,7 +22,7 @@ import {
   Cancel as XCircleIcon,
 } from '@mui/icons-material'
 import { toast } from 'sonner'
-import { createWorkflowEngine, type WorkflowExecutionResult as WFExecResult } from '@/lib/workflow-engine'
+import { createWorkflowEngine, type WorkflowExecutionResult as WFExecResult } from '@/lib/workflow/engine/workflow-engine'
 import type { Workflow, WorkflowNode, WorkflowEdge, LuaScript } from '@/lib/level-types'
 import { Input, Label, Badge, Button, Textarea, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui'
 import { CardTitle, CardDescription } from '@/components/ui'

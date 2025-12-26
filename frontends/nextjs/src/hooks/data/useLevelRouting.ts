@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import type { AppLevel } from '@/lib/level-types'
 import { getLevelPath } from '@/lib/navigation/get-level-path'
-import { useAuth } from './useAuth'
+import { useAuth } from '@/hooks/useAuth'
 
 export interface LevelRouting {
   onNavigate: (level: AppLevel) => void
