@@ -8,7 +8,7 @@
 #include "dbal/types.hpp"
 #include "dbal/errors.hpp"
 #include "../../../store/in_memory_store.hpp"
-#include "clean_expired.hpp"
+#include "lifecycle/clean_expired.hpp"
 #include <algorithm>
 
 namespace dbal {
