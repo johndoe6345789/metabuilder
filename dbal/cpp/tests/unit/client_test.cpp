@@ -696,6 +696,15 @@ void test_lua_script_validation() {
     assert(resultGlobals.error().code() == dbal::ErrorCode::ValidationError);
     std::cout << "  ✓ Empty allowed_globals rejected" << std::endl;
 
+    dbal::CreateLuaScriptInput inputForbiddenGlobals = input1;
+    inputForbiddenGlobals.name = "forbidden-globals";
+    inputForbiddenGlobals.timeout_ms = 1000;
+    inputForbiddenGlobals.allowed_globals = {"os"};
+    auto resultForbiddenGlobals = client.createLuaScript(inputForbiddenGlobals);
+    assert(resultForbiddenGlobals.isError());
+    assert(resultForbiddenGlobals.error().code() == dbal::ErrorCode::ValidationError);
+    std::cout << "  ✓ Forbidden globals rejected" << std::endl;
+
     dbal::CreateLuaScriptInput input2;
     input2.name = "duplicate-script";
     input2.code = "return true";
@@ -711,6 +720,14 @@ void test_lua_script_validation() {
     assert(result3.isError());
     assert(result3.error().code() == dbal::ErrorCode::Conflict);
     std::cout << "  ✓ Duplicate script name rejected" << std::endl;
+
+    dbal::CreateLuaScriptInput input4 = input2;
+    input4.name = "dedupe-globals";
+    input4.allowed_globals = {"math", "math", "print"};
+    auto result4 = client.createLuaScript(input4);
+    assert(result4.isOk());
+    assert(result4.value().allowed_globals.size() == 2);
+    std::cout << "  ✓ Allowed globals deduped" << std::endl;
 }
 
 void test_package_crud() {
