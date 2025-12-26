@@ -3,6 +3,8 @@ import { executeWithSandbox, type SandboxedLuaResult } from './functions/sandbox
 import { disableDangerousFunctions } from './functions/sandbox/disable-dangerous-functions'
 import { setupSandboxedEnvironment } from './functions/sandbox/setup-sandboxed-environment'
 import { executeWithTimeout } from './functions/sandbox/execute-with-timeout'
+import { getLuaMemoryUsageBytes } from './functions/sandbox/get-lua-memory-usage-bytes'
+import { enforceMaxMemory } from './functions/sandbox/enforce-max-memory'
 import { setExecutionTimeout } from './functions/sandbox/set-execution-timeout'
 import { destroy } from './functions/sandbox/destroy'
 
@@ -12,7 +14,6 @@ export type { SandboxedLuaResult }
 export class SandboxedLuaEngine {
   engine: LuaEngine | null = null
   executionTimeout = 5000
-  // TODO: Enforce maxMemory limit in sandbox execution.
   maxMemory = 10 * 1024 * 1024
 
   constructor(timeout: number = 5000) {
@@ -23,6 +24,8 @@ export class SandboxedLuaEngine {
   disableDangerousFunctions = disableDangerousFunctions
   setupSandboxedEnvironment = setupSandboxedEnvironment
   executeWithTimeout = executeWithTimeout
+  getLuaMemoryUsageBytes = getLuaMemoryUsageBytes
+  enforceMaxMemory = enforceMaxMemory
   setExecutionTimeout = setExecutionTimeout
   destroy = destroy
 }

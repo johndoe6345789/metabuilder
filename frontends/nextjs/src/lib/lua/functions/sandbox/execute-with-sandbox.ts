@@ -36,13 +36,15 @@ export async function executeWithSandbox(
   this.disableDangerousFunctions()
   this.setupSandboxedEnvironment()
 
-  const executionPromise = this.executeWithTimeout(code, context)
+  let executionResult: LuaExecutionResult | null = null
 
   try {
-    const result = await executionPromise
+    this.enforceMaxMemory()
+    executionResult = await this.executeWithTimeout(code, context)
+    this.enforceMaxMemory()
 
     return {
-      execution: result,
+      execution: executionResult,
       security: securityResult
     }
   } catch (error) {
@@ -50,7 +52,7 @@ export async function executeWithSandbox(
       execution: {
         success: false,
         error: error instanceof Error ? error.message : 'Execution failed',
-        logs: []
+        logs: executionResult?.logs ?? []
       },
       security: securityResult
     }
