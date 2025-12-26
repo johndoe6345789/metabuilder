@@ -1,6 +1,8 @@
 import { getAdapter } from '../dbal-client'
 import { verifyPassword } from '../verify-password'
 import type { User } from '../../types/level-types'
+import { mapUserRecord } from '../users/map-user-record'
+import { getUserFirstLoginFlag } from '../users/get-user-first-login-flag'
 
 export interface AuthenticateResult {
   success: boolean
@@ -36,37 +38,18 @@ export const authenticateUser = async (
     return { success: false, user: null, error: 'invalid_credentials' }
   }
 
-  // Fetch user data
-  const userResult = await adapter.list('User', {
-    filter: { username },
+  const userRecord = await adapter.findFirst('User', {
+    where: { username },
   })
 
-  if (userResult.data.length === 0) {
+  if (!userRecord) {
     return { success: false, user: null, error: 'user_not_found' }
   }
 
-  const userData = userResult.data[0] as Record<string, unknown>
-
-  const user: User = {
-    id: String(userData.id),
-    username: String(userData.username),
-    email: String(userData.email),
-    role: userData.role as User['role'],
-    profilePicture: userData.profilePicture ? String(userData.profilePicture) : undefined,
-    bio: userData.bio ? String(userData.bio) : undefined,
-    createdAt: Number(userData.createdAt),
-    tenantId: userData.tenantId ? String(userData.tenantId) : undefined,
-    isInstanceOwner: Boolean(userData.isInstanceOwner),
-  }
-
-  // Check first login flag
-  const firstLoginResult = await adapter.findFirst('GodCredentialExpiry', {
-    where: { settingKey: `first_login_${username}` },
-  })
-
-  const requiresPasswordChange = firstLoginResult
-    ? (firstLoginResult as { value: string }).value === 'true'
-    : false
+  const user = mapUserRecord(userRecord as Record<string, unknown>)
+  const requiresPasswordChange = getUserFirstLoginFlag(
+    userRecord as Record<string, unknown>
+  )
 
   return { success: true, user, requiresPasswordChange }
 }
