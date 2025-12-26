@@ -141,6 +141,47 @@ Response:
 POST /api/auth/logout
 ```
 
+## Screenshot Analysis API
+
+Local heuristic analysis for the Screenshot Analyzer UI.
+
+```
+POST /api/screenshot/analyze
+Content-Type: application/json
+
+{
+  "title": "Dashboard",
+  "url": "https://example.com/dashboard",
+  "viewport": { "width": 1280, "height": 720 },
+  "textSample": "First 3k characters of text",
+  "htmlSample": "First 6k characters of HTML"
+}
+```
+
+Response:
+
+```
+{
+  "report": "Screenshot Analysis (local heuristics)...",
+  "metrics": {
+    "wordCount": 120,
+    "headingCount": 4,
+    "h1Count": 1,
+    "h2Count": 2,
+    "h3Count": 1,
+    "imgCount": 3,
+    "imgMissingAltCount": 1,
+    "linkCount": 12,
+    "buttonCount": 4,
+    "formCount": 1,
+    "inputCount": 3
+  },
+  "warnings": [
+    "Images missing alt text: 1."
+  ]
+}
+```
+
 ## Creating an API Endpoint
 
 ### 1. Create Route File
