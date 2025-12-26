@@ -129,7 +129,7 @@ metabuilder/
 
 ---
 
-## 5-Level Permission System
+## 6-Level Permission System
 
 Hierarchical access control where each level inherits all permissions from lower levels:
 
@@ -137,20 +137,22 @@ Hierarchical access control where each level inherits all permissions from lower
 |-------|------|--------|-------|
 | 1 | Public | Read-only, unauthenticated | `/` |
 | 2 | User | Personal dashboard, content creation | `/dashboard` |
-| 3 | Admin | User management, system settings | `/admin` |
-| 4 | God | Workflows, advanced scripting, packages | `/builder` |
-| 5 | Supergod | Full system control, tenant management | `/supergod` |
+| 3 | Moderator | Moderation desk, flag review, report handling | `/moderator` |
+| 4 | Admin | User management, system settings | `/admin` |
+| 5 | God | Workflows, advanced scripting, packages | `/builder` |
+| 6 | Supergod | Full system control, tenant management | `/supergod` |
 
 ### Permission Matrix
 
-| Feature | L1 | L2 | L3 | L4 | L5 |
-|---------|----|----|----|----|----| 
-| View Public Data | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Authenticate | | ✓ | ✓ | ✓ | ✓ |
-| Create Content | | ✓ | ✓ | ✓ | ✓ |
-| Manage Users | | | ✓ | ✓ | ✓ |
-| Run Workflows | | | | ✓ | ✓ |
-| System Configuration | | | | | ✓ |
+| Feature | L1 | L2 | L3 | L4 | L5 | L6 |
+|---------|----|----|----|----|----|----|
+| View Public Data | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Authenticate | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Create Content | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Moderate Content | | | ✓ | ✓ | ✓ | ✓ |
+| Manage Users | | | | ✓ | ✓ | ✓ |
+| Run Workflows | | | | | ✓ | ✓ |
+| System Configuration | | | | | | ✓ |
 
 ### Usage
 
@@ -860,6 +862,17 @@ DEBUG=metabuilder:* npm run dev
 | Development prompts | `.github/prompts/` |
 
 ---
+
+# new text
+
+## Documentation ...
+
+...
+
+## Quick Links
+
+- ...
+
 
 ## License
 
