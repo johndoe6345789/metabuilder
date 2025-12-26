@@ -29,22 +29,6 @@ inline Result<PageView> get(InMemoryStore& store, const std::string& id) {
     return Result<PageView>(it->second);
 }
 
-/**
- * Get a page by slug
- */
-inline Result<PageView> getBySlug(InMemoryStore& store, const std::string& slug) {
-    if (slug.empty()) {
-        return Error::validationError("Slug cannot be empty");
-    }
-    
-    auto it = store.page_slugs.find(slug);
-    if (it == store.page_slugs.end()) {
-        return Error::notFound("Page not found with slug: " + slug);
-    }
-    
-    return get(store, it->second);
-}
-
 } // namespace page
 } // namespace entities
 } // namespace dbal
