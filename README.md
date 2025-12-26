@@ -23,6 +23,7 @@ A **data-driven, multi-tenant platform** where 95% of functionality lives in JSO
 15. [Contributing](#contributing)
 16. [Troubleshooting](#troubleshooting)
 17. [Key Files Reference](#key-files-reference)
+18. [Roadmap](#roadmap)
 
 ---
 
@@ -1120,6 +1121,34 @@ DEBUG=metabuilder:* npm run dev
 | Security tools | `tools/security/` |
 | Development prompts | `.github/prompts/` |
 | CI workflows | `.github/workflows/` |
+
+---
+
+## Roadmap
+
+### Current Phase: Foundation & Migration
+
+| Status | Milestone | Target |
+|--------|-----------|--------|
+| ✅ | Multi-tenant architecture | Complete |
+| ✅ | 6-level permission system | Complete |
+| ✅ | Package system with JSON/Lua | Complete |
+| ✅ | DBAL TypeScript SDK | Complete |
+| 🔄 | Next.js to Lua conversion | In Progress |
+| 🔄 | C++ DBAL daemon (production) | In Progress |
+| ⏳ | Full Lua business logic | Q1 2025 |
+| ⏳ | Package marketplace | Q2 2025 |
+
+### Future Goals
+
+- **Q1 2025**: Complete Lua conversion for 95% of frontend logic
+- **Q2 2025**: Launch package marketplace for community packages
+- **Q3 2025**: Self-hosted deployment templates (Docker, K8s)
+- **Q4 2025**: Enterprise features (SSO, audit logs, advanced analytics)
+
+### Contributing to Roadmap
+
+See the [Refactor Plan](#refactor-plan) section for detailed phase breakdowns and how to contribute.
 
 ---
 
