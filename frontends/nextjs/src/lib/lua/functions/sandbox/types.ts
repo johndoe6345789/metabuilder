@@ -23,4 +23,8 @@ export interface SandboxedLuaEngineState {
   setupSandboxedEnvironment: () => void
   /** Execute code with timeout */
   executeWithTimeout: (code: string, context?: LuaExecutionContext) => Promise<LuaExecutionResult>
+  /** Read current Lua heap usage in bytes */
+  getLuaMemoryUsageBytes: () => number
+  /** Enforce maxMemory threshold */
+  enforceMaxMemory: () => void
 }
