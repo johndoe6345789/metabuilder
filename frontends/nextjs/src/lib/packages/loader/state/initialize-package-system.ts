@@ -1,4 +1,4 @@
-import { PACKAGE_CATALOG } from '../../package-lib/package-catalog'
+import { PACKAGE_CATALOG } from '../../../package-lib/package-catalog'
 import { loadPackageComponents } from '../../declarative-component-renderer'
 import { buildPackageRegistry, exportAllPackagesForSeed } from '../package-glue'
 import { setPackageRegistry } from './set-package-registry'
