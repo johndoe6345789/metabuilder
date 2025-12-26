@@ -1040,10 +1040,9 @@ npm run start
 ### Workflow
 
 1. Follow `.github/copilot-instructions.md`
-2. Check `docs/todo/` before starting
-3. Run `npm run lint:fix` before committing
-4. Add parameterized tests for new functions
-5. Commit with descriptive messages on `main`
+2. Run `npm run lint:fix` before committing
+3. Add parameterized tests for new functions
+4. Commit with descriptive messages on `main`
 
 ### Before Committing
 
