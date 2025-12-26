@@ -3,8 +3,8 @@
  * Scans JSON for security vulnerabilities like prototype pollution
  */
 
-import type { SecurityScanResult, SecurityIssue } from '../types'
-import { calculateOverallSeverity } from '../utils/calculate-severity'
+import type { SecurityScanResult, SecurityIssue } from '../../types'
+import { calculateOverallSeverity } from '../../utils/calculate-severity'
 
 /**
  * Scan JSON string for security vulnerabilities
