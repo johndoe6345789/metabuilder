@@ -84,6 +84,19 @@ const notificationCenterMetadata: PackageSeedConfig['metadata'] = {
 }
 const notificationCenterExamples: any = {}
 
+const socialHubComponents: any[] = []
+const socialHubMetadata: PackageSeedConfig['metadata'] = {
+  packageId: 'social_hub',
+  name: 'Social Hub',
+  version: '1.0.0',
+  description: 'Social feed package with live rooms and creator updates',
+  author: 'MetaBuilder',
+  category: 'social',
+  dependencies: [],
+  exports: { components: [] },
+}
+const socialHubExamples: any = {}
+
 export const DEFAULT_PACKAGES: Record<string, PackageSeedConfig> = {
   admin_dialog: {
     metadata: adminDialogMetadata,
@@ -114,5 +127,10 @@ export const DEFAULT_PACKAGES: Record<string, PackageSeedConfig> = {
     metadata: notificationCenterMetadata,
     components: notificationCenterComponents,
     examples: notificationCenterExamples,
+  },
+  social_hub: {
+    metadata: socialHubMetadata,
+    components: socialHubComponents,
+    examples: socialHubExamples,
   },
 }
