@@ -97,6 +97,19 @@ const socialHubMetadata: PackageSeedConfig['metadata'] = {
 }
 const socialHubExamples: any = {}
 
+const codegenStudioComponents: any[] = []
+const codegenStudioMetadata: PackageSeedConfig['metadata'] = {
+  packageId: 'codegen_studio',
+  name: 'Codegen Studio',
+  version: '1.0.0',
+  description: 'Template-driven code generation studio with zip exports',
+  author: 'MetaBuilder',
+  category: 'tools',
+  dependencies: [],
+  exports: { components: [] },
+}
+const codegenStudioExamples: any = {}
+
 export const DEFAULT_PACKAGES: Record<string, PackageSeedConfig> = {
   admin_dialog: {
     metadata: adminDialogMetadata,
@@ -132,5 +145,10 @@ export const DEFAULT_PACKAGES: Record<string, PackageSeedConfig> = {
     metadata: socialHubMetadata,
     components: socialHubComponents,
     examples: socialHubExamples,
+  },
+  codegen_studio: {
+    metadata: codegenStudioMetadata,
+    components: codegenStudioComponents,
+    examples: codegenStudioExamples,
   },
 }
