@@ -15,6 +15,7 @@ Scripts organized by function:
 - **`migrate-to-prisma.sh`** - Migrate existing database to Prisma ORM
 - **`migrate-to-prisma.cjs`** - CJS-based migration utility
 - **`setup-packages.cjs`** - Initialize package structure
+- **`generate-package-index.cjs`** - Build `packages/index.json` from package metadata
 
 ### Testing & Deployment
 
@@ -118,6 +119,16 @@ npm run act
 
 # Show help
 ./scripts/run-act.sh -h
+```
+
+### `generate-package-index.cjs`
+
+Generate `packages/index.json` so the package loader can discover packages dynamically.
+
+**Usage:**
+
+```bash
+node tools/generate-package-index.cjs
 ```
 
 **Common Use Cases:**
