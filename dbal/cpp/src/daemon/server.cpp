@@ -52,29 +52,22 @@ drogon::HttpResponsePtr build_json_response(const Json::Value& body) {
     return response;
 }
 
-void handle_health(
-    const drogon::HttpRequestPtr&,
-    std::function<void(const drogon::HttpResponsePtr&)>&& callback
-) {
+drogon::HttpResponsePtr handle_health(const drogon::HttpRequestPtr&) {
     Json::Value body;
     body["status"] = "healthy";
     body["service"] = "dbal";
-    callback(build_json_response(body));
+    return build_json_response(body);
 }
 
-void handle_version(
-    const drogon::HttpRequestPtr&,
-    std::function<void(const drogon::HttpResponsePtr&)>&& callback
-) {
+drogon::HttpResponsePtr handle_version(const drogon::HttpRequestPtr&) {
     Json::Value body;
     body["version"] = "1.0.0";
     body["service"] = "DBAL Daemon";
-    callback(build_json_response(body));
+    return build_json_response(body);
 }
 
-void handle_status(
+drogon::HttpResponsePtr handle_status(
     const drogon::HttpRequestPtr& request,
-    std::function<void(const drogon::HttpResponsePtr&)>&& callback,
     const std::string& address
 ) {
     Json::Value body;
@@ -82,7 +75,7 @@ void handle_status(
     body["address"] = address;
     body["real_ip"] = resolve_real_ip(request);
     body["forwarded_proto"] = resolve_forwarded_proto(request);
-    callback(build_json_response(body));
+    return build_json_response(body);
 }
 
 } // namespace
@@ -139,12 +132,9 @@ void Server::registerRoutes() {
     }
 
     const std::string server_address = address();
-    auto status_handler = std::bind(
-        handle_status,
-        std::placeholders::_1,
-        std::placeholders::_2,
-        server_address
-    );
+    auto status_handler = [server_address](const drogon::HttpRequestPtr& request) {
+        return handle_status(request, server_address);
+    };
 
     drogon::app().registerHandler("/health", handle_health, {drogon::HttpMethod::Get});
     drogon::app().registerHandler("/healthz", handle_health, {drogon::HttpMethod::Get});
