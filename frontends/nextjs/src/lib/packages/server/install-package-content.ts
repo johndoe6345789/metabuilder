@@ -2,6 +2,8 @@ import 'server-only'
 
 import { Database } from '@/lib/database'
 import type { PackageContent } from '@/lib/package-types'
+import { mergeByKey } from './merge-by-key'
+import { mergeRecords } from './merge-records'
 
 export async function installPackageContent(packageId: string, content: PackageContent): Promise<void> {
   const [schemas, pages, workflows, luaScripts, hierarchy, configs] = await Promise.all([
@@ -13,23 +15,32 @@ export async function installPackageContent(packageId: string, content: PackageC
     Database.getComponentConfigs(),
   ])
 
+  const mergedSchemas = mergeByKey(schemas, content.schemas, (schema) => schema.name)
+  const mergedPages = mergeByKey(pages, content.pages, (page) => page.id)
+  const mergedWorkflows = mergeByKey(workflows, content.workflows, (workflow) => workflow.id)
+  const mergedLuaScripts = mergeByKey(luaScripts, content.luaScripts, (script) => script.id)
+  const mergedHierarchy = mergeRecords(hierarchy, content.componentHierarchy)
+  const mergedConfigs = mergeRecords(configs, content.componentConfigs)
+
   await Promise.all([
-    Database.setSchemas([...schemas, ...content.schemas]),
-    Database.setPages([...pages, ...content.pages]),
-    Database.setWorkflows([...workflows, ...content.workflows]),
-    Database.setLuaScripts([...luaScripts, ...content.luaScripts]),
-    Database.setComponentHierarchy({ ...hierarchy, ...content.componentHierarchy }),
-    Database.setComponentConfigs({ ...configs, ...content.componentConfigs }),
+    Database.setSchemas(mergedSchemas),
+    Database.setPages(mergedPages),
+    Database.setWorkflows(mergedWorkflows),
+    Database.setLuaScripts(mergedLuaScripts),
+    Database.setComponentHierarchy(mergedHierarchy),
+    Database.setComponentConfigs(mergedConfigs),
   ])
 
   if (content.cssClasses) {
     const cssClasses = await Database.getCssClasses()
-    await Database.setCssClasses([...cssClasses, ...content.cssClasses])
+    const mergedCssClasses = mergeByKey(cssClasses, content.cssClasses, (category) => category.name)
+    await Database.setCssClasses(mergedCssClasses)
   }
 
   if (content.dropdownConfigs) {
     const dropdowns = await Database.getDropdownConfigs()
-    await Database.setDropdownConfigs([...dropdowns, ...content.dropdownConfigs])
+    const mergedDropdowns = mergeByKey(dropdowns, content.dropdownConfigs, (config) => config.id)
+    await Database.setDropdownConfigs(mergedDropdowns)
   }
 
   if (content.seedData) {
