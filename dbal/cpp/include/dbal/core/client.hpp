@@ -55,6 +55,8 @@ public:
     Result<bool> deleteComponent(const std::string& id);
     Result<std::vector<ComponentHierarchy>> listComponents(const ListOptions& options);
     Result<std::vector<ComponentHierarchy>> getComponentTree(const std::string& page_id);
+    Result<bool> reorderComponents(const std::vector<ComponentOrderUpdate>& updates);
+    Result<ComponentHierarchy> moveComponent(const MoveComponentInput& input);
 
     Result<Workflow> createWorkflow(const CreateWorkflowInput& input);
     Result<Workflow> getWorkflow(const std::string& id);

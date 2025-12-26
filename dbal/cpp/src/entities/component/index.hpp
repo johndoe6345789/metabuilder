@@ -6,5 +6,7 @@
 #include "crud/update_component.hpp"
 #include "crud/delete_component.hpp"
 #include "crud/list_components.hpp"
+#include "crud/reorder_components.hpp"
+#include "crud/move_component.hpp"
 
 #endif

@@ -122,6 +122,14 @@ Result<std::vector<ComponentHierarchy>> Client::getComponentTree(const std::stri
     return entities::component::list(getStore(), options);
 }
 
+Result<bool> Client::reorderComponents(const std::vector<ComponentOrderUpdate>& updates) {
+    return entities::component::reorder(getStore(), updates);
+}
+
+Result<ComponentHierarchy> Client::moveComponent(const MoveComponentInput& input) {
+    return entities::component::move(getStore(), input);
+}
+
 Result<Workflow> Client::createWorkflow(const CreateWorkflowInput& input) {
     return entities::workflow::create(getStore(), input);
 }
