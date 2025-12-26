@@ -52,6 +52,8 @@ A language-agnostic database abstraction layer that provides a secure interface 
 
 The Prisma adapter behind DBAL already targets the databases you care about: PostgreSQL, MySQL, SQLite, and any other engine Prisma supports (SQL Server, CockroachDB, MongoDB, etc.). Switch between them by pointing `DATABASE_URL` at the desired backend and regenerating the Prisma client for your schema.
 
+You can also set `config.adapter` to `'postgres'` or `'mysql'` when configuring the TypeScript client—those values are currently aliases for the Prisma adapter so the rest of the stack still handles dialect differences, connection pooling, and migrations via Prisma.
+
 ```bash
 # PostgreSQL
 export DATABASE_URL="postgresql://user:pass@db:5432/metabuilder"

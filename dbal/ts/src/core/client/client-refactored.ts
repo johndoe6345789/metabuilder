@@ -32,6 +32,8 @@ const createAdapter = (config: DBALConfig): DBALAdapter => {
   } else {
     switch (config.adapter) {
       case 'prisma':
+      case 'postgres':
+      case 'mysql':
         baseAdapter = new PrismaAdapter(
           config.database?.url,
           {
