@@ -4,7 +4,7 @@ This reference ties every Material UI component that the Next.js frontend curren
 
 | Material UI component | QML counterpart | Notes |
 | --- | --- | --- |
-| Accordion / AccordionSummary / AccordionDetails | `QtQuick.Controls` `ExpandableList` (custom `MaterialAccordion` planned) | Use `ColumnLayout` + `MouseArea` to expand/collapse; we mimic this in templates. |
+| Accordion / AccordionSummary / AccordionDetails | `Material.MaterialAccordion` | Expandable panel with header/summary and content slot that toggles expansion. |
 | Alert / AlertTitle | `Material.MaterialAlert` | Custom `Rectangle` + `Text` + optional icon slot. |
 | AppBar / Toolbar | `Material.MaterialAppBar` / `Material.MaterialToolbar` | Fixed `Rectangle` with `RowLayout`; exposes elevation, drop shadow, and toolbar slot for navigation actions. |
 | Avatar / AvatarGroup | `Material.MaterialAvatar` | Circular `Image`/`Rectangle` that surfaces initials when no source is provided; group helpers can stack avatars. |
@@ -13,10 +13,10 @@ This reference ties every Material UI component that the Next.js frontend curren
 | Breadcrumbs | `Material.MaterialBreadcrumbs` | Horizontal `RowLayout` of text/buttons separated by dividers. |
 | Button / ButtonProps | `Material.MaterialButton` | Supports contained, outlined, and icon-enabled styles with ripple and disabled handling. |
 | Card / CardContent / CardHeader / CardActions / CardMedia | `Material.MaterialCard` + `Box`/`ColumnLayout` | Cards already exist with padding/border/elevation tokens. |
-| Checkbox | `QtQuick.Controls` `CheckBox` | Styled using Material palette in `MaterialTheme`. |
+| Checkbox | `Material.MaterialCheckbox` | CheckBox that applies Material colors and renders a custom indicator. |
 | ChipProps | `Material.MaterialChip` | Accepts `text` + optional prefix/utility slots. |
 | CircularProgress | `Material.MaterialCircularProgress` | `BusyIndicator`-based circle, colored via palette. |
-| Collapse | `QtQuick.Controls` `Collapsible` / `MaterialAccordion` | Controlled container h/t `MaterialAccordion` behavior. |
+| Collapse | `Material.MaterialCollapse` | Generic collapse container animated via height transitions. |
 | Container | `Material.MaterialContainer` | Width-constraining `Rectangle` that honors layout margins. |
 | CssBaseline | `Material.MaterialCssBaseline` | Background/typography reset that sets root window colors. |
 | Dialog / DialogActions / DialogContent / DialogTitle | `Material.MaterialDialog` | Wraps `QtQuick.Controls.Dialog` + slot for actions, sections, icons. |
