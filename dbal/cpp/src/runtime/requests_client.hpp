@@ -1,17 +1,12 @@
 #ifndef DBAL_REQUESTS_CLIENT_HPP
 #define DBAL_REQUESTS_CLIENT_HPP
 
-#include <chrono>
-#include <future>
+#include <cpr/cpr.h>
+#include <drogon/Json.h>
+
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
-#include <vector>
-
-#include <drogon/HttpClient.h>
-#include <drogon/HttpReqImpl.h>
-#include <drogon/HttpResponse.h>
-#include <drogon/HttpTypes.h>
-#include <drogon/Json.h>
 
 namespace dbal {
 namespace runtime {
@@ -25,8 +20,8 @@ struct RequestsResponse {
 
 class RequestsClient {
 public:
-    explicit RequestsClient(const std::string& baseURL)
-        : client_(drogon::HttpClient::newHttpClient(baseURL)) {}
+    explicit RequestsClient(std::string baseURL)
+        : baseUrl_(trimTrailingSlash(std::move(baseURL))) {}
 
     RequestsResponse get(const std::string& path,
                          const std::unordered_map<std::string, std::string>& headers = {},
@@ -46,40 +41,68 @@ public:
                              const std::unordered_map<std::string, std::string>& headers = {},
                              const std::string& body = {},
                              int timeoutMs = 30'000) {
-        drogon::HttpRequestPtr req = drogon::HttpRequest::newHttpRequest();
-        req->setMethod(drogon::HttpMethod::fromString(method));
-        req->setPath(path);
-        req->setBody(body);
+        const cpr::Url url = cpr::Url{makeUrl(path)};
+        cpr::Header cprHeaders;
         for (const auto& [key, value] : headers) {
-            req->addHeader(key, value);
+            cprHeaders.insert({key, value});
         }
 
-        std::promise<RequestsResponse> promise;
-        auto future = promise.get_future();
+        cpr::Response response;
+        const cpr::Timeout timeout(timeoutMs);
+        if (method == "GET") {
+            response = cpr::Get(url, cprHeaders, timeout);
+        } else if (method == "POST") {
+            response = cpr::Post(url, cprHeaders, cpr::Body(body), timeout);
+        } else {
+            cpr::Session session;
+            session.SetUrl(url);
+            session.SetHeader(cprHeaders);
+            session.SetTimeout(timeout);
+            session.SetMethod(method);
+            session.SetBody(body);
+            response = session.Send();
+        }
 
-        client_->sendRequest(req, [p = std::move(promise), timeoutMs](drogon::ReqResult result, const drogon::HttpResponsePtr& resp) mutable {
-            RequestsResponse response;
-            response.statusCode = resp ? resp->getStatusCode() : 0;
-            response.body = resp ? resp->getBody() : "";
-            if (resp) {
-                response.headers = resp->getHeaders();
-                try {
-                    response.json = drogon::Json::parse(resp->getBody());
-                } catch (...) {
-                }
+        if (response.error) {
+            throw std::runtime_error("HTTP request failed: " + response.error.message);
+        }
+
+        RequestsResponse result;
+        result.statusCode = response.status_code;
+        result.body = response.text;
+        for (const auto& [key, value] : response.header) {
+            result.headers[key] = value;
+        }
+
+        if (!response.text.empty()) {
+            try {
+                result.json = drogon::Json::parse(response.text);
+            } catch (...) {
             }
-            p.set_value(std::move(response));
-        });
-
-        if (future.wait_for(std::chrono::milliseconds(timeoutMs)) == std::future_status::timeout) {
-            throw std::runtime_error("HTTP request timed out");
         }
 
-        return future.get();
+        return result;
     }
 
 private:
-    drogon::HttpClientPtr client_;
+    static std::string trimTrailingSlash(std::string url) {
+        while (!url.empty() && url.back() == '/') {
+            url.pop_back();
+        }
+        return url;
+    }
+
+    std::string makeUrl(const std::string& path) const {
+        if (path.empty()) {
+            return baseUrl_;
+        }
+        if (path.front() == '/') {
+            return baseUrl_ + path;
+        }
+        return baseUrl_ + "/" + path;
+    }
+
+    std::string baseUrl_;
 };
 
 }

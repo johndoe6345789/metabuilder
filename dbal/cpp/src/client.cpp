@@ -213,6 +213,12 @@ Result<std::vector<LuaScript>> Client::listLuaScripts(const ListOptions& options
     return entities::lua_script::list(getStore(), options);
 }
 
+Result<std::vector<LuaScript>> Client::searchLuaScripts(const std::string& query,
+                                                        const std::optional<std::string>& created_by,
+                                                        int limit) {
+    return entities::lua_script::search(getStore(), query, created_by, limit);
+}
+
 Result<Package> Client::createPackage(const CreatePackageInput& input) {
     return entities::package::create(getStore(), input);
 }
