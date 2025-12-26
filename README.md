@@ -1115,16 +1115,10 @@ DEBUG=metabuilder:* npm run dev
 | Package seeds | `packages/*/seed/` |
 | DBAL TypeScript | `dbal/ts/src/` |
 | DBAL C++ | `dbal/cpp/src/` |
-| DBAL docs | `dbal/cpp/docs/` |
 | E2E tests | `frontends/nextjs/e2e/` |
 | Shared config | `config/` |
-| Build config | `config/build/` |
-| Lint config | `config/lint/` |
-| Test config | `config/test/` |
 | Analysis tools | `tools/analysis/` |
 | Security tools | `tools/security/` |
-| Documentation | `docs/` |
-| Architecture docs | `docs/architecture/` |
 | Development prompts | `.github/prompts/` |
 | CI workflows | `.github/workflows/` |
 
