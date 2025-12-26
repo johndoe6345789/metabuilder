@@ -1,5 +1,5 @@
 import JSZip from 'jszip'
-import { collectFileEntries } from '../file-operations/tree/collect-file-entries'
+import { collectFileEntries } from '../../file-operations/tree/collect-file-entries'
 import type { FileNode } from './types'
 
 export async function buildZipFromFileTree(nodes: FileNode[]): Promise<Blob> {
