@@ -1,8 +1,8 @@
-import { createSandboxedLuaEngine } from '../lua/create-sandboxed-lua-engine'
-import type { SandboxedLuaResult } from '../lua/sandboxed-lua-engine'
-import type { WorkflowExecutionContext } from './workflow-execution-context'
-import type { WorkflowState } from './workflow-state'
-import { logToWorkflow } from './log-to-workflow'
+import { createSandboxedLuaEngine } from '../../lua/create-sandboxed-lua-engine'
+import type { SandboxedLuaResult } from '../../lua/sandboxed-lua-engine'
+import type { WorkflowExecutionContext } from '../workflow-execution-context'
+import type { WorkflowState } from '../workflow-state'
+import { logToWorkflow } from '../log-to-workflow'
 
 /**
  * Execute Lua code in sandbox

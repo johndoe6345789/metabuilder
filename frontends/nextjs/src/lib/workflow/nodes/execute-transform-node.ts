@@ -1,7 +1,7 @@
 import type { WorkflowNode } from '../types/level-types'
-import type { WorkflowExecutionContext } from './workflow-execution-context'
-import type { WorkflowState } from './workflow-state'
-import { logToWorkflow } from './log-to-workflow'
+import type { WorkflowExecutionContext } from '../workflow-execution-context'
+import type { WorkflowState } from '../workflow-state'
+import { logToWorkflow } from '../log-to-workflow'
 
 /**
  * Execute a transform node
