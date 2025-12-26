@@ -32,6 +32,7 @@ Create a fully declarative, procedurally-generated multi-tenant application plat
 - Confirmation dialog prevents accidental transfers
 - All god users visible in dedicated management tab
 - Preview mode works for all 5 levels from supergod panel
+- Transfer attempts recorded in the PowerTransferRequest log for audit trails
 
 ### 2. Multi-Tenant Architecture
 **Functionality:** Isolated tenant instances with independent homepage configurations
