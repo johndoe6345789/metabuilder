@@ -54,7 +54,6 @@ This reference ties every Material UI component that the Next.js frontend curren
 | Tooltip / TooltipProps | `Material.MaterialTooltip` | Floating `Rectangle` with arrow and text, anchored to host. |
 | Typography | `Material.MaterialTypography` | `Text` wrapper providing Material font weights/sizes (h1–h4, button, body). |
 | Breadcrumbs (2nd mention) | `Material.MaterialBreadcrumbs` | See above for horizontal nav. |
-| DividerProps / MenuProps / PopoverProps etc. | Prop-driven wrappers that forward to QML `Rectangle`/`Menu` etc. | We expose `property alias` to match MUI API surface. |
 | useMediaQuery / useScrollTrigger / useTheme | Signals exposed via `Material.MaterialResponsive` helpers | Provide screen width bindings and scroll watchers for `AppBar`. |
 
 Additional Qt Quick Controls (Tabs, Dialog, Menu, Drawer, Slider, Switch, RadioButton, ComboBox, TableView, ProgressBar, MenuBar, etc.) can be composed directly when the Material-specific wrapper doesn’t exist yet. File a follow-up when you need a dedicated component and we’ll implement it inside `qmllib/Material`.
