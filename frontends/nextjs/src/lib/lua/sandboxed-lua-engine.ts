@@ -5,6 +5,7 @@ import { setupSandboxedEnvironment } from './functions/sandbox/setup-sandboxed-e
 import { executeWithTimeout } from './functions/sandbox/execute-with-timeout'
 import { getLuaMemoryUsageBytes } from './functions/sandbox/get-lua-memory-usage-bytes'
 import { enforceMaxMemory } from './functions/sandbox/enforce-max-memory'
+import { setAllowedGlobals } from './functions/sandbox/set-allowed-globals'
 import { setExecutionTimeout } from './functions/sandbox/set-execution-timeout'
 import { destroy } from './functions/sandbox/destroy'
 
@@ -15,11 +16,13 @@ export class SandboxedLuaEngine {
   engine: LuaEngine | null = null
   executionTimeout = 5000
   maxMemory = 10 * 1024 * 1024
+  allowedGlobals: string[] | undefined
 
   constructor(timeout: number = 5000) {
     this.executionTimeout = timeout
   }
 
+  setAllowedGlobals = setAllowedGlobals
   executeWithSandbox = executeWithSandbox
   disableDangerousFunctions = disableDangerousFunctions
   setupSandboxedEnvironment = setupSandboxedEnvironment
