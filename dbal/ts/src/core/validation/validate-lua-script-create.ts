@@ -1,4 +1,5 @@
 import type { LuaScript } from '../types'
+import { isAllowedLuaGlobal } from './is-allowed-lua-global'
 import { isValidUuid } from './is-valid-uuid'
 
 export function validateLuaScriptCreate(data: Partial<LuaScript>): string[] {
@@ -28,6 +29,11 @@ export function validateLuaScriptCreate(data: Partial<LuaScript>): string[] {
     errors.push('allowedGlobals must be an array of strings')
   } else if (data.allowedGlobals.some(entry => typeof entry !== 'string' || entry.trim().length === 0)) {
     errors.push('allowedGlobals must contain non-empty strings')
+  } else {
+    const invalidGlobals = data.allowedGlobals.filter((entry) => !isAllowedLuaGlobal(entry))
+    if (invalidGlobals.length > 0) {
+      errors.push(`allowedGlobals contains forbidden globals: ${invalidGlobals.join(', ')}`)
+    }
   }
 
   if (data.timeoutMs === undefined) {

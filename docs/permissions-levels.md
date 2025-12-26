@@ -22,6 +22,7 @@ Visit `/levels` to step through each tier. The page renders a grid of cards, hig
 - Add `?level=<key|id>` to narrow the response to a single tier when wiring helpers or automation into the UI.
 - Provide `?cap=<term>` (comma-separated) to return only levels whose capability descriptions mention the given keywords.
 - `POST /api/levels` accepts a `{ level, note }` payload for telemetry and responds with the matched landing tier.
+- `GET /api/levels/metrics` returns totals and capability counts so dashboards can include quick diagnostics.
 
 ## Tooling
 
