@@ -127,15 +127,13 @@
 1. Create the companion metadata folder (e.g., `lua/` or `packages/static_content`) with placeholder single-function files that mirror the above references.
 2. Run the audit across the identified folders. Mark each file as “port to Lua”, “adapter only”, or “leave in TypeScript” before editing.
 
-# Phase Deliverables
+## Phase Deliverables
 
 - **Phase 0**: Audit spreadsheet/list with tags for each entry. Lua boundary doc with endpoints and metadata goals.
 - **Phase 1**: Mapping sheet (spreadsheet or Markdown) documenting TypeScript helper → Lua micro-function mapping and file categorization.
 - **Phase 2**: Adapter interface stubs plus placeholder Lua files under the new metadata folder.
 - **Phase 3**: One working Lua helper wired through an adapter, with updated unit test coverage or manual verification notes.
 - **Phase 4**: Documentation updates, test run results, and a summary of which files moved versus stayed.
-
-# Support Notes
 
 ## Support Notes
 
@@ -172,8 +170,3 @@
   4. Adapter needed (yes/no)
   5. Test expectations
 - **Documentation reminders**: keep the doc updated with any new folder names, helper descriptions, or decisions so new contributors can follow the trail.
-- **Risks**: The Next.js frontend is large; do not remove TypeScript pages until their Lua replacements exist. Keep unit/e2e tests running in TypeScript during transition.
-- **Owner**: Track who updates each phase and keep a note in this doc or comments for accountability.
-- **Validation tips**: After a Lua helper is added, run `npm run lint` and `npm run test:unit` from `frontends/nextjs/`. Keep logs of failing tests if you defer them.
-- **Documentation**: Update READMEs in `components/`, `hooks/`, and `lib/` with pointers to the new Lua package once core content moves.
-- **Checkpoint**: Before Phase 3, ensure adapter interfaces exist for data access and that seed data has been migrated to the metadata folder.
