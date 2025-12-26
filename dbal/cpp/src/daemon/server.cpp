@@ -52,6 +52,90 @@ std::string resolve_forwarded_proto(const drogon::HttpRequestPtr& request) {
     return "http";
 }
 
+dbal::UserRole normalize_role(const std::string& role) {
+    std::string value = role;
+    std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    if (value == "admin") {
+        return dbal::UserRole::Admin;
+    }
+    if (value == "god") {
+        return dbal::UserRole::God;
+    }
+    if (value == "supergod") {
+        return dbal::UserRole::SuperGod;
+    }
+    return dbal::UserRole::User;
+}
+
+std::string role_to_string(dbal::UserRole role) {
+    switch (role) {
+        case dbal::UserRole::Admin:
+            return "admin";
+        case dbal::UserRole::God:
+            return "god";
+        case dbal::UserRole::SuperGod:
+            return "supergod";
+        default:
+            return "user";
+    }
+}
+
+long long timestamp_to_epoch_ms(const dbal::Timestamp& timestamp) {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()).count();
+}
+
+Json::Value user_to_json(const dbal::User& user) {
+    Json::Value value(Json::objectValue);
+    value["id"] = user.id;
+    value["username"] = user.username;
+    value["email"] = user.email;
+    value["role"] = role_to_string(user.role);
+    value["createdAt"] = static_cast<Json::Int64>(timestamp_to_epoch_ms(user.created_at));
+    value["updatedAt"] = static_cast<Json::Int64>(timestamp_to_epoch_ms(user.updated_at));
+    return value;
+}
+
+Json::Value users_to_json(const std::vector<dbal::User>& users) {
+    Json::Value arr(Json::arrayValue);
+    for (const auto& user : users) {
+        arr.append(user_to_json(user));
+    }
+    return arr;
+}
+
+dbal::ListOptions list_options_from_json(const Json::Value& json) {
+    dbal::ListOptions options;
+    if (!json.isNull()) {
+        if (json.isMember("page") && json["page"].isInt()) {
+            options.page = json["page"].asInt();
+        }
+        if (json.isMember("limit") && json["limit"].isInt()) {
+            options.limit = json["limit"].asInt();
+        }
+        if (json.isMember("filter") && json["filter"].isObject()) {
+            for (const auto& key : json["filter"].getMemberNames()) {
+                options.filter[key] = json["filter"][key].asString();
+            }
+        }
+        if (json.isMember("sort") && json["sort"].isObject()) {
+            for (const auto& key : json["sort"].getMemberNames()) {
+                options.sort[key] = json["sort"][key].asString();
+            }
+        }
+    }
+    return options;
+}
+
+Json::Value list_response_value(const std::vector<dbal::User>& users, const dbal::ListOptions& options) {
+    Json::Value value(Json::objectValue);
+    value["data"] = users_to_json(users);
+    value["total"] = static_cast<Json::Int64>(users.size());
+    value["page"] = options.page;
+    value["limit"] = options.limit;
+    value["hasMore"] = Json::Value(false);
+    return value;
+}
+
 drogon::HttpResponsePtr build_json_response(const Json::Value& body) {
     auto response = drogon::HttpResponse::newHttpJsonResponse(body);
     response->addHeader("Server", "DBAL/1.0.0");
@@ -63,11 +147,13 @@ drogon::HttpResponsePtr build_json_response(const Json::Value& body) {
 namespace dbal {
 namespace daemon {
 
-Server::Server(const std::string& bind_address, int port)
+Server::Server(const std::string& bind_address, int port, const dbal::ClientConfig& client_config)
     : bind_address_(bind_address),
       port_(port),
       running_(false),
-      routes_registered_(false) {}
+      routes_registered_(false),
+      client_config_(client_config),
+      dbal_client_(nullptr) {}
 
 Server::~Server() {
     stop();
