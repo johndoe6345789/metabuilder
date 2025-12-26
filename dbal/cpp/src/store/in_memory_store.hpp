@@ -9,6 +9,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 #include <cstdio>
 #include "dbal/types.hpp"
 
@@ -41,6 +42,11 @@ struct InMemoryStore {
     int lua_script_counter = 0;
     int package_counter = 0;
     
+    std::map<std::string, ComponentHierarchy> components;
+    std::map<std::string, std::vector<std::string>> components_by_page;
+    std::map<std::string, std::vector<std::string>> components_by_parent;
+    int component_counter = 0;
+    
     /**
      * Generate a unique ID with prefix
      */
@@ -65,6 +71,9 @@ struct InMemoryStore {
         lua_script_names.clear();
         packages.clear();
         package_keys.clear();
+        components.clear();
+        components_by_page.clear();
+        components_by_parent.clear();
         
         user_counter = 0;
         page_counter = 0;
@@ -72,6 +81,7 @@ struct InMemoryStore {
         session_counter = 0;
         lua_script_counter = 0;
         package_counter = 0;
+        component_counter = 0;
     }
 };
 
