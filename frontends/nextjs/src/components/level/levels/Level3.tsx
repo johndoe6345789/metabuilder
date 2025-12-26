@@ -24,7 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { MagnifyingGlass, Plus, PencilSimple, Trash, Users, ChatCircle } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Database } from '@/lib/database'
-import { AppHeader } from './shared/AppHeader'
+import { AppHeader } from '../../shared/AppHeader'
 import type { User as UserType, Comment } from '@/lib/level-types'
 import type { ModelSchema } from '@/lib/schema-types'
 
