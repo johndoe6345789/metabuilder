@@ -4,6 +4,9 @@
 #include <QStringLiteral>
 #include <QQmlApplicationEngine>
 #include <QUrl>
+#include <QQmlContext>
+
+#include "src/PackageRegistry.h"
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
@@ -16,6 +19,9 @@ int main(int argc, char *argv[]) {
                              QCoreApplication::exit(-1);
                          }
                      });
+    PackageRegistry registry;
+    registry.loadPackage("frontpage");
+    engine.rootContext()->setContextProperty(QStringLiteral("PackageRegistry"), &registry);
 
     engine.load(url);
     return app.exec();

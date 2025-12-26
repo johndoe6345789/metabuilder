@@ -12,6 +12,7 @@ find_package(cpr CONFIG REQUIRED)
 
 qt_add_executable(dbal-qml
     main.cpp
+    src/PackageRegistry.cpp
 )
 
 qt_add_qml_module(dbal-qml
