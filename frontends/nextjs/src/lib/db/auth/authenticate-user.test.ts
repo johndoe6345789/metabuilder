@@ -1,10 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const mockList = vi.fn()
-const mockFindFirst = vi.fn()
-const mockAdapter = { list: mockList, findFirst: mockFindFirst }
+const {
+  mockList,
+  mockFindFirst,
+  mockVerifyPassword,
+  mockAdapter,
+} = vi.hoisted(() => {
+  const mockList = vi.fn()
+  const mockFindFirst = vi.fn()
+  const mockVerifyPassword = vi.fn()
+  const mockAdapter = { list: mockList, findFirst: mockFindFirst }
 
-const mockVerifyPassword = vi.fn()
+  return { mockList, mockFindFirst, mockVerifyPassword, mockAdapter }
+})
 
 vi.mock('../dbal-client', () => ({
   getAdapter: () => mockAdapter,
