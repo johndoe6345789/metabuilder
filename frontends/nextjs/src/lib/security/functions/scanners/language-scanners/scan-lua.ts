@@ -3,10 +3,10 @@
  * Scans Lua code for security vulnerabilities
  */
 
-import type { SecurityScanResult, SecurityIssue } from '../types'
-import { LUA_PATTERNS } from '../patterns/lua-patterns'
-import { getLineNumber } from '../utils/get-line-number'
-import { calculateOverallSeverity } from '../utils/calculate-severity'
+import type { SecurityScanResult, SecurityIssue } from '../../types'
+import { LUA_PATTERNS } from '../../patterns/lua-patterns'
+import { getLineNumber } from '../../utils/get-line-number'
+import { calculateOverallSeverity } from '../../utils/calculate-severity'
 
 /**
  * Scan Lua code for security vulnerabilities
