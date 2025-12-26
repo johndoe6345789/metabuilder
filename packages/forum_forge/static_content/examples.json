@@ -1,0 +1,32 @@
+{
+  "examples": {
+    "categories": [
+      {
+        "id": "cat_launch",
+        "name": "Launch Radar",
+        "description": "Product drops and milestone updates"
+      },
+      {
+        "id": "cat_growth",
+        "name": "Growth Ops",
+        "description": "Retention, onboarding, and community tactics"
+      }
+    ],
+    "threads": [
+      {
+        "id": "thread_1",
+        "title": "First 1000 users playbook",
+        "categoryId": "cat_growth",
+        "replyCount": 42,
+        "likeCount": 120
+      },
+      {
+        "id": "thread_2",
+        "title": "Launch checklist for indie teams",
+        "categoryId": "cat_launch",
+        "replyCount": 18,
+        "likeCount": 64
+      }
+    ]
+  }
+}

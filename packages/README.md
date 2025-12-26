@@ -27,6 +27,7 @@ packages/
 - **notification_center**: Notification center components
 - **social_hub**: Social feed components with creator tools and live rooms
 - **codegen_studio**: Code generation studio with template-driven exports
+- **forum_forge**: Modern forum starter with categories, threads, and moderation
 
 ## Package Metadata Format
 
