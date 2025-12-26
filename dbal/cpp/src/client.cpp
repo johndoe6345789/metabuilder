@@ -74,6 +74,34 @@ Result<std::vector<PageView>> Client::listPages(const ListOptions& options) {
     return entities::page::list(getStore(), options);
 }
 
+Result<ComponentHierarchy> Client::createComponent(const CreateComponentHierarchyInput& input) {
+    return entities::component::create(getStore(), input);
+}
+
+Result<ComponentHierarchy> Client::getComponent(const std::string& id) {
+    return entities::component::get(getStore(), id);
+}
+
+Result<ComponentHierarchy> Client::updateComponent(const std::string& id, const UpdateComponentHierarchyInput& input) {
+    return entities::component::update(getStore(), id, input);
+}
+
+Result<bool> Client::deleteComponent(const std::string& id) {
+    return entities::component::remove(getStore(), id);
+}
+
+Result<std::vector<ComponentHierarchy>> Client::listComponents(const ListOptions& options) {
+    return entities::component::list(getStore(), options);
+}
+
+Result<std::vector<ComponentHierarchy>> Client::getComponentTree(const std::string& page_id) {
+    ListOptions options;
+    options.page = 1;
+    options.limit = 0;
+    options.filter["pageId"] = page_id;
+    return entities::component::list(getStore(), options);
+}
+
 Result<Workflow> Client::createWorkflow(const CreateWorkflowInput& input) {
     return entities::workflow::create(getStore(), input);
 }
