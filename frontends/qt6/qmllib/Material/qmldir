@@ -22,3 +22,13 @@ MaterialLink 1.0 MaterialLink.qml
 MaterialTypography 1.0 MaterialTypography.qml
 MaterialPaper 1.0 MaterialPaper.qml
 MaterialBox 1.0 MaterialBox.qml
+MaterialAccordion 1.0 MaterialAccordion.qml
+MaterialCollapse 1.0 MaterialCollapse.qml
+MaterialCheckbox 1.0 MaterialCheckbox.qml
+MaterialGrid 1.0 MaterialGrid.qml
+MaterialMenu 1.0 MaterialMenu.qml
+MaterialMenuProps 1.0 MaterialMenuProps.qml
+MaterialPopover 1.0 MaterialPopover.qml
+MaterialPopoverProps 1.0 MaterialPopoverProps.qml
+MaterialDividerProps 1.0 MaterialDividerProps.qml
+MaterialContainer 1.0 MaterialContainer.qml
