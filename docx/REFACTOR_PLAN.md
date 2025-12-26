@@ -127,6 +127,14 @@
 - `frontends/nextjs/src/lib`: catalogue auth, security, db/DBAL, packages, Lua, workflow, API, schema, GitHub, and utility modules.
 - Supporting assets: seed JSONs, README docs, and tests must align with the Lua transition.
 
+## God Panel / Package Mapping Notes
+
+- Level 4’s `Level4Tabs` exposes a “Packages” tab that renders `PackageManager`, so God-level users open that tab when they need to install, enable, or disable packages (`frontends/nextjs/src/components/level4/Level4Tabs.tsx`).
+- `PackageManager` loads the catalog from `PACKAGE_CATALOG`, shows installed/available packages, and calls APIs (`installPackage`, `togglePackageEnabled`, `uninstallPackage`, `listInstalledPackages`) that persist package state (`frontends/nextjs/src/components/PackageManager.tsx`).
+- `PACKAGE_CATALOG` lives in `frontends/nextjs/src/lib/packages/package-catalog.ts` and contains the manifest content (schemas, pages, workflows, Lua scripts, seed data) that the God panel presents when a package is selected.
+- The reusable packages under `packages/` follow the structure described in `packages/README.md`: each package has `seed/metadata.json`, `components.json`, and optional `static_content/examples.json`, so new package metadata can align with what `PackageManager` expects.
+- Default packages are enumerated in `frontends/nextjs/src/lib/packages/package-glue/default-packages.ts` (admin_dialog, dashboard, forum_forge, etc.), and God panel UI relies on those definitions to match catalog entries with metadata stored in `packages/`.
+
 ## Next Steps
 
 1. Create the companion metadata folder (e.g., `lua/` or `packages/static_content`) with placeholder single-function files that mirror the above references.
