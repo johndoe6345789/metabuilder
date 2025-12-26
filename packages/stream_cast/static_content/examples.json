@@ -9,6 +9,11 @@
       { "id": "intro", "label": "Intro", "destination": "studio_a" },
       { "id": "main", "label": "Main", "destination": "studio_b" },
       { "id": "qa", "label": "Q&A", "destination": "studio_c" }
-    ]
+    ],
+    "pulseMetrics": {
+      "messagesPerMinute": 420,
+      "reactionsPerMinute": 180,
+      "viewers": 3482
+    }
   }
 }
