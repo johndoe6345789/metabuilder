@@ -23,6 +23,12 @@
       "name": "permissions",
       "category": "security",
       "description": "Role checks for publishing and moderation"
+    },
+    {
+      "file": "audience_pulse.lua",
+      "name": "audience_pulse",
+      "category": "analytics",
+      "description": "Score audience engagement from live metrics"
     }
   ]
 }
