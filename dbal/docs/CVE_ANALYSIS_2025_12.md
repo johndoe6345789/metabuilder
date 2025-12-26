@@ -537,25 +537,144 @@ class SecurePathResolver {
 - No server-side encryption enforcement
 - No bucket policy validation for public access
 
-**Recommendation**:
+**🏰 Fort Knox Remediation**:
 ```typescript
-async validateBucketSecurity(): Promise<void> {
-  const { GetBucketPolicyStatusCommand, GetBucketEncryptionCommand } = 
-    await import('@aws-sdk/client-s3')
+import { 
+  S3Client, 
+  GetBucketPolicyStatusCommand,
+  GetBucketEncryptionCommand,
+  GetBucketVersioningCommand,
+  GetBucketLoggingCommand,
+  GetPublicAccessBlockCommand 
+} from '@aws-sdk/client-s3'
+
+/**
+ * Fort Knox S3 Security Validator
+ * Ensures bucket meets security requirements before any operation
+ */
+class S3SecurityValidator {
+  private s3Client: S3Client
+  private validatedBuckets = new Map<string, { timestamp: number; valid: boolean }>()
+  private static readonly VALIDATION_TTL_MS = 300_000 // 5 minutes
   
-  // Check bucket isn't public
-  const policyStatus = await this.s3Client.send(
-    new GetBucketPolicyStatusCommand({ Bucket: this.bucket })
-  )
-  if (policyStatus.PolicyStatus?.IsPublic) {
-    throw DBALError.internal('S3 bucket must not be public')
+  async validateBucketSecurity(bucket: string): Promise<void> {
+    // Check cache first
+    const cached = this.validatedBuckets.get(bucket)
+    if (cached && Date.now() - cached.timestamp < S3SecurityValidator.VALIDATION_TTL_MS) {
+      if (!cached.valid) {
+        throw DBALError.forbidden(`Bucket ${bucket} failed security validation`)
+      }
+      return
+    }
+    
+    const violations: string[] = []
+    
+    // CHECK 1: Public Access Block (must be enabled)
+    try {
+      const publicAccess = await this.s3Client.send(
+        new GetPublicAccessBlockCommand({ Bucket: bucket })
+      )
+      const config = publicAccess.PublicAccessBlockConfiguration
+      if (!config?.BlockPublicAcls || 
+          !config?.BlockPublicPolicy || 
+          !config?.IgnorePublicAcls || 
+          !config?.RestrictPublicBuckets) {
+        violations.push('Public access block not fully enabled')
+      }
+    } catch (error: any) {
+      if (error.name !== 'NoSuchPublicAccessBlockConfiguration') {
+        violations.push('Public access block not configured')
+      }
+    }
+    
+    // CHECK 2: Bucket Policy Status (must not be public)
+    try {
+      const policyStatus = await this.s3Client.send(
+        new GetBucketPolicyStatusCommand({ Bucket: bucket })
+      )
+      if (policyStatus.PolicyStatus?.IsPublic) {
+        violations.push('Bucket policy allows public access')
+      }
+    } catch (error: any) {
+      // No policy is fine
+    }
+    
+    // CHECK 3: Encryption (must be enabled with AES-256 or KMS)
+    try {
+      const encryption = await this.s3Client.send(
+        new GetBucketEncryptionCommand({ Bucket: bucket })
+      )
+      const rules = encryption.ServerSideEncryptionConfiguration?.Rules || []
+      const hasEncryption = rules.some(rule => {
+        const algo = rule.ApplyServerSideEncryptionByDefault?.SSEAlgorithm
+        return algo === 'AES256' || algo === 'aws:kms'
+      })
+      if (!hasEncryption) {
+        violations.push('Server-side encryption not enabled')
+      }
+    } catch (error: any) {
+      violations.push('Encryption configuration not found')
+    }
+    
+    // CHECK 4: Versioning (recommended for data protection)
+    try {
+      const versioning = await this.s3Client.send(
+        new GetBucketVersioningCommand({ Bucket: bucket })
+      )
+      if (versioning.Status !== 'Enabled') {
+        // Warning only, not a blocking violation
+        console.warn(`[SECURITY] Bucket ${bucket}: versioning not enabled (recommended)`)
+      }
+    } catch {}
+    
+    // CHECK 5: Access Logging (recommended for audit)
+    try {
+      const logging = await this.s3Client.send(
+        new GetBucketLoggingCommand({ Bucket: bucket })
+      )
+      if (!logging.LoggingEnabled) {
+        console.warn(`[SECURITY] Bucket ${bucket}: access logging not enabled (recommended)`)
+      }
+    } catch {}
+    
+    // Cache result
+    const isValid = violations.length === 0
+    this.validatedBuckets.set(bucket, { timestamp: Date.now(), valid: isValid })
+    
+    if (!isValid) {
+      this.logSecurityViolation('S3_BUCKET_SECURITY_FAILURE', { bucket, violations })
+      throw DBALError.forbidden(
+        `Bucket security validation failed: ${violations.join(', ')}`
+      )
+    }
   }
   
-  // Verify encryption
-  const encryption = await this.s3Client.send(
-    new GetBucketEncryptionCommand({ Bucket: this.bucket })
-  )
-  // Validate encryption settings...
+  private logSecurityViolation(event: string, details: unknown): void {
+    console.error(JSON.stringify({
+      timestamp: new Date().toISOString(),
+      severity: 'CRITICAL',
+      event,
+      details
+    }))
+  }
+}
+
+// Integration: Call before every S3 operation
+class SecureS3Storage implements BlobStorage {
+  private validator: S3SecurityValidator
+  
+  async upload(key: string, data: Buffer, options: UploadOptions): Promise<BlobMetadata> {
+    await this.validator.validateBucketSecurity(this.bucket)
+    
+    // Also enforce client-side encryption for sensitive data
+    const encryptedData = await this.encryptIfRequired(data, options)
+    
+    return this.doUpload(key, encryptedData, {
+      ...options,
+      ServerSideEncryption: 'aws:kms',  // Force KMS encryption
+      BucketKeyEnabled: true,            // Cost optimization
+    })
+  }
 }
 ```
 

@@ -18,28 +18,44 @@ namespace lua_script {
  * Create a new Lua script in the store
  */
 inline Result<LuaScript> create(InMemoryStore& store, const CreateLuaScriptInput& input) {
-    if (input.name.empty() || input.name.length() > 100) {
-        return Error::validationError("Name must be between 1 and 100 characters");
+    if (!validation::isValidLuaScriptName(input.name)) {
+        return Error::validationError("Lua script name must be 1-255 characters");
     }
-    if (input.code.empty()) {
-        return Error::validationError("Script code cannot be empty");
+    if (!validation::isValidLuaScriptCode(input.code)) {
+        return Error::validationError("Lua script code must be a non-empty string");
     }
-    if (!validation::isValidLuaSyntax(input.code)) {
-        return Error::validationError("Invalid Lua syntax");
+    if (!validation::isValidLuaTimeout(input.timeout_ms)) {
+        return Error::validationError("Timeout must be between 100 and 30000 ms");
     }
-    
+    if (input.created_by.empty()) {
+        return Error::validationError("created_by is required");
+    }
+
+    for (const auto& entry : input.allowed_globals) {
+        if (entry.empty()) {
+            return Error::validationError("allowed_globals must contain non-empty strings");
+        }
+    }
+
+    if (store.lua_script_names.find(input.name) != store.lua_script_names.end()) {
+        return Error::conflict("Lua script name already exists: " + input.name);
+    }
+
     LuaScript script;
-    script.id = store.generateId("lua_script", ++store.lua_script_counter);
+    script.id = store.generateId("lua", ++store.lua_script_counter);
     script.name = input.name;
     script.description = input.description;
     script.code = input.code;
-    script.category = input.category;
-    script.is_active = input.is_active;
+    script.is_sandboxed = input.is_sandboxed;
+    script.allowed_globals = input.allowed_globals;
+    script.timeout_ms = input.timeout_ms;
+    script.created_by = input.created_by;
     script.created_at = std::chrono::system_clock::now();
     script.updated_at = script.created_at;
-    
+
     store.lua_scripts[script.id] = script;
-    
+    store.lua_script_names[script.name] = script.id;
+
     return Result<LuaScript>(script);
 }
 
