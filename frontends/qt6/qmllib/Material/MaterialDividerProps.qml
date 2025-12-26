@@ -1,12 +1,14 @@
 import QtQuick 2.15
-import QtQuick.Layouts 1.15
 
-import "MaterialDivider.qml" as MaterialDivider
+import "MaterialPalette.qml" as MaterialPalette
 
-Component {
-    property Item divider: MaterialDivider
-    MaterialDivider.Rectangle {
+Item {
+    id: dividerProps
+    property real thickness: 1
+    Rectangle {
         id: divider
         width: parent ? parent.width : 100
+        height: thickness
+        color: MaterialPalette.outline
     }
 }
