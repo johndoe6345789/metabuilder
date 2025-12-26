@@ -29,6 +29,7 @@ packages/
 - **codegen_studio**: Code generation studio with template-driven exports
 - **forum_forge**: Modern forum starter with categories, threads, and moderation
 - **arcade_lobby**: Gaming lobby with queues, tournaments, and party setup
+- **stream_cast**: Live streaming control room with schedules and scene control
 
 ## Package Metadata Format
 
