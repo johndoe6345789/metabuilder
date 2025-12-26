@@ -1,5 +1,11 @@
 # Next.js to Lua Conversion TODO
 
+## Table of Contents
+
+- [TODOs by Phase](#todos-by-phase)
+- [Audit Results](#audit-results)
+
+
 ## TODOs by Phase
 
 ### Phase 0 – Foundation
