@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Button } from '@/components/ui'
 import { List, X, User, ShieldCheck } from '@phosphor-icons/react'
 
@@ -27,6 +28,9 @@ export function NavigationBar({ menuOpen, setMenuOpen, onNavigate }: NavigationB
             <a href="#contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Contact
             </a>
+            <Link href="/dbal-daemon" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              DBAL Daemon
+            </Link>
             <Button variant="outline" size="sm" onClick={() => onNavigate(2)}>
               <User className="mr-2" size={16} />
               Sign In
@@ -58,6 +62,9 @@ export function NavigationBar({ menuOpen, setMenuOpen, onNavigate }: NavigationB
             <a href="#contact" className="block text-sm text-muted-foreground hover:text-foreground">
               Contact
             </a>
+            <Link href="/dbal-daemon" className="block text-sm text-muted-foreground hover:text-foreground">
+              DBAL Daemon
+            </Link>
             <Button variant="outline" size="sm" className="w-full" onClick={() => onNavigate(2)}>
               <User className="mr-2" size={16} />
               Sign In
