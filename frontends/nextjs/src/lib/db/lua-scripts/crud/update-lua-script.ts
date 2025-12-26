@@ -1,6 +1,6 @@
 import { getAdapter } from '../../core/dbal-client'
 import type { LuaScript } from '../../types/level-types'
-import { buildLuaScriptUpdate } from './build-lua-script-update'
+import { buildLuaScriptUpdate } from '../serialization/build-lua-script-update'
 
 /**
  * Update a Lua script by ID
