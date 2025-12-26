@@ -1,16 +1,17 @@
 /**
  * UserRole - User permission levels in MetaBuilder
- * @description Five-level permission hierarchy
+ * @description Six-level permission hierarchy
  * - 'public': Guest access (read-only)
  * - 'user': Regular user access
+ * - 'moderator': Moderation workspace
  * - 'admin': Tenant administrator
  * - 'god': Power user with system configuration access
  * - 'supergod': System administrator with full access
  */
-export type UserRole = 'public' | 'user' | 'admin' | 'god' | 'supergod'
+export type UserRole = 'public' | 'user' | 'moderator' | 'admin' | 'god' | 'supergod'
 
-/** AppLevel - Numeric representation of permission levels (1-5) */
-export type AppLevel = 1 | 2 | 3 | 4 | 5
+/** AppLevel - Numeric representation of permission levels (1-6) */
+export type AppLevel = 1 | 2 | 3 | 4 | 5 | 6
 
 /**
  * User - System user account
