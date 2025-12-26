@@ -6,15 +6,15 @@ import "MaterialPalette.qml" as MaterialPalette
 Rectangle {
     id: chip
     property string text: ""
-    property color fillColor: MaterialPalette.palette.surfaceVariant
-    property color textColor: MaterialPalette.palette.onSurface
+    property color fillColor: MaterialPalette.surfaceVariant
+    property color textColor: MaterialPalette.onSurface
     property bool outlined: false
 
     radius: 999
     height: 32
     implicitWidth: label.width + 32
     color: outlined ? "transparent" : fillColor
-    border.color: outlined ? MaterialPalette.palette.outline : "transparent"
+    border.color: outlined ? MaterialPalette.outline : "transparent"
     border.width: outlined ? 1 : 0
 
     Text {
