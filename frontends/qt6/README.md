@@ -26,4 +26,5 @@ You can also embed `main.qml` into a Qt Quick Application project and expose C++
 - Use `Material.MaterialSurface` and `Material.MaterialDivider` to group controls with Material elevation, spacing, and dividers.
 - `Material.MaterialButton` now supports icon sources and a built-in ripple animation so interactions feel tactile.
 - Material badges live in `Material.MaterialBadge` for lightweight status chips (accented, dense, or outlined).
+- `Material.MaterialBadge` also accepts `iconSource` so you can anchor a micro icon beside the label.
 - Preview the Material view with `qmlscene frontends/qt6/MaterialLanding.qml` or embed it into your Qt Quick application to reuse the tokens and components across other screens.
