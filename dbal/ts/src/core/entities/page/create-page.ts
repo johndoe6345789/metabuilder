@@ -2,45 +2,49 @@
  * @file create-page.ts
  * @description Create page operation
  */
-import type { PageView, CreatePageInput, Result } from '../types';
-import type { InMemoryStore } from '../store/in-memory-store';
-import { validateSlug } from '../validation/page-validation';
+import type { CreatePageInput, PageView, Result } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
+import { validatePageCreate } from '../../validation/validate-page-create'
 
 /**
  * Create a new page in the store
  */
-export async function createPage(
+export const createPage = async (
   store: InMemoryStore,
   input: CreatePageInput
-): Promise<Result<PageView>> {
-  if (!validateSlug(input.slug)) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid slug format' } };
-  }
-  if (!input.title || input.title.length > 200) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Title required (max 200)' } };
-  }
-  if (input.level < 0 || input.level > 5) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Level must be 0-5' } };
+): Promise<Result<PageView>> => {
+  const isActive = input.isActive ?? true
+  const validationErrors = validatePageCreate({
+    slug: input.slug,
+    title: input.title,
+    description: input.description,
+    level: input.level,
+    layout: input.layout,
+    isActive
+  })
+
+  if (validationErrors.length > 0) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
   }
 
   if (store.pageSlugs.has(input.slug)) {
-    return { success: false, error: { code: 'CONFLICT', message: 'Slug already exists' } };
+    return { success: false, error: { code: 'CONFLICT', message: 'Slug already exists' } }
   }
 
   const page: PageView = {
     id: store.generateId('page'),
     slug: input.slug,
     title: input.title,
-    description: input.description ?? '',
+    description: input.description,
     level: input.level,
-    layout: input.layout ?? 'default',
-    isActive: input.isActive ?? true,
+    layout: input.layout,
+    isActive,
     createdAt: new Date(),
-    updatedAt: new Date(),
-  };
+    updatedAt: new Date()
+  }
 
-  store.pages.set(page.id, page);
-  store.pageSlugs.set(page.slug, page.id);
+  store.pages.set(page.id, page)
+  store.pageSlugs.set(page.slug, page.id)
 
-  return { success: true, data: page };
+  return { success: true, data: page }
 }
