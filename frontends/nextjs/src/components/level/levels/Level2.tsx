@@ -15,7 +15,7 @@ import { CommentsList } from './level2/CommentsList'
 import { AppHeader } from './shared/AppHeader'
 import type { User as UserType, Comment } from '@/lib/level-types'
 
-interface Level2Props {
+export interface Level2Props {
   user: UserType
   onLogout: () => void
   onNavigate: (level: number) => void

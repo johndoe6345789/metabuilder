@@ -20,7 +20,7 @@ import { AppHeader } from '@/components/shared/AppHeader'
 
 const FLAGGED_TERMS = ['spam', 'error', 'abuse', 'illegal', 'urgent', 'offensive']
 
-interface ModeratorPanelProps {
+export interface ModeratorPanelProps {
   user: User
   onLogout: () => void
   onNavigate: (level: number) => void

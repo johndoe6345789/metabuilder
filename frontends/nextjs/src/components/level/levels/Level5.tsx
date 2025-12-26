@@ -37,7 +37,7 @@ import { Database } from '@/lib/database'
 import { createPowerTransferRequest } from '@/lib/api/power-transfers'
 import { useKV } from '@github/spark/hooks'
 
-interface Level5Props {
+export interface Level5Props {
   user: User
   onLogout: () => void
   onNavigate: (level: AppLevel) => void
