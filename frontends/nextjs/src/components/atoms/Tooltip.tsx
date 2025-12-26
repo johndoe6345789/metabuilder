@@ -1,10 +1,11 @@
 'use client'
 
-import { forwardRef, ReactElement, ReactNode } from 'react'
+import { forwardRef, ReactElement, ReactNode, type ComponentProps } from 'react'
 import { 
   Tooltip as MuiTooltip, 
-  TooltipProps as MuiTooltipProps,
 } from '@mui/material'
+
+type MuiTooltipProps = ComponentProps<typeof MuiTooltip>
 
 export interface TooltipProps {
   children: ReactElement
