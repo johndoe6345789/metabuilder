@@ -110,6 +110,19 @@ const codegenStudioMetadata: PackageSeedConfig['metadata'] = {
 }
 const codegenStudioExamples: any = {}
 
+const forumForgeComponents: any[] = []
+const forumForgeMetadata: PackageSeedConfig['metadata'] = {
+  packageId: 'forum_forge',
+  name: 'Forum Forge',
+  version: '1.0.0',
+  description: 'Modern forum starter with categories, threads, and moderation',
+  author: 'MetaBuilder',
+  category: 'social',
+  dependencies: [],
+  exports: { components: [] },
+}
+const forumForgeExamples: any = {}
+
 export const DEFAULT_PACKAGES: Record<string, PackageSeedConfig> = {
   admin_dialog: {
     metadata: adminDialogMetadata,
@@ -150,5 +163,10 @@ export const DEFAULT_PACKAGES: Record<string, PackageSeedConfig> = {
     metadata: codegenStudioMetadata,
     components: codegenStudioComponents,
     examples: codegenStudioExamples,
+  },
+  forum_forge: {
+    metadata: forumForgeMetadata,
+    components: forumForgeComponents,
+    examples: forumForgeExamples,
   },
 }
