@@ -50,6 +50,26 @@ Result<int> Client::batchDeleteUsers(const std::vector<std::string>& ids) {
     return entities::user::batchDelete(getStore(), ids);
 }
 
+Result<bool> Client::setCredential(const CreateCredentialInput& input) {
+    return entities::credential::set(getStore(), input);
+}
+
+Result<bool> Client::verifyCredential(const std::string& username, const std::string& password) {
+    return entities::credential::verify(getStore(), username, password);
+}
+
+Result<bool> Client::setCredentialFirstLoginFlag(const std::string& username, bool flag) {
+    return entities::credential::setFirstLogin(getStore(), username, flag);
+}
+
+Result<bool> Client::getCredentialFirstLoginFlag(const std::string& username) {
+    return entities::credential::getFirstLogin(getStore(), username);
+}
+
+Result<bool> Client::deleteCredential(const std::string& username) {
+    return entities::credential::remove(getStore(), username);
+}
+
 Result<PageView> Client::createPage(const CreatePageInput& input) {
     return entities::page::create(getStore(), input);
 }

@@ -36,6 +36,12 @@ public:
     Result<int> batchUpdateUsers(const std::vector<UpdateUserBatchItem>& updates);
     Result<int> batchDeleteUsers(const std::vector<std::string>& ids);
 
+    Result<bool> setCredential(const CreateCredentialInput& input);
+    Result<bool> verifyCredential(const std::string& username, const std::string& password);
+    Result<bool> setCredentialFirstLoginFlag(const std::string& username, bool first_login);
+    Result<bool> getCredentialFirstLoginFlag(const std::string& username);
+    Result<bool> deleteCredential(const std::string& username);
+
     Result<PageView> createPage(const CreatePageInput& input);
     Result<PageView> getPage(const std::string& id);
     Result<PageView> getPageBySlug(const std::string& slug);
