@@ -45,6 +45,26 @@ struct UpdateUserBatchItem {
     UpdateUserInput data;
 };
 
+struct Credential {
+    std::string id;
+    std::string username;
+    std::string password_hash;
+    bool first_login;
+    Timestamp created_at;
+    Timestamp updated_at;
+};
+
+struct CreateCredentialInput {
+    std::string username;
+    std::string password_hash;
+    bool first_login = true;
+};
+
+struct UpdateCredentialInput {
+    std::optional<std::string> password_hash;
+    std::optional<bool> first_login;
+};
+
 struct PageView {
     std::string id;
     std::string slug;
