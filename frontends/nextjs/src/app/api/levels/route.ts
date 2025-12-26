@@ -30,3 +30,31 @@ export async function GET(request: Request) {
 
   return NextResponse.json({ levels: filtered })
 }
+
+export async function POST(request: Request) {
+  try {
+    const payload = (await request.json()) as { level?: string | number; note?: string }
+    const normalized =
+      typeof payload.level === 'string'
+        ? payload.level.toLowerCase().trim()
+        : typeof payload.level === 'number'
+        ? String(payload.level)
+        : undefined
+
+    const matched = normalized
+      ? PERMISSION_LEVELS.find(
+          (level) => level.key === normalized || String(level.id) === normalized
+        ) ?? null
+      : null
+
+    console.info('Levels API feedback', { level: normalized, note: payload.note })
+
+    return NextResponse.json({
+      acknowledged: true,
+      level: matched,
+    })
+  } catch (error) {
+    console.error('Failed to handle level feedback', error)
+    return NextResponse.json({ acknowledged: false, error: 'Invalid payload' }, { status: 400 })
+  }
+}

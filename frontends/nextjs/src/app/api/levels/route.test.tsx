@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { GET } from './route'
+import { GET, POST } from './route'
 
 describe('GET /api/levels', () => {
   it('returns every permission level when no filter is provided', async () => {
@@ -25,5 +25,19 @@ describe('GET /api/levels', () => {
 
     expect(payload.levels.length).toBeGreaterThan(0)
     expect(payload.levels.some((level) => level.key === 'god')).toBe(true)
+  })
+
+  it('accepts level feedback via POST', async () => {
+    const response = await POST(
+      new Request('http://example.com/api/levels', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ level: 'God', note: 'Need more widgets' }),
+      })
+    )
+    const payload = await response.json()
+
+    expect(payload.acknowledged).toBe(true)
+    expect(payload.level.key).toBe('god')
   })
 })
