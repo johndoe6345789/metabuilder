@@ -9,6 +9,7 @@
 
 #include "user_validation.hpp"
 #include "page_validation.hpp"
+#include "entity/component_validation.hpp"
 #include "workflow_validation.hpp"
 #include "lua_script_validation.hpp"
 #include "package_validation.hpp"
