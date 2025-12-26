@@ -36,6 +36,13 @@
 - [ ] Update documentation/tests to reflect the new Lua metadata focus and ensure existing CI steps continue to pass with the new structure.
 - [ ] Iterate with feedback—confirm the team agrees on the folder layout, metadata ownership, and which TypeScript files stay as adapters.
 
+## Prep Checklist
+
+- [ ] Confirm tooling (Lua runtime, `luacheck`, etc.) is installed if needed before creating helpers.
+- [ ] Backup critical TypeScript files via comments or notes before starting ports.
+- [ ] Share the plan with the team and gather quick approvals for folder names (`lua/`, `packages/static_content`).
+- [ ] Identify one “safe” helper to convert first, ideally small and well-tested.
+
 ## Audit Results
 
 ### App surface
@@ -149,6 +156,22 @@
   - `lua/functions/` – single-function files (one helper per file)
   - `lua/adapters/` – TypeScript adapters that relay calls into Lua micro-functions
   - `packages/static_content/` – optional storage for JSON seeds already living in the frontend
+
+## Tracking & Templates
+
+- **Audit table**:
+  1. File path
+  2. Current role (page, API, hook, lib)
+  3. Port target (Lua, adapter, stay TS)
+  4. Notes/risks
+  5. Owner/ETA
+- **Mapping sheet**:
+  1. Helper name
+  2. Inputs/outputs
+  3. Proposed Lua file path
+  4. Adapter needed (yes/no)
+  5. Test expectations
+- **Documentation reminders**: keep the doc updated with any new folder names, helper descriptions, or decisions so new contributors can follow the trail.
 - **Risks**: The Next.js frontend is large; do not remove TypeScript pages until their Lua replacements exist. Keep unit/e2e tests running in TypeScript during transition.
 - **Owner**: Track who updates each phase and keep a note in this doc or comments for accountability.
 - **Validation tips**: After a Lua helper is added, run `npm run lint` and `npm run test:unit` from `frontends/nextjs/`. Keep logs of failing tests if you defer them.
