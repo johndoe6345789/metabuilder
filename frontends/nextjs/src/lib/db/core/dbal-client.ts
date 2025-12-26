@@ -10,5 +10,5 @@
 
 export type { DBALAdapter, ListOptions, ListResult } from '../dbal-client/types'
 
-export { getAdapter } from '../dbal-client/get-adapter'
-export { closeAdapter } from '../dbal-client/close-adapter'
+export { getAdapter } from '../dbal-client/adapter/get-adapter'
+export { closeAdapter } from '../dbal-client/adapter/close-adapter'
