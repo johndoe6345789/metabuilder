@@ -102,6 +102,10 @@ Result<std::vector<PageView>> Client::listPages(const ListOptions& options) {
     return entities::page::list(getStore(), options);
 }
 
+Result<std::vector<PageView>> Client::searchPages(const std::string& query, int limit) {
+    return entities::page::search(getStore(), query, limit);
+}
+
 Result<ComponentHierarchy> Client::createComponent(const CreateComponentHierarchyInput& input) {
     return entities::component::create(getStore(), input);
 }

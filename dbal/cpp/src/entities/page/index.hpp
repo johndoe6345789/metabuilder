@@ -11,5 +11,6 @@
 #include "crud/update_page.hpp"
 #include "crud/delete_page.hpp"
 #include "crud/list_pages.hpp"
+#include "crud/search_pages.hpp"
 
 #endif

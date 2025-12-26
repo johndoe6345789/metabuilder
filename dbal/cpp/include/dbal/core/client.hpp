@@ -52,6 +52,7 @@ public:
     Result<PageView> updatePage(const std::string& id, const UpdatePageInput& input);
     Result<bool> deletePage(const std::string& id);
     Result<std::vector<PageView>> listPages(const ListOptions& options);
+    Result<std::vector<PageView>> searchPages(const std::string& query, int limit = 20);
 
     Result<ComponentHierarchy> createComponent(const CreateComponentHierarchyInput& input);
     Result<ComponentHierarchy> getComponent(const std::string& id);
