@@ -396,6 +396,118 @@ void test_page_validation() {
     std::cout << "  ✓ Invalid level rejected" << std::endl;
 }
 
+void test_component_crud() {
+    std::cout << "Testing component CRUD operations..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreatePageInput pageInput;
+    pageInput.slug = "component-page";
+    pageInput.title = "Component Page";
+    pageInput.level = 1;
+    pageInput.layout = {{"region", "root"}};
+    pageInput.is_active = true;
+
+    auto pageResult = client.createPage(pageInput);
+    assert(pageResult.isOk());
+    std::string pageId = pageResult.value().id;
+
+    dbal::CreateComponentHierarchyInput rootInput;
+    rootInput.page_id = pageId;
+    rootInput.component_type = "Container";
+    rootInput.order = 0;
+    rootInput.props = {{"role", "root"}};
+
+    auto rootResult = client.createComponent(rootInput);
+    assert(rootResult.isOk());
+    std::string rootId = rootResult.value().id;
+    std::cout << "  ✓ Root component created" << std::endl;
+
+    dbal::CreateComponentHierarchyInput childInput;
+    childInput.page_id = pageId;
+    childInput.parent_id = rootId;
+    childInput.component_type = "Button";
+    childInput.order = 1;
+    childInput.props = {{"label", "Click"}};
+
+    auto childResult = client.createComponent(childInput);
+    assert(childResult.isOk());
+    std::string childId = childResult.value().id;
+    std::cout << "  ✓ Child component created" << std::endl;
+
+    dbal::UpdateComponentHierarchyInput updateInput;
+    updateInput.order = 2;
+    auto updateResult = client.updateComponent(childId, updateInput);
+    assert(updateResult.isOk());
+    assert(updateResult.value().order == 2);
+    std::cout << "  ✓ Component order updated" << std::endl;
+
+    auto treeResult = client.getComponentTree(pageId);
+    assert(treeResult.isOk());
+    assert(treeResult.value().size() == 2);
+    std::cout << "  ✓ Retrieved component tree" << std::endl;
+
+    auto deleteResult = client.deleteComponent(rootId);
+    assert(deleteResult.isOk());
+    auto childLookup = client.getComponent(childId);
+    assert(childLookup.isError());
+    assert(childLookup.error().code() == dbal::ErrorCode::NotFound);
+    std::cout << "  ✓ Cascading delete removed child" << std::endl;
+}
+
+void test_component_validation() {
+    std::cout << "Testing component validation..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreatePageInput pageInput;
+    pageInput.slug = "component-validation";
+    pageInput.title = "Component Validation";
+    pageInput.level = 1;
+    pageInput.layout = {{"mode", "validate"}};
+    pageInput.is_active = true;
+
+    auto pageResult = client.createPage(pageInput);
+    assert(pageResult.isOk());
+    std::string pageId = pageResult.value().id;
+
+    dbal::CreateComponentHierarchyInput missingPage;
+    missingPage.page_id = "missing-page";
+    missingPage.component_type = "Leaf";
+    missingPage.order = 0;
+    missingPage.props = {{"key", "value"}};
+    auto missingResult = client.createComponent(missingPage);
+    assert(missingResult.isError());
+    assert(missingResult.error().code() == dbal::ErrorCode::NotFound);
+    std::cout << "  ✓ Missing page rejected" << std::endl;
+
+    dbal::CreateComponentHierarchyInput longType;
+    longType.page_id = pageId;
+    longType.component_type = std::string(101, 'x');
+    longType.order = 0;
+    longType.props = {{"key", "value"}};
+    auto longResult = client.createComponent(longType);
+    assert(longResult.isError());
+    assert(longResult.error().code() == dbal::ErrorCode::ValidationError);
+    std::cout << "  ✓ Oversized component type rejected" << std::endl;
+
+    dbal::CreateComponentHierarchyInput badOrder;
+    badOrder.page_id = pageId;
+    badOrder.component_type = "Leaf";
+    badOrder.order = -1;
+    badOrder.props = {{"key", "value"}};
+    auto orderResult = client.createComponent(badOrder);
+    assert(orderResult.isError());
+    assert(orderResult.error().code() == dbal::ErrorCode::ValidationError);
+    std::cout << "  ✓ Negative order rejected" << std::endl;
+}
+
 void test_workflow_crud() {
     std::cout << "Testing workflow CRUD operations..." << std::endl;
 
