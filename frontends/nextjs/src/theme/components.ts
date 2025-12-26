@@ -1,6 +1,6 @@
 import { ThemeOptions, alpha } from '@mui/material/styles'
-import { colors } from './colors'
-import { fonts } from './fonts'
+import { colors } from './base/colors'
+import { fonts } from './base/fonts'
 
 export const getComponentOverrides = (mode: 'light' | 'dark'): ThemeOptions['components'] => {
   const isDark = mode === 'dark'
