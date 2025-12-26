@@ -17,10 +17,14 @@ export interface SandboxedLuaEngineState {
   executionTimeout: number
   /** Maximum memory allowed */
   maxMemory: number
+  /** Allowed global names for sandbox */
+  allowedGlobals?: string[]
+  /** Set allowed global names for sandbox */
+  setAllowedGlobals: (allowedGlobals?: string[]) => void
   /** Disable dangerous Lua functions */
   disableDangerousFunctions: () => void
   /** Setup sandboxed environment */
-  setupSandboxedEnvironment: () => void
+  setupSandboxedEnvironment: (allowedGlobals?: string[]) => void
   /** Execute code with timeout */
   executeWithTimeout: (code: string, context?: LuaExecutionContext) => Promise<LuaExecutionResult>
   /** Read current Lua heap usage in bytes */

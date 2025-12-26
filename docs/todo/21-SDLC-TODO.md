@@ -42,6 +42,7 @@
 
 ### Development Scripts
 - [x] Add Codegen Studio export verification script (`tools/validate-codegen-export.ts`)
+- [x] Add permission level catalog script (`tools/list-permissions.ts`)
 
 ---
 
