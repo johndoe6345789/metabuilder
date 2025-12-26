@@ -54,13 +54,7 @@ public:
         } else if (method == "POST") {
             response = cpr::Post(url, cprHeaders, cpr::Body(body), timeout);
         } else {
-            cpr::Session session;
-            session.SetUrl(url);
-            session.SetHeader(cprHeaders);
-            session.SetTimeout(timeout);
-            session.SetMethod(method);
-            session.SetBody(body);
-            response = session.Send();
+            throw std::runtime_error("Unsupported HTTP method: " + method);
         }
 
         if (response.error) {

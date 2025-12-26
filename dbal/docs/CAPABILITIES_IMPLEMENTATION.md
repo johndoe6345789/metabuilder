@@ -14,7 +14,7 @@ This document maps the capabilities declared in `api/schema/capabilities.yaml` t
 | `relations` | Prisma, SQLite | ✅ | Prisma adapter handles relations via `include`, while SQL adapters map foreign keys consistently once SQL statements cover them. |
 | `migrations` | Prisma (automatic) | ✅ | `prisma migrate` workflows run ahead of TS/C++ builds; refer to `prisma/migrations` and `package.json` scripts. |
 | `schema_introspection` | Prisma, SQLite | ✅ | Prisma schema is the source of truth, and the C++ daemon reads `api/schema` definitions when generating `SqlRow` conversions. |
-| `connection_pooling` | Prisma + Drogon HTTP client | ✅ | Prisma client manages pools for TypeScript; C++ `SqlPool` plus `RequestsClient` ensures safe reuse of HTTP/SQL connections. |
+| `connection_pooling` | Prisma + cpr HTTP client | ✅ | Prisma client manages pools for TypeScript; C++ `SqlPool` plus `RequestsClient` ensures safe reuse of HTTP/SQL connections. |
 | `read_replicas` | Prisma (optional) | ⚠️ | Prisma supports multiple datasources; DBAL proxies to the configured `DATABASE_URL` and allows future replica awareness through `NativePrismaAdapter`. |
 
 ## Cross-Cutting Features

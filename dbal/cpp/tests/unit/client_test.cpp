@@ -1205,6 +1205,45 @@ void test_lua_script_validation() {
     std::cout << "  ✓ Allowed globals deduped" << std::endl;
 }
 
+void test_lua_script_search() {
+    std::cout << "Testing Lua script search..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreateUserInput userInput;
+    userInput.username = "lua_search_owner";
+    userInput.email = "lua_search_owner@example.com";
+    auto userResult = client.createUser(userInput);
+    assert(userResult.isOk());
+
+    dbal::CreateLuaScriptInput scriptInput;
+    scriptInput.name = "search_script";
+    scriptInput.code = "return 'search'";
+    scriptInput.allowed_globals = {"math"};
+    scriptInput.created_by = userResult.value().id;
+    auto createResult = client.createLuaScript(scriptInput);
+    assert(createResult.isOk());
+
+    dbal::CreateLuaScriptInput otherInput = scriptInput;
+    otherInput.name = "other_script";
+    otherInput.code = "return 'other'";
+    auto otherResult = client.createLuaScript(otherInput);
+    assert(otherResult.isOk());
+
+    auto searchResult = client.searchLuaScripts("search", userResult.value().id, 10);
+    assert(searchResult.isOk());
+    assert(searchResult.value().size() == 1);
+    std::cout << "  ✓ Script name search works" << std::endl;
+
+    auto codeSearch = client.searchLuaScripts("return 'other'", std::nullopt, 10);
+    assert(codeSearch.isOk());
+    assert(codeSearch.value().size() >= 1);
+    std::cout << "  ✓ Script code search works" << std::endl;
+}
+
 void test_package_crud() {
     std::cout << "Testing package CRUD operations..." << std::endl;
 
@@ -1409,6 +1448,7 @@ int main() {
         test_session_validation();
         test_lua_script_crud();
         test_lua_script_validation();
+        test_lua_script_search();
         test_package_crud();
         test_package_validation();
         test_package_batch_operations();
@@ -1416,7 +1456,7 @@ int main() {
         
         std::cout << std::endl;
         std::cout << "==================================================" << std::endl;
-        std::cout << "✅ All 31 test suites passed!" << std::endl;
+        std::cout << "✅ All 32 test suites passed!" << std::endl;
         std::cout << "==================================================" << std::endl;
         return 0;
     } catch (const std::exception& e) {
