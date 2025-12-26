@@ -1,34 +1,28 @@
 import * as fengari from 'fengari-web'
 import type { SandboxedLuaEngineState } from './types'
+import { normalizeAllowedGlobals } from './normalize-allowed-globals'
 
 const lua = fengari.lua
 
 /**
  * Replace globals with a safe sandbox environment
  */
-export function setupSandboxedEnvironment(this: SandboxedLuaEngineState): void {
+export function setupSandboxedEnvironment(
+  this: SandboxedLuaEngineState,
+  allowedGlobals?: string[]
+): void {
   if (!this.engine) return
 
   const { L } = this.engine
 
   lua.lua_newtable(L)
 
-  const safeFunctions = [
-    'assert', 'error', 'ipairs', 'next', 'pairs', 'pcall', 'select',
-    'tonumber', 'tostring', 'type', 'unpack', 'xpcall',
-    'string', 'table', 'math', 'bit32'
-  ]
+  const safeGlobals = normalizeAllowedGlobals(allowedGlobals)
 
-  for (const funcName of safeFunctions) {
+  for (const funcName of safeGlobals) {
     lua.lua_getglobal(L, fengari.to_luastring(funcName))
     lua.lua_setfield(L, -2, fengari.to_luastring(funcName))
   }
-
-  lua.lua_getglobal(L, fengari.to_luastring('print'))
-  lua.lua_setfield(L, -2, fengari.to_luastring('print'))
-
-  lua.lua_getglobal(L, fengari.to_luastring('log'))
-  lua.lua_setfield(L, -2, fengari.to_luastring('log'))
 
   lua.lua_pushvalue(L, -1)
   lua.lua_setfield(L, -2, fengari.to_luastring('_G'))

@@ -34,7 +34,7 @@ export async function executeWithSandbox(
   this.engine = new LuaEngine()
 
   this.disableDangerousFunctions()
-  this.setupSandboxedEnvironment()
+  this.setupSandboxedEnvironment(this.allowedGlobals)
 
   let executionResult: LuaExecutionResult | null = null
 
