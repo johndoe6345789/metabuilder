@@ -173,3 +173,19 @@
   4. Adapter needed (yes/no)
   5. Test expectations
 - **Documentation reminders**: keep the doc updated with any new folder names, helper descriptions, or decisions so new contributors can follow the trail.
+ 
+## Package Design Notes
+
+- Keep packages lean: each folder under `packages/` should contain `seed/`, optional `static_content/`, and light JSON/metadata entries.
+- Store metadata (name, version, packageId) in `seed/metadata.json`; keep `packageId` snake_case and version semver.
+- Avoid coupling packages to UI; they should expose data scripts for Lua/metadata consumers.
+- Use `package/glue` logic in `frontends/nextjs/src/lib/packages` as reference when designing new packages so metadata matches runtime expectations.
+- Document every package’s dependencies and optional scripts so Lua adapters can load/distribute them predictably.
+
+## Metadata Design Notes
+
+- Define metadata per route/component via JSON tables describing inputs, outputs, Lua helper references, and UI states.
+- Keep metadata separate from implementation; store static descriptors in `lua/metadata/*` and reference them via adapters.
+- Version metadata files to make rollbacks easier and ensure seeds stay synchronized with database migrations.
+- Use small, focused metadata files so the single-function Lua helpers can import only the data they need.
+- Track metadata ownership (which team, file) inside each descriptor to simplify future audits.
