@@ -58,7 +58,7 @@ describe('fetchWorkflowRunLogs', () => {
   })
 
   it('limits jobs and marks truncated', async () => {
-    listWorkflowRunJobsMock.mockResolvedValue(jobsFixture)
+    listWorkflowRunJobsMock.mockResolvedValue(jobsFixture as any)
     getJobLogsTextMock.mockResolvedValue('log output')
 
     const result = await fetchWorkflowRunLogs({
@@ -74,7 +74,7 @@ describe('fetchWorkflowRunLogs', () => {
   })
 
   it('skips log downloads when includeLogs is false', async () => {
-    listWorkflowRunJobsMock.mockResolvedValue(jobsFixture)
+    listWorkflowRunJobsMock.mockResolvedValue(jobsFixture as any)
 
     const result = await fetchWorkflowRunLogs({
       ...baseOptions,
@@ -87,7 +87,7 @@ describe('fetchWorkflowRunLogs', () => {
   })
 
   it('captures per-job log errors without failing the request', async () => {
-    listWorkflowRunJobsMock.mockResolvedValue(jobsFixture.slice(0, 2))
+    listWorkflowRunJobsMock.mockResolvedValue(jobsFixture.slice(0, 2) as any)
     getJobLogsTextMock
       .mockRejectedValueOnce(new Error('no logs'))
       .mockResolvedValueOnce('lint logs')
