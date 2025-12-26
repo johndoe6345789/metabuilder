@@ -1,5 +1,5 @@
-import { buildPackageTemplate } from './build-package-template'
-import { buildReactAppTemplate } from './build-react-app-template'
+import { buildPackageTemplate } from '../builders/package/build-package-template'
+import { buildReactAppTemplate } from '../builders/package/build-react-app-template'
 import { PACKAGE_TEMPLATE_CONFIGS, REACT_APP_TEMPLATE_CONFIG } from './template-configs'
 import type { PackageTemplate } from './types'
 
