@@ -8,9 +8,9 @@
 #include "dbal/types.hpp"
 #include "dbal/errors.hpp"
 #include "../../../store/in_memory_store.hpp"
-#include "create_user.hpp"
-#include "update_user.hpp"
-#include "delete_user.hpp"
+#include "../crud/create_user.hpp"
+#include "../crud/update_user.hpp"
+#include "../crud/delete_user.hpp"
 
 namespace dbal {
 namespace entities {
