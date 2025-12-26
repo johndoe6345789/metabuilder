@@ -7,15 +7,16 @@
 - CMake 3.20+
 - C++17 compatible compiler (GCC 9+, Clang 10+, MSVC 2019+)
 - SQLite3 development libraries
+- Drogon HTTP framework (via Conan or system package manager)
 - Optional: MongoDB C++ driver, gRPC
 
 ### Build Instructions
 
 ```bash
 cd dbal/cpp
-mkdir build && cd build
-cmake ..
-make -j$(nproc)
+conan install . --output-folder=build --build=missing
+cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake
+cmake --build build -j$(nproc)
 ```
 
 ### Running Tests
@@ -50,26 +51,9 @@ The daemon implements **defense-in-depth security** with multiple layers:
 
 #### HTTP Server Security (Production-Ready)
 
-The HTTP server has been hardened against common CVE patterns (2020-2024):
+The daemon now uses **Drogon** for HTTP handling to avoid custom parsing risks and reduce CVE exposure. Drogon provides hardened HTTP parsing, request validation, and connection management out of the box.
 
-- **Request Smuggling Prevention** (CVE-2024-1135, CVE-2024-23452)
-  - Rejects duplicate Content-Length headers
-  - Rejects conflicting Transfer-Encoding + Content-Length
-  - RFC 7230 compliant parsing
-
-- **Resource Limits** (CVE-2024-22087)
-  - 64KB max request size
-  - 100 headers max, 8KB per header
-  - 10MB max body size
-  - 1000 max concurrent connections
-
-- **Input Validation**
-  - CRLF injection detection
-  - Null byte detection
-  - Integer overflow protection
-  - Path length validation (2048 bytes)
-
-See [CVE_ANALYSIS.md](CVE_ANALYSIS.md) and [CVE_COMPARISON_SUMMARY.md](CVE_COMPARISON_SUMMARY.md) for detailed security analysis.
+See [CVE_ANALYSIS.md](CVE_ANALYSIS.md) and [CVE_COMPARISON_SUMMARY.md](CVE_COMPARISON_SUMMARY.md) for the legacy server analysis and migration notes.
 
 #### Process Security
 
