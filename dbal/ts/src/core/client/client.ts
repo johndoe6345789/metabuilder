@@ -2,7 +2,7 @@ import type { DBALConfig } from '../runtime/config'
 import type { DBALAdapter } from '../adapters/adapter'
 import type { User, PageView, ComponentHierarchy, Workflow, LuaScript, Package, Session, ListOptions, ListResult } from './types'
 import { DBALError } from './errors'
-import { PrismaAdapter } from '../adapters/prisma-adapter'
+import { PrismaAdapter, PostgresAdapter, MySQLAdapter } from '../adapters/prisma-adapter'
 import { ACLAdapter } from '../adapters/acl-adapter'
 import { WebSocketBridge } from '../bridges/websocket-bridge'
 import {
@@ -49,9 +49,23 @@ export class DBALClient {
     } else {
       switch (config.adapter) {
         case 'prisma':
-        case 'postgres':
-        case 'mysql':
           baseAdapter = new PrismaAdapter(
+            config.database?.url,
+            {
+              queryTimeout: config.performance?.queryTimeout
+            }
+          )
+          break
+        case 'postgres':
+          baseAdapter = new PostgresAdapter(
+            config.database?.url,
+            {
+              queryTimeout: config.performance?.queryTimeout
+            }
+          )
+          break
+        case 'mysql':
+          baseAdapter = new MySQLAdapter(
             config.database?.url,
             {
               queryTimeout: config.performance?.queryTimeout
