@@ -62,7 +62,7 @@ The DBAL follows a **zero-trust, defense-in-depth** architecture:
 
 ### 1.1 TypeScript DBAL Client
 
-#### DBAL-2025-001: WebSocket Message Origin Bypass (HIGH)
+#### DBAL-2025-001: WebSocket Message Origin Bypass (HIGH → CRITICAL with Fort Knox)
 **Location**: [websocket-bridge.ts](../ts/src/bridges/websocket-bridge.ts#L47-L78)
 **Pattern**: CWE-346 (Origin Validation Error)
 
@@ -76,12 +76,126 @@ this.ws = new WebSocket(this.endpoint)
 - Could allow cross-site WebSocket hijacking in browser contexts
 - Attacker-controlled page could connect to DBAL daemon
 
-**Recommendation**:
+**🏰 Fort Knox Remediation**:
 ```typescript
-// Add origin validation in C++ daemon
-// Add Sec-WebSocket-Protocol for authentication
-this.ws = new WebSocket(this.endpoint, ['dbal-v1', authToken])
+import { createHmac, randomBytes, timingSafeEqual } from 'crypto'
+
+interface SecureWebSocketConfig {
+  endpoint: string
+  clientId: string
+  sharedSecret: string
+  allowedOrigins: string[]
+  maxReconnectAttempts: number
+  heartbeatIntervalMs: number
+}
+
+class FortKnoxWebSocketBridge implements DBALAdapter {
+  private ws: WebSocket | null = null
+  private config: SecureWebSocketConfig
+  private nonce: string
+  private sessionToken: string | null = null
+  
+  constructor(config: SecureWebSocketConfig) {
+    this.config = config
+    this.nonce = randomBytes(32).toString('hex')
+  }
+
+  private async connect(): Promise<void> {
+    // Generate time-limited authentication token
+    const timestamp = Date.now()
+    const payload = `${this.config.clientId}:${timestamp}:${this.nonce}`
+    const signature = createHmac('sha256', this.config.sharedSecret)
+      .update(payload)
+      .digest('hex')
+    
+    // Token expires in 30 seconds
+    if (Math.abs(Date.now() - timestamp) > 30000) {
+      throw DBALError.unauthorized('Authentication token expired')
+    }
+    
+    // Use Sec-WebSocket-Protocol for auth handshake
+    this.ws = new WebSocket(this.config.endpoint, [
+      'dbal-v2',
+      `auth-${this.config.clientId}-${timestamp}-${signature}`
+    ])
+    
+    // Verify server identity on open
+    this.ws.onopen = () => {
+      this.startHeartbeat()
+      this.verifyServerChallenge()
+    }
+    
+    // Validate all incoming messages
+    this.ws.onmessage = (event) => {
+      this.handleSecureMessage(event.data)
+    }
+  }
+  
+  private handleSecureMessage(data: string): void {
+    // 1. Parse with prototype pollution protection
+    const response = this.safeJsonParse(data)
+    
+    // 2. Verify message signature
+    if (!this.verifyMessageSignature(response)) {
+      this.logSecurityEvent('INVALID_MESSAGE_SIGNATURE', { data })
+      this.ws?.close(4001, 'Invalid signature')
+      return
+    }
+    
+    // 3. Check replay protection (nonce + timestamp)
+    if (!this.checkReplayProtection(response)) {
+      this.logSecurityEvent('REPLAY_ATTACK_DETECTED', { data })
+      this.ws?.close(4002, 'Replay detected')
+      return
+    }
+    
+    // 4. Process valid message
+    this.processMessage(response)
+  }
+  
+  private safeJsonParse(data: string): unknown {
+    // Prevent prototype pollution
+    const parsed = JSON.parse(data, (key, value) => {
+      if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+        throw DBALError.maliciousCode('Prototype pollution attempt detected')
+      }
+      return value
+    })
+    
+    // Freeze to prevent modification
+    return Object.freeze(parsed)
+  }
+  
+  private verifyMessageSignature(msg: any): boolean {
+    const { signature, ...payload } = msg
+    const expected = createHmac('sha256', this.config.sharedSecret)
+      .update(JSON.stringify(payload))
+      .digest('hex')
+    
+    // Timing-safe comparison to prevent timing attacks
+    return timingSafeEqual(
+      Buffer.from(signature || '', 'hex'),
+      Buffer.from(expected, 'hex')
+    )
+  }
+  
+  private logSecurityEvent(event: string, details: Record<string, unknown>): void {
+    console.error(JSON.stringify({
+      timestamp: new Date().toISOString(),
+      severity: 'SECURITY',
+      event,
+      clientId: this.config.clientId,
+      ...details
+    }))
+  }
+}
 ```
+
+**Additional Hardening**:
+- [ ] Implement certificate pinning for WebSocket TLS
+- [ ] Add client certificate authentication (mTLS)
+- [ ] Rate limit connection attempts per client ID
+- [ ] Implement connection anomaly detection
 
 ---
 
