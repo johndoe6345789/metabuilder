@@ -138,9 +138,7 @@ void Server::registerRoutes() {
     }
 
     const std::string server_address = address();
-    auto status_handler = [server_address](const drogon::HttpRequestPtr& request) {
-        return handle_status(request, server_address);
-    };
+    g_server_address = server_address;
 
     auto health_handler = [](const drogon::HttpRequestPtr& request) {
         return handle_health(request);
