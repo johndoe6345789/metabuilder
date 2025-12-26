@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { readJson } from '@/lib/api/read-json'
 import { requireDBALApiKey } from '@/lib/api/require-dbal-api-key'
-import { Database } from '@/lib/database'
+import { transferSuperGodPower } from '@/lib/db/users/super-god/transfer-super-god-power'
 import {
   addPowerTransferRequest,
   getPowerTransferRequests,
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     await addPowerTransferRequest(newRequest)
 
     try {
-      await Database.transferSuperGodPower(fromUserId, toUserId)
+      await transferSuperGodPower(fromUserId, toUserId)
       await updatePowerTransferRequest(requestId, { status: 'accepted' })
 
       return NextResponse.json(
