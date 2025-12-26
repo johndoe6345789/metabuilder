@@ -29,6 +29,12 @@ Every archive includes:
 
 The runtime-specific paragraph is drawn from the `runtime` value, and the CLI stub prints project, runtime, package, tone, and brief so Super God users can inspect it before shipping.
 
+## Interactive builder
+
+- **Path**: `/codegen`
+- **Experience**: A Material UI-powered scaffold designer that bundles the same payload used by the API and streams the ZIP for download.
+- **Feedback**: Inline alerts surface success or failure so teams can iteratively tune briefs before sharing the starter kit with collaborators.
+
 ## Development tooling
 
 - `frontends/nextjs/src/lib/codegen/*` houses the generator helpers: one function per file (`createProjectTemplate`, `generateCodegenZip`).

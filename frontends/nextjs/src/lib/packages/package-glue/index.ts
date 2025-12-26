@@ -13,6 +13,7 @@ import { installPackage } from './install-package'
 import { installPackageComponents } from './install-package-components'
 import { installPackageScripts } from './install-package-scripts'
 import { isPackageInstalled } from './is-package-installed'
+import { loadPackageIndex } from './load-package-index'
 import { uninstallPackage } from './uninstall-package'
 
 export type { LuaScriptFile, PackageDefinition, PackageRegistry } from './types'
@@ -33,6 +34,7 @@ export {
   installPackageComponents,
   installPackageScripts,
   isPackageInstalled,
+  loadPackageIndex,
   uninstallPackage,
 }
 export { PackageGlue, packageGlue } from './package-glue'
