@@ -29,6 +29,11 @@ ApplicationWindow {
     property int selectedPackageIndex: 0
     property string searchText: ""
 
+    function filteredPackages() {
+        const currentRepo = repositories[selectedRepoIndex].name
+        return packages.filter((pkg) => pkg.repo === currentRepo && pkg.name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
+    }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 16
