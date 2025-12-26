@@ -111,15 +111,15 @@ public:
 
         int paramIndex = 2;
         if (input.username) {
-            setFragments.push_back("username = $" + std::to_string(paramIndex++));
+            setFragments.push_back("username = " + placeholder(paramIndex++));
             params.push_back({"username", *input.username});
         }
         if (input.email) {
-            setFragments.push_back("email = $" + std::to_string(paramIndex++));
+            setFragments.push_back("email = " + placeholder(paramIndex++));
             params.push_back({"email", *input.email});
         }
         if (input.role) {
-            setFragments.push_back("role = $" + std::to_string(paramIndex++));
+            setFragments.push_back("role = " + placeholder(paramIndex++));
             params.push_back({"role", userRoleToString(*input.role)});
         }
 
@@ -128,7 +128,8 @@ public:
         }
 
         const std::string sql = "UPDATE users SET " + joinFragments(setFragments, ", ") +
-                                " WHERE id = $1 RETURNING id, username, email, role, created_at, updated_at";
+                                " WHERE id = " + placeholder(1) +
+                                " RETURNING id, username, email, role, created_at, updated_at";
 
         try {
             const auto rows = executeQuery(conn, sql, params);
@@ -148,7 +149,7 @@ public:
         }
         ConnectionGuard guard(pool_, conn);
 
-        const std::string sql = "DELETE FROM users WHERE id = $1";
+        const std::string sql = "DELETE FROM users WHERE id = " + placeholder(1);
         const std::vector<SqlParam> params = {{"id", id}};
 
         try {
@@ -172,7 +173,8 @@ public:
         const int limit = options.limit > 0 ? options.limit : 50;
         const int offset = options.page > 1 ? (options.page - 1) * limit : 0;
         const std::string sql = "SELECT id, username, email, role, created_at, updated_at "
-                                "FROM users ORDER BY created_at DESC LIMIT $1 OFFSET $2";
+                                "FROM users ORDER BY created_at DESC LIMIT " + placeholder(1) +
+                                " OFFSET " + placeholder(2);
         const std::vector<SqlParam> params = {
             {"limit", std::to_string(limit)},
             {"offset", std::to_string(offset)}
@@ -452,6 +454,13 @@ protected:
             out << fragments[i];
         }
         return out.str();
+    }
+
+    std::string placeholder(size_t index) const {
+        if (dialect_ == Dialect::Postgres) {
+            return "$" + std::to_string(index);
+        }
+        return "?";
     }
 
     SqlPool pool_;
