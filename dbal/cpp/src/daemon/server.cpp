@@ -5,9 +5,15 @@
 
 #include "server.hpp"
 
+#include <algorithm>
+#include <chrono>
 #include <drogon/drogon.h>
-#include <json/json.h>
 #include <functional>
+#include <iostream>
+#include <json/json.h>
+#include <sstream>
+#include "dbal/core/errors.hpp"
+#include "dbal/core/types.hpp"
 
 namespace {
 

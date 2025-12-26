@@ -1,40 +1,39 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const mockUpdate = vi.fn()
-const mockAdapter = { update: mockUpdate }
+const mockDbalUpdate = vi.fn()
 
-vi.mock('../dbal-client', () => ({
-  getAdapter: () => mockAdapter,
+vi.mock('@/lib/dbal/database-dbal/users/dbal-update-user.server', () => ({
+  dbalUpdateUser: (id: string, payload: Record<string, unknown>) => mockDbalUpdate(id, payload),
 }))
 
 import { transferSuperGodPower } from './transfer-super-god-power'
 
 describe('transferSuperGodPower', () => {
   beforeEach(() => {
-    mockUpdate.mockReset()
+    mockDbalUpdate.mockReset()
   })
 
   it.each([
     { fromUserId: 'user_sg', toUserId: 'user_god' },
     { fromUserId: 'owner_1', toUserId: 'admin_2' },
-  ])('should transfer from $fromUserId to $toUserId', async ({ fromUserId, toUserId }) => {
-    mockUpdate.mockResolvedValue(undefined)
+  ])('updates both users when transferring power', async ({ fromUserId, toUserId }) => {
+    mockDbalUpdate.mockResolvedValue({ id: fromUserId })
 
     await transferSuperGodPower(fromUserId, toUserId)
 
-    expect(mockUpdate).toHaveBeenCalledTimes(2)
-    expect(mockUpdate).toHaveBeenNthCalledWith(1, 'User', fromUserId, {
+    expect(mockDbalUpdate).toHaveBeenCalledTimes(2)
+    expect(mockDbalUpdate).toHaveBeenNthCalledWith(1, fromUserId, {
       isInstanceOwner: false,
       role: 'god',
     })
-    expect(mockUpdate).toHaveBeenNthCalledWith(2, 'User', toUserId, {
+    expect(mockDbalUpdate).toHaveBeenNthCalledWith(2, toUserId, {
       isInstanceOwner: true,
       role: 'supergod',
     })
   })
 
-  it('should propagate adapter errors', async () => {
-    mockUpdate.mockRejectedValue(new Error('Transfer failed'))
+  it('propagates errors from the DBAL client', async () => {
+    mockDbalUpdate.mockRejectedValue(new Error('Transfer failed'))
 
     await expect(transferSuperGodPower('u1', 'u2')).rejects.toThrow('Transfer failed')
   })
