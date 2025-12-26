@@ -28,10 +28,10 @@ Rectangle {
         anchors.fill: parent
         horizontalOffset: 0
         verticalOffset: 4
-                radius: 16
-                samples: 16
-                color: "#22000000"
-            }
+        radius: 16
+        samples: 16
+        color: "#22000000"
+    }
 
     Rectangle {
         anchors.fill: parent
