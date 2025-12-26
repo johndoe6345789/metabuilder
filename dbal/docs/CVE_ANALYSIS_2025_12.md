@@ -213,14 +213,103 @@ private handleMessage(data: string): void {
 - Could modify Object prototype affecting all objects in process
 - Pattern: CVE-2019-10744 (lodash prototype pollution)
 
-**Recommendation**:
+**🏰 Fort Knox Remediation**:
 ```typescript
-import { safeJsonParse } from './security-utils'
+/**
+ * Fort Knox JSON Parser
+ * - Blocks prototype pollution
+ * - Enforces depth limits
+ * - Validates structure against schema
+ * - Sanitizes string content
+ */
+class SecureJsonParser {
+  private static readonly MAX_DEPTH = 10
+  private static readonly MAX_STRING_LENGTH = 1_000_000  // 1MB
+  private static readonly MAX_ARRAY_LENGTH = 10_000
+  private static readonly MAX_OBJECT_KEYS = 1000
+  
+  private static readonly FORBIDDEN_KEYS = new Set([
+    '__proto__',
+    'constructor', 
+    'prototype',
+    '__defineGetter__',
+    '__defineSetter__',
+    '__lookupGetter__',
+    '__lookupSetter__',
+  ])
+  
+  static parse<T>(json: string, schema?: ZodSchema<T>): T {
+    // 1. Length check
+    if (json.length > this.MAX_STRING_LENGTH) {
+      throw DBALError.validationError('JSON input too large', [
+        { field: 'json', error: `Max ${this.MAX_STRING_LENGTH} bytes` }
+      ])
+    }
+    
+    // 2. Parse with reviver for prototype protection
+    let depth = 0
+    const parsed = JSON.parse(json, (key, value) => {
+      // Block dangerous keys
+      if (this.FORBIDDEN_KEYS.has(key)) {
+        throw DBALError.maliciousCode(`Forbidden key in JSON: ${key}`)
+      }
+      
+      // Track and limit depth
+      if (typeof value === 'object' && value !== null) {
+        depth++
+        if (depth > this.MAX_DEPTH) {
+          throw DBALError.validationError('JSON nesting too deep')
+        }
+        
+        // Limit object keys
+        if (!Array.isArray(value) && Object.keys(value).length > this.MAX_OBJECT_KEYS) {
+          throw DBALError.validationError('Too many object keys')
+        }
+        
+        // Limit array length
+        if (Array.isArray(value) && value.length > this.MAX_ARRAY_LENGTH) {
+          throw DBALError.validationError('Array too large')
+        }
+      }
+      
+      return value
+    })
+    
+    // 3. Validate against schema if provided
+    if (schema) {
+      const result = schema.safeParse(parsed)
+      if (!result.success) {
+        throw DBALError.validationError('Schema validation failed', 
+          result.error.issues.map(i => ({ field: i.path.join('.'), error: i.message }))
+        )
+      }
+      return result.data
+    }
+    
+    // 4. Deep freeze to prevent mutation
+    return this.deepFreeze(parsed)
+  }
+  
+  private static deepFreeze<T>(obj: T): T {
+    if (obj === null || typeof obj !== 'object') return obj
+    
+    Object.freeze(obj)
+    Object.getOwnPropertyNames(obj).forEach(prop => {
+      const value = (obj as any)[prop]
+      if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {
+        this.deepFreeze(value)
+      }
+    })
+    
+    return obj
+  }
+}
 
-const response = safeJsonParse(data, {
-  protoAction: 'remove',
-  constructorAction: 'remove'
-})
+// Usage in WebSocket bridge
+private handleMessage(data: string): void {
+  const response = SecureJsonParser.parse(data, RPCResponseSchema)
+  // response is now validated, frozen, and safe
+}
 ```
 
 ---

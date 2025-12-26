@@ -10,6 +10,26 @@
         "id": "cat_growth",
         "name": "Growth Ops",
         "description": "Retention, onboarding, and community tactics"
+      },
+      {
+        "id": "cat_design",
+        "name": "Design Systems",
+        "description": "Tokens, theming, and UI governance"
+      },
+      {
+        "id": "cat_ai",
+        "name": "AI Tooling",
+        "description": "Prompt playbooks, evals, and guardrails"
+      },
+      {
+        "id": "cat_ops",
+        "name": "Community Ops",
+        "description": "Moderation workflows and engagement rituals"
+      },
+      {
+        "id": "cat_hiring",
+        "name": "Hiring & Ops",
+        "description": "Team growth, planning, and operating cadence"
       }
     ],
     "threads": [
@@ -26,6 +46,48 @@
         "categoryId": "cat_launch",
         "replyCount": 18,
         "likeCount": 64
+      },
+      {
+        "id": "thread_3",
+        "title": "Building a tokenized design system",
+        "categoryId": "cat_design",
+        "replyCount": 27,
+        "likeCount": 88
+      },
+      {
+        "id": "thread_4",
+        "title": "How to measure community health",
+        "categoryId": "cat_ops",
+        "replyCount": 33,
+        "likeCount": 96
+      },
+      {
+        "id": "thread_5",
+        "title": "Prompt playbooks for onboarding",
+        "categoryId": "cat_ai",
+        "replyCount": 21,
+        "likeCount": 54
+      },
+      {
+        "id": "thread_6",
+        "title": "Moderation handoff checklists",
+        "categoryId": "cat_ops",
+        "replyCount": 19,
+        "likeCount": 41
+      },
+      {
+        "id": "thread_7",
+        "title": "Hiring your first community lead",
+        "categoryId": "cat_hiring",
+        "replyCount": 15,
+        "likeCount": 33
+      },
+      {
+        "id": "thread_8",
+        "title": "Feature flag cadence for launches",
+        "categoryId": "cat_launch",
+        "replyCount": 12,
+        "likeCount": 29
       }
     ]
   }

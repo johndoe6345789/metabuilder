@@ -31,11 +31,14 @@ const renderComponent = (overrides?: { onInitiate?: () => void }) => {
   return { onInitiateTransfer }
 }
 
-const mockFetch = (payload: any) =>
-  vi.stubGlobal('fetch', async () => ({
+const mockFetch = (payload: any) => {
+  const fetchMock = vi.fn(async () => ({
     ok: true,
     json: async () => payload,
   }))
+  vi.stubGlobal('fetch', fetchMock)
+  return fetchMock
+}
 
 afterEach(() => {
   vi.restoreAllMocks()
@@ -71,7 +74,7 @@ describe('PowerTransferTab', () => {
 
     const { onInitiateTransfer } = renderComponent()
 
-    await waitFor(() => expect(screen.getByText(/Select User/i)).toBeInTheDocument())
+    await screen.findByText(/Select User/i)
 
     fireEvent.click(screen.getByText('target-god'))
     const actionButton = screen.getByRole('button', { name: /Initiate Power Transfer/i })
