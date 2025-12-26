@@ -1,1 +1,1 @@
-export { updateSession } from './crud/update/update-session'
+export { updateSession } from './crud/update-session'
