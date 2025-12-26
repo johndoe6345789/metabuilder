@@ -5,18 +5,24 @@ import type { User } from '../../types/level-types'
  * Get user by email from DBAL.
  * Single-responsibility lambda for email lookup.
  */
-export const getUserByEmail = async (email: string): Promise<User | null> => {
+export const getUserByEmail = async (
+  email: string,
+  options?: { tenantId?: string }
+): Promise<User | null> => {
   const adapter = getAdapter()
 
-  const result = await adapter.list('User', {
-    filter: { email },
+  const record = await adapter.findFirst('User', {
+    where: {
+      email,
+      ...(options?.tenantId ? { tenantId: options.tenantId } : {}),
+    },
   })
 
-  if (result.data.length === 0) {
+  if (!record) {
     return null
   }
 
-  const userData = result.data[0] as Record<string, unknown>
+  const userData = record as Record<string, unknown>
 
   return {
     id: String(userData.id),
