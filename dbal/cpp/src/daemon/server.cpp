@@ -6,8 +6,10 @@
 #include "server.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <chrono>
 #include <drogon/drogon.h>
+#include <exception>
 #include <functional>
 #include <iostream>
 #include <json/json.h>
@@ -399,6 +401,20 @@ void Server::registerRoutes() {
     drogon::app().registerHandler("/api/dbal", rpc_handler, {drogon::HttpMethod::Post});
 
     routes_registered_ = true;
+}
+
+bool Server::ensureClient() {
+    if (dbal_client_) {
+        return true;
+    }
+
+    try {
+        dbal_client_ = std::make_unique<dbal::Client>(client_config_);
+        return true;
+    } catch (const std::exception& ex) {
+        std::cerr << "Failed to initialize DBAL client: " << ex.what() << std::endl;
+        return false;
+    }
 }
 
 void Server::runServer() {
