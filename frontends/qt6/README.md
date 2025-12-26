@@ -1,26 +1,15 @@
-# DBAL QML Player
+# Qt6 Frontend (MetaBuilder Landing)
 
-This small Qt Quick app renders the `FrontPage.qml` guided hero and telemetry tiles.
+This directory contains a minimal Qt Quick replica of the public MetaBuilder landing page currently rendered by the Next.js `Level1` component.
 
-## Dependencies
+## Purpose
 
-- We resolve Qt6 and Ninja via `conanfile.txt`.
-- We pull `cpr` for HTTP helpers so future network calls reuse the same dependency solvable via Conan.
-- `CMakeDeps` + `CMakeToolchain` expose the Ninja toolchain so `cmake -G Ninja` runs the same generator as Conan.
+- Mirror the hero marketing copy, feature highlights, contact CTA, and status overview that appear on `frontends/nextjs`.
+- Provide a starting point for building a native Qt6 experience or prototyping desktop/web skins of the MetaBuilder brand.
 
-## Local build
+## Running
 
-```bash
-cd frontends/dbal/qml
-conan install . --output-folder=build --build=missing
-cmake -S . -B build -G Ninja
-cmake --build build
-./build/dbal-qml
-```
+1. Install Qt 6 (e.g., via [the official installer](https://www.qt.io/download)) if you don’t already have it.
+2. Run the scene with `qmlscene frontends/qt6/main.qml` (or launch via `qml`/`qmlengine` inside a Qt project).
 
-The `cmake` invocation purposely targets the Ninja generator and matches the toolchain that Conan emits.
-
-## Notes
-
-- The QML files are exposed via `qt_add_qml_module` and bundled together with the executable.
-- If you forget `-G Ninja`, the CMake script prints a reminder so you can reconfigure accordingly.
+You can also embed `main.qml` into a Qt Quick Application project and expose C++ integrations for live data later.
