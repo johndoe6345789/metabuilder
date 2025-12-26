@@ -1,7 +1,7 @@
 'use client'
 
 import { forwardRef, LabelHTMLAttributes } from 'react'
-import { Typography, TypographyProps } from '@mui/material'
+import { Typography } from '@mui/material'
 
 export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
   required?: boolean

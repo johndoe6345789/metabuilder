@@ -1,7 +1,9 @@
 'use client'
 
-import { forwardRef } from 'react'
-import { Skeleton as MuiSkeleton, SkeletonProps as MuiSkeletonProps } from '@mui/material'
+import { forwardRef, type ComponentProps } from 'react'
+import { Skeleton as MuiSkeleton } from '@mui/material'
+
+type MuiSkeletonProps = ComponentProps<typeof MuiSkeleton>
 
 export interface SkeletonProps extends MuiSkeletonProps {
   className?: string
