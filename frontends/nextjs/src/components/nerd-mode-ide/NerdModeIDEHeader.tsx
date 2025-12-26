@@ -27,7 +27,7 @@ export function NerdModeIDEHeader({
         <CardTitle className="text-lg flex items-center gap-2">
           <TerminalIcon fontSize="small" />
           Nerd Mode IDE
-          <span className="text-sm text-muted-foreground">· {workspaceName}</span>
+          <span className="text-sm text-muted-foreground">- {workspaceName}</span>
         </CardTitle>
         <div className="flex items-center gap-2">
           <Button size="sm" variant="outline" onClick={onOpenGitConfig}>

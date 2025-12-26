@@ -40,7 +40,7 @@ export function TemplateDialog({ open, templates, onSelectTemplate, onClose }: T
                   <p className="text-sm text-muted-foreground mt-1">{template.description}</p>
                   {template.tags && template.tags.length > 0 && (
                     <div className="text-xs text-muted-foreground mt-2">
-                      {template.tags.join(' · ')}
+                      {template.tags.join(' - ')}
                     </div>
                   )}
                 </div>
