@@ -18,9 +18,9 @@ export type { LuaSnippet } from './snippets/lua-snippets-data'
 export { LUA_SNIPPET_CATEGORIES, LUA_SNIPPETS } from './snippets/lua-snippets-data'
 
 // Re-export functions for backward compatibility
-export { getSnippetsByCategory } from './functions/get-snippets-by-category'
-export { searchSnippets } from './functions/search-snippets'
-export { getSnippetById } from './functions/get-snippet-by-id'
+export { getSnippetsByCategory } from './functions/snippets/get-snippets-by-category'
+export { searchSnippets } from './functions/snippets/search-snippets'
+export { getSnippetById } from './functions/snippets/get-snippet-by-id'
 
 // Re-export class wrapper
 export { LuaSnippetUtils } from './LuaSnippetUtils'

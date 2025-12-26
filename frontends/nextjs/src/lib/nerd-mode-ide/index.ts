@@ -6,7 +6,7 @@ export type {
   PackageTemplateConfig,
   ReactAppTemplateConfig,
 } from './types'
-export { appendExportPath } from './append-export-path'
+export { appendExportPath } from './file-operations/export/append-export-path'
 export { buildPackageTemplate } from './build-package-template'
 export { buildReactAppTemplate } from './build-react-app-template'
 export { buildZipFromFileTree } from './build-zip-from-file-tree'
