@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server'
+import { getRequestIp } from '@/lib/api/get-request-ip'
 import { readJson } from '@/lib/api/read-json'
-import { verifyCredentials } from '@/lib/db/credentials/verify-credentials'
 import { getUserByEmail } from '@/lib/db/auth/get-user-by-email'
 import { getUserByUsername } from '@/lib/db/auth/get-user-by-username'
 import { createSession } from '@/lib/db/sessions/create-session'
 import { DEFAULT_SESSION_TTL_MS } from '@/lib/auth/session-constants'
 import { setSessionCookie } from '@/lib/auth/set-session-cookie'
+import { createLoginSecurityContext } from '@/lib/security/secure-db/create-login-security-context'
+import { getLoginLockoutInfo } from '@/lib/security/secure-db/get-login-lockout-info'
+import { verifyCredentials } from '@/lib/security/secure-db/operations/verify-credentials'
 
 interface LoginPayload {
   identifier?: string
@@ -52,8 +55,27 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
   }
 
-  const isValid = await verifyCredentials(user.username, password)
+  const securityContext = createLoginSecurityContext({
+    identifier: user.username,
+    tenantId,
+    ipAddress: getRequestIp(request),
+    requestId: request.headers.get('x-request-id') ?? undefined,
+  })
+
+  const isValid = await verifyCredentials(securityContext, user.username, password)
   if (!isValid) {
+    const lockoutInfo = getLoginLockoutInfo(securityContext.user.username)
+    if (lockoutInfo.locked) {
+      const response = NextResponse.json(
+        { error: 'Too many failed login attempts. Try again later.' },
+        { status: 429 }
+      )
+      if (lockoutInfo.remainingMs) {
+        response.headers.set('Retry-After', Math.ceil(lockoutInfo.remainingMs / 1000).toString())
+      }
+      return response
+    }
+
     return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
   }
 
