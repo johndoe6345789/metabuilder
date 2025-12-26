@@ -1,0 +1,28 @@
+{
+  "name": "@metabuilder/cli",
+  "version": "0.1.0",
+  "description": "Command-line tools for MetaBuilder services",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "bin": {
+    "metabuilder-cli": "dist/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "axios": "^1.7.4",
+    "chalk": "^5.2.0",
+    "commander": "^11.0.0",
+    "inquirer": "^9.2.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.7",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}

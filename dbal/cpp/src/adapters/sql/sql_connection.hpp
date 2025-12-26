@@ -25,6 +25,8 @@ struct SqlConnectionConfig {
     std::string user;
     std::string password;
     std::string options;
+    std::string prisma_bridge_url;
+    std::string prisma_bridge_token;
 };
 
 class SqlConnection {
