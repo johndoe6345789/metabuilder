@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef } from 'react'
+import { forwardRef, type AnchorHTMLAttributes } from 'react'
 import { Button as MuiButton, ButtonProps as MuiButtonProps } from '@mui/material'
 
 export type ButtonVariant = 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
@@ -10,6 +10,9 @@ export interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'size'> {
   variant?: ButtonVariant
   size?: ButtonSize
   asChild?: boolean
+  // Support link props when component="a"
+  target?: AnchorHTMLAttributes<HTMLAnchorElement>['target']
+  rel?: AnchorHTMLAttributes<HTMLAnchorElement>['rel']
 }
 
 const variantMap: Record<ButtonVariant, { variant: MuiButtonProps['variant']; color?: MuiButtonProps['color']; sx?: object }> = {
