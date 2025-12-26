@@ -43,6 +43,13 @@ public:
     Result<bool> deletePage(const std::string& id);
     Result<std::vector<PageView>> listPages(const ListOptions& options);
 
+    Result<ComponentHierarchy> createComponent(const CreateComponentHierarchyInput& input);
+    Result<ComponentHierarchy> getComponent(const std::string& id);
+    Result<ComponentHierarchy> updateComponent(const std::string& id, const UpdateComponentHierarchyInput& input);
+    Result<bool> deleteComponent(const std::string& id);
+    Result<std::vector<ComponentHierarchy>> listComponents(const ListOptions& options);
+    Result<std::vector<ComponentHierarchy>> getComponentTree(const std::string& page_id);
+
     Result<Workflow> createWorkflow(const CreateWorkflowInput& input);
     Result<Workflow> getWorkflow(const std::string& id);
     Result<Workflow> updateWorkflow(const std::string& id, const UpdateWorkflowInput& input);
