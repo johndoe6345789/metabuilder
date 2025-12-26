@@ -40,6 +40,9 @@
 - [ ] Move 100% configuration to database
 - [ ] Track and reduce TypeScript LOC over time
 
+### Development Scripts
+- [x] Add Codegen Studio export verification script (`tools/validate-codegen-export.ts`)
+
 ---
 
 ## Phase 3: Testing & Code Review
