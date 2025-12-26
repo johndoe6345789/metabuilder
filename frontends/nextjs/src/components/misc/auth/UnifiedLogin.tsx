@@ -10,7 +10,7 @@ import { Database, hashPassword } from '@/lib/database'
 import { generateScrambledPassword, simulateEmailSend } from '@/lib/password-utils'
 import { Alert, AlertDescription } from '@/components/ui'
 
-interface UnifiedLoginProps {
+export interface UnifiedLoginProps {
   onLogin: (credentials: { username: string; password: string }) => void
   onRegister: (username: string, email: string, password: string) => void
   onBack?: () => void
