@@ -10,10 +10,12 @@ export function getLevelPath(level: AppLevel): string {
     case 2:
       return '/dashboard'
     case 3:
-      return '/admin'
+      return '/moderator'
     case 4:
-      return '/builder'
+      return '/admin'
     case 5:
+      return '/builder'
+    case 6:
       return '/supergod'
     default:
       return '/'

@@ -9,7 +9,7 @@ export function Level1Client() {
   const router = useRouter()
   
   const handleNavigate = (level: number) => {
-    const normalizedLevel = Math.min(5, Math.max(1, level)) as AppLevel
+    const normalizedLevel = Math.min(6, Math.max(1, level)) as AppLevel
     router.push(getLevelPath(normalizedLevel))
   }
 

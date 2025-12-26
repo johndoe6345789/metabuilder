@@ -8,9 +8,10 @@ import type { AuthState, AuthUser } from './auth-types'
 const roleLevels: Record<string, number> = {
   public: 1,
   user: 2,
-  admin: 3,
-  god: 4,
-  supergod: 5,
+  moderator: 3,
+  admin: 4,
+  god: 5,
+  supergod: 6,
 }
 
 export class AuthStore {
