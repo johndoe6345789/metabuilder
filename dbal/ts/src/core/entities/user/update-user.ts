@@ -2,57 +2,57 @@
  * @file update-user.ts
  * @description Update user operation
  */
-import type { User, UpdateUserInput, Result } from '../types';
-import type { InMemoryStore } from '../store/in-memory-store';
-import { validateEmail, validateUsername } from '../validation/user-validation';
+import type { Result, UpdateUserInput, User } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
+import { validateId } from '../../validation/validate-id'
+import { validateUserUpdate } from '../../validation/validate-user-update'
 
 /**
  * Update an existing user
  */
-export async function updateUser(
+export const updateUser = async (
   store: InMemoryStore,
   id: string,
   input: UpdateUserInput
-): Promise<Result<User>> {
-  if (!id) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'ID required' } };
+): Promise<Result<User>> => {
+  const idErrors = validateId(id)
+  if (idErrors.length > 0) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
   }
 
-  const user = store.users.get(id);
+  const user = store.users.get(id)
   if (!user) {
-    return { success: false, error: { code: 'NOT_FOUND', message: `User not found: ${id}` } };
+    return { success: false, error: { code: 'NOT_FOUND', message: `User not found: ${id}` } }
   }
 
-  if (input.email !== undefined) {
-    if (!validateEmail(input.email)) {
-      return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid email' } };
-    }
-    const existingId = store.userEmails.get(input.email);
-    if (existingId && existingId !== id) {
-      return { success: false, error: { code: 'CONFLICT', message: 'Email exists' } };
-    }
-    store.userEmails.delete(user.email);
-    store.userEmails.set(input.email, id);
-    user.email = input.email;
+  const validationErrors = validateUserUpdate(input)
+  if (validationErrors.length > 0) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
   }
 
-  if (input.username !== undefined) {
-    if (!validateUsername(input.username)) {
-      return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid username' } };
+  if (input.username && input.username !== user.username) {
+    if (store.usersByUsername.has(input.username)) {
+      return { success: false, error: { code: 'CONFLICT', message: 'Username already exists' } }
     }
-    const existingId = store.userUsernames.get(input.username);
-    if (existingId && existingId !== id) {
-      return { success: false, error: { code: 'CONFLICT', message: 'Username exists' } };
-    }
-    store.userUsernames.delete(user.username);
-    store.userUsernames.set(input.username, id);
-    user.username = input.username;
+    store.usersByUsername.delete(user.username)
+    store.usersByUsername.set(input.username, id)
+    user.username = input.username
   }
 
-  if (input.name !== undefined) user.name = input.name;
-  if (input.level !== undefined) user.level = input.level;
-  if (input.isActive !== undefined) user.isActive = input.isActive;
+  if (input.email && input.email !== user.email) {
+    if (store.usersByEmail.has(input.email)) {
+      return { success: false, error: { code: 'CONFLICT', message: 'Email already exists' } }
+    }
+    store.usersByEmail.delete(user.email)
+    store.usersByEmail.set(input.email, id)
+    user.email = input.email
+  }
 
-  user.updatedAt = new Date();
-  return { success: true, data: user };
+  if (input.role) {
+    user.role = input.role
+  }
+
+  user.updatedAt = new Date()
+
+  return { success: true, data: user }
 }
