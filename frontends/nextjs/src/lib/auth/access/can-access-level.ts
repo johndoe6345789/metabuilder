@@ -1,5 +1,5 @@
 import type { UserRole } from '../types/level-types'
-import { getRoleLevel } from './get-role-level'
+import { getRoleLevel } from '../role/get-role-level'
 
 /**
  * Check if a user role has access to a given permission level

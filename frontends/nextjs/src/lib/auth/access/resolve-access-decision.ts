@@ -1,5 +1,5 @@
 import type { UserRole } from '../types/level-types'
-import { getRoleLevel } from './get-role-level'
+import { getRoleLevel } from '../role/get-role-level'
 
 export type AccessDecisionReason = 'loading' | 'unauthenticated' | 'insufficient_level'
 

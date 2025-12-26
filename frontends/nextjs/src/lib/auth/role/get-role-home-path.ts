@@ -1,5 +1,5 @@
 import type { UserRole } from '../types/level-types'
-import { getLevelPath } from '../navigation/get-level-path'
+import { getLevelPath } from '@/lib/navigation/get-level-path'
 import { getRoleLevel } from './get-role-level'
 
 /**
