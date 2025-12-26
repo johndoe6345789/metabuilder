@@ -13,7 +13,8 @@ import {
 } from '@/components/ui'
 import { Plus, Trash, Play, CheckCircle, XCircle, FileCode, ArrowsOut, BookOpen, ShieldCheck } from '@phosphor-icons/react'
 import { toast } from 'sonner'
-import { createLuaEngine, type LuaExecutionResult } from '@/lib/lua-engine'
+import { executeLuaScriptWithProfile } from '@/lib/lua/execute-lua-script-with-profile'
+import type { LuaExecutionResult } from '@/lib/lua-engine'
 import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua-examples'
 import type { LuaScript } from '@/lib/level-types'
 import Editor from '@monaco-editor/react'
@@ -195,18 +196,16 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
     setTestOutput(null)
 
     try {
-      const engine = createLuaEngine()
-      
       const contextData: any = {}
       currentScript.parameters.forEach((param) => {
         contextData[param.name] = testInputs[param.name]
       })
 
-      const result = await engine.execute(currentScript.code, {
+      const result = await executeLuaScriptWithProfile(currentScript.code, {
         data: contextData,
         user: { username: 'test_user', role: 'god' },
         log: (...args: any[]) => console.log('[Lua]', ...args)
-      })
+      }, currentScript)
 
       setTestOutput(result)
       
@@ -216,7 +215,6 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
         toast.error('Script execution failed')
       }
 
-      engine.destroy()
     } catch (error) {
       toast.error('Execution error: ' + (error instanceof Error ? error.message : String(error)))
       setTestOutput({
@@ -252,18 +250,16 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
 
     setTimeout(async () => {
       try {
-        const engine = createLuaEngine()
-        
         const contextData: any = {}
         currentScript.parameters.forEach((param) => {
           contextData[param.name] = testInputs[param.name]
         })
 
-        const result = await engine.execute(currentScript.code, {
+        const result = await executeLuaScriptWithProfile(currentScript.code, {
           data: contextData,
           user: { username: 'test_user', role: 'god' },
           log: (...args: any[]) => console.log('[Lua]', ...args)
-        })
+        }, currentScript)
 
         setTestOutput(result)
         
@@ -273,7 +269,6 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
           toast.error('Script execution failed')
         }
 
-        engine.destroy()
       } catch (error) {
         toast.error('Execution error: ' + (error instanceof Error ? error.message : String(error)))
         setTestOutput({
