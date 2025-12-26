@@ -1,1 +1,1 @@
-export * from './rendering/declarative-component-renderer'
+export * from '../rendering/declarative-component-renderer'
