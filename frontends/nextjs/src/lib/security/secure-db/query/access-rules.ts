@@ -1,7 +1,7 @@
 import type { AccessRule } from './types'
 
 export const ACCESS_RULES: AccessRule[] = [
-  { resource: 'user', operation: 'READ', allowedRoles: ['user', 'admin', 'god', 'supergod'] },
+  { resource: 'user', operation: 'READ', allowedRoles: ['user', 'moderator', 'admin', 'god', 'supergod'] },
   { resource: 'user', operation: 'CREATE', allowedRoles: ['god', 'supergod'] },
   { resource: 'user', operation: 'UPDATE', allowedRoles: ['admin', 'god', 'supergod'] },
   { resource: 'user', operation: 'DELETE', allowedRoles: ['god', 'supergod'] },
@@ -16,7 +16,7 @@ export const ACCESS_RULES: AccessRule[] = [
   { resource: 'luaScript', operation: 'UPDATE', allowedRoles: ['god', 'supergod'] },
   { resource: 'luaScript', operation: 'DELETE', allowedRoles: ['god', 'supergod'] },
   
-  { resource: 'pageConfig', operation: 'READ', allowedRoles: ['user', 'admin', 'god', 'supergod'] },
+  { resource: 'pageConfig', operation: 'READ', allowedRoles: ['user', 'moderator', 'admin', 'god', 'supergod'] },
   { resource: 'pageConfig', operation: 'CREATE', allowedRoles: ['god', 'supergod'] },
   { resource: 'pageConfig', operation: 'UPDATE', allowedRoles: ['god', 'supergod'] },
   { resource: 'pageConfig', operation: 'DELETE', allowedRoles: ['god', 'supergod'] },
@@ -26,10 +26,10 @@ export const ACCESS_RULES: AccessRule[] = [
   { resource: 'modelSchema', operation: 'UPDATE', allowedRoles: ['god', 'supergod'] },
   { resource: 'modelSchema', operation: 'DELETE', allowedRoles: ['god', 'supergod'] },
   
-  { resource: 'comment', operation: 'READ', allowedRoles: ['user', 'admin', 'god', 'supergod'] },
-  { resource: 'comment', operation: 'CREATE', allowedRoles: ['user', 'admin', 'god', 'supergod'] },
-  { resource: 'comment', operation: 'UPDATE', allowedRoles: ['user', 'admin', 'god', 'supergod'] },
-  { resource: 'comment', operation: 'DELETE', allowedRoles: ['admin', 'god', 'supergod'] },
+  { resource: 'comment', operation: 'READ', allowedRoles: ['user', 'moderator', 'admin', 'god', 'supergod'] },
+  { resource: 'comment', operation: 'CREATE', allowedRoles: ['user', 'moderator', 'admin', 'god', 'supergod'] },
+  { resource: 'comment', operation: 'UPDATE', allowedRoles: ['user', 'moderator', 'admin', 'god', 'supergod'] },
+  { resource: 'comment', operation: 'DELETE', allowedRoles: ['moderator', 'admin', 'god', 'supergod'] },
   
   { resource: 'smtpConfig', operation: 'READ', allowedRoles: ['god', 'supergod'] },
   { resource: 'smtpConfig', operation: 'UPDATE', allowedRoles: ['supergod'] },
