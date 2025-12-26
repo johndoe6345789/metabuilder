@@ -15,3 +15,10 @@ MaterialCircularProgress 1.0 MaterialCircularProgress.qml
 MaterialLinearProgress 1.0 MaterialLinearProgress.qml
 MaterialSkeleton 1.0 MaterialSkeleton.qml
 MaterialSwitch 1.0 MaterialSwitch.qml
+MaterialAppBar 1.0 MaterialAppBar.qml
+MaterialToolbar 1.0 MaterialToolbar.qml
+MaterialAvatar 1.0 MaterialAvatar.qml
+MaterialLink 1.0 MaterialLink.qml
+MaterialTypography 1.0 MaterialTypography.qml
+MaterialPaper 1.0 MaterialPaper.qml
+MaterialBox 1.0 MaterialBox.qml
