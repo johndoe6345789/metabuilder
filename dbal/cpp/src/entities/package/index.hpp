@@ -10,5 +10,6 @@
 #include "update_package.hpp"
 #include "delete_package.hpp"
 #include "list_packages.hpp"
+#include "batch_packages.hpp"
 
 #endif
