@@ -9,7 +9,7 @@ Rectangle {
     property alias contentItem: contentLoader.sourceComponent
     property real cornerRadius: 16
     property color surfaceColor: MaterialPalette.surface
-    property real elevation: MaterialPalette.palette.elevationLow
+    property real elevation: MaterialPalette.elevationLow
 
     width: parent ? parent.width : 320
     radius: cornerRadius

@@ -9,11 +9,11 @@ ApplicationWindow {
     width: 1100
     height: 700
     title: "Material Inspo"
-    color: Material.MaterialPalette.palette.background
+    color: Material.MaterialPalette.background
 
     Rectangle {
         anchors.fill: parent
-        color: Material.MaterialPalette.palette.background
+        color: Material.MaterialPalette.background
     }
 
     ColumnLayout {
@@ -24,7 +24,7 @@ ApplicationWindow {
         Text {
             text: "Material-style UI in Qt Quick"
             font.pixelSize: 28
-            color: Material.MaterialPalette.palette.onSurface
+        color: Material.MaterialPalette.onSurface
             font.bold: true
         }
 
@@ -69,12 +69,12 @@ ApplicationWindow {
                 Text {
                     text: "Card headline"
                     font.pixelSize: 20
-                    color: Material.MaterialPalette.palette.onSurface
+                    color: Material.MaterialPalette.onSurface
                 }
                 Text {
                     text: "Cards can load any content, here we show simple stacked text with Material spacing."
                     font.pixelSize: 15
-                    color: Material.MaterialPalette.palette.onSurface
+                    color: Material.MaterialPalette.onSurface
                     wrapMode: Text.Wrap
                 }
             }
