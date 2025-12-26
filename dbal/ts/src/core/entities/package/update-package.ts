@@ -2,45 +2,76 @@
  * @file update-package.ts
  * @description Update package operation
  */
-import type { Package, UpdatePackageInput, Result } from '../types';
-import type { InMemoryStore } from '../store/in-memory-store';
-import { validateVersion } from '../validation/package-validation';
+import type { Package, Result, UpdatePackageInput } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
+import { validateId } from '../../validation/validate-id'
+import { validatePackageUpdate } from '../../validation/validate-package-update'
 
 /**
  * Update an existing package
  */
-export async function updatePackage(
+export const updatePackage = async (
   store: InMemoryStore,
   id: string,
   input: UpdatePackageInput
-): Promise<Result<Package>> {
-  if (!id) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'ID required' } };
+): Promise<Result<Package>> => {
+  const idErrors = validateId(id)
+  if (idErrors.length > 0) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
   }
 
-  const pkg = store.packages.get(id);
+  const pkg = store.packages.get(id)
   if (!pkg) {
-    return { success: false, error: { code: 'NOT_FOUND', message: `Package not found: ${id}` } };
+    return { success: false, error: { code: 'NOT_FOUND', message: `Package not found: ${id}` } }
   }
 
-  if (input.name !== undefined) {
-    if (!input.name || input.name.length > 100) {
-      return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid name' } };
+  const validationErrors = validatePackageUpdate(input)
+  if (validationErrors.length > 0) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
+  }
+
+  const nextName = input.name ?? pkg.name
+  const nextVersion = input.version ?? pkg.version
+  const currentKey = `${pkg.name}@${pkg.version}`
+  const nextKey = `${nextName}@${nextVersion}`
+
+  if (nextKey !== currentKey) {
+    const existingId = store.packageKeys.get(nextKey)
+    if (existingId && existingId !== id) {
+      return { success: false, error: { code: 'CONFLICT', message: 'Package name+version already exists' } }
     }
-    pkg.name = input.name;
+    store.packageKeys.delete(currentKey)
+    store.packageKeys.set(nextKey, id)
   }
 
-  if (input.version !== undefined) {
-    if (!validateVersion(input.version)) {
-      return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid version' } };
-    }
-    pkg.version = input.version;
+  pkg.name = nextName
+  pkg.version = nextVersion
+
+  if (input.description !== undefined) {
+    pkg.description = input.description
   }
 
-  if (input.description !== undefined) pkg.description = input.description;
-  if (input.metadata !== undefined) pkg.metadata = input.metadata;
-  if (input.isActive !== undefined) pkg.isActive = input.isActive;
+  if (input.author !== undefined) {
+    pkg.author = input.author
+  }
 
-  pkg.updatedAt = new Date();
-  return { success: true, data: pkg };
+  if (input.manifest !== undefined) {
+    pkg.manifest = input.manifest
+  }
+
+  if (input.isInstalled !== undefined) {
+    pkg.isInstalled = input.isInstalled
+  }
+
+  if (input.installedAt !== undefined) {
+    pkg.installedAt = input.installedAt
+  }
+
+  if (input.installedBy !== undefined) {
+    pkg.installedBy = input.installedBy
+  }
+
+  pkg.updatedAt = new Date()
+
+  return { success: true, data: pkg }
 }
