@@ -1,4 +1,4 @@
-import type { DBALAdapter } from './types'
+import type { DBALAdapter } from '../types'
 import { prismaAdapter } from './create-prisma-adapter'
 
 /**

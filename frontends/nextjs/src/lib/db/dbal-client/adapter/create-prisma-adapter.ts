@@ -1,4 +1,4 @@
-import type { DBALAdapter } from './types'
+import type { DBALAdapter } from '../types'
 import { closeConnection } from './close-connection'
 import { createEntity } from '../crud/write/create-entity'
 import { deleteEntity } from '../crud/write/delete-entity'
