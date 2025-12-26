@@ -79,9 +79,10 @@ Each level **inherits all permissions from lower levels** and adds additional ca
 | --- | --- | --- |
 | 1 | `/` | Public landing page |
 | 2 | `/dashboard` | User workspace |
-| 3 | `/admin` | Admin panel |
-| 4 | `/builder` | God-tier builder |
-| 5 | `/supergod` | Supergod console |
+| 3 | `/moderator` | Moderator desk |
+| 4 | `/admin` | Admin panel |
+| 5 | `/builder` | God-tier builder |
+| 6 | `/supergod` | Supergod console |
 | - | `/login` | Unified sign-in and registration |
 
 ## Implementation
@@ -97,8 +98,8 @@ import { useAuth } from '@/hooks'
 export const AdminPanel = () => {
   const { user } = useAuth()
   
-  // Check if user has Level 3 or higher
-  if (!canAccessLevel(user.level, 3)) {
+  // Check if user has Level 4 or higher
+  if (!canAccessLevel(user.level, 4)) {
     return <AccessDenied />
   }
   
@@ -110,7 +111,7 @@ export const AdminPanel = () => {
 
 ```typescript
 // Simple binary check
-if (canAccessLevel(user.level, 3)) {
+if (canAccessLevel(user.level, 4)) {
   showAdminFeatures()
 }
 
