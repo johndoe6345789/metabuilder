@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
@@ -62,6 +62,12 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
     invalidCustomTokens.length === 0 &&
     uniqueCustomTokens.some((token) => !selectedClassSet.has(token))
 
+  const loadCssClasses = useCallback(async () => {
+    const classes = await Database.getCssClasses()
+    const sorted = classes.slice().sort((a, b) => a.name.localeCompare(b.name))
+    setCategories(sorted)
+  }, [])
+
   useEffect(() => {
     if (open) {
       loadCssClasses()
@@ -69,7 +75,7 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
       setSearchQuery('')
       setCustomClass('')
     }
-  }, [open, initialValue])
+  }, [open, initialValue, loadCssClasses])
 
   useEffect(() => {
     if (!open) {
