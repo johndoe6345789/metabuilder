@@ -302,6 +302,70 @@
         ]
       },
       {
+        "id": "stream_cast_mod_tools",
+        "type": "Card",
+        "props": {
+          "className": "p-6"
+        },
+        "children": [
+          {
+            "id": "stream_cast_mod_tools_title",
+            "type": "Heading",
+            "props": {
+              "children": "Moderation controls",
+              "level": "3",
+              "className": "text-xl font-semibold"
+            },
+            "children": []
+          },
+          {
+            "id": "stream_cast_mod_tools_text",
+            "type": "Text",
+            "props": {
+              "children": "Quick actions for crowd spikes and highlight moments.",
+              "className": "text-sm text-muted-foreground"
+            },
+            "children": []
+          },
+          {
+            "id": "stream_cast_mod_tools_actions",
+            "type": "Flex",
+            "props": {
+              "className": "flex flex-wrap gap-2"
+            },
+            "children": [
+              {
+                "id": "stream_cast_mod_tools_slow",
+                "type": "Button",
+                "props": {
+                  "children": "Enable slow mode",
+                  "variant": "outline"
+                },
+                "children": []
+              },
+              {
+                "id": "stream_cast_mod_tools_pin",
+                "type": "Button",
+                "props": {
+                  "children": "Pin message",
+                  "variant": "outline"
+                },
+                "children": []
+              },
+              {
+                "id": "stream_cast_mod_tools_clip",
+                "type": "Button",
+                "props": {
+                  "children": "Highlight clip",
+                  "variant": "default"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
         "id": "stream_cast_pulse",
         "type": "Card",
         "props": {

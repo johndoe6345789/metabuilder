@@ -8,7 +8,7 @@
 - [ ] Implement package version management
 - [ ] Create package installation/uninstallation API
 - [ ] Add package compatibility validation
-- [ ] Add API-backed package export/snapshot endpoints to remove client DB reads (`frontends/nextjs/src/components/PackageImportExport.tsx`)
+- [x] Add API-backed package export/snapshot endpoints to remove client DB reads (`frontends/nextjs/src/app/api/codegen/studio/route.ts` + docs/codegen-studio.md)
 - [ ] Add tests for packages API routes (`frontends/nextjs/src/app/api/packages/*`)
 
 ## Admin Dialog Package

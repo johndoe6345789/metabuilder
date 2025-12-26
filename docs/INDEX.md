@@ -48,6 +48,7 @@ Detailed implementation documentation:
 - **[Prisma Implementation](./implementation/PRISMA_IMPLEMENTATION_COMPLETE.md)** - ORM setup
 - **[TypeScript Enhancements](./implementation/TYPESCRIPT_DBAL_ENHANCEMENTS.md)** - Type system improvements
 - **[Nerd Mode IDE](./implementation/NERD_MODE_IDE.md)** - Package templates and zip exports
+- **[Codegen Studio Export](./codegen-studio.md)** - Zip generation service for package starters
 
 ### 🔄 [Refactoring](./refactoring/)
 Refactoring guides and tracking:
