@@ -103,7 +103,9 @@ export function PageRoutesManager() {
       case 1: return 'bg-blue-500'
       case 2: return 'bg-green-500'
       case 3: return 'bg-orange-500'
-      case 4: return 'bg-purple-500'
+      case 4: return 'bg-sky-500'
+      case 5: return 'bg-purple-500'
+      case 6: return 'bg-rose-500'
       default: return 'bg-gray-500'
     }
   }
@@ -165,8 +167,10 @@ export function PageRoutesManager() {
                     <SelectContent>
                       <SelectItem value="1">Level 1 - Public</SelectItem>
                       <SelectItem value="2">Level 2 - User Area</SelectItem>
-                      <SelectItem value="3">Level 3 - Admin Panel</SelectItem>
-                      <SelectItem value="4">Level 4 - God Panel</SelectItem>
+                      <SelectItem value="3">Level 3 - Moderator Desk</SelectItem>
+                      <SelectItem value="4">Level 4 - Admin Panel</SelectItem>
+                      <SelectItem value="5">Level 5 - God Builder</SelectItem>
+                      <SelectItem value="6">Level 6 - Supergod Console</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -183,8 +187,10 @@ export function PageRoutesManager() {
                     <SelectContent>
                       <SelectItem value="public">Public</SelectItem>
                       <SelectItem value="user">User</SelectItem>
+                      <SelectItem value="moderator">Moderator</SelectItem>
                       <SelectItem value="admin">Admin</SelectItem>
                       <SelectItem value="god">God</SelectItem>
+                      <SelectItem value="supergod">Supergod</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

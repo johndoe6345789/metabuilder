@@ -19,8 +19,8 @@ import {
 import { PERMISSION_LEVELS, type PermissionLevel } from './levels-data'
 
 const highlightColor = (level: PermissionLevel) => {
-  if (level.id === 5) return 'warning.main'
-  if (level.id === 4) return 'primary.main'
+  if (level.id === 6) return 'warning.main'
+  if (level.id === 5) return 'primary.main'
   return 'divider'
 }
 
@@ -62,10 +62,10 @@ export default function LevelsClient() {
       <Stack spacing={4}>
         <Stack spacing={1}>
           <Typography variant="h3" component="h1">
-            The Five Permission Levels
+            The Six Permission Levels
           </Typography>
           <Typography color="text.secondary">
-            Level up through Guest, Regular User, Moderator, God, and Super God to unlock the right
+            Level up through Public, User, Moderator, Admin, God, and Super God to unlock the right
             controls for your role.
           </Typography>
         </Stack>
