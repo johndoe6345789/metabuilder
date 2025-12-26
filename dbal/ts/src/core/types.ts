@@ -7,6 +7,18 @@ export interface User {
   updatedAt: Date
 }
 
+export interface CreateUserInput {
+  username: string
+  email: string
+  role?: User['role']
+}
+
+export interface UpdateUserInput {
+  username?: string
+  email?: string
+  role?: User['role']
+}
+
 export interface Credential {
   id: string
   username: string
@@ -25,6 +37,19 @@ export interface Session {
   lastActivity: Date
 }
 
+export interface CreateSessionInput {
+  userId: string
+  token: string
+  expiresAt: Date
+}
+
+export interface UpdateSessionInput {
+  userId?: string
+  token?: string
+  expiresAt?: Date
+  lastActivity?: Date
+}
+
 export interface PageView {
   id: string
   slug: string
@@ -35,6 +60,24 @@ export interface PageView {
   isActive: boolean
   createdAt: Date
   updatedAt: Date
+}
+
+export interface CreatePageInput {
+  slug: string
+  title: string
+  description?: string
+  level: number
+  layout: Record<string, unknown>
+  isActive?: boolean
+}
+
+export interface UpdatePageInput {
+  slug?: string
+  title?: string
+  description?: string
+  level?: number
+  layout?: Record<string, unknown>
+  isActive?: boolean
 }
 
 export interface ComponentHierarchy {
@@ -61,6 +104,26 @@ export interface Workflow {
   updatedAt: Date
 }
 
+export interface CreateWorkflowInput {
+  name: string
+  description?: string
+  trigger: Workflow['trigger']
+  triggerConfig: Record<string, unknown>
+  steps: Record<string, unknown>
+  isActive?: boolean
+  createdBy: string
+}
+
+export interface UpdateWorkflowInput {
+  name?: string
+  description?: string
+  trigger?: Workflow['trigger']
+  triggerConfig?: Record<string, unknown>
+  steps?: Record<string, unknown>
+  isActive?: boolean
+  createdBy?: string
+}
+
 export interface LuaScript {
   id: string
   name: string
@@ -72,6 +135,26 @@ export interface LuaScript {
   createdBy: string
   createdAt: Date
   updatedAt: Date
+}
+
+export interface CreateLuaScriptInput {
+  name: string
+  description?: string
+  code: string
+  isSandboxed?: boolean
+  allowedGlobals: string[]
+  timeoutMs?: number
+  createdBy: string
+}
+
+export interface UpdateLuaScriptInput {
+  name?: string
+  description?: string
+  code?: string
+  isSandboxed?: boolean
+  allowedGlobals?: string[]
+  timeoutMs?: number
+  createdBy?: string
 }
 
 export interface Package {
@@ -88,6 +171,28 @@ export interface Package {
   updatedAt: Date
 }
 
+export interface CreatePackageInput {
+  name: string
+  version: string
+  description?: string
+  author: string
+  manifest: Record<string, unknown>
+  isInstalled?: boolean
+  installedAt?: Date
+  installedBy?: string
+}
+
+export interface UpdatePackageInput {
+  name?: string
+  version?: string
+  description?: string
+  author?: string
+  manifest?: Record<string, unknown>
+  isInstalled?: boolean
+  installedAt?: Date
+  installedBy?: string
+}
+
 export interface ListOptions {
   filter?: Record<string, unknown>
   sort?: Record<string, 'asc' | 'desc'>
@@ -102,3 +207,10 @@ export interface ListResult<T> {
   limit: number
   hasMore: boolean
 }
+
+export interface ResultError {
+  code: string
+  message: string
+}
+
+export type Result<T> = { success: true; data: T } | { success: false; error: ResultError }
