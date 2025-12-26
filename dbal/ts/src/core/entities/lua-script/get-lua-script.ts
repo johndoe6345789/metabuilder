@@ -1,27 +1,24 @@
 /**
  * @file get-lua-script.ts
- * @description Get Lua script operation
+ * @description Get Lua script by ID operation
  */
-import type { DBALAdapter } from '../../../adapters/adapter'
-import type { LuaScript } from '../../types'
-import { DBALError } from '../../errors'
-import { validateId } from '../../validation'
+import type { LuaScript, Result } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
+import { validateId } from '../../validation/validate-id'
 
 /**
  * Get a Lua script by ID
  */
-export async function getLuaScript(adapter: DBALAdapter, id: string): Promise<LuaScript> {
-  const validationErrors = validateId(id)
-  if (validationErrors.length > 0) {
-    throw DBALError.validationError(
-      'Invalid Lua script ID',
-      validationErrors.map(error => ({ field: 'id', error }))
-    )
+export const getLuaScript = async (store: InMemoryStore, id: string): Promise<Result<LuaScript>> => {
+  const idErrors = validateId(id)
+  if (idErrors.length > 0) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
   }
 
-  const result = await adapter.read('LuaScript', id) as LuaScript | null
-  if (!result) {
-    throw DBALError.notFound(`Lua script not found: ${id}`)
+  const script = store.luaScripts.get(id)
+  if (!script) {
+    return { success: false, error: { code: 'NOT_FOUND', message: `Lua script not found: ${id}` } }
   }
-  return result
+
+  return { success: true, data: script }
 }

@@ -2,32 +2,52 @@
  * @file create-lua-script.ts
  * @description Create Lua script operation
  */
-import type { DBALAdapter } from '../../../adapters/adapter'
-import type { LuaScript } from '../../types'
-import { DBALError } from '../../errors'
-import { validateLuaScriptCreate } from '../../validation'
+import type { CreateLuaScriptInput, LuaScript, Result } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
+import { validateLuaScriptCreate } from '../../validation/validate-lua-script-create'
 
 /**
  * Create a new Lua script in the store
  */
-export async function createLuaScript(
-  adapter: DBALAdapter,
-  data: Omit<LuaScript, 'id' | 'createdAt' | 'updatedAt'>
-): Promise<LuaScript> {
-  const validationErrors = validateLuaScriptCreate(data)
+export const createLuaScript = async (
+  store: InMemoryStore,
+  input: CreateLuaScriptInput
+): Promise<Result<LuaScript>> => {
+  const isSandboxed = input.isSandboxed ?? true
+  const timeoutMs = input.timeoutMs ?? 5000
+  const validationErrors = validateLuaScriptCreate({
+    name: input.name,
+    description: input.description,
+    code: input.code,
+    isSandboxed,
+    allowedGlobals: input.allowedGlobals,
+    timeoutMs,
+    createdBy: input.createdBy
+  })
+
   if (validationErrors.length > 0) {
-    throw DBALError.validationError(
-      'Invalid Lua script data',
-      validationErrors.map(error => ({ field: 'luaScript', error }))
-    )
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
   }
 
-  try {
-    return adapter.create('LuaScript', data) as Promise<LuaScript>
-  } catch (error) {
-    if (error instanceof DBALError && error.code === 409) {
-      throw DBALError.conflict(`Lua script with name '${data.name}' already exists`)
-    }
-    throw error
+  if (store.luaScriptNames.has(input.name)) {
+    return { success: false, error: { code: 'CONFLICT', message: 'Lua script name already exists' } }
   }
+
+  const script: LuaScript = {
+    id: store.generateId('lua'),
+    name: input.name,
+    description: input.description,
+    code: input.code,
+    isSandboxed,
+    allowedGlobals: [...input.allowedGlobals],
+    timeoutMs,
+    createdBy: input.createdBy,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+
+  store.luaScripts.set(script.id, script)
+  store.luaScriptNames.set(script.name, script.id)
+
+  return { success: true, data: script }
 }
