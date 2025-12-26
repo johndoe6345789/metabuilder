@@ -483,6 +483,12 @@ public:
         : SqlAdapter(config, Dialect::MySQL) {}
 };
 
+class PrismaAdapter : public SqlAdapter {
+public:
+    explicit PrismaAdapter(const SqlConnectionConfig& config)
+        : SqlAdapter(config, Dialect::Prisma) {}
+};
+
 }
 }
 }
