@@ -1,13 +1,13 @@
 import { LuaEngine } from '../core/LuaEngine'
-import { executeWithSandbox, type SandboxedLuaResult } from '../../functions/sandbox/execute-with-sandbox'
-import { disableDangerousFunctions } from '../../functions/sandbox/disable-dangerous-functions'
-import { setupSandboxedEnvironment } from '../../functions/sandbox/setup-sandboxed-environment'
-import { executeWithTimeout } from '../../functions/sandbox/execute-with-timeout'
-import { getLuaMemoryUsageBytes } from '../../functions/sandbox/get-lua-memory-usage-bytes'
-import { enforceMaxMemory } from '../../functions/sandbox/enforce-max-memory'
-import { setAllowedGlobals } from '../../functions/sandbox/set-allowed-globals'
-import { setExecutionTimeout } from '../../functions/sandbox/set-execution-timeout'
-import { destroy } from '../../functions/sandbox/destroy'
+import { executeWithSandbox, type SandboxedLuaResult } from '../../functions/sandbox/execute-with-sandbox.ts'
+import { disableDangerousFunctions } from '../../functions/sandbox/disable-dangerous-functions.ts'
+import { setupSandboxedEnvironment } from '../../functions/sandbox/setup-sandboxed-environment.ts'
+import { executeWithTimeout } from '../../functions/sandbox/execute-with-timeout.ts'
+import { getLuaMemoryUsageBytes } from '../../functions/sandbox/get-lua-memory-usage-bytes.ts'
+import { enforceMaxMemory } from '../../functions/sandbox/enforce-max-memory.ts'
+import { setAllowedGlobals } from '../../functions/sandbox/set-allowed-globals.ts'
+import { setExecutionTimeout } from '../../functions/sandbox/set-execution-timeout.ts'
+import { destroy } from '../../functions/sandbox/destroy.ts'
 
 // Re-export the result type
 export type { SandboxedLuaResult }
