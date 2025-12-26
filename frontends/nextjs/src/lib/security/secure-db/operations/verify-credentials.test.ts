@@ -5,13 +5,14 @@ import {
   DEFAULT_AUTH_LOCKOUT_MAX_ATTEMPTS,
 } from '../login-attempt-tracker'
 
-const mockExecuteQuery = vi.fn()
-
 vi.mock('../execute-query', () => ({
-  executeQuery: mockExecuteQuery,
+  executeQuery: vi.fn(),
 }))
 
 import { verifyCredentials } from './verify-credentials'
+import { executeQuery } from '../execute-query'
+
+const mockExecuteQuery = vi.mocked(executeQuery)
 
 const createContext = (): SecurityContext => ({
   user: {
