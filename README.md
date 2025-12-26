@@ -1,6 +1,6 @@
 # MetaBuilder
 
-A **data-driven, multi-tenant platform** where 95% of functionality lives in JSON/Lua, not TypeScript. Build enterprise applications declaratively with a 5-level permission system.
+A **data-driven, multi-tenant platform** where 95% of functionality lives in JSON/Lua, not TypeScript. Build enterprise applications declaratively with a 6-level permission system.
 
 ---
 
@@ -8,7 +8,7 @@ A **data-driven, multi-tenant platform** where 95% of functionality lives in JSO
 
 1. [Quick Start](#quick-start)
 2. [Architecture](#architecture)
-3. [5-Level Permission System](#5-level-permission-system)
+3. [6-Level Permission System](#6-level-permission-system)
 4. [Package System](#package-system)
 5. [Database](#database)
 6. [Multi-Tenant System](#multi-tenant-system)
@@ -77,7 +77,7 @@ Captured from this machine to document the local development environment:
 
 ## Key Highlights
 
-- **5-Level Permission System**: Each user level from Guest to SuperGod maps to documented routes, policies, and role inheritance so you can reason about features before touching code ([`docs/architecture/5-level-system.md`](./docs/architecture/5-level-system.md)).
+- **5-Level Permission System**: Each user level from Public to SuperGod maps to documented routes, policies, and role inheritance so you can reason about features before touching code ([`docs/architecture/5-level-system.md`](./docs/architecture/5-level-system.md)).
 - **Multi-tenant data platform**: Prisma, tenant-aware storage, and quota management patterns keep all queries scoped by `tenantId` while keeping schema evolution safe ([`docs/architecture/database.md`](./docs/architecture/database.md)).
 - **Declarative packages & Lua logic**: Modular `packages/*/seed` definitions let you ship UI/features via JSON/Lua, while the Lua sandbox protects the runtime ([`docs/architecture/packages.md`](./docs/architecture/packages.md), [`docs/lua/README.md`](./docs/lua/README.md)).
 - **Type-safe + CI-ready workflow**: TypeScript tooling, Act local workflows, and targeted scripts keep linting, testing, and deploy checks consistent with the documentation hub ([`docs/README.md`](./docs/README.md)).
@@ -863,7 +863,7 @@ DEBUG=metabuilder:* npm run dev
 | Development prompts | `.github/prompts/` |
 
 ---
- 
+
 ## Documentation Resources
 
 - [`docs/README.md`](./docs/README.md) is the master index for architecture, deployment, testing, and contribution guidance.
