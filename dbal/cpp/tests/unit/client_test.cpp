@@ -211,6 +211,75 @@ void test_credential_validation() {
     std::cout << "  ✓ Empty password hash rejected" << std::endl;
 }
 
+void test_user_search() {
+    std::cout << "Testing user search..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreateUserInput user1;
+    user1.username = "search_alpha";
+    user1.email = "alpha@example.com";
+    auto result1 = client.createUser(user1);
+    assert(result1.isOk());
+
+    dbal::CreateUserInput user2;
+    user2.username = "search_beta";
+    user2.email = "beta@examples.com";
+    auto result2 = client.createUser(user2);
+    assert(result2.isOk());
+
+    auto found = client.searchUsers("search", 10);
+    assert(found.isOk());
+    assert(found.value().size() >= 2);
+    std::cout << "  ✓ Search matched multiple users" << std::endl;
+
+    auto caseInsensitive = client.searchUsers("SEARCH_BETA", 10);
+    assert(caseInsensitive.isOk());
+    assert(caseInsensitive.value().size() == 1);
+    assert(caseInsensitive.value()[0].username == "search_beta");
+    std::cout << "  ✓ Search is case-insensitive" << std::endl;
+
+    auto limited = client.searchUsers("search", 1);
+    assert(limited.isOk());
+    assert(limited.value().size() == 1);
+    std::cout << "  ✓ Search respects limit" << std::endl;
+}
+
+void test_user_count() {
+    std::cout << "Testing user count..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreateUserInput user;
+    user.username = "count_user";
+    user.email = "count@example.com";
+    auto result = client.createUser(user);
+    assert(result.isOk());
+
+    dbal::CreateUserInput admin;
+    admin.username = "count_admin";
+    admin.email = "count_admin@example.com";
+    admin.role = dbal::UserRole::Admin;
+    auto adminResult = client.createUser(admin);
+    assert(adminResult.isOk());
+
+    auto totalCount = client.countUsers();
+    assert(totalCount.isOk());
+    assert(totalCount.value() >= 2);
+    std::cout << "  ✓ Total user count matches" << std::endl;
+
+    auto adminCount = client.countUsers(dbal::UserRole::Admin);
+    assert(adminCount.isOk());
+    assert(adminCount.value() >= 1);
+    std::cout << "  ✓ Admin count matches" << std::endl;
+}
+
 void test_get_user() {
     std::cout << "Testing get user..." << std::endl;
     

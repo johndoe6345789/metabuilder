@@ -50,6 +50,14 @@ Result<int> Client::batchDeleteUsers(const std::vector<std::string>& ids) {
     return entities::user::batchDelete(getStore(), ids);
 }
 
+Result<std::vector<User>> Client::searchUsers(const std::string& query, int limit) {
+    return entities::user::search(getStore(), query, limit);
+}
+
+Result<int> Client::countUsers(const std::optional<UserRole>& role) {
+    return entities::user::count(getStore(), role);
+}
+
 Result<bool> Client::setCredential(const CreateCredentialInput& input) {
     return entities::credential::set(getStore(), input);
 }
