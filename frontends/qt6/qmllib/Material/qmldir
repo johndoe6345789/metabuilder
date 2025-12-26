@@ -1,5 +1,5 @@
 module Material
-MaterialPalette 1.0 MaterialPalette.qml
+singleton MaterialPalette 1.0 MaterialPalette.qml
 MaterialButton 1.0 MaterialButton.qml
 MaterialCard 1.0 MaterialCard.qml
 MaterialTextField 1.0 MaterialTextField.qml
