@@ -3,7 +3,7 @@
 
 #include "../../../validation/validation.hpp"
 #include "../../../store/in_memory_store.hpp"
-#include "../../../errors.hpp"
+#include "dbal/errors.hpp"
 #include "../helpers.hpp"
 #include <chrono>
 
