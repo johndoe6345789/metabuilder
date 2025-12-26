@@ -39,18 +39,67 @@
 
 ### App surface
 
-- `frontends/nextjs/src/app` has 40+ routes. Each route needs metadata. Core files: `page.tsx`, `layout.tsx`, levels, auth, dashboards, `providers`, `packages/[...path]`, and the API handlers for auth, users, packages, levels, power-transfers, GitHub actions, screenshots, health.
-- API handlers use code under `frontends/nextjs/src/lib/api`, `lib/packages/loader`, `db`, and `dbal`. Those helpers can become Lua wrappers.
+- `frontends/nextjs/src/app` has 40+ routes.
+- Each route needs metadata.
+- Key files:
+  - `page.tsx`
+  - `layout.tsx`
+  - `levels` tree
+  - auth/dashboards
+  - `providers.tsx` and theme hooks
+  - `packages/[...path]/route.ts`
+- API handlers touch auth, users, packages, levels, power-transfers, GitHub actions, screenshot, and health.
+- They depend on helpers under `frontends/nextjs/src/lib/api`, `lib/packages/loader`, `db`, and `dbal`.
 
 ### UI components
 
-- `frontends/nextjs/src/components` holds about 60 React files. These include builders (`Builder`, `Level1-5`, `NerdModeIDE`), editors (`LuaEditor`, `CodeEditor`, `JsonEditor`, `SchemaEditor*`), management views (`PackageManager`, `DatabaseManager`, `ComponentCatalog`, `WorkflowEditor`), and integrations (`GitHubActionsFetcher`, `IRCWebchat`, `DBALDemo`, `UnifiedLogin`). They all use hooks and helpers.
-- Atoms, molecules, and organisms are in nested directories. We will tag each file in Phase 1.
+- `frontends/nextjs/src/components` holds ~60 React files.
+- Builders:
+  - `Builder`
+  - `Level1`, `Level2`, `Level3`, `Level4`, `Level5`
+  - `NerdModeIDE`
+- Editors:
+  - `LuaEditor`
+  - `LuaBlocksEditor`
+  - `CodeEditor`
+  - `JsonEditor`
+  - `SchemaEditor`s
+- Management views:
+  - `PackageManager`
+  - `DatabaseManager`
+  - `ComponentCatalog`
+  - `WorkflowEditor`
+- Integrations and tools:
+  - `GitHubActionsFetcher`
+  - `IRCWebchat` variants
+  - `DBALDemo`
+  - `UnifiedLogin`
+- Atoms, molecules, and organisms live in nested folders. We will tag each file in Phase 1.
 
 ### Hooks & libraries
 
-- Hooks: `useAuth`, `useAutoRefresh`, `useKV`, `useLevelRouting`, `useDBAL`, `useFileTree`, `useCodeEditor`, `useResolvedUser`, `useGitHubFetcher`, `use-mobile`, the `hooks/auth` store, and the `hooks/use-dbal` helpers (blob storage, kv store, cached data). These can be Lua micro-functions.
-- Libraries: `frontends/nextjs/src/lib` contains auth, security, db/DBAL, package/seed management, Lua engine/functions, workflow/rendering, API helpers, schema utilities, GitHub helpers, and utilities (`lib/utils`, `lib/prisma`). Phase 1 will label each file as “adapter” or “port”.
+- Hooks:
+  - `useAuth`
+  - `useAutoRefresh`
+  - `useKV`
+  - `useLevelRouting`
+  - `useDBAL`
+  - `useFileTree`
+  - `useCodeEditor`
+  - `useResolvedUser`
+  - `useGitHubFetcher`
+  - `use-mobile`
+  - `hooks/auth` store
+  - `hooks/use-dbal` helpers (blob storage, kv store, cached data)
+- Libraries cover:
+  - auth and security (`lib/auth`, `lib/security`)
+  - database and DBAL helpers
+  - package, seed, and metadata tooling (`lib/packages`, `lib/seed`)
+  - Lua engine and functions
+  - workflow and rendering helpers
+  - API helpers and schema utilities
+  - GitHub and general utilities (`lib/utils`, `lib/prisma`)
+- Phase 1 will tag each file as “adapter” or “port”.
 
 ### Supporting assets
 
@@ -59,11 +108,11 @@
 
 ## Quick File References
 
-- `frontends/nextjs/src/app`: each route, page, provider, and API handler needs a metadata equivalent or a Lua adapter (`page`, `layout`, auth portals, `codegen`, `api`, providers, etc.).
-- `frontends/nextjs/src/components`: shift builders (`Builder`, `Level1-5`, `NerdModeIDE`, `Workflow*`, manager/editor panels) to metadata-driven definitions. Atoms/molecules/organisms become per-file Lua adapters.
-- `frontends/nextjs/src/hooks`: convert hooks (`useAuth`, `useAutoRefresh`, `useKV`, `useDBAL`, `useFileTree`, etc.) into Lua micro-functions. Include the `hooks/use-dbal` factories.
-- `frontends/nextjs/src/lib`: catalogue auth/security, db/DBAL, package/seed, Lua engine, workflow/rendering, API helpers, schema utilities, and helpers to decide what stays in TypeScript adapters.
-- Supporting assets: seed JSON data, README docs, and tests must match the Lua plan once conversions start.
+- `frontends/nextjs/src/app`: each route, page, provider, and API handler needs metadata or a Lua adapter.
+- `frontends/nextjs/src/components`: move builders, editors, and managers to metadata-driven definitions.
+- `frontends/nextjs/src/hooks`: turn each hook into a Lua micro-function.
+- `frontends/nextjs/src/lib`: catalogue auth, security, db/DBAL, packages, Lua, workflow, API, schema, GitHub, and utility modules.
+- Supporting assets: seed JSONs, README docs, and tests must align with the Lua transition.
 
 ## Next Steps
 
