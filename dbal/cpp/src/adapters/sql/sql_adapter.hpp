@@ -56,7 +56,7 @@ public:
         ConnectionGuard guard(pool_, conn);
 
         const std::string sql = "INSERT INTO users (username, email, role) "
-                                "VALUES ($1, $2, $3) "
+                                "VALUES (" + placeholder(1) + ", " + placeholder(2) + ", " + placeholder(3) + ") "
                                 "RETURNING id, username, email, role, created_at, updated_at";
         const std::vector<SqlParam> params = {
             {"username", input.username},
@@ -83,7 +83,7 @@ public:
         ConnectionGuard guard(pool_, conn);
 
         const std::string sql = "SELECT id, username, email, role, created_at, updated_at "
-                                "FROM users WHERE id = $1";
+                                "FROM users WHERE id = " + placeholder(1);
         const std::vector<SqlParam> params = {{"id", id}};
 
         try {
