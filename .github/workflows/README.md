@@ -268,22 +268,22 @@ act -j build             # Test build job
 
 ```bash
 # Run linter
-npm run lint
+bun run lint
 
 # Fix linting issues automatically
-npm run lint:fix
+bun run lint:fix
 
 # Run e2e tests
-npm run test:e2e
+bun run test:e2e
 
 # Run e2e tests with UI
-npm run test:e2e:ui
+bun run test:e2e:ui
 
 # Run e2e tests in headed mode
-npm run test:e2e:headed
+bun run test:e2e:headed
 
 # Build the project
-npm run build
+bun run build
 ```
 
 ### Triggering Workflows
@@ -409,27 +409,27 @@ act -j <job-name> -v
 - Confirm PR is not in draft mode
 
 ### Tests Failing
-- Run tests locally: `npm run test:e2e`
+- Run tests locally: `bun run test:e2e`
 - Check test report artifacts in GitHub Actions
 - Ensure dev server starts correctly
 - Test with act: `act -j test-e2e`
 
 ### Linting Errors
-- Run `npm run lint:fix` to auto-fix
-- Review errors: `npm run lint`
+- Run `bun run lint:fix` to auto-fix
+- Review errors: `bun run lint`
 - Check `eslint.config.js` for rule configuration
 - Test with act: `act -j lint`
 
 ### Build Failures
-- Test locally: `npm run build`
+- Test locally: `bun run build`
 - Check for TypeScript errors
 - Verify all dependencies are installed
 - Test with act: `act -j build`
 
 ### Prisma Issues
 - Ensure schema exists: `prisma/schema.prisma`
-- Generate client: `npx prisma generate`
-- Run migrations: `npx prisma migrate dev`
+- Generate client: `bunx prisma generate`
+- Run migrations: `bunx prisma migrate dev`
 - Test with act: `act -j prisma-check`
 
 ## Contributing

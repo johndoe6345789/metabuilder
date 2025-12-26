@@ -74,17 +74,17 @@ jobs:
         run: conan profile detect --force
       
       - name: Check C++ dependencies
-        run: npm run cpp:check
+        run: bun run cpp:check
       
       - name: Initialize Conanfile
-        run: npm run cpp:init
+        run: bun run cpp:init
       
       - name: Install Conan dependencies
         env:
           CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
           CC: ${{ matrix.compiler.cc }}
           CXX: ${{ matrix.compiler.cxx }}
-        run: npm run cpp:install
+        run: bun run cpp:install
       
       - name: Configure CMake
         env:
@@ -93,18 +93,18 @@ jobs:
           CXX: ${{ matrix.compiler.cxx }}
         run: |
           if [ "${{ matrix.build_type }}" = "Debug" ]; then
-            npm run cpp:build -- configure --debug
+            bun run cpp:build -- configure --debug
           else
-            npm run cpp:configure
+            bun run cpp:configure
           fi
       
       - name: Build C++ project
         env:
           CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
-        run: npm run cpp:build
+        run: bun run cpp:build
       
       - name: Run C++ tests
-        run: npm run cpp:test
+        run: bun run cpp:test
       
       - name: Upload build artifacts
         if: matrix.build_type == 'Release' && matrix.compiler.cxx == 'g++'
@@ -144,7 +144,7 @@ jobs:
         run: conan profile detect --force
       
       - name: Check C++ dependencies
-        run: npm run cpp:check
+        run: bun run cpp:check
       
       - name: Full C++ build
         env:
@@ -153,11 +153,11 @@ jobs:
           if [ "${{ matrix.build_type }}" = "Debug" ]; then
             node dbal/tools/cpp-build-assistant.cjs full --debug
           else
-            npm run cpp:full
+            bun run cpp:full
           fi
       
       - name: Run C++ tests
-        run: npm run cpp:test
+        run: bun run cpp:test
       
       - name: Upload build artifacts
         if: matrix.build_type == 'Release'
@@ -198,7 +198,7 @@ jobs:
         run: conan profile detect --force
       
       - name: Check C++ dependencies
-        run: npm run cpp:check
+        run: bun run cpp:check
       
       - name: Full C++ build
         env:
@@ -208,11 +208,11 @@ jobs:
           if [ "${{ matrix.build_type }}" = "Debug" ]; then
             node dbal/tools/cpp-build-assistant.cjs full --debug
           else
-            npm run cpp:full
+            bun run cpp:full
           fi
       
       - name: Run C++ tests
-        run: npm run cpp:test
+        run: bun run cpp:test
       
       - name: Upload build artifacts
         if: matrix.build_type == 'Release'
@@ -249,7 +249,7 @@ jobs:
         run: conan profile detect --force
       
       - name: Configure project
-        run: npm run cpp:full
+        run: bun run cpp:full
       
       - name: Run cppcheck
         run: |
@@ -282,7 +282,7 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
       
       - name: Download Linux build
         uses: actions/download-artifact@v4
@@ -301,7 +301,7 @@ jobs:
           sleep 2
           
           # Run TypeScript integration tests
-          npm run test:unit
+          bun run test:unit
           
           # Cleanup
           kill $DAEMON_PID

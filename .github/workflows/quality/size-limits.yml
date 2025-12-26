@@ -30,10 +30,10 @@ jobs:
           cache-dependency-path: frontends/nextjs/package-lock.json
       
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
       
       - name: Check code size limits
-        run: npx tsx ../../tools/enforce-size-limits.ts
+        run: bunx tsx ../../tools/enforce-size-limits.ts
       
       - name: Upload report
         if: always()

@@ -39,10 +39,10 @@ jobs:
           cache-dependency-path: frontends/nextjs/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: npm run db:generate
+        run: bun run db:generate
         env:
           DATABASE_URL: file:./dev.db
 
@@ -50,7 +50,7 @@ jobs:
         id: quality
         run: |
           # Run lint and capture output
-          npm run lint > lint-output.txt 2>&1 || echo "LINT_FAILED=true" >> $GITHUB_OUTPUT
+          bun run lint > lint-output.txt 2>&1 || echo "LINT_FAILED=true" >> $GITHUB_OUTPUT
           
           # Count TypeScript files and their sizes
           TOTAL_TS_FILES=$(find src -name "*.ts" -o -name "*.tsx" | wc -l)
@@ -225,7 +225,7 @@ jobs:
               response += `   - Declarative over imperative\n`;
               response += `   - Database-driven configuration\n`;
               response += `   - Generic renderers vs hardcoded components\n`;
-              response += `4. **Test your changes:** \`npm run lint && npm run test:e2e\`\n`;
+              response += `4. **Test your changes:** \`bun run lint && bun run test:e2e\`\n`;
               response += `5. **Create a PR** - The automated workflows will review it\n\n`;
             }
             
@@ -252,11 +252,11 @@ jobs:
               response += `### 🧪 Testing with Copilot\n\n`;
               response += `\`\`\`bash\n`;
               response += `# Run E2E tests\n`;
-              response += `npm run test:e2e\n\n`;
+              response += `bun run test:e2e\n\n`;
               response += `# Run with UI\n`;
-              response += `npm run test:e2e:ui\n\n`;
+              response += `bun run test:e2e:ui\n\n`;
               response += `# Run linter\n`;
-              response += `npm run lint\n`;
+              response += `bun run lint\n`;
               response += `\`\`\`\n\n`;
               response += `Use Copilot in your IDE to:\n`;
               response += `- Generate test cases based on user stories\n`;

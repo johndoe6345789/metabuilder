@@ -43,15 +43,15 @@ jobs:
           cache-dependency-path: frontends/nextjs/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: npm run db:generate
+        run: bun run db:generate
         env:
           DATABASE_URL: file:./dev.db
 
       - name: Validate database schema
-        run: npx prisma validate
+        run: bunx prisma validate
 
       - name: Check for breaking changes
         id: breaking-changes
@@ -89,12 +89,12 @@ jobs:
             return { hasBreaking, breakingChanges };
 
       - name: Run security audit
-        run: npm audit --audit-level=moderate
+        run: bun audit --audit-level=moderate
         continue-on-error: true
 
       - name: Check package size
         run: |
-          npm run build
+          bun run build
           du -sh dist/
           
           # Check if dist is larger than 10MB
@@ -226,16 +226,16 @@ jobs:
           cache-dependency-path: frontends/nextjs/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: npm run db:generate
+        run: bun run db:generate
         env:
           DATABASE_URL: file:./dev.db
 
       - name: Verify build integrity
         run: |
-          npm run build
+          bun run build
           
           # Check critical files exist
           if [ ! -f "dist/index.html" ]; then
@@ -358,7 +358,7 @@ jobs:
       - name: Audit dependencies
         id: audit
         run: |
-          npm audit --json > audit-report.json || true
+          bun audit --json > audit-report.json || true
           
           # Check for critical vulnerabilities
           CRITICAL=$(cat audit-report.json | grep -o '"critical":[0-9]*' | grep -o '[0-9]*' || echo "0")
@@ -389,8 +389,8 @@ jobs:
             
             ### Action Required
             
-            1. Review the vulnerabilities: \`npm audit\`
-            2. Update affected packages: \`npm audit fix\`
+            1. Review the vulnerabilities: \`bun audit\`
+            2. Update affected packages: \`bun audit fix\`
             3. Test the application after updates
             4. If auto-fix doesn't work, manually update packages
             5. Consider alternatives for packages with unfixable issues
@@ -399,16 +399,16 @@ jobs:
             
             \`\`\`bash
             # View detailed audit
-            npm audit
+            bun audit
             
             # Attempt automatic fix
-            npm audit fix
+            bun audit fix
             
             # Force fix (may introduce breaking changes)
-            npm audit fix --force
+            bun audit fix --force
             
             # Check results
-            npm audit
+            bun audit
             \`\`\`
             
             **@copilot** Suggest safe dependency updates to resolve these vulnerabilities.

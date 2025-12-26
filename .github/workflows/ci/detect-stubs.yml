@@ -36,29 +36,29 @@ jobs:
           cache-dependency-path: frontends/nextjs/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: npm run db:generate
+        run: bun run db:generate
         env:
           DATABASE_URL: file:./dev.db
 
       # Pattern-based stub detection
       - name: Detect stub patterns
         id: detect-patterns
-        run: npx tsx ../../tools/detect-stub-implementations.ts > stub-patterns.json
+        run: bunx tsx ../../tools/detect-stub-implementations.ts > stub-patterns.json
         continue-on-error: true
 
       # Implementation completeness analysis
       - name: Analyze implementation completeness
         id: analyze-completeness
-        run: npx tsx ../../tools/analyze-implementation-completeness.ts > implementation-analysis.json
+        run: bunx tsx ../../tools/analyze-implementation-completeness.ts > implementation-analysis.json
         continue-on-error: true
 
       # Generate detailed report
       - name: Generate stub report
         id: generate-report
-        run: npx tsx ../../tools/generate-stub-report.ts > stub-report.md
+        run: bunx tsx ../../tools/generate-stub-report.ts > stub-report.md
         continue-on-error: true
 
       # Check for unimplemented TODOs in changed files (PR only)
@@ -132,7 +132,7 @@ jobs:
               comment += '- [ ] Review all critical stubs before merging\n';
               comment += '- [ ] Replace TODO comments with GitHub issues\n';
               comment += '- [ ] Implement placeholder functions before production\n';
-              comment += '- [ ] Run `npm run test:check-functions` to ensure coverage\n';
+              comment += '- [ ] Run `bun run test:check-functions` to ensure coverage\n';
               comment += '- [ ] Use type system to force implementation (avoid `any` types)\n\n';
               
               // Artifacts info
