@@ -1350,6 +1350,7 @@ int main() {
         test_page_search();
         test_component_crud();
         test_component_validation();
+        test_component_search();
         test_workflow_crud();
         test_workflow_validation();
         test_session_crud();
@@ -1363,7 +1364,7 @@ int main() {
         
         std::cout << std::endl;
         std::cout << "==================================================" << std::endl;
-        std::cout << "✅ All 29 test suites passed!" << std::endl;
+        std::cout << "✅ All 30 test suites passed!" << std::endl;
         std::cout << "==================================================" << std::endl;
         return 0;
     } catch (const std::exception& e) {

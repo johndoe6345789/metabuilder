@@ -5,6 +5,7 @@ This small Qt Quick app renders the `FrontPage.qml` guided hero and telemetry ti
 ## Dependencies
 
 - We resolve Qt6 and Ninja via `conanfile.txt`.
+- We pull `cpr` for HTTP helpers so future network calls reuse the same dependency solvable via Conan.
 - `CMakeDeps` + `CMakeToolchain` expose the Ninja toolchain so `cmake -G Ninja` runs the same generator as Conan.
 
 ## Local build
