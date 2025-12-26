@@ -2,11 +2,31 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+import "qmllib/MetaBuilder" as MetaBuilder
+
 Rectangle {
     id: root
     width: 1280
     height: 900
     color: "#03030a"
+
+    property var featureHighlights: [
+        { title: "Visual stacks", desc: "Compose landing, admin, and observability panels through drag-and-drop sections." },
+        { title: "Observability built in", desc: "Monitor DBAL, Prisma, and daemon health from a single cockpit." },
+        { title: "Config-first", desc: "Declarative seeds keep designers and developers aligned." }
+    ]
+
+    property var ciRuns: [
+        { name: "frontends-nextjs-build", status: "passing" },
+        { name: "dbal-unit-tests", status: "passing" },
+        { name: "prisma-migrations", status: "running" }
+    ]
+
+    property var statusItems: [
+        { label: "DBAL stack", value: "healthy" },
+        { label: "Prisma migrations", value: "pending" },
+        { label: "Daemon progress", value: "building" }
+    ]
 
     Rectangle {
         anchors.fill: parent
@@ -17,103 +37,34 @@ Rectangle {
         }
     }
 
-    Rectangle {
-        id: navBar
+    MetaBuilder.NavBar {
         anchors {
             top: parent.top
             left: parent.left
             right: parent.right
         }
-        height: 64
-        color: "#050613"
-        border.color: "#1e2b4a"
-
-        RowLayout {
-            anchors.fill: parent
-            anchors.margins: 16
-            spacing: 24
-
-            Text {
-                text: "MetaBuilder"
-                color: "#f8fbff"
-                font.pixelSize: 20
-                font.bold: true
-            }
-
-            Item { Layout.fillWidth: true }
-
-            Button { text: "Home"; font.pixelSize: 14 }
-            Button { text: "Docs"; font.pixelSize: 14 }
-            Button { text: "Login"; font.pixelSize: 14 }
-        }
+        onActionTriggered: console.log("navbar action:", action)
     }
 
     ScrollView {
         anchors {
-            top: navBar.bottom
+            top: parent.top
             left: parent.left
             right: parent.right
             bottom: parent.bottom
         }
         anchors.margins: 24
         clip: true
+        anchors.topMargin: navBar.height
 
         ColumnLayout {
             width: parent.width - 24
             spacing: 28
 
-        Rectangle {
-            width: parent.width
-            radius: 16
-            color: "#11172d"
-                border.color: "#25315b"
-                border.width: 1
-                padding: 32
-
-                ColumnLayout {
-                    spacing: 18
-
-                    Text {
-                        text: "Build entire stacks visually, from public sites to secure admin panels."
-                        font.pixelSize: 36
-                        font.bold: true
-                        color: "#ffffff"
-                        wrapMode: Text.Wrap
-                    }
-
-                    Text {
-                        text: "MetaBuilder layers marketing, observability, and runtime tooling into a single declarative canvas."
-                        font.pixelSize: 18
-                        color: "#b1bfd7"
-                        wrapMode: Text.Wrap
-                    }
-
-                    RowLayout {
-                        spacing: 12
-
-                        Button {
-                            text: "Explore levels"
-                            font.pixelSize: 15
-                            background: Rectangle {
-                                radius: 12
-                                color: "#5a7dff"
-                                border.color: "#4b6ef9"
-                                border.width: 1
-                            }
-                        }
-
-                        Button {
-                            text: "View live demo"
-                            font.pixelSize: 15
-                            background: Rectangle {
-                                radius: 12
-                                color: "#11162b"
-                                border.color: "#5a7dff"
-                                border.width: 1
-                            }
-                        }
-                    }
-                }
+            MetaBuilder.HeroSection {
+                Layout.fillWidth: true
+                onPrimaryAction: console.log("Hero primary action")
+                onSecondaryAction: console.log("Hero secondary action")
             }
 
             TabView {
@@ -146,35 +97,16 @@ Rectangle {
                                         color: "#f6f9ff"
                                     }
                                     RowLayout {
+                                        width: parent.width
                                         spacing: 16
-                                        Repeater {
-                                            model: [
-                                                { title: "Visual stacks", desc: "Compose landing, admin, and observability panels through drag-and-drop sections." },
-                                                { title: "Observability built in", desc: "Monitor DBAL, Prisma, and daemon health in one cockpit." },
-                                                { title: "Config-first", desc: "Declarative seeds keep designers and developers aligned." }
-                                            ]
-                                            delegate: Rectangle {
-                                                width: (parent.width - (spacing * 2) - 4) / 3
-                                                radius: 10
-                                                color: "#11152b"
-                                                border.color: "#1f2b45"
-                                                border.width: 1
-                                                padding: 14
 
-                                                ColumnLayout {
-                                                    spacing: 6
-                                                    Text {
-                                                        text: title
-                                                        font.pixelSize: 16
-                                                        color: "#f5f8ff"
-                                                    }
-                                                    Text {
-                                                        text: desc
-                                                        font.pixelSize: 13
-                                                        color: "#aeb8cf"
-                                                        wrapMode: Text.Wrap
-                                                    }
-                                                }
+                                        Repeater {
+                                            model: featureHighlights
+                                            delegate: MetaBuilder.FeatureCard {
+                                                Layout.fillWidth: true
+                                                Layout.preferredWidth: (parent.width - 32) / 3
+                                                title: modelData.title
+                                                description: modelData.desc
                                             }
                                         }
                                     }
@@ -216,11 +148,7 @@ Rectangle {
                         ColumnLayout {
                             spacing: 16
                             Repeater {
-                                model: [
-                                    { name: "frontends-nextjs-build", status: "passing" },
-                                    { name: "dbal-unit-tests", status: "passing" },
-                                    { name: "prisma-migrations", status: "running" }
-                                ]
+                                model: ciRuns
                                 delegate: Rectangle {
                                     width: parent.width
                                     height: 56
@@ -234,7 +162,7 @@ Rectangle {
                                         anchors.margins: 12
                                         spacing: 16
                                         Text {
-                                            text: name
+                                            text: modelData.name
                                             color: "#eef2ff"
                                             font.pixelSize: 16
                                         }
@@ -242,12 +170,12 @@ Rectangle {
                                             width: 8
                                             height: 8
                                             radius: 4
-                                            color: status === "passing" ? "#39d98a" : "#facc15"
+                                            color: modelData.status === "passing" ? "#39d98a" : "#facc15"
                                             anchors.right: parent.right
                                         }
                                         Text {
-                                            text: status
-                                            color: status === "passing" ? "#39d98a" : "#facc15"
+                                            text: modelData.status
+                                            color: modelData.status === "passing" ? "#39d98a" : "#facc15"
                                             font.pixelSize: 15
                                             anchors.rightMargin: 0
                                         }
@@ -266,34 +194,11 @@ Rectangle {
                         ColumnLayout {
                             spacing: 16
                             Repeater {
-                                model: [
-                                    { label: "DBAL stack", value: "healthy" },
-                                    { label: "Prisma migrations", value: "pending" },
-                                    { label: "Daemon progress", value: "building" }
-                                ]
-                                delegate: Rectangle {
-                                    width: parent.width
-                                    height: 60
-                                    radius: 12
-                                    color: "#0f1324"
-                                    border.color: "#1f2b46"
-                                    border.width: 1
-                                    padding: 16
-                                    RowLayout {
-                                        anchors.fill: parent
-                                        spacing: 12
-                                        Text {
-                                            text: label
-                                            color: "#d9e1ff"
-                                            font.pixelSize: 17
-                                        }
-                                        Item { Layout.fillWidth: true }
-                                        Text {
-                                            text: value
-                                            font.pixelSize: 16
-                                            color: value === "healthy" ? "#39d98a" : "#facc15"
-                                        }
-                                    }
+                                model: statusItems
+                                delegate: MetaBuilder.StatusCard {
+                                    Layout.fillWidth: true
+                                    label: modelData.label
+                                    value: modelData.value
                                 }
                             }
                         }
@@ -301,53 +206,9 @@ Rectangle {
                 }
             }
 
-            Rectangle {
-                width: parent.width
-                radius: 14
-                color: "#0b1121"
-                border.color: "#1d2a42"
-                border.width: 1
-                padding: 22
-
-                ColumnLayout {
-                    spacing: 16
-                    Text {
-                        text: "Start a project"
-                        font.pixelSize: 22
-                        color: "#ffffff"
-                    }
-                    Text {
-                        text: "Share your stack vision and MetaBuilder will map it to seeds, workflows, and runtime automation."
-                        font.pixelSize: 16
-                        color: "#aeb8cf"
-                        wrapMode: Text.Wrap
-                    }
-
-                    RowLayout {
-                        spacing: 10
-                        TextField {
-                            placeholderText: "Your name"
-                            Layout.fillWidth: true
-                        }
-                        TextField {
-                            placeholderText: "Company"
-                            Layout.fillWidth: true
-                        }
-                        TextField {
-                            placeholderText: "Email"
-                            Layout.fillWidth: true
-                        }
-                    }
-
-                    Button {
-                        text: "Schedule a call"
-                        font.pixelSize: 16
-                        background: Rectangle {
-                            radius: 10
-                            color: "#5a7dff"
-                        }
-                    }
-                }
+            MetaBuilder.ContactForm {
+                Layout.fillWidth: true
+                onSubmitRequested: console.log("contact form submitted", name, company, email)
             }
 
             RowLayout {
