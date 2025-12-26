@@ -2,42 +2,32 @@
  * @file list-users.ts
  * @description List users with filtering and pagination
  */
-import type { User, ListOptions, Result } from '../types';
-import type { InMemoryStore } from '../store/in-memory-store';
+import type { ListOptions, Result, User } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
 
 /**
  * List users with filtering and pagination
  */
-export async function listUsers(
+export const listUsers = async (
   store: InMemoryStore,
   options: ListOptions = {}
-): Promise<Result<User[]>> {
-  const { filter = {}, sort = {}, page = 1, limit = 20 } = options;
+): Promise<Result<User[]>> => {
+  const { filter = {}, sort = {}, page = 1, limit = 20 } = options
 
-  let users = Array.from(store.users.values());
+  let users = Array.from(store.users.values())
 
-  // Apply filters
-  if (filter.isActive !== undefined) {
-    users = users.filter((u) => u.isActive === filter.isActive);
-  }
-  if (filter.level !== undefined) {
-    users = users.filter((u) => u.level === filter.level);
+  if (filter.role !== undefined) {
+    users = users.filter((user) => user.role === filter.role)
   }
 
-  // Apply sorting
-  if (sort.name) {
-    users.sort((a, b) => (sort.name === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)));
-  } else if (sort.createdAt) {
+  if (sort.username) {
     users.sort((a, b) =>
-      sort.createdAt === 'asc'
-        ? a.createdAt.getTime() - b.createdAt.getTime()
-        : b.createdAt.getTime() - a.createdAt.getTime()
-    );
+      sort.username === 'asc' ? a.username.localeCompare(b.username) : b.username.localeCompare(a.username)
+    )
   }
 
-  // Apply pagination
-  const start = (page - 1) * limit;
-  const paginated = users.slice(start, start + limit);
+  const start = (page - 1) * limit
+  const paginated = users.slice(start, start + limit)
 
-  return { success: true, data: paginated };
+  return { success: true, data: paginated }
 }
