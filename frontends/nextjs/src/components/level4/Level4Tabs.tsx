@@ -1,8 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { Database as DatabaseIcon, Lightning, Code, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear, Palette, ListDashes, Sparkle, Package } from '@phosphor-icons/react'
+import { Database as DatabaseIcon, Lightning, Code, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear, Palette, ListDashes, Sparkle, Package, SquaresFour } from '@phosphor-icons/react'
 import { SchemaEditorLevel4 } from '@/components/SchemaEditorLevel4'
 import { WorkflowEditor } from '@/components/WorkflowEditor'
 import { LuaEditor } from '@/components/LuaEditor'
+import { LuaBlocksEditor } from '@/components/LuaBlocksEditor'
 import { LuaSnippetLibrary } from '@/components/LuaSnippetLibrary'
 import { DatabaseManager } from '@/components/DatabaseManager'
 import { PageRoutesManager } from '@/components/PageRoutesManager'
@@ -34,7 +35,7 @@ export function Level4Tabs({
 }: Level4TabsProps) {
   return (
     <Tabs defaultValue="guide" className="space-y-6">
-      <TabsList className={nerdMode ? "grid w-full grid-cols-4 lg:grid-cols-13 max-w-full" : "grid w-full grid-cols-3 lg:grid-cols-7 max-w-full"}>
+      <TabsList className={nerdMode ? "grid w-full grid-cols-4 lg:grid-cols-14 max-w-full" : "grid w-full grid-cols-3 lg:grid-cols-7 max-w-full"}>
         <TabsTrigger value="guide">
           <Sparkle className="mr-2" size={16} />
           Guide
@@ -68,6 +69,10 @@ export function Level4Tabs({
             <TabsTrigger value="lua">
               <Code className="mr-2" size={16} />
               Lua Scripts
+            </TabsTrigger>
+            <TabsTrigger value="blocks">
+              <SquaresFour className="mr-2" size={16} />
+              Lua Blocks
             </TabsTrigger>
             <TabsTrigger value="snippets">
               <BookOpen className="mr-2" size={16} />
@@ -132,6 +137,13 @@ export function Level4Tabs({
 
           <TabsContent value="lua" className="space-y-6">
             <LuaEditor
+              scripts={appConfig.luaScripts}
+              onScriptsChange={onLuaScriptsChange}
+            />
+          </TabsContent>
+
+          <TabsContent value="blocks" className="space-y-6">
+            <LuaBlocksEditor
               scripts={appConfig.luaScripts}
               onScriptsChange={onLuaScriptsChange}
             />

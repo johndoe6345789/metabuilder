@@ -904,7 +904,7 @@ class FortKnoxACLAdapter implements DBALAdapter {
 
 ---
 
-#### DBAL-2025-007: Mass Assignment via Unvalidated Fields (MEDIUM)
+#### DBAL-2025-007: Mass Assignment via Unvalidated Fields (MEDIUM → HIGH)
 **Location**: [prisma-adapter.ts](../ts/src/adapters/prisma-adapter.ts#L32-L39)
 
 ```typescript
@@ -921,22 +921,188 @@ async create(entity: string, data: Record<string, unknown>): Promise<unknown> {
 - Attacker could include sensitive fields: `isAdmin`, `role`, `permissions`
 - Pattern: CWE-915 (Mass Assignment)
 
-**Recommendation**:
+**🏰 Fort Knox Remediation**:
 ```typescript
-// Add field allowlist per entity
-const ALLOWED_FIELDS: Record<string, Set<string>> = {
-  User: new Set(['username', 'email', 'displayName']),
-  // ...
+import { z, ZodSchema, ZodObject } from 'zod'
+
+/**
+ * Fort Knox Field Guard
+ * Schema-driven field allowlisting with operation-specific rules
+ */
+class FieldGuard {
+  // Schemas define EXACTLY what fields are allowed per entity per operation
+  private static readonly SCHEMAS: Record<string, Record<string, ZodSchema>> = {
+    User: {
+      create: z.object({
+        username: z.string().min(3).max(50).regex(/^[a-zA-Z0-9_]+$/),
+        email: z.string().email().max(255),
+        displayName: z.string().max(100).optional(),
+        // NOTE: role, level, passwordHash NOT allowed on create
+      }).strict(),  // .strict() rejects unknown fields
+      
+      update: z.object({
+        displayName: z.string().max(100).optional(),
+        email: z.string().email().max(255).optional(),
+        // Only these fields can be updated by normal users
+      }).strict(),
+      
+      adminUpdate: z.object({
+        displayName: z.string().max(100).optional(),
+        email: z.string().email().max(255).optional(),
+        role: z.enum(['user', 'admin']).optional(),  // Admin can set role up to admin
+        isActive: z.boolean().optional(),
+      }).strict(),
+      
+      superUpdate: z.object({
+        // Supergod can modify anything - but still validated
+        displayName: z.string().max(100).optional(),
+        email: z.string().email().max(255).optional(),
+        role: z.enum(['user', 'admin', 'god', 'supergod']).optional(),
+        level: z.number().int().min(0).max(4).optional(),
+        isActive: z.boolean().optional(),
+        tenantId: z.string().uuid().optional(),
+      }).strict(),
+    },
+    
+    PageView: {
+      create: z.object({
+        title: z.string().min(1).max(200),
+        slug: z.string().min(1).max(200).regex(/^[a-z0-9-]+$/),
+        content: z.any(),  // JSON content
+        isPublished: z.boolean().default(false),
+      }).strict(),
+      
+      update: z.object({
+        title: z.string().min(1).max(200).optional(),
+        content: z.any().optional(),
+        isPublished: z.boolean().optional(),
+        // slug typically shouldn't be changed after creation
+      }).strict(),
+    },
+    
+    // Add schemas for all entities...
+  }
+  
+  // Fields that can NEVER be set via API (must be generated)
+  private static readonly SYSTEM_FIELDS = new Set([
+    'id',
+    'createdAt',
+    'updatedAt',
+    'version',       // Optimistic locking
+    'createdBy',     // Set from auth context
+    'updatedBy',     // Set from auth context
+  ])
+  
+  // Fields requiring elevated privileges to read
+  private static readonly REDACTED_FIELDS: Record<string, Set<string>> = {
+    User: new Set(['passwordHash', 'totpSecret', 'recoveryKeys']),
+    Session: new Set(['token', 'refreshToken']),
+    ApiKey: new Set(['keyHash', 'secretHash']),
+  }
+  
+  /**
+   * Validate and sanitize input data
+   * Returns ONLY allowed fields, properly typed and validated
+   */
+  static sanitize<T>(
+    entity: string,
+    operation: 'create' | 'update',
+    data: unknown,
+    userRole: string
+  ): T {
+    // Step 1: Remove system fields (these should never come from user)
+    if (typeof data === 'object' && data !== null) {
+      for (const field of this.SYSTEM_FIELDS) {
+        delete (data as Record<string, unknown>)[field]
+      }
+    }
+    
+    // Step 2: Select schema based on entity, operation, and role
+    const schemaKey = this.getSchemaKey(entity, operation, userRole)
+    const entitySchemas = this.SCHEMAS[entity]
+    
+    if (!entitySchemas) {
+      throw DBALError.internal(`No schema defined for entity: ${entity}`)
+    }
+    
+    const schema = entitySchemas[schemaKey]
+    if (!schema) {
+      throw DBALError.forbidden(
+        `Operation ${operation} not allowed for ${userRole} on ${entity}`
+      )
+    }
+    
+    // Step 3: Validate against schema
+    const result = schema.safeParse(data)
+    
+    if (!result.success) {
+      const errors = result.error.issues.map(issue => ({
+        field: issue.path.join('.'),
+        error: issue.message
+      }))
+      throw DBALError.validationError(
+        `Invalid ${entity} data for ${operation}`,
+        errors
+      )
+    }
+    
+    // Step 4: Log if any fields were stripped (potential attack indicator)
+    const inputKeys = new Set(Object.keys(data as object))
+    const outputKeys = new Set(Object.keys(result.data as object))
+    const strippedFields = [...inputKeys].filter(k => !outputKeys.has(k))
+    
+    if (strippedFields.length > 0) {
+      console.warn(JSON.stringify({
+        event: 'MASS_ASSIGNMENT_ATTEMPT',
+        entity,
+        operation,
+        strippedFields,
+        userRole,
+        timestamp: new Date().toISOString()
+      }))
+    }
+    
+    return result.data as T
+  }
+  
+  private static getSchemaKey(entity: string, operation: string, role: string): string {
+    if (role === 'supergod' && operation === 'update') return 'superUpdate'
+    if (['admin', 'god'].includes(role) && operation === 'update') return 'adminUpdate'
+    return operation
+  }
+  
+  /**
+   * Redact sensitive fields from response based on viewer's role
+   */
+  static redactResponse<T>(entity: string, data: T, viewerRole: string): T {
+    if (viewerRole === 'supergod') return data  // Supergod sees all
+    
+    const redactedFields = this.REDACTED_FIELDS[entity]
+    if (!redactedFields || !data || typeof data !== 'object') return data
+    
+    const result = { ...data } as Record<string, unknown>
+    
+    for (const field of redactedFields) {
+      if (field in result) {
+        result[field] = '[REDACTED]'
+      }
+    }
+    
+    return result as T
+  }
 }
 
+// Integration in PrismaAdapter
 async create(entity: string, data: Record<string, unknown>): Promise<unknown> {
-  const allowedFields = ALLOWED_FIELDS[entity]
-  if (allowedFields) {
-    data = Object.fromEntries(
-      Object.entries(data).filter(([key]) => allowedFields.has(key))
-    )
-  }
-  // ...
+  // Sanitize BEFORE any database operation
+  const sanitized = FieldGuard.sanitize(entity, 'create', data, this.userRole)
+  
+  const result = await this.withTimeout(
+    this.getModel(entity).create({ data: sanitized })
+  )
+  
+  // Redact sensitive fields in response
+  return FieldGuard.redactResponse(entity, result, this.userRole)
 }
 ```
 
