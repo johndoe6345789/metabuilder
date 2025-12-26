@@ -21,9 +21,7 @@ export async function POST(request: NextRequest) {
     const body = await readJson<InstallPackagePayload>(request)
     if (!body) return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 })
 
-    const packageId = typeof body.packageId === 'string'
-      ? body.packageId.trim()
-      : (typeof body.manifest?.id === 'string' ? body.manifest.id : '')
+    const packageId = typeof body.packageId === 'string' ? body.packageId.trim() : (typeof body.manifest?.id === 'string' ? body.manifest.id : '')
     if (!packageId) return NextResponse.json({ error: 'Package ID is required' }, { status: 400 })
 
     const entry = getPackageCatalogEntry(packageId)
