@@ -328,17 +328,47 @@ const id = `req_${++this.requestIdCounter}`
 - Could aid in request correlation attacks
 - Timing analysis of request frequency
 
-**Recommendation**:
+**🏰 Fort Knox Remediation**:
 ```typescript
-import { randomBytes } from 'crypto'
-const id = `req_${randomBytes(16).toString('hex')}`
+import { randomBytes, createHash } from 'crypto'
+
+class CryptographicRequestIdGenerator {
+  private instanceId: string
+  private counter: bigint = 0n
+  
+  constructor() {
+    // Unique per instance, prevents cross-instance correlation
+    this.instanceId = randomBytes(8).toString('hex')
+  }
+  
+  generate(): string {
+    // Combine: random + counter + timestamp + instance
+    const random = randomBytes(16)
+    const timestamp = BigInt(Date.now())
+    const counter = this.counter++
+    
+    // Hash to prevent information leakage
+    const hash = createHash('sha256')
+      .update(random)
+      .update(Buffer.from(timestamp.toString()))
+      .update(Buffer.from(counter.toString()))
+      .update(this.instanceId)
+      .digest('hex')
+      .substring(0, 24)
+    
+    return `req_${hash}`
+  }
+}
+
+// Also add request ID correlation tracking for debugging
+// but only in non-production or with explicit opt-in
 ```
 
 ---
 
 ### 1.2 Blob Storage Layer
 
-#### DBAL-2025-004: Path Traversal Incomplete Mitigation (MEDIUM)
+#### DBAL-2025-004: Path Traversal Incomplete Mitigation (MEDIUM → HIGH with Fort Knox)
 **Location**: [filesystem-storage.ts](../ts/src/blob/filesystem-storage.ts#L27-L30)
 
 ```typescript
@@ -356,33 +386,144 @@ private getFullPath(key: string): string {
   - Unicode normalization bypasses
 - Similar to CVE-2024-4068 (path traversal patterns)
 
-**Recommendation**:
+**🏰 Fort Knox Remediation**:
 ```typescript
-private getFullPath(key: string): string {
-  // Decode any URL encoding
-  let decoded = decodeURIComponent(key)
+import path from 'path'
+import { createHash } from 'crypto'
+
+/**
+ * Fort Knox Path Sanitizer
+ * Multiple layers of path traversal protection
+ */
+class SecurePathResolver {
+  private basePath: string
+  private resolvedBasePath: string
   
-  // Normalize Unicode
-  decoded = decoded.normalize('NFKC')
+  // Known dangerous patterns across platforms
+  private static readonly TRAVERSAL_PATTERNS = [
+    /\.\./g,                    // Basic traversal
+    /\.\.%2f/gi,                // URL encoded
+    /\.\.%5c/gi,                // URL encoded backslash  
+    /%2e%2e/gi,                 // Double URL encoded dots
+    /%252e%252e/gi,             // Triple URL encoded
+    /\.\./g,                     // Unicode fullwidth
+    /\x00/g,                    // Null bytes
+    /[\x01-\x1f\x7f]/g,        // Control characters
+  ]
   
-  // Remove all path traversal patterns
-  const sanitized = decoded
-    .replace(/\\/g, '/')           // Normalize slashes
-    .replace(/\/+/g, '/')          // Collapse multiple slashes
-    .split('/')
-    .filter(segment => segment !== '..' && segment !== '.')
-    .join('/')
-    .replace(/^\/+/, '')           // Remove leading slashes
+  // Allowed characters in path (whitelist approach)
+  private static readonly ALLOWED_PATH_CHARS = /^[a-zA-Z0-9._\-\/]+$/
   
-  const fullPath = path.join(this.basePath, sanitized)
-  
-  // Final validation: ensure result is under basePath
-  const resolved = path.resolve(fullPath)
-  if (!resolved.startsWith(path.resolve(this.basePath) + path.sep)) {
-    throw DBALError.forbidden('Path traversal detected')
+  constructor(basePath: string) {
+    this.basePath = basePath
+    this.resolvedBasePath = path.resolve(basePath)
+    
+    // Ensure base path exists and is a directory
+    if (!this.resolvedBasePath.endsWith(path.sep)) {
+      this.resolvedBasePath += path.sep
+    }
   }
   
-  return resolved
+  resolve(userKey: string): string {
+    // LAYER 1: Input validation
+    if (!userKey || typeof userKey !== 'string') {
+      throw DBALError.validationError('Invalid path key')
+    }
+    
+    if (userKey.length > 1024) {
+      throw DBALError.validationError('Path too long (max 1024 chars)')
+    }
+    
+    // LAYER 2: URL decode all possible encodings (multiple passes)
+    let decoded = userKey
+    for (let i = 0; i < 3; i++) {
+      try {
+        const newDecoded = decodeURIComponent(decoded)
+        if (newDecoded === decoded) break
+        decoded = newDecoded
+      } catch {
+        break // Invalid encoding
+      }
+    }
+    
+    // LAYER 3: Unicode normalization (NFKC is most aggressive)
+    decoded = decoded.normalize('NFKC')
+    
+    // LAYER 4: Check against dangerous patterns (blocklist)
+    for (const pattern of SecurePathResolver.TRAVERSAL_PATTERNS) {
+      if (pattern.test(decoded)) {
+        this.logSecurityViolation('PATH_TRAVERSAL_ATTEMPT', userKey)
+        throw DBALError.forbidden('Path traversal detected')
+      }
+    }
+    
+    // LAYER 5: Whitelist character validation
+    if (!SecurePathResolver.ALLOWED_PATH_CHARS.test(decoded)) {
+      this.logSecurityViolation('INVALID_PATH_CHARS', userKey)
+      throw DBALError.validationError('Path contains invalid characters')
+    }
+    
+    // LAYER 6: Normalize path separators
+    const normalized = decoded
+      .replace(/\\/g, '/')      // Windows to Unix
+      .replace(/\/+/g, '/')     // Collapse multiple slashes
+      .replace(/^\/+/, '')      // Remove leading slashes
+      .split('/')
+      .filter(segment => segment !== '.' && segment !== '..' && segment !== '')
+      .join(path.sep)
+    
+    // LAYER 7: Resolve and validate final path
+    const fullPath = path.resolve(this.basePath, normalized)
+    
+    // CRITICAL: Final containment check
+    if (!fullPath.startsWith(this.resolvedBasePath)) {
+      this.logSecurityViolation('PATH_ESCAPE_ATTEMPT', { 
+        userKey, 
+        resolved: fullPath, 
+        base: this.resolvedBasePath 
+      })
+      throw DBALError.forbidden('Path traversal detected')
+    }
+    
+    // LAYER 8: Check for symlink escape
+    return this.resolveSymlinks(fullPath)
+  }
+  
+  private async resolveSymlinks(filePath: string): Promise<string> {
+    try {
+      const realPath = await fs.promises.realpath(filePath)
+      if (!realPath.startsWith(this.resolvedBasePath)) {
+        this.logSecurityViolation('SYMLINK_ESCAPE', { filePath, realPath })
+        throw DBALError.forbidden('Symlink escape detected')
+      }
+      return realPath
+    } catch (error: any) {
+      if (error.code === 'ENOENT') {
+        // File doesn't exist yet, that's okay for new files
+        // But verify parent directory is safe
+        const parentDir = path.dirname(filePath)
+        if (parentDir !== this.basePath) {
+          const realParent = await fs.promises.realpath(parentDir).catch(() => null)
+          if (realParent && !realParent.startsWith(this.resolvedBasePath)) {
+            throw DBALError.forbidden('Parent directory escape detected')
+          }
+        }
+        return filePath
+      }
+      throw error
+    }
+  }
+  
+  private logSecurityViolation(event: string, details: unknown): void {
+    console.error(JSON.stringify({
+      timestamp: new Date().toISOString(),
+      severity: 'CRITICAL',
+      category: 'PATH_SECURITY',
+      event,
+      details,
+      stack: new Error().stack
+    }))
+  }
 }
 ```
 

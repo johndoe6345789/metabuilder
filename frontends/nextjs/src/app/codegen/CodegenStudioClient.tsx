@@ -102,11 +102,13 @@ export default function CodegenStudioClient() {
     setError(null)
     setMessage(null)
     try {
-      const filename = await fetchZip(form)
+      const { filename, manifest } = await fetchZip(form)
       setMessage(`Zip ${filename} created successfully.`)
+      setManifest(manifest)
       setStatus('success')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unable to generate the zip')
+      setManifest(null)
       setStatus('idle')
     }
   }
@@ -180,6 +182,33 @@ export default function CodegenStudioClient() {
 
           {message && <Alert severity="success">{message}</Alert>}
           {error && <Alert severity="error">{error}</Alert>}
+          {manifest && (
+            <Paper
+              elevation={1}
+              sx={{ border: '1px dashed', borderColor: 'divider', p: 2, backgroundColor: 'background.default' }}
+            >
+              <Typography variant="subtitle1" gutterBottom>
+                Manifest preview
+              </Typography>
+              <Stack spacing={0.5}>
+                <Typography variant="body2" color="text.secondary">
+                  Project: {manifest.projectName}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Package: {manifest.packageId}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Runtime: {manifest.runtime}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Tone: {manifest.tone ?? 'adaptive'}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Generated at: {new Date(manifest.generatedAt).toLocaleString()}
+                </Typography>
+              </Stack>
+            </Paper>
+          )}
         </Stack>
       </Paper>
     </Container>

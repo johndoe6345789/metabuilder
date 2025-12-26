@@ -34,6 +34,7 @@ The runtime-specific paragraph is drawn from the `runtime` value, and the CLI st
 - **Path**: `/codegen`
 - **Experience**: A Material UI-powered scaffold designer that bundles the same payload used by the API and streams the ZIP for download.
 - **Feedback**: Inline alerts surface success or failure so teams can iteratively tune briefs before sharing the starter kit with collaborators.
+- **Preview**: A manifest panel summarizes the generated values (runtime, tone, package, timestamp) after each export.
 
 ## Development tooling
 
