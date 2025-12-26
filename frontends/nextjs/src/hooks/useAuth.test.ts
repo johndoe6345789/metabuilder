@@ -10,6 +10,10 @@ vi.mock('@/lib/auth/api/login', () => ({
   login: vi.fn(),
 }))
 
+vi.mock('@/lib/auth/api/register', () => ({
+  register: vi.fn(),
+}))
+
 vi.mock('@/lib/auth/api/logout', () => ({
   logout: vi.fn(),
 }))
@@ -17,10 +21,12 @@ vi.mock('@/lib/auth/api/logout', () => ({
 import { useAuth } from '@/hooks/useAuth'
 import { fetchSession } from '@/lib/auth/api/fetch-session'
 import { login as loginRequest } from '@/lib/auth/api/login'
+import { register as registerRequest } from '@/lib/auth/api/register'
 import { logout as logoutRequest } from '@/lib/auth/api/logout'
 
 const mockFetchSession = vi.mocked(fetchSession)
 const mockLogin = vi.mocked(loginRequest)
+const mockRegister = vi.mocked(registerRequest)
 const mockLogout = vi.mocked(logoutRequest)
 
 const createUser = (overrides?: Partial<User>): User => ({
@@ -46,6 +52,7 @@ describe('useAuth', () => {
   beforeEach(async () => {
     mockFetchSession.mockReset()
     mockLogin.mockReset()
+    mockRegister.mockReset()
     mockLogout.mockReset()
     mockFetchSession.mockResolvedValue(null)
     mockLogout.mockResolvedValue(undefined)
@@ -115,6 +122,32 @@ describe('useAuth', () => {
 
     expect(result.current.user).toBeNull()
     expect(result.current.isAuthenticated).toBe(false)
+
+    unmount()
+  })
+
+  it('should register and authenticate', async () => {
+    const { result, unmount } = renderHook(() => useAuth())
+
+    mockRegister.mockResolvedValue(createUser({
+      id: 'user_2',
+      username: 'newbie',
+      email: 'newbie@example.com',
+    }))
+
+    await waitForIdle(result)
+    await act(async () => {
+      await result.current.register('newbie', 'newbie@example.com', 'password')
+    })
+
+    expect(result.current.user).toMatchObject({
+      id: 'user_2',
+      email: 'newbie@example.com',
+      name: 'newbie',
+      username: 'newbie',
+      level: 2,
+    })
+    expect(result.current.isAuthenticated).toBe(true)
 
     unmount()
   })
