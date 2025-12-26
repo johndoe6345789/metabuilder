@@ -8,5 +8,6 @@
 #include "crud/list_components.hpp"
 #include "crud/reorder_components.hpp"
 #include "crud/move_component.hpp"
+#include "crud/get_tree.hpp"
 
 #endif
