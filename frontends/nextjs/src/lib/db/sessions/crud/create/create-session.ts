@@ -1,5 +1,5 @@
 import { randomBytes, randomUUID } from 'crypto'
-import { getAdapter } from '../dbal-client'
+import { getAdapter } from '../../core/dbal-client'
 import type { CreateSessionInput, Session } from './types'
 
 const TOKEN_BYTES = 32

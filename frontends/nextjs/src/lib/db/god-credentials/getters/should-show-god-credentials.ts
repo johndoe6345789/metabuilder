@@ -1,7 +1,7 @@
 import { getGodCredentialsExpiry } from './get-god-credentials-expiry'
 import { setGodCredentialsExpiry } from './set-god-credentials-expiry'
 import { getGodCredentialsExpiryDuration } from './get-god-credentials-expiry-duration'
-import { getAdapter } from '../dbal-client'
+import { getAdapter } from '../../core/dbal-client'
 
 /**
  * Check if god credentials should be shown

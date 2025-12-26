@@ -1,4 +1,4 @@
-import { getAdapter } from '../dbal-client'
+import { getAdapter } from '../../core/dbal-client'
 import { deleteSession } from './delete-session'
 import { mapSessionRecord } from './map-session-record'
 import type { Session } from './types'

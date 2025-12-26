@@ -1,4 +1,4 @@
-import { getAdapter } from '../dbal-client'
+import { getAdapter } from '../../core/dbal-client'
 
 export async function deleteSessionByToken(token: string): Promise<boolean> {
   const adapter = getAdapter()
