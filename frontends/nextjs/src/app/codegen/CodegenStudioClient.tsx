@@ -87,7 +87,7 @@ export default function CodegenStudioClient() {
     }
   }, [form.runtime])
 
-  const handleChange = (key: keyof FormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (key: keyof FormState) => (event: ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [key]: event.target.value }))
   }
 
