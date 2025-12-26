@@ -1,6 +1,6 @@
 /**
  * @file update_session.hpp
- * @brief Update session operation (extend expiry)
+ * @brief Update session operation
  */
 #ifndef DBAL_UPDATE_SESSION_HPP
 #define DBAL_UPDATE_SESSION_HPP
@@ -14,29 +14,51 @@ namespace entities {
 namespace session {
 
 /**
- * Extend a session's expiration time
+ * Update an existing session
  */
-inline Result<Session> extend(InMemoryStore& store, const std::string& id, int additional_seconds) {
+inline Result<Session> update(InMemoryStore& store, const std::string& id, const UpdateSessionInput& input) {
     if (id.empty()) {
         return Error::validationError("Session ID cannot be empty");
     }
-    if (additional_seconds <= 0) {
-        return Error::validationError("Additional seconds must be positive");
-    }
-    
+
     auto it = store.sessions.find(id);
     if (it == store.sessions.end()) {
         return Error::notFound("Session not found: " + id);
     }
-    
+
     Session& session = it->second;
-    
-    if (session.expires_at < std::chrono::system_clock::now()) {
-        return Error::validationError("Cannot extend expired session");
+
+    if (input.user_id.has_value()) {
+        if (input.user_id.value().empty()) {
+            return Error::validationError("user_id is required");
+        }
+        if (store.users.find(input.user_id.value()) == store.users.end()) {
+            return Error::validationError("User not found: " + input.user_id.value());
+        }
+        session.user_id = input.user_id.value();
     }
-    
-    session.expires_at += std::chrono::seconds(additional_seconds);
-    
+
+    if (input.token.has_value()) {
+        if (input.token.value().empty()) {
+            return Error::validationError("token is required");
+        }
+        auto token_it = store.session_tokens.find(input.token.value());
+        if (token_it != store.session_tokens.end() && token_it->second != id) {
+            return Error::conflict("Session token already exists: " + input.token.value());
+        }
+        store.session_tokens.erase(session.token);
+        store.session_tokens[input.token.value()] = id;
+        session.token = input.token.value();
+    }
+
+    if (input.expires_at.has_value()) {
+        session.expires_at = input.expires_at.value();
+    }
+
+    if (input.last_activity.has_value()) {
+        session.last_activity = input.last_activity.value();
+    }
+
     return Result<Session>(session);
 }
 

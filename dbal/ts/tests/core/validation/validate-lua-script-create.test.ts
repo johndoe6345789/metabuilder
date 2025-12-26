@@ -20,6 +20,7 @@ describe('validateLuaScriptCreate', () => {
   it.each([
     { data: { ...base, allowedGlobals: 'math' as unknown as string[] }, message: 'allowedGlobals must be an array of strings' },
     { data: { ...base, allowedGlobals: [''] }, message: 'allowedGlobals must contain non-empty strings' },
+    { data: { ...base, allowedGlobals: ['os'] }, message: 'allowedGlobals contains forbidden globals: os' },
     { data: { ...base, timeoutMs: 50 }, message: 'timeoutMs must be an integer between 100 and 30000' },
     { data: { ...base, createdBy: 'invalid' }, message: 'createdBy must be a valid UUID' },
   ])('rejects invalid case', ({ data, message }) => {
