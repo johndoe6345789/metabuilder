@@ -123,6 +123,19 @@ const forumForgeMetadata: PackageSeedConfig['metadata'] = {
 }
 const forumForgeExamples: any = {}
 
+const arcadeLobbyComponents: any[] = []
+const arcadeLobbyMetadata: PackageSeedConfig['metadata'] = {
+  packageId: 'arcade_lobby',
+  name: 'Arcade Lobby',
+  version: '1.0.0',
+  description: 'Gaming lobby with queues, tournaments, and party setup',
+  author: 'MetaBuilder',
+  category: 'gaming',
+  dependencies: [],
+  exports: { components: [] },
+}
+const arcadeLobbyExamples: any = {}
+
 export const DEFAULT_PACKAGES: Record<string, PackageSeedConfig> = {
   admin_dialog: {
     metadata: adminDialogMetadata,
@@ -168,5 +181,10 @@ export const DEFAULT_PACKAGES: Record<string, PackageSeedConfig> = {
     metadata: forumForgeMetadata,
     components: forumForgeComponents,
     examples: forumForgeExamples,
+  },
+  arcade_lobby: {
+    metadata: arcadeLobbyMetadata,
+    components: arcadeLobbyComponents,
+    examples: arcadeLobbyExamples,
   },
 }
