@@ -2,24 +2,26 @@
  * @file delete-session.ts
  * @description Delete session operation
  */
-import type { Result } from '../types';
-import type { InMemoryStore } from '../store/in-memory-store';
+import type { Result } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
+import { validateId } from '../../validation/validate-id'
 
 /**
- * Delete a session by ID (logout)
+ * Delete a session by ID
  */
-export async function deleteSession(store: InMemoryStore, id: string): Promise<Result<boolean>> {
-  if (!id) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'ID required' } };
+export const deleteSession = async (store: InMemoryStore, id: string): Promise<Result<boolean>> => {
+  const idErrors = validateId(id)
+  if (idErrors.length > 0) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
   }
 
-  const session = store.sessions.get(id);
+  const session = store.sessions.get(id)
   if (!session) {
-    return { success: false, error: { code: 'NOT_FOUND', message: `Session not found: ${id}` } };
+    return { success: false, error: { code: 'NOT_FOUND', message: `Session not found: ${id}` } }
   }
 
-  store.sessionTokens.delete(session.token);
-  store.sessions.delete(id);
+  store.sessions.delete(id)
+  store.sessionTokens.delete(session.token)
 
-  return { success: true, data: true };
+  return { success: true, data: true }
 }
