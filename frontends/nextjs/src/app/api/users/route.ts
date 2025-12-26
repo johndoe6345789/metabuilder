@@ -1,16 +1,17 @@
 /**
  * Users API Route - Demonstrates DBAL integration
  * 
- * This API route uses DBAL for all database operations, showcasing
- * the proper server-side integration of the DBAL layer.
+ * This API route forwards user management operations to the C++ DBAL daemon.
  */
 
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { dbalAddUser, dbalGetUsers, initializeDBAL } from '@/lib/dbal/database-dbal.server'
+import { callDaemon } from '@/lib/dbal/daemon/client'
 import { hashPassword } from '@/lib/db/hash-password'
 import { setCredential } from '@/lib/db/credentials/set-credential'
-import type { UserRole } from '@/lib/level-types'
+import type { User, UserRole } from '@/lib/level-types'
+
+const RPC_LIMIT = 200
 
 function normalizeRole(role?: string): UserRole {
   if (!role) return 'user'
@@ -28,38 +29,49 @@ async function readJson<T>(request: NextRequest): Promise<T | null> {
 
 export async function GET() {
   try {
-    // Initialize DBAL on first use
-    await initializeDBAL()
-    
-    // Use DBAL to fetch users
-    const users = await dbalGetUsers()
-    
-    return NextResponse.json({ 
-      users,
-      source: 'DBAL' 
+    const listResult = await callDaemon<{
+      data: User[]
+      total: number
+      page: number
+      limit: number
+      hasMore: boolean
+    }>({
+      entity: 'User',
+      action: 'list',
+      options: {
+        limit: RPC_LIMIT,
+      },
+    })
+
+    return NextResponse.json({
+      users: listResult?.data ?? [],
+      meta: {
+        total: listResult?.total ?? 0,
+        page: listResult?.page ?? 1,
+        limit: listResult?.limit ?? 0,
+        hasMore: Boolean(listResult?.hasMore),
+      },
+      source: 'C++ DBAL daemon',
     })
   } catch (error) {
-    console.error('Error fetching users via DBAL:', error)
-    return NextResponse.json({ 
-      error: 'Failed to fetch users',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
+    console.error('Error fetching users via DBAL daemon:', error)
+    return NextResponse.json(
+      {
+        error: 'Failed to fetch users',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    )
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    await initializeDBAL()
-
     const body = await readJson<{
       username?: string
       email?: string
       role?: string
       password?: string
-      profilePicture?: string
-      bio?: string
-      tenantId?: string
-      isInstanceOwner?: boolean
     }>(request)
 
     if (!body) {
@@ -77,14 +89,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const user = await dbalAddUser({
-      username,
-      email,
-      role: normalizeRole(body.role),
-      profilePicture: body.profilePicture,
-      bio: body.bio,
-      tenantId: body.tenantId,
-      isInstanceOwner: body.isInstanceOwner,
+    const user = await callDaemon<User>({
+      entity: 'User',
+      action: 'create',
+      payload: {
+        username,
+        email,
+        role: normalizeRole(body.role),
+      },
     })
 
     const passwordHash = await hashPassword(password)
@@ -92,7 +104,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ user }, { status: 201 })
   } catch (error) {
-    console.error('Error creating user via DBAL:', error)
+    console.error('Error creating user via DBAL daemon:', error)
     return NextResponse.json(
       {
         error: 'Failed to create user',
