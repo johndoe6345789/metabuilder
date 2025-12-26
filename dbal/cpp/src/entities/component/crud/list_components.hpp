@@ -24,6 +24,18 @@ inline Result<std::vector<ComponentHierarchy>> list(InMemoryStore& store, const 
         if (!page_filter.empty() && component.page_id != page_filter) {
             continue;
         }
+        if (options.filter.find("parent_id") != options.filter.end()) {
+            const std::string& parent_filter = options.filter.at("parent_id");
+            if (!component.parent_id.has_value() || component.parent_id.value() != parent_filter) {
+                continue;
+            }
+        }
+        if (options.filter.find("component_type") != options.filter.end()) {
+            const std::string& type_filter = options.filter.at("component_type");
+            if (component.component_type != type_filter) {
+                continue;
+            }
+        }
         components.push_back(component);
     }
 
