@@ -3,10 +3,13 @@
 ## Table of Contents
 
 - [TODOs by Phase](#todos-by-phase)
+- [Prep Checklist](#prep-checklist)
 - [Audit Results](#audit-results)
 - [Quick File References](#quick-file-references)
 - [Next Steps](#next-steps)
+- [Phase Deliverables](#phase-deliverables)
 - [Support Notes](#support-notes)
+- [Tracking & Templates](#tracking--templates)
 
 
 ## TODOs by Phase
