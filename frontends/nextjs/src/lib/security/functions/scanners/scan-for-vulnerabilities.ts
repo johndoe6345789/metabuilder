@@ -1,8 +1,8 @@
 import type { SecurityScanResult } from '../types'
-import { scanHTML } from './scan-html'
-import { scanJavaScript } from './scan-javascript'
-import { scanJSON } from './scan-json'
-import { scanLua } from './scan-lua'
+import { scanHTML } from './language-scanners/scan-html'
+import { scanJavaScript } from './language-scanners/scan-javascript'
+import { scanJSON } from './language-scanners/scan-json'
+import { scanLua } from './language-scanners/scan-lua'
 
 /**
  * Convenience function to scan code for vulnerabilities
