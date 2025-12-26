@@ -8,7 +8,7 @@
 #include "dbal/types.hpp"
 #include "dbal/errors.hpp"
 #include "../../../store/in_memory_store.hpp"
-#include "../../../validation/lua_script_validation.hpp"
+#include "../../../validation/entity/lua_script_validation.hpp"
 
 namespace dbal {
 namespace entities {
