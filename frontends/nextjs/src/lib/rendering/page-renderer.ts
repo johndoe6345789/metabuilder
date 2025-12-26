@@ -1,7 +1,8 @@
 import type { ComponentInstance } from '../types/builder-types'
 import type { User } from '../types/level-types'
 import { Database } from '../database'
-import { LuaEngine } from '../lua-engine'
+import type { LuaEngine } from '../lua-engine'
+import { executeLuaScriptWithProfile } from '../lua/execute-lua-script-with-profile'
 
 export interface PageDefinition {
   id: string
@@ -48,11 +49,6 @@ export interface PageContext {
 
 export class PageRenderer {
   private pages: Map<string, PageDefinition> = new Map()
-  private luaEngine: LuaEngine
-
-  constructor() {
-    this.luaEngine = new LuaEngine()
-  }
 
   async registerPage(page: PageDefinition): Promise<void> {
     this.pages.set(page.id, page)
@@ -101,7 +97,7 @@ export class PageRenderer {
       throw new Error(`Lua script not found: ${scriptId}`)
     }
 
-    const result = await this.luaEngine.execute(script.code, context)
+    const result = await executeLuaScriptWithProfile(script.code, context, script)
     if (!result.success) {
       throw new Error(result.error || 'Lua execution failed')
     }

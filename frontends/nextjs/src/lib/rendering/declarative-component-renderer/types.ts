@@ -33,4 +33,7 @@ export interface LuaScriptDefinition {
   code: string
   parameters: any[]
   returnType: string
+  isSandboxed?: boolean
+  allowedGlobals?: string[]
+  timeoutMs?: number
 }

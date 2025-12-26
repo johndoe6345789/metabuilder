@@ -191,6 +191,18 @@ client.luaScripts.delete(id)
 client.luaScripts.list(options)
 ```
 
+```typescript
+const script = await client.luaScripts.create({
+  name: 'health_check',
+  description: 'Simple health check',
+  code: 'return true',
+  isSandboxed: true,
+  allowedGlobals: ['math'],
+  timeoutMs: 1000,
+  createdBy: '11111111-1111-1111-1111-111111111111',
+})
+```
+
 ### Packages
 ```typescript
 client.packages.create(data)

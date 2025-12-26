@@ -687,6 +687,15 @@ void test_lua_script_validation() {
     assert(result1.error().code() == dbal::ErrorCode::ValidationError);
     std::cout << "  ✓ Invalid timeout rejected" << std::endl;
 
+    dbal::CreateLuaScriptInput inputGlobals = input1;
+    inputGlobals.name = "invalid-globals";
+    inputGlobals.timeout_ms = 1000;
+    inputGlobals.allowed_globals = {""};
+    auto resultGlobals = client.createLuaScript(inputGlobals);
+    assert(resultGlobals.isError());
+    assert(resultGlobals.error().code() == dbal::ErrorCode::ValidationError);
+    std::cout << "  ✓ Empty allowed_globals rejected" << std::endl;
+
     dbal::CreateLuaScriptInput input2;
     input2.name = "duplicate-script";
     input2.code = "return true";
