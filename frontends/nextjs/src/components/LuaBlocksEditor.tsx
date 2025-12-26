@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type MouseEvent } from 'react'
 import {
   Box,
   Button,
@@ -591,20 +591,26 @@ export function LuaBlocksEditor({ scripts, onScriptsChange }: LuaBlocksEditorPro
   }
 
   const handleRequestAddBlock = (
-    event: React.MouseEvent<HTMLElement>,
+    event: MouseEvent<HTMLElement>,
     target: { parentId: string | null; slot: BlockSlot }
   ) => {
     setMenuAnchor(event.currentTarget)
     setMenuTarget(target)
   }
 
-  const handleAddBlock = (type: LuaBlockType) => {
-    if (!selectedScriptId || !menuTarget) return
+  const handleAddBlock = (type: LuaBlockType, target?: { parentId: string | null; slot: BlockSlot }) => {
+    const resolvedTarget = target ?? menuTarget
+    if (!selectedScriptId || !resolvedTarget) return
 
     const newBlock = createBlock(type)
     setBlocksByScript((prev) => ({
       ...prev,
-      [selectedScriptId]: addBlockToTree(prev[selectedScriptId] || [], menuTarget.parentId, menuTarget.slot, newBlock),
+      [selectedScriptId]: addBlockToTree(
+        prev[selectedScriptId] || [],
+        resolvedTarget.parentId,
+        resolvedTarget.slot,
+        newBlock
+      ),
     }))
 
     setMenuAnchor(null)
@@ -884,9 +890,7 @@ export function LuaBlocksEditor({ scripts, onScriptsChange }: LuaBlocksEditorPro
                           key={block.type}
                           className={styles.libraryBlock}
                           data-category={block.category}
-                          onClick={(event) =>
-                            handleRequestAddBlock(event, { parentId: null, slot: 'root' })
-                          }
+                          onClick={() => handleAddBlock(block.type, { parentId: null, slot: 'root' })}
                         >
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
                             <Box>
@@ -898,8 +902,7 @@ export function LuaBlocksEditor({ scripts, onScriptsChange }: LuaBlocksEditorPro
                               variant="outlined"
                               onClick={(event) => {
                                 event.stopPropagation()
-                                handleRequestAddBlock(event, { parentId: null, slot: 'root' })
-                                handleAddBlock(block.type)
+                                handleAddBlock(block.type, { parentId: null, slot: 'root' })
                               }}
                             >
                               Add

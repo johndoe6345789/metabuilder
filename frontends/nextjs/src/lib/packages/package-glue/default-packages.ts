@@ -1,6 +1,6 @@
 import type { PackageDefinition } from './types'
 
-type PackageSeedConfig = {
+export type PackageSeedConfig = {
   metadata: Omit<PackageDefinition, 'components' | 'scripts' | 'scriptFiles' | 'examples'>
   components: any[]
   examples: any
