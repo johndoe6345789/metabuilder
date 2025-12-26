@@ -28,6 +28,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@/dbal/*": [
+        "../dbal/ts/src/*"
       ]
     },
     "plugins": [
@@ -45,7 +48,8 @@
     "vitest.config.ts",
     "playwright.config.ts",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    "../dbal/ts/src/**/*.ts"
   ],
   "exclude": [
     "node_modules"

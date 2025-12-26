@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+import path from 'path'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -78,6 +79,14 @@ const nextConfig: NextConfig = {
   // Environment variables exposed to browser
   env: {
     NEXT_PUBLIC_DBAL_API_URL: process.env.DBAL_API_URL || 'http://localhost:8080',
+    NEXT_PUBLIC_DBAL_WS_URL: process.env.DBAL_WS_URL || 'ws://localhost:50051',
+  },
+  webpack(config) {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@/dbal': path.resolve(__dirname, '..', 'dbal', 'ts', 'src'),
+    }
+    return config
   },
 }
 

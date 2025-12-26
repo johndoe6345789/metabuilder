@@ -52,7 +52,7 @@ A language-agnostic database abstraction layer that provides a secure interface 
 
 The Prisma adapter behind DBAL already targets the databases you care about: PostgreSQL, MySQL, SQLite, and any other engine Prisma supports (SQL Server, CockroachDB, MongoDB, etc.). Switch between them by pointing `DATABASE_URL` at the desired backend and regenerating the Prisma client for your schema.
 
-You can also set `config.adapter` to `'postgres'` or `'mysql'` when configuring the TypeScript client—those values are currently aliases for the Prisma adapter so the rest of the stack still handles dialect differences, connection pooling, and migrations via Prisma.
+The TypeScript client exposes three Prisma-based adapters: `PrismaAdapter`, `PostgresAdapter`, and `MySQLAdapter`. Setting `config.adapter` to `'postgres'` or `'mysql'` constructs the dialect-specific adapter, which keeps the shared Prisma logic but tweaks the capabilities metadata (e.g., enabling full-text search where supported) and leaves the rest of the stack focused on validation, ACLs, and audit logging.
 
 ```bash
 # PostgreSQL
@@ -65,6 +65,8 @@ npx prisma generate
 ```
 
 With `config.adapter = 'prisma'`, DBAL sends every request through `PrismaAdapter`, and Prisma handles dialect differences, migrations, and connection pooling defined in `prisma/schema.prisma` and `prisma/migrations/`. That keeps DBAL focused on validation, ACLs, and audit logging while it can still drive PostgreSQL, MySQL, or any other Prisma-supported store.
+
+The C++ daemon still resides in Phase 3—the current implementation is backed by the in-memory store described in `dbal/cpp/docs/PHASE3_DAEMON.md`, so Postgres/MySQL adapters for the daemon are still future work.
 
 ## Design Principles
 
