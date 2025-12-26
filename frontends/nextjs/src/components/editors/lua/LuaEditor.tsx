@@ -13,16 +13,16 @@ import {
 } from '@/components/ui'
 import { Plus, Trash, Play, CheckCircle, XCircle, FileCode, ArrowsOut, BookOpen, ShieldCheck } from '@phosphor-icons/react'
 import { toast } from 'sonner'
-import { executeLuaScriptWithProfile } from '@/lib/lua/execute-lua-script-with-profile'
+import { executeLuaScriptWithProfile } from '@/lib/lua/engine/sandbox/execute-lua-script-with-profile'
 import type { LuaExecutionResult } from '@/lib/lua-engine'
-import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua-examples'
+import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua/examples/lua-examples'
 import type { LuaScript } from '@/lib/level-types'
 import Editor from '@monaco-editor/react'
 import { useMonaco } from '@monaco-editor/react'
-import { LuaSnippetLibrary } from '@/components/LuaSnippetLibrary'
+import { LuaSnippetLibrary } from '@/components/editors/lua/LuaSnippetLibrary'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui'
-import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
-import { SecurityWarningDialog } from '@/components/SecurityWarningDialog'
+import { securityScanner, type SecurityScanResult } from '@/lib/security/scanner/security-scanner'
+import { SecurityWarningDialog } from '@/components/dialogs/SecurityWarningDialog'
 
 interface LuaEditorProps {
   scripts: LuaScript[]
