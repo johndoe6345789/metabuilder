@@ -1,65 +1,15 @@
 import { appendExportPath } from './append-export-path'
+import { buildCliCpp } from './build-cli-cpp'
+import { buildCliReadme } from './build-cli-readme'
+import { buildPackageManifestJson } from './build-package-manifest-json'
+import { buildPackageMetadataJson } from './build-package-metadata-json'
 import { createFileNode } from './create-file-node'
 import { createFolderNode } from './create-folder-node'
 import type { PackageTemplate, PackageTemplateConfig } from './types'
 
-const buildManifestJson = (config: PackageTemplateConfig): string => {
-  const manifest = {
-    scripts: config.luaScripts.map((script) => ({
-      file: script.fileName,
-      name: script.fileName.replace(/\.lua$/, ''),
-      category: 'package',
-      description: script.description,
-    })),
-  }
-  return JSON.stringify(manifest, null, 2)
-}
-
-const buildMetadataJson = (config: PackageTemplateConfig): string => {
-  const componentIds = config.components
-    .map((component) => component.id)
-    .filter((id): id is string => typeof id === 'string')
-
-  const metadata = {
-    packageId: config.packageId,
-    name: config.name,
-    version: config.version,
-    description: config.summary,
-    author: config.author,
-    category: config.category,
-    dependencies: [],
-    exports: {
-      components: componentIds,
-    },
-  }
-
-  return JSON.stringify(metadata, null, 2)
-}
-
-const buildCliReadme = (config: PackageTemplateConfig): string => {
-  return [
-    `# ${config.name} CLI`,
-    '',
-    'This is a starter CLI surface for powering package-aware workflows.',
-    'You can wire it to the exported zip and automate deployment steps.',
-  ].join('\n')
-}
-
-const buildCliCpp = (): string => {
-  return [
-    '#include <iostream>',
-    '',
-    'int main(int argc, char** argv) {',
-    '  std::cout << "MetaBuilder CLI bootstrap" << std::endl;',
-    '  std::cout << "Arguments: " << argc - 1 << std::endl;',
-    '  return 0;',
-    '}',
-  ].join('\n')
-}
-
 export function buildPackageTemplate(config: PackageTemplateConfig): PackageTemplate {
-  const manifestJson = buildManifestJson(config)
-  const metadataJson = buildMetadataJson(config)
+  const manifestJson = buildPackageManifestJson(config)
+  const metadataJson = buildPackageMetadataJson(config)
   const componentsJson = JSON.stringify(config.components, null, 2)
   const examplesJson = JSON.stringify(config.examples, null, 2)
 
