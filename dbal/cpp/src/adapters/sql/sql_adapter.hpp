@@ -492,28 +492,61 @@ public:
 class NativePrismaAdapter : public SqlAdapter {
 public:
     explicit NativePrismaAdapter(const SqlConnectionConfig& config)
-        : SqlAdapter(config, Dialect::Prisma), bridge_command_("node dbal/ts/scripts/prisma-bridge.js") {}
+        : SqlAdapter(config, Dialect::Prisma), requestsClient_("http://localhost:3000") {}
 
     std::vector<SqlRow> runQuery(SqlConnection* connection,
                                  const std::string& sql,
                                  const std::vector<SqlParam>& params) override {
         (void)connection;
-        (void)sql;
-        (void)params;
-        throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge not implemented"};
+        const auto payload = buildPayload(sql, params, "query");
+        const auto response = requestsClient_.post("/api/native-prisma", payload.dump(), {{"Content-Type", "application/json"}});
+        if (response.statusCode != 200) {
+            throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge request failed"};
+        }
+        std::vector<SqlRow> rows;
+        const auto& rowsJson = response.json["rows"];
+        if (!rowsJson.isNull() && rowsJson.isArray()) {
+            for (const auto& entry : rowsJson) {
+                SqlRow row;
+                for (const auto& [key, value] : entry.items()) {
+                    row.columns[key] = value.isString() ? value.get<std::string>() : value.dump();
+                }
+                rows.push_back(std::move(row));
+            }
+        }
+        return rows;
     }
 
     int runNonQuery(SqlConnection* connection,
                     const std::string& sql,
                     const std::vector<SqlParam>& params) override {
         (void)connection;
-        (void)sql;
-        (void)params;
-        throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge not implemented"};
+        const auto payload = buildPayload(sql, params, "nonquery");
+        const auto response = requestsClient_.post("/api/native-prisma", payload.dump(), {{"Content-Type", "application/json"}});
+        if (response.statusCode != 200) {
+            throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge request failed"};
+        }
+        if (response.json.isMember("affected")) {
+            return response.json["affected"].asInt();
+        }
+        return 0;
     }
 
 private:
-    std::string bridge_command_;
+    runtime::RequestsClient requestsClient_;
+
+    drogon::Json::Value buildPayload(const std::string& sql,
+                                     const std::vector<SqlParam>& params,
+                                     const std::string& type) const {
+        drogon::Json::Value payload;
+        payload["sql"] = sql;
+        payload["type"] = type;
+        payload["params"] = drogon::Json::Value::array();
+        for (const auto& param : params) {
+            payload["params"].push_back(param.value);
+        }
+        return payload;
+    }
 };
 
 }
