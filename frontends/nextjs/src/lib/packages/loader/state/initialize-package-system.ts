@@ -1,7 +1,7 @@
 import { PACKAGE_CATALOG } from '../../../package-lib/package-catalog'
 import { loadPackageComponents } from '../../../rendering/declarative-component-renderer'
 import { buildPackageRegistry, exportAllPackagesForSeed } from '../../package-glue'
-import { setPackageRegistry } from './set-package-registry'
+import { setPackageRegistry } from '../registry/set-package-registry'
 import { packageSystemState } from './package-system-state'
 
 /**
