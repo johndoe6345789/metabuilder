@@ -49,7 +49,7 @@ This reference ties every Material UI component that the Next.js frontend curren
 | ToggleButton / ToggleButtonGroup | `Material.MaterialToggleGroup` | `RowLayout` of `Material.MaterialButton` toggles with `exclusive` property. |
 | Toolbar | `Material.MaterialToolbar` | Horizontal container used inside navigation bars. |
 | Tooltip / TooltipProps | `Material.MaterialTooltip` | Floating `Rectangle` with arrow and text, anchored to host. |
-| Typography | `Material.MaterialTypography` | `Text` wrapper providing Material font weights/sizes. |
+| Typography | `Material.MaterialTypography` | `Text` wrapper providing Material font weights/sizes (h1–h4, button, body). |
 | Breadcrumbs (2nd mention) | `Material.MaterialBreadcrumbs` | See above for horizontal nav. |
 | DividerProps / MenuProps / PopoverProps etc. | Prop-driven wrappers that forward to QML `Rectangle`/`Menu` etc. | We expose `property alias` to match MUI API surface. |
 | useMediaQuery / useScrollTrigger / useTheme | Signals exposed via `Material.MaterialResponsive` helpers | Provide screen width bindings and scroll watchers for `AppBar`. |
