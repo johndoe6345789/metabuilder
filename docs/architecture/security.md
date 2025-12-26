@@ -61,6 +61,12 @@ const verified = scram(password, storedHash);
 - Tokens expire after inactivity
 - Tokens can be revoked immediately
 
+### Login Lockout & Backoff
+
+- Failed login attempts are tracked per username and rate-limited.
+- After `MB_AUTH_LOCKOUT_MAX_ATTEMPTS` within `MB_AUTH_LOCKOUT_WINDOW_MS`, logins lock for `MB_AUTH_LOCKOUT_MS`.
+- When locked, the API returns `429` with `Retry-After` to guide clients.
+
 ## 🏢 Multi-Tenant Isolation
 
 ### Tenant Boundaries
@@ -257,8 +263,7 @@ const hashedKey = sha512(API_KEY);  // Hash for storage
 
 ## 🔗 Related Documentation
 
-TODO: Security guidelines live at ../security/SECURITY.md; update this link.
-- [Security Guidelines](../SECURITY.md) - Security policy
+- [Security Guidelines](../security/SECURITY.md) - Security policy
 - [5-Level System](./5-level-system.md) - Permission model
 - [Database Architecture](./database.md) - Data storage
 - [API Development](../guides/api-development.md) - API security
