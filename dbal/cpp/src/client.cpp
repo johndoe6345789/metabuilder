@@ -153,8 +153,10 @@ Result<std::vector<ComponentHierarchy>> Client::searchComponents(const std::stri
     return entities::component::search(getStore(), query, page_id, limit);
 }
 
-Result<std::vector<ComponentHierarchy>> Client::getComponentChildren(const std::string& parent_id) {
-    return entities::component::getChildren(getStore(), parent_id);
+Result<std::vector<ComponentHierarchy>> Client::getComponentChildren(const std::string& parent_id,
+                                                                     const std::optional<std::string>& component_type,
+                                                                     int limit) {
+    return entities::component::getChildren(getStore(), parent_id, component_type, limit);
 }
 
 Result<Workflow> Client::createWorkflow(const CreateWorkflowInput& input) {

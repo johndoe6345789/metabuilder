@@ -923,6 +923,16 @@ void test_component_children() {
     assert(rootChildren.value()[0].id == childId);
     std::cout << "  ✓ Retrieved direct children of root" << std::endl;
 
+    auto limitedChildren = client.getComponentChildren(rootId, "Child", 1);
+    assert(limitedChildren.isOk());
+    assert(limitedChildren.value().size() == 1);
+    std::cout << "  ✓ Component children limit works" << std::endl;
+
+    auto typeFilteredChildren = client.getComponentChildren(childId, "Grandchild", 5);
+    assert(typeFilteredChildren.isOk());
+    assert(typeFilteredChildren.value().size() == 1);
+    std::cout << "  ✓ Component children filter works" << std::endl;
+
     auto childChildren = client.getComponentChildren(childId);
     assert(childChildren.isOk());
     assert(childChildren.value().size() == 1);
