@@ -2,23 +2,26 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import type { User } from '@/lib/level-types'
 
-const mockFetchSession = vi.fn()
-const mockLogin = vi.fn()
-const mockLogout = vi.fn()
-
 vi.mock('@/lib/auth/api/fetch-session', () => ({
-  fetchSession: mockFetchSession,
+  fetchSession: vi.fn(),
 }))
 
 vi.mock('@/lib/auth/api/login', () => ({
-  login: mockLogin,
+  login: vi.fn(),
 }))
 
 vi.mock('@/lib/auth/api/logout', () => ({
-  logout: mockLogout,
+  logout: vi.fn(),
 }))
 
 import { useAuth } from '@/hooks/useAuth'
+import { fetchSession } from '@/lib/auth/api/fetch-session'
+import { login as loginRequest } from '@/lib/auth/api/login'
+import { logout as logoutRequest } from '@/lib/auth/api/logout'
+
+const mockFetchSession = vi.mocked(fetchSession)
+const mockLogin = vi.mocked(loginRequest)
+const mockLogout = vi.mocked(logoutRequest)
 
 const createUser = (overrides?: Partial<User>): User => ({
   id: 'user_1',
