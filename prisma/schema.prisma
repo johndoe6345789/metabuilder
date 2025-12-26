@@ -24,6 +24,7 @@ model User {
   powerTransfersTo        PowerTransferRequest[] @relation("PowerTransferTo")
   passwordChangeTimestamp BigInt?
   firstLogin              Boolean                @default(false)
+  sessions                Session[]
 }
 
 model Credential {
