@@ -1,10 +1,10 @@
-import { appendExportPath } from './append-export-path'
-import { buildCliCpp } from './build-cli-cpp'
-import { buildCliReadme } from './build-cli-readme'
+import { appendExportPath } from '../../file-operations/export/append-export-path'
+import { buildCliCpp } from '../cli/build-cli-cpp'
+import { buildCliReadme } from '../cli/build-cli-readme'
 import { buildPackageManifestJson } from './build-package-manifest-json'
 import { buildPackageMetadataJson } from './build-package-metadata-json'
-import { createFileNode } from './create-file-node'
-import { createFolderNode } from './create-folder-node'
+import { createFileNode } from '../../nodes/create/create-file-node'
+import { createFolderNode } from '../../nodes/create/create-folder-node'
 import type { PackageTemplate, PackageTemplateConfig } from './types'
 
 export function buildPackageTemplate(config: PackageTemplateConfig): PackageTemplate {
