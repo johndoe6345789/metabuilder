@@ -2,45 +2,54 @@
  * @file create-package.ts
  * @description Create package operation
  */
-import type { Package, CreatePackageInput, Result } from '../types';
-import type { InMemoryStore } from '../store/in-memory-store';
-import { validatePackageId, validateVersion } from '../validation/package-validation';
+import type { CreatePackageInput, Package, Result } from '../../types'
+import type { InMemoryStore } from '../../store/in-memory-store'
+import { validatePackageCreate } from '../../validation/validate-package-create'
 
 /**
  * Create a new package in the store
  */
-export async function createPackage(
+export const createPackage = async (
   store: InMemoryStore,
   input: CreatePackageInput
-): Promise<Result<Package>> {
-  if (!input.name || input.name.length > 100) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Name required (max 100)' } };
-  }
-  if (!validatePackageId(input.packageId)) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid package ID format' } };
-  }
-  if (!validateVersion(input.version)) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid version format' } };
+): Promise<Result<Package>> => {
+  const isInstalled = input.isInstalled ?? false
+  const validationErrors = validatePackageCreate({
+    name: input.name,
+    version: input.version,
+    description: input.description,
+    author: input.author,
+    manifest: input.manifest,
+    isInstalled,
+    installedAt: input.installedAt,
+    installedBy: input.installedBy
+  })
+
+  if (validationErrors.length > 0) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
   }
 
-  if (store.packageIds.has(input.packageId)) {
-    return { success: false, error: { code: 'CONFLICT', message: 'Package ID exists' } };
+  const key = `${input.name}@${input.version}`
+  if (store.packageKeys.has(key)) {
+    return { success: false, error: { code: 'CONFLICT', message: 'Package name+version already exists' } }
   }
 
   const pkg: Package = {
     id: store.generateId('package'),
-    packageId: input.packageId,
     name: input.name,
-    description: input.description ?? '',
     version: input.version,
-    metadata: input.metadata ?? {},
-    isActive: input.isActive ?? true,
+    description: input.description,
+    author: input.author,
+    manifest: input.manifest,
+    isInstalled,
+    installedAt: input.installedAt,
+    installedBy: input.installedBy,
     createdAt: new Date(),
-    updatedAt: new Date(),
-  };
+    updatedAt: new Date()
+  }
 
-  store.packages.set(pkg.id, pkg);
-  store.packageIds.set(pkg.packageId, pkg.id);
+  store.packages.set(pkg.id, pkg)
+  store.packageKeys.set(key, pkg.id)
 
-  return { success: true, data: pkg };
+  return { success: true, data: pkg }
 }
