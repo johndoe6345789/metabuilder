@@ -30,7 +30,6 @@ inline Result<LuaScript> create(InMemoryStore& store, const CreateLuaScriptInput
     if (input.created_by.empty()) {
         return Error::validationError("created_by is required");
     }
-
     for (const auto& entry : input.allowed_globals) {
         if (entry.empty()) {
             return Error::validationError("allowed_globals must contain non-empty strings");
