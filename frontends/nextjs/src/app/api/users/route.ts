@@ -9,6 +9,7 @@ import type { NextRequest } from 'next/server'
 import { callDaemon } from '@/lib/dbal/daemon/client'
 import { hashPassword } from '@/lib/db/hash-password'
 import { setCredential } from '@/lib/db/credentials/set-credential'
+import { requireDBALApiKey } from '@/lib/api/require-dbal-api-key'
 import type { User, UserRole } from '@/lib/level-types'
 
 const RPC_LIMIT = 200
@@ -27,7 +28,11 @@ async function readJson<T>(request: NextRequest): Promise<T | null> {
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const unauthorized = requireDBALApiKey(request)
+  if (unauthorized) {
+    return unauthorized
+  }
   try {
     const listResult = await callDaemon<{
       data: User[]
@@ -66,6 +71,10 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const unauthorized = requireDBALApiKey(request)
+  if (unauthorized) {
+    return unauthorized
+  }
   try {
     const body = await readJson<{
       username?: string
