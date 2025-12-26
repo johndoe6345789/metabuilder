@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "dbal/core/errors.hpp"
+#include "rpc_user_actions.hpp"
 
 namespace dbal {
 namespace daemon {
@@ -103,13 +104,7 @@ void Server::registerRoutes() {
         }
 
         if (action == "list") {
-            auto options = list_options_from_json(options_value);
-            auto result = dbal_client_->listUsers(options);
-            if (!result.isOk()) {
-                send_db_error(result.error());
-                return;
-            }
-            send_success(list_response_value(result.value(), options));
+            rpc::handle_user_list(*dbal_client_, options_value, send_success, send_error);
             return;
         }
 
@@ -120,91 +115,22 @@ void Server::registerRoutes() {
         }
 
         if (action == "get" || action == "read") {
-            auto result = dbal_client_->getUser(id);
-            if (!result.isOk()) {
-                send_db_error(result.error());
-                return;
-            }
-            send_success(user_to_json(result.value()));
+            rpc::handle_user_read(*dbal_client_, id, send_success, send_error);
             return;
         }
 
         if (action == "create") {
-            const auto username = payload.get("username", "").asString();
-            const auto email = payload.get("email", "").asString();
-            if (username.empty() || email.empty()) {
-                send_error("Username and email are required for creation");
-                return;
-            }
-
-            dbal::CreateUserInput input;
-            input.username = username;
-            input.email = email;
-            if (payload.isMember("role") && payload["role"].isString()) {
-                input.role = normalize_role(payload["role"].asString());
-            }
-
-            auto result = dbal_client_->createUser(input);
-            if (!result.isOk()) {
-                send_db_error(result.error());
-                return;
-            }
-
-            send_success(user_to_json(result.value()));
+            rpc::handle_user_create(*dbal_client_, payload, send_success, send_error);
             return;
         }
 
         if (action == "update") {
-            if (id.empty()) {
-                send_error("ID is required for updates");
-                return;
-            }
-
-            dbal::UpdateUserInput updates;
-            bool has_updates = false;
-            if (payload.isMember("username") && payload["username"].isString()) {
-                updates.username = payload["username"].asString();
-                has_updates = true;
-            }
-            if (payload.isMember("email") && payload["email"].isString()) {
-                updates.email = payload["email"].asString();
-                has_updates = true;
-            }
-            if (payload.isMember("role") && payload["role"].isString()) {
-                updates.role = normalize_role(payload["role"].asString());
-                has_updates = true;
-            }
-
-            if (!has_updates) {
-                send_error("At least one update field must be provided");
-                return;
-            }
-
-            auto result = dbal_client_->updateUser(id, updates);
-            if (!result.isOk()) {
-                send_db_error(result.error());
-                return;
-            }
-
-            send_success(user_to_json(result.value()));
+            rpc::handle_user_update(*dbal_client_, id, payload, send_success, send_error);
             return;
         }
 
         if (action == "delete" || action == "remove") {
-            if (id.empty()) {
-                send_error("ID is required for delete operations");
-                return;
-            }
-
-            auto result = dbal_client_->deleteUser(id);
-            if (!result.isOk()) {
-                send_db_error(result.error());
-                return;
-            }
-
-            Json::Value body;
-            body["deleted"] = result.value();
-            send_success(body);
+            rpc::handle_user_delete(*dbal_client_, id, send_success, send_error);
             return;
         }
 

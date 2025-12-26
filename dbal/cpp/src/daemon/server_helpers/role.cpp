@@ -1,6 +1,7 @@
 #include "server_helpers/role.hpp"
 
 #include <algorithm>
+#include <cctype>
 
 namespace dbal {
 namespace daemon {
