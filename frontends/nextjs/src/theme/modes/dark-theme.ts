@@ -1,10 +1,10 @@
 'use client'
 
 import { createTheme, alpha, type Shadows } from '@mui/material/styles'
-import { colors } from '../colors'
-import { fonts } from '../fonts'
-import { layout } from '../layout'
-import { typography } from '../typography'
+import { colors } from '../base/colors'
+import { fonts } from '../base/fonts'
+import { layout } from '../base/layout'
+import { typography } from '../base/typography'
 import { getComponentOverrides } from '../components'
 
 const custom = { fonts, borderRadius: layout.borderRadius, contentWidth: layout.contentWidth, sidebar: layout.sidebar, header: layout.header }
