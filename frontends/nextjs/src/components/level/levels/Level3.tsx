@@ -23,7 +23,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { MagnifyingGlass, Plus, PencilSimple, Trash, Users, ChatCircle } from '@phosphor-icons/react'
 import { toast } from 'sonner'
-import { Database } from '@/lib/database'
+import { getUsers, deleteUser, updateUser } from '@/lib/db/users'
+import { getComments, deleteComment } from '@/lib/db/comments'
 import { AppHeader } from '../../shared/AppHeader'
 import type { User as UserType, Comment } from '@/lib/level-types'
 import type { ModelSchema } from '@/lib/schema-types'
@@ -44,9 +45,9 @@ export function Level3({ user, onLogout, onNavigate }: Level3Props) {
 
   useEffect(() => {
     const loadData = async () => {
-      const loadedUsers = await Database.getUsers({ scope: 'all' })
+      const loadedUsers = await getUsers({ scope: 'all' })
       setUsers(loadedUsers)
-      const loadedComments = await Database.getComments()
+      const loadedComments = await getComments()
       setComments(loadedComments)
     }
     loadData()
@@ -69,13 +70,13 @@ export function Level3({ user, onLogout, onNavigate }: Level3Props) {
       toast.error("You cannot delete your own account")
       return
     }
-    await Database.deleteUser(userId)
+    await deleteUser(userId)
     setUsers((current) => current.filter(u => u.id !== userId))
     toast.success('User deleted')
   }
 
   const handleDeleteComment = async (commentId: string) => {
-    await Database.deleteComment(commentId)
+    await deleteComment(commentId)
     setComments((current) => current.filter(c => c.id !== commentId))
     toast.success('Comment deleted')
   }
@@ -88,7 +89,7 @@ export function Level3({ user, onLogout, onNavigate }: Level3Props) {
   const handleSaveUser = async () => {
     if (!editingItem) return
     
-    await Database.updateUser(editingItem.id, editingItem)
+    await updateUser(editingItem.id, editingItem)
     setUsers((current) =>
       current.map(u => u.id === editingItem.id ? editingItem : u)
     )
