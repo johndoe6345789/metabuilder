@@ -1,0 +1,34 @@
+{
+  "scripts": [
+    {
+      "file": "init.lua",
+      "name": "init",
+      "category": "lifecycle",
+      "description": "Lifecycle hooks for package installation"
+    },
+    {
+      "file": "permissions.lua",
+      "name": "permissions",
+      "category": "security",
+      "description": "Role-based access rules for posting and moderation"
+    },
+    {
+      "file": "feed_rank.lua",
+      "name": "feed_rank",
+      "category": "ranking",
+      "description": "Score feed items based on recency and engagement"
+    },
+    {
+      "file": "moderation.lua",
+      "name": "moderation",
+      "category": "moderation",
+      "description": "Flag content for review using lightweight heuristics"
+    },
+    {
+      "file": "analytics.lua",
+      "name": "analytics",
+      "category": "analytics",
+      "description": "Aggregate engagement signals for dashboards"
+    }
+  ]
+}
