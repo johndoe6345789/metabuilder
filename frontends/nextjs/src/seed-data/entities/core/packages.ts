@@ -1,4 +1,4 @@
-import { initializePackageSystem } from '@/lib/packages/loader/package-loader'
+import { initializePackageSystem } from '@/lib/package-lib/package-loader'
 
 export async function initializePackages() {
   await initializePackageSystem()
