@@ -1,0 +1,7 @@
+{
+  "packageId": "blog",
+  "name": "Blog",
+  "version": "1.0.0",
+  "description": "Storytelling hub with author profiles and read-later tagging.",
+  "dependencies": ["profile_page"]
+}

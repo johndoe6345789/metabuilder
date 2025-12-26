@@ -1,0 +1,7 @@
+{
+  "packageId": "connection_hub",
+  "name": "Connection Hub",
+  "version": "1.0.0",
+  "description": "Social graph with events, groups, and shared media.",
+  "dependencies": ["profile_page", "gallery"]
+}
