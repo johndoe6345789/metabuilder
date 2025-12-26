@@ -5,6 +5,12 @@ import {
   DEFAULT_AUTH_LOCKOUT_MAX_ATTEMPTS,
 } from '../login-attempt-tracker'
 
+vi.mock('@/lib/db', () => ({
+  Database: {
+    verifyCredentials: vi.fn(),
+  },
+}))
+
 vi.mock('../execute-query', () => ({
   executeQuery: vi.fn(),
 }))
