@@ -60,6 +60,21 @@ npm run build
 
 ---
 
+## System Information
+
+Captured from this machine to document the local development environment:
+
+| Item | Detail |
+| --- | --- |
+| Repository path | `/Users/rmac/Documents/GitHub/metabuilder` |
+| Operating system | `Darwin rmacs-MacBook-Pro.local 25.1.0` (arm64) |
+| Default shell | `zsh` |
+| Node.js | `v25.2.1` |
+| npm | `11.6.2` |
+| Commands used to collect data | `pwd`, `uname -a`, `node -v`, `npm -v` |
+
+---
+
 ## Architecture
 
 MetaBuilder combines:
