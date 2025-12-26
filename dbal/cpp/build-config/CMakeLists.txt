@@ -93,4 +93,4 @@ add_test(NAME integration_tests COMMAND integration_tests)
 add_test(NAME conformance_tests COMMAND conformance_tests)
 
 install(TARGETS dbal_daemon DESTINATION bin)
-install(DIRECTORY include/dbal DESTINATION include)
+install(DIRECTORY ${DBAL_INCLUDE_DIR}/dbal DESTINATION include)

@@ -1,5 +1,5 @@
-import type { LuaScript } from '../../types/level-types'
-import { normalizeAllowedGlobals } from '../../lua/functions/sandbox/normalize-allowed-globals'
+import type { LuaScript } from '../../../types/level-types'
+import { normalizeAllowedGlobals } from '../../../lua/functions/sandbox/globals/normalize-allowed-globals'
 
 export function buildLuaScriptUpdate(updates: Partial<LuaScript>): Record<string, unknown> {
   const data: Record<string, unknown> = {}
