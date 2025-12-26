@@ -17,8 +17,44 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        id: navBar
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
+        height: 64
+        color: "#050613"
+        border.color: "#1e2b4a"
+
+        RowLayout {
+            anchors.fill: parent
+            anchors.margins: 16
+            spacing: 24
+
+            Text {
+                text: "MetaBuilder"
+                color: "#f8fbff"
+                font.pixelSize: 20
+                font.bold: true
+            }
+
+            Item { Layout.fillWidth: true }
+
+            Button { text: "Home"; font.pixelSize: 14 }
+            Button { text: "Docs"; font.pixelSize: 14 }
+            Button { text: "Login"; font.pixelSize: 14 }
+        }
+    }
+
     ScrollView {
-        anchors.fill: parent
+        anchors {
+            top: navBar.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
         anchors.margins: 24
         clip: true
 
@@ -26,38 +62,10 @@ Rectangle {
             width: parent.width - 24
             spacing: 28
 
-            RowLayout {
-                width: parent.width
-                spacing: 36
-                Layout.alignment: Qt.AlignHCenter
-
-                Text {
-                    text: "MetaBuilder"
-                    color: "#f8fbff"
-                    font.pixelSize: 28
-                    font.bold: true
-                    Layout.alignment: Qt.AlignVCenter
-                }
-
-                Rectangle {
-                    width: 1
-                    height: 24
-                    color: "#1e2b4a"
-                }
-
-                RowLayout {
-                    spacing: 12
-                    Layout.alignment: Qt.AlignVCenter
-                    Button { text: "Home"; font.pixelSize: 14 }
-                    Button { text: "Docs"; font.pixelSize: 14 }
-                    Button { text: "Login"; font.pixelSize: 14 }
-                }
-            }
-
-            Rectangle {
-                width: parent.width
-                radius: 16
-                color: "#11172d"
+        Rectangle {
+            width: parent.width
+            radius: 16
+            color: "#11172d"
                 border.color: "#25315b"
                 border.width: 1
                 padding: 32
