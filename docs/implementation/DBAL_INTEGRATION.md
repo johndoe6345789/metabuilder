@@ -139,6 +139,34 @@ import { DBALDemo } from '@/components/DBALDemo'
 <DBALDemo />
 ```
 
+## Entity CRUD (In-Memory)
+
+The DBAL also ships lightweight, in-memory entity CRUD helpers for local tooling and tests.
+
+TypeScript (in-memory store + entity modules):
+
+```typescript
+import { createInMemoryStore } from '@/core/store/in-memory-store'
+import { createUser } from '@/core/entities/user'
+import { createLuaScript } from '@/core/entities/lua-script'
+
+const store = createInMemoryStore()
+const user = await createUser(store, { username: 'demo', email: 'demo@example.com' })
+await createLuaScript(store, {
+  name: 'health_check',
+  code: 'return true',
+  allowedGlobals: ['math'],
+  createdBy: user.success ? user.data.id : ''
+})
+```
+
+C++ (per-entity modules + shared store):
+
+```
+dbal/cpp/src/entities/<entity>/*.hpp
+dbal/cpp/src/store/in_memory_store.hpp
+```
+
 ## Usage Examples
 
 ### Storing User Preferences
