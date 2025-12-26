@@ -4,13 +4,17 @@
 #include "dbal/errors.hpp"
 #include "../../../store/in_memory_store.hpp"
 #include <algorithm>
+#include <optional>
 #include <vector>
 
 namespace dbal {
 namespace entities {
 namespace component {
 
-inline Result<std::vector<ComponentHierarchy>> getChildren(InMemoryStore& store, const std::string& parent_id) {
+inline Result<std::vector<ComponentHierarchy>> getChildren(InMemoryStore& store,
+                                                          const std::string& parent_id,
+                                                          const std::optional<std::string>& type_filter = std::nullopt,
+                                                          int limit = 0) {
     if (parent_id.empty()) {
         return Error::validationError("parent_id is required");
     }
@@ -33,7 +37,14 @@ inline Result<std::vector<ComponentHierarchy>> getChildren(InMemoryStore& store,
     std::vector<ComponentHierarchy> children;
     children.reserve(child_ids.size());
     for (const auto& child_id : child_ids) {
-        children.push_back(store.components.at(child_id));
+        const auto& component = store.components.at(child_id);
+        if (type_filter.has_value() && component.component_type != type_filter.value()) {
+            continue;
+        }
+        children.push_back(component);
+        if (limit > 0 && static_cast<int>(children.size()) >= limit) {
+            break;
+        }
     }
 
     return Result<std::vector<ComponentHierarchy>>(children);
