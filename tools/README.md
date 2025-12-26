@@ -16,6 +16,7 @@ Scripts organized by function:
 - **`migrate-to-prisma.cjs`** - CJS-based migration utility
 - **`setup-packages.cjs`** - Initialize package structure
 - **`generate-package-index.cjs`** - Build `packages/index.json` from package metadata
+- **`generate-mega-seed.cjs`** - Generate large forum seed data for demos
 
 ### Testing & Deployment
 
@@ -129,6 +130,16 @@ Generate `packages/index.json` so the package loader can discover packages dynam
 
 ```bash
 node tools/generate-package-index.cjs
+```
+
+### `generate-mega-seed.cjs`
+
+Generate a deterministic, large seed dataset for `forum_forge` examples.
+
+**Usage:**
+
+```bash
+node tools/generate-mega-seed.cjs
 ```
 
 **Common Use Cases:**

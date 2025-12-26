@@ -23,13 +23,13 @@ inline Result<std::vector<LuaScript>> list(InMemoryStore& store, const ListOptio
     for (const auto& [id, script] : store.lua_scripts) {
         bool matches = true;
         
-        if (options.filter.find("is_active") != options.filter.end()) {
-            bool filter_active = options.filter.at("is_active") == "true";
-            if (script.is_active != filter_active) matches = false;
+        if (options.filter.find("created_by") != options.filter.end()) {
+            if (script.created_by != options.filter.at("created_by")) matches = false;
         }
-        
-        if (options.filter.find("category") != options.filter.end()) {
-            if (script.category != options.filter.at("category")) matches = false;
+
+        if (options.filter.find("is_sandboxed") != options.filter.end()) {
+            bool filter_sandboxed = options.filter.at("is_sandboxed") == "true";
+            if (script.is_sandboxed != filter_sandboxed) matches = false;
         }
         
         if (matches) scripts.push_back(script);
