@@ -280,6 +280,57 @@ void test_user_count() {
     std::cout << "  ✓ Admin count matches" << std::endl;
 }
 
+void test_user_bulk_filters() {
+    std::cout << "Testing bulk user filters..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreateUserInput user1;
+    user1.username = "bulk_user_1";
+    user1.email = "bulk_user_1@example.com";
+    auto res1 = client.createUser(user1);
+    assert(res1.isOk());
+
+    dbal::CreateUserInput user2;
+    user2.username = "bulk_user_2";
+    user2.email = "bulk_user_2@example.com";
+    auto res2 = client.createUser(user2);
+    assert(res2.isOk());
+
+    dbal::CreateUserInput admin;
+    admin.username = "bulk_admin";
+    admin.email = "bulk_admin@example.com";
+    admin.role = dbal::UserRole::Admin;
+    auto adminRes = client.createUser(admin);
+    assert(adminRes.isOk());
+
+    dbal::UpdateUserInput update;
+    update.role = dbal::UserRole::Admin;
+    std::map<std::string, std::string> filter;
+    filter["role"] = "user";
+    auto updateMany = client.updateManyUsers(filter, update);
+    assert(updateMany.isOk());
+    assert(updateMany.value() >= 2);
+    std::cout << "  ✓ Bulk update applied" << std::endl;
+
+    auto adminCount = client.countUsers(dbal::UserRole::Admin);
+    assert(adminCount.isOk());
+    assert(adminCount.value() >= 3);
+
+    std::map<std::string, std::string> deleteFilter;
+    deleteFilter["role"] = "admin";
+    auto deleteMany = client.deleteManyUsers(deleteFilter);
+    assert(deleteMany.isOk());
+    assert(deleteMany.value() >= 3);
+    auto remainingAdmin = client.countUsers(dbal::UserRole::Admin);
+    assert(remainingAdmin.isOk());
+    assert(remainingAdmin.value() == 0);
+    std::cout << "  ✓ Bulk delete removed updated admins" << std::endl;
+}
+
 void test_get_user() {
     std::cout << "Testing get user..." << std::endl;
     
