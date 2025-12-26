@@ -27,6 +27,28 @@
 - [ ] Update documentation/tests to reflect the new Lua metadata focus and ensure existing CI steps continue to pass with the new structure.
 - [ ] Iterate with feedback—confirm the team agrees on the folder layout, metadata ownership, and which TypeScript files stay as adapters.
 
+## Audit Results
+
+### App surface
+
+- `frontends/nextjs/src/app` contains 40+ route files (pages/levels/login/auth dashboards) plus `providers.tsx`, theme hooks, and the `packages/[...path]` catch-all route; each route ties into multiple `api/` handlers (`auth`, `users`, `packages`, `levels`, `power-transfers`, `github/actions`, `screenshot`, `health`) so capturing their metadata equivalents is critical.
+- API handlers rely on supporting modules under `frontends/nextjs/src/lib/api` and `lib packages/loader`, `db`, and `dbal` directories (see `route.ts` graph) for data access; these modules will be the first candidates for Lua metadata wrappers.
+
+### UI components
+
+- `frontends/nextjs/src/components` includes ~60 heavy React files: builder views (`Builder.tsx`, `Level[1-5].tsx`, `NerdModeIDE.tsx`), editors (`LuaEditor`, `CodeEditor`, `JsonEditor`, `SchemaEditor*`), management screens (`PackageManager`, `DatabaseManager`, `ComponentCatalog`, `WorkflowEditor`), and integrations (`GitHubActionsFetcher`, `IRCWebchat`, `DBALDemo`, `UnifiedLogin`). Each file typically imports utility hooks from `hooks/` and helpers from `lib/`.
+- Atoms/molecules/organisms subfolders hold additional reusable UI pieces (not enumerated here) but will be flagged individually during Phase 1 mapping.
+
+### Hooks & libraries
+
+- Hooks: `useAuth`, `useAutoRefresh`, `useKV`, `useLevelRouting`, `useDBAL`, `useFileTree`, `useCodeEditor`, `useResolvedUser`, `useGitHubFetcher`, `use-mobile`, plus the `hooks/auth/` store and the `hooks/use-dbal/` utility folders (blob storage, kv store, cached data). Each hook is mostly pure logic that can become a Lua micro-function.
+- Libraries: dozens of files under `frontends/nextjs/src/lib` cover auth (`lib/auth`), security scanning (`lib/security`), db/DBAL modules, package/seed management (`lib/packages`, `lib/seed`), Lua engine/functions, workflow/rendering, API helpers (`lib/api`), schema utilities, GitHub helpers, and general helpers (`lib/utils`, `lib/prisma`). These will need to be categorized as “adapter” versus “port” in Phase 1.
+
+### Supporting assets
+
+- `frontends/nextjs/src/seed-data`: JSON seeds (names not enumerated) representing packages and data baseline—prime candidates for metadata import.
+- Tests: unit/e2e coverage exists across `app/api/*/*.test.tsx`, `lib/**/*test.ts`, `components/get-component-icon.test.tsx`, and `hooks/*.test.ts`—each should either operate against Lua stubs/adapters or stay attached to TypeScript logic.
+
 ## Quick File References
 
 - `frontends/nextjs/src/app`: every route/provider/API handler will need metadata equivalents or thin Lua adapters (`page.tsx`, `layout.tsx`, auth/dashboards, `codegen/`, `api/*`, providers, etc.).
