@@ -871,7 +871,14 @@ npm run act:build     # Test build only
 npm run act:diagnose  # Check setup (no Docker)
 ```
 
-Refer to [docs/guides/ACT_CHEAT_SHEET.md](./docs/guides/ACT_CHEAT_SHEET.md) or the detailed [docs/guides/ACT_TESTING.md](./docs/guides/ACT_TESTING.md) guide to mirror GitHub Actions workflows locally and understand each Act mode.
+#### Act Modes
+
+| Mode | Command | Description |
+|------|---------|-------------|
+| Full CI | `npm run act` | Complete workflow |
+| Lint only | `npm run act:lint` | Just linting |
+| Build only | `npm run act:build` | Just build |
+| Diagnose | `npm run act:diagnose` | Check setup |
 
 ---
 
