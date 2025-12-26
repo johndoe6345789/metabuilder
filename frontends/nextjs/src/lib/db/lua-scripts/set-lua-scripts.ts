@@ -1,5 +1,6 @@
 import { getAdapter } from '../dbal-client'
 import type { LuaScript } from '../../types/level-types'
+import { serializeLuaScript } from './serialize-lua-script'
 
 /**
  * Set all Lua scripts (replaces existing)
@@ -15,13 +16,6 @@ export async function setLuaScripts(scripts: LuaScript[]): Promise<void> {
   
   // Create new scripts
   for (const script of scripts) {
-    await adapter.create('LuaScript', {
-      id: script.id,
-      name: script.name,
-      description: script.description,
-      code: script.code,
-      parameters: JSON.stringify(script.parameters),
-      returnType: script.returnType,
-    })
+    await adapter.create('LuaScript', serializeLuaScript(script))
   }
 }

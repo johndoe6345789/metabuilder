@@ -17,6 +17,7 @@ describe('updateLuaScript', () => {
   it.each([
     { id: 'ls1', updates: { name: 'New Name' } },
     { id: 'ls2', updates: { code: 'return 2', description: 'Updated' } },
+    { id: 'ls3', updates: { isSandboxed: false, allowedGlobals: ['math'], timeoutMs: 9000 } },
   ])('should update $id', async ({ id, updates }) => {
     mockUpdate.mockResolvedValue(undefined)
 

@@ -1,5 +1,6 @@
 import { getAdapter } from '../dbal-client'
 import type { LuaScript } from '../../types/level-types'
+import { deserializeLuaScript } from './deserialize-lua-script'
 
 /**
  * Get all Lua scripts
@@ -7,12 +8,5 @@ import type { LuaScript } from '../../types/level-types'
 export async function getLuaScripts(): Promise<LuaScript[]> {
   const adapter = getAdapter()
   const result = await adapter.list('LuaScript')
-  return (result.data as any[]).map((s) => ({
-    id: s.id,
-    name: s.name,
-    description: s.description || undefined,
-    code: s.code,
-    parameters: JSON.parse(s.parameters),
-    returnType: s.returnType || undefined,
-  }))
+  return (result.data as Record<string, unknown>[]).map(deserializeLuaScript)
 }

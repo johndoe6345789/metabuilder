@@ -1124,18 +1124,36 @@ private deepEquals(a: any, b: any): boolean {
 - Could allow subtle bypass of list removal
 - DoS via circular reference (though TypeScript type system helps)
 
-**Recommendation**:
+**🏰 Fort Knox Remediation**:
 ```typescript
 import { isDeepStrictEqual } from 'util'
 
-private deepEquals(a: any, b: any): boolean {
+/**
+ * Secure deep equality check with protections
+ */
+function secureDeepEquals(a: unknown, b: unknown, maxDepth = 10): boolean {
+  // Guard against stack overflow from deeply nested structures
+  function checkDepth(obj: unknown, depth: number): void {
+    if (depth > maxDepth) {
+      throw DBALError.validationError('Object nesting exceeds maximum depth')
+    }
+    if (obj !== null && typeof obj === 'object') {
+      for (const value of Object.values(obj)) {
+        checkDepth(value, depth + 1)
+      }
+    }
+  }
+  
+  checkDepth(a, 0)
+  checkDepth(b, 0)
+  
   return isDeepStrictEqual(a, b)
 }
 ```
 
 ---
 
-#### DBAL-2025-009: Quota Bypass via Concurrent Requests (MEDIUM)
+#### DBAL-2025-009: Quota Bypass via Concurrent Requests (MEDIUM → HIGH)
 **Location**: [kv-store.ts](../ts/src/core/kv-store.ts#L101-L140)
 
 ```typescript
@@ -1159,10 +1177,194 @@ async set(key: string, value: StorableValue, context: TenantContext, ttl?: numbe
 - Concurrent requests can exceed quota by writing simultaneously
 - Pattern: CWE-362 (Concurrent Execution)
 
-**Recommendation**:
-- Use atomic quota reservation before write
-- Implement distributed locking for multi-node deployments
-- Consider Redis-based quota with Lua scripts for atomicity
+**🏰 Fort Knox Remediation**:
+```typescript
+import { createClient, RedisClientType } from 'redis'
+
+/**
+ * Fort Knox Quota Manager
+ * Atomic quota operations using Redis Lua scripts
+ */
+class AtomicQuotaManager {
+  private redis: RedisClientType
+  
+  // Lua script for atomic quota check-and-reserve
+  // Returns: 1 = success, 0 = quota exceeded, -1 = error
+  private static readonly RESERVE_QUOTA_SCRIPT = `
+    local key = KEYS[1]
+    local limit = tonumber(ARGV[1])
+    local requested = tonumber(ARGV[2])
+    local ttl = tonumber(ARGV[3]) or 300
+    
+    -- Get current usage (atomic read)
+    local current = tonumber(redis.call('GET', key) or '0')
+    
+    -- Check if request would exceed quota
+    if current + requested > limit then
+      return 0  -- Quota exceeded
+    end
+    
+    -- Reserve quota atomically
+    local new_total = redis.call('INCRBY', key, requested)
+    
+    -- Set TTL on first use
+    if current == 0 then
+      redis.call('EXPIRE', key, ttl)
+    end
+    
+    -- Double-check we didn't exceed (handles race at limit)
+    if tonumber(new_total) > limit then
+      -- Rollback
+      redis.call('DECRBY', key, requested)
+      return 0
+    end
+    
+    return 1  -- Success
+  `
+  
+  private static readonly RELEASE_QUOTA_SCRIPT = `
+    local key = KEYS[1]
+    local amount = tonumber(ARGV[1])
+    
+    local current = tonumber(redis.call('GET', key) or '0')
+    if current < amount then
+      redis.call('SET', key, '0')
+      return 0
+    end
+    
+    redis.call('DECRBY', key, amount)
+    return 1
+  `
+  
+  private reserveScriptSha: string | null = null
+  private releaseScriptSha: string | null = null
+  
+  async initialize(): Promise<void> {
+    // Pre-load Lua scripts for efficiency
+    this.reserveScriptSha = await this.redis.scriptLoad(
+      AtomicQuotaManager.RESERVE_QUOTA_SCRIPT
+    )
+    this.releaseScriptSha = await this.redis.scriptLoad(
+      AtomicQuotaManager.RELEASE_QUOTA_SCRIPT
+    )
+  }
+  
+  /**
+   * Attempt to reserve quota atomically
+   * @returns true if reservation successful, false if quota exceeded
+   */
+  async reserveQuota(
+    tenantId: string,
+    quotaType: 'storage' | 'records' | 'operations',
+    amount: number,
+    limit: number
+  ): Promise<boolean> {
+    const key = `quota:${tenantId}:${quotaType}`
+    
+    const result = await this.redis.evalSha(
+      this.reserveScriptSha!,
+      { keys: [key], arguments: [String(limit), String(amount), '86400'] }
+    )
+    
+    if (result === 0) {
+      // Log quota exceeded for monitoring
+      console.warn(JSON.stringify({
+        event: 'QUOTA_EXCEEDED',
+        tenantId,
+        quotaType,
+        requested: amount,
+        limit,
+        timestamp: new Date().toISOString()
+      }))
+      return false
+    }
+    
+    return true
+  }
+  
+  /**
+   * Release reserved quota (on delete or failure rollback)
+   */
+  async releaseQuota(
+    tenantId: string,
+    quotaType: 'storage' | 'records' | 'operations',
+    amount: number
+  ): Promise<void> {
+    const key = `quota:${tenantId}:${quotaType}`
+    
+    await this.redis.evalSha(
+      this.releaseScriptSha!,
+      { keys: [key], arguments: [String(amount)] }
+    )
+  }
+  
+  /**
+   * Get current quota usage
+   */
+  async getUsage(tenantId: string, quotaType: string): Promise<number> {
+    const key = `quota:${tenantId}:${quotaType}`
+    const value = await this.redis.get(key)
+    return parseInt(value || '0', 10)
+  }
+}
+
+/**
+ * Fort Knox KV Store with atomic quotas
+ */
+class SecureKVStore implements KVStore {
+  private quotaManager: AtomicQuotaManager
+  
+  async set(key: string, value: StorableValue, context: TenantContext, ttl?: number): Promise<void> {
+    const sizeBytes = this.calculateSize(value)
+    
+    // ATOMIC: Reserve quota before writing
+    const quotaReserved = await this.quotaManager.reserveQuota(
+      context.identity.tenantId,
+      'storage',
+      sizeBytes,
+      context.quota.maxDataSizeBytes || Infinity
+    )
+    
+    if (!quotaReserved) {
+      throw DBALError.quotaExceeded('Storage quota exceeded')
+    }
+    
+    try {
+      // Perform the write
+      await this.doSet(key, value, context, ttl)
+    } catch (error) {
+      // CRITICAL: Release quota on failure
+      await this.quotaManager.releaseQuota(
+        context.identity.tenantId,
+        'storage',
+        sizeBytes
+      )
+      throw error
+    }
+  }
+}
+```
+
+**In-Memory Alternative** (for single-node deployments):
+```typescript
+import { Mutex } from 'async-mutex'
+
+class InMemoryAtomicQuota {
+  private mutex = new Mutex()
+  private usage = new Map<string, number>()
+  
+  async reserveQuota(key: string, amount: number, limit: number): Promise<boolean> {
+    return await this.mutex.runExclusive(() => {
+      const current = this.usage.get(key) || 0
+      if (current + amount > limit) {
+        return false
+      }
+      this.usage.set(key, current + amount)
+      return true
+    })
+  }
+}
+```
 
 ---
 

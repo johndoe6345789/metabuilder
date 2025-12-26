@@ -23,7 +23,16 @@ describe('setLuaScripts', () => {
     mockDelete.mockResolvedValue(undefined)
     mockCreate.mockResolvedValue(undefined)
 
-    await setLuaScripts([{ id: 'new', name: 'New', code: 'return 1', parameters: [] }] as any)
+    await setLuaScripts([
+      {
+        id: 'new',
+        name: 'New',
+        code: 'return 1',
+        parameters: [],
+        allowedGlobals: ['math'],
+        timeoutMs: 1500,
+      },
+    ] as any)
 
     expect(mockDelete).toHaveBeenCalledTimes(1)
     expect(mockCreate).toHaveBeenCalledTimes(1)

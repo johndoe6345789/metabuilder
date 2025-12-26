@@ -1,4 +1,6 @@
 #include "dbal/client.hpp"
+#include "entities/lua_script/index.hpp"
+#include "store/in_memory_store.hpp"
 #include <stdexcept>
 #include <map>
 #include <algorithm>
@@ -6,32 +8,6 @@
 #include <array>
 
 namespace dbal {
-
-// In-memory store for mock implementation
-struct InMemoryStore {
-    std::map<std::string, User> users;
-    std::map<std::string, PageView> pages;
-    std::map<std::string, std::string> page_slugs; // slug -> id mapping
-    std::map<std::string, Workflow> workflows;
-    std::map<std::string, std::string> workflow_names; // name -> id mapping
-    std::map<std::string, Session> sessions;
-    std::map<std::string, std::string> session_tokens; // token -> id mapping
-    std::map<std::string, LuaScript> lua_scripts;
-    std::map<std::string, std::string> lua_script_names; // name -> id mapping
-    std::map<std::string, Package> packages;
-    std::map<std::string, std::string> package_keys; // name@version -> id mapping
-    int user_counter = 0;
-    int page_counter = 0;
-    int workflow_counter = 0;
-    int session_counter = 0;
-    int lua_script_counter = 0;
-    int package_counter = 0;
-};
-
-static InMemoryStore& getStore() {
-    static InMemoryStore store;
-    return store;
-}
 
 // Validation helpers
 static bool isValidEmail(const std::string& email) {
@@ -60,18 +36,6 @@ static bool isValidWorkflowTrigger(const std::string& trigger) {
     return std::find(allowed.begin(), allowed.end(), trigger) != allowed.end();
 }
 
-static bool isValidLuaScriptName(const std::string& name) {
-    return !name.empty() && name.length() <= 255;
-}
-
-static bool isValidLuaScriptCode(const std::string& code) {
-    return !code.empty();
-}
-
-static bool isValidLuaTimeout(int timeout_ms) {
-    return timeout_ms >= 100 && timeout_ms <= 30000;
-}
-
 static bool isValidPackageName(const std::string& name) {
     return !name.empty() && name.length() <= 255;
 }
@@ -83,12 +47,6 @@ static bool isValidSemver(const std::string& version) {
 
 static std::string packageKey(const std::string& name, const std::string& version) {
     return name + "@" + version;
-}
-
-static std::string generateId(const std::string& prefix, int counter) {
-    char buffer[64];
-    snprintf(buffer, sizeof(buffer), "%s_%08d", prefix.c_str(), counter);
-    return std::string(buffer);
 }
 
 Client::Client(const ClientConfig& config) : config_(config) {
@@ -128,7 +86,7 @@ Result<User> Client::createUser(const CreateUserInput& input) {
     
     // Create user
     User user;
-    user.id = generateId("user", ++store.user_counter);
+    user.id = store.generateId("user", ++store.user_counter);
     user.username = input.username;
     user.email = input.email;
     user.role = input.role;
@@ -335,7 +293,7 @@ Result<PageView> Client::createPage(const CreatePageInput& input) {
     
     // Create page
     PageView page;
-    page.id = generateId("page", ++store.page_counter);
+    page.id = store.generateId("page", ++store.page_counter);
     page.slug = input.slug;
     page.title = input.title;
     page.description = input.description;
@@ -525,7 +483,7 @@ Result<Workflow> Client::createWorkflow(const CreateWorkflowInput& input) {
     }
 
     Workflow workflow;
-    workflow.id = generateId("workflow", ++store.workflow_counter);
+    workflow.id = store.generateId("workflow", ++store.workflow_counter);
     workflow.name = input.name;
     workflow.description = input.description;
     workflow.trigger = input.trigger;
@@ -700,7 +658,7 @@ Result<Session> Client::createSession(const CreateSessionInput& input) {
     }
 
     Session session;
-    session.id = generateId("session", ++store.session_counter);
+    session.id = store.generateId("session", ++store.session_counter);
     session.user_id = input.user_id;
     session.token = input.token;
     session.expires_at = input.expires_at;
@@ -860,191 +818,23 @@ Result<std::vector<Session>> Client::listSessions(const ListOptions& options) {
 }
 
 Result<LuaScript> Client::createLuaScript(const CreateLuaScriptInput& input) {
-    if (!isValidLuaScriptName(input.name)) {
-        return Error::validationError("Lua script name must be 1-255 characters");
-    }
-    if (!isValidLuaScriptCode(input.code)) {
-        return Error::validationError("Lua script code must be a non-empty string");
-    }
-    if (!isValidLuaTimeout(input.timeout_ms)) {
-        return Error::validationError("Timeout must be between 100 and 30000 ms");
-    }
-    if (input.created_by.empty()) {
-        return Error::validationError("created_by is required");
-    }
-
-    for (const auto& entry : input.allowed_globals) {
-        if (entry.empty()) {
-            return Error::validationError("allowed_globals must contain non-empty strings");
-        }
-    }
-
-    auto& store = getStore();
-    if (store.lua_script_names.find(input.name) != store.lua_script_names.end()) {
-        return Error::conflict("Lua script name already exists: " + input.name);
-    }
-
-    LuaScript script;
-    script.id = generateId("lua", ++store.lua_script_counter);
-    script.name = input.name;
-    script.description = input.description;
-    script.code = input.code;
-    script.is_sandboxed = input.is_sandboxed;
-    script.allowed_globals = input.allowed_globals;
-    script.timeout_ms = input.timeout_ms;
-    script.created_by = input.created_by;
-    script.created_at = std::chrono::system_clock::now();
-    script.updated_at = script.created_at;
-
-    store.lua_scripts[script.id] = script;
-    store.lua_script_names[script.name] = script.id;
-
-    return Result<LuaScript>(script);
+    return entities::lua_script::create(getStore(), input);
 }
 
 Result<LuaScript> Client::getLuaScript(const std::string& id) {
-    if (id.empty()) {
-        return Error::validationError("Lua script ID cannot be empty");
-    }
-
-    auto& store = getStore();
-    auto it = store.lua_scripts.find(id);
-
-    if (it == store.lua_scripts.end()) {
-        return Error::notFound("Lua script not found: " + id);
-    }
-
-    return Result<LuaScript>(it->second);
+    return entities::lua_script::get(getStore(), id);
 }
 
 Result<LuaScript> Client::updateLuaScript(const std::string& id, const UpdateLuaScriptInput& input) {
-    if (id.empty()) {
-        return Error::validationError("Lua script ID cannot be empty");
-    }
-
-    auto& store = getStore();
-    auto it = store.lua_scripts.find(id);
-
-    if (it == store.lua_scripts.end()) {
-        return Error::notFound("Lua script not found: " + id);
-    }
-
-    LuaScript& script = it->second;
-    std::string old_name = script.name;
-
-    if (input.name.has_value()) {
-        if (!isValidLuaScriptName(input.name.value())) {
-            return Error::validationError("Lua script name must be 1-255 characters");
-        }
-        auto name_it = store.lua_script_names.find(input.name.value());
-        if (name_it != store.lua_script_names.end() && name_it->second != id) {
-            return Error::conflict("Lua script name already exists: " + input.name.value());
-        }
-        store.lua_script_names.erase(old_name);
-        store.lua_script_names[input.name.value()] = id;
-        script.name = input.name.value();
-    }
-
-    if (input.description.has_value()) {
-        script.description = input.description.value();
-    }
-
-    if (input.code.has_value()) {
-        if (!isValidLuaScriptCode(input.code.value())) {
-            return Error::validationError("Lua script code must be a non-empty string");
-        }
-        script.code = input.code.value();
-    }
-
-    if (input.is_sandboxed.has_value()) {
-        script.is_sandboxed = input.is_sandboxed.value();
-    }
-
-    if (input.allowed_globals.has_value()) {
-        for (const auto& entry : input.allowed_globals.value()) {
-            if (entry.empty()) {
-                return Error::validationError("allowed_globals must contain non-empty strings");
-            }
-        }
-        script.allowed_globals = input.allowed_globals.value();
-    }
-
-    if (input.timeout_ms.has_value()) {
-        if (!isValidLuaTimeout(input.timeout_ms.value())) {
-            return Error::validationError("Timeout must be between 100 and 30000 ms");
-        }
-        script.timeout_ms = input.timeout_ms.value();
-    }
-
-    if (input.created_by.has_value()) {
-        if (input.created_by.value().empty()) {
-            return Error::validationError("created_by is required");
-        }
-        script.created_by = input.created_by.value();
-    }
-
-    script.updated_at = std::chrono::system_clock::now();
-
-    return Result<LuaScript>(script);
+    return entities::lua_script::update(getStore(), id, input);
 }
 
 Result<bool> Client::deleteLuaScript(const std::string& id) {
-    if (id.empty()) {
-        return Error::validationError("Lua script ID cannot be empty");
-    }
-
-    auto& store = getStore();
-    auto it = store.lua_scripts.find(id);
-
-    if (it == store.lua_scripts.end()) {
-        return Error::notFound("Lua script not found: " + id);
-    }
-
-    store.lua_script_names.erase(it->second.name);
-    store.lua_scripts.erase(it);
-
-    return Result<bool>(true);
+    return entities::lua_script::remove(getStore(), id);
 }
 
 Result<std::vector<LuaScript>> Client::listLuaScripts(const ListOptions& options) {
-    auto& store = getStore();
-    std::vector<LuaScript> scripts;
-
-    for (const auto& [id, script] : store.lua_scripts) {
-        bool matches = true;
-
-        if (options.filter.find("created_by") != options.filter.end()) {
-            if (script.created_by != options.filter.at("created_by")) matches = false;
-        }
-
-        if (options.filter.find("is_sandboxed") != options.filter.end()) {
-            bool filter_sandboxed = options.filter.at("is_sandboxed") == "true";
-            if (script.is_sandboxed != filter_sandboxed) matches = false;
-        }
-
-        if (matches) {
-            scripts.push_back(script);
-        }
-    }
-
-    if (options.sort.find("name") != options.sort.end()) {
-        std::sort(scripts.begin(), scripts.end(), [](const LuaScript& a, const LuaScript& b) {
-            return a.name < b.name;
-        });
-    } else if (options.sort.find("created_at") != options.sort.end()) {
-        std::sort(scripts.begin(), scripts.end(), [](const LuaScript& a, const LuaScript& b) {
-            return a.created_at < b.created_at;
-        });
-    }
-
-    int start = (options.page - 1) * options.limit;
-    int end = std::min(start + options.limit, static_cast<int>(scripts.size()));
-
-    if (start < static_cast<int>(scripts.size())) {
-        return Result<std::vector<LuaScript>>(std::vector<LuaScript>(scripts.begin() + start, scripts.begin() + end));
-    }
-
-    return Result<std::vector<LuaScript>>(std::vector<LuaScript>());
+    return entities::lua_script::list(getStore(), options);
 }
 
 Result<Package> Client::createPackage(const CreatePackageInput& input) {
@@ -1065,7 +855,7 @@ Result<Package> Client::createPackage(const CreatePackageInput& input) {
     }
 
     Package package;
-    package.id = generateId("package", ++store.package_counter);
+    package.id = store.generateId("package", ++store.package_counter);
     package.name = input.name;
     package.version = input.version;
     package.description = input.description;

@@ -23,15 +23,34 @@ describe('addLuaScript', () => {
       name: 'script with parameters',
       script: { id: 'ls2', name: 'Calc', code: 'return a + b', parameters: [{ name: 'a' }, { name: 'b' }], returnType: 'number' },
     },
+    {
+      name: 'script with sandbox profile',
+      script: {
+        id: 'ls3',
+        name: 'Sandboxed',
+        code: 'return math.sqrt(9)',
+        parameters: [],
+        isSandboxed: true,
+        allowedGlobals: ['math'],
+        timeoutMs: 2500,
+      },
+    },
   ])('should add $name', async ({ script }) => {
     mockCreate.mockResolvedValue(undefined)
 
     await addLuaScript(script as any)
+
+    const payload = mockCreate.mock.calls[0]?.[1] as Record<string, unknown>
 
     expect(mockCreate).toHaveBeenCalledWith('LuaScript', expect.objectContaining({
       id: script.id,
       name: script.name,
       code: script.code,
     }))
+
+    if (script.allowedGlobals) {
+      expect(payload.allowedGlobals).toContain('math')
+      expect(payload.timeoutMs).toBe(script.timeoutMs)
+    }
   })
 })
