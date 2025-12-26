@@ -7,8 +7,6 @@
 
 #include <drogon/drogon.h>
 #include <json/json.h>
-#include <algorithm>
-#include <cctype>
 #include <functional>
 
 namespace {
