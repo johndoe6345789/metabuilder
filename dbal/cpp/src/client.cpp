@@ -123,11 +123,7 @@ Result<std::vector<ComponentHierarchy>> Client::listComponents(const ListOptions
 }
 
 Result<std::vector<ComponentHierarchy>> Client::getComponentTree(const std::string& page_id) {
-    ListOptions options;
-    options.page = 1;
-    options.limit = 0;
-    options.filter["pageId"] = page_id;
-    return entities::component::list(getStore(), options);
+    return entities::component::getTree(getStore(), page_id);
 }
 
 Result<bool> Client::reorderComponents(const std::vector<ComponentOrderUpdate>& updates) {
