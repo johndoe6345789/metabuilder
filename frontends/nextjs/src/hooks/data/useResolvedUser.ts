@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Database } from '@/lib/database'
+import { getUserById } from '@/lib/db/users'
 import type { User } from '@/lib/level-types'
 import { useAuth } from '../useAuth'
 
@@ -26,7 +26,7 @@ export function useResolvedUser(): ResolvedUserState {
     }
 
     setIsLoading(true)
-    Database.getUserById(authUser.id)
+    getUserById(authUser.id)
       .then((loaded) => {
         if (active) {
           setUser(loaded)
