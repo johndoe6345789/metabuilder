@@ -42,7 +42,7 @@ Import example:
     "description": "",
     "author": "Anonymous",
     "category": "other",
-    "icon": "📦",
+    "icon": "package",
     "screenshots": [],
     "tags": [],
     "dependencies": [],
