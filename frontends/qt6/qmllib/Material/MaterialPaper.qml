@@ -1,14 +1,22 @@
 import QtQuick 2.15
-import "MaterialSurface.qml" as Surface
+import QtQuick.Layouts 1.15
 
-Surface.MaterialSurface {
+import "MaterialSurface.qml" as MaterialSurface
+
+MaterialSurface {
     id: paper
-    property alias content: paperLoader.sourceComponent
+    property Component body
 
-    Loader {
-        id: paperLoader
+    Layout.alignment: Qt.AlignTop
+
+    ColumnLayout {
         anchors.fill: parent
         anchors.margins: 12
-        sourceComponent: content
+
+        Loader {
+            id: paperLoader
+            anchors.fill: parent
+            sourceComponent: body
+        }
     }
 }
