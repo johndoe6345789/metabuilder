@@ -52,38 +52,6 @@ drogon::HttpResponsePtr build_json_response(const Json::Value& body) {
     return response;
 }
 
-drogon::HttpResponsePtr handle_health(const drogon::HttpRequestPtr&) {
-    Json::Value body;
-    body["status"] = "healthy";
-    body["service"] = "dbal";
-    return build_json_response(body);
-}
-
-drogon::HttpResponsePtr handle_version(const drogon::HttpRequestPtr&) {
-    Json::Value body;
-    body["version"] = "1.0.0";
-    body["service"] = "DBAL Daemon";
-    return build_json_response(body);
-}
-
-drogon::HttpResponsePtr handle_status(
-    const drogon::HttpRequestPtr& request,
-    const std::string& address
-) {
-    Json::Value body;
-    body["status"] = "running";
-    body["address"] = address;
-    body["real_ip"] = resolve_real_ip(request);
-    body["forwarded_proto"] = resolve_forwarded_proto(request);
-    return build_json_response(body);
-}
-
-std::string g_server_address;
-
-drogon::HttpResponsePtr status_handler(const drogon::HttpRequestPtr& request) {
-    return handle_status(request, g_server_address);
-}
-
 } // namespace
 
 namespace dbal {
