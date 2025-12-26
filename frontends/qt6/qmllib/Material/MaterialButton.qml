@@ -79,7 +79,7 @@ Rectangle {
         easing.type: Easing.OutQuad
     }
 
--    MouseArea {
+    MouseArea {
         anchors.fill: parent
         enabled: !disabled
         hoverEnabled: true
