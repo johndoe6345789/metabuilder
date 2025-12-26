@@ -13,6 +13,7 @@ qt:qtquickcontrols2=True
 
 [tool_requires]
 cmake/3.27.1
+ninja/1.11.1
 
 [layout]
 cmake_layout
