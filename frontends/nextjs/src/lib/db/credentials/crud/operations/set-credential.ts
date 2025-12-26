@@ -1,4 +1,4 @@
-import { getAdapter } from '../dbal-client'
+import { getAdapter } from '../../../core/dbal-client'
 
 /**
  * Set or update a user's credential
