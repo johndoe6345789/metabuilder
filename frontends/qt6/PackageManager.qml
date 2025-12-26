@@ -29,6 +29,10 @@ ApplicationWindow {
     property int selectedPackageIndex: 0
     property string searchText: ""
 
+    function togglePackage(name, install) {
+        packages = packages.map(pkg => pkg.name === name ? Object.assign({}, pkg, { installed: install }) : pkg)
+    }
+
     function filteredPackages() {
         const currentRepo = repositories[selectedRepoIndex].name
         return packages.filter((pkg) => pkg.repo === currentRepo && pkg.name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
@@ -150,7 +154,7 @@ ApplicationWindow {
                             id: packageList
                             anchors.fill: parent
                             spacing: 8
-                            model: packages.filter((pkg) => pkg.repo === repositories[selectedRepoIndex].name && pkg.name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
+                        model: filteredPackages()
                             delegate: Rectangle {
                                 width: parent.width
                                 height: 110
@@ -177,19 +181,13 @@ ApplicationWindow {
                                             text: model.installed ? "Installed" : "Install"
                                             outlined: !model.installed
                                             enabled: !model.installed
-                                            onClicked: {
-                                                model.installed = true
-                                                packages = packages.map((pkg) => pkg.name === model.name ? pkg : pkg)
-                                            }
+                                            onClicked: togglePackage(model.name, true)
                                         }
                                         Material.MaterialButton {
                                             text: "Uninstall"
                                             outlined: true
                                             enabled: model.installed
-                                            onClicked: {
-                                                model.installed = false
-                                                packages = packages.map((pkg) => pkg.name === model.name ? pkg : pkg)
-                                            }
+                                            onClicked: togglePackage(model.name, false)
                                         }
                                     }
                                 }
