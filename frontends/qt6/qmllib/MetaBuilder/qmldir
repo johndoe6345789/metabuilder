@@ -1,0 +1,6 @@
+module MetaBuilder
+NavBar 1.0 NavBar.qml
+HeroSection 1.0 HeroSection.qml
+FeatureCard 1.0 FeatureCard.qml
+StatusCard 1.0 StatusCard.qml
+ContactForm 1.0 ContactForm.qml
