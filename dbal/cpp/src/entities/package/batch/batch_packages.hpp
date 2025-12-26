@@ -9,9 +9,9 @@
 #include "dbal/errors.hpp"
 #include "../../../store/in_memory_store.hpp"
 #include "../../../validation/entity/package_validation.hpp"
-#include "create_package.hpp"
-#include "update_package.hpp"
-#include "delete_package.hpp"
+#include "../crud/create_package.hpp"
+#include "../crud/update_package.hpp"
+#include "../crud/delete_package.hpp"
 
 namespace dbal {
 namespace entities {

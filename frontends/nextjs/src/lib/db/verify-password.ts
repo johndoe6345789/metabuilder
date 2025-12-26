@@ -1,1 +1,1 @@
-export { verifyPassword } from '../password/verify-password'
+export { verifyPassword } from './password/verify-password'
