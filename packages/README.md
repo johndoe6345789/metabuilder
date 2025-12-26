@@ -25,6 +25,7 @@ packages/
 - **nav_menu**: Navigation menu components
 - **dashboard**: Dashboard layout components
 - **notification_center**: Notification center components
+- **social_hub**: Social feed components with creator tools and live rooms
 
 ## Package Metadata Format
 
