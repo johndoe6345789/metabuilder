@@ -19,22 +19,28 @@ namespace workflow {
  */
 inline Result<std::vector<Workflow>> list(InMemoryStore& store, const ListOptions& options) {
     std::vector<Workflow> workflows;
-    
+
     for (const auto& [id, workflow] : store.workflows) {
         bool matches = true;
-        
+
         if (options.filter.find("is_active") != options.filter.end()) {
             bool filter_active = options.filter.at("is_active") == "true";
             if (workflow.is_active != filter_active) matches = false;
         }
-        
-        if (options.filter.find("type") != options.filter.end()) {
-            if (workflow.type != options.filter.at("type")) matches = false;
+
+        if (options.filter.find("trigger") != options.filter.end()) {
+            if (workflow.trigger != options.filter.at("trigger")) matches = false;
         }
-        
-        if (matches) workflows.push_back(workflow);
+
+        if (options.filter.find("created_by") != options.filter.end()) {
+            if (workflow.created_by != options.filter.at("created_by")) matches = false;
+        }
+
+        if (matches) {
+            workflows.push_back(workflow);
+        }
     }
-    
+
     if (options.sort.find("name") != options.sort.end()) {
         std::sort(workflows.begin(), workflows.end(), [](const Workflow& a, const Workflow& b) {
             return a.name < b.name;
@@ -44,14 +50,14 @@ inline Result<std::vector<Workflow>> list(InMemoryStore& store, const ListOption
             return a.created_at < b.created_at;
         });
     }
-    
+
     int start = (options.page - 1) * options.limit;
     int end = std::min(start + options.limit, static_cast<int>(workflows.size()));
-    
+
     if (start < static_cast<int>(workflows.size())) {
         return Result<std::vector<Workflow>>(std::vector<Workflow>(workflows.begin() + start, workflows.begin() + end));
     }
-    
+
     return Result<std::vector<Workflow>>(std::vector<Workflow>());
 }
 
