@@ -13,6 +13,8 @@ export { checkAccess } from './check-access'
 export { checkRateLimit } from './check-rate-limit'
 export { clearRateLimit } from './clear-rate-limit'
 export { clearAllRateLimits } from './clear-all-rate-limits'
+export { createLoginSecurityContext } from './create-login-security-context'
+export { getLoginLockoutInfo } from './get-login-lockout-info'
 export { sanitizeInput } from './sanitize-input'
 export { logOperation } from './log-operation'
 export { executeQuery } from './execute-query'
@@ -39,6 +41,8 @@ import { checkAccess } from './check-access'
 import { checkRateLimit } from './check-rate-limit'
 import { clearRateLimit } from './clear-rate-limit'
 import { clearAllRateLimits } from './clear-all-rate-limits'
+import { createLoginSecurityContext } from './create-login-security-context'
+import { getLoginLockoutInfo } from './get-login-lockout-info'
 import { sanitizeInput } from './sanitize-input'
 import { logOperation } from './log-operation'
 import { executeQuery } from './execute-query'
@@ -67,6 +71,8 @@ export class SecureDatabase {
   static checkRateLimit = checkRateLimit
   static clearRateLimit = clearRateLimit
   static clearAllRateLimits = clearAllRateLimits
+  static createLoginSecurityContext = createLoginSecurityContext
+  static getLoginLockoutInfo = getLoginLockoutInfo
   static sanitizeInput = sanitizeInput
   static logOperation = logOperation
   static executeQuery = executeQuery
