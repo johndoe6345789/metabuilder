@@ -1,15 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const mockGetModel = vi.fn()
-
 vi.mock('./get-model', () => ({
-  getModel: mockGetModel,
+  getModel: vi.fn(),
 }))
 
 import { getPrimaryKeyField } from './get-primary-key-field'
 import { readEntity } from './read-entity'
 import { updateEntity } from './update-entity'
 import { deleteEntity } from './delete-entity'
+import { getModel } from './get-model'
+
+const mockGetModel = vi.mocked(getModel)
 
 describe('getPrimaryKeyField', () => {
   it.each([
