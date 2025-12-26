@@ -91,8 +91,6 @@ target_link_libraries(integration_tests dbal_core dbal_adapters)
 target_link_libraries(conformance_tests dbal_core dbal_adapters)
 target_link_libraries(http_server_security_test Threads::Threads)
 
-target_link_libraries(dbal_adapters PRIVATE cpr::cpr)
-
 add_test(NAME client_test COMMAND client_test)
 add_test(NAME query_test COMMAND query_test)
 add_test(NAME integration_tests COMMAND integration_tests)

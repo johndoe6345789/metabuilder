@@ -10,5 +10,6 @@
 #include "crud/move_component.hpp"
 #include "crud/get_tree.hpp"
 #include "crud/search_components.hpp"
+#include "crud/get_children.hpp"
 
 #endif
