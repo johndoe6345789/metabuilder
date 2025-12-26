@@ -1,6 +1,6 @@
 import { getAdapter } from '../../core/dbal-client'
-import { deleteSession } from './delete-session'
-import { mapSessionRecord } from './map-session-record'
+import { deleteSession } from '../crud/delete/delete-session'
+import { mapSessionRecord } from '../map-session-record'
 import type { Session } from './types'
 
 export async function getSessionByToken(token: string): Promise<Session | null> {
