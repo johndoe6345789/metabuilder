@@ -1,6 +1,6 @@
 import { buildWhereClause } from '../../utils/build-where-clause'
 import { getModel } from '../../utils/get-model'
-import type { ListOptions, ListResult } from '../../adapter/types'
+import type { ListOptions, ListResult } from '../../types'
 
 export async function listEntities(
   entity: string,
