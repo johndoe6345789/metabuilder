@@ -164,6 +164,8 @@ Hierarchical access control where each level inherits all permissions from lower
 | 5 | God | Workflows, advanced scripting, packages | `/builder` |
 | 6 | Supergod | Full system control, tenant management | `/supergod` |
 
+The new Level 3 moderator desk (`/moderator`) is protected by `AuthGate` with `requiredRole="moderator"` and surfaces flagged discussions, incident reports, and quick actions before escalation to admin.
+
 ### Permission Matrix
 
 | Feature | L1 | L2 | L3 | L4 | L5 | L6 |

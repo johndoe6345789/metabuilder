@@ -18,7 +18,7 @@ export type AppLevel = 1 | 2 | 3 | 4 | 5 | 6
  * @property id - Unique user identifier
  * @property username - Display username
  * @property email - Email address for notifications
- * @property role - Permission level (public|user|admin|god|supergod)
+ * @property role - Permission level (public|user|moderator|admin|god|supergod)
  * @property tenantId - Tenant isolation identifier
  * @property isInstanceOwner - Owner of this MetaBuilder instance
  */

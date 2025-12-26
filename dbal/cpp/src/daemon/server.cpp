@@ -110,11 +110,8 @@ bool Server::start() {
     registerRoutes();
     drogon::app().addListener(bind_address_, static_cast<uint16_t>(port_));
 
-    server_thread_ = std::thread([]() {
-        drogon::app().run();
-    });
-
     running_.store(true);
+    server_thread_ = std::thread(&Server::runServer, this);
     return true;
 }
 
@@ -159,6 +156,11 @@ void Server::registerRoutes() {
     drogon::app().registerHandler("/api/status", status_handler, {drogon::Get});
 
     routes_registered_ = true;
+}
+
+void Server::runServer() {
+    drogon::app().run();
+    running_.store(false);
 }
 
 } // namespace daemon
