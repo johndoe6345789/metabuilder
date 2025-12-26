@@ -7,3 +7,11 @@ MaterialChip 1.0 MaterialChip.qml
 MaterialSurface 1.0 MaterialSurface.qml
 MaterialDivider 1.0 MaterialDivider.qml
 MaterialBadge 1.0 MaterialBadge.qml
+MaterialAlert 1.0 MaterialAlert.qml
+MaterialDialog 1.0 MaterialDialog.qml
+MaterialSnackbar 1.0 MaterialSnackbar.qml
+MaterialIconButton 1.0 MaterialIconButton.qml
+MaterialCircularProgress 1.0 MaterialCircularProgress.qml
+MaterialLinearProgress 1.0 MaterialLinearProgress.qml
+MaterialSkeleton 1.0 MaterialSkeleton.qml
+MaterialSwitch 1.0 MaterialSwitch.qml
