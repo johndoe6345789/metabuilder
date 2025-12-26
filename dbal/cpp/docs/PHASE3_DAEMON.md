@@ -43,7 +43,7 @@ The C++ daemon provides a secure, sandboxed database access layer that isolates 
 │  │       - PostgreSQL (libpq)                     │ │
 │  │       - SQLite (sqlite3)                       │ │
 │  │       - MySQL (mysqlclient)                    │ │
-│  │       - Prisma (TypeScript RPC)                 │ │
+│  │       - Native Prisma Bridge                    │ │
 │  └──────────────────┬─────────────────────────────┘ │
 │                     │                                │
 └─────────────────────┼────────────────────────────────┘
