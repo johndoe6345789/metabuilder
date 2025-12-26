@@ -18,8 +18,8 @@ export { setupContextAPI } from './setup/setup-context-api'
 export { executeLuaCode } from './execution/execute-lua-code'
 
 // Snippet utilities
-export { getSnippetsByCategory } from './get-snippets-by-category'
-export { searchSnippets } from './search-snippets'
-export { getSnippetById } from './get-snippet-by-id'
-export { getSnippetCategoryCounts } from './get-snippet-category-counts'
-export { getAllSnippetTags } from './get-all-snippet-tags'
+export { getSnippetsByCategory } from './snippets/get-snippets-by-category'
+export { searchSnippets } from './snippets/search-snippets'
+export { getSnippetById } from './snippets/get-snippet-by-id'
+export { getSnippetCategoryCounts } from './snippets/get-snippet-category-counts'
+export { getAllSnippetTags } from './snippets/get-all-snippet-tags'

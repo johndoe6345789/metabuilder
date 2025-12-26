@@ -108,11 +108,29 @@ void Server::registerRoutes() {
     const std::string server_address = address();
     g_server_address = server_address;
 
-    auto health_handler = [](const drogon::HttpRequestPtr& request) {
-        return handle_health(request);
+    auto health_handler = [](const drogon::HttpRequestPtr&,
+                             std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
+        Json::Value body;
+        body["status"] = "healthy";
+        body["service"] = "dbal";
+        callback(build_json_response(body));
     };
-    auto version_handler = [](const drogon::HttpRequestPtr& request) {
-        return handle_version(request);
+    auto version_handler = [](const drogon::HttpRequestPtr&,
+                              std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
+        Json::Value body;
+        body["version"] = "1.0.0";
+        body["service"] = "DBAL Daemon";
+        callback(build_json_response(body));
+    };
+
+    auto status_handler = [server_address](const drogon::HttpRequestPtr& request,
+                                           std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
+        Json::Value body;
+        body["status"] = "running";
+        body["address"] = server_address;
+        body["real_ip"] = resolve_real_ip(request);
+        body["forwarded_proto"] = resolve_forwarded_proto(request);
+        callback(build_json_response(body));
     };
 
     drogon::app().registerHandler("/health", health_handler, {drogon::HttpMethod::Get});
