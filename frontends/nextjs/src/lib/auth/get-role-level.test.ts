@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { getRoleLevel } from './get-role-level'
+import type { UserRole } from '../types/level-types'
 
 describe('getRoleLevel', () => {
   it.each([
@@ -8,7 +9,7 @@ describe('getRoleLevel', () => {
     ['admin', 3],
     ['god', 4],
     ['supergod', 5],
-  ])('maps %s to level %i', (role, expected) => {
-    expect(getRoleLevel(role)).toBe(expected)
+  ] as const)('maps %s to level %i', (role, expected) => {
+    expect(getRoleLevel(role as UserRole)).toBe(expected)
   })
 })

@@ -6,6 +6,7 @@ export { useFileTree } from './useFileTree'
 export { useGitHubFetcher } from './useGitHubFetcher'
 export { useKV } from './useKV'
 export { useIsMobile } from './use-mobile'
+export { useResolvedUser } from './useResolvedUser'
 
 export type { AuthUser, AuthState, UseAuthReturn } from './auth/auth-types'
 export type { EditorFile } from './useCodeEditor'
