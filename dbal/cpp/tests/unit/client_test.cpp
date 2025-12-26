@@ -1389,6 +1389,7 @@ int main() {
         test_user_conflicts();
         test_user_search();
         test_user_count();
+        test_user_bulk_filters();
         test_credential_crud();
         test_credential_validation();
         test_get_user();
@@ -1415,7 +1416,7 @@ int main() {
         
         std::cout << std::endl;
         std::cout << "==================================================" << std::endl;
-        std::cout << "✅ All 30 test suites passed!" << std::endl;
+        std::cout << "✅ All 31 test suites passed!" << std::endl;
         std::cout << "==================================================" << std::endl;
         return 0;
     } catch (const std::exception& e) {
