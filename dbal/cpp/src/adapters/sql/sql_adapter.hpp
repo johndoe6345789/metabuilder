@@ -2,6 +2,8 @@
 #define DBAL_SQL_ADAPTER_HPP
 
 #include <algorithm>
+#include <cctype>
+#include <chrono>
 #include <map>
 #include <sstream>
 #include <string>
@@ -49,7 +51,7 @@ public:
     Result<User> createUser(const CreateUserInput& input) override {
         auto conn = pool_.acquire();
         if (!conn) {
-            return Error::databaseError("Unable to acquire SQL connection");
+            return Error::internal("Unable to acquire SQL connection");
         }
         ConnectionGuard guard(pool_, conn);
 
@@ -76,7 +78,7 @@ public:
     Result<User> getUser(const std::string& id) override {
         auto conn = pool_.acquire();
         if (!conn) {
-            return Error::databaseError("Unable to acquire SQL connection");
+            return Error::internal("Unable to acquire SQL connection");
         }
         ConnectionGuard guard(pool_, conn);
 
@@ -98,7 +100,7 @@ public:
     Result<User> updateUser(const std::string& id, const UpdateUserInput& input) override {
         auto conn = pool_.acquire();
         if (!conn) {
-            return Error::databaseError("Unable to acquire SQL connection");
+            return Error::internal("Unable to acquire SQL connection");
         }
         ConnectionGuard guard(pool_, conn);
 
@@ -142,7 +144,7 @@ public:
     Result<bool> deleteUser(const std::string& id) override {
         auto conn = pool_.acquire();
         if (!conn) {
-            return Error::databaseError("Unable to acquire SQL connection");
+            return Error::internal("Unable to acquire SQL connection");
         }
         ConnectionGuard guard(pool_, conn);
 
@@ -163,7 +165,7 @@ public:
     Result<std::vector<User>> listUsers(const ListOptions& options) override {
         auto conn = pool_.acquire();
         if (!conn) {
-            return Error::databaseError("Unable to acquire SQL connection");
+            return Error::internal("Unable to acquire SQL connection");
         }
         ConnectionGuard guard(pool_, conn);
 
