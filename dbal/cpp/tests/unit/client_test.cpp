@@ -1031,6 +1031,8 @@ int main() {
         test_user_batch_operations();
         test_page_crud();
         test_page_validation();
+        test_component_crud();
+        test_component_validation();
         test_workflow_crud();
         test_workflow_validation();
         test_session_crud();
@@ -1044,7 +1046,7 @@ int main() {
         
         std::cout << std::endl;
         std::cout << "==================================================" << std::endl;
-        std::cout << "✅ All 22 test suites passed!" << std::endl;
+        std::cout << "✅ All 24 test suites passed!" << std::endl;
         std::cout << "==================================================" << std::endl;
         return 0;
     } catch (const std::exception& e) {
