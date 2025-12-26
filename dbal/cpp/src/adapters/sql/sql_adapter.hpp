@@ -489,6 +489,33 @@ public:
         : SqlAdapter(config, Dialect::Prisma) {}
 };
 
+class NativePrismaAdapter : public SqlAdapter {
+public:
+    explicit NativePrismaAdapter(const SqlConnectionConfig& config)
+        : SqlAdapter(config, Dialect::Prisma), bridge_command_("node dbal/ts/scripts/prisma-bridge.js") {}
+
+    std::vector<SqlRow> runQuery(SqlConnection* connection,
+                                 const std::string& sql,
+                                 const std::vector<SqlParam>& params) override {
+        (void)connection;
+        (void)sql;
+        (void)params;
+        throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge not implemented"};
+    }
+
+    int runNonQuery(SqlConnection* connection,
+                    const std::string& sql,
+                    const std::vector<SqlParam>& params) override {
+        (void)connection;
+        (void)sql;
+        (void)params;
+        throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge not implemented"};
+    }
+
+private:
+    std::string bridge_command_;
+};
+
 }
 }
 }
