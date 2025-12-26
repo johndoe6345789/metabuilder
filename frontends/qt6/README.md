@@ -13,3 +13,8 @@ This directory contains a minimal Qt Quick replica of the public MetaBuilder lan
 2. Run the scene with `qmlscene frontends/qt6/FrontPage.qml` (or build the Qt6 project and run `frontends/qt6/main` so the C++ entry point loads `FrontPage.qml`).
 
 You can also embed `main.qml` into a Qt Quick Application project and expose C++ integrations for live data later.
+
+## Component library
+
+- Shared QML components live under `frontends/qt6/qmllib/MetaBuilder`.
+- Import them via `import "qmllib/MetaBuilder" as MetaBuilder` and reuse `MetaBuilder.NavBar`, `MetaBuilder.HeroSection`, `MetaBuilder.FeatureCard`, `MetaBuilder.StatusCard`, and `MetaBuilder.ContactForm` to keep future pages consistent.

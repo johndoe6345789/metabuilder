@@ -38,6 +38,7 @@ Rectangle {
     }
 
     MetaBuilder.NavBar {
+        id: navBar
         anchors {
             top: parent.top
             left: parent.left
@@ -48,14 +49,13 @@ Rectangle {
 
     ScrollView {
         anchors {
-            top: parent.top
+            top: navBar.bottom
             left: parent.left
             right: parent.right
             bottom: parent.bottom
         }
         anchors.margins: 24
         clip: true
-        anchors.topMargin: navBar.height
 
         ColumnLayout {
             width: parent.width - 24
