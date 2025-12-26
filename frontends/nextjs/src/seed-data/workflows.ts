@@ -106,6 +106,39 @@ export async function initializeWorkflows() {
         { id: 'edge_1', source: 'node_validate_comment', target: 'node_save_comment', label: 'valid' },
         { id: 'edge_2', source: 'node_save_comment', target: 'node_notify_success', label: 'saved' }
       ]
+    },
+    {
+      id: 'workflow_package_export',
+      name: 'Package Export Pipeline',
+      description: 'Validates packages and generates exportable bundles',
+      enabled: true,
+      nodes: [
+        {
+          id: 'node_validate_package',
+          type: 'condition',
+          label: 'Validate Package',
+          config: { action: 'validate_package' },
+          position: { x: 100, y: 100 }
+        },
+        {
+          id: 'node_build_zip',
+          type: 'action',
+          label: 'Build Zip',
+          config: { action: 'build_package_zip' },
+          position: { x: 100, y: 200 }
+        },
+        {
+          id: 'node_publish_package',
+          type: 'action',
+          label: 'Publish Artifact',
+          config: { action: 'publish_package' },
+          position: { x: 100, y: 300 }
+        }
+      ],
+      edges: [
+        { id: 'edge_1', source: 'node_validate_package', target: 'node_build_zip', label: 'valid' },
+        { id: 'edge_2', source: 'node_build_zip', target: 'node_publish_package', label: 'built' }
+      ]
     }
   ]
 

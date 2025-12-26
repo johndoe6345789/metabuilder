@@ -18,6 +18,7 @@ const expectedWorkflowIds = [
   'workflow_user_registration',
   'workflow_page_access',
   'workflow_comment_submission',
+  'workflow_package_export',
 ]
 
 describe('initializeWorkflows', () => {
