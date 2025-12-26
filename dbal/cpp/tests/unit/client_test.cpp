@@ -775,6 +775,51 @@ void test_component_validation() {
     std::cout << "  ✓ Negative order rejected" << std::endl;
 }
 
+void test_component_search() {
+    std::cout << "Testing component search..." << std::endl;
+
+    dbal::ClientConfig config;
+    config.adapter = "sqlite";
+    config.database_url = ":memory:";
+    dbal::Client client(config);
+
+    dbal::CreatePageInput pageInput;
+    pageInput.slug = "component-search";
+    pageInput.title = "Component Search";
+    pageInput.level = 1;
+    pageInput.layout = {{"row", "search"}};
+    pageInput.is_active = true;
+    auto pageResult = client.createPage(pageInput);
+    assert(pageResult.isOk());
+    std::string pageId = pageResult.value().id;
+
+    dbal::CreateComponentHierarchyInput targetInput;
+    targetInput.page_id = pageId;
+    targetInput.component_type = "SearchButton";
+    targetInput.order = 0;
+    targetInput.props = {{"payload", "find-me"}};
+    auto targetResult = client.createComponent(targetInput);
+    assert(targetResult.isOk());
+    std::string targetId = targetResult.value().id;
+
+    auto typeSearch = client.searchComponents("searchbutton", pageId);
+    assert(typeSearch.isOk());
+    assert(!typeSearch.value().empty());
+    bool foundType = std::any_of(typeSearch.value().begin(), typeSearch.value().end(), [&](const dbal::ComponentHierarchy& entry) {
+        return entry.id == targetId;
+    });
+    assert(foundType);
+    std::cout << "  ✓ Component type search works" << std::endl;
+
+    auto propSearch = client.searchComponents("find-me", pageId);
+    assert(propSearch.isOk());
+    bool foundProp = std::any_of(propSearch.value().begin(), propSearch.value().end(), [&](const dbal::ComponentHierarchy& entry) {
+        return entry.id == targetId;
+    });
+    assert(foundProp);
+    std::cout << "  ✓ Component prop search works" << std::endl;
+}
+
 void test_workflow_crud() {
     std::cout << "Testing workflow CRUD operations..." << std::endl;
 

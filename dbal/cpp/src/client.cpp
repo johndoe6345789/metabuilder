@@ -138,6 +138,12 @@ Result<ComponentHierarchy> Client::moveComponent(const MoveComponentInput& input
     return entities::component::move(getStore(), input);
 }
 
+Result<std::vector<ComponentHierarchy>> Client::searchComponents(const std::string& query,
+                                                                 const std::optional<std::string>& page_id,
+                                                                 int limit) {
+    return entities::component::search(getStore(), query, page_id, limit);
+}
+
 Result<Workflow> Client::createWorkflow(const CreateWorkflowInput& input) {
     return entities::workflow::create(getStore(), input);
 }
