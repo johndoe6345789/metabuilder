@@ -1,4 +1,4 @@
-import { getAdapter } from '../../../../core/dbal-client'
+import { getAdapter } from '../../../dbal-client'
 import type { ComponentNode } from '../types'
 
 export async function addComponentNode(node: ComponentNode): Promise<void> {
