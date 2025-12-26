@@ -4,15 +4,18 @@
 #include <algorithm>
 #include <cctype>
 #include <chrono>
+#include <cstdlib>
 #include <map>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "../../adapters/adapter.hpp"
 #include "../../types.hpp"
 #include "../../errors.hpp"
 #include "sql_connection.hpp"
+#include "../../runtime/requests_client.hpp"
 
 namespace dbal {
 namespace adapters {
