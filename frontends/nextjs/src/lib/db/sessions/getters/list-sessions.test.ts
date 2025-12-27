@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 const mockList = vi.fn()
 const mockAdapter = { list: mockList }
 
-vi.mock('../dbal-client', () => ({
+vi.mock('../../core/dbal-client', () => ({
   getAdapter: () => mockAdapter,
 }))
 

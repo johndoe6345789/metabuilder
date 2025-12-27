@@ -7,7 +7,12 @@ import {
   FormControlLabel,
 } from '@mui/material'
 
+/**
+ * Props for the Checkbox component
+ * @extends {MuiCheckboxProps} Inherits Material-UI Checkbox props
+ */
 export interface CheckboxProps extends MuiCheckboxProps {
+  /** Optional label text to display next to the checkbox */
   label?: string
 }
 

@@ -3,6 +3,10 @@
 import { forwardRef } from 'react'
 import { Avatar as MuiAvatar, AvatarProps as MuiAvatarProps } from '@mui/material'
 
+/**
+ * Props for the Avatar component
+ * @extends {MuiAvatarProps} Inherits Material-UI Avatar props
+ */
 export type AvatarProps = MuiAvatarProps
 
 const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
