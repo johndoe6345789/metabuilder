@@ -4,6 +4,7 @@ export type ThemeMode = 'light' | 'dark' | 'system'
 
 export interface ThemeContextType {
   mode: ThemeMode
+  resolvedMode: Exclude<ThemeMode, 'system'>
   setMode: (mode: ThemeMode) => void
   toggleTheme: () => void
 }
