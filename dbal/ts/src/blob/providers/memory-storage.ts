@@ -6,7 +6,7 @@ import type {
   DownloadOptions,
   BlobListOptions,
 } from './blob-storage'
-import { DBALError } from '../core/errors'
+import { DBALError } from '../../core/foundation/errors'
 import { createHash } from 'crypto'
 
 interface BlobData {

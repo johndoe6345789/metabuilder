@@ -1,10 +1,10 @@
-import type { DBALConfig } from '../runtime/config'
-import type { DBALAdapter } from '../adapters/adapter'
-import type { User, PageView, ComponentHierarchy, Workflow, LuaScript, Package, Session, ListOptions, ListResult } from './types'
-import { DBALError } from './errors'
-import { PrismaAdapter, PostgresAdapter, MySQLAdapter } from '../adapters/prisma-adapter'
-import { ACLAdapter } from '../adapters/acl-adapter'
-import { WebSocketBridge } from '../bridges/websocket-bridge'
+import type { DBALConfig } from '../../runtime/config'
+import type { DBALAdapter } from '../../adapters/adapter'
+import type { User, PageView, ComponentHierarchy, Workflow, LuaScript, Package, Session, ListOptions, ListResult } from '../foundation/types'
+import { DBALError } from '../foundation/errors'
+import { PrismaAdapter, PostgresAdapter, MySQLAdapter } from '../../adapters/prisma-adapter'
+import { ACLAdapter } from '../../adapters/acl-adapter'
+import { WebSocketBridge } from '../../bridges/websocket-bridge'
 import {
   validateUserCreate,
   validateUserUpdate,
@@ -21,7 +21,7 @@ import {
   validateSessionCreate,
   validateSessionUpdate,
   validateId,
-} from './validation'
+} from '../validation'
 
 export class DBALClient {
   private adapter: DBALAdapter

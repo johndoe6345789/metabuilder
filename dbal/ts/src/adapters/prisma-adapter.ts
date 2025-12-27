@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import type { DBALAdapter, AdapterCapabilities } from './adapter'
 import type { ListOptions, ListResult } from '../core/types'
-import { DBALError } from '../core/errors'
+import { DBALError } from '../core/foundation/errors'
 
 type PrismaAdapterDialect = 'postgres' | 'mysql' | 'sqlite' | 'generic'
 

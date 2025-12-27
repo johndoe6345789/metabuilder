@@ -10,7 +10,7 @@
 
 import { BlobStorage, BlobMetadata, UploadOptions, DownloadOptions, BlobListOptions, BlobListResult } from './blob-storage'
 import { TenantContext, TenantManager } from '../core/tenant-context'
-import { DBALError } from '../core/errors'
+import { DBALError } from '../../core/foundation/errors'
 import { Readable } from 'stream'
 
 export class TenantAwareBlobStorage implements BlobStorage {

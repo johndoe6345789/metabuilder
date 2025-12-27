@@ -7,7 +7,7 @@ import type {
   BlobListOptions,
   BlobStorageConfig,
 } from './blob-storage'
-import { DBALError } from '../core/errors'
+import { DBALError } from '../../core/foundation/errors'
 
 /**
  * S3-compatible blob storage implementation
