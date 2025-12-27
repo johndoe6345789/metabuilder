@@ -5,9 +5,9 @@
 ## Summary
 
 - **Total files > 150 lines:** 106
-- **Pending:** 93
+- **Pending:** 91
 - **In Progress:** 0
-- **Completed:** 1
+- **Completed:** 3
 - **Skipped:** 12
 
 ## By Category
@@ -38,8 +38,8 @@ Library and tool files - easiest to refactor
 - [ ] `frontends/nextjs/src/lib/components/component-catalog.ts` (337 lines)
 - [ ] `frontends/nextjs/src/lib/schema/default-schema.ts` (308 lines)
 - [ ] `frontends/nextjs/src/lib/lua/snippets/lua-snippets-data.ts` (983 lines)
-- [ ] `tools/analysis/code/analyze-render-performance.ts` (294 lines)
-- [ ] `tools/misc/metrics/enforce-size-limits.ts` (249 lines)
+- [x] `tools/analysis/code/analyze-render-performance.ts` (294 lines)
+- [x] `tools/misc/metrics/enforce-size-limits.ts` (249 lines)
 - [ ] `tools/refactoring/refactor-to-lambda.ts` (243 lines)
 - [x] `tools/analysis/test/analyze-implementation-completeness.ts` (230 lines)
 - [ ] `tools/detection/detect-stub-implementations.ts` (215 lines)
