@@ -19,7 +19,7 @@
 - [ ] Create missing common molecules (form fields, search bars, nav items)
 
 ### Organisms (`src/components/organisms/`)
-- [ ] Audit organisms for proper composition of molecules/atoms
+- [x] Audit organisms for proper composition of molecules/atoms (See: `docs/audits/ORGANISM_COMPOSITION_AUDIT.md`)
 - [ ] Split oversized organisms (>150 LOC) into smaller organisms
 - [ ] Document organism data flow and state management
 - [ ] Ensure organisms handle layout, molecules handle interaction
