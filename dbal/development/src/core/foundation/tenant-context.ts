@@ -1,50 +1,13 @@
 /**
- * Multi-Tenant Context and Identity Management
- * 
- * Provides tenant isolation, access control, and quota management
- * for both blob storage and structured data.
+ * @file tenant-context.ts
+ * @description Multi-tenant context and identity management
  */
 
-export interface TenantIdentity {
-  tenantId: string
-  userId: string
-  role: 'owner' | 'admin' | 'member' | 'viewer'
-  permissions: Set<string>
-}
+import type { TenantIdentity, TenantQuota, TenantContext } from './tenant/tenant-types'
+import * as PermissionChecks from './tenant/permission-checks'
+import * as QuotaChecks from './tenant/quota-checks'
 
-export interface TenantQuota {
-  // Blob storage quotas
-  maxBlobStorageBytes?: number
-  maxBlobCount?: number
-  maxBlobSizeBytes?: number
-  
-  // Structured data quotas
-  maxRecords?: number
-  maxDataSizeBytes?: number
-  maxListLength?: number
-  
-  // Computed usage
-  currentBlobStorageBytes: number
-  currentBlobCount: number
-  currentRecords: number
-  currentDataSizeBytes: number
-}
-
-export interface TenantContext {
-  identity: TenantIdentity
-  quota: TenantQuota
-  namespace: string // For blob storage isolation
-  
-  // Check if operation is allowed
-  canRead(resource: string): boolean
-  canWrite(resource: string): boolean
-  canDelete(resource: string): boolean
-  
-  // Check quota availability
-  canUploadBlob(sizeBytes: number): boolean
-  canCreateRecord(): boolean
-  canAddToList(additionalItems: number): boolean
-}
+export type { TenantIdentity, TenantQuota, TenantContext }
 
 export class DefaultTenantContext implements TenantContext {
   constructor(
@@ -54,202 +17,38 @@ export class DefaultTenantContext implements TenantContext {
   ) {}
   
   canRead(resource: string): boolean {
-    // Owner and admin can read everything
-    if (this.identity.role === 'owner' || this.identity.role === 'admin') {
-      return true
-    }
-    
-    // Check specific permissions
-    return (
-      this.identity.permissions.has('read:*') ||
-      this.identity.permissions.has(`read:${resource}`)
-    )
+    return PermissionChecks.canRead(this.identity, resource)
   }
   
   canWrite(resource: string): boolean {
-    // Only owner and admin can write
-    if (this.identity.role === 'owner' || this.identity.role === 'admin') {
-      return true
-    }
-    
-    // Check specific permissions
-    return (
-      this.identity.permissions.has('write:*') ||
-      this.identity.permissions.has(`write:${resource}`)
-    )
+    return PermissionChecks.canWrite(this.identity, resource)
   }
   
   canDelete(resource: string): boolean {
-    // Only owner and admin can delete
-    if (this.identity.role === 'owner' || this.identity.role === 'admin') {
-      return true
-    }
-    
-    // Check specific permissions
-    return (
-      this.identity.permissions.has('delete:*') ||
-      this.identity.permissions.has(`delete:${resource}`)
-    )
+    return PermissionChecks.canDelete(this.identity, resource)
   }
   
   canUploadBlob(sizeBytes: number): boolean {
-    const { quota } = this
-    
-    // Check max blob size
-    if (quota.maxBlobSizeBytes && sizeBytes > quota.maxBlobSizeBytes) {
-      return false
-    }
-    
-    // Check total storage quota
-    if (quota.maxBlobStorageBytes) {
-      if (quota.currentBlobStorageBytes + sizeBytes > quota.maxBlobStorageBytes) {
-        return false
-      }
-    }
-    
-    // Check blob count quota
-    if (quota.maxBlobCount) {
-      if (quota.currentBlobCount >= quota.maxBlobCount) {
-        return false
-      }
-    }
-    
-    return true
+    return QuotaChecks.canUploadBlob(this.quota, sizeBytes)
   }
   
   canCreateRecord(): boolean {
-    const { quota } = this
-    
-    if (quota.maxRecords) {
-      return quota.currentRecords < quota.maxRecords
-    }
-    
-    return true
+    return QuotaChecks.canCreateRecord(this.quota)
   }
   
   canAddToList(additionalItems: number): boolean {
-    const { quota } = this
-    
-    if (quota.maxListLength && additionalItems > quota.maxListLength) {
-      return false
-    }
-    
-    return true
+    return QuotaChecks.canAddToList(this.quota, additionalItems)
   }
 }
 
-export interface TenantManager {
-  // Get tenant context for operations
-  getTenantContext(tenantId: string, userId: string): Promise<TenantContext>
-  
-  // Update quota usage
-  updateBlobUsage(tenantId: string, bytesChange: number, countChange: number): Promise<void>
-  updateRecordUsage(tenantId: string, countChange: number, bytesChange: number): Promise<void>
-  
-  // Create/update tenant
-  createTenant(tenantId: string, quota?: Partial<TenantQuota>): Promise<void>
-  updateQuota(tenantId: string, quota: Partial<TenantQuota>): Promise<void>
-  
-  // Get current usage
-  getUsage(tenantId: string): Promise<TenantQuota>
-}
-
-export class InMemoryTenantManager implements TenantManager {
-  private tenants = new Map<string, TenantQuota>()
-  private permissions = new Map<string, TenantIdentity>()
-  
-  async getTenantContext(tenantId: string, userId: string): Promise<TenantContext> {
-    let quota = this.tenants.get(tenantId)
-    if (!quota) {
-      // Create default quota
-      quota = {
-        currentBlobStorageBytes: 0,
-        currentBlobCount: 0,
-        currentRecords: 0,
-        currentDataSizeBytes: 0
-      }
-      this.tenants.set(tenantId, quota)
-    }
-    
-    // Get or create identity
-    const identityKey = `${tenantId}:${userId}`
-    let identity = this.permissions.get(identityKey)
-    if (!identity) {
-      identity = {
-        tenantId,
-        userId,
-        role: 'member',
-        permissions: new Set(['read:*', 'write:*'])
-      }
-      this.permissions.set(identityKey, identity)
-    }
-    
-    const namespace = `tenants/${tenantId}/`
-    
-    return new DefaultTenantContext(identity, quota, namespace)
-  }
-  
-  async updateBlobUsage(tenantId: string, bytesChange: number, countChange: number): Promise<void> {
-    const quota = this.tenants.get(tenantId)
-    if (quota) {
-      quota.currentBlobStorageBytes += bytesChange
-      quota.currentBlobCount += countChange
-    }
-  }
-  
-  async updateRecordUsage(tenantId: string, countChange: number, bytesChange: number): Promise<void> {
-    const quota = this.tenants.get(tenantId)
-    if (quota) {
-      quota.currentRecords += countChange
-      quota.currentDataSizeBytes += bytesChange
-    }
-  }
-  
-  async createTenant(tenantId: string, quotaOverrides?: Partial<TenantQuota>): Promise<void> {
-    const quota: TenantQuota = {
-      currentBlobStorageBytes: 0,
-      currentBlobCount: 0,
-      currentRecords: 0,
-      currentDataSizeBytes: 0,
-      ...quotaOverrides
-    }
-    this.tenants.set(tenantId, quota)
-  }
-  
-  async updateQuota(tenantId: string, quotaUpdates: Partial<TenantQuota>): Promise<void> {
-    const quota = this.tenants.get(tenantId)
-    if (quota) {
-      Object.assign(quota, quotaUpdates)
-    }
-  }
-  
-  async getUsage(tenantId: string): Promise<TenantQuota> {
-    const quota = this.tenants.get(tenantId)
-    if (!quota) {
-      return {
-        currentBlobStorageBytes: 0,
-        currentBlobCount: 0,
-        currentRecords: 0,
-        currentDataSizeBytes: 0
-      }
-    }
-    return { ...quota }
-  }
-  
-  // Admin methods for testing
-  setUserRole(tenantId: string, userId: string, role: TenantIdentity['role']): void {
-    const identityKey = `${tenantId}:${userId}`
-    const identity = this.permissions.get(identityKey)
-    if (identity) {
-      identity.role = role
-    }
-  }
-  
-  grantPermission(tenantId: string, userId: string, permission: string): void {
-    const identityKey = `${tenantId}:${userId}`
-    const identity = this.permissions.get(identityKey)
-    if (identity) {
-      identity.permissions.add(permission)
-    }
-  }
+export const createTenantContext = (
+  identity: TenantIdentity,
+  quota: TenantQuota,
+  namespace?: string
+): TenantContext => {
+  return new DefaultTenantContext(
+    identity,
+    quota,
+    namespace || `tenant_${identity.tenantId}`
+  )
 }
