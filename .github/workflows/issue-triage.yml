@@ -109,7 +109,7 @@ jobs:
       (github.event.action == 'labeled' && github.event.label.name == 'auto-fix')
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Analyze issue and suggest fix
         uses: actions/github-script@v7
@@ -147,7 +147,7 @@ jobs:
     if: github.event.action == 'labeled' && github.event.label.name == 'create-pr'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
