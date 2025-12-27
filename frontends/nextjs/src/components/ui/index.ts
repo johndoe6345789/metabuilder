@@ -104,6 +104,8 @@ export {
   DialogClose,
   DialogOverlay,
   DialogPortal,
+  DialogSection,
+  DialogSections,
   // Select
   Select,
   SelectTrigger,
@@ -142,6 +144,8 @@ export {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  MenuItem,
+  type MenuItemProps,
   DropdownMenuSeparator,
   DropdownMenuLabel,
   DropdownMenuGroup,
@@ -153,6 +157,7 @@ export {
   DropdownMenuSubContent,
   DropdownMenuShortcut,
   DropdownMenuPortal,
+  useDropdownState,
   // RadioGroup
   RadioGroup,
   RadioGroupItem,

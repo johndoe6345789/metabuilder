@@ -14,6 +14,7 @@ export {
   DialogTitle,
   DialogTrigger,
 } from './overlay/Dialog'
+export { DialogSection, DialogSections } from './overlay/Dialog/Sections'
 export {
   Select,
   SelectContent,
@@ -47,6 +48,8 @@ export {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from './overlay/DropdownMenu'
+export { MenuItem, type MenuItemProps } from './overlay/DropdownMenu/MenuItem'
+export { useDropdownState } from './overlay/useDropdownState'
 export { RadioGroup, RadioGroupItem } from './selection/RadioGroup'
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from './overlay/Popover'
 export { ToggleGroup, ToggleGroupItem } from './selection/ToggleGroup'

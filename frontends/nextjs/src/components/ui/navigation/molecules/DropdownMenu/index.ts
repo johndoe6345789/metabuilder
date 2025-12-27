@@ -1,4 +1,3 @@
-// Re-export for backward compatibility
 export {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -15,7 +14,6 @@ export {
   DropdownMenuCheckboxItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  MenuItem,
-  type MenuItemProps,
-  useDropdownState,
-} from './molecules/DropdownMenu'
+} from '../../../molecules/overlay/DropdownMenu'
+export { MenuItem, type MenuItemProps } from '../../../molecules/overlay/DropdownMenu/MenuItem'
+export { useDropdownState } from '../../../molecules/overlay/useDropdownState'
