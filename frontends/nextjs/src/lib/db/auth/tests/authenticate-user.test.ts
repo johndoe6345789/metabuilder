@@ -14,7 +14,7 @@ const {
   return { mockList, mockFindFirst, mockVerifyPassword, mockAdapter }
 })
 
-vi.mock('../dbal-client', () => ({
+vi.mock('../../core/dbal-client', () => ({
   getAdapter: () => mockAdapter,
 }))
 

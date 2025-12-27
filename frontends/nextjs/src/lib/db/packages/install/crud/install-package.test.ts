@@ -4,7 +4,7 @@ const mockFindFirst = vi.fn()
 const mockCreate = vi.fn()
 const mockAdapter = { findFirst: mockFindFirst, create: mockCreate }
 
-vi.mock('../dbal-client', () => ({
+vi.mock('../../../core/dbal-client', () => ({
   getAdapter: () => mockAdapter,
 }))
 

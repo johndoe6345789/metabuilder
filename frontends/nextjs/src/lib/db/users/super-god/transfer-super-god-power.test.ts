@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
+// Mock the get-dbal module to prevent server-only imports
+vi.mock('@/lib/dbal/database-dbal/core/get-dbal.server', () => ({
+  getDBAL: vi.fn(),
+}))
+
 const mockDbalUpdate = vi.fn()
 
 vi.mock('@/lib/dbal/database-dbal/users/dbal-update-user.server', () => ({
