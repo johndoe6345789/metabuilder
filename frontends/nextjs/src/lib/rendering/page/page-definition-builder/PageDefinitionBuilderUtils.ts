@@ -1,6 +1,6 @@
 // Auto-generated class wrapper
 import { initializeDefaultPages } from './functions/initialize-default-pages'
-import { buildLevel1Homepage } from './functions/build-level1-homepage'
+import { buildLevel1Homepage } from './functions/homepage/build-level1-homepage'
 import { buildLevel2UserDashboard } from './functions/build-level2-user-dashboard'
 import { buildLevel3AdminPanel } from './functions/build-level3-admin-panel'
 import { getPages } from './functions/get-pages'
