@@ -1,4 +1,4 @@
-import { isValidUuid } from './is-valid-uuid'
+import { isValidUuid } from '../predicates/is-valid-uuid'
 
 export function validateId(id: string): string[] {
   const errors: string[] = []

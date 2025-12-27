@@ -1,6 +1,6 @@
 import type { User } from '../types'
-import { isValidEmail } from './is-valid-email'
-import { isValidUsername } from './is-valid-username'
+import { isValidEmail } from '../../predicates/string/is-valid-email'
+import { isValidUsername } from '../../predicates/string/is-valid-username'
 
 /**
  * Validation rules for User entity

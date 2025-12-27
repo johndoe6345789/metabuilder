@@ -1,6 +1,6 @@
 import type { LuaScript } from '../types'
-import { isAllowedLuaGlobal } from './is-allowed-lua-global'
-import { isValidUuid } from './is-valid-uuid'
+import { isAllowedLuaGlobal } from '../../predicates/lua/is-allowed-lua-global'
+import { isValidUuid } from '../../predicates/is-valid-uuid'
 
 export function validateLuaScriptUpdate(data: Partial<LuaScript>): string[] {
   const errors: string[] = []
