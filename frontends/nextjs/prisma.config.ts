@@ -4,7 +4,6 @@
  * This file replaces the deprecated package.json#prisma configuration.
  * See: https://www.prisma.io/docs/orm/reference/prisma-config-reference
  */
-import 'dotenv/config'
 import { defineConfig } from 'prisma/config'
 
 export default defineConfig({
