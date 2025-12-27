@@ -35,8 +35,10 @@ export async function initializePackageSystem(): Promise<void> {
 
   // Load legacy packages from catalog for backward compatibility
   Object.values(PACKAGE_CATALOG).forEach((pkg) => {
-    if (pkg.content) {
-      loadPackageComponents(pkg.content)
+    const packageData = pkg()
+
+    if (packageData.content) {
+      loadPackageComponents(packageData.content)
     }
   })
 
