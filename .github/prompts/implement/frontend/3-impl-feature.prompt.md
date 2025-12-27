@@ -10,7 +10,7 @@ Run app commands from `frontends/nextjs/` unless a step says otherwise.
    npm run db:generate && npm run db:push
    ```
 
-2. **DBAL contracts**: If new entity/operation, update YAML in `dbal/api/schema/`
+2. **DBAL contracts**: If new entity/operation, update YAML in `dbal/shared/api/schema/`
 
 3. **Database layer**: Add methods to `Database` class in `src/lib/database.ts`
 

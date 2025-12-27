@@ -31,8 +31,8 @@ The C++ Build & Test workflow was failing because the project infrastructure (CM
    ```
 
 2. **Only headers exist**: 
-   - ✅ `dbal/cpp/include/dbal/*.hpp` - Header files present
-   - ❌ `dbal/cpp/src/` - Directory doesn't exist at all
+   - ✅ `dbal/production/include/dbal/*.hpp` - Header files present
+   - ❌ `dbal/production/src/` - Directory doesn't exist at all
 
 3. **Build commands fail immediately**:
    - `npm run cpp:check` → CMake validation fails
@@ -66,7 +66,7 @@ jobs:
       - name: Check if C++ sources exist
         id: check
         run: |
-          if [ -d "dbal/cpp/src" ] && [ "$(find dbal/cpp/src -name '*.cpp' | wc -l)" -gt 0 ]; then
+          if [ -d "dbal/production/src" ] && [ "$(find dbal/production/src -name '*.cpp' | wc -l)" -gt 0 ]; then
             echo "has_sources=true" >> $GITHUB_OUTPUT
             echo "✓ C++ source files found"
           else
@@ -103,7 +103,7 @@ integration:
   # ... rest of job
 ```
 
-#### 2. Created `dbal/cpp/IMPLEMENTATION_STATUS.md`
+#### 2. Created `dbal/production/IMPLEMENTATION_STATUS.md`
 
 Comprehensive documentation covering:
 - Current implementation status (infrastructure only)
@@ -115,7 +115,7 @@ Comprehensive documentation covering:
 ### How It Works
 
 1. **On workflow trigger**: The `check-implementation` job runs first
-2. **Directory check**: Verifies if `dbal/cpp/src/` directory exists
+2. **Directory check**: Verifies if `dbal/production/src/` directory exists
 3. **File count check**: Counts `.cpp` files in the src directory
 4. **Set output**: Returns `has_sources=true` or `has_sources=false`
 5. **Conditional execution**: All other jobs check this output
@@ -149,7 +149,7 @@ Comprehensive documentation covering:
 
 ```bash
 # Verify the check script logic
-cd dbal/cpp
+cd dbal/production
 [ -d "src" ] && echo "src exists" || echo "src missing"
 find src -name '*.cpp' 2>/dev/null | wc -l
 
@@ -204,14 +204,14 @@ When C++ implementation begins:
 
 ### Step 1: Create Source Directory
 ```bash
-mkdir -p dbal/cpp/src/{query,util,adapters/sqlite,daemon}
-mkdir -p dbal/cpp/tests/{unit,integration,conformance}
+mkdir -p dbal/production/src/{query,util,adapters/sqlite,daemon}
+mkdir -p dbal/production/tests/{unit,integration,conformance}
 ```
 
 ### Step 2: Add Minimal Implementation
 Start with a simple main.cpp to verify build:
 ```cpp
-// dbal/cpp/src/daemon/main.cpp
+// dbal/production/src/daemon/main.cpp
 #include <iostream>
 int main() {
     std::cout << "DBAL Daemon v0.1.0" << std::endl;
@@ -252,11 +252,11 @@ The workflow will automatically detect sources and start building!
 ## Related Files
 
 - **Workflow**: `.github/workflows/cpp-build.yml`
-- **Status Doc**: `dbal/cpp/IMPLEMENTATION_STATUS.md`
-- **Build Script**: `dbal/tools/cpp-build-assistant.js`
-- **CMake Config**: `dbal/cpp/CMakeLists.txt`
-- **Dependencies**: `dbal/cpp/conanfile.txt`
-- **Headers**: `dbal/cpp/include/dbal/*.hpp`
+- **Status Doc**: `dbal/production/IMPLEMENTATION_STATUS.md`
+- **Build Script**: `dbal/shared/tools/cpp-build-assistant.js`
+- **CMake Config**: `dbal/production/CMakeLists.txt`
+- **Dependencies**: `dbal/production/conanfile.txt`
+- **Headers**: `dbal/production/include/dbal/*.hpp`
 
 ## Future Considerations
 

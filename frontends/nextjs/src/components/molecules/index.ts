@@ -97,6 +97,26 @@ export {
 } from './form/FormField'
 
 export {
+  PasswordField,
+  type PasswordFieldProps,
+} from './form/PasswordField'
+
+export {
+  EmailField,
+  type EmailFieldProps,
+} from './form/EmailField'
+
+export {
+  NumberField,
+  type NumberFieldProps,
+} from './form/NumberField'
+
+export {
+  SearchBar,
+  type SearchBarProps,
+} from './form/SearchBar'
+
+export {
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -110,5 +130,4 @@ export { AppHeader } from '../shared/AppHeader'
 export { AppFooter } from '../shared/AppFooter'
 export { GodCredentialsBanner } from '../level1/GodCredentialsBanner'
 export { ProfileCard } from '../level2/ProfileCard'
-export { SecurityWarningDialog } from '../SecurityWarningDialog'
 export { PasswordChangeDialog } from '../PasswordChangeDialog'

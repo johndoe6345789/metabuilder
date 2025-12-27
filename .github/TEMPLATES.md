@@ -94,7 +94,7 @@ Report issues with the Database Abstraction Layer.
 
 **Best For:**
 - DBAL TypeScript SDK issues (`dbal/ts/`)
-- DBAL C++ daemon issues (`dbal/cpp/`)
+- DBAL C++ daemon issues (`dbal/production/`)
 - YAML contract problems (`api/schema/`)
 - Conformance test failures
 - Implementation inconsistencies
@@ -285,7 +285,7 @@ Packages follow strict conventions:
 
 ### DBAL (Database Abstraction Layer)
 - TypeScript implementation: `dbal/ts/` (development)
-- C++ implementation: `dbal/cpp/` (production)
+- C++ implementation: `dbal/production/` (production)
 - YAML contracts: `api/schema/` (source of truth)
 - Always update YAML first
 - Run conformance tests: `python tools/conformance/run_all.py`
@@ -338,6 +338,6 @@ Please submit an issue with the "documentation" template to suggest improvements
 - **Workflow Guide**: `.github/prompts/0-kickstart.md`
 - **Contributing**: `README.md` → Contributing section
 - **Architecture**: `docs/architecture/`
-- **DBAL Guide**: `dbal/AGENTS.md`
+- **DBAL Guide**: `dbal/docs/AGENTS.md`
 - **UI Standards**: `UI_STANDARDS.md`
 - **Copilot Instructions**: `.github/copilot-instructions.md`

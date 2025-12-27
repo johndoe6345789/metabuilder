@@ -363,7 +363,7 @@ Documentation:     Consolidated, indexed, comprehensive
 
 ### Package System
 - [packages/README.md](./packages/README.md)
-- [DBAL Architecture](./dbal/README.md)
+- [DBAL Architecture](./dbal/docs/README.md)
 - [Package Development Guide](./PACKAGE_SYSTEM_COMPLETION.md)
 
 ---

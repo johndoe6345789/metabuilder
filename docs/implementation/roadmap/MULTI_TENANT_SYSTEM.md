@@ -50,7 +50,7 @@ import {
   InMemoryKVStore,
   TenantAwareBlobStorage,
   createBlobStorage
-} from './dbal/ts/src'
+} from './dbal/development/src'
 
 // Create tenant manager
 const tenantManager = new InMemoryTenantManager()
@@ -255,7 +255,7 @@ The C++ implementation mirrors the TypeScript design:
 ### Headers
 
 ```cpp
-// dbal/cpp/include/dbal/tenant_context.hpp
+// dbal/production/include/dbal/tenant_context.hpp
 namespace dbal {
 namespace tenant {
 

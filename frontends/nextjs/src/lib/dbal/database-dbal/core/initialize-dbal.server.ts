@@ -2,8 +2,8 @@ import 'server-only'
 
 import { DBALClient as StubDBALClient } from '@/lib/dbal-stub'
 import type { DBALConfig as StubDBALConfig } from '@/lib/dbal-stub'
-import { DBALClient as RealDBALClient } from '@/dbal/ts/src'
-import type { DBALConfig as RealDBALConfig } from '@/dbal/ts/src/runtime/config'
+import { DBALClient as RealDBALClient } from '@/dbal/development/src'
+import type { DBALConfig as RealDBALConfig } from '@/dbal/development/src/runtime/config'
 import { dbalState } from './dbal-state.server'
 
 /**

@@ -4,7 +4,7 @@
 Automation and utility scripts for the DBAL system.
 
 ## Location
-[/dbal/scripts/](/dbal/scripts/)
+[/dbal/shared/scripts/](/dbal/shared/scripts/)
 
 ## Purpose
 Contains shell scripts and utilities for:

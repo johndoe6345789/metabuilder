@@ -30,7 +30,7 @@
         "./src/*"
       ],
       "@/dbal/*": [
-        "../dbal/ts/src/*"
+        "../dbal/development/src/*"
       ],
       "@dbal-ui/*": [
         "../dbal/src/*"
@@ -52,7 +52,7 @@
     "playwright.config.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "../dbal/ts/src/**/*.ts"
+    "../dbal/development/src/**/*.ts"
   ],
   "exclude": [
     "node_modules"
