@@ -452,66 +452,165 @@ jobs:
             console.log('Note: Set up actual monitoring alerts in your observability platform');
 
   # ============================================================================
-  # Rollback Procedure (Manual Trigger)
+  # Deployment Failure Handler - Prefer Roll Forward
   # ============================================================================
 
-  rollback-preparation:
-    name: Prepare Rollback (if needed)
+  deployment-failure-handler:
+    name: Handle Deployment Failure
     runs-on: ubuntu-latest
-    needs: [deploy-production]
-    if: needs.deploy-production.result == 'failure'
+    needs: [pre-deployment-validation, deploy-production]
+    if: |
+      always() && 
+      (needs.pre-deployment-validation.result == 'failure' || needs.deploy-production.result == 'failure')
     steps:
-      - name: Rollback instructions
+      - name: Determine failure stage
+        id: failure-stage
         run: |
-          echo "🔄 ROLLBACK PROCEDURE"
-          echo "===================="
-          echo ""
-          echo "Production deployment failed or encountered issues."
-          echo ""
-          echo "Immediate actions:"
-          echo "  1. Assess the severity of the failure"
-          echo "  2. Check application logs and error rates"
-          echo "  3. Determine if immediate rollback is needed"
-          echo ""
-          echo "To rollback:"
-          echo "  1. Re-run this workflow with previous stable commit"
-          echo "  2. Or use manual rollback procedure:"
-          echo "     - Revert database migrations"
-          echo "     - Deploy previous Docker image/build"
-          echo "     - Restore from pre-deployment backup"
-          echo ""
-          echo "Emergency contacts:"
-          echo "  - Check on-call rotation"
-          echo "  - Notify engineering leads"
-          echo "  - Update status page"
+          if [ "${{ needs.pre-deployment-validation.result }}" == "failure" ]; then
+            echo "stage=pre-deployment" >> $GITHUB_OUTPUT
+            echo "severity=low" >> $GITHUB_OUTPUT
+          else
+            echo "stage=production" >> $GITHUB_OUTPUT
+            echo "severity=high" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Create rollback issue
+      - name: Display roll-forward guidance
+        run: |
+          echo "⚡ DEPLOYMENT FAILURE DETECTED"
+          echo "================================"
+          echo ""
+          echo "Failure Stage: ${{ steps.failure-stage.outputs.stage }}"
+          echo "Severity: ${{ steps.failure-stage.outputs.severity }}"
+          echo ""
+          echo "🎯 RECOMMENDED APPROACH: ROLL FORWARD"
+          echo "────────────────────────────────────────"
+          echo ""
+          echo "Rolling forward is preferred because it:"
+          echo "  ✅ Fixes the root cause permanently"
+          echo "  ✅ Maintains forward progress"
+          echo "  ✅ Builds team capability"
+          echo "  ✅ Prevents recurrence"
+          echo ""
+          echo "Steps to roll forward:"
+          echo "  1. Review failure logs (link below)"
+          echo "  2. Identify and fix the root cause"
+          echo "  3. Test the fix locally"
+          echo "  4. Push fix to trigger new deployment"
+          echo ""
+          echo "⚠️  ROLLBACK ONLY IF:"
+          echo "────────────────────────"
+          echo "  • Production is actively broken"
+          echo "  • Users are experiencing outages"
+          echo "  • Critical security vulnerability"
+          echo "  • Data integrity at risk"
+          echo ""
+          if [ "${{ steps.failure-stage.outputs.stage }}" == "pre-deployment" ]; then
+            echo "✅ GOOD NEWS: Failure occurred pre-deployment"
+            echo "   → Production is NOT affected"
+            echo "   → Safe to fix and retry"
+            echo "   → No rollback needed"
+          else
+            echo "🚨 Production deployment failed"
+            echo "   → Assess production impact immediately"
+            echo "   → Check monitoring dashboards"
+            echo "   → Verify user-facing functionality"
+          fi
+
+      - name: Create fix-forward issue
         uses: actions/github-script@v7
         with:
           script: |
+            const stage = '${{ steps.failure-stage.outputs.stage }}';
+            const severity = '${{ steps.failure-stage.outputs.severity }}';
+            const isProd = stage === 'production';
+            
+            const title = isProd 
+              ? '🚨 Production Deployment Failed - Fix Required'
+              : '⚠️ Pre-Deployment Validation Failed';
+            
+            const body = `## Deployment Failure - ${stage === 'production' ? 'Production' : 'Pre-Deployment'}
+            
+            **Time:** ${new Date().toISOString()}
+            **Commit:** ${context.sha.substring(0, 7)}
+            **Workflow Run:** [View Logs](${context.payload.repository.html_url}/actions/runs/${context.runId})
+            **Failure Stage:** ${stage}
+            **Severity:** ${severity}
+            
+            ${!isProd ? '✅ **Good News:** Production is NOT affected. The failure occurred during pre-deployment checks.\n' : '🚨 **Alert:** Production deployment failed. Assess impact immediately.\n'}
+            
+            ### 🎯 Recommended Action: Roll Forward (Fix and Re-deploy)
+            
+            Rolling forward is the preferred approach because it:
+            - ✅ Fixes the root cause permanently
+            - ✅ Maintains development momentum  
+            - ✅ Prevents the same issue from recurring
+            - ✅ Builds team problem-solving skills
+            
+            ### 📋 Fix-Forward Checklist
+            
+            - [ ] **Investigate:** Review [workflow logs](${context.payload.repository.html_url}/actions/runs/${context.runId})
+            - [ ] **Diagnose:** Identify root cause of failure
+            - [ ] **Fix:** Implement fix in a new branch/commit
+            - [ ] **Test:** Verify fix locally (run relevant tests/builds)
+            - [ ] **Deploy:** Push fix to trigger new deployment
+            - [ ] **Verify:** Monitor deployment and confirm success
+            - [ ] **Document:** Update this issue with resolution details
+            
+            ${isProd ? `
+            ### 🚨 Production Impact Assessment
+            
+            **Before proceeding, verify:**
+            - [ ] Check monitoring dashboards for errors/alerts
+            - [ ] Verify critical user flows are working
+            - [ ] Check application logs for issues
+            - [ ] Assess if immediate rollback is needed
+            
+            ` : ''}
+            
+            ### ⚠️ When to Rollback Instead
+            
+            **Only rollback if:**
+            - 🔴 Production is actively broken with user impact
+            - 🔴 Critical security vulnerability exposed
+            - 🔴 Data integrity at risk
+            - 🔴 Cannot fix forward within acceptable timeframe
+            
+            ${isProd ? `
+            ### 🔄 Rollback Procedure (if absolutely necessary)
+            
+            1. **Re-run workflow** with previous stable commit SHA
+            2. **OR use manual rollback:**
+               - Revert database migrations: \`npx prisma migrate reset\`
+               - Deploy previous Docker image/build
+               - Restore from pre-deployment backup
+            3. **Notify:** Update team and status page
+            4. **Document:** Create post-mortem issue
+            
+            See [Rollback Procedure](docs/deployment/rollback.md) for details.
+            ` : `
+            ### 💡 Common Pre-Deployment Failures
+            
+            - **Prisma Generate:** Check schema.prisma syntax and DATABASE_URL
+            - **Build Failure:** Review TypeScript errors or missing dependencies
+            - **Test Failure:** Fix failing tests or update test snapshots
+            - **Lint Errors:** Run \`npm run lint:fix\` locally
+            `}
+            
+            ### 📚 Resources
+            
+            - [Workflow Run Logs](${context.payload.repository.html_url}/actions/runs/${context.runId})
+            - [Commit Details](${context.payload.repository.html_url}/commit/${context.sha})
+            - [Deployment Documentation](docs/deployment/)
+            `;
+            
+            const labels = isProd
+              ? ['deployment', 'production', 'incident', 'high-priority', 'fix-forward']
+              : ['deployment', 'pre-deployment', 'ci-failure', 'fix-forward'];
+            
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: '🚨 Production Deployment Failed - Rollback Required',
-              body: `## Production Deployment Failure
-              
-              **Time:** ${new Date().toISOString()}
-              **Commit:** ${context.sha.substring(0, 7)}
-              **Workflow:** ${context.runId}
-              
-              ### Actions Required
-              - [ ] Assess impact and severity
-              - [ ] Determine rollback necessity
-              - [ ] Execute rollback procedure if needed
-              - [ ] Investigate root cause
-              - [ ] Document incident
-              
-              ### Rollback Options
-              1. Re-deploy previous stable version
-              2. Revert problematic commits
-              3. Restore from backup
-              
-              See [Rollback Procedure](docs/deployment/rollback.md) for details.
-              `,
-              labels: ['deployment', 'production', 'incident', 'high-priority']
+              title: title,
+              body: body,
+              labels: labels
             });
