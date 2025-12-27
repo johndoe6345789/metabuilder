@@ -459,7 +459,7 @@ jobs:
     name: Prepare Rollback (if needed)
     runs-on: ubuntu-latest
     needs: [deploy-production]
-    if: failure()
+    if: needs.deploy-production.result == 'failure'
     steps:
       - name: Rollback instructions
         run: |
