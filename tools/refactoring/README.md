@@ -14,7 +14,7 @@ Automated tools for refactoring large TypeScript and C++ files into modular lamb
 ### 1. Generate Progress Report
 
 ```bash
-npx tsx tools/refactoring/refactor-to-lambda.ts
+npx tsx tools/refactoring/cli/refactor-to-lambda.ts
 ```
 
 This scans the codebase and generates `docs/todo/LAMBDA_REFACTOR_PROGRESS.md` with:
@@ -29,10 +29,10 @@ Preview what would happen without modifying files:
 
 ```bash
 # Preview all high-priority files
-npx tsx tools/refactoring/orchestrate-refactor.ts --dry-run high
+npx tsx tools/refactoring/cli/orchestrate-refactor.ts --dry-run high
 
 # Preview specific number of files
-npx tsx tools/refactoring/orchestrate-refactor.ts --dry-run high --limit=5
+npx tsx tools/refactoring/cli/orchestrate-refactor.ts --dry-run high --limit=5
 
 # Preview a single file
 npx tsx tools/refactoring/ast-lambda-refactor.ts --dry-run -v frontends/nextjs/src/lib/rendering/page/page-definition-builder.ts
@@ -44,13 +44,13 @@ Refactor files in bulk with automatic linting and import fixing:
 
 ```bash
 # Refactor all high-priority files (recommended start)
-npx tsx tools/refactoring/orchestrate-refactor.ts high
+npx tsx tools/refactoring/cli/orchestrate-refactor.ts high
 
 # Refactor first 10 high-priority files
-npx tsx tools/refactoring/orchestrate-refactor.ts high --limit=10
+npx tsx tools/refactoring/cli/orchestrate-refactor.ts high --limit=10
 
 # Refactor all pending files
-npx tsx tools/refactoring/orchestrate-refactor.ts all
+npx tsx tools/refactoring/cli/orchestrate-refactor.ts all
 ```
 
 The orchestrator will:
@@ -67,7 +67,7 @@ The orchestrator will:
 Scans codebase and generates tracking report.
 
 ```bash
-npx tsx tools/refactoring/refactor-to-lambda.ts
+npx tsx tools/refactoring/cli/refactor-to-lambda.ts
 ```
 
 **Output:** `docs/todo/LAMBDA_REFACTOR_PROGRESS.md`
@@ -134,7 +134,7 @@ npx tsx tools/refactoring/bulk-lambda-refactor.ts [options] <file>
 Refactor both TypeScript and C++ files with automatic language detection.
 
 ```bash
-npx tsx tools/refactoring/multi-lang-refactor.ts [options] <file>
+npx tsx tools/refactoring/cli/cli.ts [options] <file>
 
 # Options:
 #   -d, --dry-run    Preview without writing
@@ -145,13 +145,13 @@ npx tsx tools/refactoring/multi-lang-refactor.ts [options] <file>
 **Examples:**
 ```bash
 # Refactor TypeScript file
-npx tsx tools/refactoring/multi-lang-refactor.ts --dry-run src/lib/utils.ts
+npx tsx tools/refactoring/cli/cli.ts --dry-run src/lib/utils.ts
 
 # Refactor C++ file
-npx tsx tools/refactoring/multi-lang-refactor.ts --verbose dbal/src/adapter.cpp
+npx tsx tools/refactoring/cli/cli.ts --verbose dbal/src/adapter.cpp
 
 # Multiple files
-npx tsx tools/refactoring/multi-lang-refactor.ts file1.ts file2.cpp
+npx tsx tools/refactoring/cli/cli.ts file1.ts file2.cpp
 ```
 
 ### 5. `orchestrate-refactor.ts` - Master Orchestrator
@@ -159,7 +159,7 @@ npx tsx tools/refactoring/multi-lang-refactor.ts file1.ts file2.cpp
 Complete automated workflow for bulk refactoring (TypeScript only).
 
 ```bash
-npx tsx tools/refactoring/orchestrate-refactor.ts [priority] [options]
+npx tsx tools/refactoring/cli/orchestrate-refactor.ts [priority] [options]
 
 # Priority: high | medium | low | all
 # Options:
@@ -172,13 +172,13 @@ npx tsx tools/refactoring/orchestrate-refactor.ts [priority] [options]
 **Examples:**
 ```bash
 # Dry run for high-priority files
-npx tsx tools/refactoring/orchestrate-refactor.ts high --dry-run
+npx tsx tools/refactoring/cli/orchestrate-refactor.ts high --dry-run
 
 # Refactor 5 high-priority files
-npx tsx tools/refactoring/orchestrate-refactor.ts high --limit=5
+npx tsx tools/refactoring/cli/orchestrate-refactor.ts high --limit=5
 
 # Refactor all medium-priority files, skip tests
-npx tsx tools/refactoring/orchestrate-refactor.ts medium --skip-test
+npx tsx tools/refactoring/cli/orchestrate-refactor.ts medium --skip-test
 ```
 
 ## Refactoring Pattern
@@ -275,13 +275,13 @@ import { validateEmail } from '@/lib/utils/functions/validate-email'
 ### Phase 1: High-Priority Files (Library & Tools - 20 files)
 ```bash
 # 1. Generate report
-npx tsx tools/refactoring/refactor-to-lambda.ts
+npx tsx tools/refactoring/cli/refactor-to-lambda.ts
 
 # 2. Dry run to preview
-npx tsx tools/refactoring/orchestrate-refactor.ts high --dry-run
+npx tsx tools/refactoring/cli/orchestrate-refactor.ts high --dry-run
 
 # 3. Refactor in small batches
-npx tsx tools/refactoring/orchestrate-refactor.ts high --limit=5
+npx tsx tools/refactoring/cli/orchestrate-refactor.ts high --limit=5
 
 # 4. Review, test, commit
 git diff
@@ -289,7 +289,7 @@ npm run test:unit
 git add . && git commit -m "refactor: convert 5 library files to lambda-per-file"
 
 # 5. Repeat for next batch
-npx tsx tools/refactoring/orchestrate-refactor.ts high --limit=5
+npx tsx tools/refactoring/cli/orchestrate-refactor.ts high --limit=5
 ```
 
 ### Phase 2: Medium-Priority Files (DBAL & Components - 68 files)

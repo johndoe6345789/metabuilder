@@ -17,7 +17,7 @@ jobs:
       (github.event.label.name == 'enhancement' || github.event.label.name == 'feature-request')
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Review against architecture principles
         uses: actions/github-script@v7
@@ -100,7 +100,7 @@ jobs:
     if: github.event.action == 'labeled' && github.event.label.name == 'enhancement'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Check PRD for similar features
         uses: actions/github-script@v7
@@ -150,7 +150,7 @@ jobs:
       github.event.label.name == 'ready-to-implement'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Generate implementation suggestion
         uses: actions/github-script@v7
