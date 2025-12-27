@@ -1038,9 +1038,21 @@ npm run start
 
 ## Contributing
 
+### Reporting Issues
+
+MetaBuilder uses structured issue templates to ensure quality bug reports and feature requests:
+
+- **🐛 Bug Report**: Report bugs with environment details and reproduction steps
+- **✨ Feature Request**: Propose features aligned with data-driven architecture
+- **📚 Documentation**: Request documentation improvements
+- **📦 Package Request**: Propose new packages for the package system
+- **🔧 DBAL Issue**: Report Database Abstraction Layer issues
+
+See [`.github/TEMPLATES.md`](.github/TEMPLATES.md) for detailed guidance on using templates.
+
 ### Workflow
 
-1. Follow `.github/copilot-instructions.md`
+1. Follow `.github/copilot-instructions.md` and `.github/prompts/0-kickstart.md`
 2. Run `npm run lint:fix` before committing
 3. Add parameterized tests for new functions
 4. Commit with descriptive messages on `main`
@@ -1063,10 +1075,15 @@ npm run test:unit -- --run
 
 PRs are optional (trunk-based on `main` is default). When required:
 
-1. Run linter and tests
-2. Update documentation
-3. Add test cases
-4. Use descriptive PR title
+1. Use the comprehensive PR template (auto-populated)
+2. Complete all sections and checklists
+3. Include screenshots for UI changes
+4. Run linter and tests
+5. Update documentation
+6. Add test cases
+7. Use descriptive PR title
+
+See [`.github/TEMPLATES.md`](.github/TEMPLATES.md) for the complete PR checklist and MetaBuilder-specific guidelines.
 
 ---
 
