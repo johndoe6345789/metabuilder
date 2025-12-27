@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { CssBaseline, ThemeProvider as MuiThemeProvider } from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { lightTheme, darkTheme } from '@/theme/mui-theme'
@@ -21,16 +21,24 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   const [mode, setMode] = useState<ThemeMode>('system')
 
-  const theme = useMemo(() => {
+  const resolvedMode = useMemo<Exclude<ThemeMode, 'system'>>(() => {
     if (mode === 'system') {
-      // Detect system preference
-      const isDark = typeof window !== 'undefined'
-        ? window.matchMedia('(prefers-color-scheme: dark)').matches
-        : false
-      return isDark ? darkTheme : lightTheme
+      return typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
     }
-    return mode === 'dark' ? darkTheme : lightTheme
+
+    return mode
   }, [mode])
+
+  const theme = useMemo(() => (resolvedMode === 'dark' ? darkTheme : lightTheme), [resolvedMode])
+
+  useEffect(() => {
+    const root = document.documentElement
+
+    root.dataset.theme = resolvedMode
+    root.style.colorScheme = resolvedMode
+  }, [resolvedMode])
 
   const toggleTheme = () => {
     setMode(current => {
@@ -41,7 +49,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <ThemeContext.Provider value={{ mode, setMode, toggleTheme }}>
+    <ThemeContext.Provider value={{ mode, resolvedMode, setMode, toggleTheme }}>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
