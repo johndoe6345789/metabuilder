@@ -12,8 +12,8 @@ import {
   NavigationLink,
 } from './NavigationMenuItems'
 import { NavigationBrand, NavigationSeparator, NavigationSpacer } from './NavigationStyling'
-import { NavigationItemType } from './navigationConfig'
-import { useNavigationDropdown } from './navigationHelpers'
+import { NavigationItemType } from './utils/navigationConfig'
+import { useNavigationDropdown } from './utils/navigationHelpers'
 
 interface NavigationProps {
   children: ReactNode
