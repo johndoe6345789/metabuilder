@@ -1,2 +1,1 @@
-export * from './dbal/dbal-stub'
-export { default } from './dbal/dbal-stub'
+export * from '../dbal/dbal-stub/index'
