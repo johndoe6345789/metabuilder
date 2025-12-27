@@ -4,7 +4,7 @@
  */
 
 import { DBALError } from '../../core/foundation/errors'
-import type { User, ACLRule } from './types'
+import type { ACLRule, User } from '../acl-adapter/types'
 
 /**
  * Check if user has permission to perform operation on entity
