@@ -51,13 +51,25 @@ rollback-preparation:
 ### 2. Created Automation ✅
 
 **Script:** `scripts/triage-duplicate-issues.sh`
-- Bulk-closes 21 duplicate issues (#92-#122)
-- Adds explanatory comment to each
-- Preserves issues #124 and #24
+- Dynamically finds duplicate issues using GitHub API
+- Sorts by creation date and identifies most recent issue
+- Bulk-closes all duplicates except the most recent one
+- Adds explanatory comment to each closed issue
+- Configurable via environment variables
+
+**Features:**
+- ✅ No hardcoded issue numbers - uses API search
+- ✅ Automatically keeps most recent issue open
+- ✅ Customizable search pattern via `SEARCH_TITLE` env var
+- ✅ Comprehensive error handling and rate limiting
 
 **Usage:**
 ```bash
 export GITHUB_TOKEN="your_token_with_repo_write_access"
+./scripts/triage-duplicate-issues.sh
+
+# Or with custom search pattern:
+export SEARCH_TITLE="Custom Issue Title"
 ./scripts/triage-duplicate-issues.sh
 ```
 
