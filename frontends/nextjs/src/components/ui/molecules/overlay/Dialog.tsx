@@ -1,17 +1,11 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import {
-  Dialog as MuiDialog,
-  DialogTitle as MuiDialogTitle,
-  DialogContent as MuiDialogContent,
-  DialogActions,
-  DialogProps as MuiDialogProps,
-  IconButton,
-  Typography,
-  Box,
-} from '@mui/material'
+import { Dialog as MuiDialog, DialogTitle as MuiDialogTitle, DialogProps as MuiDialogProps, IconButton, Typography, Box } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
+import { DialogContent, type DialogContentProps } from './dialog/Body'
+import { DialogFooter, type DialogFooterProps } from './dialog/Footer'
+import { DialogHeader, type DialogHeaderProps } from './dialog/Header'
 
 export interface DialogProps extends Omit<MuiDialogProps, 'onClose'> {
   onOpenChange?: (open: boolean) => void
@@ -30,7 +24,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
         {children}
       </MuiDialog>
     )
-  }
+  },
 )
 Dialog.displayName = 'Dialog'
 
@@ -47,7 +41,7 @@ const DialogTrigger = forwardRef<HTMLDivElement, DialogTriggerProps>(
         {children}
       </Box>
     )
-  }
+  },
 )
 DialogTrigger.displayName = 'DialogTrigger'
 
@@ -83,79 +77,23 @@ const DialogClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
         <CloseIcon />
       </IconButton>
     )
-  }
+  },
 )
 DialogClose.displayName = 'DialogClose'
-
-interface DialogContentProps {
-  children: ReactNode
-  className?: string
-  onClose?: () => void
-  showCloseButton?: boolean
-}
-
-const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
-  ({ children, showCloseButton = true, onClose, ...props }, ref) => {
-    return (
-      <MuiDialogContent ref={ref} sx={{ position: 'relative', pt: showCloseButton ? 6 : 2 }} {...props}>
-        {showCloseButton && onClose && (
-          <IconButton
-            aria-label="close"
-            onClick={onClose}
-            sx={{ position: 'absolute', right: 8, top: 8, color: 'text.secondary' }}
-          >
-            <CloseIcon />
-          </IconButton>
-        )}
-        {children}
-      </MuiDialogContent>
-    )
-  }
-)
-DialogContent.displayName = 'DialogContent'
-
-interface DialogHeaderProps {
-  children: ReactNode
-  className?: string
-}
-
-const DialogHeader = forwardRef<HTMLDivElement, DialogHeaderProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <Box ref={ref} sx={{ display: 'flex', flexDirection: 'column', gap: 1, pb: 2 }} {...props}>
-        {children}
-      </Box>
-    )
-  }
-)
-DialogHeader.displayName = 'DialogHeader'
-
-interface DialogFooterProps {
-  children: ReactNode
-  className?: string
-}
-
-const DialogFooter = forwardRef<HTMLDivElement, DialogFooterProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <DialogActions ref={ref} sx={{ px: 3, py: 2 }} {...props}>
-        {children}
-      </DialogActions>
-    )
-  }
-)
-DialogFooter.displayName = 'DialogFooter'
 
 interface DialogTitleProps {
   children: ReactNode
   className?: string
 }
 
-const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitleProps>(
-  ({ children, ...props }, ref) => {
-    return <MuiDialogTitle ref={ref} {...props}>{children}</MuiDialogTitle>
-  }
-)
+const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitleProps>((props, ref) => {
+  const { children, ...rest } = props
+  return (
+    <MuiDialogTitle ref={ref} {...rest}>
+      {children}
+    </MuiDialogTitle>
+  )
+})
 DialogTitle.displayName = 'DialogTitle'
 
 interface DialogDescriptionProps {
@@ -163,15 +101,14 @@ interface DialogDescriptionProps {
   className?: string
 }
 
-const DialogDescription = forwardRef<HTMLParagraphElement, DialogDescriptionProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <Typography ref={ref} variant="body2" color="text.secondary" {...props}>
-        {children}
-      </Typography>
-    )
-  }
-)
+const DialogDescription = forwardRef<HTMLParagraphElement, DialogDescriptionProps>((props, ref) => {
+  const { children, ...rest } = props
+  return (
+    <Typography ref={ref} variant="body2" color="text.secondary" {...rest}>
+      {children}
+    </Typography>
+  )
+})
 DialogDescription.displayName = 'DialogDescription'
 
 export {
@@ -186,3 +123,5 @@ export {
   DialogTitle,
   DialogTrigger,
 }
+
+export type { DialogContentProps, DialogFooterProps, DialogHeaderProps }
