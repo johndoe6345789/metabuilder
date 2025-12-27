@@ -85,7 +85,7 @@ const nextConfig: NextConfig = {
   webpack(config) {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@/dbal': path.resolve(__dirname, '..', 'dbal', 'ts', 'src'),
+      '@/dbal': path.resolve(__dirname, '../../dbal/development/src'),
     }
     return config
   },

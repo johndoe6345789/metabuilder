@@ -1,8 +1,7 @@
-import type { DBALClient as StubDBALClient } from '@/lib/dbal-stub'
-import type { DBALClient as RealDBALClient } from '@/dbal/development/src'
+import type { DBALClient } from '@/dbal'
 
 export const dbalState: {
-  client: StubDBALClient | RealDBALClient | null
+  client: DBALClient | null
   initialized: boolean
 } = {
   client: null,
