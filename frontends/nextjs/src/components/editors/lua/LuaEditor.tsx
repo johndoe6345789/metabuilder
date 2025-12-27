@@ -1,28 +1,39 @@
-import { useState, useEffect, useRef } from 'react'
-import { Button } from '@/components/ui'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
-import { Input } from '@/components/ui'
-import { Label } from '@/components/ui'
-import { Badge } from '@/components/ui'
+import { useEffect, useRef, useState } from 'react'
 import {
+  Badge,
+  Button,
+  Card,
+  CardHeader,
+  CardContent,
+  CardDescription,
+  CardTitle,
+  Input,
+  Label,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from '@/components/ui'
-import { Plus, Trash, Play, CheckCircle, XCircle, FileCode, ArrowsOut, BookOpen, ShieldCheck } from '@phosphor-icons/react'
+import { LuaSnippetLibrary } from '@/components/editors/lua/LuaSnippetLibrary'
+import Editor, { useMonaco } from '@monaco-editor/react'
+import { ArrowsOut, BookOpen, CheckCircle, FileCode, Plus, Trash, XCircle } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { executeLuaScriptWithProfile } from '@/lib/lua/execute-lua-script-with-profile'
 import type { LuaExecutionResult } from '@/lib/lua-engine'
 import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua-examples'
 import type { LuaScript } from '@/lib/level-types'
-import Editor from '@monaco-editor/react'
-import { useMonaco } from '@monaco-editor/react'
-import { LuaSnippetLibrary } from '@/components/editors/lua/LuaSnippetLibrary'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui'
 import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
 import { SecurityWarningDialog } from '@/components/organisms/security/SecurityWarningDialog'
+import { useLuaDiagnostics } from './useLuaDiagnostics'
+import { useLuaPersistence } from './LuaPersistence'
+import { LuaEditorToolbar } from './LuaEditorToolbar'
 
 interface LuaEditorProps {
   scripts: LuaScript[]
@@ -30,9 +41,6 @@ interface LuaEditorProps {
 }
 
 export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
-  const [selectedScript, setSelectedScript] = useState<string | null>(
-    scripts.length > 0 ? scripts[0].id : null
-  )
   const [testOutput, setTestOutput] = useState<LuaExecutionResult | null>(null)
   const [testInputs, setTestInputs] = useState<Record<string, any>>({})
   const [isExecuting, setIsExecuting] = useState(false)
@@ -43,100 +51,19 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
   const editorRef = useRef<any>(null)
   const monaco = useMonaco()
 
-  const currentScript = scripts.find(s => s.id === selectedScript)
+  const {
+    selectedScript,
+    setSelectedScript,
+    currentScript,
+    handleAddScript,
+    handleDeleteScript,
+    handleUpdateScript,
+    handleAddParameter,
+    handleDeleteParameter,
+    handleUpdateParameter,
+  } = useLuaPersistence(scripts, onScriptsChange)
 
-  useEffect(() => {
-    if (monaco) {
-      monaco.languages.registerCompletionItemProvider('lua', {
-        provideCompletionItems: (model, position) => {
-          const word = model.getWordUntilPosition(position)
-          const range = {
-            startLineNumber: position.lineNumber,
-            endLineNumber: position.lineNumber,
-            startColumn: word.startColumn,
-            endColumn: word.endColumn
-          }
-
-          const suggestions: any[] = [
-            {
-              label: 'context.data',
-              kind: monaco.languages.CompletionItemKind.Property,
-              insertText: 'context.data',
-              documentation: 'Access input parameters passed to the script',
-              range
-            },
-            {
-              label: 'context.user',
-              kind: monaco.languages.CompletionItemKind.Property,
-              insertText: 'context.user',
-              documentation: 'Current user information (username, role, etc.)',
-              range
-            },
-            {
-              label: 'context.kv',
-              kind: monaco.languages.CompletionItemKind.Property,
-              insertText: 'context.kv',
-              documentation: 'Key-value storage interface',
-              range
-            },
-            {
-              label: 'context.log',
-              kind: monaco.languages.CompletionItemKind.Function,
-              insertText: 'context.log(${1:message})',
-              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-              documentation: 'Log a message to the output console',
-              range
-            },
-            {
-              label: 'log',
-              kind: monaco.languages.CompletionItemKind.Function,
-              insertText: 'log(${1:message})',
-              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-              documentation: 'Log a message (shortcut for context.log)',
-              range
-            },
-            {
-              label: 'print',
-              kind: monaco.languages.CompletionItemKind.Function,
-              insertText: 'print(${1:message})',
-              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-              documentation: 'Print a message to output',
-              range
-            },
-            {
-              label: 'return',
-              kind: monaco.languages.CompletionItemKind.Keyword,
-              insertText: 'return ${1:result}',
-              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-              documentation: 'Return a value from the script',
-              range
-            },
-          ]
-
-          return { suggestions }
-        }
-      })
-
-      monaco.languages.setLanguageConfiguration('lua', {
-        comments: {
-          lineComment: '--',
-          blockComment: ['--[[', ']]']
-        },
-        brackets: [
-          ['{', '}'],
-          ['[', ']'],
-          ['(', ')']
-        ],
-        autoClosingPairs: [
-          { open: '{', close: '}' },
-          { open: '[', close: ']' },
-          { open: '(', close: ')' },
-          { open: '"', close: '"' },
-          { open: "'", close: "'" }
-        ]
-      })
-    }
-  }, [monaco])
+  useLuaDiagnostics(monaco)
 
   useEffect(() => {
     if (currentScript) {
@@ -147,34 +74,6 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
       setTestInputs(inputs)
     }
   }, [selectedScript, currentScript?.parameters.length])
-
-  const handleAddScript = () => {
-    const newScript: LuaScript = {
-      id: `lua_${Date.now()}`,
-      name: 'New Script',
-      code: '-- Lua script example\n-- Access input parameters via context.data\n-- Use log() or print() to output messages\n\nlog("Script started")\n\nif context.data then\n  log("Received data:", context.data)\nend\n\nlocal result = {\n  success = true,\n  message = "Script executed successfully"\n}\n\nreturn result',
-      parameters: [],
-    }
-    onScriptsChange([...scripts, newScript])
-    setSelectedScript(newScript.id)
-    toast.success('Script created')
-  }
-
-  const handleDeleteScript = (scriptId: string) => {
-    onScriptsChange(scripts.filter(s => s.id !== scriptId))
-    if (selectedScript === scriptId) {
-      setSelectedScript(scripts.length > 1 ? scripts[0].id : null)
-    }
-    toast.success('Script deleted')
-  }
-
-  const handleUpdateScript = (updates: Partial<LuaScript>) => {
-    if (!currentScript) return
-    
-    onScriptsChange(
-      scripts.map(s => s.id === selectedScript ? { ...s, ...updates } : s)
-    )
-  }
 
   const handleTestScript = async () => {
     if (!currentScript) return
@@ -201,26 +100,29 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
         contextData[param.name] = testInputs[param.name]
       })
 
-      const result = await executeLuaScriptWithProfile(currentScript.code, {
-        data: contextData,
-        user: { username: 'test_user', role: 'god' },
-        log: (...args: any[]) => console.log('[Lua]', ...args)
-      }, currentScript)
+      const result = await executeLuaScriptWithProfile(
+        currentScript.code,
+        {
+          data: contextData,
+          user: { username: 'test_user', role: 'god' },
+          log: (...args: any[]) => console.log('[Lua]', ...args),
+        },
+        currentScript
+      )
 
       setTestOutput(result)
-      
+
       if (result.success) {
         toast.success('Script executed successfully')
       } else {
         toast.error('Script execution failed')
       }
-
     } catch (error) {
       toast.error('Execution error: ' + (error instanceof Error ? error.message : String(error)))
       setTestOutput({
         success: false,
         error: error instanceof Error ? error.message : String(error),
-        logs: []
+        logs: [],
       })
     } finally {
       setIsExecuting(false)
@@ -229,11 +131,11 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
 
   const handleScanCode = () => {
     if (!currentScript) return
-    
+
     const scanResult = securityScanner.scanLua(currentScript.code)
     setSecurityScanResult(scanResult)
     setShowSecurityDialog(true)
-    
+
     if (scanResult.safe) {
       toast.success('No security issues detected')
     } else {
@@ -255,26 +157,29 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
           contextData[param.name] = testInputs[param.name]
         })
 
-        const result = await executeLuaScriptWithProfile(currentScript.code, {
-          data: contextData,
-          user: { username: 'test_user', role: 'god' },
-          log: (...args: any[]) => console.log('[Lua]', ...args)
-        }, currentScript)
+        const result = await executeLuaScriptWithProfile(
+          currentScript.code,
+          {
+            data: contextData,
+            user: { username: 'test_user', role: 'god' },
+            log: (...args: any[]) => console.log('[Lua]', ...args),
+          },
+          currentScript
+        )
 
         setTestOutput(result)
-        
+
         if (result.success) {
           toast.success('Script executed successfully')
         } else {
           toast.error('Script execution failed')
         }
-
       } catch (error) {
         toast.error('Execution error: ' + (error instanceof Error ? error.message : String(error)))
         setTestOutput({
           success: false,
           error: error instanceof Error ? error.message : String(error),
-          logs: []
+          logs: [],
         })
       } finally {
         setIsExecuting(false)
@@ -282,44 +187,18 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
     }, 100)
   }
 
-  const handleAddParameter = () => {
-    if (!currentScript) return
-
-    const newParam = { name: `param${currentScript.parameters.length + 1}`, type: 'string' }
-    handleUpdateScript({
-      parameters: [...currentScript.parameters, newParam],
-    })
-  }
-
-  const handleDeleteParameter = (index: number) => {
-    if (!currentScript) return
-
-    handleUpdateScript({
-      parameters: currentScript.parameters.filter((_, i) => i !== index),
-    })
-  }
-
-  const handleUpdateParameter = (index: number, updates: { name?: string; type?: string }) => {
-    if (!currentScript) return
-
-    handleUpdateScript({
-      parameters: currentScript.parameters.map((p, i) =>
-        i === index ? { ...p, ...updates } : p
-      ),
-    })
-  }
-
   const handleInsertSnippet = (code: string) => {
     if (!currentScript) return
-    
     if (editorRef.current) {
       const selection = editorRef.current.getSelection()
       if (selection) {
-        editorRef.current.executeEdits('', [{
-          range: selection,
-          text: code,
-          forceMoveMarkers: true
-        }])
+        editorRef.current.executeEdits('', [
+          {
+            range: selection,
+            text: code,
+            forceMoveMarkers: true,
+          },
+        ])
         editorRef.current.focus()
       } else {
         const currentCode = currentScript.code
@@ -331,7 +210,7 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
       const newCode = currentCode ? currentCode + '\n\n' + code : code
       handleUpdateScript({ code: newCode })
     }
-    
+
     setShowSnippetLibrary(false)
   }
 
@@ -396,24 +275,12 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
           </CardContent>
         ) : (
           <>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Edit Script: {currentScript.name}</CardTitle>
-                  <CardDescription>Write custom Lua logic</CardDescription>
-                </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={handleScanCode}>
-                    <ShieldCheck className="mr-2" size={16} />
-                    Security Scan
-                  </Button>
-                  <Button onClick={handleTestScript} disabled={isExecuting}>
-                    <Play className="mr-2" size={16} />
-                    {isExecuting ? 'Executing...' : 'Test Script'}
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
+            <LuaEditorToolbar
+              scriptName={currentScript.name}
+              onScanCode={handleScanCode}
+              onTestScript={handleTestScript}
+              isExecuting={isExecuting}
+            />
             <CardContent className="space-y-6">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
@@ -495,7 +362,7 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
                         <Input
                           value={testInputs[param.name] ?? ''}
                           onChange={(e) => {
-                            const value = param.type === 'number' 
+                            const value = param.type === 'number'
                               ? parseFloat(e.target.value) || 0
                               : param.type === 'boolean'
                               ? e.target.value === 'true'
@@ -627,7 +494,7 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
                         </pre>
                       </div>
                     )}
-                    
+
                     {testOutput.logs.length > 0 && (
                       <div>
                         <Label className="text-xs mb-1">Logs</Label>
@@ -636,7 +503,7 @@ export function LuaEditor({ scripts, onScriptsChange }: LuaEditorProps) {
                         </pre>
                       </div>
                     )}
-                    
+
                     {testOutput.result !== null && testOutput.result !== undefined && (
                       <div>
                         <Label className="text-xs mb-1">Return Value</Label>
