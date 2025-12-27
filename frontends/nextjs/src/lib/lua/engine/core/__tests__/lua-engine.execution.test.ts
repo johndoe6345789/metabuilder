@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { LuaEngine, createLuaEngine, type LuaExecutionContext } from './lua-engine'
+import { LuaEngine, createLuaEngine, type LuaExecutionContext } from '../lua-engine'
 
-describe('lua-engine', () => {
+describe('lua-engine execution', () => {
   let engine: LuaEngine
 
   beforeEach(() => {
@@ -81,31 +81,31 @@ describe('lua-engine', () => {
         {
           name: 'access context.data number',
           code: 'return context.data.value * 2',
-          context: { data: { value: 21 } },
+          context: { data: { value: 21 } } satisfies LuaExecutionContext,
           expected: 42,
         },
         {
           name: 'access context.data string',
           code: 'return context.data.name',
-          context: { data: { name: 'test' } },
+          context: { data: { name: 'test' } } satisfies LuaExecutionContext,
           expected: 'test',
         },
         {
           name: 'access context.data boolean',
           code: 'return context.data.active',
-          context: { data: { active: true } },
+          context: { data: { active: true } } satisfies LuaExecutionContext,
           expected: true,
         },
         {
           name: 'access nested context.data',
           code: 'return context.data.user.name',
-          context: { data: { user: { name: 'Alice' } } },
+          context: { data: { user: { name: 'Alice' } } } satisfies LuaExecutionContext,
           expected: 'Alice',
         },
         {
           name: 'access context.data array',
           code: 'return context.data.items[2]',
-          context: { data: { items: [10, 20, 30] } },
+          context: { data: { items: [10, 20, 30] } } satisfies LuaExecutionContext,
           expected: 20,
         },
       ])('should $name', async ({ code, context, expected }) => {
@@ -238,66 +238,6 @@ describe('lua-engine', () => {
         const result = await engine.execute(code)
         expect(result.success).toBe(true)
         expect(result.result).toBe(expected)
-      })
-    })
-
-    describe('logging', () => {
-      it('should capture log() calls', async () => {
-        const result = await engine.execute(`
-          log("message 1")
-          log("message 2")
-          return "done"
-        `)
-        expect(result.success).toBe(true)
-        expect(result.logs).toContain('message 1')
-        expect(result.logs).toContain('message 2')
-      })
-
-      it('should capture print() calls', async () => {
-        const result = await engine.execute(`
-          print("printed output")
-          return true
-        `)
-        expect(result.success).toBe(true)
-        expect(result.logs).toContain('printed output')
-      })
-
-      it.each([
-        { name: 'number', code: 'log(42)', expected: '42' },
-        { name: 'boolean', code: 'log(true)', expected: 'true' },
-        { name: 'multiple args', code: 'log("a", "b", "c")', expected: 'a b c' },
-      ])('should log $name correctly', async ({ code, expected }) => {
-        const result = await engine.execute(code)
-        expect(result.logs).toContain(expected)
-      })
-    })
-
-    describe('error handling', () => {
-      it.each([
-        {
-          name: 'syntax error',
-          code: 'this is not valid lua !!!',
-          errorContains: 'Syntax error',
-        },
-        {
-          name: 'undefined variable',
-          code: 'return undefinedVar.property',
-          errorContains: 'Runtime error',
-        },
-        {
-          name: 'type error',
-          code: 'return "string" + 5',
-          errorContains: 'error',
-        },
-        {
-          name: 'explicit error',
-          code: 'error("intentional error")',
-          errorContains: 'intentional error',
-        },
-      ])('should handle $name', async ({ code, errorContains }) => {
-        const result = await engine.execute(code)
-        expect(result.success).toBe(false)
-        expect(result.error?.toLowerCase()).toContain(errorContains.toLowerCase())
       })
     })
 
