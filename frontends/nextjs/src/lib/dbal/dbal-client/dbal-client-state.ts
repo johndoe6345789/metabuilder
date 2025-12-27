@@ -1,4 +1,4 @@
-import type { DBALClient } from '@/lib/dbal-stub'
+import type { DBALClient } from '@/dbal'
 
 export const dbalClientState: { instance: DBALClient | null } = {
   instance: null,

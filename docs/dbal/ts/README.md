@@ -4,7 +4,7 @@
 TypeScript implementation of the DBAL system for Node.js environments.
 
 ## Location
-[/dbal/ts/](/dbal/ts/)
+[/dbal/development/](/dbal/development/)
 
 ## Purpose
 Provides JavaScript/TypeScript bindings and implementation for database access layer in Node.js applications.

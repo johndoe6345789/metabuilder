@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { getDBAL } from './get-dbal.server'
+import { getDBAL } from '../core/get-dbal.server'
 
 export async function dbalDeleteUser(userId: string): Promise<boolean> {
   const dbal = await getDBAL()

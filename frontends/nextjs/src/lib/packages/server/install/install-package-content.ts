@@ -2,8 +2,8 @@ import 'server-only'
 
 import { Database } from '@/lib/database'
 import type { PackageContent } from '@/lib/package-types'
-import { mergeByKey } from './merge-by-key'
-import { mergeRecords } from './merge-records'
+import { mergeByKey } from '../utils/merge-by-key'
+import { mergeRecords } from '../utils/merge-records'
 
 export async function installPackageContent(packageId: string, content: PackageContent): Promise<void> {
   const [schemas, pages, workflows, luaScripts, hierarchy, configs] = await Promise.all([

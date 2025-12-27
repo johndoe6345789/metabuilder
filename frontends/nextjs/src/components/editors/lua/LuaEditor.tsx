@@ -22,7 +22,7 @@ import { useMonaco } from '@monaco-editor/react'
 import { LuaSnippetLibrary } from '@/components/editors/lua/LuaSnippetLibrary'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui'
 import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
-import { SecurityWarningDialog } from '@/components/dialogs/SecurityWarningDialog'
+import { SecurityWarningDialog } from '@/components/organisms/security/SecurityWarningDialog'
 
 interface LuaEditorProps {
   scripts: LuaScript[]

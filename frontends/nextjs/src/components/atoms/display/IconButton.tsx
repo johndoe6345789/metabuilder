@@ -6,9 +6,15 @@ import {
   IconButtonProps as MuiIconButtonProps,
 } from '@mui/material'
 
+/** IconButton size options */
 export type IconButtonSize = 'small' | 'medium' | 'large'
 
+/**
+ * Props for the IconButton component
+ * @extends {MuiIconButtonProps} Inherits Material-UI IconButton props
+ */
 export interface IconButtonProps extends MuiIconButtonProps {
+  /** Visual style variant of the icon button */
   variant?: 'default' | 'outlined' | 'contained'
 }
 

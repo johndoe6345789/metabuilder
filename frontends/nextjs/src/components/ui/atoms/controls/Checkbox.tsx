@@ -3,8 +3,14 @@
 import { forwardRef } from 'react'
 import { Checkbox as MuiCheckbox, CheckboxProps as MuiCheckboxProps } from '@mui/material'
 
+/**
+ * Props for the Checkbox component
+ * @extends {MuiCheckboxProps} Inherits Material-UI Checkbox props
+ */
 export interface CheckboxProps extends Omit<MuiCheckboxProps, 'onChange'> {
+  /** Callback when checked state changes (alternative to onChange) */
   onCheckedChange?: (checked: boolean) => void
+  /** Standard onChange handler */
   onChange?: MuiCheckboxProps['onChange']
 }
 

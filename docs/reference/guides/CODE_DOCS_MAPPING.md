@@ -30,20 +30,20 @@ This document provides a 1:1 mapping between code folders and their correspondin
 
 | Code Location | Documentation | Purpose |
 |---------------|---------------|---------|
-| `/dbal/api/` | [/docs/dbal/api/](../../dbal/api/) | API schemas and versioning |
-| `/dbal/api/schema/` | [/docs/dbal/api/](../../dbal/api/) | Schema definitions |
-| `/dbal/api/versioning/` | [/docs/dbal/api/](../../dbal/api/) | Version management |
-| `/dbal/backends/` | [/docs/dbal/backends/](../../dbal/backends/) | Database backends |
-| `/dbal/backends/prisma/` | [/docs/dbal/backends/](../../dbal/backends/) | Prisma ORM backend |
-| `/dbal/backends/sqlite/` | [/docs/dbal/backends/](../../dbal/backends/) | SQLite backend |
-| `/dbal/common/` | [/docs/dbal/common/](../../dbal/common/) | Shared utilities |
-| `/dbal/cpp/` | [/docs/dbal/cpp/](../../dbal/cpp/) | C++ implementation |
-| `/dbal/cpp/src/` | [/docs/dbal/cpp/](../../dbal/cpp/) | C++ source files |
-| `/dbal/cpp/include/` | [/docs/dbal/cpp/](../../dbal/cpp/) | C++ headers |
-| `/dbal/cpp/tests/` | [/docs/dbal/cpp/](../../dbal/cpp/) | C++ tests |
-| `/dbal/ts/` | [/docs/dbal/ts/](../../dbal/ts/) | TypeScript implementation |
-| `/dbal/tools/` | [/docs/dbal/tools/](../../dbal/tools/) | Development tools |
-| `/dbal/scripts/` | [/docs/dbal/scripts/](../../dbal/scripts/) | Automation scripts |
+| `/dbal/shared/api/` | [/docs/dbal/shared/api/](../../dbal/shared/api/) | API schemas and versioning |
+| `/dbal/shared/api/schema/` | [/docs/dbal/shared/api/](../../dbal/shared/api/) | Schema definitions |
+| `/dbal/shared/api/versioning/` | [/docs/dbal/shared/api/](../../dbal/shared/api/) | Version management |
+| `/dbal/shared/backends/` | [/docs/dbal/shared/backends/](../../dbal/shared/backends/) | Database backends |
+| `/dbal/shared/backends/prisma/` | [/docs/dbal/shared/backends/](../../dbal/shared/backends/) | Prisma ORM backend |
+| `/dbal/shared/backends/sqlite/` | [/docs/dbal/shared/backends/](../../dbal/shared/backends/) | SQLite backend |
+| `/dbal/shared/common/` | [/docs/dbal/shared/common/](../../dbal/shared/common/) | Shared utilities |
+| `/dbal/production/` | [/docs/dbal/production/](../../dbal/production/) | C++ implementation |
+| `/dbal/production/src/` | [/docs/dbal/production/](../../dbal/production/) | C++ source files |
+| `/dbal/production/include/` | [/docs/dbal/production/](../../dbal/production/) | C++ headers |
+| `/dbal/production/tests/` | [/docs/dbal/production/](../../dbal/production/) | C++ tests |
+| `/dbal/development/` | [/docs/dbal/development/](../../dbal/development/) | TypeScript implementation |
+| `/dbal/shared/tools/` | [/docs/dbal/shared/tools/](../../dbal/shared/tools/) | Development tools |
+| `/dbal/shared/scripts/` | [/docs/dbal/shared/scripts/](../../dbal/shared/scripts/) | Automation scripts |
 
 ### `/packages/` → `/docs/packages/`
 

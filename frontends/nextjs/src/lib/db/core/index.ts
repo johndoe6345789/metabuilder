@@ -32,6 +32,7 @@ export * from '../power-transfers'
 export * from '../smtp-config'
 export * from '../god-credentials'
 export * from '../database-admin'
+export * from '../error-logs'
 
 // Import all for namespace class
 import { initializeDatabase } from './initialize-database'
@@ -57,6 +58,7 @@ import * as powerTransfers from '../power-transfers'
 import * as smtpConfig from '../smtp-config'
 import * as godCredentials from '../god-credentials'
 import * as databaseAdmin from '../database-admin'
+import * as errorLogs from '../error-logs'
 
 /**
  * Database namespace class - groups all DB operations as static methods
@@ -213,4 +215,11 @@ export class Database {
   static exportDatabase = databaseAdmin.exportDatabase
   static importDatabase = databaseAdmin.importDatabase
   static seedDefaultData = databaseAdmin.seedDefaultData
+
+  // Error Logs
+  static getErrorLogs = errorLogs.getErrorLogs
+  static addErrorLog = errorLogs.addErrorLog
+  static updateErrorLog = errorLogs.updateErrorLog
+  static deleteErrorLog = errorLogs.deleteErrorLog
+  static clearErrorLogs = errorLogs.clearErrorLogs
 }

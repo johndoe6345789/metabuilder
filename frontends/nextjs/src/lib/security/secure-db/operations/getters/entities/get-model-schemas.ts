@@ -1,7 +1,7 @@
 import { getSchemas as fetchSchemas } from '@/lib/db/schemas'
 import type { ModelSchema } from '@/lib/types/schema-types'
 import type { SecurityContext } from '../types'
-import { executeQuery } from '../execute-query'
+import { executeQuery } from '../../execute-query'
 
 /**
  * Get model schemas with security checks

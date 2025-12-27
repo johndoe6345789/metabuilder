@@ -3,14 +3,25 @@
 import { forwardRef } from 'react'
 import { Button as MuiButton, ButtonProps as MuiButtonProps, CircularProgress } from '@mui/material'
 
+/** Button visual style variants */
 export type ButtonVariant = 'contained' | 'outlined' | 'text' | 'destructive' | 'ghost'
+
+/** Button size options */
 export type ButtonSize = 'small' | 'medium' | 'large' | 'icon'
 
+/**
+ * Props for the Button component
+ * @extends {MuiButtonProps} Inherits Material-UI Button props
+ */
 export interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'size'> {
+  /** Visual style variant of the button */
   variant?: ButtonVariant
+  /** Size of the button */
   size?: ButtonSize
+  /** Whether to show a loading spinner */
   loading?: boolean
-  asChild?: boolean // Compatibility prop - ignored
+  /** Compatibility prop - ignored */
+  asChild?: boolean
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
