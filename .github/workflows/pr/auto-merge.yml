@@ -6,7 +6,7 @@ on:
   check_suite:
     types: [completed]
   workflow_run:
-    workflows: ["CI/CD"]
+    workflows: ["CI/CD", "Enterprise Gated CI/CD Pipeline"]
     types: [completed]
 
 permissions:
@@ -98,14 +98,23 @@ jobs:
               return;
             }
             
-            // Check CI status
+            // Check CI status - support both old and new gated workflows
             const { data: checks } = await github.rest.checks.listForRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: pr.head.sha
             });
             
-            const requiredChecks = ['Lint Code', 'Build Application', 'E2E Tests'];
+            // Required checks for old CI/CD workflow
+            const legacyRequiredChecks = ['Lint Code', 'Build Application', 'E2E Tests'];
+            
+            // Required gate checks for new Enterprise Gated CI/CD Pipeline
+            const gatedRequiredChecks = [
+              'Gate 1: Code Quality - Passed ✅',
+              'Gate 2: Testing - Passed ✅',
+              'Gate 3: Build & Package - Passed ✅'
+            ];
+            
             const checkStatuses = {};
             
             for (const check of checks.check_runs) {
@@ -113,6 +122,14 @@ jobs:
             }
             
             console.log('Check statuses:', checkStatuses);
+            
+            // Check if using new gated workflow or old workflow
+            const hasGatedChecks = gatedRequiredChecks.some(checkName => 
+              checkStatuses[checkName] !== undefined
+            );
+            
+            const requiredChecks = hasGatedChecks ? gatedRequiredChecks : legacyRequiredChecks;
+            console.log('Using checks:', hasGatedChecks ? 'Enterprise Gated' : 'Legacy');
             
             // Wait for all required checks to pass
             const allChecksPassed = requiredChecks.every(checkName => 
