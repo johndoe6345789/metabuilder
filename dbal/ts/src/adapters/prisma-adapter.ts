@@ -195,7 +195,7 @@ export class PrismaAdapter implements DBALAdapter {
     try {
       const model = this.getModel(entity)
       const where = filter ? this.buildWhereClause(filter) : undefined
-      const result = await this.withTimeout(
+      const result: { count: number } = await this.withTimeout(
         model.deleteMany({ where: where as never })
       )
       return result.count
