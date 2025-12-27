@@ -87,7 +87,8 @@
 - [ ] Create conflict notification system
 
 ### Workflow: `auto-merge.yml`
-- [ ] Validate auto-merge conditions are correct
+- [x] Validate auto-merge conditions are correct
+- [x] Updated to support both legacy and enterprise gated workflows
 - [ ] Add merge queue support
 - [ ] Implement merge window configuration
 - [ ] Create merge analytics tracking
@@ -98,25 +99,25 @@
 ## Phase 5: Deployment
 
 ### Workflow: `deployment.yml`
-- [ ] Complete pre-deployment validation checks
-- [ ] Test breaking change detection
-- [ ] Validate deployment notes generation
-- [ ] Add environment-specific deployment paths
+- [x] Complete pre-deployment validation checks (enterprise gated workflow)
+- [x] Test breaking change detection (enterprise gated workflow)
+- [x] Validate deployment notes generation (enterprise gated workflow)
+- [x] Add environment-specific deployment paths (enterprise gated workflow)
 - [ ] Implement blue-green deployment support
 
 ### Deployment Safety
-- [ ] Add database migration validation
+- [x] Add database migration validation (enterprise gated workflow)
 - [ ] Implement feature flag integration
 - [ ] Create canary deployment support
-- [ ] Add automated rollback triggers
-- [ ] Implement deployment approval gates
+- [x] Add automated rollback triggers (enterprise gated workflow)
+- [x] Implement deployment approval gates (enterprise gated workflow - production requires manual approval)
 
 ### Monitoring Integration
-- [ ] Create deployment health check automation
+- [x] Create deployment health check automation (enterprise gated workflow)
 - [ ] Add performance regression detection
 - [ ] Implement error rate monitoring post-deploy
 - [ ] Create deployment success metrics
-- [ ] Add 48-hour monitoring issue automation
+- [x] Add 48-hour monitoring issue automation (enterprise gated workflow - 24hr)
 
 ---
 
