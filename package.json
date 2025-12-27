@@ -7,7 +7,9 @@
     "todos:export-filtered": "python3 tools/project-management/populate-kanban.py --output todos-filtered.json --exclude-checklist",
     "todos:test": "python3 tools/project-management/test_populate_kanban.py",
     "todos:create": "python3 tools/project-management/populate-kanban.py --create",
-    "todos:help": "python3 tools/project-management/populate-kanban.py --help"
+    "todos:help": "python3 tools/project-management/populate-kanban.py --help",
+    "todos:check": "python3 tools/project-management/check-new-todos.py",
+    "todos:baseline": "python3 tools/project-management/check-new-todos.py --save-baseline"
   },
   "devDependencies": {
     "prisma": "^7.2.0"
