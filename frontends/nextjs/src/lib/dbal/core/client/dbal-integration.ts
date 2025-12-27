@@ -1,12 +1,12 @@
 /**
- * DBAL Integration Layer (Stub Version)
+ * DBAL Integration Layer
  * 
- * This module provides a simplified DBAL integration when the full DBAL
- * module is not available. It provides in-memory implementations of
- * tenant management, KV store, and blob storage.
+ * This module provides DBAL integration using the real DBAL client
+ * from dbal/development for development mode and WebSocket connection
+ * for production mode.
  */
 
-import { DBALClient, type DBALConfig } from '@/lib/dbal-stub'
+import { DBALClient, type DBALConfig } from '@/dbal'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

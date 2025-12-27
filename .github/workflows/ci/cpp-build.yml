@@ -4,14 +4,14 @@ on:
   push:
     branches: [ main, develop ]
     paths:
-      - 'dbal/cpp/**'
-      - 'dbal/tools/cpp-build-assistant.cjs'
+      - 'dbal/production/**'
+      - 'dbal/shared/tools/cpp-build-assistant.cjs'
       - '.github/workflows/cpp-build.yml'
   pull_request:
     branches: [ main, develop ]
     paths:
-      - 'dbal/cpp/**'
-      - 'dbal/tools/cpp-build-assistant.cjs'
+      - 'dbal/production/**'
+      - 'dbal/shared/tools/cpp-build-assistant.cjs'
       - '.github/workflows/cpp-build.yml'
   workflow_dispatch:
 
@@ -33,7 +33,7 @@ jobs:
       - name: Check if C++ sources exist
         id: check
         run: |
-          if [ -d "dbal/cpp/src" ] && [ "$(find dbal/cpp/src -name '*.cpp' | wc -l)" -gt 0 ]; then
+          if [ -d "dbal/production/src" ] && [ "$(find dbal/production/src -name '*.cpp' | wc -l)" -gt 0 ]; then
             echo "has_sources=true" >> $GITHUB_OUTPUT
             echo "✓ C++ source files found"
           else
@@ -112,8 +112,8 @@ jobs:
         with:
           name: dbal-daemon-linux
           path: |
-            dbal/cpp/build/dbal_daemon
-            dbal/cpp/build/*.so
+            dbal/production/build/dbal_daemon
+            dbal/production/build/*.so
           retention-days: 7
 
   build-macos:
@@ -151,7 +151,7 @@ jobs:
           CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
         run: |
           if [ "${{ matrix.build_type }}" = "Debug" ]; then
-            node dbal/tools/cpp-build-assistant.cjs full --debug
+            node dbal/shared/tools/cpp-build-assistant.cjs full --debug
           else
             bun run cpp:full
           fi
@@ -165,8 +165,8 @@ jobs:
         with:
           name: dbal-daemon-macos
           path: |
-            dbal/cpp/build/dbal_daemon
-            dbal/cpp/build/*.dylib
+            dbal/production/build/dbal_daemon
+            dbal/production/build/*.dylib
           retention-days: 7
 
   build-windows:
@@ -206,7 +206,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.build_type }}" = "Debug" ]; then
-            node dbal/tools/cpp-build-assistant.cjs full --debug
+            node dbal/shared/tools/cpp-build-assistant.cjs full --debug
           else
             bun run cpp:full
           fi
@@ -220,8 +220,8 @@ jobs:
         with:
           name: dbal-daemon-windows
           path: |
-            dbal/cpp/build/dbal_daemon.exe
-            dbal/cpp/build/*.dll
+            dbal/production/build/dbal_daemon.exe
+            dbal/production/build/*.dll
           retention-days: 7
 
   code-quality:
@@ -255,13 +255,13 @@ jobs:
         run: |
           cppcheck --enable=all --inconclusive --error-exitcode=1 \
             --suppress=missingIncludeSystem \
-            -I dbal/cpp/include \
-            dbal/cpp/src/
+            -I dbal/production/include \
+            dbal/production/src/
         continue-on-error: true
       
       - name: Check formatting
         run: |
-          find dbal/cpp/src dbal/cpp/include -name '*.cpp' -o -name '*.hpp' | \
+          find dbal/production/src dbal/production/include -name '*.cpp' -o -name '*.hpp' | \
           xargs clang-format --dry-run --Werror
         continue-on-error: true
 
@@ -288,15 +288,15 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dbal-daemon-linux
-          path: dbal/cpp/build/
+          path: dbal/production/build/
       
       - name: Make daemon executable
-        run: chmod +x dbal/cpp/build/dbal_daemon
+        run: chmod +x dbal/production/build/dbal_daemon
       
       - name: Run integration tests
         run: |
           # Start C++ daemon
-          ./dbal/cpp/build/dbal_daemon &
+          ./dbal/production/build/dbal_daemon &
           DAEMON_PID=$!
           sleep 2
           

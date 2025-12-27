@@ -16,7 +16,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-      '@/dbal': resolve(__dirname, '../dbal/ts/src'),
+      '@/dbal': resolve(__dirname, '../dbal/development/src'),
     },
   },
 })

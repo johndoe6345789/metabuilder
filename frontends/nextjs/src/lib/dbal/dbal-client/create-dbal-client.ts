@@ -1,5 +1,5 @@
-import { DBALClient } from '@/lib/dbal-stub'
-import type { DBALConfig } from '@/lib/dbal-stub'
+import { DBALClient } from '@/dbal'
+import type { DBALConfig } from '@/dbal'
 import type { User } from '../../types/level-types'
 import { dbalClientState } from './dbal-client-state'
 

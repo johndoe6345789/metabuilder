@@ -30,12 +30,12 @@
 - `.github/workflows/detect-stubs.yml:133` — comment += '- [ ] Replace TODO comments with GitHub issues\n';
 
 ### `dbal` (6)
-- `dbal/cpp/README.Linting.md:306` — - TODO/FIXME comments count
-- `dbal/cpp/lint.sh:137` — echo "Checking for TODO/FIXME comments..."
-- `dbal/cpp/lint.sh:138` — TODO_COUNT=$(grep -r "TODO\|FIXME" src/ include/ || true | wc -l)
-- `dbal/cpp/lint.sh:140` — echo -e "${YELLOW}⚠ Found $TODO_COUNT TODO/FIXME comments${NC}"
-- `dbal/cpp/lint.sh:141` — grep -rn "TODO\|FIXME" src/ include/ || true
-- `dbal/cpp/lint.sh:143` — echo -e "${GREEN}✓ No TODO/FIXME comments${NC}"
+- `dbal/production/README.Linting.md:306` — - TODO/FIXME comments count
+- `dbal/production/lint.sh:137` — echo "Checking for TODO/FIXME comments..."
+- `dbal/production/lint.sh:138` — TODO_COUNT=$(grep -r "TODO\|FIXME" src/ include/ || true | wc -l)
+- `dbal/production/lint.sh:140` — echo -e "${YELLOW}⚠ Found $TODO_COUNT TODO/FIXME comments${NC}"
+- `dbal/production/lint.sh:141` — grep -rn "TODO\|FIXME" src/ include/ || true
+- `dbal/production/lint.sh:143` — echo -e "${GREEN}✓ No TODO/FIXME comments${NC}"
 
 ### `docs` (95)
 - `docs/CONTRIBUTING.md:23` — - Leave TODO comments for missing functionality.

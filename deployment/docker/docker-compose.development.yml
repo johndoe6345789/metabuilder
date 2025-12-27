@@ -30,7 +30,7 @@ services:
   # C++ DBAL Daemon (Development with interactive mode)
   dbal-daemon:
     build:
-      context: ../dbal/cpp
+      context: ../dbal/production
       dockerfile: Dockerfile
       args:
         BUILD_TYPE: Debug
@@ -43,7 +43,7 @@ services:
       DBAL_DAEMON: "false"  # Interactive mode for development
       DBAL_CONFIG: /app/config/config.yaml
     volumes:
-      - ../dbal/cpp:/app/source:ro  # Mount source for live changes
+      - ../dbal/production:/app/source:ro  # Mount source for live changes
       - ./config/dbal:/app/config:ro
       - dbal_data_dev:/app/data
     ports:

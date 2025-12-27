@@ -16,8 +16,8 @@ body:
       label: DBAL Implementation
       description: Which DBAL implementation is affected?
       options:
-        - TypeScript SDK (dbal/ts/)
-        - C++ Daemon (dbal/cpp/)
+        - TypeScript SDK (dbal/development/)
+        - C++ Daemon (dbal/production/)
         - Both implementations
         - YAML Contracts (api/schema/)
         - Conformance Tests

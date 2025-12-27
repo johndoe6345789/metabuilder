@@ -3,7 +3,12 @@
 import { forwardRef, InputHTMLAttributes } from 'react'
 import { InputBase } from '@mui/material'
 
+/**
+ * Props for the Input component
+ * @extends {InputHTMLAttributes} Inherits HTML input element attributes
+ */
 export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+  /** Whether the input is in an error state */
   error?: boolean
 }
 

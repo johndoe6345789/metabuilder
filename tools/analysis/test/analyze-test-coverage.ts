@@ -44,7 +44,7 @@ const CONFIG = {
     "src/**/*.tsx",
     "packages/**/src/**/*.ts",
     "packages/**/src/**/*.tsx",
-    "dbal/ts/**/*.ts",
+    "dbal/development/**/*.ts",
   ],
   testPatterns: [
     "src/**/*.test.ts",

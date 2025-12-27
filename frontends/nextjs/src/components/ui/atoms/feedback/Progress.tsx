@@ -3,7 +3,12 @@
 import { forwardRef } from 'react'
 import { LinearProgress, LinearProgressProps, CircularProgress, CircularProgressProps } from '@mui/material'
 
+/**
+ * Props for the Progress component
+ * @extends {LinearProgressProps} Inherits Material-UI LinearProgress props
+ */
 export interface ProgressProps extends LinearProgressProps {
+  /** Progress value (0-100) for determinate mode */
   value?: number
 }
 

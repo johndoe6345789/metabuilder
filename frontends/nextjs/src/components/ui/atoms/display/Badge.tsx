@@ -3,12 +3,20 @@
 import { forwardRef, ReactNode } from 'react'
 import { Chip, ChipProps, SxProps, Theme } from '@mui/material'
 
+/** Badge visual style variants */
 export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline'
 
+/**
+ * Props for the Badge component
+ */
 export interface BadgeProps {
+  /** Visual style variant of the badge */
   variant?: BadgeVariant
+  /** Content to display inside the badge */
   children?: ReactNode
+  /** CSS class name for custom styling */
   className?: string
+  /** Custom styles for the badge */
   sx?: SxProps<Theme>
 }
 
