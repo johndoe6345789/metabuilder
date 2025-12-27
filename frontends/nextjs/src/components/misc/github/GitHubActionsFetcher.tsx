@@ -1,101 +1,40 @@
-import { useEffect, useState } from 'react'
 import { Stack } from '@mui/material'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { formatWorkflowRunAnalysis, summarizeWorkflowRuns } from '@/lib/github/analyze-workflow-runs'
-import { toast } from 'sonner'
 
-import { useWorkflowRuns } from './hooks/useWorkflowRuns'
-import { useWorkflowLogAnalysis } from './hooks/useWorkflowLogAnalysis'
+import { useActionsFetcher } from './workflows/useActionsFetcher'
 import { AnalysisPanel } from './views/AnalysisPanel'
 import { RunDetails } from './views/RunDetails'
 import { RunList } from './views/RunList'
 
 export function GitHubActionsFetcher() {
-  const [analysis, setAnalysis] = useState<string | null>(null)
-  const [isAnalyzing, setIsAnalyzing] = useState(false)
-  const [activeTab, setActiveTab] = useState<'runs' | 'logs' | 'analysis'>(
-    'runs',
-  )
-
   const {
     runs,
     isLoading,
     error,
     needsAuth,
-    repoInfo,
     repoLabel,
     lastFetched,
-    secondsUntilRefresh,
     autoRefreshEnabled,
+    secondsUntilRefresh,
     toggleAutoRefresh,
+    downloadWorkflowData,
     fetchRuns,
     getStatusColor,
+    isLoadingLogs,
     conclusion,
     summaryTone,
-  } = useWorkflowRuns()
-
-  const {
-    analyzeRunLogs,
-    downloadRunLogs,
-    isLoadingLogs,
-    runJobs,
-    runLogs,
     selectedRunId,
-  } = useWorkflowLogAnalysis({
-    repoInfo,
-    onAnalysisStart: () => setIsAnalyzing(true),
-    onAnalysisComplete: (report) => {
-      if (report) {
-        setAnalysis(report)
-      }
-      setIsAnalyzing(false)
-    },
-  })
-
-  const downloadWorkflowData = () => {
-    if (!runs) return
-
-    const jsonData = JSON.stringify(runs, null, 2)
-    const blob = new Blob([jsonData], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = `github-actions-${new Date().toISOString()}.json`
-    document.body.appendChild(anchor)
-    anchor.click()
-    document.body.removeChild(anchor)
-    URL.revokeObjectURL(url)
-    toast.success('Downloaded workflow data')
-  }
-
-  const analyzeWorkflows = async () => {
-    if (!runs || runs.length === 0) {
-      toast.error('No data to analyze')
-      return
-    }
-
-    setIsAnalyzing(true)
-    try {
-      const summary = summarizeWorkflowRuns(runs)
-      const report = formatWorkflowRunAnalysis(summary)
-      setAnalysis(report)
-      toast.success('Analysis complete')
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Analysis failed'
-      toast.error(errorMessage)
-    } finally {
-      setIsAnalyzing(false)
-    }
-  }
-
-  const handleAnalyzeLogs = () => analyzeRunLogs(runs)
-
-  useEffect(() => {
-    if (runLogs && activeTab === 'runs') {
-      setActiveTab('logs')
-    }
-  }, [activeTab, runLogs])
+    runLogs,
+    runJobs,
+    analyzeLogs,
+    analyzeWorkflows,
+    downloadRunLogs,
+    analysis,
+    isAnalyzing,
+    activeTab,
+    setActiveTab,
+  } = useActionsFetcher()
 
   return (
     <Stack spacing={3}>
@@ -134,7 +73,7 @@ export function GitHubActionsFetcher() {
               runLogs={runLogs}
               runJobs={runJobs}
               selectedRunId={selectedRunId}
-              onAnalyzeLogs={handleAnalyzeLogs}
+              onAnalyzeLogs={analyzeLogs}
               isAnalyzing={isAnalyzing}
             />
           </TabsContent>
@@ -145,7 +84,7 @@ export function GitHubActionsFetcher() {
             analysis={analysis}
             isAnalyzing={isAnalyzing}
             runLogs={runLogs}
-            onAnalyzeLogs={handleAnalyzeLogs}
+            onAnalyzeLogs={analyzeLogs}
             onAnalyzeWorkflows={analyzeWorkflows}
           />
         </TabsContent>

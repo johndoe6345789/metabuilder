@@ -7,21 +7,22 @@ import type { WorkflowRun } from '../types'
 import type { RunListProps } from './run-list.types'
 import { spinSx } from './run-list.types'
 
-type RunItemCardProps = Pick<
+type RunRowProps = Pick<
   RunListProps,
   'getStatusColor' | 'onDownloadLogs' | 'isLoadingLogs' | 'selectedRunId'
 > & {
   run: WorkflowRun
 }
 
-export const RunItemCard = ({
+export const RunRow = ({
   run,
   getStatusColor,
   onDownloadLogs,
   isLoadingLogs,
   selectedRunId,
-}: RunItemCardProps) => {
+}: RunRowProps) => {
   const statusIcon = getStatusColor(run.status, run.conclusion)
+  const isSelectedRun = isLoadingLogs && selectedRunId === run.id
 
   return (
     <Card variant="outlined" sx={{ borderColor: 'divider' }}>
@@ -81,14 +82,14 @@ export const RunItemCard = ({
               variant="outline"
               size="sm"
               onClick={() => onDownloadLogs(run.id, run.name)}
-              disabled={isLoadingLogs && selectedRunId === run.id}
+              disabled={isSelectedRun}
               startIcon={
-                isLoadingLogs && selectedRunId === run.id
+                isSelectedRun
                   ? <RunningIcon sx={{ fontSize: 16, ...spinSx }} />
                   : <DownloadIcon sx={{ fontSize: 16 }} />
               }
             >
-              {isLoadingLogs && selectedRunId === run.id ? 'Loading...' : 'Download Logs'}
+              {isSelectedRun ? 'Loading...' : 'Download Logs'}
             </Button>
             <Button
               variant="outline"
