@@ -1,32 +1,19 @@
+/**
+ * @file websocket-bridge.ts
+ * @description WebSocket bridge adapter for remote DBAL daemon
+ */
+
 import type { DBALAdapter, AdapterCapabilities } from '../adapters/adapter'
 import type { ListOptions, ListResult } from '../core/types'
 import { DBALError } from '../core/foundation/errors'
-
-interface RPCMessage {
-  id: string
-  method: string
-  params: unknown[]
-}
-
-interface RPCResponse {
-  id: string
-  result?: unknown
-  error?: {
-    code: number
-    message: string
-    details?: Record<string, unknown>
-  }
-}
+import { generateRequestId } from './utils/generate-request-id'
+import type { RPCMessage, RPCResponse, PendingRequest } from './utils/rpc-types'
 
 export class WebSocketBridge implements DBALAdapter {
   private ws: WebSocket | null = null
   private endpoint: string
   private auth?: { user: unknown, session: unknown }
-  private pendingRequests = new Map<string, {
-    resolve: (value: unknown) => void
-    reject: (reason: unknown) => void
-  }>()
-  private requestIdCounter = 0
+  private pendingRequests = new Map<string, PendingRequest>()
 
   constructor(endpoint: string, auth?: { user: unknown, session: unknown }) {
     this.endpoint = endpoint
@@ -71,11 +58,12 @@ export class WebSocketBridge implements DBALAdapter {
       this.pendingRequests.delete(response.id)
 
       if (response.error) {
-        pending.reject(new DBALError(
-          response.error.code,
+        const error = new DBALError(
           response.error.message,
+          response.error.code,
           response.error.details
-        ))
+        )
+        pending.reject(error)
       } else {
         pending.resolve(response.result)
       }
@@ -87,7 +75,7 @@ export class WebSocketBridge implements DBALAdapter {
   private async call(method: string, ...params: unknown[]): Promise<unknown> {
     await this.connect()
 
-    const id = `req_${++this.requestIdCounter}`
+    const id = generateRequestId()
     const message: RPCMessage = { id, method, params }
 
     return new Promise((resolve, reject) => {
@@ -97,13 +85,13 @@ export class WebSocketBridge implements DBALAdapter {
         this.ws.send(JSON.stringify(message))
       } else {
         this.pendingRequests.delete(id)
-        reject(DBALError.internal('WebSocket not connected'))
+        reject(DBALError.internal('WebSocket connection not open'))
       }
 
       setTimeout(() => {
         if (this.pendingRequests.has(id)) {
           this.pendingRequests.delete(id)
-          reject(DBALError.timeout('Request timeout'))
+          reject(DBALError.timeout('Request timed out'))
         }
       }, 30000)
     })
@@ -130,21 +118,20 @@ export class WebSocketBridge implements DBALAdapter {
   }
 
   async findFirst(entity: string, filter?: Record<string, unknown>): Promise<unknown | null> {
-    return this.call('findFirst', entity, filter) as Promise<unknown | null>
+    return this.call('findFirst', entity, filter)
   }
 
   async findByField(entity: string, field: string, value: unknown): Promise<unknown | null> {
-    return this.call('findByField', entity, field, value) as Promise<unknown | null>
+    return this.call('findByField', entity, field, value)
   }
 
   async upsert(
     entity: string,
-    uniqueField: string,
-    uniqueValue: unknown,
+    filter: Record<string, unknown>,
     createData: Record<string, unknown>,
     updateData: Record<string, unknown>
   ): Promise<unknown> {
-    return this.call('upsert', entity, uniqueField, uniqueValue, createData, updateData)
+    return this.call('upsert', entity, filter, createData, updateData)
   }
 
   async updateByField(entity: string, field: string, value: unknown, data: Record<string, unknown>): Promise<unknown> {

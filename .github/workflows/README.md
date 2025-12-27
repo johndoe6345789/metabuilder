@@ -52,6 +52,19 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 
 ### 🚦 Enterprise Gated Workflows (New)
 
+#### Issue and PR Triage (`triage.yml`) 🆕
+**Triggered on:** Issues (opened/edited/reopened) and Pull Requests (opened/reopened/synchronize/edited)
+
+**Purpose:** Quickly categorize inbound work so reviewers know what to look at first.
+
+- Auto-applies labels for type (bug/enhancement/docs/security/testing/performance) and area (frontend/backend/database/workflows/documentation)
+- Sets a default priority and highlights beginner-friendly issues
+- Flags missing information (repro steps, expected/actual results, versions) with a checklist comment
+- For PRs, labels areas touched, estimates risk based on change size and critical paths, and prompts for test plans/screenshots/linked issues
+- Mentions **@copilot** to sanity-check the triage with GitHub-native AI (no external Codex webhooks)
+
+This workflow runs alongside the existing PR management jobs to keep triage lightweight while preserving the richer checks in the gated pipelines.
+
 #### 1. Enterprise Gated CI/CD Pipeline (`gated-ci.yml`)
 **Triggered on:** Push to main/master/develop branches, Pull requests
 
