@@ -19,7 +19,7 @@ export interface SelectProps extends Omit<MuiSelectProps, 'children'> {
   placeholder?: string
 }
 
-const Select = forwardRef<any, SelectProps>(
+const Select = forwardRef<HTMLDivElement, SelectProps>(
   ({ options, error, fullWidth = true, placeholder, ...props }, ref) => {
     return (
       <FormControl fullWidth={fullWidth} error={error}>
