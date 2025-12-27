@@ -32,7 +32,9 @@ export class S3Storage implements BlobStorage {
   private async initializeS3Client(s3Config: NonNullable<BlobStorageConfig['s3']>) {
     try {
       // Dynamic import to avoid bundling AWS SDK if not needed
-      const { S3Client } = await import('@aws-sdk/client-s3')
+      const { S3Client } = await import('@aws-sdk/client-s3').catch(() => {
+        throw new Error('@aws-sdk/client-s3 is not installed. Install it to use S3 storage.')
+      })
       
       this.s3Client = new S3Client({
         region: s3Config.region,

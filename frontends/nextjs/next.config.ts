@@ -88,6 +88,13 @@ const nextConfig: NextConfig = {
       '@/dbal': path.resolve(__dirname, '../../dbal/development/src'),
       '@dbal-ui': path.resolve(__dirname, '../../dbal/shared/ui'),
     }
+    
+    // Mark optional dependencies as external to avoid build errors
+    config.externals = config.externals || []
+    if (Array.isArray(config.externals)) {
+      config.externals.push('@aws-sdk/client-s3')
+    }
+    
     return config
   },
 }
