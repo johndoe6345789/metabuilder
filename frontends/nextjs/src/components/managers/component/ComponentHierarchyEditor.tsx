@@ -6,7 +6,6 @@ import { ScrollArea } from '@/components/ui'
 import { Separator } from '@/components/ui'
 import {
   ArrowsOutCardinal,
-  Cursor,
   Plus,
   Tree,
 } from '@phosphor-icons/react'
@@ -14,9 +13,10 @@ import { Database, type ComponentNode } from '@/lib/database'
 import { componentCatalog } from '@/lib/components/component-catalog'
 import { toast } from 'sonner'
 import { ComponentConfigDialog } from './ComponentConfigDialog'
-import { TreeNode } from './modules/TreeNode'
 import { useHierarchyData } from './modules/useHierarchyData'
 import { useHierarchyDragDrop } from './modules/useHierarchyDragDrop'
+import { HierarchyTree } from './ComponentHierarchyEditor/Tree'
+import { selectRootNodes } from './ComponentHierarchyEditor/selectors'
 
 export function ComponentHierarchyEditor({ nerdMode = false }: { nerdMode?: boolean }) {
   const { pages, selectedPageId, setSelectedPageId, hierarchy, loadHierarchy } = useHierarchyData()
@@ -37,10 +37,7 @@ export function ComponentHierarchyEditor({ nerdMode = false }: { nerdMode?: bool
   const componentIdPrefix = useId()
 
   const rootNodes = useMemo(
-    () =>
-      Object.values(hierarchy)
-        .filter(node => node.pageId === selectedPageId && !node.parentId)
-        .sort((a, b) => a.order - b.order),
+    () => selectRootNodes(hierarchy, selectedPageId),
     [hierarchy, selectedPageId]
   )
 
@@ -108,50 +105,6 @@ export function ComponentHierarchyEditor({ nerdMode = false }: { nerdMode?: bool
     [hierarchy, loadHierarchy]
   )
 
-  const renderTree = useMemo(
-    () =>
-      rootNodes.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-64 text-muted-foreground">
-          <Cursor size={48} className="mb-4" />
-          <p>No components yet. Add one from the catalog!</p>
-        </div>
-      ) : (
-        <div className="space-y-1">
-          {rootNodes.map((node) => (
-            <TreeNode
-              key={node.id}
-              node={node}
-              hierarchy={hierarchy}
-              selectedNodeId={selectedNodeId}
-              expandedNodes={expandedNodes}
-              onSelect={setSelectedNodeId}
-              onToggle={handleToggleNode}
-              onDelete={handleDeleteNode}
-              onConfig={setConfigNodeId}
-              onDragStart={handleDragStart}
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
-              draggingNodeId={draggingNodeId}
-            />
-          ))}
-        </div>
-      ),
-    [
-      expandedNodes,
-      handleDeleteNode,
-      handleDragOver,
-      handleDragStart,
-      handleDrop,
-      handleToggleNode,
-      hierarchy,
-      rootNodes,
-      selectedNodeId,
-      draggingNodeId,
-      setConfigNodeId,
-      setSelectedNodeId,
-    ]
-  )
-
   return (
     <div className="grid grid-cols-12 gap-6 h-[calc(100vh-12rem)]">
       <div className="col-span-8 space-y-4">
@@ -191,7 +144,20 @@ export function ComponentHierarchyEditor({ nerdMode = false }: { nerdMode?: bool
           <CardContent className="flex-1 overflow-hidden">
             <ScrollArea className="h-full pr-4">
               {selectedPageId ? (
-                renderTree
+                <HierarchyTree
+                  rootNodes={rootNodes}
+                  hierarchy={hierarchy}
+                  selectedNodeId={selectedNodeId}
+                  expandedNodes={expandedNodes}
+                  draggingNodeId={draggingNodeId}
+                  onSelect={setSelectedNodeId}
+                  onToggle={handleToggleNode}
+                  onDelete={handleDeleteNode}
+                  onConfig={setConfigNodeId}
+                  onDragStart={handleDragStart}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                />
               ) : (
                 <div className="flex items-center justify-center h-64 text-muted-foreground">
                   <p>Select a page to edit its component hierarchy</p>
