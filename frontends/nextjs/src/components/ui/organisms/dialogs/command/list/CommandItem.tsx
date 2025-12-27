@@ -44,7 +44,7 @@ const CommandItem = forwardRef<HTMLLIElement, CommandItemProps>(
             <Box sx={{ display: 'flex', gap: 0.5, ml: 2 }}>
               {shortcut.map((key, index) => (
                 <Box
-                  key={index}
+                  key={key}
                   component="kbd"
                   sx={{
                     px: 1,
