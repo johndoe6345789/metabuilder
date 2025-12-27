@@ -10,7 +10,7 @@ import { getRecordsKey, getFieldLabel, sortRecords, filterRecords, findModel } f
 import { RecordForm } from './RecordForm'
 import { Plus, Pencil, Trash, MagnifyingGlass, ArrowUp, ArrowDown } from '@phosphor-icons/react'
 import { toast } from 'sonner'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 
 interface RelationCellValueProps {
   value: string
