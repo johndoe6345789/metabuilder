@@ -1,10 +1,12 @@
 import { DBALError } from '../../core/foundation/errors'
 import type { BlobMetadata } from '../blob-storage'
-import { ensurePermission, getContext, scopeKey } from './context'
+import { auditCopy, auditDeletion } from './audit-hooks'
 import type { TenantAwareDeps } from './context'
+import { scopeKey } from './context'
+import { ensurePermission, resolveTenantContext } from './tenant-context'
 
 export const deleteBlob = async (deps: TenantAwareDeps, key: string): Promise<boolean> => {
-  const context = await getContext(deps)
+  const context = await resolveTenantContext(deps)
   ensurePermission(context, 'delete')
 
   const scopedKey = scopeKey(key, context.namespace)
@@ -14,7 +16,7 @@ export const deleteBlob = async (deps: TenantAwareDeps, key: string): Promise<bo
     const deleted = await deps.baseStorage.delete(scopedKey)
 
     if (deleted) {
-      await deps.tenantManager.updateBlobUsage(deps.tenantId, -metadata.size, -1)
+      await auditDeletion(deps, metadata.size)
     }
 
     return deleted
@@ -24,7 +26,7 @@ export const deleteBlob = async (deps: TenantAwareDeps, key: string): Promise<bo
 }
 
 export const exists = async (deps: TenantAwareDeps, key: string): Promise<boolean> => {
-  const context = await getContext(deps)
+  const context = await resolveTenantContext(deps)
   ensurePermission(context, 'read')
 
   const scopedKey = scopeKey(key, context.namespace)
@@ -36,7 +38,7 @@ export const copyBlob = async (
   sourceKey: string,
   destKey: string,
 ): Promise<BlobMetadata> => {
-  const context = await getContext(deps)
+  const context = await resolveTenantContext(deps)
   ensurePermission(context, 'read')
   ensurePermission(context, 'write')
 
@@ -50,7 +52,7 @@ export const copyBlob = async (
   const destScoped = scopeKey(destKey, context.namespace)
   const metadata = await deps.baseStorage.copy(sourceScoped, destScoped)
 
-  await deps.tenantManager.updateBlobUsage(deps.tenantId, sourceMetadata.size, 1)
+  await auditCopy(deps, sourceMetadata.size)
 
   return {
     ...metadata,
@@ -59,7 +61,7 @@ export const copyBlob = async (
 }
 
 export const getStats = async (deps: TenantAwareDeps) => {
-  const context = await getContext(deps)
+  const context = await resolveTenantContext(deps)
   return {
     count: context.quota.currentBlobCount,
     totalSize: context.quota.currentBlobStorageBytes,
