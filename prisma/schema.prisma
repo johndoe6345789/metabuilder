@@ -192,3 +192,19 @@ model PasswordResetToken {
   username String @id
   token    String
 }
+
+model ErrorLog {
+  id          String  @id @default(cuid())
+  timestamp   BigInt
+  level       String  // 'error', 'warning', 'info'
+  message     String
+  stack       String?
+  context     String? // JSON string with additional context
+  userId      String?
+  username    String?
+  tenantId    String?
+  source      String? // Component/file where error occurred
+  resolved    Boolean @default(false)
+  resolvedAt  BigInt?
+  resolvedBy  String?
+}
