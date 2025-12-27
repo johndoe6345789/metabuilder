@@ -93,19 +93,26 @@ These remain molecules because they are purely presentational wrappers without b
 
 ## Recommended Actions
 
-1. **Move SecurityWarningDialog to organisms**
+✅ **COMPLETED:**
+
+1. **Moved SecurityWarningDialog to organisms**
    ```
    From: src/components/dialogs/SecurityWarningDialog.tsx
    To: src/components/organisms/security/SecurityWarningDialog.tsx
    ```
 
-2. **Update imports** - Update all files importing SecurityWarningDialog
+2. **Updated imports** - Updated all files importing SecurityWarningDialog:
+   - `frontends/nextjs/src/components/editors/lua/LuaEditor.tsx`
+   - `frontends/nextjs/src/components/editors/CodeEditor.tsx`
+   - `frontends/nextjs/src/components/editors/JsonEditor.tsx`
 
-3. **Update exports** - Update index files to export from new location
+3. **Updated exports**:
+   - Removed from `molecules/index.ts`
+   - Added to `organisms/index.ts` under "Security components" section
 
-4. **Update TODO** - Mark task as complete in `docs/todo/core/2-TODO.md`
+4. **Updated TODO** - Marked task as complete in `docs/todo/core/2-TODO.md`
 
-5. **Document reasoning** - Add note explaining why SecurityWarningDialog is an organism
+5. **Documented reasoning** - Added JSDoc comment in SecurityWarningDialog.tsx explaining organism classification
 
 ## Conclusion
 

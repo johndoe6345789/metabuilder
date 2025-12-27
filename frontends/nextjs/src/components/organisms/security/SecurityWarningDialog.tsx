@@ -1,3 +1,15 @@
+/**
+ * SecurityWarningDialog - Organism Component
+ * 
+ * This component is categorized as an organism (not a molecule) because:
+ * 1. It contains complex data processing (groups security issues by severity)
+ * 2. It implements security-specific business rules (severity ordering, badge variants)
+ * 3. It's a feature-specific component for security scanning results
+ * 4. It exceeds the recommended 150 LOC guideline for molecules (235 LOC)
+ * 
+ * See: docs/analysis/molecule-organism-audit.md for full categorization analysis
+ */
+
 import { useState } from 'react'
 import {
   Dialog,
