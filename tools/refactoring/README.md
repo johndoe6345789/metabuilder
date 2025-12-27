@@ -1,6 +1,11 @@
 # Lambda-per-File Refactoring Tools
 
-Automated tools for refactoring large TypeScript files into modular lambda-per-file structure.
+Automated tools for refactoring large TypeScript and C++ files into modular lambda-per-file structure.
+
+## Language Support
+
+- ✅ **TypeScript** (.ts, .tsx)
+- ✅ **C++** (.cpp, .hpp, .cc, .h, .cxx)
 
 ## Quick Start
 
@@ -92,9 +97,34 @@ Simpler regex-based refactoring (faster but less accurate).
 npx tsx tools/refactoring/bulk-lambda-refactor.ts [options] <file>
 ```
 
-### 4. `orchestrate-refactor.ts` - Master Orchestrator
+### 4. `multi-lang-refactor.ts` - Multi-Language Support
 
-Complete automated workflow for bulk refactoring.
+Refactor both TypeScript and C++ files with automatic language detection.
+
+```bash
+npx tsx tools/refactoring/multi-lang-refactor.ts [options] <file>
+
+# Options:
+#   -d, --dry-run    Preview without writing
+#   -v, --verbose    Detailed output
+#   -h, --help       Show help
+```
+
+**Examples:**
+```bash
+# Refactor TypeScript file
+npx tsx tools/refactoring/multi-lang-refactor.ts --dry-run src/lib/utils.ts
+
+# Refactor C++ file
+npx tsx tools/refactoring/multi-lang-refactor.ts --verbose dbal/src/adapter.cpp
+
+# Multiple files
+npx tsx tools/refactoring/multi-lang-refactor.ts file1.ts file2.cpp
+```
+
+### 5. `orchestrate-refactor.ts` - Master Orchestrator
+
+Complete automated workflow for bulk refactoring (TypeScript only).
 
 ```bash
 npx tsx tools/refactoring/orchestrate-refactor.ts [priority] [options]
@@ -123,7 +153,7 @@ npx tsx tools/refactoring/orchestrate-refactor.ts medium --skip-test
 
 The tools follow the pattern established in `frontends/nextjs/src/lib/schema/`:
 
-### Before (Single Large File)
+### TypeScript: Before (Single Large File)
 ```
 lib/
 └── utils.ts (300 lines)
@@ -133,7 +163,7 @@ lib/
     └── ...
 ```
 
-### After (Lambda-per-File)
+### TypeScript: After (Lambda-per-File)
 ```
 lib/
 ├── utils.ts (re-exports)
@@ -144,6 +174,28 @@ lib/
     │   └── format-currency.ts
     ├── UtilsUtils.ts (class wrapper)
     └── index.ts (barrel export)
+```
+
+### C++: Before (Single Large File)
+```
+dbal/
+└── adapter.cpp (400 lines)
+    ├── void connect()
+    ├── void disconnect()
+    ├── Result query()
+    └── ...
+```
+
+### C++: After (Lambda-per-File)
+```
+dbal/
+├── adapter.cpp (includes new header)
+└── adapter/
+    ├── functions/
+    │   ├── connect.cpp
+    │   ├── disconnect.cpp
+    │   └── query.cpp
+    └── adapter.hpp (function declarations)
 ```
 
 ### Usage After Refactoring
