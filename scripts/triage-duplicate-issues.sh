@@ -86,10 +86,10 @@ fetch_all_open_issues() {
       -H "Accept: application/vnd.github.v3+json" \
       "https://api.github.com/repos/$OWNER/$REPO/issues?state=open&per_page=$per_page&page=$page&sort=created&direction=desc")
     
-    # Check for API errors
-    if echo "$response" | jq -e '.[0].message' > /dev/null 2>&1; then
+    # Check for API errors (errors return object with .message, not array)
+    if echo "$response" | jq -e 'select(.message != null) | .message' > /dev/null 2>&1; then
       local error_msg
-      error_msg=$(echo "$response" | jq -r '.[0].message')
+      error_msg=$(echo "$response" | jq -r '.message')
       echo "❌ GitHub API error: $error_msg" >&2
       return 1
     fi
