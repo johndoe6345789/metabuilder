@@ -1,1 +1,1 @@
-export { togglePackageEnabled } from './install/crud/toggle-package-enabled'
+export { togglePackageEnabled } from './install/crud/actions/toggle-package-enabled'

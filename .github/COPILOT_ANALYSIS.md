@@ -8,7 +8,7 @@
 ### Analysis Approach
 
 1. **Examined existing instructions**
-   - `dbal/AGENTS.md` (605 lines) - DBAL-specific agent development guide
+   - `dbal/docs/AGENTS.md` (605 lines) - DBAL-specific agent development guide
    - `.github/copilot-instructions.md` (existing) - Original generic guidance
 
 2. **Analyzed codebase patterns** through:
@@ -116,7 +116,7 @@ Instructions now reference:
 
 | File | Purpose | Why Referenced |
 |------|---------|-----------------|
-| `dbal/AGENTS.md` | DBAL development guide | Critical for DBAL changes |
+| `dbal/docs/AGENTS.md` | DBAL development guide | Critical for DBAL changes |
 | `src/lib/database.ts` | Database operations | 1200+ LOC utility wrapper, required for all DB access |
 | `src/components/RenderComponent.tsx` | Generic renderer | 221 LOC example of declarative UI pattern |
 | `src/lib/schema-utils.test.ts` | Test examples | 63 tests showing parameterized pattern |
@@ -159,7 +159,7 @@ Instructions now reference:
 ### Adding a new database entity
 1. Read: API-First DBAL Development pattern
 2. Check: DBAL-Specific Guidance (YAML → Types → Adapters)
-3. Reference: `dbal/AGENTS.md` for detailed workflow
+3. Reference: `dbal/docs/AGENTS.md` for detailed workflow
 
 ### Creating a new component feature
 1. Read: Generic Component Rendering pattern
@@ -192,7 +192,7 @@ Agents should prioritize these when onboarding:
 1. **Start**: `docs/architecture/5-level-system.md` (understand permissions)
 2. **Then**: `docs/architecture/packages.md` (understand modularity)
 3. **Then**: `src/lib/database.ts` (understand DB pattern)
-4. **Then**: `dbal/AGENTS.md` (if working on DBAL)
+4. **Then**: `dbal/docs/AGENTS.md` (if working on DBAL)
 5. **Always**: `FUNCTION_TEST_COVERAGE.md` (for test requirements)
 
 ---

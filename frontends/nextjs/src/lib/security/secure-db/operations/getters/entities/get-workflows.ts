@@ -1,7 +1,7 @@
 import { getWorkflows as fetchWorkflows } from '@/lib/db/workflows'
 import type { Workflow } from '@/lib/types/level-types'
 import type { SecurityContext } from '../types'
-import { executeQuery } from '../execute-query'
+import { executeQuery } from '../../execute-query'
 
 /**
  * Get workflows with security checks

@@ -82,11 +82,21 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_DBAL_WS_URL: process.env.DBAL_WS_URL || 'ws://localhost:50051',
     NEXT_PUBLIC_DBAL_API_KEY: process.env.DBAL_API_KEY || '',
   },
-  webpack(config) {
+  webpack(config, { isServer }) {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@/dbal': path.resolve(__dirname, '..', 'dbal', 'ts', 'src'),
+      '@/dbal': path.resolve(__dirname, '../../dbal/development/src'),
+      '@dbal-ui': path.resolve(__dirname, '../../dbal/shared/ui'),
     }
+    
+    // Ignore optional AWS SDK on client side
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        '@aws-sdk/client-s3': false,
+      }
+    }
+    
     return config
   },
 }

@@ -252,7 +252,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 COPY . .
 
-RUN cd dbal/cpp && \
+RUN cd dbal/production && \
     cmake -B build -G Ninja && \
     ninja -C build && \
     cp build/dbal_daemon /usr/local/bin/

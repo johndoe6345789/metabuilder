@@ -1,7 +1,7 @@
 import 'server-only'
 
 import type { User } from '../../types/level-types'
-import { getDBAL } from './get-dbal.server'
+import { getDBAL } from '../core/get-dbal.server'
 
 export async function dbalAddUser(user: Omit<User, 'id' | 'createdAt'>): Promise<User> {
   const dbal = await getDBAL()

@@ -5,7 +5,7 @@ import {
   dbalGetUserById,
   dbalUpdateUser,
   initializeDBAL,
-} from '@/lib/dbal/database-dbal.server'
+} from '@/lib/dbal/core/client/database-dbal.server'
 import { hashPassword } from '@/lib/db/hash-password'
 import { setCredential } from '@/lib/db/credentials/set-credential'
 import { requireDBALApiKey } from '@/lib/api/require-dbal-api-key'
