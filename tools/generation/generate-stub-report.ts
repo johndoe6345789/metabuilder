@@ -8,6 +8,7 @@ function generateStubReport(): string {
   report += '## Overview\n\n'
   report += 'This report identifies incomplete, placeholder, or stubbed implementations in the codebase.\n'
   report += 'Stubs should be replaced with real implementations before production use.\n\n'
+  report += 'When scanning utility folders (like the new `tools/refactoring/runners` modules), pass the target root as the third argument to `detect-stub-implementations.ts`.\n\n'
   
   // Load pattern detection results
   if (existsSync('stub-patterns.json')) {

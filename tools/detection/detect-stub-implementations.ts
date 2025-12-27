@@ -64,10 +64,9 @@ const STUB_PATTERNS = [
   }
 ]
 
-function findStubs(): StubLocation[] {
+function findStubs(rootDir: string): StubLocation[] {
   const results: StubLocation[] = []
-  const srcDir = 'src'
-  
+
   function walkDir(dir: string) {
     try {
       const files = readdirSync(dir)
@@ -86,8 +85,8 @@ function findStubs(): StubLocation[] {
       // Skip inaccessible directories
     }
   }
-  
-  walkDir(srcDir)
+
+  walkDir(rootDir)
   return results
 }
 
@@ -163,7 +162,9 @@ function checkPatterns(body: string, filePath: string, lineNumber: number, name:
 }
 
 // Main execution
-const stubs = findStubs()
+const outputPath = process.argv[2] || 'stub-patterns.json'
+const targetRoot = process.argv[3] || 'src'
+const stubs = findStubs(targetRoot)
 
 // Categorize by severity
 const bySeverity = {
@@ -203,8 +204,6 @@ const summary = {
 }
 
 const serialized = JSON.stringify(summary, null, 2)
-const outputPath = process.argv[2] || 'stub-patterns.json'
-
 try {
   writeFileSync(outputPath, serialized)
   console.error(`Stub summary written to ${outputPath}`)

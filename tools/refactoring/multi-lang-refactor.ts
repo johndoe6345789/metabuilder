@@ -8,21 +8,20 @@
 import * as fs from 'fs/promises'
 import * as path from 'path'
 import { CppLambdaRefactor } from './languages/cpp-refactor'
-import { TypeScriptLambdaRefactor } from './languages/typescript-refactor'
+import { TypeScriptLambdaRefactor } from './languages/typescript/typescript-lambda-refactor'
 import { DependencyInfo, FunctionInfo, Language, RefactorResult } from './languages/types'
 
 class MultiLanguageLambdaRefactor {
   private dryRun: boolean = false
   private verbose: boolean = false
-  private readonly services: Record<Language, { getFunctionExtension: () => string; extractFunctions(filePath: string): Promise<FunctionInfo[]>; extractDependencies(filePath: string): Promise<DependencyInfo>; generateFunctionFile(func: FunctionInfo, imports: string[]): string; generateModule(context: { dir: string; basename: string; functions: FunctionInfo[]; functionsDir: string; dependencies: DependencyInfo; result: RefactorResult }): Promise<void> }>
+  private readonly tsService: TypeScriptLambdaRefactor
+  private readonly cppService: CppLambdaRefactor
 
   constructor(options: { dryRun?: boolean; verbose?: boolean } = {}) {
     this.dryRun = options.dryRun || false
     this.verbose = options.verbose || false
-    this.services = {
-      typescript: new TypeScriptLambdaRefactor({ dryRun: this.dryRun, log: this.log.bind(this) }),
-      cpp: new CppLambdaRefactor({ dryRun: this.dryRun, log: this.log.bind(this) }),
-    }
+    this.tsService = new TypeScriptLambdaRefactor({ dryRun: this.dryRun, log: this.log.bind(this) })
+    this.cppService = new CppLambdaRefactor({ dryRun: this.dryRun, log: this.log.bind(this) })
   }
 
   private log(message: string) {
@@ -49,24 +48,28 @@ class MultiLanguageLambdaRefactor {
 
     try {
       const language = this.detectLanguage(filePath)
-      const service = this.services[language]
       this.log(`\n🔍 Analyzing ${filePath} (${language})...`)
 
-      const functions = await service.extractFunctions(filePath)
+      if (language === 'typescript') {
+        const tsResult = await this.tsService.generateModule(filePath)
+        result.success = tsResult.success
+        result.newFiles = tsResult.newFiles
+        result.errors = tsResult.errors
+        return result
+      }
 
+      const functions = await this.cppService.extractFunctions(filePath)
       if (functions.length === 0) {
         result.errors.push('No functions found to extract')
         return result
       }
-
       if (functions.length <= 2) {
         result.errors.push(`Only ${functions.length} function(s) - skipping`)
         return result
       }
 
       this.log(`  Found ${functions.length} functions: ${functions.map(f => f.name).join(', ')}`)
-
-      const dependencies = await service.extractDependencies(filePath)
+      const dependencies = await this.cppService.extractDependencies(filePath)
 
       const dir = path.dirname(filePath)
       const ext = path.extname(filePath)
@@ -77,14 +80,11 @@ class MultiLanguageLambdaRefactor {
         await fs.mkdir(functionsDir, { recursive: true })
       }
 
-      this.log(`  Creating functions directory: ${functionsDir}`)
-
       for (const func of functions) {
         const kebabName = func.name.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '')
-        const funcExt = service.getFunctionExtension()
+        const funcExt = this.cppService.getFunctionExtension()
         const funcFilePath = path.join(functionsDir, `${kebabName}${funcExt}`)
-
-        const content = service.generateFunctionFile(func, dependencies.imports)
+        const content = this.cppService.generateFunctionFile(func, dependencies.imports)
 
         if (!this.dryRun) {
           await fs.writeFile(funcFilePath, content, 'utf-8')
@@ -94,7 +94,7 @@ class MultiLanguageLambdaRefactor {
         this.log(`    ✓ ${kebabName}${funcExt}`)
       }
 
-      await service.generateModule({ dir, basename, functions, functionsDir, dependencies, result })
+      await this.cppService.generateModule({ dir, basename, functions, functionsDir, dependencies, result })
 
       result.success = true
       this.log(`  ✅ Successfully refactored into ${result.newFiles.length} files`)

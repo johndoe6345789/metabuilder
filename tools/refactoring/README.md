@@ -72,16 +72,16 @@ npx tsx tools/refactoring/cli/refactor-to-lambda.ts
 
 **Output:** `docs/todo/LAMBDA_REFACTOR_PROGRESS.md`
 
-### 2. `error-as-todo-refactor.ts` - Error-as-TODO Runner (⭐ Recommended)
+### 2. `cli/error-as-todo-refactor.ts` - Error-as-TODO Runner (⭐ Recommended)
 
 Runs refactoring and treats all errors as actionable TODO items!
 
 ```bash
 # Process files and generate TODO list
-npx tsx tools/refactoring/error-as-todo-refactor.ts high --limit=10
+npx tsx tools/refactoring/cli/error-as-todo-refactor.ts high --limit=10
 
 # Dry run to see what issues would be found
-npx tsx tools/refactoring/error-as-todo-refactor.ts --dry-run --verbose
+npx tsx tools/refactoring/cli/error-as-todo-refactor.ts --dry-run --verbose
 
 # Options:
 #   -d, --dry-run      Preview without writing
@@ -102,13 +102,13 @@ npx tsx tools/refactoring/error-as-todo-refactor.ts --dry-run --verbose
 - 👷 Manual fixes needed (e.g., "this" references)
 - 💡 Suggestions for each issue
 
-### 3. `ast-lambda-refactor.ts` - AST-based Refactoring
+### 3. `runners/ast-lambda/run-ast-lambda.ts` - AST-based Refactoring
 
 Uses TypeScript compiler API for accurate code transformation.
 
 ```bash
 # Single file
-npx tsx tools/refactoring/ast-lambda-refactor.ts [options] <file>
+npx tsx tools/refactoring/runners/ast-lambda/run-ast-lambda.ts [options] <file>
 
 # Options:
 #   -d, --dry-run    Preview without writing
@@ -118,15 +118,15 @@ npx tsx tools/refactoring/ast-lambda-refactor.ts [options] <file>
 
 **Example:**
 ```bash
-npx tsx tools/refactoring/ast-lambda-refactor.ts -v frontends/nextjs/src/lib/db/core/index.ts
+npx tsx tools/refactoring/runners/ast-lambda/run-ast-lambda.ts -v frontends/nextjs/src/lib/db/core/index.ts
 ```
 
-### 3. `bulk-lambda-refactor.ts` - Regex-based Bulk Refactoring
+### 3. `runners/bulk-lambda/run-bulk-lambda.ts` - Regex-based Bulk Refactoring
 
 Simpler regex-based refactoring (faster but less accurate).
 
 ```bash
-npx tsx tools/refactoring/bulk-lambda-refactor.ts [options] <file>
+npx tsx tools/refactoring/runners/bulk-lambda/run-bulk-lambda.ts [options] <file>
 ```
 
 ### 4. `multi-lang-refactor.ts` - Multi-Language Support

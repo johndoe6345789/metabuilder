@@ -5,7 +5,7 @@
  * Processes all files from the tracking report in priority order
  */
 
-import { BulkLambdaRefactor } from '../bulk-lambda-refactor'
+import { refactorBulkFile } from '../runners/bulk-lambda/refactor-bulk-file'
 import * as fs from 'fs/promises'
 import * as path from 'path'
 import { loadFilesFromReport } from './utils/load-files-from-report'
@@ -55,10 +55,11 @@ async function main() {
   
   console.log('\n🚀 Starting refactoring...\n')
   
-  const refactor = new BulkLambdaRefactor({ dryRun, verbose })
-  const filePaths = filesToProcess.map(f => f.path)
-  
-  const results = await refactor.bulkRefactor(filePaths)
+  const results = []
+  for (const filePath of filesToProcess.map(f => f.path)) {
+    const result = await refactorBulkFile(filePath, { dryRun, verbose })
+    results.push(result)
+  }
   
   // Save results
   const resultsPath = path.join(process.cwd(), 'docs/todo/REFACTOR_RESULTS.json')
