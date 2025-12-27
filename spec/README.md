@@ -4,17 +4,23 @@ This directory contains the formal TLA+ specification for the MetaBuilder system
 
 ## Overview
 
-The specification models the core invariants and behaviors of MetaBuilder, including:
+The specification models both current and future MetaBuilder functionality through multiple TLA+ modules:
 
+**Core System Specifications:**
 - **6-Level Permission System**: Hierarchical access control (Public → User → Moderator → Admin → God → Supergod)
 - **Multi-Tenant Data Isolation**: Strict separation of data between tenants
 - **Database Abstraction Layer (DBAL)**: Query processing with security guarantees
 - **Package Management**: Installation, enabling, and disabling of feature packages
 - **Audit Logging**: Complete tracking of privileged operations
 
+**Future Functionality Specifications:**
+- **Workflow System**: Workflow execution, scheduling, and state management
+- **Real-Time Collaboration**: Concurrent editing, presence, comments, and mentions
+- **Integration Ecosystem**: Webhooks, OAuth apps, API keys, and rate limiting
+
 ## Files
 
-### `metabuilder.tla`
+### Core System: `metabuilder.tla`
 
 The main TLA+ specification file that defines:
 
@@ -41,6 +47,86 @@ Configuration file for the TLC model checker that specifies:
 - Invariants to check
 - Temporal properties to verify
 - State space constraints for bounded model checking
+
+### Future Functionality: `workflow_system.tla`
+
+Specification for advanced workflow execution features:
+
+- **Template Management**: God-level users create and manage workflow templates
+- **Workflow Execution**: Admin-level users trigger manual or scheduled workflows
+- **Step Dependencies**: Define and enforce execution order constraints
+- **Error Handling**: Automatic retry logic with configurable limits
+- **Concurrency Control**: Limit concurrent workflow executions per tenant
+- **Safety Properties**:
+  - `GodOnlyTemplateCreation`: Only Level 5+ users can author workflows
+  - `AdminOnlyExecution`: Only Level 4+ users can execute workflows
+  - `TenantIsolation`: Workflows are strictly isolated by tenant
+  - `ConcurrencyLimit`: Per-tenant concurrent execution limits
+  - `RetryLimit`: Failed steps don't exceed retry threshold
+  - `DependencyEnforcement`: Steps execute only after dependencies complete
+- **Liveness Properties**:
+  - `EventualStepExecution`: Pending steps eventually execute
+  - `EventualCompletion`: Running workflows eventually complete or fail
+  - `EventualScheduleTrigger`: Scheduled workflows eventually trigger
+
+### `workflow_system.cfg`
+
+Configuration for workflow system model checking with workflow templates, steps, and execution limits.
+
+### Future Functionality: `collaboration.tla`
+
+Specification for real-time collaboration features:
+
+- **Session Management**: User connection, idle, and disconnection states
+- **Concurrent Editing**: Multiple users editing documents simultaneously
+- **Comments and Mentions**: Users can comment and mention others in documents
+- **Presence Tracking**: Real-time user online/idle/offline status
+- **Notifications**: Mention notifications with read status tracking
+- **Version History**: Document snapshot creation and tracking
+- **Safety Properties**:
+  - `DocumentTenantIsolation`: Editors can only access documents in their tenant
+  - `ConcurrentEditorLimit`: Maximum concurrent editors per document
+  - `CommentTenantConsistency`: Comments belong to document's tenant
+  - `MentionTenantIsolation`: Mentions stay within tenant boundaries
+  - `NotificationLimit`: Pending notifications don't exceed limits
+  - `DisconnectedNotEditing`: Disconnected users automatically stop editing
+  - `OperationAuthorship`: All operations come from authorized editors
+- **Liveness Properties**:
+  - `EventualNotificationHandling`: Notifications eventually get read or cleared
+  - `EventualMentionRead`: Mentioned users eventually see their mentions
+  - `EventualStopEditing`: Active editors eventually stop or disconnect
+
+### `collaboration.cfg`
+
+Configuration for collaboration model checking with documents, comments, and concurrent editors.
+
+### Future Functionality: `integrations.tla`
+
+Specification for integration ecosystem:
+
+- **Webhook Management**: Create, configure, and manage webhooks for events
+- **OAuth Applications**: OAuth app lifecycle and token management
+- **API Key Management**: User-level API key creation and expiration
+- **Event Subscriptions**: Subscribe to and filter system events
+- **Rate Limiting**: Track and enforce API call rate limits per identity
+- **Delivery Guarantees**: Webhook delivery with retry logic
+- **Safety Properties**:
+  - `AdminOnlyIntegrationManagement`: Only Level 4+ users manage integrations
+  - `WebhookTenantLimit`: Webhooks per tenant don't exceed limits
+  - `APIKeyUserLimit`: API keys per user don't exceed limits
+  - `RateLimitEnforcement`: API calls respect rate limits
+  - `WebhookTenantIsolation`: Webhooks isolated by tenant
+  - `OAuthAppTenantIsolation`: OAuth apps isolated by tenant
+  - `TokenTenantConsistency`: OAuth tokens match app tenants
+  - `ActiveDeliveriesQueued`: Active deliveries are properly queued
+- **Liveness Properties**:
+  - `EventualDeliveryCompletion`: Webhook deliveries eventually complete or fail
+  - `EventualRetryOrFail`: Failed deliveries retry or permanently fail
+  - `EventualExpiration`: Expired API keys eventually marked as expired
+
+### `integrations.cfg`
+
+Configuration for integration ecosystem model checking with webhooks, OAuth apps, and API keys.
 
 ## Key Concepts
 
@@ -215,6 +301,58 @@ This specification aligns with the MetaBuilder architecture documentation:
 - `docs/architecture/data/data-driven-architecture.md` → Package system
 - `dbal/README.md` → DBAL state machine and security model
 - `README.md` → Multi-tenant system
+- `docs/todo/improvements/20-FUTURE-FEATURES-TODO.md` → Future features specifications
+
+## Modeling Future Features
+
+The TLA+ specifications for future features serve multiple purposes:
+
+### 1. Design Validation
+Before implementing complex features like workflows or real-time collaboration, the formal specifications help:
+- Identify potential race conditions and deadlocks
+- Verify that permission enforcement is complete
+- Ensure multi-tenant isolation is maintained
+- Validate concurrency control mechanisms
+
+### 2. API Contract Definition
+The specifications define precise contracts for:
+- **Workflow System**: Template creation, execution triggers, step dependencies
+- **Collaboration**: Session management, concurrent editing, notification delivery
+- **Integrations**: Webhook delivery guarantees, OAuth token lifecycle, rate limiting
+
+### 3. Implementation Guide
+Each specification provides:
+- Clear state transitions for the system to implement
+- Invariants that must be maintained by the implementation
+- Temporal properties describing expected system behavior
+- Edge cases that must be handled (retries, failures, disconnections)
+
+### 4. Testing Blueprint
+The specifications can guide:
+- Property-based testing strategies
+- Concurrency test scenarios
+- Multi-tenant isolation test cases
+- Load testing parameters (rate limits, concurrent users)
+
+### Running Future Feature Specs
+
+Model check individual future features:
+
+```bash
+# Check workflow system
+java -cp tla2tools.jar tlc2.TLC spec/workflow_system.tla -config spec/workflow_system.cfg
+
+# Check collaboration system
+java -cp tla2tools.jar tlc2.TLC spec/collaboration.tla -config spec/collaboration.cfg
+
+# Check integrations system
+java -cp tla2tools.jar tlc2.TLC spec/integrations.tla -config spec/integrations.cfg
+```
+
+Each specification is standalone and can be verified independently. This modular approach allows:
+- Parallel verification of different subsystems
+- Incremental feature development
+- Focused debugging when invariants are violated
 
 ## References
 
