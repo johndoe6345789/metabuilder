@@ -1,4 +1,14 @@
 {
+  "scripts": {
+    "todos:scan": "python3 docs/todo/scans/scan-project-todos.py",
+    "todos:preview": "python3 tools/project-management/populate-kanban.py --dry-run --limit 10",
+    "todos:export": "python3 tools/project-management/populate-kanban.py --output todos.json",
+    "todos:export-critical": "python3 tools/project-management/populate-kanban.py --output todos-critical.json --filter-priority critical",
+    "todos:export-filtered": "python3 tools/project-management/populate-kanban.py --output todos-filtered.json --exclude-checklist",
+    "todos:test": "python3 tools/project-management/test_populate_kanban.py",
+    "todos:create": "python3 tools/project-management/populate-kanban.py --create",
+    "todos:help": "python3 tools/project-management/populate-kanban.py --help"
+  },
   "devDependencies": {
     "prisma": "^7.2.0"
   },

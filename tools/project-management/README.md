@@ -61,6 +61,9 @@ python3 tools/project-management/populate-kanban.py --create --project-id 2
 | `--repo OWNER/NAME` | Target repository | johndoe6345789/metabuilder |
 | `--todo-dir PATH` | Path to TODO directory | auto-detect |
 | `--limit N` | Limit number of issues to create | no limit |
+| `--filter-priority LEVEL` | Filter by priority: critical, high, medium, low | - |
+| `--filter-label LABEL` | Filter by label (e.g., security, frontend) | - |
+| `--exclude-checklist` | Exclude checklist items from "Done Criteria" sections | - |
 
 #### Examples
 
@@ -90,14 +93,37 @@ python3 populate-kanban.py --create
 python3 populate-kanban.py --create --project-id 2
 ```
 
-**5. Create only high priority issues**
+**5. Filter by priority level**
 ```bash
-# First export to JSON
-python3 populate-kanban.py --output all-issues.json
+# Create only critical priority issues (40 items)
+python3 populate-kanban.py --create --filter-priority critical
 
-# Filter and create (requires jq)
-cat all-issues.json | jq '[.[] | select(.priority == "🟠 High")]' > high-priority.json
-# Then manually create from filtered JSON
+# Create only high priority issues (386 items)
+python3 populate-kanban.py --create --filter-priority high
+```
+
+**6. Filter by label**
+```bash
+# Create only security-related issues
+python3 populate-kanban.py --create --filter-label security
+
+# Create only frontend issues
+python3 populate-kanban.py --create --filter-label frontend
+```
+
+**7. Exclude checklist items**
+```bash
+# Exclude "Done Criteria" and similar checklist sections (reduces to ~763 items)
+python3 populate-kanban.py --create --exclude-checklist
+```
+
+**8. Combine filters**
+```bash
+# Critical security issues only
+python3 populate-kanban.py --create --filter-priority critical --filter-label security
+
+# High priority frontend issues, excluding checklists
+python3 populate-kanban.py --create --filter-priority high --filter-label frontend --exclude-checklist
 ```
 
 ### Output Format
@@ -196,6 +222,53 @@ The script does not check for existing issues. Before running `--create`, either
 3. Clear existing issues from the project first
 
 ### Development
+
+#### Running Tests
+
+The script includes comprehensive unit tests:
+
+```bash
+# Run all tests
+python3 test_populate_kanban.py
+
+# Or use npm script (from repository root)
+npm run todos:test
+```
+
+Tests cover:
+- Parsing TODO items from markdown files
+- Priority assignment logic
+- Label categorization
+- Filtering functionality
+- Context extraction
+- Edge cases and error handling
+
+#### NPM Scripts
+
+For convenience, add these to your workflow (from repository root):
+
+```bash
+# Preview issues
+npm run todos:preview
+
+# Run tests
+npm run todos:test
+
+# Export all TODOs
+npm run todos:export
+
+# Export only critical items
+npm run todos:export-critical
+
+# Export with filters
+npm run todos:export-filtered
+
+# Create issues on GitHub
+npm run todos:create
+
+# Show help
+npm run todos:help
+```
 
 #### Adding new label categories
 
