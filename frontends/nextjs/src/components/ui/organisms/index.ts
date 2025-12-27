@@ -35,7 +35,7 @@ export {
   SheetTitle,
   SheetDescription,
   SheetClose,
-} from './dialogs/Sheet'
+} from './dialogs/sheet'
 
 // Sidebar
 export {
@@ -61,7 +61,7 @@ export {
   CommandSeparator,
   CommandShortcut,
   useCommandShortcut,
-} from './dialogs/Command'
+} from './dialogs/command'
 
 // Pagination
 export {
@@ -103,4 +103,4 @@ export {
   AlertDialogFooter,
   AlertDialogCancel,
   AlertDialogAction,
-} from './dialogs/AlertDialog'
+} from './dialogs/alert-dialog'
