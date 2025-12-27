@@ -13,7 +13,7 @@
 - [ ] Document atom prop interfaces with JSDoc
 
 ### Molecules (`src/components/molecules/`)
-- [ ] Audit molecules (~10 components) - should be 2-5 atoms combined
+- [x] Audit molecules (~10 components) - should be 2-5 atoms combined (✅ See `docs/implementation/ui/atomic/MOLECULE_AUDIT_REPORT.md`)
 - [ ] Identify organisms incorrectly categorized as molecules
 - [ ] Ensure molecules only import from atoms, not organisms
 - [ ] Create missing common molecules (form fields, search bars, nav items)
