@@ -6,7 +6,7 @@ import type {
   DownloadOptions,
   BlobListOptions,
   BlobStorageConfig,
-} from './blob-storage'
+} from '../blob-storage'
 import { DBALError } from '../../core/foundation/errors'
 
 /**

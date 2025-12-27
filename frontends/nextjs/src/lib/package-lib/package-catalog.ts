@@ -1,1 +1,1 @@
-export * from './packages/core/package-catalog'
+export * from '../packages/core/package-catalog'
