@@ -10,6 +10,7 @@ import { createStore } from './store'
 import { uploadBuffer, uploadFromStream } from './uploads'
 import { downloadBuffer, downloadStream } from './downloads'
 import { copyBlob, deleteBlob, getMetadata, listBlobs, getObjectCount, getTotalSize } from './management'
+import { normalizeKey } from './utils'
 
 export class MemoryStorage implements BlobStorage {
   private store = createStore()
@@ -43,7 +44,7 @@ export class MemoryStorage implements BlobStorage {
   }
 
   async exists(key: string): Promise<boolean> {
-    return this.store.has(key)
+    return this.store.has(normalizeKey(key))
   }
 
   async getMetadata(key: string): Promise<BlobMetadata> {

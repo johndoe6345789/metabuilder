@@ -1,16 +1,20 @@
 import type { DBALAdapter, AdapterCapabilities } from '../../adapters/adapter'
 import type { ListOptions, ListResult } from '../../core/types'
-import { closeConnection } from './connection'
+import { createConnectionManager } from './connection-manager'
+import { createMessageRouter } from './message-router'
 import { createOperations } from './operations'
 import { createBridgeState } from './state'
 
 export class WebSocketBridge implements DBALAdapter {
   private readonly state: ReturnType<typeof createBridgeState>
+  private readonly connectionManager: ReturnType<typeof createConnectionManager>
   private readonly operations: ReturnType<typeof createOperations>
 
   constructor(endpoint: string, auth?: { user: unknown; session: unknown }) {
     this.state = createBridgeState(endpoint, auth)
-    this.operations = createOperations(this.state)
+    const messageRouter = createMessageRouter(this.state)
+    this.connectionManager = createConnectionManager(this.state, messageRouter)
+    this.operations = createOperations(this.state, this.connectionManager)
   }
 
   create(entity: string, data: Record<string, unknown>): Promise<unknown> {
@@ -75,6 +79,6 @@ export class WebSocketBridge implements DBALAdapter {
   }
 
   async close(): Promise<void> {
-    await closeConnection(this.state)
+    await this.connectionManager.close()
   }
 }
