@@ -487,14 +487,18 @@ DisconnectedNotEditing ==
 
 \* Operations in document are from editors
 OperationAuthorship ==
-    \A d \in Documents, i \in 1..Len(documentContent[d]):
-        LET op == documentContent[d][i]
-        IN CanAccessDocument(op.user, d)
+    \A d \in Documents:
+        Len(documentContent[d]) > 0 =>
+            \A i \in 1..Len(documentContent[d]):
+                LET op == documentContent[d][i]
+                IN CanAccessDocument(op.user, d)
 
 \* Version snapshots preserve content
 VersionConsistency ==
-    \A d \in Documents, v \in 1..Len(versionHistory[d]):
-        versionHistory[d][v].documentId = d
+    \A d \in Documents:
+        Len(versionHistory[d]) > 0 =>
+            \A v \in 1..Len(versionHistory[d]):
+                versionHistory[d][v].documentId = d
 
 -----------------------------------------------------------------------------
 (* Liveness Properties *)
