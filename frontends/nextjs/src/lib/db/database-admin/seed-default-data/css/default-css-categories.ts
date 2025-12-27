@@ -1,100 +1,7 @@
-import { getUsers, setUsers } from '../users'
-import { setCredential } from '../credentials'
-import { getAppConfig, setAppConfig } from '../app-config'
-import { getCssClasses, setCssClasses } from '../css-classes'
-import { getDropdownConfigs, setDropdownConfigs } from '../dropdown-configs'
-import { hashPassword } from '../password/hash-password'
-import type { CssCategory, DropdownConfig } from '../types'
-import type { User, AppConfiguration } from '../../types/level-types'
+import type { CssCategory } from '../../../core/types'
+import { buildSizingClasses, buildSpacingClasses } from './build-css-classes'
 
-const uniqueClasses = (classes: string[]) => Array.from(new Set(classes))
-const buildScaleClasses = (prefixes: string[], scale: string[]) =>
-  prefixes.flatMap((prefix) => scale.map((value) => `${prefix}-${value}`))
-
-const spacingScale = ['0', '0.5', '1', '1.5', '2', '3', '4', '5', '6', '8', '10', '12', '16']
-const spacingClasses = uniqueClasses([
-  ...buildScaleClasses(
-    ['p', 'px', 'py', 'pt', 'pr', 'pb', 'pl', 'm', 'mx', 'my', 'mt', 'mr', 'mb', 'ml'],
-    spacingScale
-  ),
-  ...buildScaleClasses(['gap', 'gap-x', 'gap-y'], ['0', '1', '2', '3', '4', '6', '8', '10', '12', '16']),
-  ...buildScaleClasses(['space-x', 'space-y'], ['0', '1', '2', '3', '4', '6', '8', '10', '12', '16']),
-])
-
-const sizeScale = ['0', '1', '2', '3', '4', '5', '6', '8', '10', '12', '16', '20', '24', '32', '40', '48', '56', '64']
-const sizingClasses = uniqueClasses([
-  ...buildScaleClasses(['w', 'h'], sizeScale),
-  'w-auto',
-  'w-full',
-  'w-screen',
-  'w-min',
-  'w-max',
-  'w-fit',
-  'h-auto',
-  'h-full',
-  'h-screen',
-  'h-min',
-  'h-max',
-  'h-fit',
-  'min-w-0',
-  'min-w-full',
-  'min-w-min',
-  'min-w-max',
-  'min-w-fit',
-  'min-h-0',
-  'min-h-full',
-  'min-h-screen',
-  'min-h-min',
-  'min-h-max',
-  'min-h-fit',
-  'max-w-none',
-  'max-w-xs',
-  'max-w-sm',
-  'max-w-md',
-  'max-w-lg',
-  'max-w-xl',
-  'max-w-2xl',
-  'max-w-3xl',
-  'max-w-4xl',
-  'max-w-5xl',
-  'max-w-6xl',
-  'max-w-7xl',
-  'max-w-full',
-  'max-w-screen-sm',
-  'max-w-screen-md',
-  'max-w-screen-lg',
-  'max-w-screen-xl',
-  'max-h-none',
-  'max-h-full',
-  'max-h-screen',
-  'w-1/2',
-  'w-1/3',
-  'w-2/3',
-  'w-1/4',
-  'w-2/4',
-  'w-3/4',
-  'w-1/5',
-  'w-2/5',
-  'w-3/5',
-  'w-4/5',
-  'w-1/6',
-  'w-2/6',
-  'w-3/6',
-  'w-4/6',
-  'w-5/6',
-  'h-1/2',
-  'h-1/3',
-  'h-2/3',
-  'h-1/4',
-  'h-2/4',
-  'h-3/4',
-  'h-1/5',
-  'h-2/5',
-  'h-3/5',
-  'h-4/5',
-])
-
-const DEFAULT_CSS_CLASSES: CssCategory[] = [
+export const buildDefaultCssCategories = (): CssCategory[] => [
   {
     name: 'Layout',
     classes: [
@@ -118,11 +25,11 @@ const DEFAULT_CSS_CLASSES: CssCategory[] = [
   },
   {
     name: 'Spacing',
-    classes: spacingClasses,
+    classes: buildSpacingClasses(),
   },
   {
     name: 'Sizing',
-    classes: sizingClasses,
+    classes: buildSizingClasses(),
   },
   {
     name: 'Typography',
@@ -369,103 +276,3 @@ const DEFAULT_CSS_CLASSES: CssCategory[] = [
     ],
   },
 ]
-
-const DEFAULT_DROPDOWN_CONFIGS: DropdownConfig[] = [
-  {
-    id: 'dropdown_status',
-    name: 'status_options',
-    label: 'Status',
-    options: [
-      { value: 'draft', label: 'Draft' },
-      { value: 'published', label: 'Published' },
-      { value: 'archived', label: 'Archived' },
-    ],
-  },
-  {
-    id: 'dropdown_priority',
-    name: 'priority_options',
-    label: 'Priority',
-    options: [
-      { value: 'low', label: 'Low' },
-      { value: 'medium', label: 'Medium' },
-      { value: 'high', label: 'High' },
-      { value: 'urgent', label: 'Urgent' },
-    ],
-  },
-  {
-    id: 'dropdown_category',
-    name: 'category_options',
-    label: 'Category',
-    options: [
-      { value: 'general', label: 'General' },
-      { value: 'technical', label: 'Technical' },
-      { value: 'business', label: 'Business' },
-      { value: 'personal', label: 'Personal' },
-    ],
-  },
-]
-
-/**
- * Seed database with default data
- */
-export async function seedDefaultData(): Promise<void> {
-  // Create default users if none exist
-  const users = await getUsers({ scope: 'all' })
-  if (users.length === 0) {
-    const defaultUsers: User[] = [
-      {
-        id: 'user_supergod',
-        username: 'supergod',
-        email: 'supergod@system.local',
-        role: 'supergod',
-        createdAt: Date.now(),
-        isInstanceOwner: true,
-      },
-      {
-        id: 'user_god',
-        username: 'god',
-        email: 'god@system.local',
-        role: 'god',
-        createdAt: Date.now(),
-        isInstanceOwner: false,
-      },
-    ]
-    await setUsers(defaultUsers)
-
-    // Set default passwords
-    for (const user of defaultUsers) {
-      const hash = await hashPassword(user.username)
-      await setCredential(user.username, hash)
-    }
-  }
-
-  // Create default app config if none exists
-  const appConfig = await getAppConfig()
-  if (!appConfig) {
-    const defaultConfig: AppConfiguration = {
-      id: 'app_001',
-      name: 'MetaBuilder App',
-      schemas: [],
-      workflows: [],
-      luaScripts: [],
-      pages: [],
-      theme: {
-        colors: {},
-        fonts: {},
-      },
-    }
-    await setAppConfig(defaultConfig)
-  }
-
-  // Create default CSS classes if none exist
-  const cssClasses = await getCssClasses()
-  if (cssClasses.length === 0) {
-    await setCssClasses(DEFAULT_CSS_CLASSES)
-  }
-
-  // Create default dropdown configs if none exist
-  const dropdowns = await getDropdownConfigs()
-  if (dropdowns.length === 0) {
-    await setDropdownConfigs(DEFAULT_DROPDOWN_CONFIGS)
-  }
-}
