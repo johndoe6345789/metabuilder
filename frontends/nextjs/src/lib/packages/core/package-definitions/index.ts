@@ -1,0 +1,7 @@
+export { forumClassicPackage } from './set-a/forum-classic'
+export { guestbookRetroPackage } from './set-a/guestbook-retro'
+export { youtubeClonePackage } from './set-a/youtube-clone'
+export { spotifyClonePackage } from './set-a/spotify-clone'
+export { retroGamesPackage } from './set-b/retro-games'
+export { ecommerceBasicPackage } from './set-b/ecommerce-basic'
+export { ircWebchatPackage } from './set-b/irc-webchat'
