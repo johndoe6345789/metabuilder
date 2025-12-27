@@ -1,9 +1,10 @@
 import type { DownloadOptions, BlobMetadata, BlobListOptions, BlobListResult } from '../blob-storage'
-import { ensurePermission, getContext, scopeKey, unscopeKey } from './context'
 import type { TenantAwareDeps } from './context'
+import { scopeKey, unscopeKey } from './context'
+import { ensurePermission, resolveTenantContext } from './tenant-context'
 
 export const downloadBuffer = async (deps: TenantAwareDeps, key: string): Promise<Buffer> => {
-  const context = await getContext(deps)
+  const context = await resolveTenantContext(deps)
   ensurePermission(context, 'read')
 
   const scopedKey = scopeKey(key, context.namespace)
@@ -15,7 +16,7 @@ export const downloadStream = async (
   key: string,
   options?: DownloadOptions,
 ): Promise<ReadableStream | NodeJS.ReadableStream> => {
-  const context = await getContext(deps)
+  const context = await resolveTenantContext(deps)
   ensurePermission(context, 'read')
 
   const scopedKey = scopeKey(key, context.namespace)
@@ -26,7 +27,7 @@ export const listBlobs = async (
   deps: TenantAwareDeps,
   options: BlobListOptions = {},
 ): Promise<BlobListResult> => {
-  const context = await getContext(deps)
+  const context = await resolveTenantContext(deps)
   ensurePermission(context, 'read')
 
   const scopedOptions: BlobListOptions = {
@@ -46,7 +47,7 @@ export const listBlobs = async (
 }
 
 export const getMetadata = async (deps: TenantAwareDeps, key: string): Promise<BlobMetadata> => {
-  const context = await getContext(deps)
+  const context = await resolveTenantContext(deps)
   ensurePermission(context, 'read')
 
   const scopedKey = scopeKey(key, context.namespace)
@@ -63,7 +64,7 @@ export const generatePresignedUrl = async (
   key: string,
   expiresIn: number,
 ): Promise<string> => {
-  const context = await getContext(deps)
+  const context = await resolveTenantContext(deps)
   ensurePermission(context, 'read')
 
   const scopedKey = scopeKey(key, context.namespace)
