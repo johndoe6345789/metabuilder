@@ -1,7 +1,7 @@
 import { checkPermission } from '../acl/check-permission'
 import { checkRowLevelAccess } from '../acl/check-row-level-access'
 import { resolvePermissionOperation } from '../acl/resolve-permission-operation'
-import type { ACLContext } from './context'
+import type { ACLContext } from './types'
 
 export const enforcePermission = (context: ACLContext, entity: string, operation: string) => {
   checkPermission(entity, operation, context.user, context.rules, context.logger)
