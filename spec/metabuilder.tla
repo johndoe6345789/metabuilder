@@ -320,8 +320,9 @@ DataConsistency ==
 
 \* Package consistency: installed packages must be in installed or disabled state
 PackageConsistency ==
-    \A t \in Tenants, p \in installedPackages[t]:
-        packageStates[p] \in {"installed", "disabled", "installing"}
+    \A t \in Tenants:
+        \A p \in installedPackages[t]:
+            packageStates[p] \in {"installed", "disabled", "installing"}
 
 \* DBAL safety: no queries processed in error state
 DBALSafety ==
