@@ -1,12 +1,12 @@
 import type { ComponentTypeDefinition } from './types'
 import { createComponentRegistryState } from './registry-state'
-import { getAllComponents } from './get-all-components'
-import { getComponent } from './get-component'
-import { getComponentsByCategory } from './get-components-by-category'
-import { hasComponent } from './has-component'
-import { loadFromCatalog } from './load-from-catalog'
-import { registerComponent } from './register-component'
-import { registerComponents } from './register-components'
+import { getAllComponents } from '../getters/get-all-components'
+import { getComponent } from '../getters/get-component'
+import { getComponentsByCategory } from '../getters/get-components-by-category'
+import { hasComponent } from '../getters/has-component'
+import { loadFromCatalog } from '../register/load-from-catalog'
+import { registerComponent } from '../register/register-component'
+import { registerComponents } from '../register/register-components'
 
 export class ComponentRegistry {
   private state = createComponentRegistryState()

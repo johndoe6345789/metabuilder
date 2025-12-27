@@ -1,4 +1,4 @@
-import type { ComponentDefinition } from '../builder-types'
+import type { ComponentDefinition } from '../../types'
 
 export interface ComponentTypeDefinition extends ComponentDefinition {
   renderingLogic?: {
