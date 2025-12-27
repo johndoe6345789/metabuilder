@@ -1,0 +1,164 @@
+name: 📦 Package Request
+description: Request a new package for MetaBuilder's package system
+title: "[Package]: "
+labels: ["enhancement", "package", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        MetaBuilder's power comes from its data-driven package system. Request a new package here!
+
+  - type: input
+    id: package-name
+    attributes:
+      label: Package Name
+      description: Proposed name for the package (use snake_case)
+      placeholder: e.g., blog_engine, task_manager, analytics_dashboard
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Package Description
+      description: What functionality would this package provide?
+      placeholder: This package would enable users to...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: package-type
+    attributes:
+      label: Package Type
+      description: What type of package is this?
+      options:
+        - UI Component/Widget
+        - Feature Module
+        - Integration
+        - Tool/Utility
+        - Template/Theme
+        - Data Schema
+        - Workflow
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: min-level
+    attributes:
+      label: Minimum Permission Level
+      description: What's the minimum user level required to use this package?
+      options:
+        - Level 1 (Public - no auth required)
+        - Level 2 (User - basic authentication)
+        - Level 3 (Moderator - content moderation)
+        - Level 4 (Admin - user management)
+        - Level 5 (God - system configuration)
+        - Level 6 (Supergod - full system control)
+    validations:
+      required: true
+
+  - type: textarea
+    id: features
+    attributes:
+      label: Key Features
+      description: List the main features this package should include
+      placeholder: |
+        - Feature 1: Description
+        - Feature 2: Description
+        - Feature 3: Description
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Use Cases
+      description: Describe scenarios where this package would be useful
+      placeholder: |
+        1. A [user type] needs to [action] in order to [goal]
+        2. When [scenario], this package would help by [benefit]
+
+  - type: textarea
+    id: components
+    attributes:
+      label: Proposed Components
+      description: What UI components would this package include?
+      placeholder: |
+        - ComponentName1: Description
+        - ComponentName2: Description
+
+  - type: textarea
+    id: lua-scripts
+    attributes:
+      label: Lua Scripts Needed
+      description: What Lua scripts would be required? (MetaBuilder is 95% JSON/Lua)
+      placeholder: |
+        - initialize.lua: Setup and configuration
+        - validators.lua: Data validation
+        - helpers.lua: Utility functions
+
+  - type: textarea
+    id: schemas
+    attributes:
+      label: Database Schemas
+      description: What database tables/models would be needed?
+      placeholder: |
+        - Model1 { field1, field2, ... }
+        - Model2 { field1, field2, ... }
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Package Dependencies
+      description: Would this package depend on other packages?
+      placeholder: |
+        - @metabuilder/dashboard
+        - @metabuilder/form_builder
+
+  - type: dropdown
+    id: multi-tenant
+    attributes:
+      label: Multi-Tenant Support
+      description: Does this package need to be tenant-aware?
+      options:
+        - "Yes - Requires tenant isolation"
+        - "No - Can be global"
+        - "Optional - Configurable"
+    validations:
+      required: true
+
+  - type: textarea
+    id: similar
+    attributes:
+      label: Similar Packages/Inspiration
+      description: Are there similar packages in other systems or frameworks?
+      placeholder: |
+        - System X has a similar feature that...
+        - This is inspired by...
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to help develop this package
+          required: false
+        - label: I can provide Lua scripts for this package
+          required: false
+        - label: I can help with testing this package
+          required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing packages to ensure this doesn't already exist
+          required: true
+        - label: This package aligns with MetaBuilder's data-driven architecture
+          required: true
+        - label: I have considered multi-tenant requirements
+          required: true

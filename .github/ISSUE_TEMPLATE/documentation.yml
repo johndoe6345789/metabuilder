@@ -1,0 +1,115 @@
+name: 📚 Documentation
+description: Report an issue with documentation or request documentation improvements
+title: "[Docs]: "
+labels: ["documentation", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve MetaBuilder's documentation! Clear docs help everyone.
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What kind of documentation issue is this?
+      options:
+        - Missing documentation
+        - Incorrect/outdated information
+        - Unclear explanation
+        - Broken links
+        - Typo/grammar
+        - Code example not working
+        - Missing code example
+        - Architecture documentation
+        - API documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Documentation Location
+      description: Where is the documentation issue? (provide file path, URL, or section name)
+      placeholder: |
+        File: docs/architecture/packages.md
+        Or URL: https://github.com/johndoe6345789/metabuilder/tree/main/docs
+        Or Section: "Getting Started > Database Setup"
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: Issue Description
+      description: What's wrong with the current documentation?
+      placeholder: The current documentation states... but it should...
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Improvement
+      description: How should the documentation be improved?
+      placeholder: |
+        The documentation should instead explain...
+        Or: Add a section that covers...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Documentation Area
+      description: Which area of MetaBuilder does this documentation cover?
+      options:
+        - Getting Started
+        - Architecture
+        - API Reference
+        - Package System
+        - DBAL
+        - Permission System
+        - Multi-Tenancy
+        - Lua Scripting
+        - Workflows
+        - Database/Prisma
+        - Testing
+        - Deployment
+        - Contributing
+        - Security
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other relevant information
+      placeholder: |
+        - Screenshots of confusing sections
+        - Related issues or PRs
+        - Why this improvement is needed
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Would you like to help improve this documentation?
+      options:
+        - label: I am willing to submit a PR to fix/improve this documentation
+          required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues for similar documentation requests
+          required: true
+        - label: I have verified the documentation issue still exists in the latest version
+          required: true
