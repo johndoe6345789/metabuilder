@@ -11,14 +11,22 @@ Successfully updated all major dependencies to their latest versions and refacto
 ### Prisma (6.19.1 → 7.2.0)
 **Breaking Changes Addressed:**
 - Removed `url` property from datasource block in `prisma/schema.prisma` (Prisma 7.x requirement)
-- Updated `prisma.config.ts` to handle datasource configuration
-- Modified `PrismaClient` initialization in `frontends/nextjs/src/lib/config/prisma.ts` to pass `datasourceUrl` parameter
+- Updated `prisma.config.ts` to handle datasource configuration for CLI operations
+- **CRITICAL**: Installed `@prisma/adapter-better-sqlite3` and `better-sqlite3` for runtime database connections
+- Modified `PrismaClient` initialization in `frontends/nextjs/src/lib/config/prisma.ts` to use SQLite adapter
+- Installed Prisma dependencies at root level (where schema.prisma lives) for monorepo compatibility
 
 **Migration Steps:**
-1. Updated package.json files (root, frontends/nextjs, dbal/development)
-2. Removed datasource URL from schema.prisma
-3. Updated PrismaClient constructor to accept datasourceUrl
-4. Regenerated Prisma client with new version
+1. Removed custom output path from schema.prisma generator (use Prisma 7 default)
+2. Installed prisma and @prisma/client at repository root
+3. Installed @prisma/adapter-better-sqlite3 and better-sqlite3 at root and in frontends/nextjs
+4. Updated PrismaClient constructor to create and use better-sqlite3 adapter
+5. Regenerated Prisma client with new version
+
+**Important Note on Prisma 7 Architecture:**
+- `prisma.config.ts` is used by CLI commands (prisma generate, prisma migrate)  
+- At runtime, PrismaClient requires either an **adapter** (for direct DB connections) or **accelerateUrl** (for Prisma Accelerate)
+- For SQLite, the better-sqlite3 adapter is the recommended solution
 
 ### Next.js & React (Already at Latest)
 - Next.js: 16.1.1 (no update needed)
@@ -138,17 +146,26 @@ Created stub implementations for missing GitHub workflow analysis functions:
 
 ### Migration Example
 
-**Before:**
+**Before (Prisma 6.x):**
 ```typescript
 export const prisma = new PrismaClient()
 ```
 
-**After:**
+**After (Prisma 7.x with SQLite adapter):**
 ```typescript
-export const prisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL,
-})
+import { PrismaClient } from '@prisma/client'
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
+import Database from 'better-sqlite3'
+
+const databaseUrl = process.env.DATABASE_URL || 'file:./dev.db'
+const dbPath = databaseUrl.replace(/^file:/, '')
+const db = new Database(dbPath)
+const adapter = new PrismaBetterSqlite3(db)
+
+export const prisma = new PrismaClient({ adapter })
 ```
+
+**Note:** The `datasourceUrl` parameter does NOT exist in Prisma 7. Use adapters instead.
 
 ## Verification Commands
 
