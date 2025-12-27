@@ -2,6 +2,29 @@
 
 This directory contains automated workflows for CI/CD, code quality, and comprehensive AI-assisted development throughout the entire SDLC.
 
+## 🚦 Enterprise Gated Tree Workflow
+
+MetaBuilder uses an **Enterprise Gated Tree Workflow** that ensures all code changes pass through multiple validation gates before being merged and deployed.
+
+**📖 Complete Guide:** [Enterprise Gated Workflow Documentation](../../docs/ENTERPRISE_GATED_WORKFLOW.md)
+
+### Quick Overview
+
+All PRs must pass through 5 sequential gates:
+
+1. **Gate 1: Code Quality** - Prisma, TypeScript, Lint, Security
+2. **Gate 2: Testing** - Unit, E2E, DBAL Daemon tests
+3. **Gate 3: Build & Package** - Application build, quality metrics
+4. **Gate 4: Review & Approval** - Human code review (1 approval required)
+5. **Gate 5: Deployment** - Staging (auto) → Production (manual approval)
+
+**Key Benefits:**
+- ✅ Sequential gates prevent wasted resources
+- ✅ Automatic merge after approval
+- ✅ Manual approval required for production
+- ✅ Clear visibility of gate status on PRs
+- ✅ Audit trail for all deployments
+
 ## 🤖 GitHub Copilot Integration
 
 All workflows are designed to work seamlessly with **GitHub Copilot** to assist throughout the Software Development Lifecycle:
@@ -16,7 +39,43 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 
 ## Workflows Overview
 
-### 1. CI/CD Workflow (`ci.yml`)
+### 🚦 Enterprise Gated Workflows (New)
+
+#### 1. Enterprise Gated CI/CD Pipeline (`gated-ci.yml`)
+**Triggered on:** Push to main/master/develop branches, Pull requests
+
+**Structure:**
+- **Gate 1:** Code Quality (Prisma, TypeScript, Lint, Security)
+- **Gate 2:** Testing (Unit, E2E, DBAL Daemon)
+- **Gate 3:** Build & Package (Build, Quality Metrics)
+- **Gate 4:** Review & Approval (Human review required)
+
+**Features:**
+- Sequential gate execution for efficiency
+- Clear gate status reporting on PRs
+- Automatic progression through gates
+- Summary report with all gate results
+
+#### 2. Enterprise Gated Deployment (`gated-deployment.yml`)
+**Triggered on:** Push to main/master, Releases, Manual workflow dispatch
+
+**Environments:**
+- **Staging:** Automatic deployment after merge to main
+- **Production:** Manual approval required
+
+**Features:**
+- Pre-deployment validation (schema, security, size)
+- Breaking change detection and warnings
+- Environment-specific deployment paths
+- Post-deployment health checks
+- Automatic deployment tracking issues
+- Rollback preparation and procedures
+
+**Gate 5:** Deployment gate ensures only reviewed code reaches production
+
+### 🔄 Legacy Workflows (Still Active)
+
+#### 3. CI/CD Workflow (`ci.yml`)
 **Triggered on:** Push to main/master/develop branches, Pull requests
 
 **Jobs:**
@@ -26,7 +85,7 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 - **E2E Tests**: Runs Playwright end-to-end tests
 - **Quality Check**: Checks for console.log statements and TODO comments
 
-### 2. Automated Code Review (`code-review.yml`)
+### 4. Automated Code Review (`code-review.yml`)
 **Triggered on:** Pull request opened, synchronized, or reopened
 
 **Features:**
@@ -43,20 +102,21 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 - ✅ React best practices
 - ✅ File size warnings
 
-### 3. Auto Merge (`auto-merge.yml`)
+### 5. Auto Merge (`auto-merge.yml`) - Updated for Gated Workflow
 **Triggered on:** PR approval, CI workflow completion
 
 **Features:**
 - Automatically merges PRs when:
   - PR is approved by reviewers
-  - All CI checks pass (lint, build, e2e tests)
+  - All gates pass (supports both gated and legacy CI checks)
   - No merge conflicts
   - PR is not in draft
 - **Automatically deletes the branch** after successful merge
 - Uses squash merge strategy
 - Posts comments about merge status
+- **Updated:** Now supports Enterprise Gated CI/CD Pipeline checks
 
-### 4. Issue Triage (`issue-triage.yml`)
+### 6. Issue Triage (`issue-triage.yml`)
 **Triggered on:** New issues opened, issues labeled
 
 **Features:**
@@ -68,7 +128,7 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 - Suggests automated fix attempts for simple issues
 - Can create fix branches automatically with `create-pr` label
 
-### 5. PR Management (`pr-management.yml`)
+### 7. PR Management (`pr-management.yml`)
 **Triggered on:** PR opened, synchronized, labeled
 
 **Features:**
@@ -80,7 +140,7 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 - Links related issues automatically
 - Posts comments on related issues
 
-### 6. Merge Conflict Check (`merge-conflict-check.yml`)
+### 8. Merge Conflict Check (`merge-conflict-check.yml`)
 **Triggered on:** PR opened/synchronized, push to main/master
 
 **Features:**
@@ -89,7 +149,7 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 - Adds/removes `merge-conflict` label
 - Fails CI if conflicts exist
 
-### 7. Planning & Design (`planning.yml`) 🆕
+### 9. Planning & Design (`planning.yml`) 🆕
 **Triggered on:** Issues opened or labeled with enhancement/feature-request
 
 **Features:**
@@ -103,7 +163,7 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 
 **SDLC Phase:** Planning & Design
 
-### 8. Development Assistance (`development.yml`) 🆕
+### 10. Development Assistance (`development.yml`) 🆕
 **Triggered on:** Push to feature branches, PR updates, @copilot mentions
 
 **Features:**
@@ -117,7 +177,7 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 
 **SDLC Phase:** Development
 
-### 9. Deployment & Monitoring (`deployment.yml`) 🆕
+### 11. Deployment & Monitoring (`deployment.yml`) 🆕
 **Triggered on:** Push to main, releases, manual workflow dispatch
 
 **Features:**
@@ -131,7 +191,7 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 
 **SDLC Phase:** Deployment & Operations
 
-### 10. Code Size Limits (`size-limits.yml`)
+### 12. Code Size Limits (`size-limits.yml`)
 **Triggered on:** Pull requests, pushes to main (when source files change)
 
 **Features:**
