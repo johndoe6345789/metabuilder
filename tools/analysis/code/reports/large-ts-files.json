@@ -12,9 +12,9 @@
     "out",
     "tmp"
   ],
-  "scanned": 1381,
-  "overLimit": 106,
-  "timestamp": "2025-12-27T15:33:16.258Z",
+  "scanned": 1407,
+  "overLimit": 100,
+  "timestamp": "2025-12-27T15:45:04.923Z",
   "files": [
     {
       "path": "frontends/nextjs/src/lib/packages/core/package-catalog.ts",
@@ -512,39 +512,10 @@
       "recommendation": "Split into focused modules; keep one primary lambda per file and extract helpers."
     },
     {
-      "path": "frontends/nextjs/src/app/levels/LevelsClient.tsx",
-      "lines": 165,
-      "recommendation": "Split into focused modules; keep one primary lambda per file and extract helpers."
-    },
-    {
       "path": "frontends/nextjs/src/components/rendering/Builder.tsx",
       "lines": 164,
       "recommendation": "Split into focused modules; keep one primary lambda per file and extract helpers."
-    },
-    {
-      "path": "frontends/nextjs/src/components/molecules/form/Select.tsx",
-      "lines": 161,
-      "recommendation": "Split into focused modules; keep one primary lambda per file and extract helpers."
-    },
-    {
-      "path": "tools/generation/generate-quality-summary.ts",
-      "lines": 160,
-      "recommendation": "Split into focused modules; keep one primary lambda per file and extract helpers."
-    },
-    {
-      "path": "tools/analysis/code/list-large-typescript-files.ts",
-      "lines": 159,
-      "recommendation": "Split into focused modules; keep one primary lambda per file and extract helpers."
-    },
-    {
-      "path": "frontends/nextjs/src/components/level/levels/Level4.tsx",
-      "lines": 156,
-      "recommendation": "Split into focused modules; keep one primary lambda per file and extract helpers."
-    },
-    {
-      "path": "frontends/nextjs/src/types/dbal.d.ts",
-      "lines": 155,
-      "recommendation": "Split into focused modules; keep one primary lambda per file and extract helpers."
     }
-  ]
+  ],
+  "outFile": "tools/analysis/code/reports/large-ts-files.json"
 }
