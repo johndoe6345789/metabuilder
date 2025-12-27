@@ -2,6 +2,8 @@
 
 A **data-driven, multi-tenant platform** where 95% of functionality lives in JSON/Lua, not TypeScript. Build enterprise applications declaratively with a 6-level permission system.
 
+> 📋 **Ready to populate the kanban?** See [KANBAN_READY.md](KANBAN_READY.md) for a quick guide to populate the GitHub project board with 775 TODO items.
+
 ---
 
 ## Table of Contents

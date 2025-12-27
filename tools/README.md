@@ -28,7 +28,24 @@ Scripts organized by function:
 - **`diagnose-workflows.sh`** - Diagnose workflow issues
 - **`capture-screenshot.ts`** - Capture UI screenshots
 
+### Project Management
+
+- **`project-management/populate-kanban.py`** - Populate GitHub project board from TODO files
+
 ## 🚀 Common Tasks
+
+### Populate GitHub Project Kanban
+
+```bash
+# Preview what issues would be created
+python3 tools/project-management/populate-kanban.py --dry-run --limit 10
+
+# Create all issues and add to project board
+gh auth login  # First time only
+python3 tools/project-management/populate-kanban.py --create --project-id 2
+```
+
+See [project-management/README.md](project-management/README.md) for detailed documentation.
 
 ### Check Documentation Quality
 
