@@ -21,7 +21,10 @@
 set -e
 
 usage() {
-  echo "Usage: $0"
+  echo "Usage: $0 [--dry-run]"
+  echo ""
+  echo "Arguments:"
+  echo "  --dry-run        Show what would be closed without actually closing issues"
   echo ""
   echo "Environment variables:"
   echo "  GITHUB_TOKEN     (required) GitHub personal access token with repo access"
@@ -33,12 +36,24 @@ usage() {
   echo "  export GITHUB_TOKEN='ghp_xxxxxxxxxxxx'"
   echo "  $0"
   echo ""
+  echo "  # Dry run to see what would be closed"
+  echo "  export GITHUB_TOKEN='ghp_xxxxxxxxxxxx'"
+  echo "  $0 --dry-run"
+  echo ""
   echo "  # Only process specific title"
   echo "  export GITHUB_TOKEN='ghp_xxxxxxxxxxxx'"
   echo "  export SEARCH_TITLE='⚠️ Pre-Deployment Validation Failed'"
   echo "  $0"
   exit 1
 }
+
+# Parse command line arguments
+DRY_RUN=false
+if [ "$1" = "--dry-run" ]; then
+  DRY_RUN=true
+  echo "🔍 DRY RUN MODE: No issues will be closed"
+  echo ""
+fi
 
 # Check for help flag
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
@@ -204,6 +219,14 @@ close_issue() {
   local title=$4
   local total_with_title=$5
   
+  if [ "$DRY_RUN" = true ]; then
+    echo "  [DRY RUN] Would close issue #${issue_number}"
+    echo "  [DRY RUN] Would add comment explaining closure"
+    echo "  ✅ Dry run complete for issue #${issue_number}"
+    echo ""
+    return 0
+  fi
+  
   local close_comment='🤖 **Automated Triage: Closing Duplicate Issue**
 
 This issue has been identified as a duplicate. Multiple issues with the same title were found, and this script automatically closes all duplicates except the most recent one.
@@ -295,14 +318,21 @@ main() {
       ISSUES_TO_CLOSE+=("$issue_num")
     done <<< "$ISSUES_TO_CLOSE_DATA"
     
-    echo "  🎯 Planning to close ${#ISSUES_TO_CLOSE[@]} duplicate issues"
+    if [ "$DRY_RUN" = true ]; then
+      echo "  🎯 [DRY RUN] Would close ${#ISSUES_TO_CLOSE[@]} duplicate issues:"
+      echo "      Issues: $(echo "${ISSUES_TO_CLOSE[@]}" | tr ' ' ',')"
+    else
+      echo "  🎯 Planning to close ${#ISSUES_TO_CLOSE[@]} duplicate issues"
+    fi
     echo ""
     
     for issue_number in "${ISSUES_TO_CLOSE[@]}"; do
       close_issue "$issue_number" "$MOST_RECENT" "$MOST_RECENT_DATE" "$duplicate_title" "$TITLE_ISSUE_COUNT"
       total_closed=$((total_closed + 1))
-      # Add a small delay to avoid rate limiting
-      sleep 1
+      # Add a small delay to avoid rate limiting (skip in dry-run)
+      if [ "$DRY_RUN" = false ]; then
+        sleep 1
+      fi
     done
     
     echo "  ✅ Completed processing this duplicate group"
@@ -310,13 +340,24 @@ main() {
   done <<< "$DUPLICATE_TITLES"
   
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-  echo "✨ Triage complete!"
+  if [ "$DRY_RUN" = true ]; then
+    echo "✨ Dry run complete!"
+  else
+    echo "✨ Triage complete!"
+  fi
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo ""
   echo "📊 Summary:"
   echo "  • Processed $DUPLICATE_TITLE_COUNT duplicate title group(s)"
-  echo "  • Closed $total_closed duplicate issue(s)"
-  echo "  • Kept the most recent issue open for each title"
+  if [ "$DRY_RUN" = true ]; then
+    echo "  • Would close $total_closed duplicate issue(s)"
+    echo "  • Would keep the most recent issue open for each title"
+    echo ""
+    echo "💡 To actually close these issues, run without --dry-run flag"
+  else
+    echo "  • Closed $total_closed duplicate issue(s)"
+    echo "  • Kept the most recent issue open for each title"
+  fi
   echo ""
 }
 
