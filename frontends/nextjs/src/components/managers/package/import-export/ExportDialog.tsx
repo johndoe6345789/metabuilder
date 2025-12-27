@@ -1,29 +1,24 @@
 import type React from 'react'
-import { Button } from '@/components/ui'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui'
-import { Label } from '@/components/ui'
-import { Input } from '@/components/ui'
-import { Textarea } from '@/components/ui'
-import { Checkbox } from '@/components/ui'
-import { ScrollArea } from '@/components/ui'
-import { Separator } from '@/components/ui'
+import {
+  Button,
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  ScrollArea,
+  Separator,
+} from '@/components/ui'
 import { Export, Package, Database as DatabaseIcon, FileArrowDown } from '@phosphor-icons/react'
 import type { PackageManifest } from '@/lib/package-types'
 import type { ExportPackageOptions } from '@/lib/packages/core/package-export'
-
-const exportOptionLabels: { key: keyof ExportPackageOptions; label: string }[] = [
-  { key: 'includeSchemas', label: 'Include data schemas' },
-  { key: 'includePages', label: 'Include page configurations' },
-  { key: 'includeWorkflows', label: 'Include workflows' },
-  { key: 'includeLuaScripts', label: 'Include Lua scripts' },
-  { key: 'includeComponentHierarchy', label: 'Include component hierarchies' },
-  { key: 'includeComponentConfigs', label: 'Include component configurations' },
-  { key: 'includeCssClasses', label: 'Include CSS classes' },
-  { key: 'includeDropdownConfigs', label: 'Include dropdown configurations' },
-  { key: 'includeSeedData', label: 'Include seed data' },
-  { key: 'includeAssets', label: 'Include assets (images, videos, audio, documents)' },
-]
+import { ExportOptions } from './ExportOptions'
+import { ExportManifestForm } from './ExportManifestForm'
 
 interface ExportDialogProps {
   open: boolean
@@ -100,104 +95,18 @@ export const ExportDialog = ({
 
           <Separator />
 
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="package-name">Package Name *</Label>
-              <Input
-                id="package-name"
-                placeholder="My Awesome Package"
-                value={manifest.name}
-                onChange={e => setManifest(prev => ({ ...prev, name: e.target.value }))}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="package-version">Version</Label>
-                <Input
-                  id="package-version"
-                  placeholder="1.0.0"
-                  value={manifest.version}
-                  onChange={e => setManifest(prev => ({ ...prev, version: e.target.value }))}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="package-author">Author</Label>
-                <Input
-                  id="package-author"
-                  placeholder="Your Name"
-                  value={manifest.author}
-                  onChange={e => setManifest(prev => ({ ...prev, author: e.target.value }))}
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="package-description">Description</Label>
-              <Textarea
-                id="package-description"
-                placeholder="Describe what this package does..."
-                value={manifest.description}
-                onChange={e => setManifest(prev => ({ ...prev, description: e.target.value }))}
-                rows={3}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="package-tags">Tags</Label>
-              <div className="flex gap-2 mb-2">
-                <Input
-                  id="package-tags"
-                  placeholder="Add a tag..."
-                  value={tagInput}
-                  onChange={e => setTagInput(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), onAddTag())}
-                />
-                <Button type="button" onClick={onAddTag}>
-                  Add
-                </Button>
-              </div>
-              {manifest.tags && manifest.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {manifest.tags.map(tag => (
-                    <div key={tag} className="px-2 py-1 bg-secondary rounded-md text-sm flex items-center gap-2">
-                      <span>{tag}</span>
-                      <button
-                        type="button"
-                        onClick={() => onRemoveTag(tag)}
-                        className="text-muted-foreground hover:text-foreground"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
+          <ExportManifestForm
+            manifest={manifest}
+            setManifest={setManifest}
+            tagInput={tagInput}
+            setTagInput={setTagInput}
+            onAddTag={onAddTag}
+            onRemoveTag={onRemoveTag}
+          />
 
           <Separator />
 
-            <div>
-              <Label className="mb-3 block">Export Options</Label>
-              <div className="space-y-3">
-                {exportOptionLabels.map(({ key, label }) => (
-                  <div className="flex items-center gap-2" key={key}>
-                    <Checkbox
-                      id={`export-${key}`}
-                      checked={exportOptions[key] as boolean}
-                      onCheckedChange={checked =>
-                        setExportOptions(prev => ({ ...prev, [key]: checked as boolean }))
-                      }
-                    />
-                    <Label htmlFor={`export-${key}`} className="font-normal cursor-pointer">
-                      {label}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <ExportOptions exportOptions={exportOptions} setExportOptions={setExportOptions} />
         </div>
       </ScrollArea>
 
