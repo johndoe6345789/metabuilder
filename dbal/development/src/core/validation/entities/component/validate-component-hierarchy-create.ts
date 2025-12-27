@@ -1,6 +1,6 @@
 import type { ComponentHierarchy } from '../types'
-import { isPlainObject } from './is-plain-object'
-import { isValidUuid } from './is-valid-uuid'
+import { isPlainObject } from '../../predicates/is-plain-object'
+import { isValidUuid } from '../../predicates/is-valid-uuid'
 
 export function validateComponentHierarchyCreate(data: Partial<ComponentHierarchy>): string[] {
   const errors: string[] = []

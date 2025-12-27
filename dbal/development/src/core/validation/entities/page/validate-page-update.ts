@@ -1,8 +1,8 @@
 import type { PageView } from '../types'
-import { isValidLevel } from './is-valid-level'
-import { isValidSlug } from './is-valid-slug'
-import { isValidTitle } from './is-valid-title'
-import { isPlainObject } from './is-plain-object'
+import { isValidLevel } from '../../predicates/is-valid-level'
+import { isValidSlug } from '../../predicates/string/is-valid-slug'
+import { isValidTitle } from '../../predicates/string/is-valid-title'
+import { isPlainObject } from '../../predicates/is-plain-object'
 
 export function validatePageUpdate(data: Partial<PageView>): string[] {
   const errors: string[] = []

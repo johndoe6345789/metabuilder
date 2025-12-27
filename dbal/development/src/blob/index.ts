@@ -1,13 +1,13 @@
 export * from './blob-storage'
-export { MemoryStorage } from './memory-storage'
-export { S3Storage } from './s3-storage'
-export { FilesystemStorage } from './filesystem-storage'
-export { TenantAwareBlobStorage } from './tenant-aware-storage'
+export { MemoryStorage } from './providers/memory-storage'
+export { S3Storage } from './providers/s3-storage'
+export { FilesystemStorage } from './providers/filesystem-storage'
+export { TenantAwareBlobStorage } from './providers/tenant-aware-storage'
 
 import type { BlobStorage, BlobStorageConfig } from './blob-storage'
-import { MemoryStorage } from './memory-storage'
-import { S3Storage } from './s3-storage'
-import { FilesystemStorage } from './filesystem-storage'
+import { MemoryStorage } from './providers/memory-storage'
+import { S3Storage } from './providers/s3-storage'
+import { FilesystemStorage } from './providers/filesystem-storage'
 
 /**
  * Factory function to create blob storage instances

@@ -1,8 +1,8 @@
 import type { Package } from '../types'
-import { isPlainObject } from './is-plain-object'
-import { isValidDate } from './is-valid-date'
-import { isValidSemver } from './is-valid-semver'
-import { isValidUuid } from './is-valid-uuid'
+import { isPlainObject } from '../../predicates/is-plain-object'
+import { isValidDate } from '../../predicates/is-valid-date'
+import { isValidSemver } from '../../predicates/string/is-valid-semver'
+import { isValidUuid } from '../../predicates/is-valid-uuid'
 
 export function validatePackageCreate(data: Partial<Package>): string[] {
   const errors: string[] = []

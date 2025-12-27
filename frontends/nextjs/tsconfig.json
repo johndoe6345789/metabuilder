@@ -29,11 +29,14 @@
       "@/*": [
         "./src/*"
       ],
+      "@/dbal": [
+        "../../dbal/development/src"
+      ],
       "@/dbal/*": [
-        "../dbal/development/src/*"
+        "../../dbal/development/src/*"
       ],
       "@dbal-ui/*": [
-        "../dbal/src/*"
+        "../../dbal/shared/ui/*"
       ]
     },
     "plugins": [

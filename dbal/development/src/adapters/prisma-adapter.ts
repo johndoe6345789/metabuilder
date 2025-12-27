@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import type { DBALAdapter, AdapterCapabilities } from './adapter'
-import type { ListOptions, ListResult } from '../core/types'
-import { DBALError } from '../core/errors'
+import type { ListOptions, ListResult } from '../core/foundation/types'
+import { DBALError } from '../core/foundation/errors'
 
 type PrismaAdapterDialect = 'postgres' | 'mysql' | 'sqlite' | 'generic'
 
@@ -195,7 +195,7 @@ export class PrismaAdapter implements DBALAdapter {
     try {
       const model = this.getModel(entity)
       const where = filter ? this.buildWhereClause(filter) : undefined
-      const result = await this.withTimeout(
+      const result: { count: number } = await this.withTimeout(
         model.deleteMany({ where: where as never })
       )
       return result.count
@@ -208,7 +208,7 @@ export class PrismaAdapter implements DBALAdapter {
     try {
       const model = this.getModel(entity)
       const where = this.buildWhereClause(filter)
-      const result = await this.withTimeout(
+      const result: { count: number } = await this.withTimeout(
         model.updateMany({ where: where as never, data: data as never })
       )
       return result.count
@@ -220,7 +220,7 @@ export class PrismaAdapter implements DBALAdapter {
   async createMany(entity: string, data: Record<string, unknown>[]): Promise<number> {
     try {
       const model = this.getModel(entity)
-      const result = await this.withTimeout(
+      const result: { count: number } = await this.withTimeout(
         model.createMany({ data: data as never })
       )
       return result.count

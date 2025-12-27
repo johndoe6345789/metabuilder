@@ -1,6 +1,6 @@
 import 'server-only'
 
-import type { DBALClient } from '@/lib/dbal-stub'
+import type { DBALClient } from '@/dbal'
 import { dbalState } from './dbal-state.server'
 import { initializeDBAL } from './initialize-dbal.server'
 

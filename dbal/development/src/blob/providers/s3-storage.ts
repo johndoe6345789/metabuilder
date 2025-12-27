@@ -6,8 +6,8 @@ import type {
   DownloadOptions,
   BlobListOptions,
   BlobStorageConfig,
-} from './blob-storage'
-import { DBALError } from '../core/errors'
+} from '../blob-storage'
+import { DBALError } from '../../core/foundation/errors'
 
 /**
  * S3-compatible blob storage implementation
@@ -31,8 +31,13 @@ export class S3Storage implements BlobStorage {
 
   private async initializeS3Client(s3Config: NonNullable<BlobStorageConfig['s3']>) {
     try {
-      // Dynamic import to avoid bundling AWS SDK if not needed
-      const { S3Client } = await import('@aws-sdk/client-s3')
+      // Dynamic import to avoid bundling AWS SDK if not installed
+      // @ts-ignore - Optional dependency
+      const s3Module = await import('@aws-sdk/client-s3').catch(() => null)
+      if (!s3Module) {
+        throw new Error('@aws-sdk/client-s3 is not installed. Install it with: npm install @aws-sdk/client-s3')
+      }
+      const { S3Client } = s3Module
       
       this.s3Client = new S3Client({
         region: s3Config.region,

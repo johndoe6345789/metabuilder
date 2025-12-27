@@ -2,7 +2,7 @@ import 'server-only'
 
 import { Database } from '@/lib/database'
 import type { PackageContent } from '@/lib/package-types'
-import { omitRecordKeys } from './omit-record-keys'
+import { omitRecordKeys } from '../utils/omit-record-keys'
 
 export async function uninstallPackageContent(packageId: string, content: PackageContent): Promise<void> {
   const [schemas, pages, workflows, luaScripts, hierarchy, configs] = await Promise.all([

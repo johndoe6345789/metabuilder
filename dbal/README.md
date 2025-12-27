@@ -19,6 +19,7 @@ dbal/
 - 🏗️ **[Architecture](docs/PROJECT.md)** - System architecture and design
 - 🤖 **[Agent Guide](docs/AGENTS.md)** - AI development guidelines
 - 📋 **[Restructure Info](docs/RESTRUCTURE_SUMMARY.md)** - Recent organizational changes
+- ☁️ **[S3 Configuration](docs/S3_CONFIGURATION.md)** - S3 blob storage setup
 
 ## Development
 

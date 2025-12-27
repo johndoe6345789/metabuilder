@@ -1,5 +1,5 @@
 import type { Credential } from '../types'
-import { isValidUsername } from './is-valid-username'
+import { isValidUsername } from '../../predicates/string/is-valid-username'
 
 export function validateCredentialCreate(data: Partial<Credential>): string[] {
   const errors: string[] = []

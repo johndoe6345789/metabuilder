@@ -1,6 +1,6 @@
 import type { Workflow } from '../types'
-import { isPlainObject } from './is-plain-object'
-import { isValidUuid } from './is-valid-uuid'
+import { isPlainObject } from '../../predicates/is-plain-object'
+import { isValidUuid } from '../../predicates/is-valid-uuid'
 
 const triggerValues = ['manual', 'schedule', 'event', 'webhook'] as const
 

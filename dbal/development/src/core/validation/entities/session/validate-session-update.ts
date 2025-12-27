@@ -1,6 +1,6 @@
 import type { Session } from '../types'
-import { isValidDate } from './is-valid-date'
-import { isValidUuid } from './is-valid-uuid'
+import { isValidDate } from '../../predicates/is-valid-date'
+import { isValidUuid } from '../../predicates/is-valid-uuid'
 
 export function validateSessionUpdate(data: Partial<Session>): string[] {
   const errors: string[] = []

@@ -1,6 +1,6 @@
 import type { DBALAdapter, AdapterCapabilities } from '../adapters/adapter'
-import type { ListOptions, ListResult } from '../core/types'
-import { DBALError } from '../core/errors'
+import type { ListOptions, ListResult } from '../core/foundation/types'
+import { DBALError } from '../core/foundation/errors'
 
 interface User {
   id: string

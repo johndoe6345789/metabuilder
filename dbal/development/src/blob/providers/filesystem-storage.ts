@@ -6,8 +6,8 @@ import type {
   DownloadOptions,
   BlobListOptions,
   BlobStorageConfig,
-} from './blob-storage'
-import { DBALError } from '../core/errors'
+} from '../blob-storage'
+import { DBALError } from '../../core/foundation/errors'
 import { promises as fs } from 'fs'
 import { createReadStream, createWriteStream } from 'fs'
 import path from 'path'
