@@ -12,13 +12,13 @@ export * as luaScript from './lua-script';
 export * as pkg from './package';
 
 // Legacy factory exports (for backward compatibility)
-export { createUserOperations } from './user-operations';
-export { createPageOperations } from './page-operations';
-export { createComponentOperations } from './component-operations';
-export { createWorkflowOperations } from './workflow-operations';
-export { createLuaScriptOperations } from './lua-script-operations';
-export { createPackageOperations } from './package-operations';
-export { createSessionOperations } from './session-operations';
+export { createUserOperations } from './operations/core/user-operations';
+export { createPageOperations } from './operations/system/page-operations';
+export { createComponentOperations } from './operations/system/component-operations';
+export { createWorkflowOperations } from './operations/core/workflow-operations';
+export { createLuaScriptOperations } from './operations/core/lua-script-operations';
+export { createPackageOperations } from './operations/system/package-operations';
+export { createSessionOperations } from './operations/core/session-operations';
 
 // Validation utilities
 export * from '../validation';
