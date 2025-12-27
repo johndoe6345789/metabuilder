@@ -1,23 +1,7 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { Database as DatabaseIcon, Lightning, Code, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear, Palette, ListDashes, Sparkle, Package, SquaresFour, Warning } from '@phosphor-icons/react'
-import { SchemaEditorLevel4 } from '@/components/SchemaEditorLevel4'
-import { WorkflowEditor } from '@/components/WorkflowEditor'
-import { LuaEditor } from '@/components/editors/lua/LuaEditor'
-import { LuaBlocksEditor } from '@/components/editors/lua/LuaBlocksEditor'
-import { LuaSnippetLibrary } from '@/components/editors/lua/LuaSnippetLibrary'
-import { DatabaseManager } from '@/components/managers/database/DatabaseManager'
-import { PageRoutesManager } from '@/components/managers/PageRoutesManager'
-import { ComponentHierarchyEditor } from '@/components/ComponentHierarchyEditor'
-import { UserManagement } from '@/components/UserManagement'
-import { GodCredentialsSettings } from '@/components/GodCredentialsSettings'
-import { CssClassManager } from '@/components/CssClassManager'
-import { DropdownConfigManager } from '@/components/DropdownConfigManager'
-import { QuickGuide } from '@/components/QuickGuide'
-import { PackageManager } from '@/components/PackageManager'
-import { ThemeEditor } from '@/components/ThemeEditor'
-import { SMTPConfigEditor } from '@/components/SMTPConfigEditor'
-import { ErrorLogsTab } from '@/components/level5/tabs/error-logs/ErrorLogsTab'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui'
 import type { AppConfiguration, User } from '@/lib/level-types'
+import { level4TabsConfig } from './tabs/config'
+import { TabContent } from './tabs/TabContent'
 
 interface Level4TabsProps {
   appConfig: AppConfiguration
@@ -36,153 +20,31 @@ export function Level4Tabs({
   onWorkflowsChange,
   onLuaScriptsChange,
 }: Level4TabsProps) {
+  const visibleTabs = level4TabsConfig.filter((tab) => (tab.nerdOnly ? nerdMode : true))
+
   return (
     <Tabs defaultValue="guide" className="space-y-6">
       <TabsList className={nerdMode ? "grid w-full grid-cols-4 lg:grid-cols-14 max-w-full" : "grid w-full grid-cols-3 lg:grid-cols-7 max-w-full"}>
-        <TabsTrigger value="guide">
-          <Sparkle className="mr-2" size={16} />
-          Guide
-        </TabsTrigger>
-        <TabsTrigger value="packages">
-          <Package className="mr-2" size={16} />
-          Packages
-        </TabsTrigger>
-        <TabsTrigger value="pages">
-          <MapTrifold className="mr-2" size={16} />
-          Page Routes
-        </TabsTrigger>
-        <TabsTrigger value="hierarchy">
-          <Tree className="mr-2" size={16} />
-          Components
-        </TabsTrigger>
-        <TabsTrigger value="users">
-          <Users className="mr-2" size={16} />
-          Users
-        </TabsTrigger>
-        <TabsTrigger value="schemas">
-          <DatabaseIcon className="mr-2" size={16} />
-          Schemas
-        </TabsTrigger>
-        {nerdMode && (
-          <>
-            <TabsTrigger value="workflows">
-              <Lightning className="mr-2" size={16} />
-              Workflows
-            </TabsTrigger>
-            <TabsTrigger value="lua">
-              <Code className="mr-2" size={16} />
-              Lua Scripts
-            </TabsTrigger>
-            <TabsTrigger value="blocks">
-              <SquaresFour className="mr-2" size={16} />
-              Lua Blocks
-            </TabsTrigger>
-            <TabsTrigger value="snippets">
-              <BookOpen className="mr-2" size={16} />
-              Snippets
-            </TabsTrigger>
-            <TabsTrigger value="css">
-              <Palette className="mr-2" size={16} />
-              CSS Classes
-            </TabsTrigger>
-            <TabsTrigger value="dropdowns">
-              <ListDashes className="mr-2" size={16} />
-              Dropdowns
-            </TabsTrigger>
-            <TabsTrigger value="database">
-              <HardDrives className="mr-2" size={16} />
-              Database
-            </TabsTrigger>
-          </>
-        )}
-        <TabsTrigger value="settings">
-          <Gear className="mr-2" size={16} />
-          Settings
-        </TabsTrigger>
-        <TabsTrigger value="errorlogs">
-          <Warning className="mr-2" size={16} />
-          Error Logs
-        </TabsTrigger>
+        {visibleTabs.map((tab) => (
+          <TabsTrigger key={tab.value} value={tab.value}>
+            <tab.icon className="mr-2" size={16} />
+            {tab.label}
+          </TabsTrigger>
+        ))}
       </TabsList>
 
-      <TabsContent value="guide" className="space-y-6">
-        <QuickGuide />
-      </TabsContent>
-
-      <TabsContent value="packages" className="space-y-6">
-        <PackageManager />
-      </TabsContent>
-
-      <TabsContent value="pages" className="space-y-6">
-        <PageRoutesManager />
-      </TabsContent>
-
-      <TabsContent value="hierarchy" className="space-y-6">
-        <ComponentHierarchyEditor nerdMode={nerdMode} />
-      </TabsContent>
-
-      <TabsContent value="users" className="space-y-6">
-        <UserManagement />
-      </TabsContent>
-
-      <TabsContent value="schemas" className="space-y-6">
-        <SchemaEditorLevel4
-          schemas={appConfig.schemas}
+      {level4TabsConfig.map((tab) => (
+        <TabContent
+          key={tab.value}
+          tab={tab}
+          appConfig={appConfig}
+          user={user}
+          nerdMode={nerdMode}
           onSchemasChange={onSchemasChange}
+          onWorkflowsChange={onWorkflowsChange}
+          onLuaScriptsChange={onLuaScriptsChange}
         />
-      </TabsContent>
-
-      {nerdMode && (
-        <>
-          <TabsContent value="workflows" className="space-y-6">
-            <WorkflowEditor
-              workflows={appConfig.workflows}
-              onWorkflowsChange={onWorkflowsChange}
-              scripts={appConfig.luaScripts}
-            />
-          </TabsContent>
-
-          <TabsContent value="lua" className="space-y-6">
-            <LuaEditor
-              scripts={appConfig.luaScripts}
-              onScriptsChange={onLuaScriptsChange}
-            />
-          </TabsContent>
-
-          <TabsContent value="blocks" className="space-y-6">
-            <LuaBlocksEditor
-              scripts={appConfig.luaScripts}
-              onScriptsChange={onLuaScriptsChange}
-            />
-          </TabsContent>
-
-          <TabsContent value="snippets" className="space-y-6">
-            <LuaSnippetLibrary />
-          </TabsContent>
-
-          <TabsContent value="css" className="space-y-6">
-            <CssClassManager />
-          </TabsContent>
-
-          <TabsContent value="dropdowns" className="space-y-6">
-            <DropdownConfigManager />
-          </TabsContent>
-
-          <TabsContent value="database" className="space-y-6">
-            <DatabaseManager />
-          </TabsContent>
-        </>
-      )}
-
-      <TabsContent value="settings" className="space-y-6">
-        <GodCredentialsSettings />
-        <ThemeEditor />
-        <SMTPConfigEditor />
-      </TabsContent>
-
-      <TabsContent value="errorlogs" className="space-y-6">
-        <ErrorLogsTab user={user} />
-      </TabsContent>
+      ))}
     </Tabs>
   )
 }
