@@ -4,7 +4,7 @@ import type { ErrorLog } from '../types'
 /**
  * Get all error logs from database
  */
-export async function getErrorLogs(options?: { limit?: number; level?: string; resolved?: boolean }): Promise<ErrorLog[]> {
+export async function getErrorLogs(options?: { limit?: number; level?: string; resolved?: boolean; tenantId?: string }): Promise<ErrorLog[]> {
   const adapter = getAdapter()
   const result = await adapter.list('ErrorLog')
   
@@ -30,6 +30,9 @@ export async function getErrorLogs(options?: { limit?: number; level?: string; r
   }
   if (options?.resolved !== undefined) {
     logs = logs.filter(log => log.resolved === options.resolved)
+  }
+  if (options?.tenantId) {
+    logs = logs.filter(log => log.tenantId === options.tenantId)
   }
 
   // Sort by timestamp descending (newest first)
