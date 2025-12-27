@@ -1,20 +1,32 @@
 // Atoms - Basic building blocks
 // These are the smallest, indivisible UI components that form the foundation
 
-// New MUI-based atoms
-export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './Button'
-export { Input, type InputProps } from './Input'
-export { Label, type LabelProps } from './Label'
-export { Badge, type BadgeProps, type BadgeVariant } from './Badge'
-export { Checkbox, type CheckboxProps } from './Checkbox'
-export { Switch, type SwitchProps } from './Switch'
-export { Avatar, AvatarGroup, AvatarFallback, AvatarImage, type AvatarProps, type AvatarSize } from './Avatar'
-export { Skeleton, type SkeletonProps } from './Skeleton'
-export { Separator, type SeparatorProps } from './Separator'
-export { Progress, CircularProgress, type ProgressProps } from './Progress'
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, type TooltipProps } from './Tooltip'
-export { Spinner, type SpinnerProps, type SpinnerSize } from './Spinner'
-export { IconButton, type IconButtonProps, type IconButtonSize } from './IconButton'
+// Controls
+export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './controls/Button'
+export { Checkbox, type CheckboxProps } from './controls/Checkbox'
+export { Switch, type SwitchProps } from './controls/Switch'
+export { Radio, type RadioProps } from './controls/Radio'
+
+// Inputs
+export { Input, type InputProps } from './inputs/Input'
+export { TextArea, type TextAreaProps } from './inputs/TextArea'
+export { Select, type SelectProps, type SelectOption } from './inputs/Select'
+
+// Display
+export { Label, type LabelProps } from './display/Label'
+export { Badge, type BadgeProps, type BadgeVariant } from './display/Badge'
+export { Avatar, AvatarGroup, AvatarFallback, AvatarImage, type AvatarProps, type AvatarSize } from './display/Avatar'
+export { IconButton, type IconButtonProps, type IconButtonSize } from './display/IconButton'
+export { Icon, type IconProps, type IconName, type IconSize } from './display/Icon'
+export { Link, type LinkProps } from './display/Link'
+export { Text, type TextProps, type TextVariant, type TextWeight, type TextAlign } from './display/Text'
+
+// Feedback
+export { Skeleton, type SkeletonProps } from './feedback/Skeleton'
+export { Separator, type SeparatorProps } from './feedback/Separator'
+export { Progress, CircularProgress, type ProgressProps } from './feedback/Progress'
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, type TooltipProps } from './feedback/Tooltip'
+export { Spinner, type SpinnerProps, type SpinnerSize } from './feedback/Spinner'
 
 // Legacy exports (for backward compatibility during migration)
 export * from '../ui/slider'
