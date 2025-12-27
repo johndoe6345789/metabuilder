@@ -43,20 +43,32 @@ Now it only runs when the `deploy-production` job actually fails.
 
 A script was created to close the duplicate issues: `scripts/triage-duplicate-issues.sh`
 
-**To run the script:**
+**The script now dynamically finds and closes duplicates:**
 
 ```bash
 # Set your GitHub token (needs repo write access)
 export GITHUB_TOKEN="your_github_token_here"
 
-# Run the script
+# Run the script (uses default search pattern)
+./scripts/triage-duplicate-issues.sh
+
+# Or with a custom search pattern
+export SEARCH_TITLE="Your custom issue title pattern"
 ./scripts/triage-duplicate-issues.sh
 ```
 
-The script will:
-1. Add an explanatory comment to each duplicate issue
-2. Close the issue with state_reason "not_planned"
-3. Keep issue #124 and #24 open
+**The script will:**
+1. Search for all open issues matching the title pattern using GitHub API
+2. Sort issues by creation date (newest first)
+3. Keep the most recent issue open
+4. Add an explanatory comment to each older duplicate issue
+5. Close duplicate issues with state_reason "not_planned"
+
+**Key Features:**
+- ✅ Dynamic duplicate detection (no hardcoded issue numbers)
+- ✅ Automatically keeps the most recent issue open
+- ✅ Configurable search pattern via environment variable
+- ✅ Uses GitHub API search for accurate results
 
 ## Issues Closed
 
