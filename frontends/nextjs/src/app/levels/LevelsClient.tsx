@@ -72,7 +72,7 @@ export default function LevelsClient() {
 
         <Grid container spacing={3}>
           {PERMISSION_LEVELS.map((level) => (
-            <Grid item xs={12} md={6} lg={4} key={level.id}>
+            <Grid item xs={12} md={6} lg={4} key={level.id} component="div">
               <Paper
                 onClick={() => handleSelect(level.id)}
                 sx={{
