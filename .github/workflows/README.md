@@ -25,6 +25,17 @@ All PRs must pass through 5 sequential gates:
 - ✅ Clear visibility of gate status on PRs
 - ✅ Audit trail for all deployments
 
+### Legacy Workflow Cleanup
+
+**Deprecated and Removed (Dec 2025):**
+- ❌ `ci/ci.yml` - Replaced by `gated-ci.yml` (100% redundant)
+- ❌ `quality/deployment.yml` - Replaced by `gated-deployment.yml` (100% redundant)
+
+**Modified:**
+- ⚡ `development.yml` - Refactored to remove redundant quality checks, kept unique Copilot features
+
+See [Legacy Pipeline Cruft Report](../../docs/LEGACY_PIPELINE_CRUFT_REPORT.md) for analysis.
+
 ## 🤖 GitHub Copilot Integration
 
 All workflows are designed to work seamlessly with **GitHub Copilot** to assist throughout the Software Development Lifecycle:
@@ -75,7 +86,13 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 
 ### 🔄 Legacy Workflows (Still Active)
 
-#### 3. CI/CD Workflow (`ci.yml`)
+#### 3. CI/CD Workflow (`ci/ci.yml`) - ❌ REMOVED
+**Status:** Deprecated and removed (Dec 2025)  
+**Reason:** 100% functionality superseded by `gated-ci.yml`
+
+**Jobs:** ~~Prisma Check, Lint, Build, E2E Tests, Quality Check~~
+
+**Replacement:** Use `gated-ci.yml` for all CI/CD operations
 **Triggered on:** Push to main/master/develop branches, Pull requests
 
 **Jobs:**
@@ -163,33 +180,26 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 
 **SDLC Phase:** Planning & Design
 
-### 10. Development Assistance (`development.yml`) 🆕
-**Triggered on:** Push to feature branches, PR updates, @copilot mentions
+### 10. Development Assistance (`development.yml`) 🆕 - Refactored
+**Triggered on:** Pull request updates, @copilot mentions
 
 **Features:**
-- **Continuous Quality Feedback**: Real-time code metrics and architectural compliance
-- **Declarative Ratio Tracking**: Monitors JSON/Lua vs TypeScript balance
-- **Component Size Monitoring**: Flags components exceeding 150 LOC
-- **Refactoring Suggestions**: Identifies opportunities for improvement
+- **Architectural Compliance Feedback**: Monitors declarative ratio and component sizes
 - **@copilot Interaction Handler**: Responds to @copilot mentions with context-aware guidance
+- **Refactoring Suggestions**: Identifies opportunities for improvement
 - Provides architectural reminders and best practices
-- Suggests generic renderers over hardcoded components
+
+**Note:** Refactored to remove redundant quality checks (lint/build now in gated-ci.yml)
 
 **SDLC Phase:** Development
 
-### 11. Deployment & Monitoring (`deployment.yml`) 🆕
-**Triggered on:** Push to main, releases, manual workflow dispatch
+### 11. Deployment & Monitoring (`deployment.yml`) - ❌ REMOVED
+**Status:** Deprecated and removed (Dec 2025)  
+**Reason:** 100% functionality superseded by `gated-deployment.yml` with improvements
 
-**Features:**
-- **Pre-Deployment Validation**: Schema validation, security audit, package size check
-- **Breaking Change Detection**: Identifies breaking commits
-- **Deployment Summary**: Generates release notes with categorized changes
-- **Post-Deployment Health Checks**: Verifies build integrity and critical files
-- **Deployment Tracking Issues**: Creates monitoring issues for releases
-- **Security Dependency Audit**: Detects and reports vulnerabilities
-- Auto-creates security issues for critical vulnerabilities
+**Jobs:** ~~Pre-Deployment Validation, Deployment Summary, Post-Deployment Health Checks~~
 
-**SDLC Phase:** Deployment & Operations
+**Replacement:** Use `gated-deployment.yml` for all deployment operations
 
 ### 12. Code Size Limits (`size-limits.yml`)
 **Triggered on:** Pull requests, pushes to main (when source files change)
