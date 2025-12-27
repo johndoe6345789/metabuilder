@@ -163,8 +163,8 @@ await createLuaScript(store, {
 C++ (per-entity modules + shared store):
 
 ```
-dbal/cpp/src/entities/<entity>/*.hpp
-dbal/cpp/src/store/in_memory_store.hpp
+dbal/production/src/entities/<entity>/*.hpp
+dbal/production/src/store/in_memory_store.hpp
 ```
 
 ## Usage Examples
@@ -389,7 +389,7 @@ Ensure path aliases are configured:
 ```typescript
 // Should work
 import { dbal } from '@/lib/dbal-integration'
-import { DBALClient } from '@/dbal/ts/src'
+import { DBALClient } from '@/dbal/development/src'
 ```
 
 ### Type errors
@@ -420,8 +420,8 @@ The in-memory adapter stores data in browser memory:
 ## Related Documentation
 
 TODO: Fix related doc links (deployments path and local implementation docs).
-- [C++ DBAL Documentation](../dbal/cpp/README.md)
-- [TypeScript DBAL Documentation](../dbal/ts/README.md)
+- [C++ DBAL Documentation](../dbal/production/README.md)
+- [TypeScript DBAL Documentation](../dbal/development/README.md)
 - [Docker Deployment](../deployment/README.md)
 - [Multi-Tenant System](../MULTI_TENANT_SYSTEM.md)
 - [Blob Storage](../BLOB_STORAGE_IMPLEMENTATION.md)

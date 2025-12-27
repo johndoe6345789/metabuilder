@@ -4,38 +4,38 @@
 Native C++ implementation of the DBAL system for high-performance database access.
 
 ## Location
-[/dbal/cpp/](/dbal/cpp/)
+[/dbal/production/](/dbal/production/)
 
 ## Key Components
 
 ### Source Code
-- **Path**: [/dbal/cpp/src/](/dbal/cpp/src/)
+- **Path**: [/dbal/production/src/](/dbal/production/src/)
 - **Purpose**: C++ source implementation
 - **Includes**: Core classes, algorithms, and business logic
 
 ### Headers
-- **Path**: [/dbal/cpp/include/](/dbal/cpp/include/)
+- **Path**: [/dbal/production/include/](/dbal/production/include/)
 - **Purpose**: C++ header files and public API definitions
 
 ### Tests
-- **Path**: [/dbal/cpp/tests/](/dbal/cpp/tests/)
+- **Path**: [/dbal/production/tests/](/dbal/production/tests/)
 - **Purpose**: Unit and integration tests for C++ code
 
 ## Build System
-- CMake configuration: [/dbal/cpp/CMakeLists.txt](/dbal/cpp/CMakeLists.txt)
-- Conan dependencies: [/dbal/cpp/conanfile.txt](/dbal/cpp/conanfile.txt)
+- CMake configuration: [/dbal/production/CMakeLists.txt](/dbal/production/CMakeLists.txt)
+- Conan dependencies: [/dbal/production/conanfile.txt](/dbal/production/conanfile.txt)
 
 ## Documentation
-- [README](/dbal/cpp/README.md)
-- [Linting Guide](/dbal/cpp/README.Linting.md)
-- [Docker Setup](/dbal/cpp/README.Docker.md)
-- [Security Testing](/dbal/cpp/SECURITY_TESTING.md)
-- [CVE Analysis](/dbal/cpp/CVE_ANALYSIS.md)
+- [README](/dbal/production/README.md)
+- [Linting Guide](/dbal/production/README.Linting.md)
+- [Docker Setup](/dbal/production/README.Docker.md)
+- [Security Testing](/dbal/production/SECURITY_TESTING.md)
+- [CVE Analysis](/dbal/production/CVE_ANALYSIS.md)
 
 ## Building
 
 ```bash
-cd dbal/cpp
+cd dbal/production
 mkdir build
 cd build
 cmake ..

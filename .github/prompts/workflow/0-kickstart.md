@@ -4,7 +4,7 @@ Use this as the default workflow when starting work in this repo.
 
 ## Workflow
 1. Skim `docs/START_HERE.md` (if new), `docs/INDEX.md`, and relevant items in `docs/todo/`.
-2. Check for scoped rules in nested `AGENTS.md` files (e.g. `dbal/AGENTS.md`) before editing those areas.
+2. Check for scoped rules in nested `AGENTS.md` files (e.g. `dbal/docs/AGENTS.md`) before editing those areas.
 3. Use the prompts in `.github/prompts/` as needed:
    - Plan: `1-plan-feature.prompt.md`
    - Design: `2-design-component.prompt.md`
@@ -19,7 +19,7 @@ Use this as the default workflow when starting work in this repo.
 ## Where Work Lives
 - Next.js app: `frontends/nextjs/` (source in `src/`, E2E in `e2e/`, local scripts in `scripts/`).
 - Component packages: `packages/` (seed JSON under `packages/*/seed/`, optional `static_content/`, schema checks in `packages/*/tests/`).
-- DBAL: `dbal/` (TypeScript library in `dbal/ts/`).
+- DBAL: `dbal/` (TypeScript library in `dbal/development/`).
 - Prisma schema/migrations: `prisma/` (`schema.prisma`, `migrations/`).
 - Shared config: `config/` (symlinked into `frontends/nextjs/`).
 - Repo utilities: `tools/` (quality checks, workflow helpers, code analysis).
@@ -41,7 +41,7 @@ Run app workflows from `frontends/nextjs/`:
   - Validate: `npx prisma validate`
 - Coverage output: `frontends/nextjs/coverage/`
 
-DBAL workflows live in `dbal/ts/` (`npm run build`, `npm run test:unit`).
+DBAL workflows live in `dbal/development/` (`npm run build`, `npm run test:unit`).
 
 ## Source + Tests
 - TypeScript + ESM. Prefer `@/…` imports inside `frontends/nextjs/src/`.

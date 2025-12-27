@@ -39,6 +39,9 @@ Complex UI sections that combine atoms and molecules into complete features. Bui
 - `PackageManager` - Package management
 - `AuditLogViewer` - Audit log display
 
+### Security Components
+- `SecurityWarningDialog` - Security scan results dialog with severity classification
+
 ## Usage
 
 ```typescript
