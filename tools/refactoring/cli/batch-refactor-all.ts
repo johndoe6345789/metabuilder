@@ -8,43 +8,7 @@
 import { BulkLambdaRefactor } from '../bulk-lambda-refactor'
 import * as fs from 'fs/promises'
 import * as path from 'path'
-
-interface FileToRefactor {
-  path: string
-  lines: number
-  category: string
-  priority: 'high' | 'medium' | 'low'
-}
-
-async function loadFilesFromReport(): Promise<FileToRefactor[]> {
-  const reportPath = path.join(process.cwd(), 'docs/todo/LAMBDA_REFACTOR_PROGRESS.md')
-  const content = await fs.readFile(reportPath, 'utf-8')
-  
-  const files: FileToRefactor[] = []
-  const lines = content.split('\n')
-  
-  let currentPriority: 'high' | 'medium' | 'low' = 'high'
-  
-  for (const line of lines) {
-    if (line.includes('### High Priority')) currentPriority = 'high'
-    else if (line.includes('### Medium Priority')) currentPriority = 'medium'
-    else if (line.includes('### Low Priority')) currentPriority = 'low'
-    else if (line.includes('### Skipped')) break
-    
-    // Match checklist items: - [ ] `path/to/file.ts` (123 lines)
-    const match = line.match(/- \[ \] `([^`]+)` \((\d+) lines\)/)
-    if (match) {
-      files.push({
-        path: match[1],
-        lines: parseInt(match[2], 10),
-        category: currentPriority,
-        priority: currentPriority,
-      })
-    }
-  }
-  
-  return files
-}
+import { loadFilesFromReport } from './utils/load-files-from-report'
 
 async function main() {
   const args = process.argv.slice(2)
