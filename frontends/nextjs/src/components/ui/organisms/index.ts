@@ -74,7 +74,7 @@ export {
   PaginationEllipsis,
   PaginationPrevious,
   PaginationNext,
-} from './navigation/Pagination'
+} from './navigation/pagination'
 
 // Navigation
 export {
