@@ -78,6 +78,8 @@ jobs:
 
       - name: Validate database schema
         run: bunx prisma validate
+        env:
+          DATABASE_URL: file:./dev.db
 
       - name: Check for breaking changes
         id: breaking
