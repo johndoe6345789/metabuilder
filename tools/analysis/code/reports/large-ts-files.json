@@ -14,7 +14,7 @@
   ],
   "scanned": 1381,
   "overLimit": 106,
-  "timestamp": "2025-12-27T15:30:28.307Z",
+  "timestamp": "2025-12-27T15:33:16.258Z",
   "files": [
     {
       "path": "frontends/nextjs/src/lib/packages/core/package-catalog.ts",
