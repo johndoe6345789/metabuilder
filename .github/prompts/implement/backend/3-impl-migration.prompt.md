@@ -36,4 +36,4 @@ static async getNewEntities(filter: { tenantId: string }) {
 ```
 
 ## 4. Update DBAL (if applicable)
-Add entity to `dbal/api/schema/entities/`
+Add entity to `dbal/shared/api/schema/entities/`

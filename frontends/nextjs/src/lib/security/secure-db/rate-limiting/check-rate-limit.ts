@@ -1,4 +1,4 @@
-import { getRateLimitConfig, rateLimitMap } from './rate-limit-store'
+import { getRateLimitConfig, rateLimitMap } from './store/rate-limit-store'
 
 /**
  * Check if user is within rate limits

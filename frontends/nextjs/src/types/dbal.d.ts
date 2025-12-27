@@ -1,12 +1,12 @@
 /**
  * DBAL type stubs
  * These types are used when the full DBAL module is not available
- * The actual implementation lives in ../../dbal/ts/src
+ * The actual implementation lives in ../../dbal/development/src
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-declare module '@/dbal/ts/src' {
+declare module '@/dbal/development/src' {
   export interface DBALConfig {
     mode?: 'development' | 'production'
     adapter?: string
@@ -67,7 +67,7 @@ declare module '@/dbal/ts/src' {
   }
 }
 
-declare module '@/dbal/ts/src/core/types' {
+declare module '@/dbal/development/src/core/types' {
   export interface User {
     id: string
     email: string
@@ -77,7 +77,7 @@ declare module '@/dbal/ts/src/core/types' {
   }
 }
 
-declare module '@/dbal/ts/src/core/tenant-context' {
+declare module '@/dbal/development/src/core/tenant-context' {
   export interface TenantContext {
     tenantId: string
     userId?: string
@@ -91,8 +91,8 @@ declare module '@/dbal/ts/src/core/tenant-context' {
   }
 }
 
-declare module '@/dbal/ts/src/core/kv-store' {
-  import type { TenantContext } from '@/dbal/ts/src/core/tenant-context'
+declare module '@/dbal/development/src/core/kv-store' {
+  import type { TenantContext } from '@/dbal/development/src/core/tenant-context'
 
   export class InMemoryKVStore {
     get<T>(key: string, context?: TenantContext): Promise<T | null>
@@ -103,7 +103,7 @@ declare module '@/dbal/ts/src/core/kv-store' {
   }
 }
 
-declare module '@/dbal/ts/src/blob' {
+declare module '@/dbal/development/src/blob' {
   export interface BlobStorageConfig {
     type: 'filesystem' | 'memory' | 's3'
     basePath?: string
@@ -138,9 +138,9 @@ declare module '@/dbal/ts/src/blob' {
   export function createBlobStorage(config: BlobStorageConfig): BlobStorage
 }
 
-declare module '@/dbal/ts/src/blob/tenant-aware-storage' {
-  import type { BlobStorage, BlobMetadata, BlobListResult } from '@/dbal/ts/src/blob'
-  import type { InMemoryTenantManager } from '@/dbal/ts/src/core/tenant-context'
+declare module '@/dbal/development/src/blob/tenant-aware-storage' {
+  import type { BlobStorage, BlobMetadata, BlobListResult } from '@/dbal/development/src/blob'
+  import type { InMemoryTenantManager } from '@/dbal/development/src/core/tenant-context'
   
   export class TenantAwareBlobStorage implements BlobStorage {
     constructor(storage: BlobStorage, tenantManager: InMemoryTenantManager, ...args: any[])

@@ -31,7 +31,7 @@ From repo root: `cd frontends/nextjs` (or from `docs/todo/`: `cd ../../frontends
 
 - [ ] `npm ci` (or `npm install`)
 - [ ] `npm run typecheck`
-- [ ] `npm run lint`
+- [x] `npm run lint` (commit 04ba8e8)
 - [ ] `npm run test:unit`
 - [ ] `npm run build`
 

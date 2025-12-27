@@ -5,7 +5,7 @@ import { Alert, AlertDescription } from '@/components/ui'
 import Editor from '@monaco-editor/react'
 import { FloppyDisk, X, ShieldCheck, Warning } from '@phosphor-icons/react'
 import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
-import { SecurityWarningDialog } from '@/components/SecurityWarningDialog'
+import { SecurityWarningDialog } from '@/components/organisms/security/SecurityWarningDialog'
 import { toast } from 'sonner'
 
 interface CodeEditorProps {

@@ -3,14 +3,14 @@
 // ========================================
 
 // Theme & Variables
-@use './styles/theme.scss' as *;
+@use './styles/core/theme.scss' as *;
 @use './styles/variables.scss' as *;
 
 // Utilities
-@use './styles/mixins.scss' as *;
+@use './styles/core/_mixins.scss' as *;
 
 // Global Styles
-@use './styles/base.scss' as *;
+@use './styles/core/_base.scss' as *;
 
 // Components
-@use './styles/components.scss' as *;
+@use './styles/core/_components.scss' as *;
