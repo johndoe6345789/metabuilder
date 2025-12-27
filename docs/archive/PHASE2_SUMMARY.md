@@ -99,17 +99,17 @@ MetaBuilder App
 
 ## File Locations
 
-- **DBAL Source**: `dbal/ts/src/`
+- **DBAL Source**: `dbal/development/src/`
 - **Documentation**: `dbal/*.md`
 - **Integration Helper**: `src/lib/dbal-client.ts`
-- **TypeScript Types**: `dbal/ts/src/core/types.ts`
+- **TypeScript Types**: `dbal/development/src/core/types.ts`
 
 ## Documentation
 
 📖 **Start Here**: `dbal/QUICK_START.md`
 📚 **Full Guide**: `dbal/PHASE2_IMPLEMENTATION.md`
 🏗️ **Architecture**: `dbal/README.md`
-🚀 **Future**: `dbal/cpp/PHASE3_DAEMON.md`
+🚀 **Future**: `dbal/production/PHASE3_DAEMON.md`
 
 ## Performance
 

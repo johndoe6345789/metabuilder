@@ -200,7 +200,7 @@ dbal/
 
 ```typescript
 import { getDBALClient } from '@/lib/dbal-client'
-import { DBALError, DBALErrorCode } from '../../dbal/ts/src'
+import { DBALError, DBALErrorCode } from '../../dbal/development/src'
 
 // Get client with auth
 const client = getDBALClient(currentUser, session)
@@ -385,7 +385,7 @@ const client = new DBALClient({
 - 📖 **Quick Start**: `dbal/QUICK_START.md` - Get started in 5 minutes
 - 📚 **Implementation Guide**: `dbal/PHASE2_IMPLEMENTATION.md` - Complete details
 - 🏗️ **Architecture**: `dbal/README.md` - System overview
-- 🚀 **Future Plans**: `dbal/cpp/PHASE3_DAEMON.md` - Phase 3 specification
+- 🚀 **Future Plans**: `dbal/production/PHASE3_DAEMON.md` - Phase 3 specification
 - 🤖 **AI Agent Guide**: `dbal/AGENTS.md` - For automated tools
 
 ## Success Criteria ✅

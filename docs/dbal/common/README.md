@@ -4,7 +4,7 @@
 Shared utilities and common code for the DBAL system.
 
 ## Location
-[/dbal/common/](/dbal/common/)
+[/dbal/shared/common/](/dbal/shared/common/)
 
 ## Purpose
 Contains common interfaces, utilities, and base classes used across all DBAL backends and implementations.

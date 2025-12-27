@@ -59,7 +59,7 @@ A complete, production-ready DBAL system that works entirely within GitHub Spark
 - Testing guidelines
 - Migration path from current system
 
-#### Phase 3 Daemon Specification (`dbal/cpp/PHASE3_DAEMON.md`) ✅
+#### Phase 3 Daemon Specification (`dbal/production/PHASE3_DAEMON.md`) ✅
 - C++ daemon architecture
 - Security hardening guidelines
 - Deployment options (Docker, Kubernetes, systemd)
@@ -128,7 +128,7 @@ A complete, production-ready DBAL system that works entirely within GitHub Spark
 ### API Definition (Language-Agnostic)
 
 ```
-dbal/api/schema/
+dbal/shared/api/schema/
 ├── entities/               # 8 entity definitions
 │   ├── user.yaml
 │   ├── credential.yaml
@@ -150,7 +150,7 @@ dbal/api/schema/
 ### TypeScript Implementation
 
 ```
-dbal/ts/
+dbal/development/
 ├── package.json
 ├── tsconfig.json
 └── src/
@@ -168,7 +168,7 @@ dbal/ts/
 ### C++ Implementation
 
 ```
-dbal/cpp/
+dbal/production/
 ├── CMakeLists.txt         # Build system
 ├── include/dbal/          # Public headers
 │   ├── dbal.hpp
@@ -192,7 +192,7 @@ dbal/backends/
 ### Tools & Scripts
 
 ```
-dbal/tools/
+dbal/shared/tools/
 ├── codegen/
 │   └── gen_types.py       # Generate TS/C++ types from YAML
 └── conformance/
@@ -219,7 +219,7 @@ dbal/
 ### Conformance Tests
 
 ```
-dbal/common/contracts/
+dbal/shared/common/contracts/
 └── conformance_cases.yaml # Shared test vectors
 ```
 

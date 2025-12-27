@@ -54,7 +54,7 @@ The C++ daemon provides a secure, sandboxed database access layer that isolates 
               └───────────────┘
 ```
 
-> **Phase 3 status:** The diagrams above describe the future state; the current C++ build still wires to the in-memory store (`dbal/cpp/src/store/in_memory_store.hpp`), so the PostgreSQL/MySQL adapters shown here are aspirational and not shipped yet. Rely on the TypeScript `PrismaAdapter`, `PostgresAdapter`, or `MySQLAdapter` for production workloads today.
+> **Phase 3 status:** The diagrams above describe the future state; the current C++ build still wires to the in-memory store (`dbal/production/src/store/in_memory_store.hpp`), so the PostgreSQL/MySQL adapters shown here are aspirational and not shipped yet. Rely on the TypeScript `PrismaAdapter`, `PostgresAdapter`, or `MySQLAdapter` for production workloads today.
 
 ## Security Features
 
@@ -105,7 +105,7 @@ The C++ daemon provides a secure, sandboxed database access layer that isolates 
 
 ### Building
 ```bash
-cd dbal/cpp
+cd dbal/production
 mkdir build && cd build
 cmake ..
 make -j$(nproc)

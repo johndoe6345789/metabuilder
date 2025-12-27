@@ -415,7 +415,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: cd dbal/ts && npm ci
+      - run: cd dbal/development && npm ci
       - run: npm run test:unit
       - run: npm run test:integration
       
@@ -423,7 +423,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: cd dbal/cpp && cmake -B build && cmake --build build
+      - run: cd dbal/production && cmake -B build && cmake --build build
       - run: ./build/tests/unit_tests
       - run: ./build/tests/integration_tests
       
@@ -432,7 +432,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: python dbal/tools/conformance/run_all.py
+      - run: python dbal/shared/tools/conformance/run_all.py
 ```
 
 ### Pre-commit Hooks
@@ -440,7 +440,7 @@ jobs:
 ```bash
 # .git/hooks/pre-commit
 #!/bin/bash
-cd dbal/api/schema
+cd dbal/shared/api/schema
 if git diff --cached --name-only | grep -q "\.yaml$"; then
     echo "YAML schema changed, regenerating types..."
     python ../../tools/codegen/gen_types.py
@@ -510,7 +510,7 @@ version: '3.8'
 
 services:
   dbal-daemon:
-    build: ./dbal/cpp
+    build: ./dbal/production
     container_name: dbal-daemon
     ports:
       - "50051:50051"

@@ -120,7 +120,7 @@ $ npm run cpp:full
 ### Test Results
 
 ```
-Test project /home/runner/work/metabuilder/metabuilder/dbal/cpp/build
+Test project /home/runner/work/metabuilder/metabuilder/dbal/production/build
     Start 1: client_test
 1/4 Test #1: client_test ......................   Passed    0.00 sec
     Start 2: query_test
@@ -222,24 +222,24 @@ Options:
 ## Files Changed
 
 ### New Files (23)
-- `dbal/cpp/include/dbal/adapters/adapter.hpp`
-- `dbal/cpp/src/*.cpp` (3 files)
-- `dbal/cpp/src/query/*.cpp` (3 files)
-- `dbal/cpp/src/util/*.cpp` (2 files)
-- `dbal/cpp/src/adapters/sqlite/*.cpp` (2 files)
-- `dbal/cpp/src/daemon/*.cpp` (3 files)
-- `dbal/cpp/tests/**/*.cpp` (4 files)
-- `dbal/tools/cpp-build-assistant.cjs` (renamed from .js)
-- `dbal/cpp/.gitignore` (added build/ directory)
+- `dbal/production/include/dbal/adapters/adapter.hpp`
+- `dbal/production/src/*.cpp` (3 files)
+- `dbal/production/src/query/*.cpp` (3 files)
+- `dbal/production/src/util/*.cpp` (2 files)
+- `dbal/production/src/adapters/sqlite/*.cpp` (2 files)
+- `dbal/production/src/daemon/*.cpp` (3 files)
+- `dbal/production/tests/**/*.cpp` (4 files)
+- `dbal/shared/tools/cpp-build-assistant.cjs` (renamed from .js)
+- `dbal/production/.gitignore` (added build/ directory)
 
 ### Modified Files (5)
 - `.github/workflows/cpp-build.yml` - Updated file references
-- `dbal/cpp/CMakeLists.txt` - Optional dependencies, separate tests
-- `dbal/cpp/conanfile.txt` - Fixed Conan 2.x format
+- `dbal/production/CMakeLists.txt` - Optional dependencies, separate tests
+- `dbal/production/conanfile.txt` - Fixed Conan 2.x format
 - `package.json` - Updated npm scripts to use .cjs
 
 ### Deleted Files (1)
-- `dbal/tools/cpp-build-assistant.js` (renamed to .cjs)
+- `dbal/shared/tools/cpp-build-assistant.js` (renamed to .cjs)
 
 ## Implementation Details
 

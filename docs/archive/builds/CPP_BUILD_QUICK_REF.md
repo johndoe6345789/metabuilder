@@ -101,7 +101,7 @@ npm run cpp:build
 
 ### After adding dependency
 ```bash
-# 1. Edit dbal/cpp/conanfile.txt
+# 1. Edit dbal/production/conanfile.txt
 # 2. Run:
 npm run cpp:install
 npm run cpp:configure
@@ -123,7 +123,7 @@ npm run cpp:test
 ## 📚 Documentation
 
 - [Full Guide](./CPP_BUILD_ASSISTANT.md)
-- [Tool README](../dbal/tools/BUILD_ASSISTANT_README.md)
+- [Tool README](../dbal/shared/tools/BUILD_ASSISTANT_README.md)
 - [DBAL Architecture](../dbal/PROJECT.md)
 
 ## 🎯 What It Does

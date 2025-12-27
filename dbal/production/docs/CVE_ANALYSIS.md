@@ -2,11 +2,11 @@
 
 ## Migration Note (Drogon)
 
-The custom HTTP server previously implemented in `dbal/cpp/src/daemon/server.cpp` has been replaced with **Drogon** to reduce CVE exposure and avoid bespoke HTTP parsing. The findings below apply to the **legacy server** and are retained for historical reference.
+The custom HTTP server previously implemented in `dbal/production/src/daemon/server.cpp` has been replaced with **Drogon** to reduce CVE exposure and avoid bespoke HTTP parsing. The findings below apply to the **legacy server** and are retained for historical reference.
 
 ## Executive Summary
 
-This document analyzes the HTTP server implementation in `dbal/cpp/src/daemon/server.cpp` against common CVE patterns from 2020-2024. Multiple vulnerabilities have been identified that match patterns from well-known CVEs affecting production HTTP servers.
+This document analyzes the HTTP server implementation in `dbal/production/src/daemon/server.cpp` against common CVE patterns from 2020-2024. Multiple vulnerabilities have been identified that match patterns from well-known CVEs affecting production HTTP servers.
 
 ## CVE Patterns Analyzed
 
@@ -262,7 +262,7 @@ This suite tests all identified vulnerability patterns and verifies fixes.
 ### Running Security Tests
 
 ```bash
-cd dbal/cpp/build
+cd dbal/production/build
 ./http_server_security_test
 ```
 

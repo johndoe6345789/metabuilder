@@ -23,7 +23,7 @@ The C++ DBAL implementation is currently in the **planning phase**. The followin
 ## Why CI is Skipped
 
 The GitHub Actions workflow includes a **check-implementation** job that:
-1. Checks if `dbal/cpp/src/` directory exists
+1. Checks if `dbal/production/src/` directory exists
 2. Verifies at least one `.cpp` file is present
 3. Sets `has_sources=false` if implementation is missing
 4. Skips all build/test jobs when sources don't exist
@@ -67,12 +67,12 @@ When you're ready to implement the C++ codebase:
 
 1. **Create the src directory**:
    ```bash
-   mkdir -p dbal/cpp/src/{query,util,adapters/sqlite,daemon}
+   mkdir -p dbal/production/src/{query,util,adapters/sqlite,daemon}
    ```
 
 2. **Create a minimal main.cpp to test the build**:
    ```bash
-   cat > dbal/cpp/src/daemon/main.cpp << 'EOF'
+   cat > dbal/production/src/daemon/main.cpp << 'EOF'
 #include <iostream>
 int main() {
     std::cout << "DBAL Daemon v0.1.0" << std::endl;
@@ -107,8 +107,8 @@ EOF
 ## Questions?
 
 If you're working on the C++ implementation:
-- Check `dbal/cpp/README.md` for architecture details
-- Review `dbal/cpp/CMakeLists.txt` for build configuration
+- Check `dbal/production/README.md` for architecture details
+- Review `dbal/production/CMakeLists.txt` for build configuration
 - Use `dbal/tools/cpp-build-assistant.js` for build commands
 - See `.github/workflows/cpp-build.yml` for CI details
 

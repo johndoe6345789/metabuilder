@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides instructions for testing the HTTP handling in the DBAL daemon now that it uses Drogon in `dbal/cpp/src/daemon/server.cpp`.
+This document provides instructions for testing the HTTP handling in the DBAL daemon now that it uses Drogon in `dbal/production/src/daemon/server.cpp`.
 
 ## Security Fixes Implemented
 
@@ -19,7 +19,7 @@ The daemon relies on Drogon's hardened HTTP parser and connection handling, whic
 ### Method 1: Automated Test Suite
 
 ```bash
-cd dbal/cpp
+cd dbal/production
 mkdir -p build && cd build
 cmake ..
 make -j4

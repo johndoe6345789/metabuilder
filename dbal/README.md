@@ -66,7 +66,7 @@ npx prisma generate
 
 With `config.adapter = 'prisma'`, DBAL sends every request through `PrismaAdapter`, and Prisma handles dialect differences, migrations, and connection pooling defined in `prisma/schema.prisma` and `prisma/migrations/`. That keeps DBAL focused on validation, ACLs, and audit logging while it can still drive PostgreSQL, MySQL, or any other Prisma-supported store.
 
-The C++ daemon still resides in Phase 3—the current implementation is backed by the in-memory store described in `dbal/cpp/docs/PHASE3_DAEMON.md`, so Postgres/MySQL adapters for the daemon are still future work.
+The C++ daemon still resides in Phase 3—the current implementation is backed by the in-memory store described in `dbal/production/docs/PHASE3_DAEMON.md`, so Postgres/MySQL adapters for the daemon are still future work.
 
 ### Native Prisma bridge
 
@@ -102,7 +102,7 @@ dbal/
 ### Development Mode (TypeScript)
 
 ```bash
-cd dbal/ts
+cd dbal/development
 npm install
 npm run build
 npm test
@@ -111,7 +111,7 @@ npm test
 ### Production Mode (C++ Daemon)
 
 ```bash
-cd dbal/cpp
+cd dbal/production
 mkdir build && cd build
 cmake ..
 make

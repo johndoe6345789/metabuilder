@@ -6,14 +6,14 @@ The DBAL (Data Bus Abstraction Layer) provides a comprehensive implementation gu
 
 ### Getting Started
 
-- [Quick Start Guide](./QUICK_START.md) - Setup and first steps
+- [Quick Start Guide](./shared/docs/QUICK_START.md) - Setup and first steps
 - [README](./README.md) - Project overview
 
 ### Implementation Guides
 
-- [Phase 2 Implementation](./PHASE2_IMPLEMENTATION.md) - Version 2 features and design
-- [Phase 2 Complete](./PHASE2_COMPLETE.md) - Implementation completion status
-- [Implementation Summary](./IMPLEMENTATION_SUMMARY.md) - Feature overview
+- [Phase 2 Implementation](./shared/docs/PHASE2_IMPLEMENTATION.md) - Version 2 features and design
+- [Phase 2 Complete](./shared/docs/PHASE2_COMPLETE.md) - Implementation completion status
+- [Implementation Summary](./shared/docs/IMPLEMENTATION_SUMMARY.md) - Feature overview
 
 ### Architecture
 
@@ -24,21 +24,21 @@ The DBAL (Data Bus Abstraction Layer) provides a comprehensive implementation gu
 
 ```
 dbal/
-├── QUICK_START.md           # Quick start guide
 ├── README.md                # Project overview
+├── README_INDEX.md          # Documentation index
 ├── PROJECT.md               # Complete documentation
-├── IMPLEMENTATION_SUMMARY.md # Implementation status
-├── PHASE2_IMPLEMENTATION.md # Version 2 design
-├── PHASE2_COMPLETE.md       # Completion status
 ├── AGENTS.md                # AI development guidelines
-├── api/                     # API specifications
-├── backends/                # Backend implementations
-├── common/                  # Shared utilities
-├── cpp/                     # C++ implementations
-├── docs/                    # Additional documentation
-├── scripts/                 # Utility scripts
-├── tools/                   # Development tools
-└── ts/                      # TypeScript implementations
+├── LICENSE                  # MIT License
+├── .gitignore               # Git ignore rules
+├── development/             # TypeScript implementation (fast iteration)
+├── production/              # C++ implementation (security & performance)
+└── shared/                  # Shared resources
+    ├── api/                 # API specifications (YAML contracts)
+    ├── backends/            # Backend implementations (Prisma, SQLite)
+    ├── common/              # Shared utilities and contracts
+    ├── docs/                # Additional documentation
+    ├── scripts/             # Utility scripts
+    └── tools/               # Development tools (codegen, build assistant)
 ```
 
 ## 🎯 Key Concepts
@@ -60,11 +60,11 @@ See [PROJECT.md](./PROJECT.md) for complete architecture documentation.
 
 ### Setting Up Development Environment
 
-See [QUICK_START.md](./QUICK_START.md) for setup instructions.
+See [QUICK_START.md](./shared/docs/QUICK_START.md) for setup instructions.
 
 ### Implementing New Features
 
-See [PHASE2_IMPLEMENTATION.md](./PHASE2_IMPLEMENTATION.md) for design patterns.
+See [PHASE2_IMPLEMENTATION.md](./shared/docs/PHASE2_IMPLEMENTATION.md) for design patterns.
 
 ### AI-Assisted Development
 

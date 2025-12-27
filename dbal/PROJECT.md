@@ -6,9 +6,9 @@ This directory contains the Database Abstraction Layer for MetaBuilder.
 
 - [Main README](README.md) - Overview and architecture
 - [Agent Guide](AGENTS.md) - For AI agents and automated tools
-- [Spark Integration](docs/SPARK_INTEGRATION.md) - GitHub Spark deployment guide
-- [TypeScript Implementation](ts/README.md) - TS development guide
-- [C++ Implementation](cpp/README.md) - C++ production guide
+- [Spark Integration](shared/docs/SPARK_INTEGRATION.md) - GitHub Spark deployment guide
+- [TypeScript Implementation](development/README.md) - TS development guide
+- [C++ Implementation](production/README.md) - C++ production guide
 
 ## Directory Structure
 
@@ -19,15 +19,42 @@ dbal/
 ├── AGENTS.md                    # Agent development guide
 ├── .gitignore                   # Git ignore rules
 │
-├── api/                         # Language-agnostic API definition
-│   ├── schema/                  # Entity and operation schemas
-│   │   ├── entities/           # Entity definitions (YAML)
-│   │   ├── operations/         # Operation definitions (YAML)
-│   │   ├── errors.yaml         # Error codes and handling
-│   │   └── capabilities.yaml   # Backend capability matrix
-│   └── versioning/
-│       └── compat.md           # Compatibility rules
+├── development/                 # TypeScript implementation (fast iteration)
+│   ├── src/                     # Source code
+│   ├── tests/                   # Test suites
+│   └── package.json             # NPM configuration
 │
+├── production/                  # C++ implementation (security & performance)
+│   ├── src/                     # Source code
+│   ├── include/                 # Header files
+│   ├── tests/                   # Test suites
+│   ├── docs/                    # C++ specific documentation
+│   └── CMakeLists.txt           # CMake configuration
+│
+└── shared/                      # Shared resources
+    ├── api/                     # Language-agnostic API definition
+    │   ├── schema/              # Entity and operation schemas
+    │   │   ├── entities/        # Entity definitions (YAML)
+    │   │   ├── operations/      # Operation definitions (YAML)
+    │   │   ├── errors.yaml      # Error codes and handling
+    │   │   └── capabilities.yaml # Backend capability matrix
+    │   └── versioning/
+    │       └── compat.md        # Compatibility rules
+    │
+    ├── backends/                # Database backend schemas
+    │   ├── prisma/              # Prisma ORM schemas
+    │   └── sqlite/              # SQLite schemas
+    │
+    ├── common/                  # Shared utilities
+    │   └── contracts/           # Conformance test contracts
+    │
+    ├── tools/                   # Development tools
+    │   ├── codegen/             # Code generation from YAML
+    │   └── conformance/         # Conformance test runners
+    │
+    ├── scripts/                 # Automation scripts
+    └── docs/                    # Additional documentation
+```
 ├── common/                      # Shared resources
 │   ├── contracts/              # Conformance test definitions
 │   ├── fixtures/               # Test data
@@ -74,36 +101,36 @@ dbal/
 ### Generate Types
 
 ```bash
-python tools/codegen/gen_types.py
+python shared/tools/codegen/gen_types.py
 ```
 
 ### Build Everything
 
 ```bash
-python scripts/build.py
+python shared/scripts/build.py
 ```
 
 ### Run Tests
 
 ```bash
-python scripts/test.py
+python shared/scripts/test.py
 ```
 
 ### Run Conformance Tests
 
 ```bash
-python scripts/conformance.py
+python shared/scripts/conformance.py
 ```
 
 ## Development Workflow
 
-1. **Define schema** in `api/schema/entities/` and `api/schema/operations/`
-2. **Generate types** with `python tools/codegen/gen_types.py`
-3. **Implement adapters** in `ts/src/adapters/` and `cpp/src/adapters/`
-4. **Write tests** in `common/contracts/`
-5. **Build** with `python scripts/build.py`
-6. **Test** with `python scripts/test.py`
-7. **Deploy** following `docs/SPARK_INTEGRATION.md`
+1. **Define schema** in `shared/api/schema/entities/` and `shared/api/schema/operations/`
+2. **Generate types** with `python shared/tools/codegen/gen_types.py`
+3. **Implement adapters** in `development/src/adapters/` and `production/src/adapters/`
+4. **Write tests** in `shared/common/contracts/`
+5. **Build** with `python shared/scripts/build.py`
+6. **Test** with `python shared/scripts/test.py`
+7. **Deploy** following `shared/docs/SPARK_INTEGRATION.md`
 
 ## Key Concepts
 

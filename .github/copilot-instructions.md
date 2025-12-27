@@ -190,7 +190,7 @@ if (user.level >= 3) {  // Admin and above
 ## DBAL-Specific Guidance
 
 **TypeScript DBAL**: Fast iteration, development use. Located in `dbal/ts/src/`.
-**C++ DBAL Daemon**: Production security, credential protection. Located in `dbal/cpp/src/`.
+**C++ DBAL Daemon**: Production security, credential protection. Located in `dbal/production/src/`.
 **Conformance Tests**: Guarantee both implementations behave identically. Update `common/contracts/` when changing YAML schemas.
 
 If fixing a DBAL bug:

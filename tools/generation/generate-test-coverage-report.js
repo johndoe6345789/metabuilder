@@ -74,7 +74,7 @@ function generateReport() {
   // Find all source and test files
   const srcFiles = findFiles("src", /\.(ts|tsx)$/, ignore)
     .concat(findFiles("packages", /\.(ts|tsx)$/, ignore))
-    .concat(findFiles("dbal/ts", /\.(ts|tsx)$/, ignore))
+    .concat(findFiles("dbal/development", /\.(ts|tsx)$/, ignore))
     .filter(f => !f.includes(".test.") && !f.includes(".spec."));
 
   const testFiles = findFiles(".", /\.(test|spec)\.(ts|tsx)$/, ignore);

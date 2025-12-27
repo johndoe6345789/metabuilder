@@ -4,7 +4,7 @@
 
 - `frontends/nextjs/`: primary Next.js app (source in `src/`, E2E in `e2e/`, local helper scripts in `scripts/`).
 - `packages/`: JSON-driven component packages (`seed/*.json`, optional `static_content/`, and `tests/` for schema/structure checks).
-- `dbal/`: database abstraction layer (TypeScript library in `dbal/ts/`; additional tooling/docs under `dbal/`).
+- `dbal/`: database abstraction layer (TypeScript library in `dbal/development/`; additional tooling/docs under `dbal/`).
 - `prisma/`: Prisma schema and migrations (`schema.prisma`, `migrations/`).
 - `config/`: shared config (Playwright/Vite/TS/ESLint) symlinked into `frontends/nextjs/`.
 - `tools/`: repo utilities (quality checks, workflow helpers, code analysis).
@@ -22,7 +22,7 @@ Run app workflows from `frontends/nextjs/`:
 - `npm run test:e2e`: Playwright E2E tests.
 - `npm run db:generate` / `npm run db:push` / `npm run db:migrate`: Prisma client + schema/migrations.
 
-DBAL library workflows live in `dbal/ts/` (`npm run build`, `npm run test:unit`).
+DBAL library workflows live in `dbal/development/` (`npm run build`, `npm run test:unit`).
 
 ## Coding Style & Naming Conventions
 

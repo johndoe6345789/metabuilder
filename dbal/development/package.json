@@ -14,7 +14,7 @@
     "test:conformance": "tsx tests/conformance/runner.ts",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts",
-    "codegen": "tsx ../tools/codegen/gen_types.ts"
+    "codegen": "tsx ../shared/tools/codegen/gen_types.ts"
   },
   "keywords": [
     "database",

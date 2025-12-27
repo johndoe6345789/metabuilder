@@ -235,7 +235,7 @@ Both implementations:
 ### With Validation
 
 ```typescript
-import { DBALClient, DBALError } from './dbal/ts/src'
+import { DBALClient, DBALError } from './dbal/development/src'
 
 const client = new DBALClient({
   adapter: 'prisma',
@@ -293,7 +293,7 @@ try {
 ### Using Validation Utilities Directly
 
 ```typescript
-import { isValidEmail, isValidUsername, validateUserCreate } from './dbal/ts/src'
+import { isValidEmail, isValidUsername, validateUserCreate } from './dbal/development/src'
 
 // Validate individual fields
 console.log(isValidEmail('test@example.com'))  // true
@@ -399,18 +399,18 @@ try {
 
 ## Files Changed
 
-1. **`dbal/ts/src/core/validation.ts`** (new, 142 lines)
+1. **`dbal/development/src/core/validation.ts`** (new, 142 lines)
    - Validation utility functions
    - Entity validation functions
    - Pattern matching with regex
 
-2. **`dbal/ts/src/core/client.ts`** (modified, +150 lines)
+2. **`dbal/development/src/core/client.ts`** (modified, +150 lines)
    - Added validation to all CRUD operations
    - Enhanced error handling
    - Configuration validation
    - Improved error messages
 
-3. **`dbal/ts/src/index.ts`** (modified, +2 lines)
+3. **`dbal/development/src/index.ts`** (modified, +2 lines)
    - Export validation functions
    - Export DBALErrorCode enum
 
@@ -421,7 +421,7 @@ try {
 ### Manual Validation
 
 ```typescript
-import { isValidEmail, isValidUsername, isValidSlug } from './dbal/ts/src'
+import { isValidEmail, isValidUsername, isValidSlug } from './dbal/development/src'
 
 // Test email validation
 console.assert(isValidEmail('test@example.com') === true)

@@ -149,11 +149,11 @@ TODO: docs/src/ is missing; add the folder or update/remove the src links below.
 
 ### 🏁 DBAL (Database Abstraction Layer)
 - [dbal/README.md](./dbal/README.md) - Overview
-- [dbal/api/README.md](./dbal/api/README.md) - API docs
-- [dbal/backends/README.md](./dbal/backends/README.md) - Backends
-- [dbal/cpp/README.md](./dbal/cpp/README.md) - C++ implementation
-- [dbal/ts/README.md](./dbal/ts/README.md) - TypeScript implementation
-- [dbal/common/README.md](./dbal/common/README.md) - Common code
+- [dbal/shared/api/README.md](./dbal/shared/api/README.md) - API docs
+- [dbal/shared/backends/README.md](./dbal/shared/backends/README.md) - Backends
+- [dbal/production/README.md](./dbal/production/README.md) - C++ implementation
+- [dbal/development/README.md](./dbal/development/README.md) - TypeScript implementation
+- [dbal/shared/common/README.md](./dbal/shared/common/README.md) - Common code
 
 ### 📖 Additional Guides
 - [guides/SASS_CONFIGURATION.md](./guides/SASS_CONFIGURATION.md) - SASS setup
