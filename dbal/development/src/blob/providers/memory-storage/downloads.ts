@@ -1,17 +1,15 @@
 import { DBALError } from '../../core/foundation/errors'
 import type { DownloadOptions } from '../blob-storage'
 import type { MemoryStore } from './store'
+import { getBlobOrThrow, normalizeKey } from './utils'
 
 export const downloadBuffer = (
   store: MemoryStore,
   key: string,
   options: DownloadOptions = {},
 ): Buffer => {
-  const blob = store.get(key)
-
-  if (!blob) {
-    throw DBALError.notFound(`Blob not found: ${key}`)
-  }
+  const normalizedKey = normalizeKey(key)
+  const blob = getBlobOrThrow(store, normalizedKey)
 
   let data = blob.data
 
