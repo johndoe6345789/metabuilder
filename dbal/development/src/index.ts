@@ -1,4 +1,4 @@
-export { DBALClient } from './core/client/client'
+export { DBALClient, createDBALClient } from './core/client'
 export type { DBALConfig } from './runtime/config'
 export type * from './core/foundation/types'
 export { DBALError, DBALErrorCode } from './core/foundation/errors'
