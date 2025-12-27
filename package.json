@@ -3,7 +3,7 @@
     "prisma": "^7.2.0"
   },
   "dependencies": {
-    "@prisma/client": "^6.19.1",
+    "@prisma/client": "^7.2.0",
     "jszip": "^3.10.1"
   }
 }
