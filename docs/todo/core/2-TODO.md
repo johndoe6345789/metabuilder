@@ -14,8 +14,8 @@
 
 ### Molecules (`src/components/molecules/`)
 - [x] Audit molecules (~10 components) - should be 2-5 atoms combined (✅ See `docs/implementation/ui/atomic/MOLECULE_AUDIT_REPORT.md`)
-- [ ] Identify organisms incorrectly categorized as molecules
-- [ ] Ensure molecules only import from atoms, not organisms
+- [x] Identify organisms incorrectly categorized as molecules (✅ See `docs/analysis/molecule-organism-audit.md`)
+- [x] Ensure molecules only import from atoms, not organisms (✅ Verified - no organism imports found)
 - [ ] Create missing common molecules (form fields, search bars, nav items)
 
 ### Organisms (`src/components/organisms/`)
