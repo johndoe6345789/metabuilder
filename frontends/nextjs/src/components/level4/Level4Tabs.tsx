@@ -16,7 +16,7 @@ import { QuickGuide } from '@/components/QuickGuide'
 import { PackageManager } from '@/components/PackageManager'
 import { ThemeEditor } from '@/components/ThemeEditor'
 import { SMTPConfigEditor } from '@/components/SMTPConfigEditor'
-import { ErrorLogsTab } from '@/components/level5/tabs/ErrorLogsTab'
+import { ErrorLogsTab } from '@/components/level5/tabs/error-logs/ErrorLogsTab'
 import type { AppConfiguration, User } from '@/lib/level-types'
 
 interface Level4TabsProps {
