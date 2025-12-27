@@ -14,8 +14,8 @@
  */
 
 // Re-export types and data
-export type { LuaSnippet } from './snippets/lua-snippets-data'
-export { LUA_SNIPPET_CATEGORIES, LUA_SNIPPETS } from './snippets/lua-snippets-data'
+export type { LuaSnippet } from './snippets'
+export { LUA_SNIPPET_CATEGORIES, LUA_SNIPPETS } from './snippets'
 
 // Re-export functions for backward compatibility
 export { getSnippetsByCategory } from './functions/snippets/get-snippets-by-category'

@@ -1,4 +1,4 @@
-import { LUA_SNIPPETS, type LuaSnippet } from '../../snippets/lua-snippets-data'
+import { LUA_SNIPPETS, type LuaSnippet } from '../../snippets'
 
 /**
  * Search snippets by query string
