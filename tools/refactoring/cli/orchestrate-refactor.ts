@@ -13,10 +13,8 @@
 import { ASTLambdaRefactor } from '../ast-lambda-refactor'
 import * as fs from 'fs/promises'
 import * as path from 'path'
-import { exec } from 'child_process'
-import { promisify } from 'util'
-
-const execAsync = promisify(exec)
+import { loadFilesFromReport } from './utils/load-files-from-report'
+import { runCommand } from './utils/run-command'
 
 interface FileToProcess {
   path: string
@@ -24,43 +22,6 @@ interface FileToProcess {
   priority: 'high' | 'medium' | 'low'
   status: 'pending' | 'completed' | 'failed' | 'skipped'
   error?: string
-}
-
-async function loadFilesFromReport(): Promise<FileToProcess[]> {
-  const reportPath = path.join(process.cwd(), 'docs/todo/LAMBDA_REFACTOR_PROGRESS.md')
-  const content = await fs.readFile(reportPath, 'utf-8')
-  
-  const files: FileToProcess[] = []
-  const lines = content.split('\n')
-  
-  let currentPriority: 'high' | 'medium' | 'low' = 'high'
-  
-  for (const line of lines) {
-    if (line.includes('### High Priority')) currentPriority = 'high'
-    else if (line.includes('### Medium Priority')) currentPriority = 'medium'
-    else if (line.includes('### Low Priority')) currentPriority = 'low'
-    else if (line.includes('### Skipped')) break
-    
-    const match = line.match(/- \[ \] `([^`]+)` \((\d+) lines\)/)
-    if (match) {
-      files.push({
-        path: match[1],
-        lines: parseInt(match[2], 10),
-        priority: currentPriority,
-        status: 'pending',
-      })
-    }
-  }
-  
-  return files
-}
-
-async function runCommand(cmd: string, cwd: string = process.cwd()): Promise<{ stdout: string; stderr: string }> {
-  try {
-    return await execAsync(cmd, { cwd, maxBuffer: 10 * 1024 * 1024 })
-  } catch (error: any) {
-    return { stdout: error.stdout || '', stderr: error.stderr || error.message }
-  }
 }
 
 async function main() {
@@ -76,7 +37,10 @@ async function main() {
   
   // Load files
   console.log('📋 Loading files from tracking report...')
-  let files = await loadFilesFromReport()
+  let files: FileToProcess[] = (await loadFilesFromReport()).map(file => ({
+    ...file,
+    status: 'pending',
+  }))
   
   if (priorityFilter !== 'all') {
     files = files.filter(f => f.priority === priorityFilter)
