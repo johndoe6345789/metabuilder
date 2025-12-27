@@ -1,6 +1,6 @@
 "use client"
 
-import { Level3 } from '@/components/Level3'
+import { Level3 } from '@/components/level-tabs'
 import { AuthGate } from '@/components/auth/AuthGate'
 import { PageLoader } from '@/components/auth/PageLoader'
 import { useResolvedUser } from '@/hooks/useResolvedUser'

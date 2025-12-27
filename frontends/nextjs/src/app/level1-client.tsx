@@ -1,6 +1,6 @@
 'use client'
 
-import { Level1 } from '@/components/Level1'
+import { Level1 } from '@/components/level-tabs'
 import { useRouter } from 'next/navigation'
 import { getLevelPath } from '@/lib/navigation/get-level-path'
 import type { AppLevel } from '@/lib/level-types'

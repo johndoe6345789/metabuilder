@@ -38,7 +38,7 @@ import { AppHeader, ProfileCard } from '@/components/molecules'
 import { ComponentCatalog, SchemaEditor } from '@/components/organisms'
 
 // Pages
-import Level4 from '@/components/Level4'
+import { Level4 } from '@/components/level-tabs'
 ```
 
 ## Component Categories

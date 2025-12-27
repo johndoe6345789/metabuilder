@@ -1,22 +1,24 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { Database as DatabaseIcon, Lightning, Code, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear, Palette, ListDashes, Sparkle, Package, SquaresFour, Warning } from '@phosphor-icons/react'
-import { SchemaEditorLevel4 } from '@/components/SchemaEditorLevel4'
-import { WorkflowEditor } from '@/components/WorkflowEditor'
-import { LuaEditor } from '@/components/editors/lua/LuaEditor'
-import { LuaBlocksEditor } from '@/components/editors/lua/LuaBlocksEditor'
-import { LuaSnippetLibrary } from '@/components/editors/lua/LuaSnippetLibrary'
-import { DatabaseManager } from '@/components/managers/database/DatabaseManager'
-import { PageRoutesManager } from '@/components/managers/PageRoutesManager'
-import { ComponentHierarchyEditor } from '@/components/ComponentHierarchyEditor'
-import { UserManagement } from '@/components/UserManagement'
-import { GodCredentialsSettings } from '@/components/GodCredentialsSettings'
-import { CssClassManager } from '@/components/CssClassManager'
-import { DropdownConfigManager } from '@/components/DropdownConfigManager'
-import { QuickGuide } from '@/components/QuickGuide'
-import { PackageManager } from '@/components/PackageManager'
-import { ThemeEditor } from '@/components/ThemeEditor'
-import { SMTPConfigEditor } from '@/components/SMTPConfigEditor'
-import { ErrorLogsTab } from '@/components/level5/tabs/ErrorLogsTab'
+import {
+  SchemaEditorLevel4,
+  LuaBlocksEditor,
+  LuaEditor,
+  LuaSnippetLibrary,
+  ThemeEditor,
+} from '@/components/editors'
+import { WorkflowEditor } from '@/components/workflow'
+import {
+  ComponentHierarchyEditor,
+  CssClassManager,
+  DatabaseManager,
+  DropdownConfigManager,
+  PackageManager,
+  PageRoutesManager,
+  UserManagement,
+} from '@/components/managers'
+import { GodCredentialsSettings, QuickGuide, SMTPConfigEditor } from '@/components/layout'
+import { ErrorLogsTab } from '@/components/level5/tabs'
 import type { AppConfiguration, User } from '@/lib/level-types'
 
 interface Level4TabsProps {

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { UnifiedLogin } from '@/components/UnifiedLogin'
+import { UnifiedLogin } from '@/components/layout'
 import { getRoleHomePath } from '@/lib/auth'
 import { useAuth } from '@/hooks/useAuth'
 

@@ -18,8 +18,18 @@ export { ScrollArea, ScrollBar, type ScrollAreaProps } from './feedback/ScrollAr
 
 // New atoms from @/components/atoms (available in God Tier panel)
 export { Radio, type RadioProps } from '../../atoms/controls/Radio'
-export { Icon, type IconProps, type IconName, type IconSize } from '../../atoms/display/Icon'
-export { Link, type LinkProps } from '../../atoms/display/Link'
-export { Text, type TextProps, type TextVariant, type TextWeight, type TextAlign } from '../../atoms/display/Text'
+export {
+  Icon,
+  type IconProps,
+  type IconName,
+  type IconSize,
+  Link,
+  type LinkProps,
+  Text,
+  type TextProps,
+  type TextVariant,
+  type TextWeight,
+  type TextAlign,
+} from '../../atoms/display'
 export { TextArea, type TextAreaProps } from '../../atoms/inputs/TextArea'
 export { Select as AtomSelect, type SelectProps, type SelectOption } from '../../atoms/inputs/Select'
