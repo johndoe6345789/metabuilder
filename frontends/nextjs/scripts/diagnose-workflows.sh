@@ -46,11 +46,11 @@ fi
 echo
 
 # List jobs in main CI workflow
-echo "🏗️  Jobs in ci.yml:"
-if [ -f "$PROJECT_ROOT/.github/workflows/ci.yml" ]; then
-    act -l -W "$PROJECT_ROOT/.github/workflows/ci.yml" 2>/dev/null || echo "   (Failed to parse workflow)"
+echo "🏗️  Jobs in ci/ci.yml:"
+if [ -f "$PROJECT_ROOT/.github/workflows/ci/ci.yml" ]; then
+    act -l -W "$PROJECT_ROOT/.github/workflows/ci/ci.yml" 2>/dev/null || echo "   (Failed to parse workflow)"
 else
-    echo "❌ ci.yml not found"
+    echo "❌ ci/ci.yml not found"
 fi
 echo
 
@@ -71,7 +71,19 @@ echo
 
 echo "✅ Diagnostics complete!"
 echo
+
+# Run workflow validation
+echo "🔍 Running workflow validation..."
+if [ -f "$SCRIPT_DIR/validate-workflows.py" ]; then
+    python3 "$SCRIPT_DIR/validate-workflows.py"
+else
+    echo "⚠️  validate-workflows.py not found, skipping validation"
+fi
+echo
+
 echo "💡 Tips:"
-echo "   - Run specific job: npm run act:lint"
-echo "   - List all jobs: act -l"
+echo "   - Validate workflows: npm run act:validate"
+echo "   - Simulate locally: npm run simulate:lint"
+echo "   - Run specific job: npm run act:lint (requires act)"
+echo "   - List all jobs: act -l (requires act)"
 echo "   - Run with specific platform: act -P ubuntu-latest=catthehacker/ubuntu:act-latest"

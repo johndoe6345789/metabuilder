@@ -23,7 +23,7 @@ echo
 
 # Test lint job
 echo "1️⃣  Testing lint job..."
-if act -W "$PROJECT_ROOT/.github/workflows/ci.yml" -j lint --dryrun; then
+if act -W "$PROJECT_ROOT/.github/workflows/ci/ci.yml" -j lint --dryrun; then
     echo "✅ Lint job syntax valid"
 else
     echo "❌ Lint job has issues"
@@ -32,7 +32,7 @@ echo
 
 # Test typecheck job
 echo "2️⃣  Testing typecheck job..."
-if act -W "$PROJECT_ROOT/.github/workflows/ci.yml" -j typecheck --dryrun; then
+if act -W "$PROJECT_ROOT/.github/workflows/ci/ci.yml" -j typecheck --dryrun; then
     echo "✅ Typecheck job syntax valid"
 else
     echo "❌ Typecheck job has issues"
@@ -41,7 +41,7 @@ echo
 
 # Test build job
 echo "3️⃣  Testing build job..."
-if act -W "$PROJECT_ROOT/.github/workflows/ci.yml" -j build --dryrun; then
+if act -W "$PROJECT_ROOT/.github/workflows/ci/ci.yml" -j build --dryrun; then
     echo "✅ Build job syntax valid"
 else
     echo "❌ Build job has issues"

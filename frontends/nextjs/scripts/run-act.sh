@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
 # Default workflow file
-WORKFLOW="${WORKFLOW:-ci.yml}"
+WORKFLOW="${WORKFLOW:-ci/ci.yml}"
 
 # Check if act is installed
 if ! command -v act &> /dev/null; then
