@@ -1,29 +1,29 @@
 import { DBALError } from '../../core/foundation/errors'
 import type { BlobListOptions, BlobListResult, BlobMetadata } from '../blob-storage'
-import { makeBlobMetadata } from './store'
 import type { MemoryStore } from './store'
+import { toBlobMetadata } from './serialization'
+import { cleanupStoreEntry, getBlobOrThrow, normalizeKey } from './utils'
 
 export const deleteBlob = async (store: MemoryStore, key: string): Promise<boolean> => {
-  if (!store.has(key)) {
-    throw DBALError.notFound(`Blob not found: ${key}`)
+  const normalizedKey = normalizeKey(key)
+
+  if (!store.has(normalizedKey)) {
+    throw DBALError.notFound(`Blob not found: ${normalizedKey}`)
   }
 
-  store.delete(key)
+  cleanupStoreEntry(store, normalizedKey)
   return true
 }
 
 export const getMetadata = (store: MemoryStore, key: string): BlobMetadata => {
-  const blob = store.get(key)
+  const normalizedKey = normalizeKey(key)
+  const blob = getBlobOrThrow(store, normalizedKey)
 
-  if (!blob) {
-    throw DBALError.notFound(`Blob not found: ${key}`)
-  }
-
-  return makeBlobMetadata(key, blob)
+  return toBlobMetadata(normalizedKey, blob)
 }
 
 export const listBlobs = (store: MemoryStore, options: BlobListOptions = {}): BlobListResult => {
-  const prefix = options.prefix || ''
+  const prefix = options.prefix ? normalizeKey(options.prefix) : ''
   const maxKeys = options.maxKeys || 1000
 
   const items: BlobMetadata[] = []
@@ -35,7 +35,7 @@ export const listBlobs = (store: MemoryStore, options: BlobListOptions = {}): Bl
         nextToken = key
         break
       }
-      items.push(makeBlobMetadata(key, blob))
+      items.push(toBlobMetadata(key, blob))
     }
   }
 
@@ -47,11 +47,9 @@ export const listBlobs = (store: MemoryStore, options: BlobListOptions = {}): Bl
 }
 
 export const copyBlob = (store: MemoryStore, sourceKey: string, destKey: string): BlobMetadata => {
-  const sourceBlob = store.get(sourceKey)
-
-  if (!sourceBlob) {
-    throw DBALError.notFound(`Source blob not found: ${sourceKey}`)
-  }
+  const normalizedSourceKey = normalizeKey(sourceKey)
+  const normalizedDestKey = normalizeKey(destKey)
+  const sourceBlob = getBlobOrThrow(store, normalizedSourceKey)
 
   const destBlob = {
     ...sourceBlob,
@@ -59,8 +57,8 @@ export const copyBlob = (store: MemoryStore, sourceKey: string, destKey: string)
     lastModified: new Date(),
   }
 
-  store.set(destKey, destBlob)
-  return makeBlobMetadata(destKey, destBlob)
+  store.set(normalizedDestKey, destBlob)
+  return toBlobMetadata(normalizedDestKey, destBlob)
 }
 
 export const getTotalSize = (store: MemoryStore): number => {
