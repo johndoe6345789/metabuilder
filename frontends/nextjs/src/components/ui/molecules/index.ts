@@ -59,3 +59,6 @@ export {
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
 } from './navigation/Breadcrumb'
+export { NavItem, type NavItemProps } from './navigation/NavItem'
+export { NavLink, type NavLinkProps } from './navigation/NavLink'
+export { NavGroup, type NavGroupProps } from './navigation/NavGroup'
