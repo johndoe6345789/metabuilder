@@ -13,25 +13,27 @@ echo
 # Check if act is installed
 echo "📦 Checking act installation..."
 if ! command -v act &> /dev/null; then
-    echo "❌ act is not installed"
+    echo "⚠️  act is not installed (optional)"
     echo "   Install with: brew install act"
-    exit 1
+    ACT_AVAILABLE=false
+else
+    echo "✅ act version: $(act --version)"
+    ACT_AVAILABLE=true
 fi
-echo "✅ act version: $(act --version)"
 echo
 
-# Check Docker
-echo "🐳 Checking Docker..."
-if ! command -v docker &> /dev/null; then
-    echo "❌ Docker is not installed"
-    exit 1
+# Check Docker only if act is available
+if [ "$ACT_AVAILABLE" = true ]; then
+    echo "🐳 Checking Docker..."
+    if ! command -v docker &> /dev/null; then
+        echo "⚠️  Docker is not installed (optional for act)"
+    elif ! docker info &> /dev/null; then
+        echo "⚠️  Docker daemon is not running (optional for act)"
+    else
+        echo "✅ Docker is running"
+    fi
+    echo
 fi
-if ! docker info &> /dev/null; then
-    echo "❌ Docker daemon is not running"
-    exit 1
-fi
-echo "✅ Docker is running"
-echo
 
 # List workflows
 echo "📋 Available workflows in $PROJECT_ROOT/.github/workflows:"
@@ -46,13 +48,15 @@ fi
 echo
 
 # List jobs in main CI workflow
-echo "🏗️  Jobs in ci.yml:"
-if [ -f "$PROJECT_ROOT/.github/workflows/ci.yml" ]; then
-    act -l -W "$PROJECT_ROOT/.github/workflows/ci.yml" 2>/dev/null || echo "   (Failed to parse workflow)"
-else
-    echo "❌ ci.yml not found"
+if [ "$ACT_AVAILABLE" = true ]; then
+    echo "🏗️  Jobs in ci/ci.yml:"
+    if [ -f "$PROJECT_ROOT/.github/workflows/ci/ci.yml" ]; then
+        act -l -W "$PROJECT_ROOT/.github/workflows/ci/ci.yml" 2>/dev/null || echo "   (Failed to parse workflow)"
+    else
+        echo "❌ ci/ci.yml not found"
+    fi
+    echo
 fi
-echo
 
 # Check for .actrc or .secrets
 echo "🔐 Checking for act configuration..."
@@ -71,7 +75,19 @@ echo
 
 echo "✅ Diagnostics complete!"
 echo
+
+# Run workflow validation
+echo "🔍 Running workflow validation..."
+if [ -f "$SCRIPT_DIR/validate-workflows.py" ]; then
+    python3 "$SCRIPT_DIR/validate-workflows.py"
+else
+    echo "⚠️  validate-workflows.py not found, skipping validation"
+fi
+echo
+
 echo "💡 Tips:"
-echo "   - Run specific job: npm run act:lint"
-echo "   - List all jobs: act -l"
+echo "   - Validate workflows: npm run act:validate"
+echo "   - Simulate locally: npm run simulate:lint"
+echo "   - Run specific job: npm run act:lint (requires act)"
+echo "   - List all jobs: act -l (requires act)"
 echo "   - Run with specific platform: act -P ubuntu-latest=catthehacker/ubuntu:act-latest"
