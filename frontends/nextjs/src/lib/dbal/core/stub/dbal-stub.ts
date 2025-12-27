@@ -7,8 +7,8 @@
  * In production, replace this with the actual DBAL module connection.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
+ 
 
 // Error codes for DBAL operations
 export enum DBALErrorCode {
