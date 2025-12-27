@@ -3,7 +3,7 @@
  * @description Default ACL rules for entities
  */
 
-import type { ACLRule } from './types'
+import type { ACLRule } from '../acl-adapter/types'
 
 export const defaultACLRules: ACLRule[] = [
   {
