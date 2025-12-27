@@ -12,8 +12,10 @@ import { filterLogs, useErrorLogFilters } from './error-logs/useErrorLogFilters'
 import { useErrorLogs } from './error-logs/useErrorLogs'
 
 interface ErrorLogsTabProps {
-  user?: User  // Optional: If provided, filters logs by user's tenantId (for God tier)
+  user?: User
 }
+
+const PAGE_SIZE = 10
 
 export function ErrorLogsTab({ user }: ErrorLogsTabProps) {
   const { logs, loading, stats, reload, isSuperGod } = useErrorLogs(user)
