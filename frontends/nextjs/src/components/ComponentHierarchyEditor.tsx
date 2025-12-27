@@ -1,1 +1,1 @@
-export { ComponentHierarchyEditor } from './managers/component/ComponentHierarchyEditor'
+export { ComponentHierarchyEditor } from './managers/component/hierarchy/ComponentHierarchyEditor'
