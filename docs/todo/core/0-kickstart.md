@@ -29,7 +29,7 @@ Run from `frontends/nextjs/`:
 
 From repo root: `cd frontends/nextjs` (or from `docs/todo/`: `cd ../../frontends/nextjs`)
 
-- [ ] `npm ci` (or `npm install`)
+- [x] `npm ci` (or `npm install`) — 427f929
 - [ ] `npm run typecheck`
 - [ ] `npm run lint`
 - [ ] `npm run test:unit`
