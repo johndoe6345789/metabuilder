@@ -55,7 +55,6 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
 
         <Level4Tabs
           appConfig={appConfig}
-          user={user}
           nerdMode={nerdMode}
           onSchemasChange={handleSchemasChange}
           onWorkflowsChange={handleWorkflowsChange}
