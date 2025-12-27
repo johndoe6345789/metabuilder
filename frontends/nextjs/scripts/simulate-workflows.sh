@@ -27,7 +27,7 @@ simulate_job() {
             if command -v bun &> /dev/null; then
                 bun install
             else
-                npm ci || npm install
+                npm install
             fi
             echo
             echo "🗄️  Generating Prisma Client..."
@@ -42,7 +42,7 @@ simulate_job() {
             if command -v bun &> /dev/null; then
                 bun install
             else
-                npm ci || npm install
+                npm install
             fi
             echo
             echo "🗄️  Generating Prisma Client..."
@@ -57,7 +57,7 @@ simulate_job() {
             if command -v bun &> /dev/null; then
                 bun install
             else
-                npm ci || npm install
+                npm install
             fi
             echo
             echo "🗄️  Generating Prisma Client..."
@@ -72,7 +72,7 @@ simulate_job() {
             if command -v bun &> /dev/null; then
                 bun install
             else
-                npm ci || npm install
+                npm install
             fi
             echo
             echo "🗄️  Generating Prisma Client..."
@@ -87,7 +87,7 @@ simulate_job() {
             if command -v bun &> /dev/null; then
                 bun install
             else
-                npm ci || npm install
+                npm install
             fi
             echo
             echo "🗄️  Generating Prisma Client..."
@@ -102,7 +102,7 @@ simulate_job() {
             if command -v bun &> /dev/null; then
                 bun install
             else
-                npm ci || npm install
+                npm install
             fi
             echo
             echo "🗄️  Generating Prisma Client..."
