@@ -3,15 +3,26 @@
 import { forwardRef, type AnchorHTMLAttributes } from 'react'
 import { Button as MuiButton, ButtonProps as MuiButtonProps } from '@mui/material'
 
+/** Button visual style variants */
 export type ButtonVariant = 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
+
+/** Button size options */
 export type ButtonSize = 'default' | 'sm' | 'lg' | 'icon'
 
+/**
+ * Props for the Button component
+ * @extends {MuiButtonProps} Inherits Material-UI Button props
+ */
 export interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'size'> {
+  /** Visual style variant of the button */
   variant?: ButtonVariant
+  /** Size of the button */
   size?: ButtonSize
+  /** Compatibility prop - ignored */
   asChild?: boolean
-  // Support link props when component="a"
+  /** Target attribute for link buttons */
   target?: AnchorHTMLAttributes<HTMLAnchorElement>['target']
+  /** Rel attribute for link buttons */
   rel?: AnchorHTMLAttributes<HTMLAnchorElement>['rel']
 }
 
