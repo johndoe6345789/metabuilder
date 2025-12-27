@@ -160,7 +160,7 @@ cmake_layout            # Standard layout
 
 ### Adding Dependencies
 
-1. Edit `dbal/cpp/conanfile.txt`
+1. Edit `dbal/production/conanfile.txt`
 2. Add package to `[requires]` section
 3. Run:
 ```bash
@@ -222,7 +222,7 @@ The assistant integrates with CTest:
 npm run cpp:test
 
 # Run specific test
-cd dbal/cpp/build
+cd dbal/production/build
 ctest -R unit_tests -V
 
 # Run with output
@@ -309,7 +309,7 @@ npm run cpp:clean
 npm run cpp:full
 
 # Or manually
-cd dbal/cpp
+cd dbal/production
 rm -rf build
 conan install . --output-folder=build --build=missing
 cmake -B build -G Ninja .
@@ -377,10 +377,10 @@ npm run cpp:configure
 ```json
 {
   "cmake.configureArgs": [
-    "-DCMAKE_TOOLCHAIN_FILE=${workspaceFolder}/dbal/cpp/build/conan_toolchain.cmake"
+    "-DCMAKE_TOOLCHAIN_FILE=${workspaceFolder}/dbal/production/build/conan_toolchain.cmake"
   ],
-  "cmake.buildDirectory": "${workspaceFolder}/dbal/cpp/build",
-  "C_Cpp.default.compileCommands": "${workspaceFolder}/dbal/cpp/build/compile_commands.json"
+  "cmake.buildDirectory": "${workspaceFolder}/dbal/production/build",
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/dbal/production/build/compile_commands.json"
 }
 ```
 
@@ -388,7 +388,7 @@ npm run cpp:configure
 
 CLion automatically detects CMake projects. Configure:
 1. Settings → Build → CMake
-2. Add toolchain file: `dbal/cpp/build/conan_toolchain.cmake`
+2. Add toolchain file: `dbal/production/build/conan_toolchain.cmake`
 3. Generator: Ninja
 
 ## DBAL Architecture Context
@@ -428,8 +428,8 @@ Database (SQLite/MongoDB/etc.)
 
 - [DBAL Project Overview](../dbal/PROJECT.md)
 - [Phase 2 Implementation](../dbal/PHASE2_IMPLEMENTATION.md)
-- [C++ Daemon Design](../dbal/cpp/PHASE3_DAEMON.md)
-- [Build Assistant README](../dbal/tools/BUILD_ASSISTANT_README.md)
+- [C++ Daemon Design](../dbal/production/PHASE3_DAEMON.md)
+- [Build Assistant README](../dbal/shared/tools/BUILD_ASSISTANT_README.md)
 
 ## Examples
 
@@ -457,14 +457,14 @@ npm run cpp:full
 
 ```bash
 # 1. Write C++ code
-vim dbal/cpp/src/adapters/postgres/postgres_adapter.cpp
+vim dbal/production/src/adapters/postgres/postgres_adapter.cpp
 
 # 2. Add dependency if needed
-vim dbal/cpp/conanfile.txt
+vim dbal/production/conanfile.txt
 # Add: libpq/15.0
 
 # 3. Update CMakeLists.txt
-vim dbal/cpp/CMakeLists.txt
+vim dbal/production/CMakeLists.txt
 
 # 4. Rebuild
 npm run cpp:install
@@ -479,7 +479,7 @@ npm run cpp:test
 
 ```bash
 # Enable verbose output
-cd dbal/cpp
+cd dbal/production
 cmake --build build --verbose
 
 # Check Conan setup
@@ -497,7 +497,7 @@ ninja -v
 
 For issues:
 1. Check [Troubleshooting](#troubleshooting) section
-2. Review [Build Assistant README](../dbal/tools/BUILD_ASSISTANT_README.md)
+2. Review [Build Assistant README](../dbal/shared/tools/BUILD_ASSISTANT_README.md)
 3. Check Conan docs: https://docs.conan.io
 4. Check CMake docs: https://cmake.org/documentation
 5. Check Ninja docs: https://ninja-build.org/manual.html

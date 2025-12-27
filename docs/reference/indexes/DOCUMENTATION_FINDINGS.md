@@ -632,11 +632,11 @@ TODO: Core doc links below point to docs/reference; update to correct paths unde
 
 | File | Purpose |
 |------|---------|
-| [dbal/README.md](../dbal/README.md) | DBAL architecture and overview |
+| [dbal/docs/README.md](../dbal/docs/README.md) | DBAL architecture and overview |
 | [dbal/QUICK_START.md](../dbal/QUICK_START.md) | DBAL 5-minute quick start |
 | [dbal/PROJECT.md](../dbal/PROJECT.md) | DBAL project structure |
 | [dbal/IMPLEMENTATION_SUMMARY.md](../dbal/IMPLEMENTATION_SUMMARY.md) | Phase 2 DBAL implementation summary |
-| [dbal/AGENTS.md](../dbal/AGENTS.md) | Agent development guide for DBAL |
+| [dbal/docs/AGENTS.md](../dbal/docs/AGENTS.md) | Agent development guide for DBAL |
 | [dbal/PHASE2_COMPLETE.md](../dbal/PHASE2_COMPLETE.md) | Phase 2 completion status |
 
 ### Development Guides

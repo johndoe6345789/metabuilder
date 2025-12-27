@@ -1537,7 +1537,7 @@ on:
   push:
     paths:
       - 'package-lock.json'
-      - 'dbal/ts/package-lock.json'
+      - 'dbal/development/package-lock.json'
 
 jobs:
   audit:
@@ -1548,7 +1548,7 @@ jobs:
       - name: NPM Audit
         run: |
           npm audit --audit-level=moderate
-          cd dbal/ts && npm audit --audit-level=moderate
+          cd dbal/development && npm audit --audit-level=moderate
           
       - name: Check for known vulnerabilities
         uses: snyk/actions/node@master

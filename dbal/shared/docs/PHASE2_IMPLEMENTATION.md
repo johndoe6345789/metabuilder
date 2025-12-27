@@ -413,7 +413,7 @@ try {
 
 ### Step 1: Install DBAL
 ```bash
-cd dbal/ts
+cd dbal/development
 npm install
 npm run build
 ```
@@ -421,7 +421,7 @@ npm run build
 ### Step 2: Update MetaBuilder
 ```typescript
 // src/lib/dbal.ts
-import { DBALClient } from '../../dbal/ts/src'
+import { DBALClient } from '../../dbal/development/src'
 
 export const dbal = new DBALClient({
   mode: 'development',

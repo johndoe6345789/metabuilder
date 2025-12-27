@@ -42,7 +42,7 @@ GitHub Spark applications run in a sandboxed browser environment. To provide sec
 For development, use the TypeScript DBAL client directly with Prisma:
 
 ```typescript
-import { DBALClient } from './dbal/ts/src'
+import { DBALClient } from './dbal/development/src'
 
 const client = new DBALClient({
   mode: 'development',
@@ -70,7 +70,7 @@ Run the DBAL daemon as a background service in your Codespace:
 **1. Build the daemon:**
 
 ```bash
-cd dbal/cpp
+cd dbal/production
 mkdir build && cd build
 cmake .. && make
 ```
@@ -85,7 +85,7 @@ Description=DBAL Daemon for Development
 
 [Service]
 Type=simple
-ExecStart=/workspaces/spark-template/dbal/cpp/build/dbal_daemon --config=/workspaces/spark-template/dbal/config/dev.yaml
+ExecStart=/workspaces/spark-template/dbal/production/build/dbal_daemon --config=/workspaces/spark-template/dbal/config/dev.yaml
 Restart=on-failure
 
 [Install]
@@ -136,7 +136,7 @@ services:
       
   dbal:
     build:
-      context: ./dbal/cpp
+      context: ./dbal/production
       dockerfile: Dockerfile
     environment:
       - DATABASE_URL=file:/data/app.db

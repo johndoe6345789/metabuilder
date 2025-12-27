@@ -14,7 +14,7 @@ The DBAL C++ project uses industry-standard tools for maintaining code quality:
 ### Run All Checks
 
 ```bash
-cd dbal/cpp
+cd dbal/production
 ./lint.sh
 ```
 
@@ -209,7 +209,7 @@ To automatically run linting before commits:
 # Create pre-commit hook
 cat > .git/hooks/pre-commit << 'EOF'
 #!/bin/bash
-cd dbal/cpp
+cd dbal/production
 ./lint.sh
 if [ $? -ne 0 ]; then
     echo "Linting failed. Fix issues or use git commit --no-verify to skip."
@@ -256,7 +256,7 @@ Add to GitHub Actions workflow:
 ```yaml
 - name: Lint C++ Code
   run: |
-    cd dbal/cpp
+    cd dbal/production
     ./lint.sh
 ```
 

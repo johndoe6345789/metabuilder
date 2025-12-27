@@ -66,7 +66,7 @@ await client.users.delete(user.id)
 ### 4. Handle Errors
 
 ```typescript
-import { DBALError, DBALErrorCode } from '../../dbal/ts/src'
+import { DBALError, DBALErrorCode } from '../../dbal/development/src'
 
 try {
   await client.users.read('nonexistent_id')
@@ -125,7 +125,7 @@ Check browser console for `[DBAL Audit]` logs.
 Full TypeScript support:
 
 ```typescript
-import type { User, PageView, ComponentHierarchy, Workflow, LuaScript, Package, Session } from '../../dbal/ts/src'
+import type { User, PageView, ComponentHierarchy, Workflow, LuaScript, Package, Session } from '../../dbal/development/src'
 
 // Type-safe entities
 const user: User = await client.users.create({ ... })
@@ -381,7 +381,7 @@ const client = new DBALClient({
 
 - 📖 Full docs: `dbal/PHASE2_IMPLEMENTATION.md`
 - 🏗️ Architecture: `dbal/README.md`
-- 🚀 Future: `dbal/cpp/PHASE3_DAEMON.md`
+- 🚀 Future: `dbal/production/PHASE3_DAEMON.md`
 - 🤖 AI Agent guide: `dbal/AGENTS.md`
 
 ## Summary

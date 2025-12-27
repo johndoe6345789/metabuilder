@@ -30,7 +30,7 @@ The `cpp-build.yml` GitHub Actions workflow was failing on all platforms:
 
 ### Referenced but Missing Files
 ```
-dbal/cpp/src/
+dbal/production/src/
 ├── client.cpp ❌
 ├── errors.cpp ❌
 ├── capabilities.cpp ❌
@@ -85,7 +85,7 @@ Implemented a pre-check job that detects whether C++ implementation exists befor
 
 1. **Pre-check Job** (`check-implementation`):
    - Runs first on ubuntu-latest
-   - Checks if `dbal/cpp/src/` directory exists
+   - Checks if `dbal/production/src/` directory exists
    - Counts `.cpp` files in directory
    - Outputs `has_sources=true/false`
    - Always succeeds (never fails)
@@ -112,7 +112,7 @@ Implemented a pre-check job that detects whether C++ implementation exists befor
 - Added `needs: check-implementation` to all build jobs (lines 45, 120, 174, 229, 270)
 - Added conditional `if` to all build jobs (lines 46, 121, 175, 230, 271)
 
-### 2. `dbal/cpp/IMPLEMENTATION_STATUS.md`
+### 2. `dbal/production/IMPLEMENTATION_STATUS.md`
 **Type**: New file (124 lines)  
 **Purpose**: Documents C++ implementation status, roadmap, and instructions
 
@@ -208,7 +208,7 @@ When ready to start C++ implementation:
 
 ### Step 1: Create Directory Structure
 ```bash
-cd dbal/cpp
+cd dbal/production
 mkdir -p src/{query,util,adapters/sqlite,daemon}
 mkdir -p tests/{unit,integration,conformance}
 ```
@@ -345,5 +345,5 @@ The fix is production-ready and recommended for immediate merge.
 
 **Questions?** See:
 - `CI_FIX_SUMMARY.md` for detailed analysis
-- `dbal/cpp/IMPLEMENTATION_STATUS.md` for implementation guide
+- `dbal/production/IMPLEMENTATION_STATUS.md` for implementation guide
 - `.github/workflows/cpp-build.yml` for workflow details

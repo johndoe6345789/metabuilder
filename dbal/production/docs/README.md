@@ -13,7 +13,7 @@
 ### Build Instructions
 
 ```bash
-cd dbal/cpp
+cd dbal/production
 conan install . --output-folder=build --build=missing
 cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake
 cmake --build build -j$(nproc)
@@ -390,20 +390,20 @@ Check logs for slow queries and add indexes.
 ```yaml
 - name: Build C++ DBAL
   run: |
-    cd dbal/cpp
+    cd dbal/production
     cmake -B build -DCMAKE_BUILD_TYPE=Release
     cmake --build build --parallel
 
 - name: Run Tests
   run: |
-    cd dbal/cpp/build
+    cd dbal/production/build
     ctest --output-on-failure
 ```
 
 ### Docker Build
 
 ```bash
-docker build -t dbal-daemon:latest -f dbal/cpp/Dockerfile .
+docker build -t dbal-daemon:latest -f dbal/production/Dockerfile .
 docker push dbal-daemon:latest
 ```
 
@@ -429,6 +429,6 @@ curl http://localhost:50051/health
 
 ## Resources
 
-- **API Documentation**: [docs.metabuilder.io/dbal/cpp](https://docs.metabuilder.io/dbal/cpp)
+- **API Documentation**: [docs.metabuilder.io/dbal/production](https://docs.metabuilder.io/dbal/production)
 - **Examples**: [cpp/examples/](cpp/examples/)
 - **Architecture**: [docs/architecture.md](../docs/architecture.md)

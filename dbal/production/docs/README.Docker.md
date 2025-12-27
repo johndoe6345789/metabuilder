@@ -5,7 +5,7 @@
 ### Build the Docker Image
 
 ```bash
-cd dbal/cpp
+cd dbal/production
 docker build -t dbal-daemon:latest .
 ```
 
