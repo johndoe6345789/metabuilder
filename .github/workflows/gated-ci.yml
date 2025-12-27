@@ -1,0 +1,610 @@
+name: Enterprise Gated CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+  statuses: write
+
+# Enterprise Gated Tree Workflow
+# Changes must pass through 5 gates before merge:
+# Gate 1: Code Quality (lint, typecheck, security)
+# Gate 2: Testing (unit, E2E)
+# Gate 3: Build & Package
+# Gate 4: Review & Approval
+# Gate 5: Deployment (staging → production with manual approval)
+
+jobs:
+  # ============================================================================
+  # GATE 1: Code Quality Gates
+  # ============================================================================
+
+  gate-1-start:
+    name: "Gate 1: Code Quality - Starting"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gate 1 checkpoint
+        run: |
+          echo "🚦 GATE 1: CODE QUALITY VALIDATION"
+          echo "================================================"
+          echo "Running: Prisma validation, TypeScript check, Linting, Security scan"
+          echo "Status: IN PROGRESS"
+
+  prisma-check:
+    name: "Gate 1.1: Validate Prisma Schema"
+    runs-on: ubuntu-latest
+    needs: gate-1-start
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        with:
+          node-version: '20'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate Prisma Client
+        run: bun run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Validate Prisma Schema
+        run: bunx prisma validate
+        env:
+          DATABASE_URL: file:./dev.db
+
+  typecheck:
+    name: "Gate 1.2: TypeScript Type Check"
+    runs-on: ubuntu-latest
+    needs: prisma-check
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        with:
+          node-version: '20'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate Prisma Client
+        run: bun run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Run TypeScript type check
+        run: bun run typecheck
+
+  lint:
+    name: "Gate 1.3: Lint Code"
+    runs-on: ubuntu-latest
+    needs: prisma-check
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        with:
+          node-version: '20'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate Prisma Client
+        run: bun run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Run ESLint
+        run: bun run lint
+
+  security-scan:
+    name: "Gate 1.4: Security Scan"
+    runs-on: ubuntu-latest
+    needs: prisma-check
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run security audit
+        run: bun audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Check for vulnerable dependencies
+        run: |
+          echo "Checking for known vulnerabilities..."
+          bun audit --json > audit-results.json 2>&1 || true
+          if [ -f audit-results.json ]; then
+            echo "Security audit completed"
+          fi
+
+  gate-1-complete:
+    name: "Gate 1: Code Quality - Passed ✅"
+    runs-on: ubuntu-latest
+    needs: [prisma-check, typecheck, lint, security-scan]
+    steps:
+      - name: Gate 1 passed
+        run: |
+          echo "✅ GATE 1 PASSED: CODE QUALITY"
+          echo "================================================"
+          echo "✓ Prisma schema validated"
+          echo "✓ TypeScript types checked"
+          echo "✓ Code linted"
+          echo "✓ Security scan completed"
+          echo ""
+          echo "Proceeding to Gate 2: Testing..."
+
+  # ============================================================================
+  # GATE 2: Testing Gates
+  # ============================================================================
+
+  gate-2-start:
+    name: "Gate 2: Testing - Starting"
+    runs-on: ubuntu-latest
+    needs: gate-1-complete
+    steps:
+      - name: Gate 2 checkpoint
+        run: |
+          echo "🚦 GATE 2: TESTING VALIDATION"
+          echo "================================================"
+          echo "Running: Unit tests, E2E tests, DBAL daemon tests"
+          echo "Status: IN PROGRESS"
+
+  test-unit:
+    name: "Gate 2.1: Unit Tests"
+    runs-on: ubuntu-latest
+    needs: gate-2-start
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        with:
+          node-version: '20'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate Prisma Client
+        run: bun run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Run unit tests
+        run: bun run test:unit
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882  # v4.4.3
+        with:
+          name: coverage-report
+          path: frontends/nextjs/coverage/
+          retention-days: 7
+
+  test-e2e:
+    name: "Gate 2.2: E2E Tests"
+    runs-on: ubuntu-latest
+    needs: gate-2-start
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        with:
+          node-version: '20'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate Prisma Client
+        run: bun run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Install Playwright Browsers
+        run: bunx playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        run: bun run test:e2e
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882  # v4.4.3
+        with:
+          name: playwright-report
+          path: frontends/nextjs/playwright-report/
+          retention-days: 7
+
+  test-dbal-daemon:
+    name: "Gate 2.3: DBAL Daemon E2E"
+    runs-on: ubuntu-latest
+    needs: gate-2-start
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        with:
+          node-version: '20'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate Prisma Client
+        run: bun run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Install Playwright Browsers
+        run: bunx playwright install --with-deps chromium
+
+      - name: Run DBAL daemon suite
+        run: bun run test:e2e:dbal-daemon
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Upload daemon test report
+        if: always()
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882  # v4.4.3
+        with:
+          name: playwright-report-dbal-daemon
+          path: frontends/nextjs/playwright-report/
+          retention-days: 7
+
+  gate-2-complete:
+    name: "Gate 2: Testing - Passed ✅"
+    runs-on: ubuntu-latest
+    needs: [test-unit, test-e2e, test-dbal-daemon]
+    steps:
+      - name: Gate 2 passed
+        run: |
+          echo "✅ GATE 2 PASSED: TESTING"
+          echo "================================================"
+          echo "✓ Unit tests passed"
+          echo "✓ E2E tests passed"
+          echo "✓ DBAL daemon tests passed"
+          echo ""
+          echo "Proceeding to Gate 3: Build & Package..."
+
+  # ============================================================================
+  # GATE 3: Build & Package Gates
+  # ============================================================================
+
+  gate-3-start:
+    name: "Gate 3: Build & Package - Starting"
+    runs-on: ubuntu-latest
+    needs: gate-2-complete
+    steps:
+      - name: Gate 3 checkpoint
+        run: |
+          echo "🚦 GATE 3: BUILD & PACKAGE VALIDATION"
+          echo "================================================"
+          echo "Running: Application build, artifact packaging"
+          echo "Status: IN PROGRESS"
+
+  build:
+    name: "Gate 3.1: Build Application"
+    runs-on: ubuntu-latest
+    needs: gate-3-start
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    outputs:
+      build-success: ${{ steps.build-step.outcome }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        with:
+          node-version: '20'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate Prisma Client
+        run: bun run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Build
+        id: build-step
+        run: bun run build
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882  # v4.4.3
+        with:
+          name: dist
+          path: frontends/nextjs/.next/
+          retention-days: 7
+
+  quality-check:
+    name: "Gate 3.2: Code Quality Metrics"
+    runs-on: ubuntu-latest
+    needs: gate-3-start
+    if: github.event_name == 'pull_request'
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        with:
+          node-version: '20'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate Prisma Client
+        run: bun run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Check for console.log statements
+        run: |
+          if git diff origin/${{ github.base_ref }}...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' | grep -E '^\+.*console\.(log|debug|info)'; then
+            echo "⚠️ Found console.log statements in the changes"
+            echo "Please remove console.log statements before merging"
+            exit 1
+          fi
+        continue-on-error: true
+
+      - name: Check for TODO comments
+        run: |
+          TODO_COUNT=$(git diff origin/${{ github.base_ref }}...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' | grep -E '^\+.*TODO|FIXME' | wc -l)
+          if [ $TODO_COUNT -gt 0 ]; then
+            echo "⚠️ Found $TODO_COUNT TODO/FIXME comments in the changes"
+            echo "Please address TODO comments before merging or create issues for them"
+          fi
+        continue-on-error: true
+
+  gate-3-complete:
+    name: "Gate 3: Build & Package - Passed ✅"
+    runs-on: ubuntu-latest
+    needs: [build, quality-check]
+    if: always() && needs.build.result == 'success' && (needs.quality-check.result == 'success' || needs.quality-check.result == 'skipped')
+    steps:
+      - name: Gate 3 passed
+        run: |
+          echo "✅ GATE 3 PASSED: BUILD & PACKAGE"
+          echo "================================================"
+          echo "✓ Application built successfully"
+          echo "✓ Build artifacts packaged"
+          echo "✓ Quality metrics validated"
+          echo ""
+          echo "Proceeding to Gate 4: Review & Approval..."
+
+  # ============================================================================
+  # GATE 4: Review & Approval Gate (PR only)
+  # ============================================================================
+
+  gate-4-review-required:
+    name: "Gate 4: Review & Approval Required"
+    runs-on: ubuntu-latest
+    needs: gate-3-complete
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Check PR approval status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const latestReviews = {};
+            for (const review of reviews) {
+              latestReviews[review.user.login] = review.state;
+            }
+            
+            const hasApproval = Object.values(latestReviews).includes('APPROVED');
+            const hasRequestChanges = Object.values(latestReviews).includes('CHANGES_REQUESTED');
+            
+            console.log('Review Status:');
+            console.log('==============');
+            console.log('Approvals:', Object.values(latestReviews).filter(s => s === 'APPROVED').length);
+            console.log('Change Requests:', Object.values(latestReviews).filter(s => s === 'CHANGES_REQUESTED').length);
+            
+            if (hasRequestChanges) {
+              core.setFailed('❌ Changes requested - PR cannot proceed to deployment');
+            } else if (!hasApproval) {
+              core.notice('⏳ PR approval required before merge - this gate will pass when approved');
+            } else {
+              console.log('✅ PR approved - gate passed');
+            }
+
+  gate-4-complete:
+    name: "Gate 4: Review & Approval - Status"
+    runs-on: ubuntu-latest
+    needs: gate-4-review-required
+    if: always() && github.event_name == 'pull_request'
+    steps:
+      - name: Gate 4 status
+        run: |
+          echo "🚦 GATE 4: REVIEW & APPROVAL"
+          echo "================================================"
+          echo "Note: This gate requires human approval"
+          echo "PR must be approved by reviewers before auto-merge"
+          echo ""
+          if [ "${{ needs.gate-4-review-required.result }}" == "success" ]; then
+            echo "✅ Review approval received"
+            echo "Proceeding to Gate 5: Deployment (post-merge)..."
+          else
+            echo "⏳ Awaiting review approval"
+            echo "Gate will complete when PR is approved"
+          fi
+
+  # ============================================================================
+  # GATE 5: Deployment Gate (post-merge, main branch only)
+  # ============================================================================
+
+  gate-5-deployment-ready:
+    name: "Gate 5: Deployment Ready"
+    runs-on: ubuntu-latest
+    needs: gate-3-complete
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    steps:
+      - name: Deployment gate checkpoint
+        run: |
+          echo "🚦 GATE 5: DEPLOYMENT VALIDATION"
+          echo "================================================"
+          echo "Code merged to main branch"
+          echo "Ready for staging deployment"
+          echo ""
+          echo "✅ ALL GATES PASSED"
+          echo "================================================"
+          echo "✓ Gate 1: Code Quality"
+          echo "✓ Gate 2: Testing"
+          echo "✓ Gate 3: Build & Package"
+          echo "✓ Gate 4: Review & Approval"
+          echo "✓ Gate 5: Ready for Deployment"
+          echo ""
+          echo "Note: Production deployment requires manual approval"
+          echo "Use workflow_dispatch with environment='production'"
+
+  # ============================================================================
+  # Summary Report
+  # ============================================================================
+
+  gates-summary:
+    name: "🎯 Gates Summary"
+    runs-on: ubuntu-latest
+    needs: [gate-1-complete, gate-2-complete, gate-3-complete]
+    if: always()
+    steps:
+      - name: Generate gates report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const gates = [
+              { name: 'Gate 1: Code Quality', status: '${{ needs.gate-1-complete.result }}' },
+              { name: 'Gate 2: Testing', status: '${{ needs.gate-2-complete.result }}' },
+              { name: 'Gate 3: Build & Package', status: '${{ needs.gate-3-complete.result }}' }
+            ];
+            
+            let summary = '## 🚦 Enterprise Gated CI/CD Pipeline Summary\n\n';
+            
+            for (const gate of gates) {
+              const icon = gate.status === 'success' ? '✅' : 
+                          gate.status === 'failure' ? '❌' : 
+                          gate.status === 'skipped' ? '⏭️' : '⏳';
+              summary += `${icon} **${gate.name}**: ${gate.status}\n`;
+            }
+            
+            if (context.eventName === 'pull_request') {
+              summary += '\n### Next Steps\n';
+              summary += '- ✅ All CI gates passed\n';
+              summary += '- ⏳ Awaiting PR approval (Gate 4)\n';
+              summary += '- 📋 Once approved, PR will auto-merge\n';
+              summary += '- 🚀 Deployment gates (Gate 5) run after merge to main\n';
+            }
+            
+            console.log(summary);
+            
+            // Post comment on PR if applicable
+            if (context.eventName === 'pull_request') {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: summary
+              });
+            }

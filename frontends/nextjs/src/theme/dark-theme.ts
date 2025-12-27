@@ -1,5 +1,5 @@
-export * from './modes/dark-theme'
 'use client'
+export * from './modes/dark-theme'
 
 import { createTheme, alpha, type Shadows } from '@mui/material/styles'
 import { colors } from './colors'

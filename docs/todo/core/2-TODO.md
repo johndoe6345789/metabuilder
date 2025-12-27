@@ -7,14 +7,14 @@
 > Reference: `docs/reference/DOCUMENTATION_FINDINGS.md`, `docs/implementation/component-atomicity-refactor.md`
 
 ### Atoms (`src/components/atoms/`)
-- [ ] Audit existing atoms (~12 components) for proper isolation
-- [ ] Ensure atoms have no dependencies on molecules/organisms
+- [x] Audit existing atoms (~12 components) for proper isolation ✅ COMPLETED: 27 atoms audited, all properly isolated
+- [x] Ensure atoms have no dependencies on molecules/organisms ✅ COMPLETED: ESLint rule added, see `docs/implementation/ui/atomic/ATOM_AUDIT_REPORT.md`
 - [ ] Add missing base UI atoms (buttons, inputs, labels, icons)
 - [ ] Document atom prop interfaces with JSDoc
 
 ### Molecules (`src/components/molecules/`)
-- [ ] Audit molecules (~10 components) - should be 2-5 atoms combined
-- [x] Identify organisms incorrectly categorized as molecules (See: `docs/analysis/molecule-organism-audit.md` - Found 1: SecurityWarningDialog)
+- [x] Audit molecules (~10 components) - should be 2-5 atoms combined (✅ See `docs/implementation/ui/atomic/MOLECULE_AUDIT_REPORT.md`)
+- [ ] Identify organisms incorrectly categorized as molecules
 - [ ] Ensure molecules only import from atoms, not organisms
 - [ ] Create missing common molecules (form fields, search bars, nav items)
 

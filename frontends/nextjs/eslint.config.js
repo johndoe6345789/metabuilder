@@ -3,9 +3,10 @@ import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
+import atomicDesignRules from './eslint-plugins/atomic-design-rules.js'
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', 'packages/*/dist', 'packages/*/node_modules', '.next/**', 'coverage/**', 'next-env.d.ts', 'prisma.config.ts'] },
+  { ignores: ['dist', 'node_modules', 'packages/*/dist', 'packages/*/node_modules', '.next/**', 'coverage/**', 'next-env.d.ts', 'prisma.config.ts', 'playwright.dbal-daemon.config.ts'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
@@ -20,6 +21,7 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      'atomic-design': atomicDesignRules,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -40,6 +42,8 @@ export default tseslint.config(
       'no-debugger': 'error',
       'prefer-const': 'error',
       'no-var': 'error',
+      // Atomic design rules
+      'atomic-design/no-upward-imports': 'error',
     },
   },
 )
