@@ -1,10 +1,6 @@
 name: Development Assistance
 
 on:
-  push:
-    branches-ignore:
-      - main
-      - master
   pull_request:
     types: [opened, synchronize, ready_for_review]
   issue_comment:
