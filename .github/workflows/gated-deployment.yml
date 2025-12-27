@@ -460,7 +460,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [pre-deployment-validation, deploy-production]
     if: |
-      always() && 
+      failure() && 
       (needs.pre-deployment-validation.result == 'failure' || needs.deploy-production.result == 'failure')
     steps:
       - name: Determine failure stage
@@ -580,7 +580,7 @@ jobs:
             
             1. **Re-run workflow** with previous stable commit SHA
             2. **OR use manual rollback:**
-               - Rollback specific migration: \`npx prisma migrate resolve --rolled-back <migration_name>\`
+               - Rollback specific migration: \`npx prisma migrate resolve --rolled-back MIGRATION_NAME --schema=prisma/schema.prisma\`
                - Deploy previous Docker image/build
                - Restore from pre-deployment backup if needed
                - ⚠️ Avoid \`prisma migrate reset\` in production (causes data loss)
