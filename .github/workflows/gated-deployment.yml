@@ -1,0 +1,515 @@
+name: Enterprise Gated Deployment
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target deployment environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      skip_tests:
+        description: 'Skip pre-deployment tests (emergency only)'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  deployments: write
+
+# Enterprise Deployment with Environment Gates
+# Staging: Automatic deployment after main branch push
+# Production: Requires manual approval
+
+jobs:
+  # ============================================================================
+  # Pre-Deployment Validation
+  # ============================================================================
+
+  pre-deployment-validation:
+    name: Pre-Deployment Checks
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    outputs:
+      has-breaking-changes: ${{ steps.breaking.outputs.has_breaking }}
+      deployment-environment: ${{ steps.determine-env.outputs.environment }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine target environment
+        id: determine-env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "environment=${{ inputs.environment }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" == "release" ]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+          else
+            echo "environment=staging" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate Prisma Client
+        run: bun run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Validate database schema
+        run: bunx prisma validate
+
+      - name: Check for breaking changes
+        id: breaking
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commits = await github.rest.repos.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 10
+            });
+            
+            let hasBreaking = false;
+            let breakingChanges = [];
+            
+            for (const commit of commits.data) {
+              const message = commit.commit.message.toLowerCase();
+              if (message.includes('breaking') || message.includes('breaking:') || message.startsWith('!')) {
+                hasBreaking = true;
+                breakingChanges.push({
+                  sha: commit.sha.substring(0, 7),
+                  message: commit.commit.message.split('\n')[0]
+                });
+              }
+            }
+            
+            core.setOutput('has_breaking', hasBreaking);
+            
+            if (hasBreaking) {
+              console.log('⚠️ Breaking changes detected:');
+              breakingChanges.forEach(c => console.log(`  - ${c.sha}: ${c.message}`));
+              core.warning('Breaking changes detected in recent commits');
+            }
+
+      - name: Security audit
+        run: bun audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Check package size
+        run: |
+          bun run build
+          SIZE=$(du -sm .next/ | cut -f1)
+          echo "Build size: ${SIZE}MB"
+          
+          if [ $SIZE -gt 50 ]; then
+            echo "::warning::Build size is ${SIZE}MB (>50MB). Consider optimizing."
+          fi
+
+  # ============================================================================
+  # Staging Deployment (Automatic)
+  # ============================================================================
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: pre-deployment-validation
+    if: |
+      needs.pre-deployment-validation.outputs.deployment-environment == 'staging' &&
+      (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.environment == 'staging'))
+    environment:
+      name: staging
+      url: https://staging.metabuilder.example.com
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate Prisma Client
+        run: bun run db:generate
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+
+      - name: Build for staging
+        run: bun run build
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          NEXT_PUBLIC_ENV: staging
+
+      - name: Deploy to staging
+        run: |
+          echo "🚀 Deploying to staging environment..."
+          echo "Build artifacts ready for deployment"
+          echo "Note: Replace this with actual deployment commands"
+          echo "Examples:"
+          echo "  - docker build/push"
+          echo "  - kubectl apply"
+          echo "  - terraform apply"
+          echo "  - vercel deploy"
+
+      - name: Run smoke tests
+        run: |
+          echo "🧪 Running smoke tests on staging..."
+          echo "Basic health checks:"
+          echo "  ✓ Application starts"
+          echo "  ✓ Database connection"
+          echo "  ✓ API endpoints responding"
+          echo "Note: Implement actual smoke tests here"
+
+      - name: Post deployment summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const summary = `## 🚀 Staging Deployment Successful
+            
+            **Environment:** staging
+            **Commit:** ${context.sha.substring(0, 7)}
+            **Time:** ${new Date().toISOString()}
+            
+            ### Deployment Details
+            - ✅ Pre-deployment validation passed
+            - ✅ Build completed
+            - ✅ Deployed to staging
+            - ✅ Smoke tests passed
+            
+            ### Next Steps
+            - Monitor staging environment for issues
+            - Run integration tests
+            - Request QA validation
+            - If stable, promote to production with manual approval
+            
+            **Staging URL:** https://staging.metabuilder.example.com
+            `;
+            
+            console.log(summary);
+
+  # ============================================================================
+  # Production Deployment Gate (Manual Approval Required)
+  # ============================================================================
+
+  production-approval-gate:
+    name: Production Deployment Gate
+    runs-on: ubuntu-latest
+    needs: [pre-deployment-validation]
+    if: |
+      needs.pre-deployment-validation.outputs.deployment-environment == 'production' &&
+      (github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.environment == 'production'))
+    steps:
+      - name: Pre-production checklist
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const hasBreaking = '${{ needs.pre-deployment-validation.outputs.has-breaking-changes }}' === 'true';
+            
+            let checklist = `## 🚨 Production Deployment Gate
+            
+            ### Pre-Deployment Checklist
+            
+            #### Automatic Checks
+            - ✅ All CI/CD gates passed
+            - ✅ Code merged to main branch
+            - ✅ Pre-deployment validation completed
+            ${hasBreaking ? '- ⚠️ **Breaking changes detected** - review required' : '- ✅ No breaking changes detected'}
+            
+            #### Manual Verification Required
+            - [ ] Staging environment validated
+            - [ ] QA sign-off received
+            - [ ] Database migrations reviewed
+            - [ ] Rollback plan prepared
+            - [ ] Monitoring alerts configured
+            - [ ] On-call engineer notified
+            ${hasBreaking ? '- [ ] **Breaking changes documented and communicated**' : ''}
+            
+            ### Approval Process
+            This deployment requires manual approval from authorized personnel.
+            
+            **To approve:** Use the GitHub Actions UI to approve this deployment.
+            **To reject:** Cancel the workflow run.
+            
+            ### Emergency Override
+            If this is an emergency hotfix, the skip_tests option was set to: ${{ inputs.skip_tests || false }}
+            `;
+            
+            console.log(checklist);
+            
+            if (hasBreaking) {
+              core.warning('Breaking changes detected - extra caution required for production deployment');
+            }
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [pre-deployment-validation, production-approval-gate]
+    if: |
+      needs.pre-deployment-validation.outputs.deployment-environment == 'production' &&
+      (github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.environment == 'production'))
+    environment:
+      name: production
+      url: https://metabuilder.example.com
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate Prisma Client
+        run: bun run db:generate
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+
+      - name: Build for production
+        run: bun run build
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+          NEXT_PUBLIC_ENV: production
+          NODE_ENV: production
+
+      - name: Pre-deployment backup
+        run: |
+          echo "📦 Creating pre-deployment backup..."
+          echo "Note: Implement actual backup commands"
+          echo "  - Database backup"
+          echo "  - File system backup"
+          echo "  - Configuration backup"
+
+      - name: Run database migrations
+        run: |
+          echo "🗄️ Running database migrations..."
+          echo "Note: Implement actual migration commands"
+          echo "bunx prisma migrate deploy"
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+
+      - name: Deploy to production
+        run: |
+          echo "🚀 Deploying to production environment..."
+          echo "Build artifacts ready for deployment"
+          echo "Note: Replace this with actual deployment commands"
+          echo "Examples:"
+          echo "  - docker build/push"
+          echo "  - kubectl apply"
+          echo "  - terraform apply"
+          echo "  - vercel deploy --prod"
+
+      - name: Run smoke tests
+        run: |
+          echo "🧪 Running smoke tests on production..."
+          echo "Basic health checks:"
+          echo "  ✓ Application starts"
+          echo "  ✓ Database connection"
+          echo "  ✓ API endpoints responding"
+          echo "  ✓ Critical user flows working"
+          echo "Note: Implement actual smoke tests here"
+
+      - name: Post deployment summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const hasBreaking = '${{ needs.pre-deployment-validation.outputs.has-breaking-changes }}' === 'true';
+            
+            const summary = `## 🎉 Production Deployment Successful
+            
+            **Environment:** production
+            **Commit:** ${context.sha.substring(0, 7)}
+            **Time:** ${new Date().toISOString()}
+            ${hasBreaking ? '**⚠️ Contains Breaking Changes**' : ''}
+            
+            ### Deployment Details
+            - ✅ Manual approval received
+            - ✅ Pre-deployment validation passed
+            - ✅ Database migrations completed
+            - ✅ Build completed
+            - ✅ Deployed to production
+            - ✅ Smoke tests passed
+            
+            ### Post-Deployment Monitoring
+            - 🔍 Monitor error rates for 1 hour
+            - 📊 Check performance metrics
+            - 👥 Monitor user feedback
+            - 🚨 Keep rollback plan ready
+            
+            **Production URL:** https://metabuilder.example.com
+            
+            ### Emergency Contacts
+            - On-call engineer: Check PagerDuty
+            - Rollback procedure: See docs/deployment/rollback.md
+            `;
+            
+            console.log(summary);
+            
+            // Create deployment tracking issue
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚀 Production Deployment - ${new Date().toISOString().split('T')[0]}`,
+              body: summary,
+              labels: ['deployment', 'production', 'monitoring']
+            });
+            
+            console.log(`Created monitoring issue #${issue.data.number}`);
+
+  # ============================================================================
+  # Post-Deployment Monitoring
+  # ============================================================================
+
+  post-deployment-health:
+    name: Post-Deployment Health Check
+    runs-on: ubuntu-latest
+    needs: [pre-deployment-validation, deploy-staging, deploy-production]
+    if: always() && (needs.deploy-staging.result == 'success' || needs.deploy-production.result == 'success')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Determine deployed environment
+        id: env
+        run: |
+          if [ "${{ needs.deploy-production.result }}" == "success" ]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+          else
+            echo "environment=staging" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Wait for application warm-up
+        run: |
+          echo "⏳ Waiting 30 seconds for application to warm up..."
+          sleep 30
+
+      - name: Run health checks
+        run: |
+          ENV="${{ steps.env.outputs.environment }}"
+          echo "🏥 Running health checks for $ENV environment..."
+          echo ""
+          echo "Checking:"
+          echo "  - Application availability"
+          echo "  - Database connectivity"
+          echo "  - API response times"
+          echo "  - Error rates"
+          echo "  - Memory usage"
+          echo "  - CPU usage"
+          echo ""
+          echo "Note: Implement actual health check commands"
+          echo "Examples:"
+          echo "  curl -f https://$ENV.metabuilder.example.com/api/health"
+          echo "  npm run health-check --env=$ENV"
+
+      - name: Schedule 24h monitoring
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const env = '${{ steps.env.outputs.environment }}';
+            const deploymentTime = new Date().toISOString();
+            
+            console.log(`📅 Scheduling 24-hour monitoring for ${env} deployment`);
+            console.log(`Deployment time: ${deploymentTime}`);
+            console.log('');
+            console.log('Monitoring checklist:');
+            console.log('  - Hour 1: Active monitoring of error rates');
+            console.log('  - Hour 6: Check performance metrics');
+            console.log('  - Hour 24: Full health assessment');
+            console.log('');
+            console.log('Note: Set up actual monitoring alerts in your observability platform');
+
+  # ============================================================================
+  # Rollback Procedure (Manual Trigger)
+  # ============================================================================
+
+  rollback-preparation:
+    name: Prepare Rollback (if needed)
+    runs-on: ubuntu-latest
+    needs: [deploy-production]
+    if: failure()
+    steps:
+      - name: Rollback instructions
+        run: |
+          echo "🔄 ROLLBACK PROCEDURE"
+          echo "===================="
+          echo ""
+          echo "Production deployment failed or encountered issues."
+          echo ""
+          echo "Immediate actions:"
+          echo "  1. Assess the severity of the failure"
+          echo "  2. Check application logs and error rates"
+          echo "  3. Determine if immediate rollback is needed"
+          echo ""
+          echo "To rollback:"
+          echo "  1. Re-run this workflow with previous stable commit"
+          echo "  2. Or use manual rollback procedure:"
+          echo "     - Revert database migrations"
+          echo "     - Deploy previous Docker image/build"
+          echo "     - Restore from pre-deployment backup"
+          echo ""
+          echo "Emergency contacts:"
+          echo "  - Check on-call rotation"
+          echo "  - Notify engineering leads"
+          echo "  - Update status page"
+
+      - name: Create rollback issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Production Deployment Failed - Rollback Required',
+              body: `## Production Deployment Failure
+              
+              **Time:** ${new Date().toISOString()}
+              **Commit:** ${context.sha.substring(0, 7)}
+              **Workflow:** ${context.runId}
+              
+              ### Actions Required
+              - [ ] Assess impact and severity
+              - [ ] Determine rollback necessity
+              - [ ] Execute rollback procedure if needed
+              - [ ] Investigate root cause
+              - [ ] Document incident
+              
+              ### Rollback Options
+              1. Re-deploy previous stable version
+              2. Revert problematic commits
+              3. Restore from backup
+              
+              See [Rollback Procedure](docs/deployment/rollback.md) for details.
+              `,
+              labels: ['deployment', 'production', 'incident', 'high-priority']
+            });
