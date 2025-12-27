@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
-import { PowerTransferTab } from './PowerTransferTab'
+import { PowerTransferTab } from '../PowerTransferTab'
 import type { User } from '@/lib/level-types'
 
 const superGodUser: User = {
