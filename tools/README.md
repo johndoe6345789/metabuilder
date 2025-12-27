@@ -28,6 +28,10 @@ Scripts organized by function:
 - **`diagnose-workflows.sh`** - Diagnose workflow issues
 - **`capture-screenshot.ts`** - Capture UI screenshots
 
+### Refactors & Analysis
+
+- **`analysis/function_isolation_refactor.py`** - Build one-function-per-file refactor plans for TypeScript/C++ and generate TODO stub files with intentional errors for later cleanup.
+
 ### Project Management
 
 - **`project-management/populate-kanban.py`** - Populate GitHub project board from TODO files
