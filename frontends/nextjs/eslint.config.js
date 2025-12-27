@@ -6,7 +6,7 @@ import tseslint from 'typescript-eslint'
 import atomicDesignRules from './eslint-plugins/atomic-design-rules.js'
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', 'packages/*/dist', 'packages/*/node_modules', '.next/**', 'coverage/**', 'next-env.d.ts', 'prisma.config.ts'] },
+  { ignores: ['dist', 'node_modules', 'packages/*/dist', 'packages/*/node_modules', '.next/**', 'coverage/**', 'next-env.d.ts', 'prisma.config.ts', 'playwright.dbal-daemon.config.ts'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
