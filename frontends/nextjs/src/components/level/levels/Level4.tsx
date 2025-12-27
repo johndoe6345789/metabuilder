@@ -6,6 +6,7 @@ import { Level4Summary } from '../../level4/Level4Summary'
 import { NerdModeIDE } from '../../misc/NerdModeIDE'
 import type { User as UserType } from '@/lib/level-types'
 import { useLevel4AppState } from './hooks/useLevel4AppState'
+import { IntroSection } from '../sections/IntroSection'
 
 interface Level4Props {
   user: UserType
@@ -42,16 +43,16 @@ export function Level4({ user, onLogout, onNavigate, onPreview }: Level4Props) {
         onImportConfig={handleImportConfig}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Application Builder</h1>
-          <p className="text-muted-foreground">
-            {nerdMode
-              ? "Design your application declaratively. Define schemas, create workflows, and write Lua scripts."
-              : "Build your application visually. Configure pages, users, and data models with simple forms."
-            }
-          </p>
-        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <IntroSection
+          eyebrow="Level 4"
+          title="Application Builder"
+          description={
+            nerdMode
+              ? 'Design your application declaratively. Define schemas, create workflows, and write Lua scripts.'
+              : 'Build your application visually. Configure pages, users, and data models with simple forms.'
+          }
+        />
 
         <Level4Tabs
           appConfig={appConfig}
