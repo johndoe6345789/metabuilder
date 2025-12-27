@@ -3,7 +3,12 @@
 import { forwardRef } from 'react'
 import { Divider, DividerProps } from '@mui/material'
 
+/**
+ * Props for the Separator component
+ * @extends {DividerProps} Inherits Material-UI Divider props
+ */
 export interface SeparatorProps extends DividerProps {
+  /** Whether the separator is decorative (for accessibility) */
   decorative?: boolean
 }
 

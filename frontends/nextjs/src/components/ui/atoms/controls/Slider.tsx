@@ -3,6 +3,10 @@
 import { forwardRef } from 'react'
 import { Slider as MuiSlider, SliderProps as MuiSliderProps } from '@mui/material'
 
+/**
+ * Props for the Slider component
+ * @extends {MuiSliderProps} Inherits Material-UI Slider props
+ */
 export type SliderProps = MuiSliderProps
 
 const Slider = forwardRef<HTMLSpanElement, SliderProps>(

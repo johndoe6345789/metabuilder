@@ -3,8 +3,14 @@
 import { forwardRef } from 'react'
 import { InputBase, InputBaseProps } from '@mui/material'
 
+/**
+ * Props for the Input component
+ * @extends {InputBaseProps} Inherits Material-UI InputBase props
+ */
 export interface InputProps extends Omit<InputBaseProps, 'size'> {
+  /** Whether the input is in an error state */
   error?: boolean
+  /** Whether the input should take up the full width of its container */
   fullWidth?: boolean
 }
 

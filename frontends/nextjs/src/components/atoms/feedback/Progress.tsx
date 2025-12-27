@@ -10,7 +10,12 @@ import {
   Typography,
 } from '@mui/material'
 
+/**
+ * Props for the Progress component
+ * @extends {LinearProgressProps} Inherits Material-UI LinearProgress props
+ */
 export interface ProgressProps extends LinearProgressProps {
+  /** Whether to display a percentage label next to the progress bar */
   showLabel?: boolean
 }
 

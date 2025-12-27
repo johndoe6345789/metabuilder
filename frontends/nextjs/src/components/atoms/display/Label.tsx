@@ -3,8 +3,14 @@
 import { forwardRef, LabelHTMLAttributes } from 'react'
 import { Typography } from '@mui/material'
 
+/**
+ * Props for the Label component
+ * @extends {LabelHTMLAttributes} Inherits HTML label element attributes
+ */
 export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
+  /** Whether to display a required indicator (*) */
   required?: boolean
+  /** Whether to style the label as an error state */
   error?: boolean
 }
 
