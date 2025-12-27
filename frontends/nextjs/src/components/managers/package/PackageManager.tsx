@@ -1,60 +1,44 @@
-import { useState, useEffect } from 'react'
-import { Button } from '@/components/ui'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui'
-import { Input } from '@/components/ui'
-import { Badge } from '@/components/ui'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { ScrollArea } from '@/components/ui'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
-import { Separator } from '@/components/ui'
+import { useState } from 'react'
+import { Badge, Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, ScrollArea, Separator } from '@/components/ui'
 import { toast } from 'sonner'
-import { PACKAGE_CATALOG, type PackageCatalogData } from '@/lib/packages/core/package-catalog'
-import type { PackageManifest, InstalledPackage } from '@/lib/package-types'
-import { installPackage, listInstalledPackages, togglePackageEnabled, uninstallPackage } from '@/lib/api/packages'
-import { Package, Download, Trash, Power, MagnifyingGlass, Star, Tag, User, TrendUp, Funnel, Export, ArrowSquareIn } from '@phosphor-icons/react'
+import { installPackage, togglePackageEnabled, uninstallPackage } from '@/lib/api/packages'
+import type { PackageCatalogData } from '@/lib/packages/core/package-catalog'
+import { ArrowSquareIn, Download, Export, Package, Star, Tag, Trash, User } from '@phosphor-icons/react'
 import { PackageImportExport } from './PackageImportExport'
+import { PackageFilters } from './package-manager/PackageFilters'
+import { PackageTabs } from './package-manager/PackageTabs'
+import { usePackages } from './package-manager/usePackages'
 
 interface PackageManagerProps {
   onClose?: () => void
 }
 
 export function PackageManager({ onClose }: PackageManagerProps) {
-  const [packages, setPackages] = useState<PackageManifest[]>([])
-  const [installedPackages, setInstalledPackages] = useState<InstalledPackage[]>([])
+  const {
+    filteredPackages,
+    installedList,
+    availableList,
+    installedPackages,
+    categories,
+    searchQuery,
+    categoryFilter,
+    sortBy,
+    setSearchQuery,
+    setCategoryFilter,
+    setSortBy,
+    loadPackages,
+    getCatalogEntry,
+  } = usePackages()
   const [selectedPackage, setSelectedPackage] = useState<PackageCatalogData | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState<string>('all')
-  const [sortBy, setSortBy] = useState<'name' | 'downloads' | 'rating'>('downloads')
   const [showDetails, setShowDetails] = useState(false)
   const [installing, setInstalling] = useState(false)
   const [showImportExport, setShowImportExport] = useState(false)
   const [importExportMode, setImportExportMode] = useState<'import' | 'export'>('export')
 
-  useEffect(() => {
-    loadPackages()
-  }, [])
-
-  const loadPackages = async () => {
-    const installed = await listInstalledPackages()
-    setInstalledPackages(installed)
-
-    const allPackages = Object.values(PACKAGE_CATALOG).map(pkg => {
-      const packageData = pkg()
-
-      return {
-        ...packageData.manifest,
-        installed: installed.some(ip => ip.packageId === packageData.manifest.id),
-      }
-    })
-
-    setPackages(allPackages)
-  }
-
   const handleInstallPackage = async (packageId: string) => {
     setInstalling(true)
     try {
-      const packageEntry = PACKAGE_CATALOG[packageId]?.()
+      const packageEntry = getCatalogEntry(packageId)
       if (!packageEntry) {
         toast.error('Package not found')
         return
@@ -75,7 +59,7 @@ export function PackageManager({ onClose }: PackageManagerProps) {
 
   const handleUninstallPackage = async (packageId: string) => {
     try {
-      const packageEntry = PACKAGE_CATALOG[packageId]?.()
+      const packageEntry = getCatalogEntry(packageId)
       if (!packageEntry) {
         toast.error('Package not found')
         return
@@ -103,28 +87,18 @@ export function PackageManager({ onClose }: PackageManagerProps) {
     }
   }
 
-  const filteredPackages = packages
-    .filter(pkg => {
-      const matchesSearch =
-        pkg.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        pkg.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        pkg.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  const openPackageDetails = (packageId: string) => {
+    const catalogEntry = getCatalogEntry(packageId)
+    if (!catalogEntry) return
 
-      const matchesCategory = categoryFilter === 'all' || pkg.category === categoryFilter
+    const installedPackage = installedPackages.find(pkg => pkg.packageId === packageId)
 
-      return matchesSearch && matchesCategory
+    setSelectedPackage({
+      ...catalogEntry,
+      manifest: { ...catalogEntry.manifest, installed: Boolean(installedPackage) },
     })
-    .sort((a, b) => {
-      if (sortBy === 'name') return a.name.localeCompare(b.name)
-      if (sortBy === 'downloads') return b.downloadCount - a.downloadCount
-      if (sortBy === 'rating') return b.rating - a.rating
-      return 0
-    })
-
-  const categories = ['all', ...Array.from(new Set(packages.map(p => p.category)))]
-
-  const installedList = packages.filter(p => p.installed)
-  const availableList = packages.filter(p => !p.installed)
+    setShowDetails(true)
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -139,8 +113,8 @@ export function PackageManager({ onClose }: PackageManagerProps) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => {
               setImportExportMode('import')
               setShowImportExport(true)
@@ -149,8 +123,8 @@ export function PackageManager({ onClose }: PackageManagerProps) {
             <ArrowSquareIn size={16} className="mr-2" />
             Import
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => {
               setImportExportMode('export')
               setShowImportExport(true)
@@ -167,127 +141,25 @@ export function PackageManager({ onClose }: PackageManagerProps) {
         </div>
       </div>
 
+      <PackageFilters
+        searchQuery={searchQuery}
+        categoryFilter={categoryFilter}
+        sortBy={sortBy}
+        categories={categories}
+        onSearchChange={setSearchQuery}
+        onCategoryChange={setCategoryFilter}
+        onSortChange={setSortBy}
+      />
+
       <div className="flex-1 overflow-hidden">
-        <Tabs defaultValue="all" className="h-full flex flex-col">
-          <div className="px-6 pt-4">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="all">All Packages</TabsTrigger>
-              <TabsTrigger value="installed">
-                Installed ({installedList.length})
-              </TabsTrigger>
-              <TabsTrigger value="available">
-                Available ({availableList.length})
-              </TabsTrigger>
-            </TabsList>
-          </div>
-
-          <div className="px-6 py-4 space-y-3 border-b">
-            <div className="relative">
-              <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-              <Input
-                placeholder="Search packages..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-
-            <div className="flex gap-3">
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="w-[180px]">
-                  <Funnel size={16} className="mr-2" />
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map(cat => (
-                    <SelectItem key={cat} value={cat}>
-                      {cat === 'all' ? 'All Categories' : cat.charAt(0).toUpperCase() + cat.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={sortBy} onValueChange={(v) => setSortBy(v as any)}>
-                <SelectTrigger className="w-[180px]">
-                  <TrendUp size={16} className="mr-2" />
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="downloads">Most Downloaded</SelectItem>
-                  <SelectItem value="rating">Highest Rated</SelectItem>
-                  <SelectItem value="name">Name</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <TabsContent value="all" className="flex-1 m-0">
-            <ScrollArea className="h-full">
-              <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredPackages.map(pkg => (
-                  <PackageCard
-                    key={pkg.id}
-                    package={pkg}
-                    isInstalled={pkg.installed}
-                    installedPackage={installedPackages.find(ip => ip.packageId === pkg.id)}
-                    onViewDetails={() => {
-                      setSelectedPackage(PACKAGE_CATALOG[pkg.id]?.() ?? null)
-                      setShowDetails(true)
-                    }}
-                    onToggle={handleTogglePackage}
-                  />
-                ))}
-              </div>
-            </ScrollArea>
-          </TabsContent>
-
-          <TabsContent value="installed" className="flex-1 m-0">
-            <ScrollArea className="h-full">
-              <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {installedList.length === 0 ? (
-                  <div className="col-span-full text-center py-12">
-                    <Package size={48} className="mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-muted-foreground">No packages installed yet</p>
-                  </div>
-                ) : (
-                  installedList.map(pkg => (
-                    <PackageCard
-                      key={pkg.id}
-                      package={pkg}
-                      isInstalled={true}
-                      installedPackage={installedPackages.find(ip => ip.packageId === pkg.id)}
-                      onViewDetails={() => {
-                        setSelectedPackage(PACKAGE_CATALOG[pkg.id]?.() ?? null)
-                        setShowDetails(true)
-                      }}
-                      onToggle={handleTogglePackage}
-                    />
-                  ))
-                )}
-              </div>
-            </ScrollArea>
-          </TabsContent>
-
-          <TabsContent value="available" className="flex-1 m-0">
-            <ScrollArea className="h-full">
-              <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {availableList.map(pkg => (
-                  <PackageCard
-                    key={pkg.id}
-                    package={pkg}
-                    isInstalled={false}
-                    installedPackage={undefined}
-                    onViewDetails={() => {
-                      setSelectedPackage(PACKAGE_CATALOG[pkg.id]?.() ?? null)
-                      setShowDetails(true)
-                    }}
-                    onToggle={handleTogglePackage}
-                  />
-                ))}
-              </div>
-            </ScrollArea>
-          </TabsContent>
-        </Tabs>
+        <PackageTabs
+          filteredPackages={filteredPackages}
+          installedList={installedList}
+          availableList={availableList}
+          installedPackages={installedPackages}
+          onSelectPackage={openPackageDetails}
+          onTogglePackage={handleTogglePackage}
+        />
       </div>
 
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
@@ -416,7 +288,7 @@ export function PackageManager({ onClose }: PackageManagerProps) {
         </DialogContent>
       </Dialog>
 
-      <PackageImportExport 
+      <PackageImportExport
         open={showImportExport}
         onOpenChange={(open) => {
           setShowImportExport(open)
@@ -427,69 +299,5 @@ export function PackageManager({ onClose }: PackageManagerProps) {
         mode={importExportMode}
       />
     </div>
-  )
-}
-
-interface PackageCardProps {
-  package: PackageManifest
-  isInstalled: boolean
-  installedPackage?: InstalledPackage
-  onViewDetails: () => void
-  onToggle: (packageId: string, enabled: boolean) => void
-}
-
-function PackageCard({ package: pkg, isInstalled, installedPackage, onViewDetails, onToggle }: PackageCardProps) {
-  return (
-    <Card className="flex flex-col hover:shadow-lg transition-shadow">
-      <CardHeader>
-        <div className="flex items-start gap-3">
-          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-2xl flex-shrink-0">
-            {pkg.icon}
-          </div>
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-lg truncate">{pkg.name}</CardTitle>
-            <CardDescription className="line-clamp-2 mt-1">{pkg.description}</CardDescription>
-          </div>
-        </div>
-      </CardHeader>
-
-      <CardContent className="flex-1">
-        <div className="flex items-center gap-2 mb-3">
-          <Badge variant="secondary">{pkg.category}</Badge>
-          {isInstalled && (
-            <Badge variant={installedPackage?.enabled ? 'default' : 'outline'}>
-              {installedPackage?.enabled ? 'Active' : 'Disabled'}
-            </Badge>
-          )}
-        </div>
-
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <Download size={14} />
-            <span>{pkg.downloadCount.toLocaleString()}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Star size={14} weight="fill" className="text-yellow-500" />
-            <span>{pkg.rating}</span>
-          </div>
-        </div>
-      </CardContent>
-
-      <CardFooter className="flex gap-2">
-        <Button variant="outline" onClick={onViewDetails} className="flex-1">
-          View Details
-        </Button>
-        {isInstalled && installedPackage && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onToggle(pkg.id, !installedPackage.enabled)}
-            title={installedPackage.enabled ? 'Disable' : 'Enable'}
-          >
-            <Power size={18} weight={installedPackage.enabled ? 'fill' : 'regular'} />
-          </Button>
-        )}
-      </CardFooter>
-    </Card>
   )
 }
