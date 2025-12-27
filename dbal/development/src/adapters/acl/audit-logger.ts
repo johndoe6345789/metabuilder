@@ -3,7 +3,7 @@
  * @description Audit logging for ACL operations
  */
 
-import type { User } from './types'
+import type { User } from '../acl-adapter/types'
 
 /**
  * Log audit entry for ACL operation
