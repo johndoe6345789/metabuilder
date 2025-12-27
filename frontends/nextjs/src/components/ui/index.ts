@@ -55,6 +55,31 @@ export {
   ScrollArea,
   ScrollBar,
   type ScrollAreaProps,
+  // NEW ATOMS (available in God Tier panel via @/components/ui)
+  // Radio
+  Radio,
+  type RadioProps,
+  // Icon
+  Icon,
+  type IconProps,
+  type IconName,
+  type IconSize,
+  // Link
+  Link,
+  type LinkProps,
+  // Text
+  Text,
+  type TextProps,
+  type TextVariant,
+  type TextWeight,
+  type TextAlign,
+  // TextArea (multi-line)
+  TextArea,
+  type TextAreaProps,
+  // AtomSelect (simple dropdown)
+  AtomSelect,
+  type SelectProps as AtomSelectProps,
+  type SelectOption,
 } from './atoms'
 
 // ============================================================================
