@@ -1,5 +1,5 @@
-import { ComponentRegistry } from './registry-class'
-import { componentRegistryState } from './registry-singleton'
+import { ComponentRegistry } from '../core/registry-class'
+import { componentRegistryState } from '../core/registry-singleton'
 
 export function getComponentRegistry(): ComponentRegistry {
   if (!componentRegistryState.instance) {
