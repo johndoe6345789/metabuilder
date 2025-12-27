@@ -1,4 +1,3 @@
-export { setCredential } from './credentials/crud/set-credential'
 import { getAdapter } from '../dbal-client'
 
 /**

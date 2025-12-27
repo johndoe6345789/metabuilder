@@ -37,7 +37,7 @@ type FormState = (typeof initialFormState)
 type FetchStatus = 'idle' | 'loading' | 'success'
 
 const createFilename = (header: string | null, fallback: string) => {
-  const match = header?.match(/filename="?([^\"]+)"?/) ?? null
+  const match = header?.match(/filename="?([^"]+)"?/) ?? null
   return match ? match[1] : fallback
 }
 

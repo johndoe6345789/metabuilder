@@ -4,7 +4,7 @@
 Internal documentation for the DBAL (Data Abstraction Layer) system.
 
 ## Location
-[/dbal/docs/](/dbal/docs/)
+[/dbal/shared/docs/](/dbal/shared/docs/)
 
 ## Contents
 

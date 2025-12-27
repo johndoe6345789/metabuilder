@@ -31,7 +31,7 @@ services:
   # C++ DBAL Daemon
   dbal-daemon:
     build:
-      context: ../dbal/cpp
+      context: ../dbal/production
       dockerfile: Dockerfile
       args:
         BUILD_TYPE: Release

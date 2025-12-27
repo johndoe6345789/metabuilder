@@ -93,19 +93,19 @@ describe('auth', () => {
       { role: 'user' as UserRole, level: 2, expected: true },
       { role: 'user' as UserRole, level: 3, expected: false },
       
-      // Admin can access levels 1-3
+      // Admin can access levels 1-4 (moderator is level 3)
       { role: 'admin' as UserRole, level: 1, expected: true },
       { role: 'admin' as UserRole, level: 2, expected: true },
       { role: 'admin' as UserRole, level: 3, expected: true },
-      { role: 'admin' as UserRole, level: 4, expected: false },
+      { role: 'admin' as UserRole, level: 4, expected: true },
       
-      // God can access levels 1-4
+      // God can access levels 1-5
       { role: 'god' as UserRole, level: 1, expected: true },
       { role: 'god' as UserRole, level: 3, expected: true },
       { role: 'god' as UserRole, level: 4, expected: true },
-      { role: 'god' as UserRole, level: 5, expected: false },
+      { role: 'god' as UserRole, level: 5, expected: true },
       
-      // Supergod can access all levels 1-5
+      // Supergod can access all levels 1-6
       { role: 'supergod' as UserRole, level: 1, expected: true },
       { role: 'supergod' as UserRole, level: 3, expected: true },
       { role: 'supergod' as UserRole, level: 5, expected: true },

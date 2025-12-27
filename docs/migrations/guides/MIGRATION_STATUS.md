@@ -127,9 +127,9 @@ Route (app)
 - `vite.config.ts` - Stubbed (no longer used)
 
 ### DBAL Layer (8 files)
-- `dbal/ts/src/adapters/prisma-adapter.ts`
-- `dbal/ts/src/blob/*.ts` (4 files)
-- `dbal/ts/src/core/kv-store.ts`
+- `dbal/development/src/adapters/prisma-adapter.ts`
+- `dbal/development/src/blob/*.ts` (4 files)
+- `dbal/development/src/core/kv-store.ts`
 - `src/lib/dbal-integration.ts`
 - `src/lib/database-dbal.server.ts` (NEW)
 

@@ -8,7 +8,12 @@ import {
 
 type MuiSwitchProps = ComponentProps<typeof MuiSwitch>
 
+/**
+ * Props for the Switch component
+ * @extends {MuiSwitchProps} Inherits Material-UI Switch props
+ */
 export interface SwitchProps extends MuiSwitchProps {
+  /** Optional label text to display next to the switch */
   label?: string
 }
 

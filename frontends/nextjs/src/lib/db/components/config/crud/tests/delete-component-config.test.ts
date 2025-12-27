@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 const mockDelete = vi.fn()
 const mockAdapter = { delete: mockDelete }
 
-vi.mock('../dbal-client', () => ({
+vi.mock('../../../../core/dbal-client', () => ({
   getAdapter: () => mockAdapter,
 }))
 

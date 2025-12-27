@@ -1,0 +1,198 @@
+name: Issue and PR Triage
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+  pull_request:
+    types: [opened, reopened, synchronize, edited]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  triage-issue:
+    name: Triage Issues
+    if: github.event_name == 'issues'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Categorize and label issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = (issue.title || '').toLowerCase();
+            const body = (issue.body || '').toLowerCase();
+            const text = `${title}\n${body}`;
+
+            const labels = new Set();
+            const missing = [];
+
+            const typeMatchers = [
+              { regex: /bug|error|crash|broken|fail/, label: 'bug' },
+              { regex: /feature|enhancement|add|new|implement/, label: 'enhancement' },
+              { regex: /document|readme|docs|guide/, label: 'documentation' },
+              { regex: /test|testing|spec|e2e/, label: 'testing' },
+              { regex: /security|vulnerability|exploit|xss|sql/, label: 'security' },
+              { regex: /performance|slow|optimize|speed/, label: 'performance' },
+            ];
+
+            for (const match of typeMatchers) {
+              if (text.match(match.regex)) {
+                labels.add(match.label);
+              }
+            }
+
+            const areaMatchers = [
+              { regex: /frontend|react|next|ui|component|browser/, label: 'area: frontend' },
+              { regex: /api|backend|service|server/, label: 'area: backend' },
+              { regex: /database|prisma|schema|sql/, label: 'area: database' },
+              { regex: /workflow|github actions|ci|pipeline/, label: 'area: workflows' },
+              { regex: /docs|readme|guide/, label: 'area: documentation' },
+            ];
+
+            for (const match of areaMatchers) {
+              if (text.match(match.regex)) {
+                labels.add(match.label);
+              }
+            }
+
+            if (text.match(/critical|urgent|asap|blocker/)) {
+              labels.add('priority: high');
+            } else if (text.match(/minor|low|nice to have/)) {
+              labels.add('priority: low');
+            } else {
+              labels.add('priority: medium');
+            }
+
+            if (text.match(/beginner|easy|simple|starter/) || labels.size <= 2) {
+              labels.add('good first issue');
+            }
+
+            const reproductionHints = ['steps to reproduce', 'expected', 'actual'];
+            for (const hint of reproductionHints) {
+              if (!body.includes(hint)) {
+                missing.push(hint);
+              }
+            }
+
+            const supportInfo = body.includes('version') || body.match(/v\d+\.\d+/);
+            if (!supportInfo) {
+              missing.push('version information');
+            }
+
+            if (labels.size > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels: Array.from(labels),
+              }).catch(e => console.log('Some labels may not exist:', e.message));
+            }
+
+            const checklist = missing.map(item => `- [ ] Add ${item}`).join('\n') || '- [x] Description includes key details.';
+            const summary = Array.from(labels).map(l => `- ${l}`).join('\n') || '- No labels inferred yet.';
+
+            const comment = [
+              '👋 Thanks for reporting an issue! I ran a quick triage:',
+              '',
+              '**Proposed labels:**',
+              summary,
+              '',
+              '**Missing details:**',
+              checklist,
+              '',
+              'Adding the missing details will help reviewers respond faster. If the proposed labels look wrong, feel free to update them.',
+              '',
+              '@copilot Please review this triage and refine labels or request any additional context needed—no Codex webhooks involved.'
+            ].join('\n');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: comment,
+            });
+
+  triage-pr:
+    name: Triage Pull Requests
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Analyze PR files and label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+            });
+
+            const labels = new Set();
+
+            const fileFlags = {
+              workflows: files.some(f => f.filename.includes('.github/workflows')),
+              docs: files.some(f => f.filename.match(/\.(md|mdx)$/) || f.filename.startsWith('docs/')),
+              frontend: files.some(f => f.filename.includes('frontends/nextjs')),
+              db: files.some(f => f.filename.includes('prisma/') || f.filename.includes('dbal/')),
+              tests: files.some(f => f.filename.match(/(test|spec)\.[jt]sx?/)),
+            };
+
+            if (fileFlags.workflows) labels.add('area: workflows');
+            if (fileFlags.docs) labels.add('area: documentation');
+            if (fileFlags.frontend) labels.add('area: frontend');
+            if (fileFlags.db) labels.add('area: database');
+            if (fileFlags.tests) labels.add('tests');
+
+            const totalChanges = files.reduce((sum, f) => sum + f.additions + f.deletions, 0);
+            const highRiskPaths = files.filter(f => f.filename.includes('.github/workflows') || f.filename.includes('prisma/'));
+
+            let riskLabel = 'risk: low';
+            if (highRiskPaths.length > 0 || totalChanges >= 400) {
+              riskLabel = 'risk: high';
+            } else if (totalChanges >= 150) {
+              riskLabel = 'risk: medium';
+            }
+            labels.add(riskLabel);
+
+            const missing = [];
+            const body = (pr.body || '').toLowerCase();
+            if (!body.includes('test')) missing.push('Test plan');
+            if (fileFlags.frontend && !body.includes('screenshot')) missing.push('Screenshots for UI changes');
+            if (!body.match(/#\d+|https:\/\/github\.com/)) missing.push('Linked issue reference');
+
+            if (labels.size > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                labels: Array.from(labels),
+              }).catch(e => console.log('Some labels may not exist:', e.message));
+            }
+
+            const labelSummary = Array.from(labels).map(l => `- ${l}`).join('\n');
+            const missingList = missing.length ? missing.map(item => `- [ ] ${item}`).join('\n') : '- [x] Description includes required context.';
+
+            const comment = [
+              '🤖 **Automated PR triage**',
+              '',
+              '**Proposed labels:**',
+              labelSummary,
+              '',
+              '**Description check:**',
+              missingList,
+              '',
+              'If any labels look incorrect, feel free to adjust them. Closing the missing items will help reviewers move faster.',
+              '',
+              '@copilot Please double-check this triage (no Codex webhook) and add any extra labels or questions for the author.'
+            ].join('\n');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: comment,
+            });

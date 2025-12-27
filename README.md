@@ -611,8 +611,8 @@ const result = await prisma.$transaction(async (tx) => {
 
 For complex operations:
 
-- **TypeScript** (`dbal/ts/`): Fast iteration, development
-- **C++ Daemon** (`dbal/cpp/`): Production security, credential protection
+- **TypeScript** (`dbal/development/`): Fast iteration, development
+- **C++ Daemon** (`dbal/production/`): Production security, credential protection
 
 ```typescript
 import { dbalQuery } from '@/lib/database-dbal.server'
@@ -633,7 +633,7 @@ Complete isolation with access control, quotas, and namespace separation.
 ### Initialize Tenant
 
 ```typescript
-import { InMemoryTenantManager, TenantAwareBlobStorage } from './dbal/ts/src'
+import { InMemoryTenantManager, TenantAwareBlobStorage } from './dbal/development/src'
 
 const tenantManager = new InMemoryTenantManager()
 
@@ -1132,8 +1132,8 @@ DEBUG=metabuilder:* npm run dev
 | App source | `frontends/nextjs/src/` |
 | Database schema | `prisma/schema.prisma` |
 | Package seeds | `packages/*/seed/` |
-| DBAL TypeScript | `dbal/ts/src/` |
-| DBAL C++ | `dbal/cpp/src/` |
+| DBAL TypeScript | `dbal/development/src/` |
+| DBAL C++ | `dbal/production/src/` |
 | E2E tests | `frontends/nextjs/e2e/` |
 | Shared config | `config/` |
 | Analysis tools | `tools/analysis/` |

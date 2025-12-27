@@ -1,4 +1,4 @@
-import { rateLimitMap } from './rate-limit-store'
+import { rateLimitMap } from './store/rate-limit-store'
 
 /**
  * Clear rate limit for a user (useful for testing)

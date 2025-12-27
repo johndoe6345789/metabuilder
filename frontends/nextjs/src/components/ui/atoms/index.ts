@@ -15,3 +15,11 @@ export { Progress, type ProgressProps } from './feedback/Progress'
 export { Slider, type SliderProps } from './controls/Slider'
 export { Toggle, type ToggleProps, type ToggleVariant, type ToggleSize } from './controls/Toggle'
 export { ScrollArea, ScrollBar, type ScrollAreaProps } from './feedback/ScrollArea'
+
+// New atoms from @/components/atoms (available in God Tier panel)
+export { Radio, type RadioProps } from '../../atoms/controls/Radio'
+export { Icon, type IconProps, type IconName, type IconSize } from '../../atoms/display/Icon'
+export { Link, type LinkProps } from '../../atoms/display/Link'
+export { Text, type TextProps, type TextVariant, type TextWeight, type TextAlign } from '../../atoms/display/Text'
+export { TextArea, type TextAreaProps } from '../../atoms/inputs/TextArea'
+export { Select as AtomSelect, type SelectProps, type SelectOption } from '../../atoms/inputs/Select'
