@@ -5,7 +5,7 @@ const mockDelete = vi.fn()
 const mockCreate = vi.fn()
 const mockAdapter = { list: mockList, delete: mockDelete, create: mockCreate }
 
-vi.mock('../dbal-client', () => ({
+vi.mock('../../core/dbal-client', () => ({
   getAdapter: () => mockAdapter,
 }))
 

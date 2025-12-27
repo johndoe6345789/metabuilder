@@ -1,18 +1,14 @@
-import type { User } from '@/lib/level-types'
+/**
+ * @file auth-store.ts
+ * @description Authentication state management store
+ */
+
 import { fetchSession } from '@/lib/auth/api/fetch-session'
 import { login as loginRequest } from '@/lib/auth/api/login'
 import { logout as logoutRequest } from '@/lib/auth/api/logout'
 import { register as registerRequest } from '@/lib/auth/api/register'
-import type { AuthState, AuthUser } from './auth-types'
-
-const roleLevels: Record<string, number> = {
-  public: 1,
-  user: 2,
-  moderator: 3,
-  admin: 4,
-  god: 5,
-  supergod: 6,
-}
+import type { AuthState } from './auth-types'
+import { mapUserToAuthUser } from './utils/map-user'
 
 export class AuthStore {
   private state: AuthState = {
@@ -35,6 +31,11 @@ export class AuthStore {
     }
   }
 
+  private setState(newState: AuthState): void {
+    this.state = newState
+    this.listeners.forEach(listener => listener())
+  }
+
   async ensureSessionChecked(): Promise<void> {
     if (!this.sessionCheckPromise) {
       this.sessionCheckPromise = this.refresh().finally(() => {
@@ -53,7 +54,7 @@ export class AuthStore {
     try {
       const user = await loginRequest(identifier, password)
       this.setState({
-        user: this.mapUserToAuthUser(user),
+        user: mapUserToAuthUser(user),
         isAuthenticated: true,
         isLoading: false,
       })
@@ -75,7 +76,7 @@ export class AuthStore {
     try {
       const user = await registerRequest(username, email, password)
       this.setState({
-        user: this.mapUserToAuthUser(user),
+        user: mapUserToAuthUser(user),
         isAuthenticated: true,
         isLoading: false,
       })
@@ -89,24 +90,14 @@ export class AuthStore {
   }
 
   async logout(): Promise<void> {
-    this.setState({
-      ...this.state,
-      isLoading: true,
-    })
-
     try {
       await logoutRequest()
+    } finally {
       this.setState({
         user: null,
         isAuthenticated: false,
         isLoading: false,
       })
-    } catch (error) {
-      this.setState({
-        ...this.state,
-        isLoading: false,
-      })
-      throw error
     }
   }
 
@@ -117,40 +108,27 @@ export class AuthStore {
     })
 
     try {
-      const sessionUser = await fetchSession()
-      this.setState({
-        user: sessionUser ? this.mapUserToAuthUser(sessionUser) : null,
-        isAuthenticated: Boolean(sessionUser),
-        isLoading: false,
-      })
+      const user = await fetchSession()
+      if (user) {
+        this.setState({
+          user: mapUserToAuthUser(user),
+          isAuthenticated: true,
+          isLoading: false,
+        })
+      } else {
+        this.setState({
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+        })
+      }
     } catch (error) {
-      console.error('Failed to refresh auth session:', error)
       this.setState({
-        ...this.state,
+        user: null,
+        isAuthenticated: false,
         isLoading: false,
       })
     }
-  }
-
-  private mapUserToAuthUser(user: User): AuthUser {
-    const level = roleLevels[user.role]
-    return {
-      id: user.id,
-      email: user.email,
-      username: user.username,
-      name: user.username,
-      role: user.role,
-      level,
-      tenantId: user.tenantId,
-      profilePicture: user.profilePicture,
-      bio: user.bio,
-      isInstanceOwner: user.isInstanceOwner,
-    }
-  }
-
-  private setState(next: AuthState): void {
-    this.state = next
-    this.listeners.forEach((listener) => listener())
   }
 }
 

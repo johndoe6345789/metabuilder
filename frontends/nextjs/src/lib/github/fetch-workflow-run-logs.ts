@@ -1,1 +1,1 @@
-export * from './logs/fetch/fetch-workflow-run-logs'
+export * from './workflows/analysis/logs/fetch-workflow-run-logs'

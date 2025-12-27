@@ -4,13 +4,24 @@ import { forwardRef } from 'react'
 import { IconButton, IconButtonProps } from '@mui/material'
 import { ToggleButton as MuiToggleButton, ToggleButtonProps as MuiToggleButtonProps } from '@mui/material'
 
+/** Toggle button visual style variants */
 export type ToggleVariant = 'default' | 'outline'
+
+/** Toggle button size options */
 export type ToggleSize = 'default' | 'sm' | 'lg'
 
+/**
+ * Props for the Toggle component
+ * @extends {MuiToggleButtonProps} Inherits Material-UI ToggleButton props
+ */
 export interface ToggleProps extends Omit<MuiToggleButtonProps, 'size'> {
+  /** Visual style variant of the toggle button */
   variant?: ToggleVariant
+  /** Size of the toggle button */
   size?: ToggleSize
+  /** Controlled pressed state */
   pressed?: boolean
+  /** Callback when pressed state changes */
   onPressedChange?: (pressed: boolean) => void
 }
 

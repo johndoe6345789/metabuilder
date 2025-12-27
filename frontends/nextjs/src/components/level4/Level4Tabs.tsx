@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { Database as DatabaseIcon, Lightning, Code, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear, Palette, ListDashes, Sparkle, Package, SquaresFour } from '@phosphor-icons/react'
+import { Database as DatabaseIcon, Lightning, Code, BookOpen, HardDrives, MapTrifold, Tree, Users, Gear, Palette, ListDashes, Sparkle, Package, SquaresFour, Warning } from '@phosphor-icons/react'
 import { SchemaEditorLevel4 } from '@/components/SchemaEditorLevel4'
 import { WorkflowEditor } from '@/components/WorkflowEditor'
 import { LuaEditor } from '@/components/editors/lua/LuaEditor'
@@ -16,10 +16,12 @@ import { QuickGuide } from '@/components/QuickGuide'
 import { PackageManager } from '@/components/PackageManager'
 import { ThemeEditor } from '@/components/ThemeEditor'
 import { SMTPConfigEditor } from '@/components/SMTPConfigEditor'
-import type { AppConfiguration } from '@/lib/level-types'
+import { ErrorLogsTab } from '@/components/level5/tabs/ErrorLogsTab'
+import type { AppConfiguration, User } from '@/lib/level-types'
 
 interface Level4TabsProps {
   appConfig: AppConfiguration
+  user: User
   nerdMode: boolean
   onSchemasChange: (schemas: any[]) => Promise<void>
   onWorkflowsChange: (workflows: any[]) => Promise<void>
@@ -28,6 +30,7 @@ interface Level4TabsProps {
 
 export function Level4Tabs({
   appConfig,
+  user,
   nerdMode,
   onSchemasChange,
   onWorkflowsChange,
@@ -95,6 +98,10 @@ export function Level4Tabs({
         <TabsTrigger value="settings">
           <Gear className="mr-2" size={16} />
           Settings
+        </TabsTrigger>
+        <TabsTrigger value="errorlogs">
+          <Warning className="mr-2" size={16} />
+          Error Logs
         </TabsTrigger>
       </TabsList>
 
@@ -171,6 +178,10 @@ export function Level4Tabs({
         <GodCredentialsSettings />
         <ThemeEditor />
         <SMTPConfigEditor />
+      </TabsContent>
+
+      <TabsContent value="errorlogs" className="space-y-6">
+        <ErrorLogsTab user={user} />
       </TabsContent>
     </Tabs>
   )

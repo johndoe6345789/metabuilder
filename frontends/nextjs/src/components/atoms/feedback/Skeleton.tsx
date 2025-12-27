@@ -5,7 +5,12 @@ import { Skeleton as MuiSkeleton } from '@mui/material'
 
 type MuiSkeletonProps = ComponentProps<typeof MuiSkeleton>
 
+/**
+ * Props for the Skeleton component
+ * @extends {MuiSkeletonProps} Inherits Material-UI Skeleton props
+ */
 export interface SkeletonProps extends MuiSkeletonProps {
+  /** CSS class name for custom styling */
   className?: string
 }
 

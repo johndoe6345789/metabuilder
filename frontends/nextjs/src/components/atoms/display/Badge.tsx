@@ -3,9 +3,15 @@
 import { forwardRef, HTMLAttributes } from 'react'
 import { Chip, ChipProps } from '@mui/material'
 
+/** Badge visual style variants */
 export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning'
 
+/**
+ * Props for the Badge component
+ * @extends {ChipProps} Inherits Material-UI Chip props
+ */
 export interface BadgeProps extends Omit<ChipProps, 'variant'> {
+  /** Visual style variant of the badge */
   variant?: BadgeVariant
 }
 

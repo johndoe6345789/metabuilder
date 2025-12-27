@@ -8,7 +8,7 @@ describe('GET /api/levels', () => {
     const payload = await response.json()
 
     expect(response.headers.get('content-type')).toContain('application/json')
-    expect(payload.levels).toHaveLength(5)
+    expect(payload.levels).toHaveLength(6)
   })
 
   it('filters results by level key', async () => {
@@ -20,11 +20,11 @@ describe('GET /api/levels', () => {
   })
 
   it('filters results by capability keyword', async () => {
-    const response = await GET(new Request('http://example.com/api/levels?cap=front page'))
+    const response = await GET(new Request('http://example.com/api/levels?cap=manage'))
     const payload = await response.json()
 
     expect(payload.levels.length).toBeGreaterThan(0)
-    expect(payload.levels.some((level) => level.key === 'god')).toBe(true)
+    expect(payload.levels.some((level) => ['admin', 'user'].includes(level.key))).toBe(true)
   })
 
   it('accepts level feedback via POST', async () => {

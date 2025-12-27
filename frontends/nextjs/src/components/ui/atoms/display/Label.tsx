@@ -3,8 +3,14 @@
 import { forwardRef, LabelHTMLAttributes, ReactNode } from 'react'
 import { FormLabel, FormLabelProps } from '@mui/material'
 
+/**
+ * Props for the Label component
+ * @extends {FormLabelProps} Inherits Material-UI FormLabel props
+ */
 export interface LabelProps extends FormLabelProps {
+  /** ID of the form element this label is associated with */
   htmlFor?: string
+  /** Content to display inside the label */
   children?: ReactNode
 }
 
