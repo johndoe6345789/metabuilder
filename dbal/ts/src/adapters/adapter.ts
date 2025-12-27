@@ -1,4 +1,4 @@
-import type { ListOptions, ListResult } from '../core/types'
+import type { ListOptions, ListResult } from '../core/foundation/types'
 
 export interface AdapterCapabilities {
   transactions: boolean

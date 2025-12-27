@@ -5,6 +5,6 @@
  * Prefer importing directly from '@/lib/db' for new code.
  */
 
-// Re-export everything from the new db module
-export * from './db'
-export { Database } from './db'
+// Re-export everything from the db module
+export * from '../db'
+export { Database } from '../db'
