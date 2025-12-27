@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui'
-import { Button } from '@/components/ui'
-import { Alert, AlertDescription } from '@/components/ui'
-import { FloppyDisk, X, Warning, ShieldCheck } from '@phosphor-icons/react'
+import { useEffect, useState } from 'react'
+import { Alert, AlertDescription, Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui'
+import { Warning } from '@phosphor-icons/react'
 import Editor from '@monaco-editor/react'
+import { toast } from 'sonner'
+
+import { SchemaSection } from './json/SchemaSection'
+import { Toolbar } from './json/Toolbar'
 import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
 import { SecurityWarningDialog } from '@/components/organisms/security/SecurityWarningDialog'
-import { toast } from 'sonner'
 
 interface JsonEditorProps {
   open: boolean
@@ -32,10 +33,12 @@ export function JsonEditor({ open, onClose, title, value, onSave, schema }: Json
     }
   }, [open, value])
 
+  const parseJson = () => JSON.parse(jsonText)
+
   const handleSave = () => {
     try {
-      const parsed = JSON.parse(jsonText)
-      
+      const parsed = parseJson()
+
       const scanResult = securityScanner.scanJSON(jsonText)
       setSecurityScanResult(scanResult)
 
@@ -66,8 +69,7 @@ export function JsonEditor({ open, onClose, title, value, onSave, schema }: Json
 
   const handleForceSave = () => {
     try {
-      const parsed = JSON.parse(jsonText)
-      onSave(parsed)
+      onSave(parseJson())
       setError(null)
       setPendingSave(false)
       setShowSecurityDialog(false)
@@ -81,7 +83,7 @@ export function JsonEditor({ open, onClose, title, value, onSave, schema }: Json
     const scanResult = securityScanner.scanJSON(jsonText)
     setSecurityScanResult(scanResult)
     setShowSecurityDialog(true)
-    
+
     if (scanResult.safe) {
       toast.success('No security issues detected')
     } else {
@@ -91,8 +93,7 @@ export function JsonEditor({ open, onClose, title, value, onSave, schema }: Json
 
   const handleFormat = () => {
     try {
-      const parsed = JSON.parse(jsonText)
-      setJsonText(JSON.stringify(parsed, null, 2))
+      setJsonText(JSON.stringify(parseJson(), null, 2))
       setError(null)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Invalid JSON - cannot format')
@@ -106,7 +107,7 @@ export function JsonEditor({ open, onClose, title, value, onSave, schema }: Json
           <DialogHeader>
             <DialogTitle className="text-2xl">{title}</DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             {error && (
               <Alert variant="destructive">
@@ -115,16 +116,21 @@ export function JsonEditor({ open, onClose, title, value, onSave, schema }: Json
               </Alert>
             )}
 
-            {securityScanResult && securityScanResult.severity !== 'safe' && securityScanResult.severity !== 'low' && !showSecurityDialog && (
-              <Alert className="border-yellow-200 bg-yellow-50">
-                <Warning className="h-5 w-5 text-yellow-600" weight="fill" />
-                <AlertDescription className="text-yellow-800">
-                  {securityScanResult.issues.length} security {securityScanResult.issues.length === 1 ? 'issue' : 'issues'} detected. 
-                  Click Security Scan to review.
-                </AlertDescription>
-              </Alert>
-            )}
-            
+            {securityScanResult &&
+              securityScanResult.severity !== 'safe' &&
+              securityScanResult.severity !== 'low' &&
+              !showSecurityDialog && (
+                <Alert className="border-yellow-200 bg-yellow-50">
+                  <Warning className="h-5 w-5 text-yellow-600" weight="fill" />
+                  <AlertDescription className="text-yellow-800">
+                    {securityScanResult.issues.length} security {securityScanResult.issues.length === 1 ? 'issue' : 'issues'}
+                     detected. Click Security Scan to review.
+                  </AlertDescription>
+                </Alert>
+              )}
+
+            <SchemaSection schema={schema} />
+
             <div className="border rounded-lg overflow-hidden">
               <Editor
                 height="600px"
@@ -157,23 +163,12 @@ export function JsonEditor({ open, onClose, title, value, onSave, schema }: Json
             </div>
           </div>
 
-          <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={handleScan}>
-              <ShieldCheck className="mr-2" />
-              Security Scan
-            </Button>
-            <Button variant="outline" onClick={handleFormat}>
-              Format JSON
-            </Button>
-            <Button variant="outline" onClick={onClose}>
-              <X className="mr-2" />
-              Cancel
-            </Button>
-            <Button onClick={handleSave} className="bg-accent text-accent-foreground hover:bg-accent/90">
-              <FloppyDisk className="mr-2" />
-              Save
-            </Button>
-          </DialogFooter>
+          <Toolbar
+            onScan={handleScan}
+            onFormat={handleFormat}
+            onCancel={onClose}
+            onSave={handleSave}
+          />
         </DialogContent>
       </Dialog>
 
