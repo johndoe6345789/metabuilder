@@ -86,6 +86,7 @@ const nextConfig: NextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@/dbal': path.resolve(__dirname, '../../dbal/development/src'),
+      '@dbal-ui': path.resolve(__dirname, '../../dbal/shared/ui'),
     }
     return config
   },
