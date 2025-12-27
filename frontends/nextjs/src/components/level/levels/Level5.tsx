@@ -23,13 +23,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui'
-import { Crown, Buildings, Users, ArrowsLeftRight, Eye, Camera } from '@phosphor-icons/react'
+import { Crown, Buildings, Users, ArrowsLeftRight, Eye, Camera, Warning } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Level5Header } from '../../level5/header/Level5Header'
 import { TenantsTab } from '../../level5/tabs/TenantsTab'
 import { GodUsersTab } from '../../level5/tabs/GodUsersTab'
 import { PowerTransferTab } from '../../level5/tabs/PowerTransferTab'
 import { PreviewTab } from '../../level5/tabs/PreviewTab'
+import { ErrorLogsTab } from '../../level5/tabs/ErrorLogsTab'
 import { ScreenshotAnalyzer } from '../../misc/demos/ScreenshotAnalyzer'
 import { NerdModeIDE } from '../../misc/NerdModeIDE'
 import type { User, AppLevel, Tenant } from '@/lib/level-types'
@@ -185,6 +186,10 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
               <Camera className="w-4 h-4 mr-2" />
               Screenshot
             </TabsTrigger>
+            <TabsTrigger value="errorlogs" className="data-[state=active]:bg-purple-600">
+              <Warning className="w-4 h-4 mr-2" />
+              Error Logs
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="tenants" className="space-y-4">
@@ -215,6 +220,10 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
 
           <TabsContent value="screenshot" className="space-y-4">
             <ScreenshotAnalyzer />
+          </TabsContent>
+
+          <TabsContent value="errorlogs" className="space-y-4">
+            <ErrorLogsTab />
           </TabsContent>
         </Tabs>
       </main>
