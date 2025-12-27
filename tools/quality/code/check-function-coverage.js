@@ -88,7 +88,7 @@ function analyze() {
   // Find source files
   const srcFiles = findFiles("src", /\.(ts|tsx)$/, ignore)
     .concat(findFiles("packages", /\.(ts|tsx)$/, ignore))
-    .concat(findFiles("dbal/ts", /\.(ts|tsx)$/, ignore))
+    .concat(findFiles("dbal/development", /\.(ts|tsx)$/, ignore))
     .filter(f => !f.includes(".test.") && !f.includes(".spec."));
   
   // Find test files

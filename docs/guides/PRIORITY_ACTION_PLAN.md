@@ -236,7 +236,7 @@ interface StateAnalysis {
 - ❌ Import/export missing UI
 - ❌ No pre-built packages
 
-**Read:** `/dbal/AGENTS.md` for package architecture guidance
+**Read:** `/dbal/docs/AGENTS.md` for package architecture guidance
 
 ---
 
@@ -762,10 +762,10 @@ npx tsx scripts/enforce-size-limits.ts
 **Package System:**
 - [packages/README.md](./packages/README.md)
 - [docs/architecture/packages.md](./docs/architecture/packages.md)
-- [dbal/AGENTS.md](./dbal/AGENTS.md) - Package guidance
+- [dbal/docs/AGENTS.md](./dbal/docs/AGENTS.md) - Package guidance
 
 **DBAL:**
-- [dbal/README.md](./dbal/README.md)
+- [dbal/docs/README.md](./dbal/docs/README.md)
 - [dbal/QUICK_START.md](./dbal/QUICK_START.md)
 
 ---

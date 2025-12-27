@@ -1,7 +1,7 @@
 // Organisms - Complex UI sections
 // These are larger components that combine atoms and molecules
 
-// New MUI-based organisms
+// New MUI-based organisms - Data
 export {
   Table,
   TableHeader,
@@ -15,8 +15,9 @@ export {
   type TableRowProps,
   type TableHeadProps,
   type TableCellProps,
-} from './Table'
+} from './data/Table'
 
+// New MUI-based organisms - Overlay/Dialogs
 export {
   Command,
   CommandDialog,
@@ -29,7 +30,7 @@ export {
   CommandShortcut,
   CommandLoading,
   type CommandProps,
-} from './Command'
+} from './overlay/Command'
 
 export {
   Sheet,
@@ -43,8 +44,9 @@ export {
   SheetOverlay,
   SheetClose,
   type SheetProps,
-} from './Sheet'
+} from './overlay/Sheet'
 
+// New MUI-based organisms - Navigation
 export {
   Sidebar,
   SidebarHeader,
@@ -62,7 +64,7 @@ export {
   SidebarInset,
   SidebarProvider,
   type SidebarProps,
-} from './Sidebar'
+} from './navigation/Sidebar'
 
 export {
   NavigationMenu,
@@ -75,7 +77,7 @@ export {
   NavigationMenuViewport,
   navigationMenuTriggerStyle,
   type NavigationMenuProps,
-} from './NavigationMenu'
+} from './navigation/NavigationMenu'
 
 export {
   Form,
@@ -88,7 +90,7 @@ export {
   useFormField,
   useForm,
   FormProvider,
-} from './Form'
+} from './data/Form'
 
 // Legacy feature components
 export { SchemaEditor } from '../SchemaEditor'
@@ -135,3 +137,6 @@ export { FeaturesSection } from '../level1/FeaturesSection'
 export { ContactSection } from '../level1/ContactSection'
 export { NavigationBar } from '../level1/NavigationBar'
 export { CommentsList } from '../level2/CommentsList'
+
+// Security components
+export { SecurityWarningDialog } from './security/SecurityWarningDialog'

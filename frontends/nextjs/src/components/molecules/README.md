@@ -15,6 +15,10 @@ Molecules are simple groups of atoms that function together as a cohesive unit. 
 | `DropdownMenu` | Context/action menu | Menu, MenuItem |
 | `FormField` | Label + input + error | Label, Input |
 | `SearchInput` | Input with search icon | TextField |
+| `PasswordField` | Password input with visibility toggle | TextField, IconButton |
+| `EmailField` | Email input with icon | TextField, InputAdornment |
+| `NumberField` | Number input with constraints | TextField |
+| `SearchBar` | Search input with clear and filter buttons | TextField, IconButton |
 | `Popover` | Floating content panel | MuiPopover |
 
 ### Application Molecules
@@ -27,7 +31,11 @@ Molecules are simple groups of atoms that function together as a cohesive unit. 
 ## Usage
 
 ```typescript
-import { Card, CardHeader, CardContent, Dialog, Alert } from '@/components/molecules'
+import { 
+  Card, CardHeader, CardContent, 
+  Dialog, Alert,
+  PasswordField, EmailField, NumberField, SearchBar
+} from '@/components/molecules'
 
 function MyPage() {
   return (
@@ -44,6 +52,35 @@ function MyPage() {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent>Modal content</DialogContent>
       </Dialog>
+
+      <PasswordField 
+        label="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <EmailField 
+        label="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        showIcon
+      />
+
+      <NumberField 
+        label="Age"
+        min={0}
+        max={120}
+        value={age}
+        onChange={(e) => setAge(e.target.value)}
+      />
+
+      <SearchBar
+        value={searchQuery}
+        onChange={setSearchQuery}
+        onClear={() => setSearchQuery('')}
+        showFilterButton
+        onFilterClick={handleOpenFilters}
+      />
     </Box>
   )
 }
@@ -72,4 +109,4 @@ function MyPage() {
   </CardContent>
 </Card>
 ```
-```
+

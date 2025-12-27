@@ -93,7 +93,7 @@ export function DBALDaemonPage() {
             <div>
               <h4 className="text-sm font-semibold uppercase tracking-[0.25em] text-muted-foreground">Configuration</h4>
               <p className="mt-2 text-sm text-muted-foreground">
-                `server`, `database`, `security`, and `performance` keys live in `dbal/cpp/config/production.yaml`. Credentials reference environment secrets, while audit paths are write-only.
+                `server`, `database`, `security`, and `performance` keys live in `dbal/production/config/production.yaml`. Credentials reference environment secrets, while audit paths are write-only.
               </p>
             </div>
           </div>

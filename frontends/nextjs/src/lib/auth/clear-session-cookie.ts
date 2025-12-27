@@ -1,1 +1,1 @@
-export * from './auth/session/clear-session-cookie'
+export * from './session/clear-session-cookie'

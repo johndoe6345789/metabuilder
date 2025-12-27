@@ -4,7 +4,7 @@
 Development and utility tools for the DBAL system.
 
 ## Location
-[/dbal/tools/](/dbal/tools/)
+[/dbal/shared/tools/](/dbal/shared/tools/)
 
 ## Purpose
 Provides command-line tools, utilities, and helpers for:

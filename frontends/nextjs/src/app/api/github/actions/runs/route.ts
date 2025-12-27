@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { createGitHubClient } from '@/lib/github/create-github-client'
 import { resolveGitHubRepo } from '@/lib/github/resolve-github-repo'
-import { listWorkflowRuns } from '@/lib/github/list-workflow-runs'
+import { listWorkflowRuns } from '@/lib/github/workflows/listing/list-workflow-runs'
 
 export const GET = async (request: NextRequest) => {
   try {

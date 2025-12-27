@@ -105,7 +105,7 @@ interface BlobStorage {
 #### 1. S3 Storage (AWS/MinIO)
 
 ```typescript
-import { createBlobStorage } from './dbal/ts/src/blob'
+import { createBlobStorage } from './dbal/development/src/blob'
 
 // AWS S3
 const s3Storage = createBlobStorage({
@@ -155,7 +155,7 @@ for (const item of result.items) {
 #### 2. Filesystem Storage
 
 ```typescript
-import { createBlobStorage } from './dbal/ts/src/blob'
+import { createBlobStorage } from './dbal/development/src/blob'
 
 // Local filesystem
 const fsStorage = createBlobStorage({
@@ -195,7 +195,7 @@ await fsStorage.uploadStream('media/video-456.mp4', stream, fileSize, {
 #### 3. In-Memory Storage (Testing)
 
 ```typescript
-import { MemoryStorage } from './dbal/ts/src/blob'
+import { MemoryStorage } from './dbal/development/src/blob'
 
 const memStorage = new MemoryStorage()
 
@@ -299,7 +299,7 @@ auto delete_result = storage.deleteBlob("test.txt");
 ### 1. User File Uploads
 
 ```typescript
-import { createBlobStorage } from './dbal/ts/src/blob'
+import { createBlobStorage } from './dbal/development/src/blob'
 
 const storage = createBlobStorage({ type: 's3', s3: { ... } })
 
@@ -556,7 +556,7 @@ res.json({ url }) // Client downloads directly
 ### Unit Tests with Memory Storage
 
 ```typescript
-import { MemoryStorage } from './dbal/ts/src/blob'
+import { MemoryStorage } from './dbal/development/src/blob'
 
 describe('File Upload', () => {
   let storage: MemoryStorage
@@ -597,7 +597,7 @@ await writeFile('./uploads/file.txt', data)
 const content = await readFile('./uploads/file.txt')
 
 // After
-import { createBlobStorage } from './dbal/ts/src/blob'
+import { createBlobStorage } from './dbal/development/src/blob'
 const storage = createBlobStorage({ 
   type: 'filesystem', 
   filesystem: { basePath: './uploads' } 
@@ -615,7 +615,7 @@ const s3 = new S3Client({ region: 'us-east-1' })
 await s3.send(new PutObjectCommand({ Bucket: 'my-bucket', Key: 'file.txt', Body: data }))
 
 // After
-import { createBlobStorage } from './dbal/ts/src/blob'
+import { createBlobStorage } from './dbal/development/src/blob'
 const storage = createBlobStorage({ 
   type: 's3', 
   s3: { bucket: 'my-bucket', region: 'us-east-1' } 
@@ -676,16 +676,16 @@ await storage.upload('file.txt', data)
 ## Files Changed
 
 **C++ Files** (2 new):
-- `dbal/cpp/include/dbal/blob_storage.hpp` - Interface definition
-- `dbal/cpp/src/blob/memory_storage.cpp` - Memory implementation
+- `dbal/production/include/dbal/blob_storage.hpp` - Interface definition
+- `dbal/production/src/blob/memory_storage.cpp` - Memory implementation
 
 **TypeScript Files** (5 new):
-- `dbal/ts/src/blob/blob-storage.ts` - Interface definition
-- `dbal/ts/src/blob/memory-storage.ts` - Memory implementation
-- `dbal/ts/src/blob/s3-storage.ts` - S3 implementation
-- `dbal/ts/src/blob/filesystem-storage.ts` - Filesystem implementation
-- `dbal/ts/src/blob/index.ts` - Exports and factory
-- `dbal/ts/src/index.ts` - Updated exports
+- `dbal/development/src/blob/blob-storage.ts` - Interface definition
+- `dbal/development/src/blob/memory-storage.ts` - Memory implementation
+- `dbal/development/src/blob/s3-storage.ts` - S3 implementation
+- `dbal/development/src/blob/filesystem-storage.ts` - Filesystem implementation
+- `dbal/development/src/blob/index.ts` - Exports and factory
+- `dbal/development/src/index.ts` - Updated exports
 
 **Documentation** (1 new):
 - `BLOB_STORAGE_IMPLEMENTATION.md` - Complete guide

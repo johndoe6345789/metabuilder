@@ -8,11 +8,11 @@
 **I'm working in `/src/lib/`**
 → Documentation: [/docs/src/lib/](/docs/src/lib/README.md)
 
-**I'm working in `/dbal/cpp/`**
-→ Documentation: [/docs/dbal/cpp/](/docs/dbal/cpp/README.md)
+**I'm working in `/dbal/production/`**
+→ Documentation: [/docs/dbal/production/](/docs/dbal/production/README.md)
 
-**I'm working in `/dbal/backends/`**
-→ Documentation: [/docs/dbal/backends/](/docs/dbal/backends/README.md)
+**I'm working in `/dbal/shared/backends/`**
+→ Documentation: [/docs/dbal/shared/backends/](/docs/dbal/shared/backends/README.md)
 
 **I'm working in `/packages/form_builder/`**
 → Documentation: [/docs/packages/form_builder.md](/docs/packages/form_builder.md)
@@ -31,13 +31,13 @@
 │   └── tests/               ↔️  /docs/src/tests/README.md
 │
 ├── /dbal/                   Code
-│   ├── api/                 ↔️  /docs/dbal/api/README.md
-│   ├── backends/            ↔️  /docs/dbal/backends/README.md
-│   ├── common/              ↔️  /docs/dbal/common/README.md
-│   ├── cpp/                 ↔️  /docs/dbal/cpp/README.md
-│   ├── ts/                  ↔️  /docs/dbal/ts/README.md
-│   ├── tools/               ↔️  /docs/dbal/tools/README.md
-│   └── scripts/             ↔️  /docs/dbal/scripts/README.md
+│   ├── api/                 ↔️  /docs/dbal/shared/api/README.md
+│   ├── backends/            ↔️  /docs/dbal/shared/backends/README.md
+│   ├── common/              ↔️  /docs/dbal/shared/common/README.md
+│   ├── cpp/                 ↔️  /docs/dbal/production/README.md
+│   ├── ts/                  ↔️  /docs/dbal/development/README.md
+│   ├── tools/               ↔️  /docs/dbal/shared/tools/README.md
+│   └── scripts/             ↔️  /docs/dbal/shared/scripts/README.md
 │
 └── /packages/               Code
     ├── admin_dialog/        ↔️  /docs/packages/admin_dialog.md
