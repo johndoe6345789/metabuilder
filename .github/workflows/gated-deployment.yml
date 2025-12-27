@@ -580,9 +580,10 @@ jobs:
             
             1. **Re-run workflow** with previous stable commit SHA
             2. **OR use manual rollback:**
-               - Revert database migrations: \`npx prisma migrate reset\`
+               - Rollback specific migration: \`npx prisma migrate resolve --rolled-back <migration_name>\`
                - Deploy previous Docker image/build
-               - Restore from pre-deployment backup
+               - Restore from pre-deployment backup if needed
+               - ⚠️ Avoid \`prisma migrate reset\` in production (causes data loss)
             3. **Notify:** Update team and status page
             4. **Document:** Create post-mortem issue
             
