@@ -12,10 +12,10 @@
     "todos:baseline": "python3 tools/project-management/check-new-todos.py --save-baseline"
   },
   "devDependencies": {
+    "@prisma/client": "^7.2.0",
     "prisma": "^7.2.0"
   },
   "dependencies": {
-    "@prisma/client": "^7.2.0",
     "jszip": "^3.10.1"
   }
 }
