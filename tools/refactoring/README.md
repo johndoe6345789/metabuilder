@@ -2,6 +2,8 @@
 
 Automated tools for refactoring large TypeScript and C++ files into modular lambda-per-file structure.
 
+**Philosophy:** Errors are good! They're not failures - they're a TODO list telling us exactly what needs attention. 🎯
+
 ## Language Support
 
 - ✅ **TypeScript** (.ts, .tsx)
@@ -70,7 +72,37 @@ npx tsx tools/refactoring/refactor-to-lambda.ts
 
 **Output:** `docs/todo/LAMBDA_REFACTOR_PROGRESS.md`
 
-### 2. `ast-lambda-refactor.ts` - AST-based Refactoring
+### 2. `error-as-todo-refactor.ts` - Error-as-TODO Runner (⭐ Recommended)
+
+Runs refactoring and treats all errors as actionable TODO items!
+
+```bash
+# Process files and generate TODO list
+npx tsx tools/refactoring/error-as-todo-refactor.ts high --limit=10
+
+# Dry run to see what issues would be found
+npx tsx tools/refactoring/error-as-todo-refactor.ts --dry-run --verbose
+
+# Options:
+#   -d, --dry-run      Preview without writing
+#   -v, --verbose      Show detailed output
+#   --limit=N          Process only N files
+#   high|medium|low    Filter by priority
+```
+
+**Output:** 
+- `docs/todo/REFACTOR_TODOS.md` - Human-readable TODO list
+- `docs/todo/REFACTOR_TODOS.json` - Machine-readable data
+
+**What it captures:**
+- ✅ Successful refactorings
+- 🔧 Parse errors (what to fix in tool)
+- 📘 Type errors (what to fix in code)
+- 📦 Import errors (need cleanup)
+- 👷 Manual fixes needed (e.g., "this" references)
+- 💡 Suggestions for each issue
+
+### 3. `ast-lambda-refactor.ts` - AST-based Refactoring
 
 Uses TypeScript compiler API for accurate code transformation.
 
