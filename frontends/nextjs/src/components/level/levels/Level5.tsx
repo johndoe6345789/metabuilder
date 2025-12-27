@@ -223,7 +223,7 @@ export function Level5({ user, onLogout, onNavigate, onPreview }: Level5Props) {
           </TabsContent>
 
           <TabsContent value="errorlogs" className="space-y-4">
-            <ErrorLogsTab />
+            <ErrorLogsTab user={user} />
           </TabsContent>
         </Tabs>
       </main>

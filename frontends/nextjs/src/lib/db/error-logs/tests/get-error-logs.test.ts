@@ -33,7 +33,7 @@ describe('getErrorLogs', () => {
           context: null,
           userId: null,
           username: null,
-          tenantId: null,
+          tenantId: 'tenant_1',
           source: 'test.ts',
           resolved: false,
           resolvedAt: null,
@@ -55,7 +55,7 @@ describe('getErrorLogs', () => {
           context: null,
           userId: null,
           username: null,
-          tenantId: null,
+          tenantId: 'tenant_1',
           source: null,
           resolved: false,
           resolvedAt: null,
@@ -70,7 +70,7 @@ describe('getErrorLogs', () => {
           context: null,
           userId: null,
           username: null,
-          tenantId: null,
+          tenantId: 'tenant_1',
           source: null,
           resolved: false,
           resolvedAt: null,
@@ -80,6 +80,43 @@ describe('getErrorLogs', () => {
       options: { level: 'error' },
       expectedLength: 1,
     },
+    {
+      name: 'filtered by tenantId',
+      dbData: [
+        {
+          id: 'error_1',
+          timestamp: BigInt(Date.now()),
+          level: 'error',
+          message: 'Tenant 1 error',
+          stack: null,
+          context: null,
+          userId: null,
+          username: null,
+          tenantId: 'tenant_1',
+          source: null,
+          resolved: false,
+          resolvedAt: null,
+          resolvedBy: null,
+        },
+        {
+          id: 'error_2',
+          timestamp: BigInt(Date.now()),
+          level: 'error',
+          message: 'Tenant 2 error',
+          stack: null,
+          context: null,
+          userId: null,
+          username: null,
+          tenantId: 'tenant_2',
+          source: null,
+          resolved: false,
+          resolvedAt: null,
+          resolvedBy: null,
+        },
+      ],
+      options: { tenantId: 'tenant_1' },
+      expectedLength: 1,
+    },
   ])('should return $name', async ({ dbData, options, expectedLength }) => {
     mockList.mockResolvedValue({ data: dbData })
 
@@ -87,5 +124,9 @@ describe('getErrorLogs', () => {
 
     expect(mockList).toHaveBeenCalledWith('ErrorLog')
     expect(result).toHaveLength(expectedLength)
+    
+    if (options?.tenantId && result.length > 0) {
+      expect(result.every(log => log.tenantId === options.tenantId)).toBe(true)
+    }
   })
 })
