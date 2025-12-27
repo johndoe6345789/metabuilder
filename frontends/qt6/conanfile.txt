@@ -8,10 +8,10 @@ CMakeDeps
 CMakeToolchain
 
 [options]
-qt:shared=True
-qt:qtdeclarative=True
-qt:qtquick=True
-qt:qtquickcontrols2=True
+qt/*:shared=True
+qt/*:qtdeclarative=True
+qt/*:qtquick=True
+qt/*:qtquickcontrols2=True
 
 [tool_requires]
 cmake/3.27.1
