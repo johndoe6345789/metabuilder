@@ -4,7 +4,7 @@ Use this as the default workflow when starting work in this repo.
 
 ## Workflow
 1. Skim `docs/START_HERE.md` (if new), `docs/INDEX.md`, and relevant items in `docs/todo/`.
-2. Check for scoped rules in nested `AGENTS.md` files (e.g. `dbal/AGENTS.md`) before editing those areas.
+2. Check for scoped rules in nested `AGENTS.md` files (e.g. `dbal/docs/AGENTS.md`) before editing those areas.
 3. Use the prompts in `.github/prompts/` as needed:
    - Plan: `1-plan-feature.prompt.md`
    - Design: `2-design-component.prompt.md`

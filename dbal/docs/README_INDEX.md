@@ -6,14 +6,14 @@ The DBAL (Data Bus Abstraction Layer) provides a comprehensive implementation gu
 
 ### Getting Started
 
-- [Quick Start Guide](./shared/docs/QUICK_START.md) - Setup and first steps
+- [Quick Start Guide](../shared/docs/QUICK_START.md) - Setup and first steps
 - [README](./README.md) - Project overview
 
 ### Implementation Guides
 
-- [Phase 2 Implementation](./shared/docs/PHASE2_IMPLEMENTATION.md) - Version 2 features and design
-- [Phase 2 Complete](./shared/docs/PHASE2_COMPLETE.md) - Implementation completion status
-- [Implementation Summary](./shared/docs/IMPLEMENTATION_SUMMARY.md) - Feature overview
+- [Phase 2 Implementation](../shared/docs/PHASE2_IMPLEMENTATION.md) - Version 2 features and design
+- [Phase 2 Complete](../shared/docs/PHASE2_COMPLETE.md) - Implementation completion status
+- [Implementation Summary](../shared/docs/IMPLEMENTATION_SUMMARY.md) - Feature overview
 
 ### Architecture
 
@@ -24,12 +24,16 @@ The DBAL (Data Bus Abstraction Layer) provides a comprehensive implementation gu
 
 ```
 dbal/
-├── README.md                # Project overview
-├── README_INDEX.md          # Documentation index
-├── PROJECT.md               # Complete documentation
-├── AGENTS.md                # AI development guidelines
+├── README.md                # Quick reference
 ├── LICENSE                  # MIT License
 ├── .gitignore               # Git ignore rules
+├── docs/                    # Documentation
+│   ├── README.md            # Main project documentation  
+│   ├── README_INDEX.md      # Documentation index
+│   ├── PROJECT.md           # Complete project reference
+│   ├── AGENTS.md            # AI development guidelines
+│   ├── RESTRUCTURE_SUMMARY.md # Restructure details
+│   └── BEFORE_AFTER.md      # Before/after comparison
 ├── development/             # TypeScript implementation (fast iteration)
 ├── production/              # C++ implementation (security & performance)
 └── shared/                  # Shared resources

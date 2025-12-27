@@ -338,6 +338,6 @@ Please submit an issue with the "documentation" template to suggest improvements
 - **Workflow Guide**: `.github/prompts/0-kickstart.md`
 - **Contributing**: `README.md` → Contributing section
 - **Architecture**: `docs/architecture/`
-- **DBAL Guide**: `dbal/AGENTS.md`
+- **DBAL Guide**: `dbal/docs/AGENTS.md`
 - **UI Standards**: `UI_STANDARDS.md`
 - **Copilot Instructions**: `.github/copilot-instructions.md`

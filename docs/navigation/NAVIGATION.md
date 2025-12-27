@@ -89,7 +89,7 @@ API reference and integration:
 - [api/README.md](./api/README.md) - API overview
 - [api/platform-guide.md](./api/platform-guide.md) - Platform guide
 - [api/quick-reference.md](./api/quick-reference.md) - Quick reference
-- [dbal/README.md](./dbal/README.md) - DBAL overview
+- [dbal/docs/README.md](./dbal/docs/README.md) - DBAL overview
 
 ### 🚢 Deployment & DevOps
 Deployment and infrastructure:
@@ -148,7 +148,7 @@ TODO: docs/src/ is missing; add the folder or update/remove the src links below.
 - [src/types/](./src/types/) - Type definitions
 
 ### 🏁 DBAL (Database Abstraction Layer)
-- [dbal/README.md](./dbal/README.md) - Overview
+- [dbal/docs/README.md](./dbal/docs/README.md) - Overview
 - [dbal/shared/api/README.md](./dbal/shared/api/README.md) - API docs
 - [dbal/shared/backends/README.md](./dbal/shared/backends/README.md) - Backends
 - [dbal/production/README.md](./dbal/production/README.md) - C++ implementation

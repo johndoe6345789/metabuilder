@@ -108,7 +108,7 @@ MetaBuilder App
 
 📖 **Start Here**: `dbal/QUICK_START.md`
 📚 **Full Guide**: `dbal/PHASE2_IMPLEMENTATION.md`
-🏗️ **Architecture**: `dbal/README.md`
+🏗️ **Architecture**: `dbal/docs/README.md`
 🚀 **Future**: `dbal/production/PHASE3_DAEMON.md`
 
 ## Performance

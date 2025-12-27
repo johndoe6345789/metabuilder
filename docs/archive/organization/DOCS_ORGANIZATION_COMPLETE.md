@@ -160,7 +160,7 @@ Documentation is now:
 
 - ✅ `docs/ORGANIZATION.md` - New documentation organization guide
 - ✅ `docs/guides/README.md` - Development guides index
-- ✅ `docs/dbal/README.md` - Database abstraction layer overview
+- ✅ `docs/dbal/docs/README.md` - Database abstraction layer overview
 - ✅ `docs/packages/README.md` - Package system overview
 - ✅ `docs/development/README.md` - Development resources
 - ✅ `docs/deployments/README.md` - Infrastructure guide

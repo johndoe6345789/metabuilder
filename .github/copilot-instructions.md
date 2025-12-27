@@ -217,7 +217,7 @@ If fixing a DBAL bug:
 - **Database**: `src/lib/database.ts` (all DB operations), `prisma/schema.prisma` (schema)
 - **Packages**: `src/lib/package-loader.ts` (initialization), `packages/*/seed/` (definitions)
 - **Tests**: `src/lib/schema-utils.test.ts` (parameterized pattern), `FUNCTION_TEST_COVERAGE.md` (auto-generated report)
-- **DBAL**: `dbal/AGENTS.md` (detailed DBAL agent guide), `api/schema/` (YAML contracts)
+- **DBAL**: `dbal/docs/AGENTS.md` (detailed DBAL agent guide), `api/schema/` (YAML contracts)
 
 ## Questions to Ask
 

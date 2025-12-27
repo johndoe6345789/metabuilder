@@ -4,20 +4,27 @@ This directory contains the Database Abstraction Layer for MetaBuilder.
 
 ## Quick Links
 
-- [Main README](README.md) - Overview and architecture
-- [Agent Guide](AGENTS.md) - For AI agents and automated tools
-- [Spark Integration](shared/docs/SPARK_INTEGRATION.md) - GitHub Spark deployment guide
-- [TypeScript Implementation](development/README.md) - TS development guide
-- [C++ Implementation](production/README.md) - C++ production guide
+- [Main README](../README.md) - Overview and getting started
+- [Agent Guide](./AGENTS.md) - For AI agents and automated tools
+- [Spark Integration](../shared/docs/SPARK_INTEGRATION.md) - GitHub Spark deployment guide
+- [TypeScript Implementation](../development/README.md) - TS development guide
+- [C++ Implementation](../production/README.md) - C++ production guide
 
 ## Directory Structure
 
 ```
 dbal/
-├── README.md                    # Main documentation
+├── README.md                    # Quick reference
 ├── LICENSE                      # MIT License
-├── AGENTS.md                    # Agent development guide
 ├── .gitignore                   # Git ignore rules
+│
+├── docs/                        # Documentation
+│   ├── README.md                # Main project documentation
+│   ├── README_INDEX.md          # Documentation index
+│   ├── PROJECT.md               # Complete project reference
+│   ├── AGENTS.md                # Agent development guide
+│   ├── RESTRUCTURE_SUMMARY.md   # Restructure details
+│   └── BEFORE_AFTER.md          # Before/after comparison
 │
 ├── development/                 # TypeScript implementation (fast iteration)
 │   ├── src/                     # Source code

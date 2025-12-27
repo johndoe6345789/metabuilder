@@ -45,5 +45,5 @@ DBAL library workflows live in `dbal/development/` (`npm run build`, `npm run te
 
 ## Agent-Specific Notes
 
-- Check for scoped rules in nested `AGENTS.md` files (e.g., `dbal/AGENTS.md`) before editing those areas.
+- Check for scoped rules in nested `AGENTS.md` files (e.g., `dbal/docs/AGENTS.md`) before editing those areas.
 - Keep changes focused, avoid dependency churn, and follow existing patterns/config in `config/` and `frontends/nextjs/`.
