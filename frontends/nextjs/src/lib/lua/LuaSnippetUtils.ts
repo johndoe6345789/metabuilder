@@ -1,4 +1,4 @@
-import { LUA_SNIPPETS, LUA_SNIPPET_CATEGORIES, type LuaSnippet } from './snippets/lua-snippets-data'
+import { LUA_SNIPPETS, LUA_SNIPPET_CATEGORIES, type LuaSnippet } from './snippets'
 import { getSnippetsByCategory } from './functions/snippets/get-snippets-by-category'
 import { searchSnippets } from './functions/snippets/search-snippets'
 import { getSnippetById } from './functions/snippets/get-snippet-by-id'

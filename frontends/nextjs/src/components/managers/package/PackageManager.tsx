@@ -9,8 +9,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import { Separator } from '@/components/ui'
 import { toast } from 'sonner'
-import { PACKAGE_CATALOG } from '@/lib/packages/core/package-catalog'
-import type { PackageManifest, PackageContent, InstalledPackage } from '@/lib/package-types'
+import { PACKAGE_CATALOG, type PackageCatalogData } from '@/lib/packages/core/package-catalog'
+import type { PackageManifest, InstalledPackage } from '@/lib/package-types'
 import { installPackage, listInstalledPackages, togglePackageEnabled, uninstallPackage } from '@/lib/api/packages'
 import { Package, Download, Trash, Power, MagnifyingGlass, Star, Tag, User, TrendUp, Funnel, Export, ArrowSquareIn } from '@phosphor-icons/react'
 import { PackageImportExport } from './PackageImportExport'
@@ -22,7 +22,7 @@ interface PackageManagerProps {
 export function PackageManager({ onClose }: PackageManagerProps) {
   const [packages, setPackages] = useState<PackageManifest[]>([])
   const [installedPackages, setInstalledPackages] = useState<InstalledPackage[]>([])
-  const [selectedPackage, setSelectedPackage] = useState<{ manifest: PackageManifest; content: PackageContent } | null>(null)
+  const [selectedPackage, setSelectedPackage] = useState<PackageCatalogData | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [sortBy, setSortBy] = useState<'name' | 'downloads' | 'rating'>('downloads')
@@ -39,10 +39,14 @@ export function PackageManager({ onClose }: PackageManagerProps) {
     const installed = await listInstalledPackages()
     setInstalledPackages(installed)
 
-    const allPackages = Object.values(PACKAGE_CATALOG).map(pkg => ({
-      ...pkg.manifest,
-      installed: installed.some(ip => ip.packageId === pkg.manifest.id),
-    }))
+    const allPackages = Object.values(PACKAGE_CATALOG).map(pkg => {
+      const packageData = pkg()
+
+      return {
+        ...packageData.manifest,
+        installed: installed.some(ip => ip.packageId === packageData.manifest.id),
+      }
+    })
 
     setPackages(allPackages)
   }
@@ -50,7 +54,7 @@ export function PackageManager({ onClose }: PackageManagerProps) {
   const handleInstallPackage = async (packageId: string) => {
     setInstalling(true)
     try {
-      const packageEntry = PACKAGE_CATALOG[packageId]
+      const packageEntry = PACKAGE_CATALOG[packageId]?.()
       if (!packageEntry) {
         toast.error('Package not found')
         return
@@ -71,7 +75,7 @@ export function PackageManager({ onClose }: PackageManagerProps) {
 
   const handleUninstallPackage = async (packageId: string) => {
     try {
-      const packageEntry = PACKAGE_CATALOG[packageId]
+      const packageEntry = PACKAGE_CATALOG[packageId]?.()
       if (!packageEntry) {
         toast.error('Package not found')
         return
@@ -227,7 +231,7 @@ export function PackageManager({ onClose }: PackageManagerProps) {
                     isInstalled={pkg.installed}
                     installedPackage={installedPackages.find(ip => ip.packageId === pkg.id)}
                     onViewDetails={() => {
-                      setSelectedPackage(PACKAGE_CATALOG[pkg.id])
+                      setSelectedPackage(PACKAGE_CATALOG[pkg.id]?.() ?? null)
                       setShowDetails(true)
                     }}
                     onToggle={handleTogglePackage}
@@ -253,7 +257,7 @@ export function PackageManager({ onClose }: PackageManagerProps) {
                       isInstalled={true}
                       installedPackage={installedPackages.find(ip => ip.packageId === pkg.id)}
                       onViewDetails={() => {
-                        setSelectedPackage(PACKAGE_CATALOG[pkg.id])
+                        setSelectedPackage(PACKAGE_CATALOG[pkg.id]?.() ?? null)
                         setShowDetails(true)
                       }}
                       onToggle={handleTogglePackage}
@@ -274,7 +278,7 @@ export function PackageManager({ onClose }: PackageManagerProps) {
                     isInstalled={false}
                     installedPackage={undefined}
                     onViewDetails={() => {
-                      setSelectedPackage(PACKAGE_CATALOG[pkg.id])
+                      setSelectedPackage(PACKAGE_CATALOG[pkg.id]?.() ?? null)
                       setShowDetails(true)
                     }}
                     onToggle={handleTogglePackage}

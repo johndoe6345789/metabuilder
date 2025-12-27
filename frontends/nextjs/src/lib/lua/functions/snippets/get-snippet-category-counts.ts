@@ -1,4 +1,4 @@
-import { LUA_SNIPPETS } from '../../snippets/lua-snippets-data'
+import { LUA_SNIPPETS } from '../../snippets'
 
 /**
  * Get count of snippets per category

@@ -79,7 +79,7 @@ class ErrorAsTodoRefactor {
         category: 'parse_error',
         severity: 'high',
         message: 'Could not load progress report - run refactor-to-lambda.ts first',
-        suggestion: 'npx tsx tools/refactoring/refactor-to-lambda.ts'
+        suggestion: 'npx tsx tools/refactoring/cli/refactor-to-lambda.ts'
       })
       return []
     }
