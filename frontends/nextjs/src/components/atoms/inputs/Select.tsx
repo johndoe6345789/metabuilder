@@ -16,11 +16,10 @@ export interface SelectOption {
 
 export interface SelectProps extends Omit<MuiSelectProps, 'children'> {
   options: SelectOption[]
-  error?: boolean
-  fullWidth?: boolean
+  placeholder?: string
 }
 
-const Select = forwardRef<HTMLSelectElement, SelectProps>(
+const Select = forwardRef<any, SelectProps>(
   ({ options, error, fullWidth = true, placeholder, ...props }, ref) => {
     return (
       <FormControl fullWidth={fullWidth} error={error}>

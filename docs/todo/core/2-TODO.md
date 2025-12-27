@@ -9,7 +9,7 @@
 ### Atoms (`src/components/atoms/`)
 - [ ] Audit existing atoms (~12 components) for proper isolation
 - [ ] Ensure atoms have no dependencies on molecules/organisms
-- [ ] Add missing base UI atoms (buttons, inputs, labels, icons)
+- [x] Add missing base UI atoms (buttons, inputs, labels, icons)
 - [ ] Document atom prop interfaces with JSDoc
 
 ### Molecules (`src/components/molecules/`)

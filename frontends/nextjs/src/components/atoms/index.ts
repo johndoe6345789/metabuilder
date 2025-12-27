@@ -27,7 +27,3 @@ export { Separator, type SeparatorProps } from './feedback/Separator'
 export { Progress, CircularProgress, type ProgressProps } from './feedback/Progress'
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, type TooltipProps } from './feedback/Tooltip'
 export { Spinner, type SpinnerProps, type SpinnerSize } from './feedback/Spinner'
-
-// Legacy exports (for backward compatibility during migration)
-export * from '../ui/slider'
-export * from '../ui/radio-group'
