@@ -88,6 +88,11 @@ lint-output.txt
 stub-patterns.json
 complexity-report.json
 
+# TODO management
+todos-baseline.json
+todos-export.json
+todos*.json
+
 # Project-specific
 **/agent-eval-report*
 vite.config.ts.bak*

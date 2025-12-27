@@ -412,6 +412,25 @@ def main():
         help='Limit number of issues to create (for testing)'
     )
     
+    parser.add_argument(
+        '--filter-priority',
+        type=str,
+        choices=['critical', 'high', 'medium', 'low'],
+        help='Filter by priority level (e.g., --filter-priority critical)'
+    )
+    
+    parser.add_argument(
+        '--filter-label',
+        type=str,
+        help='Filter by label (e.g., --filter-label security)'
+    )
+    
+    parser.add_argument(
+        '--exclude-checklist',
+        action='store_true',
+        help='Exclude checklist items (items from "Done Criteria" or similar sections)'
+    )
+    
     args = parser.parse_args()
     
     # Auto-detect todo directory if not specified
@@ -429,6 +448,38 @@ def main():
     # Parse TODO files
     parser_obj = TodoParser(args.todo_dir)
     items = parser_obj.parse_all()
+    
+    # Apply filters
+    if args.exclude_checklist:
+        # Exclude items from checklist-like sections
+        checklist_sections = ['Done Criteria', 'Quick Wins', 'Sanity Check', 'Checklist']
+        original_count = len(items)
+        items = [
+            item for item in items
+            if not any(section.lower() in item.section.lower() for section in checklist_sections)
+        ]
+        excluded = original_count - len(items)
+        if excluded > 0:
+            print(f"\nExcluded {excluded} checklist items")
+    
+    if args.filter_priority:
+        # Filter by priority
+        priority_emoji = {
+            'critical': '🔴 Critical',
+            'high': '🟠 High',
+            'medium': '🟡 Medium',
+            'low': '🟢 Low'
+        }
+        target_priority = priority_emoji[args.filter_priority]
+        original_count = len(items)
+        items = [item for item in items if item.priority == target_priority]
+        print(f"\nFiltered to {len(items)} items with priority: {target_priority}")
+    
+    if args.filter_label:
+        # Filter by label
+        original_count = len(items)
+        items = [item for item in items if args.filter_label in item.labels]
+        print(f"\nFiltered to {len(items)} items with label: {args.filter_label}")
     
     if args.limit:
         items = items[:args.limit]
