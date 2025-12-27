@@ -1,7 +1,7 @@
-import type { ComponentRegistryState } from './registry-state'
-import type { ComponentTypeDefinition } from './types'
+import type { ComponentRegistryState } from '../core/registry-state'
+import type { ComponentTypeDefinition } from '../core/types'
 import { registerComponent } from './register-component'
 
 export function registerComponents(state: ComponentRegistryState, components: ComponentTypeDefinition[]): void {
-  components.forEach(comp => registerComponent(state, comp))
+  components.forEach(component => registerComponent(state, component))
 }

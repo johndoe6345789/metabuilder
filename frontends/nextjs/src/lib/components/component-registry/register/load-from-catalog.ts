@@ -1,6 +1,6 @@
-import { componentCatalog } from '../component-catalog'
-import type { ComponentRegistryState } from './registry-state'
-import type { ComponentTypeDefinition } from './types'
+import { componentCatalog } from '../../component-catalog'
+import type { ComponentRegistryState } from '../core/registry-state'
+import type { ComponentTypeDefinition } from '../core/types'
 
 export function loadFromCatalog(state: ComponentRegistryState): void {
   componentCatalog.forEach(comp => {
