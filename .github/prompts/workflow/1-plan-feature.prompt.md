@@ -5,7 +5,7 @@ Before implementing, analyze the feature requirements:
 1. **Check existing docs**: `docs/architecture/` for design patterns
 2. **Identify affected areas**:
    - Database schema changes? → `prisma/schema.prisma`
-   - New API/DBAL operations? → `dbal/api/schema/`
+   - New API/DBAL operations? → `dbal/shared/api/schema/`
    - UI components? → Use declarative `RenderComponent`
    - Business logic? → Consider Lua script in `packages/*/seed/scripts/`
 

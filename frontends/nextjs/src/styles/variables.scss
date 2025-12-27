@@ -1,5 +1,5 @@
-@use './core/_variables' as *;
-@use './core/_mixins' as *;
-@use './core/_components' as *;
+@forward './core/_variables';
+@forward './core/_mixins';
+@forward './core/_components';
 
 // Compatibility wrapper for old @use paths

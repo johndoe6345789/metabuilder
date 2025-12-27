@@ -135,3 +135,6 @@ export { FeaturesSection } from '../level1/FeaturesSection'
 export { ContactSection } from '../level1/ContactSection'
 export { NavigationBar } from '../level1/NavigationBar'
 export { CommentsList } from '../level2/CommentsList'
+
+// Security components
+export { SecurityWarningDialog } from './security/SecurityWarningDialog'

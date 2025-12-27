@@ -232,13 +232,13 @@ Documentation for TypeScript/React source code
 ### [DBAL (Data Abstraction Layer)](dbal/)
 Documentation for C++ and TypeScript database layer
 
-- **[api/](dbal/api/)** - API schemas and versioning
-- **[backends/](dbal/backends/)** - Database backend implementations (Prisma, SQLite)
-- **[common/](dbal/common/)** - Shared DBAL utilities
-- **[cpp/](dbal/cpp/)** - C++ implementation
-- **[ts/](dbal/ts/)** - TypeScript implementation
-- **[tools/](dbal/tools/)** - Development tools
-- **[scripts/](dbal/scripts/)** - Automation scripts
+- **[api/](dbal/shared/api/)** - API schemas and versioning
+- **[backends/](dbal/shared/backends/)** - Database backend implementations (Prisma, SQLite)
+- **[common/](dbal/shared/common/)** - Shared DBAL utilities
+- **[cpp/](dbal/production/)** - C++ implementation
+- **[ts/](dbal/development/)** - TypeScript implementation
+- **[tools/](dbal/shared/tools/)** - Development tools
+- **[scripts/](dbal/shared/scripts/)** - Automation scripts
 
 ### [Packages](packages/)
 Documentation for feature packages

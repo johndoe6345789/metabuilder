@@ -1,1 +1,1 @@
-export { getPackageData } from './data/get-package-data'
+export { getPackageData } from './data/get/get-package-data'
