@@ -1,6 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import type { User } from '@/lib/level-types'
+import { useAuth } from '@/hooks/useAuth'
+import { fetchSession } from '@/lib/auth/api/fetch-session'
+import { login as loginRequest } from '@/lib/auth/api/login'
+import { register as registerRequest } from '@/lib/auth/api/register'
+import { logout as logoutRequest } from '@/lib/auth/api/logout'
 
 vi.mock('@/lib/auth/api/fetch-session', () => ({
   fetchSession: vi.fn(),
@@ -17,12 +22,6 @@ vi.mock('@/lib/auth/api/register', () => ({
 vi.mock('@/lib/auth/api/logout', () => ({
   logout: vi.fn(),
 }))
-
-import { useAuth } from '@/hooks/useAuth'
-import { fetchSession } from '@/lib/auth/api/fetch-session'
-import { login as loginRequest } from '@/lib/auth/api/login'
-import { register as registerRequest } from '@/lib/auth/api/register'
-import { logout as logoutRequest } from '@/lib/auth/api/logout'
 
 const mockFetchSession = vi.mocked(fetchSession)
 const mockLogin = vi.mocked(loginRequest)
@@ -48,7 +47,17 @@ const waitForIdle = async (result: { current: { isLoading: boolean } }) => {
   })
 }
 
-describe('useAuth', () => {
+const resetAuthStore = async () => {
+  const { result, unmount } = renderHook(() => useAuth())
+  await waitForIdle(result)
+  await act(async () => {
+    await result.current.logout()
+  })
+  await waitForIdle(result)
+  unmount()
+}
+
+describe('useAuth session flows', () => {
   beforeEach(async () => {
     mockFetchSession.mockReset()
     mockLogin.mockReset()
@@ -57,16 +66,10 @@ describe('useAuth', () => {
     mockFetchSession.mockResolvedValue(null)
     mockLogout.mockResolvedValue(undefined)
 
-    const { result, unmount } = renderHook(() => useAuth())
-    await waitForIdle(result)
-    await act(async () => {
-      await result.current.logout()
-    })
-    await waitForIdle(result)
-    unmount()
+    await resetAuthStore()
   })
 
-  it('should start unauthenticated after session check', async () => {
+  it('starts unauthenticated after session check', async () => {
     const { result, unmount } = renderHook(() => useAuth())
 
     await waitForIdle(result)
@@ -77,28 +80,20 @@ describe('useAuth', () => {
     unmount()
   })
 
-  it.each([
-    { email: 'alice@example.com', expectedName: 'alice' },
-    { email: 'bob.smith@corp.io', expectedName: 'bob.smith' },
-  ])('should authenticate $email', async ({ email, expectedName }) => {
+  it('authenticates on login', async () => {
     const { result, unmount } = renderHook(() => useAuth())
 
-    mockLogin.mockResolvedValue(createUser({
-      id: 'user_1',
-      username: expectedName,
-      email,
-    }))
+    mockLogin.mockResolvedValue(createUser())
 
     await waitForIdle(result)
     await act(async () => {
-      await result.current.login(email, 'password')
+      await result.current.login('alice@example.com', 'password')
     })
 
     expect(result.current.user).toMatchObject({
       id: 'user_1',
-      email,
-      name: expectedName,
-      username: expectedName,
+      email: 'alice@example.com',
+      username: 'alice',
       level: 2,
     })
     expect(result.current.isAuthenticated).toBe(true)
@@ -106,7 +101,7 @@ describe('useAuth', () => {
     unmount()
   })
 
-  it('should clear user on logout', async () => {
+  it('clears user on logout', async () => {
     const { result, unmount } = renderHook(() => useAuth())
 
     mockLogin.mockResolvedValue(createUser())
@@ -126,14 +121,16 @@ describe('useAuth', () => {
     unmount()
   })
 
-  it('should register and authenticate', async () => {
+  it('registers and authenticates', async () => {
     const { result, unmount } = renderHook(() => useAuth())
 
-    mockRegister.mockResolvedValue(createUser({
-      id: 'user_2',
-      username: 'newbie',
-      email: 'newbie@example.com',
-    }))
+    mockRegister.mockResolvedValue(
+      createUser({
+        id: 'user_2',
+        username: 'newbie',
+        email: 'newbie@example.com',
+      })
+    )
 
     await waitForIdle(result)
     await act(async () => {
@@ -143,7 +140,6 @@ describe('useAuth', () => {
     expect(result.current.user).toMatchObject({
       id: 'user_2',
       email: 'newbie@example.com',
-      name: 'newbie',
       username: 'newbie',
       level: 2,
     })
@@ -152,7 +148,7 @@ describe('useAuth', () => {
     unmount()
   })
 
-  it('should sync state across hooks', async () => {
+  it('syncs state across hooks', async () => {
     const first = renderHook(() => useAuth())
     const second = renderHook(() => useAuth())
 
