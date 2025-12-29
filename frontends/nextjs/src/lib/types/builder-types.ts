@@ -39,7 +39,7 @@ export type ComponentType =
  * @example { className: "mt-4", disabled: true, onClick: fn }
  */
 export interface ComponentProps {
-  [key: string]: any
+  [key: string]: unknown
 }
 
 /**
@@ -85,7 +85,7 @@ export interface PropDefinition {
   name: string
   label: string
   type: 'string' | 'number' | 'boolean' | 'select' | 'color' | 'dynamic-select'
-  defaultValue?: any
+  defaultValue?: unknown
   options?: Array<{ value: string; label: string }>
   dynamicSource?: string
   description?: string

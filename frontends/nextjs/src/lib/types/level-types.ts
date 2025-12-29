@@ -1,3 +1,5 @@
+import type { ModelSchema } from './schema-types'
+
 /**
  * UserRole - User permission levels in MetaBuilder
  * @description Six-level permission hierarchy
@@ -58,7 +60,7 @@ export interface WorkflowNode {
   id: string
   type: 'trigger' | 'action' | 'condition' | 'lua' | 'transform'
   label: string
-  config: Record<string, any>
+  config: Record<string, unknown>
   position: { x: number; y: number }
 }
 
@@ -110,7 +112,7 @@ export interface PageConfig {
   path: string
   title: string
   level: AppLevel
-  componentTree: any[]
+  componentTree: unknown[]
   requiresAuth: boolean
   requiredRole?: UserRole
 }
@@ -122,14 +124,14 @@ export interface Tenant {
   createdAt: number
   homepageConfig?: {
     pageId: string
-    customContent?: any
+    customContent?: unknown
   }
 }
 
 export interface AppConfiguration {
   id: string
   name: string
-  schemas: any[]
+  schemas: ModelSchema[]
   workflows: Workflow[]
   luaScripts: LuaScript[]
   pages: PageConfig[]
