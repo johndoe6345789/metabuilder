@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module '@monaco-editor/react' {
   import type { ComponentType, ReactNode } from 'react'
   import type { editor, languages } from 'monaco-editor'

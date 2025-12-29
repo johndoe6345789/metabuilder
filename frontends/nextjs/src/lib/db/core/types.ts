@@ -34,8 +34,8 @@ export interface ComponentNode {
 export interface ComponentConfig {
   id: string
   componentId: string
-  props: Record<string, any>
-  styles: Record<string, any>
+  props: Record<string, unknown>
+  styles: Record<string, unknown>
   events: Record<string, string>
   conditionalRendering?: {
     condition: string
