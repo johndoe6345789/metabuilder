@@ -4,11 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { SignIn, UserPlus, ArrowLeft, Envelope } from '@phosphor-icons/react'
+import { ArrowLeft, Envelope, SignIn, UserPlus } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { Database, hashPassword } from '@/lib/database'
 import { generateScrambledPassword, simulateEmailSend } from '@/lib/password-utils'
 import { Alert, AlertDescription } from '@/components/ui'
+import { LoginForm } from '@/components/auth/unified-login/LoginForm'
+import { Provider, ProviderList } from '@/components/auth/unified-login/ProviderList'
 
 export interface UnifiedLoginProps {
   onLogin: (credentials: { username: string; password: string }) => void
@@ -20,6 +22,14 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
   const [loginForm, setLoginForm] = useState({ username: '', password: '' })
   const [registerForm, setRegisterForm] = useState({ username: '', email: '' })
   const [resetEmail, setResetEmail] = useState('')
+  const providers: Provider[] = [
+    { name: 'Google', description: 'Use your Google Workspace account' },
+    { name: 'GitHub', description: 'Developer SSO via GitHub' },
+  ]
+
+  const handleProviderSelect = (provider: Provider) => {
+    toast.info(`${provider.name} login is coming soon`)
+  }
 
   const handleLogin = () => {
     if (!loginForm.username || !loginForm.password) {
@@ -119,37 +129,14 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
             </TabsList>
 
             <TabsContent value="login" className="space-y-4 mt-6">
-              <div className="space-y-2">
-                <Label htmlFor="login-username">Username</Label>
-                <Input
-                  id="login-username"
-                  value={loginForm.username}
-                  onChange={(e) => setLoginForm({ ...loginForm, username: e.target.value })}
-                  placeholder="Enter username"
-                  onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="login-password">Password</Label>
-                <Input
-                  id="login-password"
-                  type="password"
-                  value={loginForm.password}
-                  onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-                  placeholder="Enter password"
-                  onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-                />
-              </div>
-              <Button className="w-full" onClick={handleLogin}>
-                <SignIn className="mr-2" size={16} />
-                Sign In
-              </Button>
-              <Alert>
-                <AlertDescription className="text-xs">
-                  <p className="font-semibold mb-1">Test Credentials:</p>
-                  <p>Check browser console for default user passwords (they are scrambled on first run)</p>
-                </AlertDescription>
-              </Alert>
+              <LoginForm
+                username={loginForm.username}
+                password={loginForm.password}
+                onUsernameChange={(username) => setLoginForm({ ...loginForm, username })}
+                onPasswordChange={(password) => setLoginForm({ ...loginForm, password })}
+                onSubmit={handleLogin}
+              />
+              <ProviderList providers={providers} onSelect={handleProviderSelect} />
             </TabsContent>
 
             <TabsContent value="register" className="space-y-4 mt-6">
