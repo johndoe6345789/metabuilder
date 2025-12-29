@@ -128,12 +128,8 @@ export async function loadLuaUIPackage(packagePath: string): Promise<LuaUIPackag
         const isFunction = lua.lua_isfunction(L, -1)
 
         if (isFunction && typeof key === 'string') {
-          // Create a closure that captures the Lua state and function
-          const luaFunctionIndex = lua.lua_gettop(L)
-
-          // For now, we'll create a wrapper that executes the Lua function
-          // This is a simplified version - in production you'd want to keep the engine alive
-          const wrappedFunction = createLuaFunctionWrapper(engine, actionSource, key)
+          // Create a wrapper that executes the Lua function
+          const wrappedFunction = createLuaFunctionWrapper(actionSource, key)
           actions[key] = wrappedFunction
         }
 
