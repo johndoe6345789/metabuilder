@@ -77,7 +77,7 @@ export function ToastContainer({
             severity={t.type === 'default' ? 'info' : t.type}
             variant={richColors ? 'filled' : 'standard'}
             onClose={closeButton ? () => removeToast(t.id) : undefined}
-            sx={{ width: expand ? '100%' : 'auto', minWidth: 300 }}
+            sx={{ width: expand ? '100%' : 'auto', minWidth: expand ? 'auto' : 300 }}
           >
             {t.message}
             {t.description && (
