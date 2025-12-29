@@ -1,244 +1,29 @@
 import type { FieldSchema } from '../../types/schema-types'
 import { authorValidations, postValidations, productValidations } from './validation'
 
-export const postFields: FieldSchema[] = [
-  {
-    name: 'id',
-    type: 'string',
-    label: 'ID',
-    required: true,
-    unique: true,
-    editable: false,
-    listDisplay: false,
-  },
-  {
-    name: 'title',
-    type: 'string',
-    label: 'Title',
-    required: true,
-    validation: postValidations.title,
-    listDisplay: true,
-    searchable: true,
-    sortable: true,
-  },
-  {
-    name: 'slug',
-    type: 'string',
-    label: 'Slug',
-    required: true,
-    unique: true,
-    helpText: 'URL-friendly version of the title',
-    validation: postValidations.slug,
-    listDisplay: false,
-    sortable: true,
-  },
-  {
-    name: 'content',
-    type: 'text',
-    label: 'Content',
-    required: true,
-    helpText: 'Main post content',
-    listDisplay: false,
-    searchable: true,
-  },
-  {
-    name: 'excerpt',
-    type: 'text',
-    label: 'Excerpt',
-    required: false,
-    helpText: ['Short summary of the post', 'Used in list views and previews'],
-    validation: postValidations.excerpt,
-    listDisplay: false,
-  },
-  {
-    name: 'author',
-    type: 'relation',
-    label: 'Author',
-    required: true,
-    relatedModel: 'author',
-    listDisplay: true,
-    sortable: true,
-  },
-  {
-    name: 'status',
-    type: 'select',
-    label: 'Status',
-    required: true,
-    default: 'draft',
-    choices: [
-      { value: 'draft', label: 'Draft' },
-      { value: 'published', label: 'Published' },
-      { value: 'archived', label: 'Archived' },
-    ],
-    listDisplay: true,
-    sortable: true,
-  },
-  {
-    name: 'featured',
-    type: 'boolean',
-    label: 'Featured',
-    default: false,
-    helpText: 'Display on homepage',
-    listDisplay: true,
-  },
-  {
-    name: 'publishedAt',
-    type: 'datetime',
-    label: 'Published At',
-    required: false,
-    listDisplay: true,
-    sortable: true,
-  },
-  {
-    name: 'tags',
-    type: 'json',
-    label: 'Tags',
-    required: false,
-    helpText: 'JSON array of tag strings',
-    listDisplay: false,
-  },
-  {
-    name: 'views',
-    type: 'number',
-    label: 'Views',
-    default: 0,
-    validation: postValidations.views,
-    listDisplay: false,
-  },
-]
+// Import JSON configuration files
+const postFieldsJson: any[] = require('./config/post-fields.json')
+const authorFieldsJson: any[] = require('./config/author-fields.json')
+const productFieldsJson: any[] = require('./config/product-fields.json')
 
-export const authorFields: FieldSchema[] = [
-  {
-    name: 'id',
-    type: 'string',
-    label: 'ID',
-    required: true,
-    unique: true,
-    editable: false,
-    listDisplay: false,
-  },
-  {
-    name: 'name',
-    type: 'string',
-    label: 'Name',
-    required: true,
-    validation: authorValidations.name,
-    listDisplay: true,
-    searchable: true,
-    sortable: true,
-  },
-  {
-    name: 'email',
-    type: 'email',
-    label: 'Email',
-    required: true,
-    unique: true,
-    listDisplay: true,
-    searchable: true,
-    sortable: true,
-  },
-  {
-    name: 'bio',
-    type: 'text',
-    label: 'Bio',
-    required: false,
-    helpText: 'Author biography',
-    validation: authorValidations.bio,
-    listDisplay: false,
-  },
-  {
-    name: 'website',
-    type: 'url',
-    label: 'Website',
-    required: false,
-    listDisplay: false,
-  },
-  {
-    name: 'active',
-    type: 'boolean',
-    label: 'Active',
-    default: true,
-    listDisplay: true,
-  },
-  {
-    name: 'createdAt',
-    type: 'datetime',
-    label: 'Created At',
-    required: true,
-    editable: false,
-    listDisplay: true,
-    sortable: true,
-  },
-]
+// Load from JSON and add validation functions
+export const postFields: FieldSchema[] = postFieldsJson.map(field => {
+  if (field.name === 'title') return { ...field, validation: postValidations.title }
+  if (field.name === 'slug') return { ...field, validation: postValidations.slug }
+  if (field.name === 'excerpt') return { ...field, validation: postValidations.excerpt }
+  if (field.name === 'views') return { ...field, validation: postValidations.views }
+  return field
+})
 
-export const productFields: FieldSchema[] = [
-  {
-    name: 'id',
-    type: 'string',
-    label: 'ID',
-    required: true,
-    unique: true,
-    editable: false,
-    listDisplay: false,
-  },
-  {
-    name: 'name',
-    type: 'string',
-    label: 'Product Name',
-    required: true,
-    validation: productValidations.name,
-    listDisplay: true,
-    searchable: true,
-    sortable: true,
-  },
-  {
-    name: 'description',
-    type: 'text',
-    label: 'Description',
-    required: false,
-    helpText: 'Product description',
-    listDisplay: false,
-    searchable: true,
-  },
-  {
-    name: 'price',
-    type: 'number',
-    label: 'Price',
-    required: true,
-    validation: productValidations.price,
-    listDisplay: true,
-    sortable: true,
-  },
-  {
-    name: 'stock',
-    type: 'number',
-    label: 'Stock',
-    required: true,
-    default: 0,
-    validation: productValidations.stock,
-    listDisplay: true,
-    sortable: true,
-  },
-  {
-    name: 'category',
-    type: 'select',
-    label: 'Category',
-    required: true,
-    choices: [
-      { value: 'electronics', label: 'Electronics' },
-      { value: 'clothing', label: 'Clothing' },
-      { value: 'books', label: 'Books' },
-      { value: 'home', label: 'Home & Garden' },
-      { value: 'toys', label: 'Toys' },
-    ],
-    listDisplay: false,
-    sortable: true,
-  },
-  {
-    name: 'available',
-    type: 'boolean',
-    label: 'Available',
-    default: true,
-    listDisplay: true,
-  },
-]
+export const authorFields: FieldSchema[] = authorFieldsJson.map(field => {
+  if (field.name === 'name') return { ...field, validation: authorValidations.name }
+  if (field.name === 'bio') return { ...field, validation: authorValidations.bio }
+  return field
+})
+
+export const productFields: FieldSchema[] = productFieldsJson.map(field => {
+  if (field.name === 'name') return { ...field, validation: productValidations.name }
+  if (field.name === 'price') return { ...field, validation: productValidations.price }
+  if (field.name === 'stock') return { ...field, validation: productValidations.stock }
+  return field
+})
