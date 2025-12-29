@@ -1,8 +1,0 @@
-export { getCredentials } from './crud/operations/get-credentials'
-export { setCredential } from './crud/operations/set-credential'
-export { verifyCredentials } from './crud/operations/verify-credentials'
-export { getPasswordChangeTimestamps } from './password-change/get-password-change-timestamps'
-export { setPasswordChangeTimestamps } from './password-change/set-password-change-timestamps'
-export { getPasswordResetTokens } from './password-reset/operations/get-password-reset-tokens'
-export { setPasswordResetToken } from './password-reset/operations/set-password-reset-token'
-export { deletePasswordResetToken } from './password-reset/operations/delete-password-reset-token'
