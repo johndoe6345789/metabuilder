@@ -30,7 +30,7 @@ export async function GET(_request: Request, { params }: { params: PackageParams
         'Content-Type': contentType,
       },
     })
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
 }
