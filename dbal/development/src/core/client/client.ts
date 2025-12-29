@@ -1,7 +1,7 @@
 /**
  * @file client.ts
  * @description DBAL Client - Main interface for database operations
- * 
+ *
  * Provides CRUD operations for all entities through modular operation handlers.
  * Each entity type has its own dedicated operations module following the
  * single-responsibility pattern.
@@ -9,82 +9,67 @@
 
 import type { DBALConfig } from '../../runtime/config'
 import type { DBALAdapter } from '../../adapters/adapter'
-import { createAdapter } from './adapter-factory'
-import {
-  createUserOperations,
-  createPageOperations,
-  createComponentOperations,
-  createWorkflowOperations,
-  createLuaScriptOperations,
-  createPackageOperations,
-  createSessionOperations,
-} from '../entities'
+import { buildAdapter, buildEntityOperations } from './builders'
+import { normalizeClientConfig, validateClientConfig } from './mappers'
 
 export class DBALClient {
   private adapter: DBALAdapter
   private config: DBALConfig
+  private operations: ReturnType<typeof buildEntityOperations>
 
   constructor(config: DBALConfig) {
-    this.config = config
-    
-    // Validate configuration
-    if (!config.adapter) {
-      throw new Error('Adapter type must be specified')
-    }
-    if (config.mode !== 'production' && !config.database?.url) {
-      throw new Error('Database URL must be specified for non-production mode')
-    }
-    
-    this.adapter = createAdapter(config)
+    this.config = normalizeClientConfig(validateClientConfig(config))
+    this.adapter = buildAdapter(this.config)
+    this.operations = buildEntityOperations(this.adapter)
   }
 
   /**
    * User entity operations
    */
   get users() {
-    return createUserOperations(this.adapter)
+    return this.operations.users
   }
 
   /**
    * Page entity operations
    */
   get pages() {
-    return createPageOperations(this.adapter)
+    return this.operations.pages
   }
 
   /**
    * Component hierarchy entity operations
    */
   get components() {
-    return createComponentOperations(this.adapter)
+    return this.operations.components
   }
 
   /**
    * Workflow entity operations
    */
   get workflows() {
-    return createWorkflowOperations(this.adapter)
+    return this.operations.workflows
   }
 
   /**
    * Lua script entity operations
    */
   get luaScripts() {
-    return createLuaScriptOperations(this.adapter)
+    return this.operations.luaScripts
   }
 
   /**
    * Package entity operations
    */
   get packages() {
-    return createPackageOperations(this.adapter)
+    return this.operations.packages
   }
 
   /**
    * Session entity operations
    */
   get sessions() {
-    return createSessionOperations(this.adapter)
+    return this.operations.sessions
   }
 
   /**

@@ -1,0 +1,100 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { renderHook, act, waitFor } from '@testing-library/react'
+import type { User } from '@/lib/level-types'
+import { useAuth } from '@/hooks/useAuth'
+import { fetchSession } from '@/lib/auth/api/fetch-session'
+import { login as loginRequest } from '@/lib/auth/api/login'
+import { logout as logoutRequest } from '@/lib/auth/api/logout'
+
+vi.mock('@/lib/auth/api/fetch-session', () => ({
+  fetchSession: vi.fn(),
+}))
+
+vi.mock('@/lib/auth/api/login', () => ({
+  login: vi.fn(),
+}))
+
+vi.mock('@/lib/auth/api/logout', () => ({
+  logout: vi.fn(),
+}))
+
+const mockFetchSession = vi.mocked(fetchSession)
+const mockLogin = vi.mocked(loginRequest)
+const mockLogout = vi.mocked(logoutRequest)
+
+const createUser = (overrides?: Partial<User>): User => ({
+  id: 'user_1',
+  username: 'alice',
+  email: 'alice@example.com',
+  role: 'user',
+  createdAt: 1000,
+  tenantId: undefined,
+  profilePicture: undefined,
+  bio: undefined,
+  isInstanceOwner: false,
+  ...overrides,
+})
+
+const waitForIdle = async (result: { current: { isLoading: boolean } }) => {
+  await waitFor(() => {
+    expect(result.current.isLoading).toBe(false)
+  })
+}
+
+const resetAuthStore = async () => {
+  const { result, unmount } = renderHook(() => useAuth())
+  await waitForIdle(result)
+  await act(async () => {
+    await result.current.logout()
+  })
+  await waitForIdle(result)
+  unmount()
+}
+
+describe('useAuth role mapping', () => {
+  beforeEach(async () => {
+    mockFetchSession.mockReset()
+    mockLogin.mockReset()
+    mockLogout.mockReset()
+    mockFetchSession.mockResolvedValue(null)
+    mockLogout.mockResolvedValue(undefined)
+
+    await resetAuthStore()
+  })
+
+  it.each([
+    { role: 'public', expectedLevel: 1 },
+    { role: 'user', expectedLevel: 2 },
+    { role: 'admin', expectedLevel: 4 },
+    { role: 'supergod', expectedLevel: 6 },
+    { role: 'unknown', expectedLevel: 0 },
+  ])('applies level for role "$role"', async ({ role, expectedLevel }) => {
+    const { result, unmount } = renderHook(() => useAuth())
+
+    mockLogin.mockResolvedValue(createUser({ role }))
+
+    await waitForIdle(result)
+    await act(async () => {
+      await result.current.login('alice@example.com', 'password')
+    })
+
+    expect(result.current.user?.level).toBe(expectedLevel)
+
+    unmount()
+  })
+
+  it('maps refreshed session roles to levels', async () => {
+    const { result, unmount } = renderHook(() => useAuth())
+
+    mockFetchSession.mockResolvedValue(createUser({ role: 'moderator' }))
+
+    await act(async () => {
+      await result.current.refresh()
+    })
+    await waitForIdle(result)
+
+    expect(result.current.user?.level).toBe(3)
+
+    unmount()
+  })
+})
