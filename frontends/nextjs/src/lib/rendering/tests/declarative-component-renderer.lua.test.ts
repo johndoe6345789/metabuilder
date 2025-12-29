@@ -17,7 +17,7 @@ describe('declarative-component-renderer lua integration', () => {
       }
       renderer.registerLuaScript('add', script)
 
-      expect(renderer.executeLuaScript('add', [1, 2])).resolves.toBeDefined()
+      await expect(renderer.executeLuaScript('add', [1, 2])).resolves.toBeDefined()
     })
   })
 
