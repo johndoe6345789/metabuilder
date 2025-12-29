@@ -7,9 +7,9 @@
  * under the large-file threshold and easier to maintain.
  */
 
-/// <reference path="./dbal/core-config.d.ts" />
-/// <reference path="./dbal/core-types.d.ts" />
-/// <reference path="./dbal/tenant-context.d.ts" />
-/// <reference path="./dbal/kv-store.d.ts" />
-/// <reference path="./dbal/blob.d.ts" />
-/// <reference path="./dbal/tenant-aware-blob.d.ts" />
+export * from './dbal/core-config.js'
+export * from './dbal/core-types.js'
+export * from './dbal/tenant-context.js'
+export * from './dbal/kv-store.js'
+export * from './dbal/blob.js'
+export * from './dbal/tenant-aware-blob.js'

@@ -1,4 +1,4 @@
-import { describe, expect,it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { DBALError, DBALErrorCode } from '@/dbal/development/src/core/foundation/errors'
 

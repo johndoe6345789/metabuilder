@@ -3,7 +3,10 @@
  * These types define the structure of UI packages written in Lua
  */
 
-export interface LuaUIMetadata {
+/**
+ * Manifest.json structure for Lua UI packages
+ */
+export interface LuaUIManifest {
   id: string
   version: string
   name: string
@@ -11,10 +14,34 @@ export interface LuaUIMetadata {
   author?: string
   category: 'ui' | 'action' | 'validation' | 'workflow'
   dependencies?: string[]
+  pages: LuaUIPageManifest[]
+  actions?: LuaUIActionManifest[]
 }
 
+/**
+ * Page reference in manifest.json
+ */
+export interface LuaUIPageManifest {
+  file: string
+  path: string
+  title: string
+  level: number
+  requiresAuth?: boolean
+  requiredRole?: string
+}
+
+/**
+ * Action reference in manifest.json
+ */
+export interface LuaUIActionManifest {
+  file: string
+  name: string
+}
+
+/**
+ * Loaded page with rendered component tree
+ */
 export interface LuaUIPage {
-  id: string
   path: string
   title: string
   level: number
@@ -48,14 +75,11 @@ export interface LuaUIValidation {
   }
 }
 
+/**
+ * Fully loaded Lua UI package with all files resolved
+ */
 export interface LuaUIPackage {
-  metadata: LuaUIMetadata
+  manifest: LuaUIManifest
   pages: LuaUIPage[]
-  actions?: Record<string, Function>
-  validation?: LuaUIValidation
-  hooks?: {
-    onMount?: Function
-    onUnmount?: Function
-    beforeRender?: Function
-  }
+  actions: Record<string, Function>
 }
