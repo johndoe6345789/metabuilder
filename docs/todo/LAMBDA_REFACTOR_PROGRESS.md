@@ -1,104 +1,87 @@
 # Lambda-per-File Refactoring Progress
 
-**Generated:** 2025-12-27T15:35:24.150Z
+**Generated:** 2025-12-29T19:12:28.334Z
 
 ## Summary
 
-- **Total files > 150 lines:** 106
-- **Pending:** 91
+- **Total files > 150 lines:** 53
+- **Pending:** 43
 - **In Progress:** 0
-- **Completed:** 3
-- **Skipped:** 12
+- **Completed:** 0
+- **Skipped:** 10
 
 ## By Category
 
-- **component:** 60
-- **dbal:** 12
-- **library:** 11
-- **tool:** 10
+- **component:** 31
 - **test:** 10
-- **type:** 2
-- **other:** 1
+- **library:** 4
+- **tool:** 4
+- **other:** 3
+- **dbal:** 1
 
 ## Refactoring Queue
 
 Files are prioritized by ease of refactoring and impact.
 
-### High Priority (20 files)
+### High Priority (8 files)
 
 Library and tool files - easiest to refactor
 
-- [ ] `frontends/nextjs/src/lib/nerd-mode-ide/templates/template-configs.ts` (267 lines)
-- [ ] `frontends/nextjs/src/lib/db/core/index.ts` (216 lines)
-- [ ] `frontends/nextjs/src/lib/security/functions/patterns/javascript-patterns.ts` (184 lines)
-- [ ] `frontends/nextjs/src/lib/rendering/page/page-renderer.ts` (178 lines)
-- [ ] `frontends/nextjs/src/lib/github/workflows/analysis/runs/analyze-workflow-runs.ts` (164 lines)
-- [ ] `frontends/nextjs/src/lib/rendering/page/page-definition-builder.ts` (483 lines)
-- [ ] `frontends/nextjs/src/lib/db/database-admin/seed-default-data.ts` (471 lines)
-- [ ] `frontends/nextjs/src/lib/components/component-catalog.ts` (337 lines)
-- [ ] `frontends/nextjs/src/lib/schema/default-schema.ts` (308 lines)
-- [ ] `frontends/nextjs/src/lib/lua/snippets/lua-snippets-data.ts` (983 lines)
-- [x] `tools/analysis/code/analyze-render-performance.ts` (294 lines)
-- [x] `tools/misc/metrics/enforce-size-limits.ts` (249 lines)
-- [ ] `tools/refactoring/refactor-to-lambda.ts` (243 lines)
-- [x] `tools/analysis/test/analyze-implementation-completeness.ts` (230 lines)
-- [ ] `tools/detection/detect-stub-implementations.ts` (215 lines)
-- [ ] `tools/generation/generate-stub-report.ts` (204 lines)
-- [ ] `tools/quality/code/check-code-complexity.ts` (175 lines)
-- [ ] `tools/generation/generate-quality-summary.ts` (159 lines)
-- [ ] `dbal/shared/tools/cpp-build-assistant.ts` (342 lines)
-- [ ] `tools/analysis/test/analyze-test-coverage.ts` (332 lines)
+- [ ] `frontends/nextjs/src/lib/db/database-admin/seed-default-data/css/categories/base.ts` (278 lines)
+- [ ] `frontends/nextjs/src/lib/nerd-mode-ide/templates/configs/base.ts` (267 lines)
+- [ ] `frontends/nextjs/src/lib/schema/default/forms.ts` (244 lines)
+- [ ] `frontends/nextjs/src/lib/db/core/operations.ts` (190 lines)
+- [ ] `tools/refactoring/cli/orchestrate-refactor.ts` (213 lines)
+- [ ] `tools/refactoring/orchestrate-refactor/functions/main.ts` (186 lines)
+- [ ] `tools/refactoring/error-as-todo-refactor/index.ts` (163 lines)
+- [ ] `dbal/shared/tools/cpp-build-assistant/workflow.ts` (153 lines)
 
-### Medium Priority (68 files)
+### Medium Priority (32 files)
 
 DBAL and component files - moderate complexity
 
-- [ ] `frontends/nextjs/src/lib/packages/core/package-catalog.ts` (1169 lines)
-- [ ] `dbal/development/src/blob/providers/tenant-aware-storage.ts` (260 lines)
-- [ ] `dbal/development/src/adapters/acl-adapter.ts` (258 lines)
-- [ ] `dbal/development/src/blob/providers/memory-storage.ts` (230 lines)
-- [ ] `dbal/development/src/core/foundation/types.ts` (216 lines)
-- [ ] `dbal/development/src/core/entities/operations/core/user-operations.ts` (185 lines)
-- [ ] `dbal/development/src/core/entities/operations/system/package-operations.ts` (185 lines)
-- [ ] `dbal/development/src/bridges/websocket-bridge.ts` (168 lines)
-- [ ] `dbal/development/src/blob/providers/filesystem-storage.ts` (410 lines)
-- [ ] `dbal/development/src/blob/providers/s3-storage.ts` (361 lines)
-- [ ] `dbal/development/src/adapters/prisma-adapter.ts` (350 lines)
-- [ ] `frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts` (313 lines)
-- [ ] `dbal/development/src/core/foundation/kv-store.ts` (307 lines)
+- [ ] `frontends/nextjs/src/lib/dbal/core/client/dbal-integration/DbalIntegrationUtils.ts` (174 lines)
 - [ ] `frontends/nextjs/src/components/misc/data/QuickGuide.tsx` (297 lines)
-- [ ] `frontends/nextjs/src/components/editors/ThemeEditor.tsx` (294 lines)
-- [ ] `frontends/nextjs/src/components/managers/PageRoutesManager.tsx` (290 lines)
-- [ ] `frontends/nextjs/src/components/managers/component/ComponentConfigDialog.tsx` (290 lines)
-- [ ] `frontends/nextjs/src/components/level/levels/Level5.tsx` (289 lines)
-- [ ] `frontends/nextjs/src/components/editors/lua/LuaSnippetLibrary.tsx` (285 lines)
 - [ ] `frontends/nextjs/src/components/misc/data/GenericPage.tsx` (274 lines)
-- ... and 48 more
+- [ ] `frontends/nextjs/src/components/molecules/overlay/DropdownMenu.tsx` (268 lines)
+- [ ] `frontends/nextjs/src/components/managers/database/DatabaseManager.tsx` (261 lines)
+- [ ] `frontends/nextjs/src/components/examples/ContactForm.example.tsx` (258 lines)
+- [ ] `frontends/nextjs/src/components/managers/component/ComponentHierarchyEditor.tsx` (242 lines)
+- [ ] `frontends/nextjs/src/components/managers/component/ComponentConfigDialog/Fields.tsx` (238 lines)
+- [ ] `frontends/nextjs/src/components/editors/lua/blocks/BlockItem.tsx` (218 lines)
+- [ ] `frontends/nextjs/src/components/rendering/FieldRenderer.tsx` (210 lines)
+- [ ] `frontends/nextjs/src/components/ui/organisms/data/Form.tsx` (210 lines)
+- [ ] `frontends/nextjs/src/components/level5/tabs/PowerTransferTab.tsx` (207 lines)
+- [ ] `frontends/nextjs/src/components/misc/auth/UnifiedLogin.tsx` (207 lines)
+- [ ] `frontends/nextjs/src/components/ui/molecules/overlay/DropdownMenu.tsx` (207 lines)
+- [ ] `frontends/nextjs/src/components/ui/organisms/navigation/NavigationMenuItems.tsx` (203 lines)
+- [ ] `frontends/nextjs/src/components/editors/lua/LuaBlocksEditor.tsx` (193 lines)
+- [ ] `frontends/nextjs/src/components/molecules/overlay/Dialog.tsx` (191 lines)
+- [ ] `frontends/nextjs/src/components/editors/JsonEditor.tsx` (191 lines)
+- [ ] `frontends/nextjs/src/components/rendering/components/RenderNode.tsx` (188 lines)
+- [ ] `frontends/nextjs/src/components/misc/viewers/AuditLogViewer.tsx` (188 lines)
+- ... and 12 more
 
-### Low Priority (6 files)
+### Low Priority (3 files)
 
-- [ ] `frontends/nextjs/src/components/editors/lua/LuaEditor.tsx` (681 lines)
-- [ ] `frontends/nextjs/src/components/managers/package/PackageImportExport.tsx` (594 lines)
-- [ ] `frontends/nextjs/src/components/workflow/WorkflowEditor.tsx` (508 lines)
-- [ ] `frontends/nextjs/src/components/ui/index.ts` (263 lines)
-- [ ] `frontends/nextjs/src/components/misc/github/GitHubActionsFetcher.tsx` (1069 lines)
-- [ ] `frontends/nextjs/src/components/editors/lua/LuaBlocksEditor.tsx` (1048 lines)
+- [ ] `frontends/nextjs/src/components/nerd-mode-ide/core/NerdModeIDE/useNerdIdeState.ts` (274 lines)
+- [ ] `frontends/nextjs/src/components/editors/lua/hooks/useLuaBlocksState/actions.ts` (208 lines)
+- [ ] `frontends/nextjs/src/components/misc/demos/IRCWebchatDeclarative/functions/i-r-c-webchat-declarative.ts` (158 lines)
 
-### Skipped Files (12)
+### Skipped Files (10)
 
 These files do not need refactoring:
 
-- `frontends/nextjs/src/hooks/ui/state/useAutoRefresh.test.ts` (268 lines) - Test files can remain large for comprehensive coverage
-- `frontends/nextjs/src/lib/rendering/tests/page-renderer.test.ts` (265 lines) - Test files can remain large for comprehensive coverage
-- `frontends/nextjs/src/lib/security/scanner/security-scanner.test.ts` (257 lines) - Test files can remain large for comprehensive coverage
-- `frontends/nextjs/src/theme/types/theme.d.ts` (200 lines) - Type definition files are typically large
-- `frontends/nextjs/src/hooks/data/useKV.test.ts` (196 lines) - Test files can remain large for comprehensive coverage
-- `frontends/nextjs/src/hooks/useAuth.test.ts` (181 lines) - Test files can remain large for comprehensive coverage
-- `frontends/nextjs/src/types/dbal.d.ts` (154 lines) - Type definition files are typically large
-- `frontends/nextjs/src/lib/schema/schema-utils.test.ts` (440 lines) - Test files can remain large for comprehensive coverage
-- `frontends/nextjs/src/lib/workflow/engine/workflow-engine.test.ts` (388 lines) - Test files can remain large for comprehensive coverage
-- `frontends/nextjs/src/lib/lua/engine/core/lua-engine.test.ts` (357 lines) - Test files can remain large for comprehensive coverage
-- ... and 2 more
+- `frontends/nextjs/src/lib/lua/engine/core/__tests__/lua-engine.execution.test.ts` (297 lines) - Test files can remain large for comprehensive coverage
+- `frontends/nextjs/src/lib/packages/tests/package-glue/validation.test.ts` (284 lines) - Test files can remain large for comprehensive coverage
+- `frontends/nextjs/src/lib/security/scanner/__tests__/security-scanner.detection.test.ts` (234 lines) - Test files can remain large for comprehensive coverage
+- `frontends/nextjs/src/lib/packages/tests/package-glue/execution.test.ts` (229 lines) - Test files can remain large for comprehensive coverage
+- `frontends/nextjs/src/hooks/ui/state/__tests__/useAutoRefresh.polling.test.ts` (229 lines) - Test files can remain large for comprehensive coverage
+- `frontends/nextjs/src/lib/schema/__tests__/schema-utils.serialization.test.ts` (225 lines) - Test files can remain large for comprehensive coverage
+- `tools/refactoring/auto-code-extractor-3000.test.ts` (194 lines) - Test files can remain large for comprehensive coverage
+- `frontends/nextjs/src/lib/rendering/tests/declarative-component-renderer.lifecycle.test.ts` (183 lines) - Test files can remain large for comprehensive coverage
+- `frontends/nextjs/src/hooks/__tests__/useAuth.session.test.ts` (177 lines) - Test files can remain large for comprehensive coverage
+- `frontends/nextjs/src/hooks/data/__tests__/useKV.store.test.ts` (162 lines) - Test files can remain large for comprehensive coverage
 
 ## Refactoring Patterns
 

@@ -1,0 +1,18 @@
+// Auto-generated re-exports for backward compatibility
+
+export { log } from './functions/log'
+export { loadExtractionRegistry } from './functions/load-extraction-registry'
+export { saveExtractionRegistry } from './functions/save-extraction-registry'
+export { scanAndCategorizeFiles } from './functions/scan-and-categorize-files'
+export { filterFiles } from './functions/filter-files'
+export { confirmExecution } from './functions/confirm-execution'
+export { extractBatch } from './functions/extract-batch'
+export { runLinting } from './functions/run-linting'
+export { runTests } from './functions/run-tests'
+export { updateProgressReport } from './functions/update-progress-report'
+export { saveResults } from './functions/save-results'
+export { printSummary } from './functions/print-summary'
+export { run } from './functions/run'
+export { showHelp } from './functions/show-help'
+export { parseArgs } from './functions/parse-args'
+export { main } from './functions/main'
