@@ -4,6 +4,7 @@ import * as fengari from 'fengari-web'
 import { createLuaEngine } from '@/lib/lua/engine/core/create-lua-engine'
 import { pushToLua } from '@/lib/lua/functions/converters/push-to-lua'
 import { fromLua } from '@/lib/lua/functions/converters/from-lua'
+import { normalizeLuaComponent } from './normalize-lua-structure'
 import type { LuaUIManifest, LuaUIPackage, LuaUIPage, LuaUIComponent } from './types/lua-ui-package'
 
 const lua = fengari.lua
@@ -67,8 +68,9 @@ export async function loadLuaUIPackage(packagePath: string): Promise<LuaUIPackag
       throw new Error(`Error calling render() in ${pageManifest.file}: ${errorMsg}`)
     }
 
-    // Convert the result to JavaScript
-    const layout = fromLua(L, -1) as LuaUIComponent
+    // Convert the result to JavaScript and normalize arrays
+    const rawLayout = fromLua(L, -1)
+    const layout = normalizeLuaComponent(rawLayout)
     lua.lua_pop(L, 2) // Pop result and module table
     engine.destroy()
 
