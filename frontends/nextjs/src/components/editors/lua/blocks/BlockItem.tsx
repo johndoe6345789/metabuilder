@@ -1,21 +1,9 @@
 import type { MouseEvent } from 'react'
-import {
-  Box,
-  Button,
-  IconButton,
-  MenuItem,
-  TextField,
-  Tooltip,
-  Typography,
-} from '@mui/material'
-import {
-  Add as AddIcon,
-  ArrowDownward,
-  ArrowUpward,
-  ContentCopy,
-  Delete as DeleteIcon,
-} from '@mui/icons-material'
+import { Box, IconButton, Tooltip, Typography } from '@mui/material'
+import { ArrowDownward, ArrowUpward, ContentCopy, Delete as DeleteIcon } from '@mui/icons-material'
 import type { BlockDefinition, BlockSlot, LuaBlock } from '../types'
+import { BlockSection } from './BlockSection'
+import { BlockFields } from './BlockFields'
 import styles from '../LuaBlocksEditor.module.scss'
 
 interface BlockItemProps {
@@ -32,102 +20,6 @@ interface BlockItemProps {
   onRemoveBlock: (blockId: string) => void
   onUpdateField: (blockId: string, fieldName: string, value: string) => void
   renderNestedList: (blocks?: LuaBlock[]) => JSX.Element
-}
-
-interface BlockSectionProps {
-  title: string
-  blocks: LuaBlock[] | undefined
-  parentId: string
-  slot: BlockSlot
-  onRequestAddBlock: (
-    event: MouseEvent<HTMLElement>,
-    target: { parentId: string | null; slot: BlockSlot }
-  ) => void
-  renderNestedList: (blocks?: LuaBlock[]) => JSX.Element
-}
-
-const BlockSection = ({
-  title,
-  blocks,
-  parentId,
-  slot,
-  onRequestAddBlock,
-  renderNestedList,
-}: BlockSectionProps) => (
-  <Box className={styles.blockSection}>
-    <Box className={styles.blockSectionHeader}>
-      <Typography className={styles.blockSectionTitle}>{title}</Typography>
-      <Button
-        size="small"
-        variant="contained"
-        onClick={(event) => onRequestAddBlock(event, { parentId, slot })}
-        startIcon={<AddIcon fontSize="small" />}
-      >
-        Add block
-      </Button>
-    </Box>
-    <Box className={styles.blockSectionBody}>
-      {blocks && blocks.length > 0 ? (
-        renderNestedList(blocks)
-      ) : (
-        <Box className={styles.blockEmpty}>Drop blocks here to build this section.</Box>
-      )}
-    </Box>
-  </Box>
-)
-
-const BlockFields = ({
-  block,
-  definition,
-  onUpdateField,
-}: {
-  block: LuaBlock
-  definition: BlockDefinition
-  onUpdateField: (blockId: string, fieldName: string, value: string) => void
-}) => {
-  if (definition.fields.length === 0) return null
-
-  return (
-    <Box className={styles.blockFields}>
-      {definition.fields.map((field) => (
-        <Box key={field.name}>
-          <Typography className={styles.blockFieldLabel}>{field.label}</Typography>
-          {field.type === 'select' ? (
-            <TextField
-              select
-              size="small"
-              value={block.fields[field.name]}
-              onChange={(event) => onUpdateField(block.id, field.name, event.target.value)}
-              fullWidth
-              variant="outlined"
-              InputProps={{
-                sx: { backgroundColor: 'rgba(255,255,255,0.95)' },
-              }}
-            >
-              {field.options?.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          ) : (
-            <TextField
-              size="small"
-              value={block.fields[field.name]}
-              onChange={(event) => onUpdateField(block.id, field.name, event.target.value)}
-              placeholder={field.placeholder}
-              fullWidth
-              variant="outlined"
-              type={field.type === 'number' ? 'number' : 'text'}
-              InputProps={{
-                sx: { backgroundColor: 'rgba(255,255,255,0.95)' },
-              }}
-            />
-          )}
-        </Box>
-      ))}
-    </Box>
-  )
 }
 
 export const BlockItem = ({
