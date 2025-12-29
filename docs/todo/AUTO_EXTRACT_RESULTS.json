@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-12-29T18:34:32.522Z",
-  "duration": "4.10s",
+  "timestamp": "2025-12-29T18:39:04.533Z",
+  "duration": "4.22s",
   "options": {
     "dryRun": true,
-    "priority": "high",
-    "limit": 10,
+    "priority": "all",
+    "limit": 100,
     "batchSize": 5,
     "skipLint": false,
     "skipTest": false,
@@ -12,8 +12,8 @@
     "verbose": false
   },
   "summary": {
-    "total": 10,
-    "completed": 10,
+    "total": 52,
+    "completed": 52,
     "failed": 0,
     "skipped": 0
   },
@@ -86,6 +86,300 @@
       "lines": 213,
       "priority": "high",
       "category": "tool",
+      "status": "completed"
+    },
+    {
+      "path": "tools/refactoring/languages/cpp-refactor.ts",
+      "lines": 209,
+      "priority": "high",
+      "category": "tool",
+      "status": "completed"
+    },
+    {
+      "path": "tools/refactoring/ast-lambda-refactor.ts",
+      "lines": 192,
+      "priority": "high",
+      "category": "tool",
+      "status": "completed"
+    },
+    {
+      "path": "tools/refactoring/error-as-todo-refactor/index.ts",
+      "lines": 163,
+      "priority": "high",
+      "category": "tool",
+      "status": "completed"
+    },
+    {
+      "path": "dbal/shared/tools/cpp-build-assistant/workflow.ts",
+      "lines": 153,
+      "priority": "high",
+      "category": "tool",
+      "status": "completed"
+    },
+    {
+      "path": "tools/refactoring/auto-code-extractor-3000.ts",
+      "lines": 508,
+      "priority": "medium",
+      "category": "tool",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "lines": 313,
+      "priority": "medium",
+      "category": "dbal",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/misc/data/QuickGuide.tsx",
+      "lines": 297,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/misc/data/GenericPage.tsx",
+      "lines": 274,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/molecules/overlay/DropdownMenu.tsx",
+      "lines": 268,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/managers/database/DatabaseManager.tsx",
+      "lines": 261,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/examples/ContactForm.example.tsx",
+      "lines": 258,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/managers/component/ComponentHierarchyEditor.tsx",
+      "lines": 242,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/managers/component/ComponentConfigDialog/Fields.tsx",
+      "lines": 238,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/editors/lua/blocks/BlockItem.tsx",
+      "lines": 218,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/rendering/FieldRenderer.tsx",
+      "lines": 210,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/ui/organisms/data/Form.tsx",
+      "lines": 210,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/level5/tabs/PowerTransferTab.tsx",
+      "lines": 207,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/misc/auth/UnifiedLogin.tsx",
+      "lines": 207,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/ui/molecules/overlay/DropdownMenu.tsx",
+      "lines": 207,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/ui/organisms/navigation/NavigationMenuItems.tsx",
+      "lines": 203,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/editors/lua/LuaBlocksEditor.tsx",
+      "lines": 193,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/molecules/overlay/Dialog.tsx",
+      "lines": 191,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/editors/JsonEditor.tsx",
+      "lines": 191,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/misc/demos/IRCWebchatDeclarative.tsx",
+      "lines": 190,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/rendering/components/RenderNode.tsx",
+      "lines": 188,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/misc/viewers/AuditLogViewer.tsx",
+      "lines": 188,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/misc/viewers/audit-log/Filters.tsx",
+      "lines": 188,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/schema/level4/Tabs.tsx",
+      "lines": 186,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/managers/package/PackageDetailsDialog.tsx",
+      "lines": 185,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/misc/data/SMTPConfigEditor.tsx",
+      "lines": 184,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/managers/dropdown/DropdownConfigForm.tsx",
+      "lines": 182,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/ui/organisms/data/Table.tsx",
+      "lines": 174,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/misc/github/views/run-list/RunListAlerts.tsx",
+      "lines": 171,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/organisms/security/SecurityMessage.tsx",
+      "lines": 171,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/rendering/Builder.tsx",
+      "lines": 163,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/level4/tabs/TabContent.tsx",
+      "lines": 153,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/misc/demos/IRCWebchat.tsx",
+      "lines": 153,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/managers/UserManagement.tsx",
+      "lines": 334,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/managers/css/CssClassManager.tsx",
+      "lines": 327,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/misc/viewers/ModelListView.tsx",
+      "lines": 318,
+      "priority": "medium",
+      "category": "component",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/nerd-mode-ide/core/NerdModeIDE/useNerdIdeState.ts",
+      "lines": 274,
+      "priority": "low",
+      "category": "other",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/components/editors/lua/hooks/useLuaBlocksState/actions.ts",
+      "lines": 208,
+      "priority": "low",
+      "category": "other",
       "status": "completed"
     }
   ]
