@@ -9,7 +9,7 @@ describe('declarative-component-renderer lua integration', () => {
   })
 
   describe('registerLuaScript', () => {
-    it('should register and store Lua scripts', () => {
+    it('should register and store Lua scripts', async () => {
       const script = {
         code: 'return x + y',
         parameters: [{ name: 'x' }, { name: 'y' }],
