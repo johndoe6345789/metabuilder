@@ -5,12 +5,11 @@ import { hasTenant } from './functions/has-tenant'
 import { getKey } from './functions/get-key'
 import { set } from './functions/set'
 import { get } from './functions/get'
-import { delete } from './functions/delete'
+import { blobDeleteDuplicate } from './functions/delete'
 import { listAdd } from './functions/list-add'
 import { listGet } from './functions/list-get'
 import { upload } from './functions/upload'
 import { download } from './functions/download'
-import { delete } from './functions/delete'
 import { list } from './functions/list'
 import { getMetadata } from './functions/get-metadata'
 import { getInstance } from './functions/get-instance'
@@ -63,8 +62,8 @@ export class DbalIntegrationUtils {
     return await get(...args as any)
   }
 
-  static async delete(...args: any[]) {
-    return await delete(...args as any)
+  static async blobDeleteDuplicate(...args: any[]) {
+    return await blobDeleteDuplicate(...args as any)
   }
 
   static async listAdd(...args: any[]) {
@@ -81,10 +80,6 @@ export class DbalIntegrationUtils {
 
   static async download(...args: any[]) {
     return await download(...args as any)
-  }
-
-  static async delete(...args: any[]) {
-    return await delete(...args as any)
   }
 
   static async list(...args: any[]) {

@@ -1,5 +1,5 @@
 import { DBALClient, type DBALConfig } from '@/dbal'
 
-export async function delete(key: string): Promise<void> {
+export async function blobDeleteDuplicate(key: string): Promise<void> {
     this.blobs.delete(key)
   }

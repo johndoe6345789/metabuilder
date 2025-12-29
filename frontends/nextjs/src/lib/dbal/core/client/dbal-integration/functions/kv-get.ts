@@ -1,8 +1,9 @@
 import { DBALClient, type DBALConfig } from '@/dbal'
 
-export async kvGet<T = any>(key: string, tenantId = 'default', userId = 'system'): Promise<T | null> {
-    if (!this.kvStore || !this.tenantManager) throw new Error('DBAL not initialized')
-    const context = await this.tenantManager.getTenantContext(tenantId, userId)
-    if (!context) throw new Error(`Tenant not found: ${tenantId}`)
-    return this.kvStore.get(key, context) as T | null
+// Note: This was extracted from a class method
+// The original `this` context is lost, so this function may not work correctly
+export async function kvGet<T = any>(key: string, tenantId = 'default', userId = 'system'): Promise<T | null> {
+    // Original code referenced this.kvStore and this.tenantManager which don't exist here
+    // TODO: Review and fix this extraction
+    throw new Error('kvGet was incorrectly extracted - needs manual review')
   }
