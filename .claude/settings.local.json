@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(git mv:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(npm run test:unit:*)",
+      "Bash(npm install:*)"
     ]
   }
 }
