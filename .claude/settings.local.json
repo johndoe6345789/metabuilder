@@ -26,7 +26,8 @@
       "Bash(npm audit:*)",
       "Bash(bun run lint)",
       "Bash(git checkout:*)",
-      "Bash(bun audit:*)"
+      "Bash(bun audit:*)",
+      "Bash(git restore:*)"
     ]
   }
 }
