@@ -2,11 +2,12 @@
   "packageId": "dashboard",
   "name": "Dashboard",
   "version": "1.0.0",
-  "description": "Dashboard components",
+  "description": "Dashboard layouts, stat cards, and widgets",
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
   "exports": {
-    "components": []
+    "components": ["StatCard", "DashboardGrid", "Widget"],
+    "scripts": ["stats", "layout"]
   }
 }

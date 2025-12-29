@@ -2,11 +2,12 @@
   "packageId": "form_builder",
   "name": "Form Builder",
   "version": "1.0.0",
-  "description": "Form builder components",
+  "description": "Form fields, validation, and submission handling",
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
   "exports": {
-    "components": []
+    "components": ["FormField", "EmailField", "PasswordField", "NumberField", "SearchBar"],
+    "scripts": ["fields", "validate"]
   }
 }

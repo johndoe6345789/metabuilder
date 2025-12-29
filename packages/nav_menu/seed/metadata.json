@@ -2,11 +2,12 @@
   "packageId": "nav_menu",
   "name": "Navigation Menu",
   "version": "1.0.0",
-  "description": "Navigation menu components",
+  "description": "Sidebar, navigation menus, and breadcrumbs",
   "author": "MetaBuilder",
   "category": "ui",
-  "dependencies": [],
+  "dependencies": ["ui_permissions"],
   "exports": {
-    "components": []
+    "components": ["Sidebar", "NavigationMenu", "Breadcrumbs"],
+    "scripts": ["sidebar", "menu"]
   }
 }
