@@ -1,5 +1,7 @@
-export { formatError, toUserMessage } from './format-error'
+export { formatError } from './format-error'
 export type { FormattedError } from './format-error'
+
+export { toUserMessage } from './to-user-message'
 
 export { handleAPIError } from './handle-api-error'
 export type { APIErrorResponse } from './handle-api-error'

@@ -1,12 +1,6 @@
-import { DBALError, DBALErrorCode } from '@/dbal/development/src/core/foundation/errors'
+import { DBALError } from '@/dbal/core/foundation/errors'
 import { getErrorMessage, isError } from '@/lib/types/guards'
-
-export interface FormattedError {
-  message: string
-  code?: DBALErrorCode | number
-  stack?: string
-  details?: Record<string, unknown>
-}
+import type { FormattedError } from './interfaces/formatted-error'
 
 /**
  * Format any error into a consistent structure
