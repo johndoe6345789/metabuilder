@@ -4,7 +4,6 @@ import { verifyPassword } from '../password/verify-password'
 import * as auth from '../auth'
 import * as users from '../users'
 import { transferSuperGodPower } from '../users/super-god/transfer-super-god-power'
-import * as credentials from '../credentials'
 import * as sessions from '../sessions'
 import * as workflows from '../workflows'
 import * as luaScripts from '../lua-scripts'
@@ -50,16 +49,6 @@ export class Database {
   static deleteUser = users.deleteUser
   static getSuperGod = users.getSuperGod
   static transferSuperGodPower = transferSuperGodPower
-
-  // Credentials
-  static getCredentials = credentials.getCredentials
-  static setCredential = credentials.setCredential
-  static verifyCredentials = credentials.verifyCredentials
-  static getPasswordChangeTimestamps = credentials.getPasswordChangeTimestamps
-  static setPasswordChangeTimestamps = credentials.setPasswordChangeTimestamps
-  static getPasswordResetTokens = credentials.getPasswordResetTokens
-  static setPasswordResetToken = credentials.setPasswordResetToken
-  static deletePasswordResetToken = credentials.deletePasswordResetToken
 
   // Sessions
   static createSession = sessions.createSession
