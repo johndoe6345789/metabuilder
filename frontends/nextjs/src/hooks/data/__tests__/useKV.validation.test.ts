@@ -3,33 +3,24 @@ import { renderHook } from '@testing-library/react'
 import { useKV } from '@/hooks/data/useKV'
 
 const STORAGE_PREFIX = 'mb_kv:'
+let store: Record<string, string>
 
 const setupLocalStorage = (): void => {
-  const store = new Map<string, string>()
-
-  const localStorageMock: Storage = {
-    get length() {
-      return store.size
-    },
+  store = {}
+  vi.stubGlobal('localStorage', {
+    getItem: vi.fn((key: string) => store[key] ?? null),
+    setItem: vi.fn((key: string, value: string) => {
+      store[key] = value
+    }),
+    removeItem: vi.fn((key: string) => {
+      delete store[key]
+    }),
     clear: vi.fn(() => {
-      store.clear()
+      Object.keys(store).forEach(k => delete store[k])
     }),
-    getItem: vi.fn((key: string): string | null => {
-      return store.has(key) ? store.get(key)! : null
-    }),
-    key: vi.fn((index: number): string | null => {
-      const keys = Array.from(store.keys())
-      return index >= 0 && index < keys.length ? keys[index] : null
-    }),
-    removeItem: vi.fn((key: string): void => {
-      store.delete(key)
-    }),
-    setItem: vi.fn((key: string, value: string): void => {
-      store.set(key, value)
-    }),
-  }
-
-  vi.stubGlobal('localStorage', localStorageMock)
+    length: 0,
+    key: vi.fn(() => null),
+  })
 }
 
 describe('useKV validation', () => {
