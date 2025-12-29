@@ -1,5 +1,52 @@
 import { describe, it, expect } from 'vitest'
-import { summarizeWorkflowRuns } from './analyze-workflow-runs'
+import {
+  analyzeWorkflowRuns,
+  parseWorkflowRuns,
+  summarizeWorkflowRuns,
+} from './analyze-workflow-runs'
+
+describe('parseWorkflowRuns', () => {
+  it('normalizes unknown entries and ignores items without numeric IDs', () => {
+    const runs = [
+      {
+        id: 1,
+        name: 'Build',
+        status: 'completed',
+        conclusion: 'success',
+        created_at: '2024-01-01T00:00:00Z',
+        updated_at: '2024-01-01T00:10:00Z',
+        head_branch: 'main',
+        event: 'push',
+      },
+      { id: 'not-a-number' },
+      {
+        id: 2,
+        name: '',
+        status: '',
+        conclusion: 'failure',
+        created_at: '',
+        updated_at: '',
+        head_branch: '',
+        event: '',
+      },
+    ]
+
+    const parsed = parseWorkflowRuns(runs)
+
+    expect(parsed).toHaveLength(2)
+    expect(parsed[0].name).toBe('Build')
+    expect(parsed[1]).toEqual({
+      id: 2,
+      name: 'Unknown workflow',
+      status: 'unknown',
+      conclusion: 'failure',
+      created_at: '',
+      updated_at: '',
+      head_branch: 'unknown',
+      event: 'unknown',
+    })
+  })
+})
 
 describe('summarizeWorkflowRuns', () => {
   it('summarizes totals, success rate, and failure hotspots', () => {
@@ -58,5 +105,26 @@ describe('summarizeWorkflowRuns', () => {
     expect(summary.successRate).toBe(0)
     expect(summary.recentRuns).toEqual([])
     expect(summary.mostRecent).toBeNull()
+  })
+})
+
+describe('analyzeWorkflowRuns', () => {
+  it('returns parsed summary and formatted output', () => {
+    const result = analyzeWorkflowRuns([
+      {
+        id: 7,
+        name: 'Deploy',
+        status: 'completed',
+        conclusion: 'success',
+        created_at: '2024-02-01T00:00:00Z',
+        updated_at: '2024-02-01T00:05:00Z',
+        head_branch: 'main',
+        event: 'workflow_dispatch',
+      },
+    ])
+
+    expect(result.summary.total).toBe(1)
+    expect(result.formatted).toContain('Workflow Run Analysis')
+    expect(result.formatted).toContain('Deploy')
   })
 })

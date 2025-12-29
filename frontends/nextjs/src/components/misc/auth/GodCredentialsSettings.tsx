@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
-import { Button } from '@/components/ui'
-import { Input } from '@/components/ui'
-import { Label } from '@/components/ui'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
-import { Alert, AlertDescription } from '@/components/ui'
+import { GodCredentialsForm } from '@/components/auth/god-credentials/Form'
+import { GodCredentialsSummary } from '@/components/auth/god-credentials/Summary'
 import { Database } from '@/lib/database'
 import { toast } from 'sonner'
-import { Clock, Key, WarningCircle, CheckCircle } from '@phosphor-icons/react'
+import { Key } from '@phosphor-icons/react'
 
 export function GodCredentialsSettings() {
   const [duration, setDuration] = useState<number>(60)
@@ -112,91 +109,21 @@ export function GodCredentialsSettings() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {isActive && (
-          <Alert className="bg-gradient-to-br from-purple-500/10 to-orange-500/10 border-purple-500/50">
-            <CheckCircle className="h-5 w-5 text-green-500" />
-            <AlertDescription className="ml-2">
-              <div className="space-y-1">
-                <p className="font-semibold text-sm">
-                  God credentials are currently visible on the front page
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Time remaining: <span className="font-mono font-semibold">{timeRemaining}</span>
-                </p>
-              </div>
-            </AlertDescription>
-          </Alert>
-        )}
+        <GodCredentialsSummary
+          isActive={isActive}
+          expiryTime={expiryTime}
+          timeRemaining={timeRemaining}
+        />
 
-        {!isActive && expiryTime > 0 && (
-          <Alert>
-            <WarningCircle className="h-5 w-5 text-yellow-500" />
-            <AlertDescription className="ml-2">
-              <p className="text-sm">
-                God credentials have expired or been hidden
-              </p>
-            </AlertDescription>
-          </Alert>
-        )}
-
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="duration">Expiry Duration</Label>
-            <div className="flex gap-2">
-              <Input
-                id="duration"
-                type="number"
-                min="1"
-                max={unit === 'hours' ? '24' : '1440'}
-                value={duration}
-                onChange={(e) => setDuration(Number(e.target.value))}
-                className="flex-1"
-              />
-              <Select value={unit} onValueChange={(v) => setUnit(v as 'minutes' | 'hours')}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="minutes">Minutes</SelectItem>
-                  <SelectItem value="hours">Hours</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Set the duration for how long credentials are visible (1 minute to 24 hours)
-            </p>
-          </div>
-
-          <div className="flex gap-2">
-            <Button onClick={handleSave} className="flex-1">
-              <Clock className="mr-2" size={16} />
-              Save Duration
-            </Button>
-          </div>
-        </div>
-
-        <div className="border-t pt-4 space-y-3">
-          <div className="space-y-2">
-            <Label>Expiry Management</Label>
-            <p className="text-xs text-muted-foreground">
-              Reset or clear the current expiry timer
-            </p>
-          </div>
-          
-          <div className="flex gap-2">
-            <Button onClick={handleResetExpiry} variant="outline" className="flex-1">
-              Reset Timer
-            </Button>
-            <Button onClick={handleClearExpiry} variant="outline" className="flex-1">
-              Clear Expiry
-            </Button>
-          </div>
-          
-          <p className="text-xs text-muted-foreground">
-            <strong>Reset Timer:</strong> Restart the countdown using the configured duration<br />
-            <strong>Clear Expiry:</strong> Remove expiry time (credentials will show on next page load)
-          </p>
-        </div>
+        <GodCredentialsForm
+          duration={duration}
+          unit={unit}
+          onDurationChange={setDuration}
+          onUnitChange={setUnit}
+          onSave={handleSave}
+          onResetExpiry={handleResetExpiry}
+          onClearExpiry={handleClearExpiry}
+        />
       </CardContent>
     </Card>
   )

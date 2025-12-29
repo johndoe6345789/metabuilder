@@ -1,5 +1,5 @@
 import type { ModelSchema } from '@/lib/schema-types'
-import { validateField } from './validate-field'
+import { validateField } from '../field/validate-field'
 
 /**
  * Validate a record against its model schema
@@ -12,7 +12,7 @@ export const validateRecord = (
   record: any
 ): Record<string, string> => {
   const errors: Record<string, string> = {}
-  
+
   for (const field of model.fields) {
     if (field.editable === false) continue
     const error = validateField(field, record[field.name])
