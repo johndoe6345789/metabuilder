@@ -1,0 +1,14 @@
+{
+  "packageId": "ui_level2",
+  "name": "Level 2 - User Dashboard",
+  "version": "1.0.0",
+  "description": "User dashboard with profile, comments, and chat",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+  "exports": {
+    "pages": ["level2"],
+    "scripts": ["layout", "profile", "comments"],
+    "components": []
+  }
+}

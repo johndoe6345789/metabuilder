@@ -1,0 +1,14 @@
+{
+  "packageId": "ui_footer",
+  "name": "App Footer",
+  "version": "1.0.0",
+  "description": "Shared footer with copyright and links",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [],
+  "exports": {
+    "components": ["AppFooter"],
+    "scripts": ["footer"],
+    "pages": []
+  }
+}

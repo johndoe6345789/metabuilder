@@ -5,20 +5,23 @@ describe('UI Pages Bundle Metadata', () => {
   it('should have valid package structure', () => {
     expect(metadata.packageId).toBe('ui_pages')
     expect(metadata.name).toBe('UI Pages Bundle')
-    expect(metadata.version).toBeDefined()
-    expect(metadata.description).toBeDefined()
-  })
-
-  it('should have correct package ID format', () => {
-    expect(metadata.packageId).toMatch(/^[a-z_]+$/)
-  })
-
-  it('should have semantic version', () => {
     expect(metadata.version).toMatch(/^\d+\.\d+\.\d+$/)
   })
 
   it('should depend on ui_permissions', () => {
     expect(metadata.dependencies).toContain('ui_permissions')
+  })
+
+  it('should depend on ui_header', () => {
+    expect(metadata.dependencies).toContain('ui_header')
+  })
+
+  it('should depend on ui_footer', () => {
+    expect(metadata.dependencies).toContain('ui_footer')
+  })
+
+  it('should depend on ui_intro', () => {
+    expect(metadata.dependencies).toContain('ui_intro')
   })
 
   it('should depend on ui_login', () => {
@@ -27,6 +30,13 @@ describe('UI Pages Bundle Metadata', () => {
 
   it('should depend on ui_home', () => {
     expect(metadata.dependencies).toContain('ui_home')
+  })
+
+  it('should depend on all level packages', () => {
+    expect(metadata.dependencies).toContain('ui_level2')
+    expect(metadata.dependencies).toContain('ui_level3')
+    expect(metadata.dependencies).toContain('ui_level4')
+    expect(metadata.dependencies).toContain('ui_level5')
   })
 
   it('should be in ui category', () => {

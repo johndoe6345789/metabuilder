@@ -1,0 +1,14 @@
+{
+  "packageId": "ui_header",
+  "name": "App Header",
+  "version": "1.0.0",
+  "description": "Shared navigation header with user avatar and actions",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": ["ui_permissions"],
+  "exports": {
+    "components": ["AppHeader"],
+    "scripts": ["header"],
+    "pages": []
+  }
+}

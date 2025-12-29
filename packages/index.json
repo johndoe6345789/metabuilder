@@ -203,6 +203,97 @@
         "scripts": ["home_ui", "navigate"],
         "components": []
       }
+    },
+    {
+      "packageId": "ui_header",
+      "name": "App Header",
+      "version": "1.0.0",
+      "description": "Shared navigation header with user avatar and actions",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": ["ui_permissions"],
+      "exports": {
+        "components": ["AppHeader"],
+        "scripts": ["header"]
+      }
+    },
+    {
+      "packageId": "ui_footer",
+      "name": "App Footer",
+      "version": "1.0.0",
+      "description": "Shared footer with copyright and links",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": ["AppFooter"],
+        "scripts": ["footer"]
+      }
+    },
+    {
+      "packageId": "ui_intro",
+      "name": "Intro Section",
+      "version": "1.0.0",
+      "description": "Page intro with eyebrow, title, and description",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": ["IntroSection"],
+        "scripts": ["intro"]
+      }
+    },
+    {
+      "packageId": "ui_level2",
+      "name": "Level 2 - User Dashboard",
+      "version": "1.0.0",
+      "description": "User dashboard with profile, comments, and chat",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+      "exports": {
+        "pages": ["level2"],
+        "scripts": ["layout", "profile", "comments"]
+      }
+    },
+    {
+      "packageId": "ui_level3",
+      "name": "Level 3 - Admin Panel",
+      "version": "1.0.0",
+      "description": "Admin panel for user and content management",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+      "exports": {
+        "pages": ["level3"],
+        "scripts": ["layout", "users", "moderation"]
+      }
+    },
+    {
+      "packageId": "ui_level4",
+      "name": "Level 4 - Builder",
+      "version": "1.0.0",
+      "description": "Application builder with schemas and workflows",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+      "exports": {
+        "pages": ["level4"],
+        "scripts": ["layout", "schemas", "workflows"]
+      }
+    },
+    {
+      "packageId": "ui_level5",
+      "name": "Level 5 - Super God",
+      "version": "1.0.0",
+      "description": "Super god panel for tenant management",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+      "exports": {
+        "pages": ["level5"],
+        "scripts": ["layout", "tenants", "transfer"]
+      }
     }
   ]
 }

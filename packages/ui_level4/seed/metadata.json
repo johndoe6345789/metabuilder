@@ -1,0 +1,14 @@
+{
+  "packageId": "ui_level4",
+  "name": "Level 4 - Builder",
+  "version": "1.0.0",
+  "description": "Application builder with schemas and workflows",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+  "exports": {
+    "pages": ["level4"],
+    "scripts": ["layout", "schemas", "workflows"],
+    "components": []
+  }
+}

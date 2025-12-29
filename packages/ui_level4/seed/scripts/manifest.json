@@ -1,0 +1,8 @@
+{
+  "scripts": [
+    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle" },
+    { "file": "layout.lua", "name": "layout", "category": "ui", "description": "Page layout" },
+    { "file": "schemas.lua", "name": "schemas", "category": "ui", "description": "Schema editor" },
+    { "file": "workflows.lua", "name": "workflows", "category": "ui", "description": "Workflow editor" }
+  ]
+}

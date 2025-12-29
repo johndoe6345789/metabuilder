@@ -1,0 +1,6 @@
+{
+  "scripts": [
+    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle" },
+    { "file": "render.lua", "name": "render", "category": "ui", "description": "Footer rendering" }
+  ]
+}

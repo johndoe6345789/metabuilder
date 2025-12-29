@@ -1,5 +1,6 @@
 {
   "scripts": [
+    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle" },
     { "file": "levels.lua", "name": "levels", "category": "constants", "description": "Permission level constants" },
     { "file": "check.lua", "name": "check", "category": "security", "description": "Permission check functions" }
   ]

@@ -1,0 +1,14 @@
+{
+  "packageId": "ui_intro",
+  "name": "Intro Section",
+  "version": "1.0.0",
+  "description": "Page intro with eyebrow, title, and description",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [],
+  "exports": {
+    "components": ["IntroSection"],
+    "scripts": ["intro"],
+    "pages": []
+  }
+}

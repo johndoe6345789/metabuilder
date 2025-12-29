@@ -1,0 +1,14 @@
+{
+  "packageId": "ui_level5",
+  "name": "Level 5 - Super God",
+  "version": "1.0.0",
+  "description": "Super god panel for tenant management",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+  "exports": {
+    "pages": ["level5"],
+    "scripts": ["layout", "tenants", "transfer"],
+    "components": []
+  }
+}

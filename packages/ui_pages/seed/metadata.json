@@ -7,8 +7,15 @@
   "category": "ui",
   "dependencies": [
     "ui_permissions",
+    "ui_header",
+    "ui_footer",
+    "ui_intro",
     "ui_login",
-    "ui_home"
+    "ui_home",
+    "ui_level2",
+    "ui_level3",
+    "ui_level4",
+    "ui_level5"
   ],
   "exports": {
     "pages": [],
