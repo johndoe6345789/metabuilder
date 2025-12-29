@@ -34,13 +34,3 @@ export function formatError(error: unknown): FormattedError {
     message: getErrorMessage(error),
   }
 }
-
-/**
- * Convert error to user-friendly message (safe for display)
- */
-export function toUserMessage(error: unknown): string {
-  const formatted = formatError(error)
-
-  // Don't expose stack traces to users
-  return formatted.message || 'An unexpected error occurred'
-}
