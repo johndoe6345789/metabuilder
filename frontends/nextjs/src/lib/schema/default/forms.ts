@@ -2,9 +2,15 @@ import type { FieldSchema } from '../../types/schema-types'
 import { authorValidations, postValidations, productValidations } from './validation'
 
 // Import JSON configuration files
-const postFieldsJson: any[] = require('./config/post-fields.json')
-const authorFieldsJson: any[] = require('./config/author-fields.json')
-const productFieldsJson: any[] = require('./config/product-fields.json')
+// Note: These are loaded as ES modules thanks to resolveJsonModule in tsconfig.json
+import postFieldsData from './config/post-fields.json'
+import authorFieldsData from './config/author-fields.json'
+import productFieldsData from './config/product-fields.json'
+
+// Cast to proper type since JSON imports are 'any'
+const postFieldsJson = postFieldsData as any[]
+const authorFieldsJson = authorFieldsData as any[]
+const productFieldsJson = productFieldsData as any[]
 
 // Load from JSON and add validation functions
 export const postFields: FieldSchema[] = postFieldsJson.map(field => {
