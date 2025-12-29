@@ -1,6 +1,8 @@
 import type { DBALAdapter } from '../../../../adapters/adapter'
 import type { User, ListOptions, ListResult } from '../../../../foundation/types'
-import { createUser, deleteUser, updateUser } from './mutations'
+import { createUser } from './create'
+import { deleteUser } from './delete'
+import { updateUser } from './update'
 import { createManyUsers, deleteManyUsers, updateManyUsers } from './batch'
 import { listUsers, readUser } from './reads'
 

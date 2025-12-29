@@ -1,14 +1,15 @@
 import type { BlockCategory, BlockDefinition } from '../types'
 
-export const groupBlockDefinitionsByCategory = (definitions: BlockDefinition[]) => {
-  const categories: Record<BlockCategory, BlockDefinition[]> = {
-    Basics: [],
-    Logic: [],
-    Loops: [],
-    Data: [],
-    Functions: [],
-  }
+const createCategoryIndex = (): Record<BlockCategory, BlockDefinition[]> => ({
+  Basics: [],
+  Logic: [],
+  Loops: [],
+  Data: [],
+  Functions: [],
+})
 
+export const groupBlockDefinitionsByCategory = (definitions: BlockDefinition[]) => {
+  const categories = createCategoryIndex()
   definitions.forEach((definition) => {
     categories[definition.category].push(definition)
   })
