@@ -1,4 +1,4 @@
-import { describe, expect,it } from 'bun:test'
+import { describe, expect, it } from 'bun:test'
 import { join } from 'path'
 
 import { loadLuaUIPackage } from './load-lua-ui-package'
