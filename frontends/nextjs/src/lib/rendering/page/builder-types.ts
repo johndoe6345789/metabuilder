@@ -1,1 +1,1 @@
-export * from '../builder-types'
+export * from '@/lib/types/builder-types'
