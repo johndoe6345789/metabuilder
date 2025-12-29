@@ -98,3 +98,4 @@ todos*.json
 vite.config.ts.bak*
 .cache/
 dist-old/
+.vscode/claudesync.json
