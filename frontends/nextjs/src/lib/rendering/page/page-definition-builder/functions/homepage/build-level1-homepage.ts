@@ -1,20 +1,8 @@
 import type { PageDefinition } from '@/lib/rendering/page/page-renderer'
 import type { ComponentInstance } from '@/lib/rendering/page/builder-types'
+import { buildHeaderActions } from '@/lib/rendering/page/components'
 import { buildFeaturesComponent } from './build-features-component'
 import { buildHeroComponent } from './build-hero-component'
-
-const buildHeaderActions = (): ComponentInstance[] => [
-  {
-    id: 'header_login_btn',
-    type: 'Button',
-    props: {
-      children: 'Login',
-      variant: 'default',
-      size: 'sm'
-    },
-    children: []
-  }
-]
 
 export const buildLevel1Homepage = (): PageDefinition => {
   const heroComponent = buildHeroComponent()

@@ -1,26 +1,11 @@
 import { useState } from 'react'
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Chip,
-  CircularProgress,
-  Stack,
-  Typography,
-  Grid,
-} from '@mui/material'
-import {
-  CameraAlt as CameraIcon,
-  Visibility as EyeIcon,
-  Download as DownloadIcon,
-  Refresh as RefreshIcon,
-} from '@mui/icons-material'
+import { Box, Card, CardContent, CardHeader, Chip, Grid, Typography } from '@mui/material'
 import { toast } from 'sonner'
 import { captureDomSnapshot } from '@/lib/screenshot/capture-dom-snapshot'
 import { requestScreenshotAnalysis } from '@/lib/screenshot/request-screenshot-analysis'
 import type { ScreenshotAnalysisResult } from '@/lib/screenshot/types'
+import { UploadSection } from './screenshot-analyzer/UploadSection'
+import { ResultPanel } from './screenshot-analyzer/ResultPanel'
 
 export function ScreenshotAnalyzer() {
   const [isCapturing, setIsCapturing] = useState(false)
@@ -96,108 +81,16 @@ export function ScreenshotAnalyzer() {
         <Chip label="Local Analysis" color="secondary" />
       </Box>
 
-      <Card>
-        <CardHeader
-          title="Capture & Analyze"
-          subheader="Create a DOM snapshot and run heuristic checks"
-        />
-        <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Box sx={{ display: 'flex', gap: 1.5 }}>
-            <Button
-              onClick={captureScreenshot}
-              disabled={isCapturing || isAnalyzing}
-              variant="contained"
-              startIcon={<CameraIcon />}
-              sx={{ flex: 1 }}
-            >
-              {isCapturing ? 'Capturing...' : 'Capture & Analyze'}
-            </Button>
+      <UploadSection
+        isCapturing={isCapturing}
+        isAnalyzing={isAnalyzing}
+        screenshotData={screenshotData}
+        onCapture={captureScreenshot}
+        onDownload={downloadScreenshot}
+        onReanalyze={analyzeScreenshot}
+      />
 
-            {screenshotData && (
-              <>
-                <Button
-                  onClick={downloadScreenshot}
-                  variant="outlined"
-                  startIcon={<DownloadIcon />}
-                >
-                  Download
-                </Button>
-
-                <Button
-                  onClick={analyzeScreenshot}
-                  variant="outlined"
-                  disabled={isAnalyzing}
-                  startIcon={<RefreshIcon />}
-                >
-                  Re-analyze
-                </Button>
-              </>
-            )}
-          </Box>
-
-          {isAnalyzing && (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', p: 4, gap: 1.5 }}>
-              <CircularProgress size={24} />
-              <Typography color="text.secondary">Analyzing with heuristics...</Typography>
-            </Box>
-          )}
-
-          {analysisReport && !isAnalyzing && (
-            <Card variant="outlined" sx={{ bgcolor: 'action.hover' }}>
-              <CardHeader
-                avatar={<EyeIcon />}
-                title="Heuristic Analysis"
-                titleTypographyProps={{ variant: 'subtitle1' }}
-              />
-              <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {analysisResult && (
-                  <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                    <Chip size="small" label={`Words: ${analysisResult.metrics.wordCount}`} />
-                    <Chip size="small" label={`Headings: ${analysisResult.metrics.headingCount}`} />
-                    <Chip size="small" label={`Links: ${analysisResult.metrics.linkCount}`} />
-                    <Chip size="small" label={`Buttons: ${analysisResult.metrics.buttonCount}`} />
-                    <Chip size="small" label={`Images: ${analysisResult.metrics.imgCount}`} />
-                    <Chip size="small" label={`Missing alt: ${analysisResult.metrics.imgMissingAltCount}`} />
-                  </Stack>
-                )}
-
-                {analysisResult?.warnings.length ? (
-                  <Box>
-                    <Typography variant="subtitle2" gutterBottom>Warnings</Typography>
-                    <Box component="ul" sx={{ pl: 3, m: 0 }}>
-                      {analysisResult.warnings.map((warning) => (
-                        <li key={warning}>
-                          <Typography variant="body2">{warning}</Typography>
-                        </li>
-                      ))}
-                    </Box>
-                  </Box>
-                ) : null}
-
-                <Typography
-                  component="pre"
-                  sx={{
-                    whiteSpace: 'pre-wrap',
-                    fontFamily: 'inherit',
-                    fontSize: '0.875rem',
-                  }}
-                >
-                  {analysisReport}
-                </Typography>
-              </CardContent>
-            </Card>
-          )}
-
-          {screenshotData && (
-            <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 1, p: 2, bgcolor: 'action.hover' }}>
-              <Typography variant="subtitle2" gutterBottom>Screenshot Preview</Typography>
-              <Box sx={{ maxHeight: 384, overflow: 'auto', border: 1, borderColor: 'divider', borderRadius: 1 }}>
-                <Box component="img" src={screenshotData} alt="Page screenshot" sx={{ width: '100%' }} />
-              </Box>
-            </Box>
-          )}
-        </CardContent>
-      </Card>
+      <ResultPanel analysisReport={analysisReport} analysisResult={analysisResult} />
 
       <Card>
         <CardHeader title="Page Information" />
