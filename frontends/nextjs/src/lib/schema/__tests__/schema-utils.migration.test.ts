@@ -9,10 +9,13 @@ describe('schema-utils migration', () => {
       { appName: 'MyApp', modelName: 'User', expected: 'MyApp_User' },
       { appName: 'app-v2', modelName: 'User_Profile', expected: 'app-v2_User_Profile' },
       { appName: '', modelName: 'Model', expected: '_Model' },
-    ])('should generate key "$expected" for app=$appName, model=$modelName', ({ appName, modelName, expected }) => {
-      const result = getModelKey(appName, modelName)
-      expect(result).toBe(expected)
-    })
+    ])(
+      'should generate key "$expected" for app=$appName, model=$modelName',
+      ({ appName, modelName, expected }) => {
+        const result = getModelKey(appName, modelName)
+        expect(result).toBe(expected)
+      }
+    )
   })
 
   describe('getRecordsKey', () => {

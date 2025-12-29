@@ -27,7 +27,12 @@ export const validateField = (field: FieldSchema, value: any): string | null => 
       }
     }
 
-    if (field.type === 'string' || field.type === 'text' || field.type === 'email' || field.type === 'url') {
+    if (
+      field.type === 'string' ||
+      field.type === 'text' ||
+      field.type === 'email' ||
+      field.type === 'url'
+    ) {
       const strValue = String(value)
       if (minLength !== undefined && strValue.length < minLength) {
         return `${getFieldLabel(field)} must be at least ${minLength} characters`

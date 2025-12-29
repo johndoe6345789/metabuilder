@@ -37,7 +37,7 @@ describe('workflow-engine execution', () => {
     expect(result.success).toBe(true)
     expect(result.outputs.action).toBeUndefined()
     expect(Object.keys(result.outputs)).toHaveLength(2)
-    expect(result.logs.some((log) => log.includes('Condition node returned false'))).toBe(true)
+    expect(result.logs.some(log => log.includes('Condition node returned false'))).toBe(true)
   })
 
   it('passes user context through to Lua nodes', async () => {

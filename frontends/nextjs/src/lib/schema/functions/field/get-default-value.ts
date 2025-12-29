@@ -7,7 +7,7 @@ import type { FieldSchema } from '@/lib/schema-types'
  */
 export const getDefaultValue = (field: FieldSchema): any => {
   if (field.default !== undefined) return field.default
-  
+
   switch (field.type) {
     case 'string':
     case 'text':

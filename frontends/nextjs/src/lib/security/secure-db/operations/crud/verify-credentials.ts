@@ -8,8 +8,8 @@ import { loginAttemptTracker } from '../login-attempt-tracker'
  * Verify user credentials with security checks
  */
 export async function verifyCredentials(
-  ctx: SecurityContext, 
-  username: string, 
+  ctx: SecurityContext,
+  username: string,
   password: string
 ): Promise<boolean> {
   const sanitizedUsername = sanitizeInput(username).trim()

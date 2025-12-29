@@ -17,8 +17,16 @@ describe('schema-utils serialization', () => {
   describe('getFieldLabel', () => {
     it.each([
       { field: createMockField(), expected: 'Email Address', description: 'custom label' },
-      { field: { name: 'email', type: 'email' }, expected: 'Email', description: 'auto-capitalized field name' },
-      { field: { name: 'firstName', type: 'string' }, expected: 'FirstName', description: 'multi-word field name' },
+      {
+        field: { name: 'email', type: 'email' },
+        expected: 'Email',
+        description: 'auto-capitalized field name',
+      },
+      {
+        field: { name: 'firstName', type: 'string' },
+        expected: 'FirstName',
+        description: 'multi-word field name',
+      },
     ])('should return $description', ({ field, expected }) => {
       const result = getFieldLabel(field as FieldSchema)
       expect(result).toBe(expected)
@@ -94,12 +102,20 @@ describe('schema-utils serialization', () => {
 
   describe('getDefaultValue', () => {
     it.each([
-      { field: { name: 'count', type: 'number', default: 42 }, expected: 42, description: 'custom default' },
+      {
+        field: { name: 'count', type: 'number', default: 42 },
+        expected: 42,
+        description: 'custom default',
+      },
       { field: { name: 'text', type: 'string' }, expected: '', description: 'string type' },
       { field: { name: 'count', type: 'number' }, expected: 0, description: 'number type' },
       { field: { name: 'active', type: 'boolean' }, expected: false, description: 'boolean type' },
       { field: { name: 'birthDate', type: 'date' }, expected: null, description: 'date type' },
-      { field: { name: 'createdAt', type: 'datetime' }, expected: null, description: 'datetime type' },
+      {
+        field: { name: 'createdAt', type: 'datetime' },
+        expected: null,
+        description: 'datetime type',
+      },
       {
         field: {
           name: 'status',
@@ -198,7 +214,12 @@ describe('schema-utils serialization', () => {
       { searchTerm: 'ALICE', searchFields: ['name'], filters: {}, expectedCount: 1 },
       { searchTerm: 'bob', searchFields: ['name', 'email'], filters: {}, expectedCount: 1 },
       { searchTerm: '', searchFields: ['name'], filters: { status: 'active' }, expectedCount: 2 },
-      { searchTerm: 'charlie', searchFields: ['name'], filters: { status: 'active' }, expectedCount: 1 },
+      {
+        searchTerm: 'charlie',
+        searchFields: ['name'],
+        filters: { status: 'active' },
+        expectedCount: 1,
+      },
       { searchTerm: '', searchFields: ['name'], filters: {}, expectedCount: 3 },
     ])(
       'should filter with searchTerm=$searchTerm, fields=$searchFields, filters=$filters',

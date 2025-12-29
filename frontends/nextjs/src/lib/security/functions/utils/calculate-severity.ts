@@ -24,6 +24,6 @@ export const calculateOverallSeverity = (
   if (hasHigh) return 'high'
   if (hasMedium) return 'medium'
   if (hasLow) return 'low'
-  
+
   return 'safe'
 }

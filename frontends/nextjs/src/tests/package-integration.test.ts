@@ -12,7 +12,7 @@ const packages = [
   dataTableMetadata,
   formBuilderMetadata,
   navMenuMetadata,
-  notificationCenterMetadata
+  notificationCenterMetadata,
 ]
 
 describe('Package System Integration', () => {
@@ -63,14 +63,14 @@ describe('Package System Integration', () => {
         throw new Error(`Circular dependency detected: ${pkgId}`)
       }
       visited.add(pkgId)
-      
+
       const pkg = packages.find(p => p.packageId === pkgId)
       if (!pkg) return visited
-      
+
       pkg.dependencies.forEach((depId: string) => {
         getDependencies(depId, new Set(visited))
       })
-      
+
       return visited
     }
 
@@ -81,7 +81,7 @@ describe('Package System Integration', () => {
 
   it('should have all dependencies reference valid packages', () => {
     const allPackageIds = packages.map(pkg => pkg.packageId)
-    
+
     packages.forEach(pkg => {
       pkg.dependencies.forEach((depId: string) => {
         expect(allPackageIds).toContain(depId)

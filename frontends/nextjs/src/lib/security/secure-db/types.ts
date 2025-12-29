@@ -1,9 +1,21 @@
 import type { User } from '../../types/level-types'
 
 export type OperationType = 'CREATE' | 'READ' | 'UPDATE' | 'DELETE'
-export type ResourceType = 'user' | 'workflow' | 'luaScript' | 'pageConfig' | 
-  'modelSchema' | 'comment' | 'componentNode' | 'componentConfig' | 'cssCategory' | 
-  'dropdownConfig' | 'tenant' | 'powerTransfer' | 'smtpConfig' | 'credential'
+export type ResourceType =
+  | 'user'
+  | 'workflow'
+  | 'luaScript'
+  | 'pageConfig'
+  | 'modelSchema'
+  | 'comment'
+  | 'componentNode'
+  | 'componentConfig'
+  | 'cssCategory'
+  | 'dropdownConfig'
+  | 'tenant'
+  | 'powerTransfer'
+  | 'smtpConfig'
+  | 'credential'
 
 export interface AuditLog {
   id: string

@@ -7,11 +7,5 @@ import { executeQuery } from '../../execute-query'
  * Get model schemas with security checks
  */
 export async function getModelSchemas(ctx: SecurityContext): Promise<ModelSchema[]> {
-  return executeQuery(
-    ctx,
-    'modelSchema',
-    'READ',
-    async () => fetchSchemas(),
-    'all_model_schemas'
-  )
+  return executeQuery(ctx, 'modelSchema', 'READ', async () => fetchSchemas(), 'all_model_schemas')
 }

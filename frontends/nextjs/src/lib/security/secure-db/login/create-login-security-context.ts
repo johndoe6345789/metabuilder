@@ -9,9 +9,7 @@ export interface LoginSecurityContextParams {
   requestId?: string
 }
 
-export const createLoginSecurityContext = (
-  params: LoginSecurityContextParams
-): SecurityContext => {
+export const createLoginSecurityContext = (params: LoginSecurityContextParams): SecurityContext => {
   const sanitizedIdentifier = sanitizeInput(params.identifier).trim()
   const loginKey = sanitizedIdentifier.length > 0 ? sanitizedIdentifier : 'public'
 

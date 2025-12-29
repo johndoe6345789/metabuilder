@@ -7,11 +7,5 @@ import { executeQuery } from '../../execute-query'
  * Get page configs with security checks
  */
 export async function getPageConfigs(ctx: SecurityContext): Promise<PageConfig[]> {
-  return executeQuery(
-    ctx,
-    'pageConfig',
-    'READ',
-    async () => fetchPages(),
-    'all_page_configs'
-  )
+  return executeQuery(ctx, 'pageConfig', 'READ', async () => fetchPages(), 'all_page_configs')
 }

@@ -50,7 +50,7 @@ export interface Comment {
 
 /**
  * WorkflowNode - Individual step in a workflow
- * @property type - Node type: trigger (event), action (do something), 
+ * @property type - Node type: trigger (event), action (do something),
  *                  condition (if/then), lua (execute script), transform (map data)
  * @property position - X/Y coordinates for visual editor
  */

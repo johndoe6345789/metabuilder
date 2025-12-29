@@ -17,7 +17,10 @@ const parsePositiveInt = (value: string | undefined, fallback: number): number =
 
 const lockoutConfig = {
   windowMs: parsePositiveInt(process.env.MB_AUTH_LOCKOUT_WINDOW_MS, DEFAULT_AUTH_LOCKOUT_WINDOW_MS),
-  maxAttempts: parsePositiveInt(process.env.MB_AUTH_LOCKOUT_MAX_ATTEMPTS, DEFAULT_AUTH_LOCKOUT_MAX_ATTEMPTS),
+  maxAttempts: parsePositiveInt(
+    process.env.MB_AUTH_LOCKOUT_MAX_ATTEMPTS,
+    DEFAULT_AUTH_LOCKOUT_MAX_ATTEMPTS
+  ),
   lockoutMs: parsePositiveInt(process.env.MB_AUTH_LOCKOUT_MS, DEFAULT_AUTH_LOCKOUT_MS),
 }
 

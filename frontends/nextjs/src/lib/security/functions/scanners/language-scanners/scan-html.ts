@@ -23,7 +23,7 @@ export const scanHTML = (html: string): SecurityScanResult => {
       severity: 'critical',
       message: 'Script tag detected in HTML',
       pattern: match[0].substring(0, 50) + '...',
-      recommendation: 'Remove script tags or use proper React components'
+      recommendation: 'Remove script tags or use proper React components',
     })
   }
 
@@ -36,7 +36,7 @@ export const scanHTML = (html: string): SecurityScanResult => {
       severity: 'high',
       message: 'Inline event handler in HTML',
       pattern: match[0],
-      recommendation: 'Use React event handlers instead'
+      recommendation: 'Use React event handlers instead',
     })
   }
 
@@ -48,7 +48,7 @@ export const scanHTML = (html: string): SecurityScanResult => {
       severity: 'critical',
       message: 'javascript: protocol in href',
       pattern: 'javascript:',
-      recommendation: 'Use proper URLs or event handlers'
+      recommendation: 'Use proper URLs or event handlers',
     })
   }
 
@@ -62,7 +62,7 @@ export const scanHTML = (html: string): SecurityScanResult => {
         severity: 'medium',
         message: 'Iframe without sandbox attribute',
         pattern: match[0],
-        recommendation: 'Add sandbox attribute to iframes for security'
+        recommendation: 'Add sandbox attribute to iframes for security',
       })
     }
   }
@@ -73,6 +73,6 @@ export const scanHTML = (html: string): SecurityScanResult => {
   return {
     safe,
     severity,
-    issues
+    issues,
   }
 }

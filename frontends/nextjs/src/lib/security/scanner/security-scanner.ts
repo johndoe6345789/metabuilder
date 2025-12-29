@@ -1,10 +1,10 @@
 /**
  * Security Scanner
- * 
+ *
  * Wraps individual scan functions into a unified class interface.
  * Each scanning function is implemented as 1 lambda/function per file
  * in the functions/ directory.
- * 
+ *
  * Pattern: Lambda wrapper class - keeps this file short while maintaining
  * a convenient class-based API.
  */
@@ -24,7 +24,7 @@ import { getSeverityIcon } from '../functions/helpers/get-severity-icon'
 
 /**
  * SecurityScanner - Wrapper class for security scanning functions
- * 
+ *
  * All methods delegate to individual lambda functions in functions/scanners/
  * This keeps the main class file small while providing a unified API.
  */
@@ -45,11 +45,4 @@ export const securityScanner = new SecurityScanner()
 export { getSeverityColor, getSeverityIcon }
 
 // Re-export individual functions for direct use
-export {
-  scanJavaScript,
-  scanLua,
-  scanJSON,
-  scanHTML,
-  scanForVulnerabilities,
-  sanitizeInput
-}
+export { scanJavaScript, scanLua, scanJSON, scanHTML, scanForVulnerabilities, sanitizeInput }

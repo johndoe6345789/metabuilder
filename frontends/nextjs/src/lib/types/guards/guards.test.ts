@@ -53,8 +53,16 @@ describe('Type Guards', () => {
 
   describe('getErrorMessage', () => {
     it.each([
-      { value: new Error('error message'), expected: 'error message', description: 'Error instance' },
-      { value: { message: 'custom error' }, expected: 'custom error', description: 'error-like object' },
+      {
+        value: new Error('error message'),
+        expected: 'error message',
+        description: 'Error instance',
+      },
+      {
+        value: { message: 'custom error' },
+        expected: 'custom error',
+        description: 'error-like object',
+      },
       { value: 'string error', expected: 'string error', description: 'string' },
       { value: null, expected: 'An unknown error occurred', description: 'null' },
       { value: undefined, expected: 'An unknown error occurred', description: 'undefined' },
@@ -68,11 +76,21 @@ describe('Type Guards', () => {
   describe('hasProperty', () => {
     it.each([
       { obj: { name: 'test' }, key: 'name', expected: true, description: 'object with property' },
-      { obj: { name: 'test' }, key: 'age', expected: false, description: 'object without property' },
+      {
+        obj: { name: 'test' },
+        key: 'age',
+        expected: false,
+        description: 'object without property',
+      },
       { obj: {}, key: 'name', expected: false, description: 'empty object' },
       { obj: null, key: 'name', expected: false, description: 'null' },
       { obj: undefined, key: 'name', expected: false, description: 'undefined' },
-      { obj: 'string', key: 'length', expected: false, description: 'string (primitive, not object)' },
+      {
+        obj: 'string',
+        key: 'length',
+        expected: false,
+        description: 'string (primitive, not object)',
+      },
     ])('should return $expected for $description', ({ obj, key, expected }) => {
       expect(hasProperty(obj, key)).toBe(expected)
     })

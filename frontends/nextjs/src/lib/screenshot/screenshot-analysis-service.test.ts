@@ -6,7 +6,8 @@ const basePayload = {
   url: 'https://example.com',
   viewport: { width: 1280, height: 720 },
   textSample: 'Hello world from the screenshot analyzer.',
-  htmlSample: '<h1>Title</h1><h2>Subtitle</h2><img src="x" alt="desc" /><a href="#">Link</a><button>Go</button>',
+  htmlSample:
+    '<h1>Title</h1><h2>Subtitle</h2><img src="x" alt="desc" /><a href="#">Link</a><button>Go</button>',
 }
 
 describe('ScreenshotAnalysisService', () => {
@@ -32,7 +33,7 @@ describe('ScreenshotAnalysisService', () => {
       htmlSample: '<img src="x" /><button>Save</button>',
     })
 
-    expect(result.warnings.some((warning) => warning.includes('No H1'))).toBe(true)
-    expect(result.warnings.some((warning) => warning.includes('missing alt'))).toBe(true)
+    expect(result.warnings.some(warning => warning.includes('No H1'))).toBe(true)
+    expect(result.warnings.some(warning => warning.includes('missing alt'))).toBe(true)
   })
 })

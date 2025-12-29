@@ -28,7 +28,7 @@ export const scanJavaScript = (code: string): SecurityScanResult => {
         message: pattern.message,
         pattern: match[0],
         line: lineNumber,
-        recommendation: pattern.recommendation
+        recommendation: pattern.recommendation,
       })
     }
   }
@@ -44,7 +44,7 @@ export const scanJavaScript = (code: string): SecurityScanResult => {
         message: pattern.message,
         pattern: match[0],
         line: lineNumber,
-        recommendation: pattern.recommendation
+        recommendation: pattern.recommendation,
       })
     }
   }
@@ -56,6 +56,6 @@ export const scanJavaScript = (code: string): SecurityScanResult => {
     safe,
     severity,
     issues,
-    sanitizedCode: safe ? code : undefined
+    sanitizedCode: safe ? code : undefined,
   }
 }

@@ -33,7 +33,7 @@ export class ScreenshotAnalysisService {
       h2Count,
       h3Count,
       imgCount: imgTags.length,
-      imgMissingAltCount: imgTags.filter((tag) => !/\salt=/.test(tag)).length,
+      imgMissingAltCount: imgTags.filter(tag => !/\salt=/.test(tag)).length,
       linkCount: this.countMatches(/<a\b[^>]*>/gi, htmlSample),
       buttonCount: this.countMatches(/<button\b[^>]*>/gi, htmlSample),
       formCount: this.countMatches(/<form\b[^>]*>/gi, htmlSample),
@@ -96,7 +96,7 @@ export class ScreenshotAnalysisService {
     if (warnings.length === 0) {
       lines.push('- None detected')
     } else {
-      warnings.forEach((warning) => lines.push(`- ${warning}`))
+      warnings.forEach(warning => lines.push(`- ${warning}`))
     }
 
     return lines.join('\n')

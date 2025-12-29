@@ -12,10 +12,7 @@ export async function getUserById(ctx: SecurityContext, userId: string): Promise
     'user',
     'READ',
     async () =>
-      Database.getUserById(
-        userId,
-        ctx.user.tenantId ? { tenantId: ctx.user.tenantId } : undefined
-      ),
+      Database.getUserById(userId, ctx.user.tenantId ? { tenantId: ctx.user.tenantId } : undefined),
     userId
   )
 }

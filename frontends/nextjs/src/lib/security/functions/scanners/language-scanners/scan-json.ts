@@ -23,7 +23,7 @@ export const scanJSON = (jsonString: string): SecurityScanResult => {
       severity: 'medium',
       message: 'Invalid JSON format',
       pattern: 'JSON parse error',
-      recommendation: 'Ensure JSON is properly formatted'
+      recommendation: 'Ensure JSON is properly formatted',
     })
   }
 
@@ -35,7 +35,7 @@ export const scanJSON = (jsonString: string): SecurityScanResult => {
       severity: 'critical',
       message: 'Prototype pollution attempt in JSON',
       pattern: '__proto__',
-      recommendation: 'Remove prototype manipulation from JSON'
+      recommendation: 'Remove prototype manipulation from JSON',
     })
   }
 
@@ -46,7 +46,7 @@ export const scanJSON = (jsonString: string): SecurityScanResult => {
       severity: 'critical',
       message: 'Script tag in JSON data',
       pattern: '<script>',
-      recommendation: 'Remove all HTML/script content from JSON'
+      recommendation: 'Remove all HTML/script content from JSON',
     })
   }
 
@@ -57,6 +57,6 @@ export const scanJSON = (jsonString: string): SecurityScanResult => {
     safe,
     severity,
     issues,
-    sanitizedCode: safe ? jsonString : undefined
+    sanitizedCode: safe ? jsonString : undefined,
   }
 }

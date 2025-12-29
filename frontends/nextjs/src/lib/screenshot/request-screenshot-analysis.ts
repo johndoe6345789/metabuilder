@@ -22,9 +22,10 @@ export async function requestScreenshotAnalysis(
   const data = (await response.json().catch(() => null)) as unknown
 
   if (!response.ok || !isValidResult(data)) {
-    const message = (typeof data === 'object' && data !== null && 'error' in data && typeof data.error === 'string')
-      ? data.error
-      : 'Analysis failed'
+    const message =
+      typeof data === 'object' && data !== null && 'error' in data && typeof data.error === 'string'
+        ? data.error
+        : 'Analysis failed'
     throw new Error(message)
   }
 

@@ -10,21 +10,19 @@ export async function checkAccess(
   operation: OperationType,
   resourceId?: string
 ): Promise<boolean> {
-  const rule = ACCESS_RULES.find(
-    r => r.resource === resource && r.operation === operation
-  )
-  
+  const rule = ACCESS_RULES.find(r => r.resource === resource && r.operation === operation)
+
   if (!rule) {
     return false
   }
-  
+
   if (!rule.allowedRoles.includes(ctx.user.role)) {
     return false
   }
-  
+
   if (rule.customCheck) {
     return await rule.customCheck(ctx, resourceId)
   }
-  
+
   return true
 }

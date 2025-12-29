@@ -30,7 +30,14 @@ describe('security-scanner detection', () => {
       },
     ])(
       'should $name',
-      ({ code, expectedSeverity, expectedSafe, expectedIssueType, expectedIssuePattern, expectedLine }) => {
+      ({
+        code,
+        expectedSeverity,
+        expectedSafe,
+        expectedIssueType,
+        expectedIssuePattern,
+        expectedLine,
+      }) => {
         const result = securityScanner.scanJavaScript(code)
         expect(result.severity).toBe(expectedSeverity)
         expect(result.safe).toBe(expectedSafe)
@@ -38,7 +45,9 @@ describe('security-scanner detection', () => {
         if (expectedIssueType || expectedIssuePattern) {
           const issue = result.issues.find(item => {
             const matchesType = expectedIssueType ? item.type === expectedIssueType : true
-            const matchesPattern = expectedIssuePattern ? item.pattern.includes(expectedIssuePattern) : true
+            const matchesPattern = expectedIssuePattern
+              ? item.pattern.includes(expectedIssuePattern)
+              : true
             return matchesType && matchesPattern
           })
           expect(issue).toBeDefined()
@@ -74,28 +83,33 @@ describe('security-scanner detection', () => {
         expectedSeverity: 'safe',
         expectedSafe: true,
       },
-    ])('should $name', ({ code, expectedSeverity, expectedSafe, expectedIssueType, expectedIssuePattern }) => {
-      const result = securityScanner.scanLua(code)
-      expect(result.severity).toBe(expectedSeverity)
-      expect(result.safe).toBe(expectedSafe)
+    ])(
+      'should $name',
+      ({ code, expectedSeverity, expectedSafe, expectedIssueType, expectedIssuePattern }) => {
+        const result = securityScanner.scanLua(code)
+        expect(result.severity).toBe(expectedSeverity)
+        expect(result.safe).toBe(expectedSafe)
 
-      if (expectedIssueType || expectedIssuePattern) {
-        const issue = result.issues.find(item => {
-          const matchesType = expectedIssueType ? item.type === expectedIssueType : true
-          const matchesPattern = expectedIssuePattern ? item.pattern.includes(expectedIssuePattern) : true
-          return matchesType && matchesPattern
-        })
-        expect(issue).toBeDefined()
-      } else {
-        expect(result.issues.length).toBe(0)
-      }
+        if (expectedIssueType || expectedIssuePattern) {
+          const issue = result.issues.find(item => {
+            const matchesType = expectedIssueType ? item.type === expectedIssueType : true
+            const matchesPattern = expectedIssuePattern
+              ? item.pattern.includes(expectedIssuePattern)
+              : true
+            return matchesType && matchesPattern
+          })
+          expect(issue).toBeDefined()
+        } else {
+          expect(result.issues.length).toBe(0)
+        }
 
-      if (expectedSafe) {
-        expect(result.sanitizedCode).toBe(code)
-      } else {
-        expect(result.sanitizedCode).toBeUndefined()
+        if (expectedSafe) {
+          expect(result.sanitizedCode).toBe(code)
+        } else {
+          expect(result.sanitizedCode).toBeUndefined()
+        }
       }
-    })
+    )
   })
 
   describe('scanJSON', () => {
@@ -170,7 +184,8 @@ describe('security-scanner detection', () => {
     it.each([
       {
         name: 'remove script tags and inline handlers from text',
-        input: '<div onclick="alert(1)">Click</div><script>alert(2)</script><a href="javascript:alert(3)">x</a>',
+        input:
+          '<div onclick="alert(1)">Click</div><script>alert(2)</script><a href="javascript:alert(3)">x</a>',
         type: 'text' as const,
         shouldExclude: ['<script', 'onclick', 'javascript:'],
       },

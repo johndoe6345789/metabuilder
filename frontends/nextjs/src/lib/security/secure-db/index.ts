@@ -1,11 +1,5 @@
 // Types
-export type { 
-  OperationType, 
-  ResourceType, 
-  AuditLog, 
-  SecurityContext, 
-  AccessRule 
-} from './types'
+export type { OperationType, ResourceType, AuditLog, SecurityContext, AccessRule } from './types'
 
 // Core functions
 export { ACCESS_RULES } from './query/access-rules'
@@ -76,7 +70,7 @@ export class SecureDatabase {
   static sanitizeInput = sanitizeInput
   static logOperation = logOperation
   static executeQuery = executeQuery
-  
+
   // Operations
   static getUsers = getUsers
   static getUserById = getUserById

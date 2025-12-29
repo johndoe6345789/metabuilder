@@ -15,7 +15,10 @@ const parsePositiveInt = (value: string | null | undefined, fallback: number): n
 
 const getEnvRateLimitConfig = () => ({
   windowMs: parsePositiveInt(process.env.MB_RATE_LIMIT_WINDOW_MS, DEFAULT_RATE_LIMIT_WINDOW_MS),
-  maxRequests: parsePositiveInt(process.env.MB_RATE_LIMIT_MAX_REQUESTS, DEFAULT_MAX_REQUESTS_PER_WINDOW),
+  maxRequests: parsePositiveInt(
+    process.env.MB_RATE_LIMIT_MAX_REQUESTS,
+    DEFAULT_MAX_REQUESTS_PER_WINDOW
+  ),
 })
 
 let rateLimitConfig = getEnvRateLimitConfig()
@@ -31,7 +34,8 @@ export async function loadRateLimitConfig(): Promise<void> {
   configLoadPromise = (async () => {
     try {
       const envConfig = getEnvRateLimitConfig()
-      const { getSystemConfigValue } = await import('@/lib/db/system-config/get-system-config-value')
+      const { getSystemConfigValue } =
+        await import('@/lib/db/system-config/get-system-config-value')
       const [windowValue, maxRequestsValue] = await Promise.all([
         getSystemConfigValue(RATE_LIMIT_WINDOW_KEY),
         getSystemConfigValue(MAX_REQUESTS_KEY),

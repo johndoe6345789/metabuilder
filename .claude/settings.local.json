@@ -34,7 +34,9 @@
       "Bash(bun run format:*)",
       "Bash(while read file)",
       "Bash(do eslint:*)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(eslint:*)",
+      "Bash(bunx eslint:*)"
     ]
   }
 }

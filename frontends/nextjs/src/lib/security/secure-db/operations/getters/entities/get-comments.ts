@@ -7,11 +7,5 @@ import { executeQuery } from '../../execute-query'
  * Get comments with security checks
  */
 export async function getComments(ctx: SecurityContext): Promise<Comment[]> {
-  return executeQuery(
-    ctx,
-    'comment',
-    'READ',
-    async () => fetchComments(),
-    'all_comments'
-  )
+  return executeQuery(ctx, 'comment', 'READ', async () => fetchComments(), 'all_comments')
 }

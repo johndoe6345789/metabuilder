@@ -7,11 +7,5 @@ import { executeQuery } from '../../execute-query'
  * Get Lua scripts with security checks
  */
 export async function getLuaScripts(ctx: SecurityContext): Promise<LuaScript[]> {
-  return executeQuery(
-    ctx,
-    'luaScript',
-    'READ',
-    async () => fetchLuaScripts(),
-    'all_lua_scripts'
-  )
+  return executeQuery(ctx, 'luaScript', 'READ', async () => fetchLuaScripts(), 'all_lua_scripts')
 }

@@ -7,10 +7,7 @@ import { validateField } from '../field/validate-field'
  * @param record - The record to validate
  * @returns Object mapping field names to error messages
  */
-export const validateRecord = (
-  model: ModelSchema,
-  record: any
-): Record<string, string> => {
+export const validateRecord = (model: ModelSchema, record: any): Record<string, string> => {
   const errors: Record<string, string> = {}
 
   for (const field of model.fields) {

@@ -127,7 +127,10 @@ describe('declarative-component-renderer lifecycle', () => {
     })
 
     it('should load Lua scripts from package', () => {
-      const luaExecuteSpy = vi.spyOn(DeclarativeComponentRenderer.prototype as any, 'executeLuaScript')
+      const luaExecuteSpy = vi.spyOn(
+        DeclarativeComponentRenderer.prototype as any,
+        'executeLuaScript'
+      )
 
       loadPackageComponents({
         luaScripts: [

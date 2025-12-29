@@ -26,11 +26,11 @@ export async function executeLuaCode(
 
     if (result.security.severity === 'critical' || result.security.severity === 'high') {
       state.securityWarnings.push(
-        `Security issues detected: ${result.security.issues.map((i) => i.message).join(', ')}`
+        `Security issues detected: ${result.security.issues.map(i => i.message).join(', ')}`
       )
     }
 
-    result.execution.logs.forEach((log) => logToWorkflow(state, `[Lua] ${log}`))
+    result.execution.logs.forEach(log => logToWorkflow(state, `[Lua] ${log}`))
 
     if (!result.execution.success) {
       return {

@@ -8,8 +8,8 @@ import { sanitizeInput } from '../sanitize-input'
  * Update a user with security checks
  */
 export async function updateUser(
-  ctx: SecurityContext, 
-  userId: string, 
+  ctx: SecurityContext,
+  userId: string,
   updates: Partial<User>
 ): Promise<User> {
   const sanitized = sanitizeInput(updates)
@@ -18,7 +18,7 @@ export async function updateUser(
   if (tenantId && sanitized.tenantId && sanitized.tenantId !== tenantId) {
     throw new Error('Access denied. Cannot change user tenant.')
   }
-  
+
   return executeQuery(
     ctx,
     'user',
@@ -32,10 +32,7 @@ export async function updateUser(
       }
 
       await Database.updateUser(userId, sanitized)
-      const updated = await Database.getUserById(
-        userId,
-        tenantId ? { tenantId } : undefined
-      )
+      const updated = await Database.getUserById(userId, tenantId ? { tenantId } : undefined)
       if (!updated) {
         throw new Error('User not found after update')
       }

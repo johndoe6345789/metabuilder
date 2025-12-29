@@ -23,7 +23,7 @@ describe('workflow-engine persistence', () => {
     expect(result.success).toBe(false)
     expect(result.outputs.trigger).toEqual({ value: 3 })
     expect(result.outputs.action).toBeUndefined()
-    expect(result.logs.some((log) => log.includes('Break here'))).toBe(true)
+    expect(result.logs.some(log => log.includes('Break here'))).toBe(true)
     expect(result.error).toContain('Transform failed')
   })
 
@@ -49,7 +49,7 @@ describe('workflow-engine persistence', () => {
     expect(result.success).toBe(true)
     expect(result.outputs.lua).toBe(99)
     expect(result.securityWarnings).toContain('Security issues detected: uses os')
-    expect(result.logs.some((log) => log.includes('[Lua] lua log'))).toBe(true)
+    expect(result.logs.some(log => log.includes('[Lua] lua log'))).toBe(true)
     expect(mockEngine.destroy).toHaveBeenCalled()
   })
 })

@@ -19,9 +19,7 @@ end
 
 return generateWelcome
 `,
-      parameters: [
-        { name: 'username', type: 'string' }
-      ],
+      parameters: [{ name: 'username', type: 'string' }],
       returnType: 'string',
     },
     {
@@ -37,9 +35,7 @@ end
 
 return formatDate
 `,
-      parameters: [
-        { name: 'timestamp', type: 'number' }
-      ],
+      parameters: [{ name: 'timestamp', type: 'number' }],
       returnType: 'string',
     },
     {
@@ -55,9 +51,7 @@ end
 
 return validateEmail
 `,
-      parameters: [
-        { name: 'email', type: 'string' }
-      ],
+      parameters: [{ name: 'email', type: 'string' }],
       returnType: 'boolean',
     },
     {
@@ -85,7 +79,7 @@ return checkPermission
 `,
       parameters: [
         { name: 'userRole', type: 'string' },
-        { name: 'requiredRole', type: 'string' }
+        { name: 'requiredRole', type: 'string' },
       ],
       returnType: 'boolean',
     },
@@ -104,7 +98,7 @@ return logPageView
       parameters: [
         { name: 'pageId', type: 'string' },
         { name: 'userId', type: 'string' },
-        { name: 'timestamp', type: 'number' }
+        { name: 'timestamp', type: 'number' },
       ],
       returnType: 'boolean',
     },

@@ -8,7 +8,7 @@ import { sanitizeInput } from '../sanitize-input'
  * Create a new user with security checks
  */
 export async function createUser(
-  ctx: SecurityContext, 
+  ctx: SecurityContext,
   userData: Omit<User, 'id' | 'createdAt'>
 ): Promise<User> {
   const sanitized = sanitizeInput(userData)
@@ -29,7 +29,7 @@ export async function createUser(
     tenantId: tenantId ?? sanitized.tenantId,
     isInstanceOwner: sanitized.isInstanceOwner ?? false,
   }
-  
+
   return executeQuery(
     ctx,
     'user',

@@ -8,4 +8,3 @@ export { lightTheme } from './light-theme'
 export { darkTheme } from './dark-theme'
 export { useTheme, styled, alpha } from '@mui/material/styles'
 export type { Theme, SxProps } from '@mui/material/styles'
-

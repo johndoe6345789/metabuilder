@@ -19,7 +19,7 @@ export async function executeLuaNode(
     return await executeLuaCode(luaCode, data, context, state)
   }
 
-  const script = context.scripts.find((s) => s.id === scriptId)
+  const script = context.scripts.find(s => s.id === scriptId)
   if (!script) {
     return {
       success: false,

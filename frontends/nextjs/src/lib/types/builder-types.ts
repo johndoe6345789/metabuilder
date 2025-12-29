@@ -1,7 +1,7 @@
 /**
  * ComponentType - All supported UI component types in the builder
  * @description Union type of all available components
- * Supports: Layout (Flex, Grid, Container), Input (Input, Select, Switch), 
+ * Supports: Layout (Flex, Grid, Container), Input (Input, Select, Switch),
  * Display (Text, Heading, Badge), Interactive (Button, Dialog, Tabs)
  */
 export type ComponentType =

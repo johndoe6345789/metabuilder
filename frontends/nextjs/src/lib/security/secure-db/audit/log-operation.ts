@@ -24,7 +24,7 @@ export async function logOperation(
     errorMessage,
     ipAddress: ctx.ipAddress,
   }
-  
+
   try {
     addAuditLog(log)
     if (process.env.NODE_ENV === 'development') {

@@ -10,7 +10,7 @@
  * @returns Sanitized string
  */
 export const sanitizeInput = (
-  input: string, 
+  input: string,
   type: 'text' | 'html' | 'json' | 'javascript' | 'lua' = 'text'
 ): string => {
   let sanitized = input

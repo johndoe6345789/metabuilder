@@ -76,8 +76,18 @@ describe('declarative-component-renderer evaluation', () => {
       { name: 'empty string condition', condition: '', context: {}, expected: true },
       { name: 'null condition', condition: null as any, context: {}, expected: true },
       { name: 'undefined condition', condition: undefined as any, context: {}, expected: true },
-      { name: 'truthy context value', condition: 'isActive', context: { isActive: true }, expected: true },
-      { name: 'falsy context value', condition: 'isActive', context: { isActive: false }, expected: false },
+      {
+        name: 'truthy context value',
+        condition: 'isActive',
+        context: { isActive: true },
+        expected: true,
+      },
+      {
+        name: 'falsy context value',
+        condition: 'isActive',
+        context: { isActive: false },
+        expected: false,
+      },
       { name: 'missing context key', condition: 'missing', context: {}, expected: false },
       { name: 'truthy string value', condition: 'name', context: { name: 'test' }, expected: true },
       { name: 'empty string value', condition: 'name', context: { name: '' }, expected: false },
@@ -117,8 +127,16 @@ describe('declarative-component-renderer evaluation', () => {
       {
         name: 'object array data source',
         dataSource: 'users',
-        context: { users: [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }] },
-        expected: [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }],
+        context: {
+          users: [
+            { id: 1, name: 'Alice' },
+            { id: 2, name: 'Bob' },
+          ],
+        },
+        expected: [
+          { id: 1, name: 'Alice' },
+          { id: 2, name: 'Bob' },
+        ],
       },
     ])('should resolve $name', ({ dataSource, context, expected }) => {
       expect(renderer.resolveDataSource(dataSource, context)).toEqual(expected)

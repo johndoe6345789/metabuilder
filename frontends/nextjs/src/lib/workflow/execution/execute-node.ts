@@ -48,10 +48,7 @@ function normalizeRetryConfig(config: unknown) {
   }
 }
 
-function calculateRetryDelayMs(
-  attempt: number,
-  config: ReturnType<typeof normalizeRetryConfig>
-) {
+function calculateRetryDelayMs(attempt: number, config: ReturnType<typeof normalizeRetryConfig>) {
   if (config.delayMs <= 0) {
     return 0
   }

@@ -42,7 +42,7 @@ describe('workflow-engine errors', () => {
 
     expect(result.success).toBe(false)
     expect(result.error).toContain('Transform failed')
-    expect(result.logs.filter((log) => log.includes('Retrying node'))).toHaveLength(1)
+    expect(result.logs.filter(log => log.includes('Retrying node'))).toHaveLength(1)
   })
 
   it('propagates Lua script resolution errors', async () => {
