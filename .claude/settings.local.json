@@ -6,7 +6,8 @@
       "Bash(find:*)",
       "Bash(npm run test:unit:*)",
       "Bash(npm install:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(npm run db:generate:*)"
     ]
   }
 }
