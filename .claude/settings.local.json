@@ -29,7 +29,8 @@
       "Bash(bun audit:*)",
       "Bash(git restore:*)",
       "Bash(bunx playwright:*)",
-      "Bash(timeout 30 bun run build:*)"
+      "Bash(timeout 30 bun run build:*)",
+      "Bash(bun run lint:fix:*)"
     ]
   }
 }
