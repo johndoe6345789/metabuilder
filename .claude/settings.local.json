@@ -27,7 +27,8 @@
       "Bash(bun run lint)",
       "Bash(git checkout:*)",
       "Bash(bun audit:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(bunx playwright:*)"
     ]
   }
 }
