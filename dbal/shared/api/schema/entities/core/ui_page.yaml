@@ -1,0 +1,95 @@
+entity: UIPage
+version: "1.0"
+description: "Declarative JSON-based UI page definitions"
+
+fields:
+  id:
+    type: uuid
+    primary: true
+    generated: true
+
+  path:
+    type: string
+    required: true
+    unique: true
+    max_length: 500
+    description: "URL path for this page (e.g., /login, /dashboard)"
+
+  title:
+    type: string
+    required: true
+    max_length: 255
+
+  level:
+    type: integer
+    required: true
+    min: 1
+    max: 6
+    description: "Navigation level (1-6)"
+
+  require_auth:
+    type: boolean
+    required: true
+    default: false
+
+  required_role:
+    type: string
+    optional: true
+    max_length: 50
+    description: "Required role to access (user, moderator, admin, god, supergod)"
+
+  layout:
+    type: json
+    required: true
+    description: "Component tree definition (type, props, children)"
+
+  actions:
+    type: json
+    optional: true
+    description: "Action handlers (Lua function references)"
+
+  package_id:
+    type: uuid
+    optional: true
+    foreign_key:
+      entity: Package
+      field: id
+    description: "Package this page belongs to"
+
+  is_active:
+    type: boolean
+    required: true
+    default: true
+    description: "Whether this page is currently active/published"
+
+  created_at:
+    type: datetime
+    generated: true
+    immutable: true
+
+  updated_at:
+    type: datetime
+    auto_update: true
+
+  created_by:
+    type: uuid
+    optional: true
+    foreign_key:
+      entity: User
+      field: id
+
+indexes:
+  - fields: [path]
+    unique: true
+  - fields: [level, is_active]
+  - fields: [package_id]
+
+acl:
+  create:
+    role: [admin, god, supergod]
+  read:
+    public: true
+  update:
+    role: [admin, god, supergod]
+  delete:
+    role: [god, supergod]
