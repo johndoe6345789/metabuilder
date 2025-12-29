@@ -8,7 +8,8 @@
       "Bash(npm install:*)",
       "Bash(xargs:*)",
       "Bash(npm run db:generate:*)",
-      "Bash(npx prisma generate:*)"
+      "Bash(npx prisma generate:*)",
+      "Bash(DATABASE_URL=\"file:./dev.db\" npx prisma generate:*)"
     ]
   }
 }
