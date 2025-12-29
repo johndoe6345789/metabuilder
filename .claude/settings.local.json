@@ -20,7 +20,8 @@
       "Bash(bun run typecheck:*)",
       "Bash(bun run test:unit:*)",
       "Bash(echo:*)",
-      "Bash(npx prisma validate:*)"
+      "Bash(npx prisma validate:*)",
+      "Bash(npm run typecheck:*)"
     ]
   }
 }
