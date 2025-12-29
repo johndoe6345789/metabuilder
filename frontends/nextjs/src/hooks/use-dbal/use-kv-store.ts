@@ -12,7 +12,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
   const { isReady } = useDBAL()
 
   const set = useCallback(
-    async (key: string, value: any, ttl?: number) => {
+    async (key: string, value: unknown, ttl?: number) => {
       if (!isReady) {
         throw new Error('DBAL not ready')
       }
@@ -28,7 +28,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
   )
 
   const get = useCallback(
-    async <T = any>(key: string): Promise<T | null> => {
+    async <T = unknown>(key: string): Promise<T | null> => {
       if (!isReady) {
         throw new Error('DBAL not ready')
       }
@@ -60,7 +60,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
   )
 
   const listAdd = useCallback(
-    async (key: string, items: any[]) => {
+    async <T = unknown>(key: string, items: T[]) => {
       if (!isReady) {
         throw new Error('DBAL not ready')
       }
@@ -76,7 +76,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
   )
 
   const listGet = useCallback(
-    async (key: string, start?: number, end?: number): Promise<any[]> => {
+    async <T = unknown>(key: string, start?: number, end?: number): Promise<T[]> => {
       if (!isReady) {
         throw new Error('DBAL not ready')
       }

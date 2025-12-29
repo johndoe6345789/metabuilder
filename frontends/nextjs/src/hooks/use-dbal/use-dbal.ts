@@ -23,7 +23,7 @@ export function useDBAL() {
       }
     }
 
-    init()
+    void init()
   }, [])
 
   return { isReady, error }
