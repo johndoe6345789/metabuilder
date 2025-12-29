@@ -1,15 +1,18 @@
 import { exportPackageAsZip } from './export-package-as-zip'
+import type { ComponentConfig, ComponentNode, CssCategory, DropdownConfig } from '@/lib/db/core/types'
+import type { LuaScript, PageConfig, Workflow } from '@/lib/types/level-types'
+import type { ModelSchema } from '@/lib/types/schema-types'
 import type { AssetFile, PackageContent, PackageManifest } from './types'
 
 export async function exportDatabaseSnapshot(
-  schemas: any[],
-  pages: any[],
-  workflows: any[],
-  luaScripts: any[],
-  componentHierarchy: Record<string, any>,
-  componentConfigs: Record<string, any>,
-  cssClasses: any[],
-  dropdownConfigs: any[],
+  schemas: ModelSchema[],
+  pages: PageConfig[],
+  workflows: Workflow[],
+  luaScripts: LuaScript[],
+  componentHierarchy: Record<string, ComponentNode>,
+  componentConfigs: Record<string, ComponentConfig>,
+  cssClasses: CssCategory[],
+  dropdownConfigs: DropdownConfig[],
   assets: AssetFile[] = []
 ): Promise<Blob> {
   const manifest: PackageManifest = {
