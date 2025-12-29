@@ -1,11 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import {
-  isError,
-  isErrorLike,
-  isJsonValue,
-  getErrorMessage,
-  hasProperty,
-} from './guards'
+import { isError } from './is-error'
+import { isErrorLike } from './is-error-like'
+import { isJsonValue } from './is-json-value'
+import { getErrorMessage } from './get-error-message'
+import { hasProperty } from './has-property'
 
 describe('Type Guards', () => {
   describe('isError', () => {
