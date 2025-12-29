@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 declare module '@/dbal/development/src/blob' {
   export interface BlobStorageConfig {
     type: 'filesystem' | 'memory' | 's3'
@@ -10,17 +8,17 @@ declare module '@/dbal/development/src/blob' {
     contentType?: string
     size?: number
     lastModified?: Date
-    [key: string]: any
+    [key: string]: unknown
   }
 
   export interface BlobListItem {
     key: string
-    [key: string]: any
+    [key: string]: unknown
   }
 
   export interface BlobListResult {
     items: BlobListItem[]
-    [key: string]: any
+    [key: string]: unknown
   }
 
   export interface BlobStorage {
