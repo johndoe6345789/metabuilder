@@ -5,7 +5,7 @@ import { createLuaEngine } from '@/lib/lua/engine/core/create-lua-engine'
 import { pushToLua } from '@/lib/lua/functions/converters/push-to-lua'
 import { fromLua } from '@/lib/lua/functions/converters/from-lua'
 import { normalizeLuaComponent } from './normalize-lua-structure'
-import type { LuaUIManifest, LuaUIPackage, LuaUIPage, LuaUIComponent } from './types/lua-ui-package'
+import type { LuaUIManifest, LuaUIPackage, LuaUIPage } from './types/lua-ui-package'
 
 const lua = fengari.lua
 const lauxlib = fengari.lauxlib
