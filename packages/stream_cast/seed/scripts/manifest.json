@@ -1,34 +1,28 @@
 {
   "scripts": [
     {
+      "id": "init",
+      "name": "Stream Cast Init",
       "file": "init.lua",
-      "name": "init",
-      "category": "lifecycle",
-      "description": "Lifecycle hooks for installation and removal"
+      "description": "Initialize stream cast module"
     },
     {
+      "id": "player",
+      "name": "Stream Player",
+      "file": "player.lua",
+      "description": "Video player controls"
+    },
+    {
+      "id": "schedule",
+      "name": "Stream Schedule",
       "file": "schedule.lua",
-      "name": "schedule",
-      "category": "automation",
-      "description": "Resolve the next scene based on the run of show"
+      "description": "Stream scheduling"
     },
     {
-      "file": "scene_router.lua",
-      "name": "scene_router",
-      "category": "broadcast",
-      "description": "Map scene names to output destinations"
-    },
-    {
-      "file": "permissions.lua",
-      "name": "permissions",
-      "category": "security",
-      "description": "Role checks for publishing and moderation"
-    },
-    {
-      "file": "audience_pulse.lua",
-      "name": "audience_pulse",
-      "category": "analytics",
-      "description": "Score audience engagement from live metrics"
+      "id": "scenes",
+      "name": "Scene Manager",
+      "file": "scenes.lua",
+      "description": "Stream scene management"
     }
   ]
 }
