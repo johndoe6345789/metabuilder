@@ -104,5 +104,4 @@ export const ecommerceBasicPackage = (): { manifest: PackageManifest; content: P
     componentHierarchy: {},
     componentConfigs: {},
   },
-}
 })

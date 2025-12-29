@@ -110,5 +110,4 @@ export const retroGamesPackage = (): { manifest: PackageManifest; content: Packa
       ],
     },
   },
-}
 })

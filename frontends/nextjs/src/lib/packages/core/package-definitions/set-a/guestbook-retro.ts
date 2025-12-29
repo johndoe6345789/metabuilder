@@ -66,5 +66,4 @@ export const guestbookRetroPackage = (): { manifest: PackageManifest; content: P
       ],
     },
   },
-}
 })
