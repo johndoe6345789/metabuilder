@@ -74,7 +74,7 @@ describe('Type Guards', () => {
       { obj: {}, key: 'name', expected: false, description: 'empty object' },
       { obj: null, key: 'name', expected: false, description: 'null' },
       { obj: undefined, key: 'name', expected: false, description: 'undefined' },
-      { obj: 'string', key: 'length', expected: true, description: 'string with length property' },
+      { obj: 'string', key: 'length', expected: false, description: 'string (primitive, not object)' },
     ])('should return $expected for $description', ({ obj, key, expected }) => {
       expect(hasProperty(obj, key)).toBe(expected)
     })
