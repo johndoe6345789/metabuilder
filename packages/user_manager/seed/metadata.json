@@ -1,0 +1,13 @@
+{
+  "packageId": "user_manager",
+  "name": "User Manager",
+  "version": "1.0.0",
+  "description": "User management components and actions",
+  "author": "MetaBuilder",
+  "category": "managers",
+  "dependencies": ["ui_permissions", "data_table"],
+  "exports": {
+    "scripts": ["list", "actions"],
+    "components": ["UserManagement", "UserList", "UserActions"]
+  }
+}

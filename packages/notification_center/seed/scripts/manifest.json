@@ -1,0 +1,22 @@
+{
+  "scripts": [
+    {
+      "id": "init",
+      "name": "Notification Center Init",
+      "file": "init.lua",
+      "description": "Initialize notification module"
+    },
+    {
+      "id": "toast",
+      "name": "Toast Notifications",
+      "file": "toast.lua",
+      "description": "Toast notification rendering"
+    },
+    {
+      "id": "list",
+      "name": "Notification List",
+      "file": "list.lua",
+      "description": "Notification list panel"
+    }
+  ]
+}

@@ -1,6 +1,10 @@
 declare module '@monaco-editor/react' {
-  import type { ComponentType } from 'react'
-  
+  import type { ComponentType, ReactNode } from 'react'
+  import type { editor, languages } from 'monaco-editor'
+  import type * as MonacoNamespace from 'monaco-editor'
+
+  type Monaco = typeof MonacoNamespace
+
   export interface EditorProps {
     height?: string | number
     width?: string | number
@@ -10,21 +14,21 @@ declare module '@monaco-editor/react' {
     defaultLanguage?: string
     theme?: string
     line?: number
-    loading?: string | React.ReactNode
-    options?: Record<string, any>
-    overrideServices?: Record<string, any>
+    loading?: string | ReactNode
+    options?: editor.IStandaloneEditorConstructionOptions
+    overrideServices?: editor.IEditorOverrideServices
     saveViewState?: boolean
     keepCurrentModel?: boolean
     path?: string
-    onChange?: (value: string | undefined, event: any) => void
-    onMount?: (editor: any, monaco: any) => void
-    onValidate?: (markers: any[]) => void
-    beforeMount?: (monaco: any) => void
+    onChange?: (value: string | undefined, event?: editor.IModelContentChangedEvent) => void
+    onMount?: (editor: editor.IStandaloneCodeEditor, monaco: Monaco) => void
+    onValidate?: (markers: languages.IMarker[]) => void
+    beforeMount?: (monaco: Monaco) => void
   }
-  
+
   const Editor: ComponentType<EditorProps>
   export default Editor
-  
-  export function useMonaco(): any
-  export function loader(): any
+
+  export function useMonaco(): Monaco | null
+  export function loader(): Promise<Monaco>
 }

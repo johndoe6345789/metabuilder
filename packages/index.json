@@ -5,11 +5,12 @@
       "packageId": "admin_dialog",
       "name": "Admin Dialog",
       "version": "1.0.0",
-      "description": "Admin dialog components",
+      "description": "Admin dialogs for user and settings management",
       "author": "MetaBuilder",
       "category": "ui",
-      "dependencies": [],
+      "dependencies": ["ui_dialogs"],
       "exports": {
+        "scripts": ["user", "settings"],
         "components": []
       }
     },
@@ -38,14 +39,28 @@
       }
     },
     {
+      "packageId": "code_editor",
+      "name": "Code Editor",
+      "version": "1.0.0",
+      "description": "Code editor components for JSON, Lua, and themes",
+      "author": "MetaBuilder",
+      "category": "editors",
+      "dependencies": [],
+      "exports": {
+        "scripts": ["json", "lua", "theme"],
+        "components": ["CodeEditor", "JsonEditor", "LuaEditor", "ThemeEditor"]
+      }
+    },
+    {
       "packageId": "dashboard",
       "name": "Dashboard",
       "version": "1.0.0",
-      "description": "Dashboard components",
+      "description": "Dashboard components with stats and layouts",
       "author": "MetaBuilder",
       "category": "ui",
       "dependencies": [],
       "exports": {
+        "scripts": ["stats", "layout"],
         "components": []
       }
     },
@@ -53,11 +68,12 @@
       "packageId": "data_table",
       "name": "Data Table",
       "version": "1.0.0",
-      "description": "Data table components",
+      "description": "Data table with columns, rows, and pagination",
       "author": "MetaBuilder",
       "category": "ui",
       "dependencies": [],
       "exports": {
+        "scripts": ["columns", "rows", "pagination"],
         "components": []
       }
     },
@@ -65,11 +81,12 @@
       "packageId": "form_builder",
       "name": "Form Builder",
       "version": "1.0.0",
-      "description": "Form builder components",
+      "description": "Form builder with field types and validation",
       "author": "MetaBuilder",
       "category": "ui",
       "dependencies": [],
       "exports": {
+        "scripts": ["fields", "validate"],
         "components": []
       }
     },
@@ -89,11 +106,12 @@
       "packageId": "nav_menu",
       "name": "Navigation Menu",
       "version": "1.0.0",
-      "description": "Navigation menu components",
+      "description": "Navigation sidebar and menu components",
       "author": "MetaBuilder",
       "category": "ui",
-      "dependencies": [],
+      "dependencies": ["ui_permissions"],
       "exports": {
+        "scripts": ["sidebar", "menu"],
         "components": []
       }
     },
@@ -101,12 +119,39 @@
       "packageId": "notification_center",
       "name": "Notification Center",
       "version": "1.0.0",
-      "description": "Notification center components",
+      "description": "Toast notifications and notification list",
       "author": "MetaBuilder",
       "category": "ui",
       "dependencies": [],
       "exports": {
+        "scripts": ["toast", "list"],
         "components": []
+      }
+    },
+    {
+      "packageId": "ui_auth",
+      "name": "Auth Components",
+      "version": "1.0.0",
+      "description": "Authentication gate and access denied views",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": ["ui_permissions"],
+      "exports": {
+        "scripts": ["gate", "denied"],
+        "components": ["AuthGate", "AccessDenied"]
+      }
+    },
+    {
+      "packageId": "ui_dialogs",
+      "name": "Dialog Components",
+      "version": "1.0.0",
+      "description": "Confirm and alert dialog components",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "scripts": ["confirm", "alert"],
+        "components": ["ConfirmDialog", "AlertDialog"]
       }
     },
     {
@@ -152,6 +197,19 @@
       }
     },
     {
+      "packageId": "schema_editor",
+      "name": "Schema Editor",
+      "version": "1.0.0",
+      "description": "Database schema editor components",
+      "author": "MetaBuilder",
+      "category": "editors",
+      "dependencies": ["form_builder"],
+      "exports": {
+        "scripts": ["fields", "tables", "relations"],
+        "components": ["SchemaEditor", "TableEditor", "FieldEditor"]
+      }
+    },
+    {
       "packageId": "stream_cast",
       "name": "Stream Cast",
       "version": "1.0.0",
@@ -161,6 +219,32 @@
       "dependencies": [],
       "exports": {
         "components": []
+      }
+    },
+    {
+      "packageId": "user_manager",
+      "name": "User Manager",
+      "version": "1.0.0",
+      "description": "User management components and actions",
+      "author": "MetaBuilder",
+      "category": "managers",
+      "dependencies": ["ui_permissions", "data_table"],
+      "exports": {
+        "scripts": ["list", "actions"],
+        "components": ["UserManagement", "UserList", "UserActions"]
+      }
+    },
+    {
+      "packageId": "workflow_editor",
+      "name": "Workflow Editor",
+      "version": "1.0.0",
+      "description": "Workflow editor and run status components",
+      "author": "MetaBuilder",
+      "category": "editors",
+      "dependencies": [],
+      "exports": {
+        "scripts": ["editor", "status", "run"],
+        "components": ["WorkflowEditor", "WorkflowRunCard", "WorkflowRunStatus"]
       }
     },
     {

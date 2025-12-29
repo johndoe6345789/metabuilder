@@ -1,0 +1,13 @@
+{
+  "packageId": "workflow_editor",
+  "name": "Workflow Editor",
+  "version": "1.0.0",
+  "description": "Workflow editor and run status components",
+  "author": "MetaBuilder",
+  "category": "editors",
+  "dependencies": [],
+  "exports": {
+    "scripts": ["editor", "status", "run"],
+    "components": ["WorkflowEditor", "WorkflowRunCard", "WorkflowRunStatus"]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "packageId": "schema_editor",
+  "name": "Schema Editor",
+  "version": "1.0.0",
+  "description": "Database schema editor components",
+  "author": "MetaBuilder",
+  "category": "editors",
+  "dependencies": ["form_builder"],
+  "exports": {
+    "scripts": ["fields", "tables", "relations"],
+    "components": ["SchemaEditor", "TableEditor", "FieldEditor"]
+  }
+}

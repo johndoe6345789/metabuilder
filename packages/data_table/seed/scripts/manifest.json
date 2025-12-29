@@ -1,0 +1,28 @@
+{
+  "scripts": [
+    {
+      "id": "init",
+      "name": "Data Table Init",
+      "file": "init.lua",
+      "description": "Initialize data table module"
+    },
+    {
+      "id": "columns",
+      "name": "Column Definitions",
+      "file": "columns.lua",
+      "description": "Define table columns"
+    },
+    {
+      "id": "rows",
+      "name": "Row Rendering",
+      "file": "rows.lua",
+      "description": "Render table rows"
+    },
+    {
+      "id": "pagination",
+      "name": "Pagination",
+      "file": "pagination.lua",
+      "description": "Table pagination controls"
+    }
+  ]
+}
