@@ -3,7 +3,7 @@
 import { forwardRef } from 'react'
 
 import { PaginationLink } from './PaginationLink'
-import { type PaginationLinkProps,PreviousIcon } from './paginationUtils'
+import { type PaginationLinkProps, PreviousIcon } from './paginationUtils'
 
 const PaginationPrevious = forwardRef<HTMLButtonElement, Omit<PaginationLinkProps, 'children'>>(
   (props, ref) => {

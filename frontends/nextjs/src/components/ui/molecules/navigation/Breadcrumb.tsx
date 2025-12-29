@@ -2,7 +2,7 @@
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import { Box,Breadcrumbs as MuiBreadcrumbs, Link, Typography } from '@mui/material'
+import { Box, Breadcrumbs as MuiBreadcrumbs, Link, Typography } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
 interface BreadcrumbProps {

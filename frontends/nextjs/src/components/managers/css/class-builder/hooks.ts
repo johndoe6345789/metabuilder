@@ -1,7 +1,7 @@
-import { useCallback,useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
-import { CssCategory,Database } from '@/lib/database'
+import { CssCategory, Database } from '@/lib/database'
 
 const CLASS_TOKEN_PATTERN = /^[A-Za-z0-9:_/.\[\]()%#!,=+-]+$/
 const parseClassList = (value: string) => Array.from(new Set(value.split(/\s+/).filter(Boolean)))

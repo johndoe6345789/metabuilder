@@ -1,4 +1,4 @@
-import { Check,Copy, Eye, EyeSlash, Warning } from '@phosphor-icons/react'
+import { Check, Copy, Eye, EyeSlash, Warning } from '@phosphor-icons/react'
 
 import { Alert, AlertDescription } from '@/components/ui'
 import { Button } from '@/components/ui'

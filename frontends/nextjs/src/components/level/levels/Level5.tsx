@@ -1,6 +1,6 @@
 'use client'
 
-import type { AppLevel,User } from '@/lib/level-types'
+import type { AppLevel, User } from '@/lib/level-types'
 
 import { Level5Header } from '../../level5/header/Level5Header'
 import { NerdModeIDE } from '../../misc/NerdModeIDE'

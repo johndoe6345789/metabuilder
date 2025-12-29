@@ -18,7 +18,7 @@ import { Database, DB_KEYS } from '@/lib/database'
 import type { ModelSchema } from '@/lib/types/schema-types'
 
 import { ActionToolbar } from './ActionToolbar'
-import { type ConnectionDetails,ConnectionForm } from './ConnectionForm'
+import { type ConnectionDetails, ConnectionForm } from './ConnectionForm'
 import { SchemaViewer } from './SchemaViewer'
 
 interface DatabaseStats {

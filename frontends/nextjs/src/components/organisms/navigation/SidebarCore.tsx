@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Drawer, useMediaQuery,useTheme } from '@mui/material'
+import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
 // Sidebar container

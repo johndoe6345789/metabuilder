@@ -1,6 +1,6 @@
 'use client'
 
-import { ChatCircle,User } from '@phosphor-icons/react'
+import { ChatCircle, User } from '@phosphor-icons/react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import type { User as UserType } from '@/lib/level-types'

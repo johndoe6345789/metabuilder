@@ -5,7 +5,7 @@ import { Database } from '@/lib/database'
 import type { ErrorLog } from '@/lib/db/error-logs'
 import type { User } from '@/lib/level-types'
 
-import { calculateStats, emptyStats, type ErrorLogStats,filterLogs } from './errorLogUtils'
+import { calculateStats, emptyStats, type ErrorLogStats, filterLogs } from './errorLogUtils'
 
 export interface UseErrorLogsDataParams {
   user?: User

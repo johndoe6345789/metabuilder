@@ -120,4 +120,4 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionContentProps>(
 )
 AccordionContent.displayName = 'AccordionContent'
 
-export { Accordion, AccordionContent,AccordionItem, AccordionTrigger }
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger }

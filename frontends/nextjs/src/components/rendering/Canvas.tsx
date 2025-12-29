@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import type { ComponentDefinition,ComponentInstance } from '@/lib/builder-types'
+import type { ComponentDefinition, ComponentInstance } from '@/lib/builder-types'
 
 import { RenderComponent } from './RenderComponent'
 

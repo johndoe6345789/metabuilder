@@ -1,5 +1,5 @@
 import { Envelope, FloppyDisk, PaperPlaneTilt } from '@phosphor-icons/react'
-import { useEffect,useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'

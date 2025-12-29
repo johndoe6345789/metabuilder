@@ -20,5 +20,5 @@ const PreviousIcon = () => <ChevronLeftIcon fontSize="small" />
 
 const NextIcon = () => <ChevronRightIcon fontSize="small" />
 
-export { NextIcon,paginationSizeMap, PreviousIcon }
+export { NextIcon, paginationSizeMap, PreviousIcon }
 export type { PaginationLinkProps }

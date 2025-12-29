@@ -5,10 +5,10 @@
  * API compatible with @github/spark/hooks
  */
 
-import { useCallback, useEffect, useRef,useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { notifySubscribers,subscribe } from './kv-utils/kv-store'
-import { deleteStoredValue,readStoredValue, writeStoredValue } from './kv-utils/storage-operations'
+import { notifySubscribers, subscribe } from './kv-utils/kv-store'
+import { deleteStoredValue, readStoredValue, writeStoredValue } from './kv-utils/storage-operations'
 
 let storageListenerRegistered = false
 

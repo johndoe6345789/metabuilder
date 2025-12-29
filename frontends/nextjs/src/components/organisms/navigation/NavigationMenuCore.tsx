@@ -73,4 +73,4 @@ const NavigationMenuItem = forwardRef<HTMLLIElement, NavigationMenuItemProps>(
 )
 NavigationMenuItem.displayName = 'NavigationMenuItem'
 
-export { NavigationMenuCore, NavigationMenuItem,NavigationMenuList }
+export { NavigationMenuCore, NavigationMenuItem, NavigationMenuList }

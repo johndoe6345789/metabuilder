@@ -1,5 +1,5 @@
 import { Key } from '@phosphor-icons/react'
-import { useEffect,useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { GodCredentialsForm } from '@/components/auth/god-credentials/Form'

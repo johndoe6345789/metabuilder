@@ -3,7 +3,7 @@
  * Following parameterized test pattern per project conventions
  */
 
-import { describe, expect,it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import type { UserRole } from '../types/level-types'
 import {

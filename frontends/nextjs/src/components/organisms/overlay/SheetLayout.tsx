@@ -1,7 +1,7 @@
 'use client'
 
 import CloseIcon from '@mui/icons-material/Close'
-import { Box, IconButton,Typography } from '@mui/material'
+import { Box, IconButton, Typography } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
 // SheetHeader

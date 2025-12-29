@@ -1,6 +1,6 @@
 'use client'
 
-import { Box,TextareaAutosize, TextareaAutosizeProps } from '@mui/material'
+import { Box, TextareaAutosize, TextareaAutosizeProps } from '@mui/material'
 import { forwardRef } from 'react'
 
 export interface TextAreaProps extends Omit<TextareaAutosizeProps, 'ref'> {

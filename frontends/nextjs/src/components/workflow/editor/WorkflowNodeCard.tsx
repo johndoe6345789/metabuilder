@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui'
-import type { LuaScript,WorkflowNode } from '@/lib/level-types'
+import type { LuaScript, WorkflowNode } from '@/lib/level-types'
 
 import { NODE_TYPE_COLORS, NODE_TYPE_ICONS, NODE_TYPE_OPTIONS } from './constants'
 

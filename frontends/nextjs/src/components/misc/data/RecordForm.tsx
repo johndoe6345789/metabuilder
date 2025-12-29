@@ -1,11 +1,11 @@
 import { FloppyDisk, X } from '@phosphor-icons/react'
-import { useEffect,useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { Dialog, DialogContent, DialogFooter,DialogHeader, DialogTitle } from '@/components/ui'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
 import type { ModelSchema, SchemaConfig } from '@/lib/schema-types'
-import { createEmptyRecord,validateRecord } from '@/lib/schema-utils'
+import { createEmptyRecord, validateRecord } from '@/lib/schema-utils'
 
 import { FieldRenderer } from './FieldRenderer'
 

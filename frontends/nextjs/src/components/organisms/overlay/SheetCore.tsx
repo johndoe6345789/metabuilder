@@ -100,4 +100,4 @@ const SheetContent = forwardRef<HTMLDivElement, SheetContentProps>(
 )
 SheetContent.displayName = 'SheetContent'
 
-export { SheetContent,SheetCore, SheetTrigger }
+export { SheetContent, SheetCore, SheetTrigger }

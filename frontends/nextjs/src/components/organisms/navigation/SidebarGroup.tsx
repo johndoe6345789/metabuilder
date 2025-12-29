@@ -92,4 +92,4 @@ const SidebarGroupContent = forwardRef<HTMLDivElement, { children: ReactNode; cl
 )
 SidebarGroupContent.displayName = 'SidebarGroupContent'
 
-export { SidebarGroup, SidebarGroupContent,SidebarGroupLabel }
+export { SidebarGroup, SidebarGroupContent, SidebarGroupLabel }

@@ -151,11 +151,7 @@ export async function loadLuaUIPackage(packagePath: string): Promise<LuaUIPackag
 /**
  * Create a JavaScript wrapper function that calls a Lua function
  */
-function createLuaFunctionWrapper(
-  originalEngine: any,
-  luaSource: string,
-  functionName: string
-): Function {
+function createLuaFunctionWrapper(luaSource: string, functionName: string): Function {
   return (...args: any[]) => {
     // Create a new Lua engine for this call
     const engine = createLuaEngine()

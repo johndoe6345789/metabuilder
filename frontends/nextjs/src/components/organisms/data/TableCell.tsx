@@ -98,4 +98,4 @@ const TableCaption = forwardRef<
 })
 TableCaption.displayName = 'TableCaption'
 
-export { TableCaption,TableCell, TableHead, TableRow }
+export { TableCaption, TableCell, TableHead, TableRow }

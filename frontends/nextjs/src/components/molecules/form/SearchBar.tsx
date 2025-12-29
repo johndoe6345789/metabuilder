@@ -3,7 +3,7 @@
 import ClearIcon from '@mui/icons-material/Clear'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import SearchIcon from '@mui/icons-material/Search'
-import { Box, IconButton,InputAdornment, TextField } from '@mui/material'
+import { Box, IconButton, InputAdornment, TextField } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
 export interface SearchBarProps {

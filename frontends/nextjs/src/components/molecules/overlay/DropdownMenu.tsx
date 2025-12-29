@@ -13,7 +13,7 @@ import {
   MenuProps,
   Typography,
 } from '@mui/material'
-import { forwardRef, MouseEvent as ReactMouseEvent,ReactNode } from 'react'
+import { forwardRef, MouseEvent as ReactMouseEvent, ReactNode } from 'react'
 
 // DropdownMenu (uses MUI Menu under the hood)
 export interface DropdownMenuProps {

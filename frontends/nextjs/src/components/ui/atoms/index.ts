@@ -1,16 +1,16 @@
 // Atoms - Basic building blocks of the UI
 // These are the smallest, most fundamental components
 
-export { Button, type ButtonProps, type ButtonSize,type ButtonVariant } from './controls/Button'
+export { Button, type ButtonProps, type ButtonSize, type ButtonVariant } from './controls/Button'
 export { Checkbox, type CheckboxProps } from './controls/Checkbox'
 export { Slider, type SliderProps } from './controls/Slider'
 export { Switch, type SwitchProps } from './controls/Switch'
-export { Toggle, type ToggleProps, type ToggleSize,type ToggleVariant } from './controls/Toggle'
+export { Toggle, type ToggleProps, type ToggleSize, type ToggleVariant } from './controls/Toggle'
 export { Avatar, AvatarFallback, AvatarImage, type AvatarProps } from './display/Avatar'
 export { Badge, type BadgeProps, type BadgeVariant } from './display/Badge'
 export { Label, type LabelProps } from './display/Label'
 export { Progress, type ProgressProps } from './feedback/Progress'
-export { ScrollArea, type ScrollAreaProps,ScrollBar } from './feedback/ScrollArea'
+export { ScrollArea, type ScrollAreaProps, ScrollBar } from './feedback/ScrollArea'
 export { Separator, type SeparatorProps } from './feedback/Separator'
 export { Skeleton, type SkeletonProps } from './feedback/Skeleton'
 export { Input, type InputProps } from './inputs/Input'

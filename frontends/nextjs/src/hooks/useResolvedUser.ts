@@ -1,1 +1,1 @@
-export { type ResolvedUserState,useResolvedUser } from './data/useResolvedUser'
+export { type ResolvedUserState, useResolvedUser } from './data/useResolvedUser'

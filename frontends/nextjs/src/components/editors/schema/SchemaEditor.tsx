@@ -1,8 +1,8 @@
 import Editor from '@monaco-editor/react'
-import { FloppyDisk, Warning,X } from '@phosphor-icons/react'
+import { FloppyDisk, Warning, X } from '@phosphor-icons/react'
 import { useState } from 'react'
 
-import { Dialog, DialogContent, DialogFooter,DialogHeader, DialogTitle } from '@/components/ui'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Alert, AlertDescription } from '@/components/ui'
 import type { SchemaConfig } from '@/lib/schema-types'

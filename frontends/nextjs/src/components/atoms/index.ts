@@ -2,14 +2,14 @@
 // These are the smallest, indivisible UI components that form the foundation
 
 // Controls
-export { Button, type ButtonProps, type ButtonSize,type ButtonVariant } from './controls/Button'
+export { Button, type ButtonProps, type ButtonSize, type ButtonVariant } from './controls/Button'
 export { Checkbox, type CheckboxProps } from './controls/Checkbox'
 export { Radio, type RadioProps } from './controls/Radio'
 export { Switch, type SwitchProps } from './controls/Switch'
 
 // Inputs
 export { Input, type InputProps } from './inputs/Input'
-export { Select, type SelectOption,type SelectProps } from './inputs/Select'
+export { Select, type SelectOption, type SelectProps } from './inputs/Select'
 export { TextArea, type TextAreaProps } from './inputs/TextArea'
 
 // Display

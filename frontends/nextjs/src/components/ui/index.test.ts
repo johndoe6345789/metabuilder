@@ -1,4 +1,4 @@
-import { describe, expect,it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { Button, Card, Dialog, Select, Table, Tabs } from '@/components/ui'
 

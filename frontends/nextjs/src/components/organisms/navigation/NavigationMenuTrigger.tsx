@@ -71,4 +71,4 @@ const NavigationMenuContent = forwardRef<HTMLDivElement, NavigationMenuContentPr
 )
 NavigationMenuContent.displayName = 'NavigationMenuContent'
 
-export { NavigationMenuContent,NavigationMenuTrigger }
+export { NavigationMenuContent, NavigationMenuTrigger }

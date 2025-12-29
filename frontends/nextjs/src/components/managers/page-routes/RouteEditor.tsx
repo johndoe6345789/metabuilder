@@ -9,7 +9,7 @@ import {
   SelectValue,
   Switch,
 } from '@/components/ui'
-import type { AppLevel,PageConfig, UserRole } from '@/lib/level-types'
+import type { AppLevel, PageConfig, UserRole } from '@/lib/level-types'
 
 export type RouteFormData = Partial<PageConfig>
 

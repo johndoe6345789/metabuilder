@@ -68,4 +68,4 @@ const TableFooter = forwardRef<
 })
 TableFooter.displayName = 'TableFooter'
 
-export { TableBody, TableCore, TableFooter,TableHeader }
+export { TableBody, TableCore, TableFooter, TableHeader }

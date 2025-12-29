@@ -1,5 +1,5 @@
 import { useKV } from '@github/spark/hooks'
-import { ArrowCounterClockwise,FloppyDisk, Moon, Palette, Sun } from '@phosphor-icons/react'
+import { ArrowCounterClockwise, FloppyDisk, Moon, Palette, Sun } from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 

@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ScrollArea } from '@/components/ui'
 import { Separator } from '@/components/ui'
 import { componentCatalog } from '@/lib/components/component-catalog'
-import { type ComponentNode,Database } from '@/lib/database'
+import { type ComponentNode, Database } from '@/lib/database'
 
 import { ComponentConfigDialog } from './ComponentConfigDialog'
 import { selectRootNodes } from './ComponentHierarchyEditor/selectors'

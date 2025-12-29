@@ -94,4 +94,4 @@ const CommandLoading = ({ children }: { children?: ReactNode }) => {
 }
 CommandLoading.displayName = 'CommandLoading'
 
-export { CommandItem, CommandLoading,CommandSeparator, CommandShortcut }
+export { CommandItem, CommandLoading, CommandSeparator, CommandShortcut }

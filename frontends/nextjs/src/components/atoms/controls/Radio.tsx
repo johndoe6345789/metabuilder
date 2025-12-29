@@ -1,6 +1,6 @@
 'use client'
 
-import { FormControlLabel,Radio as MuiRadio, RadioProps as MuiRadioProps } from '@mui/material'
+import { FormControlLabel, Radio as MuiRadio, RadioProps as MuiRadioProps } from '@mui/material'
 import { forwardRef } from 'react'
 
 export interface RadioProps extends MuiRadioProps {

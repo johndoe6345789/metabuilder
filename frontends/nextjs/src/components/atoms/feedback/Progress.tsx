@@ -54,4 +54,4 @@ const Progress = forwardRef<HTMLDivElement, ProgressProps>(
 Progress.displayName = 'Progress'
 
 // Also export CircularProgress for convenience
-export { CircularProgress,Progress }
+export { CircularProgress, Progress }

@@ -12,4 +12,4 @@ export {
   navigationMenuTriggerStyle,
   NavigationMenuViewport,
 } from './NavigationMenuLink'
-export { NavigationMenuContent,NavigationMenuTrigger } from './NavigationMenuTrigger'
+export { NavigationMenuContent, NavigationMenuTrigger } from './NavigationMenuTrigger'

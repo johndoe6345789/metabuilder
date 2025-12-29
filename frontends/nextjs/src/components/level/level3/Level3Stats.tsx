@@ -1,7 +1,7 @@
 import { ChatCircle, Users } from '@phosphor-icons/react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
-import type { Comment,User } from '@/lib/level-types'
+import type { Comment, User } from '@/lib/level-types'
 
 interface Level3StatsProps {
   users: User[]

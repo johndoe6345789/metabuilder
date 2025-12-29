@@ -1,7 +1,7 @@
-import { fireEvent,render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { Tabs, TabsContent,TabsList, TabsTrigger } from '@/components/ui'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 
 describe('Tabs', () => {
   it('switches active tab and hides inactive panels', () => {

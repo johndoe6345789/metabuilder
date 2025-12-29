@@ -131,4 +131,4 @@ export {
   SidebarSeparator,
   SidebarToggle,
 }
-export type { SidebarHeaderProps,SidebarItem, SidebarProps }
+export type { SidebarHeaderProps, SidebarItem, SidebarProps }

@@ -1,4 +1,4 @@
-import { describe, expect,it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import type { UserRole } from '../types/level-types'
 import { getRoleLevel } from './get-role-level'

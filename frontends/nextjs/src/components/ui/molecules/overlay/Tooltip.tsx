@@ -106,4 +106,4 @@ const SimpleTooltip = ({ title, children, placement = 'top' }: SimpleTooltipProp
   )
 }
 
-export { SimpleTooltip,Tooltip, TooltipContent, TooltipProvider, TooltipTrigger }
+export { SimpleTooltip, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger }

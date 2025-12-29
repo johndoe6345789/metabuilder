@@ -1,6 +1,6 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box, Button, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
-import { ElementType, forwardRef, type MouseEvent,ReactNode } from 'react'
+import { ElementType, forwardRef, type MouseEvent, ReactNode } from 'react'
 
 interface NavigationMenuProps {
   children: ReactNode

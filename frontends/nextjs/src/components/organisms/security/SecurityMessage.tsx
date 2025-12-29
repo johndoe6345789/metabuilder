@@ -1,4 +1,4 @@
-import { CheckCircle,Info, ShieldWarning, Warning } from '@phosphor-icons/react'
+import { CheckCircle, Info, ShieldWarning, Warning } from '@phosphor-icons/react'
 
 import { Alert, AlertDescription } from '@/components/ui'
 import { Badge } from '@/components/ui'

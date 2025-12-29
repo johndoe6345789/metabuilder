@@ -12,11 +12,11 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { type ChangeEvent,useMemo, useState } from 'react'
+import { type ChangeEvent, useMemo, useState } from 'react'
 
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
-import { type CodegenRequest,useCodegenData } from './hooks/useCodegenData'
+import { type CodegenRequest, useCodegenData } from './hooks/useCodegenData'
 
 const runtimeOptions = [
   { value: 'web', label: 'Next.js web' },

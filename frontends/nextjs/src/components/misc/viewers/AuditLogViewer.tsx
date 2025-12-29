@@ -1,5 +1,5 @@
 import { ChartLine, Clock, ShieldCheck, User, Warning } from '@phosphor-icons/react'
-import { useEffect,useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
@@ -7,7 +7,7 @@ import { Button } from '@/components/ui'
 import { Badge } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
 import type { User as UserType } from '@/lib/level-types'
-import { AuditLog,SecureDatabase, SecurityContext } from '@/lib/secure-db-layer'
+import { AuditLog, SecureDatabase, SecurityContext } from '@/lib/secure-db-layer'
 
 interface AuditLogViewerProps {
   user: UserType

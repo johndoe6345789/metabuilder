@@ -73,4 +73,4 @@ const SidebarMenuButton = forwardRef<HTMLDivElement, SidebarMenuItemProps>((prop
 ))
 SidebarMenuButton.displayName = 'SidebarMenuButton'
 
-export { SidebarMenu, SidebarMenuButton,SidebarMenuItem }
+export { SidebarMenu, SidebarMenuButton, SidebarMenuItem }

@@ -1,6 +1,6 @@
 'use client'
 
-import { Box,Divider, MenuItem } from '@mui/material'
+import { Box, Divider, MenuItem } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
 interface DropdownMenuProps {

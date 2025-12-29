@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react'
-import { FloppyDisk, ShieldCheck, Warning,X } from '@phosphor-icons/react'
+import { FloppyDisk, ShieldCheck, Warning, X } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 

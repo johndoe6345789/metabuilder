@@ -54,4 +54,4 @@ SidebarRail.displayName = 'SidebarRail'
 const SidebarProvider = ({ children }: { children: ReactNode }) => <>{children}</>
 SidebarProvider.displayName = 'SidebarProvider'
 
-export { SidebarProvider,SidebarRail, SidebarSeparator, SidebarTrigger }
+export { SidebarProvider, SidebarRail, SidebarSeparator, SidebarTrigger }

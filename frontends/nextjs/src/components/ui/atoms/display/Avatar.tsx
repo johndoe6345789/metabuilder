@@ -44,4 +44,4 @@ const AvatarFallback = ({ children }: AvatarFallbackProps) => {
   return <>{children}</>
 }
 
-export { Avatar, AvatarFallback,AvatarImage }
+export { Avatar, AvatarFallback, AvatarImage }

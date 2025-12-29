@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
-import type { AppLevel,PageConfig } from '@/lib/level-types'
+import type { AppLevel, PageConfig } from '@/lib/level-types'
 
 interface RoutesTableProps {
   pages: PageConfig[]

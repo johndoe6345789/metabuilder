@@ -1,10 +1,10 @@
 import { useKV } from '@github/spark/hooks'
-import { Eye,FloppyDisk, SignOut } from '@phosphor-icons/react'
+import { Eye, FloppyDisk, SignOut } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui'
-import type { BuilderState,ComponentDefinition, ComponentInstance } from '@/lib/builder-types'
+import type { BuilderState, ComponentDefinition, ComponentInstance } from '@/lib/builder-types'
 
 import { Canvas } from './Canvas'
 import { CodeEditor } from './CodeEditor'

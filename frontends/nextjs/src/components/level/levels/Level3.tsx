@@ -1,13 +1,13 @@
 'use client'
 
-import { ChatCircle,Users } from '@phosphor-icons/react'
+import { ChatCircle, Users } from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { deleteComment,getComments } from '@/lib/db/comments'
+import { deleteComment, getComments } from '@/lib/db/comments'
 import { deleteUser, getUsers, updateUser } from '@/lib/db/users'
-import type { Comment,User as UserType } from '@/lib/level-types'
+import type { Comment, User as UserType } from '@/lib/level-types'
 import type { ModelSchema } from '@/lib/schema-types'
 
 import { AppHeader } from '../../shared/AppHeader'

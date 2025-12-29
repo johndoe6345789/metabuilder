@@ -1,6 +1,6 @@
 import { SignIn } from '@phosphor-icons/react'
 
-import { Alert, AlertDescription,Button, Input, Label } from '@/components/ui'
+import { Alert, AlertDescription, Button, Input, Label } from '@/components/ui'
 
 export interface LoginFormProps {
   username: string

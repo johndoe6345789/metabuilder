@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription,CardHeader, CardTitle } from '@/components/ui'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Button } from '@/components/ui'
 
 export function ContactSection() {

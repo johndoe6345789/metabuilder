@@ -1,4 +1,4 @@
-import { House,SignOut } from '@phosphor-icons/react'
+import { House, SignOut } from '@phosphor-icons/react'
 
 import { Button } from '@/components/ui'
 import { Avatar, AvatarFallback } from '@/components/ui'

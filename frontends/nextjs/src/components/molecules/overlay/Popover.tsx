@@ -1,6 +1,6 @@
 'use client'
 
-import { Box,Popover as MuiPopover, PopoverProps as MuiPopoverProps } from '@mui/material'
+import { Box, Popover as MuiPopover, PopoverProps as MuiPopoverProps } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
 // Popover container
@@ -95,4 +95,4 @@ const PopoverAnchor = forwardRef<HTMLDivElement, { children: ReactNode; classNam
 )
 PopoverAnchor.displayName = 'PopoverAnchor'
 
-export { Popover, PopoverAnchor,PopoverContent, PopoverTrigger }
+export { Popover, PopoverAnchor, PopoverContent, PopoverTrigger }

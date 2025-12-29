@@ -1,5 +1,5 @@
 import { House, List, SignOut, X } from '@phosphor-icons/react'
-import { useEffect,useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { RenderComponent } from '@/components/RenderComponent'
@@ -7,7 +7,7 @@ import { Button } from '@/components/ui'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import type { User } from '@/lib/level-types'
-import { getPageRenderer, type PageContext,type PageDefinition } from '@/lib/page-renderer'
+import { getPageRenderer, type PageContext, type PageDefinition } from '@/lib/page-renderer'
 
 import { AppFooter } from './shared/AppFooter'
 

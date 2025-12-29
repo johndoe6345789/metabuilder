@@ -3,7 +3,7 @@
 import { IconButton } from '@mui/material'
 import { forwardRef } from 'react'
 
-import { type PaginationLinkProps,paginationSizeMap } from './paginationUtils'
+import { type PaginationLinkProps, paginationSizeMap } from './paginationUtils'
 
 const PaginationLink = forwardRef<HTMLButtonElement, PaginationLinkProps>(
   ({ children, onClick, isActive = false, disabled = false, size = 'medium', ...props }, ref) => {

@@ -1,5 +1,5 @@
 import { useKV } from '@github/spark/hooks'
-import { useEffect,useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import type { User } from '@/lib/level-types'
 

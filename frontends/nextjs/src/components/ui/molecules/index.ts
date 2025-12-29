@@ -1,7 +1,7 @@
 // Molecules - Combinations of atoms that form functional UI groups
 // These are relatively simple groups of UI elements functioning together as a unit
 
-export { Accordion, AccordionContent,AccordionItem, AccordionTrigger } from './display/Accordion'
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './display/Accordion'
 export {
   Alert,
   AlertDescription,
@@ -29,7 +29,7 @@ export {
 export { NavGroup, type NavGroupProps } from './navigation/NavGroup'
 export { NavItem, type NavItemProps } from './navigation/NavItem'
 export { NavLink, type NavLinkProps } from './navigation/NavLink'
-export { Tabs, TabsContent,TabsList, TabsTrigger } from './navigation/Tabs'
+export { Tabs, TabsContent, TabsList, TabsTrigger } from './navigation/Tabs'
 export {
   Dialog,
   DialogClose,
@@ -61,7 +61,7 @@ export {
   DropdownMenuTrigger,
 } from './overlay/DropdownMenu'
 export { MenuItem, type MenuItemProps } from './overlay/DropdownMenu/MenuItem'
-export { Popover, PopoverAnchor,PopoverContent, PopoverTrigger } from './overlay/Popover'
+export { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from './overlay/Popover'
 export {
   SimpleTooltip,
   Tooltip,

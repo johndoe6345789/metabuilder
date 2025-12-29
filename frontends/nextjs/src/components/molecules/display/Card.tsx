@@ -112,4 +112,4 @@ const CardAction = forwardRef<HTMLDivElement, { children: ReactNode; className?:
 )
 CardAction.displayName = 'CardAction'
 
-export { Card, CardAction,CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
+export { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }

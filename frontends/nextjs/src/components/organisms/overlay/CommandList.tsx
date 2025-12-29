@@ -81,4 +81,4 @@ const CommandGroup = forwardRef<HTMLDivElement, CommandGroupProps>(
 )
 CommandGroup.displayName = 'CommandGroup'
 
-export { CommandEmpty, CommandGroup,CommandList }
+export { CommandEmpty, CommandGroup, CommandList }

@@ -4,7 +4,7 @@ import { CssBaseline, ThemeProvider as MuiThemeProvider } from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
 
-import { darkTheme,lightTheme } from '@/theme/mui-theme'
+import { darkTheme, lightTheme } from '@/theme/mui-theme'
 
 import { ThemeContext, type ThemeMode } from './theme-context'
 

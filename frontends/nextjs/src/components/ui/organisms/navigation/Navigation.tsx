@@ -1,6 +1,6 @@
 'use client'
 
-import { AppBar, Slide,Toolbar, useScrollTrigger } from '@mui/material'
+import { AppBar, Slide, Toolbar, useScrollTrigger } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
 import {

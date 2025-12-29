@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
 import { Tabs } from '@/components/ui'
-import { getSnippetsByCategory, type LuaSnippet,searchSnippets } from '@/lib/lua-snippets'
+import { getSnippetsByCategory, type LuaSnippet, searchSnippets } from '@/lib/lua-snippets'
 
 import { SearchBar } from './LuaSnippetLibrary/SearchBar'
 import { SnippetDialog } from './LuaSnippetLibrary/SnippetDialog'

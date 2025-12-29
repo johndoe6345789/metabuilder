@@ -1,4 +1,4 @@
-import { FloppyDisk,X } from '@phosphor-icons/react'
+import { FloppyDisk, X } from '@phosphor-icons/react'
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui'
 import { Badge } from '@/components/ui'

@@ -1,6 +1,6 @@
 'use client'
 
-import { Badge, Box,ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { Badge, Box, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
 export interface NavItemProps {

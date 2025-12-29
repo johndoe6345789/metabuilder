@@ -1,4 +1,4 @@
-import { List, ShieldCheck,User, X } from '@phosphor-icons/react'
+import { List, ShieldCheck, User, X } from '@phosphor-icons/react'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui'
