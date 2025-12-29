@@ -8,10 +8,10 @@ import type { WorkflowState } from '../workflow-state'
  */
 export async function executeActionNode(
   node: WorkflowNode,
-  data: any,
+  data: unknown,
   _context: WorkflowExecutionContext,
   state: WorkflowState
-): Promise<{ success: boolean; output?: any; error?: string }> {
+): Promise<{ success: boolean; output?: unknown; error?: string }> {
   logToWorkflow(state, `Action: ${node.config.action || 'default'}`)
   return { success: true, output: data }
 }

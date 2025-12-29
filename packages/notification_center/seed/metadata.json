@@ -3,6 +3,7 @@
   "name": "Notification Center",
   "version": "1.0.0",
   "description": "Notification center components",
+  "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],

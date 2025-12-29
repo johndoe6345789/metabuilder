@@ -3,7 +3,7 @@
  */
 export interface WorkflowExecutionResult {
   success: boolean
-  outputs: Record<string, any>
+  outputs: Record<string, unknown>
   logs: string[]
   error?: string
   securityWarnings?: string[]

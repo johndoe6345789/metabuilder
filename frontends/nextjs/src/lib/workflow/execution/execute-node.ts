@@ -68,10 +68,10 @@ async function sleep(delayMs: number) {
  */
 async function executeNodeOnce(
   node: WorkflowNode,
-  data: any,
+  data: unknown,
   context: WorkflowExecutionContext,
   state: WorkflowState
-): Promise<{ success: boolean; output?: any; error?: string }> {
+): Promise<{ success: boolean; output?: unknown; error?: string }> {
   try {
     switch (node.type) {
       case 'trigger':
@@ -105,10 +105,10 @@ async function executeNodeOnce(
 
 export async function executeNode(
   node: WorkflowNode,
-  data: any,
+  data: unknown,
   context: WorkflowExecutionContext,
   state: WorkflowState
-): Promise<{ success: boolean; output?: any; error?: string }> {
+): Promise<{ success: boolean; output?: unknown; error?: string }> {
   const retryConfig = normalizeRetryConfig(node.config?.retry)
   let attempt = 0
   let lastError: string | undefined

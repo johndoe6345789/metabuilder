@@ -13,7 +13,7 @@ export async function executeWorkflow(
   context: WorkflowExecutionContext
 ): Promise<WorkflowExecutionResult> {
   const state = createWorkflowState()
-  const outputs: Record<string, any> = {}
+  const outputs: Record<string, unknown> = {}
   let currentData = context.data
 
   try {

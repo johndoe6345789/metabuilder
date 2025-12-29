@@ -3,6 +3,7 @@
   "name": "User Manager",
   "version": "1.0.0",
   "description": "User management components and actions",
+  "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "managers",
   "dependencies": ["ui_permissions", "data_table"],

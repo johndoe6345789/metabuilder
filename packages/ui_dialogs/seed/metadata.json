@@ -3,6 +3,7 @@
   "name": "UI Dialogs",
   "version": "1.0.0",
   "description": "Confirmation, alert, and form dialogs",
+  "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],

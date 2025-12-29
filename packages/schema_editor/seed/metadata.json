@@ -3,6 +3,7 @@
   "name": "Schema Editor",
   "version": "1.0.0",
   "description": "Database schema editor components",
+  "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "editors",
   "dependencies": ["form_builder"],

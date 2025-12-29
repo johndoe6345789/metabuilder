@@ -3,6 +3,7 @@
   "name": "Social Hub",
   "version": "1.0.0",
   "description": "Modern social feed with creator tools and live rooms",
+  "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "social",
   "dependencies": [],

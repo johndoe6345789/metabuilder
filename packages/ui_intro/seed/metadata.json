@@ -3,6 +3,7 @@
   "name": "Intro Section",
   "version": "1.0.0",
   "description": "Page intro with eyebrow, title, and description",
+  "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],

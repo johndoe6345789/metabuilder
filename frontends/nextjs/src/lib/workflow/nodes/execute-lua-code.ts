@@ -9,17 +9,17 @@ import type { WorkflowState } from '../workflow-state'
  */
 export async function executeLuaCode(
   code: string,
-  data: any,
+  data: unknown,
   context: WorkflowExecutionContext,
   state: WorkflowState
-): Promise<{ success: boolean; output?: any; error?: string }> {
+): Promise<{ success: boolean; output?: unknown; error?: string }> {
   const engine = createSandboxedLuaEngine()
 
   try {
     const luaContext = {
       data,
       user: context.user,
-      log: (...args: any[]) => logToWorkflow(state, ...args),
+      log: (...args: unknown[]) => logToWorkflow(state, ...args),
     }
 
     const result: SandboxedLuaResult = await engine.executeWithSandbox(code, luaContext)

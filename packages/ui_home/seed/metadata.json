@@ -3,6 +3,7 @@
   "name": "Home Page",
   "version": "1.0.0",
   "description": "Level 1 home page with server status",
+  "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": ["ui_permissions"],

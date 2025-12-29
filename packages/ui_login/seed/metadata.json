@@ -3,6 +3,7 @@
   "name": "Login Page",
   "version": "1.0.0",
   "description": "Login and registration page with form validation",
+  "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": ["ui_permissions"],

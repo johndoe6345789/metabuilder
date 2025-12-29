@@ -3,6 +3,7 @@
   "name": "Stream Cast",
   "version": "1.0.0",
   "description": "Live streaming control room with schedules, scenes, and audience pulse.",
+  "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "media",
   "dependencies": [],

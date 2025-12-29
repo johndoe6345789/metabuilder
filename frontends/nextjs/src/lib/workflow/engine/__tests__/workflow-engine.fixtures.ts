@@ -5,7 +5,7 @@ export function createNode(
   id: string,
   type: WorkflowNode['type'],
   label: string,
-  config: Record<string, any> = {}
+  config: Record<string, unknown> = {}
 ): WorkflowNode {
   return { id, type, label, config, position: { x: 0, y: 0 } }
 }
@@ -15,7 +15,7 @@ export function createWorkflow(id: string, name: string, nodes: WorkflowNode[]):
 }
 
 export function createContext(
-  data: any = {},
+  data: unknown = {},
   overrides: Partial<WorkflowExecutionContext> = {}
 ): WorkflowExecutionContext {
   return { data, ...overrides }

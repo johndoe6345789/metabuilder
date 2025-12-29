@@ -8,10 +8,10 @@ import type { WorkflowState } from '../workflow-state'
  */
 export async function executeTransformNode(
   node: WorkflowNode,
-  data: any,
+  data: unknown,
   context: WorkflowExecutionContext,
   state: WorkflowState
-): Promise<{ success: boolean; output?: any; error?: string }> {
+): Promise<{ success: boolean; output?: unknown; error?: string }> {
   const transform = node.config.transform || 'data'
 
   try {

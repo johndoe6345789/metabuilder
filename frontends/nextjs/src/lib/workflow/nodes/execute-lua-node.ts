@@ -8,10 +8,10 @@ import type { WorkflowState } from './workflow-state'
  */
 export async function executeLuaNode(
   node: WorkflowNode,
-  data: any,
+  data: unknown,
   context: WorkflowExecutionContext,
   state: WorkflowState
-): Promise<{ success: boolean; output?: any; error?: string }> {
+): Promise<{ success: boolean; output?: unknown; error?: string }> {
   const scriptId = node.config.scriptId
 
   if (!scriptId || !context.scripts) {
