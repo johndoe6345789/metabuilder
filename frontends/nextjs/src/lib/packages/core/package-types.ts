@@ -24,16 +24,20 @@ export interface PackageManifest {
 }
 
 export interface PackageContent {
-  schemas: any[]
-  pages: any[]
-  workflows: any[]
-  luaScripts: any[]
-  componentHierarchy: Record<string, any>
-  componentConfigs: Record<string, any>
-  cssClasses?: any[]
-  dropdownConfigs?: any[]
-  seedData?: Record<string, any[]>
+  schemas: unknown[]
+  pages: unknown[]
+  workflows: unknown[]
+  luaScripts: unknown[]
+  componentHierarchy: Record<string, unknown>
+  componentConfigs: Record<string, unknown>
+  cssClasses?: unknown[]
+  dropdownConfigs?: unknown[]
+  seedData?: PackageSeedData
 }
+
+export type PackageSeedRecord = Record<string, unknown>
+
+export type PackageSeedData = Record<string, PackageSeedRecord[]>
 
 export interface LuaScriptFile {
   name: string
