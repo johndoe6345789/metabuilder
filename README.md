@@ -80,6 +80,29 @@ MetaBuilder is a **data-driven, multi-tenant platform** with these core features
 
 ## Refactor Plan
 
+### 🚀 Auto Code Extractor 3000™ - Automated File Splitting
+
+**NEW: One-command solution to split large files (>150 LOC) into modular structure!**
+
+We have 62 files exceeding 150 lines. The Auto Code Extractor 3000™ automatically extracts functions into individual files following the lambda-per-file pattern.
+
+#### Quick Commands
+
+```bash
+# Preview what will be extracted
+npm run extract:preview
+
+# Extract 5 files
+npm run extract:quick
+
+# Extract all high-priority files (automated)
+npm run extract:auto
+```
+
+**📖 [Quick Start Guide](./tools/refactoring/QUICK_START.md)** | **📚 [Full Documentation](./tools/refactoring/AUTO_CODE_EXTRACTOR_3000.md)**
+
+---
+
 ### Next.js to Lua Conversion TODO
 
 #### Table of Contents

@@ -4,12 +4,45 @@ Automated tools for refactoring large TypeScript and C++ files into modular lamb
 
 **Philosophy:** Errors are good! They're not failures - they're a TODO list telling us exactly what needs attention. 🎯
 
+## 🚀 NEW: Auto Code Extractor 3000™
+
+**The fastest way to refactor your codebase!**
+
+One command to rule them all - fully automated code extraction with smart defaults and safety features.
+
+### Quick Start (30 seconds)
+
+```bash
+# Preview what will be extracted (100% safe)
+npm run extract:preview
+
+# Extract 5 high-priority files
+npm run extract:quick
+
+# Fully automated - extract all high-priority files
+npm run extract:auto
+```
+
+**📖 [Quick Start Guide](./QUICK_START.md)** | **📚 [Full Documentation](./AUTO_CODE_EXTRACTOR_3000.md)**
+
+### Why Use Auto Code Extractor 3000™?
+
+✅ **One Command** - No need to run multiple tools  
+✅ **Fully Automated** - Scan, extract, lint, test - all in one  
+✅ **Safe** - Dry-run mode, confirmation prompts, git backup  
+✅ **Smart** - Priority-based processing, batch handling  
+✅ **Fast** - Process 10 files in ~30 seconds  
+
+---
+
 ## Language Support
 
 - ✅ **TypeScript** (.ts, .tsx)
 - ✅ **C++** (.cpp, .hpp, .cc, .h, .cxx)
 
-## Quick Start
+## Manual Tools (Advanced)
+
+For fine-grained control, use these individual tools:
 
 ### 1. Generate Progress Report
 
