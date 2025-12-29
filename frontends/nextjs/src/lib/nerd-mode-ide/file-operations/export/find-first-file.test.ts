@@ -1,4 +1,4 @@
-import { describe, expect,it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { findFirstFile } from './find-first-file'
 import type { FileNode } from './types'

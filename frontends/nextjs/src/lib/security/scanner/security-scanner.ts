@@ -10,7 +10,7 @@
  */
 
 // Types
-export type { SecurityIssue, SecurityPattern,SecurityScanResult } from './functions/types'
+export type { SecurityIssue, SecurityPattern, SecurityScanResult } from './functions/types'
 
 // Import individual lambda functions
 import { getSeverityColor } from '../functions/helpers/get-severity-color'
@@ -45,4 +45,4 @@ export const securityScanner = new SecurityScanner()
 export { getSeverityColor, getSeverityIcon }
 
 // Re-export individual functions for direct use
-export { sanitizeInput,scanForVulnerabilities, scanHTML, scanJavaScript, scanJSON, scanLua }
+export { sanitizeInput, scanForVulnerabilities, scanHTML, scanJavaScript, scanJSON, scanLua }

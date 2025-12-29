@@ -1,4 +1,4 @@
-import { describe, expect,it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { enforceMaxMemory } from './enforce-max-memory'
 import type { SandboxedLuaEngineState } from './types'

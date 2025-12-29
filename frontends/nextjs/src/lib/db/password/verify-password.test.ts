@@ -1,4 +1,4 @@
-import { describe, expect,it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { hashPassword } from './hash-password'
 import { verifyPassword } from './verify-password'

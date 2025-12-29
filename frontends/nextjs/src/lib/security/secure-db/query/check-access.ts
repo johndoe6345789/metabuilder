@@ -1,5 +1,5 @@
 import { ACCESS_RULES } from './access-rules'
-import type { OperationType, ResourceType,SecurityContext } from './types'
+import type { OperationType, ResourceType, SecurityContext } from './types'
 
 /**
  * Check if user has access to perform operation on resource

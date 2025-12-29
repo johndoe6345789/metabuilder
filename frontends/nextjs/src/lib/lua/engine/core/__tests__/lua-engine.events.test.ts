@@ -1,6 +1,6 @@
-import { afterEach,beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-import { createLuaEngine,LuaEngine } from '../lua-engine'
+import { createLuaEngine, LuaEngine } from '../lua-engine'
 
 describe('lua-engine events', () => {
   let engine: LuaEngine

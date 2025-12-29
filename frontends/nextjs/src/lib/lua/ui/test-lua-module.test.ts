@@ -1,4 +1,4 @@
-import { describe, expect,it } from 'bun:test'
+import { describe, expect, it } from 'bun:test'
 
 import { createLuaEngine } from '@/lib/lua/engine/core/create-lua-engine'
 import { executeLuaCode } from '@/lib/lua/functions/execution/execute-lua-code'

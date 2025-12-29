@@ -1,7 +1,7 @@
 'use client'
 
 // Component Registry - Maps Lua component types to React components
-import { Box, Button, Stack, TextField,Typography } from '@mui/material'
+import { Box, Button, Stack, TextField, Typography } from '@mui/material'
 import React from 'react'
 
 import type { LuaUIComponent } from './types/lua-ui-package'

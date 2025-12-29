@@ -4,7 +4,7 @@
  */
 
 import { LUA_PATTERNS } from '../../patterns/lua-patterns'
-import type { SecurityIssue,SecurityScanResult } from '../../types'
+import type { SecurityIssue, SecurityScanResult } from '../../types'
 import { calculateOverallSeverity } from '../../utils/calculate-severity'
 import { getLineNumber } from '../../utils/get-line-number'
 

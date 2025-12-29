@@ -1,4 +1,4 @@
-import { beforeEach,describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mockList = vi.fn()
 const mockAdapter = { list: mockList }

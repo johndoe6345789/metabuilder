@@ -1,4 +1,4 @@
-import { describe, expect,it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { getErrorMessage } from './get-error-message'
 import { hasProperty } from './has-property'

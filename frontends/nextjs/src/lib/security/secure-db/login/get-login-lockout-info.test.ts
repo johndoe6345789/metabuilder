@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { getLoginLockoutInfo } from './get-login-lockout-info'
-import { DEFAULT_AUTH_LOCKOUT_MAX_ATTEMPTS,loginAttemptTracker } from './login-attempt-tracker'
+import { DEFAULT_AUTH_LOCKOUT_MAX_ATTEMPTS, loginAttemptTracker } from './login-attempt-tracker'
 
 describe('getLoginLockoutInfo', () => {
   beforeEach(() => {

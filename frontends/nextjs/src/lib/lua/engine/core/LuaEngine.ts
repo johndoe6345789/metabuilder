@@ -44,5 +44,5 @@ export class LuaEngine {
 }
 
 // Re-export individual functions for direct imports
-export { executeLuaCode,setupContextAPI } from '../../functions'
+export { executeLuaCode, setupContextAPI } from '../../functions'
 export { fromLua, pushToLua, tableToJS } from '../../functions/converters'

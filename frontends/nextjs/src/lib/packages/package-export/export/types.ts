@@ -1,4 +1,4 @@
-import type { PackageContent,PackageManifest } from '../package-types'
+import type { PackageContent, PackageManifest } from '../package-types'
 
 export interface ExportPackageOptions {
   includeAssets?: boolean
@@ -21,4 +21,4 @@ export interface AssetFile {
   type: AssetType
 }
 
-export type { PackageContent,PackageManifest }
+export type { PackageContent, PackageManifest }

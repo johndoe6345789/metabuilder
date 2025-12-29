@@ -1,4 +1,4 @@
-import { describe, expect,it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import adminDialogMetadata from '../../../../packages/admin_dialog/seed/metadata.json'
 import dashboardMetadata from '../../../../packages/dashboard/seed/metadata.json'

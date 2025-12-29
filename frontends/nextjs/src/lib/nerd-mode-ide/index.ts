@@ -4,7 +4,7 @@ export { buildZipFromFileTree } from './builders/package/build-zip-from-file-tre
 export { appendExportPath } from './file-operations/export/append-export-path'
 export { findFirstFile } from './file-operations/export/find-first-file'
 export { collectFileEntries } from './file-operations/tree/collect-file-entries'
-export { FileTreeOperations,fileTreeOperations } from './file-operations/tree/file-tree-operations'
+export { FileTreeOperations, fileTreeOperations } from './file-operations/tree/file-tree-operations'
 export { getLanguageFromFilename } from './get-language-from-filename'
 export { createFileNode } from './nodes/create/create-file-node'
 export { createFolderNode } from './nodes/create/create-folder-node'

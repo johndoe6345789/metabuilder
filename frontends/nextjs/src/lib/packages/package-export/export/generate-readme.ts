@@ -1,4 +1,4 @@
-import type { PackageContent,PackageManifest } from './types'
+import type { PackageContent, PackageManifest } from './types'
 
 export function generateReadme(manifest: PackageManifest, content: PackageContent): string {
   return `# ${manifest.name}

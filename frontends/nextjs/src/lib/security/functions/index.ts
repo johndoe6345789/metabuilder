@@ -4,7 +4,7 @@
  */
 
 // Types
-export type { SecurityIssue, SecurityPattern,SecurityScanResult } from './types'
+export type { SecurityIssue, SecurityPattern, SecurityScanResult } from './types'
 
 // Patterns
 export { JAVASCRIPT_PATTERNS } from './patterns/javascript-patterns'

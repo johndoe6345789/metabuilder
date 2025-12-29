@@ -1,4 +1,4 @@
-import { describe, expect,it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import type { FieldSchema, ModelSchema } from '@/lib/schema-types'
 import { validateField, validateRecord } from '@/lib/schema-utils'

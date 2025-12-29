@@ -1,5 +1,5 @@
 // Types
-export type { AccessRule,AuditLog, OperationType, ResourceType, SecurityContext } from './types'
+export type { AccessRule, AuditLog, OperationType, ResourceType, SecurityContext } from './types'
 
 // Core functions
 export { logOperation } from './audit/log-operation'

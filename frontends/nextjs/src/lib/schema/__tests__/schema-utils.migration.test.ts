@@ -1,4 +1,4 @@
-import { describe, expect,it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import type { SchemaConfig } from '@/lib/schema-types'
 import { findModel, getModelKey, getRecordsKey } from '@/lib/schema-utils'
