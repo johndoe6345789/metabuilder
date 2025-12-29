@@ -1,11 +1,13 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
+import { ComponentPropsWithoutRef, forwardRef, ReactNode } from 'react'
 import { Box, Typography } from '@mui/material'
 
-import { DropdownMenuItem, type DropdownMenuItemProps } from '../DropdownMenu'
+import { DropdownMenuItem } from '../DropdownMenu'
 
-interface MenuItemProps extends DropdownMenuItemProps {
+type DropdownMenuItemComponentProps = ComponentPropsWithoutRef<typeof DropdownMenuItem>
+
+interface MenuItemProps extends DropdownMenuItemComponentProps {
   description?: ReactNode
   detail?: ReactNode
 }
