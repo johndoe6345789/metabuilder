@@ -1,0 +1,17 @@
+import { Database } from '@/lib/database'
+import type { LuaEngine } from '@/lib/lua-engine'
+import { executeLuaScriptWithProfile } from '@/lib/lua/execute-lua-script-with-profile'
+import type { ComponentInstance } from '@/lib/types/builder-types'
+import type { User } from '@/lib/types/level-types'
+
+export async function onPageLoad(page: PageDefinition, context: PageContext): Promise<void> {
+    if (page.luaScripts?.onLoad) {
+      await this.executeLuaScript(page.luaScripts.onLoad, {
+        data: {
+          user: context.user,
+          level: context.level,
+          isPreviewMode: context.isPreviewMode
+        }
+      })
+    }
+  }

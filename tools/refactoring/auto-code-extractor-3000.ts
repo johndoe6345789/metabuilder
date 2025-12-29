@@ -61,12 +61,31 @@ interface FileToExtract {
   category: string
   status: 'pending' | 'completed' | 'failed' | 'skipped'
   error?: string
+  extractedFunctions?: string[]
+}
+
+interface ExtractedFunction {
+  functionName: string
+  originalFile: string
+  extractedPath: string
+  timestamp: string
+}
+
+interface ExtractionRegistry {
+  version: string
+  lastUpdated: string
+  functions: ExtractedFunction[]
 }
 
 class AutoCodeExtractor3000 {
   private options: ExtractionOptions
   private results: FileToExtract[] = []
   private startTime: number = 0
+  private extractionRegistry: ExtractionRegistry = {
+    version: '1.0.0',
+    lastUpdated: new Date().toISOString(),
+    functions: []
+  }
 
   constructor(options: Partial<ExtractionOptions> = {}) {
     this.options = {
@@ -89,6 +108,56 @@ class AutoCodeExtractor3000 {
       error: '❌',
     }
     console.log(`${icons[level]} ${message}`)
+  }
+
+  private async loadExtractionRegistry(): Promise<void> {
+    try {
+      let rootDir = process.cwd()
+      if (rootDir.endsWith('/frontends/nextjs') || rootDir.endsWith('\\frontends\\nextjs')) {
+        rootDir = path.join(rootDir, '..', '..')
+      }
+      
+      const registryPath = path.join(rootDir, 'docs', 'todo', 'EXTRACTION_REGISTRY.json')
+      this.log(`Loading extraction registry from ${registryPath}`, 'info')
+      
+      const content = await fs.readFile(registryPath, 'utf-8')
+      this.extractionRegistry = JSON.parse(content)
+      this.log(`✅ Loaded extraction registry with ${this.extractionRegistry.functions.length} functions`, 'success')
+    } catch (error) {
+      if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+        this.log('No existing extraction registry found, will create new one', 'info')
+      } else {
+        this.log(`⚠️  Warning loading registry: ${error instanceof Error ? error.message : String(error)}`, 'warning')
+      }
+    }
+  }
+
+  private async saveExtractionRegistry(): Promise<void> {
+    if (this.options.dryRun) {
+      this.log('Dry-run mode: skipping registry save', 'info')
+      return
+    }
+
+    try {
+      let rootDir = process.cwd()
+      if (rootDir.endsWith('/frontends/nextjs') || rootDir.endsWith('\\frontends\\nextjs')) {
+        rootDir = path.join(rootDir, '..', '..')
+      }
+      
+      this.extractionRegistry.lastUpdated = new Date().toISOString()
+      const registryPath = path.join(rootDir, 'docs', 'todo', 'EXTRACTION_REGISTRY.json')
+      
+      this.log(`Saving extraction registry to ${registryPath}`, 'info')
+      this.log(`Registry contains ${this.extractionRegistry.functions.length} functions`, 'info')
+      
+      await fs.writeFile(registryPath, JSON.stringify(this.extractionRegistry, null, 2), 'utf-8')
+      this.log(`✅ Saved extraction registry with ${this.extractionRegistry.functions.length} functions`, 'success')
+    } catch (error) {
+      this.log(`❌ Error saving registry: ${error instanceof Error ? error.message : String(error)}`, 'error')
+      if (this.options.verbose && error instanceof Error && error.stack) {
+        console.error('Stack trace:', error.stack)
+      }
+    }
   }
 
   private async scanAndCategorizeFiles(): Promise<FileToExtract[]> {
@@ -176,11 +245,65 @@ class AutoCodeExtractor3000 {
       console.log(`\n[${globalIdx}/${files.length}] Processing: ${file.path}`)
       
       try {
+        // Analyze file to get function names before extraction
+        this.log(`  🔍 Analyzing file for functions...`, 'info')
+        const { analyzeAstFile } = await import('./ast/analyze-ast-file')
+        const { functions } = await analyzeAstFile(absolutePath)
+        
+        this.log(`  📊 Found ${functions.length} functions: ${functions.map(f => f.name).join(', ') || '(none)'}`, 'info')
+        
+        if (functions.length === 0) {
+          file.status = 'skipped'
+          file.error = 'No functions found in file'
+          this.log(`  ⏭️  Skipped - no functions to extract`, 'warning')
+          continue
+        }
+        
+        if (functions.length <= 2) {
+          file.status = 'skipped'
+          file.error = `Only ${functions.length} function(s) - not worth refactoring`
+          this.log(`  ⏭️  Skipped - only ${functions.length} function(s)`, 'warning')
+          continue
+        }
+        
+        this.log(`  🔨 Extracting ${functions.length} functions...`, 'info')
         await refactor.refactorFile(absolutePath)
         file.status = 'completed'
+        
+        // Record extracted functions in registry
+        if (!this.options.dryRun && functions.length > 0) {
+          const basename = path.basename(absolutePath, path.extname(absolutePath))
+          const dir = path.dirname(absolutePath)
+          
+          this.log(`  📝 Recording ${functions.length} functions in registry...`, 'info')
+          
+          for (const func of functions) {
+            const kebabName = func.name.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '')
+            const extractedPath = path.join(dir, basename, 'functions', `${kebabName}.ts`)
+            
+            this.extractionRegistry.functions.push({
+              functionName: func.name,
+              originalFile: file.path,
+              extractedPath: extractedPath.replace(rootDir + '/', ''),
+              timestamp: new Date().toISOString()
+            })
+          }
+          
+          file.extractedFunctions = functions.map(f => f.name)
+          this.log(`  ✅ Recorded ${functions.length} functions in registry`, 'success')
+        }
+        
         this.log(`Successfully extracted ${file.path}`, 'success')
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error)
+        const errorStack = error instanceof Error ? error.stack : undefined
+        
+        this.log(`  ❌ Error: ${errorMsg}`, 'error')
+        
+        if (this.options.verbose && errorStack) {
+          console.error('  Stack trace:', errorStack)
+        }
+        
         if (errorMsg.includes('skipping') || errorMsg.includes('No functions')) {
           file.status = 'skipped'
           file.error = errorMsg
@@ -290,6 +413,10 @@ class AutoCodeExtractor3000 {
     const failed = this.results.filter(f => f.status === 'failed').length
     const skipped = this.results.filter(f => f.status === 'skipped').length
     const duration = (Date.now() - this.startTime) / 1000
+    
+    const totalFunctionsExtracted = this.results
+      .filter(f => f.extractedFunctions)
+      .reduce((sum, f) => sum + (f.extractedFunctions?.length || 0), 0)
 
     console.log('\n' + '='.repeat(70))
     console.log('🎉 AUTO CODE EXTRACTOR 3000™ - SUMMARY')
@@ -299,6 +426,15 @@ class AutoCodeExtractor3000 {
     console.log(`✅ Successfully Extracted: ${completed}`)
     console.log(`⏭️  Skipped: ${skipped}`)
     console.log(`❌ Failed: ${failed}`)
+    console.log(`📝 Functions Extracted: ${totalFunctionsExtracted}`)
+    console.log(`🗃️  Registry Total: ${this.extractionRegistry.functions.length} functions`)
+    
+    if (skipped > 0) {
+      console.log('\n⏭️  Skipped Files:')
+      this.results
+        .filter(f => f.status === 'skipped')
+        .forEach(f => console.log(`   - ${f.path}: ${f.error}`))
+    }
     
     if (failed > 0) {
       console.log('\n❌ Failed Files:')
@@ -313,6 +449,13 @@ class AutoCodeExtractor3000 {
     } else {
       console.log('\n💾 Changes have been written to disk')
       console.log('   Review the changes and run tests before committing')
+      
+      if (totalFunctionsExtracted > 0) {
+        console.log(`\n📚 Extraction Registry:`)
+        console.log(`   - ${totalFunctionsExtracted} new functions recorded`)
+        console.log(`   - ${this.extractionRegistry.functions.length} total functions tracked`)
+        console.log(`   - Registry saved to: docs/todo/EXTRACTION_REGISTRY.json`)
+      }
     }
     
     console.log('\n📝 Next Steps:')
@@ -335,6 +478,9 @@ class AutoCodeExtractor3000 {
     console.log(`Limit: ${this.options.limit} files`)
     console.log(`Batch Size: ${this.options.batchSize} files`)
     console.log('='.repeat(70) + '\n')
+
+    // Load existing extraction registry
+    await this.loadExtractionRegistry()
 
     // Phase 1: Scan and categorize
     console.log('PHASE 1: SCANNING & EXTRACTION')
@@ -382,6 +528,7 @@ class AutoCodeExtractor3000 {
     // Post-processing
     await this.runLinting()
     await this.runTests()
+    await this.saveExtractionRegistry()
     await this.updateProgressReport()
     await this.saveResults()
     

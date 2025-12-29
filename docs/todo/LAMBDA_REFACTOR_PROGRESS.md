@@ -1,11 +1,11 @@
 # Lambda-per-File Refactoring Progress
 
-**Generated:** 2025-12-29T18:28:41.724Z
+**Generated:** 2025-12-29T18:54:34.116Z
 
 ## Summary
 
-- **Total files > 150 lines:** 62
-- **Pending:** 52
+- **Total files > 150 lines:** 61
+- **Pending:** 51
 - **In Progress:** 0
 - **Completed:** 0
 - **Skipped:** 10
@@ -15,7 +15,7 @@
 - **component:** 34
 - **test:** 10
 - **tool:** 9
-- **library:** 6
+- **library:** 5
 - **other:** 2
 - **dbal:** 1
 
@@ -23,7 +23,7 @@
 
 Files are prioritized by ease of refactoring and impact.
 
-### High Priority (15 files)
+### High Priority (13 files)
 
 Library and tool files - easiest to refactor
 
@@ -31,7 +31,6 @@ Library and tool files - easiest to refactor
 - [ ] `frontends/nextjs/src/lib/nerd-mode-ide/templates/configs/base.ts` (267 lines)
 - [ ] `frontends/nextjs/src/lib/schema/default/forms.ts` (244 lines)
 - [ ] `frontends/nextjs/src/lib/db/core/operations.ts` (190 lines)
-- [ ] `frontends/nextjs/src/lib/rendering/page/page-renderer.ts` (178 lines)
 - [ ] `frontends/nextjs/src/lib/github/workflows/analysis/runs/stats.ts` (153 lines)
 - [ ] `tools/refactoring/orchestrate-refactor.ts` (249 lines)
 - [ ] `tools/refactoring/bulk-lambda-refactor.ts` (249 lines)
@@ -41,12 +40,12 @@ Library and tool files - easiest to refactor
 - [ ] `tools/refactoring/ast-lambda-refactor.ts` (192 lines)
 - [ ] `tools/refactoring/error-as-todo-refactor/index.ts` (163 lines)
 - [ ] `dbal/shared/tools/cpp-build-assistant/workflow.ts` (153 lines)
-- [ ] `tools/refactoring/auto-code-extractor-3000.ts` (487 lines)
 
-### Medium Priority (35 files)
+### Medium Priority (36 files)
 
 DBAL and component files - moderate complexity
 
+- [ ] `tools/refactoring/auto-code-extractor-3000.ts` (655 lines)
 - [ ] `frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts` (313 lines)
 - [ ] `frontends/nextjs/src/components/misc/data/QuickGuide.tsx` (297 lines)
 - [ ] `frontends/nextjs/src/components/misc/data/GenericPage.tsx` (274 lines)
@@ -66,8 +65,7 @@ DBAL and component files - moderate complexity
 - [ ] `frontends/nextjs/src/components/molecules/overlay/Dialog.tsx` (191 lines)
 - [ ] `frontends/nextjs/src/components/editors/JsonEditor.tsx` (191 lines)
 - [ ] `frontends/nextjs/src/components/misc/demos/IRCWebchatDeclarative.tsx` (190 lines)
-- [ ] `frontends/nextjs/src/components/rendering/components/RenderNode.tsx` (188 lines)
-- ... and 15 more
+- ... and 16 more
 
 ### Low Priority (2 files)
 

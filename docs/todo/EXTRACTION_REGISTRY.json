@@ -1,0 +1,60 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-29T18:54:30.245Z",
+  "functions": [
+    {
+      "functionName": "registerPage",
+      "originalFile": "frontends/nextjs/src/lib/rendering/page/page-renderer.ts",
+      "extractedPath": "frontends/nextjs/src/lib/rendering/page/page-renderer/functions/register-page.ts",
+      "timestamp": "2025-12-29T18:54:30.244Z"
+    },
+    {
+      "functionName": "loadPages",
+      "originalFile": "frontends/nextjs/src/lib/rendering/page/page-renderer.ts",
+      "extractedPath": "frontends/nextjs/src/lib/rendering/page/page-renderer/functions/load-pages.ts",
+      "timestamp": "2025-12-29T18:54:30.244Z"
+    },
+    {
+      "functionName": "getPage",
+      "originalFile": "frontends/nextjs/src/lib/rendering/page/page-renderer.ts",
+      "extractedPath": "frontends/nextjs/src/lib/rendering/page/page-renderer/functions/get-page.ts",
+      "timestamp": "2025-12-29T18:54:30.244Z"
+    },
+    {
+      "functionName": "getPagesByLevel",
+      "originalFile": "frontends/nextjs/src/lib/rendering/page/page-renderer.ts",
+      "extractedPath": "frontends/nextjs/src/lib/rendering/page/page-renderer/functions/get-pages-by-level.ts",
+      "timestamp": "2025-12-29T18:54:30.244Z"
+    },
+    {
+      "functionName": "executeLuaScript",
+      "originalFile": "frontends/nextjs/src/lib/rendering/page/page-renderer.ts",
+      "extractedPath": "frontends/nextjs/src/lib/rendering/page/page-renderer/functions/execute-lua-script.ts",
+      "timestamp": "2025-12-29T18:54:30.244Z"
+    },
+    {
+      "functionName": "checkPermissions",
+      "originalFile": "frontends/nextjs/src/lib/rendering/page/page-renderer.ts",
+      "extractedPath": "frontends/nextjs/src/lib/rendering/page/page-renderer/functions/check-permissions.ts",
+      "timestamp": "2025-12-29T18:54:30.244Z"
+    },
+    {
+      "functionName": "onPageLoad",
+      "originalFile": "frontends/nextjs/src/lib/rendering/page/page-renderer.ts",
+      "extractedPath": "frontends/nextjs/src/lib/rendering/page/page-renderer/functions/on-page-load.ts",
+      "timestamp": "2025-12-29T18:54:30.244Z"
+    },
+    {
+      "functionName": "onPageUnload",
+      "originalFile": "frontends/nextjs/src/lib/rendering/page/page-renderer.ts",
+      "extractedPath": "frontends/nextjs/src/lib/rendering/page/page-renderer/functions/on-page-unload.ts",
+      "timestamp": "2025-12-29T18:54:30.244Z"
+    },
+    {
+      "functionName": "getPageRenderer",
+      "originalFile": "frontends/nextjs/src/lib/rendering/page/page-renderer.ts",
+      "extractedPath": "frontends/nextjs/src/lib/rendering/page/page-renderer/functions/get-page-renderer.ts",
+      "timestamp": "2025-12-29T18:54:30.244Z"
+    }
+  ]
+}
