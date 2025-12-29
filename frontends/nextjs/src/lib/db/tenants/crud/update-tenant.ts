@@ -9,6 +9,7 @@ export async function updateTenant(tenantId: string, updates: Partial<Tenant>): 
   const data: Record<string, any> = {}
   if (updates.name !== undefined) data.name = updates.name
   if (updates.ownerId !== undefined) data.ownerId = updates.ownerId
-  if (updates.homepageConfig !== undefined) data.homepageConfig = JSON.stringify(updates.homepageConfig)
+  if (updates.homepageConfig !== undefined)
+    data.homepageConfig = JSON.stringify(updates.homepageConfig)
   await adapter.update('Tenant', tenantId, data)
 }

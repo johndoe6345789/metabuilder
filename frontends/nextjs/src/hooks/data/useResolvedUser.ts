@@ -27,7 +27,7 @@ export function useResolvedUser(): ResolvedUserState {
 
     setIsLoading(true)
     getUserById(authUser.id)
-      .then((loaded) => {
+      .then(loaded => {
         if (active) {
           setUser(loaded)
         }

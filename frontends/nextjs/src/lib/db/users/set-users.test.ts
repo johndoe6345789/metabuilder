@@ -30,7 +30,13 @@ describe('setUsers', () => {
       name: 'new users replacing empty',
       existingUsers: [],
       newUsers: [
-        { id: 'u1', username: 'user1', email: 'u1@test.com', role: 'user' as const, createdAt: 1000 },
+        {
+          id: 'u1',
+          username: 'user1',
+          email: 'u1@test.com',
+          role: 'user' as const,
+          createdAt: 1000,
+        },
       ],
       expectedDeletes: 0,
       expectedCreates: 1,
@@ -46,20 +52,29 @@ describe('setUsers', () => {
       name: 'new users replacing existing',
       existingUsers: [{ id: 'old1' }],
       newUsers: [
-        { id: 'new1', username: 'newuser', email: 'new@test.com', role: 'admin' as const, createdAt: 2000 },
+        {
+          id: 'new1',
+          username: 'newuser',
+          email: 'new@test.com',
+          role: 'admin' as const,
+          createdAt: 2000,
+        },
       ],
       expectedDeletes: 1,
       expectedCreates: 1,
     },
-  ])('should handle $name', async ({ existingUsers, newUsers, expectedDeletes, expectedCreates }) => {
-    mockList.mockResolvedValue({ data: existingUsers })
-    mockDelete.mockResolvedValue(undefined)
-    mockCreate.mockResolvedValue(undefined)
+  ])(
+    'should handle $name',
+    async ({ existingUsers, newUsers, expectedDeletes, expectedCreates }) => {
+      mockList.mockResolvedValue({ data: existingUsers })
+      mockDelete.mockResolvedValue(undefined)
+      mockCreate.mockResolvedValue(undefined)
 
-    await setUsers(newUsers)
+      await setUsers(newUsers)
 
-    expect(mockList).toHaveBeenCalledWith('User')
-    expect(mockDelete).toHaveBeenCalledTimes(expectedDeletes)
-    expect(mockCreate).toHaveBeenCalledTimes(expectedCreates)
-  })
+      expect(mockList).toHaveBeenCalledWith('User')
+      expect(mockDelete).toHaveBeenCalledTimes(expectedDeletes)
+      expect(mockCreate).toHaveBeenCalledTimes(expectedCreates)
+    }
+  )
 })

@@ -3,7 +3,10 @@ import { ComponentRegistry } from '@/lib/component-registry'
 import { componentCatalog } from '@/lib/component-catalog'
 import type { ComponentTypeDefinition } from '@/lib/component-registry'
 
-const buildComponent = (type: string, category: ComponentTypeDefinition['category']): ComponentTypeDefinition => ({
+const buildComponent = (
+  type: string,
+  category: ComponentTypeDefinition['category']
+): ComponentTypeDefinition => ({
   type,
   label: `${type} Label`,
   icon: 'TestIcon',
@@ -20,14 +23,13 @@ describe('ComponentRegistry', () => {
     registry = new ComponentRegistry()
   })
 
-  it.each([
-    { type: 'Container' },
-    { type: 'Button' },
-    { type: 'Heading' },
-  ])('should load catalog component $type', ({ type }) => {
-    expect(registry.hasComponent(type)).toBe(true)
-    expect(registry.getComponent(type)).toBeDefined()
-  })
+  it.each([{ type: 'Container' }, { type: 'Button' }, { type: 'Heading' }])(
+    'should load catalog component $type',
+    ({ type }) => {
+      expect(registry.hasComponent(type)).toBe(true)
+      expect(registry.getComponent(type)).toBeDefined()
+    }
+  )
 
   it('should return undefined for unknown component', () => {
     expect(registry.getComponent('MissingComponent')).toBeUndefined()
@@ -43,10 +45,7 @@ describe('ComponentRegistry', () => {
   })
 
   it('should register multiple components', () => {
-    const components = [
-      buildComponent('Alpha', 'Layout'),
-      buildComponent('Beta', 'Feedback'),
-    ]
+    const components = [buildComponent('Alpha', 'Layout'), buildComponent('Beta', 'Feedback')]
 
     registry.registerComponents(components)
 

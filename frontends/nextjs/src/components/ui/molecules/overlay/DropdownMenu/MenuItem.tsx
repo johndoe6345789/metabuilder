@@ -16,7 +16,14 @@ const MenuItem = forwardRef<HTMLLIElement, MenuItemProps>(
   ({ children, description, detail, ...props }, ref) => {
     return (
       <DropdownMenuItem ref={ref} {...props}>
-        <Box sx={{ display: 'flex', alignItems: description ? 'flex-start' : 'center', gap: 2, width: '100%' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: description ? 'flex-start' : 'center',
+            gap: 2,
+            width: '100%',
+          }}
+        >
           <Box sx={{ flex: 1 }}>
             <Typography variant="body2">{children}</Typography>
             {description && (

@@ -1,8 +1,8 @@
 'use client'
 
 import { forwardRef } from 'react'
-import { 
-  Avatar as MuiAvatar, 
+import {
+  Avatar as MuiAvatar,
   AvatarProps as MuiAvatarProps,
   AvatarGroup as MuiAvatarGroup,
   AvatarGroupProps as MuiAvatarGroupProps,
@@ -33,7 +33,7 @@ const sizeMap: Record<AvatarSize, number> = {
 const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
   ({ size = 'md', fallback, children, sx, ...props }, ref) => {
     const dimension = sizeMap[size]
-    
+
     return (
       <MuiAvatar
         ref={ref}

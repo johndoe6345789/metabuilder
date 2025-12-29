@@ -14,7 +14,11 @@ export interface DialogBodyProps {
 const DialogBody = forwardRef<HTMLDivElement, DialogBodyProps>(
   ({ children, showCloseButton = true, onClose, ...props }, ref) => {
     return (
-      <MuiDialogContent ref={ref} sx={{ position: 'relative', pt: showCloseButton ? 6 : 2 }} {...props}>
+      <MuiDialogContent
+        ref={ref}
+        sx={{ position: 'relative', pt: showCloseButton ? 6 : 2 }}
+        {...props}
+      >
         {showCloseButton && onClose && (
           <IconButton
             aria-label="close"
@@ -27,7 +31,7 @@ const DialogBody = forwardRef<HTMLDivElement, DialogBodyProps>(
         {children}
       </MuiDialogContent>
     )
-  },
+  }
 )
 DialogBody.displayName = 'DialogBody'
 

@@ -18,7 +18,10 @@ interface PowerTransferTabProps {
   refreshSignal?: number
 }
 
-const STATUS_VARIANTS: Record<PowerTransferRequest['status'], 'default' | 'secondary' | 'destructive'> = {
+const STATUS_VARIANTS: Record<
+  PowerTransferRequest['status'],
+  'default' | 'secondary' | 'destructive'
+> = {
   accepted: 'default',
   pending: 'secondary',
   rejected: 'destructive',
@@ -35,9 +38,7 @@ export function PowerTransferTab({
   const [isLoadingRequests, setIsLoadingRequests] = useState(true)
   const [requestError, setRequestError] = useState<string | null>(null)
 
-  const highlightedUsers = allUsers.filter(
-    (u) => u.id !== currentUser.id && u.role !== 'supergod'
-  )
+  const highlightedUsers = allUsers.filter(u => u.id !== currentUser.id && u.role !== 'supergod')
 
   useEffect(() => {
     let isActive = true
@@ -86,7 +87,7 @@ export function PowerTransferTab({
   }
 
   const getUserLabel = (userId: string) => {
-    const user = allUsers.find((u) => u.id === userId)
+    const user = allUsers.find(u => u.id === userId)
     return user ? user.username : userId
   }
 
@@ -106,8 +107,8 @@ export function PowerTransferTab({
             <div>
               <h4 className="font-semibold text-amber-200 mb-1">Critical Action</h4>
               <p className="text-sm text-amber-300/80">
-                This action cannot be undone. Only one Super God can exist at a time. After transfer,
-                you will have God-level access only.
+                This action cannot be undone. Only one Super God can exist at a time. After
+                transfer, you will have God-level access only.
               </p>
             </div>
           </div>
@@ -119,7 +120,7 @@ export function PowerTransferTab({
           <h4 className="font-semibold text-white">Select User to Transfer Power To:</h4>
           <ScrollArea className="h-[300px]">
             <div className="space-y-2">
-              {highlightedUsers.map((user) => (
+              {highlightedUsers.map(user => (
                 <Card
                   key={user.id}
                   className={`cursor-pointer transition-all ${
@@ -165,7 +166,7 @@ export function PowerTransferTab({
               {sortedRequests.length === 0 && !isLoadingRequests ? (
                 <p className="text-sm text-muted-foreground">No transfer history available.</p>
               ) : (
-                sortedRequests.map((request) => (
+                sortedRequests.map(request => (
                   <Card key={request.id} className="bg-white/5 border-white/10">
                     <CardHeader className="flex items-center justify-between space-y-0">
                       <div>

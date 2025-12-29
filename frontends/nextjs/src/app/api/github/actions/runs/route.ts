@@ -28,16 +28,14 @@ export const GET = async (request: NextRequest) => {
       hasToken: Boolean(process.env.GITHUB_TOKEN),
     })
   } catch (error) {
-    const status = typeof error === 'object' && error && 'status' in error
-      ? Number((error as { status?: number }).status)
-      : 500
+    const status =
+      typeof error === 'object' && error && 'status' in error
+        ? Number((error as { status?: number }).status)
+        : 500
     const message = error instanceof Error ? error.message : 'Unknown error'
     const requiresAuth = status === 401 || status === 403
     const safeStatus = Number.isFinite(status) && status >= 400 ? status : 500
 
-    return NextResponse.json(
-      { error: message, requiresAuth },
-      { status: safeStatus }
-    )
+    return NextResponse.json({ error: message, requiresAuth }, { status: safeStatus })
   }
 }

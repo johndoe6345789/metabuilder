@@ -8,7 +8,7 @@ export const generateCodegenZip = async (spec: CodegenSpec) => {
   const template = createProjectTemplate(spec)
   const zip = new JSZip()
 
-  template.files.forEach((file) => {
+  template.files.forEach(file => {
     zip.file(file.path, file.contents)
   })
 

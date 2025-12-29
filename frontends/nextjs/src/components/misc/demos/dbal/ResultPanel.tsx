@@ -6,7 +6,11 @@ interface ResultPanelProps {
   emptyLabel?: string
 }
 
-export function ResultPanel({ title = 'Latest Result', result, emptyLabel = 'No result yet' }: ResultPanelProps) {
+export function ResultPanel({
+  title = 'Latest Result',
+  result,
+  emptyLabel = 'No result yet',
+}: ResultPanelProps) {
   return (
     <Card className="h-full">
       <CardHeader>

@@ -57,7 +57,9 @@ export function DropdownConfigManager() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Dropdown Configurations</h2>
-          <p className="text-sm text-muted-foreground">Manage dynamic dropdown options for properties</p>
+          <p className="text-sm text-muted-foreground">
+            Manage dynamic dropdown options for properties
+          </p>
         </div>
         <Button onClick={() => openEditor()}>
           <Plus className="mr-2" />
@@ -78,7 +80,9 @@ export function DropdownConfigManager() {
 
       {dropdowns.length === 0 && (
         <Card className="p-12 text-center">
-          <p className="text-muted-foreground">No dropdown configurations yet. Create one to get started.</p>
+          <p className="text-muted-foreground">
+            No dropdown configurations yet. Create one to get started.
+          </p>
         </Card>
       )}
 

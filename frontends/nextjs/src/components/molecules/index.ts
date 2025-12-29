@@ -96,25 +96,13 @@ export {
   type TextAreaProps,
 } from './form/FormField'
 
-export {
-  PasswordField,
-  type PasswordFieldProps,
-} from './form/PasswordField'
+export { PasswordField, type PasswordFieldProps } from './form/PasswordField'
 
-export {
-  EmailField,
-  type EmailFieldProps,
-} from './form/EmailField'
+export { EmailField, type EmailFieldProps } from './form/EmailField'
 
-export {
-  NumberField,
-  type NumberFieldProps,
-} from './form/NumberField'
+export { NumberField, type NumberFieldProps } from './form/NumberField'
 
-export {
-  SearchBar,
-  type SearchBarProps,
-} from './form/SearchBar'
+export { SearchBar, type SearchBarProps } from './form/SearchBar'
 
 export {
   Popover,

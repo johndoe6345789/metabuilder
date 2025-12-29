@@ -16,7 +16,7 @@ const lua = fengari.lua
  */
 export const fromLua = (L: any, index: number = -1): any => {
   const type = lua.lua_type(L, index)
-  
+
   switch (type) {
     case lua.LUA_TNIL:
       return null

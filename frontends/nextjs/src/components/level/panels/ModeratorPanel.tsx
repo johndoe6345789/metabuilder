@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
@@ -27,7 +27,7 @@ export function ModeratorPanel({ user, onLogout, onNavigate }: ModeratorPanelPro
     setIsLoading(true)
 
     Database.getComments()
-      .then((latest) => {
+      .then(latest => {
         if (active) {
           setComments(latest)
         }
@@ -44,12 +44,12 @@ export function ModeratorPanel({ user, onLogout, onNavigate }: ModeratorPanelPro
   }, [])
 
   const flaggedComments = useMemo(() => {
-    return comments.filter((comment) => {
+    return comments.filter(comment => {
       if (resolvedIds.includes(comment.id)) {
         return false
       }
       const content = comment.content.toLowerCase()
-      return FLAGGED_TERMS.some((term) => content.includes(term))
+      return FLAGGED_TERMS.some(term => content.includes(term))
     })
   }, [comments, resolvedIds])
 
@@ -57,7 +57,7 @@ export function ModeratorPanel({ user, onLogout, onNavigate }: ModeratorPanelPro
     if (resolvedIds.includes(commentId)) {
       return
     }
-    setResolvedIds((current) => [...current, commentId])
+    setResolvedIds(current => [...current, commentId])
     toast.success('Flag resolved and archived from the queue')
   }
 

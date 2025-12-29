@@ -9,7 +9,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 import { Badge } from '@/components/ui'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui'
 import { Avatar, AvatarFallback } from '@/components/ui'
 import { Plus, Pencil, Trash, UserCircle } from '@phosphor-icons/react'
 import { createUser, deleteUser, listUsers, updateUser } from '@/lib/api/users'
@@ -125,19 +133,27 @@ export function UserManagement() {
 
   const getRoleBadgeVariant = (role: UserRole) => {
     switch (role) {
-      case 'god': return 'default'
-      case 'admin': return 'secondary'
-      case 'user': return 'outline'
-      default: return 'outline'
+      case 'god':
+        return 'default'
+      case 'admin':
+        return 'secondary'
+      case 'user':
+        return 'outline'
+      default:
+        return 'outline'
     }
   }
 
   const getRoleColor = (role: UserRole) => {
     switch (role) {
-      case 'god': return 'text-purple-500'
-      case 'admin': return 'text-orange-500'
-      case 'user': return 'text-blue-500'
-      default: return 'text-gray-500'
+      case 'god':
+        return 'text-purple-500'
+      case 'admin':
+        return 'text-orange-500'
+      case 'user':
+        return 'text-blue-500'
+      default:
+        return 'text-gray-500'
     }
   }
 
@@ -158,11 +174,9 @@ export function UserManagement() {
           <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>{editingUser ? 'Edit User' : 'Create New User'}</DialogTitle>
-              <DialogDescription>
-                Configure user account details and access level
-              </DialogDescription>
+              <DialogDescription>Configure user account details and access level</DialogDescription>
             </DialogHeader>
-            
+
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -171,7 +185,7 @@ export function UserManagement() {
                     id="username"
                     placeholder="johndoe"
                     value={formData.username || ''}
-                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                    onChange={e => setFormData({ ...formData, username: e.target.value })}
                     disabled={!!editingUser}
                   />
                 </div>
@@ -182,7 +196,7 @@ export function UserManagement() {
                     type="email"
                     placeholder="john@example.com"
                     value={formData.email || ''}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={e => setFormData({ ...formData, email: e.target.value })}
                   />
                 </div>
               </div>
@@ -197,7 +211,7 @@ export function UserManagement() {
                     type="password"
                     placeholder="••••••••"
                     value={formData.password || ''}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    onChange={e => setFormData({ ...formData, password: e.target.value })}
                   />
                 </div>
 
@@ -205,7 +219,7 @@ export function UserManagement() {
                   <Label htmlFor="role">Role</Label>
                   <Select
                     value={formData.role}
-                    onValueChange={(value) => setFormData({ ...formData, role: value as UserRole })}
+                    onValueChange={value => setFormData({ ...formData, role: value as UserRole })}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select role" />
@@ -226,7 +240,7 @@ export function UserManagement() {
                   id="bio"
                   placeholder="User bio or description..."
                   value={formData.bio || ''}
-                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                  onChange={e => setFormData({ ...formData, bio: e.target.value })}
                   rows={3}
                 />
               </div>
@@ -237,13 +251,15 @@ export function UserManagement() {
                   id="profilePicture"
                   placeholder="https://example.com/avatar.jpg"
                   value={formData.profilePicture || ''}
-                  onChange={(e) => setFormData({ ...formData, profilePicture: e.target.value })}
+                  onChange={e => setFormData({ ...formData, profilePicture: e.target.value })}
                 />
               </div>
             </div>
 
             <DialogFooter>
-              <Button variant="outline" onClick={handleCloseDialog}>Cancel</Button>
+              <Button variant="outline" onClick={handleCloseDialog}>
+                Cancel
+              </Button>
               <Button onClick={handleSaveUser}>
                 {editingUser ? 'Update User' : 'Create User'}
               </Button>
@@ -276,7 +292,7 @@ export function UserManagement() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users.map((user) => (
+                {users.map(user => (
                   <TableRow key={user.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
@@ -290,14 +306,10 @@ export function UserManagement() {
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
-                      <Badge variant={getRoleBadgeVariant(user.role)}>
-                        {user.role}
-                      </Badge>
+                      <Badge variant={getRoleBadgeVariant(user.role)}>{user.role}</Badge>
                     </TableCell>
                     <TableCell className="max-w-xs truncate">
-                      <span className="text-sm text-muted-foreground">
-                        {user.bio || 'No bio'}
-                      </span>
+                      <span className="text-sm text-muted-foreground">{user.bio || 'No bio'}</span>
                     </TableCell>
                     <TableCell>
                       <span className="text-sm text-muted-foreground">
@@ -306,11 +318,7 @@ export function UserManagement() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => handleOpenDialog(user)}
-                        >
+                        <Button size="sm" variant="ghost" onClick={() => handleOpenDialog(user)}>
                           <Pencil />
                         </Button>
                         <Button

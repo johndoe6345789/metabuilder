@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
-import { formatWorkflowRunAnalysis, summarizeWorkflowRuns } from '@/lib/github/analyze-workflow-runs'
+import {
+  formatWorkflowRunAnalysis,
+  summarizeWorkflowRuns,
+} from '@/lib/github/analyze-workflow-runs'
 
 import { useWorkflowLogAnalysis } from '../hooks/useWorkflowLogAnalysis'
 import { useWorkflowRuns } from './hooks/useWorkflowRuns'
@@ -16,7 +19,7 @@ export function useActionsFetcher() {
   const workflowLogAnalysis = useWorkflowLogAnalysis({
     repoInfo: workflowRuns.repoInfo,
     onAnalysisStart: () => setIsAnalyzing(true),
-    onAnalysisComplete: (report) => {
+    onAnalysisComplete: report => {
       if (report) {
         setAnalysis(report)
       }

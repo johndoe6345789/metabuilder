@@ -9,7 +9,7 @@ export function UserList({ users }: UserListProps) {
 
   return (
     <div className="space-y-1.5 text-sm">
-      {users.map((username) => (
+      {users.map(username => (
         <div key={username} className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-green-500" />
           <span>{username}</span>

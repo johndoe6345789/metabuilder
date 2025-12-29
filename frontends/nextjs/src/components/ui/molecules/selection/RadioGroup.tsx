@@ -1,7 +1,13 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import { RadioGroup as MuiRadioGroup, Radio, FormControlLabel, FormControl, FormLabel } from '@mui/material'
+import {
+  RadioGroup as MuiRadioGroup,
+  Radio,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+} from '@mui/material'
 
 interface RadioGroupProps {
   children: ReactNode
@@ -19,7 +25,7 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
         ref={ref}
         defaultValue={defaultValue}
         value={value}
-        onChange={(e) => onValueChange?.(e.target.value)}
+        onChange={e => onValueChange?.(e.target.value)}
         sx={{ gap: 1 }}
         {...props}
       >

@@ -12,7 +12,11 @@ export function ResultPanel({ analysisReport, analysisResult }: ResultPanelProps
 
   return (
     <Card variant="outlined" sx={{ bgcolor: 'action.hover' }}>
-      <CardHeader avatar={<EyeIcon />} title="Heuristic Analysis" titleTypographyProps={{ variant: 'subtitle1' }} />
+      <CardHeader
+        avatar={<EyeIcon />}
+        title="Heuristic Analysis"
+        titleTypographyProps={{ variant: 'subtitle1' }}
+      />
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {analysisResult && (
           <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
@@ -21,7 +25,10 @@ export function ResultPanel({ analysisReport, analysisResult }: ResultPanelProps
             <Chip size="small" label={`Links: ${analysisResult.metrics.linkCount}`} />
             <Chip size="small" label={`Buttons: ${analysisResult.metrics.buttonCount}`} />
             <Chip size="small" label={`Images: ${analysisResult.metrics.imgCount}`} />
-            <Chip size="small" label={`Missing alt: ${analysisResult.metrics.imgMissingAltCount}`} />
+            <Chip
+              size="small"
+              label={`Missing alt: ${analysisResult.metrics.imgMissingAltCount}`}
+            />
           </Stack>
         )}
 
@@ -31,7 +38,7 @@ export function ResultPanel({ analysisReport, analysisResult }: ResultPanelProps
               Warnings
             </Typography>
             <Box component="ul" sx={{ pl: 3, m: 0 }}>
-              {analysisResult.warnings.map((warning) => (
+              {analysisResult.warnings.map(warning => (
                 <li key={warning}>
                   <Typography variant="body2">{warning}</Typography>
                 </li>

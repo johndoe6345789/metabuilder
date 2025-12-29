@@ -20,7 +20,9 @@ export const getComponentConfigs = async (): Promise<Record<string, ComponentCon
       props: JSON.parse(config.props),
       styles: JSON.parse(config.styles),
       events: JSON.parse(config.events),
-      conditionalRendering: config.conditionalRendering ? JSON.parse(config.conditionalRendering) : undefined,
+      conditionalRendering: config.conditionalRendering
+        ? JSON.parse(config.conditionalRendering)
+        : undefined,
     }
   }
   return result

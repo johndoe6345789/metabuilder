@@ -4,7 +4,10 @@ import type { ModelSchema } from '../../types/schema-types'
 /**
  * Update a schema by name
  */
-export async function updateSchema(schemaName: string, updates: Partial<ModelSchema>): Promise<void> {
+export async function updateSchema(
+  schemaName: string,
+  updates: Partial<ModelSchema>
+): Promise<void> {
   const adapter = getAdapter()
   const data: Record<string, unknown> = {}
   if (updates.label !== undefined) data.label = updates.label

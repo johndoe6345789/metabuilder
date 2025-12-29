@@ -47,9 +47,7 @@ export const authenticateUser = async (
   }
 
   const user = mapUserRecord(userRecord as Record<string, unknown>)
-  const requiresPasswordChange = getUserFirstLoginFlag(
-    userRecord as Record<string, unknown>
-  )
+  const requiresPasswordChange = getUserFirstLoginFlag(userRecord as Record<string, unknown>)
 
   return { success: true, user, requiresPasswordChange }
 }

@@ -13,23 +13,25 @@ export default function LevelsClient() {
   const [note, setNote] = useState('')
 
   const selectedLevel = useMemo(
-    () => PERMISSION_LEVELS.find((level) => level.id === selectedLevelId) ?? PERMISSION_LEVELS[0],
+    () => PERMISSION_LEVELS.find(level => level.id === selectedLevelId) ?? PERMISSION_LEVELS[0],
     [selectedLevelId]
   )
 
   const nextLevel = useMemo(
-    () => PERMISSION_LEVELS.find((level) => level.id === selectedLevelId + 1) ?? null,
+    () => PERMISSION_LEVELS.find(level => level.id === selectedLevelId + 1) ?? null,
     [selectedLevelId]
   )
 
   const maxCapabilityCount = useMemo(
-    () => Math.max(...PERMISSION_LEVELS.map((level) => level.capabilities.length)),
+    () => Math.max(...PERMISSION_LEVELS.map(level => level.capabilities.length)),
     []
   )
 
   const handleSelect = (levelId: number) => {
     setSelectedLevelId(levelId)
-    setNote(`Selected ${PERMISSION_LEVELS.find((l) => l.id === levelId)?.title ?? 'unknown'} privileges.`)
+    setNote(
+      `Selected ${PERMISSION_LEVELS.find(l => l.id === levelId)?.title ?? 'unknown'} privileges.`
+    )
   }
 
   const handlePromote = () => {

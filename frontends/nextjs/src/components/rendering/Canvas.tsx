@@ -39,9 +39,7 @@ export function Canvas({ components, selectedId, onSelect, onDrop, isDragging }:
     >
       <div
         className={`min-h-[600px] bg-card rounded-lg p-6 border-2 transition-all ${
-          isOver
-            ? 'border-drop-zone-border border-dashed'
-            : 'border-border'
+          isOver ? 'border-drop-zone-border border-dashed' : 'border-border'
         }`}
       >
         {components.length === 0 ? (

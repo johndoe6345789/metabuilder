@@ -38,7 +38,12 @@ export function Level4Header({
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600" />
               <span className="font-bold text-xl text-sidebar-foreground">God-Tier Builder</span>
             </div>
-            <Button variant="ghost" size="sm" onClick={() => onNavigate(1)} className="text-sidebar-foreground">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onNavigate(1)}
+              className="text-sidebar-foreground"
+            >
               <House className="mr-2" size={16} />
               Home
             </Button>
@@ -47,27 +52,27 @@ export function Level4Header({
           <div className="flex items-center gap-2">
             <div className="hidden sm:flex gap-2 items-center">
               <div className="text-xs text-sidebar-foreground/70 font-medium mr-1">PREVIEW:</div>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => onPreview(1)}
                 className="bg-sidebar-accent hover:bg-sidebar-accent/80"
               >
                 <Eye className="mr-2" size={16} />
                 Level 1
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => onPreview(2)}
                 className="bg-sidebar-accent hover:bg-sidebar-accent/80"
               >
                 <Eye className="mr-2" size={16} />
                 Level 2
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => onPreview(3)}
                 className="bg-sidebar-accent hover:bg-sidebar-accent/80"
               >
@@ -100,11 +105,7 @@ export function Level4Header({
               </DropdownMenu>
             </div>
             <div className="w-px h-6 bg-sidebar-border hidden sm:block" />
-            <Button 
-              variant={nerdMode ? "default" : "outline"} 
-              size="sm" 
-              onClick={onToggleNerdMode}
-            >
+            <Button variant={nerdMode ? 'default' : 'outline'} size="sm" onClick={onToggleNerdMode}>
               <Terminal className="mr-2" size={16} />
               Nerd
             </Button>
@@ -115,7 +116,12 @@ export function Level4Header({
               <Upload size={16} />
             </Button>
             <Badge variant="secondary">{username}</Badge>
-            <Button variant="ghost" size="sm" onClick={onLogout} className="text-sidebar-foreground">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onLogout}
+              className="text-sidebar-foreground"
+            >
               <SignOut size={16} />
             </Button>
           </div>

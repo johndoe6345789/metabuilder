@@ -72,10 +72,14 @@ export function ScreenshotAnalyzer() {
   }
 
   return (
-    <Box sx={{ maxWidth: 'lg', mx: 'auto', p: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
+    <Box
+      sx={{ maxWidth: 'lg', mx: 'auto', p: 3, display: 'flex', flexDirection: 'column', gap: 3 }}
+    >
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box>
-          <Typography variant="h4" fontWeight={700}>Screenshot Analyzer</Typography>
+          <Typography variant="h4" fontWeight={700}>
+            Screenshot Analyzer
+          </Typography>
           <Typography color="text.secondary">Capture and analyze the current page</Typography>
         </Box>
         <Chip label="Local Analysis" color="secondary" />
@@ -97,25 +101,45 @@ export function ScreenshotAnalyzer() {
         <CardContent>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Typography variant="caption" color="text.secondary">Title:</Typography>
-              <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>{document.title}</Typography>
+              <Typography variant="caption" color="text.secondary">
+                Title:
+              </Typography>
+              <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                {document.title}
+              </Typography>
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Typography variant="caption" color="text.secondary">URL:</Typography>
-              <Typography variant="body2" sx={{ fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <Typography variant="caption" color="text.secondary">
+                URL:
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis' }}
+              >
                 {typeof window !== 'undefined' ? window.location.href : ''}
               </Typography>
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Typography variant="caption" color="text.secondary">Viewport:</Typography>
+              <Typography variant="caption" color="text.secondary">
+                Viewport:
+              </Typography>
               <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                {typeof window !== 'undefined' ? `${window.innerWidth} × ${window.innerHeight}` : ''}
+                {typeof window !== 'undefined'
+                  ? `${window.innerWidth} × ${window.innerHeight}`
+                  : ''}
               </Typography>
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Typography variant="caption" color="text.secondary">User Agent:</Typography>
-              <Typography variant="body2" sx={{ fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {typeof navigator !== 'undefined' ? navigator.userAgent.substring(0, 50) + '...' : ''}
+              <Typography variant="caption" color="text.secondary">
+                User Agent:
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis' }}
+              >
+                {typeof navigator !== 'undefined'
+                  ? navigator.userAgent.substring(0, 50) + '...'
+                  : ''}
               </Typography>
             </Grid>
           </Grid>

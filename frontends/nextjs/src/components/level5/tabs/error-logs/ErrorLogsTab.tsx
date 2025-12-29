@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,7 +33,8 @@ interface ErrorLogsTabProps {
 
 export const ErrorLogsTab = ({ user }: ErrorLogsTabProps) => {
   const { logs, stats, loading, reload, isSuperGod, scopeDescription } = useErrorLogData(user)
-  const { filterLevel, filterResolved, setFilterLevel, setFilterResolved, filteredLogs } = useErrorLogFilters(logs)
+  const { filterLevel, filterResolved, setFilterLevel, setFilterResolved, filteredLogs } =
+    useErrorLogFilters(logs)
   const {
     clearOnlyResolved,
     handleClearLogs,
@@ -54,7 +55,13 @@ export const ErrorLogsTab = ({ user }: ErrorLogsTabProps) => {
               <CardDescription className="text-gray-400">{scopeDescription}</CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <Button onClick={reload} disabled={loading} size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+              <Button
+                onClick={reload}
+                disabled={loading}
+                size="sm"
+                variant="outline"
+                className="border-white/20 text-white hover:bg-white/10"
+              >
                 {loading ? 'Loading...' : 'Refresh'}
               </Button>
               {isSuperGod && (
@@ -132,7 +139,9 @@ export const ErrorLogsTab = ({ user }: ErrorLogsTabProps) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="border-white/20 text-white hover:bg-white/10">Cancel</AlertDialogCancel>
+              <AlertDialogCancel className="border-white/20 text-white hover:bg-white/10">
+                Cancel
+              </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleClearLogs}
                 className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700"

@@ -34,6 +34,9 @@ describe('setAppConfig', () => {
     })
 
     expect(mockDelete).toHaveBeenCalled()
-    expect(mockCreate).toHaveBeenCalledWith('AppConfiguration', expect.objectContaining({ id: 'app1' }))
+    expect(mockCreate).toHaveBeenCalledWith(
+      'AppConfiguration',
+      expect.objectContaining({ id: 'app1' })
+    )
   })
 })

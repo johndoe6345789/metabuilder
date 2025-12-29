@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui'
 import { Database, ComponentNode, ComponentConfig } from '@/lib/database'
 import { componentCatalog } from '@/lib/components/component-catalog'
 import { toast } from 'sonner'
@@ -14,7 +20,13 @@ interface ComponentConfigDialogProps {
   nerdMode?: boolean
 }
 
-export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode = false }: ComponentConfigDialogProps) {
+export function ComponentConfigDialog({
+  node,
+  isOpen,
+  onClose,
+  onSave,
+  nerdMode = false,
+}: ComponentConfigDialogProps) {
   const [config, setConfig] = useState<ComponentConfig | null>(null)
   const [props, setProps] = useState<Record<string, unknown>>({})
   const [styles, setStyles] = useState<Record<string, unknown>>({})
@@ -53,7 +65,7 @@ export function ComponentConfigDialog({ node, isOpen, onClose, onSave, nerdMode 
     const allConfigs = await Database.getComponentConfigs()
     allConfigs[node.id] = newConfig
     await Database.setComponentConfigs(allConfigs)
-    
+
     toast.success('Configuration saved')
     onSave()
   }, [config, node.id, props, styles, events, onSave])

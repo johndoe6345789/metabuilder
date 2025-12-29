@@ -5,8 +5,6 @@ export function enforceMaxMemory(this: SandboxedLuaEngineState): void {
 
   const usageBytes = this.getLuaMemoryUsageBytes()
   if (usageBytes > this.maxMemory) {
-    throw new Error(
-      `Memory limit exceeded: ${usageBytes} bytes used (max ${this.maxMemory})`
-    )
+    throw new Error(`Memory limit exceeded: ${usageBytes} bytes used (max ${this.maxMemory})`)
   }
 }

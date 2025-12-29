@@ -7,36 +7,34 @@ import { TabsContext } from '../core/tabs-context'
 
 export type TabsListProps = BoxProps
 
-const TabsList = forwardRef<HTMLDivElement, TabsListProps>(
-  ({ children, sx, ...props }, ref) => {
-    const context = useContext(TabsContext)
+const TabsList = forwardRef<HTMLDivElement, TabsListProps>(({ children, sx, ...props }, ref) => {
+  const context = useContext(TabsContext)
 
-    if (!context) {
-      throw new Error('TabsList must be used within Tabs')
-    }
-
-    return (
-      <Box
-        ref={ref}
-        role="tablist"
-        aria-orientation="horizontal"
-        sx={{
-          display: 'inline-flex',
-          height: 36,
-          alignItems: 'center',
-          justifyContent: 'center',
-          bgcolor: 'action.hover',
-          borderRadius: 2,
-          p: 0.5,
-          ...sx,
-        }}
-        {...props}
-      >
-        {children}
-      </Box>
-    )
+  if (!context) {
+    throw new Error('TabsList must be used within Tabs')
   }
-)
+
+  return (
+    <Box
+      ref={ref}
+      role="tablist"
+      aria-orientation="horizontal"
+      sx={{
+        display: 'inline-flex',
+        height: 36,
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: 'action.hover',
+        borderRadius: 2,
+        p: 0.5,
+        ...sx,
+      }}
+      {...props}
+    >
+      {children}
+    </Box>
+  )
+})
 
 TabsList.displayName = 'TabsList'
 

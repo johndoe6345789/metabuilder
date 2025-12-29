@@ -1,7 +1,10 @@
 import { getAdapter } from '../../../core/dbal-client'
 import type { ComponentNode } from '../types'
 
-export async function updateComponentNode(nodeId: string, updates: Partial<ComponentNode>): Promise<void> {
+export async function updateComponentNode(
+  nodeId: string,
+  updates: Partial<ComponentNode>
+): Promise<void> {
   const adapter = getAdapter()
   const data: Record<string, unknown> = {}
   if (updates.type !== undefined) data.type = updates.type

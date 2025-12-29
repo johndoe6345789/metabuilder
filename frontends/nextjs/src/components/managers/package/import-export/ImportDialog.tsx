@@ -1,6 +1,12 @@
 import type React from 'react'
 import { ArrowSquareIn, FileArrowUp } from '@phosphor-icons/react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui'
 import { ImportStatus } from './StatusUI'
 
 interface ImportDialogProps {
@@ -11,7 +17,13 @@ interface ImportDialogProps {
   importing: boolean
 }
 
-export const ImportDialog = ({ open, onOpenChange, fileInputRef, onFileSelect, importing }: ImportDialogProps) => (
+export const ImportDialog = ({
+  open,
+  onOpenChange,
+  fileInputRef,
+  onFileSelect,
+  importing,
+}: ImportDialogProps) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
     <DialogContent className="max-w-2xl">
       <DialogHeader>
@@ -36,7 +48,13 @@ export const ImportDialog = ({ open, onOpenChange, fileInputRef, onFileSelect, i
             <FileArrowUp size={48} className="mx-auto mb-4 text-muted-foreground" />
             <p className="font-medium mb-1">Click to select a package file</p>
             <p className="text-sm text-muted-foreground">Supports .zip files only</p>
-            <input ref={fileInputRef} type="file" accept=".zip" onChange={onFileSelect} className="hidden" />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".zip"
+              onChange={onFileSelect}
+              className="hidden"
+            />
           </div>
         }
       />

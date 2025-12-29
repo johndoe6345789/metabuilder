@@ -33,7 +33,9 @@ export const createProjectTemplate = (spec: CodegenSpec): CodegenProjectTemplate
     brief: spec.brief,
     generatedAt: new Date().toISOString(),
   }
-  const canonicalBrief = spec.brief ? spec.brief : 'A tiny sample scaffolding produced by Codegen Studio.'
+  const canonicalBrief = spec.brief
+    ? spec.brief
+    : 'A tiny sample scaffolding produced by Codegen Studio.'
   const files = [
     {
       path: `${rootDir}/README.md`,
@@ -41,22 +43,26 @@ export const createProjectTemplate = (spec: CodegenSpec): CodegenProjectTemplate
     },
     {
       path: `${rootDir}/package.json`,
-      contents: JSON.stringify({
-        name: rootDir,
-        version: '0.0.1',
-        private: true,
-        type: 'module',
-        scripts: {
-          dev: 'next dev',
-          build: 'next build',
-          start: 'next start',
+      contents: JSON.stringify(
+        {
+          name: rootDir,
+          version: '0.0.1',
+          private: true,
+          type: 'module',
+          scripts: {
+            dev: 'next dev',
+            build: 'next build',
+            start: 'next start',
+          },
+          dependencies: {
+            next: '16.1.1',
+            react: '19.2.3',
+            'react-dom': '19.2.3',
+          },
         },
-        dependencies: {
-          next: '16.1.1',
-          react: '19.2.3',
-          'react-dom': '19.2.3',
-        },
-      }, null, 2),
+        null,
+        2
+      ),
     },
     {
       path: `${rootDir}/src/app/page.tsx`,

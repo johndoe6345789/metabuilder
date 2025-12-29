@@ -1,13 +1,13 @@
 /**
  * Lua Snippets - Re-exports for backward compatibility
- * 
+ *
  * Prefer importing from LuaSnippetUtils class or individual functions:
- * 
+ *
  * @example
  * // Class pattern (recommended)
  * import { LuaSnippetUtils } from '@/lib/lua/LuaSnippetUtils'
  * const snippets = LuaSnippetUtils.getByCategory('Validation')
- * 
+ *
  * @example
  * // Individual function import
  * import { getSnippetsByCategory } from '@/lib/lua/functions/get-snippets-by-category'

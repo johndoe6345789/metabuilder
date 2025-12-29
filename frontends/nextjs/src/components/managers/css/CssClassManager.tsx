@@ -31,30 +31,33 @@ export function CssClassManager() {
 
   const normalizedSearch = searchQuery.trim().toLowerCase()
   const filteredCategories = normalizedSearch
-    ? categories.filter((category) =>
-        category.name.toLowerCase().includes(normalizedSearch) ||
-        category.classes.some((cls) => cls.toLowerCase().includes(normalizedSearch))
+    ? categories.filter(
+        category =>
+          category.name.toLowerCase().includes(normalizedSearch) ||
+          category.classes.some(cls => cls.toLowerCase().includes(normalizedSearch))
       )
     : categories
   const totalClassCount = categories.reduce((total, category) => total + category.classes.length, 0)
 
   const newClassTokens = newClass.trim().split(/\s+/).filter(Boolean)
   const uniqueNewClassTokens = Array.from(new Set(newClassTokens))
-  const invalidNewClassTokens = uniqueNewClassTokens.filter((token) => !CLASS_TOKEN_PATTERN.test(token))
-  const duplicateNewClassTokens = uniqueNewClassTokens.filter((token) => classes.includes(token))
+  const invalidNewClassTokens = uniqueNewClassTokens.filter(
+    token => !CLASS_TOKEN_PATTERN.test(token)
+  )
+  const duplicateNewClassTokens = uniqueNewClassTokens.filter(token => classes.includes(token))
   const canAddClass =
     uniqueNewClassTokens.length > 0 &&
     invalidNewClassTokens.length === 0 &&
-    uniqueNewClassTokens.some((token) => !classes.includes(token))
+    uniqueNewClassTokens.some(token => !classes.includes(token))
 
   const normalizedClassSearch = classSearchQuery.trim().toLowerCase()
   const filteredEditorClasses = normalizedClassSearch
-    ? classes.filter((cls) => cls.toLowerCase().includes(normalizedClassSearch))
+    ? classes.filter(cls => cls.toLowerCase().includes(normalizedClassSearch))
     : classes
 
   const loadCategories = async () => {
     const cats = await Database.getCssClasses()
-    const normalized = cats.map((category) => ({
+    const normalized = cats.map(category => ({
       ...category,
       classes: uniqueClasses(category.classes),
     }))
@@ -87,18 +90,18 @@ export function CssClassManager() {
       return
     }
 
-    const newTokens = uniqueNewClassTokens.filter((token) => !classes.includes(token))
+    const newTokens = uniqueNewClassTokens.filter(token => !classes.includes(token))
     if (newTokens.length === 0) {
       toast.info('Those classes already exist in this category')
       return
     }
 
-    setClasses((current) => uniqueClasses([...current, ...newTokens]))
+    setClasses(current => uniqueClasses([...current, ...newTokens]))
     setNewClass('')
   }
 
   const removeClass = (cssClass: string) => {
-    setClasses(current => current.filter((cls) => cls !== cssClass))
+    setClasses(current => current.filter(cls => cls !== cssClass))
   }
 
   const handleSave = async () => {
@@ -109,9 +112,10 @@ export function CssClassManager() {
       return
     }
 
-    const nameConflict = categories.some((category) =>
-      category.name.toLowerCase() === trimmedName.toLowerCase() &&
-      category.name !== editingCategory?.name
+    const nameConflict = categories.some(
+      category =>
+        category.name.toLowerCase() === trimmedName.toLowerCase() &&
+        category.name !== editingCategory?.name
     )
     if (nameConflict) {
       toast.error('A category with this name already exists')
@@ -152,7 +156,9 @@ export function CssClassManager() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold">CSS Class Library</h2>
-          <p className="text-sm text-muted-foreground">Manage CSS classes available in the builder</p>
+          <p className="text-sm text-muted-foreground">
+            Manage CSS classes available in the builder
+          </p>
           <p className="text-xs text-muted-foreground">
             {categories.length} categories • {totalClassCount} classes
           </p>
@@ -162,7 +168,7 @@ export function CssClassManager() {
             <Input
               placeholder="Search categories or classes..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               className="sm:w-64"
             />
             {searchQuery && (
@@ -201,16 +207,14 @@ export function CssClassManager() {
             <Separator />
             <ScrollArea className="h-[120px]">
               <div className="flex flex-wrap gap-1">
-                {category.classes.map((cls) => (
+                {category.classes.map(cls => (
                   <Badge key={cls} variant="outline" className="text-xs font-mono">
                     {cls}
                   </Badge>
                 ))}
               </div>
             </ScrollArea>
-            <div className="text-xs text-muted-foreground">
-              {category.classes.length} classes
-            </div>
+            <div className="text-xs text-muted-foreground">{category.classes.length} classes</div>
           </Card>
         ))}
       </div>
@@ -239,7 +243,7 @@ export function CssClassManager() {
               <Input
                 placeholder="e.g., Layout"
                 value={categoryName}
-                onChange={(e) => setCategoryName(e.target.value)}
+                onChange={e => setCategoryName(e.target.value)}
               />
             </div>
 
@@ -251,8 +255,8 @@ export function CssClassManager() {
                 <Input
                   placeholder="Enter class name"
                   value={newClass}
-                  onChange={(e) => setNewClass(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && canAddClass && addClass()}
+                  onChange={e => setNewClass(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && canAddClass && addClass()}
                   className={`font-mono ${invalidNewClassTokens.length > 0 ? 'border-destructive focus-visible:ring-destructive' : ''}`}
                 />
                 <Button onClick={addClass} type="button" disabled={!canAddClass}>
@@ -280,7 +284,7 @@ export function CssClassManager() {
                 <Input
                   placeholder="Filter classes..."
                   value={classSearchQuery}
-                  onChange={(e) => setClassSearchQuery(e.target.value)}
+                  onChange={e => setClassSearchQuery(e.target.value)}
                   className="font-mono"
                 />
               </div>
@@ -289,13 +293,10 @@ export function CssClassManager() {
             {classes.length > 0 && (
               <ScrollArea className="h-[200px] border rounded-lg p-3">
                 <div className="flex flex-wrap gap-2">
-                  {filteredEditorClasses.map((cls) => (
+                  {filteredEditorClasses.map(cls => (
                     <Badge key={cls} variant="secondary" className="gap-2 font-mono">
                       {cls}
-                      <button
-                        onClick={() => removeClass(cls)}
-                        className="hover:text-destructive"
-                      >
+                      <button onClick={() => removeClass(cls)} className="hover:text-destructive">
                         <X size={14} />
                       </button>
                     </Badge>

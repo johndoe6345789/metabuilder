@@ -15,9 +15,9 @@ describe('NavGroup', () => {
         <NavItem label="Child Item" />
       </NavGroup>
     )
-    
+
     expect(screen.getByText(label)).toBeTruthy()
-    
+
     const childItem = screen.queryByText('Child Item')
     if (defaultOpen) {
       expect(childItem).toBeTruthy()
@@ -30,18 +30,18 @@ describe('NavGroup', () => {
         <NavItem label="Child Item" />
       </NavGroup>
     )
-    
+
     const button = screen.getByRole('button', { name: /Menu/i })
     let childItem = screen.queryByText('Child Item')
-    
+
     // Initially collapsed - item should not be visible
     expect(childItem).toBeNull()
-    
+
     // Click to expand
     fireEvent.click(button)
     childItem = screen.queryByText('Child Item')
     expect(childItem).toBeTruthy()
-    
+
     // Click to collapse
     fireEvent.click(button)
     // After collapsing, wait for animation and check
@@ -57,31 +57,31 @@ describe('NavGroup', () => {
         <NavItem label="Document" />
       </NavGroup>
     )
-    
+
     expect(screen.getByTestId('folder-icon')).toBeTruthy()
   })
 
-  it.each([
-    { disabled: true },
-    { disabled: false },
-  ])('handles disabled=$disabled state', ({ disabled }) => {
-    render(
-      <NavGroup label="Menu" disabled={disabled}>
-        <NavItem label="Child" />
-      </NavGroup>
-    )
-    
-    const button = screen.getByRole('button', { name: /Menu/i })
-    
-    if (disabled) {
-      expect(button.getAttribute('aria-disabled')).toBe('true')
-      fireEvent.click(button)
-      // Should not expand when disabled
-      expect(screen.queryByText('Child')).toBeNull()
-    } else {
-      expect(button.getAttribute('aria-disabled')).toBe(null)
+  it.each([{ disabled: true }, { disabled: false }])(
+    'handles disabled=$disabled state',
+    ({ disabled }) => {
+      render(
+        <NavGroup label="Menu" disabled={disabled}>
+          <NavItem label="Child" />
+        </NavGroup>
+      )
+
+      const button = screen.getByRole('button', { name: /Menu/i })
+
+      if (disabled) {
+        expect(button.getAttribute('aria-disabled')).toBe('true')
+        fireEvent.click(button)
+        // Should not expand when disabled
+        expect(screen.queryByText('Child')).toBeNull()
+      } else {
+        expect(button.getAttribute('aria-disabled')).toBe(null)
+      }
     }
-  })
+  )
 
   it('renders divider when divider=true', () => {
     const { container } = render(
@@ -89,7 +89,7 @@ describe('NavGroup', () => {
         <NavItem label="Child" />
       </NavGroup>
     )
-    
+
     // Check for MUI Divider component
     const divider = container.querySelector('hr')
     expect(divider).toBeTruthy()
@@ -103,7 +103,7 @@ describe('NavGroup', () => {
         <NavItem label="Child 3" />
       </NavGroup>
     )
-    
+
     expect(screen.getByText('Child 1')).toBeTruthy()
     expect(screen.getByText('Child 2')).toBeTruthy()
     expect(screen.getByText('Child 3')).toBeTruthy()

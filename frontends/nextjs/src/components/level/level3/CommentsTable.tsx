@@ -1,5 +1,13 @@
 import { useMemo } from 'react'
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui'
 import { ChallengePanel } from '../sections/ChallengePanel'
 import { Trash } from '@phosphor-icons/react'
 import type { Comment, User } from '@/lib/level-types'
@@ -11,7 +19,12 @@ interface CommentsTableProps {
   onDeleteComment: (commentId: string) => void
 }
 
-export function CommentsTable({ comments, users, searchTerm, onDeleteComment }: CommentsTableProps) {
+export function CommentsTable({
+  comments,
+  users,
+  searchTerm,
+  onDeleteComment,
+}: CommentsTableProps) {
   const filteredComments = useMemo(
     () => comments.filter(c => c.content.toLowerCase().includes(searchTerm.toLowerCase())),
     [comments, searchTerm]
@@ -36,11 +49,13 @@ export function CommentsTable({ comments, users, searchTerm, onDeleteComment }: 
               </TableCell>
             </TableRow>
           ) : (
-            filteredComments.map((c) => {
+            filteredComments.map(c => {
               const commentUser = users.find(u => u.id === c.userId)
               return (
                 <TableRow key={c.id}>
-                  <TableCell className="font-medium">{commentUser?.username || 'Unknown'}</TableCell>
+                  <TableCell className="font-medium">
+                    {commentUser?.username || 'Unknown'}
+                  </TableCell>
                   <TableCell className="max-w-md truncate">{c.content}</TableCell>
                   <TableCell>{new Date(c.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell className="text-right">

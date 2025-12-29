@@ -66,7 +66,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           },
           '&.Mui-focused': {
             borderColor: error ? 'error.main' : 'primary.main',
-            boxShadow: (theme) => `0 0 0 2px ${error ? theme.palette.error.main : theme.palette.primary.main}25`,
+            boxShadow: theme =>
+              `0 0 0 2px ${error ? theme.palette.error.main : theme.palette.primary.main}25`,
           },
           '&.Mui-disabled': {
             opacity: 0.5,

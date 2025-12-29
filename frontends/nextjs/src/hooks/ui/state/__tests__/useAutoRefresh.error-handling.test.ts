@@ -41,9 +41,9 @@ describe('useAutoRefresh error handling', () => {
   })
 
   it('continues scheduling refreshes after onRefresh errors', () => {
-    const erroringRefresh = vi.fn().mockImplementation(() =>
-      Promise.reject(new Error('refresh failed')).catch(() => {})
-    )
+    const erroringRefresh = vi
+      .fn()
+      .mockImplementation(() => Promise.reject(new Error('refresh failed')).catch(() => {}))
 
     const { result } = renderHook(() =>
       useAutoRefresh({

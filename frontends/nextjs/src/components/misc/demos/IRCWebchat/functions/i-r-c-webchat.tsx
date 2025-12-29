@@ -20,12 +20,12 @@ export function IRCWebchat({ user, channelName = 'general', onClose }: IRCWebcha
   }, [])
 
   const addUserToChannel = () => {
-    setOnlineUsers((current) => {
+    setOnlineUsers(current => {
       if (!current) return [user.username]
       if (current.includes(user.username)) return current
       const updated = [...current, user.username]
-      
-      setMessages((msgs) => [
+
+      setMessages(msgs => [
         ...(msgs || []),
         {
           id: `msg_${Date.now()}_${Math.random()}`,
@@ -36,17 +36,17 @@ export function IRCWebchat({ user, channelName = 'general', onClose }: IRCWebcha
           type: 'join',
         },
       ])
-      
+
       return updated
     })
   }
 
   const removeUserFromChannel = () => {
-    setOnlineUsers((current) => {
+    setOnlineUsers(current => {
       if (!current) return []
-      const updated = current.filter((u) => u !== user.username)
-      
-      setMessages((msgs) => [
+      const updated = current.filter(u => u !== user.username)
+
+      setMessages(msgs => [
         ...(msgs || []),
         {
           id: `msg_${Date.now()}_${Math.random()}`,
@@ -57,7 +57,7 @@ export function IRCWebchat({ user, channelName = 'general', onClose }: IRCWebcha
           type: 'leave',
         },
       ])
-      
+
       return updated
     })
   }
@@ -78,7 +78,7 @@ export function IRCWebchat({ user, channelName = 'general', onClose }: IRCWebcha
         type: 'message',
       }
 
-      setMessages((current) => [...(current || []), newMessage])
+      setMessages(current => [...(current || []), newMessage])
     }
 
     setInputMessage('')
@@ -99,10 +99,10 @@ export function IRCWebchat({ user, channelName = 'general', onClose }: IRCWebcha
 
     if (cmd === '/help') {
       systemMessage.message = 'Available commands: /help, /users, /clear, /me <action>'
-      setMessages((current) => [...(current || []), systemMessage])
+      setMessages(current => [...(current || []), systemMessage])
     } else if (cmd === '/users') {
       systemMessage.message = `Online users (${onlineUsers?.length || 0}): ${(onlineUsers || []).join(', ')}`
-      setMessages((current) => [...(current || []), systemMessage])
+      setMessages(current => [...(current || []), systemMessage])
     } else if (cmd === '/clear') {
       setMessages([])
     } else if (cmd === '/me') {
@@ -116,11 +116,11 @@ export function IRCWebchat({ user, channelName = 'general', onClose }: IRCWebcha
           timestamp: Date.now(),
           type: 'system',
         }
-        setMessages((current) => [...(current || []), actionMessage])
+        setMessages(current => [...(current || []), actionMessage])
       }
     } else {
       systemMessage.message = `Unknown command: ${cmd}. Type /help for available commands.`
-      setMessages((current) => [...(current || []), systemMessage])
+      setMessages(current => [...(current || []), systemMessage])
     }
   }
 

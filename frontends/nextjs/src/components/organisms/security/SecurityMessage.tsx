@@ -69,13 +69,16 @@ const getDescription = (scanResult: SecurityScanResult, codeType: string) => {
 }
 
 export function SecurityMessage({ scanResult, codeType = 'code' }: SecurityMessageProps) {
-  const groupedIssues = scanResult.issues.reduce((acc, issue) => {
-    if (!acc[issue.severity]) {
-      acc[issue.severity] = []
-    }
-    acc[issue.severity].push(issue)
-    return acc
-  }, {} as Record<string, SecurityIssue[]>)
+  const groupedIssues = scanResult.issues.reduce(
+    (acc, issue) => {
+      if (!acc[issue.severity]) {
+        acc[issue.severity] = []
+      }
+      acc[issue.severity].push(issue)
+      return acc
+    },
+    {} as Record<string, SecurityIssue[]>
+  )
 
   return (
     <>
@@ -83,7 +86,9 @@ export function SecurityMessage({ scanResult, codeType = 'code' }: SecurityMessa
         <div className="flex items-center gap-4 mb-2">
           {getIcon(scanResult.severity)}
           <div className="flex-1">
-            <DialogTitle className="text-2xl">{getTitle(scanResult.severity, scanResult.safe)}</DialogTitle>
+            <DialogTitle className="text-2xl">
+              {getTitle(scanResult.severity, scanResult.safe)}
+            </DialogTitle>
             <DialogDescription className="text-base mt-1">
               {getDescription(scanResult, codeType)}
             </DialogDescription>
@@ -124,9 +129,7 @@ export function SecurityMessage({ scanResult, codeType = 'code' }: SecurityMessa
                             <div className="flex-1">
                               <p className="font-semibold">{issue.message}</p>
                               {issue.line && (
-                                <p className="text-sm opacity-75 mt-1">
-                                  Line {issue.line}
-                                </p>
+                                <p className="text-sm opacity-75 mt-1">Line {issue.line}</p>
                               )}
                             </div>
                             <Badge variant="outline" className="font-mono text-xs">

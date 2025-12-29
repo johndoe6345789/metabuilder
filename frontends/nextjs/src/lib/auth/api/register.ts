@@ -19,7 +19,10 @@ export async function register(
     }),
   })
 
-  const payload = (await response.json().catch(() => null)) as { user?: User; error?: string } | null
+  const payload = (await response.json().catch(() => null)) as {
+    user?: User
+    error?: string
+  } | null
 
   if (!response.ok || !payload?.user) {
     const message = payload?.error || 'Registration failed'

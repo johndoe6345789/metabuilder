@@ -7,7 +7,7 @@ import type { ErrorLog } from '../types'
 export async function addErrorLog(log: Omit<ErrorLog, 'id'>): Promise<string> {
   const adapter = getAdapter()
   const id = `error_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
-  
+
   await adapter.create('ErrorLog', {
     id,
     timestamp: BigInt(log.timestamp),
@@ -23,6 +23,6 @@ export async function addErrorLog(log: Omit<ErrorLog, 'id'>): Promise<string> {
     resolvedAt: log.resolvedAt ? BigInt(log.resolvedAt) : null,
     resolvedBy: log.resolvedBy || null,
   })
-  
+
   return id
 }

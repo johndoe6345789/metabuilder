@@ -1,7 +1,13 @@
 'use client'
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import { FormControl, FormHelperText, InputLabel, Select as MuiSelect, SelectProps as MuiSelectProps } from '@mui/material'
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  Select as MuiSelect,
+  SelectProps as MuiSelectProps,
+} from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
 import { SelectContent } from './SelectContent'
@@ -19,7 +25,21 @@ export interface SelectProps extends Omit<MuiSelectProps<string>, 'onChange'> {
 }
 
 const Select = forwardRef<HTMLDivElement, SelectProps>(
-  ({ onValueChange, value, defaultValue, label, error, helperText, children, sx, variant = 'outlined', ...props }, ref) => {
+  (
+    {
+      onValueChange,
+      value,
+      defaultValue,
+      label,
+      error,
+      helperText,
+      children,
+      sx,
+      variant = 'outlined',
+      ...props
+    },
+    ref
+  ) => {
     return (
       <FormControl ref={ref} fullWidth error={error} sx={sx}>
         {label && <InputLabel>{label}</InputLabel>}
@@ -28,7 +48,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
           defaultValue={defaultValue}
           label={label}
           variant={variant}
-          onChange={(e) => onValueChange?.(e.target.value as string)}
+          onChange={e => onValueChange?.(e.target.value as string)}
           IconComponent={KeyboardArrowDownIcon}
           {...props}
         >
@@ -41,5 +61,14 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
 )
 Select.displayName = 'Select'
 
-export { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue }
+export {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+}
 export type { SelectItemProps }

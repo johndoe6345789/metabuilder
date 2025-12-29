@@ -1,7 +1,10 @@
 import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
 
-import { formatWorkflowLogAnalysis, summarizeWorkflowLogs } from '@/lib/github/analyze-workflow-logs'
+import {
+  formatWorkflowLogAnalysis,
+  summarizeWorkflowLogs,
+} from '@/lib/github/analyze-workflow-logs'
 
 import { Job, RepoInfo, WorkflowRun } from '../types'
 
@@ -94,7 +97,7 @@ export function useWorkflowLogAnalysis({
         setIsLoadingLogs(false)
       }
     },
-    [repoInfo],
+    [repoInfo]
   )
 
   const analyzeRunLogs = useCallback(
@@ -120,7 +123,7 @@ export function useWorkflowLogAnalysis({
         onAnalysisComplete?.(null)
       }
     },
-    [onAnalysisComplete, onAnalysisStart, runLogs, selectedRunId],
+    [onAnalysisComplete, onAnalysisStart, runLogs, selectedRunId]
   )
 
   return {

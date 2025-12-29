@@ -14,9 +14,7 @@ describe('Icon', () => {
   })
 
   it('applies custom sx styles', () => {
-    const { container } = render(
-      <Icon name="Home" sx={{ color: 'primary.main' }} />
-    )
+    const { container } = render(<Icon name="Home" sx={{ color: 'primary.main' }} />)
     expect(container.querySelector('svg')).not.toBeNull()
   })
 

@@ -1,7 +1,7 @@
 import type { FileNode } from './types'
 
 export function updateNode(nodes: FileNode[], id: string, updates: Partial<FileNode>): FileNode[] {
-  return nodes.map((node) => {
+  return nodes.map(node => {
     if (node.id === id) {
       return { ...node, ...updates }
     }

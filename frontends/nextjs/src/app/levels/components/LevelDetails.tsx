@@ -1,4 +1,14 @@
-import { Alert, Box, Button, Chip, Divider, LinearProgress, Paper, Stack, Typography } from '@mui/material'
+import {
+  Alert,
+  Box,
+  Button,
+  Chip,
+  Divider,
+  LinearProgress,
+  Paper,
+  Stack,
+  Typography,
+} from '@mui/material'
 
 import type { PermissionLevel } from '../levels-data'
 import { highlightColor } from '../utils/highlightColor'
@@ -11,8 +21,20 @@ type LevelDetailsProps = {
   onPromote: () => void
 }
 
-export const LevelDetails = ({ selectedLevel, nextLevel, maxCapabilityCount, note, onPromote }: LevelDetailsProps) => (
-  <Paper sx={{ p: 4, border: (theme) => `1px dashed ${theme.palette.divider}`, bgcolor: 'background.paper' }}>
+export const LevelDetails = ({
+  selectedLevel,
+  nextLevel,
+  maxCapabilityCount,
+  note,
+  onPromote,
+}: LevelDetailsProps) => (
+  <Paper
+    sx={{
+      p: 4,
+      border: theme => `1px dashed ${theme.palette.divider}`,
+      bgcolor: 'background.paper',
+    }}
+  >
     <Stack spacing={2}>
       <Stack direction="row" alignItems="center" spacing={1}>
         <Typography variant="h5">Selected level details</Typography>
@@ -22,7 +44,7 @@ export const LevelDetails = ({ selectedLevel, nextLevel, maxCapabilityCount, not
         {selectedLevel.description}
       </Typography>
       <Stack direction="row" spacing={1} flexWrap="wrap">
-        {selectedLevel.capabilities.map((capability) => (
+        {selectedLevel.capabilities.map(capability => (
           <Chip
             key={capability}
             label={capability}
@@ -48,7 +70,8 @@ export const LevelDetails = ({ selectedLevel, nextLevel, maxCapabilityCount, not
         </Typography>
         {nextLevel ? (
           <Typography variant="body2" color="text.secondary">
-            Promote into <strong>{nextLevel.title}</strong> to unlock {nextLevel.capabilities.length} controls.
+            Promote into <strong>{nextLevel.title}</strong> to unlock{' '}
+            {nextLevel.capabilities.length} controls.
           </Typography>
         ) : (
           <Typography variant="body2" color="text.secondary">

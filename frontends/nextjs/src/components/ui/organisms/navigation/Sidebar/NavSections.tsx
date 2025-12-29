@@ -33,11 +33,9 @@ const SidebarSection = forwardRef<HTMLDivElement, SidebarSectionProps>(
 )
 SidebarSection.displayName = 'SidebarSection'
 
-const SidebarSeparator = forwardRef<HTMLHRElement, Record<string, never>>(
-  (props, ref) => {
-    return <Divider ref={ref} sx={{ my: 1 }} {...props} />
-  }
-)
+const SidebarSeparator = forwardRef<HTMLHRElement, Record<string, never>>((props, ref) => {
+  return <Divider ref={ref} sx={{ my: 1 }} {...props} />
+})
 SidebarSeparator.displayName = 'SidebarSeparator'
 
 export { SidebarSection, SidebarSeparator }

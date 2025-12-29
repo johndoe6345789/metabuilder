@@ -101,7 +101,9 @@ export function PageRoutesManager() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">Page Routes</h2>
-          <p className="text-muted-foreground">Configure page routes and URLs for your application</p>
+          <p className="text-muted-foreground">
+            Configure page routes and URLs for your application
+          </p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
@@ -137,11 +139,7 @@ export function PageRoutesManager() {
           <CardDescription>All page routes in your application</CardDescription>
         </CardHeader>
         <CardContent>
-          <RoutesTable
-            pages={pages}
-            onEdit={handleOpenDialog}
-            onDelete={handleDeletePage}
-          />
+          <RoutesTable pages={pages} onEdit={handleOpenDialog} onDelete={handleDeletePage} />
         </CardContent>
       </Card>
     </div>

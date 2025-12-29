@@ -9,7 +9,11 @@ import { useWorkflowState } from './editor/useWorkflowState'
 import { createActionHandlers } from './editor/createActionHandlers'
 import type { WorkflowEditorProps } from './editor/types'
 
-export function WorkflowEditor({ workflows, onWorkflowsChange, scripts = [] }: WorkflowEditorProps) {
+export function WorkflowEditor({
+  workflows,
+  onWorkflowsChange,
+  scripts = [],
+}: WorkflowEditorProps) {
   const state = useWorkflowState(workflows)
   const {
     currentWorkflow,

@@ -19,37 +19,43 @@ describe('useAutoRefresh polling', () => {
       { enabled: false, expectAutoRefreshing: false },
       { enabled: true, expectAutoRefreshing: true },
       { enabled: undefined, expectAutoRefreshing: false },
-    ])('initializes with enabled=$enabled -> isAutoRefreshing=$expectAutoRefreshing', ({ enabled, expectAutoRefreshing }) => {
-      const onRefresh = vi.fn().mockResolvedValue(undefined)
+    ])(
+      'initializes with enabled=$enabled -> isAutoRefreshing=$expectAutoRefreshing',
+      ({ enabled, expectAutoRefreshing }) => {
+        const onRefresh = vi.fn().mockResolvedValue(undefined)
 
-      const { result } = renderHook(() =>
-        useAutoRefresh({
-          intervalMs: 30000,
-          onRefresh,
-          enabled,
-        })
-      )
+        const { result } = renderHook(() =>
+          useAutoRefresh({
+            intervalMs: 30000,
+            onRefresh,
+            enabled,
+          })
+        )
 
-      expect(result.current.isAutoRefreshing).toBe(expectAutoRefreshing)
-    })
+        expect(result.current.isAutoRefreshing).toBe(expectAutoRefreshing)
+      }
+    )
 
     it.each([
       { intervalMs: 30000, expectedSeconds: 30 },
       { intervalMs: 60000, expectedSeconds: 60 },
       { intervalMs: 5000, expectedSeconds: 5 },
-    ])('sets secondsUntilNextRefresh from intervalMs=$intervalMs', ({ intervalMs, expectedSeconds }) => {
-      const onRefresh = vi.fn().mockResolvedValue(undefined)
+    ])(
+      'sets secondsUntilNextRefresh from intervalMs=$intervalMs',
+      ({ intervalMs, expectedSeconds }) => {
+        const onRefresh = vi.fn().mockResolvedValue(undefined)
 
-      const { result } = renderHook(() =>
-        useAutoRefresh({
-          intervalMs,
-          onRefresh,
-          enabled: false,
-        })
-      )
+        const { result } = renderHook(() =>
+          useAutoRefresh({
+            intervalMs,
+            onRefresh,
+            enabled: false,
+          })
+        )
 
-      expect(result.current.secondsUntilNextRefresh).toBe(expectedSeconds)
-    })
+        expect(result.current.secondsUntilNextRefresh).toBe(expectedSeconds)
+      }
+    )
   })
 
   describe('toggleAutoRefresh', () => {

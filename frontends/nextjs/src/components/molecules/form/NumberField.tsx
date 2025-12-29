@@ -69,10 +69,11 @@ const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
           '& input[type=number]': {
             MozAppearance: 'textfield',
           },
-          '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-            WebkitAppearance: 'none',
-            margin: 0,
-          },
+          '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button':
+            {
+              WebkitAppearance: 'none',
+              margin: 0,
+            },
         }}
         {...props}
       />

@@ -27,7 +27,7 @@ export const LuaScriptDetails = ({
         <Label>Script Name</Label>
         <Input
           value={script.name}
-          onChange={(e) => onUpdateScript({ name: e.target.value })}
+          onChange={e => onUpdateScript({ name: e.target.value })}
           placeholder="validate_user"
           className="font-mono"
         />
@@ -36,7 +36,7 @@ export const LuaScriptDetails = ({
         <Label>Return Type</Label>
         <Input
           value={script.returnType || ''}
-          onChange={(e) => onUpdateScript({ returnType: e.target.value })}
+          onChange={e => onUpdateScript({ returnType: e.target.value })}
           placeholder="table, boolean, string..."
         />
       </div>
@@ -46,7 +46,7 @@ export const LuaScriptDetails = ({
       <Label>Description</Label>
       <Input
         value={script.description || ''}
-        onChange={(e) => onUpdateScript({ description: e.target.value })}
+        onChange={e => onUpdateScript({ description: e.target.value })}
         placeholder="What this script does..."
       />
     </div>
@@ -69,21 +69,17 @@ export const LuaScriptDetails = ({
             <div key={index} className="flex gap-2 items-center">
               <Input
                 value={param.name}
-                onChange={(e) => onUpdateParameter(index, { name: e.target.value })}
+                onChange={e => onUpdateParameter(index, { name: e.target.value })}
                 placeholder="paramName"
                 className="flex-1 font-mono text-sm"
               />
               <Input
                 value={param.type}
-                onChange={(e) => onUpdateParameter(index, { type: e.target.value })}
+                onChange={e => onUpdateParameter(index, { type: e.target.value })}
                 placeholder="string"
                 className="w-32 text-sm"
               />
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onDeleteParameter(index)}
-              >
+              <Button variant="ghost" size="sm" onClick={() => onDeleteParameter(index)}>
                 <Trash size={14} />
               </Button>
             </div>
@@ -96,17 +92,18 @@ export const LuaScriptDetails = ({
       <div>
         <Label className="mb-2 block">Test Input Values</Label>
         <div className="space-y-2">
-          {script.parameters.map((param) => (
+          {script.parameters.map(param => (
             <div key={param.name} className="flex gap-2 items-center">
               <Label className="w-32 text-sm font-mono">{param.name}</Label>
               <Input
                 value={testInputs[param.name] ?? ''}
-                onChange={(e) => {
-                  const value = param.type === 'number'
-                    ? parseFloat(e.target.value) || 0
-                    : param.type === 'boolean'
-                      ? e.target.value === 'true'
-                      : e.target.value
+                onChange={e => {
+                  const value =
+                    param.type === 'number'
+                      ? parseFloat(e.target.value) || 0
+                      : param.type === 'boolean'
+                        ? e.target.value === 'true'
+                        : e.target.value
                   onTestInputChange(param.name, value)
                 }}
                 placeholder={`Enter ${param.type} value`}

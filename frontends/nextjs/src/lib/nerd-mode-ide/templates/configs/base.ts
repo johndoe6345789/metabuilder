@@ -28,7 +28,9 @@ const socialHubComponents = [
           {
             id: 'social_hub_subtitle',
             type: 'Text',
-            props: { children: 'A modern feed for creator updates, curated stories, and live moments.' },
+            props: {
+              children: 'A modern feed for creator updates, curated stories, and live moments.',
+            },
             children: [],
           },
         ],
@@ -148,13 +150,19 @@ const socialHubComponents = [
               {
                 id: 'social_hub_feed_post_1_title',
                 type: 'Heading',
-                props: { children: 'Launch day recap', level: '3', className: 'text-lg font-semibold' },
+                props: {
+                  children: 'Launch day recap',
+                  level: '3',
+                  className: 'text-lg font-semibold',
+                },
                 children: [],
               },
               {
                 id: 'social_hub_feed_post_1_body',
                 type: 'Text',
-                props: { children: 'We shipped the new live rooms and saw a 32% boost in engagement.' },
+                props: {
+                  children: 'We shipped the new live rooms and saw a 32% boost in engagement.',
+                },
                 children: [],
               },
               {
@@ -173,13 +181,19 @@ const socialHubComponents = [
               {
                 id: 'social_hub_feed_post_2_title',
                 type: 'Heading',
-                props: { children: 'Creator spotlight', level: '3', className: 'text-lg font-semibold' },
+                props: {
+                  children: 'Creator spotlight',
+                  level: '3',
+                  className: 'text-lg font-semibold',
+                },
                 children: [],
               },
               {
                 id: 'social_hub_feed_post_2_body',
                 type: 'Text',
-                props: { children: 'Nova shares her workflow for livestreaming and managing subscribers.' },
+                props: {
+                  children: 'Nova shares her workflow for livestreaming and managing subscribers.',
+                },
                 children: [],
               },
               {

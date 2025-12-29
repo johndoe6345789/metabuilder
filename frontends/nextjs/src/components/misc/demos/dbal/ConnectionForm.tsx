@@ -1,5 +1,14 @@
 import { useState } from 'react'
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from '@/components/ui'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+} from '@/components/ui'
 
 interface ConnectionFormProps {
   defaultUrl?: string
@@ -38,7 +47,7 @@ export function ConnectionForm({
               id="dbal-endpoint"
               placeholder="http://localhost:8080/api/dbal"
               value={endpoint}
-              onChange={(event) => setEndpoint(event.target.value)}
+              onChange={event => setEndpoint(event.target.value)}
             />
           </div>
 
@@ -49,7 +58,7 @@ export function ConnectionForm({
               type="password"
               placeholder="Optional"
               value={apiKey}
-              onChange={(event) => setApiKey(event.target.value)}
+              onChange={event => setApiKey(event.target.value)}
             />
           </div>
 
@@ -57,7 +66,9 @@ export function ConnectionForm({
             <Button type="submit" disabled={isConnecting}>
               {isConnecting ? 'Connecting…' : 'Connect'}
             </Button>
-            {statusMessage ? <p className="text-sm text-muted-foreground">{statusMessage}</p> : null}
+            {statusMessage ? (
+              <p className="text-sm text-muted-foreground">{statusMessage}</p>
+            ) : null}
           </div>
         </form>
       </CardContent>

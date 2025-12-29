@@ -1,9 +1,7 @@
 'use client'
 
 import { forwardRef, ReactElement, ReactNode, type ComponentProps } from 'react'
-import { 
-  Tooltip as MuiTooltip, 
-} from '@mui/material'
+import { Tooltip as MuiTooltip } from '@mui/material'
 
 type MuiTooltipProps = ComponentProps<typeof MuiTooltip>
 
@@ -39,7 +37,21 @@ const sideMap: Record<string, MuiTooltipProps['placement']> = {
 }
 
 const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
-  ({ children, content, title, side = 'top', delayDuration = 300, arrow = true, open, onOpen, onClose, ...props }, ref) => {
+  (
+    {
+      children,
+      content,
+      title,
+      side = 'top',
+      delayDuration = 300,
+      arrow = true,
+      open,
+      onOpen,
+      onClose,
+      ...props
+    },
+    ref
+  ) => {
     return (
       <MuiTooltip
         title={content || title || ''}

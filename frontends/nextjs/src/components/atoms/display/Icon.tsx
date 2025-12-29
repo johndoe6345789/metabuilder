@@ -15,7 +15,7 @@ export interface IconProps extends Omit<SvgIconProps, 'fontSize'> {
 const Icon = forwardRef<SVGSVGElement, IconProps>(
   ({ name, size = 'medium', sx, ...props }, ref) => {
     const IconComponent = MuiIcons[name]
-    
+
     if (!IconComponent) {
       console.warn(`Icon "${name}" not found in @mui/icons-material`)
       return null

@@ -26,11 +26,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
 
     return (
       <TabsContext.Provider value={{ value: currentValue, setValue: handleValueChange, idPrefix }}>
-        <Box
-          ref={ref}
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2, ...sx }}
-          {...props}
-        >
+        <Box ref={ref} sx={{ display: 'flex', flexDirection: 'column', gap: 2, ...sx }} {...props}>
           {children}
         </Box>
       </TabsContext.Provider>

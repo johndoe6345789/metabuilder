@@ -48,10 +48,7 @@ const iconMap: Record<string, ComponentType<SvgIconProps>> = {
   Warning: WarningAmber,
 }
 
-export function getComponentIcon(
-  iconName: string,
-  props?: SvgIconProps
-): ReactElement | null {
+export function getComponentIcon(iconName: string, props?: SvgIconProps): ReactElement | null {
   const Icon = iconMap[iconName]
   return Icon ? <Icon {...props} /> : null
 }

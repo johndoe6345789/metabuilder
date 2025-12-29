@@ -80,7 +80,7 @@ export function LuaBlocksEditor({ scripts, onScriptsChange }: LuaBlocksEditorPro
                       No scripts yet. Create a block script to begin.
                     </Typography>
                   )}
-                  {scripts.map((script) => (
+                  {scripts.map(script => (
                     <ListItemButton
                       key={script.id}
                       selected={script.id === selectedScriptId}
@@ -100,7 +100,7 @@ export function LuaBlocksEditor({ scripts, onScriptsChange }: LuaBlocksEditorPro
                       <Tooltip title="Delete script">
                         <IconButton
                           size="small"
-                          onClick={(event) => {
+                          onClick={event => {
                             event.stopPropagation()
                             handleDeleteScript(script.id)
                           }}
@@ -125,22 +125,28 @@ export function LuaBlocksEditor({ scripts, onScriptsChange }: LuaBlocksEditorPro
                       {category}
                     </Typography>
                     <Stack spacing={1}>
-                      {blocks.map((block) => (
+                      {blocks.map(block => (
                         <Paper
                           key={block.type}
                           className={styles.libraryBlock}
                           data-category={block.category}
-                          onClick={() => handleAddBlock(block.type, { parentId: null, slot: 'root' })}
+                          onClick={() =>
+                            handleAddBlock(block.type, { parentId: null, slot: 'root' })
+                          }
                         >
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
                             <Box>
-                              <Typography className={styles.libraryBlockTitle}>{block.label}</Typography>
-                              <Typography className={styles.libraryBlockDesc}>{block.description}</Typography>
+                              <Typography className={styles.libraryBlockTitle}>
+                                {block.label}
+                              </Typography>
+                              <Typography className={styles.libraryBlockDesc}>
+                                {block.description}
+                              </Typography>
                             </Box>
                             <Button
                               size="small"
                               variant="outlined"
-                              onClick={(event) => {
+                              onClick={event => {
                                 event.stopPropagation()
                                 handleAddBlock(block.type, { parentId: null, slot: 'root' })
                               }}
@@ -186,7 +192,7 @@ export function LuaBlocksEditor({ scripts, onScriptsChange }: LuaBlocksEditorPro
         open={Boolean(menuAnchor)}
         onClose={handleCloseMenu}
         blocks={blockDefinitions}
-        onSelect={(type) => handleAddBlock(type)}
+        onSelect={type => handleAddBlock(type)}
       />
     </Box>
   )

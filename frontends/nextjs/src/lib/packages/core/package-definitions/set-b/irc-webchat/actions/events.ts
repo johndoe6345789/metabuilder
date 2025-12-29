@@ -39,9 +39,7 @@ return string.format("%02d:%02d %s", hour, date.min, ampm)
 end
 
 return formatTime`,
-      parameters: [
-        { name: 'timestamp', type: 'number' },
-      ],
+      parameters: [{ name: 'timestamp', type: 'number' }],
       returnType: 'string',
     },
     {

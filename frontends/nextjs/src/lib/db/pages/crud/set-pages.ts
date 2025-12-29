@@ -6,13 +6,13 @@ import type { PageConfig } from '../../types/level-types'
  */
 export async function setPages(pages: PageConfig[]): Promise<void> {
   const adapter = getAdapter()
-  
+
   // Delete existing pages
   const existing = await adapter.list('PageConfig')
   for (const p of existing.data as any[]) {
     await adapter.delete('PageConfig', p.id)
   }
-  
+
   // Create new pages
   for (const page of pages) {
     await adapter.create('PageConfig', {

@@ -21,15 +21,24 @@ describe('addSchema', () => {
     },
     {
       name: 'full schema',
-      schema: { name: 'Post', label: 'Blog Post', labelPlural: 'Posts', fields: [], listDisplay: ['title'] },
+      schema: {
+        name: 'Post',
+        label: 'Blog Post',
+        labelPlural: 'Posts',
+        fields: [],
+        listDisplay: ['title'],
+      },
     },
   ])('should add $name', async ({ schema }) => {
     mockCreate.mockResolvedValue(undefined)
 
     await addSchema(schema as any)
 
-    expect(mockCreate).toHaveBeenCalledWith('ModelSchema', expect.objectContaining({
-      name: schema.name,
-    }))
+    expect(mockCreate).toHaveBeenCalledWith(
+      'ModelSchema',
+      expect.objectContaining({
+        name: schema.name,
+      })
+    )
   })
 })

@@ -1,13 +1,7 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import {
-  Box,
-  Drawer,
-  IconButton,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material'
+import { Box, Drawer, IconButton, useMediaQuery, useTheme } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 
 import { MenuItemList, type MenuItemListProps, type SidebarItem } from './MenuItemList'
@@ -24,7 +18,18 @@ interface SidebarProps {
 }
 
 const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
-  ({ children, open = true, onClose, width = 280, variant = 'permanent', anchor = 'left', ...props }, ref) => {
+  (
+    {
+      children,
+      open = true,
+      onClose,
+      width = 280,
+      variant = 'permanent',
+      anchor = 'left',
+      ...props
+    },
+    ref
+  ) => {
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('md'))
     const actualVariant = isMobile ? 'temporary' : variant

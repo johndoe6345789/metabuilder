@@ -30,13 +30,13 @@ export function ValidationPanel({ field, onChange }: ValidationPanelProps) {
   return (
     <div className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {numericKeys.map((key) => (
+        {numericKeys.map(key => (
           <div key={key} className="space-y-2">
             <Label className="text-xs">{labels[key]}</Label>
             <Input
               type="number"
               value={field.validation?.[key] ?? ''}
-              onChange={(event) => handleNumberChange(key, event.target.value)}
+              onChange={event => handleNumberChange(key, event.target.value)}
               placeholder="0"
             />
           </div>
@@ -45,7 +45,7 @@ export function ValidationPanel({ field, onChange }: ValidationPanelProps) {
           <Label className="text-xs">Pattern (regex)</Label>
           <Input
             value={field.validation?.pattern ?? ''}
-            onChange={(event) =>
+            onChange={event =>
               onChange({
                 validation: {
                   ...field.validation,
@@ -59,10 +59,26 @@ export function ValidationPanel({ field, onChange }: ValidationPanelProps) {
       </div>
 
       <div className="flex flex-wrap gap-4">
-        <Toggle label="Required" checked={field.required} onCheckedChange={(checked) => onChange({ required: checked })} />
-        <Toggle label="Unique" checked={field.unique} onCheckedChange={(checked) => onChange({ unique: checked })} />
-        <Toggle label="Editable" checked={field.editable !== false} onCheckedChange={(checked) => onChange({ editable: checked })} />
-        <Toggle label="Searchable" checked={field.searchable} onCheckedChange={(checked) => onChange({ searchable: checked })} />
+        <Toggle
+          label="Required"
+          checked={field.required}
+          onCheckedChange={checked => onChange({ required: checked })}
+        />
+        <Toggle
+          label="Unique"
+          checked={field.unique}
+          onCheckedChange={checked => onChange({ unique: checked })}
+        />
+        <Toggle
+          label="Editable"
+          checked={field.editable !== false}
+          onCheckedChange={checked => onChange({ editable: checked })}
+        />
+        <Toggle
+          label="Searchable"
+          checked={field.searchable}
+          onCheckedChange={checked => onChange({ searchable: checked })}
+        />
       </div>
     </div>
   )

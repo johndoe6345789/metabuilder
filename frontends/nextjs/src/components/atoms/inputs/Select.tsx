@@ -1,8 +1,8 @@
 'use client'
 
 import { forwardRef } from 'react'
-import { 
-  Select as MuiSelect, 
+import {
+  Select as MuiSelect,
   SelectProps as MuiSelectProps,
   MenuItem,
   FormControl,
@@ -47,12 +47,8 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
               {placeholder}
             </MenuItem>
           )}
-          {options.map((option) => (
-            <MenuItem 
-              key={option.value} 
-              value={option.value}
-              disabled={option.disabled}
-            >
+          {options.map(option => (
+            <MenuItem key={option.value} value={option.value} disabled={option.disabled}>
               {option.label}
             </MenuItem>
           ))}

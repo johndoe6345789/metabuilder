@@ -31,32 +31,41 @@ const TableCore = forwardRef<HTMLTableElement, TableProps>(
 TableCore.displayName = 'TableCore'
 
 // TableHeader
-const TableHeader = forwardRef<HTMLTableSectionElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
-    return <MuiTableHead ref={ref} {...props}>{children}</MuiTableHead>
-  }
-)
+const TableHeader = forwardRef<
+  HTMLTableSectionElement,
+  { children: ReactNode; className?: string }
+>(({ children, ...props }, ref) => {
+  return (
+    <MuiTableHead ref={ref} {...props}>
+      {children}
+    </MuiTableHead>
+  )
+})
 TableHeader.displayName = 'TableHeader'
 
 // TableBody
 const TableBody = forwardRef<HTMLTableSectionElement, { children: ReactNode; className?: string }>(
   ({ children, ...props }, ref) => {
-    return <MuiTableBody ref={ref} {...props}>{children}</MuiTableBody>
+    return (
+      <MuiTableBody ref={ref} {...props}>
+        {children}
+      </MuiTableBody>
+    )
   }
 )
 TableBody.displayName = 'TableBody'
 
 // TableFooter
-const TableFooter = forwardRef<HTMLTableSectionElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
-    return <MuiTableFooter ref={ref} {...props}>{children}</MuiTableFooter>
-  }
-)
+const TableFooter = forwardRef<
+  HTMLTableSectionElement,
+  { children: ReactNode; className?: string }
+>(({ children, ...props }, ref) => {
+  return (
+    <MuiTableFooter ref={ref} {...props}>
+      {children}
+    </MuiTableFooter>
+  )
+})
 TableFooter.displayName = 'TableFooter'
 
-export {
-  TableCore,
-  TableHeader,
-  TableBody,
-  TableFooter,
-}
+export { TableCore, TableHeader, TableBody, TableFooter }

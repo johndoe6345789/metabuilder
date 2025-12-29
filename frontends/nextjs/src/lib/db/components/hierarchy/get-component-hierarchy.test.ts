@@ -18,7 +18,16 @@ describe('getComponentHierarchy', () => {
     { name: 'empty object', dbData: [], expectedKeys: 0 },
     {
       name: 'parsed hierarchy',
-      dbData: [{ id: 'node1', type: 'Container', parentId: null, childIds: '["node2"]', order: 0, pageId: 'p1' }],
+      dbData: [
+        {
+          id: 'node1',
+          type: 'Container',
+          parentId: null,
+          childIds: '["node2"]',
+          order: 0,
+          pageId: 'p1',
+        },
+      ],
       expectedKeys: 1,
     },
   ])('should return $name', async ({ dbData, expectedKeys }) => {

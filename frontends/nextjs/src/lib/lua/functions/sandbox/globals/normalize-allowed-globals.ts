@@ -7,7 +7,7 @@ export function normalizeAllowedGlobals(allowedGlobals?: string[]): string[] {
     return [...DEFAULT_ALLOWED_GLOBALS]
   }
 
-  const filtered = allowedGlobals.filter((value) => ALLOWED_SET.has(value))
+  const filtered = allowedGlobals.filter(value => ALLOWED_SET.has(value))
   const unique = Array.from(new Set(filtered))
 
   return unique.length > 0 ? unique : [...DEFAULT_ALLOWED_GLOBALS]

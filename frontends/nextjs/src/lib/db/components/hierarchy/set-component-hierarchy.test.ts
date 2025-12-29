@@ -23,7 +23,9 @@ describe('setComponentHierarchy', () => {
     mockDelete.mockResolvedValue(undefined)
     mockCreate.mockResolvedValue(undefined)
 
-    await setComponentHierarchy({ node1: { id: 'node1', type: 'Container', childIds: [], order: 0, pageId: 'p1' } })
+    await setComponentHierarchy({
+      node1: { id: 'node1', type: 'Container', childIds: [], order: 0, pageId: 'p1' },
+    })
 
     expect(mockDelete).toHaveBeenCalledTimes(1)
     expect(mockCreate).toHaveBeenCalledTimes(1)

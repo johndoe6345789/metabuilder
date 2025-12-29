@@ -74,7 +74,7 @@ export function SMTPConfigEditor() {
               <Input
                 id="host"
                 value={config.host}
-                onChange={(e) => setConfig({ ...config, host: e.target.value })}
+                onChange={e => setConfig({ ...config, host: e.target.value })}
                 placeholder="smtp.example.com"
               />
             </div>
@@ -85,7 +85,7 @@ export function SMTPConfigEditor() {
                 id="port"
                 type="number"
                 value={config.port}
-                onChange={(e) => setConfig({ ...config, port: parseInt(e.target.value) || 587 })}
+                onChange={e => setConfig({ ...config, port: parseInt(e.target.value) || 587 })}
                 placeholder="587"
               />
             </div>
@@ -95,7 +95,7 @@ export function SMTPConfigEditor() {
               <Input
                 id="username"
                 value={config.username}
-                onChange={(e) => setConfig({ ...config, username: e.target.value })}
+                onChange={e => setConfig({ ...config, username: e.target.value })}
                 placeholder="your-username"
               />
             </div>
@@ -106,7 +106,7 @@ export function SMTPConfigEditor() {
                 id="password"
                 type="password"
                 value={config.password}
-                onChange={(e) => setConfig({ ...config, password: e.target.value })}
+                onChange={e => setConfig({ ...config, password: e.target.value })}
                 placeholder="your-password"
               />
             </div>
@@ -117,7 +117,7 @@ export function SMTPConfigEditor() {
                 id="fromEmail"
                 type="email"
                 value={config.fromEmail}
-                onChange={(e) => setConfig({ ...config, fromEmail: e.target.value })}
+                onChange={e => setConfig({ ...config, fromEmail: e.target.value })}
                 placeholder="noreply@metabuilder.com"
               />
             </div>
@@ -127,7 +127,7 @@ export function SMTPConfigEditor() {
               <Input
                 id="fromName"
                 value={config.fromName}
-                onChange={(e) => setConfig({ ...config, fromName: e.target.value })}
+                onChange={e => setConfig({ ...config, fromName: e.target.value })}
                 placeholder="MetaBuilder System"
               />
             </div>
@@ -137,7 +137,7 @@ export function SMTPConfigEditor() {
             <Switch
               id="secure"
               checked={config.secure}
-              onCheckedChange={(checked) => setConfig({ ...config, secure: checked })}
+              onCheckedChange={checked => setConfig({ ...config, secure: checked })}
             />
             <Label htmlFor="secure" className="cursor-pointer">
               Use Secure Connection (TLS/SSL)
@@ -166,7 +166,7 @@ export function SMTPConfigEditor() {
               type="email"
               placeholder="test@example.com"
               value={testEmail}
-              onChange={(e) => setTestEmail(e.target.value)}
+              onChange={e => setTestEmail(e.target.value)}
               className="flex-1"
             />
             <Button onClick={handleTest} className="gap-2">

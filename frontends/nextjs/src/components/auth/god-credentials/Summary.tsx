@@ -7,7 +7,11 @@ export interface GodCredentialsSummaryProps {
   timeRemaining: string
 }
 
-export function GodCredentialsSummary({ isActive, expiryTime, timeRemaining }: GodCredentialsSummaryProps) {
+export function GodCredentialsSummary({
+  isActive,
+  expiryTime,
+  timeRemaining,
+}: GodCredentialsSummaryProps) {
   if (isActive) {
     return (
       <Alert className="bg-gradient-to-br from-purple-500/10 to-orange-500/10 border-purple-500/50">
@@ -16,7 +20,9 @@ export function GodCredentialsSummary({ isActive, expiryTime, timeRemaining }: G
           <div className="space-y-1">
             <p className="font-semibold text-sm flex items-center gap-2">
               God credentials are currently visible
-              <Badge variant="secondary" className="font-mono">Active</Badge>
+              <Badge variant="secondary" className="font-mono">
+                Active
+              </Badge>
             </p>
             <p className="text-xs text-muted-foreground">
               Time remaining: <span className="font-mono font-semibold">{timeRemaining}</span>

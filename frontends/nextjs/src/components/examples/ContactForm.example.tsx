@@ -35,14 +35,14 @@ interface ContactFormProps {
 
 /**
  * ContactForm - A form component for collecting user contact information
- * 
+ *
  * This component demonstrates best practices for React forms including:
  * - Form state management with useState
  * - Input validation with error messages
  * - Permission-based rendering
  * - Callback handling for parent communication
  * - Proper TypeScript typing
- * 
+ *
  * @component
  * @example
  * return (
@@ -51,7 +51,7 @@ interface ContactFormProps {
  *     debug={true}
  *   />
  * )
- * 
+ *
  * @param props - Component props
  * @returns React component for contact form
  */
@@ -62,47 +62,47 @@ export const ContactForm: React.FC<ContactFormProps> = ({
 }) => {
   // Current user from authentication context
   const { user } = useAuth()
-  
+
   // Form state containing email and message fields
   const [formData, setFormData] = useState<FormState>({
     email: '',
     message: '',
   })
-  
+
   // Track validation errors for each field
   const [errors, setErrors] = useState<FormErrors>({})
-  
+
   // Track loading state during form submission
   const [isLoading, setIsLoading] = useState(false)
-  
+
   // Track successful submission
   const [submitted, setSubmitted] = useState(false)
-  
+
   /**
    * Validates form data before submission
    * @returns true if form is valid, false otherwise
    */
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
-    
+
     // Validate email field
     if (!formData.email) {
       newErrors.email = 'Email is required'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Invalid email format'
     }
-    
+
     // Validate message field
     if (!formData.message) {
       newErrors.message = 'Message is required'
     } else if (formData.message.length < 10) {
       newErrors.message = 'Message must be at least 10 characters'
     }
-    
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
-  
+
   /**
    * Handles input changes and updates form state
    * @param e - The input change event
@@ -110,13 +110,13 @@ export const ContactForm: React.FC<ContactFormProps> = ({
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target
-      
+
       // Update form data
       setFormData(prev => ({
         ...prev,
         [name]: value,
       }))
-      
+
       // Clear error for this field when user starts typing
       if (errors[name as keyof FormState]) {
         setErrors(prev => ({
@@ -127,7 +127,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({
     },
     [errors]
   )
-  
+
   /**
    * Handles form submission with validation
    * @param e - The form submission event
@@ -135,22 +135,22 @@ export const ContactForm: React.FC<ContactFormProps> = ({
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
-      
+
       // Validate form before submission
       if (!validateForm()) {
         return
       }
-      
+
       setIsLoading(true)
-      
+
       try {
         // Call parent callback if provided
         onSubmit?.(formData)
-        
+
         // Reset form state on successful submission
         setFormData({ email: '', message: '' })
         setSubmitted(true)
-        
+
         // Clear success message after 3 seconds
         setTimeout(() => setSubmitted(false), 3000)
       } catch (error) {
@@ -164,31 +164,24 @@ export const ContactForm: React.FC<ContactFormProps> = ({
     },
     [formData, onSubmit]
   )
-  
+
   // Only render for authenticated users (Level 2+)
   if (!user) {
-    return (
-      <div className="text-center text-gray-500">
-        Please log in to contact us.
-      </div>
-    )
+    return <div className="text-center text-gray-500">Please log in to contact us.</div>
   }
-  
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className={`space-y-4 p-4 border rounded-lg ${className}`}
-    >
+    <form onSubmit={handleSubmit} className={`space-y-4 p-4 border rounded-lg ${className}`}>
       {/* Form title */}
       <h2 className="text-2xl font-bold">Contact Us</h2>
-      
+
       {/* Success message */}
       {submitted && (
         <div className="p-2 bg-green-100 text-green-700 rounded">
           Thank you! Your message has been sent.
         </div>
       )}
-      
+
       {/* Email input field */}
       <div className="space-y-2">
         <label htmlFor="email" className="block font-medium">
@@ -211,7 +204,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({
           </p>
         )}
       </div>
-      
+
       {/* Message textarea field */}
       <div className="space-y-2">
         <label htmlFor="message" className="block font-medium">
@@ -235,16 +228,12 @@ export const ContactForm: React.FC<ContactFormProps> = ({
           </p>
         )}
       </div>
-      
+
       {/* Submit button */}
-      <Button
-        type="submit"
-        disabled={isLoading}
-        className="w-full"
-      >
+      <Button type="submit" disabled={isLoading} className="w-full">
         {isLoading ? 'Sending...' : 'Send Message'}
       </Button>
-      
+
       {/* Debug information - only shown in development */}
       {debug && (
         <div className="mt-4 p-2 bg-gray-100 rounded text-sm font-mono">

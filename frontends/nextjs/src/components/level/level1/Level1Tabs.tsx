@@ -28,8 +28,8 @@ export function Level1Tabs({ onNavigate }: Level1TabsProps) {
           description="MetaBuilder is a revolutionary platform that lets you build entire application stacks through visual interfaces."
         >
           <p className="text-lg text-muted-foreground">
-            Whether you're a designer who wants to create without code, or a developer who wants to work at a higher level of
-            abstraction, MetaBuilder adapts to your needs.
+            Whether you're a designer who wants to create without code, or a developer who wants to
+            work at a higher level of abstraction, MetaBuilder adapts to your needs.
           </p>
         </IntroSection>
         <ContactSection />

@@ -1,5 +1,16 @@
 import { useMemo } from 'react'
-import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Input, Label, Switch } from '@/components/ui'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  Switch,
+} from '@/components/ui'
 import { EnvelopeSimple, FloppyDisk } from '@phosphor-icons/react'
 import type { SMTPConfig } from '@/lib/password-utils'
 
@@ -33,7 +44,7 @@ export function ConnectionForm({ value, onChange, onSave, onTest }: ConnectionFo
             <Input
               id="host"
               value={value.host}
-              onChange={(e) => updateField('host', e.target.value)}
+              onChange={e => updateField('host', e.target.value)}
               placeholder="smtp.example.com"
             />
           </div>
@@ -43,7 +54,7 @@ export function ConnectionForm({ value, onChange, onSave, onTest }: ConnectionFo
               id="port"
               type="number"
               value={value.port}
-              onChange={(e) => updateField('port', parseInt(e.target.value || '0', 10))}
+              onChange={e => updateField('port', parseInt(e.target.value || '0', 10))}
               placeholder={securePort.toString()}
             />
           </div>
@@ -52,7 +63,7 @@ export function ConnectionForm({ value, onChange, onSave, onTest }: ConnectionFo
             <Input
               id="username"
               value={value.username}
-              onChange={(e) => updateField('username', e.target.value)}
+              onChange={e => updateField('username', e.target.value)}
               placeholder="user@example.com"
             />
           </div>
@@ -62,7 +73,7 @@ export function ConnectionForm({ value, onChange, onSave, onTest }: ConnectionFo
               id="password"
               type="password"
               value={value.password}
-              onChange={(e) => updateField('password', e.target.value)}
+              onChange={e => updateField('password', e.target.value)}
               placeholder="App password or token"
             />
           </div>
@@ -74,7 +85,7 @@ export function ConnectionForm({ value, onChange, onSave, onTest }: ConnectionFo
             <Input
               id="fromName"
               value={value.fromName || ''}
-              onChange={(e) => updateField('fromName', e.target.value)}
+              onChange={e => updateField('fromName', e.target.value)}
               placeholder="MetaBuilder"
             />
           </div>
@@ -84,7 +95,7 @@ export function ConnectionForm({ value, onChange, onSave, onTest }: ConnectionFo
               id="fromEmail"
               type="email"
               value={value.fromEmail}
-              onChange={(e) => updateField('fromEmail', e.target.value)}
+              onChange={e => updateField('fromEmail', e.target.value)}
               placeholder="no-reply@example.com"
             />
           </div>
@@ -93,9 +104,11 @@ export function ConnectionForm({ value, onChange, onSave, onTest }: ConnectionFo
         <div className="flex items-center justify-between rounded-lg border bg-muted/40 p-3">
           <div>
             <p className="font-medium">Use secure connection (TLS)</p>
-            <p className="text-sm text-muted-foreground">Switching on updates the recommended port to {securePort}.</p>
+            <p className="text-sm text-muted-foreground">
+              Switching on updates the recommended port to {securePort}.
+            </p>
           </div>
-          <Switch checked={value.tls} onCheckedChange={(checked) => updateField('tls', checked)} />
+          <Switch checked={value.tls} onCheckedChange={checked => updateField('tls', checked)} />
         </div>
       </CardContent>
       <CardFooter className="flex flex-wrap items-center gap-2">

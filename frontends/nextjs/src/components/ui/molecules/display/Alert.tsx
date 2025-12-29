@@ -1,7 +1,13 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import { Alert as MuiAlert, AlertTitle as MuiAlertTitle, AlertProps as MuiAlertProps, SxProps, Theme } from '@mui/material'
+import {
+  Alert as MuiAlert,
+  AlertTitle as MuiAlertTitle,
+  AlertProps as MuiAlertProps,
+  SxProps,
+  Theme,
+} from '@mui/material'
 
 export type AlertVariant = 'default' | 'destructive'
 
@@ -41,15 +47,13 @@ interface AlertTitleProps {
   className?: string
 }
 
-const AlertTitle = forwardRef<HTMLDivElement, AlertTitleProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <MuiAlertTitle ref={ref} {...props}>
-        {children}
-      </MuiAlertTitle>
-    )
-  }
-)
+const AlertTitle = forwardRef<HTMLDivElement, AlertTitleProps>(({ children, ...props }, ref) => {
+  return (
+    <MuiAlertTitle ref={ref} {...props}>
+      {children}
+    </MuiAlertTitle>
+  )
+})
 AlertTitle.displayName = 'AlertTitle'
 
 interface AlertDescriptionProps {
@@ -59,7 +63,11 @@ interface AlertDescriptionProps {
 
 const AlertDescription = forwardRef<HTMLParagraphElement, AlertDescriptionProps>(
   ({ children, ...props }, ref) => {
-    return <div ref={ref} {...props}>{children}</div>
+    return (
+      <div ref={ref} {...props}>
+        {children}
+      </div>
+    )
   }
 )
 AlertDescription.displayName = 'AlertDescription'

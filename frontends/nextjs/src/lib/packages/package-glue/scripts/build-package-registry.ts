@@ -10,10 +10,11 @@ export async function buildPackageRegistry(): Promise<PackageRegistry> {
   const registry: PackageRegistry = {}
   const packageIndex = await loadPackageIndex()
   const indexEntries = packageIndex ?? []
-  const indexById = new Map(indexEntries.map((entry) => [entry.packageId, entry]))
-  const packageIds = indexEntries.length > 0
-    ? indexEntries.map((entry) => entry.packageId)
-    : Object.keys(DEFAULT_PACKAGES)
+  const indexById = new Map(indexEntries.map(entry => [entry.packageId, entry]))
+  const packageIds =
+    indexEntries.length > 0
+      ? indexEntries.map(entry => entry.packageId)
+      : Object.keys(DEFAULT_PACKAGES)
 
   for (const packageId of packageIds) {
     const indexEntry = indexById.get(packageId)

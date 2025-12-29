@@ -1,4 +1,13 @@
-import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
+import {
+  Button,
+  Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui'
 import type { PropDefinition } from '@/lib/types/builder-types'
 import type { DropdownConfig } from '@/lib/database'
 import { Palette } from '@phosphor-icons/react'
@@ -11,14 +20,20 @@ interface FieldTypesProps {
   onOpenCssBuilder?: () => void
 }
 
-export function FieldTypes({ propDef, value, onChange, dynamicDropdown, onOpenCssBuilder }: FieldTypesProps) {
+export function FieldTypes({
+  propDef,
+  value,
+  onChange,
+  dynamicDropdown,
+  onOpenCssBuilder,
+}: FieldTypesProps) {
   const renderInputByType = () => {
     if (propDef.name === 'className') {
       return (
         <div className="flex gap-2">
           <Input
             value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             className="flex-1 font-mono text-xs"
           />
           {onOpenCssBuilder && (
@@ -32,26 +47,18 @@ export function FieldTypes({ propDef, value, onChange, dynamicDropdown, onOpenCs
 
     switch (propDef.type) {
       case 'string':
-        return (
-          <Input
-            value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
-          />
-        )
+        return <Input value={value || ''} onChange={e => onChange(e.target.value)} />
       case 'number':
         return (
           <Input
             type="number"
             value={value || ''}
-            onChange={(e) => onChange(Number(e.target.value))}
+            onChange={e => onChange(Number(e.target.value))}
           />
         )
       case 'boolean':
         return (
-          <Select
-            value={String(value || false)}
-            onValueChange={(val) => onChange(val === 'true')}
-          >
+          <Select value={String(value || false)} onValueChange={val => onChange(val === 'true')}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -63,10 +70,7 @@ export function FieldTypes({ propDef, value, onChange, dynamicDropdown, onOpenCs
         )
       case 'select':
         return (
-          <Select
-            value={value || propDef.defaultValue}
-            onValueChange={(val) => onChange(val)}
-          >
+          <Select value={value || propDef.defaultValue} onValueChange={val => onChange(val)}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -81,12 +85,11 @@ export function FieldTypes({ propDef, value, onChange, dynamicDropdown, onOpenCs
         )
       case 'dynamic-select':
         return (
-          <Select
-            value={value || ''}
-            onValueChange={(val) => onChange(val)}
-          >
+          <Select value={value || ''} onValueChange={val => onChange(val)}>
             <SelectTrigger>
-              <SelectValue placeholder={dynamicDropdown ? `Select ${dynamicDropdown.label}` : 'Select option'} />
+              <SelectValue
+                placeholder={dynamicDropdown ? `Select ${dynamicDropdown.label}` : 'Select option'}
+              />
             </SelectTrigger>
             <SelectContent>
               {dynamicDropdown?.options.map(option => (

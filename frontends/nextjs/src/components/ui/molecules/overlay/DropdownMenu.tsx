@@ -20,7 +20,11 @@ interface DropdownMenuTriggerProps {
 const DropdownMenuTrigger = forwardRef<HTMLButtonElement, DropdownMenuTriggerProps>(
   ({ children, asChild, ...props }, ref) => {
     return (
-      <Box ref={ref as unknown as React.Ref<HTMLDivElement>} sx={{ display: 'inline-flex' }} {...props}>
+      <Box
+        ref={ref as unknown as React.Ref<HTMLDivElement>}
+        sx={{ display: 'inline-flex' }}
+        {...props}
+      >
         {children}
       </Box>
     )
@@ -143,13 +147,19 @@ const DropdownMenuSub = ({ children }: { children: ReactNode }) => <>{children}<
 DropdownMenuSub.displayName = 'DropdownMenuSub'
 
 const DropdownMenuSubContent = forwardRef<HTMLDivElement, { children: ReactNode }>(
-  ({ children, ...props }, ref) => <Box ref={ref} {...props}>{children}</Box>
+  ({ children, ...props }, ref) => (
+    <Box ref={ref} {...props}>
+      {children}
+    </Box>
+  )
 )
 DropdownMenuSubContent.displayName = 'DropdownMenuSubContent'
 
 const DropdownMenuSubTrigger = forwardRef<HTMLLIElement, DropdownMenuItemProps>(
   ({ children, ...props }, ref) => (
-    <MenuItem ref={ref} {...props}>{children}</MenuItem>
+    <MenuItem ref={ref} {...props}>
+      {children}
+    </MenuItem>
   )
 )
 DropdownMenuSubTrigger.displayName = 'DropdownMenuSubTrigger'
@@ -183,7 +193,9 @@ interface DropdownMenuRadioItemProps extends DropdownMenuItemProps {
 
 const DropdownMenuRadioItem = forwardRef<HTMLLIElement, DropdownMenuRadioItemProps>(
   ({ children, value, ...props }, ref) => (
-    <MenuItem ref={ref} {...props}>{children}</MenuItem>
+    <MenuItem ref={ref} {...props}>
+      {children}
+    </MenuItem>
   )
 )
 DropdownMenuRadioItem.displayName = 'DropdownMenuRadioItem'

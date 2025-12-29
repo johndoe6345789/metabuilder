@@ -1,7 +1,14 @@
 import { useCallback, useMemo } from 'react'
-import { BLOCK_DEFINITIONS, buildBlockDefinitionMap, groupBlockDefinitionsByCategory } from '../blocks'
+import {
+  BLOCK_DEFINITIONS,
+  buildBlockDefinitionMap,
+  groupBlockDefinitionsByCategory,
+} from '../blocks'
 import type { BlockCategory, BlockDefinition, LuaBlock, LuaBlockType } from '../types'
-import { buildLuaFromBlocks as serializeBlocks, decodeBlocksMetadata as parseBlocksMetadata } from './luaBlockSerialization'
+import {
+  buildLuaFromBlocks as serializeBlocks,
+  decodeBlocksMetadata as parseBlocksMetadata,
+} from './luaBlockSerialization'
 
 const createBlockId = () => `block_${Date.now()}_${Math.random().toString(16).slice(2)}`
 

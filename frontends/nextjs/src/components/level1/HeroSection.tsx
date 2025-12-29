@@ -12,7 +12,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           Build Anything, Visually
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          A 5-level meta-architecture for creating entire applications through visual workflows, 
+          A 5-level meta-architecture for creating entire applications through visual workflows,
           schema editors, and embedded scripting. No code required.
         </p>
         <div className="flex gap-4 justify-center flex-wrap">

@@ -13,10 +13,7 @@ import type { WorkflowRun } from '../types'
 import type { PipelineSummary, RunListProps } from './run-list.types'
 import { spinSx } from './run-list.types'
 
-type RunListAlertsProps = Pick<
-  RunListProps,
-  'error' | 'needsAuth' | 'conclusion' | 'summaryTone'
->
+type RunListAlertsProps = Pick<RunListProps, 'error' | 'needsAuth' | 'conclusion' | 'summaryTone'>
 
 type SummaryAlertProps = {
   conclusion: PipelineSummary
@@ -25,7 +22,7 @@ type SummaryAlertProps = {
 
 const SummaryAlert = ({ conclusion, summaryTone }: SummaryAlertProps) => (
   <Alert
-    sx={(theme) => ({
+    sx={theme => ({
       borderWidth: 2,
       borderColor: theme.palette[summaryTone].main,
       bgcolor: alpha(theme.palette[summaryTone].main, 0.08),
@@ -34,12 +31,8 @@ const SummaryAlert = ({ conclusion, summaryTone }: SummaryAlertProps) => (
     })}
   >
     <Stack direction="row" spacing={2} alignItems="flex-start">
-      {summaryTone === 'success' && (
-        <SuccessIcon sx={{ color: 'success.main', fontSize: 48 }} />
-      )}
-      {summaryTone === 'error' && (
-        <FailureIcon sx={{ color: 'error.main', fontSize: 48 }} />
-      )}
+      {summaryTone === 'success' && <SuccessIcon sx={{ color: 'success.main', fontSize: 48 }} />}
+      {summaryTone === 'error' && <FailureIcon sx={{ color: 'error.main', fontSize: 48 }} />}
       {summaryTone === 'warning' && (
         <RunningIcon sx={{ color: 'warning.main', fontSize: 48, ...spinSx }} />
       )}
@@ -60,14 +53,14 @@ const SummaryAlert = ({ conclusion, summaryTone }: SummaryAlertProps) => (
             </Typography>
             <Stack spacing={1.5}>
               {conclusion.recentWorkflows.map((workflow: WorkflowRun) => {
-                const statusLabel = workflow.status === 'completed'
-                  ? workflow.conclusion
-                  : workflow.status
-                const badgeVariant = workflow.conclusion === 'success'
-                  ? 'default'
-                  : workflow.conclusion === 'failure'
-                  ? 'destructive'
-                  : 'outline'
+                const statusLabel =
+                  workflow.status === 'completed' ? workflow.conclusion : workflow.status
+                const badgeVariant =
+                  workflow.conclusion === 'success'
+                    ? 'default'
+                    : workflow.conclusion === 'failure'
+                      ? 'destructive'
+                      : 'outline'
 
                 return (
                   <Box
@@ -146,7 +139,12 @@ const SummaryAlert = ({ conclusion, summaryTone }: SummaryAlertProps) => (
   </Alert>
 )
 
-export const RunListAlerts = ({ error, needsAuth, conclusion, summaryTone }: RunListAlertsProps) => (
+export const RunListAlerts = ({
+  error,
+  needsAuth,
+  conclusion,
+  summaryTone,
+}: RunListAlertsProps) => (
   <>
     {error && (
       <Alert variant="destructive" sx={{ mb: 2 }}>
@@ -159,13 +157,12 @@ export const RunListAlerts = ({ error, needsAuth, conclusion, summaryTone }: Run
       <Alert variant="warning" sx={{ mb: 2 }}>
         <AlertTitle>Authentication Required</AlertTitle>
         <AlertDescription>
-          GitHub API requires authentication for this request. Please configure credentials and retry.
+          GitHub API requires authentication for this request. Please configure credentials and
+          retry.
         </AlertDescription>
       </Alert>
     )}
 
-    {conclusion && (
-      <SummaryAlert conclusion={conclusion} summaryTone={summaryTone} />
-    )}
+    {conclusion && <SummaryAlert conclusion={conclusion} summaryTone={summaryTone} />}
   </>
 )

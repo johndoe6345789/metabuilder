@@ -1,12 +1,7 @@
 'use client'
 
 import { forwardRef, ReactNode, useState } from 'react'
-import {
-  Box,
-  List,
-  Collapse,
-  Typography,
-} from '@mui/material'
+import { Box, List, Collapse, Typography } from '@mui/material'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
@@ -44,9 +39,8 @@ const SidebarGroup = forwardRef<HTMLDivElement, SidebarGroupProps>(
             >
               {label}
             </Typography>
-            {collapsible && (
-              open ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />
-            )}
+            {collapsible &&
+              (open ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />)}
           </Box>
         )}
         {collapsible ? (
@@ -98,8 +92,4 @@ const SidebarGroupContent = forwardRef<HTMLDivElement, { children: ReactNode; cl
 )
 SidebarGroupContent.displayName = 'SidebarGroupContent'
 
-export {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-}
+export { SidebarGroup, SidebarGroupLabel, SidebarGroupContent }

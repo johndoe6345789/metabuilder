@@ -38,14 +38,11 @@ describe('auth', () => {
   })
 
   describe('DEFAULT_CREDENTIALS', () => {
-    it.each(['supergod', 'god', 'admin', 'demo'])(
-      'should have credentials for %s',
-      (username) => {
-        expect(DEFAULT_CREDENTIALS[username]).toBeDefined()
-        expect(typeof DEFAULT_CREDENTIALS[username]).toBe('string')
-        expect(DEFAULT_CREDENTIALS[username].length).toBe(16)
-      }
-    )
+    it.each(['supergod', 'god', 'admin', 'demo'])('should have credentials for %s', username => {
+      expect(DEFAULT_CREDENTIALS[username]).toBeDefined()
+      expect(typeof DEFAULT_CREDENTIALS[username]).toBe('string')
+      expect(DEFAULT_CREDENTIALS[username].length).toBe(16)
+    })
 
     it('should generate deterministic passwords', () => {
       // Passwords should be the same on every call (deterministic)
@@ -71,7 +68,7 @@ describe('auth', () => {
       { username: '', expectPassword: false },
     ])('should handle username "$username"', ({ username, expectPassword }) => {
       const result = getScrambledPassword(username)
-      
+
       if (expectPassword) {
         expect(result).toBe(DEFAULT_CREDENTIALS[username])
         expect(result.length).toBe(16)
@@ -87,24 +84,24 @@ describe('auth', () => {
       { role: 'public' as UserRole, level: 1, expected: true },
       { role: 'public' as UserRole, level: 2, expected: false },
       { role: 'public' as UserRole, level: 5, expected: false },
-      
+
       // User can access levels 1-2
       { role: 'user' as UserRole, level: 1, expected: true },
       { role: 'user' as UserRole, level: 2, expected: true },
       { role: 'user' as UserRole, level: 3, expected: false },
-      
+
       // Admin can access levels 1-4 (moderator is level 3)
       { role: 'admin' as UserRole, level: 1, expected: true },
       { role: 'admin' as UserRole, level: 2, expected: true },
       { role: 'admin' as UserRole, level: 3, expected: true },
       { role: 'admin' as UserRole, level: 4, expected: true },
-      
+
       // God can access levels 1-5
       { role: 'god' as UserRole, level: 1, expected: true },
       { role: 'god' as UserRole, level: 3, expected: true },
       { role: 'god' as UserRole, level: 4, expected: true },
       { role: 'god' as UserRole, level: 5, expected: true },
-      
+
       // Supergod can access all levels 1-6
       { role: 'supergod' as UserRole, level: 1, expected: true },
       { role: 'supergod' as UserRole, level: 3, expected: true },

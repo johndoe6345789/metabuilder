@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Alert, AlertDescription, Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui'
+import {
+  Alert,
+  AlertDescription,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui'
 import { Warning } from '@phosphor-icons/react'
 import Editor from '@monaco-editor/react'
 import { toast } from 'sonner'
@@ -123,7 +130,8 @@ export function JsonEditor({ open, onClose, title, value, onSave, schema }: Json
                 <Alert className="border-yellow-200 bg-yellow-50">
                   <Warning className="h-5 w-5 text-yellow-600" weight="fill" />
                   <AlertDescription className="text-yellow-800">
-                    {securityScanResult.issues.length} security {securityScanResult.issues.length === 1 ? 'issue' : 'issues'}
+                    {securityScanResult.issues.length} security{' '}
+                    {securityScanResult.issues.length === 1 ? 'issue' : 'issues'}
                      detected. Click Security Scan to review.
                   </AlertDescription>
                 </Alert>
@@ -136,7 +144,7 @@ export function JsonEditor({ open, onClose, title, value, onSave, schema }: Json
                 height="600px"
                 language="json"
                 value={jsonText}
-                onChange={(value) => {
+                onChange={value => {
                   setJsonText(value || '')
                   setError(null)
                 }}

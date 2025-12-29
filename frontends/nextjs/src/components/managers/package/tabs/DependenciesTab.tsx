@@ -9,7 +9,11 @@ interface DependenciesTabProps {
   resolveCatalogEntry: (packageId: string) => PackageCatalogData | undefined
 }
 
-export function DependenciesTab({ dependencies, installedPackages, resolveCatalogEntry }: DependenciesTabProps) {
+export function DependenciesTab({
+  dependencies,
+  installedPackages,
+  resolveCatalogEntry,
+}: DependenciesTabProps) {
   if (dependencies.length === 0) {
     return <p className="text-sm text-muted-foreground">No dependencies required.</p>
   }
@@ -20,7 +24,8 @@ export function DependenciesTab({ dependencies, installedPackages, resolveCatalo
         const catalogEntry = resolveCatalogEntry(dependencyId)
         const isInstalled = installedPackages.some(pkg => pkg.packageId === dependencyId)
         const dependencyName = catalogEntry?.manifest.name ?? dependencyId
-        const dependencyDescription = catalogEntry?.manifest.description ?? 'Dependency not found in catalog.'
+        const dependencyDescription =
+          catalogEntry?.manifest.description ?? 'Dependency not found in catalog.'
 
         return (
           <Card key={dependencyId}>
@@ -28,7 +33,9 @@ export function DependenciesTab({ dependencies, installedPackages, resolveCatalo
               <div>
                 <CardTitle className="text-base flex items-center gap-2">
                   {dependencyName}
-                  <Badge variant={isInstalled ? 'secondary' : 'outline'}>{isInstalled ? 'Installed' : 'Missing'}</Badge>
+                  <Badge variant={isInstalled ? 'secondary' : 'outline'}>
+                    {isInstalled ? 'Installed' : 'Missing'}
+                  </Badge>
                 </CardTitle>
                 <CardDescription>{dependencyDescription}</CardDescription>
               </div>

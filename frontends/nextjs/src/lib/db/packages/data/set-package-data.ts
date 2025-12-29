@@ -3,7 +3,10 @@ import { getAdapter } from '../../core/dbal-client'
 /**
  * Set package data (upsert)
  */
-export async function setPackageData(packageId: string, data: Record<string, any[]>): Promise<void> {
+export async function setPackageData(
+  packageId: string,
+  data: Record<string, any[]>
+): Promise<void> {
   const adapter = getAdapter()
   await adapter.upsert('PackageData', {
     where: { packageId },

@@ -31,9 +31,8 @@ export async function POST(request: Request) {
   const username = typeof body.username === 'string' ? body.username.trim() : ''
   const email = typeof body.email === 'string' ? body.email.trim() : ''
   const password = typeof body.password === 'string' ? body.password : ''
-  const tenantId = typeof body.tenantId === 'string' && body.tenantId.trim()
-    ? body.tenantId.trim()
-    : undefined
+  const tenantId =
+    typeof body.tenantId === 'string' && body.tenantId.trim() ? body.tenantId.trim() : undefined
 
   if (!username || !email || !password) {
     return NextResponse.json(
@@ -49,10 +48,7 @@ export async function POST(request: Request) {
   ])
 
   if (existingByUsername || existingByEmail) {
-    return NextResponse.json(
-      { error: 'User already exists' },
-      { status: 409 }
-    )
+    return NextResponse.json({ error: 'User already exists' }, { status: 409 })
   }
 
   const user = {

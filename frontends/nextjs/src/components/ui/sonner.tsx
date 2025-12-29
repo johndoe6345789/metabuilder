@@ -25,12 +25,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
 import { ToastContainer, type ToastHandlers } from './sonner/ToastContainer'
-import {
-  DEFAULT_DURATION,
-  type Toast,
-  type ToastOptions,
-  type ToastType,
-} from './sonner/config'
+import { DEFAULT_DURATION, type Toast, type ToastOptions, type ToastType } from './sonner/config'
 
 const ToastContext = createContext<ToastHandlers>({
   addToast: () => {},
@@ -57,13 +52,19 @@ const enqueueToast = (toast: Toast) => {
 }
 
 export const toast = Object.assign(
-  (message: string, options?: ToastOptions) => enqueueToast(createToast(message, 'default', options)),
+  (message: string, options?: ToastOptions) =>
+    enqueueToast(createToast(message, 'default', options)),
   {
-    success: (message: string, options?: ToastOptions) => enqueueToast(createToast(message, 'success', options)),
-    error: (message: string, options?: ToastOptions) => enqueueToast(createToast(message, 'error', options)),
-    warning: (message: string, options?: ToastOptions) => enqueueToast(createToast(message, 'warning', options)),
-    info: (message: string, options?: ToastOptions) => enqueueToast(createToast(message, 'info', options)),
-    loading: (message: string, options?: ToastOptions) => enqueueToast(createToast(message, 'info', { ...options, duration: 0 })),
+    success: (message: string, options?: ToastOptions) =>
+      enqueueToast(createToast(message, 'success', options)),
+    error: (message: string, options?: ToastOptions) =>
+      enqueueToast(createToast(message, 'error', options)),
+    warning: (message: string, options?: ToastOptions) =>
+      enqueueToast(createToast(message, 'warning', options)),
+    info: (message: string, options?: ToastOptions) =>
+      enqueueToast(createToast(message, 'info', options)),
+    loading: (message: string, options?: ToastOptions) =>
+      enqueueToast(createToast(message, 'info', { ...options, duration: 0 })),
     dismiss: (id?: string | number) => {
       globalRemoveToast?.(id)
     },
@@ -80,12 +81,14 @@ export const toast = Object.assign(
       try {
         const result = await promise
         toast.dismiss(id)
-        const successMessage = typeof messages.success === 'function' ? messages.success(result) : messages.success
+        const successMessage =
+          typeof messages.success === 'function' ? messages.success(result) : messages.success
         toast.success(successMessage, options)
         return result
       } catch (error) {
         toast.dismiss(id)
-        const errorMessage = typeof messages.error === 'function' ? messages.error(error) : messages.error
+        const errorMessage =
+          typeof messages.error === 'function' ? messages.error(error) : messages.error
         toast.error(errorMessage, options)
         throw error
       }

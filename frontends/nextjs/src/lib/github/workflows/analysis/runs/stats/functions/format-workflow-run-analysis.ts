@@ -25,7 +25,7 @@ export function formatWorkflowRunAnalysis(summary: WorkflowRunSummary) {
   if (summary.recentRuns.length > 0) {
     lines.push('')
     lines.push('Recent runs:')
-    summary.recentRuns.forEach((run) => {
+    summary.recentRuns.forEach(run => {
       lines.push(
         `- ${run.name} | ${run.status}${run.conclusion ? `/${run.conclusion}` : ''} | ${run.head_branch} | ${run.updated_at}`
       )
@@ -35,7 +35,7 @@ export function formatWorkflowRunAnalysis(summary: WorkflowRunSummary) {
   if (summary.topFailingWorkflows.length > 0) {
     lines.push('')
     lines.push('Top failing workflows:')
-    summary.topFailingWorkflows.forEach((entry) => {
+    summary.topFailingWorkflows.forEach(entry => {
       lines.push(`- ${entry.name}: ${entry.failures}`)
     })
   }
@@ -43,7 +43,7 @@ export function formatWorkflowRunAnalysis(summary: WorkflowRunSummary) {
   if (summary.failingBranches.length > 0) {
     lines.push('')
     lines.push('Failing branches:')
-    summary.failingBranches.forEach((entry) => {
+    summary.failingBranches.forEach(entry => {
       lines.push(`- ${entry.branch}: ${entry.failures}`)
     })
   }
@@ -51,7 +51,7 @@ export function formatWorkflowRunAnalysis(summary: WorkflowRunSummary) {
   if (summary.failingEvents.length > 0) {
     lines.push('')
     lines.push('Failing events:')
-    summary.failingEvents.forEach((entry) => {
+    summary.failingEvents.forEach(entry => {
       lines.push(`- ${entry.event}: ${entry.failures}`)
     })
   }

@@ -27,9 +27,7 @@ export function WorkflowRunCard({
       sx={{
         cursor: onClick ? 'pointer' : 'default',
         transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
-        '&:hover': onClick
-          ? { boxShadow: 3, borderColor: 'primary.light' }
-          : undefined,
+        '&:hover': onClick ? { boxShadow: 3, borderColor: 'primary.light' } : undefined,
       }}
     >
       <CardContent sx={{ pt: 2 }}>

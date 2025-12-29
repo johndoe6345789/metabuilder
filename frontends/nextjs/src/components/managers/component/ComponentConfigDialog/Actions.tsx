@@ -12,9 +12,7 @@ export function ComponentConfigActions({ onClose, onSave }: ComponentConfigActio
       <Button variant="outline" onClick={onClose}>
         Cancel
       </Button>
-      <Button onClick={() => void onSave()}>
-        Save Configuration
-      </Button>
+      <Button onClick={() => void onSave()}>Save Configuration</Button>
     </DialogFooter>
   )
 }

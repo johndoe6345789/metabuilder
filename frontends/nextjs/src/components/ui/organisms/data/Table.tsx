@@ -18,17 +18,19 @@ interface TableProps {
   className?: string
 }
 
-const Table = forwardRef<HTMLTableElement, TableProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <TableContainer component={Paper} elevation={0} sx={{ border: 1, borderColor: 'divider', borderRadius: 2 }}>
-        <MuiTable ref={ref} size="small" {...props}>
-          {children}
-        </MuiTable>
-      </TableContainer>
-    )
-  }
-)
+const Table = forwardRef<HTMLTableElement, TableProps>(({ children, ...props }, ref) => {
+  return (
+    <TableContainer
+      component={Paper}
+      elevation={0}
+      sx={{ border: 1, borderColor: 'divider', borderRadius: 2 }}
+    >
+      <MuiTable ref={ref} size="small" {...props}>
+        {children}
+      </MuiTable>
+    </TableContainer>
+  )
+})
 Table.displayName = 'Table'
 
 interface TableHeaderProps {
@@ -54,7 +56,11 @@ interface TableBodyProps {
 
 const TableBody = forwardRef<HTMLTableSectionElement, TableBodyProps>(
   ({ children, ...props }, ref) => {
-    return <MuiTableBody ref={ref} {...props}>{children}</MuiTableBody>
+    return (
+      <MuiTableBody ref={ref} {...props}>
+        {children}
+      </MuiTableBody>
+    )
   }
 )
 TableBody.displayName = 'TableBody'
@@ -80,22 +86,20 @@ interface TableRowProps {
   className?: string
 }
 
-const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <MuiTableRow
-        ref={ref}
-        sx={{
-          '&:last-child td, &:last-child th': { border: 0 },
-          '&:hover': { bgcolor: 'action.hover' },
-        }}
-        {...props}
-      >
-        {children}
-      </MuiTableRow>
-    )
-  }
-)
+const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(({ children, ...props }, ref) => {
+  return (
+    <MuiTableRow
+      ref={ref}
+      sx={{
+        '&:last-child td, &:last-child th': { border: 0 },
+        '&:hover': { bgcolor: 'action.hover' },
+      }}
+      {...props}
+    >
+      {children}
+    </MuiTableRow>
+  )
+})
 TableRow.displayName = 'TableRow'
 
 interface TableHeadProps {
@@ -154,7 +158,11 @@ interface TableCaptionProps {
 const TableCaption = forwardRef<HTMLTableCaptionElement, TableCaptionProps>(
   ({ children, ...props }, ref) => {
     return (
-      <caption ref={ref} style={{ captionSide: 'bottom', padding: '16px', color: 'inherit', fontSize: '0.875rem' }} {...props}>
+      <caption
+        ref={ref}
+        style={{ captionSide: 'bottom', padding: '16px', color: 'inherit', fontSize: '0.875rem' }}
+        {...props}
+      >
         {children}
       </caption>
     )
@@ -162,13 +170,4 @@ const TableCaption = forwardRef<HTMLTableCaptionElement, TableCaptionProps>(
 )
 TableCaption.displayName = 'TableCaption'
 
-export {
-  Table,
-  TableHeader,
-  TableBody,
-  TableFooter,
-  TableRow,
-  TableHead,
-  TableCell,
-  TableCaption,
-}
+export { Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption }

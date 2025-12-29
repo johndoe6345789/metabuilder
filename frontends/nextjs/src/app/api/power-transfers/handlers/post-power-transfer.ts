@@ -34,7 +34,10 @@ export async function POST(request: NextRequest) {
     const toUserId = body.toUserId?.trim()
 
     if (!fromUserId || !toUserId) {
-      return NextResponse.json({ error: 'Both fromUserId and toUserId are required' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Both fromUserId and toUserId are required' },
+        { status: 400 }
+      )
     }
 
     if (fromUserId === toUserId) {
@@ -43,7 +46,10 @@ export async function POST(request: NextRequest) {
 
     const fromUser = await dbalGetUserById(fromUserId)
     if (!fromUser || fromUser.role !== 'supergod') {
-      return NextResponse.json({ error: 'Only an active supergod can initiate transfers' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Only an active supergod can initiate transfers' },
+        { status: 403 }
+      )
     }
 
     const toUser = await dbalGetUserById(toUserId)
@@ -52,11 +58,16 @@ export async function POST(request: NextRequest) {
     }
 
     if (toUser.role === 'supergod') {
-      return NextResponse.json({ error: 'Target user already has supergod privileges' }, { status: 409 })
+      return NextResponse.json(
+        { error: 'Target user already has supergod privileges' },
+        { status: 409 }
+      )
     }
 
     const pendingRequests = await getPowerTransferRequests()
-    if (pendingRequests.some((request) => request.status === 'pending' && request.toUserId === toUserId)) {
+    if (
+      pendingRequests.some(request => request.status === 'pending' && request.toUserId === toUserId)
+    ) {
       return NextResponse.json(
         { error: 'There is already a pending transfer request for that user' },
         { status: 409 }

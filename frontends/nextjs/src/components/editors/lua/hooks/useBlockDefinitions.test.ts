@@ -1,7 +1,11 @@
 import { renderHook } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { useBlockDefinitions } from './useBlockDefinitions'
-import { BLOCKS_METADATA_PREFIX, buildLuaFromBlocks, decodeBlocksMetadata } from './luaBlockSerialization'
+import {
+  BLOCKS_METADATA_PREFIX,
+  buildLuaFromBlocks,
+  decodeBlocksMetadata,
+} from './luaBlockSerialization'
 import type { LuaBlock } from '../types'
 
 describe('useBlockDefinitions', () => {
@@ -9,15 +13,15 @@ describe('useBlockDefinitions', () => {
     const { result } = renderHook(() => useBlockDefinitions())
 
     expect(result.current.blockDefinitions).toHaveLength(8)
-    expect(result.current.blocksByCategory.Basics.map((block) => block.type)).toEqual(
+    expect(result.current.blocksByCategory.Basics.map(block => block.type)).toEqual(
       expect.arrayContaining(['log', 'return', 'comment'])
     )
-    expect(result.current.blocksByCategory.Data.map((block) => block.type)).toEqual(['set_variable'])
-    expect(result.current.blocksByCategory.Logic.map((block) => block.type)).toEqual(
+    expect(result.current.blocksByCategory.Data.map(block => block.type)).toEqual(['set_variable'])
+    expect(result.current.blocksByCategory.Logic.map(block => block.type)).toEqual(
       expect.arrayContaining(['if', 'if_else'])
     )
-    expect(result.current.blocksByCategory.Loops.map((block) => block.type)).toEqual(['repeat'])
-    expect(result.current.blocksByCategory.Functions.map((block) => block.type)).toEqual(['call'])
+    expect(result.current.blocksByCategory.Loops.map(block => block.type)).toEqual(['repeat'])
+    expect(result.current.blocksByCategory.Functions.map(block => block.type)).toEqual(['call'])
   })
 })
 

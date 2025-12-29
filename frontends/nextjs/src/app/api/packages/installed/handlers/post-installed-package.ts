@@ -21,7 +21,12 @@ export async function POST(request: NextRequest) {
     const body = await readJson<InstallPackagePayload>(request)
     if (!body) return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 })
 
-    const packageId = typeof body.packageId === 'string' ? body.packageId.trim() : (typeof body.manifest?.id === 'string' ? body.manifest.id : '')
+    const packageId =
+      typeof body.packageId === 'string'
+        ? body.packageId.trim()
+        : typeof body.manifest?.id === 'string'
+          ? body.manifest.id
+          : ''
     if (!packageId) return NextResponse.json({ error: 'Package ID is required' }, { status: 400 })
 
     const entry = getPackageCatalogEntry(packageId)
@@ -29,16 +34,17 @@ export async function POST(request: NextRequest) {
     if (!content) return NextResponse.json({ error: 'Package content not found' }, { status: 404 })
 
     const installed = await getInstalledPackages()
-    if (installed.some((pkg) => pkg.packageId === packageId)) {
+    if (installed.some(pkg => pkg.packageId === packageId)) {
       return NextResponse.json({ error: 'Package already installed' }, { status: 409 })
     }
 
     await installPackageContent(packageId, content)
 
     const installedAt = typeof body.installedAt === 'number' ? body.installedAt : Date.now()
-    const version = typeof body.version === 'string'
-      ? body.version
-      : (body.manifest?.version ?? entry?.manifest.version ?? '0.0.0')
+    const version =
+      typeof body.version === 'string'
+        ? body.version
+        : (body.manifest?.version ?? entry?.manifest.version ?? '0.0.0')
     const enabled = typeof body.enabled === 'boolean' ? body.enabled : true
     const installedPackage: InstalledPackage = { packageId, installedAt, version, enabled }
 

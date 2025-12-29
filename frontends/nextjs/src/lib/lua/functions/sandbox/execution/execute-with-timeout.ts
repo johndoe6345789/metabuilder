@@ -24,7 +24,8 @@ export function executeWithTimeout(
       return
     }
 
-    this.engine.execute(code, context)
+    this.engine
+      .execute(code, context)
       .then(result => {
         clearTimeout(timeout)
         resolve(result)

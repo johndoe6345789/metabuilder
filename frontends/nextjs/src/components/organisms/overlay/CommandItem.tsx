@@ -40,10 +40,7 @@ const CommandItem = forwardRef<HTMLLIElement, CommandItemProps>(
           }}
         >
           {icon && <ListItemIcon sx={{ minWidth: 32 }}>{icon}</ListItemIcon>}
-          <ListItemText
-            primary={children}
-            primaryTypographyProps={{ fontSize: '0.875rem' }}
-          />
+          <ListItemText primary={children} primaryTypographyProps={{ fontSize: '0.875rem' }} />
           {shortcut && (
             <Typography variant="caption" color="text.secondary" sx={{ ml: 2 }}>
               {shortcut}
@@ -97,9 +94,4 @@ const CommandLoading = ({ children }: { children?: ReactNode }) => {
 }
 CommandLoading.displayName = 'CommandLoading'
 
-export {
-  CommandItem,
-  CommandSeparator,
-  CommandShortcut,
-  CommandLoading,
-}
+export { CommandItem, CommandSeparator, CommandShortcut, CommandLoading }

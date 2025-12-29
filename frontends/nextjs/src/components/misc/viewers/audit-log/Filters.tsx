@@ -32,7 +32,7 @@ const DEFAULT_RESOURCES: ResourceType[] = [
   'tenant',
   'powerTransfer',
   'smtpConfig',
-  'credential'
+  'credential',
 ]
 
 export function AuditLogFilters({
@@ -46,7 +46,7 @@ export function AuditLogFilters({
   onShowFailuresChange,
   availableOperations,
   availableResources,
-  onReset
+  onReset,
 }: AuditLogFiltersProps) {
   const operationOptions = availableOperations || DEFAULT_OPERATIONS
   const resourceOptions = useMemo(
@@ -70,7 +70,7 @@ export function AuditLogFilters({
               id="audit-log-search"
               placeholder="Search by user, resource, or error message"
               value={searchTerm}
-              onChange={(event) => onSearchChange(event.target.value)}
+              onChange={event => onSearchChange(event.target.value)}
               className="pl-9"
             />
           </div>
@@ -95,10 +95,10 @@ export function AuditLogFilters({
           <ToggleGroup
             type="multiple"
             value={selectedOperations}
-            onValueChange={(value) => onOperationsChange(value as OperationType[])}
+            onValueChange={value => onOperationsChange(value as OperationType[])}
             className="flex flex-wrap gap-2"
           >
-            {operationOptions.map((operation) => (
+            {operationOptions.map(operation => (
               <ToggleGroupItem
                 key={operation}
                 value={operation}
@@ -116,7 +116,7 @@ export function AuditLogFilters({
             <span className="text-xs text-muted-foreground">Select one or more</span>
           </div>
           <div className="flex flex-wrap gap-2">
-            {resourceOptions.map((resource) => {
+            {resourceOptions.map(resource => {
               const isSelected = selectedResources.includes(resource)
               return (
                 <Button
@@ -126,7 +126,7 @@ export function AuditLogFilters({
                   onClick={() =>
                     onResourcesChange(
                       isSelected
-                        ? selectedResources.filter((value) => value !== resource)
+                        ? selectedResources.filter(value => value !== resource)
                         : [...selectedResources, resource]
                     )
                   }
@@ -167,9 +167,7 @@ export function AuditLogFilters({
           )}
           {selectedOperations.length === 0 &&
             selectedResources.length === 0 &&
-            !showFailuresOnly && (
-              <span>No filters applied</span>
-            )}
+            !showFailuresOnly && <span>No filters applied</span>}
         </div>
 
         {onReset && (

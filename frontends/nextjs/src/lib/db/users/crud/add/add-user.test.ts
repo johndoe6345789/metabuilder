@@ -72,12 +72,14 @@ describe('addUser', () => {
   it('should propagate adapter errors', async () => {
     mockCreate.mockRejectedValue(new Error('DB error'))
 
-    await expect(addUser({
-      id: 'user_1',
-      username: 'test',
-      email: 'test@example.com',
-      role: 'user',
-      createdAt: 1000,
-    })).rejects.toThrow('DB error')
+    await expect(
+      addUser({
+        id: 'user_1',
+        username: 'test',
+        email: 'test@example.com',
+        role: 'user',
+        createdAt: 1000,
+      })
+    ).rejects.toThrow('DB error')
   })
 })

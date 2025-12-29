@@ -2,11 +2,7 @@ import { useMemo, useState } from 'react'
 import { Tabs } from '@/components/ui'
 import { BookOpen } from '@phosphor-icons/react'
 import { toast } from 'sonner'
-import {
-  getSnippetsByCategory,
-  searchSnippets,
-  type LuaSnippet,
-} from '@/lib/lua-snippets'
+import { getSnippetsByCategory, searchSnippets, type LuaSnippet } from '@/lib/lua-snippets'
 import { SearchBar } from './LuaSnippetLibrary/SearchBar'
 import { SnippetDialog } from './LuaSnippetLibrary/SnippetDialog'
 import { SnippetList } from './LuaSnippetLibrary/SnippetList'
@@ -22,8 +18,7 @@ export function LuaSnippetLibrary({ onInsertSnippet }: LuaSnippetLibraryProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null)
 
   const displayedSnippets = useMemo(
-    () =>
-      searchQuery ? searchSnippets(searchQuery) : getSnippetsByCategory(selectedCategory),
+    () => (searchQuery ? searchSnippets(searchQuery) : getSnippetsByCategory(selectedCategory)),
     [searchQuery, selectedCategory]
   )
 
@@ -80,7 +75,7 @@ export function LuaSnippetLibrary({ onInsertSnippet }: LuaSnippetLibraryProps) {
         onCopy={handleCopySnippet}
         onInsert={
           onInsertSnippet
-            ? (snippet) => {
+            ? snippet => {
                 handleInsertSnippet(snippet)
                 setSelectedSnippet(null)
               }

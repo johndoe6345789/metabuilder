@@ -16,11 +16,11 @@ interface ErrorLogStats {
 
 const buildStats = (logs: ErrorLog[]): ErrorLogStats => ({
   total: logs.length,
-  errors: logs.filter((log) => log.level === 'error').length,
-  warnings: logs.filter((log) => log.level === 'warning').length,
-  info: logs.filter((log) => log.level === 'info').length,
-  resolved: logs.filter((log) => log.resolved).length,
-  unresolved: logs.filter((log) => !log.resolved).length,
+  errors: logs.filter(log => log.level === 'error').length,
+  warnings: logs.filter(log => log.level === 'warning').length,
+  info: logs.filter(log => log.level === 'info').length,
+  resolved: logs.filter(log => log.resolved).length,
+  unresolved: logs.filter(log => !log.resolved).length,
 })
 
 export const useErrorLogData = (user?: User) => {

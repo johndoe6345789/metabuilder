@@ -124,7 +124,7 @@ describe('getErrorLogs', () => {
 
     expect(mockList).toHaveBeenCalledWith('ErrorLog')
     expect(result).toHaveLength(expectedLength)
-    
+
     if (options?.tenantId && result.length > 0) {
       expect(result.every(log => log.tenantId === options.tenantId)).toBe(true)
     }

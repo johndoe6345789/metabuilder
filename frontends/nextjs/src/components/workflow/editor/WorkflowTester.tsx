@@ -1,6 +1,10 @@
 import { Card, CardContent, CardHeader } from '@mui/material'
 import { CardTitle } from '@/components/ui'
-import { CheckCircle as CheckCircleIcon, Cancel as XCircleIcon, FlashOn as LightningIcon } from '@mui/icons-material'
+import {
+  CheckCircle as CheckCircleIcon,
+  Cancel as XCircleIcon,
+  FlashOn as LightningIcon,
+} from '@mui/icons-material'
 import { Label, Textarea } from '@/components/ui'
 import type { WorkflowTesterProps } from './types'
 
@@ -15,14 +19,16 @@ export const WorkflowTester = ({
       <Label>Test Input Data (JSON)</Label>
       <Textarea
         value={testData}
-        onChange={(e) => onTestDataChange(e.target.value)}
+        onChange={e => onTestDataChange(e.target.value)}
         className="font-mono text-sm min-h-[100px]"
         placeholder='{"example": "data"}'
       />
     </div>
 
     {testOutput && (
-      <Card className={testOutput.success ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}>
+      <Card
+        className={testOutput.success ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}
+      >
         <CardHeader>
           <div className="flex items-center gap-2">
             {testOutput.success ? (

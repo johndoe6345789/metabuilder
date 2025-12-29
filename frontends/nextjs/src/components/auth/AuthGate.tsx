@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -62,9 +62,10 @@ export function AuthGate({
       return <>{fallback}</>
     }
 
-    const description = decision.reason === 'unauthenticated'
-      ? 'Please sign in to continue.'
-      : 'Your account does not have the required access level.'
+    const description =
+      decision.reason === 'unauthenticated'
+        ? 'Please sign in to continue.'
+        : 'Your account does not have the required access level.'
 
     return (
       <AccessDenied

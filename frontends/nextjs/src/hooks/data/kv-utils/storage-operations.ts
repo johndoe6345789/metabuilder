@@ -50,13 +50,13 @@ export function readStoredValue<T>(key: string): T | undefined {
  */
 export function writeStoredValue(key: string, value: unknown): void {
   kvStore.set(key, value)
-  
+
   const storage = getLocalStorage()
   if (!storage) return
 
   const storageKey = getStorageKey(key)
   const serialized = safeStringify(value)
-  
+
   if (serialized !== null) {
     try {
       storage.setItem(storageKey, serialized)
@@ -71,7 +71,7 @@ export function writeStoredValue(key: string, value: unknown): void {
  */
 export function deleteStoredValue(key: string): void {
   kvStore.delete(key)
-  
+
   const storage = getLocalStorage()
   if (!storage) return
 

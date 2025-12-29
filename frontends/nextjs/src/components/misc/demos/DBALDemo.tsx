@@ -34,7 +34,7 @@ export function DBALDemo() {
 
   const handleConnect = (config: { endpoint: string; apiKey: string }) => {
     const timestamp = new Date().toLocaleTimeString()
-    setLogs((current) => [...current, `${timestamp}: Connected to ${config.endpoint}`])
+    setLogs(current => [...current, `${timestamp}: Connected to ${config.endpoint}`])
     setLatestResult({
       endpoint: config.endpoint,
       apiKey: config.apiKey ? '***' : 'Not provided',
@@ -58,7 +58,11 @@ export function DBALDemo() {
           statusMessage={statusMessage}
           onConnect={handleConnect}
         />
-        <ResultPanel title="Connection Details" result={latestResult} emptyLabel="Submit the form to log a connection" />
+        <ResultPanel
+          title="Connection Details"
+          result={latestResult}
+          emptyLabel="Submit the form to log a connection"
+        />
       </div>
 
       <div className="mb-6">
@@ -67,14 +71,14 @@ export function DBALDemo() {
 
       <Tabs defaultValue={tabs[0].value} className="space-y-4">
         <TabsList className={DBAL_TAB_GRID_CLASS}>
-          {tabs.map((tab) => (
+          {tabs.map(tab => (
             <TabsTrigger key={tab.value} value={tab.value}>
               {tab.label}
             </TabsTrigger>
           ))}
         </TabsList>
 
-        {tabs.map((tab) => (
+        {tabs.map(tab => (
           <TabsContent key={tab.value} value={tab.value} className="space-y-4">
             {tab.content}
           </TabsContent>

@@ -1,12 +1,6 @@
 import { Button, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Input, Label } from '@/components/ui'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import { ValidationPanel } from '@/components/schema/level4/ValidationPanel'
 import type { FieldSchema, FieldType, ModelSchema } from '@/lib/schema-types'
 import { Plus, Trash } from '@phosphor-icons/react'
@@ -33,25 +27,25 @@ export function SchemaTabs({
           <TextField
             label="Model Name (ID)"
             value={currentModel.name}
-            onChange={(value) => onUpdateModel({ name: value })}
+            onChange={value => onUpdateModel({ name: value })}
             placeholder="user_model"
           />
           <TextField
             label="Display Label"
             value={currentModel.label || ''}
-            onChange={(value) => onUpdateModel({ label: value })}
+            onChange={value => onUpdateModel({ label: value })}
             placeholder="User"
           />
           <TextField
             label="Plural Label"
             value={currentModel.labelPlural || ''}
-            onChange={(value) => onUpdateModel({ labelPlural: value })}
+            onChange={value => onUpdateModel({ labelPlural: value })}
             placeholder="Users"
           />
           <TextField
             label="Icon Name"
             value={currentModel.icon || ''}
-            onChange={(value) => onUpdateModel({ icon: value })}
+            onChange={value => onUpdateModel({ icon: value })}
             placeholder="users"
           />
         </div>
@@ -71,11 +65,11 @@ export function SchemaTabs({
                 No fields yet. Add a field to start.
               </p>
             ) : (
-              currentModel.fields.map((field) => (
+              currentModel.fields.map(field => (
                 <FieldCard
                   key={field.name}
                   field={field}
-                  onChange={(updates) => handleFieldChange(field.name, updates)}
+                  onChange={updates => handleFieldChange(field.name, updates)}
                   onDelete={() => onDeleteField(field.name)}
                 />
               ))

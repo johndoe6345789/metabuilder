@@ -34,7 +34,7 @@ export const LuaScriptsListCard = ({
             No scripts yet. Create one to start.
           </p>
         ) : (
-          scripts.map((script) => (
+          scripts.map(script => (
             <div
               key={script.id}
               className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${
@@ -53,7 +53,7 @@ export const LuaScriptsListCard = ({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation()
                   onDeleteScript(script.id)
                 }}

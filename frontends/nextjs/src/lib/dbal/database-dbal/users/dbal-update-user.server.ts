@@ -31,7 +31,8 @@ export async function dbalUpdateUser(userId: string, updates: Partial<User>): Pr
     role: updated.role as any,
     profilePicture: updated.profilePicture ?? updates.profilePicture,
     bio: updated.bio ?? updates.bio,
-    createdAt: updated.createdAt instanceof Date ? updated.createdAt.getTime() : Number(updated.createdAt),
+    createdAt:
+      updated.createdAt instanceof Date ? updated.createdAt.getTime() : Number(updated.createdAt),
     tenantId: updated.tenantId ?? updates.tenantId,
     isInstanceOwner: updated.isInstanceOwner ?? updates.isInstanceOwner,
   }

@@ -20,7 +20,10 @@ export function useChatInput(onSubmit: () => void) {
   }
 }
 
-export function useFormattedTimes(messages: ChatMessage[] | undefined, formatTime: TimestampFormatter) {
+export function useFormattedTimes(
+  messages: ChatMessage[] | undefined,
+  formatTime: TimestampFormatter
+) {
   const [formattedTimes, setFormattedTimes] = useState<Record<string, string>>({})
 
   useEffect(() => {
@@ -33,10 +36,10 @@ export function useFormattedTimes(messages: ChatMessage[] | undefined, formatTim
       }
 
       const entries = await Promise.all(
-        messages.map(async (message) => {
+        messages.map(async message => {
           const formatted = await formatTime(message.timestamp)
           return [message.id, formatted] as const
-        }),
+        })
       )
 
       if (isMounted) {

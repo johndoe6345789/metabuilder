@@ -18,7 +18,16 @@ describe('getComments', () => {
     { name: 'empty array', dbData: [], expectedLength: 0 },
     {
       name: 'parsed comments',
-      dbData: [{ id: 'c1', userId: 'u1', content: 'Hi', createdAt: BigInt(1000), updatedAt: null, parentId: null }],
+      dbData: [
+        {
+          id: 'c1',
+          userId: 'u1',
+          content: 'Hi',
+          createdAt: BigInt(1000),
+          updatedAt: null,
+          parentId: null,
+        },
+      ],
       expectedLength: 1,
     },
   ])('should return $name', async ({ dbData, expectedLength }) => {

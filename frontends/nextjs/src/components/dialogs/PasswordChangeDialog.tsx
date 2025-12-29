@@ -1,5 +1,12 @@
 import { useState } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
@@ -13,7 +20,12 @@ interface PasswordChangeDialogProps {
   isFirstLogin?: boolean
 }
 
-export function PasswordChangeDialog({ open, username, onPasswordChanged, isFirstLogin = false }: PasswordChangeDialogProps) {
+export function PasswordChangeDialog({
+  open,
+  username,
+  onPasswordChanged,
+  isFirstLogin = false,
+}: PasswordChangeDialogProps) {
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
@@ -72,7 +84,7 @@ export function PasswordChangeDialog({ open, username, onPasswordChanged, isFirs
                 id="new-password"
                 type={showPassword ? 'text' : 'password'}
                 value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
+                onChange={e => setNewPassword(e.target.value)}
                 placeholder="Enter new password"
                 className="pr-10"
               />
@@ -92,9 +104,9 @@ export function PasswordChangeDialog({ open, username, onPasswordChanged, isFirs
               id="confirm-password"
               type={showPassword ? 'text' : 'password'}
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={e => setConfirmPassword(e.target.value)}
               placeholder="Confirm new password"
-              onKeyDown={(e) => {
+              onKeyDown={e => {
                 if (e.key === 'Enter') {
                   handleSubmit()
                 }

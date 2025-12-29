@@ -1,6 +1,27 @@
 import type React from 'react'
 import type { ComponentInstance } from '@/lib/types/builder-types'
-import { Button, Input, Textarea, Label, Badge, Card, Switch, Checkbox, Separator, Alert, Progress, Slider, Avatar, AvatarFallback, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
+import {
+  Button,
+  Input,
+  Textarea,
+  Label,
+  Badge,
+  Card,
+  Switch,
+  Checkbox,
+  Separator,
+  Alert,
+  Progress,
+  Slider,
+  Avatar,
+  AvatarFallback,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui'
 import { IRCWebchatDeclarative } from '@/components/IRCWebchatDeclarative'
 import { NotificationSummaryCard } from '@/components/NotificationSummaryCard'
 import type { User } from '@/lib/level-types'
@@ -39,39 +60,19 @@ export function RenderNode({ component, renderChildren, user }: RenderNodeProps)
 
   switch (type) {
     case 'Container':
-      return (
-        <div className={props.className || 'p-4'}>
-          {renderChildren()}
-        </div>
-      )
+      return <div className={props.className || 'p-4'}>{renderChildren()}</div>
 
     case 'Flex':
-      return (
-        <div className={props.className || 'flex gap-4'}>
-          {renderChildren()}
-        </div>
-      )
+      return <div className={props.className || 'flex gap-4'}>{renderChildren()}</div>
 
     case 'Grid':
-      return (
-        <div className={props.className || 'grid grid-cols-2 gap-4'}>
-          {renderChildren()}
-        </div>
-      )
+      return <div className={props.className || 'grid grid-cols-2 gap-4'}>{renderChildren()}</div>
 
     case 'Stack':
-      return (
-        <div className={props.className || 'flex flex-col gap-2'}>
-          {renderChildren()}
-        </div>
-      )
+      return <div className={props.className || 'flex flex-col gap-2'}>{renderChildren()}</div>
 
     case 'Card':
-      return (
-        <Card className={props.className || 'p-6'}>
-          {renderChildren()}
-        </Card>
-      )
+      return <Card className={props.className || 'p-6'}>{renderChildren()}</Card>
 
     case 'NotificationSummary':
       return (
@@ -91,20 +92,10 @@ export function RenderNode({ component, renderChildren, user }: RenderNodeProps)
       )
 
     case 'Input':
-      return (
-        <Input
-          placeholder={props.placeholder}
-          type={props.type}
-        />
-      )
+      return <Input placeholder={props.placeholder} type={props.type} />
 
     case 'Textarea':
-      return (
-        <Textarea
-          placeholder={props.placeholder}
-          rows={props.rows}
-        />
-      )
+      return <Textarea placeholder={props.placeholder} rows={props.rows} />
 
     case 'Label':
       return <Label>{props.children || 'Label'}</Label>
@@ -122,18 +113,10 @@ export function RenderNode({ component, renderChildren, user }: RenderNodeProps)
     }
 
     case 'Text':
-      return (
-        <p className={props.className}>
-          {props.children || 'Text'}
-        </p>
-      )
+      return <p className={props.className}>{props.children || 'Text'}</p>
 
     case 'Badge':
-      return (
-        <Badge variant={props.variant}>
-          {props.children || 'Badge'}
-        </Badge>
-      )
+      return <Badge variant={props.variant}>{props.children || 'Badge'}</Badge>
 
     case 'Switch':
       return <Switch />
@@ -145,17 +128,19 @@ export function RenderNode({ component, renderChildren, user }: RenderNodeProps)
       return <Separator />
 
     case 'Alert':
-      return (
-        <Alert variant={props.variant}>
-          {renderChildren()}
-        </Alert>
-      )
+      return <Alert variant={props.variant}>{renderChildren()}</Alert>
 
     case 'Progress':
       return <Progress value={props.value || 50} />
 
     case 'Slider':
-      return <Slider defaultValue={props.defaultValue || [50]} max={props.max || 100} step={props.step || 1} />
+      return (
+        <Slider
+          defaultValue={props.defaultValue || [50]}
+          max={props.max || 100}
+          step={props.step || 1}
+        />
+      )
 
     case 'Avatar':
       return (

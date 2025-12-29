@@ -44,13 +44,16 @@ describe('addErrorLog', () => {
 
     const id = await addErrorLog(log)
 
-    expect(mockCreate).toHaveBeenCalledWith('ErrorLog', expect.objectContaining({
-      id: expect.stringContaining('error_'),
-      timestamp: expect.any(BigInt),
-      level: log.level,
-      message: log.message,
-      resolved: false,
-    }))
+    expect(mockCreate).toHaveBeenCalledWith(
+      'ErrorLog',
+      expect.objectContaining({
+        id: expect.stringContaining('error_'),
+        timestamp: expect.any(BigInt),
+        level: log.level,
+        message: log.message,
+        resolved: false,
+      })
+    )
     expect(id).toMatch(/^error_/)
   })
 })

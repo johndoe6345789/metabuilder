@@ -12,13 +12,18 @@ export function Level3Stats({ users, comments }: Level3StatsProps) {
 
   const stats = [
     { label: 'Total Users', value: users.length, icon: Users, helper: 'Registered accounts' },
-    { label: 'Total Comments', value: comments.length, icon: ChatCircle, helper: 'Posted by users' },
+    {
+      label: 'Total Comments',
+      value: comments.length,
+      icon: ChatCircle,
+      helper: 'Posted by users',
+    },
     { label: 'Admins', value: adminCount, icon: Users, helper: 'Admin & god users' },
   ]
 
   return (
     <div className="grid gap-6 md:grid-cols-3">
-      {stats.map((stat) => (
+      {stats.map(stat => (
         <Card key={stat.label}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{stat.label}</CardTitle>

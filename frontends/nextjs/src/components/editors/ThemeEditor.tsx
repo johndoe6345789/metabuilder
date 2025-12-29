@@ -46,14 +46,14 @@ export function ThemeEditor() {
   }, [isDarkMode, themeConfig])
 
   const handleColorChange = (colorKey: keyof ThemeColors, value: string) => {
-    setLocalColors((current) => ({
+    setLocalColors(current => ({
       ...current,
       [colorKey]: value,
     }))
   }
 
   const handleSave = () => {
-    setThemeConfig((current) => {
+    setThemeConfig(current => {
       if (!current) return { light: localColors, dark: DEFAULT_DARK_THEME, radius: localRadius }
 
       return {
@@ -88,7 +88,9 @@ export function ThemeEditor() {
                 <Palette size={24} />
                 Theme Editor
               </CardTitle>
-              <CardDescription>Customize the application theme colors and appearance</CardDescription>
+              <CardDescription>
+                Customize the application theme colors and appearance
+              </CardDescription>
             </div>
             <div className="flex items-center gap-3">
               <Sun size={18} className={!isDarkMode ? 'text-amber-500' : 'text-muted-foreground'} />
@@ -99,7 +101,10 @@ export function ThemeEditor() {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          <Tabs value={editingTheme} onValueChange={(value) => setEditingTheme(value as 'light' | 'dark')}>
+          <Tabs
+            value={editingTheme}
+            onValueChange={value => setEditingTheme(value as 'light' | 'dark')}
+          >
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="light">Light Theme</TabsTrigger>
               <TabsTrigger value="dark">Dark Theme</TabsTrigger>

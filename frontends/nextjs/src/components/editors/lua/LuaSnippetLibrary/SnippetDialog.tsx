@@ -27,7 +27,7 @@ export function SnippetDialog({
   onClose,
 }: SnippetDialogProps) {
   return (
-    <Dialog open={!!snippet} onOpenChange={(isOpen) => !isOpen && onClose()}>
+    <Dialog open={!!snippet} onOpenChange={isOpen => !isOpen && onClose()}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <div className="flex items-start justify-between gap-4">
@@ -42,7 +42,7 @@ export function SnippetDialog({
         <div className="flex-1 overflow-auto space-y-4">
           {snippet?.tags && snippet.tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {snippet.tags.map((tag) => (
+              {snippet.tags.map(tag => (
                 <Badge key={tag} variant="secondary">
                   <Tag size={12} className="mr-1" />
                   {tag}
@@ -58,10 +58,12 @@ export function SnippetDialog({
                 Parameters
               </h4>
               <div className="space-y-2">
-                {snippet.parameters.map((param) => (
+                {snippet.parameters.map(param => (
                   <div key={param.name} className="bg-muted/50 rounded-lg p-3 border">
                     <div className="flex items-center gap-2 mb-1">
-                      <code className="text-sm font-mono font-semibold text-primary">{param.name}</code>
+                      <code className="text-sm font-mono font-semibold text-primary">
+                        {param.name}
+                      </code>
                       <Badge variant="outline" className="text-xs">
                         {param.type}
                       </Badge>

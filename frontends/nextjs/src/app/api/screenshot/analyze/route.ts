@@ -20,18 +20,13 @@ export async function POST(request: Request) {
   const height = typeof viewport?.height === 'number' ? viewport.height : 0
 
   if (!title || !url || width <= 0 || height <= 0) {
-    return NextResponse.json(
-      { error: 'title, url, and viewport are required' },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: 'title, url, and viewport are required' }, { status: 400 })
   }
 
-  const textSample = typeof body.textSample === 'string'
-    ? body.textSample.slice(0, MAX_TEXT_SAMPLE)
-    : ''
-  const htmlSample = typeof body.htmlSample === 'string'
-    ? body.htmlSample.slice(0, MAX_HTML_SAMPLE)
-    : ''
+  const textSample =
+    typeof body.textSample === 'string' ? body.textSample.slice(0, MAX_TEXT_SAMPLE) : ''
+  const htmlSample =
+    typeof body.htmlSample === 'string' ? body.htmlSample.slice(0, MAX_HTML_SAMPLE) : ''
 
   const service = new ScreenshotAnalysisService()
   const analysis = service.analyze({

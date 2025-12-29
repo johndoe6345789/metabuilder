@@ -1,9 +1,9 @@
 /**
  * LuaEngine - Class wrapper for Lua execution operations
- * 
+ *
  * This class serves as a container for lambda functions related to Lua execution.
  * Each method delegates to an individual function file in the functions/ directory.
- * 
+ *
  * Pattern: "class is container for lambdas"
  * - Each lambda is defined in its own file under functions/
  * - This class wraps them for convenient stateful Lua execution
@@ -43,13 +43,6 @@ export class LuaEngine {
 }
 
 // Re-export individual functions for direct imports
-export {
-  setupContextAPI,
-  executeLuaCode
-} from '../../functions'
+export { setupContextAPI, executeLuaCode } from '../../functions'
 
-export {
-  pushToLua,
-  fromLua,
-  tableToJS
-} from '../../functions/converters'
+export { pushToLua, fromLua, tableToJS } from '../../functions/converters'

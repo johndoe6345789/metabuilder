@@ -1,5 +1,8 @@
 import { LuaEngine } from '../core/LuaEngine'
-import { executeWithSandbox, type SandboxedLuaResult } from '../../functions/sandbox/execution/execute-with-sandbox'
+import {
+  executeWithSandbox,
+  type SandboxedLuaResult,
+} from '../../functions/sandbox/execution/execute-with-sandbox'
 import { disableDangerousFunctions } from '../../functions/sandbox/execution/setup/disable-dangerous-functions'
 import { setupSandboxedEnvironment } from '../../functions/sandbox/execution/setup/setup-sandboxed-environment'
 import { executeWithTimeout } from '../../functions/sandbox/execution/execute-with-timeout'

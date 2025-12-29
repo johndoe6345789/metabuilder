@@ -39,8 +39,10 @@ export function Body<T>({
               onClick={handleClick}
               sx={onRowClick ? { cursor: 'pointer' } : undefined}
             >
-              {columns.map((column) => {
-                const content = column.render ? column.render(row, rowIndex) : (row as Record<string, unknown>)[column.key]
+              {columns.map(column => {
+                const content = column.render
+                  ? column.render(row, rowIndex)
+                  : (row as Record<string, unknown>)[column.key]
 
                 return (
                   <TableCell key={column.key} align={column.align} sx={column.sx}>

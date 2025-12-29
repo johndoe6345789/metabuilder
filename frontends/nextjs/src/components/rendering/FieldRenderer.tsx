@@ -17,16 +17,26 @@ interface FieldRendererProps {
   currentApp: string
 }
 
-export function FieldRenderer({ field, value, onChange, error, schema, currentApp }: FieldRendererProps) {
+export function FieldRenderer({
+  field,
+  value,
+  onChange,
+  error,
+  schema,
+  currentApp,
+}: FieldRendererProps) {
   const label = getFieldLabel(field)
   const helpText = getHelpText(field)
 
-  const relatedRecordsKey = field.relatedModel ? getRecordsKey(currentApp, field.relatedModel) : 'dummy'
+  const relatedRecordsKey = field.relatedModel
+    ? getRecordsKey(currentApp, field.relatedModel)
+    : 'dummy'
   const [relatedModelRecords] = useKV<any[]>(relatedRecordsKey, [])
 
-  const relatedModel = field.type === 'relation' && field.relatedModel
-    ? findModel(schema, currentApp, field.relatedModel)
-    : null
+  const relatedModel =
+    field.type === 'relation' && field.relatedModel
+      ? findModel(schema, currentApp, field.relatedModel)
+      : null
 
   const renderInput = () => {
     if (field.editable === false) {
@@ -49,7 +59,7 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
             id={field.name}
             type={field.type === 'email' ? 'email' : field.type === 'url' ? 'url' : 'text'}
             value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={label}
             className={error ? 'border-destructive' : ''}
           />
@@ -60,7 +70,7 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
           <Textarea
             id={field.name}
             value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={label}
             rows={6}
             className={error ? 'border-destructive' : ''}
@@ -73,7 +83,7 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
             id={field.name}
             type="number"
             value={value ?? ''}
-            onChange={(e) => onChange(e.target.value ? Number(e.target.value) : null)}
+            onChange={e => onChange(e.target.value ? Number(e.target.value) : null)}
             placeholder={label}
             min={field.validation?.min}
             max={field.validation?.max}
@@ -84,11 +94,7 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
       case 'boolean':
         return (
           <div className="flex items-center gap-2">
-            <Switch
-              id={field.name}
-              checked={!!value}
-              onCheckedChange={onChange}
-            />
+            <Switch id={field.name} checked={!!value} onCheckedChange={onChange} />
             <Label htmlFor={field.name} className="text-sm font-normal">
               {value ? 'Yes' : 'No'}
             </Label>
@@ -101,7 +107,7 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
             id={field.name}
             type="date"
             value={value ? new Date(value).toISOString().split('T')[0] : ''}
-            onChange={(e) => onChange(e.target.value ? new Date(e.target.value).toISOString() : null)}
+            onChange={e => onChange(e.target.value ? new Date(e.target.value).toISOString() : null)}
             className={error ? 'border-destructive' : ''}
           />
         )
@@ -112,7 +118,7 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
             id={field.name}
             type="datetime-local"
             value={value ? new Date(value).toISOString().slice(0, 16) : ''}
-            onChange={(e) => onChange(e.target.value ? new Date(e.target.value).toISOString() : null)}
+            onChange={e => onChange(e.target.value ? new Date(e.target.value).toISOString() : null)}
             className={error ? 'border-destructive' : ''}
           />
         )
@@ -124,7 +130,7 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
               <SelectValue placeholder={`Select ${label}`} />
             </SelectTrigger>
             <SelectContent>
-              {field.choices?.map((choice) => (
+              {field.choices?.map(choice => (
                 <SelectItem key={choice.value} value={choice.value}>
                   {choice.label}
                 </SelectItem>
@@ -142,7 +148,8 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
           )
         }
 
-        const displayField = relatedModel.fields.find(f => f.name === 'name' || f.name === 'title')?.name || 'id'
+        const displayField =
+          relatedModel.fields.find(f => f.name === 'name' || f.name === 'title')?.name || 'id'
 
         return (
           <Select value={value || undefined} onValueChange={onChange}>
@@ -165,7 +172,7 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
           <Textarea
             id={field.name}
             value={value ? JSON.stringify(value, null, 2) : ''}
-            onChange={(e) => {
+            onChange={e => {
               try {
                 const parsed = e.target.value ? JSON.parse(e.target.value) : null
                 onChange(parsed)
@@ -184,7 +191,7 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
           <Input
             id={field.name}
             value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={label}
             className={error ? 'border-destructive' : ''}
           />
@@ -199,12 +206,8 @@ export function FieldRenderer({ field, value, onChange, error, schema, currentAp
         {field.required && <span className="text-destructive ml-1">*</span>}
       </Label>
       {renderInput()}
-      {helpText && !error && (
-        <p className="text-sm text-muted-foreground">{helpText}</p>
-      )}
-      {error && (
-        <p className="text-sm text-destructive">{error}</p>
-      )}
+      {helpText && !error && <p className="text-sm text-muted-foreground">{helpText}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   )
 }

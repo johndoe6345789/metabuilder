@@ -43,7 +43,12 @@ interface PaletteEditorProps {
   onRadiusChange: (value: string) => void
 }
 
-export function PaletteEditor({ colors, radius, onColorChange, onRadiusChange }: PaletteEditorProps) {
+export function PaletteEditor({
+  colors,
+  radius,
+  onColorChange,
+  onRadiusChange,
+}: PaletteEditorProps) {
   return (
     <div className="space-y-6 mt-6">
       <div className="space-y-4">
@@ -52,14 +57,14 @@ export function PaletteEditor({ colors, radius, onColorChange, onRadiusChange }:
           <Input
             id="radius"
             value={radius}
-            onChange={(e) => onRadiusChange(e.target.value)}
+            onChange={e => onRadiusChange(e.target.value)}
             placeholder="e.g., 0.5rem"
             className="mt-1.5"
           />
         </div>
       </div>
 
-      {colorGroups.map((group) => (
+      {colorGroups.map(group => (
         <div key={group.title} className="space-y-4">
           <h3 className="text-sm font-semibold text-foreground">{group.title}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -67,11 +72,14 @@ export function PaletteEditor({ colors, radius, onColorChange, onRadiusChange }:
               <div key={key} className="space-y-1.5">
                 <Label htmlFor={key}>{label}</Label>
                 <div className="flex gap-2">
-                  <div className="w-10 h-10 rounded border border-border shrink-0" style={{ background: colors[key] }} />
+                  <div
+                    className="w-10 h-10 rounded border border-border shrink-0"
+                    style={{ background: colors[key] }}
+                  />
                   <Input
                     id={key}
                     value={colors[key]}
-                    onChange={(e) => onColorChange(key, e.target.value)}
+                    onChange={e => onColorChange(key, e.target.value)}
                     placeholder="oklch(...)"
                     className="font-mono text-sm"
                   />

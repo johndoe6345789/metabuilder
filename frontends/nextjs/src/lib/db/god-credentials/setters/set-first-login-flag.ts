@@ -6,9 +6,9 @@ import { getAdapter } from '../../core/dbal-client'
 export async function setFirstLoginFlag(username: string, isFirstLogin: boolean): Promise<void> {
   const adapter = getAdapter()
   // Find the user first
-  const user = await adapter.findFirst('User', {
+  const user = (await adapter.findFirst('User', {
     where: { username },
-  }) as { id: string } | null
+  })) as { id: string } | null
   if (user) {
     await adapter.update('User', user.id, { firstLogin: isFirstLogin })
   }

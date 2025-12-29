@@ -1,11 +1,7 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import {
-  Box,
-  TextField,
-  InputAdornment,
-} from '@mui/material'
+import { Box, TextField, InputAdornment } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 
 // CommandDialog
@@ -31,7 +27,7 @@ const CommandDialog = ({ children, open, onOpenChange }: CommandDialogProps) => 
       }}
       onClick={() => onOpenChange?.(false)}
     >
-      <Box onClick={(e) => e.stopPropagation()} sx={{ width: '100%', maxWidth: 520 }}>
+      <Box onClick={e => e.stopPropagation()} sx={{ width: '100%', maxWidth: 520 }}>
         {children}
       </Box>
     </Box>
@@ -57,7 +53,7 @@ const CommandInput = forwardRef<HTMLInputElement, CommandInputProps>(
           size="small"
           placeholder={placeholder}
           value={value}
-          onChange={(e) => onValueChange?.(e.target.value)}
+          onChange={e => onValueChange?.(e.target.value)}
           slotProps={{
             input: {
               startAdornment: (
@@ -80,7 +76,4 @@ const CommandInput = forwardRef<HTMLInputElement, CommandInputProps>(
 )
 CommandInput.displayName = 'CommandInput'
 
-export {
-  CommandDialog,
-  CommandInput,
-}
+export { CommandDialog, CommandInput }

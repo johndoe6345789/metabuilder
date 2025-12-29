@@ -4,11 +4,16 @@ import type { ErrorLog } from '../types'
 /**
  * Get all error logs from database
  */
-export async function getErrorLogs(options?: { limit?: number; level?: string; resolved?: boolean; tenantId?: string }): Promise<ErrorLog[]> {
+export async function getErrorLogs(options?: {
+  limit?: number
+  level?: string
+  resolved?: boolean
+  tenantId?: string
+}): Promise<ErrorLog[]> {
   const adapter = getAdapter()
   const result = await adapter.list('ErrorLog')
-  
-  let logs = (result.data as any[]).map((log) => ({
+
+  let logs = (result.data as any[]).map(log => ({
     id: log.id,
     timestamp: Number(log.timestamp),
     level: log.level as 'error' | 'warning' | 'info',

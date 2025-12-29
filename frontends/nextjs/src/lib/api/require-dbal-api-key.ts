@@ -13,10 +13,7 @@ export function requireDBALApiKey(request: NextRequest): NextResponse | null {
     ''
 
   if (providedKey !== expectedKey) {
-    return NextResponse.json(
-      { error: 'Invalid API key' },
-      { status: 401 }
-    )
+    return NextResponse.json({ error: 'Invalid API key' }, { status: 401 })
   }
 
   return null

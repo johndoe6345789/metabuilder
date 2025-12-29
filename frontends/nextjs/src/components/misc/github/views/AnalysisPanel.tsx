@@ -1,7 +1,18 @@
 import { Box, Stack } from '@mui/material'
 import { Info as InfoIcon, SmartToy as RobotIcon } from '@mui/icons-material'
 
-import { Alert, AlertDescription, AlertTitle, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Skeleton } from '@/components/ui'
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Skeleton,
+} from '@/components/ui'
 
 interface AnalysisPanelProps {
   analysis: string | null
@@ -11,7 +22,13 @@ interface AnalysisPanelProps {
   onAnalyzeLogs?: () => void
 }
 
-export function AnalysisPanel({ analysis, isAnalyzing, runLogs, onAnalyzeLogs, onAnalyzeWorkflows }: AnalysisPanelProps) {
+export function AnalysisPanel({
+  analysis,
+  isAnalyzing,
+  runLogs,
+  onAnalyzeLogs,
+  onAnalyzeWorkflows,
+}: AnalysisPanelProps) {
   return (
     <Card>
       <CardHeader>

@@ -7,9 +7,10 @@ import { LUA_SNIPPETS, type LuaSnippet } from '../../snippets'
  */
 export const searchSnippets = (query: string): LuaSnippet[] => {
   const lowerQuery = query.toLowerCase()
-  return LUA_SNIPPETS.filter(snippet => 
-    snippet.name.toLowerCase().includes(lowerQuery) ||
-    snippet.description.toLowerCase().includes(lowerQuery) ||
-    snippet.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
+  return LUA_SNIPPETS.filter(
+    snippet =>
+      snippet.name.toLowerCase().includes(lowerQuery) ||
+      snippet.description.toLowerCase().includes(lowerQuery) ||
+      snippet.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
   )
 }

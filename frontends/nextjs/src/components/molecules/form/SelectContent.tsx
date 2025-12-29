@@ -7,13 +7,15 @@ interface SelectContentProps {
   className?: string
 }
 
-const SelectContent = forwardRef<HTMLDivElement, SelectContentProps>(({ children, ...props }, ref) => {
-  return (
-    <div ref={ref} {...props}>
-      {children}
-    </div>
-  )
-})
+const SelectContent = forwardRef<HTMLDivElement, SelectContentProps>(
+  ({ children, ...props }, ref) => {
+    return (
+      <div ref={ref} {...props}>
+        {children}
+      </div>
+    )
+  }
+)
 
 SelectContent.displayName = 'SelectContent'
 

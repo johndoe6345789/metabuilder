@@ -1,5 +1,14 @@
 import Image from 'next/image'
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from '@/components/ui'
+import {
+  Badge,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+} from '@/components/ui'
 import { FilmSlate, ImageSquare } from '@phosphor-icons/react'
 
 interface MediaPaneProps {
@@ -9,7 +18,12 @@ interface MediaPaneProps {
   onVideoChange?: (value: string) => void
 }
 
-export function MediaPane({ thumbnailUrl, videoUrl, onThumbnailChange, onVideoChange }: MediaPaneProps) {
+export function MediaPane({
+  thumbnailUrl,
+  videoUrl,
+  onThumbnailChange,
+  onVideoChange,
+}: MediaPaneProps) {
   return (
     <Card className="h-full">
       <CardHeader className="space-y-1">
@@ -17,7 +31,9 @@ export function MediaPane({ thumbnailUrl, videoUrl, onThumbnailChange, onVideoCh
           <FilmSlate size={20} weight="duotone" />
           Media
         </CardTitle>
-        <CardDescription>Optional visuals to make the quick guide easier to follow.</CardDescription>
+        <CardDescription>
+          Optional visuals to make the quick guide easier to follow.
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
@@ -25,7 +41,7 @@ export function MediaPane({ thumbnailUrl, videoUrl, onThumbnailChange, onVideoCh
           <Input
             id="thumbnail-url"
             value={thumbnailUrl || ''}
-            onChange={(e) => onThumbnailChange?.(e.target.value)}
+            onChange={e => onThumbnailChange?.(e.target.value)}
             placeholder="https://images.example.com/quick-guide.png"
           />
           <p className="text-xs text-muted-foreground">Shown in dashboards and previews.</p>
@@ -41,10 +57,12 @@ export function MediaPane({ thumbnailUrl, videoUrl, onThumbnailChange, onVideoCh
           <Input
             id="video-url"
             value={videoUrl || ''}
-            onChange={(e) => onVideoChange?.(e.target.value)}
+            onChange={e => onVideoChange?.(e.target.value)}
             placeholder="YouTube or direct MP4 link"
           />
-          <p className="text-xs text-muted-foreground">Embed a short clip that shows the flow in action.</p>
+          <p className="text-xs text-muted-foreground">
+            Embed a short clip that shows the flow in action.
+          </p>
           {videoUrl && (
             <div className="rounded-lg border bg-black p-3 text-sm text-muted-foreground">
               <Badge variant="secondary" className="mb-2 inline-flex items-center gap-1">

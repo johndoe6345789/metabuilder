@@ -110,11 +110,7 @@ interface AccordionContentProps {
 const AccordionContent = forwardRef<HTMLDivElement, AccordionContentProps>(
   ({ children, ...props }, ref) => {
     return (
-      <MuiAccordionDetails
-        ref={ref}
-        sx={{ pt: 0, pb: 2 }}
-        {...props}
-      >
+      <MuiAccordionDetails ref={ref} sx={{ pt: 0, pb: 2 }} {...props}>
         {children}
       </MuiAccordionDetails>
     )
@@ -122,9 +118,4 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionContentProps>(
 )
 AccordionContent.displayName = 'AccordionContent'
 
-export { 
-  Accordion, 
-  AccordionItem,
-  AccordionTrigger, 
-  AccordionContent,
-}
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }

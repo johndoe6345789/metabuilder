@@ -35,7 +35,10 @@ const CommandDialogRoot = forwardRef<HTMLDivElement, CommandDialogProps>(
 CommandDialogRoot.displayName = 'CommandDialogRoot'
 
 const CommandInput = forwardRef<HTMLInputElement, CommandInputProps>(
-  ({ placeholder = 'Type a command or search...', value, onChange, autoFocus = true, ...props }, ref) => {
+  (
+    { placeholder = 'Type a command or search...', value, onChange, autoFocus = true, ...props },
+    ref
+  ) => {
     return (
       <Box
         sx={{
@@ -52,7 +55,7 @@ const CommandInput = forwardRef<HTMLInputElement, CommandInputProps>(
           ref={ref}
           placeholder={placeholder}
           value={value}
-          onChange={(e) => onChange?.(e.target.value)}
+          onChange={e => onChange?.(e.target.value)}
           autoFocus={autoFocus}
           fullWidth
           sx={{

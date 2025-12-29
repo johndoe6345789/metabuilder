@@ -12,20 +12,17 @@ interface SheetProps extends Omit<DrawerProps, 'anchor'> {
 
 const Sheet = forwardRef<HTMLDivElement, SheetProps>(
   ({ children, side = 'right', open, onClose, onOpenChange, ...props }, ref) => {
-    const handleClose = (_event: SyntheticEvent | object, reason: 'backdropClick' | 'escapeKeyDown') => {
+    const handleClose = (
+      _event: SyntheticEvent | object,
+      reason: 'backdropClick' | 'escapeKeyDown'
+    ) => {
       if (typeof onClose === 'function') {
         onClose(_event, reason)
       }
       onOpenChange?.(false)
     }
     return (
-      <Drawer
-        ref={ref}
-        anchor={side}
-        open={open}
-        onClose={handleClose}
-        {...props}
-      >
+      <Drawer ref={ref} anchor={side} open={open} onClose={handleClose} {...props}>
         {children}
       </Drawer>
     )
@@ -42,13 +39,7 @@ interface SheetTriggerProps {
 const SheetTrigger = forwardRef<HTMLButtonElement, SheetTriggerProps>(
   ({ children, onClick, asChild, ...props }, ref) => {
     return (
-      <Box
-        ref={ref}
-        component="span"
-        onClick={onClick}
-        sx={{ cursor: 'pointer' }}
-        {...props}
-      >
+      <Box ref={ref} component="span" onClick={onClick} sx={{ cursor: 'pointer' }} {...props}>
         {children}
       </Box>
     )
@@ -112,13 +103,7 @@ interface SheetCloseProps {
 const SheetClose = forwardRef<HTMLButtonElement, SheetCloseProps>(
   ({ children, onClick, ...props }, ref) => {
     return (
-      <Box
-        ref={ref}
-        component="span"
-        onClick={onClick}
-        sx={{ cursor: 'pointer' }}
-        {...props}
-      >
+      <Box ref={ref} component="span" onClick={onClick} sx={{ cursor: 'pointer' }} {...props}>
         {children}
       </Box>
     )

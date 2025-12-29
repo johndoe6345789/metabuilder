@@ -1,11 +1,7 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import {
-  Box,
-  Divider,
-  IconButton,
-} from '@mui/material'
+import { Box, Divider, IconButton } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 
 // SidebarSeparator
@@ -58,9 +54,4 @@ SidebarRail.displayName = 'SidebarRail'
 const SidebarProvider = ({ children }: { children: ReactNode }) => <>{children}</>
 SidebarProvider.displayName = 'SidebarProvider'
 
-export {
-  SidebarSeparator,
-  SidebarTrigger,
-  SidebarRail,
-  SidebarProvider,
-}
+export { SidebarSeparator, SidebarTrigger, SidebarRail, SidebarProvider }

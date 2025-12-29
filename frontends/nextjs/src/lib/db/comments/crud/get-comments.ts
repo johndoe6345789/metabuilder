@@ -7,7 +7,7 @@ import type { Comment } from '../../types/level-types'
 export async function getComments(): Promise<Comment[]> {
   const adapter = getAdapter()
   const result = await adapter.list('Comment')
-  return (result.data as any[]).map((c) => ({
+  return (result.data as any[]).map(c => ({
     id: c.id,
     userId: c.userId,
     content: c.content,

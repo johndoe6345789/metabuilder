@@ -1,5 +1,15 @@
 import { useMemo } from 'react'
-import { Badge, Button, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
+import {
+  Badge,
+  Button,
+  Input,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui'
 import { ChallengePanel } from '../sections/ChallengePanel'
 import { MagnifyingGlass, PencilSimple, Trash, Users, ChatCircle } from '@phosphor-icons/react'
 import type { User } from '@/lib/level-types'
@@ -28,7 +38,8 @@ export function UserTable({
   const filteredUsers = useMemo(
     () =>
       users.filter(
-        u => u.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        u =>
+          u.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
           u.email.toLowerCase().includes(searchTerm.toLowerCase())
       ),
     [users, searchTerm]
@@ -38,11 +49,14 @@ export function UserTable({
     <ChallengePanel title="Models" description="Browse and manage data models">
       <div className="flex items-center justify-between gap-4">
         <div className="relative">
-          <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+          <MagnifyingGlass
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            size={16}
+          />
           <Input
             placeholder="Search..."
             value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={e => onSearchChange(e.target.value)}
             className="pl-9 w-64"
           />
         </div>
@@ -70,12 +84,16 @@ export function UserTable({
               </TableCell>
             </TableRow>
           ) : (
-            filteredUsers.map((u) => (
+            filteredUsers.map(u => (
               <TableRow key={u.id}>
                 <TableCell className="font-medium">{u.username}</TableCell>
                 <TableCell>{u.email}</TableCell>
                 <TableCell>
-                  <Badge variant={u.role === 'god' ? 'default' : u.role === 'admin' ? 'secondary' : 'outline'}>
+                  <Badge
+                    variant={
+                      u.role === 'god' ? 'default' : u.role === 'admin' ? 'secondary' : 'outline'
+                    }
+                  >
                     {u.role}
                   </Badge>
                 </TableCell>

@@ -9,7 +9,7 @@ export const MATH_CALCULATION_SNIPPETS: LuaSnippet[] = [
     tags: ['math', 'percentage', 'calculation'],
     parameters: [
       { name: 'value', type: 'number', description: 'Partial value' },
-      { name: 'total', type: 'number', description: 'Total value' }
+      { name: 'total', type: 'number', description: 'Total value' },
     ],
     code: `local value = context.data.value or 0
 local total = context.data.total or 1
@@ -29,7 +29,7 @@ return {
   total = total,
   percentage = percentage,
   formatted = formatted
-}`
+}`,
   },
   {
     id: 'math_discount',
@@ -39,7 +39,7 @@ return {
     tags: ['math', 'discount', 'price'],
     parameters: [
       { name: 'price', type: 'number', description: 'Original price' },
-      { name: 'discount', type: 'number', description: 'Discount percentage' }
+      { name: 'discount', type: 'number', description: 'Discount percentage' },
     ],
     code: `local price = context.data.price or 0
 local discount = context.data.discount or 0
@@ -55,7 +55,7 @@ return {
   finalPrice = finalPrice,
   savings = savings,
   formatted = "$" .. string.format("%.2f", finalPrice)
-}`
+}`,
   },
   {
     id: 'math_compound_interest',
@@ -66,7 +66,7 @@ return {
     parameters: [
       { name: 'principal', type: 'number', description: 'Initial amount' },
       { name: 'rate', type: 'number', description: 'Interest rate (%)' },
-      { name: 'years', type: 'number', description: 'Number of years' }
+      { name: 'years', type: 'number', description: 'Number of years' },
     ],
     code: `local principal = context.data.principal or 1000
 local rate = (context.data.rate or 5) / 100
@@ -83,7 +83,7 @@ return {
   finalAmount = amount,
   interestEarned = interest,
   formatted = "$" .. string.format("%.2f", amount)
-}`
+}`,
   },
   {
     id: 'math_statistics',
@@ -91,9 +91,7 @@ return {
     description: 'Calculate mean, median, mode, std dev',
     category: 'Math & Calculations',
     tags: ['math', 'statistics', 'analysis'],
-    parameters: [
-      { name: 'numbers', type: 'array', description: 'Array of numbers' }
-    ],
+    parameters: [{ name: 'numbers', type: 'array', description: 'Array of numbers' }],
     code: `local numbers = context.data.numbers or {1, 2, 3, 4, 5}
 
 local sum = 0
@@ -134,6 +132,6 @@ return {
   variance = variance,
   stdDev = stdDev,
   range = max - min
-}`
-  }
+}`,
+  },
 ]

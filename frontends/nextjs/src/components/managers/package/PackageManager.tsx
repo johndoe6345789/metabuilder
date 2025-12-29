@@ -33,10 +33,11 @@ export function PackageManager({ onClose }: PackageManagerProps) {
   const [showDetails, setShowDetails] = useState(false)
   const [showImportExport, setShowImportExport] = useState(false)
   const [importExportMode, setImportExportMode] = useState<'import' | 'export'>('export')
-  const { installing, handleInstallPackage, handleUninstallPackage, handleTogglePackage } = usePackageActions({
-    loadPackages,
-    getCatalogEntry,
-  })
+  const { installing, handleInstallPackage, handleUninstallPackage, handleTogglePackage } =
+    usePackageActions({
+      loadPackages,
+      getCatalogEntry,
+    })
 
   const openPackageDetails = (packageId: string) => {
     const catalogEntry = getCatalogEntry(packageId)
@@ -60,7 +61,9 @@ export function PackageManager({ onClose }: PackageManagerProps) {
           </div>
           <div>
             <h2 className="text-2xl font-bold">Package Manager</h2>
-            <p className="text-sm text-muted-foreground">Install pre-built applications and features</p>
+            <p className="text-sm text-muted-foreground">
+              Install pre-built applications and features
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -118,15 +121,15 @@ export function PackageManager({ onClose }: PackageManagerProps) {
         onOpenChange={setShowDetails}
         selectedPackage={selectedPackage}
         installing={installing}
-        onInstall={(packageId) => handleInstallPackage(packageId, () => setShowDetails(false))}
-        onUninstall={(packageId) => handleUninstallPackage(packageId, () => setShowDetails(false))}
+        onInstall={packageId => handleInstallPackage(packageId, () => setShowDetails(false))}
+        onUninstall={packageId => handleUninstallPackage(packageId, () => setShowDetails(false))}
         installedPackages={installedPackages}
         getCatalogEntry={getCatalogEntry}
       />
 
       <PackageImportExport
         open={showImportExport}
-        onOpenChange={(open) => {
+        onOpenChange={open => {
           setShowImportExport(open)
           if (!open) {
             loadPackages()

@@ -22,7 +22,9 @@ describe('setPages', () => {
     {
       name: 'replace all pages',
       existing: [{ id: 'old1' }],
-      newPages: [{ id: 'new1', path: '/', title: 'Home', level: 1, componentTree: [], requiresAuth: false }],
+      newPages: [
+        { id: 'new1', path: '/', title: 'Home', level: 1, componentTree: [], requiresAuth: false },
+      ],
       expectedDeletes: 1,
       expectedCreates: 1,
     },

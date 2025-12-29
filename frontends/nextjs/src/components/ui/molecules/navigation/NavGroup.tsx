@@ -33,7 +33,7 @@ const NavGroup = forwardRef<HTMLDivElement, NavGroupProps>(
 
     const handleToggle = () => {
       if (!disabled) {
-        setOpen((prev) => !prev)
+        setOpen(prev => !prev)
       }
     }
 

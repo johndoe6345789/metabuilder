@@ -31,7 +31,16 @@ export const ImportStatus = ({ importing, selectionSlot }: ImportStatusProps) =>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-3 text-sm">
-          {['Data schemas', 'Page configurations', 'Workflows', 'Lua scripts', 'Component hierarchies', 'CSS configurations', 'Assets (images, etc.)', 'Seed data'].map(item => (
+          {[
+            'Data schemas',
+            'Page configurations',
+            'Workflows',
+            'Lua scripts',
+            'Component hierarchies',
+            'CSS configurations',
+            'Assets (images, etc.)',
+            'Seed data',
+          ].map(item => (
             <div key={item} className="flex items-center gap-2">
               <CheckCircle size={16} className="text-green-500" />
               <span>{item}</span>
@@ -46,7 +55,8 @@ export const ImportStatus = ({ importing, selectionSlot }: ImportStatusProps) =>
       <div className="text-sm">
         <p className="font-medium text-yellow-900 dark:text-yellow-100 mb-1">Import Warning</p>
         <p className="text-yellow-800 dark:text-yellow-200">
-          Imported packages will be merged with existing data. Make sure to back up your database before importing.
+          Imported packages will be merged with existing data. Make sure to back up your database
+          before importing.
         </p>
       </div>
     </div>

@@ -7,7 +7,7 @@ import type { ModelSchema } from '../../types/schema-types'
 export async function getSchemas(): Promise<ModelSchema[]> {
   const adapter = getAdapter()
   const result = await adapter.list('ModelSchema')
-  return (result.data as any[]).map((s) => ({
+  return (result.data as any[]).map(s => ({
     name: s.name,
     label: s.label || undefined,
     labelPlural: s.labelPlural || undefined,

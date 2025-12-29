@@ -30,7 +30,7 @@ export const BlockSection = ({
       <Button
         size="small"
         variant="contained"
-        onClick={(event) => onRequestAddBlock(event, { parentId, slot })}
+        onClick={event => onRequestAddBlock(event, { parentId, slot })}
         startIcon={<AddIcon fontSize="small" />}
       >
         Add block

@@ -128,18 +128,11 @@ const AlertDialogDescription = forwardRef<HTMLDivElement, AlertDialogDescription
   ({ children, className, ...props }, ref) => {
     return (
       <DialogContent ref={ref} className={className} sx={{ pt: 2 }} {...props}>
-        <DialogContentText id="alert-dialog-description">
-          {children}
-        </DialogContentText>
+        <DialogContentText id="alert-dialog-description">{children}</DialogContentText>
       </DialogContent>
     )
   }
 )
 AlertDialogDescription.displayName = 'AlertDialogDescription'
 
-export {
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-}
+export { AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle }

@@ -15,7 +15,12 @@ export function AccessDenied({
   onAction,
 }: AccessDeniedProps) {
   return (
-    <Stack spacing={2} alignItems="center" justifyContent="center" sx={{ minHeight: '50vh', textAlign: 'center' }}>
+    <Stack
+      spacing={2}
+      alignItems="center"
+      justifyContent="center"
+      sx={{ minHeight: '50vh', textAlign: 'center' }}
+    >
       <LockRoundedIcon sx={{ fontSize: 48, color: 'text.secondary' }} />
       <Stack spacing={1}>
         <Typography variant="h5">{title}</Typography>

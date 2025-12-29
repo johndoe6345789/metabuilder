@@ -62,11 +62,9 @@ ScrollArea.displayName = 'ScrollArea'
  * ScrollBar - Placeholder for Radix ScrollBar API compatibility
  * Not needed with MUI implementation but exported for compatibility
  */
-export const ScrollBar = forwardRef<HTMLDivElement, BoxProps>(
-  ({ ...props }, ref) => {
-    // MUI handles scrollbars natively via CSS
-    return <Box ref={ref} sx={{ display: 'none' }} {...props} />
-  }
-)
+export const ScrollBar = forwardRef<HTMLDivElement, BoxProps>(({ ...props }, ref) => {
+  // MUI handles scrollbars natively via CSS
+  return <Box ref={ref} sx={{ display: 'none' }} {...props} />
+})
 
 ScrollBar.displayName = 'ScrollBar'

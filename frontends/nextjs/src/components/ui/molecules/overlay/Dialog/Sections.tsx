@@ -23,11 +23,7 @@ interface DialogSectionProps {
 }
 
 const DialogSection = ({ children }: DialogSectionProps) => {
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      {children}
-    </Box>
-  )
+  return <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>{children}</Box>
 }
 DialogSection.displayName = 'DialogSection'
 

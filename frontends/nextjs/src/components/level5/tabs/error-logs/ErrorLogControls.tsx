@@ -1,4 +1,14 @@
-import { Badge, Button, CardDescription, CardTitle, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
+import {
+  Badge,
+  Button,
+  CardDescription,
+  CardTitle,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui'
 import type { ErrorLevelFilter, ResolutionFilter } from './useErrorLogFilters'
 import type { User } from '@/lib/level-types'
 import { Broom } from '@phosphor-icons/react'
@@ -36,7 +46,10 @@ export function ErrorLogControls({
         <CardDescription className="text-gray-400 flex items-center gap-2">
           {scopeDescription}
           {user?.tenantId && !isSuperGod && (
-            <Badge variant="outline" className="bg-purple-500/20 text-purple-400 border-purple-500/50">
+            <Badge
+              variant="outline"
+              className="bg-purple-500/20 text-purple-400 border-purple-500/50"
+            >
               Tenant: {user.tenantId}
             </Badge>
           )}
@@ -45,7 +58,13 @@ export function ErrorLogControls({
 
       <div className="flex flex-col gap-2 items-end">
         <div className="flex items-center gap-2">
-          <Button onClick={onRefresh} disabled={loading} size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+          <Button
+            onClick={onRefresh}
+            disabled={loading}
+            size="sm"
+            variant="outline"
+            className="border-white/20 text-white hover:bg-white/10"
+          >
             {loading ? 'Loading...' : 'Refresh'}
           </Button>
           {isSuperGod && (

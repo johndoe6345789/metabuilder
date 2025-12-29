@@ -45,8 +45,8 @@ export function TreeNode({
       <div
         draggable
         onDragStart={() => onDragStart(node.id)}
-        onDragOver={(e) => onDragOver(e, node.id)}
-        onDrop={(e) => onDrop(e, node.id)}
+        onDragOver={e => onDragOver(e, node.id)}
+        onDrop={e => onDrop(e, node.id)}
         className={`
           flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer
           hover:bg-accent transition-colors group
@@ -57,7 +57,7 @@ export function TreeNode({
       >
         {hasChildren ? (
           <button
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation()
               onToggle(node.id)
             }}
@@ -84,7 +84,7 @@ export function TreeNode({
             size="sm"
             variant="ghost"
             className="h-6 w-6 p-0"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation()
               onConfig(node.id)
             }}
@@ -95,7 +95,7 @@ export function TreeNode({
             size="sm"
             variant="ghost"
             className="h-6 w-6 p-0"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation()
               onDelete(node.id)
             }}
@@ -112,10 +112,10 @@ export function TreeNode({
       {hasChildren && isExpanded && (
         <div className="pl-6 space-y-1">
           {node.childIds
-            .map((childId) => hierarchy[childId])
+            .map(childId => hierarchy[childId])
             .filter(Boolean)
             .sort((a, b) => a.order - b.order)
-            .map((child) => (
+            .map(child => (
               <TreeNode
                 key={child.id}
                 node={child}

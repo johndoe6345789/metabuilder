@@ -1,9 +1,7 @@
 import type React from 'react'
 
-export const createFileSelector = (
-  onValidFile: (file: File) => void,
-  onInvalid: (message: string) => void
-) =>
+export const createFileSelector =
+  (onValidFile: (file: File) => void, onInvalid: (message: string) => void) =>
   (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return

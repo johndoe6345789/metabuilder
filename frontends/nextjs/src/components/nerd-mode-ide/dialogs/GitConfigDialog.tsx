@@ -6,13 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
@@ -26,9 +20,15 @@ interface GitConfigDialogProps {
   onSave: () => void
 }
 
-export function GitConfigDialog({ open, gitConfig, onUpdate, onClose, onSave }: GitConfigDialogProps) {
+export function GitConfigDialog({
+  open,
+  gitConfig,
+  onUpdate,
+  onClose,
+  onSave,
+}: GitConfigDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={(nextOpen) => (!nextOpen ? onClose() : null)}>
+    <Dialog open={open} onOpenChange={nextOpen => (!nextOpen ? onClose() : null)}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Configure Git Integration</DialogTitle>
@@ -56,7 +56,7 @@ export function GitConfigDialog({ open, gitConfig, onUpdate, onClose, onSave }: 
               id="git-repo"
               placeholder="https://github.com/user/repo"
               value={gitConfig?.repoUrl || ''}
-              onChange={(e) => onUpdate({ repoUrl: e.target.value })}
+              onChange={e => onUpdate({ repoUrl: e.target.value })}
             />
           </div>
           <div>
@@ -65,7 +65,7 @@ export function GitConfigDialog({ open, gitConfig, onUpdate, onClose, onSave }: 
               id="git-branch"
               placeholder="main"
               value={gitConfig?.branch || 'main'}
-              onChange={(e) => onUpdate({ branch: e.target.value })}
+              onChange={e => onUpdate({ branch: e.target.value })}
             />
           </div>
           <div>
@@ -75,7 +75,7 @@ export function GitConfigDialog({ open, gitConfig, onUpdate, onClose, onSave }: 
               type="password"
               placeholder="ghp_xxxxxxxxxxxx"
               value={gitConfig?.token || ''}
-              onChange={(e) => onUpdate({ token: e.target.value })}
+              onChange={e => onUpdate({ token: e.target.value })}
             />
           </div>
         </div>

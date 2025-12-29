@@ -1,7 +1,26 @@
 import { buildScaleClasses, uniqueClasses } from './css-class-utils'
 
 const spacingScale = ['0', '0.5', '1', '1.5', '2', '3', '4', '5', '6', '8', '10', '12', '16']
-const sizeScale = ['0', '1', '2', '3', '4', '5', '6', '8', '10', '12', '16', '20', '24', '32', '40', '48', '56', '64']
+const sizeScale = [
+  '0',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '8',
+  '10',
+  '12',
+  '16',
+  '20',
+  '24',
+  '32',
+  '40',
+  '48',
+  '56',
+  '64',
+]
 
 export const buildSpacingClasses = () =>
   uniqueClasses([
@@ -9,8 +28,14 @@ export const buildSpacingClasses = () =>
       ['p', 'px', 'py', 'pt', 'pr', 'pb', 'pl', 'm', 'mx', 'my', 'mt', 'mr', 'mb', 'ml'],
       spacingScale
     ),
-    ...buildScaleClasses(['gap', 'gap-x', 'gap-y'], ['0', '1', '2', '3', '4', '6', '8', '10', '12', '16']),
-    ...buildScaleClasses(['space-x', 'space-y'], ['0', '1', '2', '3', '4', '6', '8', '10', '12', '16']),
+    ...buildScaleClasses(
+      ['gap', 'gap-x', 'gap-y'],
+      ['0', '1', '2', '3', '4', '6', '8', '10', '12', '16']
+    ),
+    ...buildScaleClasses(
+      ['space-x', 'space-y'],
+      ['0', '1', '2', '3', '4', '6', '8', '10', '12', '16']
+    ),
   ])
 
 export const buildSizingClasses = () =>

@@ -1,14 +1,7 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material'
+import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 
 // SidebarMenu (alias for List)
 const SidebarMenu = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
@@ -43,33 +36,30 @@ const SidebarMenuItem = forwardRef<HTMLDivElement, SidebarMenuItemProps>(
     return (
       <ListItem disablePadding>
         <Box ref={ref} sx={{ width: '100%' }} {...props}>
-        <ListItemButton
-          selected={active}
-          disabled={disabled}
-          onClick={onClick}
-          href={href}
-          component={href ? 'a' : 'button'}
-          sx={{
-            mx: 1,
-            borderRadius: 1,
-            '&.Mui-selected': {
-              bgcolor: 'primary.main',
-              color: 'primary.contrastText',
-              '& .MuiListItemIcon-root': {
+          <ListItemButton
+            selected={active}
+            disabled={disabled}
+            onClick={onClick}
+            href={href}
+            component={href ? 'a' : 'button'}
+            sx={{
+              mx: 1,
+              borderRadius: 1,
+              '&.Mui-selected': {
+                bgcolor: 'primary.main',
                 color: 'primary.contrastText',
+                '& .MuiListItemIcon-root': {
+                  color: 'primary.contrastText',
+                },
+                '&:hover': {
+                  bgcolor: 'primary.dark',
+                },
               },
-              '&:hover': {
-                bgcolor: 'primary.dark',
-              },
-            },
-          }}
-        >
-          {icon && <ListItemIcon sx={{ minWidth: 36 }}>{icon}</ListItemIcon>}
-          <ListItemText
-            primary={content}
-            primaryTypographyProps={{ fontSize: '0.875rem' }}
-          />
-        </ListItemButton>
+            }}
+          >
+            {icon && <ListItemIcon sx={{ minWidth: 36 }}>{icon}</ListItemIcon>}
+            <ListItemText primary={content} primaryTypographyProps={{ fontSize: '0.875rem' }} />
+          </ListItemButton>
         </Box>
       </ListItem>
     )
@@ -78,13 +68,9 @@ const SidebarMenuItem = forwardRef<HTMLDivElement, SidebarMenuItemProps>(
 SidebarMenuItem.displayName = 'SidebarMenuItem'
 
 // SidebarMenuButton (alias for ListItemButton)
-const SidebarMenuButton = forwardRef<HTMLDivElement, SidebarMenuItemProps>(
-  (props, ref) => <SidebarMenuItem ref={ref} {...props} />
-)
+const SidebarMenuButton = forwardRef<HTMLDivElement, SidebarMenuItemProps>((props, ref) => (
+  <SidebarMenuItem ref={ref} {...props} />
+))
 SidebarMenuButton.displayName = 'SidebarMenuButton'
 
-export {
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-}
+export { SidebarMenu, SidebarMenuItem, SidebarMenuButton }

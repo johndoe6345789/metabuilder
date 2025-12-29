@@ -13,9 +13,7 @@ export function GodUsersTab({ godUsers }: GodUsersTabProps) {
     <Card className="bg-black/40 border-white/10 text-white">
       <CardHeader>
         <CardTitle>God-Level Users</CardTitle>
-        <CardDescription className="text-gray-400">
-          All users with God access level
-        </CardDescription>
+        <CardDescription className="text-gray-400">All users with God access level</CardDescription>
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[500px]">

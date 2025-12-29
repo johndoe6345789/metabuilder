@@ -5,20 +5,19 @@ import { formatWorkflowRunAnalysis } from './functions/format-workflow-run-analy
 
 /**
  * StatsUtils - Class wrapper for 3 functions
- * 
+ *
  * This is a convenience wrapper. Prefer importing individual functions.
  */
 export class StatsUtils {
   static toTopCounts(...args: any[]) {
-    return toTopCounts(...args as any)
+    return toTopCounts(...(args as any))
   }
 
   static summarizeWorkflowRuns(...args: any[]) {
-    return summarizeWorkflowRuns(...args as any)
+    return summarizeWorkflowRuns(...(args as any))
   }
 
   static formatWorkflowRunAnalysis(...args: any[]) {
-    return formatWorkflowRunAnalysis(...args as any)
+    return formatWorkflowRunAnalysis(...(args as any))
   }
-
 }

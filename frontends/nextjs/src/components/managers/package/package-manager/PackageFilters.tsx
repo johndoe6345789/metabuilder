@@ -24,11 +24,14 @@ export function PackageFilters({
   return (
     <div className="px-6 py-4 space-y-3 border-b">
       <div className="relative">
-        <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
+        <MagnifyingGlass
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          size={20}
+        />
         <Input
           placeholder="Search packages..."
           value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
+          onChange={e => onSearchChange(e.target.value)}
           className="pl-10"
         />
       </div>
@@ -48,7 +51,7 @@ export function PackageFilters({
           </SelectContent>
         </Select>
 
-        <Select value={sortBy} onValueChange={(value) => onSortChange(value as any)}>
+        <Select value={sortBy} onValueChange={value => onSortChange(value as any)}>
           <SelectTrigger className="w-[180px]">
             <TrendUp size={16} className="mr-2" />
             <SelectValue placeholder="Sort by" />

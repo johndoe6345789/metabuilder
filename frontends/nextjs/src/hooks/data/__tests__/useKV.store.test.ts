@@ -137,11 +137,7 @@ describe('useKV storage', () => {
     const [, updateValue] = result.current
 
     await act(async () => {
-      await Promise.all([
-        updateValue(1),
-        updateValue(2),
-        updateValue(3),
-      ])
+      await Promise.all([updateValue(1), updateValue(2), updateValue(3)])
     })
 
     const [finalValue] = result.current
@@ -157,6 +153,9 @@ describe('useKV storage', () => {
       await updateValue('next')
     })
 
-    expect(localStorage.setItem).toHaveBeenCalledWith(`${STORAGE_PREFIX}persist_key`, JSON.stringify('next'))
+    expect(localStorage.setItem).toHaveBeenCalledWith(
+      `${STORAGE_PREFIX}persist_key`,
+      JSON.stringify('next')
+    )
   })
 })

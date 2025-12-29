@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { Level2 } from '@/components/Level2'
 import { AuthGate } from '@/components/auth/AuthGate'

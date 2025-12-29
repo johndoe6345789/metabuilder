@@ -18,7 +18,9 @@ const catalogSections = [
 
 describe('component catalog composition', () => {
   it('includes every component from each section in order', () => {
-    const sectionTypes = catalogSections.flatMap(section => section.components.map(component => component.type))
+    const sectionTypes = catalogSections.flatMap(section =>
+      section.components.map(component => component.type)
+    )
 
     expect(componentCatalog).toHaveLength(sectionTypes.length)
     expect(componentCatalog.map(component => component.type)).toEqual(sectionTypes)

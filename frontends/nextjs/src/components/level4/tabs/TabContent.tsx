@@ -75,10 +75,7 @@ export function TabContent({
     case 'schemas':
       return (
         <TabsContent value={tab.value} className="space-y-6">
-          <SchemaEditorLevel4
-            schemas={appConfig.schemas}
-            onSchemasChange={onSchemasChange}
-          />
+          <SchemaEditorLevel4 schemas={appConfig.schemas} onSchemasChange={onSchemasChange} />
         </TabsContent>
       )
     case 'workflows':
@@ -94,19 +91,13 @@ export function TabContent({
     case 'lua':
       return (
         <TabsContent value={tab.value} className="space-y-6">
-          <LuaEditor
-            scripts={appConfig.luaScripts}
-            onScriptsChange={onLuaScriptsChange}
-          />
+          <LuaEditor scripts={appConfig.luaScripts} onScriptsChange={onLuaScriptsChange} />
         </TabsContent>
       )
     case 'blocks':
       return (
         <TabsContent value={tab.value} className="space-y-6">
-          <LuaBlocksEditor
-            scripts={appConfig.luaScripts}
-            onScriptsChange={onLuaScriptsChange}
-          />
+          <LuaBlocksEditor scripts={appConfig.luaScripts} onScriptsChange={onLuaScriptsChange} />
         </TabsContent>
       )
     case 'snippets':

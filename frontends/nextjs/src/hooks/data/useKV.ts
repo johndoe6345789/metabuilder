@@ -14,10 +14,10 @@ let storageListenerRegistered = false
 function registerStorageListener(): void {
   if (storageListenerRegistered || typeof window === 'undefined') return
   storageListenerRegistered = true
-  
-  window.addEventListener('storage', (e) => {
+
+  window.addEventListener('storage', e => {
     if (!e.key || !e.key.startsWith('mb_kv:')) return
-    
+
     const cleanKey = e.key.replace(/^mb_kv:/, '')
     const newValue = e.newValue ? JSON.parse(e.newValue) : undefined
     notifySubscribers(cleanKey, newValue)
@@ -54,7 +54,7 @@ export function useKV<T = any>(
   }, [key, defaultValue])
 
   useEffect(() => {
-    return subscribe(key, (newValue) => {
+    return subscribe(key, newValue => {
       setValue(newValue as T | undefined)
     })
   }, [key])

@@ -43,7 +43,7 @@ export function HierarchyTree({
 
   return (
     <div className="space-y-1">
-      {rootNodes.map((node) => (
+      {rootNodes.map(node => (
         <TreeNode
           key={node.id}
           node={node}

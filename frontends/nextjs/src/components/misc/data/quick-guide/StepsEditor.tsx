@@ -1,5 +1,16 @@
 import { useEffect, useState } from 'react'
-import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label, Textarea } from '@/components/ui'
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  Textarea,
+} from '@/components/ui'
 import { ArrowCounterClockwise, ListNumbers, Plus, Trash } from '@phosphor-icons/react'
 
 export interface GuideStep {
@@ -39,7 +50,7 @@ export function StepsEditor({ steps, onChange }: StepsEditorProps) {
       id: crypto.randomUUID(),
       title: 'New step',
       description: 'Describe what happens in this step.',
-      duration: '1-2 min'
+      duration: '1-2 min',
     }
 
     const nextSteps = [...localSteps, newStep]
@@ -61,7 +72,9 @@ export function StepsEditor({ steps, onChange }: StepsEditorProps) {
             <ListNumbers size={20} weight="duotone" />
             Steps
           </CardTitle>
-          <CardDescription>Keep your quick guide instructions concise and actionable.</CardDescription>
+          <CardDescription>
+            Keep your quick guide instructions concise and actionable.
+          </CardDescription>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="secondary" size="sm" onClick={resetOrdering}>
@@ -80,7 +93,10 @@ export function StepsEditor({ steps, onChange }: StepsEditorProps) {
         ) : (
           <div className="space-y-4">
             {localSteps.map((step, index) => (
-              <div key={step.id} className="rounded-lg border border-border/80 bg-card/60 p-4 shadow-sm">
+              <div
+                key={step.id}
+                className="rounded-lg border border-border/80 bg-card/60 p-4 shadow-sm"
+              >
                 <div className="mb-3 flex items-center justify-between">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Badge variant="outline">Step {index + 1}</Badge>
@@ -96,7 +112,7 @@ export function StepsEditor({ steps, onChange }: StepsEditorProps) {
                     <Input
                       id={`title-${step.id}`}
                       value={step.title}
-                      onChange={(e) => updateStep(step.id, { title: e.target.value })}
+                      onChange={e => updateStep(step.id, { title: e.target.value })}
                       placeholder="Give this step a short name"
                     />
                   </div>
@@ -105,7 +121,7 @@ export function StepsEditor({ steps, onChange }: StepsEditorProps) {
                     <Input
                       id={`duration-${step.id}`}
                       value={step.duration || ''}
-                      onChange={(e) => updateStep(step.id, { duration: e.target.value })}
+                      onChange={e => updateStep(step.id, { duration: e.target.value })}
                       placeholder="e.g. 30s, 1-2 min"
                     />
                   </div>
@@ -115,7 +131,7 @@ export function StepsEditor({ steps, onChange }: StepsEditorProps) {
                   <Textarea
                     id={`description-${step.id}`}
                     value={step.description}
-                    onChange={(e) => updateStep(step.id, { description: e.target.value })}
+                    onChange={e => updateStep(step.id, { description: e.target.value })}
                     rows={3}
                     placeholder="Outline the actions or context for this step"
                   />
@@ -125,7 +141,7 @@ export function StepsEditor({ steps, onChange }: StepsEditorProps) {
                   <Input
                     id={`media-${step.id}`}
                     value={step.mediaUrl || ''}
-                    onChange={(e) => updateStep(step.id, { mediaUrl: e.target.value })}
+                    onChange={e => updateStep(step.id, { mediaUrl: e.target.value })}
                     placeholder="Link to an image, GIF, or short video"
                   />
                 </div>

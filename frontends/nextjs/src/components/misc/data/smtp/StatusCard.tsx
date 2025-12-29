@@ -15,18 +15,18 @@ const statusCopy: Record<ConnectionStatus, { label: string; tone: string; icon: 
   idle: {
     label: 'Not tested',
     tone: 'bg-muted text-muted-foreground',
-    icon: <Clock size={16} />
+    icon: <Clock size={16} />,
   },
   connected: {
     label: 'Connected',
     tone: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
-    icon: <CheckCircle size={16} />
+    icon: <CheckCircle size={16} />,
   },
   error: {
     label: 'Connection failed',
     tone: 'bg-destructive/15 text-destructive',
-    icon: <WarningCircle size={16} />
-  }
+    icon: <WarningCircle size={16} />,
+  },
 }
 
 export function StatusCard({ status, host, lastChecked, message }: StatusCardProps) {
@@ -36,7 +36,9 @@ export function StatusCard({ status, host, lastChecked, message }: StatusCardPro
     <Card className="h-full">
       <CardHeader>
         <CardTitle>Connection status</CardTitle>
-        <CardDescription>Stay aware of how the platform talks to your SMTP provider.</CardDescription>
+        <CardDescription>
+          Stay aware of how the platform talks to your SMTP provider.
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         <Badge variant="secondary" className={`inline-flex items-center gap-2 ${copy.tone}`}>

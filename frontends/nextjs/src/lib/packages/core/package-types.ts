@@ -4,7 +4,14 @@ export interface PackageManifest {
   version: string
   description: string
   author: string
-  category: 'social' | 'entertainment' | 'productivity' | 'gaming' | 'ecommerce' | 'content' | 'other'
+  category:
+    | 'social'
+    | 'entertainment'
+    | 'productivity'
+    | 'gaming'
+    | 'ecommerce'
+    | 'content'
+    | 'other'
   icon: string
   screenshots: string[]
   tags: string[]

@@ -30,9 +30,13 @@ describe('password-utils', () => {
       { name: 'default to length 16', length: undefined },
       { name: 'support longer lengths', length: 24 },
     ])('should $name', ({ length }) => {
-      const password = length === undefined ? generateScrambledPassword() : generateScrambledPassword(length)
+      const password =
+        length === undefined ? generateScrambledPassword() : generateScrambledPassword(length)
       const expectedLength = length ?? 16
-      const expected = Array.from({ length: expectedLength }, (_, index) => CHARSET[index % CHARSET.length]).join('')
+      const expected = Array.from(
+        { length: expectedLength },
+        (_, index) => CHARSET[index % CHARSET.length]
+      ).join('')
 
       expect(password).toBe(expected)
       expect(password.length).toBe(expectedLength)

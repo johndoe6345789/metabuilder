@@ -6,13 +6,13 @@ import type { ModelSchema } from '../../types/schema-types'
  */
 export async function setSchemas(schemas: ModelSchema[]): Promise<void> {
   const adapter = getAdapter()
-  
+
   // Delete existing schemas
   const existing = await adapter.list('ModelSchema')
   for (const s of existing.data as any[]) {
     await adapter.delete('ModelSchema', s.name)
   }
-  
+
   // Create new schemas
   for (const schema of schemas) {
     await adapter.create('ModelSchema', {

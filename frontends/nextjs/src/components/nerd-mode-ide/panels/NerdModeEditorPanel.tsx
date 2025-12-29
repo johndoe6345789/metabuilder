@@ -75,7 +75,7 @@ export function NerdModeEditorPanel({
               height="100%"
               language={selectedFile.language || 'typescript'}
               value={fileContent}
-              onChange={(value) => onFileChange(value || '')}
+              onChange={value => onFileChange(value || '')}
               theme="vs-dark"
               options={{
                 minimap: { enabled: false },

@@ -27,15 +27,9 @@ const sizeMap: Record<SpinnerSize, number> = {
 const Spinner = forwardRef<HTMLDivElement, SpinnerProps>(
   ({ size = 'md', centered, ...props }, ref) => {
     const dimension = typeof size === 'number' ? size : sizeMap[size]
-    
-    const spinner = (
-      <CircularProgress
-        ref={ref}
-        size={dimension}
-        {...props}
-      />
-    )
-    
+
+    const spinner = <CircularProgress ref={ref} size={dimension} {...props} />
+
     if (centered) {
       return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 2 }}>
@@ -43,7 +37,7 @@ const Spinner = forwardRef<HTMLDivElement, SpinnerProps>(
         </Box>
       )
     }
-    
+
     return spinner
   }
 )

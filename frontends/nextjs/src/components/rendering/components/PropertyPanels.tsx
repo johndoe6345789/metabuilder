@@ -49,14 +49,16 @@ export function PropertyPanels({
                     key={propDef.name}
                     propDef={propDef}
                     value={component.props[propDef.name] || ''}
-                    onChange={(value) => onPropChange(propDef.name, value)}
+                    onChange={value => onPropChange(propDef.name, value)}
                     dynamicDropdown={dynamicDropdown}
                     onOpenCssBuilder={() => onOpenCssBuilder(propDef.name)}
                   />
                 )
               })
             ) : (
-              <p className="text-sm text-muted-foreground">This component has no configurable properties.</p>
+              <p className="text-sm text-muted-foreground">
+                This component has no configurable properties.
+              </p>
             )}
           </div>
         </ScrollArea>

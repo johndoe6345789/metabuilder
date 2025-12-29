@@ -19,7 +19,7 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
     }
 
     const installed = await getInstalledPackages()
-    if (!installed.some((pkg) => pkg.packageId === params.packageId)) {
+    if (!installed.some(pkg => pkg.packageId === params.packageId)) {
       return NextResponse.json({ error: 'Package not installed' }, { status: 404 })
     }
 

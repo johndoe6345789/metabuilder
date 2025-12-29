@@ -48,14 +48,14 @@ export function useLevel2State(user: User) {
     }
 
     await Database.addComment(comment)
-    setComments((current) => [...current, comment])
+    setComments(current => [...current, comment])
     setNewComment('')
     toast.success('Comment posted')
   }
 
   const handleDeleteComment = async (commentId: string) => {
     await Database.deleteComment(commentId)
-    setComments((current) => current.filter(c => c.id !== commentId))
+    setComments(current => current.filter(c => c.id !== commentId))
     toast.success('Comment deleted')
   }
 

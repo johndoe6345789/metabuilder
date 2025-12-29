@@ -17,7 +17,12 @@ interface ClearLogsDialogProps {
   onConfirm: () => void
 }
 
-export function ClearLogsDialog({ open, onOpenChange, clearOnlyResolved, onConfirm }: ClearLogsDialogProps) {
+export function ClearLogsDialog({
+  open,
+  onOpenChange,
+  clearOnlyResolved,
+  onConfirm,
+}: ClearLogsDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="bg-slate-900 border-white/10 text-white">

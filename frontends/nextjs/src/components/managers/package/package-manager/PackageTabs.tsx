@@ -20,7 +20,10 @@ export function PackageTabs({
   onSelectPackage,
   onTogglePackage,
 }: PackageTabsProps) {
-  const renderPackageCards = (packages: PackageManifest[], isInstalled: (pkg: PackageManifest) => boolean) => (
+  const renderPackageCards = (
+    packages: PackageManifest[],
+    isInstalled: (pkg: PackageManifest) => boolean
+  ) => (
     <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {packages.map(pkg => (
         <PackageCard
@@ -47,7 +50,7 @@ export function PackageTabs({
 
       <TabsContent value="all" className="flex-1 m-0">
         <ScrollArea className="h-full">
-          {renderPackageCards(filteredPackages, (pkg) => pkg.installed)}
+          {renderPackageCards(filteredPackages, pkg => pkg.installed)}
         </ScrollArea>
       </TabsContent>
 
@@ -76,9 +79,7 @@ export function PackageTabs({
       </TabsContent>
 
       <TabsContent value="available" className="flex-1 m-0">
-        <ScrollArea className="h-full">
-          {renderPackageCards(availableList, () => false)}
-        </ScrollArea>
+        <ScrollArea className="h-full">{renderPackageCards(availableList, () => false)}</ScrollArea>
       </TabsContent>
     </Tabs>
   )

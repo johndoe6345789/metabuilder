@@ -1,12 +1,7 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import {
-  Box,
-  Drawer,
-  useTheme,
-  useMediaQuery,
-} from '@mui/material'
+import { Box, Drawer, useTheme, useMediaQuery } from '@mui/material'
 
 // Sidebar container
 export interface SidebarProps {
@@ -20,16 +15,19 @@ export interface SidebarProps {
 }
 
 const SidebarCore = forwardRef<HTMLDivElement, SidebarProps>(
-  ({ 
-    children, 
-    open = true, 
-    onOpenChange, 
-    width = 280, 
-    collapsedWidth = 64,
-    variant = 'permanent',
-    side = 'left',
-    ...props 
-  }, ref) => {
+  (
+    {
+      children,
+      open = true,
+      onOpenChange,
+      width = 280,
+      collapsedWidth = 64,
+      variant = 'permanent',
+      side = 'left',
+      ...props
+    },
+    ref
+  ) => {
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 

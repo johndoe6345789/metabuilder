@@ -147,26 +147,27 @@ const DropdownMenuCheckboxItem = forwardRef<HTMLLIElement, DropdownMenuCheckboxI
 DropdownMenuCheckboxItem.displayName = 'DropdownMenuCheckboxItem'
 
 // DropdownMenuLabel
-const DropdownMenuLabel = forwardRef<HTMLDivElement, { children: ReactNode; inset?: boolean; className?: string }>(
-  ({ children, inset, ...props }, ref) => {
-    return (
-      <Box
-        ref={ref}
-        sx={{
-          px: 2,
-          py: 0.75,
-          fontSize: '0.75rem',
-          fontWeight: 600,
-          color: 'text.secondary',
-          ...(inset && { pl: 6 }),
-        }}
-        {...props}
-      >
-        {children}
-      </Box>
-    )
-  }
-)
+const DropdownMenuLabel = forwardRef<
+  HTMLDivElement,
+  { children: ReactNode; inset?: boolean; className?: string }
+>(({ children, inset, ...props }, ref) => {
+  return (
+    <Box
+      ref={ref}
+      sx={{
+        px: 2,
+        py: 0.75,
+        fontSize: '0.75rem',
+        fontWeight: 600,
+        color: 'text.secondary',
+        ...(inset && { pl: 6 }),
+      }}
+      {...props}
+    >
+      {children}
+    </Box>
+  )
+})
 DropdownMenuLabel.displayName = 'DropdownMenuLabel'
 
 // DropdownMenuSeparator
@@ -188,7 +189,11 @@ DropdownMenuShortcut.displayName = 'DropdownMenuShortcut'
 // DropdownMenuGroup
 const DropdownMenuGroup = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
   ({ children, ...props }, ref) => {
-    return <Box ref={ref} {...props}>{children}</Box>
+    return (
+      <Box ref={ref} {...props}>
+        {children}
+      </Box>
+    )
   }
 )
 DropdownMenuGroup.displayName = 'DropdownMenuGroup'
@@ -198,28 +203,30 @@ const DropdownMenuSub = ({ children }: { children: ReactNode }) => <>{children}<
 DropdownMenuSub.displayName = 'DropdownMenuSub'
 
 // DropdownMenuSubTrigger
-const DropdownMenuSubTrigger = forwardRef<HTMLLIElement, { children: ReactNode; inset?: boolean; className?: string }>(
-  ({ children, inset, ...props }, ref) => {
-    return (
-      <MenuItem
-        ref={ref}
-        sx={{ py: 0.75, px: 2, ...(inset && { pl: 6 }) }}
-        {...props}
-      >
-        <ListItemText>{children}</ListItemText>
-        <ChevronRightIcon fontSize="small" sx={{ ml: 1 }} />
-      </MenuItem>
-    )
-  }
-)
+const DropdownMenuSubTrigger = forwardRef<
+  HTMLLIElement,
+  { children: ReactNode; inset?: boolean; className?: string }
+>(({ children, inset, ...props }, ref) => {
+  return (
+    <MenuItem ref={ref} sx={{ py: 0.75, px: 2, ...(inset && { pl: 6 }) }} {...props}>
+      <ListItemText>{children}</ListItemText>
+      <ChevronRightIcon fontSize="small" sx={{ ml: 1 }} />
+    </MenuItem>
+  )
+})
 DropdownMenuSubTrigger.displayName = 'DropdownMenuSubTrigger'
 
 // DropdownMenuSubContent
-const DropdownMenuSubContent = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
-    return <Box ref={ref} {...props}>{children}</Box>
-  }
-)
+const DropdownMenuSubContent = forwardRef<
+  HTMLDivElement,
+  { children: ReactNode; className?: string }
+>(({ children, ...props }, ref) => {
+  return (
+    <Box ref={ref} {...props}>
+      {children}
+    </Box>
+  )
+})
 DropdownMenuSubContent.displayName = 'DropdownMenuSubContent'
 
 // DropdownMenuPortal
@@ -227,26 +234,37 @@ const DropdownMenuPortal = ({ children }: { children: ReactNode }) => <>{childre
 DropdownMenuPortal.displayName = 'DropdownMenuPortal'
 
 // DropdownMenuRadioGroup
-const DropdownMenuRadioGroup = forwardRef<HTMLDivElement, { children: ReactNode; value?: string; onValueChange?: (value: string) => void; className?: string }>(
-  ({ children, ...props }, ref) => {
-    return <Box ref={ref} {...props}>{children}</Box>
+const DropdownMenuRadioGroup = forwardRef<
+  HTMLDivElement,
+  {
+    children: ReactNode
+    value?: string
+    onValueChange?: (value: string) => void
+    className?: string
   }
-)
+>(({ children, ...props }, ref) => {
+  return (
+    <Box ref={ref} {...props}>
+      {children}
+    </Box>
+  )
+})
 DropdownMenuRadioGroup.displayName = 'DropdownMenuRadioGroup'
 
 // DropdownMenuRadioItem
-const DropdownMenuRadioItem = forwardRef<HTMLLIElement, { children: ReactNode; value: string; className?: string }>(
-  ({ children, value, ...props }, ref) => {
-    return (
-      <MenuItem ref={ref} value={value} sx={{ py: 0.75, px: 2 }} {...props}>
-        <ListItemIcon sx={{ minWidth: 28 }}>
-          <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'primary.main' }} />
-        </ListItemIcon>
-        <ListItemText>{children}</ListItemText>
-      </MenuItem>
-    )
-  }
-)
+const DropdownMenuRadioItem = forwardRef<
+  HTMLLIElement,
+  { children: ReactNode; value: string; className?: string }
+>(({ children, value, ...props }, ref) => {
+  return (
+    <MenuItem ref={ref} value={value} sx={{ py: 0.75, px: 2 }} {...props}>
+      <ListItemIcon sx={{ minWidth: 28 }}>
+        <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'primary.main' }} />
+      </ListItemIcon>
+      <ListItemText>{children}</ListItemText>
+    </MenuItem>
+  )
+})
 DropdownMenuRadioItem.displayName = 'DropdownMenuRadioItem'
 
 export {

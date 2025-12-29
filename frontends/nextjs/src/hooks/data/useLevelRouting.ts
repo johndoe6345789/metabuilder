@@ -14,13 +14,19 @@ export function useLevelRouting(): LevelRouting {
   const router = useRouter()
   const { logout } = useAuth()
 
-  const onNavigate = useCallback((level: AppLevel) => {
-    router.push(getLevelPath(level))
-  }, [router])
+  const onNavigate = useCallback(
+    (level: AppLevel) => {
+      router.push(getLevelPath(level))
+    },
+    [router]
+  )
 
-  const onPreview = useCallback((level: AppLevel) => {
-    router.push(getLevelPath(level))
-  }, [router])
+  const onPreview = useCallback(
+    (level: AppLevel) => {
+      router.push(getLevelPath(level))
+    },
+    [router]
+  )
 
   const onLogout = useCallback(async () => {
     await logout()

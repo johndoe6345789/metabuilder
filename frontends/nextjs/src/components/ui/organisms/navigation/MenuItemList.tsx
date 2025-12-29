@@ -65,11 +65,7 @@ const MenuItemList = forwardRef<HTMLUListElement, MenuItemListProps>(
                 minHeight: dense ? 40 : 48,
               }}
             >
-              {item.icon && (
-                <ListItemIcon sx={{ minWidth: 36 }}>
-                  {item.icon}
-                </ListItemIcon>
-              )}
+              {item.icon && <ListItemIcon sx={{ minWidth: 36 }}>{item.icon}</ListItemIcon>}
               <ListItemText
                 primary={item.label}
                 primaryTypographyProps={{
@@ -77,11 +73,7 @@ const MenuItemList = forwardRef<HTMLUListElement, MenuItemListProps>(
                   fontWeight: depth === 0 ? 500 : 400,
                 }}
               />
-              {item.badge && (
-                <Box sx={{ mr: 1 }}>
-                  {item.badge}
-                </Box>
-              )}
+              {item.badge && <Box sx={{ mr: 1 }}>{item.badge}</Box>}
               {hasChildren && (isOpen ? <ExpandLess /> : <ExpandMore />)}
             </ListItemButton>
           </ListItem>

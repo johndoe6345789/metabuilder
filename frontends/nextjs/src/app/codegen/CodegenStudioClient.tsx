@@ -57,11 +57,12 @@ export default function CodegenStudioClient() {
   }, [form.runtime])
 
   const previewFiles = useMemo(() => {
-    const root = form.projectName
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9_-]+/g, '-')
-      .replace(/^-+|-+$/g, '') || 'metabuilder-starter'
+    const root =
+      form.projectName
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9_-]+/g, '-')
+        .replace(/^-+|-+$/g, '') || 'metabuilder-starter'
     return [
       `${root}/README.md`,
       `${root}/package.json`,
@@ -72,7 +73,7 @@ export default function CodegenStudioClient() {
   }, [form.projectName])
 
   const handleChange = (key: keyof FormState) => (event: ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({ ...prev, [key]: event.target.value }))
+    setForm(prev => ({ ...prev, [key]: event.target.value }))
   }
 
   const handleSubmit = () => generate(form)
@@ -93,9 +94,20 @@ export default function CodegenStudioClient() {
                 onChange={handleChange('projectName')}
                 fullWidth
               />
-              <TextField label="Package id" value={form.packageId} onChange={handleChange('packageId')} fullWidth />
-              <TextField select label="Runtime" value={form.runtime} onChange={handleChange('runtime')} fullWidth>
-                {runtimeOptions.map((option) => (
+              <TextField
+                label="Package id"
+                value={form.packageId}
+                onChange={handleChange('packageId')}
+                fullWidth
+              />
+              <TextField
+                select
+                label="Runtime"
+                value={form.runtime}
+                onChange={handleChange('runtime')}
+                fullWidth
+              >
+                {runtimeOptions.map(option => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>

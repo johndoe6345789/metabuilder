@@ -1,6 +1,6 @@
 /**
  * Users API Route - Demonstrates DBAL integration
- * 
+ *
  * This API route forwards user management operations to the C++ DBAL daemon.
  */
 

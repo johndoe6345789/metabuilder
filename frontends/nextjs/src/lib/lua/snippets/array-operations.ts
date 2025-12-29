@@ -9,7 +9,7 @@ export const ARRAY_OPERATION_SNIPPETS: LuaSnippet[] = [
     tags: ['array', 'filter', 'collection'],
     parameters: [
       { name: 'items', type: 'array', description: 'Array to filter' },
-      { name: 'minValue', type: 'number', description: 'Minimum value threshold' }
+      { name: 'minValue', type: 'number', description: 'Minimum value threshold' },
     ],
     code: `local items = context.data.items or {}
 local minValue = context.data.minValue or 0
@@ -27,7 +27,7 @@ return {
   original = items,
   filtered = filtered,
   count = #filtered
-}`
+}`,
   },
   {
     id: 'array_map',
@@ -50,7 +50,7 @@ end
 return {
   original = items,
   mapped = mapped
-}`
+}`,
   },
   {
     id: 'array_reduce',
@@ -58,9 +58,7 @@ return {
     description: 'Calculate sum of numeric array values',
     category: 'Array Operations',
     tags: ['array', 'reduce', 'sum'],
-    parameters: [
-      { name: 'numbers', type: 'array', description: 'Array of numbers' }
-    ],
+    parameters: [{ name: 'numbers', type: 'array', description: 'Array of numbers' }],
     code: `local numbers = context.data.numbers or {}
 local sum = 0
 local count = 0
@@ -76,7 +74,7 @@ return {
   sum = sum,
   count = count,
   average = average
-}`
+}`,
   },
   {
     id: 'array_group_by',
@@ -106,7 +104,7 @@ end
 return {
   groups = groups,
   summary = summary
-}`
+}`,
   },
   {
     id: 'array_sort',
@@ -129,6 +127,6 @@ end)
 return {
   sorted = items,
   count = #items
-}`
-  }
+}`,
+  },
 ]

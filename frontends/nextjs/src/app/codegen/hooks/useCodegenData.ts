@@ -39,7 +39,10 @@ const fetchZip = async (values: CodegenRequest) => {
     throw new Error('Codegen Studio service returned an error')
   }
   const blob = await response.blob()
-  const filename = createFilename(response.headers.get('content-disposition'), `${values.projectName}.zip`)
+  const filename = createFilename(
+    response.headers.get('content-disposition'),
+    `${values.projectName}.zip`
+  )
   downloadBlob(blob, filename)
   const manifestHeader = response.headers.get('x-codegen-manifest')
   const manifest = manifestHeader

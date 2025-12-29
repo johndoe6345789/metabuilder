@@ -23,7 +23,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     }
 
     const installed = await getInstalledPackages()
-    const existing = installed.find((pkg) => pkg.packageId === params.packageId)
+    const existing = installed.find(pkg => pkg.packageId === params.packageId)
     if (!existing) {
       return NextResponse.json({ error: 'Package not installed' }, { status: 404 })
     }

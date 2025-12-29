@@ -10,7 +10,8 @@ export async function updatePage(pageId: string, updates: Partial<PageConfig>): 
   if (updates.path !== undefined) data.path = updates.path
   if (updates.title !== undefined) data.title = updates.title
   if (updates.level !== undefined) data.level = updates.level
-  if (updates.componentTree !== undefined) data.componentTree = JSON.stringify(updates.componentTree)
+  if (updates.componentTree !== undefined)
+    data.componentTree = JSON.stringify(updates.componentTree)
   if (updates.requiresAuth !== undefined) data.requiresAuth = updates.requiresAuth
   if (updates.requiredRole !== undefined) data.requiredRole = updates.requiredRole
 

@@ -53,16 +53,16 @@ export const createLuaBlocksActions = ({
     }
 
     onScriptsChange([...scripts, newScript])
-    setBlocksByScript((prev) => ({ ...prev, [newScript.id]: starterBlocks }))
+    setBlocksByScript(prev => ({ ...prev, [newScript.id]: starterBlocks }))
     setSelectedScriptId(newScript.id)
     toast.success('Block script created')
   }
 
   const handleDeleteScript = (scriptId: string) => {
-    const remaining = scripts.filter((script) => script.id !== scriptId)
+    const remaining = scripts.filter(script => script.id !== scriptId)
     onScriptsChange(remaining)
 
-    setBlocksByScript((prev) => {
+    setBlocksByScript(prev => {
       const { [scriptId]: _, ...rest } = prev
       return rest
     })
@@ -77,7 +77,7 @@ export const createLuaBlocksActions = ({
   const handleUpdateScript = (updates: Partial<LuaScript>) => {
     if (!selectedScript) return
     onScriptsChange(
-      scripts.map((script) => (script.id === selectedScript.id ? { ...script, ...updates } : script))
+      scripts.map(script => (script.id === selectedScript.id ? { ...script, ...updates } : script))
     )
   }
 
@@ -103,7 +103,7 @@ export const createLuaBlocksActions = ({
       toast.warning('No block metadata found in this script')
       return
     }
-    setBlocksByScript((prev) => ({ ...prev, [selectedScript.id]: parsed }))
+    setBlocksByScript(prev => ({ ...prev, [selectedScript.id]: parsed }))
     toast.success('Blocks loaded from script')
   }
 
@@ -120,7 +120,7 @@ export const createLuaBlocksActions = ({
     if (!selectedScriptId || !resolvedTarget) return
 
     const newBlock = createBlock(type)
-    setBlocksByScript((prev) => ({
+    setBlocksByScript(prev => ({
       ...prev,
       [selectedScriptId]: addBlockToTree(
         prev[selectedScriptId] || [],
@@ -141,9 +141,9 @@ export const createLuaBlocksActions = ({
 
   const handleUpdateField = (blockId: string, fieldName: string, value: string) => {
     if (!selectedScriptId) return
-    setBlocksByScript((prev) => ({
+    setBlocksByScript(prev => ({
       ...prev,
-      [selectedScriptId]: updateBlockInTree(prev[selectedScriptId] || [], blockId, (block) => ({
+      [selectedScriptId]: updateBlockInTree(prev[selectedScriptId] || [], blockId, block => ({
         ...block,
         fields: {
           ...block.fields,
@@ -155,7 +155,7 @@ export const createLuaBlocksActions = ({
 
   const handleRemoveBlock = (blockId: string) => {
     if (!selectedScriptId) return
-    setBlocksByScript((prev) => ({
+    setBlocksByScript(prev => ({
       ...prev,
       [selectedScriptId]: removeBlockFromTree(prev[selectedScriptId] || [], blockId),
     }))
@@ -164,11 +164,11 @@ export const createLuaBlocksActions = ({
   const handleDuplicateBlock = (blockId: string) => {
     if (!selectedScriptId) return
 
-    setBlocksByScript((prev) => {
+    setBlocksByScript(prev => {
       const blocks = prev[selectedScriptId] || []
       let duplicated: LuaBlock | null = null
 
-      const updated = updateBlockInTree(blocks, blockId, (block) => {
+      const updated = updateBlockInTree(blocks, blockId, block => {
         duplicated = cloneBlock(block)
         return block
       })
@@ -184,7 +184,7 @@ export const createLuaBlocksActions = ({
 
   const handleMoveBlock = (blockId: string, direction: 'up' | 'down') => {
     if (!selectedScriptId) return
-    setBlocksByScript((prev) => ({
+    setBlocksByScript(prev => ({
       ...prev,
       [selectedScriptId]: moveBlockInTree(prev[selectedScriptId] || [], blockId, direction),
     }))

@@ -29,7 +29,9 @@ export function ExportOptions({ exportOptions, setExportOptions }: ExportOptions
             <Checkbox
               id={`export-${key}`}
               checked={exportOptions[key] as boolean}
-              onCheckedChange={checked => setExportOptions(prev => ({ ...prev, [key]: checked as boolean }))}
+              onCheckedChange={checked =>
+                setExportOptions(prev => ({ ...prev, [key]: checked as boolean }))
+              }
             />
             <Label htmlFor={`export-${key}`} className="font-normal cursor-pointer">
               {label}

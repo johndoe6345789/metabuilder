@@ -59,7 +59,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       <TextField
         inputRef={ref}
         value={value}
-        onChange={(e) => onChange?.(e.target.value)}
+        onChange={e => onChange?.(e.target.value)}
         placeholder={placeholder}
         fullWidth={fullWidth}
         size="small"
@@ -115,7 +115,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           '&:focus': {
             outline: 'none',
             borderColor: error ? 'error.main' : 'primary.main',
-            boxShadow: (theme) =>
+            boxShadow: theme =>
               `0 0 0 2px ${error ? theme.palette.error.main : theme.palette.primary.main}25`,
           },
           '&:disabled': {

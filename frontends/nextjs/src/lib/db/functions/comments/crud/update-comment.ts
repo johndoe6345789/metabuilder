@@ -11,7 +11,10 @@ import type { Comment } from '../../../types/level-types'
  * @param commentId - ID of comment to update
  * @param updates - Partial comment with updates
  */
-export const updateComment = async (commentId: string, updates: Partial<Comment>): Promise<void> => {
+export const updateComment = async (
+  commentId: string,
+  updates: Partial<Comment>
+): Promise<void> => {
   const data: any = {}
   if (updates.content !== undefined) data.content = updates.content
   if (updates.updatedAt !== undefined) data.updatedAt = BigInt(updates.updatedAt)

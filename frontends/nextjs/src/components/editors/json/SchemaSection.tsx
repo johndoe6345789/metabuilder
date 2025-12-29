@@ -7,8 +7,7 @@ interface SchemaSectionProps {
 export function SchemaSection({ schema }: SchemaSectionProps) {
   if (!schema) return null
 
-  const formattedSchema =
-    typeof schema === 'string' ? schema : JSON.stringify(schema, null, 2)
+  const formattedSchema = typeof schema === 'string' ? schema : JSON.stringify(schema, null, 2)
 
   return (
     <Card>

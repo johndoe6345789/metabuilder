@@ -7,9 +7,7 @@ export const DATA_TRANSFORMATION_SNIPPETS: LuaSnippet[] = [
     description: 'Convert snake_case strings to camelCase',
     category: 'Data Transformation',
     tags: ['transform', 'string', 'case'],
-    parameters: [
-      { name: 'text', type: 'string', description: 'Snake case text' }
-    ],
+    parameters: [{ name: 'text', type: 'string', description: 'Snake case text' }],
     code: `local text = context.data.text or ""
 
 local result = string.gsub(text, "_(%w)", function(c)
@@ -19,7 +17,7 @@ end)
 return {
   original = text,
   transformed = result
-}`
+}`,
   },
   {
     id: 'transform_flatten_object',
@@ -50,7 +48,7 @@ local flattened = flatten(data)
 return {
   original = data,
   flattened = flattened
-}`
+}`,
   },
   {
     id: 'transform_normalize_data',
@@ -83,6 +81,6 @@ if data.phone then
   normalized.phone = string.gsub(data.phone, "[^%d]", "")
 end
 
-return normalized`
-  }
+return normalized`,
+  },
 ]

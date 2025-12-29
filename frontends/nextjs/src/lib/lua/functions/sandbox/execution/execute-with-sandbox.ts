@@ -25,9 +25,9 @@ export async function executeWithSandbox(
       execution: {
         success: false,
         error: 'Code blocked due to critical security issues. Please review the security warnings.',
-        logs: []
+        logs: [],
       },
-      security: securityResult
+      security: securityResult,
     }
   }
 
@@ -45,16 +45,16 @@ export async function executeWithSandbox(
 
     return {
       execution: executionResult,
-      security: securityResult
+      security: securityResult,
     }
   } catch (error) {
     return {
       execution: {
         success: false,
         error: error instanceof Error ? error.message : 'Execution failed',
-        logs: executionResult?.logs ?? []
+        logs: executionResult?.logs ?? [],
       },
-      security: securityResult
+      security: securityResult,
     }
   } finally {
     if (this.engine) {

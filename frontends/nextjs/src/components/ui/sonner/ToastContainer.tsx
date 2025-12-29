@@ -3,12 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Alert, Box, Snackbar } from '@mui/material'
 
-import {
-  anchorFromPosition,
-  containerPlacement,
-  type Toast,
-  type ToastOptions,
-} from './config'
+import { anchorFromPosition, containerPlacement, type Toast, type ToastOptions } from './config'
 
 export interface ToastHandlers {
   addToast: (toast: Toast) => void
@@ -48,10 +43,7 @@ export function ToastContainer({
   }, [addToast, onRegister, removeToast])
 
   const anchorOrigin = useMemo(() => anchorFromPosition(position), [position])
-  const containerPosition = useMemo(
-    () => containerPlacement(position),
-    [position]
-  )
+  const containerPosition = useMemo(() => containerPlacement(position), [position])
 
   return (
     <Box

@@ -10,9 +10,7 @@ export const displayComponents: ComponentDefinition[] = [
     defaultProps: {
       className: 'p-6',
     },
-    propSchema: [
-      { name: 'className', label: 'CSS Classes', type: 'string', defaultValue: 'p-6' },
-    ],
+    propSchema: [{ name: 'className', label: 'CSS Classes', type: 'string', defaultValue: 'p-6' }],
   },
   {
     type: 'Badge',

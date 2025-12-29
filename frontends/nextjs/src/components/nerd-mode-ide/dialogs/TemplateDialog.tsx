@@ -18,9 +18,14 @@ interface TemplateDialogProps {
   onClose: () => void
 }
 
-export function TemplateDialog({ open, templates, onSelectTemplate, onClose }: TemplateDialogProps) {
+export function TemplateDialog({
+  open,
+  templates,
+  onSelectTemplate,
+  onClose,
+}: TemplateDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={(nextOpen) => (!nextOpen ? onClose() : null)}>
+    <Dialog open={open} onOpenChange={nextOpen => (!nextOpen ? onClose() : null)}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Start from a template</DialogTitle>
@@ -29,7 +34,7 @@ export function TemplateDialog({ open, templates, onSelectTemplate, onClose }: T
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
-          {templates.map((template) => (
+          {templates.map(template => (
             <Card key={template.id} className="border">
               <CardContent className="p-4 flex items-start justify-between gap-4">
                 <div>

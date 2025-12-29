@@ -1,6 +1,25 @@
-import { Badge, Card, CardContent, CardHeader, CardTitle, ScrollArea, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
+import {
+  Badge,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  ScrollArea,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui'
 import type { AuditLog, OperationType, ResourceType } from '@/lib/security/secure-db/types'
-import { ArrowDown, ArrowUp, ShieldCheck, User as UserIcon, WarningCircle } from '@phosphor-icons/react'
+import {
+  ArrowDown,
+  ArrowUp,
+  ShieldCheck,
+  User as UserIcon,
+  WarningCircle,
+} from '@phosphor-icons/react'
 
 interface LogTableProps {
   logs: AuditLog[]
@@ -13,12 +32,12 @@ const OPERATION_COLORS: Record<OperationType, string> = {
   CREATE: 'bg-green-100 text-green-800',
   READ: 'bg-blue-100 text-blue-800',
   UPDATE: 'bg-yellow-100 text-yellow-800',
-  DELETE: 'bg-red-100 text-red-800'
+  DELETE: 'bg-red-100 text-red-800',
 }
 
 const RESOURCE_ICONS: Partial<Record<ResourceType, JSX.Element>> = {
   user: <UserIcon className="h-4 w-4" weight="bold" />,
-  credential: <ShieldCheck className="h-4 w-4" weight="bold" />
+  credential: <ShieldCheck className="h-4 w-4" weight="bold" />,
 }
 
 export function LogTable({ logs, sortField, sortDirection = 'asc', onSortChange }: LogTableProps) {
@@ -58,7 +77,7 @@ export function LogTable({ logs, sortField, sortDirection = 'asc', onSortChange 
                   </TableCell>
                 </TableRow>
               ) : (
-                logs.map((log) => (
+                logs.map(log => (
                   <TableRow key={log.id} className="hover:bg-muted/20">
                     <TableCell className="text-sm text-muted-foreground">
                       {new Date(log.timestamp).toLocaleString()}
@@ -68,7 +87,9 @@ export function LogTable({ logs, sortField, sortDirection = 'asc', onSortChange 
                       <Badge className={OPERATION_COLORS[log.operation]}>{log.operation}</Badge>
                     </TableCell>
                     <TableCell className="flex items-center gap-2">
-                      {RESOURCE_ICONS[log.resource] || <ShieldCheck className="h-4 w-4 text-muted-foreground" />}
+                      {RESOURCE_ICONS[log.resource] || (
+                        <ShieldCheck className="h-4 w-4 text-muted-foreground" />
+                      )}
                       <span className="capitalize">{log.resource}</span>
                     </TableCell>
                     <TableCell>
@@ -106,15 +127,18 @@ interface SortableHeaderProps {
   onSort?: (field: keyof AuditLog) => void
 }
 
-function SortableHeader({ field, label, sortField, sortDirection = 'asc', onSort }: SortableHeaderProps) {
+function SortableHeader({
+  field,
+  label,
+  sortField,
+  sortDirection = 'asc',
+  onSort,
+}: SortableHeaderProps) {
   const isActive = sortField === field
   const Icon = sortDirection === 'asc' ? ArrowUp : ArrowDown
 
   return (
-    <TableHead
-      className="cursor-pointer select-none"
-      onClick={() => onSort?.(field)}
-    >
+    <TableHead className="cursor-pointer select-none" onClick={() => onSort?.(field)}>
       <div className="flex items-center gap-2">
         {label}
         {isActive && <Icon className="h-3.5 w-3.5" />}

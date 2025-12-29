@@ -13,7 +13,7 @@ export const BlockFields = ({ block, definition, onUpdateField }: BlockFieldsPro
 
   return (
     <Box className={styles.blockFields}>
-      {definition.fields.map((field) => (
+      {definition.fields.map(field => (
         <Box key={field.name}>
           <Typography className={styles.blockFieldLabel}>{field.label}</Typography>
           {field.type === 'select' ? (
@@ -21,14 +21,14 @@ export const BlockFields = ({ block, definition, onUpdateField }: BlockFieldsPro
               select
               size="small"
               value={block.fields[field.name]}
-              onChange={(event) => onUpdateField(block.id, field.name, event.target.value)}
+              onChange={event => onUpdateField(block.id, field.name, event.target.value)}
               fullWidth
               variant="outlined"
               InputProps={{
                 sx: { backgroundColor: 'rgba(255,255,255,0.95)' },
               }}
             >
-              {field.options?.map((option) => (
+              {field.options?.map(option => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
@@ -38,7 +38,7 @@ export const BlockFields = ({ block, definition, onUpdateField }: BlockFieldsPro
             <TextField
               size="small"
               value={block.fields[field.name]}
-              onChange={(event) => onUpdateField(block.id, field.name, event.target.value)}
+              onChange={event => onUpdateField(block.id, field.name, event.target.value)}
               placeholder={field.placeholder}
               fullWidth
               variant="outlined"

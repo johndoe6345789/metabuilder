@@ -7,7 +7,7 @@ import type { Tenant } from '../../types/level-types'
 export async function getTenants(): Promise<Tenant[]> {
   const adapter = getAdapter()
   const result = await adapter.list('Tenant')
-  return (result.data as any[]).map((t) => ({
+  return (result.data as any[]).map(t => ({
     id: t.id,
     name: t.name,
     ownerId: t.ownerId,

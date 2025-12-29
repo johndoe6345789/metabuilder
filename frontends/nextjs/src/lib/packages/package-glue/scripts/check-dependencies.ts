@@ -1,7 +1,10 @@
 import type { PackageRegistry } from './types'
 
 // Check if package dependencies are met
-export function checkDependencies(registry: PackageRegistry, packageId: string): {
+export function checkDependencies(
+  registry: PackageRegistry,
+  packageId: string
+): {
   satisfied: boolean
   missing: string[]
 } {

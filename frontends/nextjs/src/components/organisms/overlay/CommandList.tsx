@@ -1,11 +1,7 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import {
-  Box,
-  List,
-  Typography,
-} from '@mui/material'
+import { Box, List, Typography } from '@mui/material'
 
 // CommandList
 interface CommandListProps {
@@ -13,25 +9,23 @@ interface CommandListProps {
   className?: string
 }
 
-const CommandList = forwardRef<HTMLDivElement, CommandListProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <Box
-        ref={ref}
-        sx={{
-          maxHeight: 300,
-          overflow: 'auto',
-          py: 1,
-        }}
-        {...props}
-      >
-        <List dense disablePadding>
-          {children}
-        </List>
-      </Box>
-    )
-  }
-)
+const CommandList = forwardRef<HTMLDivElement, CommandListProps>(({ children, ...props }, ref) => {
+  return (
+    <Box
+      ref={ref}
+      sx={{
+        maxHeight: 300,
+        overflow: 'auto',
+        py: 1,
+      }}
+      {...props}
+    >
+      <List dense disablePadding>
+        {children}
+      </List>
+    </Box>
+  )
+})
 CommandList.displayName = 'CommandList'
 
 // CommandEmpty
@@ -87,8 +81,4 @@ const CommandGroup = forwardRef<HTMLDivElement, CommandGroupProps>(
 )
 CommandGroup.displayName = 'CommandGroup'
 
-export {
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-}
+export { CommandList, CommandEmpty, CommandGroup }

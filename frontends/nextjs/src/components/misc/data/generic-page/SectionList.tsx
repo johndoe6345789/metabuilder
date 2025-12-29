@@ -1,4 +1,14 @@
-import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, ScrollArea, Separator } from '@/components/ui'
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  ScrollArea,
+  Separator,
+} from '@/components/ui'
 import { ListNumbers, Plus, PushPinSimple, SquaresFour } from '@phosphor-icons/react'
 
 export interface PageSection {
@@ -17,13 +27,21 @@ interface SectionListProps {
   onCreateSection?: () => void
 }
 
-const statusVariant: Record<NonNullable<PageSection['status']>, 'default' | 'secondary' | 'outline'> = {
+const statusVariant: Record<
+  NonNullable<PageSection['status']>,
+  'default' | 'secondary' | 'outline'
+> = {
   draft: 'secondary',
   review: 'outline',
-  published: 'default'
+  published: 'default',
 }
 
-export function SectionList({ sections, selectedSectionId, onSelectSection, onCreateSection }: SectionListProps) {
+export function SectionList({
+  sections,
+  selectedSectionId,
+  onSelectSection,
+  onCreateSection,
+}: SectionListProps) {
   return (
     <Card className="h-full">
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
@@ -42,7 +60,9 @@ export function SectionList({ sections, selectedSectionId, onSelectSection, onCr
       <CardContent className="p-0">
         {sections.length === 0 ? (
           <div className="py-10 text-center text-muted-foreground">
-            <p className="text-sm">No sections yet. Create your first section to start building the page.</p>
+            <p className="text-sm">
+              No sections yet. Create your first section to start building the page.
+            </p>
           </div>
         ) : (
           <ScrollArea className="max-h-[520px]">
@@ -70,11 +90,15 @@ export function SectionList({ sections, selectedSectionId, onSelectSection, onCr
                         <div>
                           <p className="font-semibold leading-none">{section.title}</p>
                           {section.description && (
-                            <p className="text-sm text-muted-foreground line-clamp-2">{section.description}</p>
+                            <p className="text-sm text-muted-foreground line-clamp-2">
+                              {section.description}
+                            </p>
                           )}
                         </div>
                         {section.updatedAt && (
-                          <p className="text-xs text-muted-foreground whitespace-nowrap">Updated {section.updatedAt}</p>
+                          <p className="text-xs text-muted-foreground whitespace-nowrap">
+                            Updated {section.updatedAt}
+                          </p>
                         )}
                       </div>
                       <div className="flex items-center gap-3 text-xs text-muted-foreground">

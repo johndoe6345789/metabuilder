@@ -1,4 +1,13 @@
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle, Stack, Typography } from '@/components/ui'
+import {
+  Badge,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Stack,
+  Typography,
+} from '@/components/ui'
 
 interface ModeratorActionsProps {
   flaggedCount: number
@@ -6,7 +15,11 @@ interface ModeratorActionsProps {
   flaggedTerms: string[]
 }
 
-export function ModeratorActions({ flaggedCount, resolvedCount, flaggedTerms }: ModeratorActionsProps) {
+export function ModeratorActions({
+  flaggedCount,
+  resolvedCount,
+  flaggedTerms,
+}: ModeratorActionsProps) {
   const highlightLabel = (term: string) => term.charAt(0).toUpperCase() + term.slice(1)
 
   return (
@@ -42,7 +55,7 @@ export function ModeratorActions({ flaggedCount, resolvedCount, flaggedTerms }: 
         </CardHeader>
         <CardContent>
           <Stack direction="row" spacing={1} flexWrap="wrap">
-            {flaggedTerms.map((term) => (
+            {flaggedTerms.map(term => (
               <Badge key={term}>{highlightLabel(term)}</Badge>
             ))}
           </Stack>

@@ -77,29 +77,25 @@ const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(
 TableCell.displayName = 'TableCell'
 
 // TableCaption
-const TableCaption = forwardRef<HTMLTableCaptionElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
-    return (
-      <caption
-        ref={ref}
-        style={{
-          captionSide: 'bottom',
-          padding: '12px',
-          fontSize: '0.875rem',
-          color: 'var(--text-secondary)',
-        }}
-        {...props}
-      >
-        {children}
-      </caption>
-    )
-  }
-)
+const TableCaption = forwardRef<
+  HTMLTableCaptionElement,
+  { children: ReactNode; className?: string }
+>(({ children, ...props }, ref) => {
+  return (
+    <caption
+      ref={ref}
+      style={{
+        captionSide: 'bottom',
+        padding: '12px',
+        fontSize: '0.875rem',
+        color: 'var(--text-secondary)',
+      }}
+      {...props}
+    >
+      {children}
+    </caption>
+  )
+})
 TableCaption.displayName = 'TableCaption'
 
-export {
-  TableRow,
-  TableHead,
-  TableCell,
-  TableCaption,
-}
+export { TableRow, TableHead, TableCell, TableCaption }

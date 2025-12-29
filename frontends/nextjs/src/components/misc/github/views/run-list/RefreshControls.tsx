@@ -8,14 +8,13 @@ import { spinSx } from './run-list.types'
 
 type RefreshControlsProps = Pick<
   RunListProps,
-  |
-    'autoRefreshEnabled'
-    | 'secondsUntilRefresh'
-    | 'onToggleAutoRefresh'
-    | 'onDownloadJson'
-    | 'onRefresh'
-    | 'runs'
-    | 'isLoading'
+  | 'autoRefreshEnabled'
+  | 'secondsUntilRefresh'
+  | 'onToggleAutoRefresh'
+  | 'onDownloadJson'
+  | 'onRefresh'
+  | 'runs'
+  | 'isLoading'
 >
 
 export const RefreshControls = ({
@@ -34,10 +33,7 @@ export const RefreshControls = ({
   >
     <Stack spacing={1} alignItems={{ xs: 'flex-start', md: 'flex-end' }}>
       <Stack direction="row" spacing={1} alignItems="center">
-        <Badge
-          variant={autoRefreshEnabled ? 'default' : 'outline'}
-          sx={{ fontSize: '0.75rem' }}
-        >
+        <Badge variant={autoRefreshEnabled ? 'default' : 'outline'} sx={{ fontSize: '0.75rem' }}>
           Auto-refresh {autoRefreshEnabled ? 'ON' : 'OFF'}
         </Badge>
         {autoRefreshEnabled && (

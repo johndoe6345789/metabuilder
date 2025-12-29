@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { ModeratorPanel } from '@/components/level/ModeratorPanel'
 import { AuthGate } from '@/components/auth/AuthGate'

@@ -17,13 +17,15 @@ describe('createProjectTemplate', () => {
     expect(template.manifest.packageId).toBe('codegen_studio')
     expect(template.zipName).toContain('codegen-meta-builder-lab')
 
-    const paths = template.files.map((file) => file.path)
-    expect(paths).toEqual(expect.arrayContaining([
-      'meta-builder-lab/README.md',
-      'meta-builder-lab/package.json',
-      'meta-builder-lab/src/app/page.tsx',
-      'meta-builder-lab/cli/main.cpp',
-      'meta-builder-lab/spec.json',
-    ]))
+    const paths = template.files.map(file => file.path)
+    expect(paths).toEqual(
+      expect.arrayContaining([
+        'meta-builder-lab/README.md',
+        'meta-builder-lab/package.json',
+        'meta-builder-lab/src/app/page.tsx',
+        'meta-builder-lab/cli/main.cpp',
+        'meta-builder-lab/spec.json',
+      ])
+    )
   })
 })

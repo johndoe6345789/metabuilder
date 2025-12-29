@@ -21,17 +21,27 @@ describe('addWorkflow', () => {
     },
     {
       name: 'workflow with description',
-      workflow: { id: 'w2', name: 'Process', description: 'A workflow', nodes: [{}], edges: [], enabled: false },
+      workflow: {
+        id: 'w2',
+        name: 'Process',
+        description: 'A workflow',
+        nodes: [{}],
+        edges: [],
+        enabled: false,
+      },
     },
   ])('should add $name', async ({ workflow }) => {
     mockCreate.mockResolvedValue(undefined)
 
     await addWorkflow(workflow as any)
 
-    expect(mockCreate).toHaveBeenCalledWith('Workflow', expect.objectContaining({
-      id: workflow.id,
-      name: workflow.name,
-      enabled: workflow.enabled,
-    }))
+    expect(mockCreate).toHaveBeenCalledWith(
+      'Workflow',
+      expect.objectContaining({
+        id: workflow.id,
+        name: workflow.name,
+        enabled: workflow.enabled,
+      })
+    )
   })
 })

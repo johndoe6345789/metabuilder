@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
@@ -45,13 +45,13 @@ export function Level3({ user, onLogout, onNavigate }: Level3Props) {
       return
     }
     await deleteUser(userId)
-    setUsers((current) => current.filter(u => u.id !== userId))
+    setUsers(current => current.filter(u => u.id !== userId))
     toast.success('User deleted')
   }
 
   const handleDeleteComment = async (commentId: string) => {
     await deleteComment(commentId)
-    setComments((current) => current.filter(c => c.id !== commentId))
+    setComments(current => current.filter(c => c.id !== commentId))
     toast.success('Comment deleted')
   }
 
@@ -64,7 +64,7 @@ export function Level3({ user, onLogout, onNavigate }: Level3Props) {
     if (!editingItem) return
 
     await updateUser(editingItem.id, editingItem)
-    setUsers((current) => current.map(u => u.id === editingItem.id ? editingItem : u))
+    setUsers(current => current.map(u => (u.id === editingItem.id ? editingItem : u)))
     setDialogOpen(false)
     setEditingItem(null)
     toast.success('User updated')
@@ -90,7 +90,7 @@ export function Level3({ user, onLogout, onNavigate }: Level3Props) {
 
         <Level3Stats users={users} comments={comments} />
 
-        <Tabs value={selectedModel} onValueChange={(v) => setSelectedModel(v as ModelSchema)}>
+        <Tabs value={selectedModel} onValueChange={v => setSelectedModel(v as ModelSchema)}>
           <TabsList className="grid w-full grid-cols-2 max-w-md">
             <TabsTrigger value="users">
               <Users className="mr-2" size={16} />
@@ -130,7 +130,7 @@ export function Level3({ user, onLogout, onNavigate }: Level3Props) {
         open={dialogOpen}
         user={editingItem}
         onClose={setDialogOpen}
-        onChange={(item) => setEditingItem(item)}
+        onChange={item => setEditingItem(item)}
         onSave={handleSaveUser}
       />
     </div>

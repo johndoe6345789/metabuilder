@@ -1,4 +1,13 @@
-import { Badge, Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
+import {
+  Badge,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui'
 import type { FieldSchema, ModelSchema } from '@/lib/schema-types'
 import { getFieldLabel } from '@/lib/schema-utils'
 import { ArrowDown, ArrowUp, Pencil, Trash } from '@phosphor-icons/react'
@@ -27,12 +36,12 @@ export function ModelTable({
   onEdit,
   onDelete,
   onRowClick,
-  renderRelationValue
+  renderRelationValue,
 }: ModelTableProps) {
   const actionColumns = onEdit || onDelete ? 1 : 0
 
   const renderCellValue = (record: any, fieldName: string) => {
-    const field = model.fields.find((item) => item.name === fieldName)
+    const field = model.fields.find(item => item.name === fieldName)
     if (!field) return null
 
     const value = record[fieldName]
@@ -54,7 +63,9 @@ export function ModelTable({
       case 'json':
         return <code className="text-xs">{JSON.stringify(value)}</code>
       default:
-        return typeof value === 'string' && value.length > 60 ? `${value.slice(0, 60)}…` : String(value)
+        return typeof value === 'string' && value.length > 60
+          ? `${value.slice(0, 60)}…`
+          : String(value)
     }
   }
 
@@ -63,8 +74,8 @@ export function ModelTable({
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50">
-            {displayFields.map((fieldName) => {
-              const field = model.fields.find((item) => item.name === fieldName)
+            {displayFields.map(fieldName => {
+              const field = model.fields.find(item => item.name === fieldName)
               if (!field) return null
               const isSortable = field.sortable !== false
               const isActive = sortField === fieldName
@@ -91,18 +102,21 @@ export function ModelTable({
         <TableBody>
           {records.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={displayFields.length + actionColumns} className="py-10 text-center text-muted-foreground">
+              <TableCell
+                colSpan={displayFields.length + actionColumns}
+                className="py-10 text-center text-muted-foreground"
+              >
                 No records to display
               </TableCell>
             </TableRow>
           ) : (
-            records.map((record) => (
+            records.map(record => (
               <TableRow
                 key={record.id}
                 className="hover:bg-muted/30"
                 onClick={() => onRowClick?.(record)}
               >
-                {displayFields.map((fieldName) => (
+                {displayFields.map(fieldName => (
                   <TableCell key={fieldName} className="py-3">
                     {renderCellValue(record, fieldName)}
                   </TableCell>
@@ -114,7 +128,7 @@ export function ModelTable({
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={(event) => {
+                          onClick={event => {
                             event.stopPropagation()
                             onEdit(record)
                           }}
@@ -127,7 +141,7 @@ export function ModelTable({
                           size="sm"
                           variant="ghost"
                           className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-                          onClick={(event) => {
+                          onClick={event => {
                             event.stopPropagation()
                             onDelete(record.id)
                           }}

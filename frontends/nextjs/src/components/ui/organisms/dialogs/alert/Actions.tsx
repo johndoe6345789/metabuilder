@@ -46,7 +46,15 @@ interface AlertDialogActionProps {
 
 const AlertDialogAction = forwardRef<HTMLButtonElement, AlertDialogActionProps>(
   (
-    { children = 'Confirm', onClick, color = 'primary', variant = 'contained', autoFocus = true, className, ...props },
+    {
+      children = 'Confirm',
+      onClick,
+      color = 'primary',
+      variant = 'contained',
+      autoFocus = true,
+      className,
+      ...props
+    },
     ref
   ) => {
     return (

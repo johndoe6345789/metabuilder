@@ -38,9 +38,7 @@ describe('findFirstFile', () => {
   })
 
   it('returns null when there are no files', () => {
-    const tree: FileNode[] = [
-      { id: 'folder', name: 'folder', type: 'folder', children: [] },
-    ]
+    const tree: FileNode[] = [{ id: 'folder', name: 'folder', type: 'folder', children: [] }]
 
     expect(findFirstFile(tree)).toBeNull()
   })

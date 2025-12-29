@@ -5,7 +5,11 @@ import { getUserByEmail, getUserByUsername } from '@/lib/db/auth'
 import { createSession } from '@/lib/db/sessions/create-session'
 import { DEFAULT_SESSION_TTL_MS } from '@/lib/auth/session-constants'
 import { setSessionCookie } from '@/lib/auth/set-session-cookie'
-import { createLoginSecurityContext, getLoginLockoutInfo, verifyCredentials } from '@/lib/security/secure-db'
+import {
+  createLoginSecurityContext,
+  getLoginLockoutInfo,
+  verifyCredentials,
+} from '@/lib/security/secure-db'
 
 interface LoginPayload {
   identifier?: string
@@ -23,18 +27,14 @@ export async function POST(request: Request) {
   }
 
   const identifier = [body.identifier, body.username, body.email]
-    .find((value) => typeof value === 'string' && value.trim().length > 0)
+    .find(value => typeof value === 'string' && value.trim().length > 0)
     ?.trim()
   const password = typeof body.password === 'string' ? body.password : ''
-  const tenantId = typeof body.tenantId === 'string' && body.tenantId.trim()
-    ? body.tenantId.trim()
-    : undefined
+  const tenantId =
+    typeof body.tenantId === 'string' && body.tenantId.trim() ? body.tenantId.trim() : undefined
 
   if (!identifier || !password) {
-    return NextResponse.json(
-      { error: 'Username/email and password are required' },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: 'Username/email and password are required' }, { status: 400 })
   }
 
   const lookupOptions = tenantId ? { tenantId } : undefined

@@ -4,7 +4,10 @@ import type { Workflow } from '../../types/level-types'
 /**
  * Update a workflow by ID
  */
-export async function updateWorkflow(workflowId: string, updates: Partial<Workflow>): Promise<void> {
+export async function updateWorkflow(
+  workflowId: string,
+  updates: Partial<Workflow>
+): Promise<void> {
   const adapter = getAdapter()
   const data: Record<string, unknown> = {}
   if (updates.name !== undefined) data.name = updates.name

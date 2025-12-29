@@ -1,5 +1,22 @@
-import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Stack } from '@/components/ui'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Typography } from '@/components/ui'
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Stack,
+} from '@/components/ui'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Typography,
+} from '@/components/ui'
 import type { Comment } from '@/lib/level-types'
 
 interface ModeratorLogListProps {
@@ -23,7 +40,9 @@ export function ModeratorLogList({
         <div className="flex items-center justify-between gap-4">
           <div>
             <CardTitle>Flagged comments</CardTitle>
-            <CardDescription>A curated view of the comments that triggered a signal</CardDescription>
+            <CardDescription>
+              A curated view of the comments that triggered a signal
+            </CardDescription>
           </div>
           <Button variant="ghost" size="sm" onClick={() => onNavigate(2)}>
             Go to user dashboard
@@ -48,8 +67,8 @@ export function ModeratorLogList({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {flaggedComments.map((comment) => {
-                const matches = flaggedTerms.filter((term) =>
+              {flaggedComments.map(comment => {
+                const matches = flaggedTerms.filter(term =>
                   comment.content.toLowerCase().includes(term)
                 )
 
@@ -59,7 +78,7 @@ export function ModeratorLogList({
                     <TableCell>{comment.content}</TableCell>
                     <TableCell>
                       <Stack direction="row" spacing={1} flexWrap="wrap">
-                        {matches.map((match) => (
+                        {matches.map(match => (
                           <Badge key={`${comment.id}-${match}`} variant="outline">
                             {match}
                           </Badge>

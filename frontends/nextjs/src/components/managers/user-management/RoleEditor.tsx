@@ -71,16 +71,18 @@ export function RoleEditor({
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <Label>Role</Label>
-          <Select value={role} onValueChange={(value) => onRoleChange(value as UserRole)}>
+          <Select value={role} onValueChange={value => onRoleChange(value as UserRole)}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Choose a role" />
             </SelectTrigger>
             <SelectContent>
-              {options.map((value) => (
+              {options.map(value => (
                 <SelectItem key={value} value={value}>
                   <div className="flex items-center justify-between gap-3">
                     <span>{roleLabel(value)}</span>
-                    <Badge variant={value === 'supergod' || value === 'god' ? 'default' : 'secondary'}>
+                    <Badge
+                      variant={value === 'supergod' || value === 'god' ? 'default' : 'secondary'}
+                    >
                       {value === 'public' ? 'Read only' : 'Level access'}
                     </Badge>
                   </div>
@@ -99,7 +101,7 @@ export function RoleEditor({
             <Badge variant="outline">{ROLE_INFO[role].highlights.length} capabilities</Badge>
           </div>
           <ul className="mt-3 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
-            {ROLE_INFO[role].highlights.map((item) => (
+            {ROLE_INFO[role].highlights.map(item => (
               <li key={item} className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                 <span>{item}</span>

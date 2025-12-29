@@ -28,18 +28,14 @@ const NavigationBrand = forwardRef<HTMLDivElement, NavigationBrandProps>(
 )
 NavigationBrand.displayName = 'NavigationBrand'
 
-const NavigationSeparator = forwardRef<HTMLHRElement, Record<string, never>>(
-  (props, ref) => {
-    return <Divider ref={ref} orientation="vertical" flexItem sx={{ mx: 1 }} {...props} />
-  }
-)
+const NavigationSeparator = forwardRef<HTMLHRElement, Record<string, never>>((props, ref) => {
+  return <Divider ref={ref} orientation="vertical" flexItem sx={{ mx: 1 }} {...props} />
+})
 NavigationSeparator.displayName = 'NavigationSeparator'
 
-const NavigationSpacer = forwardRef<HTMLDivElement, Record<string, never>>(
-  (props, ref) => {
-    return <Box ref={ref} sx={{ flexGrow: 1 }} {...props} />
-  }
-)
+const NavigationSpacer = forwardRef<HTMLDivElement, Record<string, never>>((props, ref) => {
+  return <Box ref={ref} sx={{ flexGrow: 1 }} {...props} />
+})
 NavigationSpacer.displayName = 'NavigationSpacer'
 
 export { NavigationBrand, NavigationSeparator, NavigationSpacer }

@@ -11,9 +11,13 @@ const getFieldValue = (block: LuaBlock, fieldName: string, fallback: string) => 
   return normalized.length > 0 ? normalized : fallback
 }
 
-const renderBlocks = (blocks: LuaBlock[], depth: number, renderBlock: (block: LuaBlock, depth: number) => string) =>
+const renderBlocks = (
+  blocks: LuaBlock[],
+  depth: number,
+  renderBlock: (block: LuaBlock, depth: number) => string
+) =>
   blocks
-    .map((block) => renderBlock(block, depth))
+    .map(block => renderBlock(block, depth))
     .filter(Boolean)
     .join('\n')
 
@@ -89,8 +93,8 @@ export const buildLuaFromBlocks = (blocks: LuaBlock[]) => {
 export const decodeBlocksMetadata = (code: string): LuaBlock[] | null => {
   const metadataLine = code
     .split('\n')
-    .map((line) => line.trim())
-    .find((line) => line.startsWith(BLOCKS_METADATA_PREFIX))
+    .map(line => line.trim())
+    .find(line => line.startsWith(BLOCKS_METADATA_PREFIX))
 
   if (!metadataLine) return null
 

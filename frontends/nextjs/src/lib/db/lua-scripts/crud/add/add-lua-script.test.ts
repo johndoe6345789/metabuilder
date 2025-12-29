@@ -21,7 +21,13 @@ describe('addLuaScript', () => {
     },
     {
       name: 'script with parameters',
-      script: { id: 'ls2', name: 'Calc', code: 'return a + b', parameters: [{ name: 'a' }, { name: 'b' }], returnType: 'number' },
+      script: {
+        id: 'ls2',
+        name: 'Calc',
+        code: 'return a + b',
+        parameters: [{ name: 'a' }, { name: 'b' }],
+        returnType: 'number',
+      },
     },
     {
       name: 'script with sandbox profile',
@@ -42,11 +48,14 @@ describe('addLuaScript', () => {
 
     const payload = mockCreate.mock.calls[0]?.[1] as Record<string, unknown>
 
-    expect(mockCreate).toHaveBeenCalledWith('LuaScript', expect.objectContaining({
-      id: script.id,
-      name: script.name,
-      code: script.code,
-    }))
+    expect(mockCreate).toHaveBeenCalledWith(
+      'LuaScript',
+      expect.objectContaining({
+        id: script.id,
+        name: script.name,
+        code: script.code,
+      })
+    )
 
     if (script.allowedGlobals) {
       expect(payload.allowedGlobals).toContain('math')

@@ -30,7 +30,11 @@
       "Bash(git restore:*)",
       "Bash(bunx playwright:*)",
       "Bash(timeout 30 bun run build:*)",
-      "Bash(bun run lint:fix:*)"
+      "Bash(bun run lint:fix:*)",
+      "Bash(bun run format:*)",
+      "Bash(while read file)",
+      "Bash(do eslint:*)",
+      "Bash(done)"
     ]
   }
 }

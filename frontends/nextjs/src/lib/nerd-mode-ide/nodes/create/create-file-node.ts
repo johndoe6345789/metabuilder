@@ -8,7 +8,11 @@ interface CreateFileNodeOptions {
   exportPath?: string
 }
 
-export function createFileNode({ name, content = '', exportPath }: CreateFileNodeOptions): FileNode {
+export function createFileNode({
+  name,
+  content = '',
+  exportPath,
+}: CreateFileNodeOptions): FileNode {
   return {
     id: createNodeId('file'),
     name,

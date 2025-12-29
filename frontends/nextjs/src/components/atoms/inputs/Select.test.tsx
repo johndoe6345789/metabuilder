@@ -12,21 +12,14 @@ describe('Select', () => {
   it.each([
     { options: mockOptions, placeholder: 'Choose option', fullWidth: true },
     { options: mockOptions, placeholder: undefined, fullWidth: false },
-  ])('renders with props %o', (props) => {
+  ])('renders with props %o', props => {
     render(<Select {...props} value="" onChange={() => {}} />)
     const select = screen.getByRole('combobox')
     expect(select).not.toBeNull()
   })
 
   it('shows placeholder when provided', () => {
-    render(
-      <Select 
-        options={mockOptions} 
-        placeholder="Select..."
-        value=""
-        onChange={() => {}}
-      />
-    )
+    render(<Select options={mockOptions} placeholder="Select..." value="" onChange={() => {}} />)
     const select = screen.getByRole('combobox')
     expect(select).not.toBeNull()
   })
@@ -38,14 +31,7 @@ describe('Select', () => {
   })
 
   it('shows error state', () => {
-    render(
-      <Select 
-        options={mockOptions} 
-        error 
-        value=""
-        onChange={() => {}}
-      />
-    )
+    render(<Select options={mockOptions} error value="" onChange={() => {}} />)
     const select = screen.getByRole('combobox')
     expect(select).not.toBeNull()
   })

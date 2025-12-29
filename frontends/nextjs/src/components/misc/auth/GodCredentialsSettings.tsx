@@ -56,7 +56,7 @@ export function GodCredentialsSettings() {
       const hours = Math.floor(diff / (60 * 60 * 1000))
       const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000))
       const seconds = Math.floor((diff % (60 * 1000)) / 1000)
-      
+
       if (hours > 0) {
         setTimeRemaining(`${hours}h ${minutes}m ${seconds}s`)
       } else {
@@ -66,9 +66,7 @@ export function GodCredentialsSettings() {
   }
 
   const handleSave = async () => {
-    const durationMs = unit === 'hours' 
-      ? duration * 60 * 60 * 1000 
-      : duration * 60 * 1000
+    const durationMs = unit === 'hours' ? duration * 60 * 60 * 1000 : duration * 60 * 1000
 
     if (durationMs < 60000) {
       toast.error('Duration must be at least 1 minute')

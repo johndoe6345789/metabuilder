@@ -36,7 +36,7 @@ function renderPropEditor(
       return (
         <Input
           value={String(value || '')}
-          onChange={(e) => setProps({ ...props, [propSchema.name]: e.target.value })}
+          onChange={e => setProps({ ...props, [propSchema.name]: e.target.value })}
           placeholder={String(propSchema.defaultValue || '')}
         />
       )
@@ -46,7 +46,7 @@ function renderPropEditor(
         <Input
           type="number"
           value={String(value || '')}
-          onChange={(e) => setProps({ ...props, [propSchema.name]: Number(e.target.value) })}
+          onChange={e => setProps({ ...props, [propSchema.name]: Number(e.target.value) })}
         />
       )
 
@@ -54,7 +54,7 @@ function renderPropEditor(
       return (
         <Switch
           checked={Boolean(value)}
-          onCheckedChange={(checked) => setProps({ ...props, [propSchema.name]: checked })}
+          onCheckedChange={checked => setProps({ ...props, [propSchema.name]: checked })}
         />
       )
 
@@ -62,7 +62,7 @@ function renderPropEditor(
       return (
         <Select
           value={String(value || propSchema.defaultValue || '')}
-          onValueChange={(val) => setProps({ ...props, [propSchema.name]: val })}
+          onValueChange={val => setProps({ ...props, [propSchema.name]: val })}
         >
           <SelectTrigger>
             <SelectValue />
@@ -81,7 +81,7 @@ function renderPropEditor(
       return (
         <Input
           value={String(value || '')}
-          onChange={(e) => setProps({ ...props, [propSchema.name]: e.target.value })}
+          onChange={e => setProps({ ...props, [propSchema.name]: e.target.value })}
         />
       )
   }
@@ -99,7 +99,7 @@ export function ComponentConfigFields({
 }: ComponentConfigFieldsProps) {
   return (
     <Tabs defaultValue="props" className="flex-1">
-      <TabsList className={nerdMode ? "grid w-full grid-cols-3" : "grid w-full grid-cols-2"}>
+      <TabsList className={nerdMode ? 'grid w-full grid-cols-3' : 'grid w-full grid-cols-2'}>
         <TabsTrigger value="props">Properties</TabsTrigger>
         <TabsTrigger value="styles">Styles</TabsTrigger>
         {nerdMode && <TabsTrigger value="events">Events</TabsTrigger>}
@@ -108,7 +108,7 @@ export function ComponentConfigFields({
       <ScrollArea className="h-[500px] mt-4">
         <TabsContent value="props" className="space-y-4 px-1">
           {componentDef?.propSchema && componentDef.propSchema.length > 0 ? (
-            componentDef.propSchema.map((propSchema) => (
+            componentDef.propSchema.map(propSchema => (
               <div key={propSchema.name} className="space-y-2">
                 <Label htmlFor={propSchema.name}>{propSchema.label}</Label>
                 {renderPropEditor(propSchema, props, setProps)}
@@ -124,14 +124,12 @@ export function ComponentConfigFields({
             <Card className="mt-6">
               <CardHeader>
                 <CardTitle className="text-sm">Custom Properties (JSON)</CardTitle>
-                <CardDescription className="text-xs">
-                  Add additional props as JSON
-                </CardDescription>
+                <CardDescription className="text-xs">Add additional props as JSON</CardDescription>
               </CardHeader>
               <CardContent>
                 <Textarea
                   value={JSON.stringify(props, null, 2)}
-                  onChange={(e) => {
+                  onChange={e => {
                     try {
                       setProps(JSON.parse(e.target.value))
                     } catch {
@@ -152,7 +150,7 @@ export function ComponentConfigFields({
             <Input
               id="className"
               value={String(props.className || '')}
-              onChange={(e) => setProps({ ...props, className: e.target.value })}
+              onChange={e => setProps({ ...props, className: e.target.value })}
               placeholder="p-4 bg-white rounded-lg"
             />
           </div>
@@ -168,7 +166,7 @@ export function ComponentConfigFields({
               <CardContent>
                 <Textarea
                   value={JSON.stringify(styles, null, 2)}
-                  onChange={(e) => {
+                  onChange={e => {
                     try {
                       setStyles(JSON.parse(e.target.value))
                     } catch {
@@ -189,18 +187,16 @@ export function ComponentConfigFields({
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm">Event Handlers</CardTitle>
-                <CardDescription className="text-xs">
-                  Map events to Lua script IDs
-                </CardDescription>
+                <CardDescription className="text-xs">Map events to Lua script IDs</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {['onClick', 'onChange', 'onSubmit', 'onFocus', 'onBlur'].map((eventName) => (
+                {['onClick', 'onChange', 'onSubmit', 'onFocus', 'onBlur'].map(eventName => (
                   <div key={eventName} className="space-y-2">
                     <Label htmlFor={eventName}>{eventName}</Label>
                     <Input
                       id={eventName}
                       value={events[eventName] || ''}
-                      onChange={(e) => setEvents({ ...events, [eventName]: e.target.value })}
+                      onChange={e => setEvents({ ...events, [eventName]: e.target.value })}
                       placeholder="lua_script_id"
                     />
                   </div>
@@ -218,7 +214,7 @@ export function ComponentConfigFields({
               <CardContent>
                 <Textarea
                   value={JSON.stringify(events, null, 2)}
-                  onChange={(e) => {
+                  onChange={e => {
                     try {
                       setEvents(JSON.parse(e.target.value))
                     } catch {

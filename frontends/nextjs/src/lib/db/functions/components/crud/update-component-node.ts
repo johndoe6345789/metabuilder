@@ -11,7 +11,10 @@ import type { ComponentNode } from './types'
  * @param nodeId - ID of node to update
  * @param updates - Partial node with updates
  */
-export const updateComponentNode = async (nodeId: string, updates: Partial<ComponentNode>): Promise<void> => {
+export const updateComponentNode = async (
+  nodeId: string,
+  updates: Partial<ComponentNode>
+): Promise<void> => {
   const data: any = {}
   if (updates.type !== undefined) data.type = updates.type
   if (updates.parentId !== undefined) data.parentId = updates.parentId

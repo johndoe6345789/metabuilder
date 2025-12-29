@@ -6,7 +6,13 @@ import { Badge } from '@/components/ui'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import type { ModelSchema, SchemaConfig } from '@/lib/schema-types'
-import { getRecordsKey, getFieldLabel, sortRecords, filterRecords, findModel } from '@/lib/schema-utils'
+import {
+  getRecordsKey,
+  getFieldLabel,
+  sortRecords,
+  filterRecords,
+  findModel,
+} from '@/lib/schema-utils'
 import { RecordForm } from './RecordForm'
 import { Plus, Pencil, Trash, MagnifyingGlass, ArrowUp, ArrowDown } from '@phosphor-icons/react'
 import { toast } from 'sonner'
@@ -23,13 +29,19 @@ function RelationCellValue({ value, relatedModel, currentApp, schema }: Relation
   const relatedRecordsKey = getRecordsKey(currentApp, relatedModel)
   const [relatedRecords] = useKV<any[]>(relatedRecordsKey, [])
   const relatedRecord = relatedRecords?.find((r: any) => r.id === value)
-  
-  if (!relatedRecord) return <span className="font-mono text-sm text-muted-foreground">{value}</span>
-  
+
+  if (!relatedRecord)
+    return <span className="font-mono text-sm text-muted-foreground">{value}</span>
+
   const relatedModelDef = findModel(schema, currentApp, relatedModel)
-  const displayField = relatedModelDef?.fields.find(f => f.name === 'name' || f.name === 'title')?.name || 'id'
-  
-  return <Badge variant="outline" className="font-normal">{relatedRecord[displayField]}</Badge>
+  const displayField =
+    relatedModelDef?.fields.find(f => f.name === 'name' || f.name === 'title')?.name || 'id'
+
+  return (
+    <Badge variant="outline" className="font-normal">
+      {relatedRecord[displayField]}
+    </Badge>
+  )
 }
 
 interface ModelListViewProps {
@@ -41,7 +53,9 @@ interface ModelListViewProps {
 export function ModelListView({ model, schema, currentApp }: ModelListViewProps) {
   const [records, setRecords] = useKV<any[]>(getRecordsKey(currentApp, model.name), [])
   const [searchTerm, setSearchTerm] = useState('')
-  const [sortField, setSortField] = useState<string | null>(model.ordering?.[0]?.replace('-', '') || null)
+  const [sortField, setSortField] = useState<string | null>(
+    model.ordering?.[0]?.replace('-', '') || null
+  )
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>(
     model.ordering?.[0]?.startsWith('-') ? 'desc' : 'asc'
   )
@@ -49,19 +63,26 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
   const [formOpen, setFormOpen] = useState(false)
   const [editingRecord, setEditingRecord] = useState<any | null>(null)
 
-  const displayFields = model.listDisplay || model.fields.filter(f => f.listDisplay !== false).slice(0, 5).map(f => f.name)
+  const displayFields =
+    model.listDisplay ||
+    model.fields
+      .filter(f => f.listDisplay !== false)
+      .slice(0, 5)
+      .map(f => f.name)
   const searchFields = model.searchFields || model.fields.filter(f => f.searchable).map(f => f.name)
-  const filterFields = model.listFilter || model.fields.filter(f => f.type === 'select' || f.type === 'boolean').map(f => f.name)
+  const filterFields =
+    model.listFilter ||
+    model.fields.filter(f => f.type === 'select' || f.type === 'boolean').map(f => f.name)
 
   const filteredAndSortedRecords = useMemo(() => {
     if (!records) return []
-    
+
     let result = filterRecords(records, searchTerm, searchFields, filters)
-    
+
     if (sortField) {
       result = sortRecords(result, sortField, sortDirection)
     }
-    
+
     return result
   }, [records, searchTerm, searchFields, filters, sortField, sortDirection])
 
@@ -85,16 +106,16 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
   }
 
   const handleDelete = (recordId: string) => {
-    setRecords((current) => (current || []).filter((r) => r.id !== recordId))
+    setRecords(current => (current || []).filter(r => r.id !== recordId))
     toast.success('Record deleted')
   }
 
   const handleSave = (record: any) => {
     if (editingRecord) {
-      setRecords((current) => (current || []).map((r) => (r.id === record.id ? record : r)))
+      setRecords(current => (current || []).map(r => (r.id === record.id ? record : r)))
       toast.success('Record updated')
     } else {
-      setRecords((current) => [...(current || []), record])
+      setRecords(current => [...(current || []), record])
       toast.success('Record created')
     }
   }
@@ -116,16 +137,16 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
         ) : (
           <Badge variant="outline">No</Badge>
         )
-      
+
       case 'date':
       case 'datetime':
         return new Date(value).toLocaleString()
-      
+
       case 'select': {
         const choice = field.choices?.find(c => c.value === value)
         return <Badge variant="secondary">{choice?.label || value}</Badge>
       }
-      
+
       case 'relation':
         return (
           <RelationCellValue
@@ -135,16 +156,16 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
             schema={schema}
           />
         )
-      
+
       case 'json':
         return <code className="text-xs bg-muted px-2 py-1 rounded">{JSON.stringify(value)}</code>
-      
+
       case 'number':
         return <span className="font-mono">{value}</span>
-      
+
       case 'text':
         return <span className="truncate max-w-xs block">{String(value).substring(0, 100)}</span>
-      
+
       default:
         return String(value)
     }
@@ -161,11 +182,11 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
             <Input
               placeholder={`Search ${searchFields.join(', ')}...`}
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
               className="pl-10"
             />
           </div>
-          
+
           {filterFields.map(fieldName => {
             const field = model.fields.find(f => f.name === fieldName)
             if (!field) return null
@@ -175,7 +196,9 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
                 <Select
                   key={fieldName}
                   value={filters[fieldName] || '__all__'}
-                  onValueChange={(value) => setFilters({ ...filters, [fieldName]: value === '__all__' ? null : value })}
+                  onValueChange={value =>
+                    setFilters({ ...filters, [fieldName]: value === '__all__' ? null : value })
+                  }
                 >
                   <SelectTrigger className="w-40">
                     <SelectValue placeholder={getFieldLabel(field)} />
@@ -196,8 +219,19 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
               return (
                 <Select
                   key={fieldName}
-                  value={filters[fieldName] === true ? 'true' : filters[fieldName] === false ? 'false' : '__all__'}
-                  onValueChange={(value) => setFilters({ ...filters, [fieldName]: value === 'true' ? true : value === 'false' ? false : null })}
+                  value={
+                    filters[fieldName] === true
+                      ? 'true'
+                      : filters[fieldName] === false
+                        ? 'false'
+                        : '__all__'
+                  }
+                  onValueChange={value =>
+                    setFilters({
+                      ...filters,
+                      [fieldName]: value === 'true' ? true : value === 'false' ? false : null,
+                    })
+                  }
                 >
                   <SelectTrigger className="w-40">
                     <SelectValue placeholder={getFieldLabel(field)} />
@@ -214,8 +248,11 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
             return null
           })}
         </div>
-        
-        <Button onClick={handleCreate} className="bg-accent text-accent-foreground hover:bg-accent/90">
+
+        <Button
+          onClick={handleCreate}
+          className="bg-accent text-accent-foreground hover:bg-accent/90"
+        >
           <Plus className="mr-2" weight="bold" />
           Create New
         </Button>
@@ -241,9 +278,9 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
                 {displayFields.map(fieldName => {
                   const field = model.fields.find(f => f.name === fieldName)
                   if (!field) return null
-                  
+
                   const isSortable = field.sortable !== false
-                  
+
                   return (
                     <TableHead
                       key={fieldName}
@@ -254,9 +291,13 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
                         <span className="uppercase text-xs font-semibold tracking-wider">
                           {getFieldLabel(field)}
                         </span>
-                        {isSortable && sortField === fieldName && (
-                          sortDirection === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />
-                        )}
+                        {isSortable &&
+                          sortField === fieldName &&
+                          (sortDirection === 'asc' ? (
+                            <ArrowUp size={14} />
+                          ) : (
+                            <ArrowDown size={14} />
+                          ))}
                       </div>
                     </TableHead>
                   )
@@ -280,11 +321,7 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
                   ))}
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => handleEdit(record)}
-                      >
+                      <Button size="sm" variant="ghost" onClick={() => handleEdit(record)}>
                         <Pencil size={16} />
                       </Button>
                       <Button

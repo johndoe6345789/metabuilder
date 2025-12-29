@@ -14,7 +14,12 @@ interface PropertyInspectorProps {
   onCodeEdit: () => void
 }
 
-export function PropertyInspector({ component, onUpdate, onDelete, onCodeEdit }: PropertyInspectorProps) {
+export function PropertyInspector({
+  component,
+  onUpdate,
+  onDelete,
+  onCodeEdit,
+}: PropertyInspectorProps) {
   const [cssBuilderOpen, setCssBuilderOpen] = useState(false)
   const [cssBuilderPropName, setCssBuilderPropName] = useState('')
   const [dynamicDropdowns, setDynamicDropdowns] = useState<DropdownConfig[]>([])
@@ -74,11 +79,7 @@ export function PropertyInspector({ component, onUpdate, onDelete, onCodeEdit }:
       <Separator />
 
       <div className="p-4">
-        <Button
-          variant="destructive"
-          className="w-full"
-          onClick={() => onDelete(component.id)}
-        >
+        <Button variant="destructive" className="w-full" onClick={() => onDelete(component.id)}>
           <Trash className="mr-2" />
           Delete Component
         </Button>

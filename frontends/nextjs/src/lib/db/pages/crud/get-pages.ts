@@ -7,7 +7,7 @@ import type { PageConfig } from '../../types/level-types'
 export async function getPages(): Promise<PageConfig[]> {
   const adapter = getAdapter()
   const result = await adapter.list('PageConfig')
-  return (result.data as any[]).map((p) => ({
+  return (result.data as any[]).map(p => ({
     id: p.id,
     path: p.path,
     title: p.title,

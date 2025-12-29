@@ -36,7 +36,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           },
           '&.Mui-focused': {
             borderColor: error ? 'error.main' : 'primary.main',
-            boxShadow: (theme) => 
+            boxShadow: theme =>
               `0 0 0 2px ${error ? theme.palette.error.main : theme.palette.primary.main}25`,
           },
           '&.Mui-disabled': {

@@ -27,14 +27,14 @@ export async function initializePackageSystem(): Promise<void> {
 
     console.log(
       `✅ Loaded ${seedData.packages.length} modular packages:`,
-      seedData.packages.map((p) => p.name).join(', ')
+      seedData.packages.map(p => p.name).join(', ')
     )
   } catch (error) {
     console.warn('⚠️ Could not load modular packages:', error)
   }
 
   // Load legacy packages from catalog for backward compatibility
-  Object.values(PACKAGE_CATALOG).forEach((pkg) => {
+  Object.values(PACKAGE_CATALOG).forEach(pkg => {
     const packageData = pkg()
 
     if (packageData.content) {

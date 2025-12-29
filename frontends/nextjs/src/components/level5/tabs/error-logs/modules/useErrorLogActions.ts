@@ -26,7 +26,7 @@ export const useErrorLogActions = ({ onRefresh, username }: ErrorLogActionsConfi
         toast.error('Failed to update error log')
       }
     },
-    [onRefresh, username],
+    [onRefresh, username]
   )
 
   const handleDeleteLog = useCallback(
@@ -39,7 +39,7 @@ export const useErrorLogActions = ({ onRefresh, username }: ErrorLogActionsConfi
         toast.error('Failed to delete error log')
       }
     },
-    [onRefresh],
+    [onRefresh]
   )
 
   const handleClearLogs = useCallback(async () => {

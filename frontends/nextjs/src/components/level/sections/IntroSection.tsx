@@ -9,7 +9,14 @@ interface IntroSectionProps {
   id?: string
 }
 
-export function IntroSection({ title, description, eyebrow, actions, children, id }: IntroSectionProps) {
+export function IntroSection({
+  title,
+  description,
+  eyebrow,
+  actions,
+  children,
+  id,
+}: IntroSectionProps) {
   return (
     <section id={id} className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">

@@ -12,15 +12,19 @@ interface CommandResultsProps {
   onSelect?: (item: CommandItem) => void
 }
 
-const CommandResults = ({ groups, emptyMessage = 'No results found.', onSelect }: CommandResultsProps) => {
-  const hasResults = groups.some((group) => group.items.length > 0)
+const CommandResults = ({
+  groups,
+  emptyMessage = 'No results found.',
+  onSelect,
+}: CommandResultsProps) => {
+  const hasResults = groups.some(group => group.items.length > 0)
 
   return (
     <CommandDialog.List>
       {hasResults ? (
         groups.map((group, index) => (
           <CommandDialog.Group key={group.heading ?? index} heading={group.heading}>
-            {group.items.map((item) => (
+            {group.items.map(item => (
               <CommandDialog.Item
                 key={item.id}
                 icon={item.icon}

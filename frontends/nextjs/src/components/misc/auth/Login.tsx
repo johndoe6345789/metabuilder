@@ -17,14 +17,14 @@ export function Login({ onLogin }: LoginProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!username || !password) {
       toast.error('Please enter both username and password')
       return
     }
 
     setIsLoading(true)
-    
+
     setTimeout(() => {
       onLogin(username, password)
       setIsLoading(false)
@@ -41,9 +41,7 @@ export function Login({ onLogin }: LoginProps) {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold">GUI Builder</CardTitle>
-          <CardDescription>
-            Sign in to access the visual component builder
-          </CardDescription>
+          <CardDescription>Sign in to access the visual component builder</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -54,7 +52,7 @@ export function Login({ onLogin }: LoginProps) {
                 type="text"
                 placeholder="admin"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={e => setUsername(e.target.value)}
                 disabled={isLoading}
               />
             </div>
@@ -65,12 +63,12 @@ export function Login({ onLogin }: LoginProps) {
                 type="password"
                 placeholder="Enter password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 disabled={isLoading}
               />
             </div>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-full bg-primary hover:bg-primary/90"
               disabled={isLoading}
             >
@@ -79,7 +77,8 @@ export function Login({ onLogin }: LoginProps) {
           </form>
           <div className="mt-6 p-3 bg-muted rounded-md">
             <p className="text-xs text-muted-foreground text-center">
-              Default credentials: <span className="font-mono font-semibold">admin</span> / <span className="font-mono font-semibold">admin</span>
+              Default credentials: <span className="font-mono font-semibold">admin</span> /{' '}
+              <span className="font-mono font-semibold">admin</span>
             </p>
           </div>
         </CardContent>

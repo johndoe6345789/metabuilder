@@ -28,19 +28,19 @@ export const executeLuaCode = async (
   try {
     // Create context table
     lua.lua_createtable(L, 0, 3)
-    
+
     if (context.data !== undefined) {
       lua.lua_pushstring(L, fengari.to_luastring('data'))
       pushToLua(L, context.data)
       lua.lua_settable(L, -3)
     }
-    
+
     if (context.user !== undefined) {
       lua.lua_pushstring(L, fengari.to_luastring('user'))
       pushToLua(L, context.user)
       lua.lua_settable(L, -3)
     }
-    
+
     const kvMethods: any = {}
     if (context.kv) {
       kvMethods.get = context.kv.get
@@ -49,12 +49,12 @@ export const executeLuaCode = async (
     lua.lua_pushstring(L, fengari.to_luastring('kv'))
     pushToLua(L, kvMethods)
     lua.lua_settable(L, -3)
-    
+
     lua.lua_setglobal(L, fengari.to_luastring('context'))
-    
+
     // Load and execute code
     const loadResult = lauxlib.luaL_loadstring(L, fengari.to_luastring(code))
-    
+
     if (loadResult !== lua.LUA_OK) {
       const errorMsg = lua.lua_tojsstring(L, -1)
       lua.lua_pop(L, 1)
@@ -64,9 +64,9 @@ export const executeLuaCode = async (
         logs,
       }
     }
-    
+
     const execResult = lua.lua_pcall(L, 0, lua.LUA_MULTRET, 0)
-    
+
     if (execResult !== lua.LUA_OK) {
       const errorMsg = lua.lua_tojsstring(L, -1)
       lua.lua_pop(L, 1)
@@ -76,11 +76,11 @@ export const executeLuaCode = async (
         logs,
       }
     }
-    
+
     // Get results
     const nresults = lua.lua_gettop(L)
     let result: any = null
-    
+
     if (nresults > 0) {
       if (nresults === 1) {
         result = fromLua(L, -1)
@@ -92,7 +92,7 @@ export const executeLuaCode = async (
       }
       lua.lua_pop(L, nresults)
     }
-    
+
     return {
       success: true,
       result,

@@ -56,7 +56,7 @@ export function NerdModeGitPanel({
               id="commit-message"
               placeholder="Update files"
               value={gitCommitMessage}
-              onChange={(e) => onCommitMessageChange(e.target.value)}
+              onChange={e => onCommitMessageChange(e.target.value)}
               className="mt-1"
             />
           </div>

@@ -19,7 +19,7 @@ export function AuditLogViewer({ user }: AuditLogViewerProps) {
     total: 0,
     successful: 0,
     failed: 0,
-    rateLimit: 0
+    rateLimit: 0,
   })
 
   const ctx: SecurityContext = { user }
@@ -46,26 +46,34 @@ export function AuditLogViewer({ user }: AuditLogViewerProps) {
       total: logs.length,
       successful: logs.filter(l => l.success).length,
       failed: logs.filter(l => !l.success).length,
-      rateLimit: logs.filter(l => l.errorMessage?.includes('Rate limit')).length
+      rateLimit: logs.filter(l => l.errorMessage?.includes('Rate limit')).length,
     }
     setStats(stats)
   }
 
   const getOperationColor = (operation: string) => {
     switch (operation) {
-      case 'CREATE': return 'bg-green-500'
-      case 'READ': return 'bg-blue-500'
-      case 'UPDATE': return 'bg-yellow-500'
-      case 'DELETE': return 'bg-red-500'
-      default: return 'bg-gray-500'
+      case 'CREATE':
+        return 'bg-green-500'
+      case 'READ':
+        return 'bg-blue-500'
+      case 'UPDATE':
+        return 'bg-yellow-500'
+      case 'DELETE':
+        return 'bg-red-500'
+      default:
+        return 'bg-gray-500'
     }
   }
 
   const getResourceIcon = (resource: string) => {
     switch (resource) {
-      case 'user': return <User className="w-4 h-4" />
-      case 'credential': return <ShieldCheck className="w-4 h-4" />
-      default: return <ChartLine className="w-4 h-4" />
+      case 'user':
+        return <User className="w-4 h-4" />
+      case 'credential':
+        return <ShieldCheck className="w-4 h-4" />
+      default:
+        return <ChartLine className="w-4 h-4" />
     }
   }
 
@@ -126,7 +134,7 @@ export function AuditLogViewer({ user }: AuditLogViewerProps) {
         <CardContent>
           <ScrollArea className="h-[600px] pr-4">
             <div className="space-y-3">
-              {logs.map((log) => (
+              {logs.map(log => (
                 <div
                   key={log.id}
                   className={`flex items-start gap-3 p-3 rounded-lg border ${
@@ -136,23 +144,19 @@ export function AuditLogViewer({ user }: AuditLogViewerProps) {
                   <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted">
                     {getResourceIcon(log.resource)}
                   </div>
-                  
+
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center gap-2">
-                      <Badge className={getOperationColor(log.operation)}>
-                        {log.operation}
-                      </Badge>
+                      <Badge className={getOperationColor(log.operation)}>{log.operation}</Badge>
                       <span className="text-sm font-medium">{log.resource}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {log.resourceId}
-                      </span>
+                      <span className="text-xs text-muted-foreground">{log.resourceId}</span>
                       {!log.success && (
                         <Badge variant="destructive" className="ml-auto">
                           Failed
                         </Badge>
                       )}
                     </div>
-                    
+
                     <div className="text-xs text-muted-foreground">
                       <span className="font-medium">{log.username}</span>
                       <span className="mx-2">•</span>
@@ -164,20 +168,16 @@ export function AuditLogViewer({ user }: AuditLogViewerProps) {
                         </>
                       )}
                     </div>
-                    
+
                     {log.errorMessage && (
-                      <div className="text-xs text-destructive">
-                        {log.errorMessage}
-                      </div>
+                      <div className="text-xs text-destructive">{log.errorMessage}</div>
                     )}
                   </div>
                 </div>
               ))}
-              
+
               {logs.length === 0 && !loading && (
-                <div className="py-12 text-center text-muted-foreground">
-                  No audit logs found
-                </div>
+                <div className="py-12 text-center text-muted-foreground">No audit logs found</div>
               )}
             </div>
           </ScrollArea>

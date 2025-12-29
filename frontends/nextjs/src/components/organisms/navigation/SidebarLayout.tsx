@@ -78,9 +78,4 @@ const SidebarInset = forwardRef<HTMLDivElement, { children: ReactNode; className
 )
 SidebarInset.displayName = 'SidebarInset'
 
-export {
-  SidebarHeader,
-  SidebarContent,
-  SidebarFooter,
-  SidebarInset,
-}
+export { SidebarHeader, SidebarContent, SidebarFooter, SidebarInset }

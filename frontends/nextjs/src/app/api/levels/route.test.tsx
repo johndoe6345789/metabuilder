@@ -24,7 +24,7 @@ describe('GET /api/levels', () => {
     const payload = await response.json()
 
     expect(payload.levels.length).toBeGreaterThan(0)
-    expect(payload.levels.some((level) => ['admin', 'user'].includes(level.key))).toBe(true)
+    expect(payload.levels.some(level => ['admin', 'user'].includes(level.key))).toBe(true)
   })
 
   it('accepts level feedback via POST', async () => {

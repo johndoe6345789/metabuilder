@@ -6,7 +6,11 @@ import { ChatWindow } from './irc/ChatWindow'
 import { useChatInput, useFormattedTimes } from './irc/hooks'
 import type { ChatMessage } from './irc/types'
 
-export function IRCWebchatDeclarative({ user, channelName = 'general', onClose }: IRCWebchatDeclarativeProps) {
+export function IRCWebchatDeclarative({
+  user,
+  channelName = 'general',
+  onClose,
+}: IRCWebchatDeclarativeProps) {
   const [messages, setMessages] = useKV<ChatMessage[]>(`chat_${channelName}`, [])
   const [onlineUsers, setOnlineUsers] = useKV<string[]>(`chat_${channelName}_users`, [])
   const [showSettings, setShowSettings] = useState(false)
@@ -22,7 +26,7 @@ export function IRCWebchatDeclarative({ user, channelName = 'general', onClose }
   }, [])
 
   const addUserToChannel = async () => {
-    setOnlineUsers((current) => {
+    setOnlineUsers(current => {
       if (!current) return [user.username]
       if (current.includes(user.username)) return current
       return [...current, user.username]
@@ -36,11 +40,11 @@ export function IRCWebchatDeclarative({ user, channelName = 'general', onClose }
       ])
 
       if (joinMsg) {
-        setMessages((msgs) => [...(msgs || []), joinMsg])
+        setMessages(msgs => [...(msgs || []), joinMsg])
       }
     } catch (error) {
       console.error('Error executing user join script:', error)
-      setMessages((msgs) => [
+      setMessages(msgs => [
         ...(msgs || []),
         {
           id: `msg_${Date.now()}_${Math.random()}`,
@@ -55,9 +59,9 @@ export function IRCWebchatDeclarative({ user, channelName = 'general', onClose }
   }
 
   const removeUserFromChannel = async () => {
-    setOnlineUsers((current) => {
+    setOnlineUsers(current => {
       if (!current) return []
-      return current.filter((u) => u !== user.username)
+      return current.filter(u => u !== user.username)
     })
 
     try {
@@ -68,11 +72,11 @@ export function IRCWebchatDeclarative({ user, channelName = 'general', onClose }
       ])
 
       if (leaveMsg) {
-        setMessages((msgs) => [...(msgs || []), leaveMsg])
+        setMessages(msgs => [...(msgs || []), leaveMsg])
       }
     } catch (error) {
       console.error('Error executing user leave script:', error)
-      setMessages((msgs) => [
+      setMessages(msgs => [
         ...(msgs || []),
         {
           id: `msg_${Date.now()}_${Math.random()}`,
@@ -102,7 +106,7 @@ export function IRCWebchatDeclarative({ user, channelName = 'general', onClose }
         ])
 
         if (newMessage) {
-          setMessages((current) => [...(current || []), newMessage])
+          setMessages(current => [...(current || []), newMessage])
         }
       } catch (error) {
         console.error('Error executing send message script:', error)
@@ -114,7 +118,7 @@ export function IRCWebchatDeclarative({ user, channelName = 'general', onClose }
           timestamp: Date.now(),
           type: 'message',
         }
-        setMessages((current) => [...(current || []), fallbackMessage])
+        setMessages(current => [...(current || []), fallbackMessage])
       }
     }
 
@@ -134,7 +138,7 @@ export function IRCWebchatDeclarative({ user, channelName = 'general', onClose }
         if (response.message === 'CLEAR_MESSAGES' && response.type === 'command') {
           setMessages([])
         } else {
-          setMessages((current) => [...(current || []), response])
+          setMessages(current => [...(current || []), response])
         }
       }
     } catch (error) {
@@ -151,8 +155,7 @@ export function IRCWebchatDeclarative({ user, channelName = 'general', onClose }
         type: 'system',
       }
 
-      setMessages((current) => [...(current || []), systemMessage])
+      setMessages(current => [...(current || []), systemMessage])
     }
   }
-
-  }
+}

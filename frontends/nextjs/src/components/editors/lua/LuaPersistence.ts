@@ -17,7 +17,7 @@ export const useLuaPersistence = (
     scripts.length > 0 ? scripts[0].id : null
   )
 
-  const currentScript = scripts.find((script) => script.id === selectedScript) || null
+  const currentScript = scripts.find(script => script.id === selectedScript) || null
 
   const handleAddScript = () => {
     const newScript = createDefaultScript()
@@ -27,7 +27,7 @@ export const useLuaPersistence = (
   }
 
   const handleDeleteScript = (scriptId: string) => {
-    onScriptsChange(scripts.filter((script) => script.id !== scriptId))
+    onScriptsChange(scripts.filter(script => script.id !== scriptId))
     if (selectedScript === scriptId) {
       setSelectedScript(scripts.length > 1 ? scripts[0].id : null)
     }
@@ -38,9 +38,7 @@ export const useLuaPersistence = (
     if (!currentScript) return
 
     onScriptsChange(
-      scripts.map((script) =>
-        script.id === selectedScript ? { ...script, ...updates } : script
-      )
+      scripts.map(script => (script.id === selectedScript ? { ...script, ...updates } : script))
     )
   }
 

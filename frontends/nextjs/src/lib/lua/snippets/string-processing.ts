@@ -7,9 +7,7 @@ export const STRING_PROCESSING_SNIPPETS: LuaSnippet[] = [
     description: 'Convert text to URL-friendly slug',
     category: 'String Processing',
     tags: ['string', 'slug', 'url'],
-    parameters: [
-      { name: 'text', type: 'string', description: 'Text to slugify' }
-    ],
+    parameters: [{ name: 'text', type: 'string', description: 'Text to slugify' }],
     code: `local text = context.data.text or ""
 
 local slug = string.lower(text)
@@ -22,7 +20,7 @@ slug = string.gsub(slug, "%-+$", "")
 return {
   original = text,
   slug = slug
-}`
+}`,
   },
   {
     id: 'string_truncate',
@@ -32,7 +30,7 @@ return {
     tags: ['string', 'truncate', 'ellipsis'],
     parameters: [
       { name: 'text', type: 'string', description: 'Text to truncate' },
-      { name: 'maxLength', type: 'number', description: 'Maximum length' }
+      { name: 'maxLength', type: 'number', description: 'Maximum length' },
     ],
     code: `local text = context.data.text or ""
 local maxLength = context.data.maxLength or 50
@@ -50,7 +48,7 @@ return {
   truncated = true,
   text = truncated,
   originalLength = string.len(text)
-}`
+}`,
   },
   {
     id: 'string_extract_hashtags',
@@ -58,9 +56,7 @@ return {
     description: 'Find all hashtags in text',
     category: 'String Processing',
     tags: ['string', 'parse', 'hashtags'],
-    parameters: [
-      { name: 'text', type: 'string', description: 'Text containing hashtags' }
-    ],
+    parameters: [{ name: 'text', type: 'string', description: 'Text containing hashtags' }],
     code: `local text = context.data.text or ""
 local hashtags = {}
 
@@ -72,7 +68,7 @@ return {
   text = text,
   hashtags = hashtags,
   count = #hashtags
-}`
+}`,
   },
   {
     id: 'string_word_count',
@@ -80,9 +76,7 @@ return {
     description: 'Count words and characters in text',
     category: 'String Processing',
     tags: ['string', 'count', 'statistics'],
-    parameters: [
-      { name: 'text', type: 'string', description: 'Text to analyze' }
-    ],
+    parameters: [{ name: 'text', type: 'string', description: 'Text to analyze' }],
     code: `local text = context.data.text or ""
 
 local charCount = string.len(text)
@@ -104,6 +98,6 @@ return {
   words = wordCount,
   sentences = sentences,
   avgWordLength = wordCount > 0 and charCount / wordCount or 0
-}`
-  }
+}`,
+  },
 ]

@@ -2,7 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { ArrowsLeftRight } from '@phosphor-icons/react'
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Separator } from '@/components/ui'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Separator,
+} from '@/components/ui'
 import type { PowerTransferRequest, User } from '@/lib/level-types'
 import { fetchPowerTransferRequests } from '@/lib/api/power-transfers'
 import { CriticalActionNotice, TransferHistory, UserSelectionList } from './sections'
@@ -25,7 +33,7 @@ export function PowerTransferTab({
   const [isLoadingRequests, setIsLoadingRequests] = useState(true)
   const [requestError, setRequestError] = useState<string | null>(null)
 
-  const highlightedUsers = allUsers.filter((u) => u.id !== currentUser.id && u.role !== 'supergod')
+  const highlightedUsers = allUsers.filter(u => u.id !== currentUser.id && u.role !== 'supergod')
 
   useEffect(() => {
     let isActive = true
@@ -58,7 +66,7 @@ export function PowerTransferTab({
   }, [refreshSignal])
 
   const getUserLabel = (userId: string) => {
-    const user = allUsers.find((u) => u.id === userId)
+    const user = allUsers.find(u => u.id === userId)
     return user ? user.username : userId
   }
 

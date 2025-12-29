@@ -15,7 +15,12 @@ interface CssClassBuilderProps {
   onSave: (classes: string) => void
 }
 
-export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: CssClassBuilderProps) {
+export function CssClassBuilder({
+  open,
+  onClose,
+  initialValue = '',
+  onSave,
+}: CssClassBuilderProps) {
   const {
     categories,
     filteredCategories,
@@ -38,7 +43,8 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
 
   const normalizedSearch = searchQuery.trim()
   const hasNoCategories = filteredCategories.length === 0 && categories.length === 0
-  const hasNoSearchResults = filteredCategories.length === 0 && categories.length > 0 && normalizedSearch
+  const hasNoSearchResults =
+    filteredCategories.length === 0 && categories.length > 0 && normalizedSearch
 
   const handleSave = () => {
     onSave(selectedClasses.join(' '))
@@ -57,7 +63,7 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
             <Input
               placeholder="Search classes..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               className="flex-1"
             />
             {searchQuery && (
@@ -78,14 +84,16 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
               <div className="flex items-center justify-between">
                 <Label className="text-xs uppercase tracking-wider">Selected Classes</Label>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">{selectedClasses.length} selected</span>
+                  <span className="text-xs text-muted-foreground">
+                    {selectedClasses.length} selected
+                  </span>
                   <Button size="sm" variant="ghost" onClick={clearSelectedClasses}>
                     Clear
                   </Button>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
-                {selectedClasses.map((cls) => (
+                {selectedClasses.map(cls => (
                   <Badge key={cls} variant="secondary" className="gap-2">
                     {cls}
                     <button onClick={() => toggleClass(cls)} className="hover:text-destructive">
@@ -94,7 +102,9 @@ export function CssClassBuilder({ open, onClose, initialValue = '', onSave }: Cs
                   </Badge>
                 ))}
               </div>
-              <div className="rounded border bg-background p-2 font-mono text-sm">{selectedClasses.join(' ')}</div>
+              <div className="rounded border bg-background p-2 font-mono text-sm">
+                {selectedClasses.join(' ')}
+              </div>
             </div>
           ) : (
             <div className="p-4 border rounded-lg bg-muted/30 text-sm text-muted-foreground">

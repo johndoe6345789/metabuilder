@@ -14,7 +14,10 @@ import {
 } from '@/components/ui'
 import type { PowerTransferRequest, User } from '@/lib/level-types'
 
-const STATUS_VARIANTS: Record<PowerTransferRequest['status'], 'default' | 'secondary' | 'destructive'> = {
+const STATUS_VARIANTS: Record<
+  PowerTransferRequest['status'],
+  'default' | 'secondary' | 'destructive'
+> = {
   accepted: 'default',
   pending: 'secondary',
   rejected: 'destructive',
@@ -40,8 +43,8 @@ export function CriticalActionNotice() {
         <div>
           <h4 className="font-semibold text-amber-200 mb-1">Critical Action</h4>
           <p className="text-sm text-amber-300/80">
-            This action cannot be undone. Only one Super God can exist at a time. After transfer, you
-            will have God-level access only.
+            This action cannot be undone. Only one Super God can exist at a time. After transfer,
+            you will have God-level access only.
           </p>
         </div>
       </div>
@@ -61,7 +64,7 @@ export function UserSelectionList({ users, selectedUserId, onSelect }: UserSelec
       <h4 className="font-semibold text-white">Select User to Transfer Power To:</h4>
       <ScrollArea className="h-[300px]">
         <div className="space-y-2">
-          {users.map((user) => (
+          {users.map(user => (
             <Card
               key={user.id}
               className={`cursor-pointer transition-all ${
@@ -97,7 +100,12 @@ interface TransferHistoryProps {
   requestError: string | null
 }
 
-export function TransferHistory({ requests, getUserLabel, isLoading, requestError }: TransferHistoryProps) {
+export function TransferHistory({
+  requests,
+  getUserLabel,
+  isLoading,
+  requestError,
+}: TransferHistoryProps) {
   const sortedRequests = [...requests].sort((a, b) => b.createdAt - a.createdAt)
 
   return (
@@ -118,7 +126,7 @@ export function TransferHistory({ requests, getUserLabel, isLoading, requestErro
           {sortedRequests.length === 0 && !isLoading ? (
             <p className="text-sm text-muted-foreground">No transfer history available.</p>
           ) : (
-            sortedRequests.map((request) => (
+            sortedRequests.map(request => (
               <Card key={request.id} className="bg-white/5 border-white/10">
                 <CardHeader className="flex items-center justify-between space-y-0">
                   <div>

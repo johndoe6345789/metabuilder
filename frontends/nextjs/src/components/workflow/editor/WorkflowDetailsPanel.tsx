@@ -7,7 +7,7 @@ export const WorkflowDetailsPanel = ({ workflow, onUpdate }: WorkflowDetailsPane
       <Label>Workflow Name</Label>
       <Input
         value={workflow.name}
-        onChange={(e) => onUpdate({ name: e.target.value })}
+        onChange={e => onUpdate({ name: e.target.value })}
         placeholder="My Workflow"
       />
     </div>
@@ -15,7 +15,7 @@ export const WorkflowDetailsPanel = ({ workflow, onUpdate }: WorkflowDetailsPane
       <Label>Description</Label>
       <Input
         value={workflow.description || ''}
-        onChange={(e) => onUpdate({ description: e.target.value })}
+        onChange={e => onUpdate({ description: e.target.value })}
         placeholder="What this workflow does..."
       />
     </div>

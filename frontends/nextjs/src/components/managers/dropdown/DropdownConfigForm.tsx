@@ -1,5 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Badge, Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Label, ScrollArea, Separator } from '@/components/ui'
+import {
+  Badge,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Input,
+  Label,
+  ScrollArea,
+  Separator,
+} from '@/components/ui'
 import { FloppyDisk, Plus, X } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import type { DropdownConfig } from '@/lib/database'
@@ -25,7 +37,12 @@ const buildDropdownConfig = (
   options,
 })
 
-export function DropdownConfigForm({ open, editingDropdown, onOpenChange, onSave }: DropdownConfigFormProps) {
+export function DropdownConfigForm({
+  open,
+  editingDropdown,
+  onOpenChange,
+  onSave,
+}: DropdownConfigFormProps) {
   const [dropdownName, setDropdownName] = useState('')
   const [dropdownLabel, setDropdownLabel] = useState('')
   const [options, setOptions] = useState<Array<{ value: string; label: string }>>([])
@@ -55,7 +72,7 @@ export function DropdownConfigForm({ open, editingDropdown, onOpenChange, onSave
     }
 
     const duplicate = options.some(
-      (opt) => opt.value.toLowerCase() === newOptionValue.trim().toLowerCase()
+      opt => opt.value.toLowerCase() === newOptionValue.trim().toLowerCase()
     )
 
     if (duplicate) {
@@ -63,7 +80,7 @@ export function DropdownConfigForm({ open, editingDropdown, onOpenChange, onSave
       return
     }
 
-    setOptions((current) => [
+    setOptions(current => [
       ...current,
       { value: newOptionValue.trim(), label: newOptionLabel.trim() },
     ])
@@ -72,7 +89,7 @@ export function DropdownConfigForm({ open, editingDropdown, onOpenChange, onSave
   }
 
   const removeOption = (index: number) => {
-    setOptions((current) => current.filter((_, i) => i !== index))
+    setOptions(current => current.filter((_, i) => i !== index))
   }
 
   const handleSave = async () => {
@@ -100,7 +117,7 @@ export function DropdownConfigForm({ open, editingDropdown, onOpenChange, onSave
               id="dropdownName"
               placeholder="e.g., status_options"
               value={dropdownName}
-              onChange={(e) => setDropdownName(e.target.value)}
+              onChange={e => setDropdownName(e.target.value)}
             />
             <p className="text-xs text-muted-foreground">Unique identifier for this dropdown</p>
           </div>
@@ -111,7 +128,7 @@ export function DropdownConfigForm({ open, editingDropdown, onOpenChange, onSave
               id="dropdownLabel"
               placeholder="e.g., Status"
               value={dropdownLabel}
-              onChange={(e) => setDropdownLabel(e.target.value)}
+              onChange={e => setDropdownLabel(e.target.value)}
             />
           </div>
 
@@ -123,12 +140,12 @@ export function DropdownConfigForm({ open, editingDropdown, onOpenChange, onSave
               <Input
                 placeholder="Value"
                 value={newOptionValue}
-                onChange={(e) => setNewOptionValue(e.target.value)}
+                onChange={e => setNewOptionValue(e.target.value)}
               />
               <Input
                 placeholder="Label"
                 value={newOptionLabel}
-                onChange={(e) => setNewOptionLabel(e.target.value)}
+                onChange={e => setNewOptionLabel(e.target.value)}
               />
               <Button onClick={addOption} type="button">
                 <Plus size={16} />
@@ -140,17 +157,16 @@ export function DropdownConfigForm({ open, editingDropdown, onOpenChange, onSave
             <ScrollArea className="h-[200px] border rounded-lg p-3">
               <div className="space-y-2">
                 {options.map((opt, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 border rounded bg-muted/50">
+                  <div
+                    key={i}
+                    className="flex items-center justify-between p-2 border rounded bg-muted/50"
+                  >
                     <div className="flex-1">
                       <span className="font-mono text-sm">{opt.value}</span>
                       <span className="mx-2 text-muted-foreground">→</span>
                       <span className="text-sm">{opt.label}</span>
                     </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => removeOption(i)}
-                    >
+                    <Button size="sm" variant="ghost" onClick={() => removeOption(i)}>
                       <X size={16} />
                     </Button>
                   </div>

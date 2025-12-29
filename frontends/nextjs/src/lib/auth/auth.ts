@@ -10,4 +10,3 @@ export {
   DEFAULT_USERS,
   DEFAULT_CREDENTIALS,
 } from './index'
-

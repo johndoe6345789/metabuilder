@@ -8,13 +8,13 @@ export const useErrorLogFilters = (logs: ErrorLog[]) => {
 
   const filteredLogs = useMemo(
     () =>
-      logs.filter((log) => {
+      logs.filter(log => {
         if (filterLevel !== 'all' && log.level !== filterLevel) return false
         if (filterResolved === 'resolved' && !log.resolved) return false
         if (filterResolved === 'unresolved' && log.resolved) return false
         return true
       }),
-    [logs, filterLevel, filterResolved],
+    [logs, filterLevel, filterResolved]
   )
 
   return { filterLevel, filterResolved, setFilterLevel, setFilterResolved, filteredLogs }

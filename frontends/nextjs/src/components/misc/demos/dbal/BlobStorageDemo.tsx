@@ -1,5 +1,14 @@
 import { useState } from 'react'
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from '@/components/ui'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+} from '@/components/ui'
 import { useBlobStorage } from '@/hooks/useDBAL'
 import { renderInitializationBadge } from './dbal-demo.utils'
 import { toast } from 'sonner'
@@ -69,7 +78,7 @@ export function BlobStorageDemo() {
           <Input
             id="fileName"
             value={fileName}
-            onChange={(e) => setFileName(e.target.value)}
+            onChange={e => setFileName(e.target.value)}
             placeholder="file.txt"
           />
         </div>
@@ -78,7 +87,7 @@ export function BlobStorageDemo() {
           <textarea
             id="fileContent"
             value={fileContent}
-            onChange={(e) => setFileContent(e.target.value)}
+            onChange={e => setFileContent(e.target.value)}
             placeholder="File content..."
             className="w-full min-h-[100px] p-2 border rounded-md"
           />
@@ -109,7 +118,7 @@ export function BlobStorageDemo() {
           <div className="space-y-2">
             <p className="text-sm font-medium">Files ({files.length}):</p>
             <div className="space-y-1">
-              {files.map((file) => (
+              {files.map(file => (
                 <div key={file} className="p-2 bg-muted rounded text-sm font-mono">
                   {file}
                 </div>

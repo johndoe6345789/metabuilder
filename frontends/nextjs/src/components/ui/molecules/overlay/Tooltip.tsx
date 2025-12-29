@@ -31,7 +31,11 @@ interface TooltipTriggerProps {
 
 const TooltipTrigger = forwardRef<HTMLDivElement, TooltipTriggerProps>(
   ({ children, ...props }, ref) => {
-    return <span ref={ref as React.Ref<HTMLSpanElement>} {...props}>{children}</span>
+    return (
+      <span ref={ref as React.Ref<HTMLSpanElement>} {...props}>
+        {children}
+      </span>
+    )
   }
 )
 TooltipTrigger.displayName = 'TooltipTrigger'

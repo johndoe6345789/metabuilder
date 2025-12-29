@@ -100,11 +100,17 @@ export function DatabaseManager() {
   }, [loadStats])
 
   const handleClearDatabase = useCallback(async () => {
-    if (!confirm('Are you sure you want to clear the entire database? This action cannot be undone!')) {
+    if (
+      !confirm('Are you sure you want to clear the entire database? This action cannot be undone!')
+    ) {
       return
     }
 
-    if (!confirm('This will delete ALL data including users, workflows, and configurations. Are you absolutely sure?')) {
+    if (
+      !confirm(
+        'This will delete ALL data including users, workflows, and configurations. Are you absolutely sure?'
+      )
+    ) {
       return
     }
 
@@ -140,7 +146,7 @@ export function DatabaseManager() {
     const input = document.createElement('input')
     input.type = 'file'
     input.accept = 'application/json'
-    input.onchange = async (e) => {
+    input.onchange = async e => {
       const file = (e.target as HTMLInputElement).files?.[0]
       if (!file) return
 
@@ -164,7 +170,9 @@ export function DatabaseManager() {
         await Database.initializeDatabase()
         setConnectionState('connected')
         setLastConnectedAt(new Date())
-        toast.success(`Connected to ${details.database || 'Metabuilder database'} via ${details.driver}`)
+        toast.success(
+          `Connected to ${details.database || 'Metabuilder database'} via ${details.driver}`
+        )
         await loadStats()
       } catch (error) {
         console.error(error)
@@ -172,22 +180,64 @@ export function DatabaseManager() {
         toast.error('Failed to initialize database connection')
       }
     },
-    [loadStats],
+    [loadStats]
   )
 
   const dbEntities = useMemo(
     () => [
       { key: 'users', icon: Users, label: 'Users', count: stats.users, color: 'text-blue-500' },
-      { key: 'credentials', icon: Key, label: 'Credentials (SHA-512)', count: stats.credentials, color: 'text-amber-500' },
-      { key: 'workflows', icon: Lightning, label: 'Workflows', count: stats.workflows, color: 'text-purple-500' },
-      { key: 'luaScripts', icon: Code, label: 'Lua Scripts', count: stats.luaScripts, color: 'text-indigo-500' },
+      {
+        key: 'credentials',
+        icon: Key,
+        label: 'Credentials (SHA-512)',
+        count: stats.credentials,
+        color: 'text-amber-500',
+      },
+      {
+        key: 'workflows',
+        icon: Lightning,
+        label: 'Workflows',
+        count: stats.workflows,
+        color: 'text-purple-500',
+      },
+      {
+        key: 'luaScripts',
+        icon: Code,
+        label: 'Lua Scripts',
+        count: stats.luaScripts,
+        color: 'text-indigo-500',
+      },
       { key: 'pages', icon: FileText, label: 'Pages', count: stats.pages, color: 'text-cyan-500' },
-      { key: 'schemas', icon: TableIcon, label: 'Data Schemas', count: stats.schemas, color: 'text-green-500' },
-      { key: 'comments', icon: ChatCircle, label: 'Comments', count: stats.comments, color: 'text-pink-500' },
-      { key: 'componentNodes', icon: Tree, label: 'Component Hierarchy', count: stats.componentNodes, color: 'text-teal-500' },
-      { key: 'componentConfigs', icon: Gear, label: 'Component Configs', count: stats.componentConfigs, color: 'text-orange-500' },
+      {
+        key: 'schemas',
+        icon: TableIcon,
+        label: 'Data Schemas',
+        count: stats.schemas,
+        color: 'text-green-500',
+      },
+      {
+        key: 'comments',
+        icon: ChatCircle,
+        label: 'Comments',
+        count: stats.comments,
+        color: 'text-pink-500',
+      },
+      {
+        key: 'componentNodes',
+        icon: Tree,
+        label: 'Component Hierarchy',
+        count: stats.componentNodes,
+        color: 'text-teal-500',
+      },
+      {
+        key: 'componentConfigs',
+        icon: Gear,
+        label: 'Component Configs',
+        count: stats.componentConfigs,
+        color: 'text-orange-500',
+      },
     ],
-    [stats],
+    [stats]
   )
 
   const totalRecords = useMemo(() => Object.values(stats).reduce((a, b) => a + b, 0), [stats])
@@ -216,7 +266,9 @@ export function DatabaseManager() {
               <DatabaseIcon size={24} />
               Database Overview
             </CardTitle>
-            <CardDescription>All data stored using SHA-512 password hashing and KV persistence</CardDescription>
+            <CardDescription>
+              All data stored using SHA-512 password hashing and KV persistence
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{totalRecords}</div>
@@ -224,7 +276,7 @@ export function DatabaseManager() {
           </CardContent>
         </Card>
 
-        {dbEntities.map((entity) => (
+        {dbEntities.map(entity => (
           <Card key={entity.key}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{entity.label}</CardTitle>
@@ -251,8 +303,9 @@ export function DatabaseManager() {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            All passwords are hashed using SHA-512 before storage. Plain text passwords are never stored in the database.
-            The credential store maintains a mapping of usernames to password hashes for secure authentication.
+            All passwords are hashed using SHA-512 before storage. Plain text passwords are never
+            stored in the database. The credential store maintains a mapping of usernames to
+            password hashes for secure authentication.
           </p>
         </CardContent>
       </Card>

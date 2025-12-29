@@ -7,7 +7,7 @@ import type { PowerTransferRequest } from '../../types/level-types'
 export async function getPowerTransferRequests(): Promise<PowerTransferRequest[]> {
   const adapter = getAdapter()
   const result = await adapter.list('PowerTransferRequest')
-  return (result.data as any[]).map((r) => ({
+  return (result.data as any[]).map(r => ({
     id: r.id,
     fromUserId: r.fromUserId,
     toUserId: r.toUserId,

@@ -24,7 +24,17 @@ interface NavigationProps {
 }
 
 const Navigation = forwardRef<HTMLElement, NavigationProps>(
-  ({ children, position = 'sticky', color = 'default', elevation = 0, hideOnScroll = false, ...props }, ref) => {
+  (
+    {
+      children,
+      position = 'sticky',
+      color = 'default',
+      elevation = 0,
+      hideOnScroll = false,
+      ...props
+    },
+    ref
+  ) => {
     const trigger = useScrollTrigger()
 
     const appBar = (

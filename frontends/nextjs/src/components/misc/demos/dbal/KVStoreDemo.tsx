@@ -1,5 +1,14 @@
 import { useState } from 'react'
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from '@/components/ui'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+} from '@/components/ui'
 import { useKVStore } from '@/hooks/useDBAL'
 import { renderInitializationBadge } from './dbal-demo.utils'
 import { toast } from 'sonner'
@@ -73,11 +82,21 @@ export function KVStoreDemo() {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="key">Key</Label>
-            <Input id="key" value={key} onChange={(e) => setKey(e.target.value)} placeholder="my-key" />
+            <Input
+              id="key"
+              value={key}
+              onChange={e => setKey(e.target.value)}
+              placeholder="my-key"
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="value">Value</Label>
-            <Input id="value" value={value} onChange={(e) => setValue(e.target.value)} placeholder="my-value" />
+            <Input
+              id="value"
+              value={value}
+              onChange={e => setValue(e.target.value)}
+              placeholder="my-value"
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="ttl">TTL (seconds, optional)</Label>
@@ -85,14 +104,20 @@ export function KVStoreDemo() {
               id="ttl"
               type="number"
               value={ttl || ''}
-              onChange={(e) => setTtl(e.target.value ? parseInt(e.target.value) : undefined)}
+              onChange={e => setTtl(e.target.value ? parseInt(e.target.value) : undefined)}
               placeholder="3600"
             />
           </div>
           <div className="flex gap-2">
-            <Button onClick={handleSet} disabled={!kv.isReady}>Set</Button>
-            <Button onClick={handleGet} variant="secondary" disabled={!kv.isReady}>Get</Button>
-            <Button onClick={handleDelete} variant="destructive" disabled={!kv.isReady}>Delete</Button>
+            <Button onClick={handleSet} disabled={!kv.isReady}>
+              Set
+            </Button>
+            <Button onClick={handleGet} variant="secondary" disabled={!kv.isReady}>
+              Get
+            </Button>
+            <Button onClick={handleDelete} variant="destructive" disabled={!kv.isReady}>
+              Delete
+            </Button>
           </div>
           {retrievedValue !== null && (
             <div className="p-3 bg-muted rounded-md">
@@ -114,13 +139,17 @@ export function KVStoreDemo() {
             <Input
               id="listKey"
               value={listKey}
-              onChange={(e) => setListKey(e.target.value)}
+              onChange={e => setListKey(e.target.value)}
               placeholder="my-list"
             />
           </div>
           <div className="flex gap-2">
-            <Button onClick={handleListAdd} disabled={!kv.isReady}>Add Items</Button>
-            <Button onClick={handleListGet} variant="secondary" disabled={!kv.isReady}>Get Items</Button>
+            <Button onClick={handleListAdd} disabled={!kv.isReady}>
+              Add Items
+            </Button>
+            <Button onClick={handleListGet} variant="secondary" disabled={!kv.isReady}>
+              Get Items
+            </Button>
           </div>
           {listItems.length > 0 && (
             <div className="space-y-2">

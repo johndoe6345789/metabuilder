@@ -41,7 +41,7 @@ const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
     const [showPassword, setShowPassword] = useState(false)
 
     const togglePasswordVisibility = () => {
-      setShowPassword((prev) => !prev)
+      setShowPassword(prev => !prev)
     }
 
     return (
@@ -67,12 +67,16 @@ const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
                 <IconButton
                   aria-label="toggle password visibility"
                   onClick={togglePasswordVisibility}
-                  onMouseDown={(e) => e.preventDefault()}
+                  onMouseDown={e => e.preventDefault()}
                   edge="end"
                   size="small"
                   disabled={disabled}
                 >
-                  {showPassword ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                  {showPassword ? (
+                    <VisibilityOffIcon fontSize="small" />
+                  ) : (
+                    <VisibilityIcon fontSize="small" />
+                  )}
                 </IconButton>
               </InputAdornment>
             ),

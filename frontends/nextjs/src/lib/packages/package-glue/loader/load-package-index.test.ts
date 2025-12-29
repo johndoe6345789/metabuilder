@@ -35,16 +35,12 @@ describe('loadPackageIndex', () => {
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
-        packages: [
-          { packageId: 'demo', name: 'Demo', version: '1.0.0' },
-        ],
+        packages: [{ packageId: 'demo', name: 'Demo', version: '1.0.0' }],
       }),
     })
 
     const result = await loadPackageIndex()
 
-    expect(result).toEqual([
-      { packageId: 'demo', name: 'Demo', version: '1.0.0' },
-    ])
+    expect(result).toEqual([{ packageId: 'demo', name: 'Demo', version: '1.0.0' }])
   })
 })

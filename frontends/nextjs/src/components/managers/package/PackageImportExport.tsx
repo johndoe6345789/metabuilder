@@ -17,13 +17,18 @@ interface PackageImportExportProps {
   mode: 'export' | 'import'
 }
 
-const createInitialManifest = () => ({ ...defaultManifest, tags: [...(defaultManifest.tags || [])] })
+const createInitialManifest = () => ({
+  ...defaultManifest,
+  tags: [...(defaultManifest.tags || [])],
+})
 const createInitialExportOptions = () => ({ ...defaultExportOptions })
 
 export function PackageImportExport({ open, onOpenChange, mode }: PackageImportExportProps) {
   const [exporting, setExporting] = useState(false)
   const [importing, setImporting] = useState(false)
-  const [exportOptions, setExportOptions] = useState<ExportPackageOptions>(createInitialExportOptions)
+  const [exportOptions, setExportOptions] = useState<ExportPackageOptions>(
+    createInitialExportOptions
+  )
   const [manifest, setManifest] = useState<Partial<PackageManifest>>(createInitialManifest)
   const [tagInput, setTagInput] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -73,7 +78,9 @@ export function PackageImportExport({ open, onOpenChange, mode }: PackageImportE
       onOpenChange(false)
     } catch (error) {
       console.error('Import error:', error)
-      toast.error(`Failed to import package: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      toast.error(
+        `Failed to import package: ${error instanceof Error ? error.message : 'Unknown error'}`
+      )
     } finally {
       setImporting(false)
     }

@@ -27,11 +27,14 @@ export interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'size'> {
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = 'contained', size = 'medium', loading, disabled, children, sx, ...props }, ref) => {
     const isIcon = size === 'icon'
-    
-    const muiVariant = variant === 'destructive' || variant === 'ghost' 
-      ? (variant === 'ghost' ? 'text' : 'contained')
-      : variant
-    
+
+    const muiVariant =
+      variant === 'destructive' || variant === 'ghost'
+        ? variant === 'ghost'
+          ? 'text'
+          : 'contained'
+        : variant
+
     const muiColor = variant === 'destructive' ? 'error' : 'primary'
 
     return (
@@ -58,11 +61,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         }}
         {...props}
       >
-        {loading ? (
-          <CircularProgress size={20} color="inherit" />
-        ) : (
-          children
-        )}
+        {loading ? <CircularProgress size={20} color="inherit" /> : children}
       </MuiButton>
     )
   }

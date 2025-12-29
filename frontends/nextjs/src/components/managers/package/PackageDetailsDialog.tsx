@@ -1,4 +1,19 @@
-import { Badge, Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, ScrollArea, Separator, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
+import {
+  Badge,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  ScrollArea,
+  Separator,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui'
 import type { PackageCatalogData } from '@/lib/packages/core/package-catalog'
 import type { InstalledPackage } from '@/lib/package-types'
 import { Download, Star, Tag, Trash, User } from '@phosphor-icons/react'
@@ -101,7 +116,9 @@ export function PackageDetailsDialog({
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 rounded-lg bg-muted">
                       <div className="font-medium text-sm">Data Models</div>
-                      <div className="text-2xl font-bold text-primary">{content.schemas.length}</div>
+                      <div className="text-2xl font-bold text-primary">
+                        {content.schemas.length}
+                      </div>
                     </div>
                     <div className="p-3 rounded-lg bg-muted">
                       <div className="font-medium text-sm">Pages</div>
@@ -109,11 +126,15 @@ export function PackageDetailsDialog({
                     </div>
                     <div className="p-3 rounded-lg bg-muted">
                       <div className="font-medium text-sm">Workflows</div>
-                      <div className="text-2xl font-bold text-primary">{content.workflows.length}</div>
+                      <div className="text-2xl font-bold text-primary">
+                        {content.workflows.length}
+                      </div>
                     </div>
                     <div className="p-3 rounded-lg bg-muted">
                       <div className="font-medium text-sm">Scripts</div>
-                      <div className="text-2xl font-bold text-primary">{content.luaScripts.length}</div>
+                      <div className="text-2xl font-bold text-primary">
+                        {content.luaScripts.length}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -125,7 +146,9 @@ export function PackageDetailsDialog({
                       {content.schemas.map(schema => (
                         <div key={schema.name} className="p-3 rounded-lg border">
                           <div className="font-medium">{schema.displayName || schema.name}</div>
-                          <div className="text-sm text-muted-foreground">{schema.fields.length} fields</div>
+                          <div className="text-sm text-muted-foreground">
+                            {schema.fields.length} fields
+                          </div>
                         </div>
                       ))}
                     </div>

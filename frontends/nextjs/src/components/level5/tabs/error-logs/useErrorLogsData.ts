@@ -31,7 +31,11 @@ export interface UseErrorLogsDataResult {
   handleClearLogs: (clearOnlyResolved: boolean) => Promise<void>
 }
 
-export function useErrorLogsData({ user, filters, pageSize }: UseErrorLogsDataParams): UseErrorLogsDataResult {
+export function useErrorLogsData({
+  user,
+  filters,
+  pageSize,
+}: UseErrorLogsDataParams): UseErrorLogsDataResult {
   const [logs, setLogs] = useState<ErrorLog[]>([])
   const [stats, setStats] = useState(emptyStats)
   const [loading, setLoading] = useState(false)
@@ -89,7 +93,7 @@ export function useErrorLogsData({ user, filters, pageSize }: UseErrorLogsDataPa
         toast.error('Failed to update error log')
       }
     },
-    [loadLogs, user?.username],
+    [loadLogs, user?.username]
   )
 
   const handleDeleteLog = useCallback(
@@ -103,7 +107,7 @@ export function useErrorLogsData({ user, filters, pageSize }: UseErrorLogsDataPa
         toast.error('Failed to delete error log')
       }
     },
-    [loadLogs],
+    [loadLogs]
   )
 
   const handleClearLogs = useCallback(
@@ -117,7 +121,7 @@ export function useErrorLogsData({ user, filters, pageSize }: UseErrorLogsDataPa
         toast.error('Failed to clear error logs')
       }
     },
-    [loadLogs],
+    [loadLogs]
   )
 
   return {

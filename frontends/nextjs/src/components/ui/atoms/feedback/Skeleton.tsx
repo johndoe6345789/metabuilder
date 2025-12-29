@@ -9,22 +9,20 @@ import { Skeleton as MuiSkeleton, SkeletonProps as MuiSkeletonProps } from '@mui
  */
 export type SkeletonProps = MuiSkeletonProps
 
-const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(
-  ({ sx, ...props }, ref) => {
-    return (
-      <MuiSkeleton
-        ref={ref}
-        animation="wave"
-        sx={{
-          bgcolor: 'action.hover',
-          borderRadius: 1,
-          ...sx,
-        }}
-        {...props}
-      />
-    )
-  }
-)
+const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(({ sx, ...props }, ref) => {
+  return (
+    <MuiSkeleton
+      ref={ref}
+      animation="wave"
+      sx={{
+        bgcolor: 'action.hover',
+        borderRadius: 1,
+        ...sx,
+      }}
+      {...props}
+    />
+  )
+})
 
 Skeleton.displayName = 'Skeleton'
 

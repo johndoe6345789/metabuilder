@@ -1,5 +1,11 @@
 // Types
-export type { CssCategory, DropdownConfig, DatabaseSchema, ComponentNode, ComponentConfig } from './types'
+export type {
+  CssCategory,
+  DropdownConfig,
+  DatabaseSchema,
+  ComponentNode,
+  ComponentConfig,
+} from './types'
 export { DB_KEYS } from './types'
 
 // DBAL Client

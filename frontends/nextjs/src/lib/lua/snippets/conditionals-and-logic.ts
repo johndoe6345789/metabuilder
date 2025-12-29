@@ -7,9 +7,7 @@ export const CONDITIONAL_LOGIC_SNIPPETS: LuaSnippet[] = [
     description: 'Check if user has required role',
     category: 'Conditionals & Logic',
     tags: ['conditional', 'role', 'access'],
-    parameters: [
-      { name: 'requiredRole', type: 'string', description: 'Required role level' }
-    ],
+    parameters: [{ name: 'requiredRole', type: 'string', description: 'Required role level' }],
     code: `local user = context.user or {}
 local requiredRole = context.data.requiredRole or "user"
 
@@ -33,7 +31,7 @@ return {
   requiredRole = requiredRole,
   hasAccess = hasAccess,
   message = hasAccess and "Access granted" or "Access denied"
-}`
+}`,
   },
   {
     id: 'conditional_time_based',
@@ -66,7 +64,7 @@ return {
   timeOfDay = timeOfDay,
   greeting = greeting,
   isBusinessHours = isBusinessHours
-}`
+}`,
   },
   {
     id: 'conditional_feature_flag',
@@ -99,6 +97,6 @@ return {
   userRole = user.role,
   enabled = isEnabled,
   reason = isEnabled and "Feature available" or "Feature not available for your role"
-}`
-  }
+}`,
+  },
 ]

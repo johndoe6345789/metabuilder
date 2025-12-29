@@ -17,7 +17,15 @@ interface RecordFormProps {
   onSave: (record: any) => void
 }
 
-export function RecordForm({ open, onClose, model, schema, currentApp, record, onSave }: RecordFormProps) {
+export function RecordForm({
+  open,
+  onClose,
+  model,
+  schema,
+  currentApp,
+  record,
+  onSave,
+}: RecordFormProps) {
   const [formData, setFormData] = useState<any>(record || createEmptyRecord(model))
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -36,7 +44,7 @@ export function RecordForm({ open, onClose, model, schema, currentApp, record, o
       [fieldName]: value,
     }))
     if (errors[fieldName]) {
-      setErrors((prev) => {
+      setErrors(prev => {
         const newErrors = { ...prev }
         delete newErrors[fieldName]
         return newErrors
@@ -46,7 +54,7 @@ export function RecordForm({ open, onClose, model, schema, currentApp, record, o
 
   const handleSave = () => {
     const validationErrors = validateRecord(model, formData)
-    
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
       return
@@ -64,15 +72,15 @@ export function RecordForm({ open, onClose, model, schema, currentApp, record, o
             {record ? 'Edit' : 'Create'} {model.label || model.name}
           </DialogTitle>
         </DialogHeader>
-        
+
         <ScrollArea className="max-h-[60vh] pr-4">
           <div className="space-y-6">
-            {model.fields.map((field) => (
+            {model.fields.map(field => (
               <FieldRenderer
                 key={field.name}
                 field={field}
                 value={formData[field.name]}
-                onChange={(value) => handleFieldChange(field.name, value)}
+                onChange={value => handleFieldChange(field.name, value)}
                 error={errors[field.name]}
                 schema={schema}
                 currentApp={currentApp}
@@ -86,7 +94,10 @@ export function RecordForm({ open, onClose, model, schema, currentApp, record, o
             <X className="mr-2" />
             Cancel
           </Button>
-          <Button onClick={handleSave} className="bg-accent text-accent-foreground hover:bg-accent/90">
+          <Button
+            onClick={handleSave}
+            className="bg-accent text-accent-foreground hover:bg-accent/90"
+          >
             <FloppyDisk className="mr-2" />
             Save
           </Button>

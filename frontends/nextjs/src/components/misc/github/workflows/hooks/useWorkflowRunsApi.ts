@@ -17,7 +17,7 @@ export function useWorkflowRunsApi() {
 
   const repoLabel = useMemo(
     () => (repoInfo ? `${repoInfo.owner}/${repoInfo.repo}` : DEFAULT_REPO_LABEL),
-    [repoInfo],
+    [repoInfo]
   )
 
   const fetchRuns = useCallback(async () => {
@@ -75,7 +75,7 @@ export function useWorkflowRunsApi() {
     if (!autoRefreshEnabled) return
 
     const countdownInterval = setInterval(() => {
-      setSecondsUntilRefresh((prev) => {
+      setSecondsUntilRefresh(prev => {
         if (prev <= 1) {
           fetchRuns()
           return 30
@@ -87,7 +87,7 @@ export function useWorkflowRunsApi() {
     return () => clearInterval(countdownInterval)
   }, [autoRefreshEnabled, fetchRuns])
 
-  const toggleAutoRefresh = () => setAutoRefreshEnabled((prev) => !prev)
+  const toggleAutoRefresh = () => setAutoRefreshEnabled(prev => !prev)
 
   return {
     runs,

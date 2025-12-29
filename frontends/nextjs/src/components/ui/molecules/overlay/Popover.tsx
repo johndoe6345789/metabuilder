@@ -61,7 +61,11 @@ const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
 PopoverContent.displayName = 'PopoverContent'
 
 const PopoverAnchor = forwardRef<HTMLDivElement, { children?: ReactNode }>(
-  ({ children, ...props }, ref) => <Box ref={ref} {...props}>{children}</Box>
+  ({ children, ...props }, ref) => (
+    <Box ref={ref} {...props}>
+      {children}
+    </Box>
+  )
 )
 PopoverAnchor.displayName = 'PopoverAnchor'
 

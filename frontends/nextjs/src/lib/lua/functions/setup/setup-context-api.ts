@@ -14,10 +14,10 @@ const lua = fengari.lua
  */
 export const setupContextAPI = (L: any, logs: string[]): void => {
   // Create log function
-  const logFunction = function(LState: any) {
+  const logFunction = function (LState: any) {
     const nargs = lua.lua_gettop(LState)
     const messages: string[] = []
-    
+
     for (let i = 1; i <= nargs; i++) {
       if (lua.lua_isstring(LState, i)) {
         messages.push(lua.lua_tojsstring(LState, i))
@@ -29,7 +29,7 @@ export const setupContextAPI = (L: any, logs: string[]): void => {
         messages.push(lua.lua_typename(LState, lua.lua_type(LState, i)))
       }
     }
-    
+
     logs.push(messages.join(' '))
     return 0
   }
@@ -38,10 +38,10 @@ export const setupContextAPI = (L: any, logs: string[]): void => {
   lua.lua_setglobal(L, fengari.to_luastring('log'))
 
   // Create print function (same behavior but tab-separated)
-  const printFunction = function(LState: any) {
+  const printFunction = function (LState: any) {
     const nargs = lua.lua_gettop(LState)
     const messages: string[] = []
-    
+
     for (let i = 1; i <= nargs; i++) {
       if (lua.lua_isstring(LState, i)) {
         messages.push(lua.lua_tojsstring(LState, i))
@@ -53,7 +53,7 @@ export const setupContextAPI = (L: any, logs: string[]): void => {
         messages.push(lua.lua_typename(LState, lua.lua_type(LState, i)))
       }
     }
-    
+
     logs.push(messages.join('\t'))
     return 0
   }

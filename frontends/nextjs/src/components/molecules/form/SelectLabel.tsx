@@ -10,7 +10,11 @@ interface SelectLabelProps {
 
 const SelectLabel = forwardRef<HTMLDivElement, SelectLabelProps>(({ children, ...props }, ref) => {
   return (
-    <Box ref={ref} sx={{ px: 2, py: 1, fontSize: '0.75rem', fontWeight: 600, color: 'text.secondary' }} {...props}>
+    <Box
+      ref={ref}
+      sx={{ px: 2, py: 1, fontSize: '0.75rem', fontWeight: 600, color: 'text.secondary' }}
+      {...props}
+    >
       {children}
     </Box>
   )

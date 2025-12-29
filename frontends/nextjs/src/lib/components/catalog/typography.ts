@@ -10,9 +10,7 @@ export const typographyComponents: ComponentDefinition[] = [
     defaultProps: {
       children: 'Label',
     },
-    propSchema: [
-      { name: 'children', label: 'Text', type: 'string', defaultValue: 'Label' },
-    ],
+    propSchema: [{ name: 'children', label: 'Text', type: 'string', defaultValue: 'Label' }],
   },
   {
     type: 'Heading',
@@ -39,7 +37,12 @@ export const typographyComponents: ComponentDefinition[] = [
           { value: '4', label: 'H4' },
         ],
       },
-      { name: 'className', label: 'CSS Classes', type: 'string', defaultValue: 'text-3xl font-bold' },
+      {
+        name: 'className',
+        label: 'CSS Classes',
+        type: 'string',
+        defaultValue: 'text-3xl font-bold',
+      },
     ],
   },
   {

@@ -36,14 +36,14 @@ Tabs.displayName = 'Tabs'
 const TabsList = forwardRef<HTMLDivElement, { children: React.ReactNode; className?: string }>(
   ({ children, ...props }, ref) => {
     return (
-      <Box 
-        ref={ref} 
-        sx={{ 
+      <Box
+        ref={ref}
+        sx={{
           display: 'inline-flex',
           bgcolor: 'action.hover',
           borderRadius: 1,
           p: 0.5,
-        }} 
+        }}
         {...props}
       >
         {children}

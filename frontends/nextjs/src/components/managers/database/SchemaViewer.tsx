@@ -1,4 +1,12 @@
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle, ScrollArea } from '@/components/ui'
+import {
+  Badge,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  ScrollArea,
+} from '@/components/ui'
 import type { ModelSchema } from '@/lib/types/schema-types'
 
 interface SchemaViewerProps {
@@ -19,30 +27,39 @@ export function SchemaViewer({ schemas, dbKeys }: SchemaViewerProps) {
             <p className="text-sm text-muted-foreground">No schemas configured yet.</p>
           ) : (
             <div className="space-y-3">
-              {schemas.map((schema) => (
+              {schemas.map(schema => (
                 <div key={schema.name} className="rounded-lg border p-3 bg-muted/40">
                   <div className="flex items-center justify-between gap-2">
                     <div>
                       <p className="flex items-center gap-2 text-sm font-semibold">
                         {schema.icon && <span className="text-lg">{schema.icon}</span>}
                         {schema.label || schema.name}
-                        <span className="font-mono text-xs text-muted-foreground">{schema.name}</span>
+                        <span className="font-mono text-xs text-muted-foreground">
+                          {schema.name}
+                        </span>
                       </p>
                       {schema.labelPlural && (
-                        <p className="text-xs text-muted-foreground">Plural: {schema.labelPlural}</p>
+                        <p className="text-xs text-muted-foreground">
+                          Plural: {schema.labelPlural}
+                        </p>
                       )}
                     </div>
                     <Badge variant="secondary">{schema.fields.length} fields</Badge>
                   </div>
                   {schema.fields.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                      {schema.fields.slice(0, 6).map((field) => (
-                        <span key={field.name} className="rounded-full bg-background px-2 py-1 border">
+                      {schema.fields.slice(0, 6).map(field => (
+                        <span
+                          key={field.name}
+                          className="rounded-full bg-background px-2 py-1 border"
+                        >
                           {field.label || field.name} ({field.type})
                         </span>
                       ))}
                       {schema.fields.length > 6 && (
-                        <span className="rounded-full bg-background px-2 py-1 border">+{schema.fields.length - 6} more</span>
+                        <span className="rounded-full bg-background px-2 py-1 border">
+                          +{schema.fields.length - 6} more
+                        </span>
                       )}
                     </div>
                   )}
@@ -62,7 +79,10 @@ export function SchemaViewer({ schemas, dbKeys }: SchemaViewerProps) {
           <ScrollArea className="h-72">
             <div className="space-y-2">
               {Object.entries(dbKeys).map(([key, value]) => (
-                <div key={key} className="flex items-center justify-between p-3 border border-border rounded-lg">
+                <div
+                  key={key}
+                  className="flex items-center justify-between p-3 border border-border rounded-lg"
+                >
                   <div>
                     <span className="font-mono text-sm font-medium">{key}</span>
                     <p className="text-xs text-muted-foreground mt-1">{value}</p>

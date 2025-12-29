@@ -19,13 +19,20 @@ interface RoutesTableProps {
 
 const getLevelBadgeColor = (level: AppLevel) => {
   switch (level) {
-    case 1: return 'bg-blue-500'
-    case 2: return 'bg-green-500'
-    case 3: return 'bg-orange-500'
-    case 4: return 'bg-sky-500'
-    case 5: return 'bg-purple-500'
-    case 6: return 'bg-rose-500'
-    default: return 'bg-gray-500'
+    case 1:
+      return 'bg-blue-500'
+    case 2:
+      return 'bg-green-500'
+    case 3:
+      return 'bg-orange-500'
+    case 4:
+      return 'bg-sky-500'
+    case 5:
+      return 'bg-purple-500'
+    case 6:
+      return 'bg-rose-500'
+    default:
+      return 'bg-gray-500'
   }
 }
 
@@ -51,14 +58,12 @@ export function RoutesTable({ pages, onEdit, onDelete }: RoutesTableProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {pages.map((page) => (
+        {pages.map(page => (
           <TableRow key={page.id}>
             <TableCell className="font-mono text-sm">{page.path}</TableCell>
             <TableCell>{page.title}</TableCell>
             <TableCell>
-              <Badge className={getLevelBadgeColor(page.level)}>
-                Level {page.level}
-              </Badge>
+              <Badge className={getLevelBadgeColor(page.level)}>Level {page.level}</Badge>
             </TableCell>
             <TableCell>
               {page.requiresAuth ? (
@@ -68,24 +73,14 @@ export function RoutesTable({ pages, onEdit, onDelete }: RoutesTableProps) {
               )}
             </TableCell>
             <TableCell>
-              <Badge variant="outline">
-                {page.requiredRole || 'public'}
-              </Badge>
+              <Badge variant="outline">{page.requiredRole || 'public'}</Badge>
             </TableCell>
             <TableCell className="text-right">
               <div className="flex justify-end gap-2">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => onEdit(page)}
-                >
+                <Button size="sm" variant="ghost" onClick={() => onEdit(page)}>
                   <Pencil />
                 </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => onDelete(page.id)}
-                >
+                <Button size="sm" variant="ghost" onClick={() => onDelete(page.id)}>
                   <Trash />
                 </Button>
               </div>

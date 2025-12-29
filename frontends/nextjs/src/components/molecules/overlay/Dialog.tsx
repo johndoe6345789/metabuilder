@@ -18,7 +18,7 @@ import CloseIcon from '@mui/icons-material/Close'
 // Slide transition
 const Transition = forwardRef(function Transition(
   props: TransitionProps & { children: React.ReactElement },
-  ref: React.Ref<unknown>,
+  ref: React.Ref<unknown>
 ) {
   return <Slide direction="up" ref={ref} {...props} />
 })
@@ -43,7 +43,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
         onClose={handleClose}
         TransitionComponent={Transition}
         PaperProps={{
-          sx: { borderRadius: 2 }
+          sx: { borderRadius: 2 },
         }}
         {...props}
       >
@@ -64,7 +64,12 @@ interface DialogTriggerProps {
 const DialogTrigger = forwardRef<HTMLDivElement, DialogTriggerProps>(
   ({ children, onClick, ...props }, ref) => {
     return (
-      <Box ref={ref} onClick={onClick} sx={{ display: 'inline-flex', cursor: 'pointer' }} {...props}>
+      <Box
+        ref={ref}
+        onClick={onClick}
+        sx={{ display: 'inline-flex', cursor: 'pointer' }}
+        {...props}
+      >
         {children}
       </Box>
     )
@@ -83,7 +88,11 @@ interface DialogContentProps {
 const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
   ({ children, showCloseButton = true, onClose, ...props }, ref) => {
     return (
-      <MuiDialogContent ref={ref} sx={{ position: 'relative', pt: showCloseButton ? 6 : 2 }} {...props}>
+      <MuiDialogContent
+        ref={ref}
+        sx={{ position: 'relative', pt: showCloseButton ? 6 : 2 }}
+        {...props}
+      >
         {showCloseButton && onClose && (
           <IconButton
             aria-label="close"
@@ -142,34 +151,40 @@ const DialogTitle = forwardRef<HTMLHeadingElement, { children: ReactNode; classN
 DialogTitle.displayName = 'DialogTitle'
 
 // DialogDescription
-const DialogDescription = forwardRef<HTMLParagraphElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
-    return (
-      <Typography ref={ref} variant="body2" color="text.secondary" {...props}>
-        {children}
-      </Typography>
-    )
-  }
-)
+const DialogDescription = forwardRef<
+  HTMLParagraphElement,
+  { children: ReactNode; className?: string }
+>(({ children, ...props }, ref) => {
+  return (
+    <Typography ref={ref} variant="body2" color="text.secondary" {...props}>
+      {children}
+    </Typography>
+  )
+})
 DialogDescription.displayName = 'DialogDescription'
 
 // DialogClose
-const DialogClose = forwardRef<HTMLButtonElement, { children?: ReactNode; onClick?: () => void; asChild?: boolean }>(
-  ({ children, onClick, ...props }, ref) => {
-    if (children) {
-      return (
-        <Box ref={ref as unknown as React.Ref<HTMLDivElement>} onClick={onClick} sx={{ display: 'inline-flex', cursor: 'pointer' }}>
-          {children}
-        </Box>
-      )
-    }
+const DialogClose = forwardRef<
+  HTMLButtonElement,
+  { children?: ReactNode; onClick?: () => void; asChild?: boolean }
+>(({ children, onClick, ...props }, ref) => {
+  if (children) {
     return (
-      <IconButton ref={ref} aria-label="close" onClick={onClick} {...props}>
-        <CloseIcon />
-      </IconButton>
+      <Box
+        ref={ref as unknown as React.Ref<HTMLDivElement>}
+        onClick={onClick}
+        sx={{ display: 'inline-flex', cursor: 'pointer' }}
+      >
+        {children}
+      </Box>
     )
   }
-)
+  return (
+    <IconButton ref={ref} aria-label="close" onClick={onClick} {...props}>
+      <CloseIcon />
+    </IconButton>
+  )
+})
 DialogClose.displayName = 'DialogClose'
 
 // Compatibility exports

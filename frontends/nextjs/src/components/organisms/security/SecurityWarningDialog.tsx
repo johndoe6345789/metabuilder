@@ -32,7 +32,7 @@ export function SecurityWarningDialog({
   onProceed,
   onCancel,
   codeType = 'code',
-  showProceedButton = false
+  showProceedButton = false,
 }: SecurityWarningDialogProps) {
   const closeDialog = () => {
     onOpenChange(false)

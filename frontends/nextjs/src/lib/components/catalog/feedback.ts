@@ -32,8 +32,6 @@ export const feedbackComponents: ComponentDefinition[] = [
     defaultProps: {
       value: 50,
     },
-    propSchema: [
-      { name: 'value', label: 'Value', type: 'number', defaultValue: 50 },
-    ],
+    propSchema: [{ name: 'value', label: 'Value', type: 'number', defaultValue: 50 }],
   },
 ]

@@ -38,12 +38,7 @@ export function ValidationSummary({
       {showTitle ? <AlertTitle>{title}</AlertTitle> : null}
       <List dense disablePadding component="ul" sx={{ pl: 3 }}>
         {errors.map((error, index) => (
-          <ListItem
-            key={index}
-            disableGutters
-            component="li"
-            sx={{ py: 0.25, px: 0 }}
-          >
+          <ListItem key={index} disableGutters component="li" sx={{ py: 0.25, px: 0 }}>
             <ListItemText primaryTypographyProps={{ variant: 'body2' }} primary={error} />
           </ListItem>
         ))}

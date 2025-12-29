@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { User, ChatCircle } from '@phosphor-icons/react'

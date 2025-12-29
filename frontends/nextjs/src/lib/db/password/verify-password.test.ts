@@ -3,16 +3,15 @@ import { verifyPassword } from './verify-password'
 import { hashPassword } from './hash-password'
 
 describe('verifyPassword', () => {
-  it.each([
-    { password: 'test123' },
-    { password: 'P@ssw0rd!' },
-    { password: 'simple' },
-  ])('should verify correct password "$password"', async ({ password }) => {
-    const hash = await hashPassword(password)
-    const result = await verifyPassword(password, hash)
+  it.each([{ password: 'test123' }, { password: 'P@ssw0rd!' }, { password: 'simple' }])(
+    'should verify correct password "$password"',
+    async ({ password }) => {
+      const hash = await hashPassword(password)
+      const result = await verifyPassword(password, hash)
 
-    expect(result).toBe(true)
-  })
+      expect(result).toBe(true)
+    }
+  )
 
   it.each([
     { password: 'correct', wrong: 'incorrect' },

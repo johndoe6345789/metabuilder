@@ -15,15 +15,34 @@ export { Select, type SelectProps, type SelectOption } from './inputs/Select'
 // Display
 export { Label, type LabelProps } from './display/Label'
 export { Badge, type BadgeProps, type BadgeVariant } from './display/Badge'
-export { Avatar, AvatarGroup, AvatarFallback, AvatarImage, type AvatarProps, type AvatarSize } from './display/Avatar'
+export {
+  Avatar,
+  AvatarGroup,
+  AvatarFallback,
+  AvatarImage,
+  type AvatarProps,
+  type AvatarSize,
+} from './display/Avatar'
 export { IconButton, type IconButtonProps, type IconButtonSize } from './display/IconButton'
 export { Icon, type IconProps, type IconName, type IconSize } from './display/Icon'
 export { Link, type LinkProps } from './display/Link'
-export { Text, type TextProps, type TextVariant, type TextWeight, type TextAlign } from './display/Text'
+export {
+  Text,
+  type TextProps,
+  type TextVariant,
+  type TextWeight,
+  type TextAlign,
+} from './display/Text'
 
 // Feedback
 export { Skeleton, type SkeletonProps } from './feedback/Skeleton'
 export { Separator, type SeparatorProps } from './feedback/Separator'
 export { Progress, CircularProgress, type ProgressProps } from './feedback/Progress'
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, type TooltipProps } from './feedback/Tooltip'
+export {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+  type TooltipProps,
+} from './feedback/Tooltip'
 export { Spinner, type SpinnerProps, type SpinnerSize } from './feedback/Spinner'

@@ -27,7 +27,7 @@ export const WorkflowSidebar = ({
             No workflows yet. Create one to start.
           </p>
         ) : (
-          workflows.map((workflow) => (
+          workflows.map(workflow => (
             <div
               key={workflow.id}
               className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${
@@ -39,9 +39,7 @@ export const WorkflowSidebar = ({
             >
               <div className="flex-1">
                 <div className="font-medium text-sm">{workflow.name}</div>
-                <div className="text-xs text-muted-foreground">
-                  {workflow.nodes.length} nodes
-                </div>
+                <div className="text-xs text-muted-foreground">{workflow.nodes.length} nodes</div>
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant={workflow.enabled ? 'default' : 'secondary'} className="text-xs">
@@ -50,7 +48,7 @@ export const WorkflowSidebar = ({
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation()
                     onDeleteWorkflow(workflow.id)
                   }}

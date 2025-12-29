@@ -5,9 +5,9 @@ import { getAdapter } from '../core/dbal-client'
  */
 export async function getSystemConfigValue(key: string): Promise<string | null> {
   const adapter = getAdapter()
-  const config = await adapter.findFirst('SystemConfig', {
+  const config = (await adapter.findFirst('SystemConfig', {
     where: { key },
-  }) as { value?: string } | null
+  })) as { value?: string } | null
 
   return typeof config?.value === 'string' ? config.value : null
 }

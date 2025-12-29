@@ -17,12 +17,12 @@ export const tableToJS = (L: any, index: number): any => {
   const result: any = {}
   let isArray = true
   let arrayIndex = 1
-  
+
   lua.lua_pushnil(L)
-  
+
   while (lua.lua_next(L, index < 0 ? index - 1 : index) !== 0) {
     const keyType = lua.lua_type(L, -2)
-    
+
     if (keyType === lua.LUA_TNUMBER) {
       const key = lua.lua_tonumber(L, -2)
       if (key !== arrayIndex) {
@@ -32,18 +32,18 @@ export const tableToJS = (L: any, index: number): any => {
     } else {
       isArray = false
     }
-    
+
     const key = fromLuaValue(L, -2)
     const value = fromLuaValue(L, -1)
     result[key] = value
-    
+
     lua.lua_pop(L, 1)
   }
-  
+
   if (isArray && arrayIndex > 1) {
     return Object.values(result)
   }
-  
+
   return result
 }
 
@@ -52,7 +52,7 @@ export const tableToJS = (L: any, index: number): any => {
  */
 const fromLuaValue = (L: any, index: number): any => {
   const type = lua.lua_type(L, index)
-  
+
   switch (type) {
     case lua.LUA_TNIL:
       return null

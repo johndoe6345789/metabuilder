@@ -1,7 +1,15 @@
 import { Box, Stack } from '@mui/material'
 import { CheckCircle as SuccessIcon } from '@mui/icons-material'
 
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Skeleton } from '@/components/ui'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Skeleton,
+} from '@/components/ui'
 
 import type { RunListProps } from './run-list.types'
 import { RunListEmptyState } from './RunListEmptyState'
@@ -9,12 +17,7 @@ import { RunRow } from './RunRow'
 
 type RunTableProps = Pick<
   RunListProps,
-  | 'runs'
-  | 'isLoading'
-  | 'getStatusColor'
-  | 'onDownloadLogs'
-  | 'isLoadingLogs'
-  | 'selectedRunId'
+  'runs' | 'isLoading' | 'getStatusColor' | 'onDownloadLogs' | 'isLoadingLogs' | 'selectedRunId'
 >
 
 export const RunTable = ({
@@ -56,7 +59,7 @@ export const RunTable = ({
 
         {runs && runs.length > 0 ? (
           <Stack spacing={2}>
-            {runs.map((run) => (
+            {runs.map(run => (
               <RunRow
                 key={run.id}
                 run={run}

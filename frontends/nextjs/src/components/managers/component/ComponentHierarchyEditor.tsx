@@ -4,11 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
 import { Separator } from '@/components/ui'
-import {
-  ArrowsOutCardinal,
-  Plus,
-  Tree,
-} from '@phosphor-icons/react'
+import { ArrowsOutCardinal, Plus, Tree } from '@phosphor-icons/react'
 import { Database, type ComponentNode } from '@/lib/database'
 import { componentCatalog } from '@/lib/components/component-catalog'
 import { toast } from 'sonner'
@@ -132,7 +128,7 @@ export function ComponentHierarchyEditor({ nerdMode = false }: { nerdMode?: bool
                   <SelectValue placeholder="Select a page" />
                 </SelectTrigger>
                 <SelectContent>
-                  {pages.map((page) => (
+                  {pages.map(page => (
                     <SelectItem key={page.id} value={page.id}>
                       {page.title} ({page.path})
                     </SelectItem>
@@ -177,10 +173,8 @@ export function ComponentHierarchyEditor({ nerdMode = false }: { nerdMode?: bool
           <CardContent className="flex-1 overflow-hidden">
             <ScrollArea className="h-full pr-4">
               <div className="space-y-6">
-                {['Layout', 'Input', 'Typography', 'Display', 'Feedback', 'Data'].map((category) => {
-                  const categoryComponents = componentCatalog.filter(
-                    (c) => c.category === category
-                  )
+                {['Layout', 'Input', 'Typography', 'Display', 'Feedback', 'Data'].map(category => {
+                  const categoryComponents = componentCatalog.filter(c => c.category === category)
                   if (categoryComponents.length === 0) return null
 
                   return (
@@ -188,14 +182,11 @@ export function ComponentHierarchyEditor({ nerdMode = false }: { nerdMode?: bool
                       <h3 className="font-semibold text-sm mb-2">{category}</h3>
                       <Separator className="mb-3" />
                       <div className="space-y-1">
-                        {categoryComponents.map((component) => (
+                        {categoryComponents.map(component => (
                           <button
                             key={component.type}
                             onClick={() =>
-                              handleAddComponent(
-                                component.type,
-                                selectedNodeId || undefined
-                              )
+                              handleAddComponent(component.type, selectedNodeId || undefined)
                             }
                             className="w-full flex items-center gap-3 p-2 rounded hover:bg-accent transition-colors text-left"
                           >
@@ -203,9 +194,7 @@ export function ComponentHierarchyEditor({ nerdMode = false }: { nerdMode?: bool
                               <Tree size={16} />
                             </div>
                             <div className="flex-1">
-                              <div className="text-sm font-medium">
-                                {component.label}
-                              </div>
+                              <div className="text-sm font-medium">{component.label}</div>
                               {component.allowsChildren && (
                                 <div className="text-xs text-muted-foreground">
                                   Can contain children

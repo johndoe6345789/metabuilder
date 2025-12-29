@@ -7,9 +7,7 @@ export const DATE_AND_TIME_SNIPPETS: LuaSnippet[] = [
     description: 'Format timestamp in various ways',
     category: 'Date & Time',
     tags: ['date', 'time', 'format'],
-    parameters: [
-      { name: 'timestamp', type: 'number', description: 'Unix timestamp' }
-    ],
+    parameters: [{ name: 'timestamp', type: 'number', description: 'Unix timestamp' }],
     code: `local timestamp = context.data.timestamp or os.time()
 
 local formatted = {
@@ -21,7 +19,7 @@ local formatted = {
   unix = timestamp
 }
 
-return formatted`
+return formatted`,
   },
   {
     id: 'date_diff',
@@ -31,7 +29,7 @@ return formatted`
     tags: ['date', 'time', 'difference'],
     parameters: [
       { name: 'startTime', type: 'number', description: 'Start timestamp' },
-      { name: 'endTime', type: 'number', description: 'End timestamp' }
+      { name: 'endTime', type: 'number', description: 'End timestamp' },
     ],
     code: `local startTime = context.data.startTime or os.time()
 local endTime = context.data.endTime or os.time()
@@ -51,6 +49,6 @@ return {
     days = diffDays
   },
   formatted = diffDays .. " days, " .. (diffHours % 24) .. " hours"
-}`
-  }
+}`,
+  },
 ]

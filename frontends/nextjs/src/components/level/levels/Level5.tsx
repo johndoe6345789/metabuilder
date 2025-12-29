@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { Level5Header } from '../../level5/header/Level5Header'
 import { NerdModeIDE } from '../../misc/NerdModeIDE'

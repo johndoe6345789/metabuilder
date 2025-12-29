@@ -1,5 +1,15 @@
 import { useState } from 'react'
-import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from '@/components/ui'
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+} from '@/components/ui'
 import { useCachedData } from '@/hooks/useDBAL'
 import { toast } from 'sonner'
 
@@ -10,7 +20,8 @@ interface UserPreferences {
 }
 
 export function CachedDataDemo() {
-  const { data, loading, error, save, clear, isReady } = useCachedData<UserPreferences>('user-preferences')
+  const { data, loading, error, save, clear, isReady } =
+    useCachedData<UserPreferences>('user-preferences')
   const [theme, setTheme] = useState('dark')
   const [language, setLanguage] = useState('en')
   const [notifications, setNotifications] = useState(true)
@@ -54,12 +65,22 @@ export function CachedDataDemo() {
 
         <div className="space-y-2">
           <Label htmlFor="theme">Theme</Label>
-          <Input id="theme" value={theme} onChange={(e) => setTheme(e.target.value)} placeholder="dark" />
+          <Input
+            id="theme"
+            value={theme}
+            onChange={e => setTheme(e.target.value)}
+            placeholder="dark"
+          />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="language">Language</Label>
-          <Input id="language" value={language} onChange={(e) => setLanguage(e.target.value)} placeholder="en" />
+          <Input
+            id="language"
+            value={language}
+            onChange={e => setLanguage(e.target.value)}
+            placeholder="en"
+          />
         </div>
 
         <div className="flex items-center space-x-2">
@@ -67,7 +88,7 @@ export function CachedDataDemo() {
             type="checkbox"
             id="notifications"
             checked={notifications}
-            onChange={(e) => setNotifications(e.target.checked)}
+            onChange={e => setNotifications(e.target.checked)}
             className="w-4 h-4"
           />
           <Label htmlFor="notifications">Enable Notifications</Label>

@@ -6,10 +6,7 @@ export {
   NavigationMenuList,
   NavigationMenuItem,
 } from './NavigationMenuCore'
-export {
-  NavigationMenuTrigger,
-  NavigationMenuContent,
-} from './NavigationMenuTrigger'
+export { NavigationMenuTrigger, NavigationMenuContent } from './NavigationMenuTrigger'
 export {
   NavigationMenuLink,
   NavigationMenuIndicator,

@@ -18,7 +18,9 @@ describe('getWorkflows', () => {
     { name: 'empty', dbData: [], expectedLength: 0 },
     {
       name: 'parsed workflows',
-      dbData: [{ id: 'w1', name: 'Test', description: null, nodes: '[]', edges: '[]', enabled: true }],
+      dbData: [
+        { id: 'w1', name: 'Test', description: null, nodes: '[]', edges: '[]', enabled: true },
+      ],
       expectedLength: 1,
     },
   ])('should return $name', async ({ dbData, expectedLength }) => {

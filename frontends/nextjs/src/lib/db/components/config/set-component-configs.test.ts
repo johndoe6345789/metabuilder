@@ -23,7 +23,9 @@ describe('setComponentConfigs', () => {
     mockDelete.mockResolvedValue(undefined)
     mockCreate.mockResolvedValue(undefined)
 
-    await setComponentConfigs({ cfg1: { id: 'cfg1', componentId: 'c1', props: {}, styles: {}, events: {} } })
+    await setComponentConfigs({
+      cfg1: { id: 'cfg1', componentId: 'c1', props: {}, styles: {}, events: {} },
+    })
 
     expect(mockDelete).toHaveBeenCalledTimes(1)
     expect(mockCreate).toHaveBeenCalledTimes(1)

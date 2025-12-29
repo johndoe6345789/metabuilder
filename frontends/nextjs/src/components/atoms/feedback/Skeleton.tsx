@@ -16,14 +16,7 @@ export interface SkeletonProps extends MuiSkeletonProps {
 
 const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(
   ({ variant = 'rounded', animation = 'wave', ...props }, ref) => {
-    return (
-      <MuiSkeleton
-        ref={ref}
-        variant={variant}
-        animation={animation}
-        {...props}
-      />
-    )
+    return <MuiSkeleton ref={ref} variant={variant} animation={animation} {...props} />
   }
 )
 

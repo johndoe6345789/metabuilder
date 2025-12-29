@@ -32,7 +32,7 @@ export function SnippetList({
 }: SnippetListProps) {
   return (
     <>
-      {LUA_SNIPPET_CATEGORIES.map((category) => (
+      {LUA_SNIPPET_CATEGORIES.map(category => (
         <TabsContent key={category} value={category} className="mt-6">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {snippets.length === 0 ? (
@@ -42,7 +42,7 @@ export function SnippetList({
                 {searchQuery && <p className="text-sm mt-2">Try a different search term</p>}
               </div>
             ) : (
-              snippets.map((snippet) => (
+              snippets.map(snippet => (
                 <Card
                   key={`${selectedCategory}-${snippet.id}`}
                   className="hover:border-primary transition-colors cursor-pointer group"
@@ -65,7 +65,7 @@ export function SnippetList({
                   </CardHeader>
                   <CardContent className="pt-0">
                     <div className="flex flex-wrap gap-1.5 mb-3">
-                      {snippet.tags.slice(0, 3).map((tag) => (
+                      {snippet.tags.slice(0, 3).map(tag => (
                         <Badge key={tag} variant="secondary" className="text-xs">
                           <Tag size={12} className="mr-1" />
                           {tag}
@@ -82,7 +82,7 @@ export function SnippetList({
                         size="sm"
                         variant="outline"
                         className="flex-1"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation()
                           onCopySnippet(snippet)
                         }}
@@ -103,7 +103,7 @@ export function SnippetList({
                         <Button
                           size="sm"
                           className="flex-1"
-                          onClick={(e) => {
+                          onClick={e => {
                             e.stopPropagation()
                             onInsertSnippet(snippet)
                           }}

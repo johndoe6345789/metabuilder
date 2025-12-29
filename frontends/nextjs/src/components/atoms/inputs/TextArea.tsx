@@ -32,19 +32,19 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             transition: 'border-color 0.2s, box-shadow 0.2s',
             resize: 'vertical',
           }}
-          onFocus={(e) => {
-            e.currentTarget.style.borderColor = error 
-              ? 'var(--mui-palette-error-main)' 
+          onFocus={e => {
+            e.currentTarget.style.borderColor = error
+              ? 'var(--mui-palette-error-main)'
               : 'var(--mui-palette-primary-main)'
             e.currentTarget.style.boxShadow = `0 0 0 2px ${
-              error 
-                ? 'rgba(var(--mui-palette-error-mainChannel) / 0.15)' 
+              error
+                ? 'rgba(var(--mui-palette-error-mainChannel) / 0.15)'
                 : 'rgba(var(--mui-palette-primary-mainChannel) / 0.15)'
             }`
           }}
-          onBlur={(e) => {
-            e.currentTarget.style.borderColor = error 
-              ? 'var(--mui-palette-error-main)' 
+          onBlur={e => {
+            e.currentTarget.style.borderColor = error
+              ? 'var(--mui-palette-error-main)'
               : 'var(--mui-palette-divider)'
             e.currentTarget.style.boxShadow = 'none'
           }}

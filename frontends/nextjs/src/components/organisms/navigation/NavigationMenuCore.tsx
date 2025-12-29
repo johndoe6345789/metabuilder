@@ -31,28 +31,29 @@ const NavigationMenuCore = forwardRef<HTMLDivElement, NavigationMenuProps>(
 NavigationMenuCore.displayName = 'NavigationMenuCore'
 
 // NavigationMenuList
-const NavigationMenuList = forwardRef<HTMLUListElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
-    return (
-      <Box
-        ref={ref}
-        component="ul"
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 0.5,
-          listStyle: 'none',
-          m: 0,
-          p: 0,
-        }}
-        {...props}
-      >
-        {children}
-      </Box>
-    )
-  }
-)
+const NavigationMenuList = forwardRef<
+  HTMLUListElement,
+  { children: ReactNode; className?: string }
+>(({ children, ...props }, ref) => {
+  return (
+    <Box
+      ref={ref}
+      component="ul"
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 0.5,
+        listStyle: 'none',
+        m: 0,
+        p: 0,
+      }}
+      {...props}
+    >
+      {children}
+    </Box>
+  )
+})
 NavigationMenuList.displayName = 'NavigationMenuList'
 
 // NavigationMenuItem
@@ -72,8 +73,4 @@ const NavigationMenuItem = forwardRef<HTMLLIElement, NavigationMenuItemProps>(
 )
 NavigationMenuItem.displayName = 'NavigationMenuItem'
 
-export {
-  NavigationMenuCore,
-  NavigationMenuList,
-  NavigationMenuItem,
-}
+export { NavigationMenuCore, NavigationMenuList, NavigationMenuItem }

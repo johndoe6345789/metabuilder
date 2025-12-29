@@ -1,8 +1,8 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import { 
-  Alert as MuiAlert, 
+import {
+  Alert as MuiAlert,
   AlertProps as MuiAlertProps,
   AlertTitle as MuiAlertTitle,
   Collapse,
@@ -33,7 +33,10 @@ const variantMap: Record<AlertVariant, MuiAlertProps['severity']> = {
 }
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(
-  ({ variant = 'default', title, dismissible, onDismiss, children, className, sx, ...props }, ref) => {
+  (
+    { variant = 'default', title, dismissible, onDismiss, children, className, sx, ...props },
+    ref
+  ) => {
     const severity = variantMap[variant]
 
     return (
@@ -44,12 +47,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
         className={className}
         action={
           dismissible && onDismiss ? (
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={onDismiss}
-            >
+            <IconButton aria-label="close" color="inherit" size="small" onClick={onDismiss}>
               <CloseIcon fontSize="inherit" />
             </IconButton>
           ) : undefined
@@ -71,7 +69,11 @@ const AlertTitle = MuiAlertTitle
 // AlertDescription (shadcn compat)
 const AlertDescription = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
   ({ children, ...props }, ref) => {
-    return <div ref={ref} {...props}>{children}</div>
+    return (
+      <div ref={ref} {...props}>
+        {children}
+      </div>
+    )
   }
 )
 AlertDescription.displayName = 'AlertDescription'

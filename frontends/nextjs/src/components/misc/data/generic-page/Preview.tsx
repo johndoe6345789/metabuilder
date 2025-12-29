@@ -1,4 +1,12 @@
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle, Separator } from '@/components/ui'
+import {
+  Badge,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Separator,
+} from '@/components/ui'
 import { PageDefinition } from '@/lib/rendering/page/page-renderer'
 import { Eye, Layout, ShieldCheck } from '@phosphor-icons/react'
 
@@ -12,7 +20,7 @@ const layoutCopy: Record<PageDefinition['layout'], string> = {
   default: 'Default layout with header and footer',
   sidebar: 'Sidebar layout with navigation',
   dashboard: 'Dashboard layout with widgets',
-  blank: 'Blank canvas for custom layouts'
+  blank: 'Blank canvas for custom layouts',
 }
 
 export function Preview({ page, updatedAt, footerText }: GenericPagePreviewProps) {
@@ -34,7 +42,9 @@ export function Preview({ page, updatedAt, footerText }: GenericPagePreviewProps
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">{page.description || 'No description provided.'}</p>
+            <p className="text-sm text-muted-foreground">
+              {page.description || 'No description provided.'}
+            </p>
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               <Badge variant="outline" className="capitalize">
                 Level {page.level}
@@ -43,7 +53,8 @@ export function Preview({ page, updatedAt, footerText }: GenericPagePreviewProps
               {page.permissions?.requiresAuth && (
                 <span className="inline-flex items-center gap-1">
                   <ShieldCheck size={14} />
-                  Auth required{page.permissions?.requiredRole ? ` (${page.permissions.requiredRole})` : ''}
+                  Auth required
+                  {page.permissions?.requiredRole ? ` (${page.permissions.requiredRole})` : ''}
                 </span>
               )}
               {updatedAt && <span>Last updated {updatedAt}</span>}
@@ -75,18 +86,25 @@ export function Preview({ page, updatedAt, footerText }: GenericPagePreviewProps
               <p className="text-sm font-semibold">Component tree</p>
               <div className="grid gap-2 md:grid-cols-2">
                 {page.components.slice(0, 4).map(component => (
-                  <div key={component.id} className="rounded border bg-muted/40 p-2 text-xs text-muted-foreground">
+                  <div
+                    key={component.id}
+                    className="rounded border bg-muted/40 p-2 text-xs text-muted-foreground"
+                  >
                     <div className="flex items-center justify-between">
                       <span className="font-semibold text-foreground">{component.type}</span>
                       {component.children && component.children.length > 0 && (
                         <Badge variant="outline">{component.children.length} children</Badge>
                       )}
                     </div>
-                    {component.props?.className && <p className="line-clamp-1">{component.props.className}</p>}
+                    {component.props?.className && (
+                      <p className="line-clamp-1">{component.props.className}</p>
+                    )}
                   </div>
                 ))}
                 {page.components.length === 0 && (
-                  <p className="text-xs text-muted-foreground">Add components to see them previewed here.</p>
+                  <p className="text-xs text-muted-foreground">
+                    Add components to see them previewed here.
+                  </p>
                 )}
               </div>
             </div>

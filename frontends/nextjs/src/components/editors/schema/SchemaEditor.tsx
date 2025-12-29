@@ -20,7 +20,7 @@ export function SchemaEditor({ open, onClose, schema, onSave }: SchemaEditorProp
   const handleSave = () => {
     try {
       const parsed = JSON.parse(schemaText)
-      
+
       if (!parsed.apps || !Array.isArray(parsed.apps)) {
         setError('Schema must have an "apps" array')
         return
@@ -40,7 +40,7 @@ export function SchemaEditor({ open, onClose, schema, onSave }: SchemaEditorProp
         <DialogHeader>
           <DialogTitle className="text-2xl">Edit Schema Configuration</DialogTitle>
         </DialogHeader>
-        
+
         <div className="space-y-4">
           {error && (
             <Alert variant="destructive">
@@ -48,13 +48,13 @@ export function SchemaEditor({ open, onClose, schema, onSave }: SchemaEditorProp
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          
+
           <div className="border rounded-lg overflow-hidden">
             <Editor
               height="500px"
               language="json"
               value={schemaText}
-              onChange={(value) => {
+              onChange={value => {
                 setSchemaText(value || '')
                 setError(null)
               }}
@@ -81,7 +81,10 @@ export function SchemaEditor({ open, onClose, schema, onSave }: SchemaEditorProp
             <X className="mr-2" />
             Cancel
           </Button>
-          <Button onClick={handleSave} className="bg-accent text-accent-foreground hover:bg-accent/90">
+          <Button
+            onClick={handleSave}
+            className="bg-accent text-accent-foreground hover:bg-accent/90"
+          >
             <FloppyDisk className="mr-2" />
             Save Schema
           </Button>

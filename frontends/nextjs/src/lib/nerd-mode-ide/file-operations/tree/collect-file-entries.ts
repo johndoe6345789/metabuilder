@@ -14,17 +14,17 @@ export function collectFileEntries(nodes: FileNode[]): FileEntry[] {
     }
 
     if (node.children) {
-      node.children.forEach((child) => walk(child, rootSegments, nextExportSegments))
+      node.children.forEach(child => walk(child, rootSegments, nextExportSegments))
     }
   }
 
-  nodes.forEach((node) => {
+  nodes.forEach(node => {
     const rootSegments = [node.name]
     if (node.type === 'file') {
       entries.push({ path: rootSegments.join('/'), content: node.content ?? '' })
       return
     }
-    node.children?.forEach((child) => walk(child, rootSegments, rootSegments))
+    node.children?.forEach(child => walk(child, rootSegments, rootSegments))
   })
 
   return entries

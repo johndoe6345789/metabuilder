@@ -10,7 +10,11 @@ describe('Text', () => {
     { variant: 'body2', weight: 'light', children: 'Small text' },
     { variant: 'caption', weight: 'medium', children: 'Caption' },
   ] as const)('renders with variant=$variant weight=$weight', ({ variant, weight, children }) => {
-    render(<Text variant={variant} weight={weight}>{children}</Text>)
+    render(
+      <Text variant={variant} weight={weight}>
+        {children}
+      </Text>
+    )
     expect(screen.getByText(children)).not.toBeNull()
   })
 

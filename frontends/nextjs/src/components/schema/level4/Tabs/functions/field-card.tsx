@@ -1,12 +1,6 @@
 import { Button, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Input, Label } from '@/components/ui'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import { ValidationPanel } from '@/components/schema/level4/ValidationPanel'
 import type { FieldSchema, FieldType, ModelSchema } from '@/lib/schema-types'
 import { Plus, Trash } from '@phosphor-icons/react'
@@ -20,14 +14,14 @@ export function FieldCard({ field, onChange, onDelete }: FieldCardProps) {
             <TextField
               label="Field Name"
               value={field.name}
-              onChange={(value) => onChange({ name: value })}
+              onChange={value => onChange({ name: value })}
               placeholder="email"
               labelClassName="text-xs"
             />
             <TextField
               label="Label"
               value={field.label || ''}
-              onChange={(value) => onChange({ label: value })}
+              onChange={value => onChange({ label: value })}
               placeholder="Email Address"
               labelClassName="text-xs"
             />
@@ -35,7 +29,7 @@ export function FieldCard({ field, onChange, onDelete }: FieldCardProps) {
               <Label className="text-xs">Type</Label>
               <Select
                 value={field.type}
-                onValueChange={(value) => onChange({ type: value as FieldType })}
+                onValueChange={value => onChange({ type: value as FieldType })}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -58,7 +52,7 @@ export function FieldCard({ field, onChange, onDelete }: FieldCardProps) {
             <TextField
               label="Default Value"
               value={field.default ?? ''}
-              onChange={(value) => onChange({ default: value || undefined })}
+              onChange={value => onChange({ default: value || undefined })}
               placeholder="Default"
               labelClassName="text-xs"
             />

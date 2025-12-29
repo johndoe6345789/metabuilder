@@ -3,11 +3,19 @@
 import { forwardRef } from 'react'
 import { Typography, TypographyProps } from '@mui/material'
 
-export type TextVariant = 
-  | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
-  | 'body1' | 'body2' 
-  | 'subtitle1' | 'subtitle2'
-  | 'caption' | 'overline'
+export type TextVariant =
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'body1'
+  | 'body2'
+  | 'subtitle1'
+  | 'subtitle2'
+  | 'caption'
+  | 'overline'
 
 export type TextWeight = 'light' | 'regular' | 'medium' | 'semibold' | 'bold'
 export type TextAlign = 'left' | 'center' | 'right' | 'justify'
@@ -29,15 +37,10 @@ const weightMap = {
 }
 
 const Text = forwardRef<HTMLElement, TextProps>(
-  ({ 
-    variant = 'body1', 
-    weight = 'regular',
-    align = 'left',
-    muted, 
-    truncate,
-    sx,
-    ...props 
-  }, ref) => {
+  (
+    { variant = 'body1', weight = 'regular', align = 'left', muted, truncate, sx, ...props },
+    ref
+  ) => {
     return (
       <Typography
         ref={ref}

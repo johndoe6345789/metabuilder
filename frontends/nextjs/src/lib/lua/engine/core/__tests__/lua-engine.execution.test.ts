@@ -29,7 +29,11 @@ describe('lua-engine execution', () => {
         { name: 'return boolean false', code: 'return false', expected: false },
         { name: 'return nil', code: 'return nil', expected: null },
         { name: 'arithmetic', code: 'return 10 + 5 * 2', expected: 20 },
-        { name: 'string concatenation', code: 'return "hello" .. " " .. "world"', expected: 'hello world' },
+        {
+          name: 'string concatenation',
+          code: 'return "hello" .. " " .. "world"',
+          expected: 'hello world',
+        },
         { name: 'comparison', code: 'return 5 > 3', expected: true },
       ])('should execute $name', async ({ code, expected }) => {
         const result = await engine.execute(code)
@@ -115,10 +119,9 @@ describe('lua-engine execution', () => {
       })
 
       it('should access context.user', async () => {
-        const result = await engine.execute(
-          'return context.user.id',
-          { user: { id: 'user123', name: 'Test' } }
-        )
+        const result = await engine.execute('return context.user.id', {
+          user: { id: 'user123', name: 'Test' },
+        })
         expect(result.success).toBe(true)
         expect(result.result).toBe('user123')
       })
@@ -279,7 +282,11 @@ describe('lua-engine execution', () => {
         { name: 'string.lower', code: 'return string.lower("HELLO")', expected: 'hello' },
         { name: 'string.len', code: 'return string.len("test")', expected: 4 },
         { name: 'string.sub', code: 'return string.sub("hello", 2, 4)', expected: 'ell' },
-        { name: 'table.concat', code: 'return table.concat({"a", "b", "c"}, ", ")', expected: 'a, b, c' },
+        {
+          name: 'table.concat',
+          code: 'return table.concat({"a", "b", "c"}, ", ")',
+          expected: 'a, b, c',
+        },
       ])('should support $name', async ({ code, expected }) => {
         const result = await engine.execute(code)
         expect(result.success).toBe(true)

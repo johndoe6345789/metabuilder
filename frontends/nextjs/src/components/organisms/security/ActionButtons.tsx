@@ -13,17 +13,13 @@ export function ActionButtons({
   scanResult,
   onCancel,
   onProceed,
-  showProceedButton = false
+  showProceedButton = false,
 }: ActionButtonsProps) {
   const disableProceed = scanResult.severity === 'critical'
 
   return (
     <DialogFooter className="flex-col sm:flex-row gap-2">
-      <Button
-        variant="outline"
-        onClick={onCancel}
-        className="w-full sm:w-auto"
-      >
+      <Button variant="outline" onClick={onCancel} className="w-full sm:w-auto">
         {scanResult.safe ? 'Close' : 'Cancel'}
       </Button>
 
@@ -34,7 +30,9 @@ export function ActionButtons({
           disabled={disableProceed}
           className="w-full sm:w-auto"
         >
-          {scanResult.severity === 'critical' ? 'Force Proceed (Not Recommended)' : 'Proceed Anyway'}
+          {scanResult.severity === 'critical'
+            ? 'Force Proceed (Not Recommended)'
+            : 'Proceed Anyway'}
         </Button>
       )}
     </DialogFooter>

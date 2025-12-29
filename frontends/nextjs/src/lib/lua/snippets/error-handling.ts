@@ -35,7 +35,7 @@ else
     success = false,
     error = tostring(result)
   }
-end`
+end`,
   },
   {
     id: 'error_validation_accumulator',
@@ -73,6 +73,6 @@ end
 return {
   valid = true,
   data = data
-}`
-  }
+}`,
+  },
 ]

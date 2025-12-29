@@ -7,13 +7,13 @@ import type { User } from '../../types/level-types'
  */
 export async function setUsers(users: User[]): Promise<void> {
   const adapter = getAdapter()
-  
+
   // Get existing users and delete them
   const existing = await adapter.list('User')
   for (const user of existing.data as any[]) {
     await adapter.delete('User', user.id)
   }
-  
+
   // Create new users
   for (const user of users) {
     await adapter.create('User', {

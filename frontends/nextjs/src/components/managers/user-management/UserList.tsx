@@ -23,19 +23,22 @@ interface UserListProps {
   onDelete?: (user: User) => void
   compact?: boolean
 }
-const ROLE_STYLES: Record<UserRole, { label: string; variant: 'default' | 'secondary' | 'outline' }> = {
-    public: { label: 'Public', variant: 'outline' },
-    user: { label: 'User', variant: 'outline' },
-    moderator: { label: 'Moderator', variant: 'secondary' },
-    admin: { label: 'Admin', variant: 'secondary' },
-    god: { label: 'God', variant: 'default' },
-    supergod: { label: 'Supergod', variant: 'default' },
-  }
+const ROLE_STYLES: Record<
+  UserRole,
+  { label: string; variant: 'default' | 'secondary' | 'outline' }
+> = {
+  public: { label: 'Public', variant: 'outline' },
+  user: { label: 'User', variant: 'outline' },
+  moderator: { label: 'Moderator', variant: 'secondary' },
+  admin: { label: 'Admin', variant: 'secondary' },
+  god: { label: 'God', variant: 'default' },
+  supergod: { label: 'Supergod', variant: 'default' },
+}
 
 function initials(value: string) {
   return value
     .split(' ')
-    .map((chunk) => chunk[0])
+    .map(chunk => chunk[0])
     .join('')
     .slice(0, 2)
     .toUpperCase()
@@ -46,7 +49,7 @@ export function UserList({ users, onEdit, onDelete, compact }: UserListProps) {
   const [role, setRole] = useState<UserRole | 'all'>('all')
 
   const filtered = useMemo(() => {
-    return users.filter((user) => {
+    return users.filter(user => {
       const matchesQuery = `${user.username} ${user.email}`
         .toLowerCase()
         .includes(query.toLowerCase())
@@ -64,7 +67,7 @@ export function UserList({ users, onEdit, onDelete, compact }: UserListProps) {
             id="user-search"
             placeholder="Search by name or email"
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={event => setQuery(event.target.value)}
           />
         </div>
         <div className="space-y-1">
@@ -75,7 +78,7 @@ export function UserList({ users, onEdit, onDelete, compact }: UserListProps) {
             id="role-filter"
             className="h-10 rounded-md border border-input bg-background px-3 text-sm"
             value={role}
-            onChange={(event) => setRole(event.target.value as UserRole | 'all')}
+            onChange={event => setRole(event.target.value as UserRole | 'all')}
           >
             <option value="all">All roles</option>
             {Object.entries(ROLE_STYLES).map(([value, meta]) => (
@@ -99,7 +102,7 @@ export function UserList({ users, onEdit, onDelete, compact }: UserListProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.map((user) => (
+            {filtered.map(user => (
               <TableRow key={user.id} className={compact ? 'text-sm' : undefined}>
                 <TableCell className="flex items-center gap-3">
                   <Avatar className="h-9 w-9">
@@ -113,7 +116,9 @@ export function UserList({ users, onEdit, onDelete, compact }: UserListProps) {
                 </TableCell>
                 <TableCell className="text-muted-foreground">{user.email}</TableCell>
                 <TableCell>
-                  <Badge variant={ROLE_STYLES[user.role]?.variant}>{ROLE_STYLES[user.role]?.label}</Badge>
+                  <Badge variant={ROLE_STYLES[user.role]?.variant}>
+                    {ROLE_STYLES[user.role]?.label}
+                  </Badge>
                 </TableCell>
                 <TableCell className="text-muted-foreground">
                   {new Date(user.createdAt).toLocaleDateString()}

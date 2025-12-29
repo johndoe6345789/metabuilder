@@ -25,7 +25,7 @@ export const LUA_SNIPPET_CATEGORIES = [
   'API & Networking',
   'Date & Time',
   'File Operations',
-  'Utilities'
+  'Utilities',
 ] as const
 
 export const LUA_SNIPPETS: LuaSnippet[] = [
@@ -38,5 +38,5 @@ export const LUA_SNIPPETS: LuaSnippet[] = [
   ...USER_MANAGEMENT_SNIPPETS,
   ...ERROR_HANDLING_SNIPPETS,
   ...DATE_AND_TIME_SNIPPETS,
-  ...UTILITY_SNIPPETS
+  ...UTILITY_SNIPPETS,
 ]

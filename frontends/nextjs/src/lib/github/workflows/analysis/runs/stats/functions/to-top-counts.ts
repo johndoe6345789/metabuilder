@@ -5,7 +5,7 @@ export function toTopCounts(
   topCount: number
 ): Array<{ key: string; count: number }> {
   const counts = new Map<string, number>()
-  values.forEach((value) => {
+  values.forEach(value => {
     counts.set(value, (counts.get(value) || 0) + 1)
   })
 

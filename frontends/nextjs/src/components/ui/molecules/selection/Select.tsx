@@ -67,7 +67,7 @@ interface SelectTriggerProps {
 const SelectTrigger = forwardRef<HTMLDivElement, SelectTriggerProps>(
   ({ children, size = 'default', id, ...props }, ref) => {
     const context = useContext(SelectContext)
-    
+
     return (
       <MuiSelect
         ref={ref}

@@ -23,7 +23,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   const resolvedMode = useMemo<Exclude<ThemeMode, 'system'>>(() => {
     if (mode === 'system') {
-      return typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
+      return typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark'
         : 'light'
     }
@@ -52,9 +53,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <ThemeContext.Provider value={{ mode, resolvedMode, setMode, toggleTheme }}>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       </MuiThemeProvider>
     </ThemeContext.Provider>
   )

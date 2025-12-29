@@ -12,7 +12,7 @@ export const useLuaMonacoConfig = (monaco: Monaco | null) => {
           startLineNumber: position.lineNumber,
           endLineNumber: position.lineNumber,
           startColumn: word.startColumn,
-          endColumn: word.endColumn
+          endColumn: word.endColumn,
         }
 
         const suggestions: any[] = [
@@ -21,21 +21,21 @@ export const useLuaMonacoConfig = (monaco: Monaco | null) => {
             kind: monaco.languages.CompletionItemKind.Property,
             insertText: 'context.data',
             documentation: 'Access input parameters passed to the script',
-            range
+            range,
           },
           {
             label: 'context.user',
             kind: monaco.languages.CompletionItemKind.Property,
             insertText: 'context.user',
             documentation: 'Current user information (username, role, etc.)',
-            range
+            range,
           },
           {
             label: 'context.kv',
             kind: monaco.languages.CompletionItemKind.Property,
             insertText: 'context.kv',
             documentation: 'Key-value storage interface',
-            range
+            range,
           },
           {
             label: 'context.log',
@@ -43,7 +43,7 @@ export const useLuaMonacoConfig = (monaco: Monaco | null) => {
             insertText: 'context.log(${1:message})',
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             documentation: 'Log a message to the output console',
-            range
+            range,
           },
           {
             label: 'log',
@@ -51,7 +51,7 @@ export const useLuaMonacoConfig = (monaco: Monaco | null) => {
             insertText: 'log(${1:message})',
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             documentation: 'Log a message (shortcut for context.log)',
-            range
+            range,
           },
           {
             label: 'print',
@@ -59,7 +59,7 @@ export const useLuaMonacoConfig = (monaco: Monaco | null) => {
             insertText: 'print(${1:message})',
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             documentation: 'Print a message to output',
-            range
+            range,
           },
           {
             label: 'return',
@@ -67,31 +67,31 @@ export const useLuaMonacoConfig = (monaco: Monaco | null) => {
             insertText: 'return ${1:result}',
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             documentation: 'Return a value from the script',
-            range
+            range,
           },
         ]
 
         return { suggestions }
-      }
+      },
     })
 
     monaco.languages.setLanguageConfiguration('lua', {
       comments: {
         lineComment: '--',
-        blockComment: ['--[[', ']]']
+        blockComment: ['--[[', ']]'],
       },
       brackets: [
         ['{', '}'],
         ['[', ']'],
-        ['(', ')']
+        ['(', ')'],
       ],
       autoClosingPairs: [
         { open: '{', close: '}' },
         { open: '[', close: ']' },
         { open: '(', close: ')' },
         { open: '"', close: '"' },
-        { open: "'", close: "'" }
-      ]
+        { open: "'", close: "'" },
+      ],
     })
   }, [monaco])
 }

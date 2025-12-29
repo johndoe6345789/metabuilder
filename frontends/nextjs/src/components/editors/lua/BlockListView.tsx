@@ -1,5 +1,14 @@
 import type { MouseEvent } from 'react'
-import { Box, Button, Card, CardContent, CardHeader, Stack, TextField, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { Add as AddIcon } from '@mui/icons-material'
 import type { LuaScript } from '@/lib/level-types'
 import type { BlockDefinition, BlockSlot, LuaBlock, LuaBlockType } from './types'
@@ -41,7 +50,7 @@ export function BlockListView({
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={(event) => onRequestAddBlock(event, { parentId: null, slot: 'root' })}
+            onClick={event => onRequestAddBlock(event, { parentId: null, slot: 'root' })}
             disabled={!selectedScript}
           >
             Add block
@@ -59,13 +68,13 @@ export function BlockListView({
               <TextField
                 label="Script name"
                 value={selectedScript.name}
-                onChange={(event) => onUpdateScript({ name: event.target.value })}
+                onChange={event => onUpdateScript({ name: event.target.value })}
                 fullWidth
               />
               <TextField
                 label="Description"
                 value={selectedScript.description || ''}
-                onChange={(event) => onUpdateScript({ description: event.target.value })}
+                onChange={event => onUpdateScript({ description: event.target.value })}
                 fullWidth
               />
             </Stack>

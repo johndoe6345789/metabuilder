@@ -25,7 +25,10 @@ export function CommentsTabContent({
   onPostComment,
   onDeleteComment,
 }: CommentsTabContentProps) {
-  const userComments = useMemo(() => comments.filter(c => c.userId === currentUserId), [comments, currentUserId])
+  const userComments = useMemo(
+    () => comments.filter(c => c.userId === currentUserId),
+    [comments, currentUserId]
+  )
 
   return (
     <ChallengePanel title="Community" description="Share updates and see what others are building.">
@@ -37,7 +40,7 @@ export function CommentsTabContent({
         <CardContent className="space-y-4">
           <Textarea
             value={newComment}
-            onChange={(e) => onChangeComment(e.target.value)}
+            onChange={e => onChangeComment(e.target.value)}
             placeholder="Write your comment here..."
             rows={4}
           />

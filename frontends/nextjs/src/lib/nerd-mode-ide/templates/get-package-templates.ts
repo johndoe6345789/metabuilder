@@ -4,7 +4,7 @@ import { PACKAGE_TEMPLATE_CONFIGS, REACT_APP_TEMPLATE_CONFIG } from './template-
 import type { PackageTemplate } from './types'
 
 export function getPackageTemplates(): PackageTemplate[] {
-  const packageTemplates = PACKAGE_TEMPLATE_CONFIGS.map((config) => buildPackageTemplate(config))
+  const packageTemplates = PACKAGE_TEMPLATE_CONFIGS.map(config => buildPackageTemplate(config))
   const reactTemplate = buildReactAppTemplate(REACT_APP_TEMPLATE_CONFIG)
   return [reactTemplate, ...packageTemplates]
 }

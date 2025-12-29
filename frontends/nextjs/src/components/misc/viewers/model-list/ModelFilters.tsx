@@ -1,4 +1,12 @@
-import { Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
+import {
+  Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui'
 import type { FieldSchema, ModelSchema } from '@/lib/schema-types'
 import { MagnifyingGlass } from '@phosphor-icons/react'
 
@@ -12,12 +20,18 @@ interface ModelFiltersProps {
 
 function getFilterableFields(model: ModelSchema): FieldSchema[] {
   if (model.listFilter) {
-    return model.fields.filter((field) => model.listFilter?.includes(field.name))
+    return model.fields.filter(field => model.listFilter?.includes(field.name))
   }
-  return model.fields.filter((field) => field.type === 'select' || field.type === 'boolean')
+  return model.fields.filter(field => field.type === 'select' || field.type === 'boolean')
 }
 
-export function ModelFilters({ model, filters, searchTerm, onSearchChange, onFilterChange }: ModelFiltersProps) {
+export function ModelFilters({
+  model,
+  filters,
+  searchTerm,
+  onSearchChange,
+  onFilterChange,
+}: ModelFiltersProps) {
   const filterFields = getFilterableFields(model)
 
   return (
@@ -30,7 +44,7 @@ export function ModelFilters({ model, filters, searchTerm, onSearchChange, onFil
             id="model-search"
             placeholder={`Search ${model.labelPlural || model.name}`}
             value={searchTerm}
-            onChange={(event) => onSearchChange(event.target.value)}
+            onChange={event => onSearchChange(event.target.value)}
             className="pl-9"
           />
         </div>
@@ -38,20 +52,22 @@ export function ModelFilters({ model, filters, searchTerm, onSearchChange, onFil
 
       {filterFields.length > 0 && (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {filterFields.map((field) => (
+          {filterFields.map(field => (
             <div key={field.name} className="space-y-1.5">
               <Label>{field.label || field.name}</Label>
               {field.type === 'select' ? (
                 <Select
                   value={filters[field.name] ?? '__all__'}
-                  onValueChange={(value) => onFilterChange(field.name, value === '__all__' ? null : value)}
+                  onValueChange={value =>
+                    onFilterChange(field.name, value === '__all__' ? null : value)
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder={field.label || field.name} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__all__">All</SelectItem>
-                    {field.choices?.map((choice) => (
+                    {field.choices?.map(choice => (
                       <SelectItem key={choice.value} value={choice.value}>
                         {choice.label || choice.value}
                       </SelectItem>
@@ -60,8 +76,19 @@ export function ModelFilters({ model, filters, searchTerm, onSearchChange, onFil
                 </Select>
               ) : (
                 <Select
-                  value={filters[field.name] === true ? 'true' : filters[field.name] === false ? 'false' : '__all__'}
-                  onValueChange={(value) => onFilterChange(field.name, value === 'true' ? true : value === 'false' ? false : null)}
+                  value={
+                    filters[field.name] === true
+                      ? 'true'
+                      : filters[field.name] === false
+                        ? 'false'
+                        : '__all__'
+                  }
+                  onValueChange={value =>
+                    onFilterChange(
+                      field.name,
+                      value === 'true' ? true : value === 'false' ? false : null
+                    )
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder={field.label || field.name} />

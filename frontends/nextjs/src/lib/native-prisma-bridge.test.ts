@@ -30,9 +30,7 @@ describe('splitSqlTemplate', () => {
   })
 
   it('throws when parameter counts mismatch for question marks', () => {
-    expect(() => splitSqlTemplate('SELECT * FROM x WHERE id = ?', [])).toThrow(
-      /parameter mismatch/
-    )
+    expect(() => splitSqlTemplate('SELECT * FROM x WHERE id = ?', [])).toThrow(/parameter mismatch/)
   })
 })
 

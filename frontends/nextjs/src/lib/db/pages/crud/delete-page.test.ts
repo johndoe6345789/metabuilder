@@ -14,14 +14,14 @@ describe('deletePage', () => {
     mockDelete.mockReset()
   })
 
-  it.each([
-    { pageId: 'page_1' },
-    { pageId: 'page_home' },
-  ])('should delete page $pageId', async ({ pageId }) => {
-    mockDelete.mockResolvedValue(undefined)
+  it.each([{ pageId: 'page_1' }, { pageId: 'page_home' }])(
+    'should delete page $pageId',
+    async ({ pageId }) => {
+      mockDelete.mockResolvedValue(undefined)
 
-    await deletePage(pageId)
+      await deletePage(pageId)
 
-    expect(mockDelete).toHaveBeenCalledWith('PageConfig', pageId)
-  })
+      expect(mockDelete).toHaveBeenCalledWith('PageConfig', pageId)
+    }
+  )
 })

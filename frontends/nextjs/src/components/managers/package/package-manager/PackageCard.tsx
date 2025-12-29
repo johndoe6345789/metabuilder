@@ -1,4 +1,13 @@
-import { Badge, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui'
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui'
 import type { InstalledPackage, PackageManifest } from '@/lib/package-types'
 import { Download, Power, Star } from '@phosphor-icons/react'
 
@@ -10,7 +19,13 @@ interface PackageCardProps {
   onToggle: (packageId: string, enabled: boolean) => void
 }
 
-export function PackageCard({ package: pkg, isInstalled, installedPackage, onViewDetails, onToggle }: PackageCardProps) {
+export function PackageCard({
+  package: pkg,
+  isInstalled,
+  installedPackage,
+  onViewDetails,
+  onToggle,
+}: PackageCardProps) {
   return (
     <Card className="flex flex-col hover:shadow-lg transition-shadow">
       <CardHeader>

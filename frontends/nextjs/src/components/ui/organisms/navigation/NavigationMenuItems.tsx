@@ -1,12 +1,5 @@
 import { forwardRef, ReactNode, ElementType, type MouseEvent } from 'react'
-import {
-  Box,
-  Button,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-} from '@mui/material'
+import { Box, Button, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 interface NavigationMenuProps {
@@ -157,7 +150,20 @@ interface NavigationLinkProps {
 }
 
 const NavigationLink = forwardRef<HTMLElement, NavigationLinkProps>(
-  ({ children, href, onClick, active = false, disabled = false, icon, asChild, component, ...props }, ref) => {
+  (
+    {
+      children,
+      href,
+      onClick,
+      active = false,
+      disabled = false,
+      icon,
+      asChild,
+      component,
+      ...props
+    },
+    ref
+  ) => {
     if (asChild || component) {
       return (
         <MenuItem

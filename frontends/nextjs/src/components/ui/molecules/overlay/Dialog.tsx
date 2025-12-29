@@ -1,7 +1,14 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import { Dialog as MuiDialog, DialogTitle as MuiDialogTitle, DialogProps as MuiDialogProps, IconButton, Typography, Box } from '@mui/material'
+import {
+  Dialog as MuiDialog,
+  DialogTitle as MuiDialogTitle,
+  DialogProps as MuiDialogProps,
+  IconButton,
+  Typography,
+  Box,
+} from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { DialogContent, type DialogContentProps } from './dialog/Body'
 import { DialogFooter, type DialogFooterProps } from './dialog/Footer'
@@ -24,7 +31,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
         {children}
       </MuiDialog>
     )
-  },
+  }
 )
 Dialog.displayName = 'Dialog'
 
@@ -41,7 +48,7 @@ const DialogTrigger = forwardRef<HTMLDivElement, DialogTriggerProps>(
         {children}
       </Box>
     )
-  },
+  }
 )
 DialogTrigger.displayName = 'DialogTrigger'
 
@@ -61,7 +68,12 @@ const DialogClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
   ({ children, onClick, ...props }, ref) => {
     if (children) {
       return (
-        <Box ref={ref as unknown as React.Ref<HTMLDivElement>} onClick={onClick} sx={{ display: 'inline-flex' }} {...props}>
+        <Box
+          ref={ref as unknown as React.Ref<HTMLDivElement>}
+          onClick={onClick}
+          sx={{ display: 'inline-flex' }}
+          {...props}
+        >
           {children}
         </Box>
       )
@@ -77,7 +89,7 @@ const DialogClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
         <CloseIcon />
       </IconButton>
     )
-  },
+  }
 )
 DialogClose.displayName = 'DialogClose'
 

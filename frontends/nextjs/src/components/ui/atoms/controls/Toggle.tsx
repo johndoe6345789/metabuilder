@@ -2,7 +2,10 @@
 
 import { forwardRef } from 'react'
 import { IconButton, IconButtonProps } from '@mui/material'
-import { ToggleButton as MuiToggleButton, ToggleButtonProps as MuiToggleButtonProps } from '@mui/material'
+import {
+  ToggleButton as MuiToggleButton,
+  ToggleButtonProps as MuiToggleButtonProps,
+} from '@mui/material'
 
 /** Toggle button visual style variants */
 export type ToggleVariant = 'default' | 'outline'
@@ -32,7 +35,10 @@ const sizeMap: Record<ToggleSize, { size: 'small' | 'medium' | 'large'; sx?: obj
 }
 
 const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
-  ({ variant = 'default', size = 'default', pressed, onPressedChange, sx, value, ...props }, ref) => {
+  (
+    { variant = 'default', size = 'default', pressed, onPressedChange, sx, value, ...props },
+    ref
+  ) => {
     const sizeConfig = sizeMap[size]
 
     return (

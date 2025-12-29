@@ -5,5 +5,5 @@ export const packageSystemState: {
   modularPackageSeedData: ModularPackageSeedData | null
 } = {
   isInitialized: false,
-  modularPackageSeedData: null
+  modularPackageSeedData: null,
 }

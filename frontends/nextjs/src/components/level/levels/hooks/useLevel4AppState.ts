@@ -21,7 +21,10 @@ const createDefaultConfig = (): AppConfiguration => ({
   },
 })
 
-const persistConfig = async (config: AppConfiguration, setConfig: (value: AppConfiguration) => void) => {
+const persistConfig = async (
+  config: AppConfiguration,
+  setConfig: (value: AppConfiguration) => void
+) => {
   setConfig(config)
   await Database.setAppConfig(config)
 }
@@ -73,7 +76,7 @@ export const useLevel4AppState = () => {
     const input = document.createElement('input')
     input.type = 'file'
     input.accept = 'application/json'
-    input.onchange = async (e) => {
+    input.onchange = async e => {
       const file = (e.target as HTMLInputElement).files?.[0]
       if (!file) return
 
@@ -99,17 +102,20 @@ export const useLevel4AppState = () => {
   }, [nerdMode, setNerdMode])
 
   const handleSchemasChange = useCallback(
-    async (schemas: AppConfiguration['schemas']) => updateConfig((config) => ({ ...config, schemas })),
+    async (schemas: AppConfiguration['schemas']) =>
+      updateConfig(config => ({ ...config, schemas })),
     [updateConfig]
   )
 
   const handleWorkflowsChange = useCallback(
-    async (workflows: AppConfiguration['workflows']) => updateConfig((config) => ({ ...config, workflows })),
+    async (workflows: AppConfiguration['workflows']) =>
+      updateConfig(config => ({ ...config, workflows })),
     [updateConfig]
   )
 
   const handleLuaScriptsChange = useCallback(
-    async (luaScripts: AppConfiguration['luaScripts']) => updateConfig((config) => ({ ...config, luaScripts })),
+    async (luaScripts: AppConfiguration['luaScripts']) =>
+      updateConfig(config => ({ ...config, luaScripts })),
     [updateConfig]
   )
 

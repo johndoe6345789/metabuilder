@@ -12,11 +12,11 @@ export async function updateErrorLog(
   }
 ): Promise<void> {
   const adapter = getAdapter()
-  
+
   const data: Record<string, any> = {}
   if (updates.resolved !== undefined) data.resolved = updates.resolved
   if (updates.resolvedAt !== undefined) data.resolvedAt = BigInt(updates.resolvedAt)
   if (updates.resolvedBy !== undefined) data.resolvedBy = updates.resolvedBy
-  
+
   await adapter.update('ErrorLog', id, data)
 }

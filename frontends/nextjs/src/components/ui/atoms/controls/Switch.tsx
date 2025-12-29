@@ -21,14 +21,7 @@ const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
       onCheckedChange?.(checked)
     }
 
-    return (
-      <MuiSwitch
-        ref={ref}
-        onChange={handleChange}
-        size="small"
-        {...props}
-      />
-    )
+    return <MuiSwitch ref={ref} onChange={handleChange} size="small" {...props} />
   }
 )
 

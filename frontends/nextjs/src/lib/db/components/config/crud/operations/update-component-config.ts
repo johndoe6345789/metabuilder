@@ -1,7 +1,10 @@
 import { getAdapter } from '../../../../core/dbal-client'
 import type { ComponentConfig } from '../types'
 
-export async function updateComponentConfig(configId: string, updates: Partial<ComponentConfig>): Promise<void> {
+export async function updateComponentConfig(
+  configId: string,
+  updates: Partial<ComponentConfig>
+): Promise<void> {
   const adapter = getAdapter()
   const data: Record<string, unknown> = {}
   if (updates.componentId !== undefined) data.componentId = updates.componentId
@@ -9,7 +12,9 @@ export async function updateComponentConfig(configId: string, updates: Partial<C
   if (updates.styles !== undefined) data.styles = JSON.stringify(updates.styles)
   if (updates.events !== undefined) data.events = JSON.stringify(updates.events)
   if (updates.conditionalRendering !== undefined) {
-    data.conditionalRendering = updates.conditionalRendering ? JSON.stringify(updates.conditionalRendering) : null
+    data.conditionalRendering = updates.conditionalRendering
+      ? JSON.stringify(updates.conditionalRendering)
+      : null
   }
   await adapter.update('ComponentConfig', configId, data)
 }

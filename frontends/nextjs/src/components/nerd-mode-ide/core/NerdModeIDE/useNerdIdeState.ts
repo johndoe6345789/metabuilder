@@ -16,7 +16,10 @@ export function useNerdIdeState() {
   const defaultTemplate = templates[0]
 
   const [fileTree, setFileTree] = useKV<FileNode[]>('nerd-mode-file-tree', defaultTemplate.tree)
-  const [workspaceName, setWorkspaceName] = useKV<string>('nerd-mode-workspace', defaultTemplate.rootName)
+  const [workspaceName, setWorkspaceName] = useKV<string>(
+    'nerd-mode-workspace',
+    defaultTemplate.rootName
+  )
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null)
   const [activeFolderId, setActiveFolderId] = useState<string | null>(fileTree?.[0]?.id ?? null)
   const [fileContent, setFileContent] = useState('')
@@ -88,9 +91,10 @@ export function useNerdIdeState() {
       ? appendExportPath(parentNode.exportPath, newItemName)
       : undefined
 
-    const newNode = newItemType === 'file'
-      ? fileTreeOperations.createFileNode({ name: newItemName, exportPath })
-      : fileTreeOperations.createFolderNode({ name: newItemName, exportPath, expanded: true })
+    const newNode =
+      newItemType === 'file'
+        ? fileTreeOperations.createFileNode({ name: newItemName, exportPath })
+        : fileTreeOperations.createFolderNode({ name: newItemName, exportPath, expanded: true })
 
     setFileTree(fileTreeOperations.appendNode(fileTree, activeFolderId, newNode))
     setNewItemName('')
@@ -106,10 +110,10 @@ export function useNerdIdeState() {
 
   const handleRunCode = () => {
     setIsRunning(true)
-    setConsoleOutput((current) => [...current, `> Running ${selectedFile?.name || 'code'}...`])
+    setConsoleOutput(current => [...current, `> Running ${selectedFile?.name || 'code'}...`])
 
     setTimeout(() => {
-      setConsoleOutput((current) => [
+      setConsoleOutput(current => [
         ...current,
         'OK Code executed successfully',
         '> Output: Hello from MetaBuilder IDE!',
@@ -120,7 +124,7 @@ export function useNerdIdeState() {
   }
 
   const handleRunTests = () => {
-    setConsoleOutput((current) => [...current, '> Running test suite...'])
+    setConsoleOutput(current => [...current, '> Running test suite...'])
 
     const mockTests: TestResult[] = [
       { name: 'Feed component renders', status: 'passed', duration: 45 },
@@ -131,10 +135,10 @@ export function useNerdIdeState() {
 
     setTimeout(() => {
       setTestResults(mockTests)
-      setConsoleOutput((current) => [
+      setConsoleOutput(current => [
         ...current,
-        `OK ${mockTests.filter((test) => test.status === 'passed').length} tests passed`,
-        `FAIL ${mockTests.filter((test) => test.status === 'failed').length} tests failed`,
+        `OK ${mockTests.filter(test => test.status === 'passed').length} tests passed`,
+        `FAIL ${mockTests.filter(test => test.status === 'failed').length} tests failed`,
       ])
       toast.success('Tests completed')
     }, 1500)
@@ -152,7 +156,7 @@ export function useNerdIdeState() {
       return
     }
 
-    setConsoleOutput((current) => [
+    setConsoleOutput(current => [
       ...current,
       `> git add .`,
       `> git commit -m "${gitCommitMessage}"`,
@@ -160,7 +164,7 @@ export function useNerdIdeState() {
     ])
 
     setTimeout(() => {
-      setConsoleOutput((current) => [
+      setConsoleOutput(current => [
         ...current,
         `OK Pushed to ${gitConfig.provider} (${gitConfig.repoUrl})`,
       ])
@@ -176,13 +180,10 @@ export function useNerdIdeState() {
       return
     }
 
-    setConsoleOutput((current) => [...current, `> git pull origin ${gitConfig.branch}`])
+    setConsoleOutput(current => [...current, `> git pull origin ${gitConfig.branch}`])
 
     setTimeout(() => {
-      setConsoleOutput((current) => [
-        ...current,
-        `OK Pulled latest changes from ${gitConfig.branch}`,
-      ])
+      setConsoleOutput(current => [...current, `OK Pulled latest changes from ${gitConfig.branch}`])
       toast.success('Repository updated')
     }, 1000)
   }
@@ -222,7 +223,7 @@ export function useNerdIdeState() {
   }
 
   const handleUpdateGitConfig = (updates: Partial<GitConfig>) => {
-    setGitConfig((current) => ({
+    setGitConfig(current => ({
       provider: current?.provider ?? 'github',
       repoUrl: current?.repoUrl ?? '',
       branch: current?.branch ?? 'main',

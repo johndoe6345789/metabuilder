@@ -2,13 +2,14 @@
 'use client'
 
 import { forwardRef, ReactNode, createContext, useContext } from 'react'
+import { FormControl, FormHelperText, FormLabel, Box } from '@mui/material'
 import {
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  Box,
-} from '@mui/material'
-import { useFormContext, Controller, FieldPath, FieldValues, ControllerProps } from 'react-hook-form'
+  useFormContext,
+  Controller,
+  FieldPath,
+  FieldValues,
+  ControllerProps,
+} from 'react-hook-form'
 
 // Form Context
 interface FormFieldContextValue {
@@ -60,14 +61,14 @@ Form.displayName = 'Form'
 // FormField component
 interface FormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > extends Omit<ControllerProps<TFieldValues, TName>, 'render'> {
   render: ControllerProps<TFieldValues, TName>['render']
 }
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   name,
   ...props
@@ -86,19 +87,17 @@ interface FormItemProps {
   className?: string
 }
 
-const FormItem = forwardRef<HTMLDivElement, FormItemProps>(
-  ({ children, ...props }, ref) => {
-    const id = `form-item-${Math.random().toString(36).substr(2, 9)}`
+const FormItem = forwardRef<HTMLDivElement, FormItemProps>(({ children, ...props }, ref) => {
+  const id = `form-item-${Math.random().toString(36).substr(2, 9)}`
 
-    return (
-      <FormItemContext.Provider value={{ id }}>
-        <Box ref={ref} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }} {...props}>
-          {children}
-        </Box>
-      </FormItemContext.Provider>
-    )
-  }
-)
+  return (
+    <FormItemContext.Provider value={{ id }}>
+      <Box ref={ref} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }} {...props}>
+        {children}
+      </Box>
+    </FormItemContext.Provider>
+  )
+})
 FormItem.displayName = 'FormItem'
 
 // FormLabel component
@@ -160,7 +159,12 @@ const FormDescription = forwardRef<HTMLParagraphElement, FormDescriptionProps>(
     const { formDescriptionId } = useFormField()
 
     return (
-      <FormHelperText ref={ref} id={formDescriptionId} sx={{ mt: 0.5, fontSize: '0.75rem' }} {...props}>
+      <FormHelperText
+        ref={ref}
+        id={formDescriptionId}
+        sx={{ mt: 0.5, fontSize: '0.75rem' }}
+        {...props}
+      >
         {children}
       </FormHelperText>
     )

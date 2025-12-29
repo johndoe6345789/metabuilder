@@ -16,7 +16,20 @@ interface ToggleGroupProps {
 }
 
 const ToggleGroup = forwardRef<HTMLDivElement, ToggleGroupProps>(
-  ({ children, type = 'single', value, defaultValue, onValueChange, disabled, variant = 'default', size = 'default', ...props }, ref) => {
+  (
+    {
+      children,
+      type = 'single',
+      value,
+      defaultValue,
+      onValueChange,
+      disabled,
+      variant = 'default',
+      size = 'default',
+      ...props
+    },
+    ref
+  ) => {
     const handleChange = (_: React.MouseEvent, newValue: string | string[] | null) => {
       if (newValue !== null) {
         onValueChange?.(newValue)

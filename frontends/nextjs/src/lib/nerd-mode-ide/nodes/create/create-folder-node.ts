@@ -8,7 +8,12 @@ interface CreateFolderNodeOptions {
   exportPath?: string
 }
 
-export function createFolderNode({ name, children = [], expanded = false, exportPath }: CreateFolderNodeOptions): FileNode {
+export function createFolderNode({
+  name,
+  children = [],
+  expanded = false,
+  exportPath,
+}: CreateFolderNodeOptions): FileNode {
   return {
     id: createNodeId('folder'),
     name,

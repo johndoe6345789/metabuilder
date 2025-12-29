@@ -26,16 +26,26 @@ export interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'size'> {
   rel?: AnchorHTMLAttributes<HTMLAnchorElement>['rel']
 }
 
-const variantMap: Record<ButtonVariant, { variant: MuiButtonProps['variant']; color?: MuiButtonProps['color']; sx?: object }> = {
+const variantMap: Record<
+  ButtonVariant,
+  { variant: MuiButtonProps['variant']; color?: MuiButtonProps['color']; sx?: object }
+> = {
   default: { variant: 'contained', color: 'primary' },
   destructive: { variant: 'contained', color: 'error' },
   outline: { variant: 'outlined', color: 'inherit' },
   secondary: { variant: 'contained', color: 'secondary' },
   ghost: { variant: 'text', color: 'inherit' },
-  link: { variant: 'text', color: 'primary', sx: { textDecoration: 'underline', '&:hover': { textDecoration: 'underline' } } },
+  link: {
+    variant: 'text',
+    color: 'primary',
+    sx: { textDecoration: 'underline', '&:hover': { textDecoration: 'underline' } },
+  },
 }
 
-const sizeMap: Record<ButtonSize, MuiButtonProps['size'] | { size: MuiButtonProps['size']; sx?: object }> = {
+const sizeMap: Record<
+  ButtonSize,
+  MuiButtonProps['size'] | { size: MuiButtonProps['size']; sx?: object }
+> = {
   default: 'medium',
   sm: 'small',
   lg: 'large',

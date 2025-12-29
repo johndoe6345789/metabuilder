@@ -15,5 +15,5 @@ export async function listSessions(options?: ListSessionsOptions): Promise<Sessi
   }
 
   const now = Date.now()
-  return sessions.filter((session) => session.expiresAt > now)
+  return sessions.filter(session => session.expiresAt > now)
 }

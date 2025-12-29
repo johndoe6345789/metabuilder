@@ -25,7 +25,7 @@ export function ProviderList({ providers, onSelect }: ProviderListProps) {
       <Separator />
       <p className="text-xs text-muted-foreground text-center">Or continue with</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {entries.map((provider) => {
+        {entries.map(provider => {
           const Icon = provider.icon
           return (
             <Button

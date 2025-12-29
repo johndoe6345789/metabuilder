@@ -12,23 +12,19 @@ import { ScrollArea } from '@/components/ui'
 
 /**
  * Refactored GitHub Actions Fetcher Component
- * 
+ *
  * Responsibilities (simplified):
  * 1. Fetch and display workflow runs
  * 2. Manage auto-refresh
  * 3. Handle user interactions
- * 
+ *
  * Business logic delegated to hooks:
  * - useGitHubFetcher: API calls
  * - useAutoRefresh: Polling logic
  */
 export function GitHubActionsFetcher() {
   const fetcher = useGitHubFetcher()
-  const {
-    isAutoRefreshing,
-    secondsUntilNextRefresh,
-    toggleAutoRefresh,
-  } = useAutoRefresh({
+  const { isAutoRefreshing, secondsUntilNextRefresh, toggleAutoRefresh } = useAutoRefresh({
     intervalMs: 30000,
     onRefresh: fetcher.fetch,
     enabled: false,

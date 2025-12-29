@@ -26,7 +26,7 @@ export function ProfileCard({
   onCancel,
   onSave,
   onFormChange,
-  onRequestPasswordReset
+  onRequestPasswordReset,
 }: ProfileCardProps) {
   return (
     <Card>
@@ -40,7 +40,9 @@ export function ProfileCard({
             <Button onClick={onEdit}>Edit Profile</Button>
           ) : (
             <div className="flex gap-2">
-              <Button variant="outline" onClick={onCancel}>Cancel</Button>
+              <Button variant="outline" onClick={onCancel}>
+                Cancel
+              </Button>
               <Button onClick={onSave}>Save Changes</Button>
             </div>
           )}
@@ -49,9 +51,7 @@ export function ProfileCard({
       <CardContent className="space-y-6">
         <div className="flex items-center gap-4">
           <Avatar className="w-20 h-20">
-            <AvatarFallback className="text-2xl">
-              {user.username[0].toUpperCase()}
-            </AvatarFallback>
+            <AvatarFallback className="text-2xl">{user.username[0].toUpperCase()}</AvatarFallback>
           </Avatar>
           <div>
             <h3 className="font-semibold text-lg">{user.username}</h3>
@@ -70,7 +70,7 @@ export function ProfileCard({
             <Input
               type="email"
               value={editingProfile ? profileForm.email : user.email}
-              onChange={(e) => onFormChange({ ...profileForm, email: e.target.value })}
+              onChange={e => onFormChange({ ...profileForm, email: e.target.value })}
               disabled={!editingProfile}
               className="mt-2"
             />
@@ -79,8 +79,8 @@ export function ProfileCard({
           <div>
             <Label>Bio</Label>
             <Textarea
-              value={editingProfile ? profileForm.bio : (user.bio || '')}
-              onChange={(e) => onFormChange({ ...profileForm, bio: e.target.value })}
+              value={editingProfile ? profileForm.bio : user.bio || ''}
+              onChange={e => onFormChange({ ...profileForm, bio: e.target.value })}
               disabled={!editingProfile}
               className="mt-2"
               rows={4}

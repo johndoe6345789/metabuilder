@@ -8,15 +8,22 @@ describe('NavLink', () => {
     { href: '/home', children: 'Home', active: false },
     { href: '/dashboard', children: 'Dashboard', active: true },
     { href: '/settings', children: 'Settings', active: false },
-  ])('renders with href="$href", children="$children", active=$active', ({ href, children, active }) => {
-    render(<NavLink href={href} active={active}>{children}</NavLink>)
-    
-    const link = screen.getByText(children)
-    expect(link).toBeTruthy()
-    
-    const linkElement = link.closest('a')
-    expect(linkElement?.getAttribute('href')).toBe(href)
-  })
+  ])(
+    'renders with href="$href", children="$children", active=$active',
+    ({ href, children, active }) => {
+      render(
+        <NavLink href={href} active={active}>
+          {children}
+        </NavLink>
+      )
+
+      const link = screen.getByText(children)
+      expect(link).toBeTruthy()
+
+      const linkElement = link.closest('a')
+      expect(linkElement?.getAttribute('href')).toBe(href)
+    }
+  )
 
   it('renders with icon', () => {
     const { container } = render(
@@ -24,7 +31,7 @@ describe('NavLink', () => {
         Home
       </NavLink>
     )
-    
+
     expect(screen.getByTestId('home-icon')).toBeTruthy()
   })
 
@@ -32,10 +39,14 @@ describe('NavLink', () => {
     { disabled: true, href: '/home' },
     { disabled: false, href: '/dashboard' },
   ])('handles disabled=$disabled state', ({ disabled, href }) => {
-    render(<NavLink href={href} disabled={disabled}>Link</NavLink>)
-    
+    render(
+      <NavLink href={href} disabled={disabled}>
+        Link
+      </NavLink>
+    )
+
     const link = screen.getByText('Link').closest('a')
-    
+
     if (disabled) {
       expect(link?.hasAttribute('href')).toBe(false)
     } else {
@@ -44,8 +55,12 @@ describe('NavLink', () => {
   })
 
   it('applies active styling when active=true', () => {
-    render(<NavLink href="/home" active>Home</NavLink>)
-    
+    render(
+      <NavLink href="/home" active>
+        Home
+      </NavLink>
+    )
+
     const link = screen.getByText('Home').closest('a')
     // Check for active styling - MUI applies specific classes
     expect(link).toBeTruthy()
@@ -53,7 +68,7 @@ describe('NavLink', () => {
 
   it('does not have underline by default', () => {
     render(<NavLink href="/home">Home</NavLink>)
-    
+
     const link = screen.getByText('Home').closest('a')
     // MUI Link with underline="none" doesn't add text-decoration
     expect(link).toBeTruthy()

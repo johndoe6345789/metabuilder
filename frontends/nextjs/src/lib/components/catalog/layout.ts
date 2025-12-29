@@ -10,9 +10,7 @@ export const layoutComponents: ComponentDefinition[] = [
     defaultProps: {
       className: 'p-4',
     },
-    propSchema: [
-      { name: 'className', label: 'CSS Classes', type: 'string', defaultValue: 'p-4' },
-    ],
+    propSchema: [{ name: 'className', label: 'CSS Classes', type: 'string', defaultValue: 'p-4' }],
   },
   {
     type: 'Flex',
@@ -37,7 +35,12 @@ export const layoutComponents: ComponentDefinition[] = [
       className: 'grid grid-cols-2 gap-4',
     },
     propSchema: [
-      { name: 'className', label: 'CSS Classes', type: 'string', defaultValue: 'grid grid-cols-2 gap-4' },
+      {
+        name: 'className',
+        label: 'CSS Classes',
+        type: 'string',
+        defaultValue: 'grid grid-cols-2 gap-4',
+      },
     ],
   },
   {
@@ -50,7 +53,12 @@ export const layoutComponents: ComponentDefinition[] = [
       className: 'flex flex-col gap-2',
     },
     propSchema: [
-      { name: 'className', label: 'CSS Classes', type: 'string', defaultValue: 'flex flex-col gap-2' },
+      {
+        name: 'className',
+        label: 'CSS Classes',
+        type: 'string',
+        defaultValue: 'flex flex-col gap-2',
+      },
     ],
   },
 ]

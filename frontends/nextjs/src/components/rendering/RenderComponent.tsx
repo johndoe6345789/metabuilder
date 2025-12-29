@@ -33,11 +33,7 @@ export function RenderComponent({ component, isSelected, onSelect, user }: Rende
 
   return (
     <div className={wrapperClass} onClick={handleClick}>
-      <RenderNode
-        component={component}
-        renderChildren={renderChildren}
-        user={user}
-      />
+      <RenderNode component={component} renderChildren={renderChildren} user={user} />
     </div>
   )
 }

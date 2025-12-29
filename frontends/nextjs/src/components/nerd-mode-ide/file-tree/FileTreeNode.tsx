@@ -24,9 +24,7 @@ export function FileTreeNode({
   onSelectFile,
   onSelectFolder,
 }: FileTreeNodeProps) {
-  const isSelected = node.type === 'file'
-    ? selectedFileId === node.id
-    : activeFolderId === node.id
+  const isSelected = node.type === 'file' ? selectedFileId === node.id : activeFolderId === node.id
   const paddingLeft = `${level * 16}px`
 
   return (
@@ -47,8 +45,16 @@ export function FileTreeNode({
       >
         {node.type === 'folder' ? (
           <>
-            {node.expanded ? <ExpandMoreIcon fontSize="inherit" /> : <ChevronRightIcon fontSize="inherit" />}
-            {node.expanded ? <FolderOpenOutlinedIcon fontSize="small" /> : <FolderOutlinedIcon fontSize="small" />}
+            {node.expanded ? (
+              <ExpandMoreIcon fontSize="inherit" />
+            ) : (
+              <ChevronRightIcon fontSize="inherit" />
+            )}
+            {node.expanded ? (
+              <FolderOpenOutlinedIcon fontSize="small" />
+            ) : (
+              <FolderOutlinedIcon fontSize="small" />
+            )}
           </>
         ) : (
           <>
@@ -60,7 +66,7 @@ export function FileTreeNode({
       </div>
       {node.type === 'folder' && node.expanded && node.children && node.children.length > 0 && (
         <div>
-          {node.children.map((child) => (
+          {node.children.map(child => (
             <FileTreeNode
               key={child.id}
               node={child}

@@ -46,7 +46,10 @@ export interface PopoverContentProps extends Omit<MuiPopoverProps, 'open'> {
 }
 
 const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
-  ({ children, align = 'center', side = 'bottom', sideOffset = 4, anchorEl, onClose, ...props }, ref) => {
+  (
+    { children, align = 'center', side = 'bottom', sideOffset = 4, anchorEl, onClose, ...props },
+    ref
+  ) => {
     const anchorOrigin = {
       vertical: side === 'top' ? 'top' : 'bottom',
       horizontal: align === 'end' ? 'right' : align === 'center' ? 'center' : 'left',

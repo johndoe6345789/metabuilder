@@ -18,7 +18,16 @@ describe('getComponentConfigs', () => {
     { name: 'empty', dbData: [], expectedKeys: 0 },
     {
       name: 'parsed configs',
-      dbData: [{ id: 'cfg1', componentId: 'c1', props: '{}', styles: '{}', events: '{}', conditionalRendering: null }],
+      dbData: [
+        {
+          id: 'cfg1',
+          componentId: 'c1',
+          props: '{}',
+          styles: '{}',
+          events: '{}',
+          conditionalRendering: null,
+        },
+      ],
       expectedKeys: 1,
     },
   ])('should return $name', async ({ dbData, expectedKeys }) => {

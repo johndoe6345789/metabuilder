@@ -9,7 +9,13 @@ export interface LoginFormProps {
   onSubmit: () => void
 }
 
-export function LoginForm({ username, password, onUsernameChange, onPasswordChange, onSubmit }: LoginFormProps) {
+export function LoginForm({
+  username,
+  password,
+  onUsernameChange,
+  onPasswordChange,
+  onSubmit,
+}: LoginFormProps) {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -17,9 +23,9 @@ export function LoginForm({ username, password, onUsernameChange, onPasswordChan
         <Input
           id="login-username"
           value={username}
-          onChange={(e) => onUsernameChange(e.target.value)}
+          onChange={e => onUsernameChange(e.target.value)}
           placeholder="Enter username"
-          onKeyDown={(e) => e.key === 'Enter' && onSubmit()}
+          onKeyDown={e => e.key === 'Enter' && onSubmit()}
         />
       </div>
       <div className="space-y-2">
@@ -28,9 +34,9 @@ export function LoginForm({ username, password, onUsernameChange, onPasswordChan
           id="login-password"
           type="password"
           value={password}
-          onChange={(e) => onPasswordChange(e.target.value)}
+          onChange={e => onPasswordChange(e.target.value)}
           placeholder="Enter password"
-          onKeyDown={(e) => e.key === 'Enter' && onSubmit()}
+          onKeyDown={e => e.key === 'Enter' && onSubmit()}
         />
       </div>
       <Button className="w-full" onClick={onSubmit}>

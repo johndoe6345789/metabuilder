@@ -47,7 +47,7 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
     }
 
     const scrambledPassword = generateScrambledPassword(16)
-    
+
     const smtpConfig = await Database.getSMTPConfig()
     await simulateEmailSend(
       registerForm.email,
@@ -55,7 +55,7 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
       `Welcome to MetaBuilder!\n\nYour account has been created.\nUsername: ${registerForm.username}\nTemporary Password: ${scrambledPassword}\n\nPlease login and change your password from your profile settings.`,
       smtpConfig || undefined
     )
-    
+
     toast.success('Account created! Check console for your password (simulated email)')
     onRegister(registerForm.username, registerForm.email, scrambledPassword)
   }
@@ -68,7 +68,7 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
 
     const users = await Database.getUsers({ scope: 'all' })
     const user = users.find(u => u.email === resetEmail)
-    
+
     if (!user) {
       toast.error('No account found with that email address')
       return
@@ -77,7 +77,7 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
     const newPassword = generateScrambledPassword(16)
     const passwordHash = await hashPassword(newPassword)
     await Database.setCredential(user.username, passwordHash)
-    
+
     const smtpConfig = await Database.getSMTPConfig()
     await simulateEmailSend(
       resetEmail,
@@ -85,7 +85,7 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
       `Your password has been reset.\n\nUsername: ${user.username}\nNew Password: ${newPassword}\n\nPlease login and change your password from your profile settings.`,
       smtpConfig || undefined
     )
-    
+
     toast.success('Password reset! Check console for your new password (simulated email)')
     setResetEmail('')
   }
@@ -93,12 +93,7 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center p-4">
       {onBack && (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="fixed top-4 left-4"
-          onClick={onBack}
-        >
+        <Button variant="ghost" size="sm" className="fixed top-4 left-4" onClick={onBack}>
           <ArrowLeft className="mr-2" size={16} />
           Back to Home
         </Button>
@@ -132,8 +127,8 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
               <LoginForm
                 username={loginForm.username}
                 password={loginForm.password}
-                onUsernameChange={(username) => setLoginForm({ ...loginForm, username })}
-                onPasswordChange={(password) => setLoginForm({ ...loginForm, password })}
+                onUsernameChange={username => setLoginForm({ ...loginForm, username })}
+                onPasswordChange={password => setLoginForm({ ...loginForm, password })}
                 onSubmit={handleLogin}
               />
               <ProviderList providers={providers} onSelect={handleProviderSelect} />
@@ -142,7 +137,8 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
             <TabsContent value="register" className="space-y-4 mt-6">
               <Alert>
                 <AlertDescription className="text-sm">
-                  No password required! A secure random password will be emailed to you after registration.
+                  No password required! A secure random password will be emailed to you after
+                  registration.
                 </AlertDescription>
               </Alert>
               <div className="space-y-2">
@@ -150,7 +146,7 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
                 <Input
                   id="register-username"
                   value={registerForm.username}
-                  onChange={(e) => setRegisterForm({ ...registerForm, username: e.target.value })}
+                  onChange={e => setRegisterForm({ ...registerForm, username: e.target.value })}
                   placeholder="Choose a username"
                 />
               </div>
@@ -160,9 +156,9 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
                   id="register-email"
                   type="email"
                   value={registerForm.email}
-                  onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
+                  onChange={e => setRegisterForm({ ...registerForm, email: e.target.value })}
                   placeholder="your@email.com"
-                  onKeyDown={(e) => e.key === 'Enter' && handleRegister()}
+                  onKeyDown={e => e.key === 'Enter' && handleRegister()}
                 />
               </div>
               <Button className="w-full" onClick={handleRegister}>
@@ -177,7 +173,8 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
             <TabsContent value="reset" className="space-y-4 mt-6">
               <Alert>
                 <AlertDescription className="text-sm">
-                  Enter your email address to receive a new password. Contact administrator if you need help.
+                  Enter your email address to receive a new password. Contact administrator if you
+                  need help.
                 </AlertDescription>
               </Alert>
               <div className="space-y-2">
@@ -186,9 +183,9 @@ export function UnifiedLogin({ onLogin, onRegister, onBack }: UnifiedLoginProps)
                   id="reset-email"
                   type="email"
                   value={resetEmail}
-                  onChange={(e) => setResetEmail(e.target.value)}
+                  onChange={e => setResetEmail(e.target.value)}
                   placeholder="your@email.com"
-                  onKeyDown={(e) => e.key === 'Enter' && handlePasswordReset()}
+                  onKeyDown={e => e.key === 'Enter' && handlePasswordReset()}
                 />
               </div>
               <Button className="w-full" onClick={handlePasswordReset}>

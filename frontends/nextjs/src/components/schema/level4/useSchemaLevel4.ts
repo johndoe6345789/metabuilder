@@ -22,7 +22,7 @@ export function useSchemaLevel4({ schemas, onSchemasChange }: UseSchemaLevel4Pro
   }, [schemas, selectedModel])
 
   const currentModel = useMemo(
-    () => schemas.find((schema) => schema.name === selectedModel) ?? null,
+    () => schemas.find(schema => schema.name === selectedModel) ?? null,
     [schemas, selectedModel]
   )
 
@@ -47,7 +47,7 @@ export function useSchemaLevel4({ schemas, onSchemasChange }: UseSchemaLevel4Pro
 
   const handleDeleteModel = useCallback(
     (modelName: string) => {
-      const updatedSchemas = schemas.filter((schema) => schema.name !== modelName)
+      const updatedSchemas = schemas.filter(schema => schema.name !== modelName)
 
       applyChanges(updatedSchemas)
       if (selectedModel === modelName) {
@@ -63,7 +63,7 @@ export function useSchemaLevel4({ schemas, onSchemasChange }: UseSchemaLevel4Pro
       if (!currentModel) return
 
       applyChanges(
-        schemas.map((schema) =>
+        schemas.map(schema =>
           schema.name === currentModel.name ? { ...schema, ...updates } : schema
         )
       )
@@ -93,7 +93,7 @@ export function useSchemaLevel4({ schemas, onSchemasChange }: UseSchemaLevel4Pro
       if (!currentModel) return
 
       handleUpdateModel({
-        fields: currentModel.fields.filter((field) => field.name !== fieldName),
+        fields: currentModel.fields.filter(field => field.name !== fieldName),
       })
       toast.success('Field deleted')
     },
@@ -105,7 +105,7 @@ export function useSchemaLevel4({ schemas, onSchemasChange }: UseSchemaLevel4Pro
       if (!currentModel) return
 
       handleUpdateModel({
-        fields: currentModel.fields.map((field) =>
+        fields: currentModel.fields.map(field =>
           field.name === fieldName ? { ...field, ...updates } : field
         ),
       })

@@ -46,7 +46,7 @@ export const createActionHandlers = ({
   const handleUpdateWorkflow = (updates: Partial<Workflow>) => {
     if (!currentWorkflow) return
 
-    onWorkflowsChange(workflows.map(w => w.id === currentWorkflow.id ? { ...w, ...updates } : w))
+    onWorkflowsChange(workflows.map(w => (w.id === currentWorkflow.id ? { ...w, ...updates } : w)))
   }
 
   const handleAddNode = (type: WorkflowNode['type']) => {
@@ -76,7 +76,7 @@ export const createActionHandlers = ({
   const handleUpdateNode = (nodeId: string, updates: Partial<WorkflowNode>) => {
     if (!currentWorkflow) return
     handleUpdateWorkflow({
-      nodes: currentWorkflow.nodes.map(n => n.id === nodeId ? { ...n, ...updates } : n),
+      nodes: currentWorkflow.nodes.map(n => (n.id === nodeId ? { ...n, ...updates } : n)),
     })
   }
 
@@ -95,11 +95,11 @@ export const createActionHandlers = ({
       }
 
       const engine = createWorkflowEngine()
-      const result = await engine.executeWorkflow(currentWorkflow, {
+      const result = (await engine.executeWorkflow(currentWorkflow, {
         data: parsedData,
         user: { username: 'test_user', role: 'god' },
         scripts,
-      }) as WorkflowExecutionResult
+      })) as WorkflowExecutionResult
 
       setTestOutput(result)
 

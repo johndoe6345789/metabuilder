@@ -18,13 +18,14 @@ export function Builder({ onLogout }: BuilderProps) {
     components: [],
     selectedId: null,
   })
-  
+
   const [draggingComponent, setDraggingComponent] = useState<ComponentDefinition | null>(null)
   const [codeEditorOpen, setCodeEditorOpen] = useState(false)
 
   if (!builderState) return null
 
-  const selectedComponent = builderState.components.find(c => c.id === builderState.selectedId) || null
+  const selectedComponent =
+    builderState.components.find(c => c.id === builderState.selectedId) || null
 
   const handleDragStart = (component: ComponentDefinition) => {
     setDraggingComponent(component)
@@ -65,9 +66,7 @@ export function Builder({ onLogout }: BuilderProps) {
       if (!current) return { components: [], selectedId: null }
       return {
         ...current,
-        components: current.components.map(comp =>
-          comp.id === id ? { ...comp, props } : comp
-        ),
+        components: current.components.map(comp => (comp.id === id ? { ...comp, props } : comp)),
       }
     })
   }
@@ -86,7 +85,7 @@ export function Builder({ onLogout }: BuilderProps) {
 
   const handleCodeSave = (code: string) => {
     if (!selectedComponent) return
-    
+
     setBuilderState(current => {
       if (!current) return { components: [], selectedId: null }
       return {

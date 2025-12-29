@@ -14,7 +14,12 @@ export default function Sidebar({ manifest, previewFiles }: SidebarProps) {
       {manifest && (
         <Paper
           elevation={1}
-          sx={{ border: '1px dashed', borderColor: 'divider', p: 2, backgroundColor: 'background.default' }}
+          sx={{
+            border: '1px dashed',
+            borderColor: 'divider',
+            p: 2,
+            backgroundColor: 'background.default',
+          }}
         >
           <Typography variant="subtitle1" gutterBottom>
             Manifest preview
@@ -40,7 +45,7 @@ export default function Sidebar({ manifest, previewFiles }: SidebarProps) {
       )}
       <Stack spacing={1}>
         <Typography variant="subtitle2">Bundle contents</Typography>
-        {previewFiles.map((entry) => (
+        {previewFiles.map(entry => (
           <Typography key={entry} variant="body2" color="text.secondary">
             • {entry}
           </Typography>

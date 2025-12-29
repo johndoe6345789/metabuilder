@@ -18,15 +18,17 @@ describe('getAppConfig', () => {
     { name: 'null when empty', dbData: [], expected: null },
     {
       name: 'parsed config',
-      dbData: [{
-        id: 'app1',
-        name: 'Test App',
-        schemas: '[]',
-        workflows: '[]',
-        luaScripts: '[]',
-        pages: '[]',
-        theme: '{}',
-      }],
+      dbData: [
+        {
+          id: 'app1',
+          name: 'Test App',
+          schemas: '[]',
+          workflows: '[]',
+          luaScripts: '[]',
+          pages: '[]',
+          theme: '{}',
+        },
+      ],
       expected: { id: 'app1', name: 'Test App' },
     },
   ])('should return $name', async ({ dbData, expected }) => {

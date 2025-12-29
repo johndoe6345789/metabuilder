@@ -14,7 +14,9 @@ export async function loadLuaScriptsFolder(packageId: string): Promise<LuaScript
       // Load each script file listed in the manifest
       for (const scriptInfo of manifest.scripts || []) {
         try {
-          const scriptResponse = await fetch(`/packages/${packageId}/seed/scripts/${scriptInfo.file}`)
+          const scriptResponse = await fetch(
+            `/packages/${packageId}/seed/scripts/${scriptInfo.file}`
+          )
           if (scriptResponse.ok) {
             const code = await scriptResponse.text()
             scriptFiles.push({

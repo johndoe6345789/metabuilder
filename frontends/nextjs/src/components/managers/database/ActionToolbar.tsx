@@ -9,7 +9,13 @@ interface ActionToolbarProps {
   onClear: () => void
 }
 
-export function ActionToolbar({ isLoading, onRefresh, onExport, onImport, onClear }: ActionToolbarProps) {
+export function ActionToolbar({
+  isLoading,
+  onRefresh,
+  onExport,
+  onImport,
+  onClear,
+}: ActionToolbarProps) {
   return (
     <div className="flex items-center justify-between">
       <div>

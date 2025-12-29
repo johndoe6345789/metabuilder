@@ -11,7 +11,7 @@ export function Header<T>({ columns, actionsHeader }: HeaderProps<T>) {
   return (
     <TableHead>
       <TableRow>
-        {columns.map((column) => (
+        {columns.map(column => (
           <TableCell
             key={column.key}
             align={column.align}

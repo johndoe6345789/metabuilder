@@ -69,45 +69,48 @@ const FormItem = forwardRef<HTMLDivElement, { children: ReactNode; className?: s
 FormItem.displayName = 'FormItem'
 
 // FormLabel
-const FormLabelComponent = forwardRef<HTMLLabelElement, { children: ReactNode; required?: boolean; error?: boolean; className?: string }>(
-  ({ children, required, error, ...props }, ref) => {
-    return (
-      <FormLabel
-        ref={ref}
-        required={required}
-        error={error}
-        sx={{ fontWeight: 500, fontSize: '0.875rem' }}
-        {...props}
-      >
-        {children}
-      </FormLabel>
-    )
-  }
-)
+const FormLabelComponent = forwardRef<
+  HTMLLabelElement,
+  { children: ReactNode; required?: boolean; error?: boolean; className?: string }
+>(({ children, required, error, ...props }, ref) => {
+  return (
+    <FormLabel
+      ref={ref}
+      required={required}
+      error={error}
+      sx={{ fontWeight: 500, fontSize: '0.875rem' }}
+      {...props}
+    >
+      {children}
+    </FormLabel>
+  )
+})
 FormLabelComponent.displayName = 'FormLabel'
 
 // FormControl (wrapper)
-const FormControlComponent = forwardRef<HTMLDivElement, { children: ReactNode; fullWidth?: boolean; error?: boolean; className?: string }>(
-  ({ children, fullWidth = true, error, ...props }, ref) => {
-    return (
-      <FormControl ref={ref} fullWidth={fullWidth} error={error} {...props}>
-        {children}
-      </FormControl>
-    )
-  }
-)
+const FormControlComponent = forwardRef<
+  HTMLDivElement,
+  { children: ReactNode; fullWidth?: boolean; error?: boolean; className?: string }
+>(({ children, fullWidth = true, error, ...props }, ref) => {
+  return (
+    <FormControl ref={ref} fullWidth={fullWidth} error={error} {...props}>
+      {children}
+    </FormControl>
+  )
+})
 FormControlComponent.displayName = 'FormControl'
 
 // FormDescription
-const FormDescription = forwardRef<HTMLParagraphElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
-    return (
-      <FormHelperText ref={ref} {...props}>
-        {children}
-      </FormHelperText>
-    )
-  }
-)
+const FormDescription = forwardRef<
+  HTMLParagraphElement,
+  { children: ReactNode; className?: string }
+>(({ children, ...props }, ref) => {
+  return (
+    <FormHelperText ref={ref} {...props}>
+      {children}
+    </FormHelperText>
+  )
+})
 FormDescription.displayName = 'FormDescription'
 
 // FormMessage (error message)

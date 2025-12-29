@@ -6,7 +6,7 @@ export async function buildZipFromFileTree(nodes: FileNode[]): Promise<Blob> {
   const zip = new JSZip()
   const entries = collectFileEntries(nodes)
 
-  entries.forEach((entry) => {
+  entries.forEach(entry => {
     zip.file(entry.path, entry.content)
   })
 

@@ -32,7 +32,10 @@ interface AuditTrailProps {
   showSearch?: boolean
   maxRows?: number
 }
-const SEVERITY_META: Record<AuditSeverity, { label: string; variant: 'default' | 'secondary' | 'destructive' }> = {
+const SEVERITY_META: Record<
+  AuditSeverity,
+  { label: string; variant: 'default' | 'secondary' | 'destructive' }
+> = {
   info: { label: 'Info', variant: 'secondary' },
   warning: { label: 'Warning', variant: 'default' },
   critical: { label: 'Critical', variant: 'destructive' },
@@ -44,9 +47,10 @@ export function AuditTrail({ events, showSearch = true, maxRows }: AuditTrailPro
   const filtered = useMemo(() => {
     const text = query.toLowerCase()
     return events
-      .filter((event) => {
+      .filter(event => {
         const matchesText =
-          !text || `${event.actor} ${event.action} ${event.target ?? ''}`.toLowerCase().includes(text)
+          !text ||
+          `${event.actor} ${event.action} ${event.target ?? ''}`.toLowerCase().includes(text)
         const matchesSeverity = severity === 'all' || event.severity === severity
         return matchesText && matchesSeverity
       })
@@ -74,7 +78,7 @@ export function AuditTrail({ events, showSearch = true, maxRows }: AuditTrailPro
                 id="audit-query"
                 placeholder="Filter by actor or action"
                 value={query}
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={event => setQuery(event.target.value)}
               />
             </div>
             <div className="space-y-1">
@@ -83,7 +87,7 @@ export function AuditTrail({ events, showSearch = true, maxRows }: AuditTrailPro
                 id="audit-severity"
                 className="h-10 rounded-md border border-input bg-background px-3 text-sm"
                 value={severity}
-                onChange={(event) => setSeverity(event.target.value as AuditSeverity | 'all')}
+                onChange={event => setSeverity(event.target.value as AuditSeverity | 'all')}
               >
                 <option value="all">All events</option>
                 {Object.entries(SEVERITY_META).map(([value, meta]) => (
@@ -108,7 +112,7 @@ export function AuditTrail({ events, showSearch = true, maxRows }: AuditTrailPro
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((event) => (
+              {filtered.map(event => (
                 <TableRow key={event.id}>
                   <TableCell className="text-xs text-muted-foreground">
                     <div className="flex items-center gap-2">

@@ -32,7 +32,11 @@ export function EmptyState({ colSpan, message = 'No data to display', action }: 
       <TableCell colSpan={colSpan} sx={{ py: 6 }}>
         <Stack alignItems="center" spacing={1}>
           <Typography variant="subtitle1">{message}</Typography>
-          {action ? <Stack direction="row" spacing={1}>{action}</Stack> : null}
+          {action ? (
+            <Stack direction="row" spacing={1}>
+              {action}
+            </Stack>
+          ) : null}
         </Stack>
       </TableCell>
     </TableRow>

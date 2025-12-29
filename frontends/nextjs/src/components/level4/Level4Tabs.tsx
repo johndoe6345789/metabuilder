@@ -20,12 +20,18 @@ export function Level4Tabs({
   onWorkflowsChange,
   onLuaScriptsChange,
 }: Level4TabsProps) {
-  const visibleTabs = level4TabsConfig.filter((tab) => (tab.nerdOnly ? nerdMode : true))
+  const visibleTabs = level4TabsConfig.filter(tab => (tab.nerdOnly ? nerdMode : true))
 
   return (
     <Tabs defaultValue="guide" className="space-y-6">
-      <TabsList className={nerdMode ? "grid w-full grid-cols-4 lg:grid-cols-14 max-w-full" : "grid w-full grid-cols-3 lg:grid-cols-7 max-w-full"}>
-        {visibleTabs.map((tab) => (
+      <TabsList
+        className={
+          nerdMode
+            ? 'grid w-full grid-cols-4 lg:grid-cols-14 max-w-full'
+            : 'grid w-full grid-cols-3 lg:grid-cols-7 max-w-full'
+        }
+      >
+        {visibleTabs.map(tab => (
           <TabsTrigger key={tab.value} value={tab.value}>
             <tab.icon className="mr-2" size={16} />
             {tab.label}
@@ -33,7 +39,7 @@ export function Level4Tabs({
         ))}
       </TabsList>
 
-      {level4TabsConfig.map((tab) => (
+      {level4TabsConfig.map(tab => (
         <TabContent
           key={tab.value}
           tab={tab}

@@ -8,25 +8,23 @@ interface SheetHeaderProps {
   className?: string
 }
 
-const SheetHeader = forwardRef<HTMLDivElement, SheetHeaderProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <Box
-        ref={ref}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 0.5,
-          pb: 2,
-          textAlign: 'left',
-        }}
-        {...props}
-      >
-        {children}
-      </Box>
-    )
-  }
-)
+const SheetHeader = forwardRef<HTMLDivElement, SheetHeaderProps>(({ children, ...props }, ref) => {
+  return (
+    <Box
+      ref={ref}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 0.5,
+        pb: 2,
+        textAlign: 'left',
+      }}
+      {...props}
+    >
+      {children}
+    </Box>
+  )
+})
 SheetHeader.displayName = 'SheetHeader'
 
 interface SheetFooterProps {
@@ -34,26 +32,24 @@ interface SheetFooterProps {
   className?: string
 }
 
-const SheetFooter = forwardRef<HTMLDivElement, SheetFooterProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <Box
-        ref={ref}
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column-reverse', sm: 'row' },
-          gap: 1,
-          pt: 2,
-          mt: 'auto',
-          justifyContent: { sm: 'flex-end' },
-        }}
-        {...props}
-      >
-        {children}
-      </Box>
-    )
-  }
-)
+const SheetFooter = forwardRef<HTMLDivElement, SheetFooterProps>(({ children, ...props }, ref) => {
+  return (
+    <Box
+      ref={ref}
+      sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column-reverse', sm: 'row' },
+        gap: 1,
+        pt: 2,
+        mt: 'auto',
+        justifyContent: { sm: 'flex-end' },
+      }}
+      {...props}
+    >
+      {children}
+    </Box>
+  )
+})
 SheetFooter.displayName = 'SheetFooter'
 
 interface SheetTitleProps {
@@ -89,12 +85,7 @@ interface SheetDescriptionProps {
 const SheetDescription = forwardRef<HTMLParagraphElement, SheetDescriptionProps>(
   ({ children, ...props }, ref) => {
     return (
-      <Typography
-        ref={ref}
-        variant="body2"
-        color="text.secondary"
-        {...props}
-      >
+      <Typography ref={ref} variant="body2" color="text.secondary" {...props}>
         {children}
       </Typography>
     )

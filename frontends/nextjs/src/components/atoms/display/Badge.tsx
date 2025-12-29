@@ -4,7 +4,13 @@ import { forwardRef, HTMLAttributes } from 'react'
 import { Chip, ChipProps } from '@mui/material'
 
 /** Badge visual style variants */
-export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning'
+export type BadgeVariant =
+  | 'default'
+  | 'secondary'
+  | 'destructive'
+  | 'outline'
+  | 'success'
+  | 'warning'
 
 /**
  * Props for the Badge component
@@ -15,7 +21,10 @@ export interface BadgeProps extends Omit<ChipProps, 'variant'> {
   variant?: BadgeVariant
 }
 
-const variantMap: Record<BadgeVariant, { color: ChipProps['color']; variant: ChipProps['variant'] }> = {
+const variantMap: Record<
+  BadgeVariant,
+  { color: ChipProps['color']; variant: ChipProps['variant'] }
+> = {
   default: { color: 'primary', variant: 'filled' },
   secondary: { color: 'secondary', variant: 'filled' },
   destructive: { color: 'error', variant: 'filled' },
@@ -27,16 +36,8 @@ const variantMap: Record<BadgeVariant, { color: ChipProps['color']; variant: Chi
 const Badge = forwardRef<HTMLDivElement, BadgeProps>(
   ({ variant = 'default', size = 'small', ...props }, ref) => {
     const config = variantMap[variant]
-    
-    return (
-      <Chip
-        ref={ref}
-        color={config.color}
-        variant={config.variant}
-        size={size}
-        {...props}
-      />
-    )
+
+    return <Chip ref={ref} color={config.color} variant={config.variant} size={size} {...props} />
   }
 )
 

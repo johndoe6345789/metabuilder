@@ -10,9 +10,9 @@ export const addBlockToTree = (
     return [...blocks, newBlock]
   }
 
-  return blocks.map((block) => {
+  return blocks.map(block => {
     if (block.id === parentId) {
-      const current = slot === 'children' ? block.children ?? [] : block.elseChildren ?? []
+      const current = slot === 'children' ? (block.children ?? []) : (block.elseChildren ?? [])
       const updated = [...current, newBlock]
       if (slot === 'children') {
         return { ...block, children: updated }
@@ -20,7 +20,9 @@ export const addBlockToTree = (
       return { ...block, elseChildren: updated }
     }
 
-    const children = block.children ? addBlockToTree(block.children, parentId, slot, newBlock) : block.children
+    const children = block.children
+      ? addBlockToTree(block.children, parentId, slot, newBlock)
+      : block.children
     const elseChildren = block.elseChildren
       ? addBlockToTree(block.elseChildren, parentId, slot, newBlock)
       : block.elseChildren
@@ -38,12 +40,14 @@ export const updateBlockInTree = (
   blockId: string,
   updater: (block: LuaBlock) => LuaBlock
 ): LuaBlock[] =>
-  blocks.map((block) => {
+  blocks.map(block => {
     if (block.id === blockId) {
       return updater(block)
     }
 
-    const children = block.children ? updateBlockInTree(block.children, blockId, updater) : block.children
+    const children = block.children
+      ? updateBlockInTree(block.children, blockId, updater)
+      : block.children
     const elseChildren = block.elseChildren
       ? updateBlockInTree(block.elseChildren, blockId, updater)
       : block.elseChildren
@@ -57,9 +61,11 @@ export const updateBlockInTree = (
 
 export const removeBlockFromTree = (blocks: LuaBlock[], blockId: string): LuaBlock[] =>
   blocks
-    .filter((block) => block.id !== blockId)
-    .map((block) => {
-      const children = block.children ? removeBlockFromTree(block.children, blockId) : block.children
+    .filter(block => block.id !== blockId)
+    .map(block => {
+      const children = block.children
+        ? removeBlockFromTree(block.children, blockId)
+        : block.children
       const elseChildren = block.elseChildren
         ? removeBlockFromTree(block.elseChildren, blockId)
         : block.elseChildren
@@ -71,8 +77,12 @@ export const removeBlockFromTree = (blocks: LuaBlock[], blockId: string): LuaBlo
       return block
     })
 
-export const moveBlockInTree = (blocks: LuaBlock[], blockId: string, direction: 'up' | 'down'): LuaBlock[] => {
-  const index = blocks.findIndex((block) => block.id === blockId)
+export const moveBlockInTree = (
+  blocks: LuaBlock[],
+  blockId: string,
+  direction: 'up' | 'down'
+): LuaBlock[] => {
+  const index = blocks.findIndex(block => block.id === blockId)
   if (index !== -1) {
     const targetIndex = direction === 'up' ? index - 1 : index + 1
     if (targetIndex < 0 || targetIndex >= blocks.length) return blocks
@@ -83,8 +93,10 @@ export const moveBlockInTree = (blocks: LuaBlock[], blockId: string, direction: 
     return updated
   }
 
-  return blocks.map((block) => {
-    const children = block.children ? moveBlockInTree(block.children, blockId, direction) : block.children
+  return blocks.map(block => {
+    const children = block.children
+      ? moveBlockInTree(block.children, blockId, direction)
+      : block.children
     const elseChildren = block.elseChildren
       ? moveBlockInTree(block.elseChildren, blockId, direction)
       : block.elseChildren

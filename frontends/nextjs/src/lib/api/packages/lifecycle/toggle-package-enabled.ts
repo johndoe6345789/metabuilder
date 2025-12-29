@@ -1,10 +1,16 @@
 import type { InstalledPackage } from '@/lib/package-types'
 import { requestJson } from '@/lib/api/request-json'
 
-export async function togglePackageEnabled(packageId: string, enabled: boolean): Promise<InstalledPackage> {
-  const payload = await requestJson<{ installed: InstalledPackage }>(`/api/packages/installed/${packageId}`, {
-    method: 'PATCH',
-    body: JSON.stringify({ enabled }),
-  })
+export async function togglePackageEnabled(
+  packageId: string,
+  enabled: boolean
+): Promise<InstalledPackage> {
+  const payload = await requestJson<{ installed: InstalledPackage }>(
+    `/api/packages/installed/${packageId}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify({ enabled }),
+    }
+  )
   return payload.installed
 }

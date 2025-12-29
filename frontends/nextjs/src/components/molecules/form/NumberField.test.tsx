@@ -9,7 +9,7 @@ describe('NumberField', () => {
     { label: 'Quantity', value: 100 },
   ])('renders with label "$label" and value $value', ({ label, value }) => {
     render(<NumberField label={label} value={value} />)
-    
+
     expect(screen.getByLabelText(label)).toBeTruthy()
     if (value !== undefined) {
       expect(screen.getByDisplayValue(value.toString())).toBeTruthy()
@@ -22,9 +22,9 @@ describe('NumberField', () => {
     { min: undefined, max: undefined, step: undefined },
   ])('respects min $min, max $max, step $step constraints', ({ min, max, step }) => {
     render(<NumberField min={min} max={max} step={step} />)
-    
+
     const input = screen.getByLabelText('Number') as HTMLInputElement
-    
+
     if (min !== undefined) {
       expect(input.min).toBe(min.toString())
     }
@@ -41,10 +41,10 @@ describe('NumberField', () => {
   it('calls onChange when value changes', () => {
     const handleChange = vi.fn()
     render(<NumberField onChange={handleChange} />)
-    
+
     const input = screen.getByLabelText('Number')
     fireEvent.change(input, { target: { value: '42' } })
-    
+
     expect(handleChange).toHaveBeenCalled()
   })
 
@@ -53,7 +53,7 @@ describe('NumberField', () => {
     { error: undefined, helperText: 'Enter a number between 0 and 100' },
   ])('displays error "$error" or helperText "$helperText"', ({ error, helperText }) => {
     render(<NumberField error={error} helperText={helperText} />)
-    
+
     const displayText = error || helperText
     if (displayText) {
       expect(screen.getByText(displayText)).toBeTruthy()
@@ -62,7 +62,7 @@ describe('NumberField', () => {
 
   it('has type="number" attribute', () => {
     render(<NumberField />)
-    
+
     const input = screen.getByLabelText('Number') as HTMLInputElement
     expect(input.type).toBe('number')
   })

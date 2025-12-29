@@ -25,14 +25,14 @@ export function SearchBar({
         <Input
           placeholder="Search snippets by name, description, or tags..."
           value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
+          onChange={e => onSearchChange(e.target.value)}
           className="pl-10"
         />
       </div>
 
       <ScrollArea className="w-full whitespace-nowrap">
         <TabsList className="inline-flex w-auto">
-          {LUA_SNIPPET_CATEGORIES.map((category) => (
+          {LUA_SNIPPET_CATEGORIES.map(category => (
             <TabsTrigger key={category} value={category} className="text-xs">
               {category}
             </TabsTrigger>

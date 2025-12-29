@@ -28,10 +28,13 @@ describe('addComment', () => {
 
     await addComment(comment as any)
 
-    expect(mockCreate).toHaveBeenCalledWith('Comment', expect.objectContaining({
-      id: comment.id,
-      userId: comment.userId,
-      content: comment.content,
-    }))
+    expect(mockCreate).toHaveBeenCalledWith(
+      'Comment',
+      expect.objectContaining({
+        id: comment.id,
+        userId: comment.userId,
+        content: comment.content,
+      })
+    )
   })
 })

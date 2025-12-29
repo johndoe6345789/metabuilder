@@ -1,4 +1,13 @@
-import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
+import {
+  Button,
+  Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui'
 
 export interface GodCredentialsFormProps {
   duration: number
@@ -31,10 +40,13 @@ export function GodCredentialsForm({
               min="1"
               max={unit === 'hours' ? '24' : '1440'}
               value={duration}
-              onChange={(e) => onDurationChange(Number(e.target.value))}
+              onChange={e => onDurationChange(Number(e.target.value))}
               className="flex-1"
             />
-            <Select value={unit} onValueChange={(value) => onUnitChange(value as 'minutes' | 'hours')}>
+            <Select
+              value={unit}
+              onValueChange={value => onUnitChange(value as 'minutes' | 'hours')}
+            >
               <SelectTrigger className="w-32">
                 <SelectValue />
               </SelectTrigger>
@@ -59,9 +71,7 @@ export function GodCredentialsForm({
       <div className="border-t pt-4 space-y-3">
         <div className="space-y-2">
           <Label>Expiry Management</Label>
-          <p className="text-xs text-muted-foreground">
-            Reset or clear the current expiry timer
-          </p>
+          <p className="text-xs text-muted-foreground">Reset or clear the current expiry timer</p>
         </div>
 
         <div className="flex gap-2">
@@ -74,8 +84,10 @@ export function GodCredentialsForm({
         </div>
 
         <p className="text-xs text-muted-foreground">
-          <strong>Reset Timer:</strong> Restart the countdown using the configured duration<br />
-          <strong>Clear Expiry:</strong> Remove expiry time (credentials will show on next page load)
+          <strong>Reset Timer:</strong> Restart the countdown using the configured duration
+          <br />
+          <strong>Clear Expiry:</strong> Remove expiry time (credentials will show on next page
+          load)
         </p>
       </div>
     </div>

@@ -19,7 +19,13 @@ interface TransferConfirmDialogProps {
   onConfirm: () => void
 }
 
-export function TransferConfirmDialog({ open, allUsers, selectedUserId, onClose, onConfirm }: TransferConfirmDialogProps) {
+export function TransferConfirmDialog({
+  open,
+  allUsers,
+  selectedUserId,
+  onClose,
+  onConfirm,
+}: TransferConfirmDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onClose}>
       <AlertDialogContent className="bg-slate-900 border-white/10 text-white">
@@ -30,8 +36,10 @@ export function TransferConfirmDialog({ open, allUsers, selectedUserId, onClose,
           </AlertDialogTitle>
           <AlertDialogDescription className="text-gray-400">
             Are you absolutely sure? This will transfer your Super God privileges to{' '}
-            <span className="font-semibold text-white">{allUsers.find(u => u.id === selectedUserId)?.username}</span>.
-            You will be downgraded to God level and cannot reverse this action.
+            <span className="font-semibold text-white">
+              {allUsers.find(u => u.id === selectedUserId)?.username}
+            </span>
+            . You will be downgraded to God level and cannot reverse this action.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

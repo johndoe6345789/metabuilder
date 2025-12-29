@@ -16,13 +16,13 @@ export const buildLevel1Homepage = (): PageDefinition => {
     layout: 'default',
     components: [heroComponent, featuresComponent],
     permissions: {
-      requiresAuth: false
+      requiresAuth: false,
     },
     metadata: {
       showHeader: true,
       showFooter: true,
       headerTitle: 'MetaBuilder',
-      headerActions: buildHeaderActions()
-    }
+      headerActions: buildHeaderActions(),
+    },
   }
 }

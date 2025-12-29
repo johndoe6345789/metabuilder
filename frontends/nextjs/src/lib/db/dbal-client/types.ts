@@ -20,6 +20,13 @@ export interface DBALAdapter {
   delete(entity: string, id: string): Promise<boolean>
   list(entity: string, options?: ListOptions): Promise<ListResult<unknown>>
   findFirst(entity: string, options?: { where?: Record<string, unknown> }): Promise<unknown | null>
-  upsert(entity: string, options: { where: Record<string, unknown>; update: Record<string, unknown>; create: Record<string, unknown> }): Promise<unknown>
+  upsert(
+    entity: string,
+    options: {
+      where: Record<string, unknown>
+      update: Record<string, unknown>
+      create: Record<string, unknown>
+    }
+  ): Promise<unknown>
   close(): Promise<void>
 }

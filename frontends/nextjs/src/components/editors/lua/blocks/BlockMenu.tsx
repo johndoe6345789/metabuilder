@@ -12,7 +12,7 @@ interface BlockMenuProps {
 
 export const BlockMenu = ({ anchorEl, open, onClose, blocks, onSelect }: BlockMenuProps) => (
   <Menu anchorEl={anchorEl} open={open} onClose={onClose} PaperProps={{ sx: { minWidth: 280 } }}>
-    {blocks.map((definition) => (
+    {blocks.map(definition => (
       <MenuItem key={definition.type} onClick={() => onSelect(definition.type)}>
         <Box className={styles.menuSwatch} data-category={definition.category} sx={{ mr: 1 }} />
         <Box>

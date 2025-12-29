@@ -5,10 +5,7 @@
 
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import {
-  dbalGetUserById,
-  initializeDBAL,
-} from '@/lib/dbal/core/client/database-dbal.server'
+import { dbalGetUserById, initializeDBAL } from '@/lib/dbal/core/client/database-dbal.server'
 import { requireDBALApiKey } from '@/lib/api/require-dbal-api-key'
 
 interface RouteParams {

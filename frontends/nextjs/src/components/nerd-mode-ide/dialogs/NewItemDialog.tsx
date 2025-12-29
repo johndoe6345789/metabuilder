@@ -1,17 +1,5 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
@@ -36,7 +24,7 @@ export function NewItemDialog({
   onCreate,
 }: NewItemDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={(nextOpen) => (!nextOpen ? onClose() : null)}>
+    <Dialog open={open} onOpenChange={nextOpen => (!nextOpen ? onClose() : null)}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New {newItemType === 'file' ? 'File' : 'Folder'}</DialogTitle>
@@ -44,7 +32,10 @@ export function NewItemDialog({
         <div className="space-y-4">
           <div>
             <Label htmlFor="file-type">Type</Label>
-            <Select value={newItemType} onValueChange={(value: 'file' | 'folder') => onTypeChange(value)}>
+            <Select
+              value={newItemType}
+              onValueChange={(value: 'file' | 'folder') => onTypeChange(value)}
+            >
               <SelectTrigger id="file-type">
                 <SelectValue />
               </SelectTrigger>
@@ -60,8 +51,8 @@ export function NewItemDialog({
               id="file-name"
               placeholder={newItemType === 'file' ? 'example.tsx' : 'folder-name'}
               value={newItemName}
-              onChange={(e) => onNameChange(e.target.value)}
-              onKeyDown={(e) => {
+              onChange={e => onNameChange(e.target.value)}
+              onKeyDown={e => {
                 if (e.key === 'Enter') onCreate()
               }}
             />

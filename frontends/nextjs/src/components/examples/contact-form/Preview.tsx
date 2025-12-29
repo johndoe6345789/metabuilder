@@ -40,9 +40,7 @@ function validateContactForm(values: ContactFormState): ValidationErrors {
 }
 
 export function ContactFormPreview() {
-  const [formValues, setFormValues] = useState<ContactFormState>(
-    createInitialContactFormState()
-  )
+  const [formValues, setFormValues] = useState<ContactFormState>(createInitialContactFormState())
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [submitted, setSubmitted] = useState(false)
 
@@ -79,20 +77,10 @@ export function ContactFormPreview() {
     }
 
     if (field.type === 'textarea') {
-      return (
-        <Textarea
-          rows={4}
-          {...commonProps}
-        />
-      )
+      return <Textarea rows={4} {...commonProps} />
     }
 
-    return (
-      <Input
-        type={field.type}
-        {...commonProps}
-      />
-    )
+    return <Input type={field.type} {...commonProps} />
   }
 
   return (
@@ -116,11 +104,7 @@ export function ContactFormPreview() {
               </div>
               {renderField(field)}
               {errors[field.name] && (
-                <p
-                  id={`${field.name}-error`}
-                  className="text-xs text-red-600"
-                  role="alert"
-                >
+                <p id={`${field.name}-error`} className="text-xs text-red-600" role="alert">
                   {errors[field.name]}
                 </p>
               )}

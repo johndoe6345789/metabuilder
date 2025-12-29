@@ -13,35 +13,54 @@ interface ErrorLogTableProps {
   onDelete: (id: string) => void
 }
 
-export const ErrorLogTable = ({ logs, isSuperGod, loading, onResolve, onDelete }: ErrorLogTableProps) => (
+export const ErrorLogTable = ({
+  logs,
+  isSuperGod,
+  loading,
+  onResolve,
+  onDelete,
+}: ErrorLogTableProps) => (
   <ScrollArea className="h-[600px] pr-4">
     <div className="space-y-3">
       {logs.length === 0 && !loading && (
         <div className="py-12 text-center text-gray-400">No error logs found</div>
       )}
 
-      {logs.map((log) => {
+      {logs.map(log => {
         const context = formatLogContext(log.context)
 
         return (
-          <Card key={log.id} className={`bg-white/5 border-white/10 ${log.resolved ? 'opacity-60' : ''}`}>
+          <Card
+            key={log.id}
+            className={`bg-white/5 border-white/10 ${log.resolved ? 'opacity-60' : ''}`}
+          >
             <CardContent className="p-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center gap-2">
-                    <div className={`p-2 rounded ${getLevelColor(log.level)}`}>{getLevelIcon(log.level)}</div>
+                    <div className={`p-2 rounded ${getLevelColor(log.level)}`}>
+                      {getLevelIcon(log.level)}
+                    </div>
                     <Badge variant="outline" className={getLevelColor(log.level)}>
                       {log.level.toUpperCase()}
                     </Badge>
                     {log.resolved && (
-                      <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/50">
+                      <Badge
+                        variant="outline"
+                        className="bg-green-500/20 text-green-400 border-green-500/50"
+                      >
                         <CheckCircle className="w-3 h-3 mr-1" />
                         Resolved
                       </Badge>
                     )}
-                    <span className="text-xs text-gray-400">{new Date(log.timestamp).toLocaleString()}</span>
+                    <span className="text-xs text-gray-400">
+                      {new Date(log.timestamp).toLocaleString()}
+                    </span>
                     {isSuperGod && log.tenantId && (
-                      <Badge variant="outline" className="bg-purple-500/20 text-purple-400 border-purple-500/50">
+                      <Badge
+                        variant="outline"
+                        className="bg-purple-500/20 text-purple-400 border-purple-500/50"
+                      >
                         Tenant: {log.tenantId}
                       </Badge>
                     )}
@@ -49,9 +68,13 @@ export const ErrorLogTable = ({ logs, isSuperGod, loading, onResolve, onDelete }
 
                   <div>
                     <p className="text-white font-medium">{log.message}</p>
-                    {log.source && <p className="text-xs text-gray-400 mt-1">Source: {log.source}</p>}
+                    {log.source && (
+                      <p className="text-xs text-gray-400 mt-1">Source: {log.source}</p>
+                    )}
                     {log.username && (
-                      <p className="text-xs text-gray-400 mt-1">User: {log.username} {log.userId && `(${log.userId})`}</p>
+                      <p className="text-xs text-gray-400 mt-1">
+                        User: {log.username} {log.userId && `(${log.userId})`}
+                      </p>
                     )}
                   </div>
 

@@ -44,23 +44,32 @@ const CommandEmpty = forwardRef<HTMLDivElement, CommandEmptyProps>(
 )
 CommandEmpty.displayName = 'CommandEmpty'
 
-const CommandGroup = forwardRef<HTMLDivElement, CommandGroupProps>(({ heading, children, ...props }, ref) => {
-  return (
-    <Box ref={ref} sx={{ py: 0.5 }} {...props}>
-      {heading && (
-        <Typography
-          variant="caption"
-          sx={{ px: 2, py: 1, display: 'block', color: 'text.secondary', fontWeight: 600, fontSize: '0.75rem' }}
-        >
-          {heading}
-        </Typography>
-      )}
-      <List disablePadding dense>
-        {children}
-      </List>
-    </Box>
-  )
-})
+const CommandGroup = forwardRef<HTMLDivElement, CommandGroupProps>(
+  ({ heading, children, ...props }, ref) => {
+    return (
+      <Box ref={ref} sx={{ py: 0.5 }} {...props}>
+        {heading && (
+          <Typography
+            variant="caption"
+            sx={{
+              px: 2,
+              py: 1,
+              display: 'block',
+              color: 'text.secondary',
+              fontWeight: 600,
+              fontSize: '0.75rem',
+            }}
+          >
+            {heading}
+          </Typography>
+        )}
+        <List disablePadding dense>
+          {children}
+        </List>
+      </Box>
+    )
+  }
+)
 CommandGroup.displayName = 'CommandGroup'
 
 const CommandItem = forwardRef<HTMLLIElement, CommandItemProps>(
@@ -73,11 +82,7 @@ const CommandItem = forwardRef<HTMLLIElement, CommandItemProps>(
           selected={selected}
           sx={{ mx: 1, borderRadius: 1, py: 1.5, '&.Mui-selected': { bgcolor: 'action.selected' } }}
         >
-          {icon && (
-            <ListItemIcon sx={{ minWidth: 32 }}>
-              {icon}
-            </ListItemIcon>
-          )}
+          {icon && <ListItemIcon sx={{ minWidth: 32 }}>{icon}</ListItemIcon>}
           <ListItemText primary={children} primaryTypographyProps={{ variant: 'body2' }} />
           {shortcut && shortcut.length > 0 && (
             <Box sx={{ display: 'flex', gap: 0.5, ml: 2 }}>
@@ -114,25 +119,20 @@ const CommandSeparator = forwardRef<HTMLHRElement, Record<string, never>>((props
 })
 CommandSeparator.displayName = 'CommandSeparator'
 
-const CommandShortcut = forwardRef<HTMLSpanElement, CommandShortcutProps>(({ children, ...props }, ref) => {
-  return (
-    <Box
-      ref={ref}
-      component="span"
-      sx={{ ml: 'auto', fontSize: '0.75rem', letterSpacing: '0.05em', color: 'text.secondary' }}
-      {...props}
-    >
-      {children}
-    </Box>
-  )
-})
+const CommandShortcut = forwardRef<HTMLSpanElement, CommandShortcutProps>(
+  ({ children, ...props }, ref) => {
+    return (
+      <Box
+        ref={ref}
+        component="span"
+        sx={{ ml: 'auto', fontSize: '0.75rem', letterSpacing: '0.05em', color: 'text.secondary' }}
+        {...props}
+      >
+        {children}
+      </Box>
+    )
+  }
+)
 CommandShortcut.displayName = 'CommandShortcut'
 
-export {
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-}
+export { CommandEmpty, CommandGroup, CommandItem, CommandList, CommandSeparator, CommandShortcut }

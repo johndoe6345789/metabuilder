@@ -1,5 +1,15 @@
 import { useState, type FormEvent } from 'react'
-import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from '@/components/ui'
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+} from '@/components/ui'
 
 export interface ConnectionDetails {
   driver: string
@@ -17,7 +27,12 @@ interface ConnectionFormProps {
   lastConnectedAt: Date | null
 }
 
-export function ConnectionForm({ onConnect, isConnecting, status, lastConnectedAt }: ConnectionFormProps) {
+export function ConnectionForm({
+  onConnect,
+  isConnecting,
+  status,
+  lastConnectedAt,
+}: ConnectionFormProps) {
   const [details, setDetails] = useState<ConnectionDetails>({
     driver: 'prisma-client',
     host: 'localhost',
@@ -28,7 +43,7 @@ export function ConnectionForm({ onConnect, isConnecting, status, lastConnectedA
   })
 
   const handleChange = (key: keyof ConnectionDetails, value: string) => {
-    setDetails((prev) => ({ ...prev, [key]: value }))
+    setDetails(prev => ({ ...prev, [key]: value }))
   }
 
   const handleSubmit = async (event: FormEvent) => {
@@ -36,7 +51,8 @@ export function ConnectionForm({ onConnect, isConnecting, status, lastConnectedA
     await onConnect(details)
   }
 
-  const statusVariant = status === 'connected' ? 'default' : status === 'connecting' ? 'secondary' : 'outline'
+  const statusVariant =
+    status === 'connected' ? 'default' : status === 'connecting' ? 'secondary' : 'outline'
   const statusLabel =
     status === 'connected'
       ? 'Connected'
@@ -60,7 +76,7 @@ export function ConnectionForm({ onConnect, isConnecting, status, lastConnectedA
             <Input
               id="driver"
               value={details.driver}
-              onChange={(e) => handleChange('driver', e.target.value)}
+              onChange={e => handleChange('driver', e.target.value)}
               placeholder="prisma-client"
             />
           </div>
@@ -69,24 +85,34 @@ export function ConnectionForm({ onConnect, isConnecting, status, lastConnectedA
             <Input
               id="database"
               value={details.database}
-              onChange={(e) => handleChange('database', e.target.value)}
+              onChange={e => handleChange('database', e.target.value)}
               placeholder="metabuilder"
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="host">Host</Label>
-            <Input id="host" value={details.host} onChange={(e) => handleChange('host', e.target.value)} placeholder="localhost" />
+            <Input
+              id="host"
+              value={details.host}
+              onChange={e => handleChange('host', e.target.value)}
+              placeholder="localhost"
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="port">Port</Label>
-            <Input id="port" value={details.port} onChange={(e) => handleChange('port', e.target.value)} placeholder="5432" />
+            <Input
+              id="port"
+              value={details.port}
+              onChange={e => handleChange('port', e.target.value)}
+              placeholder="5432"
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="username">Username</Label>
             <Input
               id="username"
               value={details.username}
-              onChange={(e) => handleChange('username', e.target.value)}
+              onChange={e => handleChange('username', e.target.value)}
               placeholder="admin"
             />
           </div>
@@ -96,13 +122,15 @@ export function ConnectionForm({ onConnect, isConnecting, status, lastConnectedA
               id="password"
               type="password"
               value={details.password}
-              onChange={(e) => handleChange('password', e.target.value)}
+              onChange={e => handleChange('password', e.target.value)}
               placeholder="••••••••"
             />
           </div>
           <div className="md:col-span-2 flex items-center justify-between">
             <div className="text-sm text-muted-foreground">
-              {lastConnectedAt ? `Last connected ${lastConnectedAt.toLocaleString()}` : 'No connection established yet.'}
+              {lastConnectedAt
+                ? `Last connected ${lastConnectedAt.toLocaleString()}`
+                : 'No connection established yet.'}
             </div>
             <Button type="submit" disabled={isConnecting}>
               {isConnecting ? 'Connecting...' : 'Initialize'}

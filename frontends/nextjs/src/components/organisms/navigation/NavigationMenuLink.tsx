@@ -58,28 +58,29 @@ const NavigationMenuIndicator = forwardRef<HTMLDivElement, { className?: string 
 NavigationMenuIndicator.displayName = 'NavigationMenuIndicator'
 
 // NavigationMenuViewport
-const NavigationMenuViewport = forwardRef<HTMLDivElement, { children?: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
-    return (
-      <Box
-        ref={ref}
-        sx={{
-          position: 'absolute',
-          top: '100%',
-          left: 0,
-          right: 0,
-          bgcolor: 'background.paper',
-          borderRadius: 1,
-          boxShadow: 3,
-          overflow: 'hidden',
-        }}
-        {...props}
-      >
-        {children}
-      </Box>
-    )
-  }
-)
+const NavigationMenuViewport = forwardRef<
+  HTMLDivElement,
+  { children?: ReactNode; className?: string }
+>(({ children, ...props }, ref) => {
+  return (
+    <Box
+      ref={ref}
+      sx={{
+        position: 'absolute',
+        top: '100%',
+        left: 0,
+        right: 0,
+        bgcolor: 'background.paper',
+        borderRadius: 1,
+        boxShadow: 3,
+        overflow: 'hidden',
+      }}
+      {...props}
+    >
+      {children}
+    </Box>
+  )
+})
 NavigationMenuViewport.displayName = 'NavigationMenuViewport'
 
 // Helper: navigationMenuTriggerStyle (returns sx props for consistent styling)

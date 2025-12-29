@@ -43,12 +43,15 @@ describe('addPage', () => {
 
     await addPage(page as any)
 
-    expect(mockCreate).toHaveBeenCalledWith('PageConfig', expect.objectContaining({
-      id: page.id,
-      path: page.path,
-      title: page.title,
-      level: page.level,
-      requiresAuth: page.requiresAuth,
-    }))
+    expect(mockCreate).toHaveBeenCalledWith(
+      'PageConfig',
+      expect.objectContaining({
+        id: page.id,
+        path: page.path,
+        title: page.title,
+        level: page.level,
+        requiresAuth: page.requiresAuth,
+      })
+    )
   })
 })

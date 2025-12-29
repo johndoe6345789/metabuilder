@@ -9,7 +9,9 @@ export function QuickGuide() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold mb-2">Quick Guide</h2>
-        <p className="text-sm text-muted-foreground">Learn how to use the new visual configuration tools</p>
+        <p className="text-sm text-muted-foreground">
+          Learn how to use the new visual configuration tools
+        </p>
       </div>
 
       <Alert className="border-primary/50 bg-primary/5">
@@ -17,11 +19,18 @@ export function QuickGuide() {
         <AlertDescription className="ml-2">
           <p className="font-semibold mb-2 text-primary">Nerd Mode Toggle</p>
           <p className="text-sm text-muted-foreground">
-            Click the <strong>"Nerd"</strong> button in the top navigation to toggle between simple and advanced modes:
+            Click the <strong>"Nerd"</strong> button in the top navigation to toggle between simple
+            and advanced modes:
           </p>
           <ul className="mt-2 space-y-1 text-sm text-muted-foreground ml-4 list-disc list-inside">
-            <li><strong>Simple Mode (Default):</strong> Focus on visual tools - Pages, Components, Users, Schemas, and Settings</li>
-            <li><strong>Nerd Mode:</strong> Access advanced features - Workflows, Lua Scripts, CSS Classes, Database tools, and the full IDE</li>
+            <li>
+              <strong>Simple Mode (Default):</strong> Focus on visual tools - Pages, Components,
+              Users, Schemas, and Settings
+            </li>
+            <li>
+              <strong>Nerd Mode:</strong> Access advanced features - Workflows, Lua Scripts, CSS
+              Classes, Database tools, and the full IDE
+            </li>
           </ul>
         </AlertDescription>
       </Alert>
@@ -34,11 +43,14 @@ export function QuickGuide() {
             </div>
             <div>
               <h3 className="font-semibold">Package System</h3>
-              <Badge variant="secondary" className="text-xs">Docker-Style Apps</Badge>
+              <Badge variant="secondary" className="text-xs">
+                Docker-Style Apps
+              </Badge>
             </div>
           </div>
           <p className="text-sm text-muted-foreground">
-            Install complete pre-built applications like forums, guestbooks, video platforms, and e-commerce stores with one click!
+            Install complete pre-built applications like forums, guestbooks, video platforms, and
+            e-commerce stores with one click!
           </p>
           <div className="pt-2 space-y-1 text-xs">
             <div className="flex items-center gap-2">
@@ -63,11 +75,14 @@ export function QuickGuide() {
             </div>
             <div>
               <h3 className="font-semibold">CSS Class Builder</h3>
-              <Badge variant="secondary" className="text-xs">Visual Styling</Badge>
+              <Badge variant="secondary" className="text-xs">
+                Visual Styling
+              </Badge>
             </div>
           </div>
           <p className="text-sm text-muted-foreground">
-            No more typing CSS classes! Click the palette icon next to any className field to visually select from 200+ organized Tailwind classes.
+            No more typing CSS classes! Click the palette icon next to any className field to
+            visually select from 200+ organized Tailwind classes.
           </p>
           <div className="pt-2 space-y-1 text-xs">
             <div className="flex items-center gap-2">
@@ -92,11 +107,14 @@ export function QuickGuide() {
             </div>
             <div>
               <h3 className="font-semibold">Dynamic Dropdowns</h3>
-              <Badge variant="secondary" className="text-xs">Reusable Options</Badge>
+              <Badge variant="secondary" className="text-xs">
+                Reusable Options
+              </Badge>
             </div>
           </div>
           <p className="text-sm text-muted-foreground">
-            Create dropdown configurations once and use them across multiple components. Perfect for status fields, categories, and priorities.
+            Create dropdown configurations once and use them across multiple components. Perfect for
+            status fields, categories, and priorities.
           </p>
           <div className="pt-2 space-y-1 text-xs">
             <div className="flex items-center gap-2">
@@ -155,12 +173,24 @@ export function QuickGuide() {
               <div className="p-4 bg-muted rounded-lg mt-3">
                 <p className="text-xs font-medium mb-2">Available Packages:</p>
                 <ul className="text-xs text-muted-foreground space-y-1">
-                  <li>• <strong>Classic Forum</strong> - Discussion boards with threads and categories</li>
-                  <li>• <strong>Retro Guestbook</strong> - 90s-style visitor messages</li>
-                  <li>• <strong>Video Platform</strong> - YouTube-style video sharing</li>
-                  <li>• <strong>Music Streaming</strong> - Spotify-style music platform</li>
-                  <li>• <strong>Retro Games Arcade</strong> - Classic games with leaderboards</li>
-                  <li>• <strong>E-Commerce Store</strong> - Complete online shop</li>
+                  <li>
+                    • <strong>Classic Forum</strong> - Discussion boards with threads and categories
+                  </li>
+                  <li>
+                    • <strong>Retro Guestbook</strong> - 90s-style visitor messages
+                  </li>
+                  <li>
+                    • <strong>Video Platform</strong> - YouTube-style video sharing
+                  </li>
+                  <li>
+                    • <strong>Music Streaming</strong> - Spotify-style music platform
+                  </li>
+                  <li>
+                    • <strong>Retro Games Arcade</strong> - Classic games with leaderboards
+                  </li>
+                  <li>
+                    • <strong>E-Commerce Store</strong> - Complete online shop
+                  </li>
                 </ul>
               </div>
             </AccordionContent>
@@ -186,14 +216,19 @@ export function QuickGuide() {
                 <ul className="list-disc list-inside space-y-1 text-muted-foreground ml-4">
                   <li>Select a component in the builder</li>
                   <li>Find the "CSS Classes" field in the Property Inspector</li>
-                  <li>Click the palette icon <Palette size={14} className="inline" /> button</li>
+                  <li>
+                    Click the palette icon <Palette size={14} className="inline" /> button
+                  </li>
                   <li>Browse categories and click classes to select them</li>
                   <li>See live preview of your selections</li>
                   <li>Click "Apply Classes" to save</li>
                 </ul>
               </div>
               <div className="p-3 bg-muted rounded-md">
-                <p className="text-xs"><strong>Tip:</strong> You can still type custom classes directly in the input field if you need something specific!</p>
+                <p className="text-xs">
+                  <strong>Tip:</strong> You can still type custom classes directly in the input
+                  field if you need something specific!
+                </p>
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -234,7 +269,10 @@ export function QuickGuide() {
 }`}</pre>
               </div>
               <div className="p-3 bg-accent/10 rounded-md border border-accent/20">
-                <p className="text-xs"><strong>Pre-loaded examples:</strong> We've included status, priority, and category dropdowns to get you started!</p>
+                <p className="text-xs">
+                  <strong>Pre-loaded examples:</strong> We've included status, priority, and
+                  category dropdowns to get you started!
+                </p>
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -248,16 +286,31 @@ export function QuickGuide() {
             </AccordionTrigger>
             <AccordionContent className="space-y-3 text-sm">
               <p className="text-muted-foreground">
-                When editing JSON or Lua code, you'll use the Monaco editor (the same editor that powers VS Code):
+                When editing JSON or Lua code, you'll use the Monaco editor (the same editor that
+                powers VS Code):
               </p>
               <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
-                <li><strong>Syntax Highlighting:</strong> Color-coded JSON/Lua syntax</li>
-                <li><strong>Auto-formatting:</strong> Press Format JSON button or use Shift+Alt+F</li>
-                <li><strong>Error Detection:</strong> See errors as you type</li>
-                <li><strong>Bracket Matching:</strong> Colored bracket pairs</li>
-                <li><strong>Code Folding:</strong> Collapse/expand sections</li>
-                <li><strong>Find & Replace:</strong> Ctrl/Cmd+F to search</li>
-                <li><strong>Minimap:</strong> Navigate large files easily</li>
+                <li>
+                  <strong>Syntax Highlighting:</strong> Color-coded JSON/Lua syntax
+                </li>
+                <li>
+                  <strong>Auto-formatting:</strong> Press Format JSON button or use Shift+Alt+F
+                </li>
+                <li>
+                  <strong>Error Detection:</strong> See errors as you type
+                </li>
+                <li>
+                  <strong>Bracket Matching:</strong> Colored bracket pairs
+                </li>
+                <li>
+                  <strong>Code Folding:</strong> Collapse/expand sections
+                </li>
+                <li>
+                  <strong>Find & Replace:</strong> Ctrl/Cmd+F to search
+                </li>
+                <li>
+                  <strong>Minimap:</strong> Navigate large files easily
+                </li>
               </ul>
             </AccordionContent>
           </AccordionItem>
@@ -273,19 +326,28 @@ export function QuickGuide() {
               <ul className="space-y-3">
                 <li className="space-y-1">
                   <p className="font-medium">Organize CSS classes by purpose</p>
-                  <p className="text-muted-foreground ml-4">Keep related classes together in categories for easier discovery</p>
+                  <p className="text-muted-foreground ml-4">
+                    Keep related classes together in categories for easier discovery
+                  </p>
                 </li>
                 <li className="space-y-1">
                   <p className="font-medium">Name dropdowns descriptively</p>
-                  <p className="text-muted-foreground ml-4">Use clear names like "user_status_options" instead of "dropdown1"</p>
+                  <p className="text-muted-foreground ml-4">
+                    Use clear names like "user_status_options" instead of "dropdown1"
+                  </p>
                 </li>
                 <li className="space-y-1">
                   <p className="font-medium">Reuse dropdown configurations</p>
-                  <p className="text-muted-foreground ml-4">If multiple components need the same options, create one dropdown and reference it</p>
+                  <p className="text-muted-foreground ml-4">
+                    If multiple components need the same options, create one dropdown and reference
+                    it
+                  </p>
                 </li>
                 <li className="space-y-1">
                   <p className="font-medium">Test in preview mode</p>
-                  <p className="text-muted-foreground ml-4">Use the preview buttons to see how your changes look on each level</p>
+                  <p className="text-muted-foreground ml-4">
+                    Use the preview buttons to see how your changes look on each level
+                  </p>
                 </li>
               </ul>
             </AccordionContent>

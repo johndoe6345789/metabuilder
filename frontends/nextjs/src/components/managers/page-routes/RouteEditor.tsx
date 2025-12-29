@@ -31,7 +31,7 @@ export function RouteEditor({ formData, onChange, onSave, onCancel, isEdit }: Ro
             id="path"
             placeholder="/home"
             value={formData.path || ''}
-            onChange={(e) => onChange({ ...formData, path: e.target.value })}
+            onChange={e => onChange({ ...formData, path: e.target.value })}
           />
         </div>
         <div className="space-y-2">
@@ -40,7 +40,7 @@ export function RouteEditor({ formData, onChange, onSave, onCancel, isEdit }: Ro
             id="title"
             placeholder="Home Page"
             value={formData.title || ''}
-            onChange={(e) => onChange({ ...formData, title: e.target.value })}
+            onChange={e => onChange({ ...formData, title: e.target.value })}
           />
         </div>
       </div>
@@ -50,7 +50,7 @@ export function RouteEditor({ formData, onChange, onSave, onCancel, isEdit }: Ro
           <Label htmlFor="level">Application Level</Label>
           <Select
             value={formData.level ? String(formData.level) : ''}
-            onValueChange={(value) => onChange({ ...formData, level: Number(value) as AppLevel })}
+            onValueChange={value => onChange({ ...formData, level: Number(value) as AppLevel })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select level" />
@@ -70,7 +70,7 @@ export function RouteEditor({ formData, onChange, onSave, onCancel, isEdit }: Ro
           <Label htmlFor="requiredRole">Required Role (if auth)</Label>
           <Select
             value={formData.requiredRole || 'public'}
-            onValueChange={(value) => onChange({ ...formData, requiredRole: value as UserRole })}
+            onValueChange={value => onChange({ ...formData, requiredRole: value as UserRole })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select role" />
@@ -91,13 +91,17 @@ export function RouteEditor({ formData, onChange, onSave, onCancel, isEdit }: Ro
         <Switch
           id="requiresAuth"
           checked={formData.requiresAuth}
-          onCheckedChange={(checked) => onChange({ ...formData, requiresAuth: checked })}
+          onCheckedChange={checked => onChange({ ...formData, requiresAuth: checked })}
         />
-        <Label htmlFor="requiresAuth" className="cursor-pointer">Requires Authentication</Label>
+        <Label htmlFor="requiresAuth" className="cursor-pointer">
+          Requires Authentication
+        </Label>
       </div>
 
       <div className="flex gap-2 justify-end">
-        <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
+        <Button type="button" variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
         <Button type="button" onClick={onSave}>
           {isEdit ? 'Update Page' : 'Create Page'}
         </Button>

@@ -8,14 +8,22 @@ describe('Link', () => {
     { href: '/contact', external: false, children: 'Contact' },
     { href: 'https://example.com', external: true, children: 'External Link' },
   ])('renders link with props %o', ({ href, external, children }) => {
-    render(<Link href={href} external={external}>{children}</Link>)
+    render(
+      <Link href={href} external={external}>
+        {children}
+      </Link>
+    )
     const link = screen.getByText(children)
     expect(link).not.toBeNull()
     expect(link.getAttribute('href')).not.toBeNull()
   })
 
   it('renders external link with correct attributes', () => {
-    render(<Link href="https://example.com" external>External</Link>)
+    render(
+      <Link href="https://example.com" external>
+        External
+      </Link>
+    )
     const link = screen.getByText('External')
     expect(link.getAttribute('target')).toBe('_blank')
     expect(link.getAttribute('rel')).toBe('noopener noreferrer')

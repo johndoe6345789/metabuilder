@@ -23,7 +23,7 @@ export function buildPackageTemplate(config: PackageTemplateConfig): PackageTemp
         content: manifestJson,
         exportPath: 'seed/scripts/manifest.json',
       }),
-      ...config.luaScripts.map((script) =>
+      ...config.luaScripts.map(script =>
         createFileNode({
           name: script.fileName,
           content: script.code,

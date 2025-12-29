@@ -8,13 +8,20 @@ interface SelectValueProps {
   children?: ReactNode
 }
 
-const SelectValue = forwardRef<HTMLSpanElement, SelectValueProps>(({ placeholder, children, ...props }, ref) => {
-  return (
-    <Box component="span" ref={ref} sx={{ color: children ? 'text.primary' : 'text.secondary' }} {...props}>
-      {children || placeholder}
-    </Box>
-  )
-})
+const SelectValue = forwardRef<HTMLSpanElement, SelectValueProps>(
+  ({ placeholder, children, ...props }, ref) => {
+    return (
+      <Box
+        component="span"
+        ref={ref}
+        sx={{ color: children ? 'text.primary' : 'text.secondary' }}
+        {...props}
+      >
+        {children || placeholder}
+      </Box>
+    )
+  }
+)
 
 SelectValue.displayName = 'SelectValue'
 

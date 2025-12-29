@@ -10,12 +10,13 @@ type LevelsGridProps = {
 
 export const LevelsGrid = ({ levels, selectedLevelId, onSelect }: LevelsGridProps) => (
   <Grid container spacing={3}>
-    {levels.map((level) => (
+    {levels.map(level => (
       <Grid item xs={12} md={6} lg={4} key={level.id} component="div">
         <Paper
           onClick={() => onSelect(level.id)}
           sx={{
-            border: (theme) => `2px solid ${selectedLevelId === level.id ? theme.palette.primary.main : theme.palette.divider}`,
+            border: theme =>
+              `2px solid ${selectedLevelId === level.id ? theme.palette.primary.main : theme.palette.divider}`,
             p: 3,
             cursor: 'pointer',
             position: 'relative',
@@ -28,7 +29,9 @@ export const LevelsGrid = ({ levels, selectedLevelId, onSelect }: LevelsGridProp
           <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
             <Chip label={level.badge} />
           </Box>
-          <Typography variant="h6">Level {level.id} · {level.title}</Typography>
+          <Typography variant="h6">
+            Level {level.id} · {level.title}
+          </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
             {level.tagline}
           </Typography>
@@ -36,7 +39,7 @@ export const LevelsGrid = ({ levels, selectedLevelId, onSelect }: LevelsGridProp
             {level.description}
           </Typography>
           <Stack direction="row" spacing={1} flexWrap="wrap">
-            {level.capabilities.slice(0, 3).map((capability) => (
+            {level.capabilities.slice(0, 3).map(capability => (
               <Chip key={capability} label={capability} size="small" variant="outlined" />
             ))}
           </Stack>

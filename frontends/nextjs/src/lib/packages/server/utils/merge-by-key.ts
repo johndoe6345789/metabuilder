@@ -1,8 +1,4 @@
-export const mergeByKey = <T>(
-  existing: T[],
-  incoming: T[],
-  getKey: (item: T) => string
-): T[] => {
+export const mergeByKey = <T>(existing: T[], incoming: T[], getKey: (item: T) => string): T[] => {
   const merged = new Map<string, T>()
 
   for (const item of existing) {

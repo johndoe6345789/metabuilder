@@ -1,4 +1,7 @@
-import { emptyModularPackageSeedData, type ModularPackageSeedData } from './modular-package-seed-data'
+import {
+  emptyModularPackageSeedData,
+  type ModularPackageSeedData,
+} from './modular-package-seed-data'
 import { packageSystemState } from '../state/package-system-state'
 
 /**

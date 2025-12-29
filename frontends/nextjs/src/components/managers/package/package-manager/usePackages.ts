@@ -53,7 +53,8 @@ export function usePackages(): UsePackagesResult {
       pkg.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pkg.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
 
-    const matchesCategory = (pkg: PackageManifest) => categoryFilter === 'all' || pkg.category === categoryFilter
+    const matchesCategory = (pkg: PackageManifest) =>
+      categoryFilter === 'all' || pkg.category === categoryFilter
 
     return packages
       .filter(pkg => matchesSearch(pkg) && matchesCategory(pkg))
@@ -67,7 +68,7 @@ export function usePackages(): UsePackagesResult {
 
   const categories = useMemo(
     () => ['all', ...Array.from(new Set(packages.map(p => p.category)))],
-    [packages],
+    [packages]
   )
 
   const installedList = useMemo(() => packages.filter(p => p.installed), [packages])

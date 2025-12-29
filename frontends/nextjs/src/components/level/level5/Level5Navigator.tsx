@@ -35,7 +35,10 @@ export function Level5Navigator({
   onPreview,
 }: Level5NavigatorProps) {
   return (
-    <ResultsPane title="Navigation" description="Jump between builder levels and administrative tools.">
+    <ResultsPane
+      title="Navigation"
+      description="Jump between builder levels and administrative tools."
+    >
       <Tabs defaultValue="tenants" className="space-y-6">
         <TabsList className="bg-black/40 border border-white/10">
           <TabsTrigger value="tenants" className="data-[state=active]:bg-purple-600">

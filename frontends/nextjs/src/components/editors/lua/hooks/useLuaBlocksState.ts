@@ -34,7 +34,7 @@ export function useLuaBlocksState({
       return
     }
 
-    if (!selectedScriptId || !scripts.find((script) => script.id === selectedScriptId)) {
+    if (!selectedScriptId || !scripts.find(script => script.id === selectedScriptId)) {
       setSelectedScriptId(scripts[0].id)
     }
   }, [scripts, selectedScriptId])
@@ -46,10 +46,10 @@ export function useLuaBlocksState({
       return
     }
 
-    const script = scripts.find((item) => item.id === selectedScriptId)
+    const script = scripts.find(item => item.id === selectedScriptId)
     const parsedBlocks = script ? decodeBlocksMetadata(script.code) : null
 
-    setBlocksByScript((prev) => ({
+    setBlocksByScript(prev => ({
       ...prev,
       [selectedScriptId]: parsedBlocks ?? [],
     }))
@@ -57,7 +57,10 @@ export function useLuaBlocksState({
 
   const selectedScript = selectSelectedScript(scripts, selectedScriptId)
   const activeBlocks = selectActiveBlocks(blocksByScript, selectedScriptId)
-  const generatedCode = useMemo(() => buildLuaFromBlocks(activeBlocks), [activeBlocks, buildLuaFromBlocks])
+  const generatedCode = useMemo(
+    () => buildLuaFromBlocks(activeBlocks),
+    [activeBlocks, buildLuaFromBlocks]
+  )
 
   const actions = createLuaBlocksActions({
     scripts,

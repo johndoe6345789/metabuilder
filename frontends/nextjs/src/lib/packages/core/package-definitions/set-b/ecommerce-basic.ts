@@ -1,11 +1,15 @@
 import type { PackageContent, PackageManifest } from '../../package-types'
 
-export const ecommerceBasicPackage = (): { manifest: PackageManifest; content: PackageContent } => ({
+export const ecommerceBasicPackage = (): {
+  manifest: PackageManifest
+  content: PackageContent
+} => ({
   manifest: {
     id: 'ecommerce-basic',
     name: 'E-Commerce Store',
     version: '1.0.0',
-    description: 'Complete online store with products, shopping cart, checkout, orders, and inventory management. Start selling online!',
+    description:
+      'Complete online store with products, shopping cart, checkout, orders, and inventory management. Start selling online!',
     author: 'MetaBuilder Team',
     category: 'ecommerce',
     icon: '🛒',
@@ -31,9 +35,21 @@ export const ecommerceBasicPackage = (): { manifest: PackageManifest; content: P
           { name: 'salePrice', type: 'number', label: 'Sale Price', required: false },
           { name: 'imageUrl', type: 'string', label: 'Image URL', required: false },
           { name: 'category', type: 'string', label: 'Category', required: false },
-          { name: 'stock', type: 'number', label: 'Stock Quantity', required: true, defaultValue: 0 },
+          {
+            name: 'stock',
+            type: 'number',
+            label: 'Stock Quantity',
+            required: true,
+            defaultValue: 0,
+          },
           { name: 'sku', type: 'string', label: 'SKU', required: false },
-          { name: 'featured', type: 'boolean', label: 'Featured', required: true, defaultValue: false },
+          {
+            name: 'featured',
+            type: 'boolean',
+            label: 'Featured',
+            required: true,
+            defaultValue: false,
+          },
           { name: 'createdAt', type: 'number', label: 'Created At', required: true },
         ],
       },
@@ -44,7 +60,13 @@ export const ecommerceBasicPackage = (): { manifest: PackageManifest; content: P
           { name: 'id', type: 'string', label: 'ID', required: true, primaryKey: true },
           { name: 'userId', type: 'string', label: 'User ID', required: true },
           { name: 'items', type: 'json', label: 'Items', required: true },
-          { name: 'totalAmount', type: 'number', label: 'Total Amount', required: true, defaultValue: 0 },
+          {
+            name: 'totalAmount',
+            type: 'number',
+            label: 'Total Amount',
+            required: true,
+            defaultValue: 0,
+          },
           { name: 'updatedAt', type: 'number', label: 'Updated At', required: true },
         ],
       },

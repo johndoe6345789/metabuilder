@@ -7,9 +7,7 @@ export const DATA_VALIDATION_SNIPPETS: LuaSnippet[] = [
     description: 'Validate email format using pattern matching',
     category: 'Data Validation',
     tags: ['validation', 'email', 'regex'],
-    parameters: [
-      { name: 'email', type: 'string', description: 'Email address to validate' }
-    ],
+    parameters: [{ name: 'email', type: 'string', description: 'Email address to validate' }],
     code: `local email = context.data.email or ""
 
 if email == "" then
@@ -21,7 +19,7 @@ if not string.match(email, pattern) then
   return { valid = false, error = "Invalid email format" }
 end
 
-return { valid = true, email = email }`
+return { valid = true, email = email }`,
   },
   {
     id: 'validate_password_strength',
@@ -29,9 +27,7 @@ return { valid = true, email = email }`
     description: 'Check password meets security requirements',
     category: 'Data Validation',
     tags: ['validation', 'password', 'security'],
-    parameters: [
-      { name: 'password', type: 'string', description: 'Password to validate' }
-    ],
+    parameters: [{ name: 'password', type: 'string', description: 'Password to validate' }],
     code: `local password = context.data.password or ""
 
 if string.len(password) < 8 then
@@ -63,7 +59,7 @@ return {
   valid = true,
   strength = "strong",
   score = 100
-}`
+}`,
   },
   {
     id: 'validate_phone',
@@ -71,9 +67,7 @@ return {
     description: 'Validate US phone number format',
     category: 'Data Validation',
     tags: ['validation', 'phone', 'format'],
-    parameters: [
-      { name: 'phone', type: 'string', description: 'Phone number to validate' }
-    ],
+    parameters: [{ name: 'phone', type: 'string', description: 'Phone number to validate' }],
     code: `local phone = context.data.phone or ""
 
 local cleaned = string.gsub(phone, "[^%d]", "")
@@ -92,7 +86,7 @@ return {
   valid = true,
   cleaned = cleaned,
   formatted = formatted
-}`
+}`,
   },
   {
     id: 'validate_required_fields',
@@ -118,6 +112,6 @@ if #missing > 0 then
   }
 end
 
-return { valid = true }`
-  }
+return { valid = true }`,
+  },
 ]

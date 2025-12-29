@@ -1,5 +1,9 @@
 import { Box, Stack, Typography } from '@mui/material'
-import { Download as DownloadIcon, OpenInNew as OpenInNewIcon, Autorenew as RunningIcon } from '@mui/icons-material'
+import {
+  Download as DownloadIcon,
+  OpenInNew as OpenInNewIcon,
+  Autorenew as RunningIcon,
+} from '@mui/icons-material'
 
 import { Badge, Button, Card, CardContent } from '@/components/ui'
 
@@ -84,9 +88,11 @@ export const RunRow = ({
               onClick={() => onDownloadLogs(run.id, run.name)}
               disabled={isSelectedRun}
               startIcon={
-                isSelectedRun
-                  ? <RunningIcon sx={{ fontSize: 16, ...spinSx }} />
-                  : <DownloadIcon sx={{ fontSize: 16 }} />
+                isSelectedRun ? (
+                  <RunningIcon sx={{ fontSize: 16, ...spinSx }} />
+                ) : (
+                  <DownloadIcon sx={{ fontSize: 16 }} />
+                )
               }
             >
               {isSelectedRun ? 'Loading...' : 'Download Logs'}

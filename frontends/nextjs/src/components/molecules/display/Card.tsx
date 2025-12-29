@@ -1,8 +1,8 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import { 
-  Card as MuiCard, 
+import {
+  Card as MuiCard,
   CardProps as MuiCardProps,
   CardHeader as MuiCardHeader,
   CardHeaderProps as MuiCardHeaderProps,
@@ -19,21 +19,19 @@ export interface CardProps extends MuiCardProps {
   noPadding?: boolean
 }
 
-const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ noPadding, sx, ...props }, ref) => {
-    return (
-      <MuiCard
-        ref={ref}
-        sx={{
-          borderRadius: 2,
-          ...(noPadding && { '& .MuiCardContent-root': { p: 0 } }),
-          ...sx,
-        }}
-        {...props}
-      />
-    )
-  }
-)
+const Card = forwardRef<HTMLDivElement, CardProps>(({ noPadding, sx, ...props }, ref) => {
+  return (
+    <MuiCard
+      ref={ref}
+      sx={{
+        borderRadius: 2,
+        ...(noPadding && { '& .MuiCardContent-root': { p: 0 } }),
+        ...sx,
+      }}
+      {...props}
+    />
+  )
+})
 Card.displayName = 'Card'
 
 // CardHeader
@@ -62,15 +60,13 @@ interface CardTitleProps {
   className?: string
 }
 
-const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <Typography ref={ref} variant="h6" fontWeight={600} {...props}>
-        {children}
-      </Typography>
-    )
-  }
-)
+const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(({ children, ...props }, ref) => {
+  return (
+    <Typography ref={ref} variant="h6" fontWeight={600} {...props}>
+      {children}
+    </Typography>
+  )
+})
 CardTitle.displayName = 'CardTitle'
 
 // CardDescription
@@ -91,25 +87,17 @@ const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionProps>(
 CardDescription.displayName = 'CardDescription'
 
 // CardContent
-const CardContent = forwardRef<HTMLDivElement, MuiCardContentProps>(
-  (props, ref) => {
-    return <MuiCardContent ref={ref} {...props} />
-  }
-)
+const CardContent = forwardRef<HTMLDivElement, MuiCardContentProps>((props, ref) => {
+  return <MuiCardContent ref={ref} {...props} />
+})
 CardContent.displayName = 'CardContent'
 
 // CardFooter / CardActions
-const CardFooter = forwardRef<HTMLDivElement, MuiCardActionsProps>(
-  ({ sx, ...props }, ref) => {
-    return (
-      <MuiCardActions
-        ref={ref}
-        sx={{ px: 2, pb: 2, justifyContent: 'flex-end', ...sx }}
-        {...props}
-      />
-    )
-  }
-)
+const CardFooter = forwardRef<HTMLDivElement, MuiCardActionsProps>(({ sx, ...props }, ref) => {
+  return (
+    <MuiCardActions ref={ref} sx={{ px: 2, pb: 2, justifyContent: 'flex-end', ...sx }} {...props} />
+  )
+})
 CardFooter.displayName = 'CardFooter'
 
 // CardAction (for header actions - shadcn compat)
@@ -124,12 +112,4 @@ const CardAction = forwardRef<HTMLDivElement, { children: ReactNode; className?:
 )
 CardAction.displayName = 'CardAction'
 
-export { 
-  Card, 
-  CardHeader, 
-  CardTitle,
-  CardDescription,
-  CardContent, 
-  CardFooter,
-  CardAction,
-}
+export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction }

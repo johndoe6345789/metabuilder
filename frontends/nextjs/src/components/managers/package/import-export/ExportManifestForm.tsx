@@ -81,7 +81,10 @@ export function ExportManifestForm({
         {manifest.tags && manifest.tags.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {manifest.tags.map(tag => (
-              <div key={tag} className="px-2 py-1 bg-secondary rounded-md text-sm flex items-center gap-2">
+              <div
+                key={tag}
+                className="px-2 py-1 bg-secondary rounded-md text-sm flex items-center gap-2"
+              >
                 <span>{tag}</span>
                 <button
                   type="button"

@@ -14,17 +14,16 @@ describe('deleteUser', () => {
     mockDelete.mockReset()
   })
 
-  it.each([
-    { userId: 'user_1' },
-    { userId: 'user_abc123' },
-    { userId: 'some-uuid-format' },
-  ])('should delete user with id $userId', async ({ userId }) => {
-    mockDelete.mockResolvedValue(undefined)
+  it.each([{ userId: 'user_1' }, { userId: 'user_abc123' }, { userId: 'some-uuid-format' }])(
+    'should delete user with id $userId',
+    async ({ userId }) => {
+      mockDelete.mockResolvedValue(undefined)
 
-    await deleteUser(userId)
+      await deleteUser(userId)
 
-    expect(mockDelete).toHaveBeenCalledWith('User', userId)
-  })
+      expect(mockDelete).toHaveBeenCalledWith('User', userId)
+    }
+  )
 
   it('should propagate adapter errors', async () => {
     mockDelete.mockRejectedValue(new Error('User not found'))

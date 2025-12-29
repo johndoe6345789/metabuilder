@@ -19,16 +19,28 @@ export function NavigationBar({ menuOpen, setMenuOpen, onNavigate }: NavigationB
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <a
+              href="#features"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
               Features
             </a>
-            <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <a
+              href="#about"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
               About
             </a>
-            <a href="#contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <a
+              href="#contact"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
               Contact
             </a>
-            <Link href="/dbal-daemon" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              href="/dbal-daemon"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
               DBAL Daemon
             </Link>
             <Button variant="outline" size="sm" onClick={() => onNavigate(2)}>
@@ -53,16 +65,25 @@ export function NavigationBar({ menuOpen, setMenuOpen, onNavigate }: NavigationB
       {menuOpen && (
         <div className="md:hidden border-t border-border bg-card">
           <div className="px-4 py-3 space-y-3">
-            <a href="#features" className="block text-sm text-muted-foreground hover:text-foreground">
+            <a
+              href="#features"
+              className="block text-sm text-muted-foreground hover:text-foreground"
+            >
               Features
             </a>
             <a href="#about" className="block text-sm text-muted-foreground hover:text-foreground">
               About
             </a>
-            <a href="#contact" className="block text-sm text-muted-foreground hover:text-foreground">
+            <a
+              href="#contact"
+              className="block text-sm text-muted-foreground hover:text-foreground"
+            >
               Contact
             </a>
-            <Link href="/dbal-daemon" className="block text-sm text-muted-foreground hover:text-foreground">
+            <Link
+              href="/dbal-daemon"
+              className="block text-sm text-muted-foreground hover:text-foreground"
+            >
               DBAL Daemon
             </Link>
             <Button variant="outline" size="sm" className="w-full" onClick={() => onNavigate(2)}>

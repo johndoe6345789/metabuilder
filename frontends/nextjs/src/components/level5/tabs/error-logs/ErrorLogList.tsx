@@ -26,7 +26,8 @@ const LEVEL_COLOR: Record<string, string> = {
 }
 
 const getLevelColor = (level: string) => LEVEL_COLOR[level] ?? LEVEL_COLOR.default
-const getLevelIcon = (level: string) => LEVEL_ICON[level as keyof typeof LEVEL_ICON] ?? LEVEL_ICON.default
+const getLevelIcon = (level: string) =>
+  LEVEL_ICON[level as keyof typeof LEVEL_ICON] ?? LEVEL_ICON.default
 
 export function ErrorLogList({ logs, onResolve, onDelete, loading, user }: ErrorLogListProps) {
   const isSuperGod = user?.role === 'supergod'
@@ -35,12 +36,10 @@ export function ErrorLogList({ logs, onResolve, onDelete, loading, user }: Error
     <ScrollArea className="h-[600px] pr-4">
       <div className="space-y-3">
         {logs.length === 0 && !loading && (
-          <div className="py-12 text-center text-gray-400">
-            No error logs found
-          </div>
+          <div className="py-12 text-center text-gray-400">No error logs found</div>
         )}
 
-        {logs.map((log) => (
+        {logs.map(log => (
           <Card
             key={log.id}
             className={`bg-white/5 border-white/10 ${log.resolved ? 'opacity-60' : ''}`}
@@ -56,7 +55,10 @@ export function ErrorLogList({ logs, onResolve, onDelete, loading, user }: Error
                       {log.level.toUpperCase()}
                     </Badge>
                     {log.resolved && (
-                      <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/50">
+                      <Badge
+                        variant="outline"
+                        className="bg-green-500/20 text-green-400 border-green-500/50"
+                      >
                         <CheckCircle className="w-3 h-3 mr-1" />
                         Resolved
                       </Badge>
@@ -65,7 +67,10 @@ export function ErrorLogList({ logs, onResolve, onDelete, loading, user }: Error
                       {new Date(log.timestamp).toLocaleString()}
                     </span>
                     {isSuperGod && log.tenantId && (
-                      <Badge variant="outline" className="bg-purple-500/20 text-purple-400 border-purple-500/50">
+                      <Badge
+                        variant="outline"
+                        className="bg-purple-500/20 text-purple-400 border-purple-500/50"
+                      >
                         Tenant: {log.tenantId}
                       </Badge>
                     )}
@@ -74,9 +79,7 @@ export function ErrorLogList({ logs, onResolve, onDelete, loading, user }: Error
                   <div>
                     <p className="text-white font-medium">{log.message}</p>
                     {log.source && (
-                      <p className="text-xs text-gray-400 mt-1">
-                        Source: {log.source}
-                      </p>
+                      <p className="text-xs text-gray-400 mt-1">Source: {log.source}</p>
                     )}
                     {log.username && (
                       <p className="text-xs text-gray-400 mt-1">
@@ -87,20 +90,14 @@ export function ErrorLogList({ logs, onResolve, onDelete, loading, user }: Error
 
                   {log.stack && (
                     <details className="text-xs text-gray-400 bg-black/40 p-2 rounded">
-                      <summary className="cursor-pointer hover:text-white">
-                        Stack trace
-                      </summary>
-                      <pre className="mt-2 overflow-x-auto whitespace-pre-wrap">
-                        {log.stack}
-                      </pre>
+                      <summary className="cursor-pointer hover:text-white">Stack trace</summary>
+                      <pre className="mt-2 overflow-x-auto whitespace-pre-wrap">{log.stack}</pre>
                     </details>
                   )}
 
                   {log.context && (
                     <details className="text-xs text-gray-400 bg-black/40 p-2 rounded">
-                      <summary className="cursor-pointer hover:text-white">
-                        Context
-                      </summary>
+                      <summary className="cursor-pointer hover:text-white">Context</summary>
                       <pre className="mt-2 overflow-x-auto whitespace-pre-wrap">
                         {JSON.stringify(JSON.parse(log.context), null, 2)}
                       </pre>

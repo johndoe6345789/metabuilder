@@ -1,30 +1,36 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import { Card as MuiCard, CardContent, CardHeader, CardActions, CardMedia, Typography, Box } from '@mui/material'
+import {
+  Card as MuiCard,
+  CardContent,
+  CardHeader,
+  CardActions,
+  CardMedia,
+  Typography,
+  Box,
+} from '@mui/material'
 import type { CardProps as MuiCardProps } from '@mui/material'
 
 export interface CardProps extends MuiCardProps {
   children?: ReactNode
 }
 
-const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ children, sx, ...props }, ref) => {
-    return (
-      <MuiCard
-        ref={ref}
-        sx={{
-          borderRadius: 2,
-          boxShadow: 1,
-          ...sx,
-        }}
-        {...props}
-      >
-        {children}
-      </MuiCard>
-    )
-  }
-)
+const Card = forwardRef<HTMLDivElement, CardProps>(({ children, sx, ...props }, ref) => {
+  return (
+    <MuiCard
+      ref={ref}
+      sx={{
+        borderRadius: 2,
+        boxShadow: 1,
+        ...sx,
+      }}
+      {...props}
+    >
+      {children}
+    </MuiCard>
+  )
+})
 Card.displayName = 'Card'
 
 interface CardHeaderProps {
@@ -48,15 +54,13 @@ interface CardTitleProps {
   className?: string
 }
 
-const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <Typography ref={ref} variant="h6" component="h3" fontWeight={600} {...props}>
-        {children}
-      </Typography>
-    )
-  }
-)
+const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(({ children, ...props }, ref) => {
+  return (
+    <Typography ref={ref} variant="h6" component="h3" fontWeight={600} {...props}>
+      {children}
+    </Typography>
+  )
+})
 CardTitle.displayName = 'CardTitle'
 
 interface CardDescriptionProps {
@@ -96,15 +100,13 @@ interface CardFooterProps {
   className?: string
 }
 
-const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <CardActions ref={ref} sx={{ p: 3, pt: 0 }} {...props}>
-        {children}
-      </CardActions>
-    )
-  }
-)
+const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(({ children, ...props }, ref) => {
+  return (
+    <CardActions ref={ref} sx={{ p: 3, pt: 0 }} {...props}>
+      {children}
+    </CardActions>
+  )
+})
 CardFooter.displayName = 'CardFooter'
 
 export {

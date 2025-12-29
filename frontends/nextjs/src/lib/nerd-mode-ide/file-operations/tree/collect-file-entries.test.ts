@@ -43,7 +43,7 @@ describe('collectFileEntries', () => {
     ]
 
     const entries = collectFileEntries(tree)
-    const paths = entries.map((entry) => entry.path)
+    const paths = entries.map(entry => entry.path)
 
     expect(paths).toContain('social_hub/seed/scripts/manifest.json')
     expect(paths).toContain('social_hub/seed/metadata.json')

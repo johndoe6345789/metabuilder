@@ -1,12 +1,7 @@
 'use client'
 
 import { forwardRef, ReactNode } from 'react'
-import {
-  Drawer as MuiDrawer,
-  DrawerProps as MuiDrawerProps,
-  Box,
-  IconButton,
-} from '@mui/material'
+import { Drawer as MuiDrawer, DrawerProps as MuiDrawerProps, Box, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 
 // Sheet (side panel drawer)
@@ -49,7 +44,12 @@ interface SheetTriggerProps {
 const SheetTrigger = forwardRef<HTMLDivElement, SheetTriggerProps>(
   ({ children, onClick, ...props }, ref) => {
     return (
-      <Box ref={ref} onClick={onClick} sx={{ display: 'inline-flex', cursor: 'pointer' }} {...props}>
+      <Box
+        ref={ref}
+        onClick={onClick}
+        sx={{ display: 'inline-flex', cursor: 'pointer' }}
+        {...props}
+      >
         {children}
       </Box>
     )
@@ -100,8 +100,4 @@ const SheetContent = forwardRef<HTMLDivElement, SheetContentProps>(
 )
 SheetContent.displayName = 'SheetContent'
 
-export {
-  SheetCore,
-  SheetTrigger,
-  SheetContent,
-}
+export { SheetCore, SheetTrigger, SheetContent }

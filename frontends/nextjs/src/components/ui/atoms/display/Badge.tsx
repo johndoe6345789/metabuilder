@@ -20,7 +20,10 @@ export interface BadgeProps {
   sx?: SxProps<Theme>
 }
 
-const variantMap: Record<BadgeVariant, { variant: ChipProps['variant']; color?: ChipProps['color']; sx?: object }> = {
+const variantMap: Record<
+  BadgeVariant,
+  { variant: ChipProps['variant']; color?: ChipProps['color']; sx?: object }
+> = {
   default: { variant: 'filled', color: 'primary' },
   secondary: { variant: 'filled', color: 'secondary' },
   destructive: { variant: 'filled', color: 'error' },

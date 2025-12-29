@@ -18,7 +18,19 @@ describe('getSchemas', () => {
     { name: 'empty', dbData: [], expectedLength: 0 },
     {
       name: 'parsed schemas',
-      dbData: [{ name: 'User', label: null, labelPlural: null, icon: null, fields: '[]', listDisplay: null, listFilter: null, searchFields: null, ordering: null }],
+      dbData: [
+        {
+          name: 'User',
+          label: null,
+          labelPlural: null,
+          icon: null,
+          fields: '[]',
+          listDisplay: null,
+          listFilter: null,
+          searchFields: null,
+          ordering: null,
+        },
+      ],
       expectedLength: 1,
     },
   ])('should return $name', async ({ dbData, expectedLength }) => {

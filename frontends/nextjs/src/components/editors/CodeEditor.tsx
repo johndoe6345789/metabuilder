@@ -1,5 +1,11 @@
 import { useState } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Alert, AlertDescription } from '@/components/ui'
 import Editor from '@monaco-editor/react'
@@ -58,7 +64,7 @@ export function CodeEditor({ open, onClose, code, onSave, componentName }: CodeE
     const scanResult = securityScanner.scanJavaScript(editorCode)
     setSecurityScanResult(scanResult)
     setShowSecurityDialog(true)
-    
+
     if (scanResult.safe) {
       toast.success('No security issues detected')
     } else {
@@ -77,19 +83,24 @@ export function CodeEditor({ open, onClose, code, onSave, componentName }: CodeE
           <DialogHeader>
             <DialogTitle>Code Editor - {componentName}</DialogTitle>
             <DialogDescription>
-              Write custom JavaScript code for this component. Access component props via <code className="bg-muted px-1 rounded">props</code>.
+              Write custom JavaScript code for this component. Access component props via{' '}
+              <code className="bg-muted px-1 rounded">props</code>.
             </DialogDescription>
           </DialogHeader>
 
-          {securityScanResult && securityScanResult.severity !== 'safe' && securityScanResult.severity !== 'low' && !showSecurityDialog && (
-            <Alert className="border-yellow-200 bg-yellow-50">
-              <Warning className="h-5 w-5 text-yellow-600" weight="fill" />
-              <AlertDescription className="text-yellow-800">
-                {securityScanResult.issues.length} security {securityScanResult.issues.length === 1 ? 'issue' : 'issues'} detected. 
-                Click Security Scan to review.
-              </AlertDescription>
-            </Alert>
-          )}
+          {securityScanResult &&
+            securityScanResult.severity !== 'safe' &&
+            securityScanResult.severity !== 'low' &&
+            !showSecurityDialog && (
+              <Alert className="border-yellow-200 bg-yellow-50">
+                <Warning className="h-5 w-5 text-yellow-600" weight="fill" />
+                <AlertDescription className="text-yellow-800">
+                  {securityScanResult.issues.length} security{' '}
+                  {securityScanResult.issues.length === 1 ? 'issue' : 'issues'} detected. Click
+                  Security Scan to review.
+                </AlertDescription>
+              </Alert>
+            )}
 
           <div className="flex-1 border rounded-md overflow-hidden">
             <Editor

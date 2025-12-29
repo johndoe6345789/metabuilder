@@ -2,7 +2,7 @@ import type { PackageTemplateConfig } from './types'
 
 export function buildPackageMetadataJson(config: PackageTemplateConfig): string {
   const componentIds = config.components
-    .map((component) => component.id)
+    .map(component => component.id)
     .filter((id): id is string => typeof id === 'string')
 
   const metadata = {

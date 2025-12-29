@@ -1,7 +1,12 @@
 'use client'
 
 import { forwardRef, ReactNode, useState } from 'react'
-import { Accordion as MuiAccordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material'
+import {
+  Accordion as MuiAccordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+} from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 interface AccordionProps {

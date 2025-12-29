@@ -11,21 +11,21 @@ export async function GET(request: Request) {
   const normalizedCapabilities = rawCapabilities
     ? rawCapabilities
         .split(',')
-        .map((value) => value.toLowerCase().trim())
+        .map(value => value.toLowerCase().trim())
         .filter(Boolean)
     : []
 
-  const matchesLevel = (level: typeof PERMISSION_LEVELS[number]) =>
+  const matchesLevel = (level: (typeof PERMISSION_LEVELS)[number]) =>
     !normalizedLevel || level.key === normalizedLevel || String(level.id) === normalizedLevel
 
-  const matchesCapabilities = (level: typeof PERMISSION_LEVELS[number]) =>
+  const matchesCapabilities = (level: (typeof PERMISSION_LEVELS)[number]) =>
     normalizedCapabilities.length === 0 ||
-    level.capabilities.some((capability) =>
-      normalizedCapabilities.some((candidate) => capability.toLowerCase().includes(candidate))
+    level.capabilities.some(capability =>
+      normalizedCapabilities.some(candidate => capability.toLowerCase().includes(candidate))
     )
 
   const filtered = PERMISSION_LEVELS.filter(
-    (level) => matchesLevel(level) && matchesCapabilities(level)
+    level => matchesLevel(level) && matchesCapabilities(level)
   )
 
   return NextResponse.json({ levels: filtered })
@@ -38,13 +38,13 @@ export async function POST(request: Request) {
       typeof payload.level === 'string'
         ? payload.level.toLowerCase().trim()
         : typeof payload.level === 'number'
-        ? String(payload.level)
-        : undefined
+          ? String(payload.level)
+          : undefined
 
     const matched = normalized
-      ? PERMISSION_LEVELS.find(
-          (level) => level.key === normalized || String(level.id) === normalized
-        ) ?? null
+      ? (PERMISSION_LEVELS.find(
+          level => level.key === normalized || String(level.id) === normalized
+        ) ?? null)
       : null
 
     console.info('Levels API feedback', { level: normalized, note: payload.note })

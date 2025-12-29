@@ -17,7 +17,10 @@ export function useClassBuilderState({ open, initialValue }: UseClassBuilderStat
   const [customClass, setCustomClass] = useState('')
   const [activeTab, setActiveTab] = useState('custom')
 
-  const knownClassSet = useMemo(() => new Set(categories.flatMap((category) => category.classes)), [categories])
+  const knownClassSet = useMemo(
+    () => new Set(categories.flatMap(category => category.classes)),
+    [categories]
+  )
   const selectedClassSet = useMemo(() => new Set(selectedClasses), [selectedClasses])
   const normalizedSearch = searchQuery.trim().toLowerCase()
 
@@ -27,32 +30,32 @@ export function useClassBuilderState({ open, initialValue }: UseClassBuilderStat
     }
 
     return categories
-      .map((category) => ({
+      .map(category => ({
         ...category,
-        classes: category.classes.filter((cls) => cls.toLowerCase().includes(normalizedSearch)),
+        classes: category.classes.filter(cls => cls.toLowerCase().includes(normalizedSearch)),
       }))
-      .filter((category) => category.classes.length > 0)
+      .filter(category => category.classes.length > 0)
   }, [categories, normalizedSearch])
 
   const customTokens = useMemo(() => customClass.trim().split(/\s+/).filter(Boolean), [customClass])
   const uniqueCustomTokens = useMemo(() => Array.from(new Set(customTokens)), [customTokens])
   const invalidCustomTokens = useMemo(
-    () => uniqueCustomTokens.filter((token) => !CLASS_TOKEN_PATTERN.test(token)),
+    () => uniqueCustomTokens.filter(token => !CLASS_TOKEN_PATTERN.test(token)),
     [uniqueCustomTokens]
   )
   const duplicateCustomTokens = useMemo(
-    () => uniqueCustomTokens.filter((token) => selectedClassSet.has(token)),
+    () => uniqueCustomTokens.filter(token => selectedClassSet.has(token)),
     [uniqueCustomTokens, selectedClassSet]
   )
   const unknownCustomTokens = useMemo(
-    () => uniqueCustomTokens.filter((token) => !knownClassSet.has(token)),
+    () => uniqueCustomTokens.filter(token => !knownClassSet.has(token)),
     [uniqueCustomTokens, knownClassSet]
   )
   const canAddCustom = useMemo(
     () =>
       uniqueCustomTokens.length > 0 &&
       invalidCustomTokens.length === 0 &&
-      uniqueCustomTokens.some((token) => !selectedClassSet.has(token)),
+      uniqueCustomTokens.some(token => !selectedClassSet.has(token)),
     [invalidCustomTokens.length, selectedClassSet, uniqueCustomTokens]
   )
 
@@ -85,16 +88,16 @@ export function useClassBuilderState({ open, initialValue }: UseClassBuilderStat
       return
     }
 
-    const hasActiveTab = filteredCategories.some((category) => category.name === activeTab)
+    const hasActiveTab = filteredCategories.some(category => category.name === activeTab)
     if (!hasActiveTab) {
       setActiveTab(filteredCategories[0]?.name ?? 'custom')
     }
   }, [activeTab, filteredCategories, open])
 
   const toggleClass = (cssClass: string) => {
-    setSelectedClasses((current) => {
+    setSelectedClasses(current => {
       if (current.includes(cssClass)) {
-        return current.filter((c) => c !== cssClass)
+        return current.filter(c => c !== cssClass)
       }
 
       return [...current, cssClass]
@@ -111,13 +114,13 @@ export function useClassBuilderState({ open, initialValue }: UseClassBuilderStat
       return
     }
 
-    const newTokens = uniqueCustomTokens.filter((token) => !selectedClassSet.has(token))
+    const newTokens = uniqueCustomTokens.filter(token => !selectedClassSet.has(token))
     if (newTokens.length === 0) {
       toast.info('Those classes are already selected')
       return
     }
 
-    setSelectedClasses((current) => [...current, ...newTokens])
+    setSelectedClasses(current => [...current, ...newTokens])
     setCustomClass('')
   }
 

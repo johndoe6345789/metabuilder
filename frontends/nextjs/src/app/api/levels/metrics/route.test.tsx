@@ -9,6 +9,8 @@ describe('GET /api/levels/metrics', () => {
 
     expect(payload.totalLevels).toBeGreaterThan(0)
     expect(Array.isArray(payload.summary)).toBe(true)
-    expect(payload.summary.every((entry: any) => typeof entry.capabilityCount === 'number')).toBe(true)
+    expect(payload.summary.every((entry: any) => typeof entry.capabilityCount === 'number')).toBe(
+      true
+    )
   })
 })

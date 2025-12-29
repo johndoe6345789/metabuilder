@@ -38,7 +38,7 @@ export function GitHubActionsFetcher() {
 
   return (
     <Stack spacing={3}>
-      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)}>
+      <Tabs value={activeTab} onValueChange={value => setActiveTab(value as typeof activeTab)}>
         <TabsList>
           <TabsTrigger value="runs">Workflow Runs</TabsTrigger>
           {runLogs && <TabsTrigger value="logs">Logs</TabsTrigger>}

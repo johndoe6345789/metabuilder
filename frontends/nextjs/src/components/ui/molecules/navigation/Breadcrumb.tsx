@@ -10,20 +10,18 @@ interface BreadcrumbProps {
   className?: string
 }
 
-const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <MuiBreadcrumbs
-        ref={ref}
-        separator={<NavigateNextIcon fontSize="small" />}
-        aria-label="breadcrumb"
-        {...props}
-      >
-        {children}
-      </MuiBreadcrumbs>
-    )
-  }
-)
+const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(({ children, ...props }, ref) => {
+  return (
+    <MuiBreadcrumbs
+      ref={ref}
+      separator={<NavigateNextIcon fontSize="small" />}
+      aria-label="breadcrumb"
+      {...props}
+    >
+      {children}
+    </MuiBreadcrumbs>
+  )
+})
 Breadcrumb.displayName = 'Breadcrumb'
 
 interface BreadcrumbListProps {
@@ -45,7 +43,11 @@ interface BreadcrumbItemProps {
 
 const BreadcrumbItem = forwardRef<HTMLLIElement, BreadcrumbItemProps>(
   ({ children, ...props }, ref) => {
-    return <Box component="span" ref={ref} {...props}>{children}</Box>
+    return (
+      <Box component="span" ref={ref} {...props}>
+        {children}
+      </Box>
+    )
   }
 )
 BreadcrumbItem.displayName = 'BreadcrumbItem'

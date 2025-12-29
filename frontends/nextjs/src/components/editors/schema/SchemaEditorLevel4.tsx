@@ -42,7 +42,7 @@ export function SchemaEditorLevel4({ schemas, onSchemasChange }: SchemaEditorLev
                 No models yet. Create one to start.
               </p>
             ) : (
-              schemas.map((schema) => (
+              schemas.map(schema => (
                 <div
                   key={schema.name}
                   className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${
@@ -61,7 +61,7 @@ export function SchemaEditorLevel4({ schemas, onSchemasChange }: SchemaEditorLev
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation()
                       handleDeleteModel(schema.name)
                     }}

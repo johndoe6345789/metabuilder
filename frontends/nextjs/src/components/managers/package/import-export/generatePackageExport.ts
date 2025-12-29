@@ -22,17 +22,25 @@ const buildManifest = (manifest: Partial<PackageManifest>): PackageManifest => (
 })
 
 const buildContent = async (exportOptions: ExportPackageOptions): Promise<PackageContent> => {
-  const [schemas, pages, workflows, luaScripts, componentHierarchy, componentConfigs, cssClasses, dropdownConfigs] =
-    await Promise.all([
-      Database.getSchemas(),
-      Database.getPages(),
-      Database.getWorkflows(),
-      Database.getLuaScripts(),
-      Database.getComponentHierarchy(),
-      Database.getComponentConfigs(),
-      Database.getCssClasses(),
-      Database.getDropdownConfigs(),
-    ])
+  const [
+    schemas,
+    pages,
+    workflows,
+    luaScripts,
+    componentHierarchy,
+    componentConfigs,
+    cssClasses,
+    dropdownConfigs,
+  ] = await Promise.all([
+    Database.getSchemas(),
+    Database.getPages(),
+    Database.getWorkflows(),
+    Database.getLuaScripts(),
+    Database.getComponentHierarchy(),
+    Database.getComponentConfigs(),
+    Database.getCssClasses(),
+    Database.getDropdownConfigs(),
+  ])
 
   return {
     schemas: exportOptions.includeSchemas ? schemas : [],

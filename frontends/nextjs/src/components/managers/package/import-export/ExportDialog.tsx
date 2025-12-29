@@ -80,7 +80,10 @@ export const ExportDialog = ({
               </CardHeader>
             </Card>
 
-            <Card className="cursor-pointer hover:border-primary transition-colors" onClick={onExportSnapshot}>
+            <Card
+              className="cursor-pointer hover:border-primary transition-colors"
+              onClick={onExportSnapshot}
+            >
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
@@ -106,7 +109,7 @@ export const ExportDialog = ({
 
           <Separator />
 
-            <ExportOptions exportOptions={exportOptions} setExportOptions={setExportOptions} />
+          <ExportOptions exportOptions={exportOptions} setExportOptions={setExportOptions} />
         </div>
       </ScrollArea>
 

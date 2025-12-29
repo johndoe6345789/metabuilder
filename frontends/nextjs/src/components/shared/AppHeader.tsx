@@ -60,12 +60,7 @@ export function AppHeader({
               <span className={`font-bold text-xl ${getTextClass()}`}>{title}</span>
             </div>
             {onNavigateHome && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={onNavigateHome}
-                className={getTextClass()}
-              >
+              <Button variant="ghost" size="sm" onClick={onNavigateHome} className={getTextClass()}>
                 <House className="mr-2" size={16} />
                 Home
               </Button>
@@ -74,26 +69,17 @@ export function AppHeader({
           </div>
 
           <div className="flex items-center gap-2">
-            {username && showBadge && (
-              <Badge variant="secondary">{username}</Badge>
-            )}
+            {username && showBadge && <Badge variant="secondary">{username}</Badge>}
             {username && showAvatar && (
               <>
-                <span className="text-sm text-muted-foreground hidden sm:inline">
-                  {username}
-                </span>
+                <span className="text-sm text-muted-foreground hidden sm:inline">{username}</span>
                 <Avatar className="w-8 h-8">
                   <AvatarFallback>{username[0].toUpperCase()}</AvatarFallback>
                 </Avatar>
               </>
             )}
             {onLogout && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={onLogout}
-                className={getTextClass()}
-              >
+              <Button variant="ghost" size="sm" onClick={onLogout} className={getTextClass()}>
                 <SignOut size={16} />
               </Button>
             )}

@@ -7,9 +7,7 @@ export const UTILITY_SNIPPETS: LuaSnippet[] = [
     description: 'Parse JSON string with error handling',
     category: 'Utilities',
     tags: ['json', 'parse', 'utility'],
-    parameters: [
-      { name: 'jsonString', type: 'string', description: 'JSON string to parse' }
-    ],
+    parameters: [{ name: 'jsonString', type: 'string', description: 'JSON string to parse' }],
     code: `local jsonString = context.data.jsonString or "{}"
 
 local function parseJSON(str)
@@ -29,7 +27,7 @@ else
     success = false,
     error = "Invalid JSON format",
   }
-end`
+end`,
   },
   {
     id: 'generate_id',
@@ -48,7 +46,7 @@ local id = generateId(context.data.prefix)
 return {
   id = id,
   timestamp = os.time()
-}`
+}`,
   },
   {
     id: 'rate_limiter',
@@ -73,7 +71,7 @@ return {
   remaining = maxAttempts - attempts,
   resetTime = currentTime + windowSeconds,
   message = allowed and "Request allowed" or "Rate limit exceeded"
-}`
+}`,
   },
   {
     id: 'cache_manager',
@@ -95,6 +93,6 @@ local cached = {
 
 log("Cached " .. key .. " for " .. ttl .. " seconds")
 
-return cached`
-  }
+return cached`,
+  },
 ]

@@ -67,7 +67,7 @@ const TablePagination = forwardRef<HTMLDivElement, TablePaginationProps>(
           </Typography>
           <FormControl size="small" disabled={disabled}>
             <Select value={pageSize} onChange={handlePageSizeChange} sx={{ minWidth: 70 }}>
-              {pageSizeOptions.map((option) => (
+              {pageSizeOptions.map(option => (
                 <MenuItem key={option} value={option}>
                   {option}
                 </MenuItem>

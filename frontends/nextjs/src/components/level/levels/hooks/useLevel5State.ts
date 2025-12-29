@@ -72,7 +72,7 @@ export function useLevel5State({ user, onLogout }: Level5StateOptions) {
   const handleConfirmTransfer = async () => {
     if (!selectedUserId) return
 
-    const targetUser = allUsers.find((u) => u.id === selectedUserId)
+    const targetUser = allUsers.find(u => u.id === selectedUserId)
     if (!targetUser) {
       toast.error('Selected user not found')
       setShowConfirmTransfer(false)
@@ -82,8 +82,10 @@ export function useLevel5State({ user, onLogout }: Level5StateOptions) {
     try {
       await createPowerTransferRequest({ fromUserId: user.id, toUserId: selectedUserId })
 
-      toast.success(`Power transferred to ${targetUser.username}. You are now a God user and will be logged out shortly.`)
-      setTransferRefresh((prev) => prev + 1)
+      toast.success(
+        `Power transferred to ${targetUser.username}. You are now a God user and will be logged out shortly.`
+      )
+      setTransferRefresh(prev => prev + 1)
       await loadData()
 
       setTimeout(() => {

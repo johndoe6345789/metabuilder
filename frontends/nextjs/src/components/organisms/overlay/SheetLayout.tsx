@@ -51,15 +51,16 @@ const SheetTitle = forwardRef<HTMLHeadingElement, { children: ReactNode; classNa
 SheetTitle.displayName = 'SheetTitle'
 
 // SheetDescription
-const SheetDescription = forwardRef<HTMLParagraphElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
-    return (
-      <Typography ref={ref} variant="body2" color="text.secondary" {...props}>
-        {children}
-      </Typography>
-    )
-  }
-)
+const SheetDescription = forwardRef<
+  HTMLParagraphElement,
+  { children: ReactNode; className?: string }
+>(({ children, ...props }, ref) => {
+  return (
+    <Typography ref={ref} variant="body2" color="text.secondary" {...props}>
+      {children}
+    </Typography>
+  )
+})
 SheetDescription.displayName = 'SheetDescription'
 
 // Compatibility exports

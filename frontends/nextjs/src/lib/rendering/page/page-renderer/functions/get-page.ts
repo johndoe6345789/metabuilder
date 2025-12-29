@@ -5,5 +5,5 @@ import type { ComponentInstance } from '@/lib/types/builder-types'
 import type { User } from '@/lib/types/level-types'
 
 export function getPage(id: string): PageDefinition | undefined {
-    return this.pages.get(id)
-  }
+  return this.pages.get(id)
+}

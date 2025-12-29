@@ -24,7 +24,7 @@ export function parseWorkflowRuns(runs: unknown[]): WorkflowRunLike[] {
   }
 
   return runs
-    .map((run) => {
+    .map(run => {
       const candidate = run as Partial<WorkflowRunLike> & { id?: unknown }
       const id = Number(candidate.id)
 

@@ -16,7 +16,7 @@ export function subscribe(key: string, subscriber: Subscriber): () => void {
     kvSubscribers.set(key, new Set())
   }
   kvSubscribers.get(key)!.add(subscriber)
-  
+
   return () => {
     const subs = kvSubscribers.get(key)
     if (subs) {

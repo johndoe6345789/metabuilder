@@ -5,7 +5,8 @@ import type { CodegenSpec } from '@/lib/codegen/codegen-types'
 
 const normalizeRuntime = (value: string | undefined): CodegenSpec['runtime'] => {
   const runtime = (value ?? 'web').toLowerCase()
-  if (['cli', 'desktop', 'hybrid', 'server'].includes(runtime)) return runtime as CodegenSpec['runtime']
+  if (['cli', 'desktop', 'hybrid', 'server'].includes(runtime))
+    return runtime as CodegenSpec['runtime']
   return 'web'
 }
 

@@ -18,13 +18,13 @@ interface GenericPageProps {
   onLogout?: () => void
 }
 
-export function GenericPage({ 
-  pageId, 
-  user, 
-  level, 
-  isPreviewMode = false, 
-  onNavigate, 
-  onLogout 
+export function GenericPage({
+  pageId,
+  user,
+  level,
+  isPreviewMode = false,
+  onNavigate,
+  onLogout,
 }: GenericPageProps) {
   const [page, setPage] = useState<PageDefinition | null>(null)
   const [loading, setLoading] = useState(true)
@@ -37,7 +37,7 @@ export function GenericPage({
       try {
         const renderer = getPageRenderer()
         await renderer.loadPages()
-        
+
         const foundPage = renderer.getPage(pageId)
         if (!foundPage) {
           setError(`Page not found: ${pageId}`)
@@ -60,9 +60,9 @@ export function GenericPage({
           isPreviewMode,
           navigationHandlers: {
             onNavigate,
-            onLogout: onLogout || (() => {})
+            onLogout: onLogout || (() => {}),
           },
-          luaEngine: renderer['luaEngine']
+          luaEngine: renderer['luaEngine'],
         }
 
         await renderer.onPageLoad(foundPage, context)
@@ -130,11 +130,9 @@ export function GenericPage({
             >
               {menuOpen ? <X /> : <List />}
             </Button>
-            <h1 className="text-xl font-bold">
-              {page.metadata?.headerTitle || page.title}
-            </h1>
+            <h1 className="text-xl font-bold">{page.metadata?.headerTitle || page.title}</h1>
           </div>
-          
+
           <div className="flex items-center gap-2">
             {page.metadata?.headerActions?.map((action, idx) => (
               <RenderComponent
@@ -145,7 +143,7 @@ export function GenericPage({
                 user={user || undefined}
               />
             ))}
-            
+
             {user && onLogout && (
               <Button variant="ghost" size="sm" onClick={onLogout}>
                 <SignOut className="mr-2" />
@@ -192,9 +190,7 @@ export function GenericPage({
     if (page.components.length === 0) {
       return (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">
-            No components configured for this page
-          </p>
+          <p className="text-muted-foreground">No components configured for this page</p>
         </div>
       )
     }
@@ -211,7 +207,7 @@ export function GenericPage({
             contextData={{
               pageId: page.id,
               level,
-              isPreviewMode
+              isPreviewMode,
             }}
           />
         ))}
@@ -227,9 +223,7 @@ export function GenericPage({
             {renderSidebar()}
             <main className="flex-1">
               {renderHeader()}
-              <div className="max-w-7xl mx-auto p-4">
-                {renderContent()}
-              </div>
+              <div className="max-w-7xl mx-auto p-4">{renderContent()}</div>
             </main>
           </div>
         )
@@ -240,31 +234,21 @@ export function GenericPage({
             {renderHeader()}
             <div className="flex">
               {renderSidebar()}
-              <main className="flex-1 p-6 bg-muted/20">
-                {renderContent()}
-              </main>
+              <main className="flex-1 p-6 bg-muted/20">{renderContent()}</main>
             </div>
           </div>
         )
 
       case 'blank':
-        return (
-          <div className="min-h-screen">
-            {renderContent()}
-          </div>
-        )
+        return <div className="min-h-screen">{renderContent()}</div>
 
       case 'default':
       default:
         return (
           <div className="min-h-screen">
             {renderHeader()}
-            <main className="max-w-7xl mx-auto p-4">
-              {renderContent()}
-            </main>
-            {page.metadata?.showFooter !== false && (
-              <AppFooter text="Powered by MetaBuilder" />
-            )}
+            <main className="max-w-7xl mx-auto p-4">{renderContent()}</main>
+            {page.metadata?.showFooter !== false && <AppFooter text="Powered by MetaBuilder" />}
           </div>
         )
     }

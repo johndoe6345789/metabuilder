@@ -7,11 +7,16 @@ interface FeatureCardContent {
   description: string
 }
 
-export const buildFeatureCard = ({ id, icon, title, description }: FeatureCardContent): ComponentInstance => ({
+export const buildFeatureCard = ({
+  id,
+  icon,
+  title,
+  description,
+}: FeatureCardContent): ComponentInstance => ({
   id: `comp_feature_${id}`,
   type: 'Card',
   props: {
-    className: 'p-6'
+    className: 'p-6',
   },
   children: [
     {
@@ -19,9 +24,9 @@ export const buildFeatureCard = ({ id, icon, title, description }: FeatureCardCo
       type: 'Text',
       props: {
         children: icon,
-        className: 'text-4xl mb-4'
+        className: 'text-4xl mb-4',
       },
-      children: []
+      children: [],
     },
     {
       id: `comp_feature_${id}_title`,
@@ -29,18 +34,18 @@ export const buildFeatureCard = ({ id, icon, title, description }: FeatureCardCo
       props: {
         level: 3,
         children: title,
-        className: 'text-xl font-semibold mb-2'
+        className: 'text-xl font-semibold mb-2',
       },
-      children: []
+      children: [],
     },
     {
       id: `comp_feature_${id}_desc`,
       type: 'Text',
       props: {
         children: description,
-        className: 'text-muted-foreground'
+        className: 'text-muted-foreground',
       },
-      children: []
-    }
-  ]
+      children: [],
+    },
+  ],
 })

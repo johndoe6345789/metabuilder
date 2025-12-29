@@ -1,8 +1,8 @@
 'use client'
 
 import { forwardRef } from 'react'
-import { 
-  LinearProgress, 
+import {
+  LinearProgress,
   LinearProgressProps,
   CircularProgress,
   CircularProgressProps,
@@ -25,11 +25,11 @@ const Progress = forwardRef<HTMLDivElement, ProgressProps>(
       return (
         <Box ref={ref} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Box sx={{ flex: 1 }}>
-            <LinearProgress 
-              variant="determinate" 
-              value={value} 
+            <LinearProgress
+              variant="determinate"
+              value={value}
               sx={{ height: 8, borderRadius: 1, ...sx }}
-              {...props} 
+              {...props}
             />
           </Box>
           <Typography variant="body2" color="text.secondary" sx={{ minWidth: 40 }}>
@@ -38,7 +38,7 @@ const Progress = forwardRef<HTMLDivElement, ProgressProps>(
         </Box>
       )
     }
-    
+
     return (
       <LinearProgress
         ref={ref}

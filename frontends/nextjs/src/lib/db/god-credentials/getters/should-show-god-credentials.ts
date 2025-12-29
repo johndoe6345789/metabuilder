@@ -11,10 +11,12 @@ export async function shouldShowGodCredentials(): Promise<boolean> {
   const expiry = await getGodCredentialsExpiry()
 
   // Get god user's password change timestamp
-  const godUser = await adapter.findFirst('User', {
+  const godUser = (await adapter.findFirst('User', {
     where: { username: 'god' },
-  }) as { passwordChangeTimestamp?: bigint | number } | null
-  const godPasswordChangeTime = godUser?.passwordChangeTimestamp ? Number(godUser.passwordChangeTimestamp) : 0
+  })) as { passwordChangeTimestamp?: bigint | number } | null
+  const godPasswordChangeTime = godUser?.passwordChangeTimestamp
+    ? Number(godUser.passwordChangeTimestamp)
+    : 0
 
   if (expiry === 0) {
     const duration = await getGodCredentialsExpiryDuration()

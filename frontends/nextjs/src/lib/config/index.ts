@@ -1,6 +1,6 @@
 /**
  * Library exports - Centralized re-exports for all lib modules
- * 
+ *
  * This file provides a clean API for importing from @/lib
  * Instead of: import { User } from '@/lib/types/level-types'
  * Use: import { User } from '@/lib'
@@ -18,15 +18,15 @@ export * from './auth'
 
 // Database (single source - db folder)
 export { Database } from './db'
-export type { 
-  CssCategory, 
-  DropdownConfig, 
-  DatabaseSchema, 
-  ComponentNode, 
+export type {
+  CssCategory,
+  DropdownConfig,
+  DatabaseSchema,
+  ComponentNode,
   ComponentConfig,
   DBALAdapter,
   ListOptions,
-  ListResult
+  ListResult,
 } from './db'
 
 // DBAL

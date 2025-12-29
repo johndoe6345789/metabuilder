@@ -20,7 +20,7 @@ export function FileTree({
 }: FileTreeProps) {
   return (
     <div>
-      {nodes.map((node) => (
+      {nodes.map(node => (
         <FileTreeNode
           key={node.id}
           node={node}

@@ -30,7 +30,7 @@ local profile = {
 
 log("Created profile for: " .. profile.username)
 
-return profile`
+return profile`,
   },
   {
     id: 'user_activity_logger',
@@ -56,6 +56,6 @@ local activity = {
 
 log("Activity logged: " .. user.username .. " - " .. action)
 
-return activity`
-  }
+return activity`,
+  },
 ]

@@ -7,7 +7,7 @@ describe('TextArea', () => {
     { placeholder: 'Enter text', fullWidth: true },
     { placeholder: 'Comment here', fullWidth: false },
     { placeholder: 'Description', minRows: 5 },
-  ])('renders with props %o', (props) => {
+  ])('renders with props %o', props => {
     render(<TextArea {...props} />)
     const textarea = screen.getByPlaceholderText(props.placeholder)
     expect(textarea).not.toBeNull()

@@ -20,6 +20,16 @@ export { ScrollArea, ScrollBar, type ScrollAreaProps } from './feedback/ScrollAr
 export { Radio, type RadioProps } from '../../atoms/controls/Radio'
 export { Icon, type IconProps, type IconName, type IconSize } from '../../atoms/display/Icon'
 export { Link, type LinkProps } from '../../atoms/display/Link'
-export { Text, type TextProps, type TextVariant, type TextWeight, type TextAlign } from '../../atoms/display/Text'
+export {
+  Text,
+  type TextProps,
+  type TextVariant,
+  type TextWeight,
+  type TextAlign,
+} from '../../atoms/display/Text'
 export { TextArea, type TextAreaProps } from '../../atoms/inputs/TextArea'
-export { Select as AtomSelect, type SelectProps, type SelectOption } from '../../atoms/inputs/Select'
+export {
+  Select as AtomSelect,
+  type SelectProps,
+  type SelectOption,
+} from '../../atoms/inputs/Select'

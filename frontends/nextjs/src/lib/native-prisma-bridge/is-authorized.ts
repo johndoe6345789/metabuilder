@@ -1,9 +1,7 @@
 import { AUTH_TOKEN_HEADER, AUTHORIZATION_HEADER } from './constants/auth-headers'
 import { getBridgeSecret } from './get-bridge-secret'
 
-export function isAuthorized(request: {
-  headers: { get(name: string): string | null }
-}): boolean {
+export function isAuthorized(request: { headers: { get(name: string): string | null } }): boolean {
   const secret = getBridgeSecret()
   if (!secret) {
     return true

@@ -1,5 +1,12 @@
 import { Button, Input, Label } from '@/components/ui'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui'
 
 interface CreateTenantDialogProps {
   open: boolean
@@ -9,7 +16,13 @@ interface CreateTenantDialogProps {
   onCreate: () => void
 }
 
-export function CreateTenantDialog({ open, newTenantName, onChangeTenantName, onClose, onCreate }: CreateTenantDialogProps) {
+export function CreateTenantDialog({
+  open,
+  newTenantName,
+  onChangeTenantName,
+  onClose,
+  onCreate,
+}: CreateTenantDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="bg-slate-900 border-white/10 text-white">
@@ -25,14 +38,18 @@ export function CreateTenantDialog({ open, newTenantName, onChangeTenantName, on
             <Input
               id="tenant-name"
               value={newTenantName}
-              onChange={(e) => onChangeTenantName(e.target.value)}
+              onChange={e => onChangeTenantName(e.target.value)}
               placeholder="Enter tenant name"
               className="bg-white/5 border-white/10 text-white"
             />
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onClose(false)} className="border-white/20 text-white hover:bg-white/10">
+          <Button
+            variant="outline"
+            onClick={() => onClose(false)}
+            className="border-white/20 text-white hover:bg-white/10"
+          >
             Cancel
           </Button>
           <Button onClick={onCreate} className="bg-purple-600 hover:bg-purple-700">

@@ -11,44 +11,43 @@ import { getPageRenderer } from './functions/get-page-renderer'
 
 /**
  * PageRendererUtils - Class wrapper for 9 functions
- * 
+ *
  * This is a convenience wrapper. Prefer importing individual functions.
  */
 export class PageRendererUtils {
   static async registerPage(...args: any[]) {
-    return await registerPage(...args as any)
+    return await registerPage(...(args as any))
   }
 
   static async loadPages(...args: any[]) {
-    return await loadPages(...args as any)
+    return await loadPages(...(args as any))
   }
 
   static getPage(...args: any[]) {
-    return getPage(...args as any)
+    return getPage(...(args as any))
   }
 
   static getPagesByLevel(...args: any[]) {
-    return getPagesByLevel(...args as any)
+    return getPagesByLevel(...(args as any))
   }
 
   static async executeLuaScript(...args: any[]) {
-    return await executeLuaScript(...args as any)
+    return await executeLuaScript(...(args as any))
   }
 
   static async checkPermissions(...args: any[]) {
-    return await checkPermissions(...args as any)
+    return await checkPermissions(...(args as any))
   }
 
   static async onPageLoad(...args: any[]) {
-    return await onPageLoad(...args as any)
+    return await onPageLoad(...(args as any))
   }
 
   static async onPageUnload(...args: any[]) {
-    return await onPageUnload(...args as any)
+    return await onPageUnload(...(args as any))
   }
 
   static getPageRenderer(...args: any[]) {
-    return getPageRenderer(...args as any)
+    return getPageRenderer(...(args as any))
   }
-
 }
