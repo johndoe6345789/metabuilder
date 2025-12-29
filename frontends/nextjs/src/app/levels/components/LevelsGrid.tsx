@@ -1,5 +1,4 @@
-import { Box, Chip, Paper, Stack, Typography } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import { Box, Chip, Grid, Paper, Stack, Typography } from '@mui/material'
 
 import type { PermissionLevel } from '../levels-data'
 
@@ -12,7 +11,7 @@ type LevelsGridProps = {
 export const LevelsGrid = ({ levels, selectedLevelId, onSelect }: LevelsGridProps) => (
   <Grid container spacing={3}>
     {levels.map((level) => (
-      <Grid size={{ xs: 12, md: 6, lg: 4 }} key={level.id} component="div">
+      <Grid item xs={12} md={6} lg={4} key={level.id} component="div">
         <Paper
           onClick={() => onSelect(level.id)}
           sx={{
