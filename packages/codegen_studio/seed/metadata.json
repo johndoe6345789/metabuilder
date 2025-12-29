@@ -3,6 +3,7 @@
   "name": "Codegen Studio",
   "version": "1.0.0",
   "description": "Generate Next.js, React, and CLI starters from configurable templates.",
+  "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "tools",
   "dependencies": [],

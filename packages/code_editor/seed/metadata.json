@@ -3,6 +3,7 @@
   "name": "Code Editor",
   "version": "1.0.0",
   "description": "Code editor components for JSON, Lua, and themes",
+  "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "editors",
   "dependencies": [],

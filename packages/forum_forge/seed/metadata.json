@@ -3,6 +3,7 @@
   "name": "Forum Forge",
   "version": "1.0.0",
   "description": "Modern forum starter with categories, threads, and moderation lanes.",
+  "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "social",
   "dependencies": [],
