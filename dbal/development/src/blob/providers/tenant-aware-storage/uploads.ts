@@ -1,7 +1,9 @@
 import { DBALError } from '../../core/foundation/errors'
-import type { UploadOptions, BlobMetadata } from '../blob-storage'
+import { auditUpload } from './audit-hooks'
 import type { TenantAwareDeps } from './context'
-import { ensurePermission, getContext, scopeKey } from './context'
+import { scopeKey } from './context'
+import { ensurePermission, resolveTenantContext } from './tenant-context'
+import type { UploadOptions, BlobMetadata } from '../blob-storage'
 
 export const uploadBuffer = async (
   deps: TenantAwareDeps,
@@ -9,7 +11,7 @@ export const uploadBuffer = async (
   data: Buffer,
   options?: UploadOptions,
 ): Promise<BlobMetadata> => {
-  const context = await getContext(deps)
+  const context = await resolveTenantContext(deps)
   ensurePermission(context, 'write')
 
   if (!context.canUploadBlob(data.length)) {
@@ -18,7 +20,7 @@ export const uploadBuffer = async (
 
   const scopedKey = scopeKey(key, context.namespace)
   const metadata = await deps.baseStorage.upload(scopedKey, data, options)
-  await deps.tenantManager.updateBlobUsage(deps.tenantId, data.length, 1)
+  await auditUpload(deps, data.length)
 
   return {
     ...metadata,
@@ -33,7 +35,7 @@ export const uploadStream = async (
   size: number,
   options?: UploadOptions,
 ): Promise<BlobMetadata> => {
-  const context = await getContext(deps)
+  const context = await resolveTenantContext(deps)
   ensurePermission(context, 'write')
 
   if (!context.canUploadBlob(size)) {
@@ -42,7 +44,7 @@ export const uploadStream = async (
 
   const scopedKey = scopeKey(key, context.namespace)
   const metadata = await deps.baseStorage.uploadStream(scopedKey, stream, size, options)
-  await deps.tenantManager.updateBlobUsage(deps.tenantId, size, 1)
+  await auditUpload(deps, size)
 
   return {
     ...metadata,

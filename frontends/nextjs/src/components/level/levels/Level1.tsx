@@ -1,209 +1,25 @@
 "use client"
 
-/**
- * Level1 Component - Public/Unauthenticated Interface
- * 
- * The Level1 component serves as the main entry point for unauthenticated users.
- * It displays the public-facing interface with features, hero sections, and
- * navigation to login or other public pages.
- * 
- * Key Features:
- * - Navigation bar for public users
- * - Hero section with marketing content
- * - Features overview
- * - Contact form
- * - Credentials display (god/supergod) during setup
- * - Login prompt for authenticated access
- */
-
-import { useState, useEffect } from 'react'
-import { getScrambledPassword } from '@/lib/auth'
+import { useState } from 'react'
 import { NavigationBar } from '../../level1/NavigationBar'
-import { GodCredentialsBanner } from '../../level1/GodCredentialsBanner'
-import { HeroSection } from '../../level1/HeroSection'
-import { FeaturesSection } from '../../level1/FeaturesSection'
-import { ContactSection } from '../../level1/ContactSection'
 import { AppFooter } from '../../shared/AppFooter'
-import { ServerStatusPanel } from '../../status/ServerStatusPanel'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { GitHubActionsFetcher } from '../../misc/github/GitHubActionsFetcher'
+import { CredentialsSection } from '../level1/CredentialsSection'
+import { Level1Tabs } from '../level1/Level1Tabs'
 
-// Props for Level1 component
 interface Level1Props {
-  // Callback when user navigates to another level
   onNavigate: (level: number) => void
 }
 
-/**
- * Level1 - Public interface component
- * @param props - Component props
- */
 export function Level1({ onNavigate }: Level1Props) {
-  // Menu visibility state
   const [menuOpen, setMenuOpen] = useState(false)
-  // Show god credentials banner during setup
-  const [showGodCredentials, setShowGodCredentials] = useState(false)
-  // Show supergod credentials banner during setup
-  const [showSuperGodCredentials, setShowSuperGodCredentials] = useState(false)
-  // Password visibility toggle for god credentials
-  const [showPassword, setShowPassword] = useState(false)
-  // Password visibility toggle for supergod credentials
-  const [showSuperGodPassword, setShowSuperGodPassword] = useState(false)
-  // Track clipboard copy state for god credentials
-  const [copied, setCopied] = useState(false)
-  // Track clipboard copy state for supergod credentials
-  const [copiedSuper, setCopiedSuper] = useState(false)
-  // Display remaining time for god credentials expiry
-  const [timeRemaining, setTimeRemaining] = useState('')
-
-  // Initialize component state on mount
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval> | undefined
-
-    const checkCredentials = async () => {
-      try {
-        const { Database } = await import('@/lib/database')
-
-        // Check if god credentials should be displayed
-        const shouldShow = await Database.shouldShowGodCredentials()
-        setShowGodCredentials(shouldShow)
-
-        // Get supergod account if exists
-        const superGod = await Database.getSuperGod()
-        const firstLoginFlags = await Database.getFirstLoginFlags()
-        setShowSuperGodCredentials(superGod !== null && firstLoginFlags['supergod'] === true)
-
-        // Update timer for god credentials expiry
-        if (shouldShow) {
-          const expiry = await Database.getGodCredentialsExpiry()
-          const updateTimer = () => {
-            const now = Date.now()
-            const diff = expiry - now
-
-            // Hide credentials when expired
-            if (diff <= 0) {
-              setShowGodCredentials(false)
-              setTimeRemaining('')
-              return
-            }
-
-            // Display remaining time in minutes and seconds
-            const minutes = Math.floor(diff / 60000)
-            const seconds = Math.floor((diff % 60000) / 1000)
-            setTimeRemaining(`${minutes}m ${seconds}s`)
-          }
-
-          updateTimer()
-          interval = setInterval(updateTimer, 1000)
-        }
-      } catch {
-        setShowGodCredentials(false)
-        setShowSuperGodCredentials(false)
-        setTimeRemaining('')
-      }
-    }
-
-    void checkCredentials()
-
-    return () => {
-      if (interval) clearInterval(interval)
-    }
-  }, [])
-
-  const handleCopyPassword = async () => {
-    await navigator.clipboard.writeText(getScrambledPassword('god'))
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  const handleCopySuperGodPassword = async () => {
-    await navigator.clipboard.writeText(getScrambledPassword('supergod'))
-    setCopiedSuper(true)
-    setTimeout(() => setCopiedSuper(false), 2000)
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">
       <NavigationBar menuOpen={menuOpen} setMenuOpen={setMenuOpen} onNavigate={onNavigate} />
 
-      {(showGodCredentials || showSuperGodCredentials) && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-4">
-          {showSuperGodCredentials && (
-            <GodCredentialsBanner
-              username="supergod"
-              password={getScrambledPassword('supergod')}
-              showPassword={showSuperGodPassword}
-              onTogglePassword={() => setShowSuperGodPassword(!showSuperGodPassword)}
-              copied={copiedSuper}
-              onCopy={handleCopySuperGodPassword}
-              timeRemaining=""
-              variant="supergod"
-            />
-          )}
-          
-          {showGodCredentials && (
-            <GodCredentialsBanner
-              username="god"
-              password={getScrambledPassword('god')}
-              showPassword={showPassword}
-              onTogglePassword={() => setShowPassword(!showPassword)}
-              copied={copied}
-              onCopy={handleCopyPassword}
-              timeRemaining={timeRemaining}
-              variant="god"
-            />
-          )}
-        </div>
-      )}
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <Tabs defaultValue="home" className="w-full">
-        <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-3 mb-8">
-          <TabsTrigger value="home">Home</TabsTrigger>
-          <TabsTrigger value="github-actions">GitHub Actions</TabsTrigger>
-          <TabsTrigger value="status">Server Status</TabsTrigger>
-        </TabsList>
-          
-          <TabsContent value="home" className="mt-0">
-            <HeroSection onNavigate={onNavigate} />
-            <FeaturesSection />
-
-            <section id="about" className="bg-muted/30 py-20 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
-              <div className="max-w-4xl mx-auto text-center space-y-6">
-                <h2 className="text-3xl font-bold">About MetaBuilder</h2>
-                <p className="text-lg text-muted-foreground">
-                  MetaBuilder is a revolutionary platform that lets you build entire application stacks 
-                  through visual interfaces. From public websites to complex admin panels, everything 
-                  is generated from declarative configurations, workflows, and embedded scripts.
-                </p>
-                <p className="text-lg text-muted-foreground">
-                  Whether you're a designer who wants to create without code, or a developer who wants 
-                  to work at a higher level of abstraction, MetaBuilder adapts to your needs.
-                </p>
-              </div>
-            </section>
-
-            <ContactSection />
-          </TabsContent>
-          
-          <TabsContent value="github-actions" className="mt-0">
-            <GitHubActionsFetcher />
-          </TabsContent>
-
-          <TabsContent value="status" className="mt-0">
-            <section className="space-y-6">
-              <div className="text-center space-y-1">
-                <p className="text-sm text-muted-foreground">Runtime observability</p>
-                <h2 className="text-3xl font-bold">Server Status</h2>
-                <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-                  Monitor the DBAL stack, Prisma schema, and the C++ daemon from this interface—so you
-                  can see how the daemon is progressing toward production readiness.
-                </p>
-              </div>
-              <ServerStatusPanel />
-            </section>
-          </TabsContent>
-        </Tabs>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+        <CredentialsSection />
+        <Level1Tabs onNavigate={onNavigate} />
       </div>
 
       <AppFooter />
