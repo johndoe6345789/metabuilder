@@ -1,0 +1,12 @@
+-- Email field component
+local function email(props)
+  return {
+    type = "Box",
+    children = {
+      { type = "Label", props = { text = props.label or "Email", htmlFor = props.name } },
+      { type = "Input", props = { name = props.name, type = "email", placeholder = "you@example.com" } }
+    }
+  }
+end
+
+return email
