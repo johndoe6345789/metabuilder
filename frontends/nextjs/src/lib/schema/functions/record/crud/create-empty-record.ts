@@ -1,6 +1,6 @@
 import type { ModelSchema } from '@/lib/schema-types'
 import { generateId } from './generate-id'
-import { getDefaultValue } from './get-default-value'
+import { getDefaultValue } from '../../field/get-default-value'
 
 /**
  * Create an empty record with default values for a model
@@ -9,7 +9,7 @@ import { getDefaultValue } from './get-default-value'
  */
 export const createEmptyRecord = (model: ModelSchema): any => {
   const record: any = {}
-  
+
   for (const field of model.fields) {
     if (field.name === 'id') {
       record.id = generateId()
@@ -19,6 +19,6 @@ export const createEmptyRecord = (model: ModelSchema): any => {
       record[field.name] = getDefaultValue(field)
     }
   }
-  
+
   return record
 }

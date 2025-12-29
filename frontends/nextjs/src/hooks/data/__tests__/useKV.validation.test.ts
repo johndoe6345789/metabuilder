@@ -5,23 +5,27 @@ import { useKV } from '@/hooks/data/useKV'
 const STORAGE_PREFIX = 'mb_kv:'
 let store: Record<string, string>
 
+const setupLocalStorage = (): void => {
+  store = {}
+  vi.stubGlobal('localStorage', {
+    getItem: vi.fn((key: string) => store[key] ?? null),
+    setItem: vi.fn((key: string, value: string) => {
+      store[key] = value
+    }),
+    removeItem: vi.fn((key: string) => {
+      delete store[key]
+    }),
+    clear: vi.fn(() => {
+      Object.keys(store).forEach(k => delete store[k])
+    }),
+    length: 0,
+    key: vi.fn(() => null),
+  })
+}
+
 describe('useKV validation', () => {
   beforeEach(() => {
-    store = {}
-    vi.stubGlobal('localStorage', {
-      getItem: vi.fn((key: string) => store[key] ?? null),
-      setItem: vi.fn((key: string, value: string) => {
-        store[key] = value
-      }),
-      removeItem: vi.fn((key: string) => {
-        delete store[key]
-      }),
-      clear: vi.fn(() => {
-        Object.keys(store).forEach(k => delete store[k])
-      }),
-      length: 0,
-      key: vi.fn(() => null),
-    })
+    setupLocalStorage()
   })
 
   it.each([

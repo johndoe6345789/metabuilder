@@ -1,108 +1,22 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import {
-  getModelKey,
-  getRecordsKey,
-  findModel,
+  createEmptyRecord,
+  filterRecords,
+  generateId,
+  getDefaultValue,
   getFieldLabel,
+  getHelpText,
   getModelLabel,
   getModelLabelPlural,
-  getHelpText,
-  generateId,
-  validateField,
-  validateRecord,
-  getDefaultValue,
-  createEmptyRecord,
   sortRecords,
-  filterRecords,
 } from '@/lib/schema-utils'
-import type { FieldSchema, ModelSchema, SchemaConfig } from '@/lib/schema-types'
+import type { FieldSchema, ModelSchema } from '@/lib/schema-types'
+import { createMockField, createMockModel } from './schema-utils.fixtures'
 
-describe('schema-utils', () => {
-  // Test data setup
-  const mockField: FieldSchema = {
-    name: 'email',
-    type: 'email',
-    label: 'Email Address',
-    required: true,
-    helpText: 'Enter a valid email',
-  }
-
-  const mockModel: ModelSchema = {
-    name: 'User',
-    label: 'User Account',
-    labelPlural: 'Users',
-    fields: [
-      { name: 'id', type: 'string', required: true },
-      { name: 'name', type: 'string', required: true, label: 'Full Name' },
-      { name: 'email', type: 'email', required: true },
-      { name: 'age', type: 'number' },
-    ],
-  }
-
-  const mockSchema: SchemaConfig = {
-    apps: [
-      {
-        name: 'TestApp',
-        models: [mockModel],
-      },
-    ],
-  }
-
-  describe('getModelKey', () => {
-    it.each([
-      { appName: 'MyApp', modelName: 'User', expected: 'MyApp_User' },
-      { appName: 'app-v2', modelName: 'User_Profile', expected: 'app-v2_User_Profile' },
-      { appName: '', modelName: 'Model', expected: '_Model' },
-    ])('should generate key "$expected" for app=$appName, model=$modelName', ({ appName, modelName, expected }) => {
-      const result = getModelKey(appName, modelName)
-      expect(result).toBe(expected)
-    })
-  })
-
-  describe('getRecordsKey', () => {
-    it('should generate a records key with prefix', () => {
-      const result = getRecordsKey('MyApp', 'User')
-      expect(result).toBe('records_MyApp_User')
-    })
-
-    it('should include records prefix', () => {
-      const result = getRecordsKey('app', 'data')
-      expect(result).toMatch(/^records_/)
-    })
-  })
-
-  describe('findModel', () => {
-    it('should find a model by app and model name', () => {
-      const result = findModel(mockSchema, 'TestApp', 'User')
-      expect(result).toBeDefined()
-      expect(result?.name).toBe('User')
-    })
-
-    it('should return undefined if app not found', () => {
-      const result = findModel(mockSchema, 'NonExistentApp', 'User')
-      expect(result).toBeUndefined()
-    })
-
-    it('should return undefined if model not found in app', () => {
-      const result = findModel(mockSchema, 'TestApp', 'NonExistentModel')
-      expect(result).toBeUndefined()
-    })
-
-    it('should handle multiple apps correctly', () => {
-      const multiAppSchema: SchemaConfig = {
-        apps: [
-          { name: 'App1', models: [{ name: 'Model1', fields: [] }] },
-          { name: 'App2', models: [{ name: 'Model2', fields: [] }] },
-        ],
-      }
-      const result = findModel(multiAppSchema, 'App2', 'Model2')
-      expect(result?.name).toBe('Model2')
-    })
-  })
-
+describe('schema-utils serialization', () => {
   describe('getFieldLabel', () => {
     it.each([
-      { field: mockField, expected: 'Email Address', description: 'custom label' },
+      { field: createMockField(), expected: 'Email Address', description: 'custom label' },
       { field: { name: 'email', type: 'email' }, expected: 'Email', description: 'auto-capitalized field name' },
       { field: { name: 'firstName', type: 'string' }, expected: 'FirstName', description: 'multi-word field name' },
     ])('should return $description', ({ field, expected }) => {
@@ -113,7 +27,7 @@ describe('schema-utils', () => {
 
   describe('getModelLabel', () => {
     it('should return custom label if provided', () => {
-      const result = getModelLabel(mockModel)
+      const result = getModelLabel(createMockModel())
       expect(result).toBe('User Account')
     })
 
@@ -126,7 +40,7 @@ describe('schema-utils', () => {
 
   describe('getModelLabelPlural', () => {
     it('should return custom plural label if provided', () => {
-      const result = getModelLabelPlural(mockModel)
+      const result = getModelLabelPlural(createMockModel())
       expect(result).toBe('Users')
     })
 
@@ -139,7 +53,7 @@ describe('schema-utils', () => {
 
   describe('getHelpText', () => {
     it('should return help text if string', () => {
-      const result = getHelpText(mockField)
+      const result = getHelpText(createMockField())
       expect(result).toBe('Enter a valid email')
     })
 
@@ -178,135 +92,6 @@ describe('schema-utils', () => {
     })
   })
 
-  describe('validateField', () => {
-    it.each([
-      {
-        name: 'required field empty',
-        field: { name: 'email', type: 'email', required: true },
-        value: '',
-        shouldHaveError: true,
-      },
-      {
-        name: 'non-required field empty',
-        field: { name: 'nickname', type: 'string', required: false },
-        value: '',
-        shouldHaveError: false,
-      },
-      {
-        name: 'invalid email',
-        field: { name: 'email', type: 'email' },
-        value: 'invalid',
-        shouldHaveError: true,
-      },
-      {
-        name: 'valid email',
-        field: { name: 'email', type: 'email' },
-        value: 'test@example.com',
-        shouldHaveError: false,
-      },
-      {
-        name: 'invalid URL',
-        field: { name: 'website', type: 'url' },
-        value: 'not a url',
-        shouldHaveError: true,
-      },
-      {
-        name: 'valid URL',
-        field: { name: 'website', type: 'url' },
-        value: 'https://example.com',
-        shouldHaveError: false,
-      },
-      {
-        name: 'number below min',
-        field: { name: 'age', type: 'number', validation: { min: 0, max: 150 } },
-        value: -1,
-        shouldHaveError: true,
-      },
-      {
-        name: 'number above max',
-        field: { name: 'age', type: 'number', validation: { min: 0, max: 150 } },
-        value: 200,
-        shouldHaveError: true,
-      },
-      {
-        name: 'valid number in range',
-        field: { name: 'age', type: 'number', validation: { min: 0, max: 150 } },
-        value: 25,
-        shouldHaveError: false,
-      },
-      {
-        name: 'string too short',
-        field: { name: 'password', type: 'string', validation: { minLength: 8, maxLength: 20 } },
-        value: 'short',
-        shouldHaveError: true,
-      },
-      {
-        name: 'string too long',
-        field: { name: 'password', type: 'string', validation: { minLength: 8, maxLength: 20 } },
-        value: 'verylongpasswordthatexceedslimit',
-        shouldHaveError: true,
-      },
-      {
-        name: 'valid string length',
-        field: { name: 'password', type: 'string', validation: { minLength: 8, maxLength: 20 } },
-        value: 'goodpass123',
-        shouldHaveError: false,
-      },
-      {
-        name: 'valid pattern match',
-        field: { name: 'code', type: 'string', validation: { pattern: '^[A-Z]{3}-\\d{3}$' } },
-        value: 'ABC-123',
-        shouldHaveError: false,
-      },
-      {
-        name: 'invalid pattern match',
-        field: { name: 'code', type: 'string', validation: { pattern: '^[A-Z]{3}-\\d{3}$' } },
-        value: 'abc-123',
-        shouldHaveError: true,
-      },
-    ])('should $name', ({ field, value, shouldHaveError }) => {
-      const result = validateField(field as FieldSchema, value)
-      if (shouldHaveError) {
-        expect(result).toBeTruthy()
-      } else {
-        expect(result).toBeNull()
-      }
-    })
-  })
-
-  describe('validateRecord', () => {
-    it('should validate all fields in a record', () => {
-      const record = { id: '1', name: 'John', email: 'invalid-email' }
-      const errors = validateRecord(mockModel, record)
-      expect(errors.email).toBeTruthy()
-    })
-
-    it('should return empty errors for valid record', () => {
-      const record = {
-        id: '1',
-        name: 'John Doe',
-        email: 'john@example.com',
-        age: 30,
-      }
-      const errors = validateRecord(mockModel, record)
-      expect(Object.keys(errors).length).toBe(0)
-    })
-
-    it('should skip non-editable fields', () => {
-      const model: ModelSchema = {
-        name: 'Post',
-        fields: [
-          { name: 'id', type: 'string', editable: false },
-          { name: 'title', type: 'string', required: true },
-        ],
-      }
-      const record = { title: '' }
-      const errors = validateRecord(model, record)
-      expect(errors.id).toBeUndefined()
-      expect(errors.title).toBeTruthy()
-    })
-  })
-
   describe('getDefaultValue', () => {
     it.each([
       { field: { name: 'count', type: 'number', default: 42 }, expected: 42, description: 'custom default' },
@@ -335,7 +120,7 @@ describe('schema-utils', () => {
 
   describe('createEmptyRecord', () => {
     it('should create a record with all fields', () => {
-      const record = createEmptyRecord(mockModel)
+      const record = createEmptyRecord(createMockModel())
       expect(record.id).toBeDefined()
       expect(record.name).toBe('')
       expect(record.email).toBe('')
@@ -343,8 +128,8 @@ describe('schema-utils', () => {
     })
 
     it('should generate unique ID', () => {
-      const record1 = createEmptyRecord(mockModel)
-      const record2 = createEmptyRecord(mockModel)
+      const record1 = createEmptyRecord(createMockModel())
+      const record2 = createEmptyRecord(createMockModel())
       expect(record1.id).not.toBe(record2.id)
     })
 
