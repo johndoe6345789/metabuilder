@@ -1,4 +1,5 @@
 import { Input, Label } from '@/components/ui'
+
 import type { WorkflowDetailsPanelProps } from './types'
 
 export const WorkflowDetailsPanel = ({ workflow, onUpdate }: WorkflowDetailsPanelProps) => (

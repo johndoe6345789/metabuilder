@@ -1,7 +1,9 @@
-import { ScrollArea, Tabs, TabsContent, TabsList, TabsTrigger, Button } from '@/components/ui'
-import type { ComponentDefinition, ComponentInstance } from '@/lib/types/builder-types'
-import type { DropdownConfig } from '@/lib/database'
 import { Code, PaintBrush } from '@phosphor-icons/react'
+
+import { Button,ScrollArea, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
+import type { DropdownConfig } from '@/lib/database'
+import type { ComponentDefinition, ComponentInstance } from '@/lib/types/builder-types'
+
 import { FieldTypes } from './FieldTypes'
 
 interface PropertyPanelsProps {

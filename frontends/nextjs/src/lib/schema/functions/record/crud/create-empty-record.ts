@@ -1,6 +1,7 @@
 import type { ModelSchema } from '@/lib/schema-types'
-import { generateId } from './generate-id'
+
 import { getDefaultValue } from '../../field/get-default-value'
+import { generateId } from './generate-id'
 
 /**
  * Create an empty record with default values for a model

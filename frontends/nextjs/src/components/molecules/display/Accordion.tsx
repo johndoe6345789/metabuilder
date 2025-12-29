@@ -1,14 +1,14 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
   Accordion as MuiAccordion,
+  AccordionDetails as MuiAccordionDetails,
   AccordionProps as MuiAccordionProps,
   AccordionSummary as MuiAccordionSummary,
-  AccordionDetails as MuiAccordionDetails,
   Typography,
 } from '@mui/material'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { forwardRef, ReactNode } from 'react'
 
 // Accordion (single item)
 export interface AccordionProps extends Omit<MuiAccordionProps, 'children'> {
@@ -118,4 +118,4 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionContentProps>(
 )
 AccordionContent.displayName = 'AccordionContent'
 
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+export { Accordion, AccordionContent,AccordionItem, AccordionTrigger }

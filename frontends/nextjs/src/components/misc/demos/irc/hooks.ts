@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import type { ChatMessage } from './types'
 
 type TimestampFormatter = (timestamp: number) => Promise<string> | string

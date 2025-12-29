@@ -1,11 +1,10 @@
 import type { FieldSchema } from '../../types/schema-types'
-import { authorValidations, postValidations, productValidations } from './validation'
-
+import authorFieldsData from './config/author-fields.json'
 // Import JSON configuration files as modules
 // TypeScript's resolveJsonModule option enables importing .json files as typed objects
 import postFieldsData from './config/post-fields.json'
-import authorFieldsData from './config/author-fields.json'
 import productFieldsData from './config/product-fields.json'
+import { authorValidations, postValidations, productValidations } from './validation'
 
 // Type assertion for JSON imports - they match FieldSchema structure minus validation functions
 const postFieldsJson = postFieldsData as Omit<FieldSchema, 'validation'>[]

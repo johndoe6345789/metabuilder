@@ -1,4 +1,9 @@
+import Editor from '@monaco-editor/react'
+import { Warning } from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+
+import { SecurityWarningDialog } from '@/components/organisms/security/SecurityWarningDialog'
 import {
   Alert,
   AlertDescription,
@@ -7,14 +12,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui'
-import { Warning } from '@phosphor-icons/react'
-import Editor from '@monaco-editor/react'
-import { toast } from 'sonner'
+import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
 
 import { SchemaSection } from './json/SchemaSection'
 import { Toolbar } from './json/Toolbar'
-import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
-import { SecurityWarningDialog } from '@/components/organisms/security/SecurityWarningDialog'
 
 interface JsonEditorProps {
   open: boolean

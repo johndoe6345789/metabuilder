@@ -1,7 +1,7 @@
 // Auto-generated class wrapper
-import { toTopCounts } from './functions/to-top-counts'
-import { summarizeWorkflowRuns } from './functions/summarize-workflow-runs'
 import { formatWorkflowRunAnalysis } from './functions/format-workflow-run-analysis'
+import { summarizeWorkflowRuns } from './functions/summarize-workflow-runs'
+import { toTopCounts } from './functions/to-top-counts'
 
 /**
  * StatsUtils - Class wrapper for 3 functions

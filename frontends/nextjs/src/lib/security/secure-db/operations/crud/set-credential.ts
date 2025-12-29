@@ -1,7 +1,8 @@
 import { setCredential as setCredentialRecord } from '@/lib/db/credentials'
-import type { SecurityContext } from '../types'
+
 import { executeQuery } from '../execute-query'
 import { sanitizeInput } from '../sanitize-input'
+import type { SecurityContext } from '../types'
 
 /**
  * Set user credential with security checks

@@ -1,8 +1,9 @@
 import { addComment } from '@/lib/db/comments'
 import type { Comment } from '@/lib/types/level-types'
-import type { SecurityContext } from '../types'
+
 import { executeQuery } from '../execute-query'
 import { sanitizeInput } from '../sanitize-input'
+import type { SecurityContext } from '../types'
 
 /**
  * Create a comment with security checks

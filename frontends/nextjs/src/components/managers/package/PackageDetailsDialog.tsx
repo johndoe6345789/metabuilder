@@ -1,3 +1,5 @@
+import { Download, Star, Tag, Trash, User } from '@phosphor-icons/react'
+
 import {
   Badge,
   Button,
@@ -14,9 +16,9 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui'
-import type { PackageCatalogData } from '@/lib/packages/core/package-catalog'
 import type { InstalledPackage } from '@/lib/package-types'
-import { Download, Star, Tag, Trash, User } from '@phosphor-icons/react'
+import type { PackageCatalogData } from '@/lib/packages/core/package-catalog'
+
 import { DependenciesTab } from './tabs/DependenciesTab'
 import { ScriptsTab } from './tabs/ScriptsTab'
 

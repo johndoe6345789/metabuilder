@@ -1,17 +1,17 @@
 // TODO: Split this file (173 LOC) into smaller organisms (<150 LOC each)
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
 import {
+  Paper,
   Table as MuiTable,
-  TableHead as MuiTableHead,
   TableBody as MuiTableBody,
-  TableRow as MuiTableRow,
   TableCell as MuiTableCell,
   TableContainer,
-  Paper,
   TableFooter as MuiTableFooter,
+  TableHead as MuiTableHead,
+  TableRow as MuiTableRow,
 } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 interface TableProps {
   children: ReactNode
@@ -170,4 +170,4 @@ const TableCaption = forwardRef<HTMLTableCaptionElement, TableCaptionProps>(
 )
 TableCaption.displayName = 'TableCaption'
 
-export { Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption }
+export { Table, TableBody, TableCaption,TableCell, TableFooter, TableHead, TableHeader, TableRow }

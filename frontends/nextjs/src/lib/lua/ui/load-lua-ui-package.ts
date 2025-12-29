@@ -1,7 +1,8 @@
-import { executeLuaCode } from '@/lib/lua/functions/execution/execute-lua-code'
 import { createLuaEngine } from '@/lib/lua/engine/core/create-lua-engine'
-import type { LuaUIPackage } from './types/lua-ui-package'
+import { executeLuaCode } from '@/lib/lua/functions/execution/execute-lua-code'
 import type { LuaValue } from '@/types/utility-types'
+
+import type { LuaUIPackage } from './types/lua-ui-package'
 
 /**
  * Load a Lua UI package from Lua source code

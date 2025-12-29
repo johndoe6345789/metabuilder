@@ -1,14 +1,15 @@
 import { randomUUID } from 'crypto'
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
+
 import { readJson } from '@/lib/api/read-json'
 import { requireDBALApiKey } from '@/lib/api/require-dbal-api-key'
-import { transferSuperGodPower } from '@/lib/db/users/super-god/transfer-super-god-power'
 import {
   addPowerTransferRequest,
   getPowerTransferRequests,
   updatePowerTransferRequest,
 } from '@/lib/db/power-transfers'
+import { transferSuperGodPower } from '@/lib/db/users/super-god/transfer-super-god-power'
 import { dbalGetUserById } from '@/lib/dbal/database-dbal/users/dbal-get-user-by-id.server'
 
 const REQUEST_EXPIRY_MS = 60 * 60 * 1000

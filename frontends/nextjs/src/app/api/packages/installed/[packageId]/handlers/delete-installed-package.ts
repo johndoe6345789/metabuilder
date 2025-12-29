@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
+
 import { getInstalledPackages } from '@/lib/db/packages/get-installed-packages'
 import { uninstallPackage } from '@/lib/db/packages/uninstall-package'
 import { getPackageCatalogEntry } from '@/lib/packages/server/get-package-catalog-entry'

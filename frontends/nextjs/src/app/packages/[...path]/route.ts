@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server'
 import { readFile, stat } from 'fs/promises'
+import { NextResponse } from 'next/server'
+
 import { getPackageContentType } from '@/lib/packages/server/get-package-content-type'
 import { resolvePackageFilePath } from '@/lib/packages/server/resolve-package-file-path'
 

@@ -1,8 +1,9 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { IconButton } from '@mui/material'
-import { paginationSizeMap, type PaginationLinkProps } from './paginationUtils'
+import { forwardRef } from 'react'
+
+import { type PaginationLinkProps,paginationSizeMap } from './paginationUtils'
 
 const PaginationLink = forwardRef<HTMLButtonElement, PaginationLinkProps>(
   ({ children, onClick, isActive = false, disabled = false, size = 'medium', ...props }, ref) => {

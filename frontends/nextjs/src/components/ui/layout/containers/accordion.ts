@@ -1,2 +1,2 @@
 // Re-export for backward compatibility
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './molecules/Accordion'
+export { Accordion, AccordionContent,AccordionItem, AccordionTrigger } from './molecules/Accordion'

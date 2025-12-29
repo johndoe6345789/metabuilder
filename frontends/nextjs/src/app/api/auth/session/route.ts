@@ -1,11 +1,12 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { AUTH_COOKIE_NAME, DEFAULT_SESSION_TTL_MS } from '@/lib/auth/session-constants'
+
 import { clearSessionCookie } from '@/lib/auth/clear-session-cookie'
+import { AUTH_COOKIE_NAME, DEFAULT_SESSION_TTL_MS } from '@/lib/auth/session-constants'
 import { setSessionCookie } from '@/lib/auth/set-session-cookie'
+import { deleteSession } from '@/lib/db/sessions/delete-session'
 import { getSessionByToken } from '@/lib/db/sessions/get-session-by-token'
 import { updateSession } from '@/lib/db/sessions/update-session'
-import { deleteSession } from '@/lib/db/sessions/delete-session'
 import { getUserById } from '@/lib/db/users/get-user-by-id'
 
 export async function GET() {

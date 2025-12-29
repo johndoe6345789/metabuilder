@@ -1,11 +1,11 @@
-import { Box, Stack, Typography } from '@mui/material'
-import { alpha } from '@mui/material/styles'
 import {
   Autorenew as RunningIcon,
   Cancel as FailureIcon,
   CheckCircle as SuccessIcon,
   OpenInNew as OpenInNewIcon,
 } from '@mui/icons-material'
+import { Box, Stack, Typography } from '@mui/material'
+import { alpha } from '@mui/material/styles'
 
 import { Alert, AlertDescription, AlertTitle, Badge, Button } from '@/components/ui'
 

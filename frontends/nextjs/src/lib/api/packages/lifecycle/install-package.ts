@@ -1,5 +1,5 @@
-import type { InstalledPackage, PackageContent, PackageManifest } from '@/lib/package-types'
 import { requestJson } from '@/lib/api/request-json'
+import type { InstalledPackage, PackageContent, PackageManifest } from '@/lib/package-types'
 
 type InstallPackageOptions = {
   manifest?: PackageManifest

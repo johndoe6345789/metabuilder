@@ -1,7 +1,7 @@
 'use client'
 
+import { ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
-import { ToggleButtonGroup, ToggleButton, ToggleButtonGroupProps } from '@mui/material'
 
 interface ToggleGroupProps {
   children: ReactNode

@@ -1,6 +1,7 @@
+import { useKV } from '@github/spark/hooks'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import { useKV } from '@github/spark/hooks'
+
 import type { FileNode } from '@/lib/nerd-mode-ide'
 import {
   appendExportPath,
@@ -9,6 +10,7 @@ import {
   getPackageTemplateById,
   getPackageTemplates,
 } from '@/lib/nerd-mode-ide'
+
 import type { GitConfig, TestResult } from '../types'
 
 export function useNerdIdeState() {

@@ -1,6 +1,7 @@
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { CheckCircle, Clock, WarningCircle } from '@phosphor-icons/react'
 import type { ReactNode } from 'react'
+
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 
 export type ConnectionStatus = 'idle' | 'connected' | 'error'
 

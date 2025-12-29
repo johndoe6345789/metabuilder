@@ -1,8 +1,9 @@
+import { Buildings, House } from '@phosphor-icons/react'
+
 import { Button } from '@/components/ui'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
 import { Badge } from '@/components/ui'
-import { Buildings, House } from '@phosphor-icons/react'
 import type { Tenant, User } from '@/lib/level-types'
 
 interface TenantsTabProps {

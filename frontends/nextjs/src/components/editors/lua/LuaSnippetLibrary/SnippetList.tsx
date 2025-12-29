@@ -1,3 +1,5 @@
+import { ArrowRight, Check, Code, Copy, Tag } from '@phosphor-icons/react'
+
 import {
   Badge,
   Button,
@@ -8,7 +10,6 @@ import {
   CardTitle,
   TabsContent,
 } from '@/components/ui'
-import { ArrowRight, Check, Code, Copy, Tag } from '@phosphor-icons/react'
 import { LUA_SNIPPET_CATEGORIES, type LuaSnippet } from '@/lib/lua-snippets'
 
 interface SnippetListProps {

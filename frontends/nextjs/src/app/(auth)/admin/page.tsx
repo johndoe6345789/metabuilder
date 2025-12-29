@@ -1,10 +1,10 @@
 'use client'
 
-import { Level3 } from '@/components/Level3'
 import { AuthGate } from '@/components/auth/AuthGate'
 import { PageLoader } from '@/components/auth/PageLoader'
-import { useResolvedUser } from '@/hooks/useResolvedUser'
+import { Level3 } from '@/components/Level3'
 import { useLevelRouting } from '@/hooks/useLevelRouting'
+import { useResolvedUser } from '@/hooks/useResolvedUser'
 
 export default function AdminPage() {
   const { user, isLoading } = useResolvedUser()

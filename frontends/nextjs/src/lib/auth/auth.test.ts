@@ -3,15 +3,16 @@
  * Following parameterized test pattern per project conventions
  */
 
-import { describe, it, expect } from 'vitest'
-import {
-  DEFAULT_USERS,
-  DEFAULT_CREDENTIALS,
-  getScrambledPassword,
-  canAccessLevel,
-  getRoleDisplayName,
-} from './auth'
+import { describe, expect,it } from 'vitest'
+
 import type { UserRole } from '../types/level-types'
+import {
+  canAccessLevel,
+  DEFAULT_CREDENTIALS,
+  DEFAULT_USERS,
+  getRoleDisplayName,
+  getScrambledPassword,
+} from './auth'
 
 describe('auth', () => {
   describe('DEFAULT_USERS', () => {

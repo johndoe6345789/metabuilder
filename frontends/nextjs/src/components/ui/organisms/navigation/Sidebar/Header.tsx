@@ -1,6 +1,6 @@
-import { forwardRef, ReactNode } from 'react'
-import { Box, IconButton } from '@mui/material'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import { Box, IconButton } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 interface SidebarHeaderProps {
   children?: ReactNode

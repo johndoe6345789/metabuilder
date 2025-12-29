@@ -1,5 +1,6 @@
-import { Button, DialogFooter } from '@/components/ui'
 import { FloppyDisk, ShieldCheck, X } from '@phosphor-icons/react'
+
+import { Button, DialogFooter } from '@/components/ui'
 
 interface ToolbarProps {
   onScan: () => void

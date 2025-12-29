@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
 import type { Monaco } from '@monaco-editor/react'
+import { useEffect } from 'react'
 
 export const useLuaDiagnostics = (monaco: Monaco | null) =>
   useEffect(() => {

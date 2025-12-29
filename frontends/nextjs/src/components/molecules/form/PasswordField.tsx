@@ -1,9 +1,9 @@
 'use client'
 
-import { forwardRef, useState } from 'react'
-import { Box, IconButton, InputAdornment, TextField } from '@mui/material'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import { Box, IconButton, InputAdornment, TextField } from '@mui/material'
+import { forwardRef, useState } from 'react'
 
 export interface PasswordFieldProps {
   label?: string

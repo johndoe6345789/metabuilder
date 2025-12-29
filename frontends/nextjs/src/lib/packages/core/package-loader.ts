@@ -4,12 +4,12 @@
  */
 
 export {
-  initializePackageSystem,
   getInstalledPackageIds,
+  getModularPackageComponents,
+  getModularPackageMetadata,
+  getModularPackageScripts,
   getPackageContent,
   getPackageManifest,
   getPackageRegistry,
-  getModularPackageComponents,
-  getModularPackageScripts,
-  getModularPackageMetadata,
+  initializePackageSystem,
 } from './loader/index'

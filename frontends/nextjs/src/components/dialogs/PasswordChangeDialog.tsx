@@ -1,4 +1,6 @@
+import { Eye, EyeSlash,Warning } from '@phosphor-icons/react'
 import { useState } from 'react'
+
 import {
   Dialog,
   DialogContent,
@@ -11,7 +13,6 @@ import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
 import { Alert, AlertDescription } from '@/components/ui'
-import { Warning, Eye, EyeSlash } from '@phosphor-icons/react'
 
 interface PasswordChangeDialogProps {
   open: boolean

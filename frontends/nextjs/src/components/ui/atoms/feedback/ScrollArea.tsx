@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { Box, type BoxProps, type SxProps, type Theme } from '@mui/material'
+import { forwardRef } from 'react'
 
 export interface ScrollAreaProps extends Omit<BoxProps, 'ref'> {
   /** Custom styles for the scroll container */

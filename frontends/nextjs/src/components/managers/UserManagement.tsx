@@ -1,6 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Pencil, Plus, Trash, UserCircle } from '@phosphor-icons/react'
+import { useEffect,useState } from 'react'
+import { toast } from 'sonner'
+
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
@@ -19,9 +22,7 @@ import {
   DialogTrigger,
 } from '@/components/ui'
 import { Avatar, AvatarFallback } from '@/components/ui'
-import { Plus, Pencil, Trash, UserCircle } from '@phosphor-icons/react'
 import { createUser, deleteUser, listUsers, updateUser } from '@/lib/api/users'
-import { toast } from 'sonner'
 import type { User, UserRole } from '@/lib/level-types'
 
 export function UserManagement() {

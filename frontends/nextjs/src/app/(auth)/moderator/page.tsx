@@ -1,10 +1,10 @@
 'use client'
 
-import { ModeratorPanel } from '@/components/level/ModeratorPanel'
 import { AuthGate } from '@/components/auth/AuthGate'
 import { PageLoader } from '@/components/auth/PageLoader'
-import { useResolvedUser } from '@/hooks/useResolvedUser'
+import { ModeratorPanel } from '@/components/level/ModeratorPanel'
 import { useLevelRouting } from '@/hooks/useLevelRouting'
+import { useResolvedUser } from '@/hooks/useResolvedUser'
 
 export default function ModeratorPage() {
   const { user, isLoading } = useResolvedUser()

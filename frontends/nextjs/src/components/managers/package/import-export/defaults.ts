@@ -1,5 +1,5 @@
-import type { ExportPackageOptions } from '@/lib/packages/core/package-export'
 import type { PackageManifest } from '@/lib/package-types'
+import type { ExportPackageOptions } from '@/lib/packages/core/package-export'
 
 export const defaultExportOptions: ExportPackageOptions = {
   includeAssets: true,

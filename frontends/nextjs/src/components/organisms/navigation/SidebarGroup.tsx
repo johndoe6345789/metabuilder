@@ -1,9 +1,9 @@
 'use client'
 
-import { forwardRef, ReactNode, useState } from 'react'
-import { Box, List, Collapse, Typography } from '@mui/material'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { Box, Collapse, List, Typography } from '@mui/material'
+import { forwardRef, ReactNode, useState } from 'react'
 
 // SidebarGroup
 interface SidebarGroupProps {
@@ -92,4 +92,4 @@ const SidebarGroupContent = forwardRef<HTMLDivElement, { children: ReactNode; cl
 )
 SidebarGroupContent.displayName = 'SidebarGroupContent'
 
-export { SidebarGroup, SidebarGroupLabel, SidebarGroupContent }
+export { SidebarGroup, SidebarGroupContent,SidebarGroupLabel }

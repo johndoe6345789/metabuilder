@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 
 import { PERMISSION_LEVELS } from '@/app/levels/levels-data'
 

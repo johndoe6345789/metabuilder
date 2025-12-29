@@ -1,7 +1,8 @@
 import { getComments as fetchComments } from '@/lib/db/comments'
 import type { Comment } from '@/lib/types/level-types'
-import type { SecurityContext } from '../types'
+
 import { executeQuery } from '../../execute-query'
+import type { SecurityContext } from '../types'
 
 /**
  * Get comments with security checks

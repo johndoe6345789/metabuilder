@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+
 import { UnifiedLogin } from '@/components/UnifiedLogin'
-import { getRoleHomePath } from '@/lib/auth'
 import { useAuth } from '@/hooks/useAuth'
+import { getRoleHomePath } from '@/lib/auth'
 
 export default function LoginPage() {
   const router = useRouter()

@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+
 import { getScrambledPassword } from '@/lib/auth'
+
 import { GodCredentialsBanner } from '../level1/GodCredentialsBanner'
 import { ChallengePanel } from '../sections/ChallengePanel'
 

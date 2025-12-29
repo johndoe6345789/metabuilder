@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
 import { Box } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 export interface DialogHeaderProps {
   children: ReactNode

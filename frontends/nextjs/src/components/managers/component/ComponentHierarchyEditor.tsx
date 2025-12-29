@@ -1,18 +1,20 @@
+import { ArrowsOutCardinal, Plus, Tree } from '@phosphor-icons/react'
 import { useCallback, useId, useMemo, useState } from 'react'
+import { toast } from 'sonner'
+
 import { Button } from '@/components/ui'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
 import { Separator } from '@/components/ui'
-import { ArrowsOutCardinal, Plus, Tree } from '@phosphor-icons/react'
-import { Database, type ComponentNode } from '@/lib/database'
 import { componentCatalog } from '@/lib/components/component-catalog'
-import { toast } from 'sonner'
+import { type ComponentNode,Database } from '@/lib/database'
+
 import { ComponentConfigDialog } from './ComponentConfigDialog'
+import { selectRootNodes } from './ComponentHierarchyEditor/selectors'
+import { HierarchyTree } from './ComponentHierarchyEditor/Tree'
 import { useHierarchyData } from './modules/useHierarchyData'
 import { useHierarchyDragDrop } from './modules/useHierarchyDragDrop'
-import { HierarchyTree } from './ComponentHierarchyEditor/Tree'
-import { selectRootNodes } from './ComponentHierarchyEditor/selectors'
 
 export function ComponentHierarchyEditor({ nerdMode = false }: { nerdMode?: boolean }) {
   const { pages, selectedPageId, setSelectedPageId, hierarchy, loadHierarchy } = useHierarchyData()

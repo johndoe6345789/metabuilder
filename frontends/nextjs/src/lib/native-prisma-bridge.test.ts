@@ -1,7 +1,8 @@
-import { describe, expect, it, afterEach } from 'vitest'
+import { afterEach,describe, expect, it } from 'vitest'
+
 import {
-  AUTHORIZATION_HEADER,
   AUTH_TOKEN_HEADER,
+  AUTHORIZATION_HEADER,
   isAuthorized,
   splitSqlTemplate,
 } from './native-prisma-bridge'

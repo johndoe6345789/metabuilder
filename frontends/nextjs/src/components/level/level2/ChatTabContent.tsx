@@ -1,6 +1,7 @@
+import type { User } from '@/lib/level-types'
+
 import { IRCWebchatDeclarative } from '../../misc/demos/IRCWebchatDeclarative'
 import { ResultsPane } from '../sections/ResultsPane'
-import type { User } from '@/lib/level-types'
 
 interface ChatTabContentProps {
   user: User

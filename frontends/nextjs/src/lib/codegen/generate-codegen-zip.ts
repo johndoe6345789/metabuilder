@@ -1,5 +1,6 @@
-import JSZip from 'jszip'
 import { Buffer } from 'node:buffer'
+
+import JSZip from 'jszip'
 
 import { CodegenSpec } from './codegen-types'
 import { createProjectTemplate } from './create-project-template'

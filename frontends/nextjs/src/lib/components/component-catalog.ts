@@ -1,10 +1,10 @@
-import type { ComponentDefinition } from './types'
 import { dataComponents } from './catalog/data'
 import { displayComponents } from './catalog/display'
 import { feedbackComponents } from './catalog/feedback'
 import { inputComponents } from './catalog/inputs'
 import { layoutComponents } from './catalog/layout'
 import { typographyComponents } from './catalog/typography'
+import type { ComponentDefinition } from './types'
 
 export const componentCatalog: ComponentDefinition[] = [
   ...layoutComponents,

@@ -1,5 +1,5 @@
-import { Box, Stack } from '@mui/material'
 import { Info as InfoIcon, SmartToy as RobotIcon } from '@mui/icons-material'
+import { Box, Stack } from '@mui/material'
 
 import {
   Alert,

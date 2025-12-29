@@ -2,14 +2,14 @@
 // Components split into separate files to keep each under 150 LOC
 export {
   NavigationMenuCore as NavigationMenu,
-  type NavigationMenuProps,
-  NavigationMenuList,
   NavigationMenuItem,
+  NavigationMenuList,
+  type NavigationMenuProps,
 } from './NavigationMenuCore'
-export { NavigationMenuTrigger, NavigationMenuContent } from './NavigationMenuTrigger'
 export {
-  NavigationMenuLink,
   NavigationMenuIndicator,
-  NavigationMenuViewport,
+  NavigationMenuLink,
   navigationMenuTriggerStyle,
+  NavigationMenuViewport,
 } from './NavigationMenuLink'
+export { NavigationMenuContent,NavigationMenuTrigger } from './NavigationMenuTrigger'

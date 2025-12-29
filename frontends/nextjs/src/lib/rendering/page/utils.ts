@@ -1,5 +1,6 @@
 import type { ComponentInstance } from '@/lib/types/builder-types'
 import type { User, UserRole } from '@/lib/types/level-types'
+
 import type { PageDefinition } from './page-renderer'
 
 export function createMockPage(id: string, options: Partial<PageDefinition> = {}): PageDefinition {

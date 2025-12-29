@@ -1,7 +1,8 @@
 import { getPages as fetchPages } from '@/lib/db/pages'
 import type { PageConfig } from '@/lib/types/level-types'
-import type { SecurityContext } from '../types'
+
 import { executeQuery } from '../../execute-query'
+import type { SecurityContext } from '../types'
 
 /**
  * Get page configs with security checks

@@ -1,3 +1,5 @@
+import { Gear, PaperPlaneTilt, SignOut, Users } from '@phosphor-icons/react'
+
 import {
   Badge,
   Button,
@@ -8,9 +10,9 @@ import {
   Input,
   ScrollArea,
 } from '@/components/ui'
-import { Gear, PaperPlaneTilt, SignOut, Users } from '@phosphor-icons/react'
-import { UserList } from './UserList'
+
 import type { ChatMessage } from './types'
+import { UserList } from './UserList'
 
 interface ChatWindowProps {
   channelName: string

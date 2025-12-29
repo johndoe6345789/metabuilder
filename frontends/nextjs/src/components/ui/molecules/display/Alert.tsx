@@ -1,13 +1,13 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
 import {
   Alert as MuiAlert,
-  AlertTitle as MuiAlertTitle,
   AlertProps as MuiAlertProps,
+  AlertTitle as MuiAlertTitle,
   SxProps,
   Theme,
 } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 export type AlertVariant = 'default' | 'destructive'
 
@@ -72,4 +72,4 @@ const AlertDescription = forwardRef<HTMLParagraphElement, AlertDescriptionProps>
 )
 AlertDescription.displayName = 'AlertDescription'
 
-export { Alert, AlertTitle, AlertDescription }
+export { Alert, AlertDescription,AlertTitle }

@@ -6,9 +6,9 @@ import { DATE_AND_TIME_SNIPPETS } from './date-and-time'
 import { ERROR_HANDLING_SNIPPETS } from './error-handling'
 import { MATH_CALCULATION_SNIPPETS } from './math-calculations'
 import { STRING_PROCESSING_SNIPPETS } from './string-processing'
+import type { LuaSnippet } from './types'
 import { USER_MANAGEMENT_SNIPPETS } from './user-management'
 import { UTILITY_SNIPPETS } from './utilities'
-import type { LuaSnippet } from './types'
 
 export type { LuaSnippet } from './types'
 

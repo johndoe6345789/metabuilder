@@ -1,5 +1,6 @@
 import { ScrollArea } from '@/components/ui'
 import type { FileNode } from '@/lib/nerd-mode-ide'
+
 import { FileTree } from '../file-tree/FileTree'
 
 interface NerdModeIDEFileExplorerProps {

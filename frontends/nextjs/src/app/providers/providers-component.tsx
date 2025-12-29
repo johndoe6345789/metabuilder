@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
 import { CssBaseline, ThemeProvider as MuiThemeProvider } from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { lightTheme, darkTheme } from '@/theme/mui-theme'
+import { useEffect, useMemo, useState } from 'react'
+
+import { darkTheme,lightTheme } from '@/theme/mui-theme'
+
 import { ThemeContext, type ThemeMode } from './theme-context'
 
 export function Providers({ children }: { children: React.ReactNode }) {

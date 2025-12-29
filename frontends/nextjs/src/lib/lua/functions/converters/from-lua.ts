@@ -4,6 +4,7 @@
  */
 
 import * as fengari from 'fengari-web'
+
 import { tableToJS } from './table-to-js'
 
 const lua = fengari.lua

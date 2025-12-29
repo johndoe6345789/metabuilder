@@ -2,7 +2,7 @@ import { parseWorkflowRuns, WorkflowRunLike } from './parser'
 import { formatWorkflowRunAnalysis, summarizeWorkflowRuns, WorkflowRunSummary } from './stats'
 
 export type { WorkflowRunLike, WorkflowRunSummary }
-export { parseWorkflowRuns, summarizeWorkflowRuns, formatWorkflowRunAnalysis }
+export { formatWorkflowRunAnalysis,parseWorkflowRuns, summarizeWorkflowRuns }
 
 export function analyzeWorkflowRuns(
   runs: unknown[],

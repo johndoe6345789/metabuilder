@@ -1,6 +1,7 @@
-import { useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search'
 import { Box, Card, InputAdornment, Stack, TextField, Typography } from '@mui/material'
+import { useState } from 'react'
+
 import { getComponentIcon } from '@/components/get-component-icon'
 import type { ComponentDefinition } from '@/lib/builder-types'
 import { componentCatalog } from '@/lib/component-catalog'

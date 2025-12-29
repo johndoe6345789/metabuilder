@@ -2,11 +2,13 @@ import CallSplitIcon from '@mui/icons-material/CallSplit'
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import SettingsIcon from '@mui/icons-material/Settings'
+
 import { Badge } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
 import { Separator } from '@/components/ui'
+
 import type { GitConfig } from './types'
 
 interface NerdModeGitPanelProps {

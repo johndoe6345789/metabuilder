@@ -1,6 +1,6 @@
 import { getAdapter } from '../../core/dbal-client'
-import type { Session, UpdateSessionInput } from './types'
 import { mapSessionRecord } from '../map-session-record'
+import type { Session, UpdateSessionInput } from './types'
 
 export async function updateSession(
   sessionId: string,

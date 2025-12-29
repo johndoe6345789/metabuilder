@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
+
 import {
   Badge,
   Button,
@@ -11,7 +13,6 @@ import {
   Label,
 } from '@/components/ui'
 import { useCachedData } from '@/hooks/useDBAL'
-import { toast } from 'sonner'
 
 interface UserPreferences {
   theme: string

@@ -1,4 +1,5 @@
 import { MagnifyingGlass } from '@phosphor-icons/react'
+
 import { Input, ScrollArea, TabsList, TabsTrigger } from '@/components/ui'
 import { LUA_SNIPPET_CATEGORIES } from '@/lib/lua-snippets'
 

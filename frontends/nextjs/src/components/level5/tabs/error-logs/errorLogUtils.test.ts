@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
+
 import type { ErrorLog } from '@/lib/db/error-logs'
+
 import { calculateStats, filterLogs } from './errorLogUtils'
 
 const sampleLogs: ErrorLog[] = [

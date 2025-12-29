@@ -1,5 +1,5 @@
-import { getAdapter } from '../core/dbal-client'
 import type { User } from '../../types/level-types'
+import { getAdapter } from '../core/dbal-client'
 
 /**
  * Set all users (replaces existing)

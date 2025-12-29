@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { LuaEngine, createLuaEngine, type LuaExecutionContext } from '../lua-engine'
+import { afterEach,beforeEach, describe, expect, it } from 'vitest'
+
+import { createLuaEngine, LuaEngine, type LuaExecutionContext } from '../lua-engine'
 
 describe('lua-engine execution', () => {
   let engine: LuaEngine

@@ -1,12 +1,12 @@
 'use client'
 
-import { forwardRef } from 'react'
 import {
   Avatar as MuiAvatar,
-  AvatarProps as MuiAvatarProps,
   AvatarGroup as MuiAvatarGroup,
   AvatarGroupProps as MuiAvatarGroupProps,
+  AvatarProps as MuiAvatarProps,
 } from '@mui/material'
+import { forwardRef } from 'react'
 
 /** Avatar size options */
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
@@ -58,4 +58,4 @@ const AvatarGroup = MuiAvatarGroup
 const AvatarFallback = ({ children }: { children: React.ReactNode }) => <>{children}</>
 const AvatarImage = MuiAvatar
 
-export { Avatar, AvatarGroup, AvatarFallback, AvatarImage }
+export { Avatar, AvatarFallback, AvatarGroup, AvatarImage }

@@ -1,8 +1,8 @@
 'use client'
 
-import { forwardRef } from 'react'
-import NextLink, { LinkProps as NextLinkProps } from 'next/link'
 import { Link as MuiLink, LinkProps as MuiLinkProps } from '@mui/material'
+import NextLink, { LinkProps as NextLinkProps } from 'next/link'
+import { forwardRef } from 'react'
 
 export interface LinkProps extends Omit<MuiLinkProps, 'href'> {
   href: NextLinkProps['href']

@@ -1,7 +1,7 @@
 'use client'
 
-import { ReactNode } from 'react'
 import { Box, Divider, Stack } from '@mui/material'
+import { ReactNode } from 'react'
 
 interface DialogSectionsProps {
   children: ReactNode

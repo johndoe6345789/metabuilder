@@ -1,8 +1,7 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-
 import { Container, Stack, Typography } from '@mui/material'
+import { useMemo, useState } from 'react'
 
 import { LevelDetails } from './components/LevelDetails'
 import { LevelsGrid } from './components/LevelsGrid'

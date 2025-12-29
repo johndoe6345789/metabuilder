@@ -1,5 +1,5 @@
-import type { PowerTransferRequest } from '@/lib/level-types'
 import { requestJson } from '@/lib/api/request-json'
+import type { PowerTransferRequest } from '@/lib/level-types'
 
 interface CreatePowerTransferRequestPayload {
   fromUserId: string

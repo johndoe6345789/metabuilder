@@ -3,8 +3,8 @@
  * Replaces all comments in database
  */
 
-import { prisma } from '../../prisma'
 import type { Comment } from '../../../types/level-types'
+import { prisma } from '../../prisma'
 
 /**
  * Set all comments (replaces existing)

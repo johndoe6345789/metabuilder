@@ -1,13 +1,15 @@
-import { Card, CardContent, CardHeader } from '@mui/material'
 import { PlayArrow as PlayIcon } from '@mui/icons-material'
+import { Card, CardContent, CardHeader } from '@mui/material'
+
 import { CardDescription, CardTitle } from '@/components/ui'
-import { WorkflowSidebar } from './editor/WorkflowSidebar'
-import { WorkflowDetailsPanel } from './editor/WorkflowDetailsPanel'
-import { WorkflowNodesPanel } from './editor/WorkflowNodesPanel'
-import { WorkflowTester } from './editor/WorkflowTester'
-import { useWorkflowState } from './editor/useWorkflowState'
+
 import { createActionHandlers } from './editor/createActionHandlers'
 import type { WorkflowEditorProps } from './editor/types'
+import { useWorkflowState } from './editor/useWorkflowState'
+import { WorkflowDetailsPanel } from './editor/WorkflowDetailsPanel'
+import { WorkflowNodesPanel } from './editor/WorkflowNodesPanel'
+import { WorkflowSidebar } from './editor/WorkflowSidebar'
+import { WorkflowTester } from './editor/WorkflowTester'
 
 export function WorkflowEditor({
   workflows,

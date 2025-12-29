@@ -1,7 +1,7 @@
-import type { LuaScript } from '../types/level-types'
-import type { LuaExecutionContext, LuaExecutionResult } from './functions/types'
 import { createLuaEngine } from '../core/create-lua-engine'
+import type { LuaScript } from '../types/level-types'
 import { createSandboxedLuaEngine } from './create-sandboxed-lua-engine'
+import type { LuaExecutionContext, LuaExecutionResult } from './functions/types'
 
 type LuaScriptProfile = Pick<LuaScript, 'isSandboxed' | 'allowedGlobals' | 'timeoutMs'>
 

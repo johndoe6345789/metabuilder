@@ -1,10 +1,11 @@
+import { Envelope } from '@phosphor-icons/react'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Avatar, AvatarFallback } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
 import { Textarea } from '@/components/ui'
-import { Envelope } from '@phosphor-icons/react'
 import type { User } from '@/lib/level-types'
 
 interface ProfileCardProps {

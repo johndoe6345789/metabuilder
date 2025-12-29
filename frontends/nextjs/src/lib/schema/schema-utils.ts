@@ -17,20 +17,20 @@
 
 // Re-export all functions for backward compatibility
 export {
-  getModelKey,
-  getRecordsKey,
+  createEmptyRecord,
+  filterRecords,
   findModel,
+  generateId,
+  getDefaultValue,
   getFieldLabel,
+  getHelpText,
+  getModelKey,
   getModelLabel,
   getModelLabelPlural,
-  getHelpText,
-  generateId,
+  getRecordsKey,
+  sortRecords,
   validateField,
   validateRecord,
-  getDefaultValue,
-  createEmptyRecord,
-  sortRecords,
-  filterRecords,
 } from './functions'
 
 // Re-export the class wrapper

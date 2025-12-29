@@ -1,13 +1,15 @@
-import { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
-import { Button } from '@/components/ui'
-import { ComponentCatalog } from './ComponentCatalog'
-import { Canvas } from './Canvas'
-import { PropertyInspector } from './PropertyInspector'
-import { CodeEditor } from './CodeEditor'
-import type { ComponentInstance, ComponentDefinition, BuilderState } from '@/lib/builder-types'
-import { FloppyDisk, SignOut, Eye } from '@phosphor-icons/react'
+import { Eye,FloppyDisk, SignOut } from '@phosphor-icons/react'
+import { useState } from 'react'
 import { toast } from 'sonner'
+
+import { Button } from '@/components/ui'
+import type { BuilderState,ComponentDefinition, ComponentInstance } from '@/lib/builder-types'
+
+import { Canvas } from './Canvas'
+import { CodeEditor } from './CodeEditor'
+import { ComponentCatalog } from './ComponentCatalog'
+import { PropertyInspector } from './PropertyInspector'
 
 interface BuilderProps {
   onLogout: () => void

@@ -1,10 +1,10 @@
 'use client'
 
-import { Level2 } from '@/components/Level2'
 import { AuthGate } from '@/components/auth/AuthGate'
 import { PageLoader } from '@/components/auth/PageLoader'
-import { useResolvedUser } from '@/hooks/useResolvedUser'
+import { Level2 } from '@/components/Level2'
 import { useLevelRouting } from '@/hooks/useLevelRouting'
+import { useResolvedUser } from '@/hooks/useResolvedUser'
 
 export default function DashboardPage() {
   const { user, isLoading } = useResolvedUser()

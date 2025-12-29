@@ -1,6 +1,8 @@
-import { describe, it, expect } from 'vitest'
-import { validateField, validateRecord } from '@/lib/schema-utils'
+import { describe, expect,it } from 'vitest'
+
 import type { FieldSchema, ModelSchema } from '@/lib/schema-types'
+import { validateField, validateRecord } from '@/lib/schema-utils'
+
 import { createMockModel } from './schema-utils.fixtures'
 
 describe('schema-utils validation', () => {

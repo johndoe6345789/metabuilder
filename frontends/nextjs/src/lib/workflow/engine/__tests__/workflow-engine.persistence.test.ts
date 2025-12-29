@@ -1,8 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { WorkflowEngine } from '../workflow-engine'
-import { createContext, createNode, createWorkflow } from './workflow-engine.fixtures'
+
 import * as SandboxFactory from '../../../lua/engine/sandbox/create-sandboxed-lua-engine'
 import type { SandboxedLuaResult } from '../../../lua/engine/sandbox/sandboxed-lua-engine'
+import { WorkflowEngine } from '../workflow-engine'
+import { createContext, createNode, createWorkflow } from './workflow-engine.fixtures'
 
 afterEach(() => {
   vi.restoreAllMocks()

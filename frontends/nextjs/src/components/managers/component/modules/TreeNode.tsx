@@ -1,5 +1,6 @@
-import type React from 'react'
 import { CaretDown, CaretRight, GearSix, Trash, Tree } from '@phosphor-icons/react'
+import type React from 'react'
+
 import { Badge, Button } from '@/components/ui'
 import { componentCatalog } from '@/lib/components/component-catalog'
 import type { ComponentNode } from '@/lib/database'

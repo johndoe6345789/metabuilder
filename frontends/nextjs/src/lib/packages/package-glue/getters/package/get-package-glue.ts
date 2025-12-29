@@ -1,3 +1,3 @@
-import { packageGlue, type PackageGlue } from '../../package-glue'
+import { type PackageGlue,packageGlue } from '../../package-glue'
 
 export const getPackageGlue = (): PackageGlue => packageGlue

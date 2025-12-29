@@ -1,7 +1,7 @@
 'use client'
 
+import { Box,Link as MuiLink, LinkProps as MuiLinkProps } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
-import { Link as MuiLink, LinkProps as MuiLinkProps, Box } from '@mui/material'
 
 export interface NavLinkProps extends Omit<MuiLinkProps, 'component'> {
   href: string

@@ -1,5 +1,6 @@
-import { Alert, AlertDescription, Badge } from '@/components/ui'
 import { CheckCircle, WarningCircle } from '@phosphor-icons/react'
+
+import { Alert, AlertDescription, Badge } from '@/components/ui'
 
 export interface GodCredentialsSummaryProps {
   isActive: boolean

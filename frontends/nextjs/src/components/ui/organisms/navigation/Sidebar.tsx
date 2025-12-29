@@ -1,8 +1,8 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
-import { Box, Drawer, IconButton, useMediaQuery, useTheme } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
+import { Box, Drawer, IconButton, useMediaQuery, useTheme } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 import { MenuItemList, type MenuItemListProps, type SidebarItem } from './MenuItemList'
 import { SidebarHeader, type SidebarHeaderProps } from './Sidebar/Header'
@@ -123,12 +123,12 @@ SidebarNav.displayName = 'SidebarNav'
 
 export {
   Sidebar,
-  SidebarHeader,
   SidebarContent,
   SidebarFooter,
+  SidebarHeader,
   SidebarNav,
   SidebarSection,
   SidebarSeparator,
   SidebarToggle,
 }
-export type { SidebarItem, SidebarProps, SidebarHeaderProps }
+export type { SidebarHeaderProps,SidebarItem, SidebarProps }

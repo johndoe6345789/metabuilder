@@ -1,8 +1,8 @@
 // Re-export for backward compatibility
 export {
   Alert,
-  AlertTitle,
   AlertDescription,
-  type AlertVariant,
   type AlertProps,
+  AlertTitle,
+  type AlertVariant,
 } from './molecules/Alert'

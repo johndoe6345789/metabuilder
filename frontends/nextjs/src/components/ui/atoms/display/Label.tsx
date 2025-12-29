@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef, LabelHTMLAttributes, ReactNode } from 'react'
 import { FormLabel, FormLabelProps } from '@mui/material'
+import { forwardRef, LabelHTMLAttributes, ReactNode } from 'react'
 
 /**
  * Props for the Label component

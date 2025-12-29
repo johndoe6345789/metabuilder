@@ -1,6 +1,7 @@
+import { CheckCircle, Trash } from '@phosphor-icons/react'
+
 import { Badge, Button, Card, CardContent, ScrollArea } from '@/components/ui'
 import type { ErrorLog } from '@/lib/db/error-logs'
-import { CheckCircle, Trash } from '@phosphor-icons/react'
 
 import { formatLogContext } from '../helpers/context'
 import { getLevelColor, getLevelIcon } from '../helpers/levelStyles'

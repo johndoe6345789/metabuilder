@@ -1,6 +1,7 @@
-import type { SecurityContext } from './types'
 import type { User } from '@/lib/types/level-types'
+
 import { sanitizeInput } from './sanitize-input'
+import type { SecurityContext } from './types'
 
 export interface LoginSecurityContextParams {
   identifier: string

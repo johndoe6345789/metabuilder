@@ -85,7 +85,7 @@ export class LoginAttemptTracker {
 export const loginAttemptTracker = new LoginAttemptTracker()
 
 export {
-  DEFAULT_AUTH_LOCKOUT_WINDOW_MS,
   DEFAULT_AUTH_LOCKOUT_MAX_ATTEMPTS,
   DEFAULT_AUTH_LOCKOUT_MS,
+  DEFAULT_AUTH_LOCKOUT_WINDOW_MS,
 }

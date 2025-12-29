@@ -1,7 +1,9 @@
 import { toast } from 'sonner'
+
 import { Card, CardContent } from '@/components/ui'
-import { GitConfigDialog } from '../dialogs/GitConfigDialog'
+
 import { NerdModeIDEHeader } from '../components/NerdModeIDEHeader'
+import { GitConfigDialog } from '../dialogs/GitConfigDialog'
 import { NewItemDialog } from '../dialogs/NewItemDialog'
 import { TemplateDialog } from '../dialogs/TemplateDialog'
 import { EditorPane } from './NerdModeIDE/EditorPane'

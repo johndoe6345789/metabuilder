@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import {
+  type DeclarativeComponentConfig,
   DeclarativeComponentRenderer,
   getDeclarativeRenderer,
   loadPackageComponents,
-  type DeclarativeComponentConfig,
 } from '@/lib/rendering/declarative-component-renderer'
 
 describe('declarative-component-renderer lifecycle', () => {

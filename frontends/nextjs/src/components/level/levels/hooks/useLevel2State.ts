@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+
 import { Database, hashPassword } from '@/lib/database'
-import { generateScrambledPassword, simulateEmailSend } from '@/lib/password-utils'
 import type { Comment, User } from '@/lib/level-types'
+import { generateScrambledPassword, simulateEmailSend } from '@/lib/password-utils'
 
 export function useLevel2State(user: User) {
   const [currentUser, setCurrentUser] = useState<User>(user)

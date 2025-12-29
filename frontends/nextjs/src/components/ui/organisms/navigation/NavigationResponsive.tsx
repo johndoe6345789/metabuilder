@@ -1,6 +1,6 @@
-import { forwardRef } from 'react'
-import { IconButton } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
+import { IconButton } from '@mui/material'
+import { forwardRef } from 'react'
 
 interface NavigationMobileToggleProps {
   onClick: () => void

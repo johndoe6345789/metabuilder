@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { Switch as MuiSwitch, SwitchProps as MuiSwitchProps } from '@mui/material'
+import { forwardRef } from 'react'
 
 /**
  * Props for the Switch component

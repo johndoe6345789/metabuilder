@@ -1,6 +1,8 @@
-import type { Metadata, Viewport } from 'next'
-import { Providers } from './providers'
 import '@/main.scss'
+
+import type { Metadata, Viewport } from 'next'
+
+import { Providers } from './providers'
 
 export const metadata: Metadata = {
   title: {

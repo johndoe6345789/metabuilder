@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
 import { Alert, AlertTitle, List, ListItem, ListItemText } from '@mui/material'
+import type { ReactNode } from 'react'
 
 /**
  * Props for {@link ValidationSummary}.

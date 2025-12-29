@@ -1,8 +1,8 @@
 'use client'
 
-import { forwardRef } from 'react'
-import { Box, Dialog, InputBase } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
+import { Box, Dialog, InputBase } from '@mui/material'
+import { forwardRef } from 'react'
 
 import type { CommandDialogProps, CommandInputProps } from './command.types'
 

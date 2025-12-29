@@ -1,3 +1,5 @@
+import { Palette } from '@phosphor-icons/react'
+
 import {
   Button,
   Input,
@@ -8,9 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui'
-import type { PropDefinition } from '@/lib/types/builder-types'
 import type { DropdownConfig } from '@/lib/database'
-import { Palette } from '@phosphor-icons/react'
+import type { PropDefinition } from '@/lib/types/builder-types'
 
 interface FieldTypesProps {
   propDef: PropDefinition

@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { ArrowsLeftRight } from '@phosphor-icons/react'
+import { useEffect, useState } from 'react'
+
 import {
   Button,
   Card,
@@ -11,8 +12,9 @@ import {
   CardTitle,
   Separator,
 } from '@/components/ui'
-import type { PowerTransferRequest, User } from '@/lib/level-types'
 import { fetchPowerTransferRequests } from '@/lib/api/power-transfers'
+import type { PowerTransferRequest, User } from '@/lib/level-types'
+
 import { CriticalActionNotice, TransferHistory, UserSelectionList } from './sections'
 
 interface PowerTransferTabProps {

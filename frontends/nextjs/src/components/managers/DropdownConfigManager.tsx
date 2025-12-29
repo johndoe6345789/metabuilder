@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
-import { Button, Card } from '@/components/ui'
-import { Database } from '@/lib/database'
 import { Plus } from '@phosphor-icons/react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+
+import { Button, Card } from '@/components/ui'
 import type { DropdownConfig } from '@/lib/database'
+import { Database } from '@/lib/database'
+
 import { DropdownConfigForm } from './dropdown/DropdownConfigForm'
 import { PreviewPane } from './dropdown/PreviewPane'
 

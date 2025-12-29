@@ -1,6 +1,7 @@
 import type { FileNode } from '@/lib/nerd-mode-ide'
-import type { GitConfig, TestResult } from '../types'
+
 import { NerdModeEditorPanel } from '../../panels/NerdModeEditorPanel'
+import type { GitConfig, TestResult } from '../types'
 
 interface EditorPaneProps {
   selectedFile: FileNode | null

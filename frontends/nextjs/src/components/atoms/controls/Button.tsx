@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { Button as MuiButton, ButtonProps as MuiButtonProps, CircularProgress } from '@mui/material'
+import { forwardRef } from 'react'
 
 /** Button visual style variants */
 export type ButtonVariant = 'contained' | 'outlined' | 'text' | 'destructive' | 'ghost'

@@ -1,5 +1,6 @@
-import type React from 'react'
 import { ArrowSquareIn, FileArrowUp } from '@phosphor-icons/react'
+import type React from 'react'
+
 import {
   Dialog,
   DialogContent,
@@ -7,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui'
+
 import { ImportStatus } from './StatusUI'
 
 interface ImportDialogProps {

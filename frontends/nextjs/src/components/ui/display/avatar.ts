@@ -1,2 +1,2 @@
 // Re-export for backward compatibility
-export { Avatar, AvatarImage, AvatarFallback, type AvatarProps } from './atoms/Avatar'
+export { Avatar, AvatarFallback, AvatarImage, type AvatarProps } from './atoms/Avatar'

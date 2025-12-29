@@ -1,9 +1,10 @@
-import { Button } from '@/components/ui'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Plus, Trash } from '@phosphor-icons/react'
+
 import { SchemaTabs } from '@/components/schema/level4/Tabs'
 import { useSchemaLevel4 } from '@/components/schema/level4/useSchemaLevel4'
+import { Button } from '@/components/ui'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import type { ModelSchema } from '@/lib/schema-types'
-import { Plus, Trash } from '@phosphor-icons/react'
 
 interface SchemaEditorLevel4Props {
   schemas: ModelSchema[]

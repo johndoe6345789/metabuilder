@@ -1,7 +1,7 @@
 'use client'
 
-import { ReactNode } from 'react'
 import { Box, Typography } from '@mui/material'
+import { ReactNode } from 'react'
 
 import { CommandDialog } from '../command'
 import type { CommandGroup, CommandItem } from '../command/command.types'

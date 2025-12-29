@@ -1,5 +1,5 @@
-import { setGodCredentialsExpiry } from './set-god-credentials-expiry'
 import { getGodCredentialsExpiryDuration } from '../getters/get-god-credentials-expiry-duration'
+import { setGodCredentialsExpiry } from './set-god-credentials-expiry'
 
 /**
  * Reset god credentials expiry to extend it by the configured duration

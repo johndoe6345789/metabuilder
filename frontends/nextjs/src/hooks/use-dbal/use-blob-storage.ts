@@ -1,6 +1,8 @@
 import { useCallback } from 'react'
-import { dbal } from '@/lib/dbal-integration'
 import { toast } from 'sonner'
+
+import { dbal } from '@/lib/dbal-integration'
+
 import { useDBAL } from './use-dbal'
 
 /**

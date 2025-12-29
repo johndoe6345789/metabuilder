@@ -1,5 +1,5 @@
-import type { WorkflowExecutionResult } from '@/lib/workflow/engine/workflow-engine'
 import type { LuaScript, Workflow, WorkflowNode } from '@/lib/level-types'
+import type { WorkflowExecutionResult } from '@/lib/workflow/engine/workflow-engine'
 
 export interface WorkflowEditorProps {
   workflows: Workflow[]

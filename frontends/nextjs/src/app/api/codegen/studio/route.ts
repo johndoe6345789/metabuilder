@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
-import { generateCodegenZip } from '@/lib/codegen/generate-codegen-zip'
 import type { CodegenSpec } from '@/lib/codegen/codegen-types'
+import { generateCodegenZip } from '@/lib/codegen/generate-codegen-zip'
 
 const normalizeRuntime = (value: string | undefined): CodegenSpec['runtime'] => {
   const runtime = (value ?? 'web').toLowerCase()

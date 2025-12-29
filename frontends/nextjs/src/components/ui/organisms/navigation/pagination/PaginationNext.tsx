@@ -1,6 +1,7 @@
 'use client'
 
 import { forwardRef } from 'react'
+
 import { PaginationLink } from './PaginationLink'
 import { NextIcon, type PaginationLinkProps } from './paginationUtils'
 

@@ -1,5 +1,6 @@
+import { GithubLogo, GoogleLogo, IconProps } from '@phosphor-icons/react'
+
 import { Button, Separator } from '@/components/ui'
-import { GoogleLogo, GithubLogo, IconProps } from '@phosphor-icons/react'
 
 export interface Provider {
   name: string

@@ -1,7 +1,8 @@
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import SaveIcon from '@mui/icons-material/Save'
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
+
 import { Badge } from '@/components/ui'
 import { Button } from '@/components/ui'
 import type { FileNode } from '@/lib/nerd-mode-ide'

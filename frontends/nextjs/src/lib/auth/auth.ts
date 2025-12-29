@@ -5,8 +5,8 @@
 
 export {
   canAccessLevel,
+  DEFAULT_CREDENTIALS,
+  DEFAULT_USERS,
   getRoleDisplayName,
   getScrambledPassword,
-  DEFAULT_USERS,
-  DEFAULT_CREDENTIALS,
 } from './index'

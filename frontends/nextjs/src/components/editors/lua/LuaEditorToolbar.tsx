@@ -1,5 +1,6 @@
-import { Button, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Play, ShieldCheck } from '@phosphor-icons/react'
+
+import { Button, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 
 interface LuaEditorToolbarProps {
   scriptName: string

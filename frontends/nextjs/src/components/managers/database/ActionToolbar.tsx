@@ -1,5 +1,6 @@
+import { ArrowsClockwise, Export, Trash,UploadSimple } from '@phosphor-icons/react'
+
 import { Button } from '@/components/ui'
-import { ArrowsClockwise, Export, UploadSimple, Trash } from '@phosphor-icons/react'
 
 interface ActionToolbarProps {
   isLoading?: boolean

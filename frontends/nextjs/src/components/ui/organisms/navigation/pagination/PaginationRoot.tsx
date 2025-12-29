@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { Pagination as MuiPagination } from '@mui/material'
+import { forwardRef } from 'react'
 
 interface PaginationProps {
   count: number

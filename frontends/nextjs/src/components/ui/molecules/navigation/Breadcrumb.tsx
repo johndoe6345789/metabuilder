@@ -1,9 +1,9 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
-import { Breadcrumbs as MuiBreadcrumbs, Link, Typography, Box } from '@mui/material'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import { Box,Breadcrumbs as MuiBreadcrumbs, Link, Typography } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 interface BreadcrumbProps {
   children: ReactNode
@@ -130,10 +130,10 @@ BreadcrumbEllipsis.displayName = 'BreadcrumbEllipsis'
 
 export {
   Breadcrumb,
-  BreadcrumbList,
+  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
+  BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  BreadcrumbEllipsis,
 }

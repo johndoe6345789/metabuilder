@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { Divider, DividerProps } from '@mui/material'
+import { forwardRef } from 'react'
 
 /**
  * Props for the Separator component

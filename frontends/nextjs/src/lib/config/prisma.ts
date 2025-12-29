@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client'
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
+import { PrismaClient } from '@prisma/client'
 import Database from 'better-sqlite3'
 
 const globalForPrisma = globalThis as unknown as {

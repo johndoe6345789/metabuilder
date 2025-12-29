@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import { PACKAGE_CATALOG, type PackageCatalogData } from '@/lib/packages/core/package-catalog'
-import type { InstalledPackage, PackageManifest } from '@/lib/package-types'
+
 import { listInstalledPackages } from '@/lib/api/packages'
+import type { InstalledPackage, PackageManifest } from '@/lib/package-types'
+import { PACKAGE_CATALOG, type PackageCatalogData } from '@/lib/packages/core/package-catalog'
 
 export interface UsePackagesResult {
   packages: PackageManifest[]

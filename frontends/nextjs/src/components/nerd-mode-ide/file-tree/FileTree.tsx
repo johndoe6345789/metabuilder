@@ -1,4 +1,5 @@
 import type { FileNode } from '@/lib/nerd-mode-ide'
+
 import { FileTreeNode } from './FileTreeNode'
 
 interface FileTreeProps {

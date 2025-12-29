@@ -1,4 +1,6 @@
+import { ChatCircle,MagnifyingGlass, PencilSimple, Trash, Users } from '@phosphor-icons/react'
 import { useMemo } from 'react'
+
 import {
   Badge,
   Button,
@@ -10,9 +12,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
-import { ChallengePanel } from '../sections/ChallengePanel'
-import { MagnifyingGlass, PencilSimple, Trash, Users, ChatCircle } from '@phosphor-icons/react'
 import type { User } from '@/lib/level-types'
+
+import { ChallengePanel } from '../sections/ChallengePanel'
 
 interface UserTableProps {
   users: User[]

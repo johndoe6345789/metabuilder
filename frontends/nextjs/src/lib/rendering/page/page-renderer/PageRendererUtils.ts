@@ -1,13 +1,13 @@
 // Auto-generated class wrapper
-import { registerPage } from './functions/register-page'
-import { loadPages } from './functions/load-pages'
-import { getPage } from './functions/get-page'
-import { getPagesByLevel } from './functions/get-pages-by-level'
-import { executeLuaScript } from './functions/execute-lua-script'
 import { checkPermissions } from './functions/check-permissions'
+import { executeLuaScript } from './functions/execute-lua-script'
+import { getPage } from './functions/get-page'
+import { getPageRenderer } from './functions/get-page-renderer'
+import { getPagesByLevel } from './functions/get-pages-by-level'
+import { loadPages } from './functions/load-pages'
 import { onPageLoad } from './functions/on-page-load'
 import { onPageUnload } from './functions/on-page-unload'
-import { getPageRenderer } from './functions/get-page-renderer'
+import { registerPage } from './functions/register-page'
 
 /**
  * PageRendererUtils - Class wrapper for 9 functions

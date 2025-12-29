@@ -1,4 +1,5 @@
 import JSZip from 'jszip'
+
 import type { AssetType, PackageContent, PackageManifest } from './types'
 
 export async function importPackageFromZip(zipFile: File): Promise<{

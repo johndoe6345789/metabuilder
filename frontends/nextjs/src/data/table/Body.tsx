@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
 import { TableBody, TableCell, TableRow } from '@mui/material'
+import type { ReactNode } from 'react'
 
 import { EmptyState } from './EmptyState'
 import type { DataTableColumn } from './types'

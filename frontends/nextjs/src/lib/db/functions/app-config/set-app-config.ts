@@ -3,8 +3,8 @@
  * Saves the application configuration to database
  */
 
-import { prisma } from '../../prisma'
 import type { AppConfiguration } from '../../../types/level-types'
+import { prisma } from '../../prisma'
 
 /**
  * Set the application configuration

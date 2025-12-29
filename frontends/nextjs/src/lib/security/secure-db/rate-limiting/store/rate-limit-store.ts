@@ -64,4 +64,4 @@ export function resetRateLimitConfig(): void {
 
 const rateLimitMap = new Map<string, number[]>()
 
-export { DEFAULT_RATE_LIMIT_WINDOW_MS, DEFAULT_MAX_REQUESTS_PER_WINDOW, rateLimitMap }
+export { DEFAULT_MAX_REQUESTS_PER_WINDOW, DEFAULT_RATE_LIMIT_WINDOW_MS, rateLimitMap }

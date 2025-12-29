@@ -1,18 +1,18 @@
 'use client'
 
-import { forwardRef, ReactNode, useState } from 'react'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
+  Box,
+  Collapse,
+  Divider,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Collapse,
-  Box,
-  Divider,
 } from '@mui/material'
-import ExpandLessIcon from '@mui/icons-material/ExpandLess'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { forwardRef, ReactNode, useState } from 'react'
 
 export interface NavGroupProps {
   label: string

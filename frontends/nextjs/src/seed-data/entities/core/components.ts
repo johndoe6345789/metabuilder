@@ -1,5 +1,5 @@
-import { Database } from '@/lib/database'
 import type { ComponentConfig } from '@/lib/database'
+import { Database } from '@/lib/database'
 
 export async function initializeComponents() {
   const existingConfigs = await Database.getComponentConfigs()

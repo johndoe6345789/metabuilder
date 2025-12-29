@@ -1,6 +1,7 @@
 import JSZip from 'jszip'
-import type { AssetFile, ExportPackageOptions, PackageContent, PackageManifest } from './types'
+
 import { generateReadme } from './generate-readme'
+import type { AssetFile, ExportPackageOptions, PackageContent, PackageManifest } from './types'
 
 export async function exportPackageAsZip(
   manifest: PackageManifest,

@@ -1,3 +1,5 @@
+import { MagnifyingGlass } from '@phosphor-icons/react'
+
 import {
   Input,
   Label,
@@ -8,7 +10,6 @@ import {
   SelectValue,
 } from '@/components/ui'
 import type { FieldSchema, ModelSchema } from '@/lib/schema-types'
-import { MagnifyingGlass } from '@phosphor-icons/react'
 
 interface ModelFiltersProps {
   model: ModelSchema

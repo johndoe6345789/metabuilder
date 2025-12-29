@@ -1,11 +1,13 @@
-import { useState } from 'react'
 import { Box, Card, CardContent, CardHeader, Chip, Grid, Typography } from '@mui/material'
+import { useState } from 'react'
 import { toast } from 'sonner'
+
 import { captureDomSnapshot } from '@/lib/screenshot/capture-dom-snapshot'
 import { requestScreenshotAnalysis } from '@/lib/screenshot/request-screenshot-analysis'
 import type { ScreenshotAnalysisResult } from '@/lib/screenshot/types'
-import { UploadSection } from './screenshot-analyzer/UploadSection'
+
 import { ResultPanel } from './screenshot-analyzer/ResultPanel'
+import { UploadSection } from './screenshot-analyzer/UploadSection'
 
 export function ScreenshotAnalyzer() {
   const [isCapturing, setIsCapturing] = useState(false)

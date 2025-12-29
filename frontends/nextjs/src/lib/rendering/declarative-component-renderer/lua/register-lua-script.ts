@@ -1,5 +1,5 @@
-import type { LuaScriptDefinition } from './types'
 import type { DeclarativeRendererState } from './renderer-state'
+import type { LuaScriptDefinition } from './types'
 
 export function registerLuaScript(
   state: DeclarativeRendererState,

@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
 import { Chip, ChipProps, SxProps, Theme } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 /** Badge visual style variants */
 export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline'

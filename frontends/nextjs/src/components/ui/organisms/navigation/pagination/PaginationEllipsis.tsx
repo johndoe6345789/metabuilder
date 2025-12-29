@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { Box } from '@mui/material'
+import { forwardRef } from 'react'
 
 const PaginationEllipsis = forwardRef<HTMLSpanElement, Record<string, never>>((props, ref) => {
   return (

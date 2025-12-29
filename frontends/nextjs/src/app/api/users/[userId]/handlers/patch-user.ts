@@ -3,12 +3,14 @@
  * @description PATCH handler for updating a user
  */
 
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { dbalUpdateUser, initializeDBAL } from '@/lib/dbal/core/client/database-dbal.server'
-import { hashPassword } from '@/lib/db/hash-password'
-import { setCredential } from '@/lib/db/credentials/set-credential'
+import { NextResponse } from 'next/server'
+
 import { requireDBALApiKey } from '@/lib/api/require-dbal-api-key'
+import { setCredential } from '@/lib/db/credentials/set-credential'
+import { hashPassword } from '@/lib/db/hash-password'
+import { dbalUpdateUser, initializeDBAL } from '@/lib/dbal/core/client/database-dbal.server'
+
 import { normalizeRole, readJson } from '../utils/request-helpers'
 
 interface RouteParams {

@@ -1,6 +1,8 @@
-import { describe, it, expect } from 'vitest'
-import { formatError } from './format-error'
+import { describe, expect,it } from 'vitest'
+
 import { DBALError, DBALErrorCode } from '@/dbal/development/src/core/foundation/errors'
+
+import { formatError } from './format-error'
 
 describe('formatError', () => {
   it.each([

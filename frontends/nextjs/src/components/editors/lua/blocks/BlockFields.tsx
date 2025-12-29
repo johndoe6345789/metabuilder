@@ -1,6 +1,7 @@
 import { Box, MenuItem, TextField, Typography } from '@mui/material'
-import type { BlockDefinition, LuaBlock } from '../types'
+
 import styles from '../LuaBlocksEditor.module.scss'
+import type { BlockDefinition, LuaBlock } from '../types'
 
 interface BlockFieldsProps {
   block: LuaBlock

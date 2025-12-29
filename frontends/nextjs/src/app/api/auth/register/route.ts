@@ -1,13 +1,14 @@
 import { randomUUID } from 'crypto'
 import { NextResponse } from 'next/server'
+
 import { readJson } from '@/lib/api/read-json'
-import { addUser } from '@/lib/db/users/add-user'
-import { getUserByEmail, getUserByUsername } from '@/lib/db/auth'
-import { hashPassword } from '@/lib/db/hash-password'
-import { setCredential } from '@/lib/db/credentials/set-credential'
-import { createSession } from '@/lib/db/sessions/create-session'
 import { DEFAULT_SESSION_TTL_MS } from '@/lib/auth/session-constants'
 import { setSessionCookie } from '@/lib/auth/set-session-cookie'
+import { getUserByEmail, getUserByUsername } from '@/lib/db/auth'
+import { setCredential } from '@/lib/db/credentials/set-credential'
+import { hashPassword } from '@/lib/db/hash-password'
+import { createSession } from '@/lib/db/sessions/create-session'
+import { addUser } from '@/lib/db/users/add-user'
 import type { UserRole } from '@/lib/level-types'
 
 interface RegisterPayload {

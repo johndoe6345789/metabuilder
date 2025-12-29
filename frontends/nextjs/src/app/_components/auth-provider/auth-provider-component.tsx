@@ -1,12 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { User } from '@/lib/level-types'
+import { useEffect, useState } from 'react'
+
 import { fetchSession } from '@/lib/auth/api/fetch-session'
 import { login as loginRequest } from '@/lib/auth/api/login'
 import { logout as logoutRequest } from '@/lib/auth/api/logout'
 import { register as registerRequest } from '@/lib/auth/api/register'
+import type { User } from '@/lib/level-types'
+
 import { AuthContext } from './auth-context'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {

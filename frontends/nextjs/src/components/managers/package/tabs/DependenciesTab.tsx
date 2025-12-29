@@ -1,7 +1,8 @@
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
-import type { PackageCatalogData } from '@/lib/packages/core/package-catalog'
-import type { InstalledPackage } from '@/lib/package-types'
 import { CheckCircle, WarningCircle } from '@phosphor-icons/react'
+
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import type { InstalledPackage } from '@/lib/package-types'
+import type { PackageCatalogData } from '@/lib/packages/core/package-catalog'
 
 interface DependenciesTabProps {
   dependencies: string[]

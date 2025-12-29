@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'sonner'
+
 import { Database } from '@/lib/database'
 import type { ErrorLog } from '@/lib/db/error-logs'
 import type { User } from '@/lib/level-types'
-import { toast } from 'sonner'
 
 export interface ErrorLogStats {
   total: number

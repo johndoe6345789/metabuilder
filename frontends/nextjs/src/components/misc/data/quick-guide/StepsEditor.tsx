@@ -1,4 +1,6 @@
+import { ArrowCounterClockwise, ListNumbers, Plus, Trash } from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
+
 import {
   Badge,
   Button,
@@ -11,7 +13,6 @@ import {
   Label,
   Textarea,
 } from '@/components/ui'
-import { ArrowCounterClockwise, ListNumbers, Plus, Trash } from '@phosphor-icons/react'
 
 export interface GuideStep {
   id: string

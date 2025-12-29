@@ -1,6 +1,6 @@
+import { Octokit } from 'octokit'
 import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
-import { Octokit } from 'octokit'
 
 export interface WorkflowRun {
   id: number

@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
-import { Separator, Button } from '@/components/ui'
-import type { ComponentInstance } from '@/lib/types/builder-types'
-import { componentCatalog } from '@/lib/component-catalog'
 import { Trash } from '@phosphor-icons/react'
+import { useEffect,useState } from 'react'
+
 import { CssClassBuilder } from '@/components/CssClassBuilder'
+import { Button,Separator } from '@/components/ui'
+import { componentCatalog } from '@/lib/component-catalog'
 import { Database, DropdownConfig } from '@/lib/database'
+import type { ComponentInstance } from '@/lib/types/builder-types'
+
 import { PropertyPanels } from './components/PropertyPanels'
 
 interface PropertyInspectorProps {

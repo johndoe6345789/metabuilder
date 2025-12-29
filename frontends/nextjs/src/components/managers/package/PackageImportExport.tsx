@@ -1,15 +1,17 @@
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
+
 import type { PackageManifest } from '@/lib/package-types'
 import type { ExportPackageOptions } from '@/lib/packages/core/package-export'
+
 import { createFileSelector } from './import-export/createFileSelector'
+import { defaultExportOptions, defaultManifest } from './import-export/defaults'
 import { executePackageImport } from './import-export/executePackageImport'
+import { ExportDialog } from './import-export/ExportDialog'
 import { generatePackageExport } from './import-export/generatePackageExport'
 import { generateSnapshotExport } from './import-export/generateSnapshotExport'
-import { validateManifest } from './import-export/validateManifest'
-import { defaultExportOptions, defaultManifest } from './import-export/defaults'
 import { ImportDialog } from './import-export/ImportDialog'
-import { ExportDialog } from './import-export/ExportDialog'
+import { validateManifest } from './import-export/validateManifest'
 
 interface PackageImportExportProps {
   open: boolean

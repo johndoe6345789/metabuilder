@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import { NavigationBar } from '../../level1/NavigationBar'
 import { AppFooter } from '../../shared/AppFooter'
 import { CredentialsSection } from '../level1/CredentialsSection'

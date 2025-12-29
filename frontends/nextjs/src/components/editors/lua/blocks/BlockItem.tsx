@@ -1,10 +1,11 @@
-import type { MouseEvent } from 'react'
-import { Box, IconButton, Tooltip, Typography } from '@mui/material'
 import { ArrowDownward, ArrowUpward, ContentCopy, Delete as DeleteIcon } from '@mui/icons-material'
-import type { BlockDefinition, BlockSlot, LuaBlock } from '../types'
-import { BlockSection } from './BlockSection'
-import { BlockFields } from './BlockFields'
+import { Box, IconButton, Tooltip, Typography } from '@mui/material'
+import type { MouseEvent } from 'react'
+
 import styles from '../LuaBlocksEditor.module.scss'
+import type { BlockDefinition, BlockSlot, LuaBlock } from '../types'
+import { BlockFields } from './BlockFields'
+import { BlockSection } from './BlockSection'
 
 interface BlockItemProps {
   block: LuaBlock

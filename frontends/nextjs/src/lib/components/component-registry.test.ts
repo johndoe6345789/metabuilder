@@ -1,7 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { ComponentRegistry } from '@/lib/component-registry'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { componentCatalog } from '@/lib/component-catalog'
 import type { ComponentTypeDefinition } from '@/lib/component-registry'
+import { ComponentRegistry } from '@/lib/component-registry'
 
 const buildComponent = (
   type: string,

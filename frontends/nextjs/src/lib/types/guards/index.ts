@@ -1,5 +1,5 @@
+export { getErrorMessage } from './get-error-message'
+export { hasProperty } from './has-property'
 export { isError } from './is-error'
 export { isErrorLike } from './is-error-like'
 export { isJsonValue } from './is-json-value'
-export { getErrorMessage } from './get-error-message'
-export { hasProperty } from './has-property'

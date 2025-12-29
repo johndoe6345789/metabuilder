@@ -1,5 +1,5 @@
+export { addComment } from './crud/add-comment'
+export { deleteComment } from './crud/delete-comment'
 export { getComments } from './crud/get-comments'
 export { setComments } from './crud/set-comments'
-export { addComment } from './crud/add-comment'
 export { updateComment } from './crud/update-comment'
-export { deleteComment } from './crud/delete-comment'

@@ -1,12 +1,12 @@
 'use client'
 
-import { forwardRef } from 'react'
 import {
-  LinearProgress,
-  LinearProgressProps,
   CircularProgress,
   CircularProgressProps,
+  LinearProgress,
+  LinearProgressProps,
 } from '@mui/material'
+import { forwardRef } from 'react'
 
 /**
  * Props for the Progress component

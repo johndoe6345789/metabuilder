@@ -1,7 +1,7 @@
 import type { Workflow } from '../types/level-types'
+import { executeWorkflow } from './execute-workflow'
 import type { WorkflowExecutionContext } from './workflow-execution-context'
 import type { WorkflowExecutionResult } from './workflow-execution-result'
-import { executeWorkflow } from './execute-workflow'
 
 /**
  * Convenience instance method for legacy workflow execution

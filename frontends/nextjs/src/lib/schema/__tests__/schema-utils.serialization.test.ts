@@ -1,4 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { beforeEach,describe, expect, it } from 'vitest'
+
+import type { FieldSchema, ModelSchema } from '@/lib/schema-types'
 import {
   createEmptyRecord,
   filterRecords,
@@ -10,7 +12,7 @@ import {
   getModelLabelPlural,
   sortRecords,
 } from '@/lib/schema-utils'
-import type { FieldSchema, ModelSchema } from '@/lib/schema-types'
+
 import { createMockField, createMockModel } from './schema-utils.fixtures'
 
 describe('schema-utils serialization', () => {

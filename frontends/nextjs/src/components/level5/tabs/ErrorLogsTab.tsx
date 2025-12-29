@@ -1,13 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+
 import { Card, CardContent, CardHeader } from '@/components/ui'
 import type { User } from '@/lib/level-types'
+
+import { ClearLogsDialog } from './error-logs/ClearLogsDialog'
 import { clearErrorLogs, deleteErrorLog, markErrorResolved } from './error-logs/errorLogActions'
 import { ErrorLogControls } from './error-logs/ErrorLogControls'
 import { ErrorLogList } from './error-logs/ErrorLogList'
 import { ErrorLogStats } from './error-logs/ErrorLogStats'
-import { ClearLogsDialog } from './error-logs/ClearLogsDialog'
 import { filterLogs, useErrorLogFilters } from './error-logs/useErrorLogFilters'
 import { useErrorLogs } from './error-logs/useErrorLogs'
 

@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { Avatar as MuiAvatar, AvatarProps as MuiAvatarProps } from '@mui/material'
+import { forwardRef } from 'react'
 
 /**
  * Props for the Avatar component
@@ -44,4 +44,4 @@ const AvatarFallback = ({ children }: AvatarFallbackProps) => {
   return <>{children}</>
 }
 
-export { Avatar, AvatarImage, AvatarFallback }
+export { Avatar, AvatarFallback,AvatarImage }

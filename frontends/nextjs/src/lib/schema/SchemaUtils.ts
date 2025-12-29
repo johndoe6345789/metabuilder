@@ -1,8 +1,9 @@
 import type { FieldSchema, ModelSchema, SchemaConfig } from '@/lib/schema-types'
+
 import {
   createEmptyRecord,
-  findModel,
   filterRecords,
+  findModel,
   generateId,
   getDefaultValue,
   getFieldLabel,

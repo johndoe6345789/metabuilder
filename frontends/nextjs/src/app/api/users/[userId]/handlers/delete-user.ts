@@ -3,10 +3,11 @@
  * @description DELETE handler for removing a user
  */
 
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { dbalDeleteUser, initializeDBAL } from '@/lib/dbal/core/client/database-dbal.server'
+import { NextResponse } from 'next/server'
+
 import { requireDBALApiKey } from '@/lib/api/require-dbal-api-key'
+import { dbalDeleteUser, initializeDBAL } from '@/lib/dbal/core/client/database-dbal.server'
 
 interface RouteParams {
   params: {

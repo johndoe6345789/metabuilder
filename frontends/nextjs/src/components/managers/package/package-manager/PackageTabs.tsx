@@ -1,6 +1,8 @@
+import { Package } from '@phosphor-icons/react'
+
 import { ScrollArea, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import type { InstalledPackage, PackageManifest } from '@/lib/package-types'
-import { Package } from '@phosphor-icons/react'
+
 import { PackageCard } from './PackageCard'
 
 interface PackageTabsProps {

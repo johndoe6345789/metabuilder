@@ -7,6 +7,7 @@ import { fetchSession } from '@/lib/auth/api/fetch-session'
 import { login as loginRequest } from '@/lib/auth/api/login'
 import { logout as logoutRequest } from '@/lib/auth/api/logout'
 import { register as registerRequest } from '@/lib/auth/api/register'
+
 import type { AuthState } from './auth-types'
 import { mapUserToAuthUser } from './utils/map-user'
 

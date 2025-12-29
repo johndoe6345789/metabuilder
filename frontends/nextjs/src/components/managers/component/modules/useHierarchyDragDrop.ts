@@ -1,8 +1,9 @@
 import type React from 'react'
 import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
+
 import { componentCatalog } from '@/lib/components/component-catalog'
-import { Database, type ComponentNode } from '@/lib/database'
+import { type ComponentNode,Database } from '@/lib/database'
 
 interface UseHierarchyDragDropProps {
   hierarchy: Record<string, ComponentNode>

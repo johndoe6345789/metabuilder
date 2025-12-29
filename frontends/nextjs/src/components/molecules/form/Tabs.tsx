@@ -1,13 +1,13 @@
 'use client'
 
-import { forwardRef } from 'react'
 import {
-  Tabs as MuiTabs,
-  TabsProps as MuiTabsProps,
+  Box,
   Tab as MuiTab,
   TabProps as MuiTabProps,
-  Box,
+  Tabs as MuiTabs,
+  TabsProps as MuiTabsProps,
 } from '@mui/material'
+import { forwardRef } from 'react'
 
 // Tabs container
 export interface TabsProps extends Omit<MuiTabsProps, 'onChange'> {
@@ -111,4 +111,4 @@ const TabsContent = forwardRef<HTMLDivElement, TabsContentProps>(
 )
 TabsContent.displayName = 'TabsContent'
 
-export { Tabs, TabsList, TabsTrigger, TabsContent }
+export { Tabs, TabsContent,TabsList, TabsTrigger }

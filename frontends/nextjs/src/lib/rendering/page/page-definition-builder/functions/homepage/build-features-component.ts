@@ -1,4 +1,5 @@
 import type { ComponentInstance } from '@/lib/rendering/page/builder-types'
+
 import { buildFeatureCard } from './build-feature-card'
 
 const FEATURE_CARDS: Array<{

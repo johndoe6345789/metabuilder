@@ -1,7 +1,7 @@
 // Central UI barrel exports
 export * from './core'
-export * from './overlay'
 export * from './data'
+export * from './overlay'
 
 // Preserve category-level entrypoints
 export * from './atoms'

@@ -2,47 +2,47 @@
 // These are the smallest, indivisible UI components that form the foundation
 
 // Controls
-export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './controls/Button'
+export { Button, type ButtonProps, type ButtonSize,type ButtonVariant } from './controls/Button'
 export { Checkbox, type CheckboxProps } from './controls/Checkbox'
-export { Switch, type SwitchProps } from './controls/Switch'
 export { Radio, type RadioProps } from './controls/Radio'
+export { Switch, type SwitchProps } from './controls/Switch'
 
 // Inputs
 export { Input, type InputProps } from './inputs/Input'
+export { Select, type SelectOption,type SelectProps } from './inputs/Select'
 export { TextArea, type TextAreaProps } from './inputs/TextArea'
-export { Select, type SelectProps, type SelectOption } from './inputs/Select'
 
 // Display
-export { Label, type LabelProps } from './display/Label'
-export { Badge, type BadgeProps, type BadgeVariant } from './display/Badge'
 export {
   Avatar,
-  AvatarGroup,
   AvatarFallback,
+  AvatarGroup,
   AvatarImage,
   type AvatarProps,
   type AvatarSize,
 } from './display/Avatar'
+export { Badge, type BadgeProps, type BadgeVariant } from './display/Badge'
+export { Icon, type IconName, type IconProps, type IconSize } from './display/Icon'
 export { IconButton, type IconButtonProps, type IconButtonSize } from './display/IconButton'
-export { Icon, type IconProps, type IconName, type IconSize } from './display/Icon'
+export { Label, type LabelProps } from './display/Label'
 export { Link, type LinkProps } from './display/Link'
 export {
   Text,
+  type TextAlign,
   type TextProps,
   type TextVariant,
   type TextWeight,
-  type TextAlign,
 } from './display/Text'
 
 // Feedback
-export { Skeleton, type SkeletonProps } from './feedback/Skeleton'
+export { CircularProgress, Progress, type ProgressProps } from './feedback/Progress'
 export { Separator, type SeparatorProps } from './feedback/Separator'
-export { Progress, CircularProgress, type ProgressProps } from './feedback/Progress'
+export { Skeleton, type SkeletonProps } from './feedback/Skeleton'
+export { Spinner, type SpinnerProps, type SpinnerSize } from './feedback/Spinner'
 export {
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
-  TooltipProvider,
   type TooltipProps,
+  TooltipProvider,
+  TooltipTrigger,
 } from './feedback/Tooltip'
-export { Spinner, type SpinnerProps, type SpinnerSize } from './feedback/Spinner'

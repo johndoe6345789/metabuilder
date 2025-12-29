@@ -1,4 +1,6 @@
 'use client'
+import { Broom, Warning } from '@phosphor-icons/react'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui'
 import type { User } from '@/lib/level-types'
-import { Broom, Warning } from '@phosphor-icons/react'
+
 import { ErrorLogTable } from './modules/ErrorLogTable'
 import { StatsGrid } from './modules/StatsGrid'
 import { useErrorLogActions } from './modules/useErrorLogActions'

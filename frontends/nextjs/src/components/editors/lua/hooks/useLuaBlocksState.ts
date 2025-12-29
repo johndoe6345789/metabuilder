@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
+
 import type { LuaScript } from '@/lib/level-types'
+
 import type { LuaBlock, LuaBlockType } from '../types'
 import { createLuaBlocksActions, type MenuTarget } from './useLuaBlocksState/actions'
 import { selectActiveBlocks, selectSelectedScript } from './useLuaBlocksState/selectors'

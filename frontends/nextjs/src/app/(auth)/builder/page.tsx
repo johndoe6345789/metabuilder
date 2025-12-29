@@ -1,10 +1,10 @@
 'use client'
 
-import { Level4 } from '@/components/Level4'
 import { AuthGate } from '@/components/auth/AuthGate'
 import { PageLoader } from '@/components/auth/PageLoader'
-import { useResolvedUser } from '@/hooks/useResolvedUser'
+import { Level4 } from '@/components/Level4'
 import { useLevelRouting } from '@/hooks/useLevelRouting'
+import { useResolvedUser } from '@/hooks/useResolvedUser'
 
 export default function BuilderPage() {
   const { user, isLoading } = useResolvedUser()

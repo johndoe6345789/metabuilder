@@ -1,6 +1,7 @@
+import { toast } from 'sonner'
+
 import { Database } from '@/lib/database'
 import type { User } from '@/lib/level-types'
-import { toast } from 'sonner'
 
 export async function markErrorResolved(id: string, reload: () => Promise<void>, user?: User) {
   try {

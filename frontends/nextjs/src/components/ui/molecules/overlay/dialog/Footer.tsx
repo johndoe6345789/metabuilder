@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
 import { DialogActions as MuiDialogActions } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 export interface DialogFooterProps {
   children: ReactNode

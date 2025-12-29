@@ -4,9 +4,10 @@
  */
 
 import * as fengari from 'fengari-web'
-import type { LuaExecutionContext, LuaExecutionResult } from '../types'
-import { pushToLua } from '../converters/push-to-lua'
+
 import { fromLua } from '../converters/from-lua'
+import { pushToLua } from '../converters/push-to-lua'
+import type { LuaExecutionContext, LuaExecutionResult } from '../types'
 
 const lua = fengari.lua
 const lauxlib = fengari.lauxlib

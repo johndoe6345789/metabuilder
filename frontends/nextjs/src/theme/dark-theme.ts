@@ -1,12 +1,13 @@
 'use client'
 export * from './modes/dark-theme'
 
-import { createTheme, alpha, type Shadows } from '@mui/material/styles'
+import { alpha, createTheme, type Shadows } from '@mui/material/styles'
+
 import { colors } from './colors'
+import { getComponentOverrides } from './components'
 import { fonts } from './fonts'
 import { layout } from './layout'
 import { typography } from './typography'
-import { getComponentOverrides } from './components'
 
 const custom = {
   fonts,

@@ -1,10 +1,10 @@
 'use client'
 
-import { Level5 } from '@/components/Level5'
 import { AuthGate } from '@/components/auth/AuthGate'
 import { PageLoader } from '@/components/auth/PageLoader'
-import { useResolvedUser } from '@/hooks/useResolvedUser'
+import { Level5 } from '@/components/Level5'
 import { useLevelRouting } from '@/hooks/useLevelRouting'
+import { useResolvedUser } from '@/hooks/useResolvedUser'
 
 export default function SuperGodPage() {
   const { user, isLoading } = useResolvedUser()

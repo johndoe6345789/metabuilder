@@ -1,6 +1,7 @@
+import { Eye } from '@phosphor-icons/react'
+
 import { Button } from '@/components/ui'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
-import { Eye } from '@phosphor-icons/react'
 
 interface PreviewTabProps {
   onPreview: (level: number) => void

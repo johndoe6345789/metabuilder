@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
 import { Stack, TableCell, TableRow, Typography } from '@mui/material'
+import type { ReactNode } from 'react'
 
 /**
  * Props for the {@link EmptyState} table row.

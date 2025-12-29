@@ -1,16 +1,5 @@
 'use client'
 
-import { CommandDialogRoot, CommandInput } from './CommandDialogShell'
-import {
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from './CommandList'
-import { useCommandShortcut } from './useCommandShortcuts'
-
 import type {
   CommandDialogProps,
   CommandEmptyProps,
@@ -22,6 +11,16 @@ import type {
   CommandListProps,
   CommandShortcutProps,
 } from './command.types'
+import { CommandDialogRoot, CommandInput } from './CommandDialogShell'
+import {
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from './CommandList'
+import { useCommandShortcut } from './useCommandShortcuts'
 
 const CommandDialog = Object.assign(CommandDialogRoot, {
   Input: CommandInput,

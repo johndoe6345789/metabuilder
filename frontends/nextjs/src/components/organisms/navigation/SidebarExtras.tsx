@@ -1,8 +1,8 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
-import { Box, Divider, IconButton } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
+import { Box, Divider, IconButton } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 // SidebarSeparator
 const SidebarSeparator = forwardRef<HTMLHRElement>((props, ref) => {
@@ -54,4 +54,4 @@ SidebarRail.displayName = 'SidebarRail'
 const SidebarProvider = ({ children }: { children: ReactNode }) => <>{children}</>
 SidebarProvider.displayName = 'SidebarProvider'
 
-export { SidebarSeparator, SidebarTrigger, SidebarRail, SidebarProvider }
+export { SidebarProvider,SidebarRail, SidebarSeparator, SidebarTrigger }

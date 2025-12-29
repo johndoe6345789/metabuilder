@@ -1,10 +1,12 @@
 import { useMemo } from 'react'
+
 import { Button } from '@/components/ui'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Textarea } from '@/components/ui'
+import type { Comment, User } from '@/lib/level-types'
+
 import { CommentsList } from '../../level2/CommentsList'
 import { ChallengePanel } from '../sections/ChallengePanel'
-import type { Comment, User } from '@/lib/level-types'
 
 interface CommentsTabContentProps {
   comments: Comment[]

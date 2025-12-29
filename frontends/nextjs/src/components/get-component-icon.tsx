@@ -1,5 +1,3 @@
-import type { ComponentType, ReactElement } from 'react'
-import type { SvgIconProps } from '@mui/material/SvgIcon'
 import {
   AccountCircle,
   Article,
@@ -23,6 +21,8 @@ import {
   ViewStream,
   WarningAmber,
 } from '@mui/icons-material'
+import type { SvgIconProps } from '@mui/material/SvgIcon'
+import type { ComponentType, ReactElement } from 'react'
 
 const iconMap: Record<string, ComponentType<SvgIconProps>> = {
   Article,

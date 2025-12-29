@@ -1,5 +1,5 @@
-import { Button, Stack, Typography } from '@mui/material'
 import LockRoundedIcon from '@mui/icons-material/LockRounded'
+import { Button, Stack, Typography } from '@mui/material'
 
 interface AccessDeniedProps {
   title?: string

@@ -1,6 +1,7 @@
-import type { PageDefinition } from '@/lib/rendering/page/page-renderer'
-import type { ComponentInstance } from './builder-types'
 import { Database } from '@/lib/database'
+import type { PageDefinition } from '@/lib/rendering/page/page-renderer'
+
+import type { ComponentInstance } from './builder-types'
 
 export async function initializeDefaultPages(): Promise<void> {
   const level1Homepage = this.buildLevel1Homepage()

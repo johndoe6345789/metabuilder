@@ -1,5 +1,5 @@
-import type { DeclarativeComponentConfig } from '../types'
 import { getDeclarativeRenderer } from '../renderer/get-declarative-renderer'
+import type { DeclarativeComponentConfig } from '../types'
 
 export function loadPackageComponents(packageContent: any) {
   const renderer = getDeclarativeRenderer()

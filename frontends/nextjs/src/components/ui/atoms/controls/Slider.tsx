@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { Slider as MuiSlider, SliderProps as MuiSliderProps } from '@mui/material'
+import { forwardRef } from 'react'
 
 /**
  * Props for the Slider component

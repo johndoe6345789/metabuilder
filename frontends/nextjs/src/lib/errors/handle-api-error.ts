@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
+
 import { DBALError } from '@/dbal/development/src/core/foundation/errors'
+
 import { formatError } from './format-error'
 
 export interface APIErrorResponse {

@@ -1,5 +1,6 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui'
 import type { AppConfiguration, User } from '@/lib/level-types'
+
 import { level4TabsConfig } from './tabs/config'
 import { TabContent } from './tabs/TabContent'
 

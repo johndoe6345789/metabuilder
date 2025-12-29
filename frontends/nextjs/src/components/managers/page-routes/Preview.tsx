@@ -1,5 +1,6 @@
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Eye, LockKey } from '@phosphor-icons/react'
+
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import type { PageConfig } from '@/lib/level-types'
 
 interface PreviewProps {

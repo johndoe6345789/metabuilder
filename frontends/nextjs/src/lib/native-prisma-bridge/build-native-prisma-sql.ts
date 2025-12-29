@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client'
+
 import { splitSqlTemplate } from './split-sql-template'
 import { toTemplateStrings } from './to-template-strings'
 

@@ -1,6 +1,10 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
+import CloseIcon from '@mui/icons-material/Close'
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import {
   DialogContent,
   DialogContentText,
@@ -8,11 +12,7 @@ import {
   IconButton,
   Typography,
 } from '@mui/material'
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
-import CloseIcon from '@mui/icons-material/Close'
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import WarningAmberIcon from '@mui/icons-material/WarningAmber'
+import { forwardRef, ReactNode } from 'react'
 
 interface AlertDialogContentProps {
   children: ReactNode

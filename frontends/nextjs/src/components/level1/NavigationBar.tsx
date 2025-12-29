@@ -1,6 +1,7 @@
+import { List, ShieldCheck,User, X } from '@phosphor-icons/react'
 import Link from 'next/link'
+
 import { Button } from '@/components/ui'
-import { List, X, User, ShieldCheck } from '@phosphor-icons/react'
 
 interface NavigationBarProps {
   menuOpen: boolean

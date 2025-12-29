@@ -1,17 +1,18 @@
 'use client'
 
-import { forwardRef } from 'react'
-import {
-  Box,
-  IconButton,
-  Typography,
-  Select,
-  MenuItem,
-  FormControl,
-  SelectChangeEvent,
-} from '@mui/material'
 import FirstPageIcon from '@mui/icons-material/FirstPage'
 import LastPageIcon from '@mui/icons-material/LastPage'
+import {
+  Box,
+  FormControl,
+  IconButton,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Typography,
+} from '@mui/material'
+import { forwardRef } from 'react'
+
 import { NextIcon, PreviousIcon } from './paginationUtils'
 
 interface TablePaginationProps {

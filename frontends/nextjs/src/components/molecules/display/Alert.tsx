@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
+import CloseIcon from '@mui/icons-material/Close'
 import {
   Alert as MuiAlert,
   AlertProps as MuiAlertProps,
@@ -10,7 +10,7 @@ import {
   SxProps,
   Theme,
 } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
+import { forwardRef, ReactNode } from 'react'
 
 export type AlertVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info'
 
@@ -78,4 +78,4 @@ const AlertDescription = forwardRef<HTMLDivElement, { children: ReactNode; class
 )
 AlertDescription.displayName = 'AlertDescription'
 
-export { Alert, AlertTitle, AlertDescription }
+export { Alert, AlertDescription,AlertTitle }

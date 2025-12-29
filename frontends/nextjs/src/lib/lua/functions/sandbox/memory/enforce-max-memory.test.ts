@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest'
-import type { SandboxedLuaEngineState } from './types'
+import { describe, expect,it } from 'vitest'
+
 import { enforceMaxMemory } from './enforce-max-memory'
+import type { SandboxedLuaEngineState } from './types'
 
 const createState = (usageBytes: number, maxMemory: number): SandboxedLuaEngineState =>
   ({

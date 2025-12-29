@@ -1,3 +1,5 @@
+import { Broom } from '@phosphor-icons/react'
+
 import {
   Badge,
   Button,
@@ -9,9 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui'
-import type { ErrorLevelFilter, ResolutionFilter } from './useErrorLogFilters'
 import type { User } from '@/lib/level-types'
-import { Broom } from '@phosphor-icons/react'
+
+import type { ErrorLevelFilter, ResolutionFilter } from './useErrorLogFilters'
 
 interface ErrorLogControlsProps {
   filterLevel: ErrorLevelFilter

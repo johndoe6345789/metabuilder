@@ -1,3 +1,5 @@
+import { Eye, LockKey, Pencil, Trash } from '@phosphor-icons/react'
+
 import {
   Badge,
   Button,
@@ -8,8 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
-import { Eye, LockKey, Pencil, Trash } from '@phosphor-icons/react'
-import type { PageConfig, AppLevel } from '@/lib/level-types'
+import type { AppLevel,PageConfig } from '@/lib/level-types'
 
 interface RoutesTableProps {
   pages: PageConfig[]

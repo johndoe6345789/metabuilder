@@ -1,4 +1,5 @@
 import * as fengari from 'fengari-web'
+
 import type { LuaEngineState } from '../types'
 
 const lua = fengari.lua

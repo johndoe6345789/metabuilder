@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 declare module '@/dbal/development/src/blob/tenant-aware-storage' {
-  import type { BlobStorage, BlobMetadata, BlobListResult } from '@/dbal/development/src/blob'
+  import type { BlobListResult,BlobMetadata, BlobStorage } from '@/dbal/development/src/blob'
   import type { InMemoryTenantManager } from '@/dbal/development/src/core/tenant-context'
 
   export class TenantAwareBlobStorage implements BlobStorage {

@@ -1,9 +1,10 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import {
-  generateScrambledPassword,
-  generateDeterministicScrambledPassword,
-  simulateEmailSend,
   DEFAULT_SMTP_CONFIG,
+  generateDeterministicScrambledPassword,
+  generateScrambledPassword,
+  simulateEmailSend,
 } from '@/lib/password-utils'
 
 const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'

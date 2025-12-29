@@ -1,4 +1,9 @@
 import {
+  CameraAlt as CameraIcon,
+  Download as DownloadIcon,
+  Refresh as RefreshIcon,
+} from '@mui/icons-material'
+import {
   Box,
   Button,
   Card,
@@ -7,11 +12,6 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material'
-import {
-  CameraAlt as CameraIcon,
-  Download as DownloadIcon,
-  Refresh as RefreshIcon,
-} from '@mui/icons-material'
 
 interface UploadSectionProps {
   isCapturing: boolean

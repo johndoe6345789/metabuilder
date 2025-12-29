@@ -1,4 +1,6 @@
+import { Trash } from '@phosphor-icons/react'
 import { useMemo } from 'react'
+
 import {
   Button,
   Table,
@@ -8,9 +10,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
-import { ChallengePanel } from '../sections/ChallengePanel'
-import { Trash } from '@phosphor-icons/react'
 import type { Comment, User } from '@/lib/level-types'
+
+import { ChallengePanel } from '../sections/ChallengePanel'
 
 interface CommentsTableProps {
   comments: Comment[]

@@ -1,12 +1,14 @@
-import type { JSX } from 'react'
 import {
   AccountTree as GitBranchIcon,
   ArrowForward as ArrowRightIcon,
   Code as CodeIcon,
   FlashOn as LightningIcon,
 } from '@mui/icons-material'
-import type { NodeTypeOption } from './types'
+import type { JSX } from 'react'
+
 import type { WorkflowNode } from '@/lib/level-types'
+
+import type { NodeTypeOption } from './types'
 
 export const DEFAULT_TEST_DATA = '{"example": "data"}'
 

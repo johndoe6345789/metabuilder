@@ -1,3 +1,6 @@
+import { ArrowDown, ArrowUp, Pencil, Trash } from '@phosphor-icons/react'
+import { ReactNode } from 'react'
+
 import {
   Badge,
   Button,
@@ -10,8 +13,6 @@ import {
 } from '@/components/ui'
 import type { FieldSchema, ModelSchema } from '@/lib/schema-types'
 import { getFieldLabel } from '@/lib/schema-utils'
-import { ArrowDown, ArrowUp, Pencil, Trash } from '@phosphor-icons/react'
-import { ReactNode } from 'react'
 
 interface ModelTableProps {
   model: ModelSchema

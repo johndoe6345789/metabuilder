@@ -1,7 +1,8 @@
 'use client'
 
-import type { CodegenManifest } from '@/lib/codegen/codegen-types'
 import { useCallback, useState } from 'react'
+
+import type { CodegenManifest } from '@/lib/codegen/codegen-types'
 
 export type CodegenRequest = {
   projectName: string

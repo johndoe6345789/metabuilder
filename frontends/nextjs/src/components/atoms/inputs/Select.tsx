@@ -1,12 +1,12 @@
 'use client'
 
-import { forwardRef } from 'react'
 import {
+  FormControl,
+  MenuItem,
   Select as MuiSelect,
   SelectProps as MuiSelectProps,
-  MenuItem,
-  FormControl,
 } from '@mui/material'
+import { forwardRef } from 'react'
 
 export interface SelectOption {
   value: string | number

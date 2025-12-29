@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { componentCatalog } from './component-catalog'
+
 import { dataComponents } from './catalog/data'
 import { displayComponents } from './catalog/display'
 import { feedbackComponents } from './catalog/feedback'
 import { inputComponents } from './catalog/inputs'
 import { layoutComponents } from './catalog/layout'
 import { typographyComponents } from './catalog/typography'
+import { componentCatalog } from './component-catalog'
 
 const catalogSections = [
   { name: 'layout', category: 'Layout', components: layoutComponents },

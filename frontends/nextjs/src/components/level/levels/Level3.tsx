@@ -1,19 +1,21 @@
 'use client'
 
+import { ChatCircle,Users } from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { Users, ChatCircle } from '@phosphor-icons/react'
 import { toast } from 'sonner'
-import { getUsers, deleteUser, updateUser } from '@/lib/db/users'
-import { getComments, deleteComment } from '@/lib/db/comments'
-import { AppHeader } from '../../shared/AppHeader'
-import type { User as UserType, Comment } from '@/lib/level-types'
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
+import { deleteComment,getComments } from '@/lib/db/comments'
+import { deleteUser, getUsers, updateUser } from '@/lib/db/users'
+import type { Comment,User as UserType } from '@/lib/level-types'
 import type { ModelSchema } from '@/lib/schema-types'
-import { IntroSection } from '../sections/IntroSection'
-import { Level3Stats } from '../level3/Level3Stats'
-import { UserTable } from '../level3/UserTable'
+
+import { AppHeader } from '../../shared/AppHeader'
 import { CommentsTable } from '../level3/CommentsTable'
 import { EditUserDialog } from '../level3/EditUserDialog'
+import { Level3Stats } from '../level3/Level3Stats'
+import { UserTable } from '../level3/UserTable'
+import { IntroSection } from '../sections/IntroSection'
 
 interface Level3Props {
   user: UserType

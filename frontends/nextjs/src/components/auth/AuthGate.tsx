@@ -1,12 +1,14 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { CircularProgress, Stack, Typography } from '@mui/material'
-import type { AppLevel, UserRole } from '@/lib/level-types'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+
+import { useAuth } from '@/hooks/useAuth'
 import { getRoleLevel } from '@/lib/auth/get-role-level'
 import { resolveAccessDecision } from '@/lib/auth/resolve-access-decision'
-import { useAuth } from '@/hooks/useAuth'
+import type { AppLevel, UserRole } from '@/lib/level-types'
+
 import { AccessDenied } from './AccessDenied'
 
 interface AuthGateProps {

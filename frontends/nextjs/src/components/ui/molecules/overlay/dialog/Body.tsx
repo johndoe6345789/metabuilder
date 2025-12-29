@@ -1,8 +1,8 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
-import { DialogContent as MuiDialogContent, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
+import { DialogContent as MuiDialogContent, IconButton } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 export interface DialogBodyProps {
   children: ReactNode

@@ -1,8 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import FolderIcon from '@mui/icons-material/Folder'
+import { fireEvent,render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+
 import { NavGroup } from './NavGroup'
 import { NavItem } from './NavItem'
-import FolderIcon from '@mui/icons-material/Folder'
 
 describe('NavGroup', () => {
   it.each([

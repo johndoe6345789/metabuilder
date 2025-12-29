@@ -1,11 +1,11 @@
 'use client'
 
-import { forwardRef } from 'react'
 import {
   Checkbox as MuiCheckbox,
   CheckboxProps as MuiCheckboxProps,
   FormControlLabel,
 } from '@mui/material'
+import { forwardRef } from 'react'
 
 /**
  * Props for the Checkbox component

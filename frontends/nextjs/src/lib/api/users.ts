@@ -1,5 +1,5 @@
-import type { User, UserRole } from '@/lib/level-types'
 import { requestJson } from '@/lib/api/request-json'
+import type { User, UserRole } from '@/lib/level-types'
 
 export async function listUsers(): Promise<User[]> {
   const payload = await requestJson<{ users: User[] }>('/api/users')

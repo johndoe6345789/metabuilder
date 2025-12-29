@@ -1,5 +1,5 @@
-import type { LuaScript } from '../../../types/level-types'
 import { normalizeAllowedGlobals } from '../../../lua/functions/sandbox/globals/normalize-allowed-globals'
+import type { LuaScript } from '../../../types/level-types'
 
 export function serializeLuaScript(script: LuaScript): Record<string, unknown> {
   const allowedGlobals = normalizeAllowedGlobals(script.allowedGlobals)

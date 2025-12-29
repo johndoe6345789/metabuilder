@@ -1,6 +1,6 @@
+import { getScrambledPassword } from '@/lib/auth'
 import { Database, hashPassword } from '@/lib/database'
 import type { User } from '@/lib/level-types'
-import { getScrambledPassword } from '@/lib/auth'
 
 export async function initializeUsers() {
   const existingUsers = await Database.getUsers({ scope: 'all' })

@@ -1,4 +1,5 @@
 import type { NextResponse } from 'next/server'
+
 import { AUTH_COOKIE_NAME } from './session-constants'
 
 export function clearSessionCookie(response: NextResponse): void {

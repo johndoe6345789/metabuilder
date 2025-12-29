@@ -1,8 +1,8 @@
 'use client'
 
-import { forwardRef } from 'react'
-import { SvgIconProps } from '@mui/material'
 import * as MuiIcons from '@mui/icons-material'
+import { SvgIconProps } from '@mui/material'
+import { forwardRef } from 'react'
 
 export type IconName = keyof typeof MuiIcons
 export type IconSize = 'small' | 'medium' | 'large' | 'inherit'

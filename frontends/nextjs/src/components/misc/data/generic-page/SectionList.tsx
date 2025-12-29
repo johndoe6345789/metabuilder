@@ -1,3 +1,5 @@
+import { ListNumbers, Plus, PushPinSimple, SquaresFour } from '@phosphor-icons/react'
+
 import {
   Badge,
   Button,
@@ -9,7 +11,6 @@ import {
   ScrollArea,
   Separator,
 } from '@/components/ui'
-import { ListNumbers, Plus, PushPinSimple, SquaresFour } from '@phosphor-icons/react'
 
 export interface PageSection {
   id: string

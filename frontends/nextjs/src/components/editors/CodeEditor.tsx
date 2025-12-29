@@ -1,4 +1,9 @@
+import Editor from '@monaco-editor/react'
+import { FloppyDisk, ShieldCheck, Warning,X } from '@phosphor-icons/react'
 import { useState } from 'react'
+import { toast } from 'sonner'
+
+import { SecurityWarningDialog } from '@/components/organisms/security/SecurityWarningDialog'
 import {
   Dialog,
   DialogContent,
@@ -8,11 +13,7 @@ import {
 } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Alert, AlertDescription } from '@/components/ui'
-import Editor from '@monaco-editor/react'
-import { FloppyDisk, X, ShieldCheck, Warning } from '@phosphor-icons/react'
 import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
-import { SecurityWarningDialog } from '@/components/organisms/security/SecurityWarningDialog'
-import { toast } from 'sonner'
 
 interface CodeEditorProps {
   open: boolean

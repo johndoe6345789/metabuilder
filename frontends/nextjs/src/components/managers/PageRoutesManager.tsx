@@ -1,4 +1,7 @@
+import { Plus } from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+
 import {
   Button,
   Card,
@@ -13,13 +16,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui'
-import { Plus } from '@phosphor-icons/react'
 import { Database } from '@/lib/database'
 import type { PageConfig } from '@/lib/level-types'
-import { toast } from 'sonner'
-import { RoutesTable } from './page-routes/RoutesTable'
+
 import { Preview } from './page-routes/Preview'
 import { RouteEditor, RouteFormData } from './page-routes/RouteEditor'
+import { RoutesTable } from './page-routes/RoutesTable'
 
 const defaultFormData: RouteFormData = {
   path: '/',

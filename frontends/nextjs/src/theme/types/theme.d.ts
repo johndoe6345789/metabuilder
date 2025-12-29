@@ -5,6 +5,6 @@
  * main declaration lightweight while still exposing all custom tokens.
  */
 
-export * from './palette'
-export * from './layout'
 export * from './components'
+export * from './layout'
+export * from './palette'

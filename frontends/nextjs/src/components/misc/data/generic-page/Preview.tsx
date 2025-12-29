@@ -1,3 +1,5 @@
+import { Eye, Layout, ShieldCheck } from '@phosphor-icons/react'
+
 import {
   Badge,
   Card,
@@ -8,7 +10,6 @@ import {
   Separator,
 } from '@/components/ui'
 import { PageDefinition } from '@/lib/rendering/page/page-renderer'
-import { Eye, Layout, ShieldCheck } from '@phosphor-icons/react'
 
 interface GenericPagePreviewProps {
   page: PageDefinition

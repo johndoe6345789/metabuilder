@@ -1,7 +1,7 @@
 import type { WorkflowNode } from '../types/level-types'
+import { executeLuaCode } from './execute-lua-code'
 import type { WorkflowExecutionContext } from './workflow-execution-context'
 import type { WorkflowState } from './workflow-state'
-import { executeLuaCode } from './execute-lua-code'
 
 /**
  * Execute a Lua script node

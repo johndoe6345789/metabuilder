@@ -1,13 +1,14 @@
 'use client'
 
+import type { AppLevel,User } from '@/lib/level-types'
+
 import { Level5Header } from '../../level5/header/Level5Header'
 import { NerdModeIDE } from '../../misc/NerdModeIDE'
-import type { User, AppLevel } from '@/lib/level-types'
+import { CreateTenantDialog } from '../level5/CreateTenantDialog'
+import { Level5Navigator } from '../level5/Level5Navigator'
+import { TransferConfirmDialog } from '../level5/TransferConfirmDialog'
 import { IntroSection } from '../sections/IntroSection'
 import { useLevel5State } from './hooks/useLevel5State'
-import { Level5Navigator } from '../level5/Level5Navigator'
-import { CreateTenantDialog } from '../level5/CreateTenantDialog'
-import { TransferConfirmDialog } from '../level5/TransferConfirmDialog'
 
 export interface Level5Props {
   user: User

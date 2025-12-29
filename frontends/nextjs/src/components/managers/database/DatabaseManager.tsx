@@ -1,22 +1,24 @@
+import {
+  ChatCircle,
+  Code,
+  Database as DatabaseIcon,
+  FileText,
+  Gear,
+  Key,
+  Lightning,
+  Table as TableIcon,
+  Tree,
+  Users,
+} from '@phosphor-icons/react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { toast } from 'sonner'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Database, DB_KEYS } from '@/lib/database'
 import type { ModelSchema } from '@/lib/types/schema-types'
-import { toast } from 'sonner'
-import {
-  Database as DatabaseIcon,
-  Users,
-  Key,
-  Lightning,
-  Code,
-  FileText,
-  Table as TableIcon,
-  ChatCircle,
-  Tree,
-  Gear,
-} from '@phosphor-icons/react'
+
 import { ActionToolbar } from './ActionToolbar'
-import { ConnectionForm, type ConnectionDetails } from './ConnectionForm'
+import { type ConnectionDetails,ConnectionForm } from './ConnectionForm'
 import { SchemaViewer } from './SchemaViewer'
 
 interface DatabaseStats {

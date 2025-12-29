@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
 import { Tooltip as MuiTooltip, TooltipProps as MuiTooltipProps } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 interface TooltipProviderProps {
   children: ReactNode
@@ -106,4 +106,4 @@ const SimpleTooltip = ({ title, children, placement = 'top' }: SimpleTooltipProp
   )
 }
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, SimpleTooltip }
+export { SimpleTooltip,Tooltip, TooltipContent, TooltipProvider, TooltipTrigger }

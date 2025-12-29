@@ -1,16 +1,16 @@
-import { LuaEngine } from '../core/LuaEngine'
+import { destroy } from '../../functions/sandbox/execution/destroy'
 import {
   executeWithSandbox,
   type SandboxedLuaResult,
 } from '../../functions/sandbox/execution/execute-with-sandbox'
+import { executeWithTimeout } from '../../functions/sandbox/execution/execute-with-timeout'
+import { setExecutionTimeout } from '../../functions/sandbox/execution/set-execution-timeout'
 import { disableDangerousFunctions } from '../../functions/sandbox/execution/setup/disable-dangerous-functions'
 import { setupSandboxedEnvironment } from '../../functions/sandbox/execution/setup/setup-sandboxed-environment'
-import { executeWithTimeout } from '../../functions/sandbox/execution/execute-with-timeout'
-import { getLuaMemoryUsageBytes } from '../../functions/sandbox/memory/get-lua-memory-usage-bytes'
-import { enforceMaxMemory } from '../../functions/sandbox/memory/enforce-max-memory'
 import { setAllowedGlobals } from '../../functions/sandbox/globals/set-allowed-globals'
-import { setExecutionTimeout } from '../../functions/sandbox/execution/set-execution-timeout'
-import { destroy } from '../../functions/sandbox/execution/destroy'
+import { enforceMaxMemory } from '../../functions/sandbox/memory/enforce-max-memory'
+import { getLuaMemoryUsageBytes } from '../../functions/sandbox/memory/get-lua-memory-usage-bytes'
+import { LuaEngine } from '../core/LuaEngine'
 
 // Re-export the result type
 export type { SandboxedLuaResult }

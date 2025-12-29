@@ -1,8 +1,9 @@
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined'
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
+
 import type { FileNode } from '@/lib/nerd-mode-ide'
 
 interface FileTreeNodeProps {

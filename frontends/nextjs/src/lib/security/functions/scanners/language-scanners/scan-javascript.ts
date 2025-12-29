@@ -3,11 +3,11 @@
  * Scans JavaScript code for security vulnerabilities
  */
 
-import type { SecurityScanResult, SecurityIssue } from '../../types'
 import { JAVASCRIPT_PATTERNS } from '../../patterns/javascript-patterns'
 import { SQL_INJECTION_PATTERNS } from '../../patterns/sql-patterns'
-import { getLineNumber } from '../../utils/get-line-number'
+import type { SecurityIssue,SecurityScanResult } from '../../types'
 import { calculateOverallSeverity } from '../../utils/calculate-severity'
+import { getLineNumber } from '../../utils/get-line-number'
 
 /**
  * Scan JavaScript code for security vulnerabilities

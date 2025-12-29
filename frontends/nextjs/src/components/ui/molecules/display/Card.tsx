@@ -1,16 +1,16 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
+import type { CardProps as MuiCardProps } from '@mui/material'
 import {
+  Box,
   Card as MuiCard,
+  CardActions,
   CardContent,
   CardHeader,
-  CardActions,
   CardMedia,
   Typography,
-  Box,
 } from '@mui/material'
-import type { CardProps as MuiCardProps } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 export interface CardProps extends MuiCardProps {
   children?: ReactNode
@@ -111,9 +111,9 @@ CardFooter.displayName = 'CardFooter'
 
 export {
   Card,
+  CardContentComponent as CardContent,
+  CardDescription,
+  CardFooter,
   CardHeaderComponent as CardHeader,
   CardTitle,
-  CardDescription,
-  CardContentComponent as CardContent,
-  CardFooter,
 }

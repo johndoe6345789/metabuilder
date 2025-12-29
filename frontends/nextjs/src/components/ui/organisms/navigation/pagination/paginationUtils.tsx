@@ -1,6 +1,6 @@
-import { ReactNode } from 'react'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import { ReactNode } from 'react'
 
 interface PaginationLinkProps {
   children: ReactNode
@@ -20,5 +20,5 @@ const PreviousIcon = () => <ChevronLeftIcon fontSize="small" />
 
 const NextIcon = () => <ChevronRightIcon fontSize="small" />
 
-export { paginationSizeMap, PreviousIcon, NextIcon }
+export { NextIcon,paginationSizeMap, PreviousIcon }
 export type { PaginationLinkProps }

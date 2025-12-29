@@ -27,9 +27,9 @@ export {
   getPackage,
   getPackageComponents,
   getPackageExamples,
+  getPackagesByCategory,
   getPackageScriptFiles,
   getPackageScripts,
-  getPackagesByCategory,
   installPackage,
   installPackageComponents,
   installPackageScripts,
@@ -37,5 +37,5 @@ export {
   loadPackageIndex,
   uninstallPackage,
 }
-export { PackageGlue, packageGlue } from './package-glue'
 export { getPackageGlue } from './get-package-glue'
+export { PackageGlue, packageGlue } from './package-glue'

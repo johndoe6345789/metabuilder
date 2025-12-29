@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
+
+import type { LuaScript } from '@/lib/level-types'
 import { executeLuaScriptWithProfile } from '@/lib/lua/execute-lua-script-with-profile'
 import type { LuaExecutionResult } from '@/lib/lua-engine'
-import type { LuaScript } from '@/lib/level-types'
 import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
 
 interface UseLuaEditorLogicProps {

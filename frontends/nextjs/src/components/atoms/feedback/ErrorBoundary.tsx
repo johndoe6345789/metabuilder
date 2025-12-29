@@ -1,8 +1,9 @@
 'use client'
 
+import { Alert, Box, Button, Typography } from '@mui/material'
 import React, { Component, ReactNode } from 'react'
+
 import { logError, LogLevel } from '@/lib/errors/log-error'
-import { Alert, Button, Box, Typography } from '@mui/material'
 
 interface Props {
   children: ReactNode

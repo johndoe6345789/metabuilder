@@ -1,3 +1,5 @@
+import { Download, Power, Star } from '@phosphor-icons/react'
+
 import {
   Badge,
   Button,
@@ -9,7 +11,6 @@ import {
   CardTitle,
 } from '@/components/ui'
 import type { InstalledPackage, PackageManifest } from '@/lib/package-types'
-import { Download, Power, Star } from '@phosphor-icons/react'
 
 interface PackageCardProps {
   package: PackageManifest

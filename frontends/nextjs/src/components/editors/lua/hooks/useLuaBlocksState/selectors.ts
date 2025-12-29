@@ -1,4 +1,5 @@
 import type { LuaScript } from '@/lib/level-types'
+
 import type { LuaBlock } from '../../types'
 
 export const selectSelectedScript = (

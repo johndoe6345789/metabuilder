@@ -1,16 +1,17 @@
+import { ArrowLeft, Envelope, SignIn, UserPlus } from '@phosphor-icons/react'
 import { useState } from 'react'
+import { toast } from 'sonner'
+
+import { LoginForm } from '@/components/auth/unified-login/LoginForm'
+import { Provider, ProviderList } from '@/components/auth/unified-login/ProviderList'
 import { Button } from '@/components/ui'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { ArrowLeft, Envelope, SignIn, UserPlus } from '@phosphor-icons/react'
-import { toast } from 'sonner'
+import { Alert, AlertDescription } from '@/components/ui'
 import { Database, hashPassword } from '@/lib/database'
 import { generateScrambledPassword, simulateEmailSend } from '@/lib/password-utils'
-import { Alert, AlertDescription } from '@/components/ui'
-import { LoginForm } from '@/components/auth/unified-login/LoginForm'
-import { Provider, ProviderList } from '@/components/auth/unified-login/ProviderList'
 
 export interface UnifiedLoginProps {
   onLogin: (credentials: { username: string; password: string }) => void

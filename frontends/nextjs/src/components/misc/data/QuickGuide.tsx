@@ -1,7 +1,8 @@
+import { Code, ListDashes, Package, Palette, Sparkle, Terminal } from '@phosphor-icons/react'
+
 import { Card } from '@/components/ui'
 import { Badge } from '@/components/ui'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui'
-import { Palette, ListDashes, Code, Sparkle, Package, Terminal } from '@phosphor-icons/react'
 import { Alert, AlertDescription } from '@/components/ui'
 
 export function QuickGuide() {

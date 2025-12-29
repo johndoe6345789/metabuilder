@@ -1,14 +1,14 @@
 'use client'
 
-import { forwardRef } from 'react'
 import {
-  LinearProgress,
-  LinearProgressProps,
+  Box,
   CircularProgress,
   CircularProgressProps,
-  Box,
+  LinearProgress,
+  LinearProgressProps,
   Typography,
 } from '@mui/material'
+import { forwardRef } from 'react'
 
 /**
  * Props for the Progress component
@@ -54,4 +54,4 @@ const Progress = forwardRef<HTMLDivElement, ProgressProps>(
 Progress.displayName = 'Progress'
 
 // Also export CircularProgress for convenience
-export { Progress, CircularProgress }
+export { CircularProgress,Progress }

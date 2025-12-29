@@ -1,8 +1,10 @@
-import { useMemo, useState } from 'react'
-import { Tabs } from '@/components/ui'
 import { BookOpen } from '@phosphor-icons/react'
+import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import { getSnippetsByCategory, searchSnippets, type LuaSnippet } from '@/lib/lua-snippets'
+
+import { Tabs } from '@/components/ui'
+import { getSnippetsByCategory, type LuaSnippet,searchSnippets } from '@/lib/lua-snippets'
+
 import { SearchBar } from './LuaSnippetLibrary/SearchBar'
 import { SnippetDialog } from './LuaSnippetLibrary/SnippetDialog'
 import { SnippetList } from './LuaSnippetLibrary/SnippetList'

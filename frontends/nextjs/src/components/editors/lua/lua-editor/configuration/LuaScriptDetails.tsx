@@ -1,4 +1,5 @@
 import { Plus, Trash } from '@phosphor-icons/react'
+
 import { Badge, Button, CardContent, Input, Label } from '@/components/ui'
 import type { LuaScript } from '@/lib/level-types'
 

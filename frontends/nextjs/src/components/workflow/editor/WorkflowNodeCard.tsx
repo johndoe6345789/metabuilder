@@ -1,3 +1,6 @@
+import { ArrowForward as ArrowRightIcon, Delete as DeleteIcon } from '@mui/icons-material'
+import { Card, CardContent } from '@mui/material'
+
 import {
   Badge,
   Button,
@@ -9,9 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui'
-import { Card, CardContent } from '@mui/material'
-import { ArrowForward as ArrowRightIcon, Delete as DeleteIcon } from '@mui/icons-material'
-import type { WorkflowNode, LuaScript } from '@/lib/level-types'
+import type { LuaScript,WorkflowNode } from '@/lib/level-types'
+
 import { NODE_TYPE_COLORS, NODE_TYPE_ICONS, NODE_TYPE_OPTIONS } from './constants'
 
 interface WorkflowNodeCardProps {

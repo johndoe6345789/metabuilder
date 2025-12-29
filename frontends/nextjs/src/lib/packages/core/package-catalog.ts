@@ -1,4 +1,3 @@
-import type { PackageContent, PackageManifest } from './package-types'
 import {
   ecommerceBasicPackage,
   forumClassicPackage,
@@ -8,6 +7,7 @@ import {
   spotifyClonePackage,
   youtubeClonePackage,
 } from './package-definitions'
+import type { PackageContent, PackageManifest } from './package-types'
 
 export type PackageCatalogData = { manifest: PackageManifest; content: PackageContent }
 export type PackageCatalogEntry = () => PackageCatalogData

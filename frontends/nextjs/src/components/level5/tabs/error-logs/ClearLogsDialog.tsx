@@ -1,3 +1,5 @@
+import { Warning } from '@phosphor-icons/react'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,7 +10,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui'
-import { Warning } from '@phosphor-icons/react'
 
 interface ClearLogsDialogProps {
   open: boolean

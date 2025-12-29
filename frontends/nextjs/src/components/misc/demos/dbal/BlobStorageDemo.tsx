@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
+
 import {
   Button,
   Card,
@@ -10,8 +12,8 @@ import {
   Label,
 } from '@/components/ui'
 import { useBlobStorage } from '@/hooks/useDBAL'
+
 import { renderInitializationBadge } from './dbal-demo.utils'
-import { toast } from 'sonner'
 
 export function BlobStorageDemo() {
   const blob = useBlobStorage()

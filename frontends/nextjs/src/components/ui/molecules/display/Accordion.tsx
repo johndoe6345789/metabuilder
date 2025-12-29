@@ -1,13 +1,13 @@
 'use client'
 
-import { forwardRef, ReactNode, useState } from 'react'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
   Accordion as MuiAccordion,
-  AccordionSummary,
   AccordionDetails,
+  AccordionSummary,
   Typography,
 } from '@mui/material'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { forwardRef, ReactNode, useState } from 'react'
 
 interface AccordionProps {
   children: ReactNode
@@ -120,4 +120,4 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionContentProps>(
 )
 AccordionContent.displayName = 'AccordionContent'
 
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+export { Accordion, AccordionContent,AccordionItem, AccordionTrigger }

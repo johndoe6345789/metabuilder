@@ -1,5 +1,7 @@
 'use client'
+import { FunnelSimple, PencilSimple, Trash } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
+
 import {
   Avatar,
   AvatarFallback,
@@ -15,7 +17,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
-import { FunnelSimple, PencilSimple, Trash } from '@phosphor-icons/react'
 import type { User, UserRole } from '@/lib/level-types'
 interface UserListProps {
   users: User[]

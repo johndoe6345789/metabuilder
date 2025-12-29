@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
 import { Box, Stack, Typography } from '@mui/material'
+import type { ReactNode } from 'react'
 
 interface FieldGroupProps {
   title: string

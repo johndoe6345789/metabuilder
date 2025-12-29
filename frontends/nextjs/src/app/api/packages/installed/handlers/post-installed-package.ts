@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
+
 import { readJson } from '@/lib/api/read-json'
 import { getInstalledPackages } from '@/lib/db/packages/get-installed-packages'
 import { installPackage } from '@/lib/db/packages/install-package'

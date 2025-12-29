@@ -1,6 +1,8 @@
 import type React from 'react'
-import type { ComponentInstance } from '@/lib/types/builder-types'
+
 import type { User } from '@/lib/level-types'
+import type { ComponentInstance } from '@/lib/types/builder-types'
+
 import { RenderNode } from './components/RenderNode'
 
 interface RenderComponentProps {

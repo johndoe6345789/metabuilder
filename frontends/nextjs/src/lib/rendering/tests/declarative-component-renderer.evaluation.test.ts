@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
+
 import { DeclarativeComponentRenderer } from '@/lib/rendering/declarative-component-renderer'
 
 describe('declarative-component-renderer evaluation', () => {

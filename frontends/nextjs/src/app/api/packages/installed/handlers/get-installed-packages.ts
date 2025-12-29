@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+
 import { getInstalledPackages } from '@/lib/db/packages/get-installed-packages'
 
 export async function GET() {

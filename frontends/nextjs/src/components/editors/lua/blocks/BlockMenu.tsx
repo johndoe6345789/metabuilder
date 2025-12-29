@@ -1,6 +1,7 @@
 import { Box, Menu, MenuItem, Typography } from '@mui/material'
-import type { BlockDefinition } from '../types'
+
 import styles from '../LuaBlocksEditor.module.scss'
+import type { BlockDefinition } from '../types'
 
 interface BlockMenuProps {
   anchorEl: HTMLElement | null

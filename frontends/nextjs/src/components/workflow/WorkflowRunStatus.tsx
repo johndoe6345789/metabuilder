@@ -1,6 +1,6 @@
-import { Chip, Stack, Typography } from '@mui/material'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined'
+import { Chip, Stack, Typography } from '@mui/material'
 
 interface WorkflowRunStatusProps {
   status: string

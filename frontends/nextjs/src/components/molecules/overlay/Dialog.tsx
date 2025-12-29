@@ -1,19 +1,19 @@
 'use client'
 
-import { forwardRef, ReactNode, useState } from 'react'
+import CloseIcon from '@mui/icons-material/Close'
 import {
-  Dialog as MuiDialog,
-  DialogTitle as MuiDialogTitle,
-  DialogContent as MuiDialogContent,
-  DialogActions as MuiDialogActions,
-  DialogProps as MuiDialogProps,
-  IconButton,
-  Typography,
   Box,
+  Dialog as MuiDialog,
+  DialogActions as MuiDialogActions,
+  DialogContent as MuiDialogContent,
+  DialogProps as MuiDialogProps,
+  DialogTitle as MuiDialogTitle,
+  IconButton,
   Slide,
+  Typography,
 } from '@mui/material'
 import { TransitionProps } from '@mui/material/transitions'
-import CloseIcon from '@mui/icons-material/Close'
+import { forwardRef, ReactNode, useState } from 'react'
 
 // Slide transition
 const Transition = forwardRef(function Transition(
@@ -194,13 +194,13 @@ DialogOverlay.displayName = 'DialogOverlay'
 
 export {
   Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
   DialogClose,
-  DialogPortal,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
   DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
 }

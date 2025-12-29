@@ -1,4 +1,4 @@
-import type { MouseEvent } from 'react'
+import { Add as AddIcon } from '@mui/icons-material'
 import {
   Box,
   Button,
@@ -9,11 +9,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { Add as AddIcon } from '@mui/icons-material'
+import type { MouseEvent } from 'react'
+
 import type { LuaScript } from '@/lib/level-types'
-import type { BlockDefinition, BlockSlot, LuaBlock, LuaBlockType } from './types'
+
 import { BlockList } from './blocks/BlockList'
 import styles from './LuaBlocksEditor.module.scss'
+import type { BlockDefinition, BlockSlot, LuaBlock, LuaBlockType } from './types'
 
 interface BlockListViewProps {
   activeBlocks: LuaBlock[]

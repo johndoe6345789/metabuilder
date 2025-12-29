@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react'
+import { Envelope, FloppyDisk, PaperPlaneTilt } from '@phosphor-icons/react'
+import { useEffect,useState } from 'react'
+import { toast } from 'sonner'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Label } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Switch } from '@/components/ui'
-import { Envelope, FloppyDisk, PaperPlaneTilt } from '@phosphor-icons/react'
-import { toast } from 'sonner'
 import { Database } from '@/lib/database'
 import { DEFAULT_SMTP_CONFIG, simulateEmailSend, type SMTPConfig } from '@/lib/password-utils'
 

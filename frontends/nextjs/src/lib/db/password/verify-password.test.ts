@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest'
-import { verifyPassword } from './verify-password'
+import { describe, expect,it } from 'vitest'
+
 import { hashPassword } from './hash-password'
+import { verifyPassword } from './verify-password'
 
 describe('verifyPassword', () => {
   it.each([{ password: 'test123' }, { password: 'P@ssw0rd!' }, { password: 'simple' }])(

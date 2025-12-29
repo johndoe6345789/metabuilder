@@ -24,8 +24,8 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
-import { ToastContainer, type ToastHandlers } from './sonner/ToastContainer'
 import { DEFAULT_DURATION, type Toast, type ToastOptions, type ToastType } from './sonner/config'
+import { ToastContainer, type ToastHandlers } from './sonner/ToastContainer'
 
 const ToastContext = createContext<ToastHandlers>({
   addToast: () => {},

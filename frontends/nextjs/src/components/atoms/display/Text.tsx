@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { Typography, TypographyProps } from '@mui/material'
+import { forwardRef } from 'react'
 
 export type TextVariant =
   | 'h1'

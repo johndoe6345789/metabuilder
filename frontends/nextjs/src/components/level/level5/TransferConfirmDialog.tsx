@@ -1,3 +1,5 @@
+import { Crown } from '@phosphor-icons/react'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,7 +10,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui'
-import { Crown } from '@phosphor-icons/react'
 import type { User } from '@/lib/level-types'
 
 interface TransferConfirmDialogProps {

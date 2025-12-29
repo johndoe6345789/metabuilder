@@ -1,5 +1,7 @@
 'use client'
+import { Clock, ShieldWarning, UserSwitch } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
+
 import {
   Badge,
   Card,
@@ -17,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
-import { Clock, ShieldWarning, UserSwitch } from '@phosphor-icons/react'
 export type AuditSeverity = 'info' | 'warning' | 'critical'
 export interface AuditEvent {
   id: string

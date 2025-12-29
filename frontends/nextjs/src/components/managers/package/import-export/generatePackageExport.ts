@@ -1,7 +1,7 @@
 import { Database } from '@/lib/database'
-import { downloadZip, exportPackageAsZip } from '@/lib/packages/core/package-export'
-import type { ExportPackageOptions } from '@/lib/packages/core/package-export'
 import type { PackageContent, PackageManifest } from '@/lib/package-types'
+import type { ExportPackageOptions } from '@/lib/packages/core/package-export'
+import { downloadZip, exportPackageAsZip } from '@/lib/packages/core/package-export'
 
 const buildManifest = (manifest: Partial<PackageManifest>): PackageManifest => ({
   id: `pkg_${Date.now()}`,

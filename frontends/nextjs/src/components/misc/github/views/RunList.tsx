@@ -4,9 +4,9 @@ import { Card, CardContent, CardHeader } from '@/components/ui'
 
 import { Filters } from './run-list/Filters'
 import { RefreshControls } from './run-list/RefreshControls'
+import type { RunListProps } from './run-list/run-list.types'
 import { RunListAlerts } from './run-list/RunListAlerts'
 import { RunTable } from './run-list/Table'
-import type { RunListProps } from './run-list/run-list.types'
 
 export function RunList({
   runs,

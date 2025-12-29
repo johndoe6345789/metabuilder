@@ -1,6 +1,8 @@
-import { Badge, Button } from '@/components/ui'
-import { Card, CardContent, CardHeader } from '@mui/material'
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material'
+import { Card, CardContent, CardHeader } from '@mui/material'
+
+import { Badge, Button } from '@/components/ui'
+
 import type { WorkflowSidebarProps } from './types'
 
 export const WorkflowSidebar = ({

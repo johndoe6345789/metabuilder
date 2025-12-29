@@ -1,7 +1,8 @@
+import { FunnelSimple, MagnifyingGlass, X } from '@phosphor-icons/react'
 import { useMemo } from 'react'
+
 import { Badge, Button, Input, Label, Switch, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 import type { OperationType, ResourceType } from '@/lib/security/secure-db/types'
-import { FunnelSimple, MagnifyingGlass, X } from '@phosphor-icons/react'
 
 interface AuditLogFiltersProps {
   searchTerm: string

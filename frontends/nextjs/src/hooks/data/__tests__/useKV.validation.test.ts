@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { renderHook } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { useKV } from '@/hooks/data/useKV'
 
 const STORAGE_PREFIX = 'mb_kv:'

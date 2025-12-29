@@ -1,3 +1,4 @@
+import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import {
   Box,
   Button,
@@ -14,10 +15,11 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material'
-import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material'
+
 import type { LuaScript } from '@/lib/level-types'
-import { BlockMenu } from './blocks/BlockMenu'
+
 import { BlockListView } from './BlockListView'
+import { BlockMenu } from './blocks/BlockMenu'
 import { CodePreview } from './CodePreview'
 import { useLuaBlockEditorState } from './hooks/useLuaBlockEditorState'
 import styles from './LuaBlocksEditor.module.scss'

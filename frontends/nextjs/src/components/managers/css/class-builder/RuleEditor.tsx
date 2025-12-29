@@ -1,3 +1,5 @@
+import { Plus } from '@phosphor-icons/react'
+
 import {
   Button,
   Input,
@@ -8,7 +10,6 @@ import {
   TabsTrigger,
 } from '@/components/ui'
 import type { CssCategory } from '@/lib/database'
-import { Plus } from '@phosphor-icons/react'
 
 interface RuleEditorProps {
   filteredCategories: CssCategory[]

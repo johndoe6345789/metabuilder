@@ -1,13 +1,12 @@
-import { useRef } from 'react'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { ArrowsOut, BookOpen, FileCode } from '@phosphor-icons/react'
+import { useRef } from 'react'
 import { toast } from 'sonner'
+
 import { LuaSnippetLibrary } from '@/components/editors/lua/LuaSnippetLibrary'
-import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua-examples'
 import { Button } from '@/components/ui'
 import { Label } from '@/components/ui'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
-import type { LuaScript } from '@/lib/level-types'
 import {
   Sheet,
   SheetContent,
@@ -16,6 +15,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui'
+import type { LuaScript } from '@/lib/level-types'
+import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua-examples'
+
 import { useLuaMonacoConfig } from './useLuaMonacoConfig'
 
 interface LuaCodeEditorSectionProps {

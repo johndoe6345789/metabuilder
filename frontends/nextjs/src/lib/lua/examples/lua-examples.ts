@@ -1,8 +1,8 @@
-import { LUA_EXAMPLES, type LuaExampleKey } from './lua-examples-data'
 import { getLuaExampleCode } from './get-lua-example-code'
 import { getLuaExamplesList } from './get-lua-examples-list'
+import { LUA_EXAMPLES, type LuaExampleKey } from './lua-examples-data'
 
-export { LUA_EXAMPLES, type LuaExampleKey, getLuaExampleCode, getLuaExamplesList }
+export { getLuaExampleCode, getLuaExamplesList,LUA_EXAMPLES, type LuaExampleKey }
 
 export const luaExamples = LUA_EXAMPLES
 

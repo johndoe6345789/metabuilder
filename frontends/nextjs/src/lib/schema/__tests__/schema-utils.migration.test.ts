@@ -1,6 +1,8 @@
-import { describe, it, expect } from 'vitest'
-import { findModel, getModelKey, getRecordsKey } from '@/lib/schema-utils'
+import { describe, expect,it } from 'vitest'
+
 import type { SchemaConfig } from '@/lib/schema-types'
+import { findModel, getModelKey, getRecordsKey } from '@/lib/schema-utils'
+
 import { createMockSchema } from './schema-utils.fixtures'
 
 describe('schema-utils migration', () => {

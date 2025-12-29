@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+
 import { prisma } from '@/lib/config/prisma'
 import { buildNativePrismaSql, isAuthorized } from '@/lib/native-prisma-bridge'
 

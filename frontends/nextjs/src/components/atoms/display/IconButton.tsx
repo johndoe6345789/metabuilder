@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { IconButton as MuiIconButton, IconButtonProps as MuiIconButtonProps } from '@mui/material'
+import { forwardRef } from 'react'
 
 /** IconButton size options */
 export type IconButtonSize = 'small' | 'medium' | 'large'

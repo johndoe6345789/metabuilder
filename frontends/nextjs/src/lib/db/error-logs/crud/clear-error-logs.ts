@@ -1,6 +1,6 @@
 import { getAdapter } from '../../core/dbal-client'
-import { getErrorLogs } from './get-error-logs'
 import { deleteErrorLog } from './delete-error-log'
+import { getErrorLogs } from './get-error-logs'
 
 /**
  * Clear all error logs or only resolved ones

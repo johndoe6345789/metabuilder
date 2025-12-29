@@ -1,4 +1,7 @@
-import { useState, useEffect } from 'react'
+import { FloppyDisk,Pencil, Plus, Trash, X } from '@phosphor-icons/react'
+import { useEffect,useState } from 'react'
+import { toast } from 'sonner'
+
 import { Card } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
@@ -6,10 +9,8 @@ import { Label } from '@/components/ui'
 import { Badge } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
 import { Separator } from '@/components/ui'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui'
-import { Database, CssCategory } from '@/lib/database'
-import { Plus, X, Pencil, Trash, FloppyDisk } from '@phosphor-icons/react'
-import { toast } from 'sonner'
+import { Dialog, DialogContent, DialogFooter,DialogHeader, DialogTitle } from '@/components/ui'
+import { CssCategory,Database } from '@/lib/database'
 
 // eslint-disable-next-line no-useless-escape
 const CLASS_TOKEN_PATTERN = /^[A-Za-z0-9:_/.\[\]()%#!,=+-]+$/

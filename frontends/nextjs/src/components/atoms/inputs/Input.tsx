@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { InputBase, InputBaseProps } from '@mui/material'
+import { forwardRef } from 'react'
 
 /**
  * Props for the Input component

@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
 import { Box } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 // SidebarHeader
 const SidebarHeader = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
@@ -78,4 +78,4 @@ const SidebarInset = forwardRef<HTMLDivElement, { children: ReactNode; className
 )
 SidebarInset.displayName = 'SidebarInset'
 
-export { SidebarHeader, SidebarContent, SidebarFooter, SidebarInset }
+export { SidebarContent, SidebarFooter, SidebarHeader, SidebarInset }

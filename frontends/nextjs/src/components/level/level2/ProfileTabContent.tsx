@@ -1,5 +1,6 @@
-import { ProfileCard } from '../../level2/ProfileCard'
 import type { User } from '@/lib/level-types'
+
+import { ProfileCard } from '../../level2/ProfileCard'
 
 interface ProfileTabContentProps {
   user: User

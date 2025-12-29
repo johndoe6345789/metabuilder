@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef, type ComponentProps } from 'react'
-import { Switch as MuiSwitch, FormControlLabel } from '@mui/material'
+import { FormControlLabel,Switch as MuiSwitch } from '@mui/material'
+import { type ComponentProps,forwardRef } from 'react'
 
 type MuiSwitchProps = ComponentProps<typeof MuiSwitch>
 

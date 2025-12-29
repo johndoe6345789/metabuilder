@@ -1,31 +1,32 @@
 import type React from 'react'
-import type { ComponentInstance } from '@/lib/types/builder-types'
+
+import { IRCWebchatDeclarative } from '@/components/IRCWebchatDeclarative'
+import { NotificationSummaryCard } from '@/components/NotificationSummaryCard'
 import {
-  Button,
-  Input,
-  Textarea,
-  Label,
-  Badge,
-  Card,
-  Switch,
-  Checkbox,
-  Separator,
   Alert,
-  Progress,
-  Slider,
   Avatar,
   AvatarFallback,
+  Badge,
+  Button,
+  Card,
+  Checkbox,
+  Input,
+  Label,
+  Progress,
+  Separator,
+  Slider,
+  Switch,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
+  Textarea,
 } from '@/components/ui'
-import { IRCWebchatDeclarative } from '@/components/IRCWebchatDeclarative'
-import { NotificationSummaryCard } from '@/components/NotificationSummaryCard'
-import type { User } from '@/lib/level-types'
 import { getDeclarativeRenderer } from '@/lib/declarative-component-renderer'
+import type { User } from '@/lib/level-types'
+import type { ComponentInstance } from '@/lib/types/builder-types'
 
 interface RenderNodeProps {
   component: ComponentInstance

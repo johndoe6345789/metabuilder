@@ -1,15 +1,16 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
+import CloseIcon from '@mui/icons-material/Close'
 import {
+  Box,
   Dialog as MuiDialog,
-  DialogTitle as MuiDialogTitle,
   DialogProps as MuiDialogProps,
+  DialogTitle as MuiDialogTitle,
   IconButton,
   Typography,
-  Box,
 } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
+import { forwardRef, ReactNode } from 'react'
+
 import { DialogContent, type DialogContentProps } from './dialog/Body'
 import { DialogFooter, type DialogFooterProps } from './dialog/Footer'
 import { DialogHeader, type DialogHeaderProps } from './dialog/Header'

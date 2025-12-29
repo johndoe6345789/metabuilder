@@ -1,4 +1,6 @@
 import { Card, CardContent } from '@/components/ui'
+import type { LuaScript } from '@/lib/level-types'
+
 import { LuaCodeEditorSection } from './code/LuaCodeEditorSection'
 import { LuaScriptDetails } from './configuration/LuaScriptDetails'
 import { LuaScriptsListCard } from './configuration/LuaScriptsListCard'
@@ -6,7 +8,6 @@ import { LuaExecutionPreview } from './execution/LuaExecutionPreview'
 import { LuaLintingControls } from './linting/LuaLintingControls'
 import { LuaEditorToolbar } from './toolbar/LuaEditorToolbar'
 import { useLuaEditorLogic } from './useLuaEditorLogic'
-import type { LuaScript } from '@/lib/level-types'
 
 interface LuaEditorProps {
   scripts: LuaScript[]

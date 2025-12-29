@@ -11,10 +11,11 @@
  */
 
 import * as fengari from 'fengari-web'
-import type { LuaExecutionContext, LuaExecutionResult } from '../../functions/types'
-import { setupContextAPI } from '../../functions/setup/setup-context-api'
-import { execute } from '../../functions/engine/execute'
+
 import { destroy } from '../../functions/engine/destroy'
+import { execute } from '../../functions/engine/execute'
+import { setupContextAPI } from '../../functions/setup/setup-context-api'
+import type { LuaExecutionContext, LuaExecutionResult } from '../../functions/types'
 
 const lauxlib = fengari.lauxlib
 const lualib = fengari.lualib
@@ -43,6 +44,5 @@ export class LuaEngine {
 }
 
 // Re-export individual functions for direct imports
-export { setupContextAPI, executeLuaCode } from '../../functions'
-
-export { pushToLua, fromLua, tableToJS } from '../../functions/converters'
+export { executeLuaCode,setupContextAPI } from '../../functions'
+export { fromLua, pushToLua, tableToJS } from '../../functions/converters'

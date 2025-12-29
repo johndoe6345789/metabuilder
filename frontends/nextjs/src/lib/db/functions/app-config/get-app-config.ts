@@ -3,8 +3,8 @@
  * Retrieves the application configuration from database
  */
 
-import { prisma } from '../../prisma'
 import type { AppConfiguration } from '../../../types/level-types'
+import { prisma } from '../../prisma'
 
 /**
  * Get the application configuration

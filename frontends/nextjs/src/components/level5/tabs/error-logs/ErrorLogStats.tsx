@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
+
 import type { ErrorLogStats } from './useErrorLogs'
 
 const STAT_CONFIG: Array<{ key: keyof ErrorLogStats; label: string; color: string }> = [

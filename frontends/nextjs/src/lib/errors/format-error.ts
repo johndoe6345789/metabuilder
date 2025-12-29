@@ -1,5 +1,6 @@
 import { DBALError } from '@/dbal/core/foundation/errors'
 import { getErrorMessage, isError } from '@/lib/types/guards'
+
 import type { FormattedError } from './interfaces/formatted-error'
 
 /**

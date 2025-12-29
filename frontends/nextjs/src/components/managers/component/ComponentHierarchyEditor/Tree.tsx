@@ -1,6 +1,8 @@
 import { Cursor } from '@phosphor-icons/react'
 import type React from 'react'
+
 import type { ComponentNode } from '@/lib/database'
+
 import { TreeNode } from '../modules/TreeNode'
 
 interface HierarchyTreeProps {

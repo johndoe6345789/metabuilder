@@ -1,6 +1,7 @@
 import { Database } from '@/lib/database-lib/database'
-import type { SecurityContext } from '../types'
+
 import { executeQuery } from '../execute-query'
+import type { SecurityContext } from '../types'
 
 /**
  * Delete a user with security checks

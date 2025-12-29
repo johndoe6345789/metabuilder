@@ -1,9 +1,10 @@
 'use client'
 
-import { Level1 } from '@/components/Level1'
 import { useRouter } from 'next/navigation'
-import { getLevelPath } from '@/lib/navigation/get-level-path'
+
+import { Level1 } from '@/components/Level1'
 import type { AppLevel } from '@/lib/level-types'
+import { getLevelPath } from '@/lib/navigation/get-level-path'
 
 export function Level1Client() {
   const router = useRouter()

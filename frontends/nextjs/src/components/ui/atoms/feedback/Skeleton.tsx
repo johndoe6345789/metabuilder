@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { Skeleton as MuiSkeleton, SkeletonProps as MuiSkeletonProps } from '@mui/material'
+import { forwardRef } from 'react'
 
 /**
  * Props for the Skeleton component

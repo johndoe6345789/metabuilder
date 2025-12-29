@@ -1,8 +1,9 @@
-import type { MouseEvent } from 'react'
-import { Box, Button, Typography } from '@mui/material'
 import { Add as AddIcon } from '@mui/icons-material'
-import type { BlockSlot, LuaBlock } from '../types'
+import { Box, Button, Typography } from '@mui/material'
+import type { MouseEvent } from 'react'
+
 import styles from '../LuaBlocksEditor.module.scss'
+import type { BlockSlot, LuaBlock } from '../types'
 
 interface BlockSectionProps {
   title: string

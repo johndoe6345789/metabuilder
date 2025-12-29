@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { loadPackageIndex } from './load-package-index'
 
 const originalFetch = global.fetch

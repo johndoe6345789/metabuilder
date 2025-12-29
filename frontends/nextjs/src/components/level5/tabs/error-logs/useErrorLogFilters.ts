@@ -1,4 +1,5 @@
 import { useState } from 'react'
+
 import type { ErrorLog } from '@/lib/db/error-logs'
 
 export type ErrorLevelFilter = 'all' | 'error' | 'warning' | 'info'

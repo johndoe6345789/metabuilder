@@ -1,8 +1,9 @@
 import { Database } from '@/lib/database-lib/database'
 import type { User } from '@/lib/types/level-types'
-import type { SecurityContext } from '../types'
+
 import { executeQuery } from '../execute-query'
 import { sanitizeInput } from '../sanitize-input'
+import type { SecurityContext } from '../types'
 
 /**
  * Create a new user with security checks

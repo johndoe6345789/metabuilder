@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
+
 import type { LuaScript } from '@/lib/level-types'
 
 const createDefaultScript = (): LuaScript => ({

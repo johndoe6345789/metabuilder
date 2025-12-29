@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react'
+
 import type { Workflow } from '@/lib/level-types'
-import type { WorkflowSelection, WorkflowState, WorkflowStateSetters } from './types'
-import { DEFAULT_TEST_DATA } from './constants'
 import type { WorkflowExecutionResult } from '@/lib/workflow/engine/workflow-engine'
+
+import { DEFAULT_TEST_DATA } from './constants'
+import type { WorkflowSelection, WorkflowState, WorkflowStateSetters } from './types'
 
 export const useWorkflowState = (
   workflows: Workflow[]

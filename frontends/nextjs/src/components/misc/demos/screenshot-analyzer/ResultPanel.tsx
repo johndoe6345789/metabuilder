@@ -1,5 +1,6 @@
-import { Box, Card, CardContent, CardHeader, Chip, Stack, Typography } from '@mui/material'
 import { Visibility as EyeIcon } from '@mui/icons-material'
+import { Box, Card, CardContent, CardHeader, Chip, Stack, Typography } from '@mui/material'
+
 import type { ScreenshotAnalysisResult } from '@/lib/screenshot/types'
 
 interface ResultPanelProps {

@@ -1,13 +1,15 @@
+import { ArrowsLeftRight, Buildings, Camera, Eye, Users, Warning } from '@phosphor-icons/react'
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { Buildings, Users, ArrowsLeftRight, Eye, Camera, Warning } from '@phosphor-icons/react'
-import { ResultsPane } from '../sections/ResultsPane'
-import { TenantsTab } from '../../level5/tabs/TenantsTab'
+import type { AppLevel, Tenant, User } from '@/lib/level-types'
+
+import { ErrorLogsTab } from '../../level5/tabs/error-logs/ErrorLogsTab'
 import { GodUsersTab } from '../../level5/tabs/GodUsersTab'
 import { PowerTransferTab } from '../../level5/tabs/power-transfer/PowerTransferTab'
 import { PreviewTab } from '../../level5/tabs/PreviewTab'
-import { ErrorLogsTab } from '../../level5/tabs/error-logs/ErrorLogsTab'
+import { TenantsTab } from '../../level5/tabs/TenantsTab'
 import { ScreenshotAnalyzer } from '../../misc/demos/ScreenshotAnalyzer'
-import type { AppLevel, Tenant, User } from '@/lib/level-types'
+import { ResultsPane } from '../sections/ResultsPane'
 
 interface Level5NavigatorProps {
   tenants: Tenant[]

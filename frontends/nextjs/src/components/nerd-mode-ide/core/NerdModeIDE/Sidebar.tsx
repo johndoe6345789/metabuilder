@@ -1,4 +1,5 @@
 import type { FileNode } from '@/lib/nerd-mode-ide'
+
 import { NerdModeIDEFileExplorer } from '../../components/NerdModeIDEFileExplorer'
 
 interface SidebarProps {

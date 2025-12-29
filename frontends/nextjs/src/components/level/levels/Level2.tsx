@@ -1,13 +1,15 @@
 'use client'
 
+import { ChatCircle,User } from '@phosphor-icons/react'
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
-import { User, ChatCircle } from '@phosphor-icons/react'
-import { AppHeader } from '../../shared/AppHeader'
 import type { User as UserType } from '@/lib/level-types'
-import { IntroSection } from '../sections/IntroSection'
-import { ProfileTabContent } from '../level2/ProfileTabContent'
-import { CommentsTabContent } from '../level2/CommentsTabContent'
+
+import { AppHeader } from '../../shared/AppHeader'
 import { ChatTabContent } from '../level2/ChatTabContent'
+import { CommentsTabContent } from '../level2/CommentsTabContent'
+import { ProfileTabContent } from '../level2/ProfileTabContent'
+import { IntroSection } from '../sections/IntroSection'
 import { useLevel2State } from './hooks/useLevel2State'
 
 export interface Level2Props {

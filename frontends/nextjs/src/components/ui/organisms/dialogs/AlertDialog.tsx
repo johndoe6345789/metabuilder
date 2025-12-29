@@ -1,15 +1,15 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
 import { Dialog } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
+import { AlertDialogAction, AlertDialogCancel, AlertDialogFooter } from './alert/Actions'
 import {
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
 } from './alert/Content'
-import { AlertDialogAction, AlertDialogCancel, AlertDialogFooter } from './alert/Actions'
 
 interface AlertDialogProps {
   open: boolean

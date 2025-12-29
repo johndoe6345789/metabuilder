@@ -1,6 +1,6 @@
 // Auto-generated class wrapper
-import { SchemaTabs } from './functions/schema-tabs'
 import { FieldCard } from './functions/field-card'
+import { SchemaTabs } from './functions/schema-tabs'
 import { TextField } from './functions/text-field'
 
 /**

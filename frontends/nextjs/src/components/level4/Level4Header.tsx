@@ -1,3 +1,5 @@
+import { Download, Eye, House, SignOut, Terminal,Upload } from '@phosphor-icons/react'
+
 import { Button } from '@/components/ui'
 import { Badge } from '@/components/ui'
 import {
@@ -6,7 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui'
-import { SignOut, Eye, House, Download, Upload, Terminal } from '@phosphor-icons/react'
 
 interface Level4HeaderProps {
   username: string

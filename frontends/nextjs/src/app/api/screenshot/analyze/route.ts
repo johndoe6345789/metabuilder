@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
+
 import { readJson } from '@/lib/api/read-json'
-import type { ScreenshotAnalysisPayload } from '@/lib/screenshot/types'
 import { ScreenshotAnalysisService } from '@/lib/screenshot/screenshot-analysis-service'
+import type { ScreenshotAnalysisPayload } from '@/lib/screenshot/types'
 
 const MAX_TEXT_SAMPLE = 4000
 const MAX_HTML_SAMPLE = 6000

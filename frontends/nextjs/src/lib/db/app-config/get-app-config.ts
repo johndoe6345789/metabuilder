@@ -1,5 +1,5 @@
-import { getAdapter } from '../core/dbal-client'
 import type { AppConfiguration } from '../../types/level-types'
+import { getAdapter } from '../core/dbal-client'
 
 export async function getAppConfig(): Promise<AppConfiguration | null> {
   const adapter = getAdapter()

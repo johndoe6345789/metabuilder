@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
 import type { TableCellProps } from '@mui/material'
+import type { ReactNode } from 'react'
 
 export interface DataTableColumn<T> {
   key: string

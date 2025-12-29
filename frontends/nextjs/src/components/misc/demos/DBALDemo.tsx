@@ -6,15 +6,17 @@
  */
 
 import { useMemo, useState } from 'react'
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { useDBAL } from '@/hooks/use-dbal/use-dbal'
+
 import { BlobStorageDemo } from './dbal/BlobStorageDemo'
 import { CachedDataDemo } from './dbal/CachedDataDemo'
 import { ConnectionForm } from './dbal/ConnectionForm'
+import { DBAL_CONTAINER_CLASS, DBAL_TAB_GRID_CLASS,DBALTabConfig } from './dbal/dbal-demo.utils'
 import { KVStoreDemo } from './dbal/KVStoreDemo'
 import { LogsPanel } from './dbal/LogsPanel'
 import { ResultPanel } from './dbal/ResultPanel'
-import { DBALTabConfig, DBAL_CONTAINER_CLASS, DBAL_TAB_GRID_CLASS } from './dbal/dbal-demo.utils'
 
 const tabs: DBALTabConfig[] = [
   { value: 'kv', label: 'Key-Value Store', content: <KVStoreDemo /> },

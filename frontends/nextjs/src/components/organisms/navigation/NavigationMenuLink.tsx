@@ -1,7 +1,7 @@
 'use client'
 
+import { Box,Button } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
-import { Button, Box } from '@mui/material'
 
 // NavigationMenuLink
 interface NavigationMenuLinkProps {
@@ -103,8 +103,8 @@ const navigationMenuTriggerStyle = () => ({
 })
 
 export {
-  NavigationMenuLink,
   NavigationMenuIndicator,
-  NavigationMenuViewport,
+  NavigationMenuLink,
   navigationMenuTriggerStyle,
+  NavigationMenuViewport,
 }

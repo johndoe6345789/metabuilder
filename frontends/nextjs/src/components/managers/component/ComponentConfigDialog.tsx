@@ -1,4 +1,6 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useCallback,useEffect, useState } from 'react'
+import { toast } from 'sonner'
+
 import {
   Dialog,
   DialogContent,
@@ -6,9 +8,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui'
-import { Database, ComponentNode, ComponentConfig } from '@/lib/database'
 import { componentCatalog } from '@/lib/components/component-catalog'
-import { toast } from 'sonner'
+import { ComponentConfig,ComponentNode, Database } from '@/lib/database'
+
 import { ComponentConfigActions } from './ComponentConfigDialog/Actions'
 import { ComponentConfigFields } from './ComponentConfigDialog/Fields'
 

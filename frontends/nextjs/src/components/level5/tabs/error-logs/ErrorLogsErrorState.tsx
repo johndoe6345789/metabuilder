@@ -1,5 +1,6 @@
-import { Button, Card, CardContent } from '@/components/ui'
 import { Warning } from '@phosphor-icons/react'
+
+import { Button, Card, CardContent } from '@/components/ui'
 
 interface ErrorLogsErrorStateProps {
   message: string

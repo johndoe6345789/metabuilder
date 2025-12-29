@@ -1,5 +1,5 @@
-import { forwardRef, ReactNode } from 'react'
 import { Box, Divider, Typography } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 interface SidebarSectionProps {
   title?: string

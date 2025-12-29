@@ -1,12 +1,13 @@
 'use client'
 
-import { Level4Header } from '../../level4/Level4Header'
-import { Level4Tabs } from '../../level4/Level4Tabs'
-import { Level4Summary } from '../../level4/Level4Summary'
-import { NerdModeIDE } from '../../misc/NerdModeIDE'
 import type { User as UserType } from '@/lib/level-types'
-import { useLevel4AppState } from './hooks/useLevel4AppState'
+
+import { Level4Header } from '../../level4/Level4Header'
+import { Level4Summary } from '../../level4/Level4Summary'
+import { Level4Tabs } from '../../level4/Level4Tabs'
+import { NerdModeIDE } from '../../misc/NerdModeIDE'
 import { IntroSection } from '../sections/IntroSection'
+import { useLevel4AppState } from './hooks/useLevel4AppState'
 
 interface Level4Props {
   user: UserType

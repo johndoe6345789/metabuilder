@@ -1,7 +1,7 @@
 'use client'
 
+import { Box,CircularProgress, CircularProgressProps } from '@mui/material'
 import { forwardRef } from 'react'
-import { CircularProgress, CircularProgressProps, Box } from '@mui/material'
 
 /** Spinner size options */
 export type SpinnerSize = 'xs' | 'sm' | 'md' | 'lg'

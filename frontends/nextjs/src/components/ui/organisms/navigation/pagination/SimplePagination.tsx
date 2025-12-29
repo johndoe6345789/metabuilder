@@ -1,7 +1,8 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { Box, IconButton, Typography } from '@mui/material'
+import { forwardRef } from 'react'
+
 import { NextIcon, PreviousIcon } from './paginationUtils'
 
 interface SimplePaginationProps {

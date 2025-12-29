@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { collectFileEntries } from './collect-file-entries'
 import type { FileNode } from './types'
 

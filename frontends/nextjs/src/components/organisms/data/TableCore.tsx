@@ -1,14 +1,14 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
 import {
-  Table as MuiTable,
-  TableHead as MuiTableHead,
-  TableBody as MuiTableBody,
-  TableFooter as MuiTableFooter,
-  TableContainer,
   Paper,
+  Table as MuiTable,
+  TableBody as MuiTableBody,
+  TableContainer,
+  TableFooter as MuiTableFooter,
+  TableHead as MuiTableHead,
 } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 // Table wrapper with container
 export interface TableProps {
@@ -68,4 +68,4 @@ const TableFooter = forwardRef<
 })
 TableFooter.displayName = 'TableFooter'
 
-export { TableCore, TableHeader, TableBody, TableFooter }
+export { TableBody, TableCore, TableFooter,TableHeader }

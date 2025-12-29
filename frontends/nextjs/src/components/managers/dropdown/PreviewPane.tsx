@@ -1,5 +1,6 @@
-import { Badge, Button, Card, Separator } from '@/components/ui'
 import { Pencil, Trash } from '@phosphor-icons/react'
+
+import { Badge, Button, Card, Separator } from '@/components/ui'
 import type { DropdownConfig } from '@/lib/database'
 
 interface PreviewPaneProps {

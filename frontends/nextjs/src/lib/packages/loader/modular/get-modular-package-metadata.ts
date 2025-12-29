@@ -1,5 +1,5 @@
-import { getModularSeedData } from './get-modular-seed-data'
 import { initializePackageSystem } from '../state/initialize-package-system'
+import { getModularSeedData } from './get-modular-seed-data'
 
 /**
  * Get modular package metadata

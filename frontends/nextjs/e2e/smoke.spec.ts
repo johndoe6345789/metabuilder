@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect,test } from '@playwright/test';
 
 test.describe('Basic Smoke Tests', () => {
   test('should load the application', async ({ page }) => {

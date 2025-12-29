@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { getLanguageFromFilename } from './get-language-from-filename'
 
 describe('getLanguageFromFilename', () => {

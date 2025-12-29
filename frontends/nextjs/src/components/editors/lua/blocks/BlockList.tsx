@@ -1,7 +1,8 @@
-import type { MouseEvent } from 'react'
 import { Box } from '@mui/material'
-import type { BlockDefinition, BlockSlot, LuaBlock, LuaBlockType } from '../types'
+import type { MouseEvent } from 'react'
+
 import styles from '../LuaBlocksEditor.module.scss'
+import type { BlockDefinition, BlockSlot, LuaBlock, LuaBlockType } from '../types'
 import { BlockItem } from './BlockItem'
 
 interface BlockListProps {

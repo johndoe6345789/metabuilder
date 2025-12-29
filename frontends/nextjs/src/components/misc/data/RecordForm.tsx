@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui'
+import { FloppyDisk, X } from '@phosphor-icons/react'
+import { useEffect,useState } from 'react'
+
+import { Dialog, DialogContent, DialogFooter,DialogHeader, DialogTitle } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
 import type { ModelSchema, SchemaConfig } from '@/lib/schema-types'
-import { validateRecord, createEmptyRecord } from '@/lib/schema-utils'
+import { createEmptyRecord,validateRecord } from '@/lib/schema-utils'
+
 import { FieldRenderer } from './FieldRenderer'
-import { FloppyDisk, X } from '@phosphor-icons/react'
 
 interface RecordFormProps {
   open: boolean

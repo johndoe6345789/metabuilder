@@ -1,7 +1,7 @@
 // Auto-generated class wrapper
-import { IRCWebchat } from './functions/i-r-c-webchat'
-import { handleSendMessage } from './functions/handle-send-message'
 import { formatTime } from './functions/format-time'
+import { handleSendMessage } from './functions/handle-send-message'
+import { IRCWebchat } from './functions/i-r-c-webchat'
 
 /**
  * IRCWebchatUtils - Class wrapper for 3 functions

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Database, type ComponentNode } from '@/lib/database'
+
+import { type ComponentNode,Database } from '@/lib/database'
 import type { PageConfig } from '@/lib/level-types'
 
 interface UseHierarchyDataResult {

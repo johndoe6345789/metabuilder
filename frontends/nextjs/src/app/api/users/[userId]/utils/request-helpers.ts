@@ -4,6 +4,7 @@
  */
 
 import type { NextRequest } from 'next/server'
+
 import type { UserRole } from '@/lib/level-types'
 
 /**

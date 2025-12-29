@@ -1,9 +1,10 @@
 'use client'
 
-import { forwardRef, useContext } from 'react'
-import type { MouseEvent } from 'react'
-import { Box } from '@mui/material'
 import type { BoxProps } from '@mui/material'
+import { Box } from '@mui/material'
+import type { MouseEvent } from 'react'
+import { forwardRef, useContext } from 'react'
+
 import { TabsContext } from '../core/tabs-context'
 
 export interface TabsTriggerProps extends BoxProps<'button'> {

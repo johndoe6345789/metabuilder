@@ -3,119 +3,107 @@
 
 // New MUI-based molecules
 export {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-  CardAction,
-  type CardProps,
-  type CardHeaderProps,
-} from './display/Card'
-
-export {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
-  DialogClose,
-  DialogPortal,
-  DialogOverlay,
-  type DialogProps,
-} from './overlay/Dialog'
-
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  type AccordionProps,
+  AccordionTrigger,
+} from './display/Accordion'
 export {
   Alert,
-  AlertTitle,
   AlertDescription,
   type AlertProps,
+  AlertTitle,
   type AlertVariant,
 } from './display/Alert'
-
 export {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-  type TabsProps,
-  type TabsTriggerProps,
-} from './form/Tabs'
-
-export {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-  type AccordionProps,
-} from './display/Accordion'
-
-export {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-  SelectGroup,
-  SelectLabel,
-  SelectSeparator,
-  type SelectProps,
-  type SelectItemProps,
-} from './form/Select'
-
-export {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuCheckboxItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuGroup,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
-  DropdownMenuPortal,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  type DropdownMenuProps,
-  type DropdownMenuContentProps,
-  type DropdownMenuItemProps,
-} from './overlay/DropdownMenu'
-
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  type CardHeaderProps,
+  type CardProps,
+  CardTitle,
+} from './display/Card'
+export { EmailField, type EmailFieldProps } from './form/EmailField'
 export {
   FormField,
-  SearchInput,
-  TextArea,
   type FormFieldProps,
+  SearchInput,
   type SearchInputProps,
+  TextArea,
   type TextAreaProps,
 } from './form/FormField'
-
-export { PasswordField, type PasswordFieldProps } from './form/PasswordField'
-
-export { EmailField, type EmailFieldProps } from './form/EmailField'
-
 export { NumberField, type NumberFieldProps } from './form/NumberField'
-
+export { PasswordField, type PasswordFieldProps } from './form/PasswordField'
 export { SearchBar, type SearchBarProps } from './form/SearchBar'
-
+export {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  type SelectItemProps,
+  SelectLabel,
+  type SelectProps,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from './form/Select'
+export {
+  Tabs,
+  TabsContent,
+  TabsList,
+  type TabsProps,
+  TabsTrigger,
+  type TabsTriggerProps,
+} from './form/Tabs'
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  type DialogProps,
+  DialogTitle,
+  DialogTrigger,
+} from './overlay/Dialog'
+export {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  type DropdownMenuContentProps,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  type DropdownMenuItemProps,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  type DropdownMenuProps,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from './overlay/DropdownMenu'
 export {
   Popover,
-  PopoverTrigger,
-  PopoverContent,
   PopoverAnchor,
-  type PopoverProps,
+  PopoverContent,
   type PopoverContentProps,
+  type PopoverProps,
+  PopoverTrigger,
 } from './overlay/Popover'
 
 // Legacy shared components
-export { AppHeader } from '../shared/AppHeader'
-export { AppFooter } from '../shared/AppFooter'
 export { GodCredentialsBanner } from '../level1/GodCredentialsBanner'
 export { ProfileCard } from '../level2/ProfileCard'
 export { PasswordChangeDialog } from '../PasswordChangeDialog'
+export { AppFooter } from '../shared/AppFooter'
+export { AppHeader } from '../shared/AppHeader'

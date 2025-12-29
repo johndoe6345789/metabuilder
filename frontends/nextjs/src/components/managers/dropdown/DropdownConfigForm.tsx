@@ -1,4 +1,7 @@
+import { FloppyDisk, Plus, X } from '@phosphor-icons/react'
 import { useEffect, useMemo, useState } from 'react'
+import { toast } from 'sonner'
+
 import {
   Badge,
   Button,
@@ -12,8 +15,6 @@ import {
   ScrollArea,
   Separator,
 } from '@/components/ui'
-import { FloppyDisk, Plus, X } from '@phosphor-icons/react'
-import { toast } from 'sonner'
 import type { DropdownConfig } from '@/lib/database'
 
 interface DropdownConfigFormProps {

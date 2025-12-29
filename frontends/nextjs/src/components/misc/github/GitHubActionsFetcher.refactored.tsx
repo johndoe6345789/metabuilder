@@ -1,14 +1,15 @@
+import { ArrowClockwise, Info, Warning } from '@phosphor-icons/react'
 import { useEffect } from 'react'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui'
 import { Skeleton } from '@/components/ui'
 import { Badge } from '@/components/ui'
-import { ArrowClockwise, Info, Warning } from '@phosphor-icons/react'
-import { useGitHubFetcher } from '@/hooks/useGitHubFetcher'
-import { useAutoRefresh } from '@/hooks/useAutoRefresh'
-import { WorkflowRunCard } from '@/components/WorkflowRunCard'
 import { ScrollArea } from '@/components/ui'
+import { WorkflowRunCard } from '@/components/WorkflowRunCard'
+import { useAutoRefresh } from '@/hooks/useAutoRefresh'
+import { useGitHubFetcher } from '@/hooks/useGitHubFetcher'
 
 /**
  * Refactored GitHub Actions Fetcher Component

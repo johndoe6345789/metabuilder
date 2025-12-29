@@ -1,11 +1,12 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { renderHook, act, waitFor } from '@testing-library/react'
-import type { User } from '@/lib/level-types'
+import { act, renderHook, waitFor } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { useAuth } from '@/hooks/useAuth'
 import { fetchSession } from '@/lib/auth/api/fetch-session'
 import { login as loginRequest } from '@/lib/auth/api/login'
-import { register as registerRequest } from '@/lib/auth/api/register'
 import { logout as logoutRequest } from '@/lib/auth/api/logout'
+import { register as registerRequest } from '@/lib/auth/api/register'
+import type { User } from '@/lib/level-types'
 
 vi.mock('@/lib/auth/api/fetch-session', () => ({
   fetchSession: vi.fn(),

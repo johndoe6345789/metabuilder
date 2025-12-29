@@ -1,7 +1,8 @@
+import { House,SignOut } from '@phosphor-icons/react'
+
 import { Button } from '@/components/ui'
 import { Avatar, AvatarFallback } from '@/components/ui'
 import { Badge } from '@/components/ui'
-import { SignOut, House } from '@phosphor-icons/react'
 
 interface AppHeaderProps {
   title?: string

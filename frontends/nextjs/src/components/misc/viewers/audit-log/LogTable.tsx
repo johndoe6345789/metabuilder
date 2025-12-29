@@ -1,4 +1,12 @@
 import {
+  ArrowDown,
+  ArrowUp,
+  ShieldCheck,
+  User as UserIcon,
+  WarningCircle,
+} from '@phosphor-icons/react'
+
+import {
   Badge,
   Card,
   CardContent,
@@ -13,13 +21,6 @@ import {
   TableRow,
 } from '@/components/ui'
 import type { AuditLog, OperationType, ResourceType } from '@/lib/security/secure-db/types'
-import {
-  ArrowDown,
-  ArrowUp,
-  ShieldCheck,
-  User as UserIcon,
-  WarningCircle,
-} from '@phosphor-icons/react'
 
 interface LogTableProps {
   logs: AuditLog[]

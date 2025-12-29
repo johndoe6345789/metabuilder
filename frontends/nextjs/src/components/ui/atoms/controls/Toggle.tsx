@@ -1,11 +1,11 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { IconButton, IconButtonProps } from '@mui/material'
 import {
   ToggleButton as MuiToggleButton,
   ToggleButtonProps as MuiToggleButtonProps,
 } from '@mui/material'
+import { forwardRef } from 'react'
 
 /** Toggle button visual style variants */
 export type ToggleVariant = 'default' | 'outline'

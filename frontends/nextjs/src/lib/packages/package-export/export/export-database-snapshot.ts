@@ -1,5 +1,5 @@
-import type { AssetFile, PackageContent, PackageManifest } from './types'
 import { exportPackageAsZip } from './export-package-as-zip'
+import type { AssetFile, PackageContent, PackageManifest } from './types'
 
 export async function exportDatabaseSnapshot(
   schemas: any[],

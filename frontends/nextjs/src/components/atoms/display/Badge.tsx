@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef, HTMLAttributes } from 'react'
 import { Chip, ChipProps } from '@mui/material'
+import { forwardRef, HTMLAttributes } from 'react'
 
 /** Badge visual style variants */
 export type BadgeVariant =

@@ -1,13 +1,15 @@
+import { ArrowSquareIn, Export, Package } from '@phosphor-icons/react'
 import { useState } from 'react'
+
 import { Button } from '@/components/ui'
 import type { PackageCatalogData } from '@/lib/packages/core/package-catalog'
-import { ArrowSquareIn, Export, Package } from '@phosphor-icons/react'
-import { PackageDetailsDialog } from './PackageDetailsDialog'
-import { PackageImportExport } from './PackageImportExport'
+
 import { PackageFilters } from './package-manager/PackageFilters'
 import { PackageTabs } from './package-manager/PackageTabs'
 import { usePackageActions } from './package-manager/usePackageActions'
 import { usePackages } from './package-manager/usePackages'
+import { PackageDetailsDialog } from './PackageDetailsDialog'
+import { PackageImportExport } from './PackageImportExport'
 
 interface PackageManagerProps {
   onClose?: () => void

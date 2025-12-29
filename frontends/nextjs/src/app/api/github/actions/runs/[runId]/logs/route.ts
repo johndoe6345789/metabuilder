@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
+
 import { createGitHubClient } from '@/lib/github/create-github-client'
 import { fetchWorkflowRunLogs } from '@/lib/github/fetch-workflow-run-logs'
 import { parseWorkflowRunLogsOptions } from '@/lib/github/parse-workflow-run-logs-options'

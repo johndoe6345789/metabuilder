@@ -1,5 +1,6 @@
 import { Play, ShieldCheck } from '@phosphor-icons/react'
-import { Button, CardHeader, CardTitle, CardDescription } from '@/components/ui'
+
+import { Button, CardDescription,CardHeader, CardTitle } from '@/components/ui'
 import type { LuaScript } from '@/lib/level-types'
 
 interface LuaEditorToolbarProps {

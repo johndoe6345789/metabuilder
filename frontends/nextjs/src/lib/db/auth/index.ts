@@ -1,4 +1,4 @@
-export { authenticateUser } from './queries/authenticate-user'
 export type { AuthenticateResult } from './queries/authenticate-user'
-export { getUserByUsername } from './queries/get-user-by-username'
+export { authenticateUser } from './queries/authenticate-user'
 export { getUserByEmail } from './queries/get-user-by-email'
+export { getUserByUsername } from './queries/get-user-by-username'

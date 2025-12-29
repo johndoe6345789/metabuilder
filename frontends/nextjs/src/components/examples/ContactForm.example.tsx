@@ -1,7 +1,8 @@
 // Example component demonstrating best practices with comprehensive documentation
 // This file serves as a reference for building well-documented components
 
-import { useState, useCallback } from 'react'
+import { useCallback,useState } from 'react'
+
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { useAuth } from '@/hooks'

@@ -1,9 +1,9 @@
 'use client'
 
-import { forwardRef } from 'react'
-import { TextField } from '@mui/material'
 import EmailIcon from '@mui/icons-material/Email'
+import { TextField } from '@mui/material'
 import { InputAdornment } from '@mui/material'
+import { forwardRef } from 'react'
 
 export interface EmailFieldProps {
   label?: string

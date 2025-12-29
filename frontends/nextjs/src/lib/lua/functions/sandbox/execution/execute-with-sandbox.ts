@@ -1,8 +1,8 @@
-import type { LuaExecutionContext } from '../types'
-import type { LuaExecutionResult } from '../types'
 import type { SecurityScanResult } from '../../../../security/scanner/security-scanner'
 import { securityScanner } from '../../../../security/scanner/security-scanner'
 import { LuaEngine } from '../../../engine/core/LuaEngine'
+import type { LuaExecutionContext } from '../types'
+import type { LuaExecutionResult } from '../types'
 import type { SandboxedLuaEngineState } from './types'
 
 export interface SandboxedLuaResult {

@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef, ReactElement, ReactNode, type ComponentProps } from 'react'
 import { Tooltip as MuiTooltip } from '@mui/material'
+import { type ComponentProps,forwardRef, ReactElement, ReactNode } from 'react'
 
 type MuiTooltipProps = ComponentProps<typeof MuiTooltip>
 
@@ -75,4 +75,4 @@ const TooltipTrigger = ({ children }: { children: ReactElement }) => children
 const TooltipContent = ({ children }: { children: React.ReactNode }) => <>{children}</>
 const TooltipProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }
+export { Tooltip, TooltipContent, TooltipProvider,TooltipTrigger }

@@ -1,8 +1,8 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
-import { Button, Menu } from '@mui/material'
 import ChevronDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import { Button, Menu } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 // NavigationMenuTrigger
 interface NavigationMenuTriggerProps {
@@ -71,4 +71,4 @@ const NavigationMenuContent = forwardRef<HTMLDivElement, NavigationMenuContentPr
 )
 NavigationMenuContent.displayName = 'NavigationMenuContent'
 
-export { NavigationMenuTrigger, NavigationMenuContent }
+export { NavigationMenuContent,NavigationMenuTrigger }

@@ -1,12 +1,12 @@
-import { createDeclarativeRendererState } from './renderer-state'
+import { evaluateConditional } from './evaluate-conditional'
 import { executeLuaScript } from './execute-lua-script'
 import { getComponentConfig } from './get-component-config'
 import { hasComponentConfig } from './has-component-config'
 import { interpolateValue } from './interpolate-value'
 import { registerComponentConfig } from './register-component-config'
 import { registerLuaScript } from './register-lua-script'
+import { createDeclarativeRendererState } from './renderer-state'
 import { resolveDataSource } from './resolve-data-source'
-import { evaluateConditional } from './evaluate-conditional'
 import type { DeclarativeComponentConfig, LuaScriptDefinition } from './types'
 
 export class DeclarativeComponentRenderer {

@@ -1,4 +1,6 @@
+import { EnvelopeSimple, FloppyDisk } from '@phosphor-icons/react'
 import { useMemo } from 'react'
+
 import {
   Button,
   Card,
@@ -11,7 +13,6 @@ import {
   Label,
   Switch,
 } from '@/components/ui'
-import { EnvelopeSimple, FloppyDisk } from '@phosphor-icons/react'
 import type { SMTPConfig } from '@/lib/password-utils'
 
 interface ConnectionFormProps {

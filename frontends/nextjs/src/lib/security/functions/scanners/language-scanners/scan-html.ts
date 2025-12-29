@@ -3,7 +3,7 @@
  * Scans HTML for security vulnerabilities like XSS
  */
 
-import type { SecurityScanResult, SecurityIssue } from '../../types'
+import type { SecurityIssue,SecurityScanResult } from '../../types'
 import { calculateOverallSeverity } from '../../utils/calculate-severity'
 
 /**

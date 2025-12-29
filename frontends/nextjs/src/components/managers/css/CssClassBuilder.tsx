@@ -1,12 +1,14 @@
+import { FloppyDisk,X } from '@phosphor-icons/react'
+
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui'
 import { Badge } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
+
 import { useClassBuilderState } from './class-builder/hooks'
 import { Preview } from './class-builder/Preview'
 import { RuleEditor } from './class-builder/RuleEditor'
-import { X, FloppyDisk } from '@phosphor-icons/react'
 
 interface CssClassBuilderProps {
   open: boolean

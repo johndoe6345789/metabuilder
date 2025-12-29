@@ -1,9 +1,10 @@
-import { HeroSection } from '../../level1/HeroSection'
-import { FeaturesSection } from '../../level1/FeaturesSection'
-import { ContactSection } from '../../level1/ContactSection'
-import { ServerStatusPanel } from '../../status/ServerStatusPanel'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
+
+import { ContactSection } from '../../level1/ContactSection'
+import { FeaturesSection } from '../../level1/FeaturesSection'
+import { HeroSection } from '../../level1/HeroSection'
 import { GitHubActionsFetcher } from '../../misc/github/GitHubActionsFetcher'
+import { ServerStatusPanel } from '../../status/ServerStatusPanel'
 import { IntroSection } from '../sections/IntroSection'
 
 interface Level1TabsProps {

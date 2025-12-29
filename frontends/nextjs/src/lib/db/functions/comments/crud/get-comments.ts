@@ -3,8 +3,8 @@
  * Retrieves all comments from database
  */
 
-import { prisma } from '../../prisma'
 import type { Comment } from '../../../types/level-types'
+import { prisma } from '../../prisma'
 
 /**
  * Get all comments

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+
 import { getUserById } from '@/lib/db/users'
 import type { User } from '@/lib/level-types'
+
 import { useAuth } from '../useAuth'
 
 export interface ResolvedUserState {

@@ -1,4 +1,5 @@
 import { createContext } from 'react'
+
 import type { User } from '@/lib/level-types'
 
 export interface AuthContextType {

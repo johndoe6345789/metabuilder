@@ -1,6 +1,6 @@
+import { useKV } from '@github/spark/hooks'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { useKV } from '@github/spark/hooks'
 
 import { Database } from '@/lib/database'
 import type { AppConfiguration } from '@/lib/level-types'

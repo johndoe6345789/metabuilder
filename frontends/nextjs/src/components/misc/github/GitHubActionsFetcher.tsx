@@ -2,10 +2,10 @@ import { Stack } from '@mui/material'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 
-import { useActionsFetcher } from './workflows/useActionsFetcher'
 import { AnalysisPanel } from './views/AnalysisPanel'
 import { RunDetails } from './views/RunDetails'
 import { RunList } from './views/RunList'
+import { useActionsFetcher } from './workflows/useActionsFetcher'
 
 export function GitHubActionsFetcher() {
   const {

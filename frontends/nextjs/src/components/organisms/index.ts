@@ -4,139 +4,135 @@
 // New MUI-based organisms - Data
 export {
   Table,
-  TableHeader,
   TableBody,
-  TableFooter,
-  TableRow,
-  TableHead,
-  TableCell,
   TableCaption,
-  type TableProps,
-  type TableRowProps,
-  type TableHeadProps,
+  TableCell,
   type TableCellProps,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  type TableHeadProps,
+  type TableProps,
+  TableRow,
+  type TableRowProps,
 } from './data/Table'
 
 // New MUI-based organisms - Overlay/Dialogs
 export {
   Command,
   CommandDialog,
-  CommandInput,
-  CommandList,
   CommandEmpty,
   CommandGroup,
+  CommandInput,
   CommandItem,
-  CommandSeparator,
-  CommandShortcut,
+  CommandList,
   CommandLoading,
   type CommandProps,
+  CommandSeparator,
+  CommandShortcut,
 } from './overlay/Command'
-
 export {
   Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetFooter,
-  SheetTitle,
-  SheetDescription,
-  SheetPortal,
-  SheetOverlay,
   SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetOverlay,
+  SheetPortal,
   type SheetProps,
+  SheetTitle,
+  SheetTrigger,
 } from './overlay/Sheet'
 
 // New MUI-based organisms - Navigation
 export {
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarMenuItem,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarSeparator,
-  SidebarTrigger,
-  SidebarRail,
-  SidebarInset,
-  SidebarProvider,
-  type SidebarProps,
-} from './navigation/Sidebar'
-
-export {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuTrigger,
-  NavigationMenuContent,
-  NavigationMenuLink,
-  NavigationMenuIndicator,
-  NavigationMenuViewport,
-  navigationMenuTriggerStyle,
-  type NavigationMenuProps,
-} from './navigation/NavigationMenu'
-
-export {
   Form,
+  FormControl,
+  FormDescription,
   FormField as FormFieldController,
   FormItem,
   FormLabel,
-  FormControl,
-  FormDescription,
   FormMessage,
-  useFormField,
-  useForm,
   FormProvider,
+  useForm,
+  useFormField,
 } from './data/Form'
+export {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  type NavigationMenuProps,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+  NavigationMenuViewport,
+} from './navigation/NavigationMenu'
+export {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  type SidebarProps,
+  SidebarProvider,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarTrigger,
+} from './navigation/Sidebar'
 
 // Legacy feature components
-export { SchemaEditor } from '../SchemaEditor'
-export { ComponentCatalog } from '../ComponentCatalog'
-export { PropertyInspector } from '../PropertyInspector'
-export { CssClassBuilder } from '../CssClassBuilder'
-export { CssClassManager } from '../CssClassManager'
-export { DropdownConfigManager } from '../DropdownConfigManager'
-export { DatabaseManager } from '../DatabaseManager'
-export { UserManagement } from '../UserManagement'
-export { PackageManager } from '../PackageManager'
-export { PackageImportExport } from '../PackageImportExport'
-export { LuaEditor } from '../LuaEditor'
-export { LuaSnippetLibrary } from '../LuaSnippetLibrary'
-export { JsonEditor } from '../JsonEditor'
-export { CodeEditor } from '../CodeEditor'
-export { NerdModeIDE } from '../NerdModeIDE'
-export { ThemeEditor } from '../ThemeEditor'
-export { SMTPConfigEditor } from '../SMTPConfigEditor'
-export { IRCWebchat } from '../IRCWebchat'
-export { IRCWebchatDeclarative } from '../IRCWebchatDeclarative'
-export { WorkflowEditor } from '../WorkflowEditor'
-export { PageRoutesManager } from '../PageRoutesManager'
-export { GodCredentialsSettings } from '../GodCredentialsSettings'
-export { ScreenshotAnalyzer } from '../ScreenshotAnalyzer'
-export { GitHubActionsFetcher } from '../GitHubActionsFetcher'
 export { AuditLogViewer } from '../AuditLogViewer'
 export { Builder } from '../Builder'
 export { Canvas } from '../Canvas'
+export { CodeEditor } from '../CodeEditor'
+export { ComponentCatalog } from '../ComponentCatalog'
 export { ComponentConfigDialog } from '../ComponentConfigDialog'
 export { ComponentHierarchyEditor } from '../ComponentHierarchyEditor'
+export { CssClassBuilder } from '../CssClassBuilder'
+export { CssClassManager } from '../CssClassManager'
+export { DatabaseManager } from '../DatabaseManager'
+export { DropdownConfigManager } from '../DropdownConfigManager'
 export { FieldRenderer } from '../FieldRenderer'
 export { GenericPage } from '../GenericPage'
+export { GitHubActionsFetcher } from '../GitHubActionsFetcher'
+export { GodCredentialsSettings } from '../GodCredentialsSettings'
+export { IRCWebchat } from '../IRCWebchat'
+export { IRCWebchatDeclarative } from '../IRCWebchatDeclarative'
+export { JsonEditor } from '../JsonEditor'
+export { ContactSection } from '../level1/ContactSection'
+export { FeaturesSection } from '../level1/FeaturesSection'
+export { HeroSection } from '../level1/HeroSection'
+export { NavigationBar } from '../level1/NavigationBar'
+export { CommentsList } from '../level2/CommentsList'
+export { Login } from '../Login'
+export { LuaEditor } from '../LuaEditor'
+export { LuaSnippetLibrary } from '../LuaSnippetLibrary'
 export { ModelListView } from '../ModelListView'
+export { NerdModeIDE } from '../NerdModeIDE'
+export { PackageImportExport } from '../PackageImportExport'
+export { PackageManager } from '../PackageManager'
+export { PageRoutesManager } from '../PageRoutesManager'
+export { PropertyInspector } from '../PropertyInspector'
 export { QuickGuide } from '../QuickGuide'
 export { RecordForm } from '../RecordForm'
 export { RenderComponent } from '../RenderComponent'
+export { SchemaEditor } from '../SchemaEditor'
 export { SchemaEditorLevel4 } from '../SchemaEditorLevel4'
+export { ScreenshotAnalyzer } from '../ScreenshotAnalyzer'
+export { SMTPConfigEditor } from '../SMTPConfigEditor'
+export { ThemeEditor } from '../ThemeEditor'
 export { UnifiedLogin } from '../UnifiedLogin'
-export { Login } from '../Login'
-
-export { HeroSection } from '../level1/HeroSection'
-export { FeaturesSection } from '../level1/FeaturesSection'
-export { ContactSection } from '../level1/ContactSection'
-export { NavigationBar } from '../level1/NavigationBar'
-export { CommentsList } from '../level2/CommentsList'
+export { UserManagement } from '../UserManagement'
+export { WorkflowEditor } from '../WorkflowEditor'
 
 // Security components
 export { SecurityWarningDialog } from './security/SecurityWarningDialog'

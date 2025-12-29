@@ -1,5 +1,9 @@
-import { useState, useMemo } from 'react'
 import { useKV } from '@github/spark/hooks'
+import { ArrowDown,ArrowUp, MagnifyingGlass, Pencil, Plus, Trash } from '@phosphor-icons/react'
+import { motion } from 'motion/react'
+import { useMemo,useState } from 'react'
+import { toast } from 'sonner'
+
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Badge } from '@/components/ui'
@@ -7,16 +11,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import type { ModelSchema, SchemaConfig } from '@/lib/schema-types'
 import {
-  getRecordsKey,
-  getFieldLabel,
-  sortRecords,
   filterRecords,
   findModel,
+  getFieldLabel,
+  getRecordsKey,
+  sortRecords,
 } from '@/lib/schema-utils'
+
 import { RecordForm } from './RecordForm'
-import { Plus, Pencil, Trash, MagnifyingGlass, ArrowUp, ArrowDown } from '@phosphor-icons/react'
-import { toast } from 'sonner'
-import { motion } from 'motion/react'
 
 interface RelationCellValueProps {
   value: string

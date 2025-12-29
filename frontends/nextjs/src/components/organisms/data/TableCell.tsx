@@ -1,11 +1,11 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
 import {
-  TableRow as MuiTableRow,
   TableCell as MuiTableCell,
   TableCellProps as MuiTableCellProps,
+  TableRow as MuiTableRow,
 } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 // TableRow
 export interface TableRowProps {
@@ -98,4 +98,4 @@ const TableCaption = forwardRef<
 })
 TableCaption.displayName = 'TableCaption'
 
-export { TableRow, TableHead, TableCell, TableCaption }
+export { TableCaption,TableCell, TableHead, TableRow }

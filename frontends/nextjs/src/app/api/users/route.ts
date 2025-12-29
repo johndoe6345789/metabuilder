@@ -4,12 +4,13 @@
  * This API route forwards user management operations to the C++ DBAL daemon.
  */
 
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { callDaemon } from '@/lib/dbal/daemon/client'
-import { hashPassword } from '@/lib/db/hash-password'
-import { setCredential } from '@/lib/db/credentials/set-credential'
+import { NextResponse } from 'next/server'
+
 import { requireDBALApiKey } from '@/lib/api/require-dbal-api-key'
+import { setCredential } from '@/lib/db/credentials/set-credential'
+import { hashPassword } from '@/lib/db/hash-password'
+import { callDaemon } from '@/lib/dbal/daemon/client'
 import type { User, UserRole } from '@/lib/level-types'
 
 const RPC_LIMIT = 200

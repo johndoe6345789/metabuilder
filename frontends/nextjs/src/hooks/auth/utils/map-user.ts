@@ -4,6 +4,7 @@
  */
 
 import type { User } from '@/lib/level-types'
+
 import type { AuthUser } from '../auth-types'
 import { getRoleLevel } from './role-levels'
 

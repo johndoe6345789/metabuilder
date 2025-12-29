@@ -1,4 +1,6 @@
+import { FilmSlate, ImageSquare } from '@phosphor-icons/react'
 import Image from 'next/image'
+
 import {
   Badge,
   Card,
@@ -9,7 +11,6 @@ import {
   Input,
   Label,
 } from '@/components/ui'
-import { FilmSlate, ImageSquare } from '@phosphor-icons/react'
 
 interface MediaPaneProps {
   thumbnailUrl?: string

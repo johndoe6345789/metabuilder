@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
+
 import { installPackage, togglePackageEnabled, uninstallPackage } from '@/lib/api/packages'
 import type { PackageCatalogData } from '@/lib/packages/core/package-catalog'
 

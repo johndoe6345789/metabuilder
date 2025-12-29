@@ -1,12 +1,13 @@
 import { renderHook } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { useBlockDefinitions } from './useBlockDefinitions'
+
+import type { LuaBlock } from '../types'
 import {
   BLOCKS_METADATA_PREFIX,
   buildLuaFromBlocks,
   decodeBlocksMetadata,
 } from './luaBlockSerialization'
-import type { LuaBlock } from '../types'
+import { useBlockDefinitions } from './useBlockDefinitions'
 
 describe('useBlockDefinitions', () => {
   it('aggregates block metadata by category', () => {

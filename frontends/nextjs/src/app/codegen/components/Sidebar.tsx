@@ -1,7 +1,8 @@
 'use client'
 
-import type { CodegenManifest } from '@/lib/codegen/codegen-types'
 import { Paper, Stack, Typography } from '@mui/material'
+
+import type { CodegenManifest } from '@/lib/codegen/codegen-types'
 
 interface SidebarProps {
   manifest: CodegenManifest | null

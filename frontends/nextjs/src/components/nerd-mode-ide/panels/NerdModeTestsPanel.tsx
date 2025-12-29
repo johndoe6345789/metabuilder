@@ -1,8 +1,10 @@
 import ScienceIcon from '@mui/icons-material/Science'
+
 import { Badge } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Card, CardContent } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
+
 import type { TestResult } from './types'
 
 interface NerdModeTestsPanelProps {

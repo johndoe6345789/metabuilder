@@ -1,8 +1,9 @@
 import { Database } from '@/lib/database-lib/database'
-import type { SecurityContext } from '../types'
+
 import { executeQuery } from '../execute-query'
-import { sanitizeInput } from '../sanitize-input'
 import { loginAttemptTracker } from '../login-attempt-tracker'
+import { sanitizeInput } from '../sanitize-input'
+import type { SecurityContext } from '../types'
 
 /**
  * Verify user credentials with security checks

@@ -1,4 +1,6 @@
+import { Database as DatabaseIcon, Export, FileArrowDown,Package } from '@phosphor-icons/react'
 import type React from 'react'
+
 import {
   Button,
   Card,
@@ -14,11 +16,11 @@ import {
   ScrollArea,
   Separator,
 } from '@/components/ui'
-import { Export, Package, Database as DatabaseIcon, FileArrowDown } from '@phosphor-icons/react'
 import type { PackageManifest } from '@/lib/package-types'
 import type { ExportPackageOptions } from '@/lib/packages/core/package-export'
-import { ExportOptions } from './ExportOptions'
+
 import { ExportManifestForm } from './ExportManifestForm'
+import { ExportOptions } from './ExportOptions'
 
 interface ExportDialogProps {
   open: boolean

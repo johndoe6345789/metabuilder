@@ -1,6 +1,8 @@
-import { Box, Button, Card, CardContent, CardHeader, Stack, Tooltip } from '@mui/material'
 import { ContentCopy, Refresh as RefreshIcon, Save as SaveIcon } from '@mui/icons-material'
+import { Box, Button, Card, CardContent, CardHeader, Stack, Tooltip } from '@mui/material'
+
 import type { LuaScript } from '@/lib/level-types'
+
 import styles from './LuaBlocksEditor.module.scss'
 
 interface CodePreviewProps {

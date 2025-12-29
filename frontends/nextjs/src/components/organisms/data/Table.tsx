@@ -1,18 +1,18 @@
 // Table barrel export - maintains backward compatibility after splitting into smaller organisms
 // Components split into separate files to keep each under 150 LOC
 export {
-  TableCore as Table,
-  type TableProps,
-  TableHeader,
-  TableBody,
-  TableFooter,
-} from './TableCore'
-export {
-  TableRow,
-  type TableRowProps,
-  TableHead,
-  type TableHeadProps,
+  TableCaption,
   TableCell,
   type TableCellProps,
-  TableCaption,
+  TableHead,
+  type TableHeadProps,
+  TableRow,
+  type TableRowProps,
 } from './TableCell'
+export {
+  TableCore as Table,
+  TableBody,
+  TableFooter,
+  TableHeader,
+  type TableProps,
+} from './TableCore'

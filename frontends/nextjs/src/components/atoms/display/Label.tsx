@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef, LabelHTMLAttributes } from 'react'
 import { Typography } from '@mui/material'
+import { forwardRef, LabelHTMLAttributes } from 'react'
 
 /**
  * Props for the Label component

@@ -1,10 +1,12 @@
-import { Button, Label } from '@/components/ui'
 import {
   AccountTree as GitBranchIcon,
   ArrowForward as ArrowRightIcon,
   Code as CodeIcon,
   FlashOn as LightningIcon,
 } from '@mui/icons-material'
+
+import { Button, Label } from '@/components/ui'
+
 import type { WorkflowNodesPanelProps } from './types'
 import { WorkflowNodeCard } from './WorkflowNodeCard'
 

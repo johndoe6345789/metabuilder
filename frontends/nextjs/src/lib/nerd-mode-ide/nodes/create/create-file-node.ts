@@ -1,5 +1,5 @@
-import { createNodeId } from './create-node-id'
 import { getLanguageFromFilename } from '../../get-language-from-filename'
+import { createNodeId } from './create-node-id'
 import type { FileNode } from './types'
 
 interface CreateFileNodeOptions {

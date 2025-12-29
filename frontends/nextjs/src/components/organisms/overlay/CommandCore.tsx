@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef, ReactNode } from 'react'
 import { Paper } from '@mui/material'
+import { forwardRef, ReactNode } from 'react'
 
 // Command container (like cmdk)
 export interface CommandProps {
