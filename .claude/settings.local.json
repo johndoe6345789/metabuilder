@@ -7,7 +7,8 @@
       "Bash(npm run test:unit:*)",
       "Bash(npm install:*)",
       "Bash(xargs:*)",
-      "Bash(npm run db:generate:*)"
+      "Bash(npm run db:generate:*)",
+      "Bash(npx prisma generate:*)"
     ]
   }
 }
