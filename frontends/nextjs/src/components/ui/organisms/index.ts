@@ -89,8 +89,9 @@ export {
   NavigationSeparator,
   NavigationSpacer,
   NavigationTrigger,
-  useNavigationDropdown,
 } from './navigation/Navigation'
+export type { NavigationItemType } from './navigation/utils/navigationConfig'
+export { useNavigationDropdown } from './navigation/utils/navigationHelpers'
 
 // Alert Dialog
 export {

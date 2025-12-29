@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { generateComponentTree } from '@/lib/lua/ui/generate-component-tree'
-import type { UIPageData } from '@/lib/ui-pages/load-page-from-db'
+import type { LuaActionHandler, UIPageData } from '@/lib/ui-pages/load-page-from-db'
 import type { LuaUIComponent } from '@/lib/lua/ui/types/lua-ui-package'
 
 interface UIPageRendererProps {
@@ -32,7 +32,7 @@ export function UIPageRenderer({ pageData }: UIPageRendererProps) {
  * Context for action handlers
  * Components can access these via useUIPageActions hook
  */
-const UIPageActionsContext = React.createContext<Record<string, Function>>({})
+const UIPageActionsContext = React.createContext<Record<string, LuaActionHandler>>({})
 
 /**
  * Hook to access page action handlers

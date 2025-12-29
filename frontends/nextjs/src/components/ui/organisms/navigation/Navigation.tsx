@@ -13,8 +13,6 @@ import {
 } from './NavigationMenuItems'
 import { NavigationMobileToggle } from './NavigationResponsive'
 import { NavigationBrand, NavigationSeparator, NavigationSpacer } from './NavigationStyling'
-import { NavigationItemType } from './utils/navigationConfig'
-import { useNavigationDropdown } from './utils/navigationHelpers'
 
 interface NavigationProps {
   children: ReactNode
@@ -80,6 +78,4 @@ export {
   NavigationSeparator,
   NavigationSpacer,
   NavigationTrigger,
-  useNavigationDropdown,
 }
-export type { NavigationItemType }
