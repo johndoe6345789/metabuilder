@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * Root DBAL module declarations.
  * Split from the monolithic dbal.d.ts to keep each set of exports contained.
@@ -8,7 +6,7 @@ declare module '@/dbal/development/src' {
   export interface DBALConfig {
     mode?: 'development' | 'production'
     adapter?: string
-    auth?: any
+    auth?: Record<string, unknown>
     database?: {
       url?: string
     }
@@ -16,7 +14,7 @@ declare module '@/dbal/development/src' {
       sandbox?: 'strict' | 'permissive' | 'disabled'
       enableAuditLog?: boolean
     }
-    [key: string]: any
+    [key: string]: unknown
   }
 
   export interface DBALUser {
@@ -28,7 +26,7 @@ declare module '@/dbal/development/src' {
     role?: string
     tenantId?: string
     createdAt?: number | string | Date
-    [key: string]: any
+    [key: string]: unknown
   }
 
   export interface ListResult<T> {

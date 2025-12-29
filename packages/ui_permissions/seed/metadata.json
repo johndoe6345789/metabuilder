@@ -3,6 +3,7 @@
   "name": "UI Permissions",
   "version": "1.0.0",
   "description": "Shared permission utilities for page access control",
+  "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
