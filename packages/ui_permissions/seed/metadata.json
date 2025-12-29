@@ -1,0 +1,13 @@
+{
+  "packageId": "ui_permissions",
+  "name": "UI Permissions",
+  "version": "1.0.0",
+  "description": "Shared permission utilities for page access control",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [],
+  "exports": {
+    "scripts": ["permissions"],
+    "components": []
+  }
+}

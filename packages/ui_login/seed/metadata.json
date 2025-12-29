@@ -1,0 +1,14 @@
+{
+  "packageId": "ui_login",
+  "name": "Login Page",
+  "version": "1.0.0",
+  "description": "Login and registration page with form validation",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": ["ui_permissions"],
+  "exports": {
+    "pages": ["login"],
+    "scripts": ["login_ui", "login_actions"],
+    "components": []
+  }
+}

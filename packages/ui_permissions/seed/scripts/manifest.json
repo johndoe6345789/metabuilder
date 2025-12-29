@@ -1,0 +1,6 @@
+{
+  "scripts": [
+    { "file": "levels.lua", "name": "levels", "category": "constants", "description": "Permission level constants" },
+    { "file": "check.lua", "name": "check", "category": "security", "description": "Permission check functions" }
+  ]
+}

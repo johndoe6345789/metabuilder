@@ -1,0 +1,7 @@
+{
+  "scripts": [
+    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle" },
+    { "file": "validate.lua", "name": "validate", "category": "validation", "description": "Form validation" },
+    { "file": "actions.lua", "name": "actions", "category": "actions", "description": "Login/register handlers" }
+  ]
+}

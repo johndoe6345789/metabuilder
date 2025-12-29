@@ -1,0 +1,14 @@
+{
+  "packageId": "ui_home",
+  "name": "Home Page",
+  "version": "1.0.0",
+  "description": "Level 1 home page with server status",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": ["ui_permissions"],
+  "exports": {
+    "pages": ["level1"],
+    "scripts": ["home_ui", "navigate"],
+    "components": []
+  }
+}

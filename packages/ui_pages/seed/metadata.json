@@ -1,20 +1,18 @@
 {
   "packageId": "ui_pages",
-  "name": "UI Pages",
-  "version": "1.0.0",
-  "description": "Declarative JSON-defined UI pages for all levels",
+  "name": "UI Pages Bundle",
+  "version": "2.0.0",
+  "description": "Meta-package that bundles all UI page packages",
   "author": "MetaBuilder",
   "category": "ui",
-  "dependencies": [],
+  "dependencies": [
+    "ui_permissions",
+    "ui_login",
+    "ui_home"
+  ],
   "exports": {
-    "pages": [
-      "login",
-      "level1",
-      "level2",
-      "level3",
-      "level4",
-      "level5",
-      "level6"
-    ]
+    "pages": [],
+    "scripts": [],
+    "components": []
   }
 }
