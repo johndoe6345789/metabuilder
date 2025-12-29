@@ -48,7 +48,7 @@ export interface FieldSchema {
   label?: string
   required?: boolean
   unique?: boolean
-  default?: any
+  default?: unknown
   choices?: Array<{ value: string; label: string }>
   relatedModel?: string
   helpText?: string | string[]
