@@ -10,7 +10,7 @@
  * 5. Updates progress report
  */
 
-import { ASTLambdaRefactor } from '../ast-lambda-refactor'
+import { refactorFile } from '../ast-lambda-refactor/functions/refactor-file'
 import * as fs from 'fs/promises'
 import * as path from 'path'
 import { loadFilesFromReport } from './utils/load-files-from-report'
@@ -83,30 +83,25 @@ async function main() {
   console.log('='.repeat(60) + '\n')
   
   // Refactor files
-  const refactor = new ASTLambdaRefactor({ dryRun, verbose: true })
+  // Note: refactorFile has been refactored and needs context object
+  // For now, we'll skip actual refactoring and just report the issue
+  
+  console.log('\n⚠️  WARNING: The refactoring tools have been refactored themselves and')
+  console.log('   have broken imports/exports. The tools need to be fixed first.')
+  console.log('\n📋 Files that would be refactored:')
   
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
-    console.log(`\n[${i + 1}/${files.length}] Processing: ${file.path}`)
-    
-    try {
-      await refactor.refactorFile(file.path)
-      file.status = 'completed'
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : String(error)
-      if (errorMsg.includes('skipping') || errorMsg.includes('No functions')) {
-        file.status = 'skipped'
-        file.error = errorMsg
-      } else {
-        file.status = 'failed'
-        file.error = errorMsg
-        console.error(`  ❌ Error: ${errorMsg}`)
-      }
-    }
-    
-    // Small delay to avoid overwhelming system
-    await new Promise(resolve => setTimeout(resolve, 100))
+    console.log(`   ${i + 1}. ${file.path} (${file.lines} lines)`)
+    file.status = 'skipped'
+    file.error = 'Tool needs repair: lambda functions use "this" without class context. See manual refactoring steps below.'
   }
+  
+  console.log('\n💡 To refactor these files manually:')
+  console.log('   1. Extract functions to separate files in a functions/ subdirectory')
+  console.log('   2. Create an index.ts with re-exports')
+  console.log('   3. Create a Utils class wrapper')
+  console.log('   4. Replace original file with re-export statement')
   
   // Summary
   const summary = {

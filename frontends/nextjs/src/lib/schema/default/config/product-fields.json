@@ -1,0 +1,83 @@
+[
+  {
+    "name": "id",
+    "type": "string",
+    "label": "ID",
+    "required": true,
+    "unique": true,
+    "editable": false,
+    "listDisplay": false
+  },
+  {
+    "name": "name",
+    "type": "string",
+    "label": "Product Name",
+    "required": true,
+    "listDisplay": true,
+    "searchable": true,
+    "sortable": true
+  },
+  {
+    "name": "description",
+    "type": "text",
+    "label": "Description",
+    "required": false,
+    "helpText": "Product description",
+    "listDisplay": false,
+    "searchable": true
+  },
+  {
+    "name": "price",
+    "type": "number",
+    "label": "Price",
+    "required": true,
+    "listDisplay": true,
+    "sortable": true
+  },
+  {
+    "name": "stock",
+    "type": "number",
+    "label": "Stock",
+    "required": true,
+    "default": 0,
+    "listDisplay": true,
+    "sortable": true
+  },
+  {
+    "name": "category",
+    "type": "select",
+    "label": "Category",
+    "required": true,
+    "choices": [
+      {
+        "value": "electronics",
+        "label": "Electronics"
+      },
+      {
+        "value": "clothing",
+        "label": "Clothing"
+      },
+      {
+        "value": "books",
+        "label": "Books"
+      },
+      {
+        "value": "home",
+        "label": "Home & Garden"
+      },
+      {
+        "value": "toys",
+        "label": "Toys"
+      }
+    ],
+    "listDisplay": false,
+    "sortable": true
+  },
+  {
+    "name": "available",
+    "type": "boolean",
+    "label": "Available",
+    "default": true,
+    "listDisplay": true
+  }
+]
