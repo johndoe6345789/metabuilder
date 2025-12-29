@@ -57,5 +57,7 @@
     "https://docs.github.com/*": true,
     "https://www.npmjs.com/*": true,
     "https://registry.npmjs.org/*": true
-}
+},
+"claudeCode.allowDangerouslySkipPermissions": true,
+"claudeCode.initialPermissionMode": "bypassPermissions"
 }
