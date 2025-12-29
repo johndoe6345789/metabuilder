@@ -2,8 +2,9 @@
 
 import { forwardRef } from 'react'
 
+import { NextIcon } from './paginationIcons'
 import { PaginationLink } from './PaginationLink'
-import { NextIcon, type PaginationLinkProps } from './paginationUtils'
+import { type PaginationLinkProps } from './paginationTypes'
 
 const PaginationNext = forwardRef<HTMLButtonElement, Omit<PaginationLinkProps, 'children'>>(
   (props, ref) => {

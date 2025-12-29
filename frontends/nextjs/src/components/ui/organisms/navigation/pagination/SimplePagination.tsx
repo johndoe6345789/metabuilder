@@ -3,7 +3,7 @@
 import { Box, IconButton, Typography } from '@mui/material'
 import { forwardRef } from 'react'
 
-import { NextIcon, PreviousIcon } from './paginationUtils'
+import { NextIcon, PreviousIcon } from './paginationIcons'
 
 interface SimplePaginationProps {
   hasPrevious: boolean

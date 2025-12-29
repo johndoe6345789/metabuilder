@@ -1,9 +1,11 @@
 import { Database } from '@/lib/database'
-import { executeLuaCode } from '@/lib/lua/functions/execution/execute-lua-code'
 import { createLuaEngine } from '@/lib/lua/engine/core/create-lua-engine'
+import { executeLuaCode } from '@/lib/lua/functions/execution/execute-lua-code'
 import { normalizeLuaStructure } from '@/lib/lua/ui/normalize-lua-structure'
-import type { JsonObject } from '@/types/utility-types'
 import type { UIPageRecord } from '@/lib/seed/import-ui-pages'
+import type { JsonObject } from '@/types/utility-types'
+
+export type LuaActionHandler = (payload?: Record<string, unknown>) => Promise<unknown>
 
 /**
  * Load a UI page from database and optionally process with Lua
@@ -24,7 +26,7 @@ export async function loadPageFromDB(path: string): Promise<UIPageData | null> {
 
   // 2. Get associated Lua scripts if any (from actions field)
   let processedLayout = page.layout
-  const actionHandlers: Record<string, Function> = {}
+  const actionHandlers: Record<string, LuaActionHandler> = {}
 
   if (page.actions) {
     // Load Lua action handlers
@@ -78,15 +80,15 @@ export async function loadPageFromDB(path: string): Promise<UIPageData | null> {
 /**
  * Create a JavaScript wrapper for a Lua action handler
  */
-function createLuaActionHandler(luaCode: string, actionName: string): Function {
-  return async (...args: any[]) => {
+function createLuaActionHandler(luaCode: string, actionName: string): LuaActionHandler {
+  return async (payload: Record<string, unknown> = {}) => {
     const engine = createLuaEngine()
 
     try {
       const result = await executeLuaCode(
         engine.L,
         luaCode,
-        { data: args[0] || {} },
+        { data: payload },
         []
       )
 
@@ -112,5 +114,5 @@ export interface UIPageData {
   requireAuth: boolean
   requiredRole?: string
   layout: JsonObject
-  actions: Record<string, Function>
+  actions: Record<string, LuaActionHandler>
 }
