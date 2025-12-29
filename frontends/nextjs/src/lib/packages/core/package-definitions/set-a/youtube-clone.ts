@@ -117,5 +117,4 @@ export const youtubeClonePackage = (): { manifest: PackageManifest; content: Pac
     componentHierarchy: {},
     componentConfigs: {},
   },
-}
 })

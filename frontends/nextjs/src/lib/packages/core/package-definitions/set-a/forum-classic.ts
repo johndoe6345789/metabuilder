@@ -131,5 +131,4 @@ export const forumClassicPackage = (): { manifest: PackageManifest; content: Pac
       ],
     },
   },
-}
 })

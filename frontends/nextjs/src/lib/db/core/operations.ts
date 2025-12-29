@@ -3,6 +3,7 @@ import { hashPassword } from '../password/hash-password'
 import { verifyPassword } from '../password/verify-password'
 import * as auth from '../auth'
 import * as users from '../users'
+import { transferSuperGodPower } from '../users/super-god/transfer-super-god-power'
 import * as credentials from '../credentials'
 import * as sessions from '../sessions'
 import * as workflows from '../workflows'
@@ -48,7 +49,7 @@ export class Database {
   static updateUser = users.updateUser
   static deleteUser = users.deleteUser
   static getSuperGod = users.getSuperGod
-  static transferSuperGodPower = users.transferSuperGodPower
+  static transferSuperGodPower = transferSuperGodPower
 
   // Credentials
   static getCredentials = credentials.getCredentials

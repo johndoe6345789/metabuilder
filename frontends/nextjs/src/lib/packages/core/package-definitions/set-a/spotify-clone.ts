@@ -126,5 +126,4 @@ export const spotifyClonePackage = (): { manifest: PackageManifest; content: Pac
     componentHierarchy: {},
     componentConfigs: {},
   },
-}
 })
