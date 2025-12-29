@@ -1,0 +1,92 @@
+{
+  "timestamp": "2025-12-29T18:30:06.526Z",
+  "duration": "4.03s",
+  "options": {
+    "dryRun": true,
+    "priority": "high",
+    "limit": 10,
+    "batchSize": 5,
+    "skipLint": false,
+    "skipTest": false,
+    "autoConfirm": false,
+    "verbose": false
+  },
+  "summary": {
+    "total": 10,
+    "completed": 10,
+    "failed": 0,
+    "skipped": 0
+  },
+  "files": [
+    {
+      "path": "frontends/nextjs/src/lib/db/database-admin/seed-default-data/css/categories/base.ts",
+      "lines": 278,
+      "priority": "high",
+      "category": "library",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/lib/nerd-mode-ide/templates/configs/base.ts",
+      "lines": 267,
+      "priority": "high",
+      "category": "library",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/lib/schema/default/forms.ts",
+      "lines": 244,
+      "priority": "high",
+      "category": "library",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/lib/db/core/operations.ts",
+      "lines": 190,
+      "priority": "high",
+      "category": "library",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/lib/rendering/page/page-renderer.ts",
+      "lines": 178,
+      "priority": "high",
+      "category": "library",
+      "status": "completed"
+    },
+    {
+      "path": "frontends/nextjs/src/lib/github/workflows/analysis/runs/stats.ts",
+      "lines": 153,
+      "priority": "high",
+      "category": "library",
+      "status": "completed"
+    },
+    {
+      "path": "tools/refactoring/orchestrate-refactor.ts",
+      "lines": 249,
+      "priority": "high",
+      "category": "tool",
+      "status": "completed"
+    },
+    {
+      "path": "tools/refactoring/bulk-lambda-refactor.ts",
+      "lines": 249,
+      "priority": "high",
+      "category": "tool",
+      "status": "completed"
+    },
+    {
+      "path": "tools/refactoring/languages/typescript-refactor.ts",
+      "lines": 219,
+      "priority": "high",
+      "category": "tool",
+      "status": "completed"
+    },
+    {
+      "path": "tools/refactoring/cli/orchestrate-refactor.ts",
+      "lines": 213,
+      "priority": "high",
+      "category": "tool",
+      "status": "completed"
+    }
+  ]
+}

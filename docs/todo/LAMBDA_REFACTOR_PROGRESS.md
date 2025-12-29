@@ -1,20 +1,20 @@
 # Lambda-per-File Refactoring Progress
 
-**Generated:** 2025-12-29T18:20:27.266Z
+**Generated:** 2025-12-29T18:28:41.724Z
 
 ## Summary
 
-- **Total files > 150 lines:** 60
-- **Pending:** 51
+- **Total files > 150 lines:** 62
+- **Pending:** 52
 - **In Progress:** 0
 - **Completed:** 0
-- **Skipped:** 9
+- **Skipped:** 10
 
 ## By Category
 
 - **component:** 34
-- **test:** 9
-- **tool:** 8
+- **test:** 10
+- **tool:** 9
 - **library:** 6
 - **other:** 2
 - **dbal:** 1
@@ -23,7 +23,7 @@
 
 Files are prioritized by ease of refactoring and impact.
 
-### High Priority (14 files)
+### High Priority (15 files)
 
 Library and tool files - easiest to refactor
 
@@ -41,6 +41,7 @@ Library and tool files - easiest to refactor
 - [ ] `tools/refactoring/ast-lambda-refactor.ts` (192 lines)
 - [ ] `tools/refactoring/error-as-todo-refactor/index.ts` (163 lines)
 - [ ] `dbal/shared/tools/cpp-build-assistant/workflow.ts` (153 lines)
+- [ ] `tools/refactoring/auto-code-extractor-3000.ts` (487 lines)
 
 ### Medium Priority (35 files)
 
@@ -73,7 +74,7 @@ DBAL and component files - moderate complexity
 - [ ] `frontends/nextjs/src/components/nerd-mode-ide/core/NerdModeIDE/useNerdIdeState.ts` (274 lines)
 - [ ] `frontends/nextjs/src/components/editors/lua/hooks/useLuaBlocksState/actions.ts` (208 lines)
 
-### Skipped Files (9)
+### Skipped Files (10)
 
 These files do not need refactoring:
 
@@ -83,6 +84,7 @@ These files do not need refactoring:
 - `frontends/nextjs/src/lib/packages/tests/package-glue/execution.test.ts` (229 lines) - Test files can remain large for comprehensive coverage
 - `frontends/nextjs/src/hooks/ui/state/__tests__/useAutoRefresh.polling.test.ts` (229 lines) - Test files can remain large for comprehensive coverage
 - `frontends/nextjs/src/lib/schema/__tests__/schema-utils.serialization.test.ts` (225 lines) - Test files can remain large for comprehensive coverage
+- `tools/refactoring/auto-code-extractor-3000.test.ts` (194 lines) - Test files can remain large for comprehensive coverage
 - `frontends/nextjs/src/lib/rendering/tests/declarative-component-renderer.lifecycle.test.ts` (183 lines) - Test files can remain large for comprehensive coverage
 - `frontends/nextjs/src/hooks/__tests__/useAuth.session.test.ts` (177 lines) - Test files can remain large for comprehensive coverage
 - `frontends/nextjs/src/hooks/data/__tests__/useKV.store.test.ts` (162 lines) - Test files can remain large for comprehensive coverage

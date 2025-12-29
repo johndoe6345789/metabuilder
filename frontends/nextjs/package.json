@@ -56,7 +56,12 @@
         "cpp:clean": "node dbal/shared/tools/cpp-build-assistant.cjs clean",
         "cpp:rebuild": "node dbal/shared/tools/cpp-build-assistant.cjs rebuild",
         "cpp:full": "node dbal/shared/tools/cpp-build-assistant.cjs full",
-        "screenshot": "npx playwright install chromium && npx tsx scripts/capture-screenshot.ts"
+        "screenshot": "npx playwright install chromium && npx tsx scripts/capture-screenshot.ts",
+        "extract:preview": "NODE_PATH=./node_modules npx tsx ../../tools/refactoring/auto-code-extractor-3000.ts --dry-run",
+        "extract:quick": "NODE_PATH=./node_modules npx tsx ../../tools/refactoring/auto-code-extractor-3000.ts --limit=5",
+        "extract:auto": "NODE_PATH=./node_modules npx tsx ../../tools/refactoring/auto-code-extractor-3000.ts --auto-confirm",
+        "extract:all": "NODE_PATH=./node_modules npx tsx ../../tools/refactoring/auto-code-extractor-3000.ts --priority=all --limit=50 --auto-confirm",
+        "extract:help": "NODE_PATH=./node_modules npx tsx ../../tools/refactoring/auto-code-extractor-3000.ts --help"
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.958.0",
