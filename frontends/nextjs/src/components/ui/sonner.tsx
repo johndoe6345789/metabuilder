@@ -2,7 +2,24 @@
 
 /**
  * Sonner-compatible toast API using MUI Snackbar
- * Provides a drop-in replacement for the 'sonner' package
+ * Provides a drop-in replacement for the 'sonner' package.
+ *
+ * Usage:
+ *
+ * ```tsx
+ * import { Toaster, toast } from '@/components/ui/sonner'
+ *
+ * function App() {
+ *   return (
+ *     <>
+ *       <button onClick={() => toast('Default message')}>Show default toast</button>
+ *       <button onClick={() => toast.success('Saved!')}>Show success toast</button>
+ *       <button onClick={() => toast.error('Failed to save')}>Show error toast</button>
+ *       <Toaster />
+ *     </>
+ *   )
+ * }
+ * ```
  */
 
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
