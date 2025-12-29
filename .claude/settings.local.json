@@ -23,7 +23,8 @@
       "Bash(npx prisma validate:*)",
       "Bash(npm run typecheck:*)",
       "Bash(npm run lint)",
-      "Bash(npm audit:*)"
+      "Bash(npm audit:*)",
+      "Bash(bun run lint)"
     ]
   }
 }
