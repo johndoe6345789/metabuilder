@@ -47,7 +47,7 @@ async function refactorFormsToJson() {
     const jsonPath = path.join(configDir, config.name)
     // Convert TypeScript syntax to JSON (remove validation references for now)
     let jsonContent = config.content
-      .replace(/validation:\s*\w+\.\w+,?\s*/g, '')  // Remove validation refs
+      .replace(/validation:\s*[a-zA-Z_][a-zA-Z0-9_]*\.[a-zA-Z_][a-zA-Z0-9_]*,?\s*/g, '')  // Remove validation refs
       .replace(/,(\s*[}\]])/g, '$1')  // Remove trailing commas
     
     try {

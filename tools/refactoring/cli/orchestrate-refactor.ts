@@ -94,7 +94,7 @@ async function main() {
     const file = files[i]
     console.log(`   ${i + 1}. ${file.path} (${file.lines} lines)`)
     file.status = 'skipped'
-    file.error = 'Refactoring tool needs repair - functions use "this" without class context'
+    file.error = 'Tool needs repair: lambda functions use "this" without class context. See manual refactoring steps below.'
   }
   
   console.log('\n💡 To refactor these files manually:')

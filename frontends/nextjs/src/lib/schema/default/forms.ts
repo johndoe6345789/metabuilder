@@ -1,8 +1,8 @@
 import type { FieldSchema } from '../../types/schema-types'
 import { authorValidations, postValidations, productValidations } from './validation'
 
-// Import JSON configuration files
-// Note: These are loaded as ES modules thanks to resolveJsonModule in tsconfig.json
+// Import JSON configuration files as modules
+// TypeScript's resolveJsonModule option enables importing .json files as typed objects
 import postFieldsData from './config/post-fields.json'
 import authorFieldsData from './config/author-fields.json'
 import productFieldsData from './config/product-fields.json'
