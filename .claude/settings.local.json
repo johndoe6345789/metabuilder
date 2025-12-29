@@ -36,7 +36,8 @@
       "Bash(do eslint:*)",
       "Bash(done)",
       "Bash(eslint:*)",
-      "Bash(bunx eslint:*)"
+      "Bash(bunx eslint:*)",
+      "Bash(bun test:*)"
     ]
   }
 }
