@@ -1,11 +1,11 @@
 # Lambda-per-File Refactoring Progress
 
-**Generated:** 2025-12-29T19:12:28.334Z
+**Generated:** 2025-12-29T21:09:00.273Z
 
 ## Summary
 
-- **Total files > 150 lines:** 53
-- **Pending:** 43
+- **Total files > 150 lines:** 52
+- **Pending:** 42
 - **In Progress:** 0
 - **Completed:** 0
 - **Skipped:** 10
@@ -16,7 +16,7 @@
 - **test:** 10
 - **library:** 4
 - **tool:** 4
-- **other:** 3
+- **other:** 2
 - **dbal:** 1
 
 ## Refactoring Queue
@@ -30,7 +30,7 @@ Library and tool files - easiest to refactor
 - [ ] `frontends/nextjs/src/lib/db/database-admin/seed-default-data/css/categories/base.ts` (278 lines)
 - [ ] `frontends/nextjs/src/lib/nerd-mode-ide/templates/configs/base.ts` (267 lines)
 - [ ] `frontends/nextjs/src/lib/schema/default/forms.ts` (244 lines)
-- [ ] `frontends/nextjs/src/lib/db/core/operations.ts` (190 lines)
+- [ ] `frontends/nextjs/src/lib/db/core/operations.ts` (191 lines)
 - [ ] `tools/refactoring/cli/orchestrate-refactor.ts` (213 lines)
 - [ ] `tools/refactoring/orchestrate-refactor/functions/main.ts` (186 lines)
 - [ ] `tools/refactoring/error-as-todo-refactor/index.ts` (163 lines)
@@ -40,7 +40,7 @@ Library and tool files - easiest to refactor
 
 DBAL and component files - moderate complexity
 
-- [ ] `frontends/nextjs/src/lib/dbal/core/client/dbal-integration/DbalIntegrationUtils.ts` (174 lines)
+- [ ] `frontends/nextjs/src/lib/dbal/core/client/dbal-integration/DbalIntegrationUtils.ts` (169 lines)
 - [ ] `frontends/nextjs/src/components/misc/data/QuickGuide.tsx` (297 lines)
 - [ ] `frontends/nextjs/src/components/misc/data/GenericPage.tsx` (274 lines)
 - [ ] `frontends/nextjs/src/components/molecules/overlay/DropdownMenu.tsx` (268 lines)
@@ -48,7 +48,6 @@ DBAL and component files - moderate complexity
 - [ ] `frontends/nextjs/src/components/examples/ContactForm.example.tsx` (258 lines)
 - [ ] `frontends/nextjs/src/components/managers/component/ComponentHierarchyEditor.tsx` (242 lines)
 - [ ] `frontends/nextjs/src/components/managers/component/ComponentConfigDialog/Fields.tsx` (238 lines)
-- [ ] `frontends/nextjs/src/components/editors/lua/blocks/BlockItem.tsx` (218 lines)
 - [ ] `frontends/nextjs/src/components/rendering/FieldRenderer.tsx` (210 lines)
 - [ ] `frontends/nextjs/src/components/ui/organisms/data/Form.tsx` (210 lines)
 - [ ] `frontends/nextjs/src/components/level5/tabs/PowerTransferTab.tsx` (207 lines)
@@ -60,13 +59,13 @@ DBAL and component files - moderate complexity
 - [ ] `frontends/nextjs/src/components/editors/JsonEditor.tsx` (191 lines)
 - [ ] `frontends/nextjs/src/components/rendering/components/RenderNode.tsx` (188 lines)
 - [ ] `frontends/nextjs/src/components/misc/viewers/AuditLogViewer.tsx` (188 lines)
+- [ ] `frontends/nextjs/src/components/misc/viewers/audit-log/Filters.tsx` (188 lines)
 - ... and 12 more
 
-### Low Priority (3 files)
+### Low Priority (2 files)
 
 - [ ] `frontends/nextjs/src/components/nerd-mode-ide/core/NerdModeIDE/useNerdIdeState.ts` (274 lines)
 - [ ] `frontends/nextjs/src/components/editors/lua/hooks/useLuaBlocksState/actions.ts` (208 lines)
-- [ ] `frontends/nextjs/src/components/misc/demos/IRCWebchatDeclarative/functions/i-r-c-webchat-declarative.ts` (158 lines)
 
 ### Skipped Files (10)
 
