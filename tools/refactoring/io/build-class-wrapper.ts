@@ -20,8 +20,8 @@ export function buildClassWrapper(className: string, functions: MinimalFunctionI
 
   for (const func of functions) {
     const asyncKeyword = func.isAsync ? 'async ' : ''
-    content += `  static ${asyncKeyword}${func.name}(...args: any[]) {\n`
-    content += `    return ${func.isAsync ? 'await ' : ''}${func.name}(...args as any)\n`
+    content += `  static ${asyncKeyword}${func.name}(...args: Parameters<typeof ${func.name}>) {\n`
+    content += `    return ${func.isAsync ? 'await ' : ''}${func.name}(...args)\n`
     content += `  }\n\n`
   }
 

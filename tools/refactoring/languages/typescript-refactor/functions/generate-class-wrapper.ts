@@ -14,7 +14,7 @@ function generateClassWrapper(className: string, functions: FunctionInfo[]): str
 
     for (const func of functions) {
       const asyncKeyword = func.isAsync ? 'async ' : ''
-      content += `  static ${asyncKeyword}${func.name}(...args: any[]) {\n`
+      content += `  static ${asyncKeyword}${func.name}(...args: Parameters<typeof ${func.name}>) {\n`
       content += `    return ${func.isAsync ? 'await ' : ''}${func.name}(...args)\n`
       content += `  }\n\n`
     }
