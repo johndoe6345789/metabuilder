@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import { NotificationSummaryCard } from '@/components/NotificationSummaryCard'
+import { NotificationSummaryCard } from '@/components/misc/data/NotificationSummaryCard'
 
 describe('NotificationSummaryCard', () => {
   it('renders fallback data when no items are provided', () => {
