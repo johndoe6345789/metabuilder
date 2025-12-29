@@ -1,29 +1,29 @@
 # Lambda-per-File Refactoring Progress
 
-**Generated:** 2025-12-29T18:54:34.116Z
+**Generated:** 2025-12-29T19:12:28.334Z
 
 ## Summary
 
-- **Total files > 150 lines:** 61
-- **Pending:** 51
+- **Total files > 150 lines:** 53
+- **Pending:** 43
 - **In Progress:** 0
 - **Completed:** 0
 - **Skipped:** 10
 
 ## By Category
 
-- **component:** 34
+- **component:** 31
 - **test:** 10
-- **tool:** 9
-- **library:** 5
-- **other:** 2
+- **library:** 4
+- **tool:** 4
+- **other:** 3
 - **dbal:** 1
 
 ## Refactoring Queue
 
 Files are prioritized by ease of refactoring and impact.
 
-### High Priority (13 files)
+### High Priority (8 files)
 
 Library and tool files - easiest to refactor
 
@@ -31,22 +31,16 @@ Library and tool files - easiest to refactor
 - [ ] `frontends/nextjs/src/lib/nerd-mode-ide/templates/configs/base.ts` (267 lines)
 - [ ] `frontends/nextjs/src/lib/schema/default/forms.ts` (244 lines)
 - [ ] `frontends/nextjs/src/lib/db/core/operations.ts` (190 lines)
-- [ ] `frontends/nextjs/src/lib/github/workflows/analysis/runs/stats.ts` (153 lines)
-- [ ] `tools/refactoring/orchestrate-refactor.ts` (249 lines)
-- [ ] `tools/refactoring/bulk-lambda-refactor.ts` (249 lines)
-- [ ] `tools/refactoring/languages/typescript-refactor.ts` (219 lines)
 - [ ] `tools/refactoring/cli/orchestrate-refactor.ts` (213 lines)
-- [ ] `tools/refactoring/languages/cpp-refactor.ts` (209 lines)
-- [ ] `tools/refactoring/ast-lambda-refactor.ts` (192 lines)
+- [ ] `tools/refactoring/orchestrate-refactor/functions/main.ts` (186 lines)
 - [ ] `tools/refactoring/error-as-todo-refactor/index.ts` (163 lines)
 - [ ] `dbal/shared/tools/cpp-build-assistant/workflow.ts` (153 lines)
 
-### Medium Priority (36 files)
+### Medium Priority (32 files)
 
 DBAL and component files - moderate complexity
 
-- [ ] `tools/refactoring/auto-code-extractor-3000.ts` (655 lines)
-- [ ] `frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts` (313 lines)
+- [ ] `frontends/nextjs/src/lib/dbal/core/client/dbal-integration/DbalIntegrationUtils.ts` (174 lines)
 - [ ] `frontends/nextjs/src/components/misc/data/QuickGuide.tsx` (297 lines)
 - [ ] `frontends/nextjs/src/components/misc/data/GenericPage.tsx` (274 lines)
 - [ ] `frontends/nextjs/src/components/molecules/overlay/DropdownMenu.tsx` (268 lines)
@@ -64,13 +58,15 @@ DBAL and component files - moderate complexity
 - [ ] `frontends/nextjs/src/components/editors/lua/LuaBlocksEditor.tsx` (193 lines)
 - [ ] `frontends/nextjs/src/components/molecules/overlay/Dialog.tsx` (191 lines)
 - [ ] `frontends/nextjs/src/components/editors/JsonEditor.tsx` (191 lines)
-- [ ] `frontends/nextjs/src/components/misc/demos/IRCWebchatDeclarative.tsx` (190 lines)
-- ... and 16 more
+- [ ] `frontends/nextjs/src/components/rendering/components/RenderNode.tsx` (188 lines)
+- [ ] `frontends/nextjs/src/components/misc/viewers/AuditLogViewer.tsx` (188 lines)
+- ... and 12 more
 
-### Low Priority (2 files)
+### Low Priority (3 files)
 
 - [ ] `frontends/nextjs/src/components/nerd-mode-ide/core/NerdModeIDE/useNerdIdeState.ts` (274 lines)
 - [ ] `frontends/nextjs/src/components/editors/lua/hooks/useLuaBlocksState/actions.ts` (208 lines)
+- [ ] `frontends/nextjs/src/components/misc/demos/IRCWebchatDeclarative/functions/i-r-c-webchat-declarative.ts` (158 lines)
 
 ### Skipped Files (10)
 

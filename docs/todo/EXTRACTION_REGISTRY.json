@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-12-29T18:54:30.245Z",
+  "lastUpdated": "2025-12-29T19:12:24.211Z",
   "functions": [
     {
       "functionName": "registerPage",
@@ -55,6 +55,594 @@
       "originalFile": "frontends/nextjs/src/lib/rendering/page/page-renderer.ts",
       "extractedPath": "frontends/nextjs/src/lib/rendering/page/page-renderer/functions/get-page-renderer.ts",
       "timestamp": "2025-12-29T18:54:30.244Z"
+    },
+    {
+      "functionName": "toTopCounts",
+      "originalFile": "frontends/nextjs/src/lib/github/workflows/analysis/runs/stats.ts",
+      "extractedPath": "frontends/nextjs/src/lib/github/workflows/analysis/runs/stats/functions/to-top-counts.ts",
+      "timestamp": "2025-12-29T19:12:23.875Z"
+    },
+    {
+      "functionName": "summarizeWorkflowRuns",
+      "originalFile": "frontends/nextjs/src/lib/github/workflows/analysis/runs/stats.ts",
+      "extractedPath": "frontends/nextjs/src/lib/github/workflows/analysis/runs/stats/functions/summarize-workflow-runs.ts",
+      "timestamp": "2025-12-29T19:12:23.875Z"
+    },
+    {
+      "functionName": "formatWorkflowRunAnalysis",
+      "originalFile": "frontends/nextjs/src/lib/github/workflows/analysis/runs/stats.ts",
+      "extractedPath": "frontends/nextjs/src/lib/github/workflows/analysis/runs/stats/functions/format-workflow-run-analysis.ts",
+      "timestamp": "2025-12-29T19:12:23.875Z"
+    },
+    {
+      "functionName": "loadFilesFromReport",
+      "originalFile": "tools/refactoring/orchestrate-refactor.ts",
+      "extractedPath": "tools/refactoring/orchestrate-refactor/functions/load-files-from-report.ts",
+      "timestamp": "2025-12-29T19:12:23.901Z"
+    },
+    {
+      "functionName": "runCommand",
+      "originalFile": "tools/refactoring/orchestrate-refactor.ts",
+      "extractedPath": "tools/refactoring/orchestrate-refactor/functions/run-command.ts",
+      "timestamp": "2025-12-29T19:12:23.901Z"
+    },
+    {
+      "functionName": "main",
+      "originalFile": "tools/refactoring/orchestrate-refactor.ts",
+      "extractedPath": "tools/refactoring/orchestrate-refactor/functions/main.ts",
+      "timestamp": "2025-12-29T19:12:23.901Z"
+    },
+    {
+      "functionName": "log",
+      "originalFile": "tools/refactoring/bulk-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/bulk-lambda-refactor/functions/log.ts",
+      "timestamp": "2025-12-29T19:12:23.929Z"
+    },
+    {
+      "functionName": "toKebabCase",
+      "originalFile": "tools/refactoring/bulk-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/bulk-lambda-refactor/functions/to-kebab-case.ts",
+      "timestamp": "2025-12-29T19:12:23.929Z"
+    },
+    {
+      "functionName": "toClassName",
+      "originalFile": "tools/refactoring/bulk-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/bulk-lambda-refactor/functions/to-class-name.ts",
+      "timestamp": "2025-12-29T19:12:23.929Z"
+    },
+    {
+      "functionName": "writeFunctions",
+      "originalFile": "tools/refactoring/bulk-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/bulk-lambda-refactor/functions/write-functions.ts",
+      "timestamp": "2025-12-29T19:12:23.929Z"
+    },
+    {
+      "functionName": "writeClassWrapper",
+      "originalFile": "tools/refactoring/bulk-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/bulk-lambda-refactor/functions/write-class-wrapper.ts",
+      "timestamp": "2025-12-29T19:12:23.929Z"
+    },
+    {
+      "functionName": "writeIndex",
+      "originalFile": "tools/refactoring/bulk-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/bulk-lambda-refactor/functions/write-index.ts",
+      "timestamp": "2025-12-29T19:12:23.929Z"
+    },
+    {
+      "functionName": "writeReexportFile",
+      "originalFile": "tools/refactoring/bulk-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/bulk-lambda-refactor/functions/write-reexport-file.ts",
+      "timestamp": "2025-12-29T19:12:23.929Z"
+    },
+    {
+      "functionName": "refactorFile",
+      "originalFile": "tools/refactoring/bulk-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/bulk-lambda-refactor/functions/refactor-file.ts",
+      "timestamp": "2025-12-29T19:12:23.929Z"
+    },
+    {
+      "functionName": "bulkRefactor",
+      "originalFile": "tools/refactoring/bulk-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/bulk-lambda-refactor/functions/bulk-refactor.ts",
+      "timestamp": "2025-12-29T19:12:23.929Z"
+    },
+    {
+      "functionName": "runLintFix",
+      "originalFile": "tools/refactoring/bulk-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/bulk-lambda-refactor/functions/run-lint-fix.ts",
+      "timestamp": "2025-12-29T19:12:23.929Z"
+    },
+    {
+      "functionName": "main",
+      "originalFile": "tools/refactoring/bulk-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/bulk-lambda-refactor/functions/main.ts",
+      "timestamp": "2025-12-29T19:12:23.929Z"
+    },
+    {
+      "functionName": "getFunctionExtension",
+      "originalFile": "tools/refactoring/languages/typescript-refactor.ts",
+      "extractedPath": "tools/refactoring/languages/typescript-refactor/functions/get-function-extension.ts",
+      "timestamp": "2025-12-29T19:12:23.947Z"
+    },
+    {
+      "functionName": "extractFunctions",
+      "originalFile": "tools/refactoring/languages/typescript-refactor.ts",
+      "extractedPath": "tools/refactoring/languages/typescript-refactor/functions/extract-functions.ts",
+      "timestamp": "2025-12-29T19:12:23.947Z"
+    },
+    {
+      "functionName": "extractDependencies",
+      "originalFile": "tools/refactoring/languages/typescript-refactor.ts",
+      "extractedPath": "tools/refactoring/languages/typescript-refactor/functions/extract-dependencies.ts",
+      "timestamp": "2025-12-29T19:12:23.947Z"
+    },
+    {
+      "functionName": "generateFunctionFile",
+      "originalFile": "tools/refactoring/languages/typescript-refactor.ts",
+      "extractedPath": "tools/refactoring/languages/typescript-refactor/functions/generate-function-file.ts",
+      "timestamp": "2025-12-29T19:12:23.947Z"
+    },
+    {
+      "functionName": "generateModule",
+      "originalFile": "tools/refactoring/languages/typescript-refactor.ts",
+      "extractedPath": "tools/refactoring/languages/typescript-refactor/functions/generate-module.ts",
+      "timestamp": "2025-12-29T19:12:23.947Z"
+    },
+    {
+      "functionName": "generateClassWrapper",
+      "originalFile": "tools/refactoring/languages/typescript-refactor.ts",
+      "extractedPath": "tools/refactoring/languages/typescript-refactor/functions/generate-class-wrapper.ts",
+      "timestamp": "2025-12-29T19:12:23.947Z"
+    },
+    {
+      "functionName": "generateIndexFile",
+      "originalFile": "tools/refactoring/languages/typescript-refactor.ts",
+      "extractedPath": "tools/refactoring/languages/typescript-refactor/functions/generate-index-file.ts",
+      "timestamp": "2025-12-29T19:12:23.947Z"
+    },
+    {
+      "functionName": "getFunctionExtension",
+      "originalFile": "tools/refactoring/languages/cpp-refactor.ts",
+      "extractedPath": "tools/refactoring/languages/cpp-refactor/functions/get-function-extension.ts",
+      "timestamp": "2025-12-29T19:12:23.967Z"
+    },
+    {
+      "functionName": "extractFunctions",
+      "originalFile": "tools/refactoring/languages/cpp-refactor.ts",
+      "extractedPath": "tools/refactoring/languages/cpp-refactor/functions/extract-functions.ts",
+      "timestamp": "2025-12-29T19:12:23.967Z"
+    },
+    {
+      "functionName": "extractDependencies",
+      "originalFile": "tools/refactoring/languages/cpp-refactor.ts",
+      "extractedPath": "tools/refactoring/languages/cpp-refactor/functions/extract-dependencies.ts",
+      "timestamp": "2025-12-29T19:12:23.967Z"
+    },
+    {
+      "functionName": "generateFunctionFile",
+      "originalFile": "tools/refactoring/languages/cpp-refactor.ts",
+      "extractedPath": "tools/refactoring/languages/cpp-refactor/functions/generate-function-file.ts",
+      "timestamp": "2025-12-29T19:12:23.967Z"
+    },
+    {
+      "functionName": "generateModule",
+      "originalFile": "tools/refactoring/languages/cpp-refactor.ts",
+      "extractedPath": "tools/refactoring/languages/cpp-refactor/functions/generate-module.ts",
+      "timestamp": "2025-12-29T19:12:23.967Z"
+    },
+    {
+      "functionName": "generateHeaderFile",
+      "originalFile": "tools/refactoring/languages/cpp-refactor.ts",
+      "extractedPath": "tools/refactoring/languages/cpp-refactor/functions/generate-header-file.ts",
+      "timestamp": "2025-12-29T19:12:23.967Z"
+    },
+    {
+      "functionName": "log",
+      "originalFile": "tools/refactoring/ast-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/ast-lambda-refactor/functions/log.ts",
+      "timestamp": "2025-12-29T19:12:23.982Z"
+    },
+    {
+      "functionName": "toKebabCase",
+      "originalFile": "tools/refactoring/ast-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/ast-lambda-refactor/functions/to-kebab-case.ts",
+      "timestamp": "2025-12-29T19:12:23.982Z"
+    },
+    {
+      "functionName": "toClassName",
+      "originalFile": "tools/refactoring/ast-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/ast-lambda-refactor/functions/to-class-name.ts",
+      "timestamp": "2025-12-29T19:12:23.982Z"
+    },
+    {
+      "functionName": "createFunctionFile",
+      "originalFile": "tools/refactoring/ast-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/ast-lambda-refactor/functions/create-function-file.ts",
+      "timestamp": "2025-12-29T19:12:23.982Z"
+    },
+    {
+      "functionName": "createIndexFile",
+      "originalFile": "tools/refactoring/ast-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/ast-lambda-refactor/functions/create-index-file.ts",
+      "timestamp": "2025-12-29T19:12:23.982Z"
+    },
+    {
+      "functionName": "createClassWrapper",
+      "originalFile": "tools/refactoring/ast-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/ast-lambda-refactor/functions/create-class-wrapper.ts",
+      "timestamp": "2025-12-29T19:12:23.982Z"
+    },
+    {
+      "functionName": "replaceOriginal",
+      "originalFile": "tools/refactoring/ast-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/ast-lambda-refactor/functions/replace-original.ts",
+      "timestamp": "2025-12-29T19:12:23.982Z"
+    },
+    {
+      "functionName": "refactorFile",
+      "originalFile": "tools/refactoring/ast-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/ast-lambda-refactor/functions/refactor-file.ts",
+      "timestamp": "2025-12-29T19:12:23.982Z"
+    },
+    {
+      "functionName": "bulkRefactor",
+      "originalFile": "tools/refactoring/ast-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/ast-lambda-refactor/functions/bulk-refactor.ts",
+      "timestamp": "2025-12-29T19:12:23.982Z"
+    },
+    {
+      "functionName": "main",
+      "originalFile": "tools/refactoring/ast-lambda-refactor.ts",
+      "extractedPath": "tools/refactoring/ast-lambda-refactor/functions/main.ts",
+      "timestamp": "2025-12-29T19:12:23.982Z"
+    },
+    {
+      "functionName": "log",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/log.ts",
+      "timestamp": "2025-12-29T19:12:24.019Z"
+    },
+    {
+      "functionName": "loadExtractionRegistry",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/load-extraction-registry.ts",
+      "timestamp": "2025-12-29T19:12:24.019Z"
+    },
+    {
+      "functionName": "saveExtractionRegistry",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/save-extraction-registry.ts",
+      "timestamp": "2025-12-29T19:12:24.019Z"
+    },
+    {
+      "functionName": "scanAndCategorizeFiles",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/scan-and-categorize-files.ts",
+      "timestamp": "2025-12-29T19:12:24.019Z"
+    },
+    {
+      "functionName": "filterFiles",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/filter-files.ts",
+      "timestamp": "2025-12-29T19:12:24.019Z"
+    },
+    {
+      "functionName": "confirmExecution",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/confirm-execution.ts",
+      "timestamp": "2025-12-29T19:12:24.019Z"
+    },
+    {
+      "functionName": "extractBatch",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/extract-batch.ts",
+      "timestamp": "2025-12-29T19:12:24.019Z"
+    },
+    {
+      "functionName": "runLinting",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/run-linting.ts",
+      "timestamp": "2025-12-29T19:12:24.019Z"
+    },
+    {
+      "functionName": "runTests",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/run-tests.ts",
+      "timestamp": "2025-12-29T19:12:24.019Z"
+    },
+    {
+      "functionName": "updateProgressReport",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/update-progress-report.ts",
+      "timestamp": "2025-12-29T19:12:24.019Z"
+    },
+    {
+      "functionName": "saveResults",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/save-results.ts",
+      "timestamp": "2025-12-29T19:12:24.019Z"
+    },
+    {
+      "functionName": "printSummary",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/print-summary.ts",
+      "timestamp": "2025-12-29T19:12:24.019Z"
+    },
+    {
+      "functionName": "run",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/run.ts",
+      "timestamp": "2025-12-29T19:12:24.019Z"
+    },
+    {
+      "functionName": "showHelp",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/show-help.ts",
+      "timestamp": "2025-12-29T19:12:24.020Z"
+    },
+    {
+      "functionName": "parseArgs",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/parse-args.ts",
+      "timestamp": "2025-12-29T19:12:24.020Z"
+    },
+    {
+      "functionName": "main",
+      "originalFile": "tools/refactoring/auto-code-extractor-3000.ts",
+      "extractedPath": "tools/refactoring/auto-code-extractor-3000/functions/main.ts",
+      "timestamp": "2025-12-29T19:12:24.020Z"
+    },
+    {
+      "functionName": "createTenant",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/create-tenant.ts",
+      "timestamp": "2025-12-29T19:12:24.042Z"
+    },
+    {
+      "functionName": "getTenantContext",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/get-tenant-context.ts",
+      "timestamp": "2025-12-29T19:12:24.042Z"
+    },
+    {
+      "functionName": "hasTenant",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/has-tenant.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "getKey",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/get-key.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "set",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/set.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "get",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/get.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "delete",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/delete.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "listAdd",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/list-add.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "listGet",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/list-get.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "upload",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/upload.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "download",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/download.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "delete",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/delete.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "list",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/list.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "getMetadata",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/get-metadata.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "getInstance",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/get-instance.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "initialize",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/initialize.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "getClient",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/get-client.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "getTenantManager",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/get-tenant-manager.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "getKVStore",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/get-k-v-store.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "getBlobStorage",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/get-blob-storage.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "isInitialized",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/is-initialized.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "reset",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/reset.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "kvSet",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/kv-set.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "kvGet",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/kv-get.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "kvDelete",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/kv-delete.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "kvListAdd",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/kv-list-add.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "kvListGet",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/kv-list-get.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "blobUpload",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/blob-upload.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "blobDownload",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/blob-download.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "blobDelete",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/blob-delete.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "blobList",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/blob-list.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "blobGetMetadata",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/blob-get-metadata.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "handleError",
+      "originalFile": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration.ts",
+      "extractedPath": "frontends/nextjs/src/lib/dbal/core/client/dbal-integration/functions/handle-error.ts",
+      "timestamp": "2025-12-29T19:12:24.043Z"
+    },
+    {
+      "functionName": "IRCWebchatDeclarative",
+      "originalFile": "frontends/nextjs/src/components/misc/demos/IRCWebchatDeclarative.tsx",
+      "extractedPath": "frontends/nextjs/src/components/misc/demos/IRCWebchatDeclarative/functions/i-r-c-webchat-declarative.ts",
+      "timestamp": "2025-12-29T19:12:24.141Z"
+    },
+    {
+      "functionName": "handleSendMessage",
+      "originalFile": "frontends/nextjs/src/components/misc/demos/IRCWebchatDeclarative.tsx",
+      "extractedPath": "frontends/nextjs/src/components/misc/demos/IRCWebchatDeclarative/functions/handle-send-message.ts",
+      "timestamp": "2025-12-29T19:12:24.141Z"
+    },
+    {
+      "functionName": "formatTime",
+      "originalFile": "frontends/nextjs/src/components/misc/demos/IRCWebchatDeclarative.tsx",
+      "extractedPath": "frontends/nextjs/src/components/misc/demos/IRCWebchatDeclarative/functions/format-time.ts",
+      "timestamp": "2025-12-29T19:12:24.141Z"
+    },
+    {
+      "functionName": "SchemaTabs",
+      "originalFile": "frontends/nextjs/src/components/schema/level4/Tabs.tsx",
+      "extractedPath": "frontends/nextjs/src/components/schema/level4/Tabs/functions/schema-tabs.ts",
+      "timestamp": "2025-12-29T19:12:24.158Z"
+    },
+    {
+      "functionName": "FieldCard",
+      "originalFile": "frontends/nextjs/src/components/schema/level4/Tabs.tsx",
+      "extractedPath": "frontends/nextjs/src/components/schema/level4/Tabs/functions/field-card.ts",
+      "timestamp": "2025-12-29T19:12:24.158Z"
+    },
+    {
+      "functionName": "TextField",
+      "originalFile": "frontends/nextjs/src/components/schema/level4/Tabs.tsx",
+      "extractedPath": "frontends/nextjs/src/components/schema/level4/Tabs/functions/text-field.ts",
+      "timestamp": "2025-12-29T19:12:24.158Z"
+    },
+    {
+      "functionName": "IRCWebchat",
+      "originalFile": "frontends/nextjs/src/components/misc/demos/IRCWebchat.tsx",
+      "extractedPath": "frontends/nextjs/src/components/misc/demos/IRCWebchat/functions/i-r-c-webchat.ts",
+      "timestamp": "2025-12-29T19:12:24.186Z"
+    },
+    {
+      "functionName": "handleSendMessage",
+      "originalFile": "frontends/nextjs/src/components/misc/demos/IRCWebchat.tsx",
+      "extractedPath": "frontends/nextjs/src/components/misc/demos/IRCWebchat/functions/handle-send-message.ts",
+      "timestamp": "2025-12-29T19:12:24.186Z"
+    },
+    {
+      "functionName": "formatTime",
+      "originalFile": "frontends/nextjs/src/components/misc/demos/IRCWebchat.tsx",
+      "extractedPath": "frontends/nextjs/src/components/misc/demos/IRCWebchat/functions/format-time.ts",
+      "timestamp": "2025-12-29T19:12:24.186Z"
     }
   ]
 }
