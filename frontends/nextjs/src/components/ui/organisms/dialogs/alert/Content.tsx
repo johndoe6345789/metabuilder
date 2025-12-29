@@ -21,28 +21,32 @@ interface AlertDialogContentProps {
   className?: string
 }
 
-const AlertDialogContent = forwardRef<HTMLDivElement, AlertDialogContentProps>(
-  ({ children, showCloseButton = false, onClose, className, ...props }, ref) => {
-    return (
-      <>
-        {showCloseButton && onClose && (
-          <IconButton
-            onClick={onClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: 'text.secondary',
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        )}
-        {children}
-      </>
-    )
-  }
-)
+const AlertDialogContent = ({
+  children,
+  showCloseButton = false,
+  onClose,
+  className,
+  ...props
+}: AlertDialogContentProps) => {
+  return (
+    <>
+      {showCloseButton && onClose && (
+        <IconButton
+          onClick={onClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: 'text.secondary',
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      )}
+      {children}
+    </>
+  )
+}
 AlertDialogContent.displayName = 'AlertDialogContent'
 
 interface AlertDialogHeaderProps {
