@@ -7,10 +7,10 @@ import postFieldsData from './config/post-fields.json'
 import authorFieldsData from './config/author-fields.json'
 import productFieldsData from './config/product-fields.json'
 
-// Cast to proper type since JSON imports are 'any'
-const postFieldsJson = postFieldsData as any[]
-const authorFieldsJson = authorFieldsData as any[]
-const productFieldsJson = productFieldsData as any[]
+// Type assertion for JSON imports - they match FieldSchema structure minus validation functions
+const postFieldsJson = postFieldsData as Omit<FieldSchema, 'validation'>[]
+const authorFieldsJson = authorFieldsData as Omit<FieldSchema, 'validation'>[]
+const productFieldsJson = productFieldsData as Omit<FieldSchema, 'validation'>[]
 
 // Load from JSON and add validation functions
 export const postFields: FieldSchema[] = postFieldsJson.map(field => {

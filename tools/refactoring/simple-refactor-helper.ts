@@ -51,8 +51,8 @@ async function refactorFormsToJson() {
       .replace(/,(\s*[}\]])/g, '$1')  // Remove trailing commas
     
     try {
-      // Validate it's proper JSON
-      const parsed = eval(`(${jsonContent})`)
+      // Validate it's proper JSON by parsing
+      const parsed = JSON.parse(jsonContent)
       await fs.writeFile(jsonPath, JSON.stringify(parsed, null, 2), 'utf-8')
       console.log(`✓ Created: ${config.name}`)
     } catch (error) {
