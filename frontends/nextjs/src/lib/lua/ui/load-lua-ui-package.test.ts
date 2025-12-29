@@ -1,10 +1,11 @@
-import { describe, it, expect } from 'bun:test'
+import { describe, expect,it } from 'bun:test'
 import { join } from 'path'
+
 import { loadLuaUIPackage } from './load-lua-ui-package'
 
 describe('loadLuaUIPackage', () => {
   it('should load example-form package with manifest and lua files', async () => {
-    const packagePath = join(__dirname, '../packages/lua-ui/example-form')
+    const packagePath = join(__dirname, '../../packages/lua-ui/example-form')
     const uiPackage = await loadLuaUIPackage(packagePath)
 
     // Check manifest
@@ -45,7 +46,7 @@ describe('loadLuaUIPackage', () => {
   })
 
   it('should execute action function from loaded package', async () => {
-    const packagePath = join(__dirname, '../packages/lua-ui/example-form')
+    const packagePath = join(__dirname, '../../packages/lua-ui/example-form')
     const uiPackage = await loadLuaUIPackage(packagePath)
 
     // Call the action function

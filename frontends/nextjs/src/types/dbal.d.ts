@@ -7,9 +7,9 @@
  * under the large-file threshold and easier to maintain.
  */
 
+export * from './dbal/blob.js'
 export * from './dbal/core-config.js'
 export * from './dbal/core-types.js'
-export * from './dbal/tenant-context.js'
 export * from './dbal/kv-store.js'
-export * from './dbal/blob.js'
 export * from './dbal/tenant-aware-blob.js'
+export * from './dbal/tenant-context.js'
