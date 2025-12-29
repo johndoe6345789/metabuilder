@@ -13,26 +13,26 @@ import { initializeDefaultPages } from './functions/initialize-default-pages'
  */
 export class PageDefinitionBuilderUtils {
   static async initializeDefaultPages(): Promise<void> {
-    return await initializeDefaultPages(...(arguments as any))
+    return await initializeDefaultPages()
   }
 
   static buildLevel1Homepage(): PageDefinition {
-    return buildLevel1Homepage(...(arguments as any))
+    return buildLevel1Homepage()
   }
 
   static buildLevel2UserDashboard(): PageDefinition {
-    return buildLevel2UserDashboard(...(arguments as any))
+    return buildLevel2UserDashboard()
   }
 
   static buildLevel3AdminPanel(): PageDefinition {
-    return buildLevel3AdminPanel(...(arguments as any))
+    return buildLevel3AdminPanel()
   }
 
   static getPages(): PageDefinition[] {
-    return getPages(...(arguments as any))
+    return getPages()
   }
 
   static getPageDefinitionBuilder(): PageDefinitionBuilder {
-    return getPageDefinitionBuilder(...(arguments as any))
+    return getPageDefinitionBuilder()
   }
 }

@@ -133,7 +133,7 @@ export function JsonEditor({ open, onClose, title, value, onSave, schema }: Json
                   <AlertDescription className="text-yellow-800">
                     {securityScanResult.issues.length} security{' '}
                     {securityScanResult.issues.length === 1 ? 'issue' : 'issues'}
-                     detected. Click Security Scan to review.
+                    detected. Click Security Scan to review.
                   </AlertDescription>
                 </Alert>
               )}

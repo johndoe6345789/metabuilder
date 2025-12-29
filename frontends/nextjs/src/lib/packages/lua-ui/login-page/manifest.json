@@ -1,0 +1,22 @@
+{
+  "id": "login-page",
+  "version": "1.0.0",
+  "name": "Login Page",
+  "description": "Unified login and registration page",
+  "category": "ui",
+  "pages": [
+    {
+      "file": "login-ui.lua",
+      "path": "/login",
+      "title": "Login",
+      "level": 1,
+      "requiresAuth": false
+    }
+  ],
+  "actions": [
+    {
+      "file": "login-actions.lua",
+      "name": "login_actions"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "packageId": "ui_pages",
+  "name": "UI Pages",
+  "version": "1.0.0",
+  "description": "Declarative JSON-defined UI pages for all levels",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [],
+  "exports": {
+    "pages": [
+      "login",
+      "level1",
+      "level2",
+      "level3",
+      "level4",
+      "level5",
+      "level6"
+    ]
+  }
+}

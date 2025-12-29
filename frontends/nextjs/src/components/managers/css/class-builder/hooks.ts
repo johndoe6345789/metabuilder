@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 
 import { CssCategory, Database } from '@/lib/database'
 
-const CLASS_TOKEN_PATTERN = /^[A-Za-z0-9:_/.\[\]()%#!,=+-]+$/
+const CLASS_TOKEN_PATTERN = /^[A-Za-z0-9:_/.[\]()%#!,=+-]+$/
 const parseClassList = (value: string) => Array.from(new Set(value.split(/\s+/).filter(Boolean)))
 
 interface UseClassBuilderStateProps {

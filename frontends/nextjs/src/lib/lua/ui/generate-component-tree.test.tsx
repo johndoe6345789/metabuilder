@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'bun:test'
+import { describe, expect,it } from 'bun:test'
 import React from 'react'
+
 import { generateComponentTree } from './generate-component-tree'
 import type { LuaUIComponent } from './types/lua-ui-package'
 

@@ -1,9 +1,11 @@
+import * as fengari from 'fengari-web'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
-import * as fengari from 'fengari-web'
+
 import { createLuaEngine } from '@/lib/lua/engine/core/create-lua-engine'
-import { pushToLua } from '@/lib/lua/functions/converters/push-to-lua'
 import { fromLua } from '@/lib/lua/functions/converters/from-lua'
+import { pushToLua } from '@/lib/lua/functions/converters/push-to-lua'
+
 import { normalizeLuaComponent } from './normalize-lua-structure'
 import type { LuaUIManifest, LuaUIPackage, LuaUIPage } from './types/lua-ui-package'
 
@@ -85,7 +87,7 @@ export async function loadLuaUIPackage(packagePath: string): Promise<LuaUIPackag
   }
 
   // Load all action files
-  const actions: Record<string, Function> = {}
+  const actions: Record<string, (...args: any[]) => any> = {}
   if (manifest.actions) {
     for (const actionManifest of manifest.actions) {
       const actionPath = join(packagePath, actionManifest.file)
@@ -148,7 +150,7 @@ export async function loadLuaUIPackage(packagePath: string): Promise<LuaUIPackag
 /**
  * Create a JavaScript wrapper function that calls a Lua function
  */
-function createLuaFunctionWrapper(luaSource: string, functionName: string): Function {
+function createLuaFunctionWrapper(luaSource: string, functionName: string): (...args: any[]) => any {
   return (...args: any[]) => {
     // Create a new Lua engine for this call
     const engine = createLuaEngine()

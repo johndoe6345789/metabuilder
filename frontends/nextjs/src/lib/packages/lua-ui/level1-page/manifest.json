@@ -1,0 +1,22 @@
+{
+  "id": "level1-page",
+  "version": "1.0.0",
+  "name": "Level 1 - Home",
+  "description": "Main landing page with navigation and credentials",
+  "category": "ui",
+  "pages": [
+    {
+      "file": "level1-ui.lua",
+      "path": "/",
+      "title": "Home",
+      "level": 1,
+      "requiresAuth": false
+    }
+  ],
+  "actions": [
+    {
+      "file": "level1-actions.lua",
+      "name": "level1_actions"
+    }
+  ]
+}

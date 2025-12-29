@@ -1,4 +1,5 @@
 import * as fengari from 'fengari-web'
+
 import { fromLua } from '@/lib/lua/functions/converters/from-lua'
 
 const lua = fengari.lua

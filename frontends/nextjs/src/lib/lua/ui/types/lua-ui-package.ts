@@ -58,7 +58,7 @@ export interface LuaUIComponent {
 
 export interface LuaUIAction {
   name: string
-  handler: string | Function
+  handler: string | ((...args: any[]) => any)
 }
 
 export interface LuaUIValidation {
@@ -71,7 +71,7 @@ export interface LuaUIValidation {
     max?: number
     pattern?: string
     format?: string
-    custom?: string | Function
+    custom?: string | ((...args: any[]) => any)
   }
 }
 
@@ -81,5 +81,5 @@ export interface LuaUIValidation {
 export interface LuaUIPackage {
   manifest: LuaUIManifest
   pages: LuaUIPage[]
-  actions: Record<string, Function>
+  actions: Record<string, (...args: any[]) => any>
 }
