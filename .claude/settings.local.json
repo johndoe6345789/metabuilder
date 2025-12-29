@@ -16,7 +16,8 @@
       "Bash(xargs git rm:*)",
       "Bash(bun add:*)",
       "Bash(bun install:*)",
-      "Bash(test -f:*)"
+      "Bash(test -f:*)",
+      "Bash(bun run typecheck:*)"
     ]
   }
 }
