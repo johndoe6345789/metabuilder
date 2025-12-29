@@ -1,0 +1,13 @@
+{
+  "packageId": "ui_dialogs",
+  "name": "UI Dialogs",
+  "version": "1.0.0",
+  "description": "Confirmation, alert, and form dialogs",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [],
+  "exports": {
+    "components": ["ConfirmDialog", "AlertDialog", "FormDialog"],
+    "scripts": ["confirm", "alert"]
+  }
+}

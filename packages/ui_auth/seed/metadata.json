@@ -1,0 +1,13 @@
+{
+  "packageId": "ui_auth",
+  "name": "Auth UI",
+  "version": "1.0.0",
+  "description": "Access denied, auth gate, and loading states",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": ["ui_permissions"],
+  "exports": {
+    "components": ["AccessDenied", "AuthGate", "PageLoader"],
+    "scripts": ["denied", "gate"]
+  }
+}
