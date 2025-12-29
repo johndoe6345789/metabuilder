@@ -19,7 +19,8 @@
       "Bash(test -f:*)",
       "Bash(bun run typecheck:*)",
       "Bash(bun run test:unit:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(npx prisma validate:*)"
     ]
   }
 }
