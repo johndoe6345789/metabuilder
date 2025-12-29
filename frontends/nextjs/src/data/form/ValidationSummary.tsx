@@ -17,12 +17,13 @@ export function ValidationSummary({
   return (
     <Alert severity="error" variant="outlined" sx={{ alignItems: 'flex-start' }}>
       {showTitle ? <AlertTitle>{title}</AlertTitle> : null}
-      <List dense disablePadding sx={{ listStyle: 'disc', pl: 3 }}>
+      <List dense disablePadding component="ul" sx={{ pl: 3 }}>
         {errors.map((error, index) => (
           <ListItem
             key={index}
             disableGutters
-            sx={{ display: 'list-item', py: 0.25, px: 0 }}
+            component="li"
+            sx={{ py: 0.25, px: 0 }}
           >
             <ListItemText primaryTypographyProps={{ variant: 'body2' }} primary={error} />
           </ListItem>
