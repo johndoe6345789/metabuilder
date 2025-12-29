@@ -14,7 +14,9 @@
       "Bash(git log:*)",
       "Bash(cat:*)",
       "Bash(xargs git rm:*)",
-      "Bash(bun add:*)"
+      "Bash(bun add:*)",
+      "Bash(bun install:*)",
+      "Bash(test -f:*)"
     ]
   }
 }
