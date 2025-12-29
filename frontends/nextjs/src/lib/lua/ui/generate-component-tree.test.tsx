@@ -107,7 +107,9 @@ describe('generateComponentTree', () => {
     const reactElement = generateComponentTree(luaComponent)
 
     expect(reactElement.type).toBe('div')
-    expect(reactElement.props.children).toContain('Unknown component: UnknownComponent')
+    // Children is an array: ["Unknown component: ", "UnknownComponent"]
+    expect(Array.isArray(reactElement.props.children)).toBe(true)
+    expect(reactElement.props.children.join('')).toBe('Unknown component: UnknownComponent')
   })
 
   it('should generate complex nested structure', () => {
