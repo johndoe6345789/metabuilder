@@ -12,7 +12,8 @@
       "Bash(DATABASE_URL=\"file:./dev.db\" npx prisma generate:*)",
       "Bash(git rm:*)",
       "Bash(git log:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(xargs git rm:*)"
     ]
   }
 }
