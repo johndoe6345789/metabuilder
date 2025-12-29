@@ -34,7 +34,7 @@ export function useAutoRefresh({
     if (!isAutoRefreshing) return
 
     const refreshInterval = setInterval(() => {
-      onRefresh()
+      void onRefresh()
     }, intervalMs)
 
     const countdownInterval = setInterval(() => {

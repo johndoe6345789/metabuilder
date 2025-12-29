@@ -8,18 +8,18 @@ import { useKVStore } from './use-kv-store'
  * Hook for storing and retrieving cached data with automatic serialization
  */
 export function useCachedData<T>(key: string, tenantId?: string, userId?: string) {
-  const kv = useKVStore(tenantId, userId)
+  const { isReady, get, set, delete: deleteKey } = useKVStore(tenantId, userId)
   const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const loadData = async () => {
-      if (!kv.isReady) return
+      if (!isReady) return
 
       try {
         setLoading(true)
-        const cached = await kv.get<T>(key)
+        const cached = await get<T>(key)
         setData(cached)
         setError(null)
       } catch (err) {
@@ -30,13 +30,13 @@ export function useCachedData<T>(key: string, tenantId?: string, userId?: string
       }
     }
 
-    loadData()
-  }, [key, kv.isReady])
+    void loadData()
+  }, [get, isReady, key])
 
   const save = useCallback(
     async (newData: T, ttl?: number) => {
       try {
-        await kv.set(key, newData, ttl)
+        await set(key, newData, ttl)
         setData(newData)
         setError(null)
       } catch (err) {
@@ -45,12 +45,12 @@ export function useCachedData<T>(key: string, tenantId?: string, userId?: string
         throw err
       }
     },
-    [key, kv]
+    [key, set]
   )
 
   const clear = useCallback(async () => {
     try {
-      await kv.delete(key)
+      await deleteKey(key)
       setData(null)
       setError(null)
     } catch (err) {
@@ -58,7 +58,7 @@ export function useCachedData<T>(key: string, tenantId?: string, userId?: string
       setError(errorInfo.message)
       throw err
     }
-  }, [key, kv])
+  }, [deleteKey, key])
 
   return {
     data,
@@ -66,6 +66,6 @@ export function useCachedData<T>(key: string, tenantId?: string, userId?: string
     error,
     save,
     clear,
-    isReady: kv.isReady,
+    isReady,
   }
 }

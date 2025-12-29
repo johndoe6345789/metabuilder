@@ -38,7 +38,7 @@ export class AuthStore {
   }
 
   async ensureSessionChecked(): Promise<void> {
-    if (!this.sessionCheckPromise) {
+    if (this.sessionCheckPromise === null) {
       this.sessionCheckPromise = this.refresh().finally(() => {
         this.sessionCheckPromise = null
       })
@@ -129,6 +129,7 @@ export class AuthStore {
         isAuthenticated: false,
         isLoading: false,
       })
+      console.error('Failed to refresh session', error)
     }
   }
 }

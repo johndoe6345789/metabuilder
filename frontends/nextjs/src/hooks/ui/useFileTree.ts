@@ -19,8 +19,10 @@ export function useFileTree(initialFiles: FileNode[] = []) {
   const [files, setFiles] = useState<FileNode[]>(initialFiles)
 
   const findNodeById = useCallback(
-    (id: string, nodes = files): FileNode | null => {
-      for (const node of nodes) {
+    (id: string, nodes?: FileNode[]): FileNode | null => {
+      const searchNodes = nodes ?? files
+
+      for (const node of searchNodes) {
         if (node.id === id) return node
         if (node.children) {
           const found = findNodeById(id, node.children)
@@ -69,32 +71,29 @@ export function useFileTree(initialFiles: FileNode[] = []) {
 
   const addChild = useCallback(
     (parentId: string, child: FileNode) => {
-      const parent = findNodeById(parentId)
-      if (!parent || parent.type !== 'folder') return
+      setFiles(currentFiles => {
+        const parent = findNodeById(parentId, currentFiles)
+        if (!parent || parent.type !== 'folder') return currentFiles
 
-      setFiles(files =>
-        files.map(node => {
-          if (node.id === parentId) {
-            return {
-              ...node,
-              children: [...(node.children || []), child],
+        const appendChild = (nodes: FileNode[]): FileNode[] =>
+          nodes.map(node => {
+            if (node.id === parentId && node.type === 'folder') {
+              return {
+                ...node,
+                children: [...(node.children || []), child],
+              }
             }
-          }
-          if (node.children) {
-            return {
-              ...node,
-              children:
-                files.map(n =>
-                  n.id === parentId ? { ...n, children: [...(n.children || []), child] } : n
-                )[0]?.children || node.children,
+            if (node.children) {
+              return { ...node, children: appendChild(node.children) }
             }
-          }
-          return node
-        })
-      )
+            return node
+          })
+
+        return appendChild(currentFiles)
+      })
       toast.success('Created')
     },
-    [findNodeById, files]
+    [findNodeById]
   )
 
   return {
