@@ -24,7 +24,8 @@
       "Bash(npm run typecheck:*)",
       "Bash(npm run lint)",
       "Bash(npm audit:*)",
-      "Bash(bun run lint)"
+      "Bash(bun run lint)",
+      "Bash(git checkout:*)"
     ]
   }
 }
