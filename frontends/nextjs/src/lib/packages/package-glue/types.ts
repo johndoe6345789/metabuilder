@@ -1,3 +1,5 @@
+import type { JsonObject, JsonValue } from '@/types/utility-types'
+
 export interface LuaScriptFile {
   name: string
   path: string
@@ -5,6 +7,13 @@ export interface LuaScriptFile {
   category?: string
   description?: string
 }
+
+export type PackageComponent = {
+  id: string
+  [key: string]: JsonValue
+}
+
+export type PackageExamples = JsonObject
 
 export interface PackageDefinition {
   packageId: string
@@ -21,10 +30,10 @@ export interface PackageDefinition {
     handlers?: string[]
   }
   shadowcnComponents?: string[]
-  components: any[]
+  components: PackageComponent[]
   scripts?: string
   scriptFiles?: LuaScriptFile[]
-  examples?: any
+  examples?: PackageExamples
 }
 
 export interface PackageRegistry {
