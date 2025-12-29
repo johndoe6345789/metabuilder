@@ -76,6 +76,8 @@ npx tsx tools/refactoring/cli/refactor-to-lambda.ts
 
 Runs refactoring and treats all errors as actionable TODO items!
 
+Modular building blocks now live under `tools/refactoring/error-as-todo-refactor/` with an `index.ts` re-export for easy imports in other scripts.
+
 ```bash
 # Process files and generate TODO list
 npx tsx tools/refactoring/error-as-todo-refactor.ts high --limit=10

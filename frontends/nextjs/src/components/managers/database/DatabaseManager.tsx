@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react'
-import { Button } from '@/components/ui'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
-import { Badge } from '@/components/ui'
-import { ScrollArea } from '@/components/ui'
 import { Database, DB_KEYS } from '@/lib/database'
+import type { ModelSchema } from '@/lib/types/schema-types'
 import { toast } from 'sonner'
 import {
   Database as DatabaseIcon,
@@ -16,12 +14,27 @@ import {
   ChatCircle,
   Tree,
   Gear,
-  Trash,
-  ArrowsClockwise,
 } from '@phosphor-icons/react'
+import { ActionToolbar } from './ActionToolbar'
+import { ConnectionForm, type ConnectionDetails } from './ConnectionForm'
+import { SchemaViewer } from './SchemaViewer'
+
+interface DatabaseStats {
+  users: number
+  credentials: number
+  workflows: number
+  luaScripts: number
+  pages: number
+  schemas: number
+  comments: number
+  componentNodes: number
+  componentConfigs: number
+}
+
+type ConnectionState = 'disconnected' | 'connecting' | 'connected'
 
 export function DatabaseManager() {
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<DatabaseStats>({
     users: 0,
     credentials: 0,
     workflows: 0,
@@ -32,14 +45,12 @@ export function DatabaseManager() {
     componentNodes: 0,
     componentConfigs: 0,
   })
-
+  const [schemas, setSchemas] = useState<ModelSchema[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [connectionState, setConnectionState] = useState<ConnectionState>('disconnected')
+  const [lastConnectedAt, setLastConnectedAt] = useState<Date | null>(null)
 
-  useEffect(() => {
-    loadStats()
-  }, [])
-
-  const loadStats = async () => {
+  const loadStats = useCallback(async () => {
     setIsLoading(true)
     try {
       const [
@@ -48,7 +59,7 @@ export function DatabaseManager() {
         workflows,
         luaScripts,
         pages,
-        schemas,
+        schemaData,
         comments,
         hierarchy,
         configs,
@@ -70,19 +81,25 @@ export function DatabaseManager() {
         workflows: workflows.length,
         luaScripts: luaScripts.length,
         pages: pages.length,
-        schemas: schemas.length,
+        schemas: schemaData.length,
         comments: comments.length,
         componentNodes: Object.keys(hierarchy).length,
         componentConfigs: Object.keys(configs).length,
       })
+      setSchemas(schemaData)
     } catch (error) {
+      console.error(error)
       toast.error('Failed to load database statistics')
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
-  const handleClearDatabase = async () => {
+  useEffect(() => {
+    void loadStats()
+  }, [loadStats])
+
+  const handleClearDatabase = useCallback(async () => {
     if (!confirm('Are you sure you want to clear the entire database? This action cannot be undone!')) {
       return
     }
@@ -97,11 +114,12 @@ export function DatabaseManager() {
       await loadStats()
       toast.success('Database cleared and reinitialized')
     } catch (error) {
+      console.error(error)
       toast.error('Failed to clear database')
     }
-  }
+  }, [loadStats])
 
-  const handleExportDatabase = async () => {
+  const handleExportDatabase = useCallback(async () => {
     try {
       const data = await Database.exportDatabase()
       const blob = new Blob([data], { type: 'application/json' })
@@ -113,11 +131,12 @@ export function DatabaseManager() {
       URL.revokeObjectURL(url)
       toast.success('Database exported successfully')
     } catch (error) {
+      console.error(error)
       toast.error('Failed to export database')
     }
-  }
+  }, [])
 
-  const handleImportDatabase = () => {
+  const handleImportDatabase = useCallback(() => {
     const input = document.createElement('input')
     input.type = 'file'
     input.accept = 'application/json'
@@ -131,51 +150,64 @@ export function DatabaseManager() {
         await loadStats()
         toast.success('Database imported successfully')
       } catch (error) {
+        console.error(error)
         toast.error('Failed to import database')
       }
     }
     input.click()
-  }
+  }, [loadStats])
 
-  const totalRecords = Object.values(stats).reduce((a, b) => a + b, 0)
+  const handleConnect = useCallback(
+    async (details: ConnectionDetails) => {
+      setConnectionState('connecting')
+      try {
+        await Database.initializeDatabase()
+        setConnectionState('connected')
+        setLastConnectedAt(new Date())
+        toast.success(`Connected to ${details.database || 'Metabuilder database'} via ${details.driver}`)
+        await loadStats()
+      } catch (error) {
+        console.error(error)
+        setConnectionState('disconnected')
+        toast.error('Failed to initialize database connection')
+      }
+    },
+    [loadStats],
+  )
 
-  const dbEntities = [
-    { key: 'users', icon: Users, label: 'Users', count: stats.users, color: 'text-blue-500' },
-    { key: 'credentials', icon: Key, label: 'Credentials (SHA-512)', count: stats.credentials, color: 'text-amber-500' },
-    { key: 'workflows', icon: Lightning, label: 'Workflows', count: stats.workflows, color: 'text-purple-500' },
-    { key: 'luaScripts', icon: Code, label: 'Lua Scripts', count: stats.luaScripts, color: 'text-indigo-500' },
-    { key: 'pages', icon: FileText, label: 'Pages', count: stats.pages, color: 'text-cyan-500' },
-    { key: 'schemas', icon: TableIcon, label: 'Data Schemas', count: stats.schemas, color: 'text-green-500' },
-    { key: 'comments', icon: ChatCircle, label: 'Comments', count: stats.comments, color: 'text-pink-500' },
-    { key: 'componentNodes', icon: Tree, label: 'Component Hierarchy', count: stats.componentNodes, color: 'text-teal-500' },
-    { key: 'componentConfigs', icon: Gear, label: 'Component Configs', count: stats.componentConfigs, color: 'text-orange-500' },
-  ]
+  const dbEntities = useMemo(
+    () => [
+      { key: 'users', icon: Users, label: 'Users', count: stats.users, color: 'text-blue-500' },
+      { key: 'credentials', icon: Key, label: 'Credentials (SHA-512)', count: stats.credentials, color: 'text-amber-500' },
+      { key: 'workflows', icon: Lightning, label: 'Workflows', count: stats.workflows, color: 'text-purple-500' },
+      { key: 'luaScripts', icon: Code, label: 'Lua Scripts', count: stats.luaScripts, color: 'text-indigo-500' },
+      { key: 'pages', icon: FileText, label: 'Pages', count: stats.pages, color: 'text-cyan-500' },
+      { key: 'schemas', icon: TableIcon, label: 'Data Schemas', count: stats.schemas, color: 'text-green-500' },
+      { key: 'comments', icon: ChatCircle, label: 'Comments', count: stats.comments, color: 'text-pink-500' },
+      { key: 'componentNodes', icon: Tree, label: 'Component Hierarchy', count: stats.componentNodes, color: 'text-teal-500' },
+      { key: 'componentConfigs', icon: Gear, label: 'Component Configs', count: stats.componentConfigs, color: 'text-orange-500' },
+    ],
+    [stats],
+  )
+
+  const totalRecords = useMemo(() => Object.values(stats).reduce((a, b) => a + b, 0), [stats])
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">Database Management</h2>
-          <p className="text-muted-foreground">
-            Manage all persistent data across the application
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={loadStats} disabled={isLoading}>
-            <ArrowsClockwise size={16} className={isLoading ? 'animate-spin' : ''} />
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleExportDatabase}>
-            Export
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleImportDatabase}>
-            Import
-          </Button>
-          <Button variant="destructive" size="sm" onClick={handleClearDatabase}>
-            <Trash className="mr-2" size={16} />
-            Clear DB
-          </Button>
-        </div>
-      </div>
+      <ActionToolbar
+        isLoading={isLoading}
+        onRefresh={() => void loadStats()}
+        onExport={handleExportDatabase}
+        onImport={handleImportDatabase}
+        onClear={handleClearDatabase}
+      />
+
+      <ConnectionForm
+        onConnect={handleConnect}
+        isConnecting={connectionState === 'connecting'}
+        status={connectionState}
+        lastConnectedAt={lastConnectedAt}
+      />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card className="col-span-full bg-gradient-to-br from-primary/10 to-accent/10 border-2 border-dashed border-primary/30">
@@ -184,9 +216,7 @@ export function DatabaseManager() {
               <DatabaseIcon size={24} />
               Database Overview
             </CardTitle>
-            <CardDescription>
-              All data stored using SHA-512 password hashing and KV persistence
-            </CardDescription>
+            <CardDescription>All data stored using SHA-512 password hashing and KV persistence</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{totalRecords}</div>
@@ -210,31 +240,7 @@ export function DatabaseManager() {
         ))}
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Database Keys</CardTitle>
-          <CardDescription>
-            All KV storage keys used by the application
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ScrollArea className="h-64">
-            <div className="space-y-2">
-              {Object.entries(DB_KEYS).map(([key, value]) => (
-                <div key={key} className="flex items-center justify-between p-3 border border-border rounded-lg">
-                  <div>
-                    <span className="font-mono text-sm font-medium">{key}</span>
-                    <p className="text-xs text-muted-foreground mt-1">{value}</p>
-                  </div>
-                  <Badge variant="secondary" className="font-mono text-xs">
-                    KV
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-        </CardContent>
-      </Card>
+      <SchemaViewer schemas={schemas} dbKeys={DB_KEYS} />
 
       <Card className="border-amber-500/50 bg-amber-500/5">
         <CardHeader>
