@@ -18,7 +18,8 @@
       "Bash(bun install:*)",
       "Bash(test -f:*)",
       "Bash(bun run typecheck:*)",
-      "Bash(bun run test:unit:*)"
+      "Bash(bun run test:unit:*)",
+      "Bash(echo:*)"
     ]
   }
 }
