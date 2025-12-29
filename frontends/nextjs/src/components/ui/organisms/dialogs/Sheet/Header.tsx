@@ -41,14 +41,11 @@ const SheetFooter = forwardRef<HTMLDivElement, SheetFooterProps>(
         ref={ref}
         sx={{
           display: 'flex',
-          flexDirection: 'column-reverse',
+          flexDirection: { xs: 'column-reverse', sm: 'row' },
           gap: 1,
           pt: 2,
           mt: 'auto',
-          sm: {
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-          },
+          justifyContent: { sm: 'flex-end' },
         }}
         {...props}
       >
