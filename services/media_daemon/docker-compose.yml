@@ -1,0 +1,190 @@
+# Media Daemon Docker Compose
+# Use with: docker-compose -f docker-compose.yml up -d
+
+version: '3.8'
+
+services:
+  # ============================================================================
+  # Media Daemon
+  # ============================================================================
+  media-daemon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: metabuilder/media-daemon:latest
+    container_name: media-daemon
+    restart: unless-stopped
+    
+    ports:
+      - "8090:8090"
+    
+    environment:
+      # Server
+      - MEDIA_BIND_ADDRESS=0.0.0.0
+      - MEDIA_PORT=8090
+      - MEDIA_WORKERS=4
+      - MEDIA_DEV_MODE=false
+      
+      # DBAL Connection
+      - DBAL_URL=http://dbal-daemon:8080
+      - DBAL_API_KEY=${DBAL_API_KEY:-}
+      
+      # Job Queue
+      - MEDIA_VIDEO_WORKERS=2
+      - MEDIA_AUDIO_WORKERS=4
+      - MEDIA_DOC_WORKERS=4
+      - MEDIA_IMAGE_WORKERS=8
+      - MEDIA_TEMP_DIR=/data/temp
+      - MEDIA_OUTPUT_DIR=/data/output
+      
+      # Radio
+      - MEDIA_RADIO_ENABLED=true
+      - MEDIA_RADIO_MAX_CHANNELS=10
+      - MEDIA_RADIO_HLS_DIR=/data/hls/radio
+      
+      # TV
+      - MEDIA_TV_ENABLED=true
+      - MEDIA_TV_MAX_CHANNELS=5
+      - MEDIA_TV_HLS_DIR=/data/hls/tv
+      
+      # Icecast (optional)
+      - ICECAST_HOST=${ICECAST_HOST:-icecast}
+      - ICECAST_PASSWORD=${ICECAST_PASSWORD:-hackme}
+    
+    volumes:
+      # Media storage
+      - media-library:/data/media:ro
+      - media-output:/data/output
+      - media-cache:/data/cache
+      
+      # HLS segments (serve via nginx)
+      - hls-output:/data/hls
+      
+      # Temp (consider tmpfs for performance)
+      - media-temp:/data/temp
+      
+      # Custom plugins
+      - ./plugins:/plugins:ro
+      
+      # Custom config (optional)
+      # - ./config/media-daemon.yaml:/etc/media-daemon/config.yaml:ro
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    
+    networks:
+      - metabuilder-net
+    
+    depends_on:
+      dbal-daemon:
+        condition: service_healthy
+
+  # ============================================================================
+  # Icecast Server (Radio Output)
+  # ============================================================================
+  icecast:
+    image: libretime/icecast:2.4.4
+    container_name: icecast
+    restart: unless-stopped
+    
+    ports:
+      - "8000:8000"
+    
+    environment:
+      - ICECAST_SOURCE_PASSWORD=${ICECAST_PASSWORD:-hackme}
+      - ICECAST_ADMIN_PASSWORD=${ICECAST_ADMIN_PASSWORD:-hackme}
+      - ICECAST_RELAY_PASSWORD=${ICECAST_PASSWORD:-hackme}
+      - ICECAST_HOSTNAME=${ICECAST_HOSTNAME:-localhost}
+      - ICECAST_MAX_CLIENTS=100
+      - ICECAST_MAX_SOURCES=10
+    
+    volumes:
+      - icecast-logs:/var/log/icecast2
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/status-json.xsl"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    
+    networks:
+      - metabuilder-net
+
+  # ============================================================================
+  # Nginx (HLS Streaming Server)
+  # ============================================================================
+  nginx-stream:
+    image: nginx:alpine
+    container_name: nginx-stream
+    restart: unless-stopped
+    
+    ports:
+      - "8080:80"  # HLS streams
+    
+    volumes:
+      - hls-output:/data/hls:ro
+      - ./config/nginx-stream.conf:/etc/nginx/conf.d/default.conf:ro
+    
+    networks:
+      - metabuilder-net
+
+  # ============================================================================
+  # Redis (optional - for distributed job queue)
+  # ============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: media-redis
+    restart: unless-stopped
+    
+    command: redis-server --appendonly yes
+    
+    volumes:
+      - redis-data:/data
+    
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    
+    networks:
+      - metabuilder-net
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  metabuilder-net:
+    external: true
+
+# ============================================================================
+# Volumes
+# ============================================================================
+volumes:
+  media-library:
+    name: metabuilder-media-library
+  media-output:
+    name: metabuilder-media-output
+  media-cache:
+    name: metabuilder-media-cache
+  media-temp:
+    name: metabuilder-media-temp
+  hls-output:
+    name: metabuilder-hls-output
+  icecast-logs:
+    name: metabuilder-icecast-logs
+  redis-data:
+    name: metabuilder-media-redis

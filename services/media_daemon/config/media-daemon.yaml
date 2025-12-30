@@ -1,0 +1,197 @@
+# Media Daemon Configuration
+version: "1.0"
+
+# Server settings
+server:
+  bind_address: "0.0.0.0"
+  port: 8090
+  workers: 4
+  development_mode: false
+
+# DBAL connection for notifications
+dbal:
+  url: "${DBAL_URL:-http://localhost:8080}"
+  api_key: "${DBAL_API_KEY}"
+  timeout_ms: 5000
+  retry_attempts: 3
+
+# Job queue configuration
+job_queue:
+  # Maximum concurrent jobs per type
+  workers:
+    video: 2
+    audio: 4
+    document: 4
+    image: 8
+  
+  # Job priority levels (lower = higher priority)
+  priorities:
+    urgent: 0
+    high: 1
+    normal: 2
+    low: 3
+    background: 4
+  
+  # Job retention
+  retention:
+    completed_hours: 24
+    failed_hours: 168  # 7 days
+  
+  # Temp storage
+  temp_dir: "/data/temp"
+  output_dir: "/data/output"
+
+# Radio streaming configuration
+radio:
+  enabled: true
+  max_channels: 10
+  
+  # Audio settings
+  audio:
+    sample_rate: 44100
+    channels: 2
+    bitrates: [64, 128, 192, 320]  # kbps
+    default_bitrate: 128
+    codec: "mp3"  # mp3, aac, opus
+  
+  # Crossfade settings
+  crossfade:
+    enabled: true
+    duration_ms: 3000
+  
+  # Normalization
+  normalization:
+    enabled: true
+    target_lufs: -14.0
+  
+  # Output formats
+  outputs:
+    - type: "icecast"
+      host: "${ICECAST_HOST:-localhost}"
+      port: 8000
+      mount: "/radio"
+      password: "${ICECAST_PASSWORD}"
+    - type: "hls"
+      segment_duration: 6
+      playlist_size: 5
+
+# TV channel simulation
+tv:
+  enabled: true
+  max_channels: 5
+  
+  # Video settings
+  video:
+    resolutions:
+      - name: "1080p"
+        width: 1920
+        height: 1080
+        bitrate: 5000
+      - name: "720p"
+        width: 1280
+        height: 720
+        bitrate: 2500
+      - name: "480p"
+        width: 854
+        height: 480
+        bitrate: 1000
+    codec: "h264"  # h264, h265, vp9
+    preset: "fast"
+  
+  # Audio settings
+  audio:
+    codec: "aac"
+    bitrate: 128
+    sample_rate: 48000
+  
+  # HLS output settings
+  hls:
+    segment_duration: 4
+    playlist_size: 10
+    output_dir: "/data/hls"
+  
+  # EPG settings
+  epg:
+    lookahead_hours: 24
+    refresh_interval_minutes: 15
+
+# Plugin system
+plugins:
+  enabled: true
+  directory: "/plugins"
+  hot_reload: false  # Enable in development mode
+  
+  # Built-in plugins
+  builtin:
+    ffmpeg:
+      enabled: true
+      binary: "/usr/bin/ffmpeg"
+      hardware_accel: "auto"  # auto, nvidia, vaapi, none
+    
+    imagemagick:
+      enabled: true
+      binary: "/usr/bin/convert"
+      memory_limit: "512MB"
+    
+    pandoc:
+      enabled: true
+      binary: "/usr/bin/pandoc"
+      pdf_engine: "xelatex"
+
+# Storage backends
+storage:
+  # Local filesystem
+  local:
+    media_dir: "/data/media"
+    cache_dir: "/data/cache"
+    max_cache_size_gb: 50
+  
+  # S3-compatible storage (optional)
+  s3:
+    enabled: false
+    endpoint: "${S3_ENDPOINT}"
+    bucket: "${S3_BUCKET}"
+    access_key: "${S3_ACCESS_KEY}"
+    secret_key: "${S3_SECRET_KEY}"
+    region: "us-east-1"
+
+# Monitoring
+monitoring:
+  # Prometheus metrics
+  prometheus:
+    enabled: true
+    endpoint: "/metrics"
+  
+  # Health checks
+  health:
+    endpoint: "/health"
+    include_details: true
+
+# Logging
+logging:
+  level: "info"  # trace, debug, info, warn, error
+  format: "json"  # json, text
+  output: "stdout"  # stdout, file
+  file:
+    path: "/var/log/media-daemon.log"
+    max_size_mb: 100
+    max_files: 5
+
+# Security
+security:
+  # API authentication
+  api_keys:
+    enabled: true
+    header: "X-API-Key"
+  
+  # Rate limiting
+  rate_limit:
+    enabled: true
+    requests_per_minute: 100
+    burst: 20
+  
+  # CORS
+  cors:
+    enabled: true
+    origins: ["*"]
+    methods: ["GET", "POST", "PUT", "DELETE"]

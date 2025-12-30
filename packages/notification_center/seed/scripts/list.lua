@@ -1,63 +1,10 @@
--- Notification list utilities
+--- Notification list facade
+--- Re-exports single-function modules for backward compatibility
 
----@class NotificationListUtils
 local M = {}
 
----@class Notification
----@field id string|number
----@field title string
----@field message string
----@field created_at string|number
----@field read? boolean
----@field icon? string
-
----@class UIComponent
----@field type string
----@field props? table
----@field children? table
----@field content? string
----@field variant? string
-
----@param notification Notification
----@return UIComponent
-function M.render_item(notification)
-  return {
-    type = "notification_item",
-    props = {
-      id = notification.id,
-      title = notification.title,
-      message = notification.message,
-      time = notification.created_at,
-      read = notification.read or false,
-      icon = notification.icon or "bell"
-    }
-  }
-end
-
----@param notifications Notification[]
----@return UIComponent
-function M.render_list(notifications)
-  local items = {}
-  for _, n in ipairs(notifications) do
-    table.insert(items, M.render_item(n))
-  end
-  return {
-    type = "notification_list",
-    children = items
-  }
-end
-
----@param count number
----@return UIComponent|nil
-function M.render_badge(count)
-  if count > 0 then
-    return {
-      type = "badge",
-      content = count > 99 and "99+" or tostring(count),
-      variant = "error"
-    }
-  end
-  return nil
-end
+M.render_item = require("render_notification_item")
+M.render_list = require("render_notification_list")
+M.render_badge = require("render_notification_badge")
 
 return M

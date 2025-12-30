@@ -1,20 +1,8 @@
----@class ThreadRank
+--- Thread ranking facade for forum_forge
+--- Re-exports single-function modules for backward compatibility
+
 local M = {}
 
----@class Thread
----@field replyCount? number
----@field likeCount? number
----@field lastReplyAt? number
----@field createdAt? number
-
----@param thread Thread
----@return number
-function M.rank_thread(thread)
-  local replies = thread.replyCount or 0
-  local likes = thread.likeCount or 0
-  local recency = thread.lastReplyAt or thread.createdAt or 0
-
-  return (replies * 2) + likes + (recency / 1000000)
-end
+M.rank_thread = require("rank_thread")
 
 return M

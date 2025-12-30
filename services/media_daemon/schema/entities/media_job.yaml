@@ -1,0 +1,152 @@
+# Media Job Entity Schema
+# Following DBAL YAML-first design pattern
+
+entity: MediaJob
+version: "1.0"
+description: "Media processing job for transcoding, conversion, and streaming"
+
+fields:
+  id:
+    type: uuid
+    primary: true
+    generated: true
+    description: "Unique job identifier"
+  
+  tenant_id:
+    type: uuid
+    required: true
+    indexed: true
+    description: "Tenant for multi-tenancy isolation"
+  
+  user_id:
+    type: uuid
+    required: true
+    indexed: true
+    description: "User who submitted the job"
+  
+  type:
+    type: enum
+    values: [video_transcode, audio_transcode, document_convert, image_process, radio_ingest, tv_segment, custom]
+    required: true
+    indexed: true
+    description: "Type of media job"
+  
+  status:
+    type: enum
+    values: [pending, queued, processing, completed, failed, cancelled]
+    default: pending
+    indexed: true
+    description: "Current job status"
+  
+  priority:
+    type: enum
+    values: [urgent, high, normal, low, background]
+    default: normal
+    description: "Job priority level"
+  
+  params:
+    type: json
+    required: true
+    description: "Job-specific parameters (codec, bitrate, etc.)"
+  
+  progress:
+    type: json
+    description: "Progress tracking (percent, stage, eta)"
+  
+  input_path:
+    type: string
+    required: true
+    max_length: 1024
+    description: "Path to input file(s)"
+  
+  output_path:
+    type: string
+    max_length: 1024
+    description: "Path to output file(s)"
+  
+  error_message:
+    type: string
+    max_length: 4096
+    description: "Error message if job failed"
+  
+  callback_url:
+    type: string
+    max_length: 512
+    description: "Webhook URL for completion notification"
+  
+  notify_user:
+    type: boolean
+    default: true
+    description: "Send DBAL notification on completion"
+  
+  metadata:
+    type: json
+    description: "Additional metadata"
+  
+  created_at:
+    type: timestamp
+    auto_now_add: true
+    indexed: true
+    description: "Job creation timestamp"
+  
+  started_at:
+    type: timestamp
+    description: "Job start timestamp"
+  
+  completed_at:
+    type: timestamp
+    description: "Job completion timestamp"
+  
+  duration_ms:
+    type: integer
+    description: "Processing duration in milliseconds"
+
+indexes:
+  - fields: [tenant_id, user_id]
+    name: idx_job_tenant_user
+  - fields: [tenant_id, status]
+    name: idx_job_tenant_status
+  - fields: [status, priority, created_at]
+    name: idx_job_queue
+
+acl:
+  create:
+    min_level: 1  # User level
+  read:
+    self: true
+    min_level: 2  # Moderator can see all
+  update:
+    self: true
+    min_level: 3  # Admin
+  delete:
+    min_level: 3  # Admin
+
+operations:
+  submit:
+    description: "Submit a new job"
+    input:
+      - type
+      - params
+      - priority
+      - callback_url
+      - notify_user
+      - metadata
+    output: [id, status, created_at]
+  
+  cancel:
+    description: "Cancel a pending or processing job"
+    input: [id]
+    output: [status]
+  
+  retry:
+    description: "Retry a failed job"
+    input: [id]
+    output: [id, status]
+  
+  list_pending:
+    description: "List pending jobs for a tenant"
+    input:
+      - tenant_id
+      - limit?
+      - offset?
+    output: [id, type, status, priority, created_at]
