@@ -7,11 +7,68 @@
  * 3. If schema differs from current DB, added to migration queue
  * 4. Admin reviews queue, approves migrations
  * 5. On container restart, pending migrations are applied
+ * 
+ * Entity Prefixing:
+ * - All entities are prefixed with package name to avoid collisions
+ * - Example: forum_forge.Post → Pkg_ForumForge_Post
+ * - Prefix format: Pkg_{PascalPackageName}_{EntityName}
+ * - Relations automatically use prefixed names
  */
 
 import * as crypto from 'crypto'
 import * as fs from 'fs'
 import * as path from 'path'
+
+/**
+ * Convert snake_case package name to PascalCase prefix
+ * Example: forum_forge → ForumForge
+ */
+export const packageToPascalCase = (packageId: string): string => {
+  return packageId
+    .split('_')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join('')
+}
+
+/**
+ * Generate prefixed entity name to avoid package collisions
+ * Format: Pkg_{PascalPackageName}_{EntityName}
+ * Example: forum_forge + Post → Pkg_ForumForge_Post
+ */
+export const getPrefixedEntityName = (packageId: string, entityName: string): string => {
+  const prefix = packageToPascalCase(packageId)
+  return `Pkg_${prefix}_${entityName}`
+}
+
+/**
+ * Check if an entity name is prefixed
+ */
+export const isPrefixedEntityName = (name: string): boolean => {
+  return name.startsWith('Pkg_')
+}
+
+/**
+ * Extract package ID from prefixed entity name
+ * Example: Pkg_ForumForge_Post → forum_forge
+ */
+export const extractPackageFromPrefix = (prefixedName: string): string | null => {
+  if (!isPrefixedEntityName(prefixedName)) return null
+  const match = prefixedName.match(/^Pkg_([A-Z][a-zA-Z]*)_/)
+  if (!match) return null
+  // Convert PascalCase back to snake_case
+  return match[1].replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase()
+}
+
+/**
+ * Extract original entity name from prefixed name
+ * Example: Pkg_ForumForge_Post → Post
+ */
+export const extractEntityFromPrefix = (prefixedName: string): string | null => {
+  if (!isPrefixedEntityName(prefixedName)) return null
+  const parts = prefixedName.split('_')
+  if (parts.length < 3) return null
+  return parts.slice(2).join('_')
+}
 
 // Simple YAML parser for our specific schema format
 // Using a lightweight approach to avoid external dependency
@@ -216,26 +273,37 @@ export const fieldToPrisma = (name: string, field: PackageSchemaField): string =
 
 /**
  * Convert package schema entity to Prisma model
+ * Applies package prefix to entity name and relation targets
  */
-export const entityToPrisma = (entity: PackageSchemaEntity): string => {
+export const entityToPrisma = (entity: PackageSchemaEntity, packageId?: string): string => {
   const lines: string[] = []
   
-  lines.push(`model ${entity.name} {`)
+  // Use prefixed name if packageId provided
+  const modelName = packageId 
+    ? getPrefixedEntityName(packageId, entity.name)
+    : entity.name
+  
+  lines.push(`model ${modelName} {`)
   
   // Fields
   for (const [name, field] of Object.entries(entity.fields)) {
     lines.push(fieldToPrisma(name, field))
   }
   
-  // Relations
+  // Relations - also prefix target entities from same package
   if (entity.relations) {
     lines.push('')
     for (const rel of entity.relations) {
+      // Prefix relation target entity if it's from the same package
+      const targetEntity = packageId
+        ? getPrefixedEntityName(packageId, rel.entity)
+        : rel.entity
+        
       if (rel.type === 'belongsTo') {
         const optional = rel.optional ? '?' : ''
-        lines.push(`  ${rel.name} ${rel.entity}${optional} @relation(fields: [${rel.field}], references: [id]${rel.onDelete ? `, onDelete: ${rel.onDelete}` : ''})`)
+        lines.push(`  ${rel.name} ${targetEntity}${optional} @relation(fields: [${rel.field}], references: [id]${rel.onDelete ? `, onDelete: ${rel.onDelete}` : ''})`)
       } else if (rel.type === 'hasMany') {
-        lines.push(`  ${rel.name} ${rel.entity}[]`)
+        lines.push(`  ${rel.name} ${targetEntity}[]`)
       }
     }
   }
@@ -251,6 +319,12 @@ export const entityToPrisma = (entity: PackageSchemaEntity): string => {
         lines.push(`  @@index([${fields}])`)
       }
     }
+  }
+  
+  // Map to original table name for cleaner DB
+  if (packageId) {
+    lines.push('')
+    lines.push(`  @@map("${packageId}_${entity.name.toLowerCase()}")`)
   }
   
   lines.push('}')
