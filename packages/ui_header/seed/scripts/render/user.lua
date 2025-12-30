@@ -11,14 +11,20 @@
 ---@field action? string
 ---@field type? string
 
+---@class AuthButtonsComponent
+---@field type "auth_buttons"
+---@field children MenuItem[]
+
 ---@class UserMenuComponent
----@field type string
+---@field type "user_menu"
 ---@field avatar? string
 ---@field name? string
----@field children? MenuItem[]
+---@field items MenuItem[]
+
+---@alias HeaderUserComponent AuthButtonsComponent|UserMenuComponent
 
 ---@param user? User
----@return UserMenuComponent
+---@return HeaderUserComponent
 local function user_section(user)
   if not user then
     return {
