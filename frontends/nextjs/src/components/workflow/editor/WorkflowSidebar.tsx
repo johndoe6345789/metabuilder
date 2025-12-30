@@ -1,7 +1,7 @@
-import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import { Card, CardContent, CardHeader } from '@mui/material'
 
 import { Badge, Button } from '@/components/ui'
+import { Plus, Trash } from '@/fakemui/icons'
 
 import type { WorkflowSidebarProps } from './types'
 
@@ -17,7 +17,7 @@ export const WorkflowSidebar = ({
       <div className="flex items-center justify-between">
         <div className="text-lg font-semibold">Workflows</div>
         <Button size="sm" onClick={onAddWorkflow}>
-          <AddIcon sx={{ fontSize: 16 }} />
+          <Plus size={16} />
         </Button>
       </div>
       <p className="text-sm text-muted-foreground">Automation workflows</p>

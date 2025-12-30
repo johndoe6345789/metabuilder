@@ -1,11 +1,5 @@
-import {
-  AccountTree as GitBranchIcon,
-  ArrowForward as ArrowRightIcon,
-  Code as CodeIcon,
-  FlashOn as LightningIcon,
-} from '@mui/icons-material'
-
 import { Button, Label } from '@/components/ui'
+import { ArrowRight, Code, GitBranch, Lightning } from '@/fakemui/icons'
 
 import type { WorkflowNodesPanelProps } from './types'
 import { WorkflowNodeCard } from './WorkflowNodeCard'
@@ -22,19 +16,19 @@ export const WorkflowNodesPanel = ({
       <Label className="text-base">Nodes</Label>
       <div className="flex gap-2">
         <Button size="sm" variant="outline" onClick={() => onAddNode('trigger')}>
-          <LightningIcon sx={{ fontSize: 14, mr: 1 }} />
+          <Lightning size={14} style={{ marginRight: 4 }} />
           Trigger
         </Button>
         <Button size="sm" variant="outline" onClick={() => onAddNode('action')}>
-          <ArrowRightIcon sx={{ fontSize: 14, mr: 1 }} />
+          <ArrowRight size={14} style={{ marginRight: 4 }} />
           Action
         </Button>
         <Button size="sm" variant="outline" onClick={() => onAddNode('condition')}>
-          <GitBranchIcon sx={{ fontSize: 14, mr: 1 }} />
+          <GitBranch size={14} style={{ marginRight: 4 }} />
           Condition
         </Button>
         <Button size="sm" variant="outline" onClick={() => onAddNode('lua')}>
-          <CodeIcon sx={{ fontSize: 14, mr: 1 }} />
+          <Code size={14} style={{ marginRight: 4 }} />
           Lua
         </Button>
       </div>

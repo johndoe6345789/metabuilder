@@ -1,9 +1,6 @@
-import {
-  Cancel as XCircleIcon,
-  CheckCircle as CheckCircleIcon,
-  FlashOn as LightningIcon,
-} from '@mui/icons-material'
 import { Card, CardContent, CardHeader } from '@mui/material'
+
+import { CheckCircle, Lightning, XCircle } from '@/fakemui/icons'
 
 import { CardTitle } from '@/components/ui'
 import { Label, Textarea } from '@/components/ui'

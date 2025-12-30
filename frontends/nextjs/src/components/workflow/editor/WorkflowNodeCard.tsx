@@ -1,5 +1,6 @@
-import { ArrowForward as ArrowRightIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import { Card, CardContent } from '@mui/material'
+
+import { ArrowRight, Trash } from '@/fakemui/icons'
 
 import {
   Badge,
@@ -26,7 +27,7 @@ interface WorkflowNodeCardProps {
 }
 
 const getNodeIcon = (type: WorkflowNode['type']) =>
-  NODE_TYPE_ICONS[type] || <ArrowRightIcon fontSize="small" />
+  NODE_TYPE_ICONS[type] || <ArrowRight size={16} />
 const getNodeColor = (type: WorkflowNode['type']) => NODE_TYPE_COLORS[type] || 'grey.500'
 
 export const WorkflowNodeCard = ({

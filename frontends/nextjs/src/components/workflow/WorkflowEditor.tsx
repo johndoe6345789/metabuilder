@@ -1,5 +1,6 @@
-import { PlayArrow as PlayIcon } from '@mui/icons-material'
 import { Card, CardContent, CardHeader } from '@mui/material'
+
+import { Play } from '@/fakemui/icons'
 
 import { CardDescription, CardTitle } from '@/components/ui'
 

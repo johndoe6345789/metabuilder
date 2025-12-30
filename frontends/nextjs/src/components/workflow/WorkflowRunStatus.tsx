@@ -1,6 +1,6 @@
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
-import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined'
 import { Chip, Stack, Typography } from '@mui/material'
+
+import { CheckCircle, XCircle } from '@/fakemui/icons'
 
 interface WorkflowRunStatusProps {
   status: string
@@ -14,8 +14,8 @@ export function WorkflowRunStatus({ status, conclusion }: WorkflowRunStatusProps
 
   return (
     <Stack direction="row" spacing={1} alignItems="center">
-      {isSuccess && <CheckCircleOutlineIcon sx={{ color: 'success.main', fontSize: 20 }} />}
-      {isFailure && <HighlightOffOutlinedIcon sx={{ color: 'error.main', fontSize: 20 }} />}
+      {isSuccess && <CheckCircle size={20} style={{ color: 'var(--mui-palette-success-main)' }} />}
+      {isFailure && <XCircle size={20} style={{ color: 'var(--mui-palette-error-main)' }} />}
       {isInProgress && <Chip label="Running..." size="small" variant="outlined" />}
       <Typography variant="body2" sx={{ fontWeight: 600, textTransform: 'capitalize' }}>
         {conclusion || status}

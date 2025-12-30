@@ -1,10 +1,6 @@
-import {
-  AccountTree as GitBranchIcon,
-  ArrowForward as ArrowRightIcon,
-  Code as CodeIcon,
-  FlashOn as LightningIcon,
-} from '@mui/icons-material'
 import type { JSX } from 'react'
+
+import { ArrowRight, Code, GitBranch, Lightning } from '@/fakemui/icons'
 
 import type { WorkflowNode } from '@/lib/level-types'
 
@@ -21,11 +17,11 @@ export const NODE_TYPE_OPTIONS: NodeTypeOption[] = [
 ]
 
 export const NODE_TYPE_ICONS: Record<WorkflowNode['type'], JSX.Element> = {
-  trigger: <LightningIcon fontSize="small" />,
-  action: <ArrowRightIcon fontSize="small" />,
-  condition: <GitBranchIcon fontSize="small" />,
-  lua: <CodeIcon fontSize="small" />,
-  transform: <ArrowRightIcon fontSize="small" />,
+  trigger: <Lightning size={16} />,
+  action: <ArrowRight size={16} />,
+  condition: <GitBranch size={16} />,
+  lua: <Code size={16} />,
+  transform: <ArrowRight size={16} />,
 }
 
 export const NODE_TYPE_COLORS: Record<WorkflowNode['type'], string> = {
