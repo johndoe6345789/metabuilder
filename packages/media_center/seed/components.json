@@ -739,6 +739,561 @@
           "children": "Markdown → EPUB"
         }
       ]
+    },
+    
+    {
+      "id": "RetroGameLauncher",
+      "type": "container",
+      "props": { "sx": { "p": 3 } },
+      "children": [
+        {
+          "type": "typography",
+          "props": { "variant": "h5", "gutterBottom": true },
+          "children": "Retro Gaming"
+        },
+        {
+          "type": "grid",
+          "props": { "container": true, "spacing": 3 },
+          "children": [
+            {
+              "type": "grid",
+              "props": { "item": true, "xs": 12, "md": 8 },
+              "children": [
+                {
+                  "type": "card",
+                  "children": [
+                    {
+                      "type": "cardContent",
+                      "children": [
+                        {
+                          "type": "typography",
+                          "props": { "variant": "h6", "gutterBottom": true },
+                          "children": "Start New Game"
+                        },
+                        {
+                          "type": "form",
+                          "props": { "id": "retro-launch-form" },
+                          "children": [
+                            {
+                              "type": "fileUpload",
+                              "props": {
+                                "name": "rom_file",
+                                "label": "Select ROM",
+                                "accept": ".nes,.sfc,.smc,.gba,.gb,.gbc,.n64,.z64,.bin,.iso,.cue,.chd,.zip,.7z",
+                                "fullWidth": true,
+                                "sx": { "mb": 2 }
+                              }
+                            },
+                            {
+                              "type": "select",
+                              "props": {
+                                "name": "core",
+                                "label": "Emulator Core",
+                                "fullWidth": true,
+                                "sx": { "mb": 2 },
+                                "options": "{{available_cores}}"
+                              }
+                            },
+                            {
+                              "type": "select",
+                              "props": {
+                                "name": "shader",
+                                "label": "Shader Preset",
+                                "fullWidth": true,
+                                "sx": { "mb": 2 },
+                                "defaultValue": "none",
+                                "options": [
+                                  { "value": "none", "label": "None (Sharp Pixels)" },
+                                  { "value": "crt_royale", "label": "CRT Royale" },
+                                  { "value": "crt_lottes", "label": "CRT Lottes" },
+                                  { "value": "scanlines", "label": "Scanlines" },
+                                  { "value": "lcd_grid", "label": "LCD Grid (Handheld)" },
+                                  { "value": "xbrz", "label": "xBRZ Upscaling" }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "grid",
+                              "props": { "container": true, "spacing": 2, "sx": { "mb": 2 } },
+                              "children": [
+                                {
+                                  "type": "grid",
+                                  "props": { "item": true, "xs": 6 },
+                                  "children": [
+                                    {
+                                      "type": "select",
+                                      "props": {
+                                        "name": "resolution",
+                                        "label": "Resolution",
+                                        "fullWidth": true,
+                                        "defaultValue": "720p",
+                                        "options": [
+                                          { "value": "480p", "label": "480p (SD)" },
+                                          { "value": "720p", "label": "720p (HD)" },
+                                          { "value": "1080p", "label": "1080p (Full HD)" },
+                                          { "value": "1440p", "label": "1440p (2K)" },
+                                          { "value": "4k", "label": "4K (UHD)" }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "grid",
+                                  "props": { "item": true, "xs": 6 },
+                                  "children": [
+                                    {
+                                      "type": "formControlLabel",
+                                      "props": {
+                                        "control": {
+                                          "type": "checkbox",
+                                          "props": { "name": "integer_scaling" }
+                                        },
+                                        "label": "Integer Scaling"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "accordion",
+                              "props": { "sx": { "mb": 2 } },
+                              "children": [
+                                {
+                                  "type": "accordionSummary",
+                                  "props": { "expandIcon": { "type": "icon", "props": { "name": "ExpandMore" } } },
+                                  "children": "Streaming Options"
+                                },
+                                {
+                                  "type": "accordionDetails",
+                                  "children": [
+                                    {
+                                      "type": "formControlLabel",
+                                      "props": {
+                                        "control": {
+                                          "type": "switch",
+                                          "props": { "name": "stream_enabled" }
+                                        },
+                                        "label": "Enable Streaming"
+                                      }
+                                    },
+                                    {
+                                      "type": "textField",
+                                      "props": {
+                                        "name": "stream_url",
+                                        "label": "RTMP URL",
+                                        "placeholder": "rtmp://live.twitch.tv/app/your_stream_key",
+                                        "fullWidth": true,
+                                        "sx": { "mt": 2 }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "accordion",
+                              "children": [
+                                {
+                                  "type": "accordionSummary",
+                                  "props": { "expandIcon": { "type": "icon", "props": { "name": "ExpandMore" } } },
+                                  "children": "Netplay (Multiplayer)"
+                                },
+                                {
+                                  "type": "accordionDetails",
+                                  "children": [
+                                    {
+                                      "type": "formControlLabel",
+                                      "props": {
+                                        "control": {
+                                          "type": "switch",
+                                          "props": { "name": "netplay_enabled" }
+                                        },
+                                        "label": "Enable Netplay"
+                                      }
+                                    },
+                                    {
+                                      "type": "radioGroup",
+                                      "props": {
+                                        "name": "netplay_mode",
+                                        "sx": { "mt": 1 }
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "formControlLabel",
+                                          "props": {
+                                            "value": "host",
+                                            "control": { "type": "radio" },
+                                            "label": "Host Game"
+                                          }
+                                        },
+                                        {
+                                          "type": "formControlLabel",
+                                          "props": {
+                                            "value": "join",
+                                            "control": { "type": "radio" },
+                                            "label": "Join Game"
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "textField",
+                                      "props": {
+                                        "name": "netplay_host",
+                                        "label": "Host Address (for joining)",
+                                        "placeholder": "192.168.1.100:55435",
+                                        "fullWidth": true,
+                                        "sx": { "mt": 2 }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "cardActions",
+                      "children": [
+                        {
+                          "type": "button",
+                          "props": {
+                            "variant": "contained",
+                            "color": "primary",
+                            "startIcon": { "type": "icon", "props": { "name": "PlayArrow" } }
+                          },
+                          "events": { "onClick": "submitForm('retro-launch-form', retro_helpers.start_session)" },
+                          "children": "Launch Game"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "props": { "item": true, "xs": 12, "md": 4 },
+              "children": [
+                {
+                  "type": "card",
+                  "children": [
+                    {
+                      "type": "cardContent",
+                      "children": [
+                        {
+                          "type": "typography",
+                          "props": { "variant": "h6", "gutterBottom": true },
+                          "children": "Supported Systems"
+                        },
+                        {
+                          "type": "list",
+                          "props": { "dense": true },
+                          "children": [
+                            {
+                              "type": "listItem",
+                              "children": [
+                                { "type": "listItemIcon", "children": [{ "type": "icon", "props": { "name": "SportsEsports" } }] },
+                                { "type": "listItemText", "props": { "primary": "Nintendo", "secondary": "NES, SNES, N64, GB/GBC/GBA, DS" } }
+                              ]
+                            },
+                            {
+                              "type": "listItem",
+                              "children": [
+                                { "type": "listItemIcon", "children": [{ "type": "icon", "props": { "name": "SportsEsports" } }] },
+                                { "type": "listItemText", "props": { "primary": "Sega", "secondary": "Master System, Genesis, Saturn, Dreamcast" } }
+                              ]
+                            },
+                            {
+                              "type": "listItem",
+                              "children": [
+                                { "type": "listItemIcon", "children": [{ "type": "icon", "props": { "name": "SportsEsports" } }] },
+                                { "type": "listItemText", "props": { "primary": "Sony", "secondary": "PlayStation, PSP" } }
+                              ]
+                            },
+                            {
+                              "type": "listItem",
+                              "children": [
+                                { "type": "listItemIcon", "children": [{ "type": "icon", "props": { "name": "SportsEsports" } }] },
+                                { "type": "listItemText", "props": { "primary": "Arcade", "secondary": "MAME, Neo Geo, FinalBurn" } }
+                              ]
+                            },
+                            {
+                              "type": "listItem",
+                              "children": [
+                                { "type": "listItemIcon", "children": [{ "type": "icon", "props": { "name": "SportsEsports" } }] },
+                                { "type": "listItemText", "props": { "primary": "Other", "secondary": "Atari, PC Engine, DOS, ScummVM" } }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    
+    {
+      "id": "RetroGamePlayer",
+      "type": "container",
+      "props": { "sx": { "p": 2, "bgcolor": "#000", "borderRadius": 1 } },
+      "children": [
+        {
+          "type": "box",
+          "props": {
+            "sx": {
+              "position": "relative",
+              "width": "100%",
+              "paddingTop": "56.25%",
+              "bgcolor": "#111"
+            }
+          },
+          "children": [
+            {
+              "type": "canvas",
+              "props": {
+                "id": "retro-game-canvas",
+                "sx": {
+                  "position": "absolute",
+                  "top": 0,
+                  "left": 0,
+                  "width": "100%",
+                  "height": "100%",
+                  "imageRendering": "pixelated"
+                }
+              }
+            },
+            {
+              "type": "box",
+              "props": {
+                "id": "game-overlay",
+                "sx": {
+                  "position": "absolute",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "p": 1,
+                  "background": "linear-gradient(transparent, rgba(0,0,0,0.8))",
+                  "display": "flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "opacity": 0,
+                  "transition": "opacity 0.3s",
+                  "&:hover": { "opacity": 1 }
+                }
+              },
+              "children": [
+                {
+                  "type": "box",
+                  "props": { "sx": { "display": "flex", "gap": 1 } },
+                  "children": [
+                    {
+                      "type": "iconButton",
+                      "props": { "color": "inherit", "size": "small" },
+                      "events": { "onClick": "retro_helpers.set_paused(session_id, !is_paused)" },
+                      "children": [{ "type": "icon", "props": { "name": "{{is_paused ? 'PlayArrow' : 'Pause'}}" } }]
+                    },
+                    {
+                      "type": "iconButton",
+                      "props": { "color": "inherit", "size": "small" },
+                      "events": { "onClick": "retro_helpers.save_state(session_id)" },
+                      "children": [{ "type": "icon", "props": { "name": "Save" } }]
+                    },
+                    {
+                      "type": "iconButton",
+                      "props": { "color": "inherit", "size": "small" },
+                      "events": { "onClick": "openDialog('LoadState')" },
+                      "children": [{ "type": "icon", "props": { "name": "FolderOpen" } }]
+                    },
+                    {
+                      "type": "iconButton",
+                      "props": { "color": "inherit", "size": "small" },
+                      "events": { "onClick": "retro_helpers.take_screenshot(session_id)" },
+                      "children": [{ "type": "icon", "props": { "name": "CameraAlt" } }]
+                    },
+                    {
+                      "type": "iconButton",
+                      "props": { "color": "inherit", "size": "small" },
+                      "events": { "onClick": "retro_helpers.set_fast_forward(session_id, !fast_forward)" },
+                      "children": [{ "type": "icon", "props": { "name": "FastForward", "color": "{{fast_forward ? 'primary' : 'inherit'}}" } }]
+                    }
+                  ]
+                },
+                {
+                  "type": "typography",
+                  "props": { "variant": "caption", "color": "grey.400" },
+                  "children": "{{fps}} FPS | {{retro_helpers.format_playtime(play_time)}}"
+                },
+                {
+                  "type": "box",
+                  "props": { "sx": { "display": "flex", "gap": 1 } },
+                  "children": [
+                    {
+                      "type": "iconButton",
+                      "props": { "color": "inherit", "size": "small" },
+                      "events": { "onClick": "openDialog('ShaderPicker')" },
+                      "children": [{ "type": "icon", "props": { "name": "Tune" } }]
+                    },
+                    {
+                      "type": "iconButton",
+                      "props": { "color": "inherit", "size": "small" },
+                      "events": { "onClick": "toggleFullscreen('retro-game-canvas')" },
+                      "children": [{ "type": "icon", "props": { "name": "Fullscreen" } }]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "box",
+          "props": { "sx": { "mt": 1, "display": "flex", "justifyContent": "space-between", "alignItems": "center" } },
+          "children": [
+            {
+              "type": "typography",
+              "props": { "variant": "subtitle1", "color": "grey.300" },
+              "children": "{{rom_name}}"
+            },
+            {
+              "type": "chip",
+              "props": { 
+                "label": "{{core_name}}", 
+                "size": "small", 
+                "color": "primary",
+                "variant": "outlined" 
+              }
+            }
+          ]
+        }
+      ]
+    },
+    
+    {
+      "id": "SaveStateManager",
+      "type": "dialog",
+      "props": { "maxWidth": "md", "fullWidth": true },
+      "children": [
+        {
+          "type": "dialogTitle",
+          "children": "Save States"
+        },
+        {
+          "type": "dialogContent",
+          "children": [
+            {
+              "type": "grid",
+              "props": { "container": true, "spacing": 2 },
+              "children": [
+                {
+                  "type": "iterator",
+                  "dataSource": "save_states",
+                  "itemTemplate": {
+                    "type": "grid",
+                    "props": { "item": true, "xs": 6, "sm": 4, "md": 3 },
+                    "children": [
+                      {
+                        "type": "card",
+                        "props": { 
+                          "sx": { 
+                            "cursor": "pointer",
+                            "&:hover": { "boxShadow": 4 }
+                          }
+                        },
+                        "events": { "onClick": "retro_helpers.load_state(session_id, {{item.slot}})" },
+                        "children": [
+                          {
+                            "type": "cardMedia",
+                            "props": {
+                              "component": "img",
+                              "height": "120",
+                              "image": "{{item.screenshot_path}}",
+                              "alt": "Slot {{item.slot}}"
+                            }
+                          },
+                          {
+                            "type": "cardContent",
+                            "props": { "sx": { "py": 1 } },
+                            "children": [
+                              {
+                                "type": "typography",
+                                "props": { "variant": "subtitle2" },
+                                "children": "Slot {{item.slot}}"
+                              },
+                              {
+                                "type": "typography",
+                                "props": { "variant": "caption", "color": "text.secondary" },
+                                "children": "{{formatDate(item.created_at)}}"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "dialogActions",
+          "children": [
+            {
+              "type": "button",
+              "events": { "onClick": "closeDialog()" },
+              "children": "Close"
+            }
+          ]
+        }
+      ]
+    },
+    
+    {
+      "id": "ActiveSessionsList",
+      "type": "container",
+      "children": [
+        {
+          "type": "typography",
+          "props": { "variant": "h6", "gutterBottom": true },
+          "children": "Active Sessions"
+        },
+        {
+          "type": "dataTable",
+          "props": {
+            "columns": [
+              { "field": "rom_name", "headerName": "Game", "flex": 1 },
+              { "field": "core_name", "headerName": "Core", "width": 120 },
+              { "field": "fps", "headerName": "FPS", "width": 80 },
+              { "field": "play_time", "headerName": "Time", "width": 100, "valueFormatter": "retro_helpers.format_playtime" },
+              { "field": "status", "headerName": "Status", "width": 100 },
+              { "field": "actions", "headerName": "", "width": 120 }
+            ],
+            "dataSource": "active_sessions",
+            "rowActions": [
+              {
+                "icon": "Visibility",
+                "tooltip": "View",
+                "onClick": "navigateTo('/media/retro/' + row.session_id)"
+              },
+              {
+                "icon": "Stop",
+                "tooltip": "Stop",
+                "onClick": "retro_helpers.stop_session(row.session_id)"
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }
