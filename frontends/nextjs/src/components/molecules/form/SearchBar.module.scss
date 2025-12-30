@@ -1,0 +1,28 @@
+.searchBar {
+  border-radius: 8px;
+  background-color: var(--background-paper, #fff);
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  }
+
+  &:focus-within {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.searchIcon {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.endAdornments {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.clearButton,
+.filterButton {
+  padding: 4px;
+}
