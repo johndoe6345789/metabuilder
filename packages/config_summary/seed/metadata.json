@@ -7,7 +7,9 @@
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [
       "ConfigSummary",
@@ -28,5 +30,16 @@
       "tests/aggregators.cases.json"
     ]
   },
-  "minLevel": 4
+  "minLevel": 4,
+  "primary": false,
+  "permissions": {
+    "config.summary.export": {
+      "minLevel": 4,
+      "description": "Export configuration data"
+    },
+    "config.summary.view": {
+      "minLevel": 4,
+      "description": "View configuration summaries"
+    }
+  }
 }

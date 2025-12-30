@@ -8,8 +8,27 @@
   "category": "tools",
   "dependencies": [],
   "exports": {
-    "components": ["TestRunner", "TestResults"],
-    "scripts": ["framework", "runner", "assertions", "mocks"]
+    "components": [
+      "TestRunner",
+      "TestResults"
+    ],
+    "scripts": [
+      "framework",
+      "runner",
+      "assertions",
+      "mocks"
+    ]
   },
-  "minLevel": 3
+  "minLevel": 3,
+  "primary": false,
+  "permissions": {
+    "lua.test.run": {
+      "minLevel": 3,
+      "description": "Run Lua tests"
+    },
+    "lua.test.view": {
+      "minLevel": 3,
+      "description": "View test results"
+    }
+  }
 }

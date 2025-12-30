@@ -7,10 +7,16 @@
   "author": "MetaBuilder Team",
   "category": "social",
   "dependencies": [],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
-    "components": ["IRCWebchat"],
-    "layouts": ["layout.json"],
+    "components": [
+      "IRCWebchat"
+    ],
+    "layouts": [
+      "layout.json"
+    ],
     "luaScripts": [
       "send_message",
       "handle_command",
@@ -29,10 +35,42 @@
       "tests/components.cases.json"
     ]
   },
-  "tags": ["chat", "irc", "messaging", "realtime"],
+  "tags": [
+    "chat",
+    "irc",
+    "messaging",
+    "realtime"
+  ],
   "minLevel": 2,
   "schema": {
-    "entities": ["IRCChannel", "IRCMessage", "IRCMembership"],
+    "entities": [
+      "IRCChannel",
+      "IRCMessage",
+      "IRCMembership"
+    ],
     "path": "schema/entities.yaml"
+  },
+  "primary": true,
+  "permissions": {
+    "irc.channel.moderate": {
+      "minLevel": 3,
+      "description": "Moderate IRC channels"
+    },
+    "irc.message.send": {
+      "minLevel": 2,
+      "description": "Send IRC messages"
+    },
+    "irc.channel.join": {
+      "minLevel": 2,
+      "description": "Join IRC channels"
+    },
+    "irc.channel.view": {
+      "minLevel": 2,
+      "description": "View IRC channels"
+    },
+    "irc.channel.create": {
+      "minLevel": 3,
+      "description": "Create IRC channels"
+    }
   }
 }

@@ -6,8 +6,13 @@
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "social",
-  "dependencies": ["ui_permissions", "form_builder"],
-  "devDependencies": ["lua_test"],
+  "dependencies": [
+    "ui_permissions",
+    "form_builder"
+  ],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [
       "social_hub_root",
@@ -51,5 +56,28 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 2
+  "minLevel": 2,
+  "primary": true,
+  "permissions": {
+    "social.feed.view": {
+      "minLevel": 2,
+      "description": "View social feed"
+    },
+    "social.moderate": {
+      "minLevel": 3,
+      "description": "Moderate social content"
+    },
+    "social.post.edit": {
+      "minLevel": 2,
+      "description": "Edit own posts"
+    },
+    "social.post.create": {
+      "minLevel": 2,
+      "description": "Create social posts"
+    },
+    "social.post.delete": {
+      "minLevel": 2,
+      "description": "Delete own posts"
+    }
+  }
 }

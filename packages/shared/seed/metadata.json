@@ -17,5 +17,16 @@
     "permissions.database_toggle"
   ],
   "dependencies": [],
-  "minLevel": 0
+  "minLevel": 0,
+  "primary": false,
+  "permissions": {
+    "shared.permissions.check": {
+      "minLevel": 0,
+      "description": "Check permissions"
+    },
+    "shared.types.access": {
+      "minLevel": 0,
+      "description": "Access shared type definitions"
+    }
+  }
 }

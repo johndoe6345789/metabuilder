@@ -7,12 +7,29 @@
   "license": "MIT",
   "minLevel": 5,
   "category": "demo",
-  "tags": ["screenshot", "analysis", "browser", "dom"],
+  "tags": [
+    "screenshot",
+    "analysis",
+    "browser",
+    "dom"
+  ],
   "dependencies": [],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
-    "components": ["ScreenshotAnalyzer", "UploadSection", "ResultPanel", "PageInfo"],
-    "scripts": ["init", "capture", "analyze", "page_info"]
+    "components": [
+      "ScreenshotAnalyzer",
+      "UploadSection",
+      "ResultPanel",
+      "PageInfo"
+    ],
+    "scripts": [
+      "init",
+      "capture",
+      "analyze",
+      "page_info"
+    ]
   },
   "tests": {
     "scripts": [
@@ -29,5 +46,20 @@
     "browser": true
   },
   "requiredHooks": [],
-  "layout": "layout.json"
+  "layout": "layout.json",
+  "primary": true,
+  "permissions": {
+    "screenshot.upload": {
+      "minLevel": 5,
+      "description": "Upload screenshots"
+    },
+    "screenshot.analyze": {
+      "minLevel": 5,
+      "description": "Analyze screenshots"
+    },
+    "screenshot.capture": {
+      "minLevel": 5,
+      "description": "Capture screenshots"
+    }
+  }
 }

@@ -6,8 +6,13 @@
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
-  "dependencies": ["data_table", "ui_permissions"],
-  "devDependencies": ["lua_test"],
+  "dependencies": [
+    "data_table",
+    "ui_permissions"
+  ],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [
       "StatCard",
@@ -27,5 +32,20 @@
       "tests/stats.cases.json"
     ]
   },
-  "minLevel": 2
+  "minLevel": 2,
+  "primary": true,
+  "permissions": {
+    "dashboard.view": {
+      "minLevel": 2,
+      "description": "View dashboard"
+    },
+    "dashboard.widgets.configure": {
+      "minLevel": 3,
+      "description": "Configure dashboard widgets"
+    },
+    "dashboard.widgets.add": {
+      "minLevel": 3,
+      "description": "Add dashboard widgets"
+    }
+  }
 }

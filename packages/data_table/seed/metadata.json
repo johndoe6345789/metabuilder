@@ -7,7 +7,9 @@
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [
       "DataGrid"
@@ -33,5 +35,20 @@
       "tests/export.cases.json"
     ]
   },
-  "minLevel": 1
+  "minLevel": 1,
+  "primary": false,
+  "permissions": {
+    "datatable.export": {
+      "minLevel": 2,
+      "description": "Export table data"
+    },
+    "datatable.view": {
+      "minLevel": 1,
+      "description": "View data tables"
+    },
+    "datatable.filter": {
+      "minLevel": 1,
+      "description": "Filter table data"
+    }
+  }
 }

@@ -7,7 +7,9 @@
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [
       "FormField",
@@ -37,5 +39,20 @@
       "tests/contact_form.cases.json"
     ]
   },
-  "minLevel": 1
+  "minLevel": 1,
+  "primary": false,
+  "permissions": {
+    "form.view": {
+      "minLevel": 1,
+      "description": "View forms"
+    },
+    "form.submit": {
+      "minLevel": 1,
+      "description": "Submit forms"
+    },
+    "form.create": {
+      "minLevel": 3,
+      "description": "Create form definitions"
+    }
+  }
 }

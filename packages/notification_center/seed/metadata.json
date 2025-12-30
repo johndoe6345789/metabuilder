@@ -7,7 +7,9 @@
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [
       "NotificationSummary"
@@ -31,7 +33,28 @@
   },
   "minLevel": 1,
   "schema": {
-    "entities": ["Notification"],
+    "entities": [
+      "Notification"
+    ],
     "path": "schema/entities.yaml"
+  },
+  "primary": false,
+  "permissions": {
+    "notifications.view": {
+      "minLevel": 1,
+      "description": "View notifications"
+    },
+    "notifications.dismiss": {
+      "minLevel": 1,
+      "description": "Dismiss notifications"
+    },
+    "notifications.send": {
+      "minLevel": 3,
+      "description": "Send notifications to users"
+    },
+    "notifications.broadcast": {
+      "minLevel": 4,
+      "description": "Broadcast notifications"
+    }
   }
 }

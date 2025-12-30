@@ -45,5 +45,20 @@
   "tests": [
     "tests/colors.test.lua",
     "tests/export.test.lua"
-  ]
+  ],
+  "primary": true,
+  "permissions": {
+    "css.designer.export": {
+      "minLevel": 2,
+      "description": "Export to SCSS/CSS"
+    },
+    "css.designer.edit": {
+      "minLevel": 2,
+      "description": "Edit CSS styles"
+    },
+    "css.designer.view": {
+      "minLevel": 2,
+      "description": "View CSS designer"
+    }
+  }
 }

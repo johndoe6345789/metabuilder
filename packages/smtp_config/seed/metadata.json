@@ -7,7 +7,9 @@
   "author": "MetaBuilder",
   "category": "config",
   "dependencies": [],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [
       "SMTPConfigEditor",
@@ -28,5 +30,20 @@
       "tests/validate.cases.json"
     ]
   },
-  "minLevel": 5
+  "minLevel": 5,
+  "primary": true,
+  "permissions": {
+    "smtp.config.view": {
+      "minLevel": 5,
+      "description": "View SMTP configuration"
+    },
+    "smtp.config.edit": {
+      "minLevel": 5,
+      "description": "Edit SMTP configuration"
+    },
+    "smtp.test": {
+      "minLevel": 5,
+      "description": "Test SMTP connection"
+    }
+  }
 }

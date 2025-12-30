@@ -22,5 +22,20 @@
       "media"
     ]
   },
-  "minLevel": 2
+  "minLevel": 2,
+  "primary": true,
+  "permissions": {
+    "guide.edit": {
+      "minLevel": 3,
+      "description": "Edit quick guides"
+    },
+    "guide.view": {
+      "minLevel": 2,
+      "description": "View quick guides"
+    },
+    "guide.create": {
+      "minLevel": 3,
+      "description": "Create quick guides"
+    }
+  }
 }

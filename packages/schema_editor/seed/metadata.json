@@ -9,7 +9,9 @@
   "dependencies": [
     "form_builder"
   ],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "scripts": [
       "fields",
@@ -36,5 +38,24 @@
       "tests/table_operations.cases.json"
     ]
   },
-  "minLevel": 5
+  "minLevel": 5,
+  "primary": true,
+  "permissions": {
+    "schema.view": {
+      "minLevel": 5,
+      "description": "View database schemas"
+    },
+    "schema.create": {
+      "minLevel": 5,
+      "description": "Create new schemas"
+    },
+    "schema.edit": {
+      "minLevel": 5,
+      "description": "Edit database schemas"
+    },
+    "schema.migrate": {
+      "minLevel": 5,
+      "description": "Run schema migrations"
+    }
+  }
 }

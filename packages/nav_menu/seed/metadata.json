@@ -9,7 +9,9 @@
   "dependencies": [
     "ui_permissions"
   ],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [
       "Sidebar",
@@ -31,5 +33,16 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 2
+  "minLevel": 2,
+  "primary": false,
+  "permissions": {
+    "nav.menu.view": {
+      "minLevel": 2,
+      "description": "View navigation menus"
+    },
+    "nav.menu.configure": {
+      "minLevel": 4,
+      "description": "Configure navigation menus"
+    }
+  }
 }

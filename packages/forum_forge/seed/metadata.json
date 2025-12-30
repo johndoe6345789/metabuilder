@@ -6,8 +6,14 @@
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "social",
-  "dependencies": ["ui_permissions", "data_table", "form_builder"],
-  "devDependencies": ["lua_test"],
+  "dependencies": [
+    "ui_permissions",
+    "data_table",
+    "form_builder"
+  ],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": []
   },
@@ -23,7 +29,34 @@
   },
   "minLevel": 2,
   "schema": {
-    "entities": ["ForumCategory", "ForumThread", "ForumPost"],
+    "entities": [
+      "ForumCategory",
+      "ForumThread",
+      "ForumPost"
+    ],
     "path": "schema/entities.yaml"
+  },
+  "primary": true,
+  "permissions": {
+    "forum.thread.create": {
+      "minLevel": 2,
+      "description": "Create forum threads"
+    },
+    "forum.view": {
+      "minLevel": 2,
+      "description": "View forum categories and threads"
+    },
+    "forum.moderate": {
+      "minLevel": 3,
+      "description": "Moderate forum content"
+    },
+    "forum.category.manage": {
+      "minLevel": 4,
+      "description": "Manage forum categories"
+    },
+    "forum.post.create": {
+      "minLevel": 2,
+      "description": "Create forum posts"
+    }
   }
 }
