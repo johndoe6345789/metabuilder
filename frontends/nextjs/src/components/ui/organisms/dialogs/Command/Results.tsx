@@ -1,10 +1,12 @@
 'use client'
 
-import { Box, Typography } from '@mui/material'
+import { Box } from '@/fakemui/fakemui/layout'
+import { Typography } from '@/fakemui/fakemui/data-display'
 import { ReactNode } from 'react'
 
 import { CommandDialog } from '../command'
 import type { CommandGroup, CommandItem } from '../command/command.types'
+import styles from './Results.module.scss'
 
 interface CommandResultsProps {
   groups: CommandGroup[]
@@ -35,12 +37,12 @@ const CommandResults = ({
                   onSelect?.(item)
                 }}
               >
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                  <Typography variant="body2" component="span">
+                <Box className={styles.itemContent}>
+                  <Typography variant="body2" as="span" className={styles.itemLabel}>
                     {item.label}
                   </Typography>
                   {item.description && (
-                    <Typography variant="caption" color="text.secondary" component="span">
+                    <Typography variant="caption" as="span" className={styles.itemDescription}>
                       {item.description}
                     </Typography>
                   )}
