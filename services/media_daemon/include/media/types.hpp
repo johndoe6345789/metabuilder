@@ -102,12 +102,27 @@ private:
 // ============================================================================
 
 enum class JobType {
+    // Transcoding
     VIDEO_TRANSCODE,
     AUDIO_TRANSCODE,
     DOCUMENT_CONVERT,
     IMAGE_PROCESS,
-    RADIO_INGEST,
-    TV_SEGMENT,
+    
+    // Radio plugin jobs
+    RadioStream,        ///< Start/manage radio streaming
+    RadioIngest,        ///< Ingest audio into radio queue
+    
+    // TV plugin jobs
+    TvBroadcast,        ///< Start/manage TV broadcast
+    TvSegment,          ///< Process TV segment for schedule
+    TvEpgGenerate,      ///< Generate EPG data
+    
+    // Libretro plugin jobs
+    RetroSession,       ///< Start retro gaming session
+    RetroRecord,        ///< Record gameplay
+    RetroStream,        ///< Stream gameplay
+    
+    // Generic
     CUSTOM
 };
 
