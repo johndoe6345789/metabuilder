@@ -1,0 +1,164 @@
+{
+  "define": [
+    {
+      "desc": "Simple string field with defaults",
+      "name": "username",
+      "type": "string",
+      "options": null,
+      "expected_nullable": false,
+      "expected_unique": false
+    },
+    {
+      "desc": "Nullable email field",
+      "name": "email",
+      "type": "string",
+      "options": {
+        "nullable": true
+      },
+      "expected_nullable": true,
+      "expected_unique": false
+    },
+    {
+      "desc": "Unique username field",
+      "name": "username",
+      "type": "string",
+      "options": {
+        "unique": true
+      },
+      "expected_nullable": false,
+      "expected_unique": true
+    },
+    {
+      "desc": "Integer field with default value",
+      "name": "age",
+      "type": "integer",
+      "options": {
+        "default": 18
+      },
+      "expected_nullable": false,
+      "expected_unique": false,
+      "expected_default": 18
+    },
+    {
+      "desc": "Boolean field with false default",
+      "name": "is_active",
+      "type": "boolean",
+      "options": {
+        "default": false
+      },
+      "expected_nullable": false,
+      "expected_unique": false,
+      "expected_default": false
+    },
+    {
+      "desc": "Boolean field with true default",
+      "name": "is_verified",
+      "type": "boolean",
+      "options": {
+        "default": true
+      },
+      "expected_nullable": false,
+      "expected_unique": false,
+      "expected_default": true
+    },
+    {
+      "desc": "Nullable text field",
+      "name": "bio",
+      "type": "text",
+      "options": {
+        "nullable": true
+      },
+      "expected_nullable": true,
+      "expected_unique": false
+    },
+    {
+      "desc": "Date field",
+      "name": "birthdate",
+      "type": "date",
+      "options": null,
+      "expected_nullable": false,
+      "expected_unique": false
+    },
+    {
+      "desc": "DateTime field with nullable",
+      "name": "last_login",
+      "type": "datetime",
+      "options": {
+        "nullable": true
+      },
+      "expected_nullable": true,
+      "expected_unique": false
+    },
+    {
+      "desc": "Float field for score",
+      "name": "rating",
+      "type": "float",
+      "options": {
+        "default": 0.0
+      },
+      "expected_nullable": false,
+      "expected_unique": false,
+      "expected_default": 0.0
+    },
+    {
+      "desc": "JSON field for metadata",
+      "name": "metadata",
+      "type": "json",
+      "options": {
+        "nullable": true
+      },
+      "expected_nullable": true,
+      "expected_unique": false
+    }
+  ],
+  "primary_key": [
+    {
+      "desc": "Standard id primary key",
+      "name": "id"
+    },
+    {
+      "desc": "User ID primary key",
+      "name": "user_id"
+    },
+    {
+      "desc": "Custom primary key name",
+      "name": "uuid"
+    },
+    {
+      "desc": "Table-specific primary key",
+      "name": "post_id"
+    }
+  ],
+  "foreign_key": [
+    {
+      "desc": "User reference",
+      "name": "user_id",
+      "ref_table": "users",
+      "ref_field": "id"
+    },
+    {
+      "desc": "Post reference",
+      "name": "post_id",
+      "ref_table": "posts",
+      "ref_field": "id"
+    },
+    {
+      "desc": "Parent category reference",
+      "name": "parent_category_id",
+      "ref_table": "categories",
+      "ref_field": "id"
+    },
+    {
+      "desc": "Author reference",
+      "name": "author_id",
+      "ref_table": "users",
+      "ref_field": "id"
+    },
+    {
+      "desc": "Organization reference",
+      "name": "org_id",
+      "ref_table": "organizations",
+      "ref_field": "org_id"
+    }
+  ]
+}
