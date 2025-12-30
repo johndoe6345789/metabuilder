@@ -40,4 +40,16 @@ cpr::Response HttpClient::post(const std::string &path,
                    cpr::Header{{"Content-Type", content_type}});
 }
 
+cpr::Response HttpClient::patch(const std::string &path,
+                                const std::string &body,
+                                const std::string &content_type) const {
+  return cpr::Patch(cpr::Url{build_url(base_url_, path)},
+                    cpr::Body{body},
+                    cpr::Header{{"Content-Type", content_type}});
+}
+
+cpr::Response HttpClient::del(const std::string &path) const {
+  return cpr::Delete(cpr::Url{build_url(base_url_, path)});
+}
+
 const std::string &HttpClient::base_url() const noexcept { return base_url_; }

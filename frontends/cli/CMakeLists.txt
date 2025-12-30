@@ -10,6 +10,7 @@ include(${CMAKE_BINARY_DIR}/conan_toolchain.cmake OPTIONAL)
 add_executable(metabuilder-cli
     src/main.cpp
     src/commands/command_dispatch.cpp
+    src/commands/dbal_commands.cpp
     src/utils/http_client.cpp
 )
 
