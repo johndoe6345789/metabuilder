@@ -294,6 +294,47 @@ Routes validate:
 3. User has permission for the operation
 4. Package is enabled for the tenant
 
+## Auth Module Files
+
+The routing auth system is implemented in `frontends/nextjs/src/lib/routing/auth/`:
+
+| File | Purpose |
+|------|---------|
+| `get-session-user.ts` | Extract user from `mb_session` cookie |
+| `validate-tenant-access.ts` | Check user can access tenant |
+| `validate-package-route.ts` | Check package exists and user meets minLevel |
+| `execute-dbal-operation.ts` | Execute CRUD operations with tenant isolation |
+| `index.ts` | Re-exports all auth functions |
+
+### Usage in API Routes
+
+```typescript
+import {
+  getSessionUser,
+  validateTenantAccess,
+  validatePackageRoute,
+  executeDbalOperation,
+} from '@/lib/routing'
+
+// 1. Get session
+const { user } = await getSessionUser()
+
+// 2. Check package access
+const pkgResult = validatePackageRoute('forum_forge', 'posts', user)
+if (!pkgResult.allowed) return errorResponse(pkgResult.reason, 403)
+
+// 3. Check tenant access
+const tenantResult = await validateTenantAccess(user, 'acme', pkgResult.package.minLevel)
+if (!tenantResult.allowed) return errorResponse(tenantResult.reason, 403)
+
+// 4. Execute operation
+const result = await executeDbalOperation(dbalOp, {
+  user,
+  tenant: tenantResult.tenant,
+  body: requestBody,
+})
+```
+
 ## Examples
 
 ### Full Request Flow
@@ -303,9 +344,12 @@ GET /api/v1/acme/forum_forge/posts/123
 
 1. Middleware extracts: tenant=acme, package=forum_forge
 2. Route parser extracts: entity=posts, id=123
-3. Entity prefixer builds: Pkg_ForumForge_Posts
-4. DBAL executes: SELECT * FROM forum_forge_posts WHERE id=123 AND tenant_id=...
-5. Response returned as JSON
+3. Session validated from mb_session cookie
+4. Package minLevel checked (user.level >= package.minLevel)
+5. Tenant access validated (user belongs to tenant OR is God+)
+6. Entity prefixer builds: Pkg_ForumForge_Posts
+7. DBAL executes: SELECT * FROM forum_forge_posts WHERE id=123 AND tenant_id=...
+8. Response returned as JSON
 ```
 
 ### Creating a New Record
@@ -313,6 +357,7 @@ GET /api/v1/acme/forum_forge/posts/123
 ```bash
 curl -X POST /api/v1/acme/forum_forge/posts \
   -H "Content-Type: application/json" \
+  -H "Cookie: mb_session=your-session-token" \
   -d '{"title": "Hello", "body": "World"}'
 ```
 
@@ -320,16 +365,10 @@ curl -X POST /api/v1/acme/forum_forge/posts \
 
 ```bash
 # Publish a draft post
-curl -X POST /api/v1/acme/forum_forge/posts/123/publish
+curl -X POST /api/v1/acme/forum_forge/posts/123/publish \
+  -H "Cookie: mb_session=your-session-token"
 
-# Archive old posts
-curl -X POST /api/v1/acme/forum_forge/posts/bulk-archive \
-  -d '{"olderThan": "2024-01-01"}'
-```
-
-## Related Documentation
-
-- [Entity Prefixing](./entity-prefixing.md)
-- [DBAL Architecture](../dbal/)
-- [Package System](./packages.md)
-- [Multi-Tenancy](./multi-tenancy.md)
+# Count records
+curl -X POST /api/v1/acme/forum_forge/posts/count \
+  -H "Cookie: mb_session=your-session-token" \
+  -d '{"filter": {"status": "published"}}'
