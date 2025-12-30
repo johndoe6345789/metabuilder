@@ -1,1 +1,1 @@
-export * from './dbal-client'
+export * from './dbal-client/index'

@@ -25,6 +25,9 @@ export const listAuditLogs = (limit: number = DEFAULT_AUDIT_LOG_LIMIT): AuditLog
   return slice.reverse()
 }
 
+// Alias for backwards compatibility
+export const getAuditLogs = listAuditLogs
+
 export const clearAuditLogs = (): void => {
   auditLogs.length = 0
 }
