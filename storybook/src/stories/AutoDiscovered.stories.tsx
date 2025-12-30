@@ -18,7 +18,7 @@ import {
 import { loadAndExecuteLuaFile, type LuaExecutionResult } from '../lua/executor'
 import { executeMockRender, getMockPackage, initializeMocks } from '../mocks/packages'
 import { loadPackageComponents } from '../mocks/auto-loader'
-import type { LuaRenderContext, LuaUIComponent } from '../types/lua-types'
+import type { LuaRenderContext } from '../types/lua-types'
 
 const meta: Meta = {
   title: 'Auto-Discovered Packages',
@@ -187,10 +187,20 @@ function PackageExplorer() {
               background: selectedPkg === pkg.metadata.packageId ? '#e0e7ff' : 'transparent',
               borderBottom: '1px solid #e5e7eb',
             }}
-            onClick={() => {
+            onClick={async () => {
               setSelectedPkg(pkg.metadata.packageId)
+              // Load component IDs from components.json
+              const components = await loadPackageComponents(pkg.metadata.packageId)
+              setComponentIds(components.map(c => c.id))
+              // Select first render or all_components
               const renderScript = pkg.scripts.find(s => s.hasRenderFunction)
-              setSelectedScript(renderScript?.file || null)
+              if (renderScript) {
+                setSelectedScript(renderScript.file)
+              } else if (components.length > 0) {
+                setSelectedScript('all_components')
+              } else {
+                setSelectedScript(null)
+              }
             }}
           >
             <div style={{ fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -227,12 +237,28 @@ function PackageExplorer() {
                 onChange={e => setSelectedScript(e.target.value)}
                 style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #d1d5db' }}
               >
-                <option value="">Select script...</option>
-                {currentPackage.scripts.map(s => (
-                  <option key={s.file} value={s.file}>
-                    {s.name} {s.hasRenderFunction && '(render)'}
-                  </option>
-                ))}
+                <option value="">Select render...</option>
+                {/* Component IDs from components.json */}
+                {componentIds.length > 0 && (
+                  <optgroup label="📦 Components (from package)">
+                    <option value="all_components">🔲 All Components</option>
+                    {componentIds.map(id => (
+                      <option key={id} value={id}>
+                        {id}
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+                {/* Scripts from manifest */}
+                {currentPackage.scripts.length > 0 && (
+                  <optgroup label="📜 Scripts">
+                    {currentPackage.scripts.map(s => (
+                      <option key={s.file} value={s.file}>
+                        {s.name} {s.hasRenderFunction && '✨'}
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
               </select>
               
               <select 
