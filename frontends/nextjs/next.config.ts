@@ -90,11 +90,16 @@ const nextConfig: NextConfig = {
       '@/core/foundation/errors': path.resolve(__dirname, '../../dbal/development/src/core/foundation/errors.ts'),
     }
 
-    // Ignore optional AWS SDK on client side
+    // Ignore optional AWS SDK and Node.js modules on client side
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         '@aws-sdk/client-s3': false,
+        fs: false,
+        path: false,
+        crypto: false,
+        stream: false,
+        os: false,
       }
     }
 
