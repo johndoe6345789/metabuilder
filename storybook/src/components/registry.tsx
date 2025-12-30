@@ -1144,6 +1144,9 @@ export const componentRegistry: Record<string, AnyComponent> = {
   AppHeader,
   AppFooter,
   Sidebar,
+  
+  // Script viewer
+  LuaScriptViewer,
 }
 
 /**

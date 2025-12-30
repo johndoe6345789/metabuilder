@@ -102,7 +102,8 @@ function createTemplateVars(ctx: LuaRenderContext): TemplateVariables {
  */
 function componentsToRenders(
   components: PackageComponent[],
-  scripts: Array<{ file: string; name: string; description?: string; category?: string }> = []
+  scripts: Array<{ file: string; name: string; description?: string; category?: string }> = [],
+  packageId?: string
 ): Record<string, (ctx: LuaRenderContext) => LuaUIComponent> {
   const renders: Record<string, (ctx: LuaRenderContext) => LuaUIComponent> = {}
 
