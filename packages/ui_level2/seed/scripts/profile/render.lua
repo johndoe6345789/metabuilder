@@ -5,6 +5,16 @@
 ---@field props? table
 ---@field children? UIComponent[]
 
+---@class InputProps
+---@field label string
+---@field value string
+---@field name? string
+---@field disabled? boolean
+
+---@class ButtonProps
+---@field text string
+---@field onClick string
+
 ---@class UserInfo
 ---@field username string
 ---@field email? string

@@ -119,7 +119,6 @@ function M.defineTests(framework, assertions, mocks)
   local beforeEach = framework.beforeEach
   local expect = assertions.expect
   local cases = load_cases("filters.cases.json")
-  local cases = load_cases("filters.cases.json")
   
   -- Import filter modules
   local filterByOperation = require("filters.filter_by_operation")
@@ -145,16 +144,6 @@ function M.defineTests(framework, assertions, mocks)
         expect(#result).toBe(tc.expected)
       end)
       
-      it("should return all logs when operation is nil", function()
-        local result = filterByOperation.filterByOperation(logs, nil)
-        expect(#result).toBe(5)
-      end)
-      
-      it("should return all logs when operation is empty string", function()
-        local result = filterByOperation.filterByOperation(logs, "")
-        expect(#result).toBe(5)
-      end)
-      
       it("should return empty array when logs is nil", function()
         local result = filterByOperation.filterByOperation(nil, "create")
         expect(#result).toBe(0)
@@ -174,10 +163,6 @@ function M.defineTests(framework, assertions, mocks)
         expect(#result).toBe(tc.expected)
       end)
       
-      it("should return all logs when resource is nil", function()
-        local result = filterByResource.filterByResource(logs, nil)
-        expect(#result).toBe(5)
-      end)
     end)
     
     describe("filterBySuccess", function()
@@ -196,10 +181,6 @@ function M.defineTests(framework, assertions, mocks)
         end
       end)
       
-      it("should return all logs when success is nil", function()
-        local result = filterBySuccess.filterBySuccess(logs, nil)
-        expect(#result).toBe(5)
-      end)
     end)
     
     describe("filterByUsername", function()
@@ -215,87 +196,42 @@ function M.defineTests(framework, assertions, mocks)
         expect(#result).toBe(tc.expected)
       end)
       
-      it("should return all logs when username is nil", function()
-        local result = filterByUsername.filterByUsername(logs, nil)
-        expect(#result).toBe(5)
-      end)
-      
-      it("should return all logs when username is empty string", function()
-        local result = filterByUsername.filterByUsername(logs, "")
-        expect(#result).toBe(5)
-      end)
     end)
     
     describe("filterByDateRange", function()
+      ---@type AuditLogEntry[]
       local logs
       
       beforeEach(function()
         logs = createSampleLogs()
       end)
       
-      it_each({
-        { startTime = 1000000, endTime = 1200000, expected = 3 },
-        { startTime = 1200000, endTime = 1400000, expected = 3 },
-        { startTime = 1500000, endTime = 2000000, expected = 0 },
-        { startTime = nil, endTime = 1200000, expected = 3 },
-        { startTime = 1200000, endTime = nil, expected = 3 },
-        { startTime = nil, endTime = nil, expected = 5 }
-      })("should filter correctly with startTime=$startTime, endTime=$endTime -> $expected", function(tc)
+      it_each(cases.filter_by_date_range, "$desc", function(tc)
         local result = filterByDateRange.filterByDateRange(logs, tc.startTime, tc.endTime)
         expect(#result).toBe(tc.expected)
       end)
     end)
     
     describe("applyFilters", function()
+      ---@type AuditLogEntry[]
       local logs
       
       beforeEach(function()
         logs = createSampleLogs()
       end)
       
-      it("should apply operation filter only", function()
-        local result = applyFilters.applyFilters(logs, { operation = "create" })
-        expect(#result).toBe(2)
+      it_each(cases.apply_filters, "$desc", function(tc)
+        local result = applyFilters.applyFilters(logs, tc.filters)
+        expect(#result).toBe(tc.expected)
+        if tc.expectedFirstId then
+          expect(result[1].id).toBe(tc.expectedFirstId)
+        end
       end)
       
-      it("should apply multiple filters", function()
-        local result = applyFilters.applyFilters(logs, {
-          operation = "create",
-          resource = "user"
-        })
-        expect(#result).toBe(1)
-        expect(result[1].id).toBe("log1")
-      end)
-      
-      it("should apply success and username filters", function()
-        local result = applyFilters.applyFilters(logs, {
-          success = true,
-          username = "admin"
-        })
-        expect(#result).toBe(2)
-      end)
-      
-      it("should apply date range with other filters", function()
-        local result = applyFilters.applyFilters(logs, {
-          startTime = 1000000,
-          endTime = 1100000,
-          success = true
-        })
-        expect(#result).toBe(2)
-      end)
-      
-      it("should return all logs with empty filters", function()
-        local result = applyFilters.applyFilters(logs, {})
-        expect(#result).toBe(5)
-      end)
-      
-      it("should handle nil filters", function()
-        local result = applyFilters.applyFilters(logs, nil)
-        expect(#result).toBe(5)
-      end)
     end)
     
     describe("getFilterOptions", function()
+      ---@type AuditLogEntry[]
       local logs
       
       beforeEach(function()
@@ -303,6 +239,7 @@ function M.defineTests(framework, assertions, mocks)
       end)
       
       it("should extract unique operations", function()
+        ---@type FilterOptions
         local options = getFilterOptions.getFilterOptions(logs)
         expect(#options.operations).toBe(4)
         -- Should be sorted alphabetically
@@ -313,6 +250,7 @@ function M.defineTests(framework, assertions, mocks)
       end)
       
       it("should extract unique resources", function()
+        ---@type FilterOptions
         local options = getFilterOptions.getFilterOptions(logs)
         expect(#options.resources).toBe(3)
         expect(options.resources[1]).toBe("post")
@@ -321,6 +259,7 @@ function M.defineTests(framework, assertions, mocks)
       end)
       
       it("should extract unique usernames", function()
+        ---@type FilterOptions
         local options = getFilterOptions.getFilterOptions(logs)
         expect(#options.usernames).toBe(4)
         -- Sorted: Admin_User, admin, editor, viewer
@@ -329,6 +268,7 @@ function M.defineTests(framework, assertions, mocks)
       end)
       
       it("should return empty arrays for nil logs", function()
+        ---@type FilterOptions
         local options = getFilterOptions.getFilterOptions(nil)
         expect(#options.operations).toBe(0)
         expect(#options.resources).toBe(0)
@@ -336,6 +276,7 @@ function M.defineTests(framework, assertions, mocks)
       end)
       
       it("should return empty arrays for empty logs", function()
+        ---@type FilterOptions
         local options = getFilterOptions.getFilterOptions({})
         expect(#options.operations).toBe(0)
         expect(#options.resources).toBe(0)

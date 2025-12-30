@@ -3,6 +3,9 @@
 -- Each function is defined in its own file following 1-function-per-file pattern
 
 ---@class Moderation
+---@field deleteUser fun(userId: string): boolean
+---@field editUser fun(userId: string, updates: table): boolean
+---@field banUser fun(userId: string, reason: string): boolean
 local M = {}
 
 -- Import all single-function modules
