@@ -14,7 +14,7 @@ import {
   Tree,
   Users,
   Warning,
-} from '@phosphor-icons/react'
+} from '@/fakemui/icons'
 
 export type Level4TabValue =
   | 'guide'
