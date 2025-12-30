@@ -70,9 +70,10 @@
 - **Extended HttpClient** with PATCH and DELETE methods
 
 ### 🎯 Active Work Items
-1. Multi-frontend support (Qt6/QML, CLI) - **75% complete**
-2. E2E verification with Playwright - **70% complete**
-3. Documentation completion - **65% complete**
+1. Multi-frontend support (Qt6/QML, CLI) - **80% complete**
+2. E2E verification with Playwright - **75% complete**
+3. Documentation completion - **70% complete**
+4. **Lua DBAL operations** - **22 packages complete**
 
 ---
 
