@@ -1,4 +1,4 @@
-import { DBALError } from '@/core/foundation/errors'
+import { DBALError } from '../../../core/foundation/errors'
 import type { RPCResponse } from '../utils/rpc-types'
 import type { BridgeState } from './state'
 

@@ -1,4 +1,4 @@
-import { DBALError } from '@/core/foundation/errors'
+import { DBALError } from '../../../core/foundation/errors'
 import { generateRequestId } from '../utils/generate-request-id'
 import type { RPCMessage } from '../utils/rpc-types'
 import type { ConnectionManager } from './connection-manager'

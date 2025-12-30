@@ -1,4 +1,4 @@
-import { DBALError } from '@/core/foundation/errors'
+import { DBALError } from '../../../../core/foundation/errors'
 import type { BlobMetadata } from '../blob-storage'
 import { auditCopy, auditDeletion } from './audit-hooks'
 import type { TenantAwareDeps } from './context'

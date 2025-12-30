@@ -1,5 +1,5 @@
 import type { BlobMetadata } from '../../../blob-storage'
-import { DBALError } from '@/core/foundation/errors'
+import { DBALError } from '../../../../../core/foundation/errors'
 import type { S3Context } from '../client'
 import { getMetadata } from './metadata'
 

@@ -1,4 +1,4 @@
-import { DBALError } from '@/core/foundation/errors'
+import { DBALError } from '../../../../core/foundation/errors'
 import { auditUpload } from './audit-hooks'
 import type { TenantAwareDeps } from './context'
 import { scopeKey } from './context'
