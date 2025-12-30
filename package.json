@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "generate:package": "npx ts-node scripts/generate-package.ts",
     "todos:scan": "python3 docs/todo/scans/scan-project-todos.py",
     "todos:preview": "python3 tools/project-management/populate-kanban.py --dry-run --limit 10",
     "todos:export": "python3 tools/project-management/populate-kanban.py --output todos.json",
