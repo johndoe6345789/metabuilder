@@ -187,6 +187,10 @@ int dbal_schema(const HttpClient &client, const std::vector<std::string> &args) 
     std::cout << "  dbal schema list          List all registered schemas\n";
     std::cout << "  dbal schema pending       Show pending migrations\n";
     std::cout << "  dbal schema entity <name> Show schema for entity\n";
+    std::cout << "  dbal schema scan          Scan packages for schema changes\n";
+    std::cout << "  dbal schema approve <id>  Approve a migration (or 'all')\n";
+    std::cout << "  dbal schema reject <id>   Reject a migration\n";
+    std::cout << "  dbal schema generate      Generate Prisma fragment\n";
     return 1;
   }
   
@@ -198,12 +202,38 @@ int dbal_schema(const HttpClient &client, const std::vector<std::string> &args) 
   }
   
   if (subcommand == "pending") {
-    print_response(client.get("/api/dbal/schema/pending"));
+    print_response(client.get("/api/dbal/schema"));
     return 0;
   }
   
   if (subcommand == "entity" && args.size() >= 4) {
     print_response(client.get("/api/dbal/schema/" + args[3]));
+    return 0;
+  }
+  
+  if (subcommand == "scan") {
+    std::cout << "Scanning packages for schema changes...\n";
+    print_response(client.post("/api/dbal/schema", "{\"action\":\"scan\"}"));
+    return 0;
+  }
+  
+  if (subcommand == "approve" && args.size() >= 4) {
+    std::string id = args[3];
+    std::cout << "Approving migration: " << id << "\n";
+    print_response(client.post("/api/dbal/schema", "{\"action\":\"approve\",\"id\":\"" + id + "\"}"));
+    return 0;
+  }
+  
+  if (subcommand == "reject" && args.size() >= 4) {
+    std::string id = args[3];
+    std::cout << "Rejecting migration: " << id << "\n";
+    print_response(client.post("/api/dbal/schema", "{\"action\":\"reject\",\"id\":\"" + id + "\"}"));
+    return 0;
+  }
+  
+  if (subcommand == "generate") {
+    std::cout << "Generating Prisma fragment from approved migrations...\n";
+    print_response(client.post("/api/dbal/schema", "{\"action\":\"generate\"}"));
     return 0;
   }
   
@@ -224,9 +254,15 @@ void print_dbal_help() {
   dbal delete <entity> <id>              Delete a record
   dbal list <entity> [filters...]        List records with optional filters
   dbal execute <operation> [params...]   Execute a DBAL operation
+
+Schema Management:
   dbal schema list                       List registered entity schemas
   dbal schema pending                    Show pending schema migrations
   dbal schema entity <name>              Show schema for an entity
+  dbal schema scan                       Scan packages for schema changes
+  dbal schema approve <id|all>           Approve a migration
+  dbal schema reject <id>                Reject a migration
+  dbal schema generate                   Generate Prisma fragment
 
 Filter syntax for list:
   where.field=value    Filter by field value
