@@ -8,6 +8,7 @@
   "category": "admin",
   "dependencies": [],
   "devDependencies": [
+    "lua_test",
     "package_validator"
   ],
   "exports": {

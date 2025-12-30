@@ -7,6 +7,9 @@
   "author": "MetaBuilder",
   "category": "tools",
   "dependencies": [],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [],
     "scripts": [
