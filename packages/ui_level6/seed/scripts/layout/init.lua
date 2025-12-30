@@ -1,6 +1,11 @@
--- Level 6 layout module facade
--- Re-exports all supergod layout functions for backward compatibility
+--- Level 6 layout module facade
+--- Re-exports all supergod layout functions for backward compatibility
+---@module layout.init
 
+---@class Level6LayoutModule
+---@field supergod_sidebar fun(): string Render supergod sidebar
+---@field supergod_toolbar fun(): string Render supergod toolbar
+---@field supergod_content fun(content: string): string Render supergod content area
 local M = {}
 
 M.supergod_sidebar = require("layout.supergod_sidebar")
