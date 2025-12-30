@@ -14,7 +14,10 @@ import { processTemplates } from './schema'
 // Import all JSON mock files
 // Vite handles JSON imports natively
 import dashboardMock from './data/dashboard.json'
+import dataTableMock from './data/data_table.json'
+import navMenuMock from './data/nav_menu.json'
 import uiLevel4Mock from './data/ui_level4.json'
+import uiLoginMock from './data/ui_login.json'
 import userManagerMock from './data/user_manager.json'
 
 /**
@@ -53,7 +56,10 @@ function jsonToMockPackage(json: JsonMockPackage): MockPackageDefinition {
  */
 const jsonMocks: JsonMockPackage[] = [
   dashboardMock as unknown as JsonMockPackage,
+  dataTableMock as unknown as JsonMockPackage,
+  navMenuMock as unknown as JsonMockPackage,
   uiLevel4Mock as unknown as JsonMockPackage,
+  uiLoginMock as unknown as JsonMockPackage,
   userManagerMock as unknown as JsonMockPackage,
 ]
 
