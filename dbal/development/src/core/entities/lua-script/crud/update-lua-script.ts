@@ -4,8 +4,8 @@
  */
 import type { LuaScript, Result, UpdateLuaScriptInput } from '../../types'
 import type { InMemoryStore } from '../../store/in-memory-store'
-import { validateId } from '../../validation/validate-id'
-import { validateLuaScriptUpdate } from '../../validation/validate-lua-script-update'
+import { validateId } from '../../../validation/entities/validate-id'
+import { validateLuaScriptUpdate } from '../../../validation/entities/lua-script/validate-lua-script-update'
 
 /**
  * Update an existing Lua script

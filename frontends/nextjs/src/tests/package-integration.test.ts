@@ -6,6 +6,8 @@ import dataTableMetadata from '../../../../packages/data_table/seed/metadata.jso
 import formBuilderMetadata from '../../../../packages/form_builder/seed/metadata.json'
 import navMenuMetadata from '../../../../packages/nav_menu/seed/metadata.json'
 import notificationCenterMetadata from '../../../../packages/notification_center/seed/metadata.json'
+import uiDialogsMetadata from '../../../../packages/ui_dialogs/seed/metadata.json'
+import uiPermissionsMetadata from '../../../../packages/ui_permissions/seed/metadata.json'
 
 const packages = [
   adminDialogMetadata,
@@ -14,6 +16,8 @@ const packages = [
   formBuilderMetadata,
   navMenuMetadata,
   notificationCenterMetadata,
+  uiDialogsMetadata,
+  uiPermissionsMetadata,
 ]
 
 describe('Package System Integration', () => {

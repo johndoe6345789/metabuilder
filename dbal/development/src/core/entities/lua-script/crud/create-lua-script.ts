@@ -4,7 +4,7 @@
  */
 import type { CreateLuaScriptInput, LuaScript, Result } from '../../types'
 import type { InMemoryStore } from '../../store/in-memory-store'
-import { validateLuaScriptCreate } from '../../validation/validate-lua-script-create'
+import { validateLuaScriptCreate } from '../../../validation/entities/lua-script/validate-lua-script-create'
 
 /**
  * Create a new Lua script in the store

@@ -16,7 +16,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-      '@/dbal': resolve(__dirname, '../dbal/development/src'),
+      '@/fakemui': resolve(__dirname, '../../fakemui'),
+      '@/dbal': resolve(__dirname, '../../dbal/development/src'),
+      '@dbal-ui': resolve(__dirname, '../../dbal/shared/ui'),
     },
   },
 })

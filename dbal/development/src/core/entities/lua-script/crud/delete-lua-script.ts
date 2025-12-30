@@ -4,7 +4,7 @@
  */
 import type { Result } from '../../types'
 import type { InMemoryStore } from '../../store/in-memory-store'
-import { validateId } from '../../validation/validate-id'
+import { validateId } from '../../../validation/entities/validate-id'
 
 /**
  * Delete a Lua script by ID

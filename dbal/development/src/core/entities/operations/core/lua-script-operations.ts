@@ -7,11 +7,7 @@
 
 import type { DBALAdapter } from '../../adapters/adapter'
 import type { LuaScript, ListOptions, ListResult } from '../types'
-import { createLuaScript } from './lua-script/create-lua-script'
-import { deleteLuaScript } from './lua-script/delete-lua-script'
-import { getLuaScript } from './lua-script/get-lua-script'
-import { listLuaScripts } from './lua-script/list-lua-scripts'
-import { updateLuaScript } from './lua-script/update-lua-script'
+import { createLuaScript, deleteLuaScript, getLuaScript, listLuaScripts, updateLuaScript } from '../../lua-script'
 
 export interface LuaScriptOperations {
   create: (data: Omit<LuaScript, 'id' | 'createdAt' | 'updatedAt'>) => Promise<LuaScript>
