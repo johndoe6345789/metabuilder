@@ -1,18 +1,19 @@
 'use client'
 
-import type { BoxProps } from '@mui/material'
-import { Box } from '@mui/material'
-import type { MouseEvent } from 'react'
+import { Box } from '@fakemui/layout/Box'
+import type { MouseEvent, CSSProperties, ButtonHTMLAttributes } from 'react'
 import { forwardRef, useContext } from 'react'
 
 import { TabsContext } from '../core/tabs-context'
+import styles from './TabsTrigger.module.scss'
 
-export interface TabsTriggerProps extends BoxProps<'button'> {
+export interface TabsTriggerProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'ref'> {
   value: string
+  style?: CSSProperties
 }
 
 const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
-  ({ children, value, onClick, disabled, sx, ...props }, ref) => {
+  ({ children, value, onClick, disabled, style, className, ...props }, ref) => {
     const context = useContext(TabsContext)
 
     if (!context) {
@@ -31,7 +32,7 @@ const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
 
     return (
       <Box
-        ref={ref}
+        ref={ref as React.Ref<HTMLElement>}
         component="button"
         type="button"
         role="tab"
@@ -43,35 +44,8 @@ const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
         data-state={isSelected ? 'active' : 'inactive'}
         data-value={value}
         onClick={handleClick}
-        sx={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          whiteSpace: 'nowrap',
-          px: 2,
-          py: 0.75,
-          fontSize: '0.875rem',
-          fontWeight: 500,
-          borderRadius: 1.5,
-          border: 0,
-          bgcolor: 'transparent',
-          color: 'text.secondary',
-          cursor: 'pointer',
-          transition: 'all 0.15s',
-          '&:hover': {
-            color: 'text.primary',
-          },
-          '&[aria-selected="true"]': {
-            bgcolor: 'background.paper',
-            color: 'text.primary',
-            boxShadow: 1,
-          },
-          '&:disabled': {
-            opacity: 0.5,
-            cursor: 'not-allowed',
-          },
-          ...sx,
-        }}
+        className={`${styles.tabsTrigger} ${className ?? ''}`}
+        style={style}
         {...props}
       >
         {children}

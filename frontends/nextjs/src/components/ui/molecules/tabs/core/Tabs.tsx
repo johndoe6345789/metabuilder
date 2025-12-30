@@ -1,19 +1,19 @@
 'use client'
 
-import type { BoxProps } from '@mui/material'
-import { Box } from '@mui/material'
+import { Box } from '@fakemui/layout/Box'
+import type { BoxProps } from '@fakemui/layout/Box'
 import { forwardRef, useId, useState } from 'react'
 
 import { TabsContext } from './tabs-context'
 
-export interface TabsProps extends BoxProps {
+export interface TabsProps extends Omit<BoxProps, 'ref'> {
   defaultValue?: string
   value?: string
   onValueChange?: (value: string) => void
 }
 
 const Tabs = forwardRef<HTMLDivElement, TabsProps>(
-  ({ children, defaultValue, value, onValueChange, sx, ...props }, ref) => {
+  ({ children, defaultValue, value, onValueChange, style, ...props }, ref) => {
     const [internalValue, setInternalValue] = useState(defaultValue ?? '')
     const currentValue = value ?? internalValue
     const idPrefix = useId()
@@ -27,7 +27,16 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
 
     return (
       <TabsContext.Provider value={{ value: currentValue, setValue: handleValueChange, idPrefix }}>
-        <Box ref={ref} sx={{ display: 'flex', flexDirection: 'column', gap: 2, ...sx }} {...props}>
+        <Box
+          ref={ref as React.Ref<HTMLElement>}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            ...style,
+          }}
+          {...props}
+        >
           {children}
         </Box>
       </TabsContext.Provider>
