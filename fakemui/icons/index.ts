@@ -193,6 +193,7 @@ export { CloudOff } from './CloudOff'
 export { Terminal } from './Terminal'
 export { Archive } from './Archive'
 export { Bug } from './Bug'
+export { BugReport } from './BugReport'
 export { Gavel } from './Gavel'
 export { Clipboard } from './Clipboard'
 export { ClipboardCheck } from './ClipboardCheck'
@@ -212,6 +213,8 @@ export { PushPinSimple } from './PushPinSimple'
 export { Buildings } from './Buildings'
 export { GithubLogo } from './GithubLogo'
 export { GoogleLogo } from './GoogleLogo'
+export { Extension } from './Extension'
+export { PowerSettingsNew } from './PowerSettingsNew'
 
 // Theme & Display
 export { Moon } from './Moon'
@@ -221,6 +224,9 @@ export { Expand } from './Expand'
 export { Collapse } from './Collapse'
 export { ZoomIn } from './ZoomIn'
 export { ZoomOut } from './ZoomOut'
+export { ZoomInMap } from './ZoomInMap'
+export { ZoomOutMap } from './ZoomOutMap'
+export { CenterFocusStrong } from './CenterFocusStrong'
 
 // UI Controls
 export { MoreHorizontal } from './MoreHorizontal'
@@ -232,7 +238,7 @@ export { Save } from './Save'
 export { Undo } from './Undo'
 export { Redo } from './Redo'
 
-// Data Table
+// Data Table & Charts
 export { SortAscending } from './SortAscending'
 export { SortDescending } from './SortDescending'
 export { ColumnResize } from './ColumnResize'
@@ -245,6 +251,11 @@ export { FilterClear } from './FilterClear'
 export { Columns } from './Columns'
 export { Rows } from './Rows'
 export { Pagination } from './Pagination'
+export { BarChart } from './BarChart'
+export { PieChart } from './PieChart'
+export { ShowChart } from './ShowChart'
+export { Timeline } from './Timeline'
+export { Analytics } from './Analytics'
 
 // Layout & Navigation
 export { Tab } from './Tab'
@@ -333,9 +344,14 @@ export { NotificationsOff } from './NotificationsOff'
 export { ContentCopy } from './ContentCopy'
 export { ContentPaste } from './ContentPaste'
 
-// Component Icon Map
+// Component Icon Map & Form Controls
 export { Article } from './Article'
 export { Checkbox } from './Checkbox'
+export { CheckBox } from './CheckBox'
+export { CheckBoxOutlineBlank } from './CheckBoxOutlineBlank'
+export { IndeterminateCheckBox } from './IndeterminateCheckBox'
+export { RadioButtonChecked } from './RadioButtonChecked'
+export { RadioButtonUnchecked } from './RadioButtonUnchecked'
 export { CropFree } from './CropFree'
 export { CropPortrait } from './CropPortrait'
 export { GridView } from './GridView'

@@ -18,13 +18,19 @@
       "tests/metadata.test.lua",
       "tests/components.test.lua",
       "tests/filtering.test.lua",
-      "tests/sorting.test.lua"
+      "tests/sorting.test.lua",
+      "tests/pagination.test.lua",
+      "tests/selection.test.lua",
+      "tests/export.test.lua"
     ],
     "cases": [
       "tests/metadata.cases.json",
       "tests/components.cases.json",
       "tests/filtering.cases.json",
-      "tests/sorting.cases.json"
+      "tests/sorting.cases.json",
+      "tests/pagination.cases.json",
+      "tests/selection.cases.json",
+      "tests/export.cases.json"
     ]
   },
   "minLevel": 1
