@@ -1,6 +1,20 @@
 -- Theme Editor utilities
+
+---@class ThemeEditor
 local M = {}
 
+---@class Theme
+---@field primary? string
+---@field secondary? string
+---@field mode? string
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? table
+
+---@param theme? Theme
+---@return UIComponent
 function M.render(theme)
   return {
     type = "theme_editor",
@@ -12,6 +26,9 @@ function M.render(theme)
   }
 end
 
+---@param name string
+---@param value string
+---@return UIComponent
 function M.color_picker(name, value)
   return {
     type = "color_picker",
@@ -23,6 +40,7 @@ function M.color_picker(name, value)
   }
 end
 
+---@return UIComponent
 function M.mode_toggle()
   return {
     type = "switch",

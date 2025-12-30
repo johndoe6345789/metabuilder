@@ -1,6 +1,27 @@
 -- JSON Editor utilities
+
+---@class JsonEditor
 local M = {}
 
+---@class EditorOptions
+---@field read_only? boolean
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? table
+
+---@class ValidationResult
+---@field valid boolean
+---@field errors table
+
+---@class FormatAction
+---@field action string
+---@field language string
+
+---@param value? string
+---@param options? EditorOptions
+---@return UIComponent
 function M.render(value, options)
   return {
     type = "code_editor",
@@ -14,6 +35,8 @@ function M.render(value, options)
   }
 end
 
+---@param json_string string
+---@return ValidationResult
 function M.validate(json_string)
   -- JSON validation placeholder
   return {
@@ -22,6 +45,8 @@ function M.validate(json_string)
   }
 end
 
+---@param json_string string
+---@return FormatAction
 function M.format(json_string)
   return {
     action = "format",
