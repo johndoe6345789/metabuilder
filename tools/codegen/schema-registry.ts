@@ -1,0 +1,389 @@
+/**
+ * Package Schema Registry & Migration Queue
+ * 
+ * Flow:
+ * 1. Package declares schema in seed/schema/entities.yaml
+ * 2. On package install/update, schema is validated & checksummed
+ * 3. If schema differs from current DB, added to migration queue
+ * 4. Admin reviews queue, approves migrations
+ * 5. On container restart, pending migrations are applied
+ */
+
+import * as crypto from 'crypto'
+import * as yaml from 'yaml'
+import * as fs from 'fs'
+import * as path from 'path'
+
+// Types
+export interface PackageSchemaField {
+  type: string
+  primary?: boolean
+  generated?: boolean
+  required?: boolean
+  nullable?: boolean
+  index?: boolean
+  unique?: boolean
+  default?: unknown
+  maxLength?: number
+  enum?: string[]
+  description?: string
+}
+
+export interface PackageSchemaIndex {
+  fields: string[]
+  unique?: boolean
+  name?: string
+}
+
+export interface PackageSchemaRelation {
+  name: string
+  type: 'belongsTo' | 'hasMany' | 'hasOne' | 'manyToMany'
+  entity: string
+  field?: string
+  foreignKey?: string
+  onDelete?: 'Cascade' | 'SetNull' | 'Restrict' | 'NoAction'
+  optional?: boolean
+}
+
+export interface PackageSchemaEntity {
+  name: string
+  version: string
+  description?: string
+  checksum?: string | null
+  fields: Record<string, PackageSchemaField>
+  indexes?: PackageSchemaIndex[]
+  relations?: PackageSchemaRelation[]
+  acl?: Record<string, string[]>
+}
+
+export interface PackageSchema {
+  entities: PackageSchemaEntity[]
+}
+
+export interface MigrationQueueItem {
+  id: string
+  packageId: string
+  entityName: string
+  action: 'create' | 'alter' | 'drop'
+  currentChecksum: string | null
+  newChecksum: string
+  schemaYaml: string
+  prismaPreview: string
+  status: 'pending' | 'approved' | 'rejected' | 'applied' | 'failed'
+  createdAt: number
+  reviewedAt?: number
+  reviewedBy?: string
+  appliedAt?: number
+  error?: string
+}
+
+export interface SchemaRegistry {
+  entities: Record<string, {
+    checksum: string
+    version: string
+    ownerPackage: string
+    prismaModel: string
+    appliedAt: number
+  }>
+  migrationQueue: MigrationQueueItem[]
+}
+
+/**
+ * Compute deterministic checksum for schema entity
+ * Ignores description/comments, only structural fields
+ */
+export const computeSchemaChecksum = (entity: PackageSchemaEntity): string => {
+  const structural = {
+    name: entity.name,
+    version: entity.version,
+    fields: entity.fields,
+    indexes: entity.indexes || [],
+    relations: entity.relations || [],
+  }
+  const json = JSON.stringify(structural, Object.keys(structural).sort())
+  return crypto.createHash('sha256').update(json).digest('hex').slice(0, 16)
+}
+
+/**
+ * Convert package schema field to Prisma field definition
+ */
+export const fieldToPrisma = (name: string, field: PackageSchemaField): string => {
+  const parts: string[] = []
+  
+  // Type mapping
+  const typeMap: Record<string, string> = {
+    'string': 'String',
+    'int': 'Int',
+    'bigint': 'BigInt',
+    'float': 'Float',
+    'boolean': 'Boolean',
+    'datetime': 'DateTime',
+    'json': 'Json',
+    'cuid': 'String',
+    'uuid': 'String',
+  }
+  
+  let prismaType = typeMap[field.type] || 'String'
+  
+  // Nullable
+  if (field.nullable) {
+    prismaType += '?'
+  }
+  
+  parts.push(`  ${name}`)
+  parts.push(prismaType)
+  
+  // Attributes
+  const attrs: string[] = []
+  
+  if (field.primary) {
+    attrs.push('@id')
+  }
+  
+  if (field.generated && field.type === 'cuid') {
+    attrs.push('@default(cuid())')
+  } else if (field.default !== undefined) {
+    if (typeof field.default === 'boolean') {
+      attrs.push(`@default(${field.default})`)
+    } else if (typeof field.default === 'number') {
+      attrs.push(`@default(${field.default})`)
+    } else if (typeof field.default === 'string') {
+      attrs.push(`@default("${field.default}")`)
+    }
+  }
+  
+  if (field.unique) {
+    attrs.push('@unique')
+  }
+  
+  if (attrs.length > 0) {
+    parts.push(attrs.join(' '))
+  }
+  
+  return parts.join(' ')
+}
+
+/**
+ * Convert package schema entity to Prisma model
+ */
+export const entityToPrisma = (entity: PackageSchemaEntity): string => {
+  const lines: string[] = []
+  
+  lines.push(`model ${entity.name} {`)
+  
+  // Fields
+  for (const [name, field] of Object.entries(entity.fields)) {
+    lines.push(fieldToPrisma(name, field))
+  }
+  
+  // Relations
+  if (entity.relations) {
+    lines.push('')
+    for (const rel of entity.relations) {
+      if (rel.type === 'belongsTo') {
+        const optional = rel.optional ? '?' : ''
+        lines.push(`  ${rel.name} ${rel.entity}${optional} @relation(fields: [${rel.field}], references: [id]${rel.onDelete ? `, onDelete: ${rel.onDelete}` : ''})`)
+      } else if (rel.type === 'hasMany') {
+        lines.push(`  ${rel.name} ${rel.entity}[]`)
+      }
+    }
+  }
+  
+  // Indexes
+  if (entity.indexes && entity.indexes.length > 0) {
+    lines.push('')
+    for (const idx of entity.indexes) {
+      const fields = idx.fields.join(', ')
+      if (idx.unique) {
+        lines.push(`  @@unique([${fields}])`)
+      } else {
+        lines.push(`  @@index([${fields}])`)
+      }
+    }
+  }
+  
+  lines.push('}')
+  
+  return lines.join('\n')
+}
+
+/**
+ * Load schema registry from disk
+ */
+export const loadSchemaRegistry = (registryPath: string): SchemaRegistry => {
+  if (fs.existsSync(registryPath)) {
+    return JSON.parse(fs.readFileSync(registryPath, 'utf-8'))
+  }
+  return { entities: {}, migrationQueue: [] }
+}
+
+/**
+ * Save schema registry to disk
+ */
+export const saveSchemaRegistry = (registryPath: string, registry: SchemaRegistry): void => {
+  fs.writeFileSync(registryPath, JSON.stringify(registry, null, 2))
+}
+
+/**
+ * Load package schema from seed/schema/entities.yaml
+ */
+export const loadPackageSchema = (packagePath: string): PackageSchema | null => {
+  const schemaPath = path.join(packagePath, 'seed', 'schema', 'entities.yaml')
+  if (!fs.existsSync(schemaPath)) {
+    return null
+  }
+  return yaml.parse(fs.readFileSync(schemaPath, 'utf-8'))
+}
+
+/**
+ * Validate and queue schema changes for a package
+ */
+export const validateAndQueueSchema = (
+  packageId: string,
+  packagePath: string,
+  registry: SchemaRegistry
+): { valid: boolean; errors: string[]; queued: MigrationQueueItem[] } => {
+  const errors: string[] = []
+  const queued: MigrationQueueItem[] = []
+  
+  const schema = loadPackageSchema(packagePath)
+  if (!schema) {
+    return { valid: true, errors: [], queued: [] } // No schema = OK
+  }
+  
+  for (const entity of schema.entities) {
+    const newChecksum = computeSchemaChecksum(entity)
+    const existing = registry.entities[entity.name]
+    
+    // Check for conflicts with other packages
+    if (existing && existing.ownerPackage !== packageId) {
+      if (existing.checksum !== newChecksum) {
+        errors.push(
+          `Entity "${entity.name}" owned by "${existing.ownerPackage}" has different schema. ` +
+          `Current: ${existing.checksum}, Proposed: ${newChecksum}. ` +
+          `Packages must use identical schema or coordinate versions.`
+        )
+        continue
+      }
+      // Same checksum = compatible, skip
+      continue
+    }
+    
+    // New entity or updated schema
+    if (!existing || existing.checksum !== newChecksum) {
+      const prismaPreview = entityToPrisma(entity)
+      const item: MigrationQueueItem = {
+        id: crypto.randomUUID(),
+        packageId,
+        entityName: entity.name,
+        action: existing ? 'alter' : 'create',
+        currentChecksum: existing?.checksum || null,
+        newChecksum,
+        schemaYaml: yaml.stringify(entity),
+        prismaPreview,
+        status: 'pending',
+        createdAt: Date.now(),
+      }
+      queued.push(item)
+      registry.migrationQueue.push(item)
+    }
+  }
+  
+  return { valid: errors.length === 0, errors, queued }
+}
+
+/**
+ * Get pending migrations for admin review
+ */
+export const getPendingMigrations = (registry: SchemaRegistry): MigrationQueueItem[] => {
+  return registry.migrationQueue.filter(m => m.status === 'pending')
+}
+
+/**
+ * Approve a migration (admin action)
+ */
+export const approveMigration = (
+  registry: SchemaRegistry,
+  migrationId: string,
+  adminUserId: string
+): boolean => {
+  const migration = registry.migrationQueue.find(m => m.id === migrationId)
+  if (!migration || migration.status !== 'pending') {
+    return false
+  }
+  migration.status = 'approved'
+  migration.reviewedAt = Date.now()
+  migration.reviewedBy = adminUserId
+  return true
+}
+
+/**
+ * Reject a migration (admin action)
+ */
+export const rejectMigration = (
+  registry: SchemaRegistry,
+  migrationId: string,
+  adminUserId: string
+): boolean => {
+  const migration = registry.migrationQueue.find(m => m.id === migrationId)
+  if (!migration || migration.status !== 'pending') {
+    return false
+  }
+  migration.status = 'rejected'
+  migration.reviewedAt = Date.now()
+  migration.reviewedBy = adminUserId
+  return true
+}
+
+/**
+ * Generate combined Prisma schema fragment for approved migrations
+ */
+export const generatePrismaFragment = (registry: SchemaRegistry): string => {
+  const approved = registry.migrationQueue.filter(m => m.status === 'approved')
+  if (approved.length === 0) {
+    return ''
+  }
+  
+  const lines = [
+    '// =============================================================================',
+    '// AUTO-GENERATED FROM PACKAGE SCHEMAS - DO NOT EDIT MANUALLY',
+    '// Generated: ' + new Date().toISOString(),
+    '// =============================================================================',
+    '',
+  ]
+  
+  for (const migration of approved) {
+    lines.push(`// From package: ${migration.packageId}`)
+    lines.push(migration.prismaPreview)
+    lines.push('')
+  }
+  
+  return lines.join('\n')
+}
+
+/**
+ * Mark migrations as applied after successful Prisma migrate
+ */
+export const markMigrationsApplied = (registry: SchemaRegistry): void => {
+  const approved = registry.migrationQueue.filter(m => m.status === 'approved')
+  for (const migration of approved) {
+    migration.status = 'applied'
+    migration.appliedAt = Date.now()
+    
+    // Update registry
+    registry.entities[migration.entityName] = {
+      checksum: migration.newChecksum,
+      version: '1.0', // Could extract from schema
+      ownerPackage: migration.packageId,
+      prismaModel: migration.prismaPreview,
+      appliedAt: Date.now(),
+    }
+  }
+}
+
+/**
+ * Check if container restart is needed (approved migrations waiting)
+ */
+export const needsContainerRestart = (registry: SchemaRegistry): boolean => {
+  return registry.migrationQueue.some(m => m.status === 'approved')
+}
