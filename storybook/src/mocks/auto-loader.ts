@@ -111,6 +111,18 @@ function componentsToRenders(
     renders[`${component.id}.json`] = renders[component.id]
   }
 
+  // Add common script aliases pointing to first component
+  // This handles cases where manifest.json says "render.lua" but component id differs
+  if (components.length > 0) {
+    const mainRender = renders[components[0].id]
+    const scriptAliases = ['render.lua', 'render', 'main.lua', 'main', 'layout.lua', 'layout']
+    for (const alias of scriptAliases) {
+      if (!renders[alias]) {
+        renders[alias] = mainRender
+      }
+    }
+  }
+
   // Add a special "all_components" render that shows all components
   if (components.length > 0) {
     renders['all_components'] = (ctx: LuaRenderContext) => {
