@@ -5,6 +5,7 @@ import type { LuaScript } from '@/lib/level-types'
 import { executeLuaScriptWithProfile } from '@/lib/lua/execute-lua-script-with-profile'
 import type { LuaExecutionResult } from '@/lib/lua-engine'
 import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
+import type { JsonValue } from '@/types/utility-types'
 
 interface UseLuaEditorLogicProps {
   scripts: LuaScript[]
@@ -19,7 +20,7 @@ export const useLuaEditorLogic = ({ scripts, onScriptsChange }: UseLuaEditorLogi
     scripts.length > 0 ? scripts[0].id : null
   )
   const [testOutput, setTestOutput] = useState<LuaExecutionResult | null>(null)
-  const [testInputs, setTestInputs] = useState<Record<string, any>>({})
+  const [testInputs, setTestInputs] = useState<Record<string, JsonValue>>({})
   const [isExecuting, setIsExecuting] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showSnippetLibrary, setShowSnippetLibrary] = useState(false)
@@ -37,7 +38,7 @@ export const useLuaEditorLogic = ({ scripts, onScriptsChange }: UseLuaEditorLogi
 
   useEffect(() => {
     if (!currentScript) return
-    const inputs: Record<string, any> = {}
+    const inputs: Record<string, JsonValue> = {}
     currentScript.parameters.forEach(param => {
       inputs[param.name] = param.type === 'number' ? 0 : param.type === 'boolean' ? false : ''
     })
@@ -86,7 +87,7 @@ export const useLuaEditorLogic = ({ scripts, onScriptsChange }: UseLuaEditorLogi
     handleUpdateScript({
       parameters: currentScript.parameters.map((p, i) => (i === index ? { ...p, ...updates } : p)),
     })
-  const handleTestInputChange = (paramName: string, value: any) =>
+  const handleTestInputChange = (paramName: string, value: JsonValue) =>
     setTestInputs({ ...testInputs, [paramName]: value })
 
   const executeScript = async () => {
@@ -94,7 +95,7 @@ export const useLuaEditorLogic = ({ scripts, onScriptsChange }: UseLuaEditorLogi
     setIsExecuting(true)
     setTestOutput(null)
     try {
-      const contextData: any = {}
+      const contextData: Record<string, JsonValue> = {}
       currentScript.parameters.forEach(param => {
         contextData[param.name] = testInputs[param.name]
       })
@@ -103,7 +104,7 @@ export const useLuaEditorLogic = ({ scripts, onScriptsChange }: UseLuaEditorLogi
         {
           data: contextData,
           user: { username: 'test_user', role: 'god' },
-          log: (...args: any[]) => console.log('[Lua]', ...args),
+          log: (...args: JsonValue[]) => console.log('[Lua]', ...args),
         },
         currentScript
       )

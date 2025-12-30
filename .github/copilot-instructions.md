@@ -4,10 +4,11 @@
 
 MetaBuilder is a **data-driven, multi-tenant platform** with 95% functionality in JSON/Lua, not TypeScript. The system combines:
 
-- **5-Level Permission System**: Public → User → Admin → God → Supergod access hierarchies
+- **6-Level Permission System**: Public → User → Moderator → Admin → God → Supergod access hierarchies
 - **DBAL (Database Abstraction Layer)**: TypeScript SDK + C++ daemon, language-agnostic via YAML contracts
 - **Declarative Components**: Render complex UIs from JSON configuration using `RenderComponent`
 - **Package System**: Self-contained modules in `/packages/{name}/seed/` with metadata, components, scripts
+- **Multi-Source Package Repos**: Support for local and remote package registries via `PackageSourceManager`
 - **Multi-Tenancy**: All data queries filter by `tenantId`; each tenant has isolated configurations
 
 ## 0-kickstart Operating Rules
@@ -56,7 +57,7 @@ Each package auto-loads on init:
 ```
 packages/{name}/
 ├── seed/
-│   ├── metadata.json      # Package info, exports, dependencies
+│   ├── metadata.json      # Package info, exports, dependencies, minLevel
 │   ├── components.json    # Component definitions
 │   ├── scripts/           # Lua scripts organized by function
 │   └── index.ts           # Exports packageSeed object
@@ -64,6 +65,22 @@ packages/{name}/
 └── static_content/        # Assets (images, etc.)
 ```
 Loaded by `initializePackageSystem()` → `buildPackageRegistry()` → `exportAllPackagesForSeed()`
+
+### 3a. Multi-Source Package Repositories
+Packages can come from multiple sources:
+```typescript
+import { createPackageSourceManager, LocalPackageSource, RemotePackageSource } from '@/lib/packages/package-glue'
+
+const manager = createPackageSourceManager({
+  enableRemote: true,
+  remoteUrl: 'https://registry.metabuilder.dev/api/v1',
+  conflictResolution: 'priority' // or 'latest-version', 'local-first', 'remote-first'
+})
+
+const packages = await manager.fetchMergedIndex()
+const pkg = await manager.loadPackage('dashboard')
+```
+See: `docs/packages/package-sources.md`, `package-glue/sources/`
 
 ### 4. Database Helpers Pattern
 Always use `Database` class methods, never raw Prisma:

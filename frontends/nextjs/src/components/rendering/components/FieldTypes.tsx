@@ -12,11 +12,12 @@ import {
 } from '@/components/ui'
 import type { DropdownConfig } from '@/lib/database'
 import type { PropDefinition } from '@/lib/types/builder-types'
+import type { JsonValue } from '@/types/utility-types'
 
 interface FieldTypesProps {
   propDef: PropDefinition
-  value: any
-  onChange: (value: any) => void
+  value: JsonValue
+  onChange: (value: JsonValue) => void
   dynamicDropdown?: DropdownConfig | null
   onOpenCssBuilder?: () => void
 }
@@ -69,9 +70,15 @@ export function FieldTypes({
             </SelectContent>
           </Select>
         )
-      case 'select':
+      case 'select': {
+        const selectValue =
+          typeof value === 'string'
+            ? value
+            : typeof propDef.defaultValue === 'string'
+              ? propDef.defaultValue
+              : ''
         return (
-          <Select value={value || propDef.defaultValue} onValueChange={val => onChange(val)}>
+          <Select value={selectValue} onValueChange={val => onChange(val)}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -84,6 +91,7 @@ export function FieldTypes({
             </SelectContent>
           </Select>
         )
+      }
       case 'dynamic-select':
         return (
           <Select value={value || ''} onValueChange={val => onChange(val)}>

@@ -9,15 +9,15 @@ import { TextField } from './functions/text-field'
  * This is a convenience wrapper. Prefer importing individual functions.
  */
 export class TabsUtils {
-  static SchemaTabs(...args: any[]) {
-    return SchemaTabs(...(args as any))
+  static SchemaTabs(...args: Parameters<typeof SchemaTabs>) {
+    return SchemaTabs(...args)
   }
 
-  static FieldCard(...args: any[]) {
-    return FieldCard(...(args as any))
+  static FieldCard(...args: Parameters<typeof FieldCard>) {
+    return FieldCard(...args)
   }
 
-  static TextField(...args: any[]) {
-    return TextField(...(args as any))
+  static TextField(...args: Parameters<typeof TextField>) {
+    return TextField(...args)
   }
 }

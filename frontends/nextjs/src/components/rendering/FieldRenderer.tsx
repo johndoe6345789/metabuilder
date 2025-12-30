@@ -8,15 +8,18 @@ import { Label } from '@/components/ui'
 import type { FieldSchema, SchemaConfig } from '@/lib/schema-types'
 import { findModel, getFieldLabel, getHelpText, getModelLabel } from '@/lib/schema-utils'
 import { getRecordsKey } from '@/lib/schema-utils'
+import type { JsonValue } from '@/types/utility-types'
 
 interface FieldRendererProps {
   field: FieldSchema
-  value: any
-  onChange: (value: any) => void
+  value: JsonValue
+  onChange: (value: JsonValue) => void
   error?: string
   schema: SchemaConfig
   currentApp: string
 }
+
+type RelatedRecord = Record<string, JsonValue> & { id: string }
 
 export function FieldRenderer({
   field,
@@ -32,7 +35,7 @@ export function FieldRenderer({
   const relatedRecordsKey = field.relatedModel
     ? getRecordsKey(currentApp, field.relatedModel)
     : 'dummy'
-  const [relatedModelRecords] = useKV<any[]>(relatedRecordsKey, [])
+  const [relatedModelRecords] = useKV<RelatedRecord[]>(relatedRecordsKey, [])
 
   const relatedModel =
     field.type === 'relation' && field.relatedModel
@@ -158,7 +161,7 @@ export function FieldRenderer({
               <SelectValue placeholder={`Select ${label}`} />
             </SelectTrigger>
             <SelectContent>
-              {relatedModelRecords.map((record: any) => (
+              {relatedModelRecords.map(record => (
                 <SelectItem key={record.id} value={record.id}>
                   {record[displayField] || record.id}
                 </SelectItem>

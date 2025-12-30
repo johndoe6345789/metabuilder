@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 import type { LuaScript, Workflow, WorkflowNode } from '@/lib/level-types'
 import type { WorkflowExecutionResult } from '@/lib/workflow/engine/workflow-engine'
 import { createWorkflowEngine } from '@/lib/workflow/engine/workflow-engine'
+import type { JsonValue } from '@/types/utility-types'
 
 import type { WorkflowActionHandlers, WorkflowStateSetters } from './types'
 
@@ -89,9 +90,9 @@ export const createActionHandlers = ({
     setTestOutput(null)
 
     try {
-      let parsedData: any
+      let parsedData: JsonValue
       try {
-        parsedData = JSON.parse(testData)
+        parsedData = JSON.parse(testData) as JsonValue
       } catch {
         parsedData = testData
       }

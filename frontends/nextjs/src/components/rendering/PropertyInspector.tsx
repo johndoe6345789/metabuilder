@@ -5,13 +5,14 @@ import { CssClassBuilder } from '@/components/CssClassBuilder'
 import { Button, Separator } from '@/components/ui'
 import { componentCatalog } from '@/lib/component-catalog'
 import { Database, DropdownConfig } from '@/lib/database'
-import type { ComponentInstance } from '@/lib/types/builder-types'
+import type { ComponentInstance, ComponentProps } from '@/lib/types/builder-types'
+import type { JsonValue } from '@/types/utility-types'
 
 import { PropertyPanels } from './components/PropertyPanels'
 
 interface PropertyInspectorProps {
   component: ComponentInstance | null
-  onUpdate: (id: string, props: any) => void
+  onUpdate: (id: string, props: ComponentProps) => void
   onDelete: (id: string) => void
   onCodeEdit: () => void
 }
@@ -45,7 +46,7 @@ export function PropertyInspector({
 
   const componentDef = componentCatalog.find(c => c.type === component.type)
 
-  const handlePropChange = (propName: string, value: any) => {
+  const handlePropChange = (propName: string, value: JsonValue) => {
     onUpdate(component.id, {
       ...component.props,
       [propName]: value,
@@ -90,7 +91,11 @@ export function PropertyInspector({
       <CssClassBuilder
         open={cssBuilderOpen}
         onClose={() => setCssBuilderOpen(false)}
-        initialValue={component.props[cssBuilderPropName] || ''}
+        initialValue={
+          typeof component.props[cssBuilderPropName] === 'string'
+            ? component.props[cssBuilderPropName]
+            : ''
+        }
         onSave={handleCssClassSave}
       />
     </div>

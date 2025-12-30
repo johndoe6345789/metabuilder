@@ -3,6 +3,7 @@ import { Code, PaintBrush } from '@phosphor-icons/react'
 import { Button, ScrollArea, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import type { DropdownConfig } from '@/lib/database'
 import type { ComponentDefinition, ComponentInstance } from '@/lib/types/builder-types'
+import type { JsonValue } from '@/types/utility-types'
 
 import { FieldTypes } from './FieldTypes'
 
@@ -10,7 +11,7 @@ interface PropertyPanelsProps {
   component: ComponentInstance
   componentDef?: ComponentDefinition
   dynamicDropdowns: DropdownConfig[]
-  onPropChange: (propName: string, value: any) => void
+  onPropChange: (propName: string, value: JsonValue) => void
   onCodeEdit: () => void
   onOpenCssBuilder: (propName: string) => void
 }
