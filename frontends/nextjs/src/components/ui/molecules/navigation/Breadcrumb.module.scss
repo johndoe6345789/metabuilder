@@ -1,0 +1,73 @@
+// Breadcrumb styles - converted from MUI sx props
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumbsList {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumbsItem {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumbsSeparator {
+  display: flex;
+  align-items: center;
+  margin: 0 8px;
+  color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+}
+
+.breadcrumbItem {
+  display: inline-flex;
+  align-items: center;
+}
+
+.breadcrumbLink {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: inherit;
+  text-decoration: none;
+  transition: text-decoration 0.2s;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.breadcrumbPage {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary, rgba(0, 0, 0, 0.87));
+}
+
+.breadcrumbSeparator {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 8px;
+  color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+}
+
+.breadcrumbEllipsis {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
