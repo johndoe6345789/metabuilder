@@ -102,8 +102,68 @@ local function validate_metadata(metadata)
   if metadata.minLevel then
     if type(metadata.minLevel) ~= "number" then
       table.insert(errors, "minLevel must be a number")
-    elseif metadata.minLevel < 1 or metadata.minLevel > 6 then
-      table.insert(errors, "minLevel must be between 1 and 6")
+    elseif metadata.minLevel < 0 or metadata.minLevel > 6 then
+      table.insert(errors, "minLevel must be between 0 and 6")
+    end
+  end
+
+  -- Validate primary flag (optional, defaults to true)
+  if metadata.primary ~= nil then
+    if type(metadata.primary) ~= "boolean" then
+      table.insert(errors, "primary must be a boolean")
+    end
+  end
+
+  -- Validate permissions (optional)
+  if metadata.permissions then
+    if type(metadata.permissions) ~= "table" then
+      table.insert(errors, "permissions must be an object")
+    else
+      for permKey, permDef in pairs(metadata.permissions) do
+        if type(permKey) ~= "string" then
+          table.insert(errors, "permission key must be a string")
+        elseif not string.match(permKey, "^[a-z][a-z0-9_.]*$") then
+          table.insert(errors, "permission key '" .. tostring(permKey) .. "' must be lowercase with dots/underscores (e.g., 'forum.post.create')")
+        end
+        
+        if type(permDef) ~= "table" then
+          table.insert(errors, "permissions[" .. tostring(permKey) .. "] must be an object")
+        else
+          -- Validate minLevel (required)
+          if permDef.minLevel == nil then
+            table.insert(errors, "permissions[" .. permKey .. "].minLevel is required")
+          elseif type(permDef.minLevel) ~= "number" then
+            table.insert(errors, "permissions[" .. permKey .. "].minLevel must be a number")
+          elseif permDef.minLevel < 0 or permDef.minLevel > 6 then
+            table.insert(errors, "permissions[" .. permKey .. "].minLevel must be between 0 and 6")
+          end
+          
+          -- Validate description (required)
+          if permDef.description == nil then
+            table.insert(errors, "permissions[" .. permKey .. "].description is required")
+          elseif type(permDef.description) ~= "string" then
+            table.insert(errors, "permissions[" .. permKey .. "].description must be a string")
+          end
+          
+          -- Validate featureFlags (optional)
+          if permDef.featureFlags ~= nil then
+            if type(permDef.featureFlags) ~= "table" then
+              table.insert(errors, "permissions[" .. permKey .. "].featureFlags must be an array")
+            else
+              for i, flag in ipairs(permDef.featureFlags) do
+                if type(flag) ~= "string" then
+                  table.insert(errors, "permissions[" .. permKey .. "].featureFlags[" .. i .. "] must be a string")
+                end
+              end
+            end
+          end
+          
+          -- Validate requireDatabase (optional)
+          if permDef.requireDatabase ~= nil and type(permDef.requireDatabase) ~= "boolean" then
+            table.insert(errors, "permissions[" .. permKey .. "].requireDatabase must be a boolean")
+          end
+        end
+      end
     end
   end
 
