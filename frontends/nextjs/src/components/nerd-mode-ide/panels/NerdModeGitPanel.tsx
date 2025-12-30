@@ -1,13 +1,9 @@
-import CallSplitIcon from '@mui/icons-material/CallSplit'
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
-import SettingsIcon from '@mui/icons-material/Settings'
-
 import { Badge } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
 import { Separator } from '@/components/ui'
+import { CallSplit, CloudDownload, CloudUpload, Settings } from '@/fakemui/icons'
 
 import type { GitConfig } from './types'
 
@@ -40,7 +36,7 @@ export function NerdModeGitPanel({
                 <span className="text-muted-foreground">{gitConfig.repoUrl}</span>
               </div>
               <div className="flex items-center gap-2">
-                <CallSplitIcon fontSize="inherit" />
+                <CallSplit size={14} />
                 <span>{gitConfig.branch}</span>
               </div>
             </div>
@@ -65,17 +61,17 @@ export function NerdModeGitPanel({
 
           <div className="flex gap-2">
             <Button onClick={onGitPush} className="flex-1">
-              <CloudUploadIcon className="mr-2" fontSize="small" />
+              <CloudUpload size={16} style={{ marginRight: 8 }} />
               Push
             </Button>
             <Button onClick={onGitPull} variant="outline" className="flex-1">
-              <CloudDownloadIcon className="mr-2" fontSize="small" />
+              <CloudDownload size={16} style={{ marginRight: 8 }} />
               Pull
             </Button>
           </div>
 
           <Button variant="outline" className="w-full" onClick={onOpenConfig}>
-            <SettingsIcon className="mr-2" fontSize="small" />
+            <Settings size={16} style={{ marginRight: 8 }} />
             Configure Git
           </Button>
         </div>

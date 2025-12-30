@@ -1,9 +1,8 @@
-import ScienceIcon from '@mui/icons-material/Science'
-
 import { Badge } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Card, CardContent } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
+import { Science } from '@/fakemui/icons'
 
 import type { TestResult } from './types'
 
@@ -18,7 +17,7 @@ export function NerdModeTestsPanel({ testResults, onRunTests }: NerdModeTestsPan
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold">Test Suite</h3>
         <Button size="sm" onClick={onRunTests}>
-          <ScienceIcon className="mr-2" fontSize="small" />
+          <Science size={16} style={{ marginRight: 8 }} />
           Run Tests
         </Button>
       </div>
@@ -26,7 +25,7 @@ export function NerdModeTestsPanel({ testResults, onRunTests }: NerdModeTestsPan
         <div className="space-y-2">
           {testResults.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              <ScienceIcon fontSize="large" className="mx-auto mb-2 opacity-50" />
+              <Science size={48} style={{ margin: '0 auto 8px', opacity: 0.5 }} />
               <p>No tests run yet</p>
             </div>
           ) : (

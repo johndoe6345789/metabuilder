@@ -1,8 +1,10 @@
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined'
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
+import {
+  ChevronRight,
+  DescriptionOutlined,
+  ExpandMore,
+  FolderOpenOutlined,
+  FolderOutlined,
+} from '@/fakemui/icons'
 
 import type { FileNode } from '@/lib/nerd-mode-ide'
 
@@ -47,20 +49,20 @@ export function FileTreeNode({
         {node.type === 'folder' ? (
           <>
             {node.expanded ? (
-              <ExpandMoreIcon fontSize="inherit" />
+              <ExpandMore size={14} />
             ) : (
-              <ChevronRightIcon fontSize="inherit" />
+              <ChevronRight size={14} />
             )}
             {node.expanded ? (
-              <FolderOpenOutlinedIcon fontSize="small" />
+              <FolderOpenOutlined size={16} />
             ) : (
-              <FolderOutlinedIcon fontSize="small" />
+              <FolderOutlined size={16} />
             )}
           </>
         ) : (
           <>
             <div style={{ width: '14px' }} />
-            <DescriptionOutlinedIcon fontSize="small" />
+            <DescriptionOutlined size={16} />
           </>
         )}
         <span>{node.name}</span>

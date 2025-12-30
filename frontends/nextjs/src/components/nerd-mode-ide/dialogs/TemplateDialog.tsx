@@ -1,5 +1,3 @@
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
-
 import { Card, CardContent } from '@/components/ui'
 import {
   Dialog,
@@ -10,6 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui'
 import { Button } from '@/components/ui'
+import { AutoAwesome } from '@/fakemui/icons'
 import type { PackageTemplate } from '@/lib/nerd-mode-ide'
 
 interface TemplateDialogProps {
@@ -40,7 +39,7 @@ export function TemplateDialog({
               <CardContent className="p-4 flex items-start justify-between gap-4">
                 <div>
                   <div className="font-semibold flex items-center gap-2">
-                    <AutoAwesomeIcon fontSize="small" />
+                    <AutoAwesome size={16} />
                     {template.name}
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">{template.description}</p>

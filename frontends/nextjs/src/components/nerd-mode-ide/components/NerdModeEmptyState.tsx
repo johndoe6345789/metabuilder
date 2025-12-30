@@ -1,10 +1,10 @@
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
+import { DescriptionOutlined } from '@/fakemui/icons'
 
 export function NerdModeEmptyState() {
   return (
     <div className="flex items-center justify-center h-full text-muted-foreground">
       <div className="text-center">
-        <DescriptionOutlinedIcon fontSize="large" className="mx-auto mb-3 opacity-50" />
+        <DescriptionOutlined size={48} style={{ margin: '0 auto 12px', opacity: 0.5 }} />
         <p>Select a file to edit</p>
       </div>
     </div>

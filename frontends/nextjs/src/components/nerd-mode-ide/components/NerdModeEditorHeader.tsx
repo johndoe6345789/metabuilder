@@ -1,10 +1,6 @@
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
-import PlayArrowIcon from '@mui/icons-material/PlayArrow'
-import SaveIcon from '@mui/icons-material/Save'
-
 import { Badge } from '@/components/ui'
 import { Button } from '@/components/ui'
+import { DeleteOutline, DescriptionOutlined, PlayArrow, Save } from '@/fakemui/icons'
 import type { FileNode } from '@/lib/nerd-mode-ide'
 
 interface NerdModeEditorHeaderProps {
@@ -25,7 +21,7 @@ export function NerdModeEditorHeader({
   return (
     <div className="flex items-center justify-between p-2 bg-muted border-b border-border">
       <div className="flex items-center gap-2">
-        <DescriptionOutlinedIcon fontSize="small" />
+        <DescriptionOutlined size={16} />
         <span className="text-sm font-medium">{selectedFile.name}</span>
         <Badge variant="outline" className="text-xs">
           {selectedFile.language || 'text'}
@@ -33,13 +29,13 @@ export function NerdModeEditorHeader({
       </div>
       <div className="flex items-center gap-1">
         <Button size="sm" variant="ghost" onClick={onRunCode} disabled={isRunning}>
-          <PlayArrowIcon fontSize="small" />
+          <PlayArrow size={16} />
         </Button>
         <Button size="sm" variant="ghost" onClick={onSave}>
-          <SaveIcon fontSize="small" />
+          <Save size={16} />
         </Button>
         <Button size="sm" variant="ghost" onClick={onDelete}>
-          <DeleteOutlineIcon fontSize="small" />
+          <DeleteOutline size={16} />
         </Button>
       </div>
     </div>

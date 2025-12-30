@@ -1,11 +1,6 @@
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
-import SettingsIcon from '@mui/icons-material/Settings'
-import TerminalIcon from '@mui/icons-material/Terminal'
-
 import { Button } from '@/components/ui'
 import { CardHeader, CardTitle } from '@/components/ui'
+import { AutoAwesome, CloudDownload, LibraryAdd, Settings, Terminal } from '@/fakemui/icons'
 
 interface NerdModeIDEHeaderProps {
   workspaceName: string
@@ -26,22 +21,22 @@ export function NerdModeIDEHeader({
     <CardHeader className="pb-3">
       <div className="flex items-center justify-between">
         <CardTitle className="text-lg flex items-center gap-2">
-          <TerminalIcon fontSize="small" />
+          <Terminal size={16} />
           Nerd Mode IDE
           <span className="text-sm text-muted-foreground">- {workspaceName}</span>
         </CardTitle>
         <div className="flex items-center gap-2">
           <Button size="sm" variant="outline" onClick={onOpenGitConfig}>
-            <SettingsIcon fontSize="small" />
+            <Settings size={16} />
           </Button>
           <Button size="sm" variant="outline" onClick={onOpenTemplates}>
-            <AutoAwesomeIcon fontSize="small" />
+            <AutoAwesome size={16} />
           </Button>
           <Button size="sm" variant="outline" onClick={onOpenNewItem}>
-            <LibraryAddIcon fontSize="small" />
+            <LibraryAdd size={16} />
           </Button>
           <Button size="sm" variant="outline" onClick={onExportZip}>
-            <CloudDownloadIcon fontSize="small" />
+            <CloudDownload size={16} />
           </Button>
         </div>
       </div>
