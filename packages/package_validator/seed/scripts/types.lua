@@ -20,9 +20,22 @@
 ---@field dependencies? string[] Package dependencies
 ---@field devDependencies? string[] Development dependencies
 ---@field exports? MetadataExports Exported items
----@field minLevel? number Minimum permission level (1-6)
+---@field minLevel? number Minimum permission level (0-6)
+---@field primary? boolean Whether package can own routes (default: true)
+---@field permissions? table<string, PermissionDef> Fine-grained permission declarations
 ---@field bindings? MetadataBindings Available bindings
 ---@field icon? string Path to icon file
+---@field schema? MetadataSchema Database schema configuration
+
+---@class PermissionDef
+---@field minLevel number Minimum level required (0-6)
+---@field description string Human-readable description
+---@field featureFlags? string[] Required feature flags
+---@field requireDatabase? boolean Whether database is required
+
+---@class MetadataSchema
+---@field entities? string[] Entity names for auto-CRUD routes
+---@field path? string Path to schema YAML file
 
 ---@class MetadataExports
 ---@field components? string[] Exported component names
