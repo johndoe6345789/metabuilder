@@ -10,73 +10,134 @@
  *   PUT  /api/v1/acme/forum_forge/posts/123       -> update post 123
  *   DELETE /api/v1/acme/forum_forge/posts/123     -> delete post 123
  *   POST /api/v1/acme/forum_forge/posts/123/like  -> custom action
+ * 
+ * Authentication & Authorization:
+ *   - Session validated from mb_session cookie
+ *   - Tenant access validated (user must belong to tenant or be God+)
+ *   - Package minLevel checked against user level
+ *   - Entity must be declared in package schema
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import {
-  parseRestfulRequest,
-  successResponse,
-  errorResponse,
-  STATUS,
-} from '@/lib/routing'
 
-// TODO: Import actual DBAL client when ready
-// import { dbal } from '@/lib/dbal'
+import {
+  errorResponse,
+  executeDbalOperation,
+  executePackageAction,
+  getSessionUser,
+  parseRestfulRequest,
+  STATUS,
+  successResponse,
+  validatePackageRoute,
+  validateTenantAccess,
+} from '@/lib/routing'
 
 interface RouteParams {
   params: Promise<{ slug: string[] }>
 }
 
 /**
- * Handle all RESTful requests
+ * Handle all RESTful requests with full auth & DBAL execution
  */
 async function handleRequest(
   request: NextRequest,
   { params }: RouteParams
 ): Promise<NextResponse> {
   const resolvedParams = await params
+  
+  // 1. Parse the route
   const context = await parseRestfulRequest(request, resolvedParams)
-
   if ('error' in context) {
     return errorResponse(context.error, context.status)
   }
 
   const { route, operation, dbalOp } = context
 
-  // TODO: Verify tenant access (user belongs to tenant)
-  // const session = await getServerSession()
-  // if (!session?.user?.tenants?.includes(route.tenant)) {
-  //   return errorResponse('Access denied to tenant', STATUS.FORBIDDEN)
-  // }
+  // 2. Get current user session (may be null for public routes)
+  const { user, error: sessionError } = await getSessionUser()
+  
+  // 3. Validate package exists and user has required level
+  const packageResult = validatePackageRoute(route.package, route.entity, user)
+  if (!packageResult.allowed) {
+    const status = !user ? STATUS.UNAUTHORIZED : STATUS.FORBIDDEN
+    return errorResponse(packageResult.reason || 'Access denied', status)
+  }
 
-  // TODO: Execute actual DBAL operation
-  // For now, return the parsed operation for debugging
+  // 4. Validate tenant access
+  const tenantResult = await validateTenantAccess(
+    user,
+    route.tenant,
+    packageResult.package?.minLevel || 1
+  )
+  if (!tenantResult.allowed) {
+    const status = !user ? STATUS.UNAUTHORIZED : STATUS.FORBIDDEN
+    return errorResponse(tenantResult.reason || 'Access denied', status)
+  }
+
+  // 5. Execute the DBAL operation
   try {
-    // const result = await executeDbalOperation(dbalOp)
-    
-    // Placeholder response showing what would be executed
-    const debugResponse = {
-      route: {
-        tenant: route.tenant,
-        package: route.package,
-        entity: route.entity,
-        id: route.id,
-        action: route.action,
-      },
-      operation,
-      dbalOperation: dbalOp,
-      status: 'parsed',
-      note: 'DBAL execution pending - this shows how the route was parsed',
+    // Parse request body for mutations
+    let body: Record<string, unknown> | undefined
+    if (['POST', 'PUT', 'PATCH'].includes(request.method)) {
+      try {
+        const text = await request.text()
+        if (text) {
+          body = JSON.parse(text)
+        }
+      } catch {
+        return errorResponse('Invalid JSON body', STATUS.BAD_REQUEST)
+      }
     }
+
+    // Handle custom actions separately
+    if (operation === 'action' && route.action) {
+      const actionResult = await executePackageAction(
+        route.package,
+        route.entity,
+        route.action,
+        route.id || null,
+        { user, tenant: tenantResult.tenant!, body }
+      )
+      
+      if (!actionResult.success) {
+        return errorResponse(actionResult.error || 'Action failed', STATUS.BAD_REQUEST)
+      }
+      
+      return successResponse(actionResult.data, STATUS.OK)
+    }
+
+    // Execute standard CRUD operation
+    const result = await executeDbalOperation(dbalOp, {
+      user,
+      tenant: tenantResult.tenant!,
+      body,
+    })
+
+    if (!result.success) {
+      // Map common errors to appropriate status codes
+      const errorMsg = result.error || 'Operation failed'
+      if (errorMsg.includes('not found')) {
+        return errorResponse(errorMsg, STATUS.NOT_FOUND)
+      }
+      if (errorMsg.includes('required')) {
+        return errorResponse(errorMsg, STATUS.BAD_REQUEST)
+      }
+      return errorResponse(errorMsg, STATUS.INTERNAL_ERROR)
+    }
+
+    // Build response with metadata
+    const responseData = result.meta 
+      ? { data: result.data, ...result.meta }
+      : result.data
 
     // Map operation to appropriate status code
     switch (operation) {
       case 'create':
-        return successResponse(debugResponse, STATUS.CREATED)
+        return successResponse(responseData, STATUS.CREATED)
       case 'delete':
-        return successResponse({ deleted: true, ...debugResponse }, STATUS.OK)
+        return successResponse(responseData, STATUS.OK)
       default:
-        return successResponse(debugResponse, STATUS.OK)
+        return successResponse(responseData, STATUS.OK)
     }
   } catch (error) {
     console.error('DBAL operation failed:', error)
