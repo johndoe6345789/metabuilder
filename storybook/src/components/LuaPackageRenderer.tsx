@@ -57,8 +57,9 @@ export const LuaPackageRenderer: React.FC<LuaPackageRendererProps> = ({
     <LuaPackageRenderer key={index} component={child} debug={debug} />
   ))
   
-  // Build props, extracting special ones
-  const { className, ...restProps } = props as Record<string, unknown>
+  // Build props, extracting special ones and filtering out reserved React props
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { className, ref, key, ...restProps } = props as Record<string, unknown>
   
   const element = (
     <Component className={className as string} {...restProps}>

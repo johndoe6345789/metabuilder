@@ -34,7 +34,7 @@ end
 ---@return table Created category
 function M.createCategory(dbal, params)
   -- Get next sort order
-  local existing = dbal:list('ForumCategory', {
+  local existing = dbal:list(entity('ForumCategory'), {
     where = { tenantId = params.tenantId },
     orderBy = { sortOrder = 'desc' },
     take = 1,
@@ -45,7 +45,7 @@ function M.createCategory(dbal, params)
     maxOrder = existing.items[1].sortOrder or 0
   end
   
-  return dbal:create('ForumCategory', {
+  return dbal:create(entity('ForumCategory'), {
     tenantId = params.tenantId,
     name = params.name,
     slug = params.slug,
@@ -73,7 +73,7 @@ function M.listCategories(dbal, tenantId, parentId)
     where.parentId = parentId
   end
   
-  local result = dbal:list('ForumCategory', {
+  local result = dbal:list(entity('ForumCategory'), {
     where = where,
     orderBy = { sortOrder = 'asc' },
     take = 100,
@@ -89,7 +89,8 @@ end
 ---@return table Updated category
 function M.updateCategory(dbal, categoryId, updates)
   updates.updatedAt = os.time() * 1000
-  return dbal:update('ForumCategory', categoryId, updates)
+  return dbal:update(entity('ForumCategory'), categoryId, updates)
+end
 end
 
 ---------------------------------------------------------------------------
@@ -111,7 +112,7 @@ end
 ---@param params ForumThreadCreateParams
 ---@return table Created thread
 function M.createThread(dbal, params)
-  local thread = dbal:create('ForumThread', {
+  local thread = dbal:create(entity('ForumThread'), {
     tenantId = params.tenantId,
     categoryId = params.categoryId,
     authorId = params.authorId,
@@ -131,9 +132,9 @@ function M.createThread(dbal, params)
   })
   
   -- Increment category thread count
-  local category = dbal:read('ForumCategory', params.categoryId)
+  local category = dbal:read(entity('ForumCategory'), params.categoryId)
   if category then
-    dbal:update('ForumCategory', params.categoryId, {
+    dbal:update(entity('ForumCategory'), params.categoryId, {
       threadCount = (category.threadCount or 0) + 1,
       updatedAt = os.time() * 1000,
     })
@@ -149,7 +150,7 @@ end
 ---@param skip number|nil
 ---@return table List result
 function M.listThreads(dbal, categoryId, take, skip)
-  return dbal:list('ForumThread', {
+  return dbal:list(entity('ForumThread'), {
     where = { categoryId = categoryId },
     orderBy = { isPinned = 'desc', lastPostAt = 'desc' },
     take = take or 20,
@@ -163,10 +164,10 @@ end
 ---@param incrementView boolean|nil Increment view count
 ---@return table|nil Thread
 function M.getThread(dbal, threadId, incrementView)
-  local thread = dbal:read('ForumThread', threadId)
+  local thread = dbal:read(entity('ForumThread'), threadId)
   
   if thread and incrementView then
-    dbal:update('ForumThread', threadId, {
+    dbal:update(entity('ForumThread'), threadId, {
       viewCount = (thread.viewCount or 0) + 1,
     })
     thread.viewCount = (thread.viewCount or 0) + 1
@@ -182,7 +183,8 @@ end
 ---@return table Updated thread
 function M.updateThread(dbal, threadId, updates)
   updates.updatedAt = os.time() * 1000
-  return dbal:update('ForumThread', threadId, updates)
+  return dbal:update(entity('ForumThread'), threadId, updates)
+end
 end
 
 ---Pin/unpin a thread
@@ -218,7 +220,7 @@ end
 ---@param params ForumPostCreateParams
 ---@return table Created post
 function M.createPost(dbal, params)
-  local thread = dbal:read('ForumThread', params.threadId)
+  local thread = dbal:read(entity('ForumThread'), params.threadId)
   if not thread then
     error('Thread not found: ' .. params.threadId)
   end
@@ -227,7 +229,7 @@ function M.createPost(dbal, params)
     error('Thread is locked')
   end
   
-  local post = dbal:create('ForumPost', {
+  local post = dbal:create(entity('ForumPost'), {
     tenantId = params.tenantId,
     threadId = params.threadId,
     authorId = params.authorId,
@@ -241,7 +243,7 @@ function M.createPost(dbal, params)
   })
   
   -- Update thread stats
-  dbal:update('ForumThread', params.threadId, {
+  dbal:update(entity('ForumThread'), params.threadId, {
     replyCount = (thread.replyCount or 0) + 1,
     lastPostAt = os.time() * 1000,
     lastPostAuthorId = params.authorId,
@@ -250,9 +252,9 @@ function M.createPost(dbal, params)
   })
   
   -- Update category post count
-  local category = dbal:read('ForumCategory', thread.categoryId)
+  local category = dbal:read(entity('ForumCategory'), thread.categoryId)
   if category then
-    dbal:update('ForumCategory', thread.categoryId, {
+    dbal:update(entity('ForumCategory'), thread.categoryId, {
       postCount = (category.postCount or 0) + 1,
       updatedAt = os.time() * 1000,
     })
@@ -268,7 +270,7 @@ end
 ---@param skip number|nil
 ---@return table List result
 function M.listPosts(dbal, threadId, take, skip)
-  return dbal:list('ForumPost', {
+  return dbal:list(entity('ForumPost'), {
     where = { threadId = threadId },
     orderBy = { createdAt = 'asc' },
     take = take or 50,
@@ -282,7 +284,7 @@ end
 ---@param content string
 ---@return table Updated post
 function M.updatePost(dbal, postId, content)
-  return dbal:update('ForumPost', postId, {
+  return dbal:update(entity('ForumPost'), postId, {
     content = content,
     isEdited = true,
     editedAt = os.time() * 1000,
@@ -295,9 +297,9 @@ end
 ---@param postId string
 ---@return table Updated post
 function M.likePost(dbal, postId)
-  local post = dbal:read('ForumPost', postId)
+  local post = dbal:read(entity('ForumPost'), postId)
   if post then
-    return dbal:update('ForumPost', postId, {
+    return dbal:update(entity('ForumPost'), postId, {
       likeCount = (post.likeCount or 0) + 1,
     })
   end
@@ -310,12 +312,13 @@ end
 ---@param deletedBy string Username who deleted
 ---@return table Updated post
 function M.deletePost(dbal, postId, deletedBy)
-  return dbal:update('ForumPost', postId, {
+  return dbal:update(entity('ForumPost'), postId, {
     content = '[Deleted by ' .. deletedBy .. ']',
     isEdited = true,
     editedAt = os.time() * 1000,
     updatedAt = os.time() * 1000,
   })
+end
 end
 
 ---------------------------------------------------------------------------
@@ -343,7 +346,7 @@ end
 function M.searchThreads(dbal, tenantId, query, take)
   -- Basic implementation - fetch and filter
   -- TODO: Implement proper full-text search via DBAL
-  local result = dbal:list('ForumThread', {
+  local result = dbal:list(entity('ForumThread'), {
     where = { tenantId = tenantId },
     take = 1000,
   })
