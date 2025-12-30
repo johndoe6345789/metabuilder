@@ -1,10 +1,10 @@
 module Fakemui
 
 # Style System Singletons (mirrors React SCSS)
-singleton Theme 1.0 Theme.qml
-singleton StyleVariables 1.0 StyleVariables.qml
-singleton StyleMixins 1.0 StyleMixins.qml
-singleton Responsive 1.0 Responsive.qml
+singleton Theme 1.0 theming/Theme.qml
+singleton StyleVariables 1.0 theming/StyleVariables.qml
+singleton StyleMixins 1.0 theming/StyleMixins.qml
+singleton Responsive 1.0 theming/Responsive.qml
 
 # Core UI Components (MUI-style)
 CButton 1.0 qml-components/core/CButton.qml
