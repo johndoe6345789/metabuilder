@@ -47,6 +47,10 @@ export interface LuaRenderContext {
     level?: number
     email?: string
   }
+  tenant?: {
+    id?: string
+    name?: string
+  }
   nerdMode?: boolean
   theme?: 'light' | 'dark'
   [key: string]: unknown
