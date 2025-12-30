@@ -3,9 +3,9 @@ import { createLuaEngine } from '@/lib/lua/engine/core/create-lua-engine'
 import { executeLuaCode } from '@/lib/lua/functions/execution/execute-lua-code'
 import { normalizeLuaStructure } from '@/lib/lua/ui/normalize-lua-structure'
 import type { UIPageRecord } from '@/lib/seed/import-ui-pages'
-import type { JsonObject } from '@/types/utility-types'
+import type { JsonObject, JsonValue } from '@/types/utility-types'
 
-export type LuaActionHandler = (payload?: Record<string, unknown>) => Promise<unknown>
+export type LuaActionHandler = (payload?: JsonObject) => Promise<JsonValue | null>
 
 /**
  * Load a UI page from database and optionally process with Lua
@@ -25,7 +25,7 @@ export async function loadPageFromDB(path: string): Promise<UIPageData | null> {
   const page = pages[0]
 
   // 2. Get associated Lua scripts if any (from actions field)
-  let processedLayout = page.layout
+  let processedLayout: JsonValue = page.layout
   const actionHandlers: Record<string, LuaActionHandler> = {}
 
   if (page.actions) {
@@ -81,7 +81,7 @@ export async function loadPageFromDB(path: string): Promise<UIPageData | null> {
  * Create a JavaScript wrapper for a Lua action handler
  */
 function createLuaActionHandler(luaCode: string, actionName: string): LuaActionHandler {
-  return async (payload: Record<string, unknown> = {}) => {
+  return async (payload: JsonObject = {}) => {
     const engine = createLuaEngine()
 
     try {
@@ -97,7 +97,7 @@ function createLuaActionHandler(luaCode: string, actionName: string): LuaActionH
         throw new Error(result.error)
       }
 
-      return result.result
+      return (result.result ?? null) as JsonValue | null
     } finally {
       engine.destroy()
     }

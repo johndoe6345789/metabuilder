@@ -3,19 +3,24 @@
  * Shared type definitions for Lua execution
  */
 
+import type { JsonValue } from '@/types/utility-types'
+
+/** Fengari Lua state - opaque type from fengari-web */
+export type LuaState = ReturnType<typeof import('fengari-web').lauxlib.luaL_newstate>
+
 export interface LuaExecutionContext {
-  data?: any
-  user?: any
+  data?: JsonValue
+  user?: JsonValue
   kv?: {
-    get: (key: string) => Promise<any>
-    set: (key: string, value: any) => Promise<void>
+    get: (key: string) => Promise<JsonValue>
+    set: (key: string, value: JsonValue) => Promise<void>
   }
-  log?: (...args: any[]) => void
+  log?: (...args: unknown[]) => void
 }
 
 export interface LuaExecutionResult {
   success: boolean
-  result?: any
+  result?: JsonValue
   error?: string
   logs: string[]
 }
@@ -26,7 +31,7 @@ export interface LuaExecutionResult {
  */
 export interface LuaEngineState {
   /** The Fengari Lua state */
-  L: any
+  L: LuaState
   /** Logs captured during execution */
   logs: string[]
 }

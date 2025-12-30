@@ -3,6 +3,13 @@
 // Parse npm audit JSON and format results
 import { execSync } from 'child_process'
 
+interface NpmVulnerability {
+  name: string
+  severity: string
+  version: string
+  fixAvailable: boolean
+}
+
 try {
   const audit = JSON.parse(execSync('npm audit --json 2>/dev/null || echo "{}"', { encoding: 'utf8' }))
   
@@ -15,12 +22,15 @@ try {
       info: audit.metadata?.vulnerabilities?.info || 0
     },
     totalVulnerabilities: audit.metadata?.totalVulnerabilities || 0,
-    advisories: Object.values(audit.vulnerabilities || {}).map((v: any) => ({
-      name: v.name,
-      severity: v.severity,
-      version: v.version,
-      fixAvailable: v.fixAvailable
-    })),
+    advisories: Object.values(audit.vulnerabilities || {}).map((v) => {
+      const vuln = v as NpmVulnerability
+      return {
+        name: vuln.name,
+        severity: vuln.severity,
+        version: vuln.version,
+        fixAvailable: vuln.fixAvailable
+      }
+    }),
     timestamp: new Date().toISOString()
   }
   

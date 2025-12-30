@@ -15,8 +15,8 @@ interface RecordFormProps {
   model: ModelSchema
   schema: SchemaConfig
   currentApp: string
-  record?: any
-  onSave: (record: any) => void
+  record?: Record<string, unknown>
+  onSave: (record: Record<string, unknown>) => void
 }
 
 export function RecordForm({
@@ -28,7 +28,7 @@ export function RecordForm({
   record,
   onSave,
 }: RecordFormProps) {
-  const [formData, setFormData] = useState<any>(record || createEmptyRecord(model))
+  const [formData, setFormData] = useState<Record<string, unknown>>(record || createEmptyRecord(model))
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   useEffect(() => {
@@ -40,8 +40,8 @@ export function RecordForm({
     setErrors({})
   }, [record, model, open])
 
-  const handleFieldChange = (fieldName: string, value: any) => {
-    setFormData((prev: any) => ({
+  const handleFieldChange = (fieldName: string, value: unknown) => {
+    setFormData((prev) => ({
       ...prev,
       [fieldName]: value,
     }))

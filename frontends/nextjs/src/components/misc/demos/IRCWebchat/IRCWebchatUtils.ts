@@ -9,15 +9,15 @@ import { IRCWebchat } from './functions/i-r-c-webchat'
  * This is a convenience wrapper. Prefer importing individual functions.
  */
 export class IRCWebchatUtils {
-  static IRCWebchat(...args: any[]) {
-    return IRCWebchat(...(args as any))
+  static IRCWebchat(...args: Parameters<typeof IRCWebchat>) {
+    return IRCWebchat(...args)
   }
 
-  static handleSendMessage(...args: any[]) {
-    return handleSendMessage(...(args as any))
+  static handleSendMessage(...args: Parameters<typeof handleSendMessage>) {
+    return handleSendMessage(...args)
   }
 
-  static formatTime(...args: any[]) {
-    return formatTime(...(args as any))
+  static formatTime(...args: Parameters<typeof formatTime>) {
+    return formatTime(...args)
   }
 }

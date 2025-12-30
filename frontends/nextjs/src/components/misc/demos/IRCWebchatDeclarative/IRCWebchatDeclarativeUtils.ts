@@ -9,15 +9,15 @@ import { IRCWebchatDeclarative } from './functions/i-r-c-webchat-declarative'
  * This is a convenience wrapper. Prefer importing individual functions.
  */
 export class IRCWebchatDeclarativeUtils {
-  static IRCWebchatDeclarative(...args: any[]) {
-    return IRCWebchatDeclarative(...(args as any))
+  static IRCWebchatDeclarative(...args: Parameters<typeof IRCWebchatDeclarative>) {
+    return IRCWebchatDeclarative(...args)
   }
 
-  static async handleSendMessage(...args: any[]) {
-    return await handleSendMessage(...(args as any))
+  static async handleSendMessage(...args: Parameters<typeof handleSendMessage>) {
+    return await handleSendMessage(...args)
   }
 
-  static async formatTime(...args: any[]) {
-    return await formatTime(...(args as any))
+  static async formatTime(...args: Parameters<typeof formatTime>) {
+    return await formatTime(...args)
   }
 }

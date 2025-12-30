@@ -17,6 +17,8 @@ import {
 } from '@/components/ui'
 import type { LuaScript } from '@/lib/level-types'
 import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua-examples'
+import type { LuaExampleKey } from '@/lib/lua-examples'
+import type { editor } from 'monaco-editor'
 
 import { useLuaMonacoConfig } from './useLuaMonacoConfig'
 
@@ -37,7 +39,7 @@ export const LuaCodeEditorSection = ({
   onShowSnippetLibraryChange,
   onUpdateScript,
 }: LuaCodeEditorSectionProps) => {
-  const editorRef = useRef<any>(null)
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const monaco = useMonaco()
 
   useLuaMonacoConfig(monaco)
@@ -67,7 +69,7 @@ export const LuaCodeEditorSection = ({
   }
 
   const handleExampleLoad = (value: string) => {
-    const exampleCode = getLuaExampleCode(value as any)
+    const exampleCode = getLuaExampleCode(value as LuaExampleKey)
     onUpdateScript({ code: exampleCode })
     toast.success('Example loaded')
   }

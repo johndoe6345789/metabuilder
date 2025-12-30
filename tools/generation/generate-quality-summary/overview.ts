@@ -6,7 +6,14 @@ type OverviewStatus = {
   details: string
 }
 
-const selectDetails = (data: any): OverviewStatus | undefined => {
+interface ReportData {
+  coverage?: number
+  totalIssues?: number
+  critical?: number
+  averageCoverage?: number
+}
+
+const selectDetails = (data: ReportData | null): OverviewStatus | undefined => {
   if (data?.coverage !== undefined) {
     return {
       status: data.coverage >= 80 ? '✅ Pass' : '⚠️ Warning',

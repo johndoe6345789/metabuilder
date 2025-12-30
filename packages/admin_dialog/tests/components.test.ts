@@ -1,6 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import components from '../seed/components.json'
 
+interface ComponentDefinition {
+  id: string
+  type: string
+}
+
 describe('Admin Dialog Components', () => {
   it('should be a valid array', () => {
     expect(components).toBeInstanceOf(Array)
@@ -8,7 +13,7 @@ describe('Admin Dialog Components', () => {
 
   it('should have valid component structure if components exist', () => {
     if (components.length > 0) {
-      components.forEach((component: any) => {
+      components.forEach((component: ComponentDefinition) => {
         expect(component.id).toBeDefined()
         expect(component.type).toBeDefined()
         expect(typeof component.id).toBe('string')

@@ -1,7 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import * as SandboxFactory from '../../../lua/engine/sandbox/create-sandboxed-lua-engine'
-import type { SandboxedLuaResult } from '../../../lua/engine/sandbox/sandboxed-lua-engine'
+import type {
+  SandboxedLuaEngine,
+  SandboxedLuaResult,
+} from '../../../lua/engine/sandbox/sandboxed-lua-engine'
+import type { SecurityScanResult } from '../../../security/scanner/types'
 import { WorkflowEngine } from '../workflow-engine'
 import { createContext, createNode, createWorkflow } from './workflow-engine.fixtures'
 
@@ -29,17 +33,30 @@ describe('workflow-engine persistence', () => {
   })
 
   it('persists security warnings from Lua execution', async () => {
+    const securityResult: SecurityScanResult = {
+      safe: false,
+      severity: 'high',
+      issues: [
+        {
+          type: 'dangerous',
+          severity: 'high',
+          message: 'uses os',
+          pattern: 'os',
+        },
+      ],
+    }
+
     const sandboxResult: SandboxedLuaResult = {
       execution: { success: true, result: 99, logs: ['lua log'] },
-      security: { severity: 'high', issues: [{ message: 'uses os' }] } as any,
+      security: securityResult,
     }
 
-    const mockEngine = {
+    const mockEngine: SandboxedLuaEngine = {
       executeWithSandbox: vi.fn(async () => sandboxResult),
       destroy: vi.fn(),
-    }
+    } as SandboxedLuaEngine
 
-    vi.spyOn(SandboxFactory, 'createSandboxedLuaEngine').mockReturnValue(mockEngine as any)
+    vi.spyOn(SandboxFactory, 'createSandboxedLuaEngine').mockReturnValue(mockEngine)
 
     const workflow = createWorkflow('persist-2', 'Lua security', [
       createNode('lua', 'lua', 'Sandboxed', { code: 'return 1' }),

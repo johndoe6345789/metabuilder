@@ -1,3 +1,4 @@
+import type { ClassValue } from 'clsx'
 import { describe, expect, it } from 'vitest'
 
 import { cn } from '@/lib/utils'
@@ -5,17 +6,22 @@ import { cn } from '@/lib/utils'
 describe('utils', () => {
   describe('cn', () => {
     // Note: cn() uses clsx, which concatenates classes without smart Tailwind merging
-    it.each([
+    const cases: Array<{
+      input: ClassValue[]
+      shouldContain: string[]
+      shouldNotContain: string[]
+      description: string
+    }> = [
       {
         input: ['px-2 py-1', 'px-3'],
         shouldContain: ['px-2', 'py-1', 'px-3'],
-        shouldNotContain: [] as string[],
+        shouldNotContain: [],
         description: 'concatenate classes (no tailwind deduplication)',
       },
       {
         input: ['px-2', 'py-2'],
         shouldContain: ['px-2', 'py-2'],
-        shouldNotContain: [] as string[],
+        shouldNotContain: [],
         description: 'handle simple classes',
       },
       {
@@ -27,7 +33,7 @@ describe('utils', () => {
       {
         input: ['px-2 py-1 bg-red-500', 'px-3 bg-blue-500'],
         shouldContain: ['px-2', 'px-3', 'py-1', 'bg-red-500', 'bg-blue-500'],
-        shouldNotContain: [] as string[],
+        shouldNotContain: [],
         description: 'concatenate all classes (no tailwind deduplication)',
       },
       {
@@ -42,8 +48,10 @@ describe('utils', () => {
         shouldNotContain: [],
         description: 'handle arrays of classes',
       },
-    ])('should $description', ({ input, shouldContain, shouldNotContain }) => {
-      const result = cn(...(input as any))
+    ]
+
+    it.each(cases)('should $description', ({ input, shouldContain, shouldNotContain }) => {
+      const result = cn(...input)
       shouldContain.forEach(cls => {
         expect(result).toContain(cls)
       })

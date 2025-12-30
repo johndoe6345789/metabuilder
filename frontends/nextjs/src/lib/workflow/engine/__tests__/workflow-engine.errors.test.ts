@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest'
 
+import type { WorkflowNode } from '../../../types/level-types'
 import { WorkflowEngine } from '../workflow-engine'
 import { createContext, createNode, createWorkflow } from './workflow-engine.fixtures'
 
 describe('workflow-engine errors', () => {
   it('fails unknown node types with a clear error', async () => {
+    const invalidType = 'unknown' as WorkflowNode['type']
     const workflow = createWorkflow('err-1', 'Unknown node', [
-      createNode('mystery', 'unknown' as any, 'Mystery node'),
+      createNode('mystery', invalidType, 'Mystery node'),
     ])
 
     const result = await WorkflowEngine.execute(workflow, createContext({}))

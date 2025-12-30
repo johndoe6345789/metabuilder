@@ -1,10 +1,31 @@
 import { existsSync, readFileSync } from 'fs'
 
+interface StubInfo {
+  name: string
+  file: string
+  line: number
+  type: string
+  flags: string[]
+  summary: string
+}
+
+interface CompletenessAnalysis {
+  averageCompleteness: number
+  bySeverity: {
+    critical: number
+    high: number
+    medium: number
+    low: number
+  }
+  flagTypes: Record<string, number>
+  criticalStubs?: StubInfo[]
+}
+
 export const buildCompletenessSection = (): string => {
   if (!existsSync('implementation-analysis.json')) return ''
 
   try {
-    const completeness = JSON.parse(readFileSync('implementation-analysis.json', 'utf8'))
+    const completeness: CompletenessAnalysis = JSON.parse(readFileSync('implementation-analysis.json', 'utf8'))
     let section = '## Implementation Completeness Analysis\n\n'
     section += `**Average Completeness Score**: ${completeness.averageCompleteness}%\n\n`
 
@@ -27,7 +48,15 @@ export const buildCompletenessSection = (): string => {
     if (completeness.criticalStubs && completeness.criticalStubs.length > 0) {
       section += '### 🔴 Incomplete Implementations (0% Completeness)\n\n'
       section += '<details><summary>Click to expand</summary>\n\n'
-      completeness.criticalStubs.forEach((stub: any) => {
+      interface CriticalStub {
+        name: string
+        file: string
+        line: number
+        type: string
+        flags: string[]
+        summary: string
+      }
+      completeness.criticalStubs.forEach((stub: CriticalStub) => {
         section += `#### \`${stub.name}\` in \`${stub.file}:${stub.line}\`\n`
         section += `**Type**: ${stub.type}\n`
         section += `**Flags**: ${stub.flags.join(', ')}\n`

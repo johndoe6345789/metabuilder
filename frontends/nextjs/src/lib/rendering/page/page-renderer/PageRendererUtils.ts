@@ -15,39 +15,39 @@ import { registerPage } from './functions/register-page'
  * This is a convenience wrapper. Prefer importing individual functions.
  */
 export class PageRendererUtils {
-  static async registerPage(...args: any[]) {
-    return await registerPage(...(args as any))
+  static async registerPage(...args: Parameters<typeof registerPage>) {
+    return await registerPage(...args)
   }
 
-  static async loadPages(...args: any[]) {
-    return await loadPages(...(args as any))
+  static async loadPages(...args: Parameters<typeof loadPages>) {
+    return await loadPages(...args)
   }
 
-  static getPage(...args: any[]) {
-    return getPage(...(args as any))
+  static getPage(...args: Parameters<typeof getPage>) {
+    return getPage(...args)
   }
 
-  static getPagesByLevel(...args: any[]) {
-    return getPagesByLevel(...(args as any))
+  static getPagesByLevel(...args: Parameters<typeof getPagesByLevel>) {
+    return getPagesByLevel(...args)
   }
 
-  static async executeLuaScript(...args: any[]) {
-    return await executeLuaScript(...(args as any))
+  static async executeLuaScript(...args: Parameters<typeof executeLuaScript>) {
+    return await executeLuaScript(...args)
   }
 
-  static async checkPermissions(...args: any[]) {
-    return await checkPermissions(...(args as any))
+  static async checkPermissions(...args: Parameters<typeof checkPermissions>) {
+    return await checkPermissions(...args)
   }
 
-  static async onPageLoad(...args: any[]) {
-    return await onPageLoad(...(args as any))
+  static async onPageLoad(...args: Parameters<typeof onPageLoad>) {
+    return await onPageLoad(...args)
   }
 
-  static async onPageUnload(...args: any[]) {
-    return await onPageUnload(...(args as any))
+  static async onPageUnload(...args: Parameters<typeof onPageUnload>) {
+    return await onPageUnload(...args)
   }
 
-  static getPageRenderer(...args: any[]) {
-    return getPageRenderer(...(args as any))
+  static getPageRenderer(...args: Parameters<typeof getPageRenderer>) {
+    return getPageRenderer(...args)
   }
 }

@@ -15,7 +15,7 @@ export const useLuaMonacoConfig = (monaco: Monaco | null) => {
           endColumn: word.endColumn,
         }
 
-        const suggestions: any[] = [
+        const suggestions: monaco.languages.CompletionItem[] = [
           {
             label: 'context.data',
             kind: monaco.languages.CompletionItemKind.Property,

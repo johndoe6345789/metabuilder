@@ -3,9 +3,10 @@ import { NextResponse } from 'next/server'
 
 import { readJson } from '@/lib/api/read-json'
 import { setPackageData } from '@/lib/db/packages/set-package-data'
+import type { JsonValue } from '@/types/utility-types'
 
 type PackageDataPayload = {
-  data?: Record<string, any[]>
+  data?: Record<string, JsonValue[]>
 }
 
 interface RouteParams {

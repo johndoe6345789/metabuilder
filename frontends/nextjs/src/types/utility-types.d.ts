@@ -48,13 +48,13 @@ export interface LuaTable {
 /**
  * Lua function representation
  */
-export type LuaFunction = (...args: unknown[]) => unknown
+export type LuaFunction = (...args: JsonValue[]) => JsonValue
 
 /**
  * Generic property bag for metadata and dynamic properties
  * Prefer specific interfaces when structure is known
  */
-export type PropertyBag = Record<string, unknown>
+export type PropertyBag = Record<string, JsonValue>
 
 /**
  * Type-safe record with specific value type
@@ -64,4 +64,4 @@ export type TypedRecord<T> = Record<string, T>
 /**
  * Unknown error type (for catch blocks)
  */
-export type UnknownError = unknown
+export type UnknownError = Error | string
