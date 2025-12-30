@@ -199,6 +199,52 @@ Dynamic page routes for UI:
 - [frontends/nextjs/src/app/[tenant]/[package]/[...slug]/page.tsx](../../frontends/nextjs/src/app/[tenant]/[package]/[...slug]/page.tsx)
 - [frontends/nextjs/src/middleware.ts](../../frontends/nextjs/src/middleware.ts)
 
+## Primary Package + Dependencies
+
+A page is owned by a **primary package** (from the URL), but may use components and data from **dependency packages**.
+
+### How Dependencies Work
+
+1. Package declares dependencies in `metadata.json`:
+   ```json
+   {
+     "packageId": "forum_forge",
+     "dependencies": ["ui_permissions", "data_table", "user_manager"]
+   }
+   ```
+
+2. Layout loads dependencies and provides them to context:
+   ```tsx
+   <TenantProvider 
+     tenant="acme"
+     packageId="forum_forge"
+     additionalPackages={[
+       { id: "ui_permissions" },
+       { id: "data_table" },
+       { id: "user_manager" }
+     ]}
+   />
+   ```
+
+3. Components can query from dependency packages:
+   ```tsx
+   // Access roles from user_manager on a forum_forge page
+   const { list } = useDependencyEntity<Role>('user_manager', 'roles')
+   ```
+
+### Context API
+
+```tsx
+const {
+  tenant,           // "acme"
+  primaryPackage,   // "forum_forge"
+  packages,         // [{ id: "forum_forge" }, { id: "ui_permissions" }, ...]
+  hasPackage,       // (pkgId) => boolean
+  buildApiUrl,      // (entity, id?, action?, packageId?) => url
+  getPrefixedEntityForPackage,  // (pkgId, entity) => "Pkg_UserManager_Role"
+} = useTenant()
+```
+
 ## React Hooks
 
 ### useTenant
@@ -209,10 +255,11 @@ Access current tenant context in components:
 import { useTenant } from '@/app/[tenant]/[package]/tenant-context'
 
 function MyComponent() {
-  const { tenant, package: pkg, buildApiUrl } = useTenant()
+  const { tenant, primaryPackage, packages, buildApiUrl } = useTenant()
   
   // buildApiUrl('posts') → '/api/v1/acme/forum_forge/posts'
   // buildApiUrl('posts', '123') → '/api/v1/acme/forum_forge/posts/123'
+  // buildApiUrl('roles', null, null, 'user_manager') → '/api/v1/acme/user_manager/roles'
 }
 ```
 
@@ -247,6 +294,26 @@ function PostManager() {
     await posts.create(data)
     await posts.list() // Refresh
   }
+}
+```
+
+### useDependencyEntity
+
+Access entities from dependency packages:
+
+```tsx
+import { useDependencyEntity } from '@/lib/hooks/use-rest-api'
+
+// On a forum_forge page, query roles from user_manager
+function ModeratorSelector() {
+  const roles = useDependencyEntity<Role>('user_manager', 'roles')
+  const [roleList, setRoleList] = useState<Role[]>([])
+  
+  useEffect(() => {
+    roles.list({ where: { name: 'moderator' } }).then(setRoleList)
+  }, [])
+  
+  return <RoleDropdown roles={roleList} />
 }
 ```
 

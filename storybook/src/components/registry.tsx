@@ -783,6 +783,60 @@ export const ListItemText: React.FC<ListItemTextProps> = ({ primary, secondary, 
   </div>
 )
 
+// ListItemButton - clickable list item
+export const ListItemButton: React.FC<LuaComponentProps & { selected?: boolean; onClick?: () => void }> = ({ 
+  selected = false,
+  onClick,
+  children, 
+  className = '' 
+}) => (
+  <li 
+    className={`flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-muted ${selected ? 'bg-accent/10' : ''} ${className}`}
+    onClick={onClick}
+  >
+    {children}
+  </li>
+)
+
+// Collapse - collapsible container
+interface CollapseProps extends LuaComponentProps {
+  in?: boolean
+  open?: boolean
+}
+
+export const Collapse: React.FC<CollapseProps> = ({ 
+  in: isIn = true,
+  open = true,
+  children, 
+  className = '' 
+}) => {
+  const isOpen = isIn || open
+  return isOpen ? <div className={className}>{children}</div> : null
+}
+
+// Breadcrumbs - navigation breadcrumb trail
+interface BreadcrumbsProps extends LuaComponentProps {
+  separator?: React.ReactNode
+}
+
+export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ 
+  separator = '/',
+  children, 
+  className = 'flex items-center gap-2 text-sm' 
+}) => {
+  const items = React.Children.toArray(children)
+  return (
+    <nav className={className}>
+      {items.map((child, i) => (
+        <React.Fragment key={i}>
+          {child}
+          {i < items.length - 1 && <span className="text-muted-foreground">{separator}</span>}
+        </React.Fragment>
+      ))}
+    </nav>
+  )
+}
+
 // Data display
 interface TableProps extends LuaComponentProps {
   columns?: Array<{ field: string; headerName: string; width?: number; flex?: number }>
