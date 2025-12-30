@@ -1,5 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material'
-import { alpha } from '@mui/material/styles'
+import { Box, Stack, Typography } from '@/fakemui'
 
 import { Alert, AlertDescription, AlertTitle, Badge, Button } from '@/components/ui'
 import { Autorenew, Cancel, CheckCircle, OpenInNew } from '@/fakemui/icons'

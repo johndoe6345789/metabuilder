@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material'
+import { Stack } from '@/fakemui'
 
 import { Card, CardContent, CardHeader } from '@/components/ui'
 

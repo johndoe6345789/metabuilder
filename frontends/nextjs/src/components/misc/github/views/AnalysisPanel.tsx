@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material'
+import { Box, Stack } from '@/fakemui'
 
 import { Info, Robot } from '@/fakemui/icons'
 

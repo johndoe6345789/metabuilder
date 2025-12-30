@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Stack, Typography } from '@/fakemui'
 
 import { Badge, Button, Card, CardContent } from '@/components/ui'
 import { Autorenew, Download, OpenInNew } from '@/fakemui/icons'

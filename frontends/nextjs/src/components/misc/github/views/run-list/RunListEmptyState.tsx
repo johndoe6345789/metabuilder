@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box } from '@/fakemui'
 
 import type { RunListProps } from './run-list.types'
 
