@@ -1,6 +1,5 @@
 'use client'
 
-import CloseIcon from '@mui/icons-material/Close'
 import {
   Box,
   Dialog as MuiDialog,
@@ -10,6 +9,8 @@ import {
   Typography,
 } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Close } from '@/fakemui/icons'
 
 import { DialogContent, type DialogContentProps } from './dialog/Body'
 import { DialogFooter, type DialogFooterProps } from './dialog/Footer'

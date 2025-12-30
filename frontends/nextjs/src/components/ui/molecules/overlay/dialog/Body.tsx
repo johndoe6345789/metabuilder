@@ -1,8 +1,9 @@
 'use client'
 
-import CloseIcon from '@mui/icons-material/Close'
 import { DialogContent as MuiDialogContent, IconButton } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Close } from '@/fakemui/icons'
 
 export interface DialogBodyProps {
   children: ReactNode
@@ -25,7 +26,7 @@ const DialogBody = forwardRef<HTMLDivElement, DialogBodyProps>(
             onClick={onClose}
             sx={{ position: 'absolute', right: 8, top: 8, color: 'text.secondary' }}
           >
-            <CloseIcon />
+            <Close />
           </IconButton>
         )}
         {children}

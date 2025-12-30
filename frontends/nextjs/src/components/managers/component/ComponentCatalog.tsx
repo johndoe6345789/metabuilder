@@ -1,6 +1,7 @@
-import SearchIcon from '@mui/icons-material/Search'
 import { Box, Card, InputAdornment, Stack, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
+
+import { Search } from '@/fakemui/icons'
 
 import { getComponentIcon } from '@/components/get-component-icon'
 import type { ComponentDefinition } from '@/lib/builder-types'
@@ -47,7 +48,7 @@ export function ComponentCatalog({ onDragStart }: ComponentCatalogProps) {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon sx={{ color: 'text.secondary', fontSize: 18 }} />
+                <Search style={{ color: 'rgba(0,0,0,0.54)', fontSize: 18 }} />
               </InputAdornment>
             ),
           }}

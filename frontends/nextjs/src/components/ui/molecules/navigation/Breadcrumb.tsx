@@ -1,9 +1,9 @@
 'use client'
 
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import { Box, Breadcrumbs as MuiBreadcrumbs, Link, Typography } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { MoreHoriz, NavigateNext } from '@/fakemui/icons'
 
 interface BreadcrumbProps {
   children: ReactNode
@@ -14,7 +14,7 @@ const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(({ children, ...prop
   return (
     <MuiBreadcrumbs
       ref={ref}
-      separator={<NavigateNextIcon fontSize="small" />}
+      separator={<NavigateNext size={16} />}
       aria-label="breadcrumb"
       {...props}
     >

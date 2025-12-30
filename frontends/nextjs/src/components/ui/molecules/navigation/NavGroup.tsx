@@ -1,7 +1,5 @@
 'use client'
 
-import ExpandLessIcon from '@mui/icons-material/ExpandLess'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
   Box,
   Collapse,
@@ -13,6 +11,8 @@ import {
   ListItemText,
 } from '@mui/material'
 import { forwardRef, ReactNode, useState } from 'react'
+
+import { ExpandLess, ExpandMore } from '@/fakemui/icons'
 
 export interface NavGroupProps {
   label: string
@@ -72,9 +72,9 @@ const NavGroup = forwardRef<HTMLDivElement, NavGroupProps>(
               }}
             />
             {open ? (
-              <ExpandLessIcon fontSize="small" sx={{ color: 'text.secondary' }} />
+              <ExpandLess size={16} style={{ color: 'rgba(0,0,0,0.54)' }} />
             ) : (
-              <ExpandMoreIcon fontSize="small" sx={{ color: 'text.secondary' }} />
+              <ExpandMore size={16} style={{ color: 'rgba(0,0,0,0.54)' }} />
             )}
           </ListItemButton>
         </ListItem>
