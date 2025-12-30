@@ -1,4 +1,4 @@
-export { DataGrid, DataGridPro, DataGridPremium } from './DataGrid'
+export { DataGrid, DataGridPro, DataGridPremium } from './DataGrid.tsx'
 export {
   DatePicker,
   TimePicker,
@@ -8,4 +8,4 @@ export {
   StaticDatePicker,
   CalendarPicker,
   ClockPicker,
-} from './DatePicker'
+} from './DatePicker.tsx'
