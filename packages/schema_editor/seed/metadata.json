@@ -9,6 +9,7 @@
   "dependencies": [
     "form_builder"
   ],
+  "devDependencies": ["lua_test"],
   "exports": {
     "scripts": [
       "fields",
@@ -19,6 +20,16 @@
       "SchemaEditor",
       "TableEditor",
       "FieldEditor"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
     ]
   },
   "minLevel": 5

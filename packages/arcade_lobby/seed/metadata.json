@@ -7,8 +7,19 @@
   "author": "MetaBuilder",
   "category": "gaming",
   "dependencies": ["ui_permissions", "dashboard"],
+  "devDependencies": ["lua_test"],
   "exports": {
     "components": []
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
+    ]
   },
   "minLevel": 2
 }

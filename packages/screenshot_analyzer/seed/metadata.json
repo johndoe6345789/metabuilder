@@ -8,9 +8,20 @@
   "category": "demo",
   "tags": ["screenshot", "analysis", "browser", "dom"],
   "dependencies": [],
+  "devDependencies": ["lua_test"],
   "exports": {
     "components": ["ScreenshotAnalyzer", "UploadSection", "ResultPanel", "PageInfo"],
     "scripts": ["init", "capture", "analyze", "page_info"]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
+    ]
   },
   "bindings": {
     "dbal": false,

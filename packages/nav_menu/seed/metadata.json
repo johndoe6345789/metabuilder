@@ -9,6 +9,7 @@
   "dependencies": [
     "ui_permissions"
   ],
+  "devDependencies": ["lua_test"],
   "exports": {
     "components": [
       "Sidebar",
@@ -18,6 +19,16 @@
     "scripts": [
       "sidebar",
       "menu"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
     ]
   },
   "minLevel": 2

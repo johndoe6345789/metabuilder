@@ -7,6 +7,7 @@
   "author": "MetaBuilder Team",
   "category": "social",
   "dependencies": [],
+  "devDependencies": ["lua_test"],
   "exports": {
     "components": ["IRCWebchat"],
     "layouts": ["layout.json"],
@@ -16,6 +17,16 @@
       "format_time",
       "user_join",
       "user_leave"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
     ]
   },
   "tags": ["chat", "irc", "messaging", "realtime"],

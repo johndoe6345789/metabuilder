@@ -7,6 +7,7 @@
   "author": "MetaBuilder",
   "category": "social",
   "dependencies": ["ui_permissions", "form_builder"],
+  "devDependencies": ["lua_test"],
   "exports": {
     "components": [
       "social_hub_root",
@@ -38,6 +39,16 @@
       "social_hub_feed_post_2_title",
       "social_hub_feed_post_2_body",
       "social_hub_feed_post_2_badge"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
     ]
   },
   "minLevel": 2
