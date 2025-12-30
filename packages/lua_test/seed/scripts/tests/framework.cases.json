@@ -1,0 +1,300 @@
+{
+  "name": "lua_test Framework Test Cases",
+  "version": "1.0.0",
+  "description": "Parameterized test cases for testing the lua_test framework itself",
+  
+  "describe_behavior": {
+    "suite_creation": [
+      {
+        "name": "empty suite",
+        "testCount": 0,
+        "expectedNested": 0,
+        "description": "Suite with no tests or nested suites"
+      },
+      {
+        "name": "single test suite",
+        "testCount": 1,
+        "expectedNested": 0,
+        "description": "Suite with exactly one test"
+      },
+      {
+        "name": "multi-test suite",
+        "testCount": 5,
+        "expectedNested": 0,
+        "description": "Suite with multiple tests"
+      },
+      {
+        "name": "nested suite",
+        "testCount": 2,
+        "expectedNested": 1,
+        "description": "Suite with one nested describe block"
+      },
+      {
+        "name": "deeply nested suite",
+        "testCount": 1,
+        "expectedNested": 3,
+        "description": "Suite with three levels of nesting"
+      }
+    ]
+  },
+
+  "expect_matchers": {
+    "toBe": [
+      {"actual": 1, "expected": 1, "shouldPass": true, "description": "equal numbers"},
+      {"actual": 1, "expected": 2, "shouldPass": false, "description": "unequal numbers"},
+      {"actual": "hello", "expected": "hello", "shouldPass": true, "description": "equal strings"},
+      {"actual": "hello", "expected": "world", "shouldPass": false, "description": "unequal strings"},
+      {"actual": true, "expected": true, "shouldPass": true, "description": "equal booleans"},
+      {"actual": true, "expected": false, "shouldPass": false, "description": "unequal booleans"},
+      {"actual": null, "expected": null, "shouldPass": true, "description": "nil equals nil"}
+    ],
+    
+    "toEqual": [
+      {"actual": {"a": 1}, "expected": {"a": 1}, "shouldPass": true, "description": "equal flat tables"},
+      {"actual": {"a": 1}, "expected": {"a": 2}, "shouldPass": false, "description": "unequal flat tables"},
+      {"actual": {"x": {"y": 1}}, "expected": {"x": {"y": 1}}, "shouldPass": true, "description": "equal nested tables"},
+      {"actual": [1, 2, 3], "expected": [1, 2, 3], "shouldPass": true, "description": "equal arrays"},
+      {"actual": [1, 2], "expected": [1, 2, 3], "shouldPass": false, "description": "unequal arrays"},
+      {"actual": {}, "expected": {}, "shouldPass": true, "description": "empty tables"}
+    ],
+    
+    "toBeNil": [
+      {"actual": null, "shouldPass": true, "description": "nil value"},
+      {"actual": 0, "shouldPass": false, "description": "zero is not nil"},
+      {"actual": "", "shouldPass": false, "description": "empty string is not nil"},
+      {"actual": false, "shouldPass": false, "description": "false is not nil"}
+    ],
+    
+    "toBeTruthy": [
+      {"actual": true, "shouldPass": true, "description": "true is truthy"},
+      {"actual": 1, "shouldPass": true, "description": "non-zero numbers are truthy"},
+      {"actual": "text", "shouldPass": true, "description": "non-empty strings are truthy"},
+      {"actual": {}, "shouldPass": true, "description": "empty tables are truthy"},
+      {"actual": false, "shouldPass": false, "description": "false is not truthy"},
+      {"actual": null, "shouldPass": false, "description": "nil is not truthy"}
+    ],
+    
+    "toBeFalsy": [
+      {"actual": false, "shouldPass": true, "description": "false is falsy"},
+      {"actual": null, "shouldPass": true, "description": "nil is falsy"},
+      {"actual": true, "shouldPass": false, "description": "true is not falsy"},
+      {"actual": 0, "shouldPass": false, "description": "zero is truthy in Lua"},
+      {"actual": "", "shouldPass": false, "description": "empty string is truthy in Lua"}
+    ],
+    
+    "toBeType": [
+      {"actual": 42, "expectedType": "number", "shouldPass": true},
+      {"actual": 3.14, "expectedType": "number", "shouldPass": true},
+      {"actual": "hello", "expectedType": "string", "shouldPass": true},
+      {"actual": true, "expectedType": "boolean", "shouldPass": true},
+      {"actual": false, "expectedType": "boolean", "shouldPass": true},
+      {"actual": {}, "expectedType": "table", "shouldPass": true},
+      {"actual": null, "expectedType": "nil", "shouldPass": true},
+      {"actual": 42, "expectedType": "string", "shouldPass": false},
+      {"actual": "42", "expectedType": "number", "shouldPass": false}
+    ],
+    
+    "toContain": [
+      {"actual": "hello world", "expected": "world", "shouldPass": true, "description": "substring match"},
+      {"actual": "hello", "expected": "xyz", "shouldPass": false, "description": "substring not found"},
+      {"actual": [1, 2, 3], "expected": 2, "shouldPass": true, "description": "array contains element"},
+      {"actual": [1, 2, 3], "expected": 5, "shouldPass": false, "description": "array missing element"},
+      {"actual": ["a", "b", "c"], "expected": "b", "shouldPass": true, "description": "string array contains"}
+    ],
+    
+    "toHaveLength": [
+      {"actual": "hello", "expected": 5, "shouldPass": true, "description": "string length"},
+      {"actual": "", "expected": 0, "shouldPass": true, "description": "empty string"},
+      {"actual": [1, 2, 3], "expected": 3, "shouldPass": true, "description": "array length"},
+      {"actual": [], "expected": 0, "shouldPass": true, "description": "empty array"},
+      {"actual": "test", "expected": 10, "shouldPass": false, "description": "wrong string length"}
+    ],
+    
+    "toBeGreaterThan": [
+      {"actual": 10, "expected": 5, "shouldPass": true},
+      {"actual": 5, "expected": 10, "shouldPass": false},
+      {"actual": 5, "expected": 5, "shouldPass": false, "description": "equal is not greater"},
+      {"actual": -1, "expected": -5, "shouldPass": true, "description": "negative numbers"},
+      {"actual": 0.5, "expected": 0.1, "shouldPass": true, "description": "floats"}
+    ],
+    
+    "toBeLessThan": [
+      {"actual": 5, "expected": 10, "shouldPass": true},
+      {"actual": 10, "expected": 5, "shouldPass": false},
+      {"actual": 5, "expected": 5, "shouldPass": false, "description": "equal is not less"},
+      {"actual": -5, "expected": -1, "shouldPass": true, "description": "negative numbers"}
+    ],
+    
+    "toBeCloseTo": [
+      {"actual": 0.1, "expected": 0.1, "precision": 5, "shouldPass": true},
+      {"actual": 0.30000000000000004, "expected": 0.3, "precision": 5, "shouldPass": true, "description": "JS float issue"},
+      {"actual": 0.1, "expected": 0.2, "precision": 1, "shouldPass": false},
+      {"actual": 3.14159, "expected": 3.14, "precision": 2, "shouldPass": true}
+    ],
+    
+    "toMatch": [
+      {"actual": "hello123", "pattern": "%d+", "shouldPass": true, "description": "digits pattern"},
+      {"actual": "hello", "pattern": "%d+", "shouldPass": false, "description": "no digits"},
+      {"actual": "test@example.com", "pattern": "@.*%.com", "shouldPass": true, "description": "email-like"},
+      {"actual": "HELLO", "pattern": "^%u+$", "shouldPass": true, "description": "uppercase only"},
+      {"actual": "hello", "pattern": "^%u+$", "shouldPass": false, "description": "not uppercase"}
+    ],
+    
+    "toHaveProperty": [
+      {"actual": {"name": "Alice"}, "key": "name", "shouldPass": true},
+      {"actual": {"age": 30}, "key": "age", "value": 30, "shouldPass": true},
+      {"actual": {"age": 30}, "key": "age", "value": 25, "shouldPass": false},
+      {"actual": {}, "key": "missing", "shouldPass": false},
+      {"actual": {"nested": {"deep": true}}, "key": "nested", "shouldPass": true}
+    ]
+  },
+
+  "hooks": {
+    "execution_order": [
+      {
+        "testCount": 1,
+        "expectedBeforeAllCalls": 1,
+        "expectedAfterAllCalls": 1,
+        "expectedBeforeEachCalls": 1,
+        "expectedAfterEachCalls": 1,
+        "description": "single test hook counts"
+      },
+      {
+        "testCount": 3,
+        "expectedBeforeAllCalls": 1,
+        "expectedAfterAllCalls": 1,
+        "expectedBeforeEachCalls": 3,
+        "expectedAfterEachCalls": 3,
+        "description": "multiple tests hook counts"
+      },
+      {
+        "testCount": 5,
+        "expectedBeforeAllCalls": 1,
+        "expectedAfterAllCalls": 1,
+        "expectedBeforeEachCalls": 5,
+        "expectedAfterEachCalls": 5,
+        "description": "five tests hook counts"
+      }
+    ],
+    
+    "hook_types": [
+      {"hookName": "beforeAll", "runsPerSuite": 1, "runsPerTest": 0},
+      {"hookName": "afterAll", "runsPerSuite": 1, "runsPerTest": 0},
+      {"hookName": "beforeEach", "runsPerSuite": 0, "runsPerTest": 1},
+      {"hookName": "afterEach", "runsPerSuite": 0, "runsPerTest": 1}
+    ]
+  },
+
+  "parameterized_tests": {
+    "interpolation": [
+      {
+        "template": "adds $a + $b = $sum",
+        "values": {"a": 1, "b": 2, "sum": 3},
+        "expectedName": "adds 1 + 2 = 3"
+      },
+      {
+        "template": "user $name is $age years old",
+        "values": {"name": "Alice", "age": 30},
+        "expectedName": "user Alice is 30 years old"
+      },
+      {
+        "template": "multiplies $x by $y",
+        "values": {"x": 5, "y": 10},
+        "expectedName": "multiplies 5 by 10"
+      },
+      {
+        "template": "checks $flag status",
+        "values": {"flag": true},
+        "expectedName": "checks true status"
+      }
+    ],
+    
+    "edge_cases": [
+      {
+        "template": "handles $data",
+        "valueType": "table",
+        "expectedSubstitution": "[table]",
+        "description": "tables become [table]"
+      },
+      {
+        "template": "empty $missing field",
+        "values": {},
+        "expectedName": "empty $missing field",
+        "description": "unmatched placeholders remain"
+      }
+    ]
+  },
+
+  "test_status": {
+    "states": [
+      {"initial": "pending", "afterPass": "passed", "afterFail": "failed"},
+      {"skipped": true, "status": "skipped"},
+      {"only": true, "status": "pending"}
+    ]
+  },
+
+  "configuration": {
+    "defaults": {
+      "timeout": 5000,
+      "verbose": true,
+      "stopOnFirstFailure": false,
+      "filter": null
+    },
+    
+    "custom_values": [
+      {"option": "timeout", "value": 10000, "description": "custom timeout"},
+      {"option": "verbose", "value": false, "description": "disable verbose"},
+      {"option": "stopOnFirstFailure", "value": true, "description": "fail fast"},
+      {"option": "filter", "value": "login", "description": "filter by name"}
+    ]
+  },
+
+  "json_loading": {
+    "path_navigation": [
+      {"json": "{\"a\": {\"b\": [1, 2]}}", "path": "a.b", "expectedLength": 2},
+      {"json": "{\"tests\": {\"login\": [{\"user\": \"alice\"}]}}", "path": "tests.login", "expectedLength": 1},
+      {"json": "{\"deep\": {\"nested\": {\"data\": [1]}}}", "path": "deep.nested.data", "expectedLength": 1}
+    ],
+    
+    "error_cases": [
+      {"json": "{\"a\": 1}", "path": "b.c", "shouldError": true, "description": "invalid path"},
+      {"json": "invalid json", "path": null, "shouldError": true, "description": "parse error"},
+      {"json": "{\"a\": null}", "path": "a", "shouldReturnEmpty": true, "description": "null becomes empty"}
+    ]
+  },
+
+  "negation": {
+    "never_modifier": [
+      {"matcher": "toBe", "actual": 1, "expected": 2, "negated": true, "shouldPass": true},
+      {"matcher": "toBe", "actual": 1, "expected": 1, "negated": true, "shouldPass": false},
+      {"matcher": "toBeNil", "actual": 1, "negated": true, "shouldPass": true},
+      {"matcher": "toBeNil", "actual": null, "negated": true, "shouldPass": false},
+      {"matcher": "toBeTruthy", "actual": false, "negated": true, "shouldPass": true},
+      {"matcher": "toBeFalsy", "actual": true, "negated": true, "shouldPass": true},
+      {"matcher": "toContain", "actual": [1, 2, 3], "expected": 5, "negated": true, "shouldPass": true}
+    ]
+  },
+
+  "error_messages": {
+    "assertion_failures": [
+      {
+        "matcher": "toBe",
+        "actual": 1,
+        "expected": 2,
+        "expectedMessageContains": "Expected 1 to be 2"
+      },
+      {
+        "matcher": "toEqual",
+        "actual": {"a": 1},
+        "expected": {"a": 2},
+        "expectedMessageContains": "deeply equal"
+      },
+      {
+        "matcher": "toBeType",
+        "actual": 42,
+        "expectedType": "string",
+        "expectedMessageContains": "Expected type to be string"
+      }
+    ]
+  }
+}
