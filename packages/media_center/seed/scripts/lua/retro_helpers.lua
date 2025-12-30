@@ -3,6 +3,59 @@
   Provides Lua API for managing game sessions, save states, and streaming
 ]]
 
+---@class RetroHelpersModule
+---@field BUTTON table<string, string> Button constants matching libretro RETRO_DEVICE_ID_JOYPAD_*
+---@field AXIS table<string, string> Analog stick axis identifiers
+---@field MOTION table<string, function> Common fighting game motion inputs
+---@field SYSTEMS table<string, SystemInfo> System name mappings and core information
+---@field SHADERS table<string, string> Available shader preset descriptions
+---@field tap fun(session_id: string, button: string, player?: number, duration_ms?: number) Press and release a button
+---@field press fun(session_id: string, button: string, player?: number) Press a button (hold down)
+---@field release fun(session_id: string, button: string, player?: number) Release a button
+---@field release_all fun(session_id: string, player?: number) Release all buttons for a player
+---@field up fun(session_id: string, player?: number) Tap UP button
+---@field down fun(session_id: string, player?: number) Tap DOWN button
+---@field left fun(session_id: string, player?: number) Tap LEFT button
+---@field right fun(session_id: string, player?: number) Tap RIGHT button
+---@field hold_direction fun(session_id: string, direction: string, duration_ms: number, player?: number) Hold a direction
+---@field diagonal fun(session_id: string, horizontal: string, vertical: string, duration_ms?: number, player?: number) Move in a diagonal direction
+---@field set_analog fun(session_id: string, stick: string, x: number, y: number, player?: number) Set analog stick position
+---@field center_analog fun(session_id: string, stick: string, player?: number) Center (release) analog stick
+---@field flick_analog fun(session_id: string, stick: string, x: number, y: number, duration_ms?: number, player?: number) Move analog stick and return to center
+---@field combo fun(session_id: string, inputs: ComboInput[], player?: number) Execute a sequence of inputs
+---@field special_move fun(session_id: string, motion: function, button: string, player?: number) Execute a motion then press a button
+---@field get_available_cores fun(): LibretroCore[] Get available cores from the daemon
+---@field get_core_for_rom fun(rom_path: string): LibretroCore|nil Get recommended core for a ROM file
+---@field start_session fun(config: RetroSessionConfig): string|nil, string? Start a new gaming session
+---@field stop_session fun(session_id: string): boolean Stop a gaming session
+---@field set_paused fun(session_id: string, paused: boolean): boolean Pause/resume a session
+---@field get_session_state fun(session_id: string): RetroSessionState|nil Get session state
+---@field list_sessions fun(): RetroSessionState[] List all active sessions
+---@field save_state fun(session_id: string, slot?: number, description?: string): SaveState|nil Create a save state
+---@field load_state fun(session_id: string, slot: number): boolean Load a save state
+---@field list_save_states fun(session_id: string): SaveState[] List save states for a session
+---@field delete_save_state fun(session_id: string, state_id: string): boolean Delete a save state
+---@field send_input fun(session_id: string, player: number, button: string, pressed: boolean) Send button input
+---@field send_analog fun(session_id: string, player: number, stick: string, x: number, y: number) Send analog stick input
+---@field set_speed fun(session_id: string, speed: number) Set game speed multiplier
+---@field set_fast_forward fun(session_id: string, enabled: boolean) Toggle fast forward
+---@field frame_advance fun(session_id: string) Advance single frame (when paused)
+---@field take_screenshot fun(session_id: string): string|nil Take a screenshot
+---@field start_recording fun(session_id: string, output_path: string): boolean Start recording gameplay
+---@field stop_recording fun(session_id: string): string|nil Stop recording
+---@field start_streaming fun(session_id: string, rtmp_url: string): boolean Start streaming to RTMP
+---@field stop_streaming fun(session_id: string): boolean Stop streaming
+---@field set_shader fun(session_id: string, preset: string) Set shader preset
+---@field get_shaders fun(): string[] Get available shader presets
+---@field load_cheats fun(session_id: string, codes: string[]) Load cheat codes
+---@field set_cheat_enabled fun(session_id: string, index: number, enabled: boolean) Enable/disable a cheat
+---@field host_netplay fun(session_id: string, port: number, password?: string): string|nil Host a netplay session
+---@field join_netplay fun(session_id: string, host: string, port: number, password?: string): boolean Join a netplay session
+---@field disconnect_netplay fun(session_id: string) Disconnect from netplay
+---@field ra_login fun(username: string, password: string): string|nil Login to RetroAchievements
+---@field get_achievements fun(session_id: string): Achievement[] Get achievements for current game
+---@field quick_start fun(rom_path: string, options?: QuickStartOptions): string|nil, string? Quick start a game with auto-detected core
+---@field format_playtime fun(seconds: number): string Format play time as HH:MM:SS
 local retro_helpers = {}
 
 -- ============================================================================
@@ -279,37 +332,71 @@ end
 -- Type Definitions
 -- ============================================================================
 
---- @class LibretroCore
---- @field name string Core identifier
---- @field display_name string Human-readable name
---- @field system string System type (nes, snes, genesis, etc.)
---- @field supported_extensions string[] File extensions this core handles
+---@class LibretroCore
+---@field name string Core identifier
+---@field display_name string Human-readable name
+---@field system string System type (nes, snes, genesis, etc.)
+---@field supported_extensions string[] File extensions this core handles
 
---- @class RetroSessionConfig
---- @field rom_path string Path to the ROM file
---- @field core_name string Core to use
---- @field output_width? number Video width (default 1280)
---- @field output_height? number Video height (default 720)
---- @field shader_preset? string Shader to apply (crt-royale, etc.)
---- @field stream_url? string RTMP URL for streaming
---- @field netplay_enabled? boolean Enable netplay
+---@class RetroSessionConfig
+---@field rom_path string Path to the ROM file
+---@field core_name string Core to use
+---@field output_width? number Video width (default 1280)
+---@field output_height? number Video height (default 720)
+---@field shader_preset? string Shader to apply (crt-royale, etc.)
+---@field stream_url? string RTMP URL for streaming
+---@field netplay_enabled? boolean Enable netplay
 
---- @class RetroSessionState
---- @field session_id string
---- @field is_running boolean
---- @field is_paused boolean
---- @field rom_name string
---- @field core_name string
---- @field fps number Current FPS
---- @field frame_count number Total frames rendered
---- @field play_time number Seconds played
+---@class RetroSessionState
+---@field session_id string Unique session identifier
+---@field is_running boolean Whether session is active
+---@field is_paused boolean Whether session is paused
+---@field rom_name string Name of ROM file
+---@field core_name string Name of libretro core
+---@field fps number Current frames per second
+---@field frame_count number Total frames rendered
+---@field play_time number Seconds played
 
---- @class SaveState
---- @field state_id string
---- @field slot number Slot number (0-9)
---- @field created_at string ISO timestamp
---- @field screenshot_path string Path to screenshot
---- @field description string User description
+---@class SaveState
+---@field state_id string Unique state identifier
+---@field slot number Slot number (0-9)
+---@field created_at string ISO timestamp
+---@field screenshot_path string Path to screenshot
+---@field description string User description
+
+---@class ComboInput
+---@field button? string Button to press
+---@field analog? AnalogInput Analog stick input
+---@field duration_ms? number How long to hold the input
+---@field wait_after_ms? number Wait time after this input
+
+---@class AnalogInput
+---@field stick string Stick identifier ("left" or "right")
+---@field x number Horizontal axis value (-1.0 to 1.0)
+---@field y number Vertical axis value (-1.0 to 1.0)
+
+---@class SystemInfo
+---@field name string Full system name
+---@field cores string[] List of compatible core names
+
+---@class Achievement
+---@field id string Achievement ID
+---@field title string Achievement title
+---@field description string Achievement description
+---@field points number Points value
+---@field unlocked boolean Whether unlocked
+---@field unlock_time? string ISO timestamp when unlocked
+
+---@class QuickStartOptions
+---@field width? number Video width
+---@field height? number Video height
+---@field shader? string Shader preset name
+---@field stream_url? string RTMP streaming URL
+---@field netplay? boolean Enable netplay
+
+---@class HTTPResponse
+---@field status number HTTP status code
+---@field json table Parsed JSON response body
 
 -- ============================================================================
 -- System Definitions
