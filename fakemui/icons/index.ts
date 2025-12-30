@@ -142,6 +142,7 @@ export { Cloud } from './Cloud'
 // Developer & Tools
 export { Terminal } from './Terminal'
 export { Archive } from './Archive'
+export { Bug } from './Bug'
 export { Clipboard } from './Clipboard'
 export { Package } from './Package'
 export { Layers } from './Layers'

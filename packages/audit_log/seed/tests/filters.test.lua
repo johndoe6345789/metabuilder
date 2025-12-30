@@ -4,6 +4,18 @@
 local M = {}
 
 -- Sample audit log data for testing
+---@class AuditLogEntry
+---@field id string
+---@field operation string
+---@field resource string
+---@field resourceId string
+---@field username string
+---@field timestamp number
+---@field ipAddress string
+---@field success boolean
+---@field errorMessage string|nil
+
+---@return AuditLogEntry[]
 local function createSampleLogs()
   return {
     {
