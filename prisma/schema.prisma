@@ -574,3 +574,330 @@ model PowerTransferRequest {
   @@index([status])
   @@index([expiresAt])
 }
+
+// =============================================================================
+// GENERIC ENTITIES FOR PACKAGES
+// =============================================================================
+
+// Tags - Attach labels to any entity (posts, media, threads, etc.)
+model Tag {
+  id        String  @id @default(cuid())
+  tenantId  String
+  name      String
+  slug      String
+  color     String? // Hex color for UI
+  icon      String?
+  category  String? // Group tags: 'topic', 'status', 'priority', etc.
+  createdAt BigInt
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([category])
+}
+
+// Tagging - Many-to-many junction for tags on any entity
+model Tagging {
+  id         String @id @default(cuid())
+  tenantId   String
+  tagId      String
+  entityType String // 'post', 'media', 'thread', 'user', etc.
+  entityId   String
+  createdAt  BigInt
+  createdBy  String?
+
+  @@unique([tagId, entityType, entityId])
+  @@index([tenantId])
+  @@index([tagId])
+  @@index([entityType, entityId])
+}
+
+// Relationships - Generic many-to-many between any entities
+model EntityRelation {
+  id             String  @id @default(cuid())
+  tenantId       String
+  sourceType     String  // 'user', 'post', 'product', etc.
+  sourceId       String
+  targetType     String
+  targetId       String
+  relationType   String  // 'follows', 'blocks', 'related_to', 'parent_of', etc.
+  metadata       String? // JSON: additional relation data
+  createdAt      BigInt
+  createdBy      String?
+
+  @@unique([sourceType, sourceId, targetType, targetId, relationType])
+  @@index([tenantId])
+  @@index([sourceType, sourceId])
+  @@index([targetType, targetId])
+  @@index([relationType])
+}
+
+// Generic Task Queue - Background jobs for any package
+model Task {
+  id          String  @id @default(cuid())
+  tenantId    String
+  queue       String  // 'email', 'export', 'import', 'cleanup', etc.
+  type        String  // Specific task type within queue
+  status      String  @default("pending") // pending, running, completed, failed, cancelled
+  priority    Int     @default(0)
+  payload     String  // JSON: task input data
+  result      String? // JSON: task output/result
+  error       String?
+  attempts    Int     @default(0)
+  maxAttempts Int     @default(3)
+  runAt       BigInt? // Scheduled execution time
+  startedAt   BigInt?
+  completedAt BigInt?
+  createdAt   BigInt
+  createdBy   String?
+
+  @@index([tenantId])
+  @@index([queue, status])
+  @@index([status, priority])
+  @@index([runAt])
+}
+
+// Webhooks - Outbound event notifications
+model Webhook {
+  id          String  @id @default(cuid())
+  tenantId    String
+  name        String
+  url         String
+  secret      String? // For HMAC signing
+  events      String  // JSON: array of event types to trigger on
+  headers     String? // JSON: custom headers to include
+  enabled     Boolean @default(true)
+  lastTriggered BigInt?
+  failCount   Int     @default(0)
+  createdAt   BigInt
+  updatedAt   BigInt?
+
+  @@index([tenantId])
+  @@index([enabled])
+}
+
+// Webhook Deliveries - Log of webhook attempts
+model WebhookDelivery {
+  id         String  @id @default(cuid())
+  webhookId  String
+  event      String
+  payload    String  // JSON: what was sent
+  response   String? // JSON: response received
+  statusCode Int?
+  success    Boolean
+  duration   Int?    // ms
+  error      String?
+  createdAt  BigInt
+
+  @@index([webhookId])
+  @@index([createdAt])
+  @@index([success])
+}
+
+// Attachments - Generic file attachments to any entity
+model Attachment {
+  id           String  @id @default(cuid())
+  tenantId     String
+  entityType   String  // 'comment', 'post', 'message', etc.
+  entityId     String
+  filename     String
+  originalName String
+  mimeType     String
+  size         BigInt
+  path         String
+  metadata     String? // JSON: dimensions, duration, etc.
+  sortOrder    Int     @default(0)
+  createdAt    BigInt
+  createdBy    String?
+
+  @@index([tenantId])
+  @@index([entityType, entityId])
+}
+
+// Reactions - Likes, emoji reactions on any entity
+model Reaction {
+  id         String @id @default(cuid())
+  tenantId   String
+  userId     String
+  entityType String // 'post', 'comment', 'media', etc.
+  entityId   String
+  type       String // 'like', 'love', 'laugh', 'wow', 'sad', 'angry', '+1', etc.
+  createdAt  BigInt
+
+  @@unique([userId, entityType, entityId, type])
+  @@index([tenantId])
+  @@index([entityType, entityId])
+  @@index([userId])
+}
+
+// Bookmarks/Favorites - Users saving any entity
+model Bookmark {
+  id         String  @id @default(cuid())
+  tenantId   String
+  userId     String
+  entityType String  // 'post', 'thread', 'media', 'product', etc.
+  entityId   String
+  folder     String? // Optional folder/collection
+  note       String? // User's note about the bookmark
+  createdAt  BigInt
+
+  @@unique([userId, entityType, entityId])
+  @@index([tenantId])
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([folder])
+}
+
+// Activity Feed - Timeline events
+model Activity {
+  id         String  @id @default(cuid())
+  tenantId   String
+  userId     String?
+  action     String  // 'created', 'updated', 'deleted', 'shared', 'mentioned', etc.
+  entityType String
+  entityId   String
+  targetType String? // Secondary entity (e.g., 'user' mentioned in 'post')
+  targetId   String?
+  metadata   String? // JSON: extra context
+  isPublic   Boolean @default(true)
+  createdAt  BigInt
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@index([isPublic, createdAt])
+}
+
+// Counters - Denormalized counts for any entity
+model Counter {
+  id         String @id @default(cuid())
+  tenantId   String
+  entityType String
+  entityId   String
+  name       String // 'views', 'likes', 'shares', 'downloads', etc.
+  value      BigInt @default(0)
+  updatedAt  BigInt
+
+  @@unique([entityType, entityId, name])
+  @@index([tenantId])
+  @@index([entityType, entityId])
+}
+
+// Versions - Version history for any entity
+model Version {
+  id         String  @id @default(cuid())
+  tenantId   String
+  entityType String
+  entityId   String
+  version    Int
+  data       String  // JSON: snapshot of entity state
+  changes    String? // JSON: diff from previous version
+  message    String? // Commit message
+  createdAt  BigInt
+  createdBy  String?
+
+  @@unique([entityType, entityId, version])
+  @@index([tenantId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+// Templates - Reusable content templates
+model Template {
+  id          String  @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  category    String  // 'email', 'page', 'component', 'workflow', etc.
+  content     String  // JSON or template string
+  variables   String? // JSON: list of variable placeholders
+  isPublic    Boolean @default(false)
+  createdAt   BigInt
+  updatedAt   BigInt?
+  createdBy   String?
+
+  @@unique([tenantId, category, name])
+  @@index([tenantId])
+  @@index([category])
+  @@index([isPublic])
+}
+
+// Scheduled Jobs - Cron-like recurring tasks
+model ScheduledJob {
+  id          String  @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  schedule    String  // Cron expression: "0 0 * * *"
+  taskType    String  // What to run
+  taskPayload String  // JSON: parameters
+  enabled     Boolean @default(true)
+  lastRunAt   BigInt?
+  nextRunAt   BigInt?
+  lastStatus  String? // success, failed
+  lastError   String?
+  runCount    Int     @default(0)
+  createdAt   BigInt
+  updatedAt   BigInt?
+
+  @@index([tenantId])
+  @@index([enabled, nextRunAt])
+}
+
+// Locks - Distributed locking for concurrency control
+model Lock {
+  id         String  @id @default(cuid())
+  tenantId   String?
+  resource   String  // What's being locked
+  owner      String  // Who holds the lock (session ID, worker ID, etc.)
+  expiresAt  BigInt
+  acquiredAt BigInt
+  metadata   String? // JSON: additional context
+
+  @@unique([tenantId, resource])
+  @@index([expiresAt])
+}
+
+// Messages - Generic messaging/inbox system
+model Message {
+  id           String  @id @default(cuid())
+  tenantId     String
+  senderId     String?
+  recipientId  String
+  threadId     String? // For threaded conversations
+  subject      String?
+  body         String
+  isRead       Boolean @default(false)
+  isArchived   Boolean @default(false)
+  isDeleted    Boolean @default(false)
+  metadata     String? // JSON: attachments, flags, etc.
+  createdAt    BigInt
+  readAt       BigInt?
+
+  @@index([tenantId])
+  @@index([recipientId, isRead])
+  @@index([senderId])
+  @@index([threadId])
+  @@index([createdAt])
+}
+
+// Invitations - Generic invite system
+model Invitation {
+  id         String  @id @default(cuid())
+  tenantId   String
+  type       String  // 'team', 'project', 'event', etc.
+  targetId   String? // What they're being invited to
+  email      String
+  token      String  @unique
+  role       String? // Role to assign on acceptance
+  invitedBy  String
+  status     String  @default("pending") // pending, accepted, declined, expired
+  expiresAt  BigInt
+  acceptedAt BigInt?
+  createdAt  BigInt
+
+  @@index([tenantId])
+  @@index([email])
+  @@index([token])
+  @@index([status])
+}
