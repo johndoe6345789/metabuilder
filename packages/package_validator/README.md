@@ -183,10 +183,17 @@ Must be an array of component objects.
 **Recommended Files:**
 - `seed/scripts/` (directory)
 - `seed/scripts/init.lua` (if exports.scripts is defined)
-- `seed/scripts/tests/` (directory for test files)
+- `seed/scripts/tests/` (directory - required if `lua_test` is a devDependency)
 - `static_content/icon.svg`
 - `README.md`
 - `examples/` (directory)
+
+**Test Files (when using lua_test):**
+
+If your package includes `lua_test` as a devDependency, the following test files are recommended:
+- `seed/scripts/tests/metadata.test.lua` - Tests for metadata validation
+- `seed/scripts/tests/components.test.lua` - Tests for component validation
+- Additional `*.test.lua` files for your package's functionality
 
 ### Lua Files
 
