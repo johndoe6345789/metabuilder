@@ -9,7 +9,9 @@
   "dependencies": [
     "ui_permissions"
   ],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "pages": [
       "level1"
@@ -30,5 +32,16 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 1
+  "minLevel": 1,
+  "primary": true,
+  "permissions": {
+    "home.view": {
+      "minLevel": 1,
+      "description": "View home page"
+    },
+    "home.server.status": {
+      "minLevel": 1,
+      "description": "View server status"
+    }
+  }
 }

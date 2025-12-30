@@ -7,7 +7,9 @@
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [
       "StatsGrid",
@@ -28,5 +30,16 @@
       "tests/formatters.cases.json"
     ]
   },
-  "minLevel": 2
+  "minLevel": 2,
+  "primary": false,
+  "permissions": {
+    "stats.grid.view": {
+      "minLevel": 2,
+      "description": "View stats grids"
+    },
+    "stats.grid.configure": {
+      "minLevel": 3,
+      "description": "Configure stats grids"
+    }
+  }
 }

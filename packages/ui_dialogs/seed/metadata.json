@@ -7,7 +7,9 @@
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [
       "ConfirmDialog",
@@ -29,5 +31,20 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 1
+  "minLevel": 1,
+  "primary": false,
+  "permissions": {
+    "dialog.confirm": {
+      "minLevel": 1,
+      "description": "Use confirmation dialogs"
+    },
+    "dialog.alert": {
+      "minLevel": 1,
+      "description": "Use alert dialogs"
+    },
+    "dialog.form": {
+      "minLevel": 1,
+      "description": "Use form dialogs"
+    }
+  }
 }

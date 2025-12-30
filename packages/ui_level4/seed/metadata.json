@@ -13,7 +13,9 @@
     "user_manager",
     "admin_dialog"
   ],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "pages": [
       "level4"
@@ -35,5 +37,24 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 4
+  "minLevel": 4,
+  "primary": true,
+  "permissions": {
+    "level4.settings.edit": {
+      "minLevel": 4,
+      "description": "Edit system settings"
+    },
+    "level4.users.manage": {
+      "minLevel": 4,
+      "description": "Manage users"
+    },
+    "level4.panel.view": {
+      "minLevel": 4,
+      "description": "View admin panel"
+    },
+    "level4.users.ban": {
+      "minLevel": 4,
+      "description": "Ban users"
+    }
+  }
 }

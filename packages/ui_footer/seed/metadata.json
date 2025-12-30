@@ -7,7 +7,9 @@
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [
       "AppFooter"
@@ -27,5 +29,12 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 1
+  "minLevel": 1,
+  "primary": false,
+  "permissions": {
+    "footer.view": {
+      "minLevel": 1,
+      "description": "View application footer"
+    }
+  }
 }

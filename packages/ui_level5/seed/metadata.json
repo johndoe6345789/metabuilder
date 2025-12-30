@@ -13,7 +13,9 @@
     "schema_editor",
     "workflow_editor"
   ],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "pages": [
       "level5"
@@ -37,5 +39,24 @@
       "tests/transfer.cases.json"
     ]
   },
-  "minLevel": 5
+  "minLevel": 5,
+  "primary": true,
+  "permissions": {
+    "level5.schemas.manage": {
+      "minLevel": 5,
+      "description": "Manage database schemas"
+    },
+    "level5.workflows.manage": {
+      "minLevel": 5,
+      "description": "Manage workflows"
+    },
+    "level5.panel.view": {
+      "minLevel": 5,
+      "description": "View God panel"
+    },
+    "level5.packages.manage": {
+      "minLevel": 5,
+      "description": "Manage packages"
+    }
+  }
 }

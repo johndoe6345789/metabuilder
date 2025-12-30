@@ -9,7 +9,9 @@
   "dependencies": [
     "ui_permissions"
   ],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [
       "AccessDenied",
@@ -34,5 +36,12 @@
       "tests/gate.cases.json"
     ]
   },
-  "minLevel": 2
+  "minLevel": 2,
+  "primary": false,
+  "permissions": {
+    "auth.gate.access": {
+      "minLevel": 2,
+      "description": "Access auth-gated content"
+    }
+  }
 }

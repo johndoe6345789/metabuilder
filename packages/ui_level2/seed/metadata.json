@@ -11,7 +11,9 @@
     "ui_header",
     "ui_intro"
   ],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "pages": [
       "level2"
@@ -33,5 +35,28 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 2
+  "minLevel": 2,
+  "primary": true,
+  "permissions": {
+    "level2.comments.post": {
+      "minLevel": 2,
+      "description": "Post comments"
+    },
+    "level2.profile.view": {
+      "minLevel": 2,
+      "description": "View profile"
+    },
+    "level2.comments.view": {
+      "minLevel": 2,
+      "description": "View comments"
+    },
+    "level2.profile.edit": {
+      "minLevel": 2,
+      "description": "Edit profile"
+    },
+    "level2.dashboard.view": {
+      "minLevel": 2,
+      "description": "View user dashboard"
+    }
+  }
 }

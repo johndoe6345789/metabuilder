@@ -6,8 +6,13 @@
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "media",
-  "dependencies": ["ui_permissions", "dashboard"],
-  "devDependencies": ["lua_test"],
+  "dependencies": [
+    "ui_permissions",
+    "dashboard"
+  ],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": []
   },
@@ -23,7 +28,34 @@
   },
   "minLevel": 2,
   "schema": {
-    "entities": ["StreamChannel", "StreamSchedule", "StreamScene"],
+    "entities": [
+      "StreamChannel",
+      "StreamSchedule",
+      "StreamScene"
+    ],
     "path": "schema/entities.yaml"
+  },
+  "primary": true,
+  "permissions": {
+    "stream.broadcast": {
+      "minLevel": 3,
+      "description": "Start live broadcast"
+    },
+    "stream.create": {
+      "minLevel": 3,
+      "description": "Create stream channels"
+    },
+    "stream.scene.manage": {
+      "minLevel": 3,
+      "description": "Manage stream scenes"
+    },
+    "stream.schedule": {
+      "minLevel": 3,
+      "description": "Manage stream schedules"
+    },
+    "stream.view": {
+      "minLevel": 2,
+      "description": "View streams"
+    }
   }
 }

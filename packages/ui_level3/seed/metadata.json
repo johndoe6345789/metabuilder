@@ -11,7 +11,9 @@
     "ui_header",
     "ui_intro"
   ],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "pages": [
       "level3"
@@ -35,5 +37,24 @@
       "tests/moderation.cases.json"
     ]
   },
-  "minLevel": 3
+  "minLevel": 3,
+  "primary": true,
+  "permissions": {
+    "level3.panel.view": {
+      "minLevel": 3,
+      "description": "View moderator panel"
+    },
+    "level3.users.view": {
+      "minLevel": 3,
+      "description": "View user list"
+    },
+    "level3.reports.view": {
+      "minLevel": 3,
+      "description": "View reports"
+    },
+    "level3.content.moderate": {
+      "minLevel": 3,
+      "description": "Moderate content"
+    }
+  }
 }
