@@ -5,6 +5,9 @@
 
 import * as fengari from 'fengari-web'
 
+import type { JsonValue } from '@/types/utility-types'
+import type { LuaState } from '../types'
+
 import { tableToJS } from './table-to-js'
 
 const lua = fengari.lua
@@ -15,7 +18,7 @@ const lua = fengari.lua
  * @param index - Stack index (default: -1 for top of stack)
  * @returns JavaScript value
  */
-export const fromLua = (L: any, index: number = -1): any => {
+export const fromLua = (L: LuaState, index: number = -1): JsonValue => {
   const type = lua.lua_type(L, index)
 
   switch (type) {

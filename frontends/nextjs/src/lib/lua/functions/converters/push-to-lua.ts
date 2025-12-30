@@ -5,6 +5,9 @@
 
 import * as fengari from 'fengari-web'
 
+import type { JsonValue } from '@/types/utility-types'
+import type { LuaState } from '../types'
+
 const lua = fengari.lua
 
 /**
@@ -12,7 +15,7 @@ const lua = fengari.lua
  * @param L - Lua state
  * @param value - JavaScript value to push
  */
-export const pushToLua = (L: any, value: any): void => {
+export const pushToLua = (L: LuaState, value: JsonValue): void => {
   if (value === null || value === undefined) {
     lua.lua_pushnil(L)
   } else if (typeof value === 'boolean') {

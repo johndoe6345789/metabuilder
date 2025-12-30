@@ -5,6 +5,9 @@
 
 import * as fengari from 'fengari-web'
 
+import type { JsonValue } from '@/types/utility-types'
+import type { LuaState } from '../types'
+
 const lua = fengari.lua
 
 /**
@@ -13,8 +16,8 @@ const lua = fengari.lua
  * @param index - Stack index of the table
  * @returns JavaScript array or object
  */
-export const tableToJS = (L: any, index: number): any => {
-  const result: any = {}
+export const tableToJS = (L: LuaState, index: number): JsonValue => {
+  const result: Record<string, JsonValue> = {}
   let isArray = true
   let arrayIndex = 1
 
@@ -50,7 +53,7 @@ export const tableToJS = (L: any, index: number): any => {
 /**
  * Helper to convert single Lua value (avoids circular dependency)
  */
-const fromLuaValue = (L: any, index: number): any => {
+const fromLuaValue = (L: LuaState, index: number): JsonValue => {
   const type = lua.lua_type(L, index)
 
   switch (type) {

@@ -3,13 +3,29 @@ import type { PackageContent, PackageManifest } from '@/lib/package-types'
 import type { ExportPackageOptions } from '@/lib/packages/core/package-export'
 import { downloadZip, exportPackageAsZip } from '@/lib/packages/core/package-export'
 
+type PackageCategory = PackageManifest['category']
+
+const PACKAGE_CATEGORIES: PackageCategory[] = [
+  'social',
+  'entertainment',
+  'productivity',
+  'gaming',
+  'ecommerce',
+  'content',
+  'other',
+]
+
+function normalizeCategory(category?: string): PackageCategory {
+  return PACKAGE_CATEGORIES.includes(category as PackageCategory) ? (category as PackageCategory) : 'other'
+}
+
 const buildManifest = (manifest: Partial<PackageManifest>): PackageManifest => ({
   id: `pkg_${Date.now()}`,
   name: manifest.name!,
   version: manifest.version || '1.0.0',
   description: manifest.description || '',
   author: manifest.author || 'Anonymous',
-  category: (manifest.category as any) || 'other',
+  category: normalizeCategory(manifest.category),
   icon: '📦',
   screenshots: [],
   tags: manifest.tags || [],

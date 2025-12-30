@@ -4,7 +4,7 @@ import type { LuaEngine } from '@/lib/lua-engine'
 import type { ComponentInstance } from '@/lib/types/builder-types'
 import type { User } from '@/lib/types/level-types'
 
-export async function executeLuaScript(scriptId: string, context: any): Promise<any> {
+export async function executeLuaScript(scriptId: string, context: Record<string, unknown>): Promise<unknown> {
   const scripts = await Database.getLuaScripts()
   const script = scripts.find(s => s.id === scriptId)
   if (!script) {
