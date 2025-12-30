@@ -1,0 +1,13 @@
+// Divider atoms - flat selectors
+
+.divider {
+  height: 1px;
+  background: var(--color-divider);
+  margin: var(--spacing-md) 0;
+}
+
+.divider--vertical {
+  width: 1px;
+  height: auto;
+  margin: 0 var(--spacing-md);
+}

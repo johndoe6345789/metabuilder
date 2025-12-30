@@ -1,0 +1,39 @@
+// Size utility classes
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.max-w-full { max-width: 100%; }
+.max-w-sm { max-width: 400px; }
+.max-w-md { max-width: 600px; }
+.max-w-lg { max-width: 800px; }
+.min-w-0 { min-width: 0; }
+
+// Margin auto
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+// Overflow
+.overflow-hidden { overflow: hidden; }
+.overflow-auto { overflow: auto; }
+.overflow-x-auto { overflow-x: auto; }
+.overflow-y-auto { overflow-y: auto; }
+
+// Visibility
+.hidden { display: none; }
+.invisible { visibility: hidden; }
+.visible { visibility: visible; }
+
+// Cursor
+.cursor-pointer { cursor: pointer; }
+.cursor-default { cursor: default; }
+
+// Whitespace / text overflow
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.whitespace-nowrap { white-space: nowrap; }
+.whitespace-pre { white-space: pre; }
+
+// Font family
+.font-mono { font-family: var(--font-mono); }

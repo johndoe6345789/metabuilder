@@ -1,0 +1,32 @@
+// Accordion atoms - flat selectors
+
+.accordion {
+  background: var(--color-bg-paper);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  cursor: pointer;
+}
+
+.accordion-header:hover {
+  background: var(--color-bg-hover);
+}
+
+.accordion-icon {
+  transition: transform var(--transition-normal);
+}
+
+.accordion--open .accordion-icon {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  padding: 0 var(--spacing-md) var(--spacing-md);
+}

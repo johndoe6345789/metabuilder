@@ -1,0 +1,121 @@
+// List atoms - flat selectors
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list--spaced {
+  margin-bottom: var(--spacing-md);
+}
+
+.list--dense .list-item {
+  padding: var(--spacing-xs) var(--spacing-md);
+}
+
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item--borderless {
+  border-bottom: none;
+  border-radius: var(--radius-md);
+}
+
+.list-item--clickable {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.list-item--clickable:hover {
+  background: var(--color-bg-elevated);
+}
+
+.list-item--error {
+  background: var(--color-error-bg);
+}
+
+.list-item--muted {
+  opacity: 0.7;
+}
+
+.list-item-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.list-item-icon--success {
+  color: var(--color-success);
+}
+
+.list-item-icon--error {
+  color: var(--color-error);
+}
+
+.list-item-icon--pending {
+  color: var(--color-text-secondary);
+  animation: pulse 1s infinite;
+}
+
+.list-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.list-item-title {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.list-item-primary {
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-item-secondary {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.list-item-meta {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.list-item-desc {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Button-style list item (full-width clickable)
+.list-item-button {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}

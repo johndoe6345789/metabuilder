@@ -1,0 +1,19 @@
+// Code block atom
+
+.code-block {
+  background: rgba(0, 0, 0, 0.4);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-mono);
+}
+
+.code-block code {
+  background: transparent;
+  padding: 0;
+}
+
+[data-theme="light"] .code-block {
+  background: rgba(0, 0, 0, 0.05);
+}

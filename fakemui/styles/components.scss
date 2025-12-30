@@ -1,0 +1,367 @@
+// Component-specific styles for TaskDetail, SearchDialog, Documentation
+
+// Loading container
+.loading-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+// Back button
+.back-button {
+  margin-bottom: 1rem;
+}
+
+// Error alert
+.error-alert {
+  margin-bottom: 1rem;
+}
+
+// Task card
+.task-card {
+  margin-bottom: 1rem;
+}
+
+// Chip row
+.chip-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+// Task ID
+.task-id {
+  color: var(--text-disabled);
+  display: block;
+}
+
+// Monospace text
+.mono {
+  font-family: monospace;
+}
+
+// Tabs container
+.tabs-container {
+  border-bottom: 1px solid var(--divider);
+  margin-bottom: 1rem;
+}
+
+// Tab panel
+.tab-panel {
+  padding: 1rem;
+}
+
+// Editor container
+.editor-container {
+  border-radius: 4px;
+  overflow: hidden;
+  height: 400px;
+  
+  &.small {
+    height: 300px;
+  }
+  
+  &.large {
+    height: 500px;
+  }
+}
+
+// Status chip
+.status-chip {
+  margin-top: 0.5rem;
+}
+
+// Turn title
+.turn-title {
+  flex-grow: 1;
+}
+
+// Current chip
+.current-chip {
+  margin-right: 0.5rem;
+}
+
+// Turn actions
+.turn-actions {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+// Turn section
+.turn-section {
+  margin-bottom: 1rem;
+}
+
+// Turn content
+.turn-content {
+  padding: 1rem;
+  background-color: var(--background-default);
+}
+
+// Patch header
+.patch-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+// Patch actions
+.patch-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+// Patch description
+.patch-description {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: var(--background-default);
+  border-radius: 4px;
+}
+
+// Text utilities
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-disabled {
+  color: var(--text-disabled);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+// Search dialog
+.search-dialog {
+  .fakemui-dialog-content {
+    min-height: 400px;
+    max-height: 80vh;
+  }
+}
+
+.search-dialog-title {
+  padding-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-dialog-content {
+  padding: 1rem;
+}
+
+.search-input {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.search-loading {
+  padding: 1rem 0;
+}
+
+.search-loading-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.search-progress {
+  margin-top: 1rem;
+}
+
+.search-error {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.search-section-title {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  
+  svg {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+  }
+}
+
+.search-results-list {
+  margin-bottom: 1rem;
+}
+
+.search-result-meta {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+.search-result-desc {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-divider {
+  margin: 1rem 0;
+}
+
+.search-code-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-code-preview {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: var(--background-default);
+  font-family: monospace;
+  font-size: 0.75rem;
+  overflow: hidden;
+}
+
+.search-code-line {
+  padding: 0.125rem 0;
+  
+  .line-number {
+    color: var(--text-disabled);
+    margin-right: 0.5rem;
+    font-size: 0.7rem;
+  }
+  
+  .line-content {
+    font-family: monospace;
+    font-size: 0.75rem;
+    
+    &.added {
+      color: var(--success);
+    }
+    
+    &.removed {
+      color: var(--error);
+    }
+  }
+}
+
+.search-empty {
+  text-align: center;
+  padding: 2rem 0;
+  
+  > * {
+    margin-top: 0.5rem;
+    display: block;
+  }
+}
+
+// Highlight for search matches
+.highlight {
+  background-color: var(--warning);
+  color: var(--warning-contrast);
+  padding: 0 0.25rem;
+  border-radius: 2px;
+}
+
+// Documentation styles
+.documentation {
+  padding: 1rem 0;
+}
+
+.doc-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  
+  svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.doc-tabs-container {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--divider);
+}
+
+.code-block {
+  padding: 1rem;
+  background-color: #1e1e1e;
+  border-radius: 4px;
+  position: relative;
+  font-family: monospace;
+  overflow: auto;
+  margin: 0.5rem 0;
+  
+  .copy-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    color: #888;
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+  
+  .code-content {
+    margin: 0;
+    color: #f8f8f2;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+}
+
+.endpoint-row {
+  &:hover {
+    background-color: var(--action-hover);
+  }
+  
+  td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--divider);
+  }
+  
+  .method-chip {
+    font-family: monospace;
+    font-weight: bold;
+  }
+  
+  .endpoint-path {
+    font-family: monospace;
+    font-size: 0.875rem;
+  }
+}
+
+// Table styles for endpoints
+.endpoints-table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  th {
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 2px solid var(--divider);
+    font-weight: 600;
+  }
+  
+  td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--divider);
+  }
+}

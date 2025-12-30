@@ -1,0 +1,27 @@
+// Grid atom - responsive grid layouts
+
+.grid {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.grid--sm { gap: var(--spacing-sm); }
+.grid--lg { gap: var(--spacing-lg); }
+
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.auto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.auto-grid--sm {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.auto-grid--lg {
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+}

@@ -7,6 +7,9 @@
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": [
       "StepsEditor",

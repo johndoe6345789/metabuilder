@@ -1,0 +1,11 @@
+module Components
+
+# Application Components (mirroring React app)
+TaskList 1.0 TaskList.qml
+TaskDetail 1.0 TaskDetail.qml
+NewPrompt 1.0 NewPrompt.qml
+UserInfo 1.0 UserInfo.qml
+SearchDialog 1.0 SearchDialog.qml
+Documentation 1.0 Documentation.qml
+MarkdownRenderer 1.0 MarkdownRenderer.qml
+

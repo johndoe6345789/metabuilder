@@ -1,0 +1,54 @@
+// Panel atoms - flat selectors
+
+.panel {
+  background: var(--color-bg-paper);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.panel--fixed-br {
+  position: fixed;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+}
+
+.panel--fixed-bl {
+  position: fixed;
+  bottom: var(--spacing-md);
+  left: var(--spacing-md);
+}
+
+.panel--elevated {
+  box-shadow: var(--shadow-xl);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-primary-dark);
+  color: white;
+}
+
+.panel-header--clickable {
+  cursor: pointer;
+}
+
+.panel-title {
+  flex: 1;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.panel-body {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.panel-footer {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}

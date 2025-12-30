@@ -1,0 +1,123 @@
+// ============================================
+// Theme Variables (CSS Custom Properties)
+// ============================================
+
+:root {
+  // Colors - Dark theme (default)
+  --color-primary: #10a37f;
+  --color-primary-dark: #0d8a6a;
+  --color-primary-light: #1abf94;
+  --color-secondary: #8e8ea0;
+  
+  --color-bg: #0d0d0d;
+  --color-bg-paper: #1a1a1a;
+  --color-bg-elevated: #242424;
+  --color-bg-hover: rgba(255, 255, 255, 0.08);
+  
+  --color-text: #ffffff;
+  --color-text-secondary: #a0a0a0;
+  --color-text-disabled: #666666;
+  
+  --color-border: #333333;
+  --color-divider: rgba(255, 255, 255, 0.12);
+  
+  --color-success: #22c55e;
+  --color-success-bg: rgba(34, 197, 94, 0.1);
+  --color-warning: #f59e0b;
+  --color-warning-bg: rgba(245, 158, 11, 0.1);
+  --color-error: #ef4444;
+  --color-error-bg: rgba(239, 68, 68, 0.1);
+  --color-info: #3b82f6;
+  --color-info-bg: rgba(59, 130, 246, 0.1);
+  
+  // Spacing
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  // Border radius
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+  
+  // Shadows
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+  
+  // Typography
+  --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Fira Code', 'Consolas', 'Monaco', monospace;
+  
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  
+  // Transitions
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 350ms ease;
+  
+  // Z-index layers
+  --z-dropdown: 100;
+  --z-modal: 200;
+  --z-toast: 300;
+}
+
+// Light theme overrides
+[data-theme="light"] {
+  --color-bg: #ffffff;
+  --color-bg-paper: #f7f7f8;
+  --color-bg-elevated: #ffffff;
+  --color-bg-hover: rgba(0, 0, 0, 0.04);
+  
+  --color-text: #1a1a1a;
+  --color-text-secondary: #6e6e80;
+  --color-text-disabled: #999999;
+  
+  --color-border: #e0e0e0;
+  --color-divider: rgba(0, 0, 0, 0.12);
+  
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
+}
+
+// Midnight theme
+[data-theme="midnight"] {
+  --color-primary: #6366f1;
+  --color-primary-dark: #4f46e5;
+  --color-primary-light: #818cf8;
+  --color-secondary: #a5b4fc;
+  --color-bg: #0f172a;
+  --color-bg-paper: #1e293b;
+  --color-bg-elevated: #334155;
+}
+
+// Forest theme
+[data-theme="forest"] {
+  --color-primary: #22c55e;
+  --color-primary-dark: #16a34a;
+  --color-primary-light: #4ade80;
+  --color-secondary: #86efac;
+  --color-bg: #0a1f0a;
+  --color-bg-paper: #14331a;
+  --color-bg-elevated: #1e4d26;
+}
+
+// Ocean theme
+[data-theme="ocean"] {
+  --color-primary: #0ea5e9;
+  --color-primary-dark: #0284c7;
+  --color-primary-light: #38bdf8;
+  --color-secondary: #7dd3fc;
+  --color-bg: #0c1929;
+  --color-bg-paper: #132f4c;
+  --color-bg-elevated: #1a4166;
+}

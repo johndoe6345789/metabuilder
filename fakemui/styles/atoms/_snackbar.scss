@@ -1,0 +1,26 @@
+// Snackbar/Toast styles
+
+.snackbar {
+  position: fixed;
+  bottom: var(--spacing-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-toast);
+  animation: slideUp var(--transition-normal);
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

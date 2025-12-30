@@ -1,0 +1,13 @@
+// Input with icon mixin
+
+@mixin input-with-icon($icon-left: 40px) {
+  position: relative;
+}
+
+@mixin input-icon-position($left: 12px) {
+  position: absolute;
+  left: $left;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-secondary);
+}

@@ -1,0 +1,21 @@
+// Custom scrollbar mixin
+
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: var(--radius-full);
+    
+    &:hover {
+      background: var(--color-text-disabled);
+    }
+  }
+}

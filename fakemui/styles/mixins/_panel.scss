@@ -1,0 +1,10 @@
+// Panel container mixin
+
+@mixin panel($position: fixed, $padding: var(--spacing-md)) {
+  position: $position;
+  background: var(--color-bg-paper);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: $padding;
+  z-index: var(--z-dropdown);
+}

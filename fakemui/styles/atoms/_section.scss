@@ -1,0 +1,29 @@
+// Section atom - content sections with optional header
+
+.section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.section--sm { margin-bottom: var(--spacing-md); }
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.section-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.section-content {
+  padding: var(--spacing-md);
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+}

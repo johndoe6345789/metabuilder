@@ -8,6 +8,9 @@
   "category": "ui",
   "minLevel": 6,
   "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "pages": ["level6"],
     "scripts": ["layout", "tenants", "transfer", "system"],

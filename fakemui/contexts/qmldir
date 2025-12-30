@@ -1,0 +1,6 @@
+module contexts
+
+# Context singletons - mirrors React context providers
+singleton AjaxQueueContext 1.0 AjaxQueueContext.qml
+singleton LanguageContext 1.0 LanguageContext.qml
+singleton NerdModeContext 1.0 NerdModeContext.qml

@@ -1,0 +1,34 @@
+// Progress atoms - flat selectors
+
+.progress {
+  height: 4px;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--color-primary);
+  transition: width 0.3s ease;
+}
+
+.progress--thin {
+  height: 3px;
+}
+
+.progress--thick {
+  height: 6px;
+}
+
+.progress--success .progress-bar {
+  background: var(--color-success);
+}
+
+.progress--warning .progress-bar {
+  background: var(--color-warning);
+}
+
+.progress--error .progress-bar {
+  background: var(--color-error);
+}

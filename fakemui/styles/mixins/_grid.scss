@@ -1,0 +1,13 @@
+// Grid layout mixins
+
+@mixin grid($columns: 1, $gap: var(--spacing-md)) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+}
+
+@mixin auto-grid($min-width: 300px, $gap: var(--spacing-md)) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($min-width, 1fr));
+  gap: $gap;
+}
