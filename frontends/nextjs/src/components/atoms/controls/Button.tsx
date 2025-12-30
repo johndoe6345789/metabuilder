@@ -1,7 +1,8 @@
 'use client'
 
-import { Button as MuiButton, ButtonProps as MuiButtonProps, CircularProgress } from '@mui/material'
+import { Button as FakemuiButton } from '@/fakemui'
 import { forwardRef } from 'react'
+import type { ButtonProps as FakemuiButtonProps } from '@/fakemui/fakemui/inputs/Button'
 
 /** Button visual style variants */
 export type ButtonVariant = 'contained' | 'outlined' | 'text' | 'destructive' | 'ghost'
@@ -11,9 +12,9 @@ export type ButtonSize = 'small' | 'medium' | 'large' | 'icon'
 
 /**
  * Props for the Button component
- * @extends {MuiButtonProps} Inherits Material-UI Button props
+ * Wrapper around fakemui Button to maintain API compatibility
  */
-export interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'size'> {
+export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'variant' | 'size'> {
   /** Visual style variant of the button */
   variant?: ButtonVariant
   /** Size of the button */
@@ -22,47 +23,54 @@ export interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'size'> {
   loading?: boolean
   /** Compatibility prop - ignored */
   asChild?: boolean
+  /** Start icon element */
+  startIcon?: React.ReactNode
+  /** End icon element */
+  endIcon?: React.ReactNode
+  /** Full width button */
+  fullWidth?: boolean
+  /** MUI sx prop - converted to className for compatibility */
+  sx?: any
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'contained', size = 'medium', loading, disabled, children, sx, ...props }, ref) => {
+  ({ variant = 'contained', size = 'medium', loading, disabled, children, sx, startIcon, endIcon, fullWidth, className, ...props }, ref) => {
+    // Map MUI variants to fakemui variants
+    const fakemuiVariant: FakemuiButtonProps['variant'] =
+      variant === 'contained' ? 'primary' :
+      variant === 'outlined' ? 'outline' :
+      variant === 'text' ? 'text' :
+      variant === 'destructive' ? 'danger' :
+      variant === 'ghost' ? 'ghost' :
+      'default'
+
+    // Map MUI sizes to fakemui sizes
+    const fakemuiSize: FakemuiButtonProps['size'] =
+      size === 'small' ? 'sm' :
+      size === 'large' ? 'lg' :
+      'md'
+
     const isIcon = size === 'icon'
 
-    const muiVariant =
-      variant === 'destructive' || variant === 'ghost'
-        ? variant === 'ghost'
-          ? 'text'
-          : 'contained'
-        : variant
-
-    const muiColor = variant === 'destructive' ? 'error' : 'primary'
+    // Combine className with any sx-based classes
+    const combinedClassName = [className, sx?.className].filter(Boolean).join(' ')
 
     return (
-      <MuiButton
+      <FakemuiButton
         ref={ref}
-        variant={muiVariant}
-        color={muiColor}
-        size={isIcon ? 'medium' : size}
-        disabled={disabled || loading}
-        sx={{
-          ...(isIcon && {
-            minWidth: 40,
-            width: 40,
-            height: 40,
-            p: 0,
-            borderRadius: 1,
-          }),
-          ...(variant === 'ghost' && {
-            '&:hover': {
-              bgcolor: 'action.hover',
-            },
-          }),
-          ...sx,
-        }}
+        variant={fakemuiVariant}
+        size={fakemuiSize}
+        icon={isIcon}
+        loading={loading}
+        disabled={disabled}
+        fullWidth={fullWidth}
+        startIcon={startIcon}
+        endIcon={endIcon}
+        className={combinedClassName}
         {...props}
       >
-        {loading ? <CircularProgress size={20} color="inherit" /> : children}
-      </MuiButton>
+        {children}
+      </FakemuiButton>
     )
   }
 )

@@ -1,37 +1,37 @@
 'use client'
 
-import {
-  Checkbox as MuiCheckbox,
-  CheckboxProps as MuiCheckboxProps,
-  FormControlLabel,
-} from '@mui/material'
+import { Checkbox as FakemuiCheckbox } from '@/fakemui'
 import { forwardRef } from 'react'
 
 /**
  * Props for the Checkbox component
- * @extends {MuiCheckboxProps} Inherits Material-UI Checkbox props
+ * Wrapper around fakemui Checkbox to maintain API compatibility
  */
-export interface CheckboxProps extends MuiCheckboxProps {
+export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
   /** Optional label text to display next to the checkbox */
-  label?: string
+  label?: React.ReactNode
+  /** Whether the checkbox is in an error state (MUI compatibility) */
+  error?: boolean
+  /** MUI color prop (ignored for compatibility) */
+  color?: string
+  /** MUI size prop (ignored for compatibility) */
+  size?: string
+  /** MUI sx prop - converted to className for compatibility */
+  sx?: any
 }
 
-const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(({ label, ...props }, ref) => {
-  if (label) {
-    return (
-      <FormControlLabel
-        control={<MuiCheckbox ref={ref} {...props} />}
-        label={label}
-        sx={{
-          '& .MuiFormControlLabel-label': {
-            fontSize: '0.875rem',
-          },
-        }}
-      />
-    )
-  }
+const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(({ label, error, color, size, sx, className, ...props }, ref) => {
+  // Combine className with any sx-based classes
+  const combinedClassName = [className, sx?.className, error ? 'checkbox--error' : ''].filter(Boolean).join(' ')
 
-  return <MuiCheckbox ref={ref} {...props} />
+  return (
+    <FakemuiCheckbox
+      ref={ref}
+      label={label}
+      className={combinedClassName}
+      {...props}
+    />
+  )
 })
 
 Checkbox.displayName = 'Checkbox'
