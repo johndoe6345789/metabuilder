@@ -27,12 +27,14 @@
     "scripts": [
       "tests/metadata.test.lua",
       "tests/components.test.lua",
-      "tests/validate.test.lua"
+      "tests/validate.test.lua",
+      "tests/contact_form.test.lua"
     ],
     "cases": [
       "tests/metadata.cases.json",
       "tests/components.cases.json",
-      "tests/validate.cases.json"
+      "tests/validate.cases.json",
+      "tests/contact_form.cases.json"
     ]
   },
   "minLevel": 1
