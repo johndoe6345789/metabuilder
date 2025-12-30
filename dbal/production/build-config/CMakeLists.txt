@@ -124,6 +124,26 @@ if(lua_FOUND AND sol2_FOUND)
         target_link_libraries(package_generator nlohmann_json::nlohmann_json)
     endif()
     
+    # Package generator tests
+    add_executable(package_generator_test
+        ${DBAL_TEST_DIR}/tools/package_generator_test.cpp
+    )
+    
+    target_include_directories(package_generator_test PRIVATE
+        ${DBAL_SRC_DIR}/tools/package_generator
+    )
+    
+    target_link_libraries(package_generator_test
+        lua::lua
+        sol2::sol2
+    )
+    
+    if(nlohmann_json_FOUND)
+        target_link_libraries(package_generator_test nlohmann_json::nlohmann_json)
+    endif()
+    
+    add_test(NAME package_generator_test COMMAND package_generator_test)
+    
     install(TARGETS package_generator DESTINATION bin)
 else()
     message(STATUS "Skipping package_generator (lua or sol2 not found)")
@@ -131,4 +151,5 @@ endif()
 
 install(TARGETS dbal_daemon DESTINATION bin)
 install(DIRECTORY ${DBAL_INCLUDE_DIR}/dbal DESTINATION include)
+
 
