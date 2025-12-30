@@ -878,6 +878,7 @@ export const componentRegistry: Record<string, AnyComponent> = {
   Badge,
   Chip,
   Divider,
+  Separator: Divider,
   Alert,
   Progress,
   LinearProgress: Progress,
