@@ -255,6 +255,16 @@ void print_dbal_help() {
   dbal list <entity> [filters...]        List records with optional filters
   dbal execute <operation> [params...]   Execute a DBAL operation
 
+RESTful Multi-Tenant Operations:
+  dbal rest <tenant> <package> <entity> [id] [action] [method] [data...]
+    Examples:
+      dbal rest acme forum_forge posts                    # GET - list posts
+      dbal rest acme forum_forge posts 123                # GET - read post
+      dbal rest acme forum_forge posts POST title=Hello   # POST - create
+      dbal rest acme forum_forge posts 123 PUT title=New  # PUT - update
+      dbal rest acme forum_forge posts 123 DELETE         # DELETE
+      dbal rest acme forum_forge posts 123 like POST      # Custom action
+
 Schema Management:
   dbal schema list                       List registered entity schemas
   dbal schema pending                    Show pending schema migrations
