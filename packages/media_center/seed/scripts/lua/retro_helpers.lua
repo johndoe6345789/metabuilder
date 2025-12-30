@@ -326,11 +326,11 @@ retro_helpers.MOTION = {
     end,
 }
 
---- Execute a motion then press a button
---- @param session_id string
---- @param motion function Motion from MOTION table
---- @param button string Button to press after motion
---- @param player? number
+---Execute a motion then press a button
+---@param session_id string Session identifier
+---@param motion function Motion from MOTION table
+---@param button string Button to press after motion
+---@param player? number Player number (default 0)
 function retro_helpers.special_move(session_id, motion, button, player)
     motion(session_id, player)
     retro_helpers.tap(session_id, button, player)
@@ -459,8 +459,8 @@ retro_helpers.SHADERS = {
     bilinear = "Bilinear (smooth)",
 }
 
---- Get available cores from the daemon
---- @return LibretroCore[]
+---Get available cores from the daemon
+---@return LibretroCore[] cores List of available cores
 function retro_helpers.get_available_cores()
     local response = http.get("/api/v1/retro/cores")
     if response.status == 200 then
@@ -469,9 +469,9 @@ function retro_helpers.get_available_cores()
     return {}
 end
 
---- Get recommended core for a ROM file
---- @param rom_path string Path to the ROM
---- @return LibretroCore|nil
+---Get recommended core for a ROM file
+---@param rom_path string Path to the ROM
+---@return LibretroCore|nil core Recommended core or nil if none found
 function retro_helpers.get_core_for_rom(rom_path)
     local response = http.post("/api/v1/retro/detect-core", {
         rom_path = rom_path
@@ -482,10 +482,10 @@ function retro_helpers.get_core_for_rom(rom_path)
     return nil
 end
 
---- Start a new gaming session
---- @param config RetroSessionConfig
---- @return string|nil session_id
---- @return string|nil error
+---Start a new gaming session
+---@param config RetroSessionConfig Session configuration
+---@return string|nil session_id Session ID if successful
+---@return string|nil error Error message if failed
 function retro_helpers.start_session(config)
     local response = http.post("/api/v1/retro/sessions", {
         rom_path = config.rom_path,
@@ -503,18 +503,18 @@ function retro_helpers.start_session(config)
     return nil, response.json.error or "Failed to start session"
 end
 
---- Stop a gaming session
---- @param session_id string
---- @return boolean success
+---Stop a gaming session
+---@param session_id string Session identifier
+---@return boolean success Whether stop was successful
 function retro_helpers.stop_session(session_id)
     local response = http.delete("/api/v1/retro/sessions/" .. session_id)
     return response.status == 200 or response.status == 204
 end
 
---- Pause/resume a session
---- @param session_id string
---- @param paused boolean
---- @return boolean success
+---Pause or resume a session
+---@param session_id string Session identifier
+---@param paused boolean True to pause, false to resume
+---@return boolean success Whether operation was successful
 function retro_helpers.set_paused(session_id, paused)
     local response = http.patch("/api/v1/retro/sessions/" .. session_id, {
         paused = paused
@@ -522,9 +522,9 @@ function retro_helpers.set_paused(session_id, paused)
     return response.status == 200
 end
 
---- Get session state
---- @param session_id string
---- @return RetroSessionState|nil
+---Get session state
+---@param session_id string Session identifier
+---@return RetroSessionState|nil state Session state or nil if not found
 function retro_helpers.get_session_state(session_id)
     local response = http.get("/api/v1/retro/sessions/" .. session_id)
     if response.status == 200 then
@@ -533,8 +533,8 @@ function retro_helpers.get_session_state(session_id)
     return nil
 end
 
---- List all active sessions
---- @return RetroSessionState[]
+---List all active sessions
+---@return RetroSessionState[] sessions Array of active sessions
 function retro_helpers.list_sessions()
     local response = http.get("/api/v1/retro/sessions")
     if response.status == 200 then
@@ -545,11 +545,11 @@ end
 
 -- Save State Management
 
---- Create a save state
---- @param session_id string
---- @param slot? number Slot number (0-9), or -1 for auto
---- @param description? string Optional description
---- @return SaveState|nil
+---Create a save state
+---@param session_id string Session identifier
+---@param slot? number Slot number (0-9), or -1 for auto
+---@param description? string Optional description
+---@return SaveState|nil state Save state info or nil if failed
 function retro_helpers.save_state(session_id, slot, description)
     local response = http.post("/api/v1/retro/sessions/" .. session_id .. "/states", {
         slot = slot or -1,
@@ -561,18 +561,18 @@ function retro_helpers.save_state(session_id, slot, description)
     return nil
 end
 
---- Load a save state
---- @param session_id string
---- @param slot number Slot number to load
---- @return boolean success
+---Load a save state
+---@param session_id string Session identifier
+---@param slot number Slot number to load
+---@return boolean success Whether load was successful
 function retro_helpers.load_state(session_id, slot)
     local response = http.post("/api/v1/retro/sessions/" .. session_id .. "/states/" .. slot .. "/load")
     return response.status == 200
 end
 
---- List save states for a session
---- @param session_id string
---- @return SaveState[]
+---List save states for a session
+---@param session_id string Session identifier
+---@return SaveState[] states Array of save states
 function retro_helpers.list_save_states(session_id)
     local response = http.get("/api/v1/retro/sessions/" .. session_id .. "/states")
     if response.status == 200 then
@@ -581,10 +581,10 @@ function retro_helpers.list_save_states(session_id)
     return {}
 end
 
---- Delete a save state
---- @param session_id string
---- @param state_id string
---- @return boolean success
+---Delete a save state
+---@param session_id string Session identifier
+---@param state_id string State identifier
+---@return boolean success Whether delete was successful
 function retro_helpers.delete_save_state(session_id, state_id)
     local response = http.delete("/api/v1/retro/sessions/" .. session_id .. "/states/" .. state_id)
     return response.status == 200 or response.status == 204
@@ -592,11 +592,11 @@ end
 
 -- Input handling
 
---- Send button input
---- @param session_id string
---- @param player number Player number (0-3)
---- @param button string Button name (a, b, x, y, start, select, up, down, left, right, l, r)
---- @param pressed boolean True for press, false for release
+---Send button input
+---@param session_id string Session identifier
+---@param player number Player number (0-3)
+---@param button string Button name (a, b, x, y, start, select, up, down, left, right, l, r)
+---@param pressed boolean True for press, false for release
 function retro_helpers.send_input(session_id, player, button, pressed)
     http.post("/api/v1/retro/sessions/" .. session_id .. "/input", {
         player = player,
@@ -605,12 +605,12 @@ function retro_helpers.send_input(session_id, player, button, pressed)
     })
 end
 
---- Send analog stick input
---- @param session_id string
---- @param player number
---- @param stick string "left" or "right"
---- @param x number -1.0 to 1.0
---- @param y number -1.0 to 1.0
+---Send analog stick input
+---@param session_id string Session identifier
+---@param player number Player number (0-3)
+---@param stick string "left" or "right"
+---@param x number -1.0 to 1.0 horizontal axis
+---@param y number -1.0 to 1.0 vertical axis
 function retro_helpers.send_analog(session_id, player, stick, x, y)
     http.post("/api/v1/retro/sessions/" .. session_id .. "/input/analog", {
         player = player,
