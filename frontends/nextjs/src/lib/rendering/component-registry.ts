@@ -71,6 +71,21 @@ import {
   Step,
   StepLabel,
   Pagination,
+  // New components
+  DatePicker,
+  TimePicker,
+  ColorPicker,
+  FileUpload,
+  Fab,
+  ToggleButton,
+  ToggleButtonGroup,
+  Autocomplete,
+  Rating,
+  FormField,
+  Drawer,
+  Modal,
+  Backdrop,
+  Popover,
 } from '@/fakemui'
 
 import type { ComponentType } from 'react'
