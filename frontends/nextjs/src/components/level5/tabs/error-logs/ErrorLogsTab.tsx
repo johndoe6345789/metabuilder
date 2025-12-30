@@ -1,5 +1,5 @@
 'use client'
-import { Broom, Warning } from '@phosphor-icons/react'
+import { Broom, Warning } from '@/fakemui/icons'
 
 import {
   AlertDialog,

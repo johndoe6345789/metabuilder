@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowsLeftRight, Crown } from '@phosphor-icons/react'
+import { ArrowsLeftRight, Crown } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui'

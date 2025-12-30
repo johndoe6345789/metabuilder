@@ -1,4 +1,4 @@
-import { CheckCircle, Trash } from '@phosphor-icons/react'
+import { CheckCircle, Trash } from '@/fakemui/icons'
 
 import { Badge, Button, Card, CardContent, ScrollArea } from '@/components/ui'
 import type { ErrorLog } from '@/lib/db/error-logs'

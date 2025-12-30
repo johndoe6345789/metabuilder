@@ -1,4 +1,4 @@
-import { MagnifyingGlass } from '@phosphor-icons/react'
+import { MagnifyingGlass } from '@/fakemui/icons'
 
 import {
   Input,

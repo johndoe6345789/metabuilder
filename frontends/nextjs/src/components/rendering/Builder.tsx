@@ -1,5 +1,5 @@
 import { useKV } from '@github/spark/hooks'
-import { Eye, FloppyDisk, SignOut } from '@phosphor-icons/react'
+import { Eye, FloppyDisk, SignOut } from '@/fakemui/icons'
 import { useState } from 'react'
 import { toast } from 'sonner'
 

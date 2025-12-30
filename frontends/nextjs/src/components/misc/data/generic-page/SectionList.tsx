@@ -1,4 +1,4 @@
-import { ListNumbers, Plus, PushPinSimple, SquaresFour } from '@phosphor-icons/react'
+import { ListNumbers, Plus, PushPinSimple, SquaresFour } from '@/fakemui/icons'
 
 import {
   Badge,

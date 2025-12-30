@@ -1,4 +1,4 @@
-import { Shield, Users } from '@phosphor-icons/react'
+import { Shield, Users } from '@/fakemui/icons'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'

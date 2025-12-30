@@ -1,4 +1,4 @@
-import { Code, PaintBrush } from '@phosphor-icons/react'
+import { Code, PaintBrush } from '@/fakemui/icons'
 
 import { Button, ScrollArea, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import type { DropdownConfig } from '@/lib/database'

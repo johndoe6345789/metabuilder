@@ -1,4 +1,4 @@
-import { Envelope, FloppyDisk, PaperPlaneTilt } from '@phosphor-icons/react'
+import { Envelope, FloppyDisk, PaperPlaneTilt } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 

@@ -1,4 +1,4 @@
-import { Palette } from '@phosphor-icons/react'
+import { Palette } from '@/fakemui/icons'
 
 import {
   Button,

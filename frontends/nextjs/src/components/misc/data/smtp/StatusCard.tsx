@@ -1,4 +1,4 @@
-import { CheckCircle, Clock, WarningCircle } from '@phosphor-icons/react'
+import { CheckCircle, Clock, WarningCircle } from '@/fakemui/icons'
 import type { ReactNode } from 'react'
 
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'

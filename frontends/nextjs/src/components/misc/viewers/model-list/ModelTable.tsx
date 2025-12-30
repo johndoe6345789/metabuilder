@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, Pencil, Trash } from '@phosphor-icons/react'
+import { ArrowDown, ArrowUp, Pencil, Trash } from '@/fakemui/icons'
 import { ReactNode } from 'react'
 
 import {

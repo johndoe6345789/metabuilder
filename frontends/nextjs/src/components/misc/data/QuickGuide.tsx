@@ -1,4 +1,4 @@
-import { Code, ListDashes, Package, Palette, Sparkle, Terminal } from '@phosphor-icons/react'
+import { Code, ListDashes, Package, Palette, Sparkle, Terminal } from '@/fakemui/icons'
 
 import { Card } from '@/components/ui'
 import { Badge } from '@/components/ui'

@@ -1,4 +1,4 @@
-import { Plus, Trash } from '@phosphor-icons/react'
+import { Plus, Trash } from '@/fakemui/icons'
 
 import { ValidationPanel } from '@/components/schema/level4/ValidationPanel'
 import { Button, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'

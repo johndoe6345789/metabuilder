@@ -1,5 +1,5 @@
 import { useKV } from '@github/spark/hooks'
-import { ArrowDown, ArrowUp, MagnifyingGlass, Pencil, Plus, Trash } from '@phosphor-icons/react'
+import { ArrowDown, ArrowUp, MagnifyingGlass, Pencil, Plus, Trash } from '@/fakemui/icons'
 import { motion } from 'motion/react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'

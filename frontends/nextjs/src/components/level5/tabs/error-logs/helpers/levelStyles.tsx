@@ -1,4 +1,4 @@
-import { Info, Warning } from '@phosphor-icons/react'
+import { Info, Warning } from '@/fakemui/icons'
 
 export const getLevelIcon = (level: string) => {
   switch (level) {

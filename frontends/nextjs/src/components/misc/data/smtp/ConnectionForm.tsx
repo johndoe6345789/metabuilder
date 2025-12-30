@@ -1,4 +1,4 @@
-import { EnvelopeSimple, FloppyDisk } from '@phosphor-icons/react'
+import { EnvelopeSimple, FloppyDisk } from '@/fakemui/icons'
 import { useMemo } from 'react'
 
 import {

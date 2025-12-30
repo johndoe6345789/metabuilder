@@ -1,4 +1,4 @@
-import { Warning } from '@phosphor-icons/react'
+import { Warning } from '@/fakemui/icons'
 
 import { Button, Card, CardContent } from '@/components/ui'
 

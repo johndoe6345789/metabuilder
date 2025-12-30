@@ -1,4 +1,4 @@
-import { House, List, SignOut, X } from '@phosphor-icons/react'
+import { House, List, SignOut, X } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
