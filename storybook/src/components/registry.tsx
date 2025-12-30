@@ -83,8 +83,17 @@ export const Typography: React.FC<TypographyProps> = ({
     overline: 'text-xs uppercase tracking-wide text-muted-foreground',
   }
   
-  const Element = variant.startsWith('h') ? variant as keyof JSX.IntrinsicElements : 'p'
-  return <Element className={`${variantClasses[variant]} ${className}`}>{content}</Element>
+  const combinedClass = `${variantClasses[variant]} ${className}`
+  
+  switch (variant) {
+    case 'h1': return <h1 className={combinedClass}>{content}</h1>
+    case 'h2': return <h2 className={combinedClass}>{content}</h2>
+    case 'h3': return <h3 className={combinedClass}>{content}</h3>
+    case 'h4': return <h4 className={combinedClass}>{content}</h4>
+    case 'h5': return <h5 className={combinedClass}>{content}</h5>
+    case 'h6': return <h6 className={combinedClass}>{content}</h6>
+    default: return <p className={combinedClass}>{content}</p>
+  }
 }
 
 interface ButtonProps extends LuaComponentProps {
@@ -96,7 +105,7 @@ interface ButtonProps extends LuaComponentProps {
 
 export const Button: React.FC<ButtonProps> = ({ 
   variant = 'contained',
-  color = 'primary',
+  color: _color = 'primary',
   size = 'medium',
   className = '',
   children,
@@ -126,11 +135,11 @@ export const Button: React.FC<ButtonProps> = ({
 }
 
 interface IconProps extends LuaComponentProps {
-  name: string
+  name?: string
   size?: 'small' | 'medium' | 'large'
 }
 
-export const Icon: React.FC<IconProps> = ({ name, size = 'medium', className = '' }) => {
+export const Icon: React.FC<IconProps> = ({ name = 'default', size = 'medium', className = '' }) => {
   const sizeClasses = { small: 'text-sm', medium: 'text-xl', large: 'text-3xl' }
   // Simple emoji/text fallback for icons
   const iconMap: Record<string, string> = {
@@ -218,7 +227,7 @@ export const Alert: React.FC<LuaComponentProps & { severity?: 'info' | 'success'
 }
 
 export const Badge: React.FC<LuaComponentProps & { color?: string }> = ({
-  color = 'default',
+  color: _color = 'default',
   className = '',
   children,
 }) => (
