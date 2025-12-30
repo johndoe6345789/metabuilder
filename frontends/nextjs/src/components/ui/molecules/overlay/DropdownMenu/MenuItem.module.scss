@@ -1,0 +1,31 @@
+// MenuItem molecule component styles
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+
+  &.hasDescription {
+    align-items: flex-start;
+  }
+}
+
+.content {
+  flex: 1;
+}
+
+.label {
+  font-size: 0.875rem;
+  line-height: 1.43;
+}
+
+.description {
+  margin-top: 4px;
+  color: var(--color-text-secondary, rgba(0, 0, 0, 0.6));
+}
+
+.detail {
+  color: var(--color-text-secondary, rgba(0, 0, 0, 0.6));
+  font-size: 0.875rem;
+}

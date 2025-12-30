@@ -1,0 +1,17 @@
+// DialogBody molecule component styles
+
+.body {
+  position: relative;
+  padding: 16px 24px;
+
+  &.hasCloseButton {
+    padding-top: 48px;
+  }
+}
+
+.closeButton {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  color: var(--color-text-secondary, rgba(0, 0, 0, 0.6));
+}

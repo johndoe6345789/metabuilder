@@ -1,0 +1,12 @@
+// DialogSections molecule component styles
+
+.sections {
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
