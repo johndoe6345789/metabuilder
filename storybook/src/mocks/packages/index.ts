@@ -17,6 +17,7 @@ import { autoRegisterPackages } from '../auto-loader'
 const AUTO_LOAD_PACKAGES = [
   'arcade_lobby',
   'audit_log',
+  'code_editor',
   'dashboard',
   'data_table',
   'form_builder',
