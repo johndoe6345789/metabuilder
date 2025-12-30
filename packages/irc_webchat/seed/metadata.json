@@ -1,0 +1,22 @@
+{
+  "packageId": "irc_webchat",
+  "name": "IRC Webchat",
+  "version": "1.0.0",
+  "description": "Classic IRC-style webchat with channels, commands, online users, and real-time messaging. Perfect for community chat rooms.",
+  "icon": "💬",
+  "author": "MetaBuilder Team",
+  "category": "social",
+  "dependencies": [],
+  "exports": {
+    "components": ["IRCWebchat"],
+    "luaScripts": [
+      "send_message",
+      "handle_command",
+      "format_time",
+      "user_join",
+      "user_leave"
+    ]
+  },
+  "tags": ["chat", "irc", "messaging", "realtime"],
+  "minLevel": 2
+}

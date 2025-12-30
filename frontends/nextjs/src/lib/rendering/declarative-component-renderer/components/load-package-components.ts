@@ -21,7 +21,7 @@ export function loadPackageComponents(packageContent: PackageContent) {
 
   if (packageContent.componentConfigs) {
     Object.entries(packageContent.componentConfigs).forEach(([type, config]) => {
-      renderer.registerComponentConfig(type, config as DeclarativeComponentConfig)
+      renderer.registerComponentConfig(type, config)
     })
   }
 
@@ -30,7 +30,7 @@ export function loadPackageComponents(packageContent: PackageContent) {
       renderer.registerLuaScript(script.id, {
         code: script.code,
         parameters: script.parameters || [],
-        returnType: script.returnType || 'any',
+        returnType: script.returnType || 'value',
         isSandboxed: script.isSandboxed,
         allowedGlobals: script.allowedGlobals,
         timeoutMs: script.timeoutMs,

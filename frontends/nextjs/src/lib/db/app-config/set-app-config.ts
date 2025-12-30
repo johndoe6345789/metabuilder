@@ -6,7 +6,8 @@ export async function setAppConfig(config: AppConfiguration): Promise<void> {
 
   // Delete existing configs
   const existing = await adapter.list('AppConfiguration')
-  for (const c of existing.data as any[]) {
+  const existingConfigs = existing.data as Array<{ id: string }>
+  for (const c of existingConfigs) {
     await adapter.delete('AppConfiguration', c.id)
   }
 

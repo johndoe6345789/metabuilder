@@ -10,7 +10,8 @@ export async function setUsers(users: User[]): Promise<void> {
 
   // Get existing users and delete them
   const existing = await adapter.list('User')
-  for (const user of existing.data as any[]) {
+  const existingUsers = existing.data as Array<{ id: string }>
+  for (const user of existingUsers) {
     await adapter.delete('User', user.id)
   }
 

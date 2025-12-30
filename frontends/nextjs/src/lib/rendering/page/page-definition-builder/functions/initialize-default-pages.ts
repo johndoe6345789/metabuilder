@@ -22,7 +22,7 @@ export async function initializeDefaultPages(): Promise<void> {
         level: page.level,
         componentTree: page.components,
         requiresAuth: page.permissions?.requiresAuth || false,
-        requiredRole: page.permissions?.requiredRole as any,
+        requiredRole: page.permissions?.requiredRole,
       })
     }
   }

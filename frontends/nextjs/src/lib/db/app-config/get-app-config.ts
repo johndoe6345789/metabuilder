@@ -5,7 +5,15 @@ export async function getAppConfig(): Promise<AppConfiguration | null> {
   const adapter = getAdapter()
   const result = await adapter.list('AppConfiguration', { limit: 1 })
   if (result.data.length === 0) return null
-  const config = result.data[0] as any
+  const config = result.data[0] as {
+    id: string
+    name: string
+    schemas: string
+    workflows: string
+    luaScripts: string
+    pages: string
+    theme: string
+  }
   return {
     id: config.id,
     name: config.name,

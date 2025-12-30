@@ -1,0 +1,10 @@
+[
+  {
+    "id": "comp_chat_root",
+    "type": "IRCWebchat",
+    "props": {
+      "channelName": "general"
+    },
+    "children": []
+  }
+]
