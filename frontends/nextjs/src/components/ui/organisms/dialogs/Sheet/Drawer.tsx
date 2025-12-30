@@ -1,28 +1,29 @@
 'use client'
 
 import { Close as CloseIcon } from '@/fakemui/icons'
-import { Box, Drawer, DrawerProps, IconButton } from '@mui/material'
-import { forwardRef, ReactNode, SyntheticEvent } from 'react'
+import { Box } from '@/fakemui/fakemui/layout'
+import { Drawer } from '@/fakemui/fakemui/surfaces'
+import { IconButton } from '@/fakemui/fakemui/inputs'
+import { forwardRef, ReactNode } from 'react'
 
-interface SheetProps extends Omit<DrawerProps, 'anchor'> {
+import styles from './Drawer.module.scss'
+
+interface SheetProps {
   children: ReactNode
   side?: 'left' | 'right' | 'top' | 'bottom'
+  open?: boolean
+  onClose?: () => void
   onOpenChange?: (open: boolean) => void
 }
 
 const Sheet = forwardRef<HTMLDivElement, SheetProps>(
   ({ children, side = 'right', open, onClose, onOpenChange, ...props }, ref) => {
-    const handleClose = (
-      _event: SyntheticEvent | object,
-      reason: 'backdropClick' | 'escapeKeyDown'
-    ) => {
-      if (typeof onClose === 'function') {
-        onClose(_event, reason)
-      }
+    const handleClose = () => {
+      onClose?.()
       onOpenChange?.(false)
     }
     return (
-      <Drawer ref={ref} anchor={side} open={open} onClose={handleClose} {...props}>
+      <Drawer anchor={side} open={open} onClose={handleClose} {...props}>
         {children}
       </Drawer>
     )
@@ -39,7 +40,7 @@ interface SheetTriggerProps {
 const SheetTrigger = forwardRef<HTMLButtonElement, SheetTriggerProps>(
   ({ children, onClick, asChild, ...props }, ref) => {
     return (
-      <Box ref={ref} component="span" onClick={onClick} sx={{ cursor: 'pointer' }} {...props}>
+      <Box component="span" onClick={onClick} className={styles.trigger} {...props}>
         {children}
       </Box>
     )
@@ -56,35 +57,22 @@ interface SheetContentProps {
 }
 
 const SheetContent = forwardRef<HTMLDivElement, SheetContentProps>(
-  ({ children, side = 'right', onClose, showCloseButton = true, ...props }, ref) => {
+  ({ children, side = 'right', onClose, showCloseButton = true, className, ...props }, ref) => {
     const isHorizontal = side === 'left' || side === 'right'
 
     return (
       <Box
         ref={ref}
-        sx={{
-          width: isHorizontal ? 320 : '100%',
-          height: isHorizontal ? '100%' : 'auto',
-          maxHeight: !isHorizontal ? '80vh' : undefined,
-          display: 'flex',
-          flexDirection: 'column',
-          p: 3,
-          bgcolor: 'background.paper',
-        }}
+        className={`${styles.content} ${isHorizontal ? styles.horizontal : styles.vertical} ${className || ''}`}
         {...props}
       >
         {showCloseButton && (
           <IconButton
             onClick={onClose}
-            sx={{
-              position: 'absolute',
-              top: 8,
-              right: 8,
-              color: 'text.secondary',
-            }}
-            size="small"
+            className={styles.closeButton}
+            sm
           >
-            <CloseIcon fontSize="small" />
+            <CloseIcon />
           </IconButton>
         )}
         {children}
@@ -103,7 +91,7 @@ interface SheetCloseProps {
 const SheetClose = forwardRef<HTMLButtonElement, SheetCloseProps>(
   ({ children, onClick, ...props }, ref) => {
     return (
-      <Box ref={ref} component="span" onClick={onClick} sx={{ cursor: 'pointer' }} {...props}>
+      <Box component="span" onClick={onClick} className={styles.close} {...props}>
         {children}
       </Box>
     )

@@ -1,6 +1,6 @@
 'use client'
 
-import { Dialog } from '@mui/material'
+import { Dialog, DialogPanel } from '@/fakemui/fakemui/utils'
 import { forwardRef, ReactNode } from 'react'
 
 import { AlertDialogAction, AlertDialogCancel, AlertDialogFooter } from './alert/Actions'
@@ -10,6 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from './alert/Content'
+import styles from './AlertDialog.module.scss'
 
 interface AlertDialogProps {
   open: boolean
@@ -28,16 +29,20 @@ const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
     }
     return (
       <Dialog
-        ref={ref}
         open={open}
         onClose={handleClose}
-        maxWidth={maxWidth}
-        fullWidth={fullWidth}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         {...props}
       >
-        {children}
+        <DialogPanel
+          ref={ref}
+          sm={maxWidth === 'sm' || maxWidth === 'xs'}
+          lg={maxWidth === 'lg'}
+          xl={maxWidth === 'xl'}
+        >
+          {children}
+        </DialogPanel>
       </Dialog>
     )
   }
@@ -53,7 +58,7 @@ interface AlertDialogTriggerProps {
 const AlertDialogTrigger = forwardRef<HTMLSpanElement, AlertDialogTriggerProps>(
   ({ children, onClick, asChild, ...props }, ref) => {
     return (
-      <span ref={ref} onClick={onClick} style={{ cursor: 'pointer' }} {...props}>
+      <span ref={ref} onClick={onClick} className={styles.trigger} {...props}>
         {children}
       </span>
     )
