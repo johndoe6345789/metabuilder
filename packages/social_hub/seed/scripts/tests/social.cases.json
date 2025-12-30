@@ -1,0 +1,32 @@
+{
+  "validate_content": [
+    { "input": null, "valid": false, "error": "Post cannot be empty", "desc": "null content" },
+    { "input": "", "valid": false, "error": "Post cannot be empty", "desc": "empty string" },
+    { "input": "Hello world!", "valid": true, "error": null, "desc": "normal content" },
+    { "input": "x", "valid": true, "error": null, "desc": "single char" },
+    { "input": "12345678901234567890123456789012345678901234567890", "valid": true, "error": null, "desc": "50 chars" },
+    { "input": "Hello\nWorld\n123", "valid": true, "error": null, "desc": "multiline content" },
+    { "input": "Special chars: !@#$%^&*()_+", "valid": true, "error": null, "desc": "special chars" }
+  ],
+  "validate_content_length": [
+    { "length": 499, "valid": true, "desc": "just under limit" },
+    { "length": 500, "valid": true, "desc": "at limit" },
+    { "length": 501, "valid": false, "desc": "just over limit" },
+    { "length": 1000, "valid": false, "desc": "way over limit" }
+  ],
+  "submit_post": [
+    { "content": "Hello!", "media": null, "expected_media": [], "desc": "no media" },
+    { "content": "Photo post", "media": ["http://img.com/a.jpg"], "expected_media": ["http://img.com/a.jpg"], "desc": "single image" },
+    { "content": "Multi", "media": ["a.jpg", "b.png", "c.gif"], "expected_media": ["a.jpg", "b.png", "c.gif"], "desc": "multiple media" }
+  ],
+  "render_post": [
+    { "id": "p1", "author": "Alice", "content": "Hello", "likes": 5, "comments": 2, "desc": "basic post" },
+    { "id": "p2", "author": "Bob", "content": "Test", "likes": 0, "comments": 0, "desc": "no engagement" },
+    { "id": "p3", "author": "Carol", "content": "Popular!", "likes": 1000, "comments": 50, "desc": "popular post" }
+  ],
+  "render_stat": [
+    { "label": "Posts", "value": 42, "icon": "article", "desc": "posts stat" },
+    { "label": "Followers", "value": 1000, "icon": "people", "desc": "followers stat" },
+    { "label": "Likes", "value": 0, "icon": "heart", "desc": "zero likes" }
+  ]
+}
