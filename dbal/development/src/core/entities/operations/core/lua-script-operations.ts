@@ -1,48 +1,60 @@
 /**
  * @file lua-script-operations.ts
  * @description LuaScript entity CRUD operations for DBAL client
- * 
+ * NOTE: Lua script operations not yet implemented - stubbed for build
+ *
  * Single-responsibility module following the small-function-file pattern.
  */
 
-import type { DBALAdapter } from '../../adapters/adapter'
-import type { LuaScript, ListOptions, ListResult } from '../types'
-import { createLuaScript, deleteLuaScript, getLuaScript, listLuaScripts, updateLuaScript } from '../../lua-script'
+// TODO: Implement Lua script operations
+// import type { DBALAdapter } from '../../adapters/adapter'
+// import type { LuaScript, ListOptions, ListResult } from '../types'
+// import { createLuaScript, deleteLuaScript, getLuaScript, listLuaScripts, updateLuaScript } from '../../lua-script'
 
 export interface LuaScriptOperations {
-  create: (data: Omit<LuaScript, 'id' | 'createdAt' | 'updatedAt'>) => Promise<LuaScript>
-  read: (id: string) => Promise<LuaScript | null>
-  update: (id: string, data: Partial<LuaScript>) => Promise<LuaScript>
+  create: (data: any) => Promise<any>
+  read: (id: string) => Promise<any | null>
+  update: (id: string, data: any) => Promise<any>
   delete: (id: string) => Promise<boolean>
-  list: (options?: ListOptions) => Promise<ListResult<LuaScript>>
+  list: (options?: any) => Promise<any>
 }
 
 /**
  * Create Lua script operations object for the DBAL client
  */
-export const createLuaScriptOperations = (adapter: DBALAdapter): LuaScriptOperations => ({
+export const createLuaScriptOperations = (adapter: any): LuaScriptOperations => ({
   /**
    * Create a new Lua script
    */
-  create: (data) => createLuaScript(adapter, data),
+  create: async (data) => {
+    throw new Error('Lua script operations not yet implemented');
+  },
 
   /**
    * Read a Lua script by ID
    */
-  read: (id) => getLuaScript(adapter, id),
+  read: async (id) => {
+    throw new Error('Lua script operations not yet implemented');
+  },
 
   /**
    * Update an existing Lua script
    */
-  update: (id, data) => updateLuaScript(adapter, id, data),
+  update: async (id, data) => {
+    throw new Error('Lua script operations not yet implemented');
+  },
 
   /**
    * Delete a Lua script by ID
    */
-  delete: (id) => deleteLuaScript(adapter, id),
+  delete: async (id) => {
+    throw new Error('Lua script operations not yet implemented');
+  },
 
   /**
    * List Lua scripts with filtering and pagination
    */
-  list: (options) => listLuaScripts(adapter, options),
+  list: async (options) => {
+    throw new Error('Lua script operations not yet implemented');
+  },
 })
