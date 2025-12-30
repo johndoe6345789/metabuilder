@@ -1,5 +1,7 @@
+---@class Moderation
 local M = {}
 
+---@type string[]
 local banned_terms = {
   "spam",
   "scam",
@@ -7,6 +9,15 @@ local banned_terms = {
   "abuse"
 }
 
+---@class Post
+---@field content? string
+
+---@class FlagResult
+---@field flagged boolean
+---@field reasons string[]
+
+---@param post Post
+---@return FlagResult
 function M.flag_post(post)
   local content = post.content or ""
   local reasons = {}

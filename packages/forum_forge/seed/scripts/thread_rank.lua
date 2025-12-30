@@ -1,5 +1,14 @@
+---@class ThreadRank
 local M = {}
 
+---@class Thread
+---@field replyCount? number
+---@field likeCount? number
+---@field lastReplyAt? number
+---@field createdAt? number
+
+---@param thread Thread
+---@return number
 function M.rank_thread(thread)
   local replies = thread.replyCount or 0
   local likes = thread.likeCount or 0

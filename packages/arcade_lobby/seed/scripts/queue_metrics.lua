@@ -1,5 +1,16 @@
+---@class QueueMetrics
 local M = {}
 
+---@class Queue
+---@field players? number
+---@field waitSeconds? number
+
+---@class QueueSummary
+---@field totalPlayers number
+---@field longestWaitSeconds number
+
+---@param queues Queue[]
+---@return QueueSummary
 function M.summarize(queues)
   local total_players = 0
   local longest_wait = 0

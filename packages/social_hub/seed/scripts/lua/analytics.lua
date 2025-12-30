@@ -1,5 +1,18 @@
+---@class Analytics
 local Analytics = {}
 
+---@class Event
+---@field views? number
+---@field likes? number
+---@field comments? number
+
+---@class Summary
+---@field views number
+---@field likes number
+---@field comments number
+
+---@param events? Event[]
+---@return Summary
 function Analytics.aggregate(events)
   local summary = { views = 0, likes = 0, comments = 0 }
   for _, event in ipairs(events or {}) do

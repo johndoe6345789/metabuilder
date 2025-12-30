@@ -1,5 +1,10 @@
+---@class Blueprint
 local M = {}
 
+---@generic T
+---@param value? T
+---@param default_value T
+---@return T
 local function fallback(value, default_value)
   if value == nil or value == '' then
     return default_value
@@ -7,6 +12,23 @@ local function fallback(value, default_value)
   return value
 end
 
+---@class BlueprintInput
+---@field project_name? string
+---@field runtime? string
+---@field description? string
+
+---@class GeneratedFile
+---@field path string
+---@field content string
+
+---@class BlueprintOutput
+---@field name string
+---@field runtime string
+---@field description string
+---@field files GeneratedFile[]
+
+---@param input BlueprintInput
+---@return BlueprintOutput
 function M.build_blueprint(input)
   local name = fallback(input.project_name, "starter-app")
   local runtime = fallback(input.runtime, "web")
