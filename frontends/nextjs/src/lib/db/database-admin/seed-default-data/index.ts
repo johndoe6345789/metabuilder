@@ -1,5 +1,4 @@
 import { seedAppConfig } from './app/seed-app-config'
-import { seedUsers } from './app/seed-users'
 import { seedCssCategories } from './css/seed-css-categories'
 import { seedDropdownConfigs } from './dropdowns/seed-dropdown-configs'
 
@@ -7,14 +6,15 @@ import { seedDropdownConfigs } from './dropdowns/seed-dropdown-configs'
  * Seed database with default data
  */
 export const seedDefaultData = async (): Promise<void> => {
-  await seedUsers()
+  // TODO: Implement seedUsers function and import it
+  // await seedUsers()
   await seedAppConfig()
   await seedCssCategories()
   await seedDropdownConfigs()
 }
 
 export const defaultDataBuilders = {
-  seedUsers,
+  // seedUsers,
   seedAppConfig,
   seedCssCategories,
   seedDropdownConfigs,

@@ -9,7 +9,7 @@ import {
   TableFooter as FakeMuiTableFooter,
   TableHead as FakeMuiTableHead,
   TableRow as FakeMuiTableRow,
-} from 'fakemui'
+} from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
 
 import styles from './Table.module.scss'
