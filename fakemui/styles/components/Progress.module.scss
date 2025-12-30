@@ -1,0 +1,272 @@
+// Progress component styles
+// LinearProgress and CircularProgress
+
+// Linear Progress
+.linearProgress {
+  height: 4px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--progress-track, rgba(var(--color-primary-rgb), 0.2));
+  border-radius: var(--radius-full);
+
+  .bar,
+  .bar2 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: inherit;
+    transition: width 0.3s ease;
+  }
+
+  .bar {
+    background-color: var(--progress-bar, var(--color-primary));
+  }
+
+  .buffer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background-color: var(--progress-buffer, rgba(var(--color-primary-rgb), 0.3));
+    border-radius: inherit;
+  }
+
+  .dashed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(
+      var(--progress-track, rgba(var(--color-primary-rgb), 0.2)) 0%,
+      var(--progress-track, rgba(var(--color-primary-rgb), 0.2)) 16%,
+      transparent 42%
+    );
+    background-size: 10px 10px;
+    background-position: 0 -23px;
+    animation: dashed-animation 3s infinite linear;
+  }
+
+  // Determinate (default)
+  &.determinate {
+    .bar {
+      transition: width 0.4s linear;
+    }
+  }
+
+  // Indeterminate animation
+  &.indeterminate {
+    .bar {
+      width: auto;
+      animation: indeterminate-bar1 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+    }
+
+    .bar2 {
+      background-color: var(--progress-bar, var(--color-primary));
+      animation: indeterminate-bar2 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite;
+    }
+  }
+
+  // Query animation (reverse indeterminate)
+  &.query {
+    .bar {
+      width: auto;
+      animation: indeterminate-bar1 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite reverse;
+    }
+
+    .bar2 {
+      background-color: var(--progress-bar, var(--color-primary));
+      animation: indeterminate-bar2 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite reverse;
+    }
+  }
+
+  // Color variants
+  &.primary {
+    --progress-bar: var(--color-primary);
+    --progress-track: rgba(var(--color-primary-rgb), 0.2);
+    --progress-buffer: rgba(var(--color-primary-rgb), 0.4);
+  }
+
+  &.secondary {
+    --progress-bar: var(--color-secondary);
+    --progress-track: rgba(var(--color-secondary-rgb), 0.2);
+    --progress-buffer: rgba(var(--color-secondary-rgb), 0.4);
+  }
+
+  &.success {
+    --progress-bar: var(--color-success);
+    --progress-track: rgba(var(--color-success-rgb), 0.2);
+    --progress-buffer: rgba(var(--color-success-rgb), 0.4);
+  }
+
+  &.warning {
+    --progress-bar: var(--color-warning);
+    --progress-track: rgba(var(--color-warning-rgb), 0.2);
+    --progress-buffer: rgba(var(--color-warning-rgb), 0.4);
+  }
+
+  &.error {
+    --progress-bar: var(--color-error);
+    --progress-track: rgba(var(--color-error-rgb), 0.2);
+    --progress-buffer: rgba(var(--color-error-rgb), 0.4);
+  }
+
+  &.info {
+    --progress-bar: var(--color-info);
+    --progress-track: rgba(var(--color-info-rgb), 0.2);
+    --progress-buffer: rgba(var(--color-info-rgb), 0.4);
+  }
+}
+
+// Circular Progress
+.circularProgress {
+  display: inline-flex;
+  position: relative;
+
+  .svg {
+    display: block;
+  }
+
+  .track {
+    stroke: var(--circular-track, rgba(var(--color-primary-rgb), 0.2));
+  }
+
+  .circle {
+    stroke: var(--circular-bar, var(--color-primary));
+    stroke-linecap: round;
+  }
+
+  // Determinate
+  &.determinate {
+    .svg {
+      transform: rotate(-90deg);
+    }
+
+    .circle {
+      transition: stroke-dashoffset 0.3s ease;
+    }
+  }
+
+  // Indeterminate
+  &.indeterminate {
+    animation: circular-rotate 1.4s linear infinite;
+
+    .circle {
+      animation: circular-dash 1.4s ease-in-out infinite;
+      stroke-dasharray: 80px, 200px;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  &.disableShrink {
+    .circle {
+      animation: none;
+    }
+  }
+
+  // Color variants
+  &.circular-primary {
+    --circular-bar: var(--color-primary);
+    --circular-track: rgba(var(--color-primary-rgb), 0.2);
+  }
+
+  &.circular-secondary {
+    --circular-bar: var(--color-secondary);
+    --circular-track: rgba(var(--color-secondary-rgb), 0.2);
+  }
+
+  &.circular-success {
+    --circular-bar: var(--color-success);
+    --circular-track: rgba(var(--color-success-rgb), 0.2);
+  }
+
+  &.circular-warning {
+    --circular-bar: var(--color-warning);
+    --circular-track: rgba(var(--color-warning-rgb), 0.2);
+  }
+
+  &.circular-error {
+    --circular-bar: var(--color-error);
+    --circular-track: rgba(var(--color-error-rgb), 0.2);
+  }
+
+  &.circular-info {
+    --circular-bar: var(--color-info);
+    --circular-track: rgba(var(--color-info-rgb), 0.2);
+  }
+
+  &.circular-inherit {
+    --circular-bar: currentColor;
+    --circular-track: currentColor;
+
+    .track {
+      opacity: 0.2;
+    }
+  }
+}
+
+// Animations
+@keyframes indeterminate-bar1 {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+}
+
+@keyframes indeterminate-bar2 {
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+  60% {
+    left: 107%;
+    right: -8%;
+  }
+  100% {
+    left: 107%;
+    right: -8%;
+  }
+}
+
+@keyframes dashed-animation {
+  0% {
+    background-position: 0 -23px;
+  }
+  100% {
+    background-position: -200px -23px;
+  }
+}
+
+@keyframes circular-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes circular-dash {
+  0% {
+    stroke-dasharray: 1px, 200px;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -15px;
+  }
+  100% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -125px;
+  }
+}
