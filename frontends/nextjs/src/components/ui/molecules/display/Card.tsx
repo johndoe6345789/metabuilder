@@ -7,8 +7,8 @@ import {
   CardTitle as FakeMuiCardTitle,
   CardDescription as FakeMuiCardDescription,
   CardFooter as FakeMuiCardFooter,
-} from '@fakemui/fakemui/surfaces'
-import { Box } from '@fakemui/fakemui/layout'
+} from '@/fakemui/fakemui/surfaces'
+import { Box } from '@/fakemui/fakemui/layout'
 import { forwardRef, ReactNode } from 'react'
 import styles from './Card.module.scss'
 

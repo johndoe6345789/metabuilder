@@ -1,6 +1,6 @@
 'use client'
 
-import { Tooltip as FakeMuiTooltip } from '@fakemui/fakemui/data-display'
+import { Tooltip as FakeMuiTooltip } from '@/fakemui/fakemui/data-display'
 import { forwardRef, ReactNode } from 'react'
 import styles from './Tooltip.module.scss'
 
