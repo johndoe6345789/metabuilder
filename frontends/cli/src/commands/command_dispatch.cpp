@@ -1,5 +1,6 @@
 #include "command_dispatch.h"
 #include "dbal_commands.h"
+#include "package_commands.h"
 
 #include <cpr/cpr.h>
 #include <iostream>
@@ -9,13 +10,14 @@ namespace {
 void print_help() {
   std::cout << R"(Usage: metabuilder-cli <command> [options]
 Available commands:
-  auth session                Show the current authentication session
+  auth session                    Show the current authentication session
   auth login <email> <password>   Authenticate with credentials
-  user list                   List all users
-  user get <userId>           Get a user by ID
-  tenant list                 List all tenants
-  tenant get <tenantId>       Get a tenant by ID
-  dbal <subcommand>           DBAL operations (use 'dbal help' for details)
+  user list                       List all users
+  user get <userId>               Get a user by ID
+  tenant list                     List all tenants
+  tenant get <tenantId>           Get a tenant by ID
+  dbal <subcommand>               DBAL operations (use 'dbal help' for details)
+  package <subcommand>            Package operations (use 'package help' for details)
 )";
 }
 
@@ -131,6 +133,10 @@ int dispatch(const HttpClient &client, const std::vector<std::string> &args) {
 
   if (args[0] == "dbal") {
     return handle_dbal(client, args);
+  }
+
+  if (args[0] == "package") {
+    return handle_package(args);
   }
 
   print_help();
