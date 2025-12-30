@@ -5,8 +5,8 @@ local M = {}
 
 ---@class UIComponent
 ---@field type string
----@field props? table
----@field children? table
+---@field props? table<string, any>
+---@field children? UIComponent[]
 
 ---@class MenuItem
 ---@field label string

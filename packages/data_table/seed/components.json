@@ -1,1 +1,43 @@
-[]
+[
+  {
+    "id": "data_grid",
+    "type": "data_grid",
+    "name": "Data Grid",
+    "description": "Advanced data table with sorting, filtering, pagination",
+    "props": {
+      "columns": [],
+      "data": [],
+      "sortable": true,
+      "filterable": true,
+      "pagination": true,
+      "pageSize": 10,
+      "selection": false
+    },
+    "layout": {
+      "type": "Box",
+      "props": { "className": "space-y-4" },
+      "children": [
+        {
+          "type": "Table",
+          "props": {
+            "columns": "{{columns}}",
+            "data": "{{data}}",
+            "sortable": "{{sortable}}",
+            "filterable": "{{filterable}}",
+            "pagination": "{{pagination}}",
+            "pageSize": "{{pageSize}}",
+            "selection": "{{selection}}"
+          }
+        }
+      ]
+    },
+    "scripts": {
+      "init": "init.initialize",
+      "sort": "sorting.sortByColumn",
+      "filter": "filtering.applyFilters",
+      "paginate": "pagination.changePage",
+      "export": "export.exportData",
+      "select": "selection.toggleRow"
+    }
+  }
+]

@@ -1,9 +1,6 @@
 -- Add schema action
 
----@class ActionResult
----@field success boolean
----@field action string
----@field id? string
+require("schemas.types")
 
 ---Opens the add schema dialog
 ---@return ActionResult

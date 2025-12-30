@@ -36,6 +36,9 @@
 ---@class SchemasRenderContext
 ---@field schemas? Schema[]
 
+---@class EditSchemaContext
+---@field schemaId string
+
 ---@class ActionResult
 ---@field success boolean
 ---@field action string

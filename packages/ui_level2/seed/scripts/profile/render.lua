@@ -8,6 +8,23 @@ local M = {}
 ---@param ctx RenderContext
 ---@return UIComponent
 function M.render(ctx)
+  ---@type InputProps
+  local usernameProps = {
+    label = "Username",
+    value = ctx.user.username,
+    disabled = true
+  }
+  ---@type InputProps
+  local emailProps = {
+    label = "Email",
+    name = "email",
+    value = ctx.user.email or ""
+  }
+  ---@type ButtonProps
+  local saveProps = {
+    text = "Save Changes",
+    onClick = "saveProfile"
+  }
   ---@type UIComponent
   local card = {
     type = "Card",
@@ -31,29 +48,15 @@ function M.render(ctx)
         children = {
           {
             type = "Input",
-            props = {
-              ---@type InputProps
-              label = "Username",
-              value = ctx.user.username,
-              disabled = true
-            }
+            props = usernameProps
           },
           {
             type = "Input",
-            props = {
-              ---@type InputProps
-              label = "Email",
-              name = "email",
-              value = ctx.user.email or ""
-            }
+            props = emailProps
           },
           {
             type = "Button",
-            props = {
-              ---@type ButtonProps
-              text = "Save Changes",
-              onClick = "saveProfile"
-            }
+            props = saveProps
           }
         }
       }

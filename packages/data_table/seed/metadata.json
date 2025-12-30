@@ -9,7 +9,9 @@
   "dependencies": [],
   "devDependencies": ["lua_test"],
   "exports": {
-    "components": []
+    "components": [
+      "DataGrid"
+    ]
   },
   "tests": {
     "scripts": [

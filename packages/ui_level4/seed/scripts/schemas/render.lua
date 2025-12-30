@@ -56,7 +56,8 @@ local function render(ctx)
       }
     }
   end
-  return {
+  ---@type UIComponent
+  local view = {
     type = "Stack",
     props = {
       ---@type StackProps
@@ -82,6 +83,7 @@ local function render(ctx)
       }
     }
   }
+  return view
 end
 
 return render

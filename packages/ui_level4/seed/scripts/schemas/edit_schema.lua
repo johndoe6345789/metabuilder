@@ -1,12 +1,9 @@
 -- Edit schema action
 
----@class ActionResult
----@field success boolean
----@field action string
----@field id? string
+require("schemas.types")
 
 ---Opens the edit schema dialog for the specified schema
----@param ctx table
+---@param ctx EditSchemaContext
 ---@return ActionResult
 local function editSchema(ctx)
   return { success = true, action = "open_schema_dialog", id = ctx.schemaId }
