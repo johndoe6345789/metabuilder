@@ -14,11 +14,17 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-      '@/fakemui': resolve(__dirname, '../../fakemui'),
-      '@/dbal': resolve(__dirname, '../../dbal/development/src'),
-      '@dbal-ui': resolve(__dirname, '../../dbal/shared/ui'),
-    },
+    alias: [
+      // fakemui aliases must be first (more specific matches first)
+      { find: /^@\/fakemui\/(.+)$/, replacement: resolve(__dirname, '../../fakemui/$1') },
+      { find: /^@\/fakemui$/, replacement: resolve(__dirname, '../../fakemui/index.ts') },
+      // dbal aliases
+      { find: /^@\/dbal\/(.+)$/, replacement: resolve(__dirname, '../../dbal/development/src/$1') },
+      { find: /^@\/dbal$/, replacement: resolve(__dirname, '../../dbal/development/src') },
+      { find: /^@dbal-ui\/(.+)$/, replacement: resolve(__dirname, '../../dbal/shared/ui/$1') },
+      { find: /^@dbal-ui$/, replacement: resolve(__dirname, '../../dbal/shared/ui') },
+      // General @ alias last (least specific)
+      { find: /^@\/(.+)$/, replacement: resolve(__dirname, './src/$1') },
+    ],
   },
 })
