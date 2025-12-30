@@ -3,12 +3,14 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cstdlib>
 #include <functional>
 #include <json/json.h>
 #include <sstream>
 
 #include "dbal/core/errors.hpp"
 #include "rpc_user_actions.hpp"
+#include "rpc_schema_actions.hpp"
 
 namespace dbal {
 namespace daemon {
