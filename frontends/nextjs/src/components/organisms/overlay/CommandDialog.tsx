@@ -1,9 +1,8 @@
 'use client'
 
-import { Box, InputAdornment, TextField } from '@mui/material'
-import { forwardRef, ReactNode } from 'react'
-
+import { Box, Input } from '@/fakemui'
 import { Search } from '@/fakemui/icons'
+import { forwardRef, ReactNode } from 'react'
 
 // CommandDialog
 interface CommandDialogProps {
@@ -15,20 +14,8 @@ interface CommandDialogProps {
 const CommandDialog = ({ children, open, onOpenChange }: CommandDialogProps) => {
   if (!open) return null
   return (
-    <Box
-      sx={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 50,
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        pt: '20vh',
-        bgcolor: 'rgba(0,0,0,0.5)',
-      }}
-      onClick={() => onOpenChange?.(false)}
-    >
-      <Box onClick={e => e.stopPropagation()} sx={{ width: '100%', maxWidth: 520 }}>
+    <Box className="command-dialog-overlay" onClick={() => onOpenChange?.(false)}>
+      <Box onClick={e => e.stopPropagation()} className="command-dialog-content">
         {children}
       </Box>
     </Box>
@@ -45,30 +32,18 @@ interface CommandInputProps {
 }
 
 const CommandInput = forwardRef<HTMLInputElement, CommandInputProps>(
-  ({ placeholder = 'Search...', value, onValueChange, ...props }, ref) => {
+  ({ placeholder = 'Search...', value, onValueChange, className, ...props }, ref) => {
     return (
-      <Box sx={{ p: 1.5, borderBottom: 1, borderColor: 'divider' }}>
-        <TextField
-          inputRef={ref}
+      <Box className={`command-input-wrapper ${className || ''}`}>
+        <Input
+          ref={ref}
           fullWidth
-          size="small"
+          size="sm"
           placeholder={placeholder}
           value={value}
           onChange={e => onValueChange?.(e.target.value)}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search size={16} style={{ color: 'rgba(0,0,0,0.54)' }} />
-                </InputAdornment>
-              ),
-            },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-notchedOutline': {
-              border: 'none',
-            },
-          }}
+          startAdornment={<Search size={16} className="command-input-icon" />}
+          className="command-input"
           {...props}
         />
       </Box>

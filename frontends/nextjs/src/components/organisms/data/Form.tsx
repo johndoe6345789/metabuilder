@@ -3,20 +3,16 @@
 import {
   Box,
   FormControl,
-  FormControlLabel,
   FormGroup,
   FormHelperText,
   FormLabel,
-  TextField,
-  TextFieldProps,
-} from '@mui/material'
-import { ElementType, forwardRef, ReactNode } from 'react'
+} from '@/fakemui'
+import { forwardRef, ReactNode } from 'react'
 import {
   Controller,
   ControllerProps,
   FieldValues,
   FormProvider,
-  Path,
   useForm,
   useFormContext,
   UseFormReturn,
@@ -30,13 +26,13 @@ interface FormProps<T extends FieldValues> {
   className?: string
 }
 
-function Form<T extends FieldValues>({ form, onSubmit, children, ...props }: FormProps<T>) {
+function Form<T extends FieldValues>({ form, onSubmit, children, className, ...props }: FormProps<T>) {
   return (
     <FormProvider {...form}>
       <Box
         component="form"
         onSubmit={form.handleSubmit(onSubmit)}
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+        className={`form-wrapper ${className || ''}`}
         {...props}
       >
         {children}
@@ -58,9 +54,9 @@ FormField.displayName = 'FormField'
 
 // FormItem
 const FormItem = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <Box ref={ref} sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }} {...props}>
+      <Box ref={ref} className={`form-item ${className || ''}`} {...props}>
         {children}
       </Box>
     )
@@ -72,13 +68,13 @@ FormItem.displayName = 'FormItem'
 const FormLabelComponent = forwardRef<
   HTMLLabelElement,
   { children: ReactNode; required?: boolean; error?: boolean; className?: string }
->(({ children, required, error, ...props }, ref) => {
+>(({ children, required, error, className, ...props }, ref) => {
   return (
     <FormLabel
       ref={ref}
       required={required}
       error={error}
-      sx={{ fontWeight: 500, fontSize: '0.875rem' }}
+      className={`form-label ${className || ''}`}
       {...props}
     >
       {children}
@@ -91,9 +87,9 @@ FormLabelComponent.displayName = 'FormLabel'
 const FormControlComponent = forwardRef<
   HTMLDivElement,
   { children: ReactNode; fullWidth?: boolean; error?: boolean; className?: string }
->(({ children, fullWidth = true, error, ...props }, ref) => {
+>(({ children, fullWidth = true, error, className, ...props }, ref) => {
   return (
-    <FormControl ref={ref} fullWidth={fullWidth} error={error} {...props}>
+    <FormControl ref={ref} fullWidth={fullWidth} error={error} className={className} {...props}>
       {children}
     </FormControl>
   )

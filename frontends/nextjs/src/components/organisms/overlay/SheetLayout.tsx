@@ -1,15 +1,14 @@
 'use client'
 
-import { Box, IconButton, Typography } from '@mui/material'
-import { forwardRef, ReactNode } from 'react'
-
+import { Box, IconButton, Typography } from '@/fakemui'
 import { Close } from '@/fakemui/icons'
+import { forwardRef, ReactNode } from 'react'
 
 // SheetHeader
 const SheetHeader = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <Box ref={ref} sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 3 }} {...props}>
+      <Box ref={ref} className={`sheet-header ${className || ''}`} {...props}>
         {children}
       </Box>
     )
@@ -19,19 +18,9 @@ SheetHeader.displayName = 'SheetHeader'
 
 // SheetFooter
 const SheetFooter = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <Box
-        ref={ref}
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          gap: 1,
-          mt: 'auto',
-          pt: 3,
-        }}
-        {...props}
-      >
+      <Box ref={ref} className={`sheet-footer ${className || ''}`} {...props}>
         {children}
       </Box>
     )
@@ -41,9 +30,9 @@ SheetFooter.displayName = 'SheetFooter'
 
 // SheetTitle
 const SheetTitle = forwardRef<HTMLHeadingElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <Typography ref={ref} variant="h6" fontWeight={600} {...props}>
+      <Typography ref={ref} variant="h6" className={`sheet-title ${className || ''}`} {...props}>
         {children}
       </Typography>
     )
@@ -55,9 +44,9 @@ SheetTitle.displayName = 'SheetTitle'
 const SheetDescription = forwardRef<
   HTMLParagraphElement,
   { children: ReactNode; className?: string }
->(({ children, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
-    <Typography ref={ref} variant="body2" color="text.secondary" {...props}>
+    <Typography ref={ref} variant="body2" className={`sheet-description ${className || ''}`} {...props}>
       {children}
     </Typography>
   )

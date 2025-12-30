@@ -1,35 +1,29 @@
 'use client'
 
-import { Box, Drawer as MuiDrawer, DrawerProps as MuiDrawerProps, IconButton } from '@mui/material'
-import { forwardRef, ReactNode } from 'react'
-
+import { Box, Drawer, IconButton } from '@/fakemui'
 import { Close } from '@/fakemui/icons'
+import { forwardRef, ReactNode, ComponentProps } from 'react'
 
 // Sheet (side panel drawer)
-export interface SheetProps extends Omit<MuiDrawerProps, 'onClose'> {
+export interface SheetProps extends Omit<ComponentProps<typeof Drawer>, 'onClose'> {
   side?: 'left' | 'right' | 'top' | 'bottom'
   onOpenChange?: (open: boolean) => void
 }
 
 const SheetCore = forwardRef<HTMLDivElement, SheetProps>(
-  ({ open, side = 'right', onOpenChange, children, ...props }, ref) => {
+  ({ open, side = 'right', onOpenChange, children, className, ...props }, ref) => {
+    const sideClass = `sheet--${side}`
     return (
-      <MuiDrawer
+      <Drawer
         ref={ref}
         anchor={side}
         open={open}
         onClose={() => onOpenChange?.(false)}
-        PaperProps={{
-          sx: {
-            width: side === 'left' || side === 'right' ? 320 : '100%',
-            height: side === 'top' || side === 'bottom' ? 'auto' : '100%',
-            maxWidth: '100vw',
-          },
-        }}
+        className={`sheet ${sideClass} ${className || ''}`}
         {...props}
       >
         {children}
-      </MuiDrawer>
+      </Drawer>
     )
   }
 )
@@ -40,17 +34,13 @@ interface SheetTriggerProps {
   children: ReactNode
   asChild?: boolean
   onClick?: () => void
+  className?: string
 }
 
 const SheetTrigger = forwardRef<HTMLDivElement, SheetTriggerProps>(
-  ({ children, onClick, ...props }, ref) => {
+  ({ children, onClick, className, ...props }, ref) => {
     return (
-      <Box
-        ref={ref}
-        onClick={onClick}
-        sx={{ display: 'inline-flex', cursor: 'pointer' }}
-        {...props}
-      >
+      <Box ref={ref} onClick={onClick} className={`sheet-trigger ${className || ''}`} {...props}>
         {children}
       </Box>
     )
@@ -67,30 +57,11 @@ interface SheetContentProps {
 }
 
 const SheetContent = forwardRef<HTMLDivElement, SheetContentProps>(
-  ({ children, side = 'right', onClose, ...props }, ref) => {
+  ({ children, side = 'right', onClose, className, ...props }, ref) => {
     return (
-      <Box
-        ref={ref}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          p: 3,
-          position: 'relative',
-        }}
-        {...props}
-      >
+      <Box ref={ref} className={`sheet-content ${className || ''}`} {...props}>
         {onClose && (
-          <IconButton
-            aria-label="close"
-            onClick={onClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: 'text.secondary',
-            }}
-          >
+          <IconButton aria-label="close" onClick={onClose} className="sheet-close-button">
             <Close />
           </IconButton>
         )}

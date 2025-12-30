@@ -2,12 +2,12 @@
 
 import {
   Paper,
-  Table as MuiTable,
-  TableBody as MuiTableBody,
+  Table,
+  TableBody as FakemuiTableBody,
   TableContainer,
-  TableFooter as MuiTableFooter,
-  TableHead as MuiTableHead,
-} from '@mui/material'
+  TableFooter as FakemuiTableFooter,
+  TableHead as FakemuiTableHead,
+} from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
 
 // Table wrapper with container
@@ -18,12 +18,14 @@ export interface TableProps {
 }
 
 const TableCore = forwardRef<HTMLTableElement, TableProps>(
-  ({ children, stickyHeader, ...props }, ref) => {
+  ({ children, stickyHeader, className, ...props }, ref) => {
     return (
-      <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: 1 }}>
-        <MuiTable ref={ref} stickyHeader={stickyHeader} size="small" {...props}>
-          {children}
-        </MuiTable>
+      <TableContainer>
+        <Paper className={`table-wrapper ${className || ''}`}>
+          <Table ref={ref} stickyHeader={stickyHeader} size="small" {...props}>
+            {children}
+          </Table>
+        </Paper>
       </TableContainer>
     )
   }
@@ -36,9 +38,9 @@ const TableHeader = forwardRef<
   { children: ReactNode; className?: string }
 >(({ children, ...props }, ref) => {
   return (
-    <MuiTableHead ref={ref} {...props}>
+    <FakemuiTableHead ref={ref} {...props}>
       {children}
-    </MuiTableHead>
+    </FakemuiTableHead>
   )
 })
 TableHeader.displayName = 'TableHeader'
@@ -47,9 +49,9 @@ TableHeader.displayName = 'TableHeader'
 const TableBody = forwardRef<HTMLTableSectionElement, { children: ReactNode; className?: string }>(
   ({ children, ...props }, ref) => {
     return (
-      <MuiTableBody ref={ref} {...props}>
+      <FakemuiTableBody ref={ref} {...props}>
         {children}
-      </MuiTableBody>
+      </FakemuiTableBody>
     )
   }
 )
@@ -61,9 +63,9 @@ const TableFooter = forwardRef<
   { children: ReactNode; className?: string }
 >(({ children, ...props }, ref) => {
   return (
-    <MuiTableFooter ref={ref} {...props}>
+    <FakemuiTableFooter ref={ref} {...props}>
       {children}
-    </MuiTableFooter>
+    </FakemuiTableFooter>
   )
 })
 TableFooter.displayName = 'TableFooter'

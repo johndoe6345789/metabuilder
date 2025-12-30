@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, List, Typography } from '@mui/material'
+import { Box, List, Typography } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
 
 // CommandList
@@ -9,17 +9,9 @@ interface CommandListProps {
   className?: string
 }
 
-const CommandList = forwardRef<HTMLDivElement, CommandListProps>(({ children, ...props }, ref) => {
+const CommandList = forwardRef<HTMLDivElement, CommandListProps>(({ children, className, ...props }, ref) => {
   return (
-    <Box
-      ref={ref}
-      sx={{
-        maxHeight: 300,
-        overflow: 'auto',
-        py: 1,
-      }}
-      {...props}
-    >
+    <Box ref={ref} className={`command-list ${className || ''}`} {...props}>
       <List dense disablePadding>
         {children}
       </List>
@@ -35,18 +27,9 @@ interface CommandEmptyProps {
 }
 
 const CommandEmpty = forwardRef<HTMLDivElement, CommandEmptyProps>(
-  ({ children = 'No results found.', ...props }, ref) => {
+  ({ children = 'No results found.', className, ...props }, ref) => {
     return (
-      <Box
-        ref={ref}
-        sx={{
-          py: 4,
-          textAlign: 'center',
-          color: 'text.secondary',
-          fontSize: '0.875rem',
-        }}
-        {...props}
-      >
+      <Box ref={ref} className={`command-empty ${className || ''}`} {...props}>
         {children}
       </Box>
     )
@@ -62,15 +45,11 @@ interface CommandGroupProps {
 }
 
 const CommandGroup = forwardRef<HTMLDivElement, CommandGroupProps>(
-  ({ children, heading, ...props }, ref) => {
+  ({ children, heading, className, ...props }, ref) => {
     return (
-      <Box ref={ref} {...props}>
+      <Box ref={ref} className={`command-group ${className || ''}`} {...props}>
         {heading && (
-          <Typography
-            variant="overline"
-            color="text.secondary"
-            sx={{ px: 2, py: 1, display: 'block' }}
-          >
+          <Typography variant="overline" className="command-group-heading">
             {heading}
           </Typography>
         )}

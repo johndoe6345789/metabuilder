@@ -1,11 +1,10 @@
 'use client'
 
 import {
-  TableCell as MuiTableCell,
-  TableCellProps as MuiTableCellProps,
-  TableRow as MuiTableRow,
-} from '@mui/material'
-import { forwardRef, ReactNode } from 'react'
+  TableCell as FakemuiTableCell,
+  TableRow as FakemuiTableRow,
+} from '@/fakemui'
+import { forwardRef, ReactNode, ComponentProps } from 'react'
 
 // TableRow
 export interface TableRowProps {
@@ -17,60 +16,57 @@ export interface TableRowProps {
 }
 
 const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
-  ({ children, selected, hover = true, ...props }, ref) => {
+  ({ children, selected, hover = true, className, ...props }, ref) => {
+    const classes = [
+      'table-row',
+      selected && 'table-row--selected',
+      hover && 'table-row--hover',
+      className,
+    ]
+      .filter(Boolean)
+      .join(' ')
+
     return (
-      <MuiTableRow
-        ref={ref}
-        selected={selected}
-        hover={hover}
-        sx={{
-          '&:last-child td, &:last-child th': { border: 0 },
-        }}
-        {...props}
-      >
+      <FakemuiTableRow ref={ref} className={classes} {...props}>
         {children}
-      </MuiTableRow>
+      </FakemuiTableRow>
     )
   }
 )
 TableRow.displayName = 'TableRow'
 
 // TableHead (cell in header)
-export interface TableHeadProps extends MuiTableCellProps {
+export interface TableHeadProps extends ComponentProps<typeof FakemuiTableCell> {
   className?: string
 }
 
 const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
-  ({ children, sx, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <MuiTableCell
+      <FakemuiTableCell
         ref={ref}
         component="th"
-        sx={{
-          fontWeight: 600,
-          bgcolor: 'action.hover',
-          ...sx,
-        }}
+        className={`table-head-cell ${className || ''}`}
         {...props}
       >
         {children}
-      </MuiTableCell>
+      </FakemuiTableCell>
     )
   }
 )
 TableHead.displayName = 'TableHead'
 
 // TableCell
-export interface TableCellProps extends MuiTableCellProps {
+export interface TableCellProps extends ComponentProps<typeof FakemuiTableCell> {
   className?: string
 }
 
 const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(
   ({ children, ...props }, ref) => {
     return (
-      <MuiTableCell ref={ref} {...props}>
+      <FakemuiTableCell ref={ref} {...props}>
         {children}
-      </MuiTableCell>
+      </FakemuiTableCell>
     )
   }
 )

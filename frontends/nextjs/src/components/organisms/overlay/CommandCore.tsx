@@ -1,6 +1,6 @@
 'use client'
 
-import { Paper } from '@mui/material'
+import { Paper } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
 
 // Command container (like cmdk)
@@ -14,17 +14,12 @@ export interface CommandProps {
 }
 
 const CommandCore = forwardRef<HTMLDivElement, CommandProps>(
-  ({ children, onValueChange, value, shouldFilter = true, ...props }, ref) => {
+  ({ children, onValueChange, value, shouldFilter = true, className, ...props }, ref) => {
     return (
       <Paper
         ref={ref}
         variant="outlined"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          borderRadius: 2,
-        }}
+        className={`command-container ${className || ''}`}
         {...props}
       >
         {children}
