@@ -21,5 +21,9 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 2
+  "minLevel": 2,
+  "schema": {
+    "entities": ["StreamChannel", "StreamSchedule", "StreamScene"],
+    "path": "schema/entities.yaml"
+  }
 }
