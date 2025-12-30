@@ -23,5 +23,12 @@
       "ThemeEditor"
     ]
   },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": []
+  },
   "minLevel": 5
 }
