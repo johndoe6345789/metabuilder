@@ -1,5 +1,6 @@
-import { Stack, TableCell, TableRow, Typography } from '@mui/material'
 import type { ReactNode } from 'react'
+
+import { Stack, TableCell, TableRow, Typography } from '@/fakemui'
 
 /**
  * Props for the {@link EmptyState} table row.
@@ -29,7 +30,7 @@ interface EmptyStateProps {
 export function EmptyState({ colSpan, message = 'No data to display', action }: EmptyStateProps) {
   return (
     <TableRow>
-      <TableCell colSpan={colSpan} sx={{ py: 6 }}>
+      <TableCell colSpan={colSpan} className="table-empty-state">
         <Stack alignItems="center" spacing={1}>
           <Typography variant="subtitle1">{message}</Typography>
           {action ? (

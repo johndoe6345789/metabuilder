@@ -1,5 +1,6 @@
-import { TableBody, TableCell, TableRow } from '@mui/material'
 import type { ReactNode } from 'react'
+
+import { TableBody, TableCell, TableRow } from '@/fakemui'
 
 import { EmptyState } from './EmptyState'
 import type { DataTableColumn } from './types'
@@ -37,7 +38,7 @@ export function Body<T>({
               key={rowId}
               hover={Boolean(onRowClick)}
               onClick={handleClick}
-              sx={onRowClick ? { cursor: 'pointer' } : undefined}
+              className={onRowClick ? 'table-row--clickable' : ''}
             >
               {columns.map(column => {
                 const content = column.render
@@ -45,7 +46,7 @@ export function Body<T>({
                   : (row as Record<string, unknown>)[column.key]
 
                 return (
-                  <TableCell key={column.key} align={column.align} sx={column.sx}>
+                  <TableCell key={column.key} align={column.align} className={column.className}>
                     {content ?? '—'}
                   </TableCell>
                 )

@@ -31,9 +31,9 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
     }
 
     return (
-      <Modal ref={ref} open={open} onClose={handleClose} className={className} {...props}>
+      <Modal open={open} onClose={handleClose} className={className} {...props}>
         <Slide direction="up" in={open}>
-          <div className="dialog-panel">{children}</div>
+          <div ref={ref} className="dialog-panel">{children}</div>
         </Slide>
       </Modal>
     )
@@ -138,8 +138,8 @@ const DialogDescription = forwardRef<
   { children: ReactNode; className?: string }
 >(({ children, className, ...props }, ref) => {
   return (
-    <Typography ref={ref} variant="body2" className={`dialog-description ${className || ''}`} {...props}>
-      {children}
+    <Typography variant="body2" className={`dialog-description ${className || ''}`} {...props}>
+      <span ref={ref}>{children}</span>
     </Typography>
   )
 })
@@ -153,7 +153,6 @@ const DialogClose = forwardRef<
   if (children) {
     return (
       <Box
-        ref={ref as unknown as React.Ref<HTMLDivElement>}
         onClick={onClick}
         className="dialog-close"
       >

@@ -1,5 +1,6 @@
-import { Alert, AlertTitle, List, ListItem, ListItemText } from '@mui/material'
 import type { ReactNode } from 'react'
+
+import { Alert, AlertTitle, List, ListItem, ListItemText } from '@/fakemui'
 
 /**
  * Props for {@link ValidationSummary}.
@@ -34,12 +35,12 @@ export function ValidationSummary({
   if (!errors.length) return null
 
   return (
-    <Alert severity="error" variant="outlined" sx={{ alignItems: 'flex-start' }}>
+    <Alert severity="error" variant="outlined" className="validation-summary">
       {showTitle ? <AlertTitle>{title}</AlertTitle> : null}
-      <List dense disablePadding component="ul" sx={{ pl: 3 }}>
+      <List dense className="validation-summary__list">
         {errors.map((error, index) => (
-          <ListItem key={index} disableGutters component="li" sx={{ py: 0.25, px: 0 }}>
-            <ListItemText primaryTypographyProps={{ variant: 'body2' }} primary={error} />
+          <ListItem key={index} className="validation-summary__item">
+            <ListItemText primary={error} />
           </ListItem>
         ))}
       </List>
