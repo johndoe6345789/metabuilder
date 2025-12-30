@@ -82,12 +82,25 @@ function M.validate_scripts_structure(package_path, metadata)
       init_file:close()
     end
 
-    -- Check for tests directory
-    local test_init = io.open(scripts_path .. "/tests/metadata.test.lua", "r")
-    if not test_init then
-      table.insert(warnings, "scripts/tests/ directory recommended for test files")
-    else
-      test_init:close()
+    -- Check for tests directory if lua_test is a devDependency
+    local has_lua_test = false
+    if metadata.devDependencies then
+      for _, dep in ipairs(metadata.devDependencies) do
+        if dep == "lua_test" then
+          has_lua_test = true
+          break
+        end
+      end
+    end
+
+    if has_lua_test then
+      -- lua_test is a devDependency, so tests are expected
+      local test_init = io.open(scripts_path .. "/tests/metadata.test.lua", "r")
+      if not test_init then
+        table.insert(warnings, "scripts/tests/ directory with test files recommended when lua_test is a devDependency")
+      else
+        test_init:close()
+      end
     end
   end
 
