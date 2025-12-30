@@ -1,51 +1,42 @@
 'use client'
 
-import {
-  Box,
-  Tab as MuiTab,
-  TabProps as MuiTabProps,
-  Tabs as MuiTabs,
-  TabsProps as MuiTabsProps,
-} from '@mui/material'
-import { forwardRef } from 'react'
+import { forwardRef, ButtonHTMLAttributes, HTMLAttributes } from 'react'
+
+import { Box, Tab as FakeMuiTab, Tabs as FakeMuiTabs, TabProps as FakeMuiTabProps } from '@/fakemui'
+
+import styles from './Tabs.module.scss'
 
 // Tabs container
-export interface TabsProps extends Omit<MuiTabsProps, 'onChange'> {
+export interface TabsProps extends HTMLAttributes<HTMLDivElement> {
   defaultValue?: string
+  value?: string
   onValueChange?: (value: string) => void
+  variant?: 'standard' | 'scrollable' | 'fullWidth'
 }
 
 const Tabs = forwardRef<HTMLDivElement, TabsProps>(
-  ({ defaultValue, value, onValueChange, children, sx, ...props }, ref) => {
+  ({ defaultValue, value, onValueChange, children, className, variant, ...props }, ref) => {
     return (
-      <Box ref={ref} sx={sx}>
-        <MuiTabs
+      <Box ref={ref} className={`${styles.tabsWrapper} ${className || ''}`} {...props}>
+        <FakeMuiTabs
           value={value || defaultValue}
           onChange={(_, newValue) => onValueChange?.(newValue)}
-          {...props}
+          variant={variant}
+          className={styles.tabs}
         >
           {children}
-        </MuiTabs>
+        </FakeMuiTabs>
       </Box>
     )
   }
 )
 Tabs.displayName = 'Tabs'
 
-// TabsList (wrapper for MUI Tabs - for shadcn compat)
+// TabsList (wrapper for tabs - for shadcn compat)
 const TabsList = forwardRef<HTMLDivElement, { children: React.ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <Box
-        ref={ref}
-        sx={{
-          display: 'inline-flex',
-          bgcolor: 'action.hover',
-          borderRadius: 1,
-          p: 0.5,
-        }}
-        {...props}
-      >
+      <Box ref={ref} className={`${styles.tabsList} ${className || ''}`} {...props}>
         {children}
       </Box>
     )
@@ -54,29 +45,21 @@ const TabsList = forwardRef<HTMLDivElement, { children: React.ReactNode; classNa
 TabsList.displayName = 'TabsList'
 
 // TabsTrigger (individual tab)
-export interface TabsTriggerProps extends Omit<MuiTabProps, 'value'> {
+export interface TabsTriggerProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'value'> {
   value: string
+  label?: React.ReactNode
+  selected?: boolean
 }
 
-const TabsTrigger = forwardRef<HTMLDivElement, TabsTriggerProps>(
-  ({ value, label, children, sx, ...props }, ref) => {
+const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
+  ({ value, label, children, className, selected, ...props }, ref) => {
     return (
-      <MuiTab
-        ref={ref as React.Ref<HTMLDivElement>}
+      <FakeMuiTab
+        ref={ref}
         value={value}
         label={label || children}
-        sx={{
-          minHeight: 36,
-          px: 3,
-          py: 1,
-          textTransform: 'none',
-          fontWeight: 500,
-          borderRadius: 0.5,
-          '&.Mui-selected': {
-            bgcolor: 'background.paper',
-          },
-          ...sx,
-        }}
+        selected={selected}
+        className={`${styles.tabTrigger} ${className || ''}`}
         {...props}
       />
     )
@@ -93,7 +76,7 @@ interface TabsContentProps {
 }
 
 const TabsContent = forwardRef<HTMLDivElement, TabsContentProps>(
-  ({ value, children, forceMount, ...props }, ref) => {
+  ({ value, children, forceMount, className, ...props }, ref) => {
     return (
       <Box
         ref={ref}
@@ -101,7 +84,7 @@ const TabsContent = forwardRef<HTMLDivElement, TabsContentProps>(
         hidden={!forceMount}
         id={`tabpanel-${value}`}
         aria-labelledby={`tab-${value}`}
-        sx={{ pt: 2 }}
+        className={`${styles.tabContent} ${className || ''}`}
         {...props}
       >
         {children}
