@@ -116,7 +116,6 @@ export {
   Badge,
   Chip,
   Divider,
-  Icon,
   List,
   ListItem,
   ListItemButton,
