@@ -108,11 +108,11 @@ retro_helpers.AXIS = {
 -- Input Functions
 -- ============================================================================
 
---- Press and release a button (tap)
---- @param session_id string
---- @param button string Button from BUTTON table
---- @param player? number Player number (default 0)
---- @param duration_ms? number Hold duration in ms (default 50)
+---Press and release a button (tap)
+---@param session_id string Session identifier
+---@param button string Button from BUTTON table
+---@param player? number Player number (default 0)
+---@param duration_ms? number Hold duration in ms (default 50)
 function retro_helpers.tap(session_id, button, player, duration_ms)
     player = player or 0
     duration_ms = duration_ms or 50
@@ -122,10 +122,10 @@ function retro_helpers.tap(session_id, button, player, duration_ms)
     retro_helpers.release(session_id, button, player)
 end
 
---- Press a button (hold down)
---- @param session_id string
---- @param button string Button from BUTTON table
---- @param player? number Player number (default 0)
+---Press a button (hold down)
+---@param session_id string Session identifier
+---@param button string Button from BUTTON table
+---@param player? number Player number (default 0)
 function retro_helpers.press(session_id, button, player)
     player = player or 0
     http.post("/api/v1/retro/sessions/" .. session_id .. "/input", {
@@ -135,10 +135,10 @@ function retro_helpers.press(session_id, button, player)
     })
 end
 
---- Release a button
---- @param session_id string
---- @param button string Button from BUTTON table
---- @param player? number Player number (default 0)
+---Release a button
+---@param session_id string Session identifier
+---@param button string Button from BUTTON table
+---@param player? number Player number (default 0)
 function retro_helpers.release(session_id, button, player)
     player = player or 0
     http.post("/api/v1/retro/sessions/" .. session_id .. "/input", {
@@ -148,9 +148,9 @@ function retro_helpers.release(session_id, button, player)
     })
 end
 
---- Release all buttons for a player
---- @param session_id string
---- @param player? number Player number (default 0)
+---Release all buttons for a player
+---@param session_id string Session identifier
+---@param player? number Player number (default 0)
 function retro_helpers.release_all(session_id, player)
     player = player or 0
     for _, btn in pairs(retro_helpers.BUTTON) do
