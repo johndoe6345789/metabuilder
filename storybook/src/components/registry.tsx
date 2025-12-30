@@ -689,6 +689,12 @@ export const componentRegistry: Record<string, AnyComponent> = {
   Table,
   Pagination,
   
+  // Dialogs/Modals
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  
   // App-specific (from Lua packages)
   Level4Header,
   IntroSection,
