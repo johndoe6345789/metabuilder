@@ -1,14 +1,14 @@
 'use client'
 
-import type { BoxProps } from '@mui/material'
-import { Box } from '@mui/material'
+import { Box } from '@fakemui/layout/Box'
+import type { BoxProps } from '@fakemui/layout/Box'
 import { forwardRef, useContext } from 'react'
 
 import { TabsContext } from '../core/tabs-context'
 
-export type TabsListProps = BoxProps
+export type TabsListProps = Omit<BoxProps, 'ref'>
 
-const TabsList = forwardRef<HTMLDivElement, TabsListProps>(({ children, sx, ...props }, ref) => {
+const TabsList = forwardRef<HTMLDivElement, TabsListProps>(({ children, style, ...props }, ref) => {
   const context = useContext(TabsContext)
 
   if (!context) {
@@ -17,18 +17,18 @@ const TabsList = forwardRef<HTMLDivElement, TabsListProps>(({ children, sx, ...p
 
   return (
     <Box
-      ref={ref}
+      ref={ref as React.Ref<HTMLElement>}
       role="tablist"
       aria-orientation="horizontal"
-      sx={{
+      style={{
         display: 'inline-flex',
-        height: 36,
+        height: '36px',
         alignItems: 'center',
         justifyContent: 'center',
-        bgcolor: 'action.hover',
-        borderRadius: 2,
-        p: 0.5,
-        ...sx,
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+        borderRadius: '8px',
+        padding: '4px',
+        ...style,
       }}
       {...props}
     >
