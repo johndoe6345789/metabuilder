@@ -22,10 +22,14 @@
   },
   "tests": {
     "scripts": [
-      "tests/status.test.lua"
+      "tests/status.test.lua",
+      "tests/editor.test.lua",
+      "tests/run.test.lua"
     ],
     "cases": [
-      "tests/status.cases.json"
+      "tests/status.cases.json",
+      "tests/editor.cases.json",
+      "tests/run.cases.json"
     ]
   },
   "minLevel": 5
