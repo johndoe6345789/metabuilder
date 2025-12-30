@@ -1,4 +1,3 @@
-import { ArrowClockwise, Info, Warning } from '@/fakemui/icons'
 import { useEffect } from 'react'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
@@ -8,6 +7,7 @@ import { Skeleton } from '@/components/ui'
 import { Badge } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
 import { WorkflowRunCard } from '@/components/WorkflowRunCard'
+import { ArrowClockwise, Info, Warning } from '@/fakemui/icons'
 import { useAutoRefresh } from '@/hooks/useAutoRefresh'
 import { useGitHubFetcher } from '@/hooks/useGitHubFetcher'
 

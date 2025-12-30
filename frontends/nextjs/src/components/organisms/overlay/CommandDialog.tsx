@@ -1,8 +1,9 @@
 'use client'
 
+import { forwardRef, ReactNode } from 'react'
+
 import { Box, Input } from '@/fakemui'
 import { Search } from '@/fakemui/icons'
-import { forwardRef, ReactNode } from 'react'
 
 // CommandDialog
 interface CommandDialogProps {

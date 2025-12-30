@@ -1,6 +1,5 @@
-import { CheckCircle, Info, Trash, Warning } from '@/fakemui/icons'
-
 import { Badge, Button, Card, CardContent, ScrollArea } from '@/components/ui'
+import { CheckCircle, Info, Trash, Warning } from '@/fakemui/icons'
 import type { ErrorLog } from '@/lib/db/error-logs'
 import type { User } from '@/lib/level-types'
 

@@ -1,5 +1,3 @@
-import { Broom } from '@/fakemui/icons'
-
 import {
   Badge,
   Button,
@@ -11,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui'
+import { Broom } from '@/fakemui/icons'
 import type { User } from '@/lib/level-types'
 
 import type { ErrorLevelFilter, ResolutionFilter } from './useErrorLogFilters'

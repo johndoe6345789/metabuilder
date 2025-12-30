@@ -1,7 +1,7 @@
-import { useKV } from '@/hooks/data/useKV'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
+import { useKV } from '@/hooks/data/useKV'
 import { Database } from '@/lib/database'
 import type { AppConfiguration } from '@/lib/level-types'
 import { seedDatabase } from '@/lib/seed-data'

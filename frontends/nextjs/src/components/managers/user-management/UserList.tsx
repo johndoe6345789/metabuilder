@@ -1,5 +1,4 @@
 'use client'
-import { FunnelSimple, PencilSimple, Trash } from '@/fakemui/icons'
 import { useMemo, useState } from 'react'
 
 import {
@@ -17,6 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
+import { FunnelSimple, PencilSimple, Trash } from '@/fakemui/icons'
 import type { User, UserRole } from '@/lib/level-types'
 interface UserListProps {
   users: User[]

@@ -1,7 +1,6 @@
-import { Eye } from '@/fakemui/icons'
-
 import { Button } from '@/components/ui'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Eye } from '@/fakemui/icons'
 
 interface PreviewTabProps {
   onPreview: (level: number) => void

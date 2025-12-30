@@ -1,7 +1,3 @@
-import { Box, Stack, Typography } from '@/fakemui'
-
-import { Description, Robot } from '@/fakemui/icons'
-
 import {
   Badge,
   Button,
@@ -12,6 +8,8 @@ import {
   CardTitle,
   ScrollArea,
 } from '@/components/ui'
+import { Box, Stack, Typography } from '@/fakemui'
+import { Description, Robot } from '@/fakemui/icons'
 
 import { Job } from '../types'
 

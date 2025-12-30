@@ -1,15 +1,17 @@
 'use client'
 
+import { forwardRef, ReactNode } from 'react'
+
+import { Box } from '@/fakemui/fakemui/layout'
 import {
   Card as FakeMuiCard,
-  CardContent as FakeMuiCardContent,
   CardActions,
-  CardTitle as FakeMuiCardTitle,
+  CardContent as FakeMuiCardContent,
   CardDescription as FakeMuiCardDescription,
   CardFooter as FakeMuiCardFooter,
+  CardTitle as FakeMuiCardTitle,
 } from '@/fakemui/fakemui/surfaces'
-import { Box } from '@/fakemui/fakemui/layout'
-import { forwardRef, ReactNode } from 'react'
+
 import styles from './Card.module.scss'
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {

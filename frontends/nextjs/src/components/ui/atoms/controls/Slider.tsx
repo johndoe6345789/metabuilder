@@ -1,7 +1,9 @@
 'use client'
 
+import { CSSProperties,forwardRef } from 'react'
+
 import { Slider as FakemuiSlider, SliderProps as FakemuiSliderProps } from '@/fakemui/fakemui/inputs'
-import { forwardRef, CSSProperties } from 'react'
+
 import styles from './Slider.module.scss'
 
 /**

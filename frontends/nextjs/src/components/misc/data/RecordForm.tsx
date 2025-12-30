@@ -1,9 +1,9 @@
-import { FloppyDisk, X } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
+import { FloppyDisk, X } from '@/fakemui/icons'
 import type { ModelSchema, SchemaConfig } from '@/lib/schema-types'
 import { createEmptyRecord, validateRecord } from '@/lib/schema-utils'
 

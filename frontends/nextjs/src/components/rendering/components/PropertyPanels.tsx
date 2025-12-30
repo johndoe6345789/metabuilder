@@ -1,6 +1,5 @@
-import { Code, PaintBrush } from '@/fakemui/icons'
-
 import { Button, ScrollArea, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
+import { Code, PaintBrush } from '@/fakemui/icons'
 import type { DropdownConfig } from '@/lib/database'
 import type { ComponentDefinition, ComponentInstance } from '@/lib/types/builder-types'
 import type { JsonValue } from '@/types/utility-types'

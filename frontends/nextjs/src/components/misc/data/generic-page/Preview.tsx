@@ -1,5 +1,3 @@
-import { Eye, Layout, ShieldCheck } from '@/fakemui/icons'
-
 import {
   Badge,
   Card,
@@ -9,6 +7,7 @@ import {
   CardTitle,
   Separator,
 } from '@/components/ui'
+import { Eye, Layout, ShieldCheck } from '@/fakemui/icons'
 import { PageDefinition } from '@/lib/rendering/page/page-renderer'
 
 interface GenericPagePreviewProps {

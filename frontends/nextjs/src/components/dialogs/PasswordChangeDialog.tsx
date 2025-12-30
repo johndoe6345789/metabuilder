@@ -1,4 +1,3 @@
-import { Eye, EyeSlash, Warning } from '@/fakemui/icons'
 import { useState } from 'react'
 
 import {
@@ -13,6 +12,7 @@ import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
 import { Alert, AlertDescription } from '@/components/ui'
+import { Eye, EyeSlash, Warning } from '@/fakemui/icons'
 
 interface PasswordChangeDialogProps {
   open: boolean

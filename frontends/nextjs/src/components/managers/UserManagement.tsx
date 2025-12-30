@@ -1,6 +1,5 @@
 'use client'
 
-import { Pencil, Plus, Trash, UserCircle } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -22,6 +21,7 @@ import {
   DialogTrigger,
 } from '@/components/ui'
 import { Avatar, AvatarFallback } from '@/components/ui'
+import { Pencil, Plus, Trash, UserCircle } from '@/fakemui/icons'
 import { createUser, deleteUser, listUsers, updateUser } from '@/lib/api/users'
 import type { User, UserRole } from '@/lib/level-types'
 

@@ -1,6 +1,7 @@
-import { Home as HomeIcon } from '@/fakemui/icons'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+
+import { Home as HomeIcon } from '@/fakemui/icons'
 
 import { NavLink } from './NavLink'
 

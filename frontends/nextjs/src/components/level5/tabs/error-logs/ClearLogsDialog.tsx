@@ -1,5 +1,3 @@
-import { Warning } from '@/fakemui/icons'
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui'
+import { Warning } from '@/fakemui/icons'
 
 interface ClearLogsDialogProps {
   open: boolean

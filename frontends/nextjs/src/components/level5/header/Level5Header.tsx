@@ -1,7 +1,6 @@
-import { Crown, SignOut, Terminal } from '@/fakemui/icons'
-
 import { Button } from '@/components/ui'
 import { Badge } from '@/components/ui'
+import { Crown, SignOut, Terminal } from '@/fakemui/icons'
 
 interface Level5HeaderProps {
   username: string

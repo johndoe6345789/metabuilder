@@ -1,8 +1,9 @@
 'use client'
 
-import { Box } from '@/fakemui/fakemui/layout'
-import { Typography } from '@/fakemui/fakemui/data-display'
 import { ReactNode } from 'react'
+
+import { Typography } from '@/fakemui/fakemui/data-display'
+import { Box } from '@/fakemui/fakemui/layout'
 
 import { CommandDialog } from '../command'
 import type { CommandGroup, CommandItem } from '../command/command.types'

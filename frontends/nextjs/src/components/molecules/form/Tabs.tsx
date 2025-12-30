@@ -1,8 +1,8 @@
 'use client'
 
-import { forwardRef, ButtonHTMLAttributes, HTMLAttributes } from 'react'
+import { ButtonHTMLAttributes, forwardRef, HTMLAttributes } from 'react'
 
-import { Box, Tab as FakeMuiTab, Tabs as FakeMuiTabs, TabProps as FakeMuiTabProps } from '@/fakemui'
+import { Box, Tab as FakeMuiTab, TabProps as FakeMuiTabProps,Tabs as FakeMuiTabs } from '@/fakemui'
 
 import styles from './Tabs.module.scss'
 

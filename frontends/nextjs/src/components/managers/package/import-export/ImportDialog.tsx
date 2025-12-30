@@ -1,4 +1,3 @@
-import { ArrowSquareIn, FileArrowUp } from '@/fakemui/icons'
 import type React from 'react'
 
 import {
@@ -8,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui'
+import { ArrowSquareIn, FileArrowUp } from '@/fakemui/icons'
 
 import { ImportStatus } from './StatusUI'
 

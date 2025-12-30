@@ -1,8 +1,9 @@
 'use client'
 
-import { Box } from '@/fakemui/fakemui/layout'
-import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@/fakemui/fakemui/data-display'
 import { forwardRef } from 'react'
+
+import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@/fakemui/fakemui/data-display'
+import { Box } from '@/fakemui/fakemui/layout'
 
 import type {
   CommandEmptyProps,

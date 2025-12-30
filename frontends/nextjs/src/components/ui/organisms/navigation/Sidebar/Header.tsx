@@ -1,6 +1,8 @@
-import { ChevronLeft as ChevronLeftIcon } from '@/fakemui/icons'
-import { Box, IconButton } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
+
+import { Box, IconButton } from '@/fakemui'
+import { ChevronLeft as ChevronLeftIcon } from '@/fakemui/icons'
+
 import styles from '../Navigation.module.scss'
 
 interface SidebarHeaderProps {

@@ -1,4 +1,3 @@
-import { ArrowDown, ArrowUp, Pencil, Trash } from '@/fakemui/icons'
 import { ReactNode } from 'react'
 
 import {
@@ -11,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
+import { ArrowDown, ArrowUp, Pencil, Trash } from '@/fakemui/icons'
 import type { FieldSchema, ModelSchema } from '@/lib/schema-types'
 import { getFieldLabel } from '@/lib/schema-utils'
 import type { JsonValue } from '@/types/utility-types'

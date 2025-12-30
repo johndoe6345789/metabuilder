@@ -5,6 +5,7 @@ import { forwardRef, ReactNode, SelectHTMLAttributes } from 'react'
 import { Box, FormControl, FormHelperText, FormLabel, Select as FakeMuiSelect } from '@/fakemui'
 import { KeyboardArrowDown } from '@/fakemui/icons'
 
+import styles from './Select.module.scss'
 import { SelectContent } from './SelectContent'
 import { SelectGroup } from './SelectGroup'
 import type { SelectItemProps } from './SelectItem'
@@ -13,8 +14,6 @@ import { SelectLabel } from './SelectLabel'
 import { SelectSeparator } from './SelectSeparator'
 import { SelectTrigger } from './SelectTrigger'
 import { SelectValue } from './SelectValue'
-
-import styles from './Select.module.scss'
 
 export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange'> {
   onValueChange?: (value: string) => void

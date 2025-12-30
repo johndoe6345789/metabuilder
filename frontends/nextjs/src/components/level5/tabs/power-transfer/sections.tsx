@@ -1,7 +1,5 @@
 'use client'
 
-import { Crown } from '@/fakemui/icons'
-
 import {
   Alert,
   AlertDescription,
@@ -13,6 +11,7 @@ import {
   CardTitle,
   ScrollArea,
 } from '@/components/ui'
+import { Crown } from '@/fakemui/icons'
 import type { PowerTransferRequest, User } from '@/lib/level-types'
 
 const STATUS_VARIANTS: Record<

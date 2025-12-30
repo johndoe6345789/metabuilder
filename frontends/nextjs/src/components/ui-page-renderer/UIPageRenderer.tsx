@@ -1,9 +1,10 @@
 'use client'
 
 import React from 'react'
+
 import { generateComponentTree } from '@/lib/lua/ui/generate-component-tree'
-import type { LuaActionHandler, UIPageData } from '@/lib/ui-pages/load-page-from-db'
 import type { LuaUIComponent } from '@/lib/lua/ui/types/lua-ui-package'
+import type { LuaActionHandler, UIPageData } from '@/lib/ui-pages/load-page-from-db'
 
 interface UIPageRendererProps {
   pageData: UIPageData

@@ -1,12 +1,12 @@
 import { buildPackageRegistry } from './scripts/build-package-registry'
 import { checkDependencies } from './scripts/check-dependencies'
 import { exportAllPackagesForSeed } from './scripts/export-all-packages-for-seed'
-import { getAllPackageScripts } from './scripts/get-all-package-scripts'
 import {
   canAccessPackage,
   getAccessiblePackages,
   getPackagesByLevel,
 } from './scripts/get-accessible-packages'
+import { getAllPackageScripts } from './scripts/get-all-package-scripts'
 import { getInstalledPackages } from './scripts/get-installed-packages'
 import { getPackage } from './scripts/get-package'
 import { getPackageComponents } from './scripts/get-package-components'
@@ -26,8 +26,8 @@ import {
 } from './scripts/resolve-dependencies'
 import { uninstallPackage } from './scripts/uninstall-package'
 
-export type { LuaScriptFile, PackageDefinition, PackageRegistry } from './types'
 export type { DependencyResolutionResult } from './scripts/resolve-dependencies'
+export type { LuaScriptFile, PackageDefinition, PackageRegistry } from './types'
 
 export {
   buildPackageRegistry,
@@ -58,12 +58,12 @@ export { getPackageGlue } from './get-package-glue'
 export { PackageGlue, packageGlue } from './package-glue'
 
 // Package sources - multi-source repository support
-export * from './sources'
+export type { PackageRepoConfig } from './package-repo-config'
 export {
-  getPackageRepoConfig,
-  validatePackageRepoConfig,
   DEFAULT_PACKAGE_REPO_CONFIG,
   DEVELOPMENT_PACKAGE_REPO_CONFIG,
+  getPackageRepoConfig,
   PRODUCTION_PACKAGE_REPO_CONFIG,
+  validatePackageRepoConfig,
 } from './package-repo-config'
-export type { PackageRepoConfig } from './package-repo-config'
+export * from './sources'

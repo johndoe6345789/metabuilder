@@ -1,7 +1,6 @@
+import { CardDescription, CardTitle } from '@/components/ui'
 import { Card, CardContent, CardHeader } from '@/fakemui'
 import { Play } from '@/fakemui/icons'
-
-import { CardDescription, CardTitle } from '@/components/ui'
 
 import { createActionHandlers } from './editor/createActionHandlers'
 import type { WorkflowEditorProps } from './editor/types'

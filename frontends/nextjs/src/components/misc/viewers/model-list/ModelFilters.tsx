@@ -1,5 +1,3 @@
-import { MagnifyingGlass } from '@/fakemui/icons'
-
 import {
   Input,
   Label,
@@ -9,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui'
+import { MagnifyingGlass } from '@/fakemui/icons'
 import type { FieldSchema, ModelSchema } from '@/lib/schema-types'
 import type { JsonValue } from '@/types/utility-types'
 

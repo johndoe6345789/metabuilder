@@ -1,6 +1,5 @@
-import { CheckCircle, Trash } from '@/fakemui/icons'
-
 import { Badge, Button, Card, CardContent, ScrollArea } from '@/components/ui'
+import { CheckCircle, Trash } from '@/fakemui/icons'
 import type { ErrorLog } from '@/lib/db/error-logs'
 
 import { formatLogContext } from '../helpers/context'

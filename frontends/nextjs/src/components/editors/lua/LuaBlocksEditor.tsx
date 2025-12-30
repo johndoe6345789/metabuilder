@@ -10,13 +10,12 @@ import {
   ListItemButton,
   ListItemText,
   Paper,
+  Plus as AddIcon,
   Stack,
   Tooltip,
-  Typography,
-  Plus as AddIcon,
   Trash as DeleteIcon,
+  Typography,
 } from '@/fakemui'
-
 import type { LuaScript } from '@/lib/level-types'
 
 import { BlockListView } from './BlockListView'

@@ -1,7 +1,6 @@
 import type { JSX } from 'react'
 
 import { ArrowRight, Code, GitBranch, Lightning } from '@/fakemui/icons'
-
 import type { WorkflowNode } from '@/lib/level-types'
 
 import type { NodeTypeOption } from './types'

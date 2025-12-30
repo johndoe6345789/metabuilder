@@ -1,7 +1,9 @@
 'use client'
 
-import { FormLabel, FormLabelProps } from '@/fakemui/fakemui/inputs'
 import { forwardRef, ReactNode } from 'react'
+
+import { FormLabel, FormLabelProps } from '@/fakemui/fakemui/inputs'
+
 import styles from './Label.module.scss'
 
 /**

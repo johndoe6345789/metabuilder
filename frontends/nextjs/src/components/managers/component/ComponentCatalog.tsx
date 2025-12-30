@@ -1,9 +1,8 @@
 import { useState } from 'react'
 
+import { getComponentIcon } from '@/components/get-component-icon'
 import { Box, Card, Stack, TextField, Typography } from '@/fakemui'
 import { Search } from '@/fakemui/icons'
-
-import { getComponentIcon } from '@/components/get-component-icon'
 import type { ComponentDefinition } from '@/lib/builder-types'
 import { componentCatalog } from '@/lib/component-catalog'
 

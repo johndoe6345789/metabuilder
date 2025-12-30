@@ -5,7 +5,6 @@ import { ComponentPropsWithoutRef, forwardRef, ReactNode } from 'react'
 import { Typography } from '@/fakemui/fakemui/data-display'
 
 import { DropdownMenuItem } from '../DropdownMenu'
-
 import styles from './MenuItem.module.scss'
 
 type DropdownMenuItemComponentProps = ComponentPropsWithoutRef<typeof DropdownMenuItem>

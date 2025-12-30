@@ -1,5 +1,4 @@
 'use client'
-import { Clock, ShieldWarning, UserSwitch } from '@/fakemui/icons'
 import { useMemo, useState } from 'react'
 
 import {
@@ -19,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
+import { Clock, ShieldWarning, UserSwitch } from '@/fakemui/icons'
 export type AuditSeverity = 'info' | 'warning' | 'critical'
 export interface AuditEvent {
   id: string

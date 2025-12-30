@@ -1,7 +1,8 @@
 'use client'
 
-import { Pagination as FakeMuiPagination } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Pagination as FakeMuiPagination } from '@/fakemui'
 
 interface PaginationProps {
   count: number

@@ -1,7 +1,9 @@
 'use client'
 
-import { InputBase, InputBaseProps } from '@/fakemui/fakemui/inputs'
 import { forwardRef, InputHTMLAttributes } from 'react'
+
+import { InputBase, InputBaseProps } from '@/fakemui/fakemui/inputs'
+
 import styles from './Input.module.scss'
 
 /**

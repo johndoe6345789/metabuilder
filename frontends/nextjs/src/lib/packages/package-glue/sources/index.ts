@@ -1,31 +1,29 @@
 // Package source types and interfaces
 export type {
-  PackageSourceType,
-  PackageSourceConfig,
-  PackageIndexEntry,
   PackageData,
+  PackageIndexEntry,
   PackageSource,
+  PackageSourceConfig,
+  PackageSourceType,
 } from './package-source-types'
-
 export {
   DEFAULT_LOCAL_SOURCE,
   DEFAULT_REMOTE_SOURCE,
 } from './package-source-types'
 
 // Local package source
-export { LocalPackageSource, createLocalSource } from './local-package-source'
+export { createLocalSource,LocalPackageSource } from './local-package-source'
 
 // Remote package source
-export { RemotePackageSource, createRemoteSource } from './remote-package-source'
+export { createRemoteSource,RemotePackageSource } from './remote-package-source'
 
 // Package source manager
 export type {
   ConflictResolution,
-  PackageSourceManagerConfig,
   MergedPackageEntry,
+  PackageSourceManagerConfig,
 } from './package-source-manager'
-
 export {
-  PackageSourceManager,
   createPackageSourceManager,
+  PackageSourceManager,
 } from './package-source-manager'

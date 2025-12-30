@@ -1,4 +1,3 @@
-import { Lock } from '@/fakemui/icons'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -6,6 +5,7 @@ import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Lock } from '@/fakemui/icons'
 
 interface LoginProps {
   onLogin: (username: string, password: string) => void

@@ -2,20 +2,19 @@
 
 import { forwardRef, ReactNode } from 'react'
 
-import { Box } from '@/fakemui/fakemui/layout'
 import { Typography } from '@/fakemui/fakemui/data-display'
 import { IconButton } from '@/fakemui/fakemui/inputs'
+import { Box } from '@/fakemui/fakemui/layout'
 import {
   Dialog as FakeMuiDialog,
   DialogTitle as FakeMuiDialogTitle,
 } from '@/fakemui/fakemui/utils'
 import { Close } from '@/fakemui/icons'
 
+import styles from './Dialog.module.scss'
 import { DialogContent, type DialogContentProps } from './dialog/Body'
 import { DialogFooter, type DialogFooterProps } from './dialog/Footer'
 import { DialogHeader, type DialogHeaderProps } from './dialog/Header'
-
-import styles from './Dialog.module.scss'
 
 export interface DialogProps {
   open?: boolean

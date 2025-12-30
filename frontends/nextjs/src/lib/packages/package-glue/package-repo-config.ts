@@ -1,4 +1,4 @@
-import type { PackageSourceConfig, ConflictResolution } from './sources'
+import type { ConflictResolution,PackageSourceConfig } from './sources'
 
 /**
  * Package repository configuration

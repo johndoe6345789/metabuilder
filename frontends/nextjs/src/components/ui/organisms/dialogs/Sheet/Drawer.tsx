@@ -1,10 +1,11 @@
 'use client'
 
-import { Close as CloseIcon } from '@/fakemui/icons'
+import { forwardRef, ReactNode } from 'react'
+
+import { IconButton } from '@/fakemui/fakemui/inputs'
 import { Box } from '@/fakemui/fakemui/layout'
 import { Drawer } from '@/fakemui/fakemui/surfaces'
-import { IconButton } from '@/fakemui/fakemui/inputs'
-import { forwardRef, ReactNode } from 'react'
+import { Close as CloseIcon } from '@/fakemui/icons'
 
 import styles from './Drawer.module.scss'
 

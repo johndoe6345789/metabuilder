@@ -1,7 +1,8 @@
 'use client'
 
-import * as FakeMuiIcons from '@/fakemui/icons'
 import { CSSProperties, forwardRef } from 'react'
+
+import * as FakeMuiIcons from '@/fakemui/icons'
 
 // Create a type from the available fakemui icons
 export type IconName = keyof typeof FakeMuiIcons

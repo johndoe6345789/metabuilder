@@ -1,7 +1,9 @@
 'use client'
 
+import { CSSProperties,forwardRef } from 'react'
+
 import { ToggleButton, ToggleButtonProps } from '@/fakemui/fakemui/inputs'
-import { forwardRef, CSSProperties } from 'react'
+
 import styles from './Toggle.module.scss'
 
 /** Toggle button visual style variants */

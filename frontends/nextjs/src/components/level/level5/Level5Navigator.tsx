@@ -1,7 +1,6 @@
-import { ArrowsLeftRight, Buildings, Camera, Eye, Users, Warning } from '@/fakemui/icons'
-
-import { Box, Typography } from '@/fakemui'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
+import { Box, Typography } from '@/fakemui'
+import { ArrowsLeftRight, Buildings, Camera, Eye, Users, Warning } from '@/fakemui/icons'
 import type { AppLevel, Tenant, User } from '@/lib/level-types'
 
 import { ErrorLogsTab } from '../../level5/tabs/error-logs/ErrorLogsTab'

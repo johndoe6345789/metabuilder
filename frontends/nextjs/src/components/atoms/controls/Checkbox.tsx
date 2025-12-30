@@ -1,7 +1,8 @@
 'use client'
 
-import { Checkbox as FakemuiCheckbox } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Checkbox as FakemuiCheckbox } from '@/fakemui'
 
 /**
  * Props for the Checkbox component

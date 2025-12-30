@@ -1,5 +1,3 @@
-import { useKV } from '@/hooks/data/useKV'
-import { ArrowDown, ArrowUp, MagnifyingGlass, Pencil, Plus, Trash } from '@/fakemui/icons'
 import { motion } from 'motion/react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
@@ -9,6 +7,8 @@ import { Input } from '@/components/ui'
 import { Badge } from '@/components/ui'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
+import { ArrowDown, ArrowUp, MagnifyingGlass, Pencil, Plus, Trash } from '@/fakemui/icons'
+import { useKV } from '@/hooks/data/useKV'
 import type { ModelSchema, SchemaConfig } from '@/lib/schema-types'
 import {
   filterRecords,

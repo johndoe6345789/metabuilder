@@ -1,8 +1,8 @@
 'use client'
 
-import { Box, Collapse, Divider, List, ListItem, ListItemIcon, ListItemText } from '@/fakemui'
 import { forwardRef, ReactNode, useState } from 'react'
 
+import { Box, Collapse, Divider, List, ListItem, ListItemIcon, ListItemText } from '@/fakemui'
 import { ExpandLess, ExpandMore } from '@/fakemui/icons'
 
 import styles from './NavGroup.module.scss'

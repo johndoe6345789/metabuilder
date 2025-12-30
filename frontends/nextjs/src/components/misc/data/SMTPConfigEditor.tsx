@@ -1,4 +1,3 @@
-import { Envelope, FloppyDisk, PaperPlaneTilt } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -7,6 +6,7 @@ import { Label } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Switch } from '@/components/ui'
+import { Envelope, FloppyDisk, PaperPlaneTilt } from '@/fakemui/icons'
 import { Database } from '@/lib/database'
 import { DEFAULT_SMTP_CONFIG, simulateEmailSend, type SMTPConfig } from '@/lib/password-utils'
 

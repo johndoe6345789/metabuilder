@@ -1,6 +1,5 @@
 'use client'
 
-import { ArrowsLeftRight } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 
 import {
@@ -12,6 +11,7 @@ import {
   CardTitle,
   Separator,
 } from '@/components/ui'
+import { ArrowsLeftRight } from '@/fakemui/icons'
 import { fetchPowerTransferRequests } from '@/lib/api/power-transfers'
 import type { PowerTransferRequest, User } from '@/lib/level-types'
 

@@ -1,7 +1,9 @@
 'use client'
 
+import { CSSProperties,forwardRef } from 'react'
+
 import { LinearProgress, LinearProgressProps } from '@/fakemui/fakemui/feedback'
-import { forwardRef, CSSProperties } from 'react'
+
 import styles from './Progress.module.scss'
 
 /**

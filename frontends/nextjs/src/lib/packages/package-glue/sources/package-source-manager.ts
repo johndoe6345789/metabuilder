@@ -1,10 +1,10 @@
+import { LocalPackageSource } from './local-package-source'
 import type {
+  PackageData,
+  PackageIndexEntry,
   PackageSource,
   PackageSourceConfig,
-  PackageIndexEntry,
-  PackageData,
 } from './package-source-types'
-import { LocalPackageSource } from './local-package-source'
 import { RemotePackageSource } from './remote-package-source'
 
 /**

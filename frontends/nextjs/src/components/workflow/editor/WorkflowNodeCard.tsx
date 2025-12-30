@@ -1,6 +1,3 @@
-import { Card, CardContent } from '@/fakemui'
-import { ArrowRight, Trash } from '@/fakemui/icons'
-
 import {
   Badge,
   Button,
@@ -12,6 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui'
+import { Card, CardContent } from '@/fakemui'
+import { ArrowRight, Trash } from '@/fakemui/icons'
 import type { LuaScript, WorkflowNode } from '@/lib/level-types'
 
 import { NODE_TYPE_COLORS, NODE_TYPE_ICONS, NODE_TYPE_OPTIONS } from './constants'

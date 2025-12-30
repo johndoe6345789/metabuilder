@@ -1,6 +1,5 @@
-import { Plus, Trash } from '@/fakemui/icons'
-
 import { Badge, Button, CardContent, Input, Label } from '@/components/ui'
+import { Plus, Trash } from '@/fakemui/icons'
 import type { LuaScript } from '@/lib/level-types'
 import type { JsonValue } from '@/types/utility-types'
 

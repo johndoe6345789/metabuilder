@@ -6,7 +6,6 @@ import { Box, TextField } from '@/fakemui'
 import { Search } from '@/fakemui/icons'
 
 import { Label } from '../atoms/Label'
-
 import styles from './FormField.module.scss'
 
 // FormField - combines label and input

@@ -2,6 +2,7 @@
 
 import { forwardRef, ReactNode } from 'react'
 
+import { DialogContent, DialogTitle, IconButton, Typography } from '@/fakemui'
 import {
   CheckCircleOutline as CheckCircleOutlineIcon,
   Close as CloseIcon,
@@ -9,7 +10,6 @@ import {
   InfoOutlined as InfoOutlinedIcon,
   WarningAmber as WarningAmberIcon,
 } from '@/fakemui/icons'
-import { DialogContent, DialogTitle, IconButton, Typography } from '@/fakemui'
 
 interface AlertDialogContentProps {
   children: ReactNode

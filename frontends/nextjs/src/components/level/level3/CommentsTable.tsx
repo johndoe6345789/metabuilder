@@ -1,4 +1,3 @@
-import { Trash } from '@/fakemui/icons'
 import { useMemo } from 'react'
 
 import {
@@ -10,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
+import { Trash } from '@/fakemui/icons'
 import type { Comment, User } from '@/lib/level-types'
 
 import { ChallengePanel } from '../sections/ChallengePanel'

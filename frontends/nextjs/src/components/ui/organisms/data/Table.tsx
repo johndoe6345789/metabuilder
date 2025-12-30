@@ -1,6 +1,8 @@
 // TODO: Split this file (173 LOC) into smaller organisms (<150 LOC each)
 'use client'
 
+import { forwardRef, ReactNode } from 'react'
+
 import {
   Table as FakeMuiTable,
   TableBody as FakeMuiTableBody,
@@ -10,7 +12,6 @@ import {
   TableHead as FakeMuiTableHead,
   TableRow as FakeMuiTableRow,
 } from '@/fakemui'
-import { forwardRef, ReactNode } from 'react'
 
 import styles from './Table.module.scss'
 

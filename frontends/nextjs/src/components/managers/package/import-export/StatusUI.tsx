@@ -1,7 +1,7 @@
-import { CheckCircle, Warning } from '@/fakemui/icons'
 import type { ReactNode } from 'react'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { CheckCircle, Warning } from '@/fakemui/icons'
 
 interface ImportStatusProps {
   importing: boolean

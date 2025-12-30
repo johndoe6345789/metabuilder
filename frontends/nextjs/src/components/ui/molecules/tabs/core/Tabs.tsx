@@ -1,8 +1,9 @@
 'use client'
 
-import { Box } from '@/fakemui'
-import type { BoxProps } from '@/fakemui'
 import { forwardRef, useId, useState } from 'react'
+
+import type { BoxProps } from '@/fakemui'
+import { Box } from '@/fakemui'
 
 import { TabsContext } from './tabs-context'
 

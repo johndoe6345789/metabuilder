@@ -1,8 +1,10 @@
 'use client'
 
-import { AppBar, Toolbar, Slide } from '@/fakemui'
 import { forwardRef, ReactNode, useEffect, useState } from 'react'
 
+import { AppBar, Slide,Toolbar } from '@/fakemui'
+
+import styles from './Navigation.module.scss'
 import {
   NavigationContent,
   NavigationItem,
@@ -13,7 +15,6 @@ import {
 } from './NavigationMenuItems'
 import { NavigationMobileToggle } from './NavigationResponsive'
 import { NavigationBrand, NavigationSeparator, NavigationSpacer } from './NavigationStyling'
-import styles from './Navigation.module.scss'
 
 interface NavigationProps {
   children: ReactNode

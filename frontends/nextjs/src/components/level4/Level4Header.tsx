@@ -1,5 +1,3 @@
-import { Download, Eye, House, SignOut, Terminal, Upload } from '@/fakemui/icons'
-
 import { Button } from '@/components/ui'
 import { Badge } from '@/components/ui'
 import {
@@ -8,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui'
+import { Download, Eye, House, SignOut, Terminal, Upload } from '@/fakemui/icons'
 
 interface Level4HeaderProps {
   username: string

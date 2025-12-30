@@ -1,7 +1,8 @@
 'use client'
 
-import { Box } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Box } from '@/fakemui'
 
 import styles from './pagination.module.scss'
 

@@ -1,4 +1,3 @@
-import { FloppyDisk, Plus, X } from '@/fakemui/icons'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -15,6 +14,7 @@ import {
   ScrollArea,
   Separator,
 } from '@/components/ui'
+import { FloppyDisk, Plus, X } from '@/fakemui/icons'
 import type { DropdownConfig } from '@/lib/database'
 
 interface DropdownConfigFormProps {

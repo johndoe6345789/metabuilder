@@ -1,10 +1,9 @@
-import { FloppyDisk, X } from '@/fakemui/icons'
-
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui'
 import { Badge } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
+import { FloppyDisk, X } from '@/fakemui/icons'
 
 import { useClassBuilderState } from './class-builder/hooks'
 import { Preview } from './class-builder/Preview'

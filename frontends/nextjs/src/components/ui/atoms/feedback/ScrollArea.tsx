@@ -1,7 +1,9 @@
 'use client'
 
+import { CSSProperties,forwardRef } from 'react'
+
 import { Box, BoxProps } from '@/fakemui/fakemui/layout'
-import { forwardRef, CSSProperties } from 'react'
+
 import styles from './ScrollArea.module.scss'
 
 export interface ScrollAreaProps extends Omit<BoxProps, 'ref'> {

@@ -1,7 +1,9 @@
 'use client'
 
-import { Button as FakemuiButton, ButtonProps as FakemuiButtonProps, ButtonVariant as FakemuiButtonVariant, ButtonSize as FakemuiButtonSize } from '@/fakemui/fakemui/inputs'
-import { type AnchorHTMLAttributes, forwardRef, CSSProperties } from 'react'
+import { type AnchorHTMLAttributes, CSSProperties,forwardRef } from 'react'
+
+import { Button as FakemuiButton, ButtonProps as FakemuiButtonProps, ButtonSize as FakemuiButtonSize,ButtonVariant as FakemuiButtonVariant } from '@/fakemui/fakemui/inputs'
+
 import styles from './Button.module.scss'
 
 /** Button visual style variants */

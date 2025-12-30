@@ -1,6 +1,5 @@
 'use client'
 
-import { ArrowsLeftRight, Crown } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui'
@@ -9,6 +8,7 @@ import { ScrollArea } from '@/components/ui'
 import { Badge } from '@/components/ui'
 import { Separator } from '@/components/ui'
 import { Alert, AlertDescription } from '@/components/ui'
+import { ArrowsLeftRight, Crown } from '@/fakemui/icons'
 import { fetchPowerTransferRequests } from '@/lib/api/power-transfers'
 import type { PowerTransferRequest, User } from '@/lib/level-types'
 

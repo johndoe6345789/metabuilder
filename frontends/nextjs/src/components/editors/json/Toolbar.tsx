@@ -1,6 +1,5 @@
-import { FloppyDisk, ShieldCheck, X } from '@/fakemui/icons'
-
 import { Button, DialogFooter } from '@/components/ui'
+import { FloppyDisk, ShieldCheck, X } from '@/fakemui/icons'
 
 interface ToolbarProps {
   onScan: () => void

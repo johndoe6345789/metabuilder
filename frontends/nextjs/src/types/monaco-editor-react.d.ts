@@ -1,7 +1,7 @@
 declare module '@monaco-editor/react' {
-  import type { ComponentType, ReactNode } from 'react'
   import type { editor, languages } from 'monaco-editor'
   import type * as MonacoNamespace from 'monaco-editor'
+  import type { ComponentType, ReactNode } from 'react'
 
   type Monaco = typeof MonacoNamespace
 

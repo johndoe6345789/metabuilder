@@ -1,6 +1,5 @@
-import { Eye, LockKey } from '@/fakemui/icons'
-
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Eye, LockKey } from '@/fakemui/icons'
 import type { PageConfig } from '@/lib/level-types'
 
 interface PreviewProps {

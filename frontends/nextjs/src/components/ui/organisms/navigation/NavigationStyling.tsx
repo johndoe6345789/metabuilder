@@ -1,5 +1,7 @@
-import { Box, Divider } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
+
+import { Box, Divider } from '@/fakemui'
+
 import styles from './Navigation.module.scss'
 
 interface NavigationBrandProps {

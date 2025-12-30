@@ -1,6 +1,5 @@
-import { CheckCircle, WarningCircle } from '@/fakemui/icons'
-
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { CheckCircle, WarningCircle } from '@/fakemui/icons'
 import type { InstalledPackage } from '@/lib/package-types'
 import type { PackageCatalogData } from '@/lib/packages/core/package-catalog'
 

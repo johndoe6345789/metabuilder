@@ -1,8 +1,7 @@
 'use client'
 
-import { ChatCircle, User } from '@/fakemui/icons'
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
+import { ChatCircle, User } from '@/fakemui/icons'
 import type { User as UserType } from '@/lib/level-types'
 
 import { AppHeader } from '../../shared/AppHeader'

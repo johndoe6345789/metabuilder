@@ -1,8 +1,8 @@
 import * as fengari from 'fengari-web'
 
 import { fromLua } from '@/lib/lua/functions/converters/from-lua'
-import type { JsonValue } from '@/types/utility-types'
 import type { LuaState } from '@/lib/lua/functions/types'
+import type { JsonValue } from '@/types/utility-types'
 
 const lua = fengari.lua
 

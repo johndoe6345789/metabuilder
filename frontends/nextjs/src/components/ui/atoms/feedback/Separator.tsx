@@ -1,7 +1,9 @@
 'use client'
 
-import { Divider, DividerProps } from '@/fakemui/fakemui/data-display'
 import { forwardRef } from 'react'
+
+import { Divider, DividerProps } from '@/fakemui/fakemui/data-display'
+
 import styles from './Separator.module.scss'
 
 /**

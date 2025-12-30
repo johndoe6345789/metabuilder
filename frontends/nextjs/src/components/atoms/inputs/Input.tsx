@@ -1,7 +1,8 @@
 'use client'
 
-import { Input as FakemuiInput } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Input as FakemuiInput } from '@/fakemui'
 import type { InputProps as FakemuiInputProps } from '@/fakemui/fakemui/inputs/Input'
 
 /**

@@ -1,7 +1,8 @@
 'use client'
 
-import { Button as FakemuiButton } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Button as FakemuiButton } from '@/fakemui'
 import type { ButtonProps as FakemuiButtonProps } from '@/fakemui/fakemui/inputs/Button'
 
 /** Button visual style variants */

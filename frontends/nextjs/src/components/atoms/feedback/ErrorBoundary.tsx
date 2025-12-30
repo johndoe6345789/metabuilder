@@ -1,8 +1,8 @@
 'use client'
 
-import { Alert, Button, Typography } from '@/fakemui'
 import React, { Component, ReactNode } from 'react'
 
+import { Alert, Button, Typography } from '@/fakemui'
 import { logError, LogLevel } from '@/lib/errors/log-error'
 
 interface Props {

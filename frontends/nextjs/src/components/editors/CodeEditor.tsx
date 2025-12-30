@@ -1,5 +1,4 @@
 import Editor from '@monaco-editor/react'
-import { FloppyDisk, ShieldCheck, Warning, X } from '@/fakemui/icons'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -13,6 +12,7 @@ import {
 } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Alert, AlertDescription } from '@/components/ui'
+import { FloppyDisk, ShieldCheck, Warning, X } from '@/fakemui/icons'
 import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
 
 interface CodeEditorProps {

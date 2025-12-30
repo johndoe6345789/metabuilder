@@ -1,7 +1,8 @@
 'use client'
 
-import { Tooltip as FakemuiTooltip } from '@/fakemui'
 import { forwardRef, ReactElement, ReactNode } from 'react'
+
+import { Tooltip as FakemuiTooltip } from '@/fakemui'
 
 /**
  * Props for the Tooltip component

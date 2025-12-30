@@ -1,6 +1,5 @@
-import { Plus, Trash } from '@/fakemui/icons'
-
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Plus, Trash } from '@/fakemui/icons'
 import type { LuaScript } from '@/lib/level-types'
 
 interface LuaScriptsListCardProps {

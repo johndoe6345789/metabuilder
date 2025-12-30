@@ -1,7 +1,8 @@
 'use client'
 
-import { IconButton } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { IconButton } from '@/fakemui'
 
 import styles from './pagination.module.scss'
 import { type PaginationLinkProps } from './paginationTypes'

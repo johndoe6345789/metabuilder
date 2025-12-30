@@ -1,4 +1,3 @@
-import { EnvelopeSimple, FloppyDisk } from '@/fakemui/icons'
 import { useMemo } from 'react'
 
 import {
@@ -13,6 +12,7 @@ import {
   Label,
   Switch,
 } from '@/components/ui'
+import { EnvelopeSimple, FloppyDisk } from '@/fakemui/icons'
 import type { SMTPConfig } from '@/lib/password-utils'
 
 interface ConnectionFormProps {

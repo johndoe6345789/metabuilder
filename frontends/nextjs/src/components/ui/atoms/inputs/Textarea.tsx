@@ -1,7 +1,9 @@
 'use client'
 
-import { Textarea as FakemuiTextarea, TextareaProps as FakemuiTextareaProps } from '@/fakemui/fakemui/inputs'
 import { forwardRef } from 'react'
+
+import { Textarea as FakemuiTextarea, TextareaProps as FakemuiTextareaProps } from '@/fakemui/fakemui/inputs'
+
 import styles from './Textarea.module.scss'
 
 /**

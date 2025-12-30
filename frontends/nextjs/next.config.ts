@@ -87,8 +87,9 @@ const nextConfig: NextConfig = {
       ...config.resolve.alias,
       '@/dbal': path.resolve(__dirname, '../../dbal/development/src'),
       '@dbal-ui': path.resolve(__dirname, '../../dbal/shared/ui'),
+      '@/core/foundation/errors': path.resolve(__dirname, '../../dbal/development/src/core/foundation/errors.ts'),
     }
-    
+
     // Ignore optional AWS SDK on client side
     if (!isServer) {
       config.resolve.fallback = {
@@ -96,7 +97,7 @@ const nextConfig: NextConfig = {
         '@aws-sdk/client-s3': false,
       }
     }
-    
+
     return config
   },
 }

@@ -1,7 +1,8 @@
 'use client'
 
-import { Box, Link } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
+
+import { Box, Link } from '@/fakemui'
 
 import styles from './NavLink.module.scss'
 

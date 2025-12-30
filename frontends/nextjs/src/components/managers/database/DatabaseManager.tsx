@@ -1,3 +1,7 @@
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { toast } from 'sonner'
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import {
   ChatCircle,
   Code,
@@ -10,10 +14,6 @@ import {
   Tree,
   Users,
 } from '@/fakemui/icons'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { toast } from 'sonner'
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Database, DB_KEYS } from '@/lib/database'
 import type { ModelSchema } from '@/lib/types/schema-types'
 

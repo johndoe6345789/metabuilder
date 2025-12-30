@@ -1,5 +1,6 @@
-import type { LuaUIComponent } from './types/lua-ui-package'
 import type { JsonValue } from '@/types/utility-types'
+
+import type { LuaUIComponent } from './types/lua-ui-package'
 
 /**
  * Normalize a Lua-converted structure to ensure arrays are properly converted

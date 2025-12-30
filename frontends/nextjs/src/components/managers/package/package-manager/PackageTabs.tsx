@@ -1,6 +1,5 @@
-import { Package } from '@/fakemui/icons'
-
 import { ScrollArea, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
+import { Package } from '@/fakemui/icons'
 import type { InstalledPackage, PackageManifest } from '@/lib/package-types'
 
 import { PackageCard } from './PackageCard'

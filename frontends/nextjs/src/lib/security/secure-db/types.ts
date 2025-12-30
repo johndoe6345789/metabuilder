@@ -1,5 +1,6 @@
-import type { User } from '../../types/level-types'
 import type { JsonObject } from '@/types/utility-types'
+
+import type { User } from '../../types/level-types'
 
 export type OperationType = 'CREATE' | 'READ' | 'UPDATE' | 'DELETE'
 export type ResourceType =

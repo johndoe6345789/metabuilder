@@ -1,7 +1,8 @@
 'use client'
 
-import { CircularProgress } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { CircularProgress } from '@/fakemui'
 
 /** Spinner size options */
 export type SpinnerSize = 'xs' | 'sm' | 'md' | 'lg'

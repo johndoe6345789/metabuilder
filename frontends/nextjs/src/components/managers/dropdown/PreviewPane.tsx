@@ -1,6 +1,5 @@
-import { Pencil, Trash } from '@/fakemui/icons'
-
 import { Badge, Button, Card, Separator } from '@/components/ui'
+import { Pencil, Trash } from '@/fakemui/icons'
 import type { DropdownConfig } from '@/lib/database'
 
 interface PreviewPaneProps {

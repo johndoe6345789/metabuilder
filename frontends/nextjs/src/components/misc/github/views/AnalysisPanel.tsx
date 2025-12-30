@@ -1,7 +1,3 @@
-import { Box, Stack } from '@/fakemui'
-
-import { Info, Robot } from '@/fakemui/icons'
-
 import {
   Alert,
   AlertDescription,
@@ -14,6 +10,8 @@ import {
   CardTitle,
   Skeleton,
 } from '@/components/ui'
+import { Box, Stack } from '@/fakemui'
+import { Info, Robot } from '@/fakemui/icons'
 
 interface AnalysisPanelProps {
   analysis: string | null

@@ -1,14 +1,15 @@
+import type { MouseEvent } from 'react'
+
 import {
-  Box,
-  IconButton,
-  Tooltip,
-  Typography,
   ArrowDown as ArrowDownward,
   ArrowUp as ArrowUpward,
+  Box,
   Copy as ContentCopy,
+  IconButton,
+  Tooltip,
   Trash as DeleteIcon,
+  Typography,
 } from '@/fakemui'
-import type { MouseEvent } from 'react'
 
 import styles from '../LuaBlocksEditor.module.scss'
 import type { BlockDefinition, BlockSlot, LuaBlock } from '../types'

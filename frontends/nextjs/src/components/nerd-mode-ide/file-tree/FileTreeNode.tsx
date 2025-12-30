@@ -5,7 +5,6 @@ import {
   FolderOpenOutlined,
   FolderOutlined,
 } from '@/fakemui/icons'
-
 import type { FileNode } from '@/lib/nerd-mode-ide'
 
 interface FileTreeNodeProps {

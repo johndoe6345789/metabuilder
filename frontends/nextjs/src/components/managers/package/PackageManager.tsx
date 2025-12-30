@@ -1,7 +1,7 @@
-import { ArrowSquareIn, Export, Package } from '@/fakemui/icons'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui'
+import { ArrowSquareIn, Export, Package } from '@/fakemui/icons'
 import type { PackageCatalogData } from '@/lib/packages/core/package-catalog'
 
 import { PackageFilters } from './package-manager/PackageFilters'

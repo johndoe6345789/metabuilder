@@ -1,7 +1,8 @@
 'use client'
 
-import { Radio as FakemuiRadio } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Radio as FakemuiRadio } from '@/fakemui'
 
 /**
  * Props for the Radio component

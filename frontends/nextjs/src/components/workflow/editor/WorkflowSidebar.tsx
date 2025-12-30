@@ -1,6 +1,5 @@
-import { Card, CardContent, CardHeader } from '@/fakemui'
-
 import { Badge, Button } from '@/components/ui'
+import { Card, CardContent, CardHeader } from '@/fakemui'
 import { Plus, Trash } from '@/fakemui/icons'
 
 import type { WorkflowSidebarProps } from './types'

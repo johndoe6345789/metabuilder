@@ -1,5 +1,3 @@
-import { ListNumbers, Plus, PushPinSimple, SquaresFour } from '@/fakemui/icons'
-
 import {
   Badge,
   Button,
@@ -11,6 +9,7 @@ import {
   ScrollArea,
   Separator,
 } from '@/components/ui'
+import { ListNumbers, Plus, PushPinSimple, SquaresFour } from '@/fakemui/icons'
 
 export interface PageSection {
   id: string

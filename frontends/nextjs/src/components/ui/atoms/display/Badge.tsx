@@ -1,7 +1,9 @@
 'use client'
 
+import { CSSProperties,forwardRef, ReactNode } from 'react'
+
 import { Chip } from '@/fakemui/fakemui/data-display'
-import { forwardRef, ReactNode, CSSProperties } from 'react'
+
 import styles from './Badge.module.scss'
 
 /** Badge visual style variants */

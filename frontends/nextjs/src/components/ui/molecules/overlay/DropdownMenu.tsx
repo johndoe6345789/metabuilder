@@ -1,9 +1,11 @@
 'use client'
 
+import { forwardRef, ReactNode } from 'react'
+
+import { Divider } from '@/fakemui/fakemui/data-display'
 import { Box } from '@/fakemui/fakemui/layout'
 import { MenuItem } from '@/fakemui/fakemui/navigation'
-import { Divider } from '@/fakemui/fakemui/data-display'
-import { forwardRef, ReactNode } from 'react'
+
 import styles from './DropdownMenu.module.scss'
 
 interface DropdownMenuProps {

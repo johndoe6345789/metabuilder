@@ -1,4 +1,3 @@
-import { Plus } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -16,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui'
+import { Plus } from '@/fakemui/icons'
 import { Database } from '@/lib/database'
 import type { PageConfig } from '@/lib/level-types'
 

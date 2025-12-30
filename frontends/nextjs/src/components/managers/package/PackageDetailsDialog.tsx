@@ -1,5 +1,3 @@
-import { Download, Star, Tag, Trash, User } from '@/fakemui/icons'
-
 import {
   Badge,
   Button,
@@ -16,6 +14,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui'
+import { Download, Star, Tag, Trash, User } from '@/fakemui/icons'
 import type { InstalledPackage } from '@/lib/package-types'
 import type { PackageCatalogData } from '@/lib/packages/core/package-catalog'
 

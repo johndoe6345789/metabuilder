@@ -1,7 +1,8 @@
 'use client'
 
-import { IconButton as FakemuiIconButton } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { IconButton as FakemuiIconButton } from '@/fakemui'
 
 /** IconButton size options */
 export type IconButtonSize = 'small' | 'medium' | 'large'

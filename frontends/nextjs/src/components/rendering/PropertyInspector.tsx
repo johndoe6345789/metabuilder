@@ -1,8 +1,8 @@
-import { Trash } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 
 import { CssClassBuilder } from '@/components/CssClassBuilder'
 import { Button, Separator } from '@/components/ui'
+import { Trash } from '@/fakemui/icons'
 import { componentCatalog } from '@/lib/component-catalog'
 import { Database, DropdownConfig } from '@/lib/database'
 import type { ComponentInstance, ComponentProps } from '@/lib/types/builder-types'

@@ -1,10 +1,10 @@
 import Editor from '@monaco-editor/react'
-import { FloppyDisk, Warning, X } from '@/fakemui/icons'
 import { useState } from 'react'
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Alert, AlertDescription } from '@/components/ui'
+import { FloppyDisk, Warning, X } from '@/fakemui/icons'
 import type { SchemaConfig } from '@/lib/schema-types'
 
 interface SchemaEditorProps {

@@ -1,5 +1,6 @@
-import { Box } from '@/fakemui'
 import type { MouseEvent } from 'react'
+
+import { Box } from '@/fakemui'
 
 import styles from '../LuaBlocksEditor.module.scss'
 import type { BlockDefinition, BlockSlot, LuaBlock, LuaBlockType } from '../types'

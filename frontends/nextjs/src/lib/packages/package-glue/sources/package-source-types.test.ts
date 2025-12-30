@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import type { PackageSourceConfig, PackageIndexEntry, PackageData } from './package-source-types'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import type { PackageData,PackageIndexEntry, PackageSourceConfig } from './package-source-types'
 import { DEFAULT_LOCAL_SOURCE, DEFAULT_REMOTE_SOURCE } from './package-source-types'
 
 describe('package-source-types', () => {

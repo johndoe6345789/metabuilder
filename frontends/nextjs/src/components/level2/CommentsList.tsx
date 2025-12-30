@@ -1,8 +1,7 @@
-import { Trash } from '@/fakemui/icons'
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { Avatar, AvatarFallback } from '@/components/ui'
+import { Trash } from '@/fakemui/icons'
 import type { Comment, User } from '@/lib/level-types'
 
 interface CommentsListProps {

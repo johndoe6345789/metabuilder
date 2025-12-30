@@ -1,6 +1,5 @@
-import { Stack } from '@/fakemui'
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
+import { Stack } from '@/fakemui'
 
 import { AnalysisPanel } from './views/AnalysisPanel'
 import { RunDetails } from './views/RunDetails'

@@ -1,7 +1,9 @@
 'use client'
 
+import { CSSProperties,forwardRef } from 'react'
+
 import { Avatar as FakemuiAvatar, AvatarProps as FakemuiAvatarProps } from '@/fakemui/fakemui/data-display'
-import { forwardRef, CSSProperties } from 'react'
+
 import styles from './Avatar.module.scss'
 
 /**

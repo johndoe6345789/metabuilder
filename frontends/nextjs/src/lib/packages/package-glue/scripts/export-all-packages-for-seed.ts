@@ -1,8 +1,8 @@
+import type { ModularPackageSeedData } from '../../loader/modular/modular-package-seed-data'
 import { getPackageComponents } from './get-package-components'
 import { getPackageScriptFiles } from './get-package-script-files'
 import { getPackageScripts } from './get-package-scripts'
 import type { PackageRegistry } from './types'
-import type { ModularPackageSeedData } from '../../loader/modular/modular-package-seed-data'
 
 // Export all packages for seeding
 export function exportAllPackagesForSeed(registry: PackageRegistry) {

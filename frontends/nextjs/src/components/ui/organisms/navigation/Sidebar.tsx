@@ -1,13 +1,14 @@
 'use client'
 
-import { Menu as MenuIcon } from '@/fakemui/icons'
-import { Box, Drawer, IconButton, useMediaQuery } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
 
+import { Box, Drawer, IconButton, useMediaQuery } from '@/fakemui'
+import { Menu as MenuIcon } from '@/fakemui/icons'
+
 import { MenuItemList, type MenuItemListProps, type SidebarItem } from './MenuItemList'
+import styles from './Navigation.module.scss'
 import { SidebarHeader, type SidebarHeaderProps } from './Sidebar/Header'
 import { SidebarSection, SidebarSeparator } from './Sidebar/NavSections'
-import styles from './Navigation.module.scss'
 
 interface SidebarProps {
   children?: ReactNode

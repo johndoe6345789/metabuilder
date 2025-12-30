@@ -4,7 +4,8 @@
  */
 
 import type { User } from '@/lib/types/level-types'
-import { checkPackagePermissions, checkComponentPermissions, type PermissionContext } from './check-package-permissions'
+
+import { checkComponentPermissions, checkPackagePermissions, type PermissionContext } from './check-package-permissions'
 import { permissionManager } from './permission-manager'
 
 /**

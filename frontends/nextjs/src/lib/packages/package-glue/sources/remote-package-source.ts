@@ -1,11 +1,11 @@
+import type { LuaScriptFile, PackageComponent, PackageExamples } from '../types'
 import type {
+  PackageData,
+  PackageIndexEntry,
   PackageSource,
   PackageSourceConfig,
-  PackageIndexEntry,
-  PackageData,
 } from './package-source-types'
 import { DEFAULT_REMOTE_SOURCE } from './package-source-types'
-import type { LuaScriptFile, PackageComponent, PackageExamples } from '../types'
 
 /**
  * Remote package registry API response types

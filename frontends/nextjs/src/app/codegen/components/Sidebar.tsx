@@ -1,7 +1,6 @@
 'use client'
 
 import { Paper, Stack, Typography } from '@/fakemui'
-
 import type { CodegenManifest } from '@/lib/codegen/codegen-types'
 
 interface SidebarProps {

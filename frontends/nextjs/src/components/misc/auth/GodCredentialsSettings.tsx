@@ -1,10 +1,10 @@
-import { Key } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { GodCredentialsForm } from '@/components/auth/god-credentials/Form'
 import { GodCredentialsSummary } from '@/components/auth/god-credentials/Summary'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Key } from '@/fakemui/icons'
 import { Database } from '@/lib/database'
 
 export function GodCredentialsSettings() {

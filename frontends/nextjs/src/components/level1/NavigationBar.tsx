@@ -1,7 +1,7 @@
-import { List, ShieldCheck, User, X } from '@/fakemui/icons'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui'
+import { List, ShieldCheck, User, X } from '@/fakemui/icons'
 
 interface NavigationBarProps {
   menuOpen: boolean

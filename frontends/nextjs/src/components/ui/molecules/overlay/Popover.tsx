@@ -1,7 +1,9 @@
 'use client'
 
-import { Box } from '@/fakemui/fakemui/layout'
 import { forwardRef, ReactNode } from 'react'
+
+import { Box } from '@/fakemui/fakemui/layout'
+
 import styles from './Popover.module.scss'
 
 interface PopoverProps {

@@ -2,8 +2,8 @@
 
 import { ReactNode } from 'react'
 
-import { Stack } from '@/fakemui/fakemui/layout'
 import { Divider } from '@/fakemui/fakemui/data-display'
+import { Stack } from '@/fakemui/fakemui/layout'
 
 import styles from './Sections.module.scss'
 

@@ -1,4 +1,3 @@
-import { ChatCircle, MagnifyingGlass, PencilSimple, Trash, Users } from '@/fakemui/icons'
 import { useMemo } from 'react'
 
 import {
@@ -12,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
+import { ChatCircle, MagnifyingGlass, PencilSimple, Trash, Users } from '@/fakemui/icons'
 import type { User } from '@/lib/level-types'
 
 import { ChallengePanel } from '../sections/ChallengePanel'

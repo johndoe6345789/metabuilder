@@ -1,8 +1,8 @@
-import { BookOpen } from '@/fakemui/icons'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
 import { Tabs } from '@/components/ui'
+import { BookOpen } from '@/fakemui/icons'
 import { getSnippetsByCategory, type LuaSnippet, searchSnippets } from '@/lib/lua-snippets'
 
 import { SearchBar } from './LuaSnippetLibrary/SearchBar'

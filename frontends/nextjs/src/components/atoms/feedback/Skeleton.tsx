@@ -1,7 +1,8 @@
 'use client'
 
-import { Skeleton as FakemuiSkeleton } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Skeleton as FakemuiSkeleton } from '@/fakemui'
 import type { SkeletonProps as FakemuiSkeletonProps } from '@/fakemui/fakemui/feedback/Skeleton'
 
 /**

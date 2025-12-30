@@ -1,7 +1,8 @@
 'use client'
 
-import { Divider } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Divider } from '@/fakemui'
 
 /**
  * Props for the Separator component

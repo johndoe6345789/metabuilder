@@ -1,7 +1,8 @@
 'use client'
 
-import { Box, List, Typography } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
+
+import { Box, List, Typography } from '@/fakemui'
 
 // CommandList
 interface CommandListProps {

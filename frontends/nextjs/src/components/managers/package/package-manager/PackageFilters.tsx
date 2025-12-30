@@ -1,7 +1,6 @@
-import { Funnel, MagnifyingGlass, TrendUp } from '@/fakemui/icons'
-
 import { Input } from '@/components/ui'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
+import { Funnel, MagnifyingGlass, TrendUp } from '@/fakemui/icons'
 
 interface PackageFiltersProps {
   searchQuery: string

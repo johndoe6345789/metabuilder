@@ -1,8 +1,8 @@
 'use client'
 
-import { Box, Breadcrumbs, Link, Typography } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
 
+import { Box, Breadcrumbs, Link, Typography } from '@/fakemui'
 import { MoreHoriz, NavigateNext } from '@/fakemui/icons'
 
 import styles from './Breadcrumb.module.scss'

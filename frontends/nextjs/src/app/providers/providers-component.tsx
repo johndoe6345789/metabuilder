@@ -1,8 +1,9 @@
 'use client'
 
-import { CssBaseline } from '@/fakemui'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
+
+import { CssBaseline } from '@/fakemui'
 
 import { ThemeContext, type ThemeMode } from './theme-context'
 

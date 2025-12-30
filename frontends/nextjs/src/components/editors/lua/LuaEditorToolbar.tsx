@@ -1,6 +1,5 @@
-import { Play, ShieldCheck } from '@/fakemui/icons'
-
 import { Button, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Play, ShieldCheck } from '@/fakemui/icons'
 
 interface LuaEditorToolbarProps {
   scriptName: string

@@ -7,7 +7,7 @@
 
 import type { JsonValue } from '@/types/utility-types'
 
-import { createBrowserBindings, BROWSER_LUA_BINDINGS, type BrowserBindings } from './browser-bindings'
+import { BROWSER_LUA_BINDINGS, type BrowserBindings,createBrowserBindings } from './browser-bindings'
 import { createDBALBindings, DBAL_LUA_BINDINGS, type DBALBindings } from './dbal-bindings'
 
 export interface BindingsConfig {

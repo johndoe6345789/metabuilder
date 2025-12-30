@@ -1,6 +1,8 @@
-import { Menu as MenuIcon } from '@/fakemui/icons'
-import { IconButton } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { IconButton } from '@/fakemui'
+import { Menu as MenuIcon } from '@/fakemui/icons'
+
 import styles from './Navigation.module.scss'
 
 interface NavigationMobileToggleProps {

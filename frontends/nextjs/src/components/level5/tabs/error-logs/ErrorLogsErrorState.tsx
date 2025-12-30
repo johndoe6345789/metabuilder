@@ -1,6 +1,5 @@
-import { Warning } from '@/fakemui/icons'
-
 import { Button, Card, CardContent } from '@/components/ui'
+import { Warning } from '@/fakemui/icons'
 
 interface ErrorLogsErrorStateProps {
   message: string

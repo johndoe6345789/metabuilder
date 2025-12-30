@@ -10,12 +10,12 @@ export {
 export { SandboxedLuaEngine } from './sandboxed-lua-engine'
 
 // Lua bindings for external APIs
+export type { BindingsConfig,BindingsContext, BrowserBindings, DBALBindings } from './bindings'
 export {
+  BROWSER_LUA_BINDINGS,
+  COMBINED_LUA_BINDINGS,
+  createBindingsContext,
   createBrowserBindings,
   createDBALBindings,
-  createBindingsContext,
-  BROWSER_LUA_BINDINGS,
   DBAL_LUA_BINDINGS,
-  COMBINED_LUA_BINDINGS,
 } from './bindings'
-export type { BrowserBindings, DBALBindings, BindingsContext, BindingsConfig } from './bindings'

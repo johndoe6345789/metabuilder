@@ -1,4 +1,4 @@
-import type { PackageComponent, PackageExamples, LuaScriptFile } from '../types'
+import type { LuaScriptFile,PackageComponent, PackageExamples } from '../types'
 
 /**
  * Package source types

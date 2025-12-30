@@ -1,7 +1,8 @@
 'use client'
 
-import { Select as FakemuiSelect } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Select as FakemuiSelect } from '@/fakemui'
 
 export interface SelectOption {
   value: string | number

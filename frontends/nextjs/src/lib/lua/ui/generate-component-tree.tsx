@@ -4,9 +4,9 @@
 import React from 'react'
 
 import { Box, Button, Stack, TextField, Typography } from '@/fakemui'
+import type { JsonValue } from '@/types/utility-types'
 
 import type { LuaUIComponent } from './types/lua-ui-package'
-import type { JsonValue } from '@/types/utility-types'
 
 const ComponentRegistry: Record<string, React.ElementType> = {
   Box,

@@ -1,8 +1,9 @@
 'use client'
 
-import { Box } from '@/fakemui'
-import type { MouseEvent, CSSProperties, ButtonHTMLAttributes } from 'react'
+import type { ButtonHTMLAttributes,CSSProperties, MouseEvent } from 'react'
 import { forwardRef, useContext } from 'react'
+
+import { Box } from '@/fakemui'
 
 import { TabsContext } from '../core/tabs-context'
 import styles from './TabsTrigger.module.scss'

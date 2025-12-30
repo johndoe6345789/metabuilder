@@ -1,4 +1,3 @@
-import { Database as DatabaseIcon, Export, FileArrowDown, Package } from '@/fakemui/icons'
 import type React from 'react'
 
 import {
@@ -16,6 +15,7 @@ import {
   ScrollArea,
   Separator,
 } from '@/components/ui'
+import { Database as DatabaseIcon, Export, FileArrowDown, Package } from '@/fakemui/icons'
 import type { PackageManifest } from '@/lib/package-types'
 import type { ExportPackageOptions } from '@/lib/packages/core/package-export'
 

@@ -1,6 +1,4 @@
 'use client'
-import { Broom, Warning } from '@/fakemui/icons'
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui'
+import { Broom, Warning } from '@/fakemui/icons'
 import type { User } from '@/lib/level-types'
 
 import { ErrorLogTable } from './modules/ErrorLogTable'

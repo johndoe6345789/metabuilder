@@ -1,9 +1,8 @@
-import { Plus, Trash } from '@/fakemui/icons'
-
 import { SchemaTabs } from '@/components/schema/level4/Tabs'
 import { useSchemaLevel4 } from '@/components/schema/level4/useSchemaLevel4'
 import { Button } from '@/components/ui'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import { Plus, Trash } from '@/fakemui/icons'
 import type { ModelSchema } from '@/lib/schema-types'
 
 interface SchemaEditorLevel4Props {

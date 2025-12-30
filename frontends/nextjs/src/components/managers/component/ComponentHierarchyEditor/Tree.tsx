@@ -1,6 +1,6 @@
-import { Cursor } from '@/fakemui/icons'
 import type React from 'react'
 
+import { Cursor } from '@/fakemui/icons'
 import type { ComponentNode } from '@/lib/database'
 
 import { TreeNode } from '../modules/TreeNode'

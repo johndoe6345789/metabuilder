@@ -1,5 +1,4 @@
 import Editor from '@monaco-editor/react'
-import { Warning } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -12,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui'
+import { Warning } from '@/fakemui/icons'
 import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
 import type { JsonValue } from '@/types/utility-types'
 

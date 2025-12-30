@@ -1,6 +1,5 @@
-import { MagnifyingGlass } from '@/fakemui/icons'
-
 import { Input, ScrollArea, TabsList, TabsTrigger } from '@/components/ui'
+import { MagnifyingGlass } from '@/fakemui/icons'
 import { LUA_SNIPPET_CATEGORIES } from '@/lib/lua-snippets'
 
 interface SearchBarProps {

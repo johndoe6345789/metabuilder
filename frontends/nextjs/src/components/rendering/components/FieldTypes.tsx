@@ -1,5 +1,3 @@
-import { Palette } from '@/fakemui/icons'
-
 import {
   Button,
   Input,
@@ -10,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui'
+import { Palette } from '@/fakemui/icons'
 import type { DropdownConfig } from '@/lib/database'
 import type { PropDefinition } from '@/lib/types/builder-types'
 import type { JsonValue } from '@/types/utility-types'

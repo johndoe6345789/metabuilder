@@ -1,6 +1,5 @@
-import { Box, Stack, Typography } from '@/fakemui'
-
 import { Alert, AlertDescription, AlertTitle, Badge, Button } from '@/components/ui'
+import { Box, Stack, Typography } from '@/fakemui'
 import { Autorenew, Cancel, CheckCircle, OpenInNew } from '@/fakemui/icons'
 
 import type { WorkflowRun } from '../types'

@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { PackageSourceManager, createPackageSourceManager } from './package-source-manager'
-import type { PackageSource, PackageSourceConfig, PackageIndexEntry, PackageData } from './package-source-types'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { createPackageSourceManager,PackageSourceManager } from './package-source-manager'
+import type { PackageData,PackageIndexEntry, PackageSource, PackageSourceConfig } from './package-source-types'
 
 // Mock package source for testing
 class MockPackageSource implements PackageSource {

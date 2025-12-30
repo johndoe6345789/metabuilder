@@ -1,8 +1,10 @@
 'use client'
 
-import { ExpandLess, ExpandMore } from '@/fakemui/icons'
-import { Box, Collapse, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@/fakemui'
 import { forwardRef, ReactNode, useState } from 'react'
+
+import { Box, Collapse, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@/fakemui'
+import { ExpandLess, ExpandMore } from '@/fakemui/icons'
+
 import styles from './Navigation.module.scss'
 
 interface SidebarItem {

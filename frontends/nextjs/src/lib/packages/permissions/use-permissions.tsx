@@ -6,15 +6,16 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { permissionManager } from './permission-manager'
+
 import {
-  checkPackagePermissions,
   checkComponentPermissions,
-  type PermissionContext,
-  type PackagePermissions,
+  checkPackagePermissions,
   type ComponentPermission,
+  type PackagePermissions,
   type PermissionCheckResult,
+  type PermissionContext,
 } from './check-package-permissions'
+import { permissionManager } from './permission-manager'
 
 export interface UsePermissionsOptions {
   userLevel: number

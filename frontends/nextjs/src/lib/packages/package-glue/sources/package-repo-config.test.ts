@@ -1,12 +1,13 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+
+import type { PackageRepoConfig } from '../package-repo-config'
 import {
   DEFAULT_PACKAGE_REPO_CONFIG,
   DEVELOPMENT_PACKAGE_REPO_CONFIG,
-  PRODUCTION_PACKAGE_REPO_CONFIG,
   getPackageRepoConfig,
+  PRODUCTION_PACKAGE_REPO_CONFIG,
   validatePackageRepoConfig,
 } from '../package-repo-config'
-import type { PackageRepoConfig } from '../package-repo-config'
 
 describe('package-repo-config', () => {
   describe('DEFAULT_PACKAGE_REPO_CONFIG', () => {

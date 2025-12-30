@@ -1,7 +1,9 @@
 'use client'
 
-import { Checkbox as FakemuiCheckbox, CheckboxProps as FakemuiCheckboxProps } from '@/fakemui/fakemui/inputs'
 import { forwardRef } from 'react'
+
+import { Checkbox as FakemuiCheckbox, CheckboxProps as FakemuiCheckboxProps } from '@/fakemui/fakemui/inputs'
+
 import styles from './Checkbox.module.scss'
 
 /**

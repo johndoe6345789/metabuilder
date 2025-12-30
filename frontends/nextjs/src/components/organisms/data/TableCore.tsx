@@ -1,5 +1,7 @@
 'use client'
 
+import { forwardRef, ReactNode } from 'react'
+
 import {
   Paper,
   Table,
@@ -8,7 +10,6 @@ import {
   TableFooter as FakemuiTableFooter,
   TableHead as FakemuiTableHead,
 } from '@/fakemui'
-import { forwardRef, ReactNode } from 'react'
 
 // Table wrapper with container
 export interface TableProps {

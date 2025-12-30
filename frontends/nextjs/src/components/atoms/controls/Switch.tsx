@@ -1,7 +1,8 @@
 'use client'
 
-import { Switch as FakemuiSwitch } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Switch as FakemuiSwitch } from '@/fakemui'
 
 /**
  * Props for the Switch component

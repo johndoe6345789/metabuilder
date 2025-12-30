@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import type { LuaScript } from '../../types/level-types'
 
 const mockList = vi.fn()

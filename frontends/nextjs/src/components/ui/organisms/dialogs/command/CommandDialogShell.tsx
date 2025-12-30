@@ -1,10 +1,11 @@
 'use client'
 
-import { Search as SearchIcon } from '@/fakemui/icons'
+import { forwardRef } from 'react'
+
+import { InputBase } from '@/fakemui/fakemui/inputs'
 import { Box } from '@/fakemui/fakemui/layout'
 import { Dialog, DialogPanel } from '@/fakemui/fakemui/utils'
-import { InputBase } from '@/fakemui/fakemui/inputs'
-import { forwardRef } from 'react'
+import { Search as SearchIcon } from '@/fakemui/icons'
 
 import type { CommandDialogProps, CommandInputProps } from './command.types'
 import styles from './CommandDialogShell.module.scss'

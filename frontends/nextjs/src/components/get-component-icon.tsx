@@ -1,3 +1,5 @@
+import type { ComponentType, ReactElement } from 'react'
+
 import {
   AccountCircle,
   Article,
@@ -8,6 +10,7 @@ import {
   CropPortrait,
   FormatAlignLeft,
   GridView,
+  type IconProps,
   LocalOffer,
   LooksOne,
   Minus,
@@ -20,9 +23,7 @@ import {
   ViewColumn,
   ViewStream,
   WarningAmber,
-  type IconProps,
 } from '@/fakemui/icons'
-import type { ComponentType, ReactElement } from 'react'
 
 const iconMap: Record<string, ComponentType<IconProps>> = {
   Article,

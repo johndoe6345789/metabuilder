@@ -1,5 +1,3 @@
-import { Download, Power, Star } from '@/fakemui/icons'
-
 import {
   Badge,
   Button,
@@ -10,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui'
+import { Download, Power, Star } from '@/fakemui/icons'
 import type { InstalledPackage, PackageManifest } from '@/lib/package-types'
 
 interface PackageCardProps {

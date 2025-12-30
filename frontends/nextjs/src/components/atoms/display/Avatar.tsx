@@ -1,7 +1,8 @@
 'use client'
 
-import { Avatar as FakemuiAvatar, AvatarGroup as FakemuiAvatarGroup } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Avatar as FakemuiAvatar, AvatarGroup as FakemuiAvatarGroup } from '@/fakemui'
 
 /** Avatar size options */
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'

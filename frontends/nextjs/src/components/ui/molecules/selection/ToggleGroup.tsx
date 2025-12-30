@@ -1,7 +1,9 @@
 'use client'
 
-import { ToggleButton, ToggleButtonGroup } from '@/fakemui/fakemui/inputs'
 import { forwardRef, ReactNode } from 'react'
+
+import { ToggleButton, ToggleButtonGroup } from '@/fakemui/fakemui/inputs'
+
 import styles from './ToggleGroup.module.scss'
 
 interface ToggleGroupProps {

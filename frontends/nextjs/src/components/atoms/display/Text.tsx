@@ -1,7 +1,8 @@
 'use client'
 
-import { Text as FakemuiText, Typography } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Text as FakemuiText, Typography } from '@/fakemui'
 
 export type TextVariant =
   | 'h1'

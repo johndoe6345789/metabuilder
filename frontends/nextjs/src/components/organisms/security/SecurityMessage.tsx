@@ -1,10 +1,9 @@
-import { CheckCircle, Info, ShieldWarning, Warning } from '@/fakemui/icons'
-
 import { Alert, AlertDescription } from '@/components/ui'
 import { Badge } from '@/components/ui'
 import { DialogDescription, DialogHeader, DialogTitle } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
 import { Separator } from '@/components/ui'
+import { CheckCircle, Info, ShieldWarning, Warning } from '@/fakemui/icons'
 import type { SecurityIssue, SecurityScanResult } from '@/lib/security/scanner/security-scanner'
 import { getSeverityColor, getSeverityIcon } from '@/lib/security/scanner/security-scanner'
 

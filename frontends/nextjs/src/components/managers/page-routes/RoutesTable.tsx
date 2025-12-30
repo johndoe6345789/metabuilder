@@ -1,5 +1,3 @@
-import { Eye, LockKey, Pencil, Trash } from '@/fakemui/icons'
-
 import {
   Badge,
   Button,
@@ -10,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
+import { Eye, LockKey, Pencil, Trash } from '@/fakemui/icons'
 import type { AppLevel, PageConfig } from '@/lib/level-types'
 
 interface RoutesTableProps {

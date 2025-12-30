@@ -6,6 +6,7 @@
 import * as fengari from 'fengari-web'
 
 import type { JsonValue } from '@/types/utility-types'
+
 import type { LuaState } from '../types'
 
 const lua = fengari.lua

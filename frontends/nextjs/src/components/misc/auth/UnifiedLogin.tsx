@@ -1,4 +1,3 @@
-import { ArrowLeft, Envelope, SignIn, UserPlus } from '@/fakemui/icons'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -10,6 +9,7 @@ import { Input } from '@/components/ui'
 import { Label } from '@/components/ui'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { Alert, AlertDescription } from '@/components/ui'
+import { ArrowLeft, Envelope, SignIn, UserPlus } from '@/fakemui/icons'
 import { Database, hashPassword } from '@/lib/database'
 import { generateScrambledPassword, simulateEmailSend } from '@/lib/password-utils'
 

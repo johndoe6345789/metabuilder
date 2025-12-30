@@ -1,8 +1,9 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+
 import { UIPageRenderer } from '@/components/ui-page-renderer/UIPageRenderer'
-import { loadPageFromLuaPackages } from '@/lib/ui-pages/load-page-from-lua-packages'
 import { loadPageFromDB } from '@/lib/ui-pages/load-page-from-db'
+import { loadPageFromLuaPackages } from '@/lib/ui-pages/load-page-from-lua-packages'
 
 interface PageProps {
   params: Promise<{

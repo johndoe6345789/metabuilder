@@ -1,7 +1,3 @@
-import { Box, Stack } from '@/fakemui'
-
-import { CheckCircle } from '@/fakemui/icons'
-
 import {
   Button,
   Card,
@@ -11,6 +7,8 @@ import {
   CardTitle,
   Skeleton,
 } from '@/components/ui'
+import { Box, Stack } from '@/fakemui'
+import { CheckCircle } from '@/fakemui/icons'
 
 import type { RunListProps } from './run-list.types'
 import { RunListEmptyState } from './RunListEmptyState'

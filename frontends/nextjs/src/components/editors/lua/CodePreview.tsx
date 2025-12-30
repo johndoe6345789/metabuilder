@@ -1,16 +1,15 @@
 import {
+  ArrowClockwise as RefreshIcon,
   Box,
   Button,
   Card,
   CardContent,
   CardHeader,
+  Copy as ContentCopy,
+  FloppyDisk as SaveIcon,
   Stack,
   Tooltip,
-  Copy as ContentCopy,
-  ArrowClockwise as RefreshIcon,
-  FloppyDisk as SaveIcon,
 } from '@/fakemui'
-
 import type { LuaScript } from '@/lib/level-types'
 
 import styles from './LuaBlocksEditor.module.scss'

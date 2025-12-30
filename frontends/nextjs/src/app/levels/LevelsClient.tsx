@@ -1,7 +1,8 @@
 'use client'
 
-import { Container, Stack, Typography } from '@/fakemui'
 import { useMemo, useState } from 'react'
+
+import { Container, Stack, Typography } from '@/fakemui'
 
 import { LevelDetails } from './components/LevelDetails'
 import { LevelsGrid } from './components/LevelsGrid'

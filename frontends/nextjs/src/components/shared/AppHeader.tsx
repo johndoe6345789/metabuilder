@@ -1,8 +1,7 @@
-import { House, SignOut } from '@/fakemui/icons'
-
 import { Button } from '@/components/ui'
 import { Avatar, AvatarFallback } from '@/components/ui'
 import { Badge } from '@/components/ui'
+import { House, SignOut } from '@/fakemui/icons'
 
 interface AppHeaderProps {
   title?: string

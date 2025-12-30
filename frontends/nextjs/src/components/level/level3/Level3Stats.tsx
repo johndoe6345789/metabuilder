@@ -1,6 +1,5 @@
-import { ChatCircle, Users } from '@/fakemui/icons'
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
+import { ChatCircle, Users } from '@/fakemui/icons'
 import type { Comment, User } from '@/lib/level-types'
 
 interface Level3StatsProps {

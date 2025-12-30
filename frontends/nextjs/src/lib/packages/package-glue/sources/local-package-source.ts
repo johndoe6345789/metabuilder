@@ -1,14 +1,14 @@
-import type {
-  PackageSource,
-  PackageSourceConfig,
-  PackageIndexEntry,
-  PackageData,
-} from './package-source-types'
-import { DEFAULT_LOCAL_SOURCE } from './package-source-types'
-import { loadPackageSeedJson } from '../scripts/load-package-seed-json'
 import { loadLuaScript } from '../scripts/load-lua-script'
 import { loadLuaScriptsFolder } from '../scripts/load-lua-scripts-folder'
+import { loadPackageSeedJson } from '../scripts/load-package-seed-json'
 import type { LuaScriptFile, PackageComponent, PackageExamples } from '../types'
+import type {
+  PackageData,
+  PackageIndexEntry,
+  PackageSource,
+  PackageSourceConfig,
+} from './package-source-types'
+import { DEFAULT_LOCAL_SOURCE } from './package-source-types'
 
 /**
  * Package seed JSON structure

@@ -1,5 +1,3 @@
-import { Crown } from '@/fakemui/icons'
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui'
+import { Crown } from '@/fakemui/icons'
 import type { User } from '@/lib/level-types'
 
 interface TransferConfirmDialogProps {

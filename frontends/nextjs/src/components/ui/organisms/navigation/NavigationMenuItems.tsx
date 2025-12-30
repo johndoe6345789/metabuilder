@@ -1,6 +1,8 @@
-import { ExpandMore as ExpandMoreIcon } from '@/fakemui/icons'
-import { Box, Button, Menu, MenuItem, ListItemIcon, ListItemText } from '@/fakemui'
 import { ElementType, forwardRef, type MouseEvent, ReactNode } from 'react'
+
+import { Box, Button, ListItemIcon, ListItemText,Menu, MenuItem } from '@/fakemui'
+import { ExpandMore as ExpandMoreIcon } from '@/fakemui/icons'
+
 import styles from './Navigation.module.scss'
 
 interface NavigationMenuProps {

@@ -1,5 +1,3 @@
-import { ArrowRight, Check, Code, Copy, Tag } from '@/fakemui/icons'
-
 import {
   Badge,
   Button,
@@ -10,6 +8,7 @@ import {
   DialogTitle,
   Separator,
 } from '@/components/ui'
+import { ArrowRight, Check, Code, Copy, Tag } from '@/fakemui/icons'
 import { type LuaSnippet } from '@/lib/lua-snippets'
 
 interface SnippetDialogProps {

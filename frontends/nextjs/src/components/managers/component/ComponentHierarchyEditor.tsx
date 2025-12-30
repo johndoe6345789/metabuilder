@@ -1,4 +1,3 @@
-import { ArrowsOutCardinal, Plus, Tree } from '@/fakemui/icons'
 import { useCallback, useId, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -7,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
 import { Separator } from '@/components/ui'
+import { ArrowsOutCardinal, Plus, Tree } from '@/fakemui/icons'
 import { componentCatalog } from '@/lib/components/component-catalog'
 import { type ComponentNode, Database } from '@/lib/database'
 

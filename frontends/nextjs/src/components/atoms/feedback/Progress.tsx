@@ -1,7 +1,8 @@
 'use client'
 
-import { LinearProgress, CircularProgress } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { CircularProgress,LinearProgress } from '@/fakemui'
 
 /**
  * Props for the Progress component

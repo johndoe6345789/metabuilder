@@ -1,6 +1,7 @@
-import { Folder as FolderIcon } from '@/fakemui/icons'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+
+import { Folder as FolderIcon } from '@/fakemui/icons'
 
 import { NavGroup } from './NavGroup'
 import { NavItem } from './NavItem'

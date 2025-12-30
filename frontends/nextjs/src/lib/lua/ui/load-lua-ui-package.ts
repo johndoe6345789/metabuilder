@@ -5,7 +5,6 @@ import { join } from 'path'
 import { createLuaEngine } from '@/lib/lua/engine/core/create-lua-engine'
 import { fromLua } from '@/lib/lua/functions/converters/from-lua'
 import { pushToLua } from '@/lib/lua/functions/converters/push-to-lua'
-
 import type { JsonValue } from '@/types/utility-types'
 
 import { normalizeLuaComponent } from './normalize-lua-structure'

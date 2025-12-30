@@ -1,7 +1,8 @@
 'use client'
 
-import { ListItem, ListItemIcon, ListItemText } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
+
+import { ListItem, ListItemIcon, ListItemText } from '@/fakemui'
 
 import styles from './NavItem.module.scss'
 

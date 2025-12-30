@@ -1,6 +1,5 @@
-import { GithubLogo, GoogleLogo, type IconProps } from '@/fakemui/icons'
-
 import { Button, Separator } from '@/components/ui'
+import { GithubLogo, GoogleLogo, type IconProps } from '@/fakemui/icons'
 
 export interface Provider {
   name: string

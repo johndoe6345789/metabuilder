@@ -1,5 +1,3 @@
-import { useKV } from '@/hooks/data/useKV'
-import { ArrowCounterClockwise, FloppyDisk, Moon, Palette, Sun } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -7,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { Switch } from '@/components/ui'
+import { ArrowCounterClockwise, FloppyDisk, Moon, Palette, Sun } from '@/fakemui/icons'
+import { useKV } from '@/hooks/data/useKV'
 
 import { DEFAULT_DARK_THEME, DEFAULT_LIGHT_THEME } from './theme/constants'
 import { PaletteEditor } from './theme/PaletteEditor'

@@ -1,7 +1,9 @@
 'use client'
 
-import { Tooltip as FakeMuiTooltip } from '@/fakemui/fakemui/data-display'
 import { forwardRef, ReactNode } from 'react'
+
+import { Tooltip as FakeMuiTooltip } from '@/fakemui/fakemui/data-display'
+
 import styles from './Tooltip.module.scss'
 
 type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right'

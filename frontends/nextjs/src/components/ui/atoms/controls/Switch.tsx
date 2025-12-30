@@ -1,7 +1,9 @@
 'use client'
 
-import { Switch as FakemuiSwitch, SwitchProps as FakemuiSwitchProps } from '@/fakemui/fakemui/inputs'
 import { forwardRef } from 'react'
+
+import { Switch as FakemuiSwitch, SwitchProps as FakemuiSwitchProps } from '@/fakemui/fakemui/inputs'
+
 import styles from './Switch.module.scss'
 
 /**

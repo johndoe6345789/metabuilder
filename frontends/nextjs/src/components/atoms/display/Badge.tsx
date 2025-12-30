@@ -1,7 +1,8 @@
 'use client'
 
-import { Chip } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Chip } from '@/fakemui'
 
 /** Badge visual style variants */
 export type BadgeVariant =

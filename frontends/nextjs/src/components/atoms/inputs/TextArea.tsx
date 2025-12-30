@@ -1,7 +1,8 @@
 'use client'
 
-import { Textarea } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import { Textarea } from '@/fakemui'
 
 /**
  * Props for the TextArea component

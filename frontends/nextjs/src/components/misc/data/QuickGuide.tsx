@@ -1,9 +1,8 @@
-import { Code, ListDashes, Package, Palette, Sparkle, Terminal } from '@/fakemui/icons'
-
 import { Card } from '@/components/ui'
 import { Badge } from '@/components/ui'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui'
 import { Alert, AlertDescription } from '@/components/ui'
+import { Code, ListDashes, Package, Palette, Sparkle, Terminal } from '@/fakemui/icons'
 
 export function QuickGuide() {
   return (

@@ -1,7 +1,8 @@
 'use client'
 
-import { Label as FakemuiLabel } from '@/fakemui'
 import { forwardRef, LabelHTMLAttributes } from 'react'
+
+import { Label as FakemuiLabel } from '@/fakemui'
 
 /**
  * Props for the Label component

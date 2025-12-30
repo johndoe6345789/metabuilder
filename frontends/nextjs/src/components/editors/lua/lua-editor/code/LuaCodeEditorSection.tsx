@@ -1,5 +1,5 @@
 import Editor, { useMonaco } from '@monaco-editor/react'
-import { ArrowsOut, BookOpen, FileCode } from '@/fakemui/icons'
+import type { editor } from 'monaco-editor'
 import { useRef } from 'react'
 import { toast } from 'sonner'
 
@@ -15,10 +15,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui'
+import { ArrowsOut, BookOpen, FileCode } from '@/fakemui/icons'
 import type { LuaScript } from '@/lib/level-types'
-import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua-examples'
 import type { LuaExampleKey } from '@/lib/lua-examples'
-import type { editor } from 'monaco-editor'
+import { getLuaExampleCode, getLuaExamplesList } from '@/lib/lua-examples'
 
 import { useLuaMonacoConfig } from './useLuaMonacoConfig'
 

@@ -1,6 +1,5 @@
-import { CheckCircle, WarningCircle } from '@/fakemui/icons'
-
 import { Alert, AlertDescription, Badge } from '@/components/ui'
+import { CheckCircle, WarningCircle } from '@/fakemui/icons'
 
 export interface GodCredentialsSummaryProps {
   isActive: boolean

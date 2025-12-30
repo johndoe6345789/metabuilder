@@ -1,8 +1,9 @@
 'use client'
 
+import { ChangeEvent,forwardRef } from 'react'
+
 import { Box, FormControl, IconButton, Select, Typography } from '@/fakemui'
 import { FirstPage as FirstPageIcon, LastPage as LastPageIcon } from '@/fakemui/icons'
-import { forwardRef, ChangeEvent } from 'react'
 
 import styles from './pagination.module.scss'
 import { NextIcon, PreviousIcon } from './paginationIcons'

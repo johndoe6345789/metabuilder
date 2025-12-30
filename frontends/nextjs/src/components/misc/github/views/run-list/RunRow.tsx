@@ -1,6 +1,5 @@
-import { Box, Stack, Typography } from '@/fakemui'
-
 import { Badge, Button, Card, CardContent } from '@/components/ui'
+import { Box, Stack, Typography } from '@/fakemui'
 import { Autorenew, Download, OpenInNew } from '@/fakemui/icons'
 
 import type { WorkflowRun } from '../types'

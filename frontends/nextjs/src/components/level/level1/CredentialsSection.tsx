@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react'
 
+import { GodCredentialsBanner } from '@/components/level1/GodCredentialsBanner'
 import { getScrambledPassword } from '@/lib/auth'
 
-import { GodCredentialsBanner } from '@/components/level1/GodCredentialsBanner'
 import { ChallengePanel } from '../sections/ChallengePanel'
 
 export function CredentialsSection() {

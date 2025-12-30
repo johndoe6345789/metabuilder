@@ -1,13 +1,13 @@
-import { evaluateConditional } from '../evaluation/evaluate-conditional'
-import { executeLuaScript } from '../lua/execute-lua-script'
 import { getComponentConfig } from '../components/get-component-config'
 import { hasComponentConfig } from '../components/has-component-config'
-import { interpolateValue } from '../evaluation/interpolate-value'
 import { registerComponentConfig } from '../components/register-component-config'
-import { registerLuaScript } from '../lua/register-lua-script'
-import { createDeclarativeRendererState } from './renderer-state'
+import { evaluateConditional } from '../evaluation/evaluate-conditional'
+import { interpolateValue } from '../evaluation/interpolate-value'
 import { resolveDataSource } from '../evaluation/resolve-data-source'
+import { executeLuaScript } from '../lua/execute-lua-script'
+import { registerLuaScript } from '../lua/register-lua-script'
 import type { DeclarativeComponentConfig, LuaScriptDefinition } from '../types'
+import { createDeclarativeRendererState } from './renderer-state'
 
 export class DeclarativeComponentRenderer {
   private readonly state = createDeclarativeRendererState()

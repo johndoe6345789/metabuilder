@@ -1,7 +1,8 @@
 'use client'
 
-import { Paper } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
+
+import { Paper } from '@/fakemui'
 
 // Command container (like cmdk)
 export interface CommandProps {

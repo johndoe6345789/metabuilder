@@ -1,8 +1,7 @@
-import { Shield, Users } from '@/fakemui/icons'
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { ScrollArea } from '@/components/ui'
 import { Badge } from '@/components/ui'
+import { Shield, Users } from '@/fakemui/icons'
 import type { User } from '@/lib/level-types'
 
 interface GodUsersTabProps {

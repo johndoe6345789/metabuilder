@@ -12,8 +12,8 @@ export {
 export {
   componentRegistry,
   getComponentByType,
-  hasComponent,
   getRegisteredComponentTypes,
-  registerComponent,
+  hasComponent,
   type LuaComponentProps,
+  registerComponent,
 } from './component-registry'

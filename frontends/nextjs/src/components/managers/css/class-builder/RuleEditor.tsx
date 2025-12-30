@@ -1,5 +1,3 @@
-import { Plus } from '@/fakemui/icons'
-
 import {
   Button,
   Input,
@@ -9,6 +7,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui'
+import { Plus } from '@/fakemui/icons'
 import type { CssCategory } from '@/lib/database'
 
 interface RuleEditorProps {

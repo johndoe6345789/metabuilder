@@ -1,7 +1,9 @@
 'use client'
 
+import { CSSProperties,forwardRef } from 'react'
+
 import { Skeleton as FakemuiSkeleton, SkeletonProps as FakemuiSkeletonProps } from '@/fakemui/fakemui/feedback'
-import { forwardRef, CSSProperties } from 'react'
+
 import styles from './Skeleton.module.scss'
 
 /**

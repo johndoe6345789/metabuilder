@@ -1,8 +1,9 @@
 'use client'
 
-import { Link as FakemuiLink } from '@/fakemui'
 import NextLink, { LinkProps as NextLinkProps } from 'next/link'
 import { forwardRef } from 'react'
+
+import { Link as FakemuiLink } from '@/fakemui'
 
 /**
  * Props for the Link component

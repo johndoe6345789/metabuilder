@@ -9,12 +9,12 @@ export type {
 } from './types'
 
 // Bridge exports for connecting Lua packages to React hooks
+export type { HookBridge, HookInstance, PackageBridgeConfig } from './bridge'
 export {
-  registerHookBridge,
-  getHookBridge,
-  hasHookBridge,
-  getRegisteredHooks,
   createHookContextFunctions,
   generateHookLuaBindings,
+  getHookBridge,
+  getRegisteredHooks,
+  hasHookBridge,
+  registerHookBridge,
 } from './bridge'
-export type { HookBridge, HookInstance, PackageBridgeConfig } from './bridge'

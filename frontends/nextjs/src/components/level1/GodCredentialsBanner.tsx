@@ -1,7 +1,6 @@
-import { Check, Copy, Eye, EyeSlash, Warning } from '@/fakemui/icons'
-
 import { Alert, AlertDescription } from '@/components/ui'
 import { Button } from '@/components/ui'
+import { Check, Copy, Eye, EyeSlash, Warning } from '@/fakemui/icons'
 
 interface GodCredentialsBannerProps {
   username: string
