@@ -16,6 +16,7 @@ import { autoRegisterPackages } from '../auto-loader'
 // Packages known to have good components.json files
 const AUTO_LOAD_PACKAGES = [
   'arcade_lobby',
+  'audit_log',
   'dashboard',
   'data_table',
   'form_builder',
