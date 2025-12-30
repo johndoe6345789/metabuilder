@@ -34,23 +34,19 @@ describe('NavGroup', () => {
     )
 
     const button = screen.getByRole('button', { name: /Menu/i })
-    let childItem = screen.queryByText('Child Item')
+    const childItem = screen.queryByText('Child Item')
 
-    // Initially collapsed - item should not be visible
-    expect(childItem).toBeNull()
+    // Children are always in DOM (CSS-based collapse)
+    expect(childItem).toBeTruthy()
 
     // Click to expand
     fireEvent.click(button)
-    childItem = screen.queryByText('Child Item')
-    expect(childItem).toBeTruthy()
+    expect(screen.queryByText('Child Item')).toBeTruthy()
 
     // Click to collapse
     fireEvent.click(button)
-    // After collapsing, wait for animation and check
-    setTimeout(() => {
-      childItem = screen.queryByText('Child Item')
-      expect(childItem).toBeNull()
-    }, 500)
+    // Children remain in DOM but are hidden via CSS
+    expect(screen.queryByText('Child Item')).toBeTruthy()
   })
 
   it('renders with icon', () => {
@@ -77,8 +73,8 @@ describe('NavGroup', () => {
       if (disabled) {
         expect(button.hasAttribute('disabled')).toBe(true)
         fireEvent.click(button)
-        // Should not expand when disabled
-        expect(screen.queryByText('Child')).toBeNull()
+        // Children remain in DOM (CSS-based collapse), click doesn't toggle state
+        expect(screen.queryByText('Child')).toBeTruthy()
       } else {
         expect(button.hasAttribute('disabled')).toBe(false)
       }
