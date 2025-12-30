@@ -5,6 +5,280 @@
 
 local retro_helpers = {}
 
+-- ============================================================================
+-- Button Constants (matches libretro RETRO_DEVICE_ID_JOYPAD_*)
+-- ============================================================================
+
+retro_helpers.BUTTON = {
+    -- D-Pad
+    UP = "up",
+    DOWN = "down",
+    LEFT = "left",
+    RIGHT = "right",
+    
+    -- Face buttons (SNES layout)
+    A = "a",
+    B = "b",
+    X = "x",
+    Y = "y",
+    
+    -- Shoulder buttons
+    L = "l",
+    R = "r",
+    L2 = "l2",
+    R2 = "r2",
+    L3 = "l3",      -- Left stick click
+    R3 = "r3",      -- Right stick click
+    
+    -- Menu buttons
+    START = "start",
+    SELECT = "select",
+}
+
+-- Aliases for different console naming conventions
+retro_helpers.BUTTON.CROSS = retro_helpers.BUTTON.B      -- PlayStation
+retro_helpers.BUTTON.CIRCLE = retro_helpers.BUTTON.A    -- PlayStation
+retro_helpers.BUTTON.SQUARE = retro_helpers.BUTTON.Y    -- PlayStation
+retro_helpers.BUTTON.TRIANGLE = retro_helpers.BUTTON.X  -- PlayStation
+retro_helpers.BUTTON.RUN = retro_helpers.BUTTON.START   -- PC Engine
+retro_helpers.BUTTON.OPTION = retro_helpers.BUTTON.SELECT -- Atari
+
+-- Analog stick axes
+retro_helpers.AXIS = {
+    LEFT_X = "left_x",
+    LEFT_Y = "left_y",
+    RIGHT_X = "right_x",
+    RIGHT_Y = "right_y",
+}
+
+-- ============================================================================
+-- Input Functions
+-- ============================================================================
+
+--- Press and release a button (tap)
+--- @param session_id string
+--- @param button string Button from BUTTON table
+--- @param player? number Player number (default 0)
+--- @param duration_ms? number Hold duration in ms (default 50)
+function retro_helpers.tap(session_id, button, player, duration_ms)
+    player = player or 0
+    duration_ms = duration_ms or 50
+    
+    retro_helpers.press(session_id, button, player)
+    sleep(duration_ms)
+    retro_helpers.release(session_id, button, player)
+end
+
+--- Press a button (hold down)
+--- @param session_id string
+--- @param button string Button from BUTTON table
+--- @param player? number Player number (default 0)
+function retro_helpers.press(session_id, button, player)
+    player = player or 0
+    http.post("/api/v1/retro/sessions/" .. session_id .. "/input", {
+        player = player,
+        button = button,
+        pressed = true
+    })
+end
+
+--- Release a button
+--- @param session_id string
+--- @param button string Button from BUTTON table
+--- @param player? number Player number (default 0)
+function retro_helpers.release(session_id, button, player)
+    player = player or 0
+    http.post("/api/v1/retro/sessions/" .. session_id .. "/input", {
+        player = player,
+        button = button,
+        pressed = false
+    })
+end
+
+--- Release all buttons for a player
+--- @param session_id string
+--- @param player? number Player number (default 0)
+function retro_helpers.release_all(session_id, player)
+    player = player or 0
+    for _, btn in pairs(retro_helpers.BUTTON) do
+        retro_helpers.release(session_id, btn, player)
+    end
+end
+
+-- Convenience functions for directions
+
+--- Tap UP
+function retro_helpers.up(session_id, player)
+    retro_helpers.tap(session_id, retro_helpers.BUTTON.UP, player)
+end
+
+--- Tap DOWN
+function retro_helpers.down(session_id, player)
+    retro_helpers.tap(session_id, retro_helpers.BUTTON.DOWN, player)
+end
+
+--- Tap LEFT
+function retro_helpers.left(session_id, player)
+    retro_helpers.tap(session_id, retro_helpers.BUTTON.LEFT, player)
+end
+
+--- Tap RIGHT
+function retro_helpers.right(session_id, player)
+    retro_helpers.tap(session_id, retro_helpers.BUTTON.RIGHT, player)
+end
+
+--- Hold a direction
+--- @param session_id string
+--- @param direction string "up", "down", "left", "right"
+--- @param duration_ms number How long to hold
+--- @param player? number Player number
+function retro_helpers.hold_direction(session_id, direction, duration_ms, player)
+    retro_helpers.press(session_id, direction, player)
+    sleep(duration_ms)
+    retro_helpers.release(session_id, direction, player)
+end
+
+--- Move in a diagonal direction
+--- @param session_id string
+--- @param horizontal string "left" or "right"
+--- @param vertical string "up" or "down"
+--- @param duration_ms? number Hold duration
+--- @param player? number Player number
+function retro_helpers.diagonal(session_id, horizontal, vertical, duration_ms, player)
+    duration_ms = duration_ms or 50
+    retro_helpers.press(session_id, horizontal, player)
+    retro_helpers.press(session_id, vertical, player)
+    sleep(duration_ms)
+    retro_helpers.release(session_id, horizontal, player)
+    retro_helpers.release(session_id, vertical, player)
+end
+
+-- ============================================================================
+-- Analog Stick Input
+-- ============================================================================
+
+--- Set analog stick position
+--- @param session_id string
+--- @param stick string "left" or "right"
+--- @param x number -1.0 to 1.0 (left to right)
+--- @param y number -1.0 to 1.0 (up to down)
+--- @param player? number Player number (default 0)
+function retro_helpers.set_analog(session_id, stick, x, y, player)
+    player = player or 0
+    http.post("/api/v1/retro/sessions/" .. session_id .. "/input/analog", {
+        player = player,
+        stick = stick,
+        x = math.max(-1.0, math.min(1.0, x)),
+        y = math.max(-1.0, math.min(1.0, y))
+    })
+end
+
+--- Center (release) analog stick
+--- @param session_id string
+--- @param stick string "left" or "right"
+--- @param player? number
+function retro_helpers.center_analog(session_id, stick, player)
+    retro_helpers.set_analog(session_id, stick, 0, 0, player)
+end
+
+--- Move analog stick in a direction and return to center
+--- @param session_id string
+--- @param stick string "left" or "right"
+--- @param x number -1.0 to 1.0
+--- @param y number -1.0 to 1.0
+--- @param duration_ms? number How long to hold (default 100)
+--- @param player? number
+function retro_helpers.flick_analog(session_id, stick, x, y, duration_ms, player)
+    duration_ms = duration_ms or 100
+    retro_helpers.set_analog(session_id, stick, x, y, player)
+    sleep(duration_ms)
+    retro_helpers.center_analog(session_id, stick, player)
+end
+
+-- ============================================================================
+-- Combo/Macro System
+-- ============================================================================
+
+--- Execute a sequence of inputs
+--- @param session_id string
+--- @param inputs table[] Array of {button, duration_ms, wait_after_ms}
+--- @param player? number
+function retro_helpers.combo(session_id, inputs, player)
+    for _, input in ipairs(inputs) do
+        if input.button then
+            retro_helpers.tap(session_id, input.button, player, input.duration_ms)
+        elseif input.analog then
+            retro_helpers.flick_analog(session_id, input.analog.stick, 
+                input.analog.x, input.analog.y, input.duration_ms, player)
+        end
+        if input.wait_after_ms then
+            sleep(input.wait_after_ms)
+        end
+    end
+end
+
+--- Common fighting game motions
+retro_helpers.MOTION = {
+    -- Quarter circle forward (↓↘→)
+    QCF = function(session_id, player)
+        retro_helpers.tap(session_id, "down", player, 30)
+        retro_helpers.diagonal(session_id, "right", "down", 30, player)
+        retro_helpers.tap(session_id, "right", player, 30)
+    end,
+    
+    -- Quarter circle back (↓↙←)
+    QCB = function(session_id, player)
+        retro_helpers.tap(session_id, "down", player, 30)
+        retro_helpers.diagonal(session_id, "left", "down", 30, player)
+        retro_helpers.tap(session_id, "left", player, 30)
+    end,
+    
+    -- Dragon punch / Shoryuken (→↓↘)
+    DP = function(session_id, player)
+        retro_helpers.tap(session_id, "right", player, 30)
+        retro_helpers.tap(session_id, "down", player, 30)
+        retro_helpers.diagonal(session_id, "right", "down", 30, player)
+    end,
+    
+    -- Half circle forward (←↙↓↘→)
+    HCF = function(session_id, player)
+        retro_helpers.tap(session_id, "left", player, 30)
+        retro_helpers.diagonal(session_id, "left", "down", 30, player)
+        retro_helpers.tap(session_id, "down", player, 30)
+        retro_helpers.diagonal(session_id, "right", "down", 30, player)
+        retro_helpers.tap(session_id, "right", player, 30)
+    end,
+    
+    -- Charge back then forward
+    CHARGE_BF = function(session_id, charge_ms, player)
+        charge_ms = charge_ms or 800
+        retro_helpers.hold_direction(session_id, "left", charge_ms, player)
+        retro_helpers.tap(session_id, "right", player, 30)
+    end,
+    
+    -- 360 motion (for grapplers)
+    CIRCLE = function(session_id, player)
+        local dirs = {"right", "down", "left", "up"}
+        for _, dir in ipairs(dirs) do
+            retro_helpers.tap(session_id, dir, player, 20)
+        end
+    end,
+}
+
+--- Execute a motion then press a button
+--- @param session_id string
+--- @param motion function Motion from MOTION table
+--- @param button string Button to press after motion
+--- @param player? number
+function retro_helpers.special_move(session_id, motion, button, player)
+    motion(session_id, player)
+    retro_helpers.tap(session_id, button, player)
+end
+
+-- ============================================================================
+-- Type Definitions
+-- ============================================================================
+
 --- @class LibretroCore
 --- @field name string Core identifier
 --- @field display_name string Human-readable name
@@ -36,6 +310,10 @@ local retro_helpers = {}
 --- @field created_at string ISO timestamp
 --- @field screenshot_path string Path to screenshot
 --- @field description string User description
+
+-- ============================================================================
+-- System Definitions
+-- ============================================================================
 
 -- System name mappings
 retro_helpers.SYSTEMS = {
