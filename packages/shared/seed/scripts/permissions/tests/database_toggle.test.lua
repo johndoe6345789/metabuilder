@@ -1,0 +1,98 @@
+-- Tests for database toggle control
+-- Tests database enable/disable and requirement checking
+
+local databaseToggle = require("permissions.database_toggle")
+
+describe("Database Toggle Control", function()
+
+  before_each(function()
+    -- Reset to default enabled state
+    databaseToggle.initialize_database(true)
+  end)
+
+  describe("Database initialization", function()
+    it("should initialize database as enabled by default", function()
+      databaseToggle.initialize_database()
+      assert.is_true(databaseToggle.is_database_enabled())
+    end)
+
+    it("should initialize database as disabled when specified", function()
+      databaseToggle.initialize_database(false)
+      assert.is_false(databaseToggle.is_database_enabled())
+    end)
+
+    it("should initialize database as enabled when true", function()
+      databaseToggle.initialize_database(true)
+      assert.is_true(databaseToggle.is_database_enabled())
+    end)
+  end)
+
+  describe("Database enable/disable", function()
+    it("should enable database", function()
+      databaseToggle.disable_database()
+      databaseToggle.enable_database()
+      assert.is_true(databaseToggle.is_database_enabled())
+    end)
+
+    it("should disable database", function()
+      databaseToggle.enable_database()
+      databaseToggle.disable_database()
+      assert.is_false(databaseToggle.is_database_enabled())
+    end)
+
+    it("should handle enabling already enabled database", function()
+      databaseToggle.enable_database()
+      databaseToggle.enable_database()
+      assert.is_true(databaseToggle.is_database_enabled())
+    end)
+  end)
+
+  describe("Database status", function()
+    it("should return enabled status", function()
+      databaseToggle.enable_database()
+      local status = databaseToggle.get_database_status()
+      assert.is_true(status.enabled)
+      assert.equals("Database is enabled", status.message)
+    end)
+
+    it("should return disabled status", function()
+      databaseToggle.disable_database()
+      local status = databaseToggle.get_database_status()
+      assert.is_false(status.enabled)
+      assert.equals("Database is disabled", status.message)
+    end)
+  end)
+
+  describe("Require database", function()
+    it("should succeed when database is enabled", function()
+      databaseToggle.enable_database()
+      local success = databaseToggle.require_database("test operation")
+      assert.is_true(success)
+    end)
+
+    it("should throw error when database is disabled", function()
+      databaseToggle.disable_database()
+      assert.has_error(function()
+        databaseToggle.require_database("test operation")
+      end)
+    end)
+
+    it("should include resource name in error message", function()
+      databaseToggle.disable_database()
+      local success, err = pcall(function()
+        databaseToggle.require_database("my feature")
+      end)
+      assert.is_false(success)
+      assert.is_truthy(string.find(err, "my feature"))
+    end)
+
+    it("should use default resource name when not provided", function()
+      databaseToggle.disable_database()
+      local success, err = pcall(function()
+        databaseToggle.require_database()
+      end)
+      assert.is_false(success)
+      assert.is_truthy(string.find(err, "this operation"))
+    end)
+  end)
+end)
