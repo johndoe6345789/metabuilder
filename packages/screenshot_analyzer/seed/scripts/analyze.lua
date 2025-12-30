@@ -1,7 +1,60 @@
 -- Page Analysis Operations
+
+---@class ElementCounts
+---@field headings integer Number of heading elements
+---@field paragraphs integer Number of paragraph elements
+---@field links integer Number of link elements
+---@field images integer Number of image elements
+---@field buttons integer Number of button elements
+---@field inputs integer Number of input elements
+---@field forms integer Number of form elements
+
+---@class PageStructure
+---@field text_length integer Length of text content
+---@field html_length integer Length of HTML sample
+---@field element_counts ElementCounts Element count breakdown
+
+---@class StructureResult
+---@field success boolean Whether analysis succeeded
+---@field structure PageStructure Structure analysis data
+
+---@class PageTypeIndicators
+---@field has_form boolean Whether page has forms
+---@field has_login boolean Whether page has login form
+---@field has_table boolean Whether page has tables
+---@field has_article boolean Whether page has article element
+
+---@class PageTypeResult
+---@field success boolean Whether detection succeeded
+---@field page_type string Detected page type
+---@field confidence number Confidence score (0-1)
+---@field indicators PageTypeIndicators Detection indicators
+
+---@class ReportData
+---@field structure PageStructure Structure data
+---@field page_type PageTypeResult Page type data
+---@field info PageInfo Page info data
+
+---@class ReportResult
+---@field success boolean Whether report generation succeeded
+---@field report string Markdown formatted report
+---@field data ReportData Raw report data
+
+---@class Recommendation
+---@field type "accessibility" | "usability" Type of recommendation
+---@field priority "high" | "medium" | "low" Priority level
+---@field message string Recommendation message
+
+---@class RecommendationsResult
+---@field success boolean Whether analysis succeeded
+---@field recommendations Recommendation[] List of recommendations
+---@field count integer Number of recommendations
+
+---@class AnalyzeModule
 local M = {}
 
--- Analyze page structure
+---Analyze page structure
+---@return StructureResult
 function M.analyze_structure()
   local text_sample = page_get_text_content(3000)
   local html_sample = page_get_html_sample(3000)
@@ -33,7 +86,8 @@ function M.analyze_structure()
   }
 end
 
--- Detect page type
+---Detect page type
+---@return PageTypeResult
 function M.detect_page_type()
   local url = page_get_url()
   local title = page_get_title()
@@ -74,7 +128,8 @@ function M.detect_page_type()
   }
 end
 
--- Generate analysis report
+---Generate analysis report
+---@return ReportResult
 function M.generate_report()
   local structure = M.analyze_structure()
   local page_type = M.detect_page_type()
@@ -114,7 +169,8 @@ function M.generate_report()
   }
 end
 
--- Get recommendations based on analysis
+---Get recommendations based on analysis
+---@return RecommendationsResult
 function M.get_recommendations()
   local structure = M.analyze_structure()
   local recommendations = {}
