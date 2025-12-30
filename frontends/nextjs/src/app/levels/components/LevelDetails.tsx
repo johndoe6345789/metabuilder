@@ -8,7 +8,7 @@ import {
   Paper,
   Stack,
   Typography,
-} from '@mui/material'
+} from '@/fakemui'
 
 import type { PermissionLevel } from '../levels-data'
 import { highlightColor } from '../utils/highlightColor'

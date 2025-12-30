@@ -1,6 +1,6 @@
 'use client'
 
-import { CircularProgress, Stack, Typography } from '@mui/material'
+import { CircularProgress, Stack, Typography } from '@/fakemui'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 

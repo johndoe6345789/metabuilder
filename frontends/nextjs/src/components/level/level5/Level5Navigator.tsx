@@ -1,6 +1,6 @@
 import { ArrowsLeftRight, Buildings, Camera, Eye, Users, Warning } from '@/fakemui/icons'
 
-import { Box, Typography } from '@mui/material'
+import { Box, Typography } from '@/fakemui'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import type { AppLevel, Tenant, User } from '@/lib/level-types'
 

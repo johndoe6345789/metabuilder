@@ -1,4 +1,4 @@
-import { CircularProgress, Stack, Typography } from '@mui/material'
+import { CircularProgress, Stack, Typography } from '@/fakemui'
 
 interface PageLoaderProps {
   message?: string

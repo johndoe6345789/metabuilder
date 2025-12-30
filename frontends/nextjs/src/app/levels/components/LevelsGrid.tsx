@@ -1,4 +1,4 @@
-import { Box, Chip, Grid, Paper, Stack, Typography } from '@mui/material'
+import { Box, Chip, Grid, Paper, Stack, Typography } from '@/fakemui'
 
 import type { PermissionLevel } from '../levels-data'
 

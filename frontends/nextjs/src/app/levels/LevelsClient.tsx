@@ -1,6 +1,6 @@
 'use client'
 
-import { Container, Stack, Typography } from '@mui/material'
+import { Container, Stack, Typography } from '@/fakemui'
 import { useMemo, useState } from 'react'
 
 import { LevelDetails } from './components/LevelDetails'

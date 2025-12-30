@@ -1,4 +1,4 @@
-import { Button, Stack, Typography } from '@mui/material'
+import { Button, Stack, Typography } from '@/fakemui'
 
 import { LockRounded } from '@/fakemui/icons'
 

@@ -1,10 +1,8 @@
 'use client'
 
-import { CssBaseline, ThemeProvider as MuiThemeProvider } from '@mui/material'
+import { CssBaseline } from '@/fakemui'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
-
-import { darkTheme, lightTheme } from '@/theme/mui-theme'
 
 import { ThemeContext, type ThemeMode } from './theme-context'
 
@@ -34,8 +32,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
     return mode
   }, [mode])
 
-  const theme = useMemo(() => (resolvedMode === 'dark' ? darkTheme : lightTheme), [resolvedMode])
-
   useEffect(() => {
     const root = document.documentElement
 
@@ -53,10 +49,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ mode, resolvedMode, setMode, toggleTheme }}>
-      <MuiThemeProvider theme={theme}>
-        <CssBaseline />
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-      </MuiThemeProvider>
+      <CssBaseline />
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </ThemeContext.Provider>
   )
 }

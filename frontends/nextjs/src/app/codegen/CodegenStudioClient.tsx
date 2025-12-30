@@ -11,7 +11,7 @@ import {
   Stack,
   TextField,
   Typography,
-} from '@mui/material'
+} from '@/fakemui'
 import { type ChangeEvent, useMemo, useState } from 'react'
 
 import Header from './components/Header'
