@@ -5,15 +5,16 @@ import { Box, Button, Stack, TextField, Typography } from '@mui/material'
 import React from 'react'
 
 import type { LuaUIComponent } from './types/lua-ui-package'
+import type { JsonValue } from '@/types/utility-types'
 
-const ComponentRegistry: Record<string, React.ComponentType<any>> = {
+const ComponentRegistry: Record<string, React.ElementType> = {
   Box,
   Stack,
   Typography,
   Button,
   Input: TextField,
   TextArea: TextField,
-  Form: 'form' as any, // Use native HTML form
+  Form: 'form', // Use native HTML form
 }
 
 /**
@@ -45,10 +46,10 @@ export function generateComponentTree(
  * Handles special cases like MUI component props
  */
 function convertLuaPropsToReact(
-  luaProps: Record<string, unknown>,
+  luaProps: Record<string, JsonValue>,
   componentType: string
-): Record<string, unknown> {
-  const reactProps: Record<string, unknown> = { ...luaProps }
+): Record<string, JsonValue> {
+  const reactProps: Record<string, JsonValue> = { ...luaProps }
 
   // Special handling for different component types
   switch (componentType) {
@@ -58,7 +59,7 @@ function convertLuaPropsToReact(
       if (luaProps.type === 'email') {
         reactProps.type = 'email'
       }
-      if (luaProps.rows) {
+      if (typeof luaProps.rows === 'number') {
         reactProps.multiline = true
         reactProps.rows = luaProps.rows
       }
@@ -88,12 +89,12 @@ function convertLuaPropsToReact(
  */
 function renderComponentContent(
   componentType: string,
-  props: Record<string, unknown>
+  props: Record<string, JsonValue>
 ): React.ReactNode {
   switch (componentType) {
     case 'Button':
     case 'Typography':
-      return props.text as string
+      return typeof props.text === 'string' ? props.text : null
     default:
       return null
   }

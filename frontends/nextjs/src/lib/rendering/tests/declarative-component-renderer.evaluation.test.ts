@@ -55,7 +55,7 @@ describe('declarative-component-renderer evaluation', () => {
       },
       {
         name: 'null template',
-        template: null as any,
+        template: null as string,
         context: { name: 'test' },
         expected: null,
       },
@@ -75,8 +75,8 @@ describe('declarative-component-renderer evaluation', () => {
       { name: 'boolean true', condition: true, context: {}, expected: true },
       { name: 'boolean false', condition: false, context: {}, expected: false },
       { name: 'empty string condition', condition: '', context: {}, expected: true },
-      { name: 'null condition', condition: null as any, context: {}, expected: true },
-      { name: 'undefined condition', condition: undefined as any, context: {}, expected: true },
+      { name: 'null condition', condition: null as string, context: {}, expected: true },
+      { name: 'undefined condition', condition: undefined as string, context: {}, expected: true },
       {
         name: 'truthy context value',
         condition: 'isActive',

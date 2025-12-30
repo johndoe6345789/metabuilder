@@ -15,7 +15,7 @@ describe('declarative-component-renderer lifecycle', () => {
   })
 
   describe('registerComponentConfig', () => {
-    it.each([
+    const cases: Array<{ name: string; type: string; config: DeclarativeComponentConfig }> = [
       {
         name: 'basic component',
         type: 'button',
@@ -45,8 +45,10 @@ describe('declarative-component-renderer lifecycle', () => {
           config: { layout: 'block', styling: { className: 'input' }, children: [] },
         },
       },
-    ])('should register $name', ({ type, config }) => {
-      renderer.registerComponentConfig(type, config as DeclarativeComponentConfig)
+    ]
+
+    it.each(cases)('should register $name', ({ type, config }) => {
+      renderer.registerComponentConfig(type, config)
 
       expect(renderer.hasComponentConfig(type)).toBe(true)
       expect(renderer.getComponentConfig(type)).toEqual(config)
@@ -128,10 +130,7 @@ describe('declarative-component-renderer lifecycle', () => {
     })
 
     it('should load Lua scripts from package', () => {
-      const luaExecuteSpy = vi.spyOn(
-        DeclarativeComponentRenderer.prototype as any,
-        'executeLuaScript'
-      )
+      const luaExecuteSpy = vi.spyOn(DeclarativeComponentRenderer.prototype, 'executeLuaScript')
 
       loadPackageComponents({
         luaScripts: [
