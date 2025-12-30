@@ -1,0 +1,261 @@
+# Schema definitions owned by stream_cast package
+
+entities:
+  - name: StreamChannel
+    version: "1.0"
+    description: "Live streaming channel"
+    checksum: null
+    
+    fields:
+      id:
+        type: cuid
+        primary: true
+        generated: true
+        
+      tenantId:
+        type: string
+        required: true
+        index: true
+        
+      name:
+        type: string
+        required: true
+        maxLength: 100
+        
+      slug:
+        type: string
+        required: true
+        
+      description:
+        type: string
+        nullable: true
+        
+      thumbnail:
+        type: string
+        nullable: true
+        
+      category:
+        type: string
+        nullable: true
+        index: true
+        
+      status:
+        type: string
+        required: true
+        default: "offline"
+        enum: [offline, live, scheduled]
+        index: true
+        
+      viewerCount:
+        type: int
+        default: 0
+        
+      streamKey:
+        type: string
+        nullable: true
+        unique: true
+        
+      rtmpUrl:
+        type: string
+        nullable: true
+        
+      hlsUrl:
+        type: string
+        nullable: true
+        
+      chatEnabled:
+        type: boolean
+        default: true
+        
+      isPublic:
+        type: boolean
+        default: true
+        
+      isMature:
+        type: boolean
+        default: false
+        
+      metadata:
+        type: string
+        nullable: true
+        description: "JSON: bitrate, resolution, etc."
+        
+      createdAt:
+        type: bigint
+        required: true
+        
+      updatedAt:
+        type: bigint
+        nullable: true
+        
+      createdBy:
+        type: string
+        required: true
+
+    indexes:
+      - fields: [tenantId, slug]
+        unique: true
+      - fields: [tenantId]
+      - fields: [status]
+      - fields: [category]
+
+    relations:
+      - name: schedules
+        type: hasMany
+        entity: StreamSchedule
+        foreignKey: channelId
+      - name: scenes
+        type: hasMany
+        entity: StreamScene
+        foreignKey: channelId
+
+    acl:
+      create: [user]
+      read: [public]
+      update: [self, admin]
+      delete: [self, admin]
+      rowLevel: "createdBy = $user.id"
+
+  - name: StreamSchedule
+    version: "1.0"
+    description: "Scheduled stream event"
+    checksum: null
+    
+    fields:
+      id:
+        type: cuid
+        primary: true
+        generated: true
+        
+      channelId:
+        type: string
+        required: true
+        index: true
+        
+      title:
+        type: string
+        required: true
+        maxLength: 200
+        
+      description:
+        type: string
+        nullable: true
+        
+      startTime:
+        type: bigint
+        required: true
+        index: true
+        
+      endTime:
+        type: bigint
+        nullable: true
+        
+      duration:
+        type: int
+        nullable: true
+        description: "Expected duration in minutes"
+        
+      isRecurring:
+        type: boolean
+        default: false
+        
+      recurrence:
+        type: string
+        nullable: true
+        description: "JSON: cron/rrule"
+        
+      notifyAt:
+        type: bigint
+        nullable: true
+        
+      metadata:
+        type: string
+        nullable: true
+        description: "JSON: guests, topics, etc."
+        
+      createdAt:
+        type: bigint
+        required: true
+
+    indexes:
+      - fields: [channelId]
+      - fields: [startTime]
+
+    relations:
+      - name: channel
+        type: belongsTo
+        entity: StreamChannel
+        field: channelId
+        onDelete: Cascade
+
+    acl:
+      create: [user]
+      read: [public]
+      update: [self, admin]
+      delete: [self, admin]
+
+  - name: StreamScene
+    version: "1.0"
+    description: "Stream scene/layout configuration"
+    checksum: null
+    
+    fields:
+      id:
+        type: cuid
+        primary: true
+        generated: true
+        
+      channelId:
+        type: string
+        required: true
+        index: true
+        
+      name:
+        type: string
+        required: true
+        maxLength: 100
+        
+      layout:
+        type: string
+        required: true
+        description: "JSON: scene layout composition"
+        
+      sources:
+        type: string
+        required: true
+        description: "JSON: cameras, screens, overlays"
+        
+      transitions:
+        type: string
+        nullable: true
+        description: "JSON: scene transitions"
+        
+      isActive:
+        type: boolean
+        default: false
+        index: true
+        
+      sortOrder:
+        type: int
+        default: 0
+        
+      createdAt:
+        type: bigint
+        required: true
+
+    indexes:
+      - fields: [channelId]
+      - fields: [isActive]
+
+    relations:
+      - name: channel
+        type: belongsTo
+        entity: StreamChannel
+        field: channelId
+        onDelete: Cascade
+
+    acl:
+      create: [user]
+      read: [user]
+      update: [self, admin]
+      delete: [self, admin]
