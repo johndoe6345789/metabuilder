@@ -1,1 +1,181 @@
-[]
+[
+  {
+    "id": "level3_layout",
+    "type": "Box",
+    "props": { "className": "min-h-screen bg-background" },
+    "children": [
+      {
+        "id": "level3_header",
+        "type": "AppHeader",
+        "children": [
+          {
+            "type": "Toolbar",
+            "children": [
+              { "type": "Typography", "props": { "variant": "h6", "text": "Level 3 - Moderator Panel" } },
+              { "type": "Badge", "props": { "children": "Mod" } },
+              { "type": "Box", "props": { "className": "flex-grow" } },
+              { "type": "Typography", "props": { "variant": "body2", "text": "{{user.username}}" } }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "level3_content",
+        "type": "Container",
+        "props": { "className": "max-w-7xl mx-auto px-4 py-8 space-y-8" },
+        "children": [
+          {
+            "id": "level3_intro",
+            "type": "Stack",
+            "props": { "className": "space-y-4" },
+            "children": [
+              { "type": "Typography", "props": { "variant": "overline", "text": "Level 3" } },
+              { "type": "Typography", "props": { "variant": "h2", "text": "Data Management" } },
+              { "type": "Typography", "props": { "variant": "body1", "text": "Manage users and content.", "className": "text-muted-foreground" } }
+            ]
+          },
+          {
+            "id": "level3_stats",
+            "type": "Grid",
+            "props": { "className": "grid grid-cols-3 gap-4" },
+            "children": [
+              {
+                "type": "Card",
+                "children": [
+                  { "type": "CardHeader", "children": [{ "type": "Typography", "props": { "variant": "caption", "text": "Users" } }] },
+                  { "type": "CardContent", "children": [{ "type": "Typography", "props": { "variant": "h4", "text": "128" } }] }
+                ]
+              },
+              {
+                "type": "Card",
+                "children": [
+                  { "type": "CardHeader", "children": [{ "type": "Typography", "props": { "variant": "caption", "text": "Comments" } }] },
+                  { "type": "CardContent", "children": [{ "type": "Typography", "props": { "variant": "h4", "text": "1,024" } }] }
+                ]
+              },
+              {
+                "type": "Card",
+                "children": [
+                  { "type": "CardHeader", "children": [{ "type": "Typography", "props": { "variant": "caption", "text": "Flagged" } }] },
+                  { "type": "CardContent", "children": [{ "type": "Typography", "props": { "variant": "h4", "text": "12", "className": "text-red-500" } }] }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "level3_tabs",
+            "type": "Card",
+            "children": [
+              {
+                "type": "Tabs",
+                "props": { "items": [
+                  { "value": "users", "label": "Users" },
+                  { "value": "moderation", "label": "Moderation Queue" },
+                  { "value": "reports", "label": "Reports" }
+                ]}
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "users_panel",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          { "type": "Typography", "props": { "variant": "h5", "text": "User Management" } },
+          { "type": "Typography", "props": { "variant": "body2", "text": "View and moderate user accounts.", "className": "text-muted-foreground" } }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "type": "Table",
+            "props": {
+              "columns": [
+                { "field": "username", "headerName": "Username" },
+                { "field": "email", "headerName": "Email" },
+                { "field": "level", "headerName": "Level" },
+                { "field": "status", "headerName": "Status" }
+              ],
+              "rows": [
+                { "username": "john_doe", "email": "john@example.com", "level": 1, "status": "Active" },
+                { "username": "jane_smith", "email": "jane@example.com", "level": 2, "status": "Active" },
+                { "username": "spam_user", "email": "spam@bad.com", "level": 1, "status": "Suspended" }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "moderation_queue",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          { "type": "Typography", "props": { "variant": "h5", "text": "Moderation Queue" } },
+          { "type": "Typography", "props": { "variant": "body2", "text": "Review flagged content and take action.", "className": "text-muted-foreground" } }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "type": "List",
+            "children": [
+              {
+                "type": "ListItem",
+                "children": [
+                  { "type": "Icon", "props": { "name": "Warning" } },
+                  { "type": "ListItemText", "props": { "primary": "Inappropriate comment on post #1234", "secondary": "Reported 2 hours ago" } },
+                  { "type": "Button", "props": { "variant": "outlined", "size": "small", "children": "Review" } }
+                ]
+              },
+              {
+                "type": "ListItem",
+                "children": [
+                  { "type": "Icon", "props": { "name": "Warning" } },
+                  { "type": "ListItemText", "props": { "primary": "Spam content detected", "secondary": "Reported 5 hours ago" } },
+                  { "type": "Button", "props": { "variant": "outlined", "size": "small", "children": "Review" } }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "reports_panel",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          { "type": "Typography", "props": { "variant": "h5", "text": "Reports" } },
+          { "type": "Typography", "props": { "variant": "body2", "text": "User-submitted reports for review.", "className": "text-muted-foreground" } }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "type": "Alert",
+            "props": { "severity": "info" },
+            "children": [
+              { "type": "Typography", "props": { "text": "No pending reports. Great job keeping the community clean!" } }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

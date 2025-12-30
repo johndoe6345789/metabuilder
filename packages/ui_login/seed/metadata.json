@@ -9,7 +9,9 @@
   "dependencies": [
     "ui_permissions"
   ],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "pages": [
       "login"
@@ -28,5 +30,20 @@
       "tests/validate.cases.json"
     ]
   },
-  "minLevel": 1
+  "minLevel": 1,
+  "primary": true,
+  "permissions": {
+    "register.submit": {
+      "minLevel": 1,
+      "description": "Submit registration"
+    },
+    "login.submit": {
+      "minLevel": 1,
+      "description": "Submit login credentials"
+    },
+    "login.view": {
+      "minLevel": 1,
+      "description": "View login page"
+    }
+  }
 }

@@ -7,13 +7,24 @@
   "author": "MetaBuilder",
   "category": "ui",
   "minLevel": 6,
-  "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+  "dependencies": [
+    "ui_permissions",
+    "ui_header",
+    "ui_intro"
+  ],
   "devDependencies": [
     "lua_test"
   ],
   "exports": {
-    "pages": ["level6"],
-    "scripts": ["layout", "tenants", "transfer", "system"],
+    "pages": [
+      "level6"
+    ],
+    "scripts": [
+      "layout",
+      "tenants",
+      "transfer",
+      "system"
+    ],
     "components": []
   },
   "tests": {
@@ -25,5 +36,32 @@
     "cases": [
       "tests/transfer.cases.json"
     ]
+  },
+  "primary": true,
+  "permissions": {
+    "level6.tenants.create": {
+      "minLevel": 6,
+      "description": "Create tenants"
+    },
+    "level6.ownership.transfer": {
+      "minLevel": 6,
+      "description": "Transfer ownership"
+    },
+    "level6.tenants.manage": {
+      "minLevel": 6,
+      "description": "Manage tenants"
+    },
+    "level6.panel.view": {
+      "minLevel": 6,
+      "description": "View Supergod panel"
+    },
+    "level6.tenants.delete": {
+      "minLevel": 6,
+      "description": "Delete tenants"
+    },
+    "level6.system.admin": {
+      "minLevel": 6,
+      "description": "System administration"
+    }
   }
 }

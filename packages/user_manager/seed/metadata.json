@@ -10,7 +10,9 @@
     "ui_permissions",
     "data_table"
   ],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "scripts": [
       "list",
@@ -30,5 +32,32 @@
       "tests/actions.cases.json"
     ]
   },
-  "minLevel": 4
+  "minLevel": 4,
+  "primary": true,
+  "permissions": {
+    "users.delete": {
+      "minLevel": 5,
+      "description": "Delete users"
+    },
+    "users.create": {
+      "minLevel": 4,
+      "description": "Create new users"
+    },
+    "users.edit": {
+      "minLevel": 4,
+      "description": "Edit user profiles"
+    },
+    "users.view": {
+      "minLevel": 4,
+      "description": "View user details"
+    },
+    "users.level.change": {
+      "minLevel": 5,
+      "description": "Change user access levels"
+    },
+    "users.list": {
+      "minLevel": 4,
+      "description": "List all users"
+    }
+  }
 }

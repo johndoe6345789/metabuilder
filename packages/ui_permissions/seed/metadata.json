@@ -7,7 +7,9 @@
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "scripts": [
       "permissions"
@@ -24,5 +26,16 @@
       "tests/levels.cases.json"
     ]
   },
-  "minLevel": 1
+  "minLevel": 1,
+  "primary": false,
+  "permissions": {
+    "permissions.check": {
+      "minLevel": 1,
+      "description": "Check user permissions"
+    },
+    "permissions.level.read": {
+      "minLevel": 1,
+      "description": "Read permission levels"
+    }
+  }
 }

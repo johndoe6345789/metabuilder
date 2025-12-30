@@ -19,7 +19,9 @@
     "ui_level5",
     "ui_level6"
   ],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "pages": [],
     "scripts": [],
@@ -35,5 +37,12 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 1
+  "minLevel": 1,
+  "primary": false,
+  "permissions": {
+    "pages.bundle.access": {
+      "minLevel": 1,
+      "description": "Access bundled UI pages"
+    }
+  }
 }
