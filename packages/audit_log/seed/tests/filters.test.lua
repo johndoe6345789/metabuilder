@@ -15,6 +15,11 @@ local M = {}
 ---@field success boolean
 ---@field errorMessage string|nil
 
+---@class FilterOptions
+---@field operations string[]
+---@field resources string[]
+---@field usernames string[]
+
 ---@class FilterByOperationCase
 ---@field operation string|nil
 ---@field expected integer
@@ -118,6 +123,7 @@ function M.defineTests(framework, assertions, mocks)
   local it_each = framework.it_each
   local beforeEach = framework.beforeEach
   local expect = assertions.expect
+  ---@type { filter_by_operation: FilterByOperationCase[], filter_by_resource: FilterByResourceCase[], filter_by_success: FilterBySuccessCase[], filter_by_username: FilterByUsernameCase[], filter_by_date_range: FilterByDateRangeCase[], apply_filters: ApplyFiltersCase[] }
   local cases = load_cases("filters.cases.json")
   
   -- Import filter modules

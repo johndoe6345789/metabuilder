@@ -1,0 +1,48 @@
+{
+  "filter_by_operation": [
+    { "desc": "create operation", "operation": "create", "expected": 2 },
+    { "desc": "read operation", "operation": "read", "expected": 1 },
+    { "desc": "update operation", "operation": "update", "expected": 1 },
+    { "desc": "delete operation", "operation": "delete", "expected": 1 },
+    { "desc": "unknown operation", "operation": "nonexistent", "expected": 0 },
+    { "desc": "nil operation returns all", "operation": null, "expected": 5 },
+    { "desc": "empty operation returns all", "operation": "", "expected": 5 }
+  ],
+  "filter_by_resource": [
+    { "desc": "user resource", "resource": "user", "expected": 2 },
+    { "desc": "settings resource", "resource": "settings", "expected": 1 },
+    { "desc": "post resource", "resource": "post", "expected": 2 },
+    { "desc": "unknown resource", "resource": "nonexistent", "expected": 0 },
+    { "desc": "nil resource returns all", "resource": null, "expected": 5 }
+  ],
+  "filter_by_success": [
+    { "desc": "success true", "success": true, "expected": 4 },
+    { "desc": "success false", "success": false, "expected": 1, "expectedId": "log3" },
+    { "desc": "success nil returns all", "success": null, "expected": 5 }
+  ],
+  "filter_by_username": [
+    { "desc": "case-insensitive admin", "username": "admin", "expected": 3 },
+    { "desc": "uppercase admin", "username": "ADMIN", "expected": 3 },
+    { "desc": "viewer match", "username": "viewer", "expected": 1 },
+    { "desc": "editor match", "username": "editor", "expected": 1 },
+    { "desc": "unknown username", "username": "nonexistent", "expected": 0 },
+    { "desc": "nil username returns all", "username": null, "expected": 5 },
+    { "desc": "empty username returns all", "username": "", "expected": 5 }
+  ],
+  "filter_by_date_range": [
+    { "desc": "start/end range includes 3", "startTime": 1000000, "endTime": 1200000, "expected": 3 },
+    { "desc": "range includes 3 from mid", "startTime": 1200000, "endTime": 1400000, "expected": 3 },
+    { "desc": "range outside data", "startTime": 1500000, "endTime": 2000000, "expected": 0 },
+    { "desc": "end only", "startTime": null, "endTime": 1200000, "expected": 3 },
+    { "desc": "start only", "startTime": 1200000, "endTime": null, "expected": 3 },
+    { "desc": "no bounds", "startTime": null, "endTime": null, "expected": 5 }
+  ],
+  "apply_filters": [
+    { "desc": "operation only", "filters": { "operation": "create" }, "expected": 2 },
+    { "desc": "operation + resource", "filters": { "operation": "create", "resource": "user" }, "expected": 1, "expectedFirstId": "log1" },
+    { "desc": "success + username", "filters": { "success": true, "username": "admin" }, "expected": 2 },
+    { "desc": "date range + success", "filters": { "startTime": 1000000, "endTime": 1100000, "success": true }, "expected": 2 },
+    { "desc": "empty filters returns all", "filters": {}, "expected": 5 },
+    { "desc": "nil filters returns all", "filters": null, "expected": 5 }
+  ]
+}
