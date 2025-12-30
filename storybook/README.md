@@ -12,6 +12,36 @@ npm run dev
 
 Then open http://localhost:6006
 
+## Features
+
+### 🔍 Auto-Discovery
+Packages are automatically discovered from `packages/index.json` based on `storybook.config.json`:
+
+```json
+{
+  "discovery": {
+    "includedCategories": ["ui", "admin", "gaming", "social", "editors"],
+    "excludedPackages": ["shared", "lua_test"],
+    "minLevel": 1,
+    "maxLevel": 6
+  }
+}
+```
+
+### 🎭 Context Variants
+Test packages with different user contexts:
+- **Guest** - Level 1 user
+- **Admin** - Level 4 user  
+- **Admin (Nerd Mode)** - Level 4 with nerdMode enabled
+- **Supergod** - Level 6 user
+
+### 🔧 Interactive Explorer
+Use **Auto-Discovered Packages → Explorer** to:
+- Browse all discovered packages
+- Select scripts to render
+- Switch context variants
+- Toggle debug mode
+
 ## Structure
 
 ```
