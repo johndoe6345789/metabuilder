@@ -1,5 +1,6 @@
 import { ArrowsLeftRight, Buildings, Camera, Eye, Users, Warning } from '@phosphor-icons/react'
 
+import { Box, Typography } from '@mui/material'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import type { AppLevel, Tenant, User } from '@/lib/level-types'
 
@@ -8,7 +9,6 @@ import { GodUsersTab } from '../../level5/tabs/GodUsersTab'
 import { PowerTransferTab } from '../../level5/tabs/power-transfer/PowerTransferTab'
 import { PreviewTab } from '../../level5/tabs/PreviewTab'
 import { TenantsTab } from '../../level5/tabs/TenantsTab'
-import { ScreenshotAnalyzer } from '../../misc/demos/ScreenshotAnalyzer'
 import { ResultsPane } from '../sections/ResultsPane'
 
 interface Level5NavigatorProps {
@@ -97,7 +97,14 @@ export function Level5Navigator({
         </TabsContent>
 
         <TabsContent value="screenshot" className="space-y-4">
-          <ScreenshotAnalyzer />
+          <Box sx={{ p: 3, textAlign: 'center' }}>
+            <Typography variant="h6" color="text.secondary">
+              Screenshot Analyzer is now a Lua package
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              See packages/screenshot_analyzer for the implementation
+            </Typography>
+          </Box>
         </TabsContent>
 
         <TabsContent value="errorlogs" className="space-y-4">
