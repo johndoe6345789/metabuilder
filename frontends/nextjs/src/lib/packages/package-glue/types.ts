@@ -23,6 +23,8 @@ export interface PackageDefinition {
   author: string
   category: string
   dependencies: string[]
+  /** Minimum permission level required to access this package (1=Public, 2=User, 3=Admin, 4=God, 5=Supergod) */
+  minLevel: number
   exports: {
     components: string[]
     scripts?: string[]
