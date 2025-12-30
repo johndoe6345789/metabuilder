@@ -1,52 +1,42 @@
 'use client'
 
-import { InputBase, InputBaseProps } from '@mui/material'
+import { Input as FakemuiInput } from '@/fakemui'
 import { forwardRef } from 'react'
+import type { InputProps as FakemuiInputProps } from '@/fakemui/fakemui/inputs/Input'
 
 /**
  * Props for the Input component
- * @extends {InputBaseProps} Inherits Material-UI InputBase props
+ * Wrapper around fakemui Input to maintain API compatibility
  */
-export interface InputProps extends Omit<InputBaseProps, 'size'> {
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   /** Whether the input is in an error state */
   error?: boolean
   /** Whether the input should take up the full width of its container */
   fullWidth?: boolean
+  /** MUI sx prop - converted to className for compatibility */
+  sx?: any
+  /** MUI inputRef - forwarded as ref */
+  inputRef?: React.Ref<HTMLInputElement>
+  /** Start adornment element */
+  startAdornment?: React.ReactNode
+  /** End adornment element */
+  endAdornment?: React.ReactNode
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ type, error, fullWidth = true, ...props }, ref) => {
+  ({ type, error, fullWidth = true, sx, inputRef, startAdornment, endAdornment, className, ...props }, ref) => {
+    // Combine className with any sx-based classes
+    const combinedClassName = [className, sx?.className].filter(Boolean).join(' ')
+
     return (
-      <InputBase
-        inputRef={ref}
+      <FakemuiInput
+        ref={inputRef || ref}
         type={type}
         error={error}
         fullWidth={fullWidth}
-        sx={{
-          px: 1.5,
-          py: 1,
-          fontSize: '0.875rem',
-          border: 1,
-          borderColor: error ? 'error.main' : 'divider',
-          borderRadius: 1,
-          bgcolor: 'background.paper',
-          transition: 'border-color 0.2s, box-shadow 0.2s',
-          '&:hover': {
-            borderColor: error ? 'error.main' : 'text.secondary',
-          },
-          '&.Mui-focused': {
-            borderColor: error ? 'error.main' : 'primary.main',
-            boxShadow: theme =>
-              `0 0 0 2px ${error ? theme.palette.error.main : theme.palette.primary.main}25`,
-          },
-          '&.Mui-disabled': {
-            opacity: 0.5,
-            cursor: 'not-allowed',
-          },
-          '& input': {
-            p: 0,
-          },
-        }}
+        startAdornment={startAdornment}
+        endAdornment={endAdornment}
+        className={combinedClassName}
         {...props}
       />
     )

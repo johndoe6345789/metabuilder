@@ -1,56 +1,39 @@
 'use client'
 
-import { Box, TextareaAutosize, TextareaAutosizeProps } from '@mui/material'
+import { Textarea } from '@/fakemui'
 import { forwardRef } from 'react'
 
-export interface TextAreaProps extends Omit<TextareaAutosizeProps, 'ref'> {
+/**
+ * Props for the TextArea component
+ * Wrapper around fakemui Textarea to maintain API compatibility
+ */
+export interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  /** Whether the textarea is in an error state */
   error?: boolean
+  /** Whether the textarea should take up the full width of its container */
   fullWidth?: boolean
+  /** Minimum number of rows */
+  minRows?: number
+  /** Maximum number of rows */
+  maxRows?: number
+  /** MUI sx prop - converted to className for compatibility */
+  sx?: any
 }
 
 const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ error, fullWidth = true, minRows = 3, ...props }, ref) => {
+  ({ error, fullWidth = true, minRows = 3, maxRows, sx, className, ...props }, ref) => {
+    // Combine className with any sx-based classes
+    const combinedClassName = [className, sx?.className, error ? 'textarea--error' : ''].filter(Boolean).join(' ')
+
     return (
-      <Box
-        sx={{
-          width: fullWidth ? '100%' : 'auto',
-        }}
-      >
-        <TextareaAutosize
-          ref={ref}
-          minRows={minRows}
-          style={{
-            width: '100%',
-            padding: '8px 12px',
-            fontSize: '0.875rem',
-            fontFamily: 'inherit',
-            lineHeight: 1.5,
-            border: `1px solid ${error ? 'var(--mui-palette-error-main)' : 'var(--mui-palette-divider)'}`,
-            borderRadius: '4px',
-            backgroundColor: 'var(--mui-palette-background-paper)',
-            color: 'var(--mui-palette-text-primary)',
-            transition: 'border-color 0.2s, box-shadow 0.2s',
-            resize: 'vertical',
-          }}
-          onFocus={e => {
-            e.currentTarget.style.borderColor = error
-              ? 'var(--mui-palette-error-main)'
-              : 'var(--mui-palette-primary-main)'
-            e.currentTarget.style.boxShadow = `0 0 0 2px ${
-              error
-                ? 'rgba(var(--mui-palette-error-mainChannel) / 0.15)'
-                : 'rgba(var(--mui-palette-primary-mainChannel) / 0.15)'
-            }`
-          }}
-          onBlur={e => {
-            e.currentTarget.style.borderColor = error
-              ? 'var(--mui-palette-error-main)'
-              : 'var(--mui-palette-divider)'
-            e.currentTarget.style.boxShadow = 'none'
-          }}
-          {...props}
-        />
-      </Box>
+      <Textarea
+        ref={ref}
+        rows={minRows}
+        error={error}
+        fullWidth={fullWidth}
+        className={combinedClassName}
+        {...props}
+      />
     )
   }
 )
