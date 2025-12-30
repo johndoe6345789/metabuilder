@@ -6,19 +6,18 @@ type FiltersProps = Pick<RunListProps, 'repoLabel' | 'lastFetched'>
 
 export const Filters = ({ repoLabel, lastFetched }: FiltersProps) => (
   <Stack spacing={1}>
-    <Typography variant="h4" fontWeight={700}>
+    <Typography variant="h4" style={{ fontWeight: 700 }}>
       GitHub Actions Monitor
     </Typography>
     <Typography color="text.secondary">
       Repository:{' '}
       <Box
         component="code"
-        sx={{
-          ml: 1,
-          px: 1,
-          py: 0.5,
-          borderRadius: 1,
-          bgcolor: 'action.hover',
+        style={{
+          marginLeft: 8,
+          padding: '2px 8px',
+          borderRadius: 4,
+          backgroundColor: 'var(--color-action-hover)',
           fontSize: '0.875rem',
         }}
       >
