@@ -72,6 +72,11 @@ export {
   InputBase,
   FilledInput,
   OutlinedInput,
+  FormField,
+  DatePicker,
+  TimePicker,
+  ColorPicker,
+  FileUpload,
 } from './fakemui/inputs'
 
 // Surfaces

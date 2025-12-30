@@ -88,7 +88,11 @@ import {
   Popover,
 } from '@/fakemui'
 
-import type { ComponentType } from 'react'
+import type { ComponentType, FC } from 'react'
+
+// Type helper to cast components to generic LuaComponentProps
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyComponent = FC<any>
 
 /**
  * Type definition for component props from Lua
@@ -133,6 +137,17 @@ export const componentRegistry: Record<string, ComponentType<LuaComponentProps>>
   RadioGroup,
   Switch,
   Slider,
+  // New inputs
+  DatePicker,
+  TimePicker,
+  ColorPicker,
+  FileUpload,
+  Fab,
+  ToggleButton,
+  ToggleButtonGroup,
+  Autocomplete,
+  Rating,
+  FormField,
 
   // Form elements
   FormControl,
