@@ -1,5 +1,6 @@
-import LockRoundedIcon from '@mui/icons-material/LockRounded'
 import { Button, Stack, Typography } from '@mui/material'
+
+import { LockRounded } from '@/fakemui/icons'
 
 interface AccessDeniedProps {
   title?: string
@@ -21,7 +22,7 @@ export function AccessDenied({
       justifyContent="center"
       sx={{ minHeight: '50vh', textAlign: 'center' }}
     >
-      <LockRoundedIcon sx={{ fontSize: 48, color: 'text.secondary' }} />
+      <LockRounded size={48} style={{ color: 'rgba(0,0,0,0.54)' }} />
       <Stack spacing={1}>
         <Typography variant="h5">{title}</Typography>
         <Typography variant="body2" color="text.secondary">

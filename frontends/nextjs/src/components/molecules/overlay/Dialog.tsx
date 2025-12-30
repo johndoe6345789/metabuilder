@@ -1,6 +1,5 @@
 'use client'
 
-import CloseIcon from '@mui/icons-material/Close'
 import {
   Box,
   Dialog as MuiDialog,
@@ -14,6 +13,8 @@ import {
 } from '@mui/material'
 import { TransitionProps } from '@mui/material/transitions'
 import { forwardRef, ReactNode, useState } from 'react'
+
+import { Close } from '@/fakemui/icons'
 
 // Slide transition
 const Transition = forwardRef(function Transition(

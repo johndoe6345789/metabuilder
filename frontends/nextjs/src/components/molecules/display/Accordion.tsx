@@ -1,6 +1,5 @@
 'use client'
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
   Accordion as MuiAccordion,
   AccordionDetails as MuiAccordionDetails,
@@ -9,6 +8,8 @@ import {
   Typography,
 } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { ExpandMore } from '@/fakemui/icons'
 
 // Accordion (single item)
 export interface AccordionProps extends Omit<MuiAccordionProps, 'children'> {

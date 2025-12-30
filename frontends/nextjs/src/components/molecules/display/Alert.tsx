@@ -1,6 +1,5 @@
 'use client'
 
-import CloseIcon from '@mui/icons-material/Close'
 import {
   Alert as MuiAlert,
   AlertProps as MuiAlertProps,
@@ -11,6 +10,8 @@ import {
   Theme,
 } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Close } from '@/fakemui/icons'
 
 export type AlertVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info'
 
@@ -48,7 +49,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
         action={
           dismissible && onDismiss ? (
             <IconButton aria-label="close" color="inherit" size="small" onClick={onDismiss}>
-              <CloseIcon fontSize="inherit" />
+              <Close size={16} />
             </IconButton>
           ) : undefined
         }

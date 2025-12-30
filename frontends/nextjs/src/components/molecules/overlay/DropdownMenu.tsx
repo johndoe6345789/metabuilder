@@ -1,7 +1,5 @@
 'use client'
 
-import CheckIcon from '@mui/icons-material/Check'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import {
   Box,
   Divider,
@@ -14,6 +12,8 @@ import {
   Typography,
 } from '@mui/material'
 import { forwardRef, MouseEvent as ReactMouseEvent, ReactNode } from 'react'
+
+import { Check, ChevronRight } from '@/fakemui/icons'
 
 // DropdownMenu (uses MUI Menu under the hood)
 export interface DropdownMenuProps {
