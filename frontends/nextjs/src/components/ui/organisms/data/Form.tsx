@@ -1,7 +1,7 @@
 // TODO: Split this file (209 LOC) into smaller organisms (<150 LOC each)
 'use client'
 
-import { Box, FormHelperText, FormLabel } from 'fakemui'
+import { Box, FormHelperText, FormLabel } from '@/fakemui'
 import { createContext, forwardRef, ReactNode, useContext } from 'react'
 import {
   Controller,

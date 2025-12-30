@@ -228,7 +228,6 @@ export {
 // X (Advanced)
 export {
   DataGrid,
-  DatePicker,
 } from './fakemui/x'
 
 // Theming
