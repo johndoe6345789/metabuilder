@@ -174,6 +174,52 @@ function M.validate_naming_conventions(package_path, metadata)
   return errors, warnings
 end
 
+-- Validate test files structure
+function M.validate_test_structure(package_path, metadata)
+  local errors = {}
+  local warnings = {}
+
+  -- Check if lua_test is a devDependency
+  local has_lua_test = false
+  if metadata.devDependencies then
+    for _, dep in ipairs(metadata.devDependencies) do
+      if dep == "lua_test" then
+        has_lua_test = true
+        break
+      end
+    end
+  end
+
+  if not has_lua_test then
+    -- No lua_test, tests are optional
+    return errors, warnings
+  end
+
+  local tests_path = package_path .. "/scripts/tests"
+
+  -- Check for common test files
+  local common_tests = {
+    "metadata.test.lua",
+    "components.test.lua"
+  }
+
+  local found_tests = false
+  for _, test_file in ipairs(common_tests) do
+    local test_path = tests_path .. "/" .. test_file
+    local file = io.open(test_path, "r")
+    if file then
+      file:close()
+      found_tests = true
+    end
+  end
+
+  if not found_tests then
+    table.insert(warnings, "No test files found (metadata.test.lua, components.test.lua) despite lua_test devDependency")
+  end
+
+  return errors, warnings
+end
+
 -- Validate complete package structure
 function M.validate_package_structure(package_path, metadata)
   local results = {
@@ -219,6 +265,16 @@ function M.validate_package_structure(package_path, metadata)
     results.valid = false
   end
   for _, warn in ipairs(naming_warnings) do
+    table.insert(results.warnings, warn)
+  end
+
+  -- Test structure (only if lua_test is a devDependency)
+  local test_errors, test_warnings = M.validate_test_structure(package_path, metadata)
+  for _, err in ipairs(test_errors) do
+    table.insert(results.errors, err)
+    results.valid = false
+  end
+  for _, warn in ipairs(test_warnings) do
     table.insert(results.warnings, warn)
   end
 
