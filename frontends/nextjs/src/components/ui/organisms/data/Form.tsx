@@ -1,7 +1,7 @@
 // TODO: Split this file (209 LOC) into smaller organisms (<150 LOC each)
 'use client'
 
-import { Box, FormControl, FormHelperText, FormLabel } from '@mui/material'
+import { Box, FormHelperText, FormLabel } from 'fakemui'
 import { createContext, forwardRef, ReactNode, useContext } from 'react'
 import {
   Controller,
@@ -10,6 +10,8 @@ import {
   FieldValues,
   useFormContext,
 } from 'react-hook-form'
+
+import styles from './Form.module.scss'
 
 // Form Context
 interface FormFieldContextValue {
@@ -87,17 +89,19 @@ interface FormItemProps {
   className?: string
 }
 
-const FormItem = forwardRef<HTMLDivElement, FormItemProps>(({ children, ...props }, ref) => {
-  const id = `form-item-${Math.random().toString(36).substr(2, 9)}`
+const FormItem = forwardRef<HTMLDivElement, FormItemProps>(
+  ({ children, className = '', ...props }, ref) => {
+    const id = `form-item-${Math.random().toString(36).substr(2, 9)}`
 
-  return (
-    <FormItemContext.Provider value={{ id }}>
-      <Box ref={ref} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }} {...props}>
-        {children}
-      </Box>
-    </FormItemContext.Provider>
-  )
-})
+    return (
+      <FormItemContext.Provider value={{ id }}>
+        <Box ref={ref} className={`${styles.formItem} ${className}`} {...props}>
+          {children}
+        </Box>
+      </FormItemContext.Provider>
+    )
+  }
+)
 FormItem.displayName = 'FormItem'
 
 // FormLabel component
@@ -107,19 +111,14 @@ interface FormLabelProps {
 }
 
 const FormLabelComponent = forwardRef<HTMLLabelElement, FormLabelProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     const { error, formItemId } = useFormField()
 
     return (
       <FormLabel
         ref={ref}
         htmlFor={formItemId}
-        error={!!error}
-        sx={{
-          fontSize: '0.875rem',
-          fontWeight: 500,
-          color: error ? 'error.main' : 'text.primary',
-        }}
+        className={`${styles.formLabel} ${error ? styles.error : ''} ${className}`}
         {...props}
       >
         {children}
@@ -136,11 +135,9 @@ interface FormControlProps {
 }
 
 const FormControlComponent = forwardRef<HTMLDivElement, FormControlProps>(
-  ({ children, ...props }, ref) => {
-    const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
-
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <Box ref={ref} {...props}>
+      <Box ref={ref} className={className} {...props}>
         {children}
       </Box>
     )
@@ -155,14 +152,14 @@ interface FormDescriptionProps {
 }
 
 const FormDescription = forwardRef<HTMLParagraphElement, FormDescriptionProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     const { formDescriptionId } = useFormField()
 
     return (
       <FormHelperText
         ref={ref}
         id={formDescriptionId}
-        sx={{ mt: 0.5, fontSize: '0.75rem' }}
+        className={`${styles.formHelperText} ${className}`}
         {...props}
       >
         {children}
@@ -179,7 +176,7 @@ interface FormMessageProps {
 }
 
 const FormMessage = forwardRef<HTMLParagraphElement, FormMessageProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     const { error, formMessageId } = useFormField()
     const body = error ? String(error?.message) : children
 
@@ -192,7 +189,7 @@ const FormMessage = forwardRef<HTMLParagraphElement, FormMessageProps>(
         ref={ref}
         id={formMessageId}
         error={!!error}
-        sx={{ mt: 0.5, fontSize: '0.75rem' }}
+        className={`${styles.formHelperText} ${error ? styles.error : ''} ${className}`}
         {...props}
       >
         {body}

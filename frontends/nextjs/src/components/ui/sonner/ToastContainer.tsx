@@ -1,9 +1,10 @@
 'use client'
 
-import { Alert, Box, Snackbar } from '@mui/material'
+import { Alert, Box, Snackbar } from 'fakemui'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { anchorFromPosition, containerPlacement, type Toast, type ToastOptions } from './config'
+import styles from './ToastContainer.module.scss'
 
 export interface ToastHandlers {
   addToast: (toast: Toast) => void
@@ -15,6 +16,24 @@ interface ToastContainerProps extends ToastOptions {
   expand?: boolean
   closeButton?: boolean
   onRegister?: (handlers: ToastHandlers) => void
+}
+
+function getPositionClass(position: string): string {
+  switch (position) {
+    case 'top-left':
+      return styles.topLeft
+    case 'top-center':
+      return styles.topCenter
+    case 'top-right':
+      return styles.topRight
+    case 'bottom-left':
+      return styles.bottomLeft
+    case 'bottom-center':
+      return styles.bottomCenter
+    case 'bottom-right':
+    default:
+      return styles.bottomRight
+  }
 }
 
 export function ToastContainer({
@@ -43,16 +62,10 @@ export function ToastContainer({
   }, [addToast, onRegister, removeToast])
 
   const anchorOrigin = useMemo(() => anchorFromPosition(position), [position])
-  const containerPosition = useMemo(() => containerPlacement(position), [position])
+  const positionClass = useMemo(() => getPositionClass(position), [position])
 
   return (
-    <Box
-      sx={{
-        position: 'fixed',
-        zIndex: 9999,
-        ...containerPosition,
-      }}
-    >
+    <Box className={`${styles.toastContainer} ${positionClass}`}>
       {toasts.map(t => (
         <Snackbar
           key={t.id}
@@ -60,20 +73,17 @@ export function ToastContainer({
           autoHideDuration={t.duration || null}
           onClose={() => removeToast(t.id)}
           anchorOrigin={anchorOrigin}
-          sx={{
-            position: 'relative',
-            mb: 1,
-          }}
+          className={styles.snackbar}
         >
           <Alert
             severity={t.type === 'default' ? 'info' : t.type}
             variant={richColors ? 'filled' : 'standard'}
             onClose={closeButton ? () => removeToast(t.id) : undefined}
-            sx={{ width: expand ? '100%' : 'auto', minWidth: 300 }}
+            className={`${styles.alert} ${expand ? styles.fullWidth : ''}`}
           >
             {t.message}
             {t.description && (
-              <Box component="div" sx={{ fontSize: '0.875rem', opacity: 0.8, mt: 0.5 }}>
+              <Box component="div" className={styles.alertDescription}>
                 {t.description}
               </Box>
             )}
