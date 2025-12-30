@@ -1,15 +1,15 @@
 -- Admin settings security section
 
----@class SettingsSection
----@field type string
----@field id string
----@field title string
----@field fields SettingsField[]
-
 ---@class SettingsField
----@field id string
----@field type string
----@field label string
+---@field id string The field identifier
+---@field type string The field type (switch, number, etc.)
+---@field label string The field label for display
+
+---@class SettingsSection
+---@field type string The section type identifier
+---@field id string The section identifier
+---@field title string The section title
+---@field fields SettingsField[] Array of field configurations
 
 ---@return SettingsSection
 local function security_settings()
