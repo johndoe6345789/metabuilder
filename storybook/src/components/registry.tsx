@@ -471,19 +471,25 @@ export const TextField: React.FC<TextFieldProps> = ({
 
 interface SelectProps extends LuaComponentProps {
   label?: string
-  options?: Array<{ value: string | number; label: string }>
+  options?: Array<{ value: string | number; label: string }> | Record<string, unknown>
 }
 
-export const Select: React.FC<SelectProps> = ({ label, options = [], className = '' }) => (
-  <div className={className}>
-    {label && <label className="block text-sm font-medium mb-1">{label}</label>}
-    <select className="border rounded px-3 py-2 w-full">
-      {options.map(opt => (
-        <option key={opt.value} value={opt.value}>{opt.label}</option>
-      ))}
-    </select>
-  </div>
-)
+export const Select: React.FC<SelectProps> = ({ label, options, className = '', children }) => {
+  // Normalize options - could be array, object, or undefined
+  const optionsArray = Array.isArray(options) ? options : []
+  
+  return (
+    <div className={className}>
+      {label && <label className="block text-sm font-medium mb-1">{label}</label>}
+      <select className="border rounded px-3 py-2 w-full">
+        {optionsArray.map((opt, i) => (
+          <option key={opt.value ?? i} value={opt.value}>{opt.label}</option>
+        ))}
+        {children}
+      </select>
+    </div>
+  )
+}
 
 // Label - standalone label component
 export const Label: React.FC<LuaComponentProps & { htmlFor?: string }> = ({ 
