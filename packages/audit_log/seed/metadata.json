@@ -36,7 +36,9 @@
   },
   "minLevel": 3,
   "schema": {
-    "entities": ["AuditLog"],
+    "entities": [
+      "AuditLog"
+    ],
     "path": "schema/entities.yaml"
   },
   "bindings": {
@@ -68,5 +70,6 @@
         "minLevel": 3
       }
     }
-  }
+  },
+  "primary": true
 }

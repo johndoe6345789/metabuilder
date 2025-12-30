@@ -6,10 +6,27 @@
   "author": "MetaBuilder",
   "category": "media",
   "minLevel": 3,
-  "tags": ["media", "streaming", "radio", "tv", "transcoding", "documents", "pdf", "retro", "gaming", "emulation"],
-  "dependencies": ["notification_center", "data_table"],
+  "tags": [
+    "media",
+    "streaming",
+    "radio",
+    "tv",
+    "transcoding",
+    "documents",
+    "pdf",
+    "retro",
+    "gaming",
+    "emulation"
+  ],
+  "dependencies": [
+    "notification_center",
+    "data_table"
+  ],
   "schema": {
-    "entities": ["MediaAsset", "MediaJob"],
+    "entities": [
+      "MediaAsset",
+      "MediaJob"
+    ],
     "path": "schema/entities.yaml"
   },
   "exports": {
@@ -156,13 +173,24 @@
     },
     "default_video_quality": {
       "type": "select",
-      "options": ["auto", "1080p", "720p", "480p"],
+      "options": [
+        "auto",
+        "1080p",
+        "720p",
+        "480p"
+      ],
       "default": "auto",
       "description": "Default video playback quality"
     },
     "default_audio_quality": {
       "type": "select",
-      "options": ["auto", "320", "192", "128", "64"],
+      "options": [
+        "auto",
+        "320",
+        "192",
+        "128",
+        "64"
+      ],
       "default": "auto",
       "description": "Default audio streaming quality (kbps)"
     }
@@ -176,5 +204,6 @@
       "job_submission.test.lua",
       "radio_streaming.test.lua"
     ]
-  }
+  },
+  "primary": true
 }

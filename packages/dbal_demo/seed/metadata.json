@@ -7,12 +7,30 @@
   "license": "MIT",
   "minLevel": 3,
   "category": "demo",
-  "tags": ["dbal", "demo", "kv-store", "blob-storage", "cache"],
+  "tags": [
+    "dbal",
+    "demo",
+    "kv-store",
+    "blob-storage",
+    "cache"
+  ],
   "dependencies": [],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
-    "components": ["DBALDemo", "KVStorePanel", "BlobStoragePanel", "CachedDataPanel"],
-    "scripts": ["init", "kv_operations", "blob_operations", "cache_operations"]
+    "components": [
+      "DBALDemo",
+      "KVStorePanel",
+      "BlobStoragePanel",
+      "CachedDataPanel"
+    ],
+    "scripts": [
+      "init",
+      "kv_operations",
+      "blob_operations",
+      "cache_operations"
+    ]
   },
   "tests": {
     "scripts": [
@@ -30,7 +48,12 @@
     "dbal": true,
     "browser": false
   },
-  "requiredHooks": ["dbal", "kv_store", "blob_storage", "cached_data"],
+  "requiredHooks": [
+    "dbal",
+    "kv_store",
+    "blob_storage",
+    "cached_data"
+  ],
   "layout": "layout.json",
   "permissions": {
     "enabled": true,
@@ -46,13 +69,17 @@
         "enabled": true,
         "minLevel": 3,
         "requireDatabase": true,
-        "featureFlags": ["kv_store_enabled"]
+        "featureFlags": [
+          "kv_store_enabled"
+        ]
       },
       "BlobStoragePanel": {
         "enabled": true,
         "minLevel": 4,
         "requireDatabase": true,
-        "featureFlags": ["blob_storage_enabled"]
+        "featureFlags": [
+          "blob_storage_enabled"
+        ]
       },
       "CachedDataPanel": {
         "enabled": true,
@@ -60,5 +87,6 @@
         "requireDatabase": true
       }
     }
-  }
+  },
+  "primary": true
 }
