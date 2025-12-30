@@ -2,10 +2,10 @@
   "id": "media_center",
   "name": "Media Center",
   "version": "1.0.0",
-  "description": "Media processing dashboard with job queue, radio, and TV channel management",
+  "description": "Media processing dashboard with job queue, radio, TV channel management, and document conversion",
   "author": "MetaBuilder",
   "minLevel": 3,
-  "tags": ["media", "streaming", "radio", "tv", "transcoding"],
+  "tags": ["media", "streaming", "radio", "tv", "transcoding", "documents", "pdf"],
   "dependencies": ["notification_center", "data_table"],
   "exports": {
     "components": [
@@ -19,19 +19,23 @@
       "TvChannelEditor",
       "TvScheduleEditor",
       "TvEpgViewer",
-      "MediaPlayer"
+      "MediaPlayer",
+      "DocumentConverter",
+      "QuickConvertButtons"
     ],
     "pages": [
       "MediaOverviewPage",
       "JobsPage",
       "RadioPage",
-      "TvPage"
+      "TvPage",
+      "DocumentsPage"
     ],
     "scripts": [
       "media_api",
       "job_helpers",
       "radio_helpers",
-      "tv_helpers"
+      "tv_helpers",
+      "document_helpers"
     ]
   },
   "routes": [

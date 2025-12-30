@@ -482,6 +482,263 @@
           ]
         }
       ]
+    },
+    {
+      "id": "DocumentConverter",
+      "type": "card",
+      "props": {
+        "sx": { "maxWidth": 600, "mx": "auto", "mt": 3 }
+      },
+      "children": [
+        {
+          "type": "cardContent",
+          "children": [
+            {
+              "type": "typography",
+              "props": { "variant": "h5", "gutterBottom": true },
+              "children": "Document Converter"
+            },
+            {
+              "type": "typography",
+              "props": { "variant": "body2", "color": "text.secondary", "paragraph": true },
+              "children": "Convert Markdown, HTML, and other documents to PDF, DOCX, EPUB, and more."
+            },
+            {
+              "type": "box",
+              "props": { "component": "form", "sx": { "display": "flex", "flexDirection": "column", "gap": 2 } },
+              "children": [
+                {
+                  "type": "textField",
+                  "props": {
+                    "label": "Input File",
+                    "placeholder": "/path/to/document.md",
+                    "fullWidth": true,
+                    "required": true
+                  },
+                  "binding": "form.input_path"
+                },
+                {
+                  "type": "grid",
+                  "props": { "container": true, "spacing": 2 },
+                  "children": [
+                    {
+                      "type": "grid",
+                      "props": { "item": true, "xs": 6 },
+                      "children": [
+                        {
+                          "type": "select",
+                          "props": {
+                            "label": "Input Format",
+                            "fullWidth": true,
+                            "options": [
+                              { "value": "markdown", "label": "Markdown" },
+                              { "value": "html", "label": "HTML" },
+                              { "value": "docx", "label": "Word (DOCX)" },
+                              { "value": "latex", "label": "LaTeX" },
+                              { "value": "rst", "label": "reStructuredText" },
+                              { "value": "org", "label": "Org-mode" }
+                            ]
+                          },
+                          "binding": "form.input_format"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "grid",
+                      "props": { "item": true, "xs": 6 },
+                      "children": [
+                        {
+                          "type": "select",
+                          "props": {
+                            "label": "Output Format",
+                            "fullWidth": true,
+                            "options": [
+                              { "value": "pdf", "label": "PDF" },
+                              { "value": "html", "label": "HTML" },
+                              { "value": "docx", "label": "Word (DOCX)" },
+                              { "value": "epub", "label": "EPUB" },
+                              { "value": "odt", "label": "OpenDocument" },
+                              { "value": "latex", "label": "LaTeX" }
+                            ]
+                          },
+                          "binding": "form.output_format"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "textField",
+                  "props": {
+                    "label": "Output Path (optional)",
+                    "placeholder": "Auto-generated if empty",
+                    "fullWidth": true
+                  },
+                  "binding": "form.output_path"
+                },
+                {
+                  "type": "accordion",
+                  "children": [
+                    {
+                      "type": "accordionSummary",
+                      "props": { "expandIcon": "ExpandMore" },
+                      "children": [
+                        {
+                          "type": "typography",
+                          "children": "Advanced Options"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "accordionDetails",
+                      "children": [
+                        {
+                          "type": "box",
+                          "props": { "sx": { "display": "flex", "flexDirection": "column", "gap": 2 } },
+                          "children": [
+                            {
+                              "type": "textField",
+                              "props": { "label": "Document Title", "fullWidth": true },
+                              "binding": "form.title"
+                            },
+                            {
+                              "type": "textField",
+                              "props": { "label": "Author", "fullWidth": true },
+                              "binding": "form.author"
+                            },
+                            {
+                              "type": "formControlLabel",
+                              "props": {
+                                "label": "Include Table of Contents",
+                                "control": { "type": "checkbox" }
+                              },
+                              "binding": "form.toc"
+                            },
+                            {
+                              "type": "grid",
+                              "props": { "container": true, "spacing": 2 },
+                              "children": [
+                                {
+                                  "type": "grid",
+                                  "props": { "item": true, "xs": 6 },
+                                  "children": [
+                                    {
+                                      "type": "select",
+                                      "props": {
+                                        "label": "Paper Size",
+                                        "fullWidth": true,
+                                        "options": [
+                                          { "value": "a4", "label": "A4" },
+                                          { "value": "letter", "label": "Letter" },
+                                          { "value": "legal", "label": "Legal" }
+                                        ]
+                                      },
+                                      "binding": "form.paper_size"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "grid",
+                                  "props": { "item": true, "xs": 6 },
+                                  "children": [
+                                    {
+                                      "type": "textField",
+                                      "props": { "label": "Margin", "placeholder": "1in", "fullWidth": true },
+                                      "binding": "form.margin"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "select",
+                              "props": {
+                                "label": "Code Highlight Style",
+                                "fullWidth": true,
+                                "options": [
+                                  { "value": "tango", "label": "Tango" },
+                                  { "value": "pygments", "label": "Pygments" },
+                                  { "value": "kate", "label": "Kate" },
+                                  { "value": "monochrome", "label": "Monochrome" },
+                                  { "value": "espresso", "label": "Espresso" },
+                                  { "value": "zenburn", "label": "Zenburn" }
+                                ]
+                              },
+                              "binding": "form.highlight_style"
+                            },
+                            {
+                              "type": "textField",
+                              "props": { "label": "Custom Template Path", "fullWidth": true },
+                              "binding": "form.template"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "button",
+                  "props": {
+                    "variant": "contained",
+                    "color": "primary",
+                    "size": "large",
+                    "fullWidth": true,
+                    "startIcon": { "type": "icon", "props": { "name": "Transform" } }
+                  },
+                  "events": {
+                    "onClick": "document_helpers.convert(form.input_path, form.output_format, form)"
+                  },
+                  "children": "Convert Document"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "QuickConvertButtons",
+      "type": "box",
+      "props": { "sx": { "display": "flex", "gap": 2, "flexWrap": "wrap" } },
+      "children": [
+        {
+          "type": "button",
+          "props": {
+            "variant": "outlined",
+            "startIcon": { "type": "icon", "props": { "name": "PictureAsPdf" } }
+          },
+          "events": { "onClick": "openDialog('DocumentConverter', { output_format: 'pdf' })" },
+          "children": "Markdown → PDF"
+        },
+        {
+          "type": "button",
+          "props": {
+            "variant": "outlined",
+            "startIcon": { "type": "icon", "props": { "name": "Code" } }
+          },
+          "events": { "onClick": "openDialog('DocumentConverter', { output_format: 'html' })" },
+          "children": "Markdown → HTML"
+        },
+        {
+          "type": "button",
+          "props": {
+            "variant": "outlined",
+            "startIcon": { "type": "icon", "props": { "name": "Article" } }
+          },
+          "events": { "onClick": "openDialog('DocumentConverter', { output_format: 'docx' })" },
+          "children": "Markdown → DOCX"
+        },
+        {
+          "type": "button",
+          "props": {
+            "variant": "outlined",
+            "startIcon": { "type": "icon", "props": { "name": "MenuBook" } }
+          },
+          "events": { "onClick": "openDialog('DocumentConverter', { output_format: 'epub' })" },
+          "children": "Markdown → EPUB"
+        }
+      ]
     }
   ]
 }
