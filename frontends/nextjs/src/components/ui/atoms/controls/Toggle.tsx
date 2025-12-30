@@ -1,11 +1,8 @@
 'use client'
 
-import { IconButton, IconButtonProps } from '@mui/material'
-import {
-  ToggleButton as MuiToggleButton,
-  ToggleButtonProps as MuiToggleButtonProps,
-} from '@mui/material'
-import { forwardRef } from 'react'
+import { ToggleButton, ToggleButtonProps } from '@/fakemui/fakemui/inputs'
+import { forwardRef, CSSProperties } from 'react'
+import styles from './Toggle.module.scss'
 
 /** Toggle button visual style variants */
 export type ToggleVariant = 'default' | 'outline'
@@ -15,9 +12,9 @@ export type ToggleSize = 'default' | 'sm' | 'lg'
 
 /**
  * Props for the Toggle component
- * @extends {MuiToggleButtonProps} Inherits Material-UI ToggleButton props
+ * @extends {ToggleButtonProps} Inherits fakemui ToggleButton props
  */
-export interface ToggleProps extends Omit<MuiToggleButtonProps, 'size'> {
+export interface ToggleProps extends Omit<ToggleButtonProps, 'size'> {
   /** Visual style variant of the toggle button */
   variant?: ToggleVariant
   /** Size of the toggle button */
@@ -26,38 +23,32 @@ export interface ToggleProps extends Omit<MuiToggleButtonProps, 'size'> {
   pressed?: boolean
   /** Callback when pressed state changes */
   onPressedChange?: (pressed: boolean) => void
+  /** Custom inline styles */
+  style?: CSSProperties
 }
 
-const sizeMap: Record<ToggleSize, { size: 'small' | 'medium' | 'large'; sx?: object }> = {
-  sm: { size: 'small', sx: { height: 32, minWidth: 32 } },
-  default: { size: 'medium', sx: { height: 40, minWidth: 40 } },
-  lg: { size: 'large', sx: { height: 48, minWidth: 48 } },
+const sizeMap: Record<ToggleSize, 'small' | 'medium' | 'large'> = {
+  sm: 'small',
+  default: 'medium',
+  lg: 'large',
 }
 
 const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
   (
-    { variant = 'default', size = 'default', pressed, onPressedChange, sx, value, ...props },
+    { variant = 'default', size = 'default', pressed, onPressedChange, className, style, value, ...props },
     ref
   ) => {
-    const sizeConfig = sizeMap[size]
+    const sizeClass = styles[size] || styles.default
 
     return (
-      <MuiToggleButton
+      <ToggleButton
         ref={ref}
         value={value || 'toggle'}
         selected={pressed}
-        onChange={() => onPressedChange?.(!pressed)}
-        size={sizeConfig.size}
-        sx={{
-          border: variant === 'outline' ? 1 : 0,
-          borderColor: 'divider',
-          bgcolor: pressed ? 'action.selected' : 'transparent',
-          '&:hover': {
-            bgcolor: 'action.hover',
-          },
-          ...sizeConfig.sx,
-          ...sx,
-        }}
+        onClick={() => onPressedChange?.(!pressed)}
+        size={sizeMap[size]}
+        className={`${styles.toggle} ${sizeClass} ${variant === 'outline' ? styles.outline : ''} ${pressed ? styles.pressed : ''} ${className || ''}`}
+        style={style}
         {...props}
       />
     )

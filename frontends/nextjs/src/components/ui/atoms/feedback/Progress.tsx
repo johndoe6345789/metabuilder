@@ -1,37 +1,28 @@
 'use client'
 
-import {
-  CircularProgress,
-  CircularProgressProps,
-  LinearProgress,
-  LinearProgressProps,
-} from '@mui/material'
-import { forwardRef } from 'react'
+import { LinearProgress, LinearProgressProps } from '@/fakemui/fakemui/feedback'
+import { forwardRef, CSSProperties } from 'react'
+import styles from './Progress.module.scss'
 
 /**
  * Props for the Progress component
- * @extends {LinearProgressProps} Inherits Material-UI LinearProgress props
+ * @extends {LinearProgressProps} Inherits fakemui LinearProgress props
  */
 export interface ProgressProps extends LinearProgressProps {
   /** Progress value (0-100) for determinate mode */
   value?: number
+  /** Custom inline styles */
+  style?: CSSProperties
 }
 
-const Progress = forwardRef<HTMLDivElement, ProgressProps>(({ value, sx, ...props }, ref) => {
+const Progress = forwardRef<HTMLDivElement, ProgressProps>(({ value, className, style, ...props }, ref) => {
   return (
     <LinearProgress
       ref={ref}
       variant={value !== undefined ? 'determinate' : 'indeterminate'}
       value={value}
-      sx={{
-        height: 8,
-        borderRadius: 4,
-        bgcolor: 'action.hover',
-        '& .MuiLinearProgress-bar': {
-          borderRadius: 4,
-        },
-        ...sx,
-      }}
+      className={`${styles.progress} ${className || ''}`}
+      style={style}
       {...props}
     />
   )

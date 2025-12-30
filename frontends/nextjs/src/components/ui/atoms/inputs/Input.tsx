@@ -1,7 +1,8 @@
 'use client'
 
-import { InputBase } from '@mui/material'
+import { InputBase, InputBaseProps } from '@/fakemui/fakemui/inputs'
 import { forwardRef, InputHTMLAttributes } from 'react'
+import styles from './Input.module.scss'
 
 /**
  * Props for the Input component
@@ -14,39 +15,16 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ type, error, className, style, ...props }, ref) => {
-    // Filter out HTML-specific props that conflict with MUI
+    // Filter out HTML-specific props that conflict with InputBase
     const { color, ...restProps } = props as InputProps & { color?: string }
     return (
       <InputBase
         inputRef={ref}
         type={type}
         error={error}
-        sx={{
-          width: '100%',
-          px: 1.5,
-          py: 1,
-          fontSize: '0.875rem',
-          border: 1,
-          borderColor: error ? 'error.main' : 'divider',
-          borderRadius: 1,
-          bgcolor: 'background.paper',
-          '&:hover': {
-            borderColor: error ? 'error.main' : 'text.primary',
-          },
-          '&.Mui-focused': {
-            borderColor: error ? 'error.main' : 'primary.main',
-            boxShadow: theme =>
-              `0 0 0 2px ${error ? theme.palette.error.main : theme.palette.primary.main}25`,
-          },
-          '&.Mui-disabled': {
-            opacity: 0.5,
-            cursor: 'not-allowed',
-          },
-          '& input': {
-            p: 0,
-          },
-        }}
-        {...restProps}
+        fullWidth
+        className={`${styles.input} ${error ? styles.error : ''} ${className || ''}`}
+        inputProps={restProps}
       />
     )
   }

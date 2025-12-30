@@ -1,31 +1,24 @@
 'use client'
 
-import { Slider as MuiSlider, SliderProps as MuiSliderProps } from '@mui/material'
-import { forwardRef } from 'react'
+import { Slider as FakemuiSlider, SliderProps as FakemuiSliderProps } from '@/fakemui/fakemui/inputs'
+import { forwardRef, CSSProperties } from 'react'
+import styles from './Slider.module.scss'
 
 /**
  * Props for the Slider component
- * @extends {MuiSliderProps} Inherits Material-UI Slider props
+ * @extends {FakemuiSliderProps} Inherits fakemui Slider props
  */
-export type SliderProps = MuiSliderProps
+export interface SliderProps extends FakemuiSliderProps {
+  /** Custom inline styles */
+  style?: CSSProperties
+}
 
-const Slider = forwardRef<HTMLSpanElement, SliderProps>(({ sx, ...props }, ref) => {
+const Slider = forwardRef<HTMLInputElement, SliderProps>(({ className, style, ...props }, ref) => {
   return (
-    <MuiSlider
+    <FakemuiSlider
       ref={ref}
-      sx={{
-        '& .MuiSlider-thumb': {
-          width: 16,
-          height: 16,
-        },
-        '& .MuiSlider-track': {
-          height: 4,
-        },
-        '& .MuiSlider-rail': {
-          height: 4,
-        },
-        ...sx,
-      }}
+      className={`${styles.slider} ${className || ''}`}
+      style={style}
       {...props}
     />
   )

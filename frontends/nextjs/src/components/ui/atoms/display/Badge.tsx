@@ -1,7 +1,8 @@
 'use client'
 
-import { Chip, ChipProps, SxProps, Theme } from '@mui/material'
-import { forwardRef, ReactNode } from 'react'
+import { Chip } from '@/fakemui/fakemui/data-display'
+import { forwardRef, ReactNode, CSSProperties } from 'react'
+import styles from './Badge.module.scss'
 
 /** Badge visual style variants */
 export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline'
@@ -16,43 +17,30 @@ export interface BadgeProps {
   children?: ReactNode
   /** CSS class name for custom styling */
   className?: string
-  /** Custom styles for the badge */
-  sx?: SxProps<Theme>
+  /** Custom inline styles */
+  style?: CSSProperties
 }
 
-const variantMap: Record<
-  BadgeVariant,
-  { variant: ChipProps['variant']; color?: ChipProps['color']; sx?: object }
-> = {
-  default: { variant: 'filled', color: 'primary' },
-  secondary: { variant: 'filled', color: 'secondary' },
-  destructive: { variant: 'filled', color: 'error' },
-  outline: { variant: 'outlined', color: 'default' },
-}
-
-const Badge = forwardRef<HTMLDivElement, BadgeProps>(
-  ({ variant = 'default', children, className, sx, ...props }, ref) => {
-    const config = variantMap[variant]
+const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
+  ({ variant = 'default', children, className, style, ...props }, ref) => {
+    const variantClass = {
+      default: styles.default,
+      secondary: styles.secondary,
+      destructive: styles.destructive,
+      outline: styles.outline,
+    }[variant]
 
     return (
       <Chip
-        ref={ref}
-        label={children}
-        variant={config.variant}
-        color={config.color}
-        size="small"
-        className={className}
-        sx={{
-          height: 'auto',
-          py: 0.25,
-          px: 0.5,
-          fontSize: '0.75rem',
-          fontWeight: 500,
-          borderRadius: '9999px',
-          ...config.sx,
-          ...sx,
-        }}
-      />
+        sm
+        outline={variant === 'outline'}
+        error={variant === 'destructive'}
+        className={`${styles.badge} ${variantClass} ${className || ''}`}
+        style={style}
+        {...props}
+      >
+        {children}
+      </Chip>
     )
   }
 )

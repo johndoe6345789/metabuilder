@@ -1,24 +1,25 @@
 'use client'
 
-import { Skeleton as MuiSkeleton, SkeletonProps as MuiSkeletonProps } from '@mui/material'
-import { forwardRef } from 'react'
+import { Skeleton as FakemuiSkeleton, SkeletonProps as FakemuiSkeletonProps } from '@/fakemui/fakemui/feedback'
+import { forwardRef, CSSProperties } from 'react'
+import styles from './Skeleton.module.scss'
 
 /**
  * Props for the Skeleton component
- * @extends {MuiSkeletonProps} Inherits Material-UI Skeleton props
+ * @extends {FakemuiSkeletonProps} Inherits fakemui Skeleton props
  */
-export type SkeletonProps = MuiSkeletonProps
+export interface SkeletonProps extends FakemuiSkeletonProps {
+  /** Custom inline styles */
+  style?: CSSProperties
+}
 
-const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(({ sx, ...props }, ref) => {
+const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(({ className, style, ...props }, ref) => {
   return (
-    <MuiSkeleton
+    <FakemuiSkeleton
       ref={ref}
       animation="wave"
-      sx={{
-        bgcolor: 'action.hover',
-        borderRadius: 1,
-        ...sx,
-      }}
+      className={`${styles.skeleton} ${className || ''}`}
+      style={style}
       {...props}
     />
   )

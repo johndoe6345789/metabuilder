@@ -1,12 +1,13 @@
 'use client'
 
-import { InputBase, InputBaseProps } from '@mui/material'
+import { Textarea as FakemuiTextarea, TextareaProps as FakemuiTextareaProps } from '@/fakemui/fakemui/inputs'
 import { forwardRef } from 'react'
+import styles from './Textarea.module.scss'
 
 /**
  * Props for the Textarea component
  */
-export interface TextareaProps {
+export interface TextareaProps extends Omit<FakemuiTextareaProps, 'className'> {
   /** Whether the textarea is in an error state */
   error?: boolean
   /** Whether the textarea is disabled */
@@ -44,39 +45,13 @@ export interface TextareaProps {
 }
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ error, minRows = 3, ...props }, ref) => {
+  ({ error, minRows = 3, className, ...props }, ref) => {
     return (
-      <InputBase
-        inputRef={ref}
-        multiline
-        minRows={minRows}
+      <FakemuiTextarea
+        ref={ref}
+        rows={minRows}
         error={error}
-        sx={{
-          width: '100%',
-          px: 1.5,
-          py: 1,
-          fontSize: '0.875rem',
-          border: 1,
-          borderColor: error ? 'error.main' : 'divider',
-          borderRadius: 1,
-          bgcolor: 'background.paper',
-          alignItems: 'flex-start',
-          '&:hover': {
-            borderColor: error ? 'error.main' : 'text.primary',
-          },
-          '&.Mui-focused': {
-            borderColor: error ? 'error.main' : 'primary.main',
-            boxShadow: theme =>
-              `0 0 0 2px ${error ? theme.palette.error.main : theme.palette.primary.main}25`,
-          },
-          '&.Mui-disabled': {
-            opacity: 0.5,
-            cursor: 'not-allowed',
-          },
-          '& textarea': {
-            p: 0,
-          },
-        }}
+        className={`${styles.textarea} ${error ? styles.error : ''} ${className || ''}`}
         {...props}
       />
     )

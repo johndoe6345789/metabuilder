@@ -1,23 +1,25 @@
 'use client'
 
-import { Avatar as MuiAvatar, AvatarProps as MuiAvatarProps } from '@mui/material'
-import { forwardRef } from 'react'
+import { Avatar as FakemuiAvatar, AvatarProps as FakemuiAvatarProps } from '@/fakemui/fakemui/data-display'
+import { forwardRef, CSSProperties } from 'react'
+import styles from './Avatar.module.scss'
 
 /**
  * Props for the Avatar component
- * @extends {MuiAvatarProps} Inherits Material-UI Avatar props
+ * @extends {FakemuiAvatarProps} Inherits fakemui Avatar props
  */
-export type AvatarProps = MuiAvatarProps
+export interface AvatarProps extends FakemuiAvatarProps {
+  /** Custom inline styles */
+  style?: CSSProperties
+}
 
-const Avatar = forwardRef<HTMLDivElement, AvatarProps>(({ sx, ...props }, ref) => {
+const Avatar = forwardRef<HTMLDivElement, AvatarProps>(({ className, style, ...props }, ref) => {
   return (
-    <MuiAvatar
+    <FakemuiAvatar
       ref={ref}
-      sx={{
-        width: 40,
-        height: 40,
-        ...sx,
-      }}
+      md
+      className={`${styles.avatar} ${className || ''}`}
+      style={style}
       {...props}
     />
   )

@@ -1,11 +1,12 @@
 'use client'
 
-import { Divider, DividerProps } from '@mui/material'
+import { Divider, DividerProps } from '@/fakemui/fakemui/data-display'
 import { forwardRef } from 'react'
+import styles from './Separator.module.scss'
 
 /**
  * Props for the Separator component
- * @extends {DividerProps} Inherits Material-UI Divider props
+ * @extends {DividerProps} Inherits fakemui Divider props
  */
 export interface SeparatorProps extends DividerProps {
   /** Direction of the separator */
@@ -15,15 +16,12 @@ export interface SeparatorProps extends DividerProps {
 }
 
 const Separator = forwardRef<HTMLHRElement, SeparatorProps>(
-  ({ orientation = 'horizontal', ...props }, ref) => {
+  ({ orientation = 'horizontal', className, ...props }, ref) => {
     return (
       <Divider
         ref={ref}
-        orientation={orientation}
-        sx={{
-          my: orientation === 'horizontal' ? 2 : 0,
-          mx: orientation === 'vertical' ? 2 : 0,
-        }}
+        vertical={orientation === 'vertical'}
+        className={`${styles.separator} ${orientation === 'vertical' ? styles.vertical : styles.horizontal} ${className || ''}`}
         {...props}
       />
     )

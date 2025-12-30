@@ -1,35 +1,27 @@
 'use client'
 
-import { FormLabel, FormLabelProps } from '@mui/material'
-import { forwardRef, LabelHTMLAttributes, ReactNode } from 'react'
+import { FormLabel, FormLabelProps } from '@/fakemui/fakemui/inputs'
+import { forwardRef, ReactNode } from 'react'
+import styles from './Label.module.scss'
 
 /**
  * Props for the Label component
- * @extends {FormLabelProps} Inherits Material-UI FormLabel props
+ * @extends {FormLabelProps} Inherits fakemui FormLabel props
  */
 export interface LabelProps extends FormLabelProps {
   /** ID of the form element this label is associated with */
   htmlFor?: string
   /** Content to display inside the label */
   children?: ReactNode
+  /** Whether the label is disabled */
+  disabled?: boolean
 }
 
-const Label = forwardRef<HTMLLabelElement, LabelProps>(({ children, ...props }, ref) => {
+const Label = forwardRef<HTMLLabelElement, LabelProps>(({ children, disabled, className, ...props }, ref) => {
   return (
     <FormLabel
       ref={ref}
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 1,
-        fontSize: '0.875rem',
-        fontWeight: 500,
-        color: 'text.primary',
-        '&.Mui-disabled': {
-          opacity: 0.5,
-          cursor: 'not-allowed',
-        },
-      }}
+      className={`${styles.label} ${disabled ? styles.disabled : ''} ${className || ''}`}
       {...props}
     >
       {children}

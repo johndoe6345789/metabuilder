@@ -1,38 +1,32 @@
 'use client'
 
-import { Checkbox as MuiCheckbox, CheckboxProps as MuiCheckboxProps } from '@mui/material'
+import { Checkbox as FakemuiCheckbox, CheckboxProps as FakemuiCheckboxProps } from '@/fakemui/fakemui/inputs'
 import { forwardRef } from 'react'
+import styles from './Checkbox.module.scss'
 
 /**
  * Props for the Checkbox component
- * @extends {MuiCheckboxProps} Inherits Material-UI Checkbox props
+ * @extends {FakemuiCheckboxProps} Inherits fakemui Checkbox props
  */
-export interface CheckboxProps extends Omit<MuiCheckboxProps, 'onChange'> {
+export interface CheckboxProps extends Omit<FakemuiCheckboxProps, 'onChange'> {
   /** Callback when checked state changes (alternative to onChange) */
   onCheckedChange?: (checked: boolean) => void
   /** Standard onChange handler */
-  onChange?: MuiCheckboxProps['onChange']
+  onChange?: React.ChangeEventHandler<HTMLInputElement>
 }
 
-const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
-  ({ onCheckedChange, onChange, ...props }, ref) => {
-    const handleChange: MuiCheckboxProps['onChange'] = (event, checked) => {
-      onChange?.(event, checked)
-      onCheckedChange?.(checked)
+const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
+  ({ onCheckedChange, onChange, className, ...props }, ref) => {
+    const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+      onChange?.(event)
+      onCheckedChange?.(event.target.checked)
     }
 
     return (
-      <MuiCheckbox
+      <FakemuiCheckbox
         ref={ref}
         onChange={handleChange}
-        sx={{
-          p: 0,
-          width: 18,
-          height: 18,
-          '& .MuiSvgIcon-root': {
-            fontSize: 18,
-          },
-        }}
+        className={`${styles.checkbox} ${className || ''}`}
         {...props}
       />
     )
