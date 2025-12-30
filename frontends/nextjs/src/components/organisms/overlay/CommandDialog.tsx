@@ -1,8 +1,9 @@
 'use client'
 
-import SearchIcon from '@mui/icons-material/Search'
 import { Box, InputAdornment, TextField } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Search } from '@/fakemui/icons'
 
 // CommandDialog
 interface CommandDialogProps {
@@ -58,7 +59,7 @@ const CommandInput = forwardRef<HTMLInputElement, CommandInputProps>(
             input: {
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon fontSize="small" color="action" />
+                  <Search size={16} style={{ color: 'rgba(0,0,0,0.54)' }} />
                 </InputAdornment>
               ),
             },

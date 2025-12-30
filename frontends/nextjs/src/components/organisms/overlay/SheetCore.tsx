@@ -1,8 +1,9 @@
 'use client'
 
-import CloseIcon from '@mui/icons-material/Close'
 import { Box, Drawer as MuiDrawer, DrawerProps as MuiDrawerProps, IconButton } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Close } from '@/fakemui/icons'
 
 // Sheet (side panel drawer)
 export interface SheetProps extends Omit<MuiDrawerProps, 'onClose'> {
@@ -90,7 +91,7 @@ const SheetContent = forwardRef<HTMLDivElement, SheetContentProps>(
               color: 'text.secondary',
             }}
           >
-            <CloseIcon />
+            <Close />
           </IconButton>
         )}
         {children}

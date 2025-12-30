@@ -1,8 +1,9 @@
 'use client'
 
-import ChevronDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { Button, Menu } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { KeyboardArrowDown } from '@/fakemui/icons'
 
 // NavigationMenuTrigger
 interface NavigationMenuTriggerProps {
@@ -17,7 +18,7 @@ const NavigationMenuTrigger = forwardRef<HTMLButtonElement, NavigationMenuTrigge
       <Button
         ref={ref}
         onClick={onClick}
-        endIcon={<ChevronDownIcon />}
+        endIcon={<KeyboardArrowDown />}
         sx={{
           color: 'text.primary',
           textTransform: 'none',

@@ -1,8 +1,9 @@
 'use client'
 
-import CloseIcon from '@mui/icons-material/Close'
 import { Box, IconButton, Typography } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Close } from '@/fakemui/icons'
 
 // SheetHeader
 const SheetHeader = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
@@ -72,7 +73,7 @@ const SheetClose = forwardRef<HTMLButtonElement, { children?: ReactNode; asChild
     if (children) return <>{children}</>
     return (
       <IconButton ref={ref} aria-label="close">
-        <CloseIcon />
+        <Close />
       </IconButton>
     )
   }

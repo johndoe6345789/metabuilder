@@ -264,3 +264,18 @@ export { Form } from './Form'
 export { Level } from './Level'
 export { Denied } from './Denied'
 export { Redirect } from './Redirect'
+
+// Drag & Drop
+export { DragIndicator } from './DragIndicator'
+export { DragHandle } from './DragHandle'
+
+// Additional Actions
+export { Print } from './Print'
+export { Schedule } from './Schedule'
+export { Tune } from './Tune'
+export { ThumbUp } from './ThumbUp'
+export { ThumbDown } from './ThumbDown'
+export { Notifications } from './Notifications'
+export { NotificationsOff } from './NotificationsOff'
+export { ContentCopy } from './ContentCopy'
+export { ContentPaste } from './ContentPaste'

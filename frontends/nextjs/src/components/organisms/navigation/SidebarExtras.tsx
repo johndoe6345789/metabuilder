@@ -1,8 +1,9 @@
 'use client'
 
-import MenuIcon from '@mui/icons-material/Menu'
 import { Box, Divider, IconButton } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Menu } from '@/fakemui/icons'
 
 // SidebarSeparator
 const SidebarSeparator = forwardRef<HTMLHRElement>((props, ref) => {
@@ -20,7 +21,7 @@ const SidebarTrigger = forwardRef<HTMLButtonElement, SidebarTriggerProps>(
   ({ onClick, ...props }, ref) => {
     return (
       <IconButton ref={ref} onClick={onClick} size="small" {...props}>
-        <MenuIcon />
+        <Menu />
       </IconButton>
     )
   }

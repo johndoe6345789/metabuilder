@@ -1,9 +1,9 @@
 'use client'
 
-import ExpandLessIcon from '@mui/icons-material/ExpandLess'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box, Collapse, List, Typography } from '@mui/material'
 import { forwardRef, ReactNode, useState } from 'react'
+
+import { ExpandLess, ExpandMore } from '@/fakemui/icons'
 
 // SidebarGroup
 interface SidebarGroupProps {
@@ -40,7 +40,7 @@ const SidebarGroup = forwardRef<HTMLDivElement, SidebarGroupProps>(
               {label}
             </Typography>
             {collapsible &&
-              (open ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />)}
+              (open ? <ExpandLess size={16} /> : <ExpandMore size={16} />)}
           </Box>
         )}
         {collapsible ? (
