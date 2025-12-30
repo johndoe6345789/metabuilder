@@ -261,6 +261,8 @@ Warnings:
 
 ## Using as a Dev Dependency
 
+### Package Validator
+
 Add `package_validator` to your package's `devDependencies` to enable validation during development:
 
 ```json
@@ -274,6 +276,30 @@ Add `package_validator` to your package's `devDependencies` to enable validation
   ]
 }
 ```
+
+### Lua Test Framework
+
+Many packages also use `lua_test` as a devDependency for testing:
+
+```json
+{
+  "packageId": "your_package",
+  "name": "Your Package",
+  "version": "1.0.0",
+  "dependencies": [],
+  "devDependencies": [
+    "lua_test",
+    "package_validator"
+  ]
+}
+```
+
+When `lua_test` is detected as a devDependency, the validator will:
+- Expect test files in `seed/scripts/tests/`
+- Recommend standard test files (`metadata.test.lua`, `components.test.lua`)
+- Validate test file structure and patterns
+
+**Note:** Packages without `lua_test` won't receive warnings about missing test files.
 
 ### CLI Usage
 
