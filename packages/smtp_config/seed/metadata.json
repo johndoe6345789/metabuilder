@@ -1,0 +1,32 @@
+{
+  "packageId": "smtp_config",
+  "name": "SMTP Config",
+  "version": "1.0.0",
+  "description": "SMTP configuration editor for email settings",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "config",
+  "dependencies": [],
+  "devDependencies": ["lua_test"],
+  "exports": {
+    "components": [
+      "SMTPConfigEditor",
+      "SMTPTestPanel"
+    ],
+    "scripts": [
+      "smtp",
+      "validate"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/smtp.test.lua",
+      "tests/validate.test.lua"
+    ],
+    "cases": [
+      "tests/smtp.cases.json",
+      "tests/validate.cases.json"
+    ]
+  },
+  "minLevel": 5
+}

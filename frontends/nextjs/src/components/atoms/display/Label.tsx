@@ -1,44 +1,35 @@
 'use client'
 
-import { Typography } from '@mui/material'
+import { Label as FakemuiLabel } from '@/fakemui'
 import { forwardRef, LabelHTMLAttributes } from 'react'
 
 /**
  * Props for the Label component
- * @extends {LabelHTMLAttributes} Inherits HTML label element attributes
+ * Wrapper around fakemui Label to maintain API compatibility
  */
 export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
   /** Whether to display a required indicator (*) */
   required?: boolean
   /** Whether to style the label as an error state */
   error?: boolean
+  /** MUI sx prop - converted to className for compatibility */
+  sx?: any
 }
 
 const Label = forwardRef<HTMLLabelElement, LabelProps>(
-  ({ children, required, error, ...props }, ref) => {
+  ({ children, required, error, sx, className, ...props }, ref) => {
+    // Combine className with any sx-based classes
+    const combinedClassName = [
+      className,
+      sx?.className,
+      error ? 'label--error' : '',
+    ].filter(Boolean).join(' ')
+
     return (
-      <Typography
-        component="label"
-        ref={ref}
-        variant="body2"
-        fontWeight={500}
-        sx={{
-          display: 'inline-block',
-          mb: 0.5,
-          color: error ? 'error.main' : 'text.primary',
-          '&.Mui-disabled': {
-            opacity: 0.5,
-          },
-        }}
-        {...props}
-      >
+      <label ref={ref} className={`label ${combinedClassName}`} {...props}>
         {children}
-        {required && (
-          <Typography component="span" color="error.main" sx={{ ml: 0.5 }}>
-            *
-          </Typography>
-        )}
-      </Typography>
+        {required && <span className="label__required"> *</span>}
+      </label>
     )
   }
 )

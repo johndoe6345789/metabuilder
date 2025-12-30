@@ -8,6 +8,7 @@
 ---@class StatCardProps
 ---@field label string
 ---@field value number|string
+---@field icon? string Icon name from fakemui icons
 ---@field change? string
 ---@field positive? boolean
 ---@field className? string
