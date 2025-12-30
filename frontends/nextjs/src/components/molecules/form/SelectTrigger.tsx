@@ -1,8 +1,9 @@
 'use client'
 
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { Box } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { KeyboardArrowDown } from '@/fakemui/icons'
 
 interface SelectTriggerProps {
   children: ReactNode
@@ -31,7 +32,7 @@ const SelectTrigger = forwardRef<HTMLDivElement, SelectTriggerProps>(
         {...props}
       >
         {children}
-        <KeyboardArrowDownIcon fontSize="small" sx={{ ml: 1, color: 'text.secondary' }} />
+        <KeyboardArrowDown size={16} style={{ marginLeft: 4, color: 'rgba(0,0,0,0.54)' }} />
       </Box>
     )
   }

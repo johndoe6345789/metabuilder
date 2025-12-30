@@ -1,9 +1,9 @@
 'use client'
 
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { Box, IconButton, InputAdornment, TextField } from '@mui/material'
 import { forwardRef, useState } from 'react'
+
+import { Visibility, VisibilityOff } from '@/fakemui/icons'
 
 export interface PasswordFieldProps {
   label?: string
@@ -73,9 +73,9 @@ const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
                   disabled={disabled}
                 >
                   {showPassword ? (
-                    <VisibilityOffIcon fontSize="small" />
+                    <VisibilityOff size={16} />
                   ) : (
-                    <VisibilityIcon fontSize="small" />
+                    <Visibility size={16} />
                   )}
                 </IconButton>
               </InputAdornment>

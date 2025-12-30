@@ -1,8 +1,9 @@
 'use client'
 
-import SearchIcon from '@mui/icons-material/Search'
 import { Box, InputAdornment, TextField } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Search } from '@/fakemui/icons'
 
 import { Input } from '../atoms/Input'
 import { Label } from '../atoms/Label'

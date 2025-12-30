@@ -1,9 +1,10 @@
 'use client'
 
-import EmailIcon from '@mui/icons-material/Email'
 import { TextField } from '@mui/material'
 import { InputAdornment } from '@mui/material'
 import { forwardRef } from 'react'
+
+import { Email } from '@/fakemui/icons'
 
 export interface EmailFieldProps {
   label?: string
@@ -61,7 +62,7 @@ const EmailField = forwardRef<HTMLInputElement, EmailFieldProps>(
             ? {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <EmailIcon fontSize="small" color="action" />
+                    <Email size={16} style={{ color: 'rgba(0,0,0,0.54)' }} />
                   </InputAdornment>
                 ),
               }

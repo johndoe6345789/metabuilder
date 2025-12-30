@@ -1,10 +1,9 @@
 'use client'
 
-import ClearIcon from '@mui/icons-material/Clear'
-import FilterListIcon from '@mui/icons-material/FilterList'
-import SearchIcon from '@mui/icons-material/Search'
 import { Box, IconButton, InputAdornment, TextField } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Clear, FilterList, Search } from '@/fakemui/icons'
 
 export interface SearchBarProps {
   value?: string
@@ -61,7 +60,7 @@ const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
           input: {
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon fontSize="small" color="action" />
+                <Search size={16} style={{ color: 'rgba(0,0,0,0.54)' }} />
               </InputAdornment>
             ),
             endAdornment: (
@@ -75,7 +74,7 @@ const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
                       size="small"
                       sx={{ p: 0.5 }}
                     >
-                      <ClearIcon fontSize="small" />
+                      <Clear size={16} />
                     </IconButton>
                   )}
                   {showFilterButton && (
@@ -87,7 +86,7 @@ const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
                       disabled={disabled}
                       sx={{ p: 0.5 }}
                     >
-                      <FilterListIcon fontSize="small" />
+                      <FilterList size={16} />
                     </IconButton>
                   )}
                   {endAdornment}

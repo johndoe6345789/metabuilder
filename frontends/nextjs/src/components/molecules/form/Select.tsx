@@ -1,6 +1,5 @@
 'use client'
 
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import {
   FormControl,
   FormHelperText,
@@ -9,6 +8,8 @@ import {
   SelectProps as MuiSelectProps,
 } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { KeyboardArrowDown } from '@/fakemui/icons'
 
 import { SelectContent } from './SelectContent'
 import { SelectGroup } from './SelectGroup'
