@@ -1,4 +1,4 @@
-import { useKV } from '@github/spark/hooks'
+import { useKV } from '@/hooks/data/useKV'
 import { ArrowDown, ArrowUp, MagnifyingGlass, Pencil, Plus, Trash } from '@/fakemui/icons'
 import { motion } from 'motion/react'
 import { useMemo, useState } from 'react'

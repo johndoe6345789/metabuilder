@@ -12,6 +12,17 @@
 ---@class RenderContext
 ---@field user UserInfo Current user information
 
+---@class InputProps
+---@field label string
+---@field value string
+---@field name? string
+---@field disabled? boolean
+
+---@class ButtonProps
+---@field text string
+---@field onClick string
+---@field variant? string
+
 ---@class FormData
 ---@field email string Email from form input
 

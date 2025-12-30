@@ -1,4 +1,4 @@
-import { useKV } from '@github/spark/hooks'
+import { useKV } from '@/hooks/data/useKV'
 
 import { Input } from '@/components/ui'
 import { Textarea } from '@/components/ui'

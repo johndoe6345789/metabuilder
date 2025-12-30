@@ -1,4 +1,4 @@
-import { useKV } from '@github/spark/hooks'
+import { useKV } from '@/hooks/data/useKV'
 import { Eye, FloppyDisk, SignOut } from '@/fakemui/icons'
 import { useState } from 'react'
 import { toast } from 'sonner'
