@@ -1,0 +1,233 @@
+// Navigation Component Styles
+// Migrated from MUI sx props to CSS modules
+
+// AppBar styles
+.appBar {
+  background-color: var(--color-background-paper, #fff);
+  border-bottom: 1px solid var(--color-divider, rgba(0, 0, 0, 0.12));
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  padding: 0 16px;
+}
+
+// Navigation Menu
+.navMenu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navItem {
+  position: relative;
+}
+
+.navTrigger {
+  text-transform: none;
+  font-weight: 500;
+  color: var(--color-text-primary, rgba(0, 0, 0, 0.87));
+  
+  &:hover {
+    background-color: var(--color-action-hover, rgba(0, 0, 0, 0.04));
+  }
+}
+
+// Navigation Content (Menu dropdown)
+.navContent {
+  margin-top: 8px;
+  min-width: 200px;
+}
+
+// Navigation Link/MenuItem
+.navLink {
+  border-radius: 4px;
+  
+  &.active {
+    background-color: var(--color-action-selected, rgba(0, 0, 0, 0.08));
+  }
+}
+
+.linkIcon {
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+}
+
+// Navigation Styling
+.brand {
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+  cursor: default;
+  
+  &.clickable {
+    cursor: pointer;
+  }
+}
+
+.separator {
+  margin: 0 8px;
+  height: 24px;
+  align-self: center;
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+// Mobile Toggle
+.mobileToggle {
+  display: block;
+  margin-right: 16px;
+  
+  @media (min-width: 600px) {
+    display: none;
+  }
+}
+
+// Sidebar
+.sidebar {
+  width: var(--sidebar-width, 280px);
+  flex-shrink: 0;
+  
+  &[data-open="false"] {
+    width: 0;
+  }
+}
+
+.sidebarPaper {
+  width: var(--sidebar-width, 280px);
+  box-sizing: border-box;
+  background-color: var(--color-background-paper, #fff);
+  border-right: 1px solid var(--color-divider, rgba(0, 0, 0, 0.12));
+}
+
+.sidebarContent {
+  flex: 1;
+  overflow: auto;
+  padding: 8px 0;
+}
+
+.sidebarFooter {
+  padding: 16px;
+  border-top: 1px solid var(--color-divider, rgba(0, 0, 0, 0.12));
+}
+
+// Sidebar Header
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  min-height: 64px;
+}
+
+// Sidebar Section
+.sidebarSection {
+  padding: 8px 0;
+}
+
+.sectionTitle {
+  padding: 8px 16px;
+  display: block;
+  color: var(--color-text-secondary, rgba(0, 0, 0, 0.6));
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+}
+
+.sidebarSeparator {
+  margin: 8px 0;
+}
+
+// Menu Item List
+.menuList {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  
+  &.dense {
+    .menuItemButton {
+      min-height: 40px;
+    }
+  }
+}
+
+.menuItem {
+  padding: 0;
+}
+
+.menuItemButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  min-height: 48px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  
+  &:hover {
+    background-color: var(--color-action-hover, rgba(0, 0, 0, 0.04));
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  &.dense {
+    min-height: 40px;
+  }
+}
+
+.menuItemIcon {
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  color: var(--color-text-secondary, rgba(0, 0, 0, 0.6));
+}
+
+.menuItemText {
+  flex: 1;
+  
+  .primaryText {
+    display: block;
+    font-weight: 500;
+    
+    &.nested {
+      font-weight: 400;
+    }
+  }
+}
+
+.menuItemBadge {
+  margin-right: 8px;
+}
+
+.expandIcon {
+  margin-left: auto;
+}
+
+.nestedList {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
