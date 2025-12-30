@@ -1,0 +1,16 @@
+{
+  "packageId": "ui_level6",
+  "name": "Level 6 - Supergod Panel",
+  "version": "1.0.0",
+  "description": "Supergod panel for tenant management and system administration",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "minLevel": 6,
+  "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+  "exports": {
+    "pages": ["level6"],
+    "scripts": ["layout", "tenants", "transfer", "system"],
+    "components": []
+  }
+}

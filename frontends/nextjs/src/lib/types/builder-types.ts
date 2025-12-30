@@ -1,9 +1,12 @@
+import type { JsonValue } from '@/types/utility-types'
+
 /**
  * ComponentType - All supported UI component types in the builder
  * @description Union type of all available components
  * Supports: Layout (Flex, Grid, Container), Input (Input, Select, Switch),
  * Display (Text, Heading, Badge), Interactive (Button, Dialog, Tabs)
  */
+
 export type ComponentType =
   | 'Button'
   | 'Input'
@@ -39,7 +42,7 @@ export type ComponentType =
  * @example { className: "mt-4", disabled: true, onClick: fn }
  */
 export interface ComponentProps {
-  [key: string]: unknown
+  [key: string]: JsonValue
 }
 
 /**
@@ -85,7 +88,7 @@ export interface PropDefinition {
   name: string
   label: string
   type: 'string' | 'number' | 'boolean' | 'select' | 'color' | 'dynamic-select'
-  defaultValue?: unknown
+  defaultValue?: JsonValue
   options?: Array<{ value: string; label: string }>
   dynamicSource?: string
   description?: string

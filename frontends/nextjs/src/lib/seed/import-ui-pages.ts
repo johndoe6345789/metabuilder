@@ -2,11 +2,16 @@ import { readFile, readdir } from 'fs/promises'
 import { join } from 'path'
 import type { JsonObject } from '@/types/utility-types'
 
+type UIPagesDb = {
+  query<T = JsonObject>(sql: string, params?: unknown[]): Promise<T[]>
+  execute(sql: string, params?: unknown[]): Promise<void>
+}
+
 /**
  * Import UI pages from JSON seed data into the database
  * Flow: JSON (packages/ui_pages/seed/pages/*.json) → Database (ui_page table)
  */
-export async function importUIPages(db: any): Promise<void> {
+export async function importUIPages(db: UIPagesDb): Promise<void> {
   const pagesDir = join(process.cwd(), '../../packages/ui_pages/seed/pages')
 
   try {

@@ -1,8 +1,8 @@
 {
   "packageId": "ui_level3",
-  "name": "Level 3 - Admin Panel",
+  "name": "Level 3 - Moderator Panel",
   "version": "1.0.0",
-  "description": "Admin panel for user and content management",
+  "description": "Moderator panel for content moderation",
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",

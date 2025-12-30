@@ -1,4 +1,5 @@
 import type { User } from '../../types/level-types'
+import type { JsonObject } from '@/types/utility-types'
 
 export type OperationType = 'CREATE' | 'READ' | 'UPDATE' | 'DELETE'
 export type ResourceType =
@@ -28,7 +29,7 @@ export interface AuditLog {
   success: boolean
   errorMessage?: string
   ipAddress?: string
-  metadata?: Record<string, any>
+  metadata?: JsonObject
 }
 
 export interface SecurityContext {

@@ -2,6 +2,7 @@
  * TypeScript types for Lua UI packages
  * These types define the structure of UI packages written in Lua
  */
+import type { JsonValue } from '@/types/utility-types'
 
 /**
  * Manifest.json structure for Lua UI packages
@@ -52,13 +53,13 @@ export interface LuaUIPage {
 
 export interface LuaUIComponent {
   type: string
-  props: Record<string, unknown>
+  props: Record<string, JsonValue>
   children?: LuaUIComponent[]
 }
 
 export interface LuaUIAction {
   name: string
-  handler: string | ((...args: any[]) => any)
+  handler: string | ((...args: JsonValue[]) => JsonValue)
 }
 
 export interface LuaUIValidation {
@@ -71,7 +72,7 @@ export interface LuaUIValidation {
     max?: number
     pattern?: string
     format?: string
-    custom?: string | ((...args: any[]) => any)
+    custom?: string | ((...args: JsonValue[]) => JsonValue)
   }
 }
 
@@ -81,5 +82,5 @@ export interface LuaUIValidation {
 export interface LuaUIPackage {
   manifest: LuaUIManifest
   pages: LuaUIPage[]
-  actions: Record<string, (...args: any[]) => any>
+  actions: Record<string, (...args: JsonValue[]) => JsonValue>
 }

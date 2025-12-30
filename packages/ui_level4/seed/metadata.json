@@ -1,15 +1,17 @@
 {
   "packageId": "ui_level4",
-  "name": "Level 4 - Builder",
+  "name": "Level 4 - Admin Panel",
   "version": "1.0.0",
-  "description": "Application builder with schemas and workflows",
+  "description": "Admin panel for user and system management",
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [
     "ui_permissions",
     "ui_header",
-    "ui_intro"
+    "ui_intro",
+    "user_manager",
+    "admin_dialog"
   ],
   "exports": {
     "pages": [
@@ -17,8 +19,8 @@
     ],
     "scripts": [
       "layout",
-      "schemas",
-      "workflows"
+      "users",
+      "settings"
     ],
     "components": []
   },

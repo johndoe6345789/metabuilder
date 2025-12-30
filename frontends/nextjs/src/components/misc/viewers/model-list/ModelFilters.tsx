@@ -10,13 +10,14 @@ import {
   SelectValue,
 } from '@/components/ui'
 import type { FieldSchema, ModelSchema } from '@/lib/schema-types'
+import type { JsonValue } from '@/types/utility-types'
 
 interface ModelFiltersProps {
   model: ModelSchema
-  filters: Record<string, any>
+  filters: Record<string, JsonValue>
   searchTerm: string
   onSearchChange: (value: string) => void
-  onFilterChange: (field: string, value: any) => void
+  onFilterChange: (field: string, value: JsonValue) => void
 }
 
 function getFilterableFields(model: ModelSchema): FieldSchema[] {

@@ -17,8 +17,13 @@ import {
   getRecordsKey,
   sortRecords,
 } from '@/lib/schema-utils'
+import type { JsonObject, JsonValue } from '@/types/utility-types'
 
 import { RecordForm } from './RecordForm'
+
+type RecordValue = string | number | boolean | null | JsonObject | JsonValue[]
+
+type RecordData = Record<string, RecordValue>
 
 interface RelationCellValueProps {
   value: string
@@ -29,8 +34,8 @@ interface RelationCellValueProps {
 
 function RelationCellValue({ value, relatedModel, currentApp, schema }: RelationCellValueProps) {
   const relatedRecordsKey = getRecordsKey(currentApp, relatedModel)
-  const [relatedRecords] = useKV<any[]>(relatedRecordsKey, [])
-  const relatedRecord = relatedRecords?.find((r: any) => r.id === value)
+  const [relatedRecords] = useKV<RecordData[]>(relatedRecordsKey, [])
+  const relatedRecord = relatedRecords?.find(r => r.id === value)
 
   if (!relatedRecord)
     return <span className="font-mono text-sm text-muted-foreground">{value}</span>
@@ -53,7 +58,7 @@ interface ModelListViewProps {
 }
 
 export function ModelListView({ model, schema, currentApp }: ModelListViewProps) {
-  const [records, setRecords] = useKV<any[]>(getRecordsKey(currentApp, model.name), [])
+  const [records, setRecords] = useKV<RecordData[]>(getRecordsKey(currentApp, model.name), [])
   const [searchTerm, setSearchTerm] = useState('')
   const [sortField, setSortField] = useState<string | null>(
     model.ordering?.[0]?.replace('-', '') || null
@@ -61,9 +66,9 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>(
     model.ordering?.[0]?.startsWith('-') ? 'desc' : 'asc'
   )
-  const [filters, setFilters] = useState<Record<string, any>>({})
+  const [filters, setFilters] = useState<Record<string, RecordValue>>({})
   const [formOpen, setFormOpen] = useState(false)
-  const [editingRecord, setEditingRecord] = useState<any | null>(null)
+  const [editingRecord, setEditingRecord] = useState<RecordData | null>(null)
 
   const displayFields =
     model.listDisplay ||
@@ -102,7 +107,7 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
     setFormOpen(true)
   }
 
-  const handleEdit = (record: any) => {
+  const handleEdit = (record: RecordData) => {
     setEditingRecord(record)
     setFormOpen(true)
   }
@@ -112,7 +117,7 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
     toast.success('Record deleted')
   }
 
-  const handleSave = (record: any) => {
+  const handleSave = (record: RecordData) => {
     if (editingRecord) {
       setRecords(current => (current || []).map(r => (r.id === record.id ? record : r)))
       toast.success('Record updated')
@@ -122,7 +127,7 @@ export function ModelListView({ model, schema, currentApp }: ModelListViewProps)
     }
   }
 
-  const renderCellValue = (record: any, fieldName: string) => {
+  const renderCellValue = (record: RecordData, fieldName: string) => {
     const field = model.fields.find(f => f.name === fieldName)
     if (!field) return null
 

@@ -5,6 +5,7 @@ local M = {}
 local ROLE_MAP = {
   public = LEVELS.PUBLIC,
   user = LEVELS.USER,
+  moderator = LEVELS.MODERATOR,
   admin = LEVELS.ADMIN,
   god = LEVELS.GOD,
   supergod = LEVELS.SUPERGOD
@@ -17,6 +18,14 @@ end
 
 function M.can_access(user, required_level)
   return M.get_level(user) >= required_level
+end
+
+function M.is_moderator_or_above(user)
+  return M.get_level(user) >= LEVELS.MODERATOR
+end
+
+function M.is_admin_or_above(user)
+  return M.get_level(user) >= LEVELS.ADMIN
 end
 
 return M

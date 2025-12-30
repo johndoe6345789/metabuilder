@@ -1,9 +1,17 @@
 'use client'
 
-import { Badge, Box, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import {
+  Badge,
+  Box,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  type ListItemProps,
+} from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
-export interface NavItemProps {
+export interface NavItemProps extends Omit<ListItemProps, 'children'> {
   icon?: ReactNode
   label: string
   onClick?: () => void
@@ -30,6 +38,7 @@ const NavItem = forwardRef<HTMLLIElement, NavItemProps>(
       href,
       secondaryLabel,
       dense = false,
+      sx,
       ...props
     },
     ref
@@ -39,9 +48,7 @@ const NavItem = forwardRef<HTMLLIElement, NavItemProps>(
         ref={ref}
         disablePadding
         {...props}
-        sx={{
-          ...(props as any).sx,
-        }}
+        sx={sx}
       >
         <ListItemButton
           onClick={onClick}

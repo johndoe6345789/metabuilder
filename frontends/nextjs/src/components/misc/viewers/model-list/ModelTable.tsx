@@ -13,17 +13,20 @@ import {
 } from '@/components/ui'
 import type { FieldSchema, ModelSchema } from '@/lib/schema-types'
 import { getFieldLabel } from '@/lib/schema-utils'
+import type { JsonValue } from '@/types/utility-types'
+
+type RecordData = Record<string, JsonValue>
 
 interface ModelTableProps {
   model: ModelSchema
-  records: any[]
+  records: RecordData[]
   displayFields: string[]
   sortField?: string | null
   sortDirection?: 'asc' | 'desc'
   onSortChange?: (field: string) => void
-  onEdit?: (record: any) => void
+  onEdit?: (record: RecordData) => void
   onDelete?: (id: string) => void
-  onRowClick?: (record: any) => void
+  onRowClick?: (record: RecordData) => void
   renderRelationValue?: (value: string, field: FieldSchema) => ReactNode
 }
 
@@ -41,7 +44,7 @@ export function ModelTable({
 }: ModelTableProps) {
   const actionColumns = onEdit || onDelete ? 1 : 0
 
-  const renderCellValue = (record: any, fieldName: string) => {
+  const renderCellValue = (record: RecordData, fieldName: string) => {
     const field = model.fields.find(item => item.name === fieldName)
     if (!field) return null
 

@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2025-12-26T01:12:07.934Z",
+  "generatedAt": "2025-12-30T00:19:15.231Z",
   "packages": [
     {
       "packageId": "admin_dialog",
       "name": "Admin Dialog",
       "version": "1.0.0",
-      "description": "Admin dialogs for user and settings management",
+      "description": "Admin dialog components",
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "ui",
-      "dependencies": ["ui_dialogs"],
+      "dependencies": [],
       "exports": {
-        "scripts": ["user", "settings"],
         "components": []
-      }
+      },
+      "minLevel": 4
     },
     {
       "packageId": "arcade_lobby",
@@ -26,7 +26,8 @@
       "dependencies": [],
       "exports": {
         "components": []
-      }
+      },
+      "minLevel": 2
     },
     {
       "packageId": "codegen_studio",
@@ -39,7 +40,8 @@
       "dependencies": [],
       "exports": {
         "components": []
-      }
+      },
+      "minLevel": 5
     },
     {
       "packageId": "code_editor",
@@ -51,51 +53,79 @@
       "category": "editors",
       "dependencies": [],
       "exports": {
-        "scripts": ["json", "lua", "theme"],
-        "components": ["CodeEditor", "JsonEditor", "LuaEditor", "ThemeEditor"]
-      }
+        "scripts": [
+          "json",
+          "lua",
+          "theme"
+        ],
+        "components": [
+          "CodeEditor",
+          "JsonEditor",
+          "LuaEditor",
+          "ThemeEditor"
+        ]
+      },
+      "minLevel": 5
     },
     {
       "packageId": "dashboard",
       "name": "Dashboard",
       "version": "1.0.0",
-      "description": "Dashboard components with stats and layouts",
+      "description": "Dashboard layouts, stat cards, and widgets",
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "ui",
       "dependencies": [],
       "exports": {
-        "scripts": ["stats", "layout"],
-        "components": []
-      }
+        "components": [
+          "StatCard",
+          "DashboardGrid",
+          "Widget"
+        ],
+        "scripts": [
+          "stats",
+          "layout"
+        ]
+      },
+      "minLevel": 2
     },
     {
       "packageId": "data_table",
       "name": "Data Table",
       "version": "1.0.0",
-      "description": "Data table with columns, rows, and pagination",
+      "description": "Data table components",
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "ui",
       "dependencies": [],
       "exports": {
-        "scripts": ["columns", "rows", "pagination"],
         "components": []
-      }
+      },
+      "minLevel": 1
     },
     {
       "packageId": "form_builder",
       "name": "Form Builder",
       "version": "1.0.0",
-      "description": "Form builder with field types and validation",
+      "description": "Form fields, validation, and submission handling",
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "ui",
       "dependencies": [],
       "exports": {
-        "scripts": ["fields", "validate"],
-        "components": []
-      }
+        "components": [
+          "FormField",
+          "EmailField",
+          "PasswordField",
+          "NumberField",
+          "SearchBar"
+        ],
+        "scripts": [
+          "fields",
+          "validate"
+        ]
+      },
+      "minLevel": 1
     },
     {
       "packageId": "forum_forge",
@@ -108,63 +138,71 @@
       "dependencies": [],
       "exports": {
         "components": []
-      }
+      },
+      "minLevel": 2
     },
     {
       "packageId": "nav_menu",
       "name": "Navigation Menu",
       "version": "1.0.0",
-      "description": "Navigation sidebar and menu components",
+      "description": "Sidebar, navigation menus, and breadcrumbs",
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "ui",
-      "dependencies": ["ui_permissions"],
+      "dependencies": [
+        "ui_permissions"
+      ],
       "exports": {
-        "scripts": ["sidebar", "menu"],
-        "components": []
-      }
+        "components": [
+          "Sidebar",
+          "NavigationMenu",
+          "Breadcrumbs"
+        ],
+        "scripts": [
+          "sidebar",
+          "menu"
+        ]
+      },
+      "minLevel": 2
     },
     {
       "packageId": "notification_center",
       "name": "Notification Center",
       "version": "1.0.0",
-      "description": "Toast notifications and notification list",
+      "description": "Notification center components",
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "ui",
       "dependencies": [],
       "exports": {
-        "scripts": ["toast", "list"],
         "components": []
-      }
+      },
+      "minLevel": 1
     },
     {
-      "packageId": "ui_auth",
-      "name": "Auth Components",
+      "packageId": "schema_editor",
+      "name": "Schema Editor",
       "version": "1.0.0",
-      "description": "Authentication gate and access denied views",
+      "description": "Database schema editor components",
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
-      "category": "ui",
-      "dependencies": ["ui_permissions"],
+      "category": "editors",
+      "dependencies": [
+        "form_builder"
+      ],
       "exports": {
-        "scripts": ["gate", "denied"],
-        "components": ["AuthGate", "AccessDenied"]
-      }
-    },
-    {
-      "packageId": "ui_dialogs",
-      "name": "Dialog Components",
-      "version": "1.0.0",
-      "description": "Confirm and alert dialog components",
-      "icon": "static_content/icon.svg",
-      "author": "MetaBuilder",
-      "category": "ui",
-      "dependencies": [],
-      "exports": {
-        "scripts": ["confirm", "alert"],
-        "components": ["ConfirmDialog", "AlertDialog"]
-      }
+        "scripts": [
+          "fields",
+          "tables",
+          "relations"
+        ],
+        "components": [
+          "SchemaEditor",
+          "TableEditor",
+          "FieldEditor"
+        ]
+      },
+      "minLevel": 5
     },
     {
       "packageId": "social_hub",
@@ -207,21 +245,8 @@
           "social_hub_feed_post_2_body",
           "social_hub_feed_post_2_badge"
         ]
-      }
-    },
-    {
-      "packageId": "schema_editor",
-      "name": "Schema Editor",
-      "version": "1.0.0",
-      "description": "Database schema editor components",
-      "icon": "static_content/icon.svg",
-      "author": "MetaBuilder",
-      "category": "editors",
-      "dependencies": ["form_builder"],
-      "exports": {
-        "scripts": ["fields", "tables", "relations"],
-        "components": ["SchemaEditor", "TableEditor", "FieldEditor"]
-      }
+      },
+      "minLevel": 2
     },
     {
       "packageId": "stream_cast",
@@ -234,93 +259,54 @@
       "dependencies": [],
       "exports": {
         "components": []
-      }
+      },
+      "minLevel": 2
     },
     {
-      "packageId": "user_manager",
-      "name": "User Manager",
+      "packageId": "ui_auth",
+      "name": "Auth UI",
       "version": "1.0.0",
-      "description": "User management components and actions",
+      "description": "Access denied, auth gate, and loading states",
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
-      "category": "managers",
-      "dependencies": ["ui_permissions", "data_table"],
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions"
+      ],
       "exports": {
-        "scripts": ["list", "actions"],
-        "components": ["UserManagement", "UserList", "UserActions"]
-      }
+        "components": [
+          "AccessDenied",
+          "AuthGate",
+          "PageLoader"
+        ],
+        "scripts": [
+          "denied",
+          "gate"
+        ]
+      },
+      "minLevel": 2
     },
     {
-      "packageId": "workflow_editor",
-      "name": "Workflow Editor",
+      "packageId": "ui_dialogs",
+      "name": "UI Dialogs",
       "version": "1.0.0",
-      "description": "Workflow editor and run status components",
-      "icon": "static_content/icon.svg",
-      "author": "MetaBuilder",
-      "category": "editors",
-      "dependencies": [],
-      "exports": {
-        "scripts": ["editor", "status", "run"],
-        "components": ["WorkflowEditor", "WorkflowRunCard", "WorkflowRunStatus"]
-      }
-    },
-    {
-      "packageId": "ui_permissions",
-      "name": "UI Permissions",
-      "version": "1.0.0",
-      "description": "Shared permission utilities for page access control",
+      "description": "Confirmation, alert, and form dialogs",
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "ui",
       "dependencies": [],
       "exports": {
-        "scripts": ["permissions"],
-        "components": []
-      }
-    },
-    {
-      "packageId": "ui_login",
-      "name": "Login Page",
-      "version": "1.0.0",
-      "description": "Login and registration page with form validation",
-      "icon": "static_content/icon.svg",
-      "author": "MetaBuilder",
-      "category": "ui",
-      "dependencies": ["ui_permissions"],
-      "exports": {
-        "pages": ["login"],
-        "scripts": ["login_ui", "login_validate"],
-        "components": []
-      }
-    },
-    {
-      "packageId": "ui_home",
-      "name": "Home Page",
-      "version": "1.0.0",
-      "description": "Level 1 home page with server status",
-      "icon": "static_content/icon.svg",
-      "author": "MetaBuilder",
-      "category": "ui",
-      "dependencies": ["ui_permissions"],
-      "exports": {
-        "pages": ["level1"],
-        "scripts": ["home_ui", "navigate"],
-        "components": []
-      }
-    },
-    {
-      "packageId": "ui_header",
-      "name": "App Header",
-      "version": "1.0.0",
-      "description": "Shared navigation header with user avatar and actions",
-      "icon": "static_content/icon.svg",
-      "author": "MetaBuilder",
-      "category": "ui",
-      "dependencies": ["ui_permissions"],
-      "exports": {
-        "components": ["AppHeader"],
-        "scripts": ["header"]
-      }
+        "components": [
+          "ConfirmDialog",
+          "AlertDialog",
+          "FormDialog"
+        ],
+        "scripts": [
+          "confirm",
+          "alert"
+        ]
+      },
+      "minLevel": 1
     },
     {
       "packageId": "ui_footer",
@@ -332,9 +318,60 @@
       "category": "ui",
       "dependencies": [],
       "exports": {
-        "components": ["AppFooter"],
-        "scripts": ["footer"]
-      }
+        "components": [
+          "AppFooter"
+        ],
+        "scripts": [
+          "footer"
+        ],
+        "pages": []
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "ui_header",
+      "name": "App Header",
+      "version": "1.0.0",
+      "description": "Shared navigation header with user avatar and actions",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions"
+      ],
+      "exports": {
+        "components": [
+          "AppHeader"
+        ],
+        "scripts": [
+          "header"
+        ],
+        "pages": []
+      },
+      "minLevel": 2
+    },
+    {
+      "packageId": "ui_home",
+      "name": "Home Page",
+      "version": "1.0.0",
+      "description": "Level 1 home page with server status",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions"
+      ],
+      "exports": {
+        "pages": [
+          "level1"
+        ],
+        "scripts": [
+          "home_ui",
+          "navigate"
+        ],
+        "components": []
+      },
+      "minLevel": 1
     },
     {
       "packageId": "ui_intro",
@@ -346,9 +383,15 @@
       "category": "ui",
       "dependencies": [],
       "exports": {
-        "components": ["IntroSection"],
-        "scripts": ["intro"]
-      }
+        "components": [
+          "IntroSection"
+        ],
+        "scripts": [
+          "intro"
+        ],
+        "pages": []
+      },
+      "minLevel": 1
     },
     {
       "packageId": "ui_level2",
@@ -358,53 +401,248 @@
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "ui",
-      "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+      "dependencies": [
+        "ui_permissions",
+        "ui_header",
+        "ui_intro"
+      ],
       "exports": {
-        "pages": ["level2"],
-        "scripts": ["layout", "profile", "comments"]
-      }
+        "pages": [
+          "level2"
+        ],
+        "scripts": [
+          "layout",
+          "profile",
+          "comments"
+        ],
+        "components": []
+      },
+      "minLevel": 2
     },
     {
       "packageId": "ui_level3",
-      "name": "Level 3 - Admin Panel",
+      "name": "Level 3 - Moderator Panel",
       "version": "1.0.0",
-      "description": "Admin panel for user and content management",
+      "description": "Moderator panel for content moderation",
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "ui",
-      "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+      "dependencies": [
+        "ui_permissions",
+        "ui_header",
+        "ui_intro"
+      ],
       "exports": {
-        "pages": ["level3"],
-        "scripts": ["layout", "users", "moderation"]
-      }
+        "pages": [
+          "level3"
+        ],
+        "scripts": [
+          "layout",
+          "users",
+          "moderation"
+        ],
+        "components": []
+      },
+      "minLevel": 3
     },
     {
       "packageId": "ui_level4",
-      "name": "Level 4 - Builder",
+      "name": "Level 4 - Admin Panel",
       "version": "1.0.0",
-      "description": "Application builder with schemas and workflows",
+      "description": "Admin panel for user and system management",
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "ui",
-      "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+      "dependencies": [
+        "ui_permissions",
+        "ui_header",
+        "ui_intro",
+        "user_manager",
+        "admin_dialog"
+      ],
       "exports": {
-        "pages": ["level4"],
-        "scripts": ["layout", "schemas", "workflows"]
-      }
+        "pages": [
+          "level4"
+        ],
+        "scripts": [
+          "layout",
+          "users",
+          "settings"
+        ],
+        "components": []
+      },
+      "minLevel": 4
     },
     {
       "packageId": "ui_level5",
-      "name": "Level 5 - Super God",
+      "name": "Level 5 - God Panel",
       "version": "1.0.0",
-      "description": "Super god panel for tenant management",
+      "description": "God panel for application building, schemas, and workflows",
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "ui",
-      "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+      "dependencies": [
+        "ui_permissions",
+        "ui_header",
+        "ui_intro",
+        "schema_editor",
+        "workflow_editor"
+      ],
       "exports": {
-        "pages": ["level5"],
-        "scripts": ["layout", "tenants", "transfer"]
+        "pages": [
+          "level5"
+        ],
+        "scripts": [
+          "layout",
+          "schemas",
+          "workflows"
+        ],
+        "components": []
+      },
+      "minLevel": 5
+    },
+    {
+      "packageId": "ui_level6",
+      "name": "Level 6 - Supergod Panel",
+      "version": "1.0.0",
+      "description": "Supergod panel for tenant management and system administration",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "minLevel": 6,
+      "dependencies": [
+        "ui_permissions",
+        "ui_header",
+        "ui_intro"
+      ],
+      "exports": {
+        "pages": [
+          "level6"
+        ],
+        "scripts": [
+          "layout",
+          "tenants",
+          "transfer",
+          "system"
+        ],
+        "components": []
       }
+    },
+    {
+      "packageId": "ui_login",
+      "name": "Login Page",
+      "version": "1.0.0",
+      "description": "Login and registration page with form validation",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions"
+      ],
+      "exports": {
+        "pages": [
+          "login"
+        ],
+        "scripts": [
+          "login_ui",
+          "login_actions"
+        ],
+        "components": []
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "ui_pages",
+      "name": "UI Pages Bundle",
+      "version": "2.0.0",
+      "description": "Meta-package that bundles all UI page packages",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions",
+        "ui_header",
+        "ui_footer",
+        "ui_intro",
+        "ui_login",
+        "ui_home",
+        "ui_level2",
+        "ui_level3",
+        "ui_level4",
+        "ui_level5",
+        "ui_level6"
+      ],
+      "exports": {
+        "pages": [],
+        "scripts": [],
+        "components": []
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "ui_permissions",
+      "name": "UI Permissions",
+      "version": "1.0.0",
+      "description": "Shared permission utilities for page access control",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "scripts": [
+          "permissions"
+        ],
+        "components": []
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "user_manager",
+      "name": "User Manager",
+      "version": "1.0.0",
+      "description": "User management components and actions",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "managers",
+      "dependencies": [
+        "ui_permissions",
+        "data_table"
+      ],
+      "exports": {
+        "scripts": [
+          "list",
+          "actions"
+        ],
+        "components": [
+          "UserManagement",
+          "UserList",
+          "UserActions"
+        ]
+      },
+      "minLevel": 4
+    },
+    {
+      "packageId": "workflow_editor",
+      "name": "Workflow Editor",
+      "version": "1.0.0",
+      "description": "Workflow editor and run status components",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "editors",
+      "dependencies": [],
+      "exports": {
+        "scripts": [
+          "editor",
+          "status",
+          "run"
+        ],
+        "components": [
+          "WorkflowEditor",
+          "WorkflowRunCard",
+          "WorkflowRunStatus"
+        ]
+      },
+      "minLevel": 5
     }
   ]
 }

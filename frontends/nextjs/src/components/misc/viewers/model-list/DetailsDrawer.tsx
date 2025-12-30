@@ -13,11 +13,14 @@ import {
 } from '@/components/ui'
 import type { ModelSchema } from '@/lib/schema-types'
 import { getFieldLabel } from '@/lib/schema-utils'
+import type { JsonValue } from '@/types/utility-types'
+
+type RecordData = Record<string, JsonValue>
 
 interface DetailsDrawerProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  record: any | null
+  record: RecordData | null
   model: ModelSchema
 }
 
