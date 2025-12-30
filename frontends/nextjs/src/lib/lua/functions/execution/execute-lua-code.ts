@@ -5,9 +5,11 @@
 
 import * as fengari from 'fengari-web'
 
+import type { JsonValue } from '@/types/utility-types'
+
 import { fromLua } from '../converters/from-lua'
 import { pushToLua } from '../converters/push-to-lua'
-import type { LuaExecutionContext, LuaExecutionResult } from '../types'
+import type { LuaExecutionContext, LuaExecutionResult, LuaState } from '../types'
 
 const lua = fengari.lua
 const lauxlib = fengari.lauxlib
@@ -21,7 +23,7 @@ const lauxlib = fengari.lauxlib
  * @returns Execution result
  */
 export const executeLuaCode = async (
-  L: any,
+  L: LuaState,
   code: string,
   context: LuaExecutionContext,
   logs: string[]
@@ -42,7 +44,7 @@ export const executeLuaCode = async (
       lua.lua_settable(L, -3)
     }
 
-    const kvMethods: any = {}
+    const kvMethods: Record<string, ((key: string) => Promise<JsonValue>) | ((key: string, value: JsonValue) => Promise<void>)> = {}
     if (context.kv) {
       kvMethods.get = context.kv.get
       kvMethods.set = context.kv.set
@@ -80,7 +82,7 @@ export const executeLuaCode = async (
 
     // Get results
     const nresults = lua.lua_gettop(L)
-    let result: any = null
+    let result: JsonValue = null
 
     if (nresults > 0) {
       if (nresults === 1) {

@@ -4,14 +4,14 @@ import type { DeclarativeRendererState } from './renderer-state'
 export async function executeLuaScript(
   state: DeclarativeRendererState,
   scriptId: string,
-  params: any[]
-): Promise<any> {
+  params: unknown[]
+): Promise<unknown> {
   const script = state.luaScripts[scriptId]
   if (!script) {
     throw new Error(`Lua script not found: ${scriptId}`)
   }
 
-  const paramContext: Record<string, any> = {}
+  const paramContext: Record<string, unknown> = {}
   script.parameters.forEach((param, index) => {
     if (params[index] !== undefined) {
       paramContext[param.name] = params[index]

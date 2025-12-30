@@ -15,7 +15,7 @@ import * as fengari from 'fengari-web'
 import { destroy } from '../../functions/engine/destroy'
 import { execute } from '../../functions/engine/execute'
 import { setupContextAPI } from '../../functions/setup/setup-context-api'
-import type { LuaExecutionContext, LuaExecutionResult } from '../../functions/types'
+import type { LuaExecutionContext, LuaExecutionResult, LuaState } from '../../functions/types'
 
 const lauxlib = fengari.lauxlib
 const lualib = fengari.lualib
@@ -27,7 +27,7 @@ export type { LuaExecutionContext, LuaExecutionResult }
  * LuaEngine class wraps individual Lua execution lambdas
  */
 export class LuaEngine {
-  L: any
+  L: LuaState
   logs: string[] = []
 
   constructor() {

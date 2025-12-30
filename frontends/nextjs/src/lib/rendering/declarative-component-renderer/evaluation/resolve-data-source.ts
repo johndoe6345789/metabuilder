@@ -1,4 +1,4 @@
-export function resolveDataSource(dataSource: string, context: Record<string, any>): any[] {
+export function resolveDataSource(dataSource: string, context: Record<string, unknown>): unknown[] {
   if (!dataSource) return []
-  return context[dataSource] || []
+  return (context[dataSource] as unknown[]) || []
 }
