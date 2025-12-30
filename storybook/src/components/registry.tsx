@@ -525,6 +525,37 @@ export const Textarea: React.FC<TextareaProps> = ({
   </div>
 )
 
+// Switch - toggle switch input
+interface SwitchProps extends LuaComponentProps {
+  checked?: boolean
+  onChange?: (checked: boolean) => void
+  disabled?: boolean
+  label?: string
+}
+
+export const Switch: React.FC<SwitchProps> = ({ 
+  checked = false, 
+  disabled = false,
+  label,
+  className = '' 
+}) => {
+  const [isChecked, setIsChecked] = React.useState(checked)
+  
+  return (
+    <label className={`inline-flex items-center gap-2 cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}>
+      <div 
+        className={`relative w-10 h-6 rounded-full transition-colors ${isChecked ? 'bg-accent' : 'bg-muted'}`}
+        onClick={() => !disabled && setIsChecked(!isChecked)}
+      >
+        <div 
+          className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${isChecked ? 'translate-x-5' : 'translate-x-1'}`}
+        />
+      </div>
+      {label && <span className="text-sm">{label}</span>}
+    </label>
+  )
+}
+
 // Navigation
 export const AppBar: React.FC<LuaComponentProps> = ({ children, className = 'bg-canvas border-b' }) => (
   <header className={className}>{children}</header>
@@ -721,6 +752,7 @@ export const componentRegistry: Record<string, AnyComponent> = {
   Select,
   Label,
   Textarea,
+  Switch,
   
   // Display
   Icon,
