@@ -1,8 +1,18 @@
 {
   "name": "shared",
-  "version": "1.0.0",
-  "description": "Shared types and utilities for all Lua packages",
-  "exports": ["types.ui_types"],
+  "version": "1.1.0",
+  "description": "Shared types, utilities, and permission system for all Lua packages",
+  "exports": [
+    "types.ui_types",
+    "permissions"
+  ],
+  "scripts": [
+    "permissions",
+    "permissions.check_access",
+    "permissions.enforce_level",
+    "permissions.manage_flags",
+    "permissions.database_toggle"
+  ],
   "dependencies": [],
   "minLevel": 0
 }
