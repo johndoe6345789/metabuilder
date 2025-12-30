@@ -46,4 +46,26 @@ M.validate_config = generator.validate_config
 M.get_template_categories = templates.get_categories
 M.get_default_config = generator.get_default_config
 
+---Get list of valid categories (for C++ CLI)
+---@return string[]
+function M.get_categories()
+  return templates.get_categories()
+end
+
+---Generate minimal package quickly (for C++ CLI quick command)
+---@param config PackageConfig
+---@return GeneratedFile[]
+function M.generate_quick(config)
+  -- Force minimal generation
+  config.withTests = false
+  config.withSchema = false
+  config.withComponents = false
+  config.entities = {}
+  config.components = {}
+  
+  local result = generator.generate(config)
+  return result.files or {}
+end
+
 return M
+

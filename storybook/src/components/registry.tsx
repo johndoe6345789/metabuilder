@@ -1055,6 +1055,155 @@ export const LuaScriptViewer: React.FC<LuaComponentProps & {
 }
 
 /**
+ * IRCWebchat - Classic IRC-style chat interface
+ */
+interface IRCMessage {
+  id: string
+  user: string
+  text: string
+  timestamp: number
+  type: 'message' | 'join' | 'leave' | 'system'
+}
+
+export const IRCWebchat: React.FC<LuaComponentProps & {
+  channelName?: string
+}> = ({ channelName = 'general' }) => {
+  const [messages, setMessages] = React.useState<IRCMessage[]>([
+    { id: '1', user: 'system', text: `Welcome to #${channelName}!`, timestamp: Date.now() - 60000, type: 'system' },
+    { id: '2', user: 'alice', text: 'Hey everyone! 👋', timestamp: Date.now() - 45000, type: 'message' },
+    { id: '3', user: 'bob', text: 'Hi Alice! How are you?', timestamp: Date.now() - 30000, type: 'message' },
+    { id: '4', user: 'charlie', text: 'Just joined the channel', timestamp: Date.now() - 15000, type: 'join' },
+    { id: '5', user: 'alice', text: 'Welcome Charlie!', timestamp: Date.now() - 5000, type: 'message' },
+  ])
+  const [inputValue, setInputValue] = React.useState('')
+  const [users] = React.useState(['alice', 'bob', 'charlie', 'demo_user'])
+  const messagesEndRef = React.useRef<HTMLDivElement>(null)
+
+  const formatTime = (timestamp: number) => {
+    const date = new Date(timestamp)
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  }
+
+  const handleSend = () => {
+    if (!inputValue.trim()) return
+    
+    // Handle commands
+    if (inputValue.startsWith('/')) {
+      const [cmd, ...args] = inputValue.slice(1).split(' ')
+      if (cmd === 'me') {
+        setMessages(prev => [...prev, {
+          id: Date.now().toString(),
+          user: 'demo_user',
+          text: `* demo_user ${args.join(' ')}`,
+          timestamp: Date.now(),
+          type: 'message'
+        }])
+      } else if (cmd === 'clear') {
+        setMessages([{ id: Date.now().toString(), user: 'system', text: 'Chat cleared', timestamp: Date.now(), type: 'system' }])
+      } else if (cmd === 'help') {
+        setMessages(prev => [...prev, {
+          id: Date.now().toString(),
+          user: 'system',
+          text: 'Commands: /me <action>, /clear, /help, /users',
+          timestamp: Date.now(),
+          type: 'system'
+        }])
+      } else if (cmd === 'users') {
+        setMessages(prev => [...prev, {
+          id: Date.now().toString(),
+          user: 'system',
+          text: `Users in #${channelName}: ${users.join(', ')}`,
+          timestamp: Date.now(),
+          type: 'system'
+        }])
+      }
+    } else {
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        user: 'demo_user',
+        text: inputValue,
+        timestamp: Date.now(),
+        type: 'message'
+      }])
+    }
+    setInputValue('')
+  }
+
+  React.useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
+  return (
+    <div className="flex h-[600px] border rounded-lg overflow-hidden bg-canvas">
+      {/* Main chat area */}
+      <div className="flex-1 flex flex-col">
+        {/* Channel header */}
+        <div className="px-4 py-3 border-b bg-muted/50 flex items-center gap-2">
+          <span className="text-lg font-semibold">#{channelName}</span>
+          <span className="text-sm text-muted-foreground">|</span>
+          <span className="text-sm text-muted-foreground">{users.length} users online</span>
+        </div>
+        
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-1 font-mono text-sm bg-[#1a1a2e]">
+          {messages.map(msg => (
+            <div key={msg.id} className={`flex gap-2 ${msg.type === 'system' ? 'text-yellow-400' : msg.type === 'join' ? 'text-green-400' : 'text-gray-200'}`}>
+              <span className="text-gray-500 shrink-0">[{formatTime(msg.timestamp)}]</span>
+              {msg.type === 'system' ? (
+                <span className="text-yellow-400">*** {msg.text}</span>
+              ) : msg.type === 'join' ? (
+                <span className="text-green-400">→ {msg.user} has joined #{channelName}</span>
+              ) : msg.type === 'leave' ? (
+                <span className="text-red-400">← {msg.user} has left #{channelName}</span>
+              ) : (
+                <>
+                  <span className="text-cyan-400 font-bold">&lt;{msg.user}&gt;</span>
+                  <span>{msg.text}</span>
+                </>
+              )}
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+        
+        {/* Input */}
+        <div className="p-3 border-t bg-muted/30">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={e => setInputValue(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSend()}
+              placeholder="Type a message... (try /help for commands)"
+              className="flex-1 px-3 py-2 rounded border bg-background text-sm font-mono"
+            />
+            <button 
+              onClick={handleSend}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      {/* Users sidebar */}
+      <div className="w-48 border-l bg-muted/20">
+        <div className="px-3 py-2 border-b text-sm font-semibold">Users ({users.length})</div>
+        <div className="p-2 space-y-1">
+          {users.map(user => (
+            <div key={user} className="flex items-center gap-2 px-2 py-1 text-sm rounded hover:bg-muted/50">
+              <span className="w-2 h-2 rounded-full bg-green-500"></span>
+              <span className={user === 'demo_user' ? 'font-semibold' : ''}>{user}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/**
  * Component Registry - maps Lua type names to React components
  */
 export const componentRegistry: Record<string, AnyComponent> = {
@@ -1144,6 +1293,7 @@ export const componentRegistry: Record<string, AnyComponent> = {
   AppHeader,
   AppFooter,
   Sidebar,
+  IRCWebchat,
   
   // Script viewer
   LuaScriptViewer,
