@@ -5,7 +5,7 @@ import { Autorenew, Download, OpenInNew } from '@/fakemui/icons'
 
 import type { WorkflowRun } from '../types'
 import type { RunListProps } from './run-list.types'
-import { spinSx } from './run-list.types'
+import { spinStyle } from './run-list.types'
 
 type RunRowProps = Pick<
   RunListProps,
@@ -25,35 +25,34 @@ export const RunRow = ({
   const isSelectedRun = isLoadingLogs && selectedRunId === run.id
 
   return (
-    <Card variant="outlined" sx={{ borderColor: 'divider' }}>
+    <Card variant="outlined" style={{ borderColor: 'var(--color-divider)' }}>
       <CardContent>
-        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} justifyContent="space-between">
+        <Stack direction="row" spacing={2} justifyContent="space-between" className="flex-wrap md:flex-nowrap">
           <Stack spacing={1}>
             <Stack direction="row" spacing={1} alignItems="center">
               <Box
-                sx={{
+                style={{
                   width: 10,
                   height: 10,
                   borderRadius: '50%',
-                  bgcolor: statusIcon,
+                  backgroundColor: statusIcon,
                 }}
               />
-              <Typography fontWeight={600}>{run.name}</Typography>
-              <Badge variant="outline" sx={{ textTransform: 'capitalize' }}>
+              <Typography style={{ fontWeight: 600 }}>{run.name}</Typography>
+              <Badge variant="outline" style={{ textTransform: 'capitalize' }}>
                 {run.event}
               </Badge>
             </Stack>
 
-            <Stack direction="row" spacing={2} flexWrap="wrap" sx={{ color: 'text.secondary' }}>
+            <Stack direction="row" spacing={2} className="flex-wrap" style={{ color: 'var(--color-text-secondary)' }}>
               <Stack direction="row" spacing={0.5} alignItems="center">
-                <Typography fontWeight={600}>Branch:</Typography>
+                <Typography style={{ fontWeight: 600 }}>Branch:</Typography>
                 <Box
                   component="code"
-                  sx={{
-                    px: 0.75,
-                    py: 0.25,
-                    bgcolor: 'action.hover',
-                    borderRadius: 1,
+                  style={{
+                    padding: '2px 6px',
+                    backgroundColor: 'var(--color-action-hover)',
+                    borderRadius: 4,
                     fontFamily: 'monospace',
                     fontSize: '0.75rem',
                   }}
@@ -62,22 +61,22 @@ export const RunRow = ({
                 </Box>
               </Stack>
               <Stack direction="row" spacing={0.5} alignItems="center">
-                <Typography fontWeight={600}>Event:</Typography>
+                <Typography style={{ fontWeight: 600 }}>Event:</Typography>
                 <Typography>{run.event}</Typography>
               </Stack>
               <Stack direction="row" spacing={0.5} alignItems="center">
-                <Typography fontWeight={600}>Status:</Typography>
-                <Typography sx={{ color: getStatusColor(run.status, run.conclusion) }}>
+                <Typography style={{ fontWeight: 600 }}>Status:</Typography>
+                <Typography style={{ color: getStatusColor(run.status, run.conclusion) }}>
                   {run.status === 'completed' ? run.conclusion : run.status}
                 </Typography>
               </Stack>
             </Stack>
-            <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+            <Typography variant="caption" color="text.secondary" style={{ marginTop: 4, display: 'block' }}>
               Updated: {new Date(run.updated_at).toLocaleString()}
             </Typography>
           </Stack>
 
-          <Stack spacing={1} alignItems={{ xs: 'flex-start', md: 'flex-end' }}>
+          <Stack spacing={1} alignItems="flex-end">
             <Button
               variant="outline"
               size="sm"
@@ -85,7 +84,7 @@ export const RunRow = ({
               disabled={isSelectedRun}
               startIcon={
                 isSelectedRun ? (
-                  <Autorenew size={16} style={spinSx} />
+                  <Autorenew size={16} style={spinStyle} />
                 ) : (
                   <Download size={16} />
                 )
