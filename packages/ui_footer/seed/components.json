@@ -1,1 +1,373 @@
-[]
+[
+  {
+    "id": "app_footer",
+    "type": "Box",
+    "props": {
+      "component": "footer",
+      "className": "app-footer"
+    },
+    "children": [
+      {
+        "id": "app_footer_container",
+        "type": "Box",
+        "props": {
+          "className": "footer-container"
+        },
+        "children": [
+          {
+            "id": "app_footer_main",
+            "type": "Flex",
+            "props": {
+              "className": "flex flex-wrap justify-between items-start gap-8 py-8"
+            },
+            "children": [
+              {
+                "id": "app_footer_brand",
+                "type": "Stack",
+                "props": {
+                  "className": "flex flex-col gap-2"
+                },
+                "children": [
+                  {
+                    "id": "app_footer_logo",
+                    "type": "Text",
+                    "props": {
+                      "children": "MetaBuilder",
+                      "variant": "h6",
+                      "className": "font-bold"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "app_footer_tagline",
+                    "type": "Text",
+                    "props": {
+                      "children": "Build. Deploy. Manage.",
+                      "variant": "body2",
+                      "className": "text-muted-foreground"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "app_footer_links_section",
+                "type": "Flex",
+                "props": {
+                  "className": "flex gap-12"
+                },
+                "children": [
+                  {
+                    "id": "app_footer_links_product",
+                    "type": "Stack",
+                    "props": {
+                      "className": "flex flex-col gap-2"
+                    },
+                    "children": [
+                      {
+                        "id": "app_footer_links_product_title",
+                        "type": "Text",
+                        "props": {
+                          "children": "Product",
+                          "variant": "subtitle2",
+                          "className": "font-semibold"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_footer_link_features",
+                        "type": "Link",
+                        "props": {
+                          "href": "/features",
+                          "children": "Features",
+                          "className": "text-muted-foreground hover:text-foreground"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_footer_link_pricing",
+                        "type": "Link",
+                        "props": {
+                          "href": "/pricing",
+                          "children": "Pricing",
+                          "className": "text-muted-foreground hover:text-foreground"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_footer_link_docs",
+                        "type": "Link",
+                        "props": {
+                          "href": "/docs",
+                          "children": "Documentation",
+                          "className": "text-muted-foreground hover:text-foreground"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "app_footer_links_company",
+                    "type": "Stack",
+                    "props": {
+                      "className": "flex flex-col gap-2"
+                    },
+                    "children": [
+                      {
+                        "id": "app_footer_links_company_title",
+                        "type": "Text",
+                        "props": {
+                          "children": "Company",
+                          "variant": "subtitle2",
+                          "className": "font-semibold"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_footer_link_about",
+                        "type": "Link",
+                        "props": {
+                          "href": "/about",
+                          "children": "About",
+                          "className": "text-muted-foreground hover:text-foreground"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_footer_link_blog",
+                        "type": "Link",
+                        "props": {
+                          "href": "/blog",
+                          "children": "Blog",
+                          "className": "text-muted-foreground hover:text-foreground"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_footer_link_contact",
+                        "type": "Link",
+                        "props": {
+                          "href": "/contact",
+                          "children": "Contact",
+                          "className": "text-muted-foreground hover:text-foreground"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "app_footer_links_legal",
+                    "type": "Stack",
+                    "props": {
+                      "className": "flex flex-col gap-2"
+                    },
+                    "children": [
+                      {
+                        "id": "app_footer_links_legal_title",
+                        "type": "Text",
+                        "props": {
+                          "children": "Legal",
+                          "variant": "subtitle2",
+                          "className": "font-semibold"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_footer_link_privacy",
+                        "type": "Link",
+                        "props": {
+                          "href": "/privacy",
+                          "children": "Privacy Policy",
+                          "className": "text-muted-foreground hover:text-foreground"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_footer_link_terms",
+                        "type": "Link",
+                        "props": {
+                          "href": "/terms",
+                          "children": "Terms of Service",
+                          "className": "text-muted-foreground hover:text-foreground"
+                        },
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "app_footer_social",
+                "type": "Stack",
+                "props": {
+                  "className": "flex flex-col gap-2"
+                },
+                "children": [
+                  {
+                    "id": "app_footer_social_title",
+                    "type": "Text",
+                    "props": {
+                      "children": "Follow Us",
+                      "variant": "subtitle2",
+                      "className": "font-semibold"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "app_footer_social_icons",
+                    "type": "Flex",
+                    "props": {
+                      "className": "flex gap-3"
+                    },
+                    "children": [
+                      {
+                        "id": "app_footer_social_github",
+                        "type": "Link",
+                        "props": {
+                          "href": "https://github.com",
+                          "external": true,
+                          "title": "GitHub",
+                          "className": "text-muted-foreground hover:text-foreground"
+                        },
+                        "children": [
+                          {
+                            "id": "app_footer_icon_github",
+                            "type": "Icon",
+                            "props": {
+                              "name": "GitHub",
+                              "size": 20
+                            },
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "id": "app_footer_social_twitter",
+                        "type": "Link",
+                        "props": {
+                          "href": "https://twitter.com",
+                          "external": true,
+                          "title": "Twitter",
+                          "className": "text-muted-foreground hover:text-foreground"
+                        },
+                        "children": [
+                          {
+                            "id": "app_footer_icon_twitter",
+                            "type": "Icon",
+                            "props": {
+                              "name": "Twitter",
+                              "size": 20
+                            },
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "id": "app_footer_social_linkedin",
+                        "type": "Link",
+                        "props": {
+                          "href": "https://linkedin.com",
+                          "external": true,
+                          "title": "LinkedIn",
+                          "className": "text-muted-foreground hover:text-foreground"
+                        },
+                        "children": [
+                          {
+                            "id": "app_footer_icon_linkedin",
+                            "type": "Icon",
+                            "props": {
+                              "name": "LinkedIn",
+                              "size": 20
+                            },
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "id": "app_footer_social_discord",
+                        "type": "Link",
+                        "props": {
+                          "href": "https://discord.com",
+                          "external": true,
+                          "title": "Discord",
+                          "className": "text-muted-foreground hover:text-foreground"
+                        },
+                        "children": [
+                          {
+                            "id": "app_footer_icon_discord",
+                            "type": "Icon",
+                            "props": {
+                              "name": "Forum",
+                              "size": 20
+                            },
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "app_footer_divider",
+            "type": "Box",
+            "props": {
+              "className": "border-t border-border"
+            },
+            "children": []
+          },
+          {
+            "id": "app_footer_bottom",
+            "type": "Flex",
+            "props": {
+              "className": "flex justify-between items-center py-4"
+            },
+            "children": [
+              {
+                "id": "app_footer_copyright",
+                "type": "Text",
+                "props": {
+                  "children": "© 2025 MetaBuilder. All rights reserved.",
+                  "variant": "caption",
+                  "className": "text-muted-foreground"
+                },
+                "children": []
+              },
+              {
+                "id": "app_footer_bottom_links",
+                "type": "Flex",
+                "props": {
+                  "className": "flex gap-4"
+                },
+                "children": [
+                  {
+                    "id": "app_footer_bottom_link_status",
+                    "type": "Link",
+                    "props": {
+                      "href": "/status",
+                      "children": "Status",
+                      "className": "text-xs text-muted-foreground hover:text-foreground"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "app_footer_bottom_link_security",
+                    "type": "Link",
+                    "props": {
+                      "href": "/security",
+                      "children": "Security",
+                      "className": "text-xs text-muted-foreground hover:text-foreground"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
