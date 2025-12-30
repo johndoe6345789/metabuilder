@@ -400,6 +400,48 @@ export const Sidebar: React.FC<LuaComponentProps> = ({ children, className = 'w-
   <aside className={className}>{children}</aside>
 )
 
+// Dialog components
+interface DialogProps extends LuaComponentProps {
+  open?: boolean
+  onClose?: () => void
+  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  fullWidth?: boolean
+}
+
+export const Dialog: React.FC<DialogProps> = ({ 
+  children, 
+  className = '',
+  maxWidth = 'sm',
+}) => {
+  const maxWidthClasses = {
+    xs: 'max-w-xs',
+    sm: 'max-w-sm',
+    md: 'max-w-md',
+    lg: 'max-w-lg',
+    xl: 'max-w-xl',
+  }
+  
+  return (
+    <div className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 ${className}`}>
+      <div className={`bg-canvas rounded-lg shadow-xl ${maxWidthClasses[maxWidth]} w-full mx-4`}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
+export const DialogTitle: React.FC<LuaComponentProps> = ({ children, className = 'px-6 py-4 border-b font-semibold text-lg flex items-center gap-2' }) => (
+  <div className={className}>{children}</div>
+)
+
+export const DialogContent: React.FC<LuaComponentProps> = ({ children, className = 'px-6 py-4' }) => (
+  <div className={className}>{children}</div>
+)
+
+export const DialogActions: React.FC<LuaComponentProps> = ({ children, className = 'px-6 py-4 border-t flex justify-end gap-2' }) => (
+  <div className={className}>{children}</div>
+)
+
 // Form inputs
 interface TextFieldProps extends LuaComponentProps {
   label?: string
