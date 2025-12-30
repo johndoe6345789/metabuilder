@@ -128,19 +128,13 @@ export const executeDbalOperation = async (
           return { success: false, error: 'Record not found' }
         }
         
-        const updateData = {
-          ...payload,
+        // Build update data, excluding meta fields and protected fields
+        const { id, tenantId, filter, sort, page, limit, ...cleanPayload } = payload as Record<string, unknown>
+        const updateData: Record<string, unknown> = {
+          ...cleanPayload,
           updatedBy: user?.id,
           updatedAt: Date.now(),
         }
-        
-        // Prevent changing tenant or ID
-        delete updateData.id
-        delete updateData.tenantId
-        delete updateData.filter
-        delete updateData.sort
-        delete updateData.page
-        delete updateData.limit
         
         const updated = await adapter.update(dbalOp.entity, dbalOp.id, updateData)
         
