@@ -1,1 +1,410 @@
-[]
+[
+  {
+    "id": "confirm_dialog",
+    "type": "Dialog",
+    "name": "ConfirmDialog",
+    "description": "A dialog with title, message, and confirm/cancel buttons for user confirmation",
+    "props": {
+      "open": false,
+      "maxWidth": "sm",
+      "fullWidth": true
+    },
+    "bindings": {
+      "open": "{{open}}",
+      "onClose": "{{onClose}}"
+    },
+    "children": [
+      {
+        "id": "confirm_dialog_title",
+        "type": "DialogTitle",
+        "props": {
+          "sx": {
+            "display": "flex",
+            "alignItems": "center",
+            "gap": 1
+          }
+        },
+        "children": [
+          {
+            "id": "confirm_dialog_title_icon",
+            "type": "Icon",
+            "props": {
+              "name": "HelpOutline",
+              "color": "{{severity}}"
+            },
+            "children": []
+          },
+          {
+            "id": "confirm_dialog_title_text",
+            "type": "Text",
+            "props": {
+              "variant": "h6",
+              "component": "span"
+            },
+            "bindings": {
+              "text": "{{title}}"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "confirm_dialog_content",
+        "type": "DialogContent",
+        "props": {
+          "dividers": true
+        },
+        "children": [
+          {
+            "id": "confirm_dialog_message",
+            "type": "Text",
+            "props": {
+              "variant": "body1",
+              "color": "textSecondary"
+            },
+            "bindings": {
+              "text": "{{message}}"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "confirm_dialog_actions",
+        "type": "DialogActions",
+        "props": {
+          "sx": {
+            "px": 3,
+            "py": 2,
+            "gap": 1
+          }
+        },
+        "children": [
+          {
+            "id": "confirm_dialog_cancel_button",
+            "type": "Button",
+            "props": {
+              "variant": "outlined",
+              "color": "secondary"
+            },
+            "bindings": {
+              "text": "{{cancelLabel}}",
+              "onClick": "{{onCancel}}"
+            },
+            "defaultProps": {
+              "text": "Cancel"
+            },
+            "children": []
+          },
+          {
+            "id": "confirm_dialog_confirm_button",
+            "type": "Button",
+            "props": {
+              "variant": "contained",
+              "autoFocus": true
+            },
+            "bindings": {
+              "text": "{{confirmLabel}}",
+              "color": "{{severity}}",
+              "onClick": "{{onConfirm}}"
+            },
+            "defaultProps": {
+              "text": "Confirm",
+              "color": "primary"
+            },
+            "children": []
+          }
+        ]
+      }
+    ],
+    "scripts": {
+      "onConfirm": "confirm_dialog.handleConfirm",
+      "onCancel": "confirm_dialog.handleCancel",
+      "onClose": "confirm_dialog.handleClose"
+    }
+  },
+  {
+    "id": "alert_dialog",
+    "type": "Dialog",
+    "name": "AlertDialog",
+    "description": "A simple alert dialog with message and OK button",
+    "props": {
+      "open": false,
+      "maxWidth": "xs",
+      "fullWidth": true
+    },
+    "bindings": {
+      "open": "{{open}}",
+      "onClose": "{{onClose}}"
+    },
+    "children": [
+      {
+        "id": "alert_dialog_title",
+        "type": "DialogTitle",
+        "props": {
+          "sx": {
+            "display": "flex",
+            "alignItems": "center",
+            "gap": 1
+          }
+        },
+        "children": [
+          {
+            "id": "alert_dialog_title_icon",
+            "type": "Icon",
+            "props": {
+              "name": "Info"
+            },
+            "bindings": {
+              "color": "{{severity}}"
+            },
+            "defaultProps": {
+              "color": "info"
+            },
+            "children": []
+          },
+          {
+            "id": "alert_dialog_title_text",
+            "type": "Text",
+            "props": {
+              "variant": "h6",
+              "component": "span"
+            },
+            "bindings": {
+              "text": "{{title}}"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "alert_dialog_content",
+        "type": "DialogContent",
+        "props": {},
+        "children": [
+          {
+            "id": "alert_dialog_message_box",
+            "type": "Box",
+            "props": {
+              "sx": {
+                "display": "flex",
+                "alignItems": "flex-start",
+                "gap": 2
+              }
+            },
+            "children": [
+              {
+                "id": "alert_dialog_message",
+                "type": "Text",
+                "props": {
+                  "variant": "body1",
+                  "color": "textSecondary"
+                },
+                "bindings": {
+                  "text": "{{message}}"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "alert_dialog_actions",
+        "type": "DialogActions",
+        "props": {
+          "sx": {
+            "px": 3,
+            "py": 2
+          }
+        },
+        "children": [
+          {
+            "id": "alert_dialog_ok_button",
+            "type": "Button",
+            "props": {
+              "variant": "contained",
+              "autoFocus": true
+            },
+            "bindings": {
+              "text": "{{confirmLabel}}",
+              "color": "{{severity}}",
+              "onClick": "{{onConfirm}}"
+            },
+            "defaultProps": {
+              "text": "OK",
+              "color": "primary"
+            },
+            "children": []
+          }
+        ]
+      }
+    ],
+    "scripts": {
+      "onConfirm": "alert_dialog.handleConfirm",
+      "onClose": "alert_dialog.handleClose"
+    }
+  },
+  {
+    "id": "form_dialog",
+    "type": "Dialog",
+    "name": "FormDialog",
+    "description": "A dialog containing a form with submit/cancel buttons",
+    "props": {
+      "open": false,
+      "maxWidth": "sm",
+      "fullWidth": true
+    },
+    "bindings": {
+      "open": "{{open}}",
+      "onClose": "{{onClose}}"
+    },
+    "children": [
+      {
+        "id": "form_dialog_title",
+        "type": "DialogTitle",
+        "props": {
+          "sx": {
+            "display": "flex",
+            "alignItems": "center",
+            "justifyContent": "space-between"
+          }
+        },
+        "children": [
+          {
+            "id": "form_dialog_title_text",
+            "type": "Text",
+            "props": {
+              "variant": "h6",
+              "component": "span"
+            },
+            "bindings": {
+              "text": "{{title}}"
+            },
+            "children": []
+          },
+          {
+            "id": "form_dialog_close_button",
+            "type": "Button",
+            "props": {
+              "variant": "text",
+              "color": "secondary",
+              "size": "small",
+              "sx": {
+                "minWidth": "auto",
+                "p": 0.5
+              }
+            },
+            "bindings": {
+              "onClick": "{{onClose}}",
+              "hidden": "{{hideCloseButton}}"
+            },
+            "children": [
+              {
+                "id": "form_dialog_close_icon",
+                "type": "Icon",
+                "props": {
+                  "name": "Close",
+                  "size": 20
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "form_dialog_content",
+        "type": "DialogContent",
+        "props": {
+          "dividers": true
+        },
+        "children": [
+          {
+            "id": "form_dialog_form",
+            "type": "Box",
+            "props": {
+              "component": "form",
+              "sx": {
+                "display": "flex",
+                "flexDirection": "column",
+                "gap": 2,
+                "pt": 1
+              }
+            },
+            "bindings": {
+              "onSubmit": "{{onSubmit}}"
+            },
+            "children": [
+              {
+                "id": "form_dialog_fields_container",
+                "type": "Stack",
+                "props": {
+                  "direction": "column",
+                  "spacing": 2
+                },
+                "bindings": {
+                  "children": "{{formFields}}"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "form_dialog_actions",
+        "type": "DialogActions",
+        "props": {
+          "sx": {
+            "px": 3,
+            "py": 2,
+            "gap": 1
+          }
+        },
+        "children": [
+          {
+            "id": "form_dialog_cancel_button",
+            "type": "Button",
+            "props": {
+              "variant": "outlined",
+              "color": "secondary"
+            },
+            "bindings": {
+              "text": "{{cancelLabel}}",
+              "onClick": "{{onCancel}}"
+            },
+            "defaultProps": {
+              "text": "Cancel"
+            },
+            "children": []
+          },
+          {
+            "id": "form_dialog_submit_button",
+            "type": "Button",
+            "props": {
+              "variant": "contained",
+              "color": "primary",
+              "type": "submit"
+            },
+            "bindings": {
+              "text": "{{submitLabel}}",
+              "disabled": "{{isSubmitting}}",
+              "onClick": "{{onSubmit}}"
+            },
+            "defaultProps": {
+              "text": "Submit"
+            },
+            "children": []
+          }
+        ]
+      }
+    ],
+    "scripts": {
+      "onSubmit": "form_dialog.handleSubmit",
+      "onCancel": "form_dialog.handleCancel",
+      "onClose": "form_dialog.handleClose",
+      "validate": "form_dialog.validate"
+    }
+  }
+]
