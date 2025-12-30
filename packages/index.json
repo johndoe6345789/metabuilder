@@ -36,6 +36,31 @@
       "minLevel": 2
     },
     {
+      "packageId": "audit_log",
+      "name": "Audit Log",
+      "version": "1.0.0",
+      "description": "Security audit log viewer and stats dashboard",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "admin",
+      "dependencies": [],
+      "exports": {
+        "components": [
+          "AuditLogViewer",
+          "AuditStatsCard",
+          "LogTable",
+          "LogFilters"
+        ],
+        "scripts": [
+          "init",
+          "stats",
+          "filters",
+          "formatting"
+        ]
+      },
+      "minLevel": 3
+    },
+    {
       "packageId": "codegen_studio",
       "name": "Codegen Studio",
       "version": "1.0.0",
@@ -228,6 +253,29 @@
         "components": []
       },
       "minLevel": 1
+    },
+    {
+      "packageId": "quick_guide",
+      "name": "Quick Guide",
+      "version": "1.0.0",
+      "description": "Quick guide builder with steps and media management",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": [
+          "StepsEditor",
+          "MediaPane",
+          "QuickGuideBuilder"
+        ],
+        "scripts": [
+          "init",
+          "steps",
+          "media"
+        ]
+      },
+      "minLevel": 2
     },
     {
       "packageId": "schema_editor",
