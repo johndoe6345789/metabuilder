@@ -1,18 +1,11 @@
 'use client'
 
-import {
-  Box,
-  Collapse,
-  Divider,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material'
+import { Box, Collapse, Divider, List, ListItem, ListItemIcon, ListItemText } from '@/fakemui'
 import { forwardRef, ReactNode, useState } from 'react'
 
 import { ExpandLess, ExpandMore } from '@/fakemui/icons'
+
+import styles from './NavGroup.module.scss'
 
 export interface NavGroupProps {
   label: string
@@ -26,7 +19,7 @@ export interface NavGroupProps {
 
 const NavGroup = forwardRef<HTMLDivElement, NavGroupProps>(
   (
-    { label, icon, children, defaultOpen = false, disabled = false, divider = false, ...props },
+    { label, icon, children, defaultOpen = false, disabled = false, divider = false, className = '', ...props },
     ref
   ) => {
     const [open, setOpen] = useState(defaultOpen)
@@ -37,51 +30,44 @@ const NavGroup = forwardRef<HTMLDivElement, NavGroupProps>(
       }
     }
 
+    const buttonClasses = [styles.groupButton, disabled && styles.groupButtonDisabled]
+      .filter(Boolean)
+      .join(' ')
+
+    const collapseClasses = [styles.collapse, open && styles.collapseOpen].filter(Boolean).join(' ')
+
+    const childListClasses = [
+      styles.childList,
+      icon ? styles.childListWithIcon : styles.childListNoIcon,
+    ]
+      .filter(Boolean)
+      .join(' ')
+
     return (
-      <Box ref={ref} {...props}>
-        {divider && <Divider sx={{ my: 1 }} />}
-        <ListItem disablePadding>
-          <ListItemButton
+      <Box ref={ref} className={`${styles.navGroup} ${className}`} {...props}>
+        {divider && <Divider className={styles.divider} />}
+        <ListItem className={styles.groupItem}>
+          <button
+            type="button"
+            className={buttonClasses}
             onClick={handleToggle}
             disabled={disabled}
-            sx={{
-              borderRadius: 1,
-              mx: 0.5,
-              my: 0.25,
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-            }}
           >
-            {icon && (
-              <ListItemIcon
-                sx={{
-                  minWidth: 40,
-                  color: 'text.secondary',
-                }}
-              >
-                {icon}
-              </ListItemIcon>
-            )}
+            {icon && <ListItemIcon className={styles.icon}>{icon}</ListItemIcon>}
             <ListItemText
-              primary={label}
-              primaryTypographyProps={{
-                variant: 'body2',
-                fontWeight: 600,
-                color: 'text.primary',
-              }}
+              primary={<span className={styles.labelText}>{label}</span>}
             />
-            {open ? (
-              <ExpandLess size={16} style={{ color: 'rgba(0,0,0,0.54)' }} />
-            ) : (
-              <ExpandMore size={16} style={{ color: 'rgba(0,0,0,0.54)' }} />
-            )}
-          </ListItemButton>
+            <span className={styles.expandIcon}>
+              {open ? (
+                <ExpandLess size={16} />
+              ) : (
+                <ExpandMore size={16} />
+              )}
+            </span>
+          </button>
         </ListItem>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding sx={{ pl: icon ? 3 : 1 }}>
-            {children}
-          </List>
+        <Collapse in={open} className={collapseClasses}>
+          <List className={childListClasses}>{children}</List>
         </Collapse>
       </Box>
     )

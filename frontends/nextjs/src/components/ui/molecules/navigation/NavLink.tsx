@@ -1,9 +1,11 @@
 'use client'
 
-import { Box, Link as MuiLink, LinkProps as MuiLinkProps } from '@mui/material'
+import { Box, Link } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
 
-export interface NavLinkProps extends Omit<MuiLinkProps, 'component'> {
+import styles from './NavLink.module.scss'
+
+export interface NavLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string
   active?: boolean
   disabled?: boolean
@@ -13,56 +15,33 @@ export interface NavLinkProps extends Omit<MuiLinkProps, 'component'> {
 }
 
 const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
-  ({ href, active = false, disabled = false, children, icon, sx, ...props }, ref) => {
+  ({ href, active = false, disabled = false, children, icon, className = '', ...props }, ref) => {
+    const linkClasses = [
+      styles.navLink,
+      active && styles.navLinkActive,
+      disabled && styles.navLinkDisabled,
+      className,
+    ]
+      .filter(Boolean)
+      .join(' ')
+
+    const iconClasses = [styles.icon, active && styles.iconActive].filter(Boolean).join(' ')
+
     return (
-      <MuiLink
+      <Link
         ref={ref}
         href={disabled ? undefined : href}
         underline="none"
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-          px: 2,
-          py: 1,
-          borderRadius: 1,
-          fontSize: '0.875rem',
-          fontWeight: active ? 600 : 500,
-          color: active ? 'primary.main' : 'text.primary',
-          bgcolor: active ? 'action.selected' : 'transparent',
-          cursor: disabled ? 'not-allowed' : 'pointer',
-          opacity: disabled ? 0.5 : 1,
-          transition: 'background-color 0.2s, color 0.2s',
-          '&:hover': disabled
-            ? {}
-            : {
-                bgcolor: active ? 'action.selected' : 'action.hover',
-                color: active ? 'primary.main' : 'text.primary',
-              },
-          '&:focus-visible': {
-            outline: '2px solid',
-            outlineColor: 'primary.main',
-            outlineOffset: 2,
-          },
-          ...sx,
-        }}
+        className={linkClasses}
         {...props}
       >
         {icon && (
-          <Box
-            component="span"
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              fontSize: '1.25rem',
-              color: active ? 'primary.main' : 'text.secondary',
-            }}
-          >
+          <Box component="span" className={iconClasses}>
             {icon}
           </Box>
         )}
         {children}
-      </MuiLink>
+      </Link>
     )
   }
 )

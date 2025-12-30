@@ -1,17 +1,11 @@
 'use client'
 
-import {
-  Badge,
-  Box,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  type ListItemProps,
-} from '@mui/material'
+import { ListItem, ListItemIcon, ListItemText } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
 
-export interface NavItemProps extends Omit<ListItemProps, 'children'> {
+import styles from './NavItem.module.scss'
+
+export interface NavItemProps extends React.LiHTMLAttributes<HTMLLIElement> {
   icon?: ReactNode
   label: string
   onClick?: () => void
@@ -23,6 +17,16 @@ export interface NavItemProps extends Omit<ListItemProps, 'children'> {
   secondaryLabel?: string
   dense?: boolean
   className?: string
+}
+
+const badgeColorMap: Record<string, string> = {
+  default: styles.badgeDefault,
+  primary: styles.badgePrimary,
+  secondary: styles.badgeSecondary,
+  error: styles.badgeError,
+  warning: styles.badgeWarning,
+  info: styles.badgeInfo,
+  success: styles.badgeSuccess,
 }
 
 const NavItem = forwardRef<HTMLLIElement, NavItemProps>(
@@ -38,93 +42,61 @@ const NavItem = forwardRef<HTMLLIElement, NavItemProps>(
       href,
       secondaryLabel,
       dense = false,
-      sx,
+      className = '',
       ...props
     },
     ref
   ) => {
+    const buttonClasses = [
+      styles.navItemButton,
+      active && styles.navItemButtonSelected,
+      disabled && styles.navItemButtonDisabled,
+      dense && styles.navItemButtonDense,
+    ]
+      .filter(Boolean)
+      .join(' ')
+
+    const iconClasses = [styles.icon, active && styles.iconActive].filter(Boolean).join(' ')
+
+    const primaryTextClasses = [styles.textPrimary, active && styles.textPrimaryActive]
+      .filter(Boolean)
+      .join(' ')
+
+    const badgeClasses = [styles.badge, badgeColorMap[badgeColor]].filter(Boolean).join(' ')
+
+    const ButtonComponent = href ? 'a' : 'button'
+
     return (
-      <ListItem
-        ref={ref}
-        disablePadding
-        {...props}
-        sx={sx}
-      >
-        <ListItemButton
+      <ListItem ref={ref} className={`${styles.navItem} ${className}`} {...props}>
+        <ButtonComponent
+          className={buttonClasses}
           onClick={onClick}
           disabled={disabled}
-          selected={active}
-          dense={dense}
-          href={href}
-          sx={{
-            borderRadius: 1,
-            mx: 0.5,
-            my: 0.25,
-            '&.Mui-selected': {
-              bgcolor: 'action.selected',
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-            },
-            '&:hover': {
-              bgcolor: 'action.hover',
-            },
-          }}
+          {...(href ? { href } : { type: 'button' })}
         >
           {icon && (
-            <ListItemIcon
-              sx={{
-                minWidth: 40,
-                color: active ? 'primary.main' : 'text.secondary',
-              }}
-            >
+            <ListItemIcon className={iconClasses}>
               {badge !== undefined ? (
-                <Badge
-                  badgeContent={badge}
-                  color={badgeColor}
-                  sx={{
-                    '& .MuiBadge-badge': {
-                      fontSize: '0.625rem',
-                      height: 16,
-                      minWidth: 16,
-                      padding: '0 4px',
-                    },
-                  }}
-                >
+                <span className={styles.badgeWrapper}>
                   {icon}
-                </Badge>
+                  <span className={badgeClasses}>{badge}</span>
+                </span>
               ) : (
                 icon
               )}
             </ListItemIcon>
           )}
           <ListItemText
-            primary={label}
-            secondary={secondaryLabel}
-            primaryTypographyProps={{
-              variant: 'body2',
-              fontWeight: active ? 600 : 400,
-              color: active ? 'primary.main' : 'text.primary',
-            }}
-            secondaryTypographyProps={{
-              variant: 'caption',
-            }}
+            className={styles.text}
+            primary={<span className={primaryTextClasses}>{label}</span>}
+            secondary={secondaryLabel && <span className={styles.textSecondary}>{secondaryLabel}</span>}
           />
           {badge !== undefined && !icon && (
-            <Box sx={{ ml: 1 }}>
-              <Badge
-                badgeContent={badge}
-                color={badgeColor}
-                sx={{
-                  '& .MuiBadge-badge': {
-                    position: 'static',
-                    transform: 'none',
-                  },
-                }}
-              />
-            </Box>
+            <span className={styles.badgeWrapper}>
+              <span className={`${badgeClasses} ${styles.badgeStatic}`}>{badge}</span>
+            </span>
           )}
-        </ListItemButton>
+        </ButtonComponent>
       </ListItem>
     )
   }

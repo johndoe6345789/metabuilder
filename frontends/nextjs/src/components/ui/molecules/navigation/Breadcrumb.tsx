@@ -1,27 +1,32 @@
 'use client'
 
-import { Box, Breadcrumbs as MuiBreadcrumbs, Link, Typography } from '@mui/material'
+import { Box, Breadcrumbs, Link, Typography } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
 
 import { MoreHoriz, NavigateNext } from '@/fakemui/icons'
+
+import styles from './Breadcrumb.module.scss'
 
 interface BreadcrumbProps {
   children: ReactNode
   className?: string
 }
 
-const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(({ children, ...props }, ref) => {
-  return (
-    <MuiBreadcrumbs
-      ref={ref}
-      separator={<NavigateNext size={16} />}
-      aria-label="breadcrumb"
-      {...props}
-    >
-      {children}
-    </MuiBreadcrumbs>
-  )
-})
+const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(
+  ({ children, className = '', ...props }, ref) => {
+    return (
+      <Breadcrumbs
+        ref={ref}
+        separator={<NavigateNext size={16} />}
+        className={`${styles.breadcrumbs} ${className}`}
+        aria-label="breadcrumb"
+        {...props}
+      >
+        {children}
+      </Breadcrumbs>
+    )
+  }
+)
 Breadcrumb.displayName = 'Breadcrumb'
 
 interface BreadcrumbListProps {
@@ -30,7 +35,7 @@ interface BreadcrumbListProps {
 }
 
 const BreadcrumbList = forwardRef<HTMLOListElement, BreadcrumbListProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return <>{children}</>
   }
 )
@@ -42,9 +47,9 @@ interface BreadcrumbItemProps {
 }
 
 const BreadcrumbItem = forwardRef<HTMLLIElement, BreadcrumbItemProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <Box component="span" ref={ref} {...props}>
+      <Box component="span" ref={ref} className={`${styles.breadcrumbItem} ${className}`} {...props}>
         {children}
       </Box>
     )
@@ -60,14 +65,14 @@ interface BreadcrumbLinkProps {
 }
 
 const BreadcrumbLink = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
-  ({ children, href, ...props }, ref) => {
+  ({ children, href, className = '', ...props }, ref) => {
     return (
       <Link
         ref={ref}
         href={href}
         underline="hover"
         color="inherit"
-        sx={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem' }}
+        className={`${styles.breadcrumbLink} ${className}`}
         {...props}
       >
         {children}
@@ -83,12 +88,11 @@ interface BreadcrumbPageProps {
 }
 
 const BreadcrumbPage = forwardRef<HTMLSpanElement, BreadcrumbPageProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
       <Typography
         ref={ref}
-        color="text.primary"
-        sx={{ fontSize: '0.875rem', fontWeight: 500 }}
+        className={`${styles.breadcrumbPage} ${className}`}
         {...props}
       >
         {children}
@@ -103,10 +107,10 @@ interface BreadcrumbSeparatorProps {
   className?: string
 }
 
-const BreadcrumbSeparator = ({ children, ...props }: BreadcrumbSeparatorProps) => {
+const BreadcrumbSeparator = ({ children, className = '', ...props }: BreadcrumbSeparatorProps) => {
   return (
-    <Box component="span" sx={{ mx: 1, color: 'text.secondary' }} {...props}>
-      {children || <NavigateNextIcon fontSize="small" />}
+    <Box component="span" className={`${styles.breadcrumbSeparator} ${className}`} {...props}>
+      {children || <NavigateNext size={16} />}
     </Box>
   )
 }
@@ -116,13 +120,11 @@ interface BreadcrumbEllipsisProps {
   className?: string
 }
 
-const BreadcrumbEllipsis = ({ ...props }: BreadcrumbEllipsisProps) => {
+const BreadcrumbEllipsis = ({ className = '', ...props }: BreadcrumbEllipsisProps) => {
   return (
-    <Box component="span" sx={{ display: 'flex', alignItems: 'center' }} {...props}>
-      <MoreHorizIcon fontSize="small" />
-      <Box component="span" sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden' }}>
-        More
-      </Box>
+    <Box component="span" className={`${styles.breadcrumbEllipsis} ${className}`} {...props}>
+      <MoreHoriz size={16} />
+      <span className={styles.srOnly}>More</span>
     </Box>
   )
 }
