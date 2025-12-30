@@ -1,7 +1,8 @@
 'use client'
 
-import { DialogActions as MuiDialogActions } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import styles from './Footer.module.scss'
 
 export interface DialogFooterProps {
   children: ReactNode
@@ -9,11 +10,11 @@ export interface DialogFooterProps {
 }
 
 const DialogFooter = forwardRef<HTMLDivElement, DialogFooterProps>((props, ref) => {
-  const { children, ...rest } = props
+  const { children, className, ...rest } = props
   return (
-    <MuiDialogActions ref={ref} sx={{ px: 3, py: 2 }} {...rest}>
+    <div ref={ref} className={`${styles.footer} ${className ?? ''}`} {...rest}>
       {children}
-    </MuiDialogActions>
+    </div>
   )
 })
 DialogFooter.displayName = 'DialogFooter'

@@ -1,7 +1,8 @@
 'use client'
 
-import { Box } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import styles from './Header.module.scss'
 
 export interface DialogHeaderProps {
   children: ReactNode
@@ -9,11 +10,11 @@ export interface DialogHeaderProps {
 }
 
 const DialogHeader = forwardRef<HTMLDivElement, DialogHeaderProps>((props, ref) => {
-  const { children, ...rest } = props
+  const { children, className, ...rest } = props
   return (
-    <Box ref={ref} sx={{ display: 'flex', flexDirection: 'column', gap: 1, pb: 2 }} {...rest}>
+    <div ref={ref} className={`${styles.header} ${className ?? ''}`} {...rest}>
       {children}
-    </Box>
+    </div>
   )
 })
 DialogHeader.displayName = 'DialogHeader'

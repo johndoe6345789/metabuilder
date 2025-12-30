@@ -1,7 +1,11 @@
 'use client'
 
-import { Box, Divider, Stack } from '@mui/material'
 import { ReactNode } from 'react'
+
+import { Stack } from '@/fakemui/fakemui/layout'
+import { Divider } from '@/fakemui/fakemui/data-display'
+
+import styles from './Sections.module.scss'
 
 interface DialogSectionsProps {
   children: ReactNode
@@ -11,7 +15,11 @@ interface DialogSectionsProps {
 
 const DialogSections = ({ children, spacing = 3, divided = false }: DialogSectionsProps) => {
   return (
-    <Stack spacing={spacing} divider={divided ? <Divider flexItem /> : undefined}>
+    <Stack
+      className={styles.sections}
+      spacing={spacing}
+      divider={divided ? <Divider /> : undefined}
+    >
       {children}
     </Stack>
   )
@@ -23,7 +31,7 @@ interface DialogSectionProps {
 }
 
 const DialogSection = ({ children }: DialogSectionProps) => {
-  return <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>{children}</Box>
+  return <div className={styles.section}>{children}</div>
 }
 DialogSection.displayName = 'DialogSection'
 

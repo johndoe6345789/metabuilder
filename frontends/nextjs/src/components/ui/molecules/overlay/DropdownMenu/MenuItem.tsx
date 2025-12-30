@@ -1,9 +1,12 @@
 'use client'
 
-import { Box, Typography } from '@mui/material'
 import { ComponentPropsWithoutRef, forwardRef, ReactNode } from 'react'
 
+import { Typography } from '@/fakemui/fakemui/data-display'
+
 import { DropdownMenuItem } from '../DropdownMenu'
+
+import styles from './MenuItem.module.scss'
 
 type DropdownMenuItemComponentProps = ComponentPropsWithoutRef<typeof DropdownMenuItem>
 
@@ -16,28 +19,21 @@ const MenuItem = forwardRef<HTMLLIElement, MenuItemProps>(
   ({ children, description, detail, ...props }, ref) => {
     return (
       <DropdownMenuItem ref={ref} {...props}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: description ? 'flex-start' : 'center',
-            gap: 2,
-            width: '100%',
-          }}
-        >
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="body2">{children}</Typography>
+        <div className={`${styles.container} ${description ? styles.hasDescription : ''}`}>
+          <div className={styles.content}>
+            <Typography variant="body2" className={styles.label}>{children}</Typography>
             {description && (
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              <Typography variant="body2" className={styles.description}>
                 {description}
               </Typography>
             )}
-          </Box>
+          </div>
           {detail && (
-            <Box component="span" sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
+            <span className={styles.detail}>
               {detail}
-            </Box>
+            </span>
           )}
-        </Box>
+        </div>
       </DropdownMenuItem>
     )
   }

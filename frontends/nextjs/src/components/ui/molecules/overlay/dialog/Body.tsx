@@ -1,9 +1,11 @@
 'use client'
 
-import { DialogContent as MuiDialogContent, IconButton } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
+import { IconButton } from '@/fakemui/fakemui/inputs'
 import { Close } from '@/fakemui/icons'
+
+import styles from './Body.module.scss'
 
 export interface DialogBodyProps {
   children: ReactNode
@@ -13,24 +15,21 @@ export interface DialogBodyProps {
 }
 
 const DialogBody = forwardRef<HTMLDivElement, DialogBodyProps>(
-  ({ children, showCloseButton = true, onClose, ...props }, ref) => {
+  ({ children, showCloseButton = true, onClose, className, ...props }, ref) => {
+    const bodyClass = `${styles.body} ${showCloseButton && onClose ? styles.hasCloseButton : ''} ${className ?? ''}`
     return (
-      <MuiDialogContent
-        ref={ref}
-        sx={{ position: 'relative', pt: showCloseButton ? 6 : 2 }}
-        {...props}
-      >
+      <div ref={ref} className={bodyClass} {...props}>
         {showCloseButton && onClose && (
           <IconButton
             aria-label="close"
             onClick={onClose}
-            sx={{ position: 'absolute', right: 8, top: 8, color: 'text.secondary' }}
+            className={styles.closeButton}
           >
             <Close />
           </IconButton>
         )}
         {children}
-      </MuiDialogContent>
+      </div>
     )
   }
 )
