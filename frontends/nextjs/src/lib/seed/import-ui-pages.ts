@@ -2,9 +2,11 @@ import { readFile, readdir } from 'fs/promises'
 import { join } from 'path'
 import type { JsonObject } from '@/types/utility-types'
 
+type SqlParam = string | number | boolean | null
+
 type UIPagesDb = {
-  query<T = JsonObject>(sql: string, params?: unknown[]): Promise<T[]>
-  execute(sql: string, params?: unknown[]): Promise<void>
+  query<T = JsonObject>(sql: string, params?: SqlParam[]): Promise<T[]>
+  execute(sql: string, params?: SqlParam[]): Promise<void>
 }
 
 /**
