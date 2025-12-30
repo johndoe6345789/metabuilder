@@ -133,6 +133,7 @@ function componentsToRenders(
 
   // Add stub renders for utility scripts (non-rendering scripts from manifest)
   // This prevents "Render function not found" errors when someone clicks on them
+  // Shows script info + code viewer with live execution
   for (const script of scripts) {
     const scriptFile = script.file
     const scriptName = script.name
@@ -140,35 +141,19 @@ function componentsToRenders(
     // Skip if already registered
     if (renders[scriptFile] || renders[scriptName]) continue
     
-    // Create a friendly stub that shows script info
-    const stubRender = () => ({
-      type: 'Alert',
-      props: { severity: 'info' },
-      children: [
-        {
-          type: 'Typography',
-          props: { variant: 'subtitle1', text: `📜 ${script.name}` },
-        },
-        {
-          type: 'Typography',
-          props: { 
-            variant: 'body2', 
-            text: script.description || 'Utility script (no visual render)',
-          },
-        },
-        script.category ? {
-          type: 'Typography',
-          props: { 
-            variant: 'caption', 
-            text: `Category: ${script.category}`,
-            className: 'text-muted-foreground',
-          },
-        } : null,
-      ].filter(Boolean),
+    // Create a render that shows the script with code viewer and execution result
+    const scriptRender = () => ({
+      type: 'LuaScriptViewer',
+      props: { 
+        scriptFile,
+        scriptName: script.name,
+        description: script.description || 'Utility script',
+        category: script.category,
+      },
     })
     
-    renders[scriptFile] = stubRender
-    renders[scriptName] = stubRender
+    renders[scriptFile] = scriptRender
+    renders[scriptName] = scriptRender
   }
 
   // Add a special "all_components" render that shows all components
