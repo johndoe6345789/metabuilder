@@ -45,8 +45,8 @@
   },
 
   "scripts": {
-    "renderFunctions": ["render", "main", "layout", "init"],
-    "ignoredScripts": ["test", "types", "utils"]
+    "renderFunctions": ["render", "main", "layout", "login_form", "register_form", "forgot_password", "form", "page", "view"],
+    "ignoredScripts": ["test", "types", "utils", "init", "validate", "actions"]
   },
 
   "manualOverrides": {
