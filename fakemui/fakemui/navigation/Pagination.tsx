@@ -177,6 +177,23 @@ export const PaginationItem: React.FC<PaginationItemProps> = ({
     }
   }
 
+  const getAriaLabel = () => {
+    switch (type) {
+      case 'first':
+        return 'Go to first page'
+      case 'previous':
+        return 'Go to previous page'
+      case 'next':
+        return 'Go to next page'
+      case 'last':
+        return 'Go to last page'
+      case 'page':
+        return `Go to page ${page}`
+      default:
+        return undefined
+    }
+  }
+
   if (type === 'ellipsis') {
     return (
       <span className={`pagination-item pagination-item--ellipsis ${className}`} {...(props as any)}>
@@ -191,6 +208,7 @@ export const PaginationItem: React.FC<PaginationItemProps> = ({
       disabled={disabled}
       onClick={onClick}
       aria-current={selected ? 'page' : undefined}
+      aria-label={getAriaLabel()}
       {...(props as any)}
     >
       {getContent()}
