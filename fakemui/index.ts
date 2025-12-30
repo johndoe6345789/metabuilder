@@ -10,6 +10,8 @@ export {
   Copy,
   Check,
   X,
+  Filter,
+  FilterOff,
   // Navigation
   ArrowUp,
   ArrowDown,

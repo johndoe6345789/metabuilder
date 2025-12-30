@@ -16,6 +16,7 @@ export { Stop } from './Stop'
 export { Download } from './Download'
 export { Upload } from './Upload'
 export { Filter } from './Filter'
+export { FilterOff } from './FilterOff'
 export { Refresh } from './Refresh'
 
 // Navigation
@@ -138,6 +139,7 @@ export { LockOpen } from './LockOpen'
 export { Key } from './Key'
 export { Shield } from './Shield'
 export { UserShield } from './UserShield'
+export { ShieldSlash } from './ShieldSlash'
 export { Globe } from './Globe'
 export { Cloud } from './Cloud'
 

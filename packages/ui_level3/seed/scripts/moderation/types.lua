@@ -1,8 +1,12 @@
 -- Type definitions for moderation module
 -- Shared across all moderation functions
 
+---@class ModerationUser
+---@field id string
+---@field level? number
+
 ---@class ModerationContext
----@field user table User object for permission checking
+---@field user ModerationUser User object for permission checking
 ---@field targetId string ID of the target user for moderation action
 
 ---@class ActionResult

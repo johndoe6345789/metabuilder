@@ -1,0 +1,48 @@
+{
+  "can_show": [
+    {
+      "user": { "level": 0 },
+      "item": { "label": "Home" },
+      "expected": true,
+      "desc": "item with no minLevel"
+    },
+    {
+      "user": { "level": 0 },
+      "item": { "label": "Admin", "minLevel": 3 },
+      "expected": false,
+      "desc": "low level user for admin"
+    },
+    {
+      "user": { "level": 3 },
+      "item": { "label": "Admin", "minLevel": 3 },
+      "expected": true,
+      "desc": "admin for admin item"
+    },
+    {
+      "user": { "level": 5 },
+      "item": { "label": "Admin", "minLevel": 3 },
+      "expected": true,
+      "desc": "high level for admin item"
+    },
+    {
+      "user": {},
+      "item": { "label": "Users", "minLevel": 2 },
+      "expected": false,
+      "desc": "no level user"
+    }
+  ],
+  "render": [
+    {
+      "props": {
+        "user": { "level": 2 },
+        "items": [
+          { "label": "Home", "path": "/" },
+          { "label": "Admin", "path": "/admin", "minLevel": 3 },
+          { "label": "Users", "path": "/users", "minLevel": 2 }
+        ]
+      },
+      "expectedChildren": 2,
+      "desc": "filters items by permission"
+    }
+  ]
+}

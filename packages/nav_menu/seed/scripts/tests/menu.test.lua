@@ -20,9 +20,15 @@
 ---@field expected boolean
 ---@field desc string
 
+---@class MenuRenderTestCase
+---@field props MenuRenderProps
+---@field expectedChildren integer
+---@field desc string
+
 describe("Menu", function()
   -- Mock check module
-  local original_can_access
+  ---@type { can_show: MenuShowTestCase[], render: MenuRenderTestCase[] }
+  local cases = load_cases("menu.cases.json")
   
   before(function()
     -- Create mock for check.can_access
@@ -36,13 +42,7 @@ describe("Menu", function()
   local menu = require("menu")
 
   describe("can_show", function()
-    it.each({
-      { user = { level = 0 }, item = { label = "Home" }, expected = true, desc = "item with no minLevel" },
-      { user = { level = 0 }, item = { label = "Admin", minLevel = 3 }, expected = false, desc = "low level user for admin" },
-      { user = { level = 3 }, item = { label = "Admin", minLevel = 3 }, expected = true, desc = "admin for admin item" },
-      { user = { level = 5 }, item = { label = "Admin", minLevel = 3 }, expected = true, desc = "high level for admin item" },
-      { user = {}, item = { label = "Users", minLevel = 2 }, expected = false, desc = "no level user" },
-    })("should return $expected for $desc", function(testCase)
+    it.each(cases.can_show, "$desc", function(testCase)
       local result = menu.can_show(testCase.user, testCase.item)
       expect(result).toBe(testCase.expected)
     end)
@@ -70,18 +70,10 @@ describe("Menu", function()
   end)
 
   describe("render", function()
-    it("should filter items by permission", function()
-      local props = {
-        user = { level = 2 },
-        items = {
-          { label = "Home", path = "/" },
-          { label = "Admin", path = "/admin", minLevel = 3 },
-          { label = "Users", path = "/users", minLevel = 2 }
-        }
-      }
-      local result = menu.render(props)
+    it.each(cases.render, "$desc", function(testCase)
+      local result = menu.render(testCase.props)
       expect(result.type).toBe("Flex")
-      expect(#result.children).toBe(2) -- Home and Users, not Admin
+      expect(#result.children).toBe(testCase.expectedChildren)
     end)
   end)
 end)

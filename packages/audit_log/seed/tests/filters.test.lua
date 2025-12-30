@@ -20,6 +20,14 @@ local M = {}
 ---@field resources string[]
 ---@field usernames string[]
 
+---@class ApplyFiltersInput
+---@field operation string|nil
+---@field resource string|nil
+---@field success boolean|nil
+---@field username string|nil
+---@field startTime number|nil
+---@field endTime number|nil
+
 ---@class FilterByOperationCase
 ---@field operation string|nil
 ---@field expected integer
