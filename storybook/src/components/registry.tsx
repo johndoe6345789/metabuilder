@@ -883,6 +883,178 @@ export const Pagination: React.FC<LuaComponentProps & { count?: number; page?: n
 )
 
 /**
+ * LuaScriptViewer - Shows Lua utility scripts with code and execution
+ */
+export const LuaScriptViewer: React.FC<LuaComponentProps & {
+  scriptFile?: string
+  scriptName?: string
+  description?: string
+  category?: string
+  packageId?: string
+}> = ({ scriptFile, scriptName, description, category, packageId }) => {
+  const [code, setCode] = React.useState<string | null>(null)
+  const [result, setResult] = React.useState<string | null>(null)
+  const [error, setError] = React.useState<string | null>(null)
+  const [testInput, setTestInput] = React.useState('1735570800000') // Default timestamp
+  const [loading, setLoading] = React.useState(true)
+
+  React.useEffect(() => {
+    async function loadScript() {
+      if (!scriptFile) return
+      
+      // Try to find the package from the current URL or context
+      const pkgId = packageId || window.location.hash.match(/packageId=([^&]+)/)?.[1] || 
+                    window.location.pathname.split('/').find(p => p.includes('_')) ||
+                    'irc_webchat' // Fallback
+      
+      try {
+        const response = await fetch(`/packages/${pkgId}/seed/scripts/${scriptFile}`)
+        if (response.ok) {
+          const luaCode = await response.text()
+          setCode(luaCode)
+        } else {
+          setError(`Failed to load: ${response.statusText}`)
+        }
+      } catch (err) {
+        setError(String(err))
+      }
+      setLoading(false)
+    }
+    loadScript()
+  }, [scriptFile, packageId])
+
+  const runScript = async () => {
+    if (!code) return
+    setError(null)
+    setResult(null)
+    
+    try {
+      // Dynamically import fengari
+      const fengari = await import('fengari-web')
+      const { lua, lauxlib, lualib, to_luastring, to_jsstring } = fengari
+      
+      const L = lauxlib.luaL_newstate()
+      lualib.luaL_openlibs(L)
+      
+      // Load the script
+      const loadResult = lauxlib.luaL_loadstring(L, to_luastring(code))
+      if (loadResult !== lua.LUA_OK) {
+        setError(`Load error: ${to_jsstring(lua.lua_tostring(L, -1))}`)
+        lua.lua_close(L)
+        return
+      }
+      
+      // Execute to get the function
+      const execResult = lua.lua_pcall(L, 0, 1, 0)
+      if (execResult !== lua.LUA_OK) {
+        setError(`Exec error: ${to_jsstring(lua.lua_tostring(L, -1))}`)
+        lua.lua_close(L)
+        return
+      }
+      
+      // Check return type
+      const returnType = lua.lua_type(L, -1)
+      
+      if (returnType === lua.LUA_TFUNCTION) {
+        // Call the function with test input
+        const input = parseFloat(testInput) || testInput
+        if (typeof input === 'number') {
+          lua.lua_pushnumber(L, input)
+        } else {
+          lua.lua_pushstring(L, to_luastring(input))
+        }
+        
+        const callResult = lua.lua_pcall(L, 1, 1, 0)
+        if (callResult !== lua.LUA_OK) {
+          setError(`Call error: ${to_jsstring(lua.lua_tostring(L, -1))}`)
+          lua.lua_close(L)
+          return
+        }
+        
+        // Get result
+        const resultType = lua.lua_type(L, -1)
+        if (resultType === lua.LUA_TSTRING) {
+          setResult(to_jsstring(lua.lua_tostring(L, -1)))
+        } else if (resultType === lua.LUA_TNUMBER) {
+          setResult(String(lua.lua_tonumber(L, -1)))
+        } else if (resultType === lua.LUA_TBOOLEAN) {
+          setResult(lua.lua_toboolean(L, -1) ? 'true' : 'false')
+        } else {
+          const typeNames = ['nil', 'boolean', 'lightuserdata', 'number', 'string', 'table', 'function', 'userdata', 'thread']
+          setResult(`[${typeNames[resultType] || 'unknown'}]`)
+        }
+      } else {
+        const typeNames = ['nil', 'boolean', 'lightuserdata', 'number', 'string', 'table', 'function', 'userdata', 'thread']
+        setResult(`Script returned: ${typeNames[returnType] || 'unknown'}`)
+      }
+      
+      lua.lua_close(L)
+    } catch (err) {
+      setError(String(err))
+    }
+  }
+
+  if (loading) {
+    return <div className="p-4">Loading script...</div>
+  }
+
+  return (
+    <div className="p-6 space-y-4">
+      {/* Header */}
+      <div className="border-b pb-4">
+        <h2 className="text-xl font-semibold flex items-center gap-2">
+          📜 {scriptName || scriptFile}
+        </h2>
+        <p className="text-muted-foreground">{description}</p>
+        {category && <span className="text-xs bg-muted px-2 py-1 rounded">Category: {category}</span>}
+      </div>
+      
+      {/* Code viewer */}
+      <div className="border rounded-lg overflow-hidden">
+        <div className="bg-muted px-4 py-2 text-sm font-medium border-b">Lua Code</div>
+        <pre className="p-4 bg-[#1e1e1e] text-[#d4d4d4] overflow-x-auto text-sm font-mono">
+          {code || 'No code loaded'}
+        </pre>
+      </div>
+      
+      {/* Test runner */}
+      <div className="border rounded-lg p-4 space-y-3">
+        <div className="font-medium">Test Execution</div>
+        <div className="flex gap-2 items-center">
+          <label className="text-sm text-muted-foreground">Input:</label>
+          <input 
+            type="text"
+            value={testInput}
+            onChange={e => setTestInput(e.target.value)}
+            className="flex-1 px-3 py-2 border rounded text-sm"
+            placeholder="Enter test input..."
+          />
+          <button 
+            onClick={runScript}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
+          >
+            ▶ Run
+          </button>
+        </div>
+        
+        {error && (
+          <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded text-sm">
+            {error}
+          </div>
+        )}
+        
+        {result && (
+          <div className="p-3 bg-green-50 border border-green-200 rounded">
+            <span className="text-sm text-muted-foreground">Result: </span>
+            <code className="font-mono font-medium">{result}</code>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/**
  * Component Registry - maps Lua type names to React components
  */
 export const componentRegistry: Record<string, AnyComponent> = {
