@@ -32,7 +32,12 @@ export const createWriteStrategy = (context: ACLContext) => {
     createData: Record<string, unknown>,
     updateData: Record<string, unknown>,
   ): Promise<unknown> => {
-    return withAudit(context, entity, 'upsert', () => context.baseAdapter.upsert(entity, filter, createData, updateData))
+    return withAudit(context, entity, 'upsert', () => {
+      // Extract first key from filter as uniqueField
+      const uniqueField = Object.keys(filter)[0]
+      const uniqueValue = filter[uniqueField]
+      return context.baseAdapter.upsert(entity, uniqueField, uniqueValue, createData, updateData)
+    })
   }
 
   const updateByField = async (
