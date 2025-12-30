@@ -1,71 +1,73 @@
-import '@mui/material/styles'
-import '@mui/material/Typography'
-import '@mui/material/Button'
-import '@mui/material/Chip'
-import '@mui/material/IconButton'
-import '@mui/material/Badge'
-import '@mui/material/Alert'
+/**
+ * FakeMUI Component Type Extensions
+ * 
+ * This file defines additional component variants and props for the fakemui component library.
+ * These types extend the base component interfaces to support custom variants.
+ */
 
-// Typography variants and component overrides
-declare module '@mui/material/styles' {
-  interface TypographyVariants {
-    code: React.CSSProperties
-    kbd: React.CSSProperties
-    label: React.CSSProperties
-  }
+import type { CSSProperties } from 'react'
 
-  interface TypographyVariantsOptions {
-    code?: React.CSSProperties
-    kbd?: React.CSSProperties
-    label?: React.CSSProperties
-  }
+/** Typography variant extensions */
+export interface TypographyVariants {
+  code: CSSProperties
+  kbd: CSSProperties
+  label: CSSProperties
 }
 
-declare module '@mui/material/Typography' {
-  interface TypographyPropsVariantOverrides {
-    code: true
-    kbd: true
-    label: true
-  }
+/** Button variant extensions */
+export interface ButtonVariants {
+  soft: true
+  ghost: true
 }
 
-declare module '@mui/material/Button' {
-  interface ButtonPropsVariantOverrides {
-    soft: true
-    ghost: true
-  }
-
-  interface ButtonPropsColorOverrides {
-    neutral: true
-  }
+/** Button color extensions */
+export interface ButtonColors {
+  neutral: true
 }
 
-declare module '@mui/material/Chip' {
-  interface ChipPropsVariantOverrides {
-    soft: true
-  }
-
-  interface ChipPropsColorOverrides {
-    neutral: true
-  }
+/** Chip variant extensions */
+export interface ChipVariants {
+  soft: true
 }
 
-declare module '@mui/material/IconButton' {
-  interface IconButtonPropsColorOverrides {
-    neutral: true
-  }
+/** Chip color extensions */
+export interface ChipColors {
+  neutral: true
 }
 
-declare module '@mui/material/Badge' {
-  interface BadgePropsColorOverrides {
-    neutral: true
-  }
+/** IconButton color extensions */
+export interface IconButtonColors {
+  neutral: true
 }
 
-declare module '@mui/material/Alert' {
-  interface AlertPropsVariantOverrides {
-    soft: true
-  }
+/** Badge color extensions */
+export interface BadgeColors {
+  neutral: true
 }
 
-export {}
+/** Alert variant extensions */
+export interface AlertVariants {
+  soft: true
+}
+
+/** Combined component extensions for fakemui */
+export interface FakeMUIComponentExtensions {
+  typography: TypographyVariants
+  button: {
+    variants: ButtonVariants
+    colors: ButtonColors
+  }
+  chip: {
+    variants: ChipVariants
+    colors: ChipColors
+  }
+  iconButton: {
+    colors: IconButtonColors
+  }
+  badge: {
+    colors: BadgeColors
+  }
+  alert: {
+    variants: AlertVariants
+  }
+}
