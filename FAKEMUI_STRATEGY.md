@@ -65,7 +65,7 @@ Total: ~150 components, ~80 SCSS files
 - Zero runtime dependencies
 - Full TypeScript support
 
-**Current Icons:** 310+ ✅✅ Far exceeds target!
+**Current Icons:** 332+ ✅✅ Far exceeds target!
 **Target Phase 3:** 100+ ✅ ACHIEVED
 
 **See:** [fakemui/icons/README.md](fakemui/icons/README.md)
@@ -84,9 +84,9 @@ Total: ~150 components, ~80 SCSS files
 | `@mui/material/Box` | `fakemui/layout/Box` | ✅ Ready |
 | `@mui/material/Stack` | `fakemui/layout/Stack` | ✅ Ready |
 | `@mui/material/Typography` | `fakemui/data-display/Typography` | ✅ Ready |
-| `@mui/icons-material/*` | `fakemui/icons/*` | ✅ **130+ icons** |
+| `@mui/icons-material/*` | `fakemui/icons/*` | ✅ **332+ icons** |
 | `@mui/x-data-grid` | Lua package or custom | ⏳ Planned |
-| `@mui/x-date-pickers` | Native HTML5 or Lua | ⏳ Planned |
+| `@mui/x-date-pickers` | `fakemui/inputs/DatePicker` | ✅ **Ready** |
 
 ### From @mui/icons-material → Fakemui Icons
 
@@ -98,6 +98,9 @@ Total: ~150 components, ~80 SCSS files
 | Actions | 20+ | Plus, Trash, Copy, Save, Edit, Delete, Close, Check, Clear |
 | Status | 15+ | CheckCircle, ErrorOutline, WarningAmber, InfoOutlined, Cancel |
 | File/Folder | 10+ | Folder, FolderOpen, File, Article, Description |
+| Rich Text | 10+ | FormatBold, FormatItalic, FormatUnderline, FormatStrikethrough, FormatListBulleted |
+| Date/Time | 5+ | DateRange, AccessTime, Calendar, Clock |
+| Devices | 5+ | Smartphone, Tablet, Desktop |
 | UI Controls | 15+ | Visibility, VisibilityOff, Search, FilterList, KeyboardArrowDown |
 | Media | 10+ | PlayArrow, Pause, Stop, Volume, Camera, Video |
 | Social | 10+ | Email, Chat, Send, ThumbUp, ThumbDown, Share |
