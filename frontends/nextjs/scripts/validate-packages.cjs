@@ -296,7 +296,7 @@ function main() {
 
   // Determine packages directory (relative to script location)
   const scriptDir = __dirname
-  const packagesDir = path.resolve(scriptDir, '../../packages')
+  const packagesDir = path.resolve(scriptDir, '../../../packages')
 
   if (!fs.existsSync(packagesDir)) {
     console.error(`Packages directory not found: ${packagesDir}`)
