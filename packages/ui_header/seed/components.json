@@ -1,1 +1,352 @@
-[]
+[
+  {
+    "id": "app_header",
+    "type": "AppBar",
+    "props": {
+      "position": "sticky",
+      "color": "default",
+      "elevation": 1,
+      "className": "app-header"
+    },
+    "children": [
+      {
+        "id": "app_header_toolbar",
+        "type": "Toolbar",
+        "props": {
+          "className": "app-header-toolbar"
+        },
+        "children": [
+          {
+            "id": "app_header_logo_section",
+            "type": "Flex",
+            "props": {
+              "className": "flex items-center gap-2"
+            },
+            "children": [
+              {
+                "id": "app_header_logo_link",
+                "type": "Link",
+                "props": {
+                  "href": "/",
+                  "className": "flex items-center gap-2 no-underline"
+                },
+                "children": [
+                  {
+                    "id": "app_header_logo_image",
+                    "type": "Box",
+                    "props": {
+                      "component": "img",
+                      "src": "/logo.svg",
+                      "alt": "MetaBuilder Logo",
+                      "className": "header-logo",
+                      "sx": {
+                        "height": 32,
+                        "width": "auto"
+                      }
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "app_header_logo_text",
+                    "type": "Text",
+                    "props": {
+                      "variant": "h6",
+                      "children": "MetaBuilder",
+                      "className": "font-bold text-foreground"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "app_header_nav_section",
+            "type": "Box",
+            "props": {
+              "className": "header-nav-section",
+              "sx": {
+                "flexGrow": 1,
+                "display": "flex",
+                "justifyContent": "center"
+              }
+            },
+            "children": [
+              {
+                "id": "app_header_nav_links",
+                "type": "Stack",
+                "props": {
+                  "direction": "row",
+                  "spacing": 1,
+                  "className": "header-nav-links"
+                },
+                "children": [
+                  {
+                    "id": "app_header_nav_home",
+                    "type": "Button",
+                    "props": {
+                      "variant": "text",
+                      "href": "/",
+                      "children": "Home",
+                      "className": "nav-link"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "app_header_nav_features",
+                    "type": "Button",
+                    "props": {
+                      "variant": "text",
+                      "href": "/features",
+                      "children": "Features",
+                      "className": "nav-link"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "app_header_nav_docs",
+                    "type": "Button",
+                    "props": {
+                      "variant": "text",
+                      "href": "/docs",
+                      "children": "Docs",
+                      "className": "nav-link"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "app_header_nav_packages",
+                    "type": "Button",
+                    "props": {
+                      "variant": "text",
+                      "href": "/packages",
+                      "children": "Packages",
+                      "className": "nav-link"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "app_header_actions_section",
+            "type": "Flex",
+            "props": {
+              "className": "flex items-center gap-2"
+            },
+            "children": [
+              {
+                "id": "app_header_theme_toggle",
+                "type": "IconButton",
+                "props": {
+                  "aria-label": "Toggle theme",
+                  "onClick": "toggleTheme",
+                  "size": "small"
+                },
+                "children": [
+                  {
+                    "id": "app_header_theme_icon",
+                    "type": "Icon",
+                    "props": {
+                      "name": "Brightness4"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "app_header_notifications",
+                "type": "IconButton",
+                "props": {
+                  "aria-label": "Notifications",
+                  "onClick": "openNotifications",
+                  "size": "small"
+                },
+                "children": [
+                  {
+                    "id": "app_header_notifications_icon",
+                    "type": "Icon",
+                    "props": {
+                      "name": "Notifications"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "app_header_user_section",
+            "type": "Box",
+            "props": {
+              "className": "header-user-section"
+            },
+            "children": [
+              {
+                "id": "app_header_user_menu",
+                "type": "Menu",
+                "props": {
+                  "trigger": "app_header_user_avatar_button",
+                  "anchorOrigin": {
+                    "vertical": "bottom",
+                    "horizontal": "right"
+                  },
+                  "transformOrigin": {
+                    "vertical": "top",
+                    "horizontal": "right"
+                  }
+                },
+                "children": [
+                  {
+                    "id": "app_header_user_avatar_button",
+                    "type": "IconButton",
+                    "props": {
+                      "aria-label": "User menu",
+                      "size": "small",
+                      "className": "user-avatar-button"
+                    },
+                    "children": [
+                      {
+                        "id": "app_header_user_avatar",
+                        "type": "Avatar",
+                        "props": {
+                          "src": "{{user.avatarUrl}}",
+                          "alt": "{{user.username}}",
+                          "sx": {
+                            "width": 32,
+                            "height": 32
+                          }
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "app_header_menu_profile",
+                    "type": "MenuItem",
+                    "props": {
+                      "onClick": "navigate",
+                      "href": "/profile"
+                    },
+                    "children": [
+                      {
+                        "id": "app_header_menu_profile_icon",
+                        "type": "Icon",
+                        "props": {
+                          "name": "Person",
+                          "className": "menu-item-icon"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_header_menu_profile_text",
+                        "type": "Text",
+                        "props": {
+                          "children": "Profile"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "app_header_menu_settings",
+                    "type": "MenuItem",
+                    "props": {
+                      "onClick": "navigate",
+                      "href": "/settings"
+                    },
+                    "children": [
+                      {
+                        "id": "app_header_menu_settings_icon",
+                        "type": "Icon",
+                        "props": {
+                          "name": "Settings",
+                          "className": "menu-item-icon"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_header_menu_settings_text",
+                        "type": "Text",
+                        "props": {
+                          "children": "Settings"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "app_header_menu_divider",
+                    "type": "Divider",
+                    "props": {},
+                    "children": []
+                  },
+                  {
+                    "id": "app_header_menu_logout",
+                    "type": "MenuItem",
+                    "props": {
+                      "onClick": "logout"
+                    },
+                    "children": [
+                      {
+                        "id": "app_header_menu_logout_icon",
+                        "type": "Icon",
+                        "props": {
+                          "name": "Logout",
+                          "className": "menu-item-icon"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_header_menu_logout_text",
+                        "type": "Text",
+                        "props": {
+                          "children": "Logout"
+                        },
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "app_header_auth_buttons",
+                "type": "Stack",
+                "props": {
+                  "direction": "row",
+                  "spacing": 1,
+                  "className": "auth-buttons",
+                  "data-show-when": "!user"
+                },
+                "children": [
+                  {
+                    "id": "app_header_login_button",
+                    "type": "Button",
+                    "props": {
+                      "variant": "text",
+                      "href": "/login",
+                      "children": "Login"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "app_header_signup_button",
+                    "type": "Button",
+                    "props": {
+                      "variant": "contained",
+                      "color": "primary",
+                      "href": "/register",
+                      "children": "Sign Up"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
