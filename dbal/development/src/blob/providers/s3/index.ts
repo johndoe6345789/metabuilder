@@ -7,7 +7,7 @@ import type {
   BlobListOptions,
   BlobStorageConfig,
 } from '../../blob-storage'
-import { DBALError } from '../../core/foundation/errors'
+import { DBALError } from '@/core/foundation/errors'
 import type { S3Context } from './client'
 import { createS3Context } from './client'
 import { downloadBuffer, downloadStream } from './operations/downloads'

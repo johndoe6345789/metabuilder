@@ -1,7 +1,7 @@
 import { promises as fs, createReadStream } from 'fs'
 import type { ReadStreamOptions } from 'fs'
 import type { DownloadOptions } from '../../../blob-storage'
-import { DBALError } from '../../../core/foundation/errors'
+import { DBALError } from '@/core/foundation/errors'
 import type { FilesystemContext } from '../context'
 import { buildFullPath } from '../paths'
 

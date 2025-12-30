@@ -3,7 +3,7 @@
  * @description Check if user has permission for entity operation
  */
 
-import { DBALError } from '../../core/foundation/errors'
+import { DBALError } from '@/core/foundation/errors'
 import type { ACLRule, User } from '../acl-adapter/types'
 
 /**

@@ -1,4 +1,4 @@
-import { DBALError } from '../../core/foundation/errors'
+import { DBALError } from '@/core/foundation/errors'
 import type { UploadOptions } from '../blob-storage'
 import type { MemoryStore } from './store'
 import { collectStream, toBlobData, toBlobMetadata } from './serialization'

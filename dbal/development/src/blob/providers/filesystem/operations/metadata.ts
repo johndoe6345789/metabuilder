@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs'
 import { createHash } from 'crypto'
 import type { BlobMetadata } from '../../../blob-storage'
-import { DBALError } from '../../../core/foundation/errors'
+import { DBALError } from '@/core/foundation/errors'
 import type { FilesystemContext } from '../context'
 import { buildFullPath, buildMetadataPath } from '../paths'
 
