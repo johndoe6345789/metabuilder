@@ -8,6 +8,10 @@
   "minLevel": 3,
   "tags": ["media", "streaming", "radio", "tv", "transcoding", "documents", "pdf", "retro", "gaming", "emulation"],
   "dependencies": ["notification_center", "data_table"],
+  "schema": {
+    "entities": ["MediaAsset", "MediaJob"],
+    "path": "schema/entities.yaml"
+  },
   "exports": {
     "components": [
       "MediaDashboard",
