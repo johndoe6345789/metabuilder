@@ -31,7 +31,7 @@ import {
   extractPackageFromPrefix,
   extractEntityFromPrefix,
   type SchemaRegistry,
-} from './schema-registry'
+} from './schema-registry.js'
 
 const REGISTRY_PATH = path.join(__dirname, '../../prisma/schema-registry.json')
 const PACKAGES_PATH = path.join(__dirname, '../../packages')
@@ -232,12 +232,14 @@ const cmdPreview = (packageId: string): void => {
     return
   }
   
-  console.log(`\n${colors.cyan}Prisma Preview for ${packageId}${colors.reset}\n`)
+  console.log(`\n${colors.cyan}Prisma Preview for ${packageId}${colors.reset}`)
+  console.log(`${colors.dim}Prefix: Pkg_${packageToPascalCase(packageId)}_${colors.reset}\n`)
   
   for (const entity of schema.entities) {
     const checksum = computeSchemaChecksum(entity)
-    console.log(`${colors.dim}// Entity: ${entity.name} (checksum: ${checksum})${colors.reset}`)
-    console.log(entityToPrisma(entity))
+    const prefixedName = getPrefixedEntityName(packageId, entity.name)
+    console.log(`${colors.dim}// Entity: ${entity.name} → ${prefixedName} (checksum: ${checksum})${colors.reset}`)
+    console.log(entityToPrisma(entity, packageId))
     console.log('')
   }
 }
