@@ -7,14 +7,16 @@ import * as fengari from 'fengari-web'
 
 const lua = fengari.lua
 
+type LuaState = Parameters<typeof lua.lua_gettop>[0]
+
 /**
  * Setup the context API functions (log, print) in Lua state
  * @param L - Lua state
  * @param logs - Array to collect log messages
  */
-export const setupContextAPI = (L: any, logs: string[]): void => {
+export const setupContextAPI = (L: LuaState, logs: string[]): void => {
   // Create log function
-  const logFunction = function (LState: any) {
+  const logFunction = function (LState: LuaState) {
     const nargs = lua.lua_gettop(LState)
     const messages: string[] = []
 
@@ -38,7 +40,7 @@ export const setupContextAPI = (L: any, logs: string[]): void => {
   lua.lua_setglobal(L, fengari.to_luastring('log'))
 
   // Create print function (same behavior but tab-separated)
-  const printFunction = function (LState: any) {
+  const printFunction = function (LState: LuaState) {
     const nargs = lua.lua_gettop(LState)
     const messages: string[] = []
 

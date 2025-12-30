@@ -6,7 +6,7 @@
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
-  "dependencies": [],
+  "dependencies": ["ui_dialogs", "ui_permissions"],
   "exports": {
     "components": []
   },

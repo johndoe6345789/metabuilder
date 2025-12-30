@@ -1,8 +1,9 @@
 import { DBALClient, type DBALConfig } from '@/dbal'
+import type { JsonValue } from '@/types/utility-types'
 
 // Note: This was extracted from a class method
 // The original `this` context is lost, so this function may not work correctly
-export async function kvGet<T = any>(
+export async function kvGet<T = JsonValue>(
   key: string,
   tenantId = 'default',
   userId = 'system'

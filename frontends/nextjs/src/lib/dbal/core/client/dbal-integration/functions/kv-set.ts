@@ -1,9 +1,10 @@
 import { DBALClient, type DBALConfig } from '@/dbal'
+import type { JsonValue } from '@/types/utility-types'
 
 // KV Store operations
 export async function kvSet(
   key: string,
-  value: any,
+  value: JsonValue,
   ttl?: number,
   tenantId = 'default',
   userId = 'system'

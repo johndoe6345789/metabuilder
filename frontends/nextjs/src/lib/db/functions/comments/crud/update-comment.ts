@@ -6,6 +6,11 @@
 import type { Comment } from '../../../types/level-types'
 import { prisma } from '../../prisma'
 
+type CommentUpdateData = {
+  content?: string
+  updatedAt?: bigint
+}
+
 /**
  * Update a comment
  * @param commentId - ID of comment to update
@@ -15,7 +20,7 @@ export const updateComment = async (
   commentId: string,
   updates: Partial<Comment>
 ): Promise<void> => {
-  const data: any = {}
+  const data: CommentUpdateData = {}
   if (updates.content !== undefined) data.content = updates.content
   if (updates.updatedAt !== undefined) data.updatedAt = BigInt(updates.updatedAt)
 

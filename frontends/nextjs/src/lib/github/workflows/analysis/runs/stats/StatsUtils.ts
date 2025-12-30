@@ -9,15 +9,15 @@ import { toTopCounts } from './functions/to-top-counts'
  * This is a convenience wrapper. Prefer importing individual functions.
  */
 export class StatsUtils {
-  static toTopCounts(...args: any[]) {
-    return toTopCounts(...(args as any))
+  static toTopCounts(...args: Parameters<typeof toTopCounts>) {
+    return toTopCounts(...args)
   }
 
-  static summarizeWorkflowRuns(...args: any[]) {
-    return summarizeWorkflowRuns(...(args as any))
+  static summarizeWorkflowRuns(...args: Parameters<typeof summarizeWorkflowRuns>) {
+    return summarizeWorkflowRuns(...args)
   }
 
-  static formatWorkflowRunAnalysis(...args: any[]) {
-    return formatWorkflowRunAnalysis(...(args as any))
+  static formatWorkflowRunAnalysis(...args: Parameters<typeof formatWorkflowRunAnalysis>) {
+    return formatWorkflowRunAnalysis(...args)
   }
 }

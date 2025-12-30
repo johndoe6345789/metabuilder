@@ -6,7 +6,7 @@
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "social",
-  "dependencies": [],
+  "dependencies": ["ui_permissions", "form_builder"],
   "exports": {
     "components": [
       "social_hub_root",

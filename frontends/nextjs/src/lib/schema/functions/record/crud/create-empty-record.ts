@@ -1,4 +1,5 @@
 import type { ModelSchema } from '@/lib/schema-types'
+import type { JsonValue } from '@/types/utility-types'
 
 import { getDefaultValue } from '../../field/get-default-value'
 import { generateId } from './generate-id'
@@ -8,8 +9,8 @@ import { generateId } from './generate-id'
  * @param model - The model schema to create a record for
  * @returns A new record with default field values
  */
-export const createEmptyRecord = (model: ModelSchema): any => {
-  const record: any = {}
+export const createEmptyRecord = (model: ModelSchema): Record<string, JsonValue> => {
+  const record: Record<string, JsonValue> = {}
 
   for (const field of model.fields) {
     if (field.name === 'id') {

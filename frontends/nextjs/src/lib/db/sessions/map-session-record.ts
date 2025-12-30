@@ -1,6 +1,15 @@
 import type { Session } from './types'
 
-export function mapSessionRecord(record: any): Session {
+type SessionRecord = {
+  id: string
+  userId: string
+  token: string
+  expiresAt: number | string | Date
+  createdAt: number | string | Date
+  lastActivity: number | string | Date
+}
+
+export function mapSessionRecord(record: SessionRecord): Session {
   return {
     id: record.id,
     userId: record.userId,

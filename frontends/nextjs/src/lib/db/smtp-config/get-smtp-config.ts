@@ -1,13 +1,15 @@
 import type { SMTPConfig } from '../../password'
 import { getAdapter } from '../core/dbal-client'
 
+type DBALSMTPConfig = SMTPConfig
+
 /**
  * Get SMTP configuration
  */
 export async function getSMTPConfig(): Promise<SMTPConfig | null> {
   const adapter = getAdapter()
-  const result = await adapter.list('SMTPConfig')
-  const config = (result.data as any[])[0]
+  const result = (await adapter.list('SMTPConfig')) as { data: DBALSMTPConfig[] }
+  const config = result.data[0]
   if (!config) return null
 
   return {

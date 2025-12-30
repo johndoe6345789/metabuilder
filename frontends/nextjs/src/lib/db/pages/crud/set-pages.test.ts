@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { PageConfig } from '../../types/level-types'
 
 const mockList = vi.fn()
 const mockDelete = vi.fn()
@@ -18,7 +19,13 @@ describe('setPages', () => {
     mockCreate.mockReset()
   })
 
-  it.each([
+  const cases: Array<{
+    name: string
+    existing: Array<{ id: string }>
+    newPages: PageConfig[]
+    expectedDeletes: number
+    expectedCreates: number
+  }> = [
     {
       name: 'replace all pages',
       existing: [{ id: 'old1' }],
@@ -28,12 +35,14 @@ describe('setPages', () => {
       expectedDeletes: 1,
       expectedCreates: 1,
     },
-  ])('should $name', async ({ existing, newPages, expectedDeletes, expectedCreates }) => {
+  ]
+
+  it.each(cases)('should $name', async ({ existing, newPages, expectedDeletes, expectedCreates }) => {
     mockList.mockResolvedValue({ data: existing })
     mockDelete.mockResolvedValue(undefined)
     mockCreate.mockResolvedValue(undefined)
 
-    await setPages(newPages as any)
+    await setPages(newPages)
 
     expect(mockDelete).toHaveBeenCalledTimes(expectedDeletes)
     expect(mockCreate).toHaveBeenCalledTimes(expectedCreates)

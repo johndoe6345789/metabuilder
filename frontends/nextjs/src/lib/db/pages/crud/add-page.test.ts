@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { PageConfig } from '../../types/level-types'
 
 const mockCreate = vi.fn()
 const mockAdapter = { create: mockCreate }
@@ -14,7 +15,7 @@ describe('addPage', () => {
     mockCreate.mockReset()
   })
 
-  it.each([
+  const cases: Array<{ name: string; page: PageConfig }> = [
     {
       name: 'basic page',
       page: {
@@ -38,10 +39,12 @@ describe('addPage', () => {
         requiredRole: 'user',
       },
     },
-  ])('should add $name', async ({ page }) => {
+  ]
+
+  it.each(cases)('should add $name', async ({ page }) => {
     mockCreate.mockResolvedValue(undefined)
 
-    await addPage(page as any)
+    await addPage(page)
 
     expect(mockCreate).toHaveBeenCalledWith(
       'PageConfig',

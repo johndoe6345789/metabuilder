@@ -1,3 +1,5 @@
+import type { JsonValue } from '@/types/utility-types'
+
 /**
  * Filter records by search term and field filters
  * @param records - The records to filter
@@ -6,12 +8,13 @@
  * @param filters - Field-value pairs to filter by
  * @returns Filtered records array
  */
+
 export const filterRecords = (
-  records: any[],
+  records: Record<string, JsonValue>[],
   searchTerm: string,
   searchFields: string[],
-  filters: Record<string, any>
-): any[] => {
+  filters: Record<string, JsonValue>
+): Record<string, JsonValue>[] => {
   let filtered = records
 
   if (searchTerm) {

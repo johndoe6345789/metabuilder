@@ -1,6 +1,10 @@
 import { PACKAGE_CATALOG } from '../../../package-lib/package-catalog'
 import { loadPackageComponents } from '../../../rendering/declarative-component-renderer'
-import { buildPackageRegistry, exportAllPackagesForSeed } from '../../package-glue'
+import {
+  buildPackageRegistry,
+  exportAllPackagesForSeed,
+  resolveDependencyOrder,
+} from '../../package-glue'
 import { setPackageRegistry } from '../registry/set-package-registry'
 import { packageSystemState } from './package-system-state'
 
@@ -14,6 +18,18 @@ export async function initializePackageSystem(): Promise<void> {
   // Load modular packages from /packages folder structure
   try {
     const packageRegistry = await buildPackageRegistry()
+    
+    // Resolve dependencies and get load order
+    const dependencyResult = resolveDependencyOrder(packageRegistry)
+    
+    if (dependencyResult.unresolvable.length > 0) {
+      console.warn('⚠️ Packages with missing dependencies:', dependencyResult.unresolvable)
+    }
+    
+    if (dependencyResult.circular.length > 0) {
+      console.warn('⚠️ Circular dependencies detected:', dependencyResult.circular)
+    }
+
     setPackageRegistry(packageRegistry)
 
     const seedData = exportAllPackagesForSeed(packageRegistry)
@@ -26,8 +42,8 @@ export async function initializePackageSystem(): Promise<void> {
     })
 
     console.log(
-      `✅ Loaded ${seedData.packages.length} modular packages:`,
-      seedData.packages.map(p => p.name).join(', ')
+      `✅ Loaded ${seedData.packages.length} modular packages in dependency order:`,
+      dependencyResult.loadOrder.join(' → ')
     )
   } catch (error) {
     console.warn('⚠️ Could not load modular packages:', error)

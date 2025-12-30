@@ -1,5 +1,6 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui'
-import type { AppConfiguration, User } from '@/lib/level-types'
+import type { AppConfiguration, LuaScript, User, Workflow } from '@/lib/level-types'
+import type { ModelSchema } from '@/lib/types/schema-types'
 
 import { level4TabsConfig } from './tabs/config'
 import { TabContent } from './tabs/TabContent'
@@ -8,9 +9,9 @@ interface Level4TabsProps {
   appConfig: AppConfiguration
   user: User
   nerdMode: boolean
-  onSchemasChange: (schemas: any[]) => Promise<void>
-  onWorkflowsChange: (workflows: any[]) => Promise<void>
-  onLuaScriptsChange: (scripts: any[]) => Promise<void>
+  onSchemasChange: (schemas: ModelSchema[]) => Promise<void>
+  onWorkflowsChange: (workflows: Workflow[]) => Promise<void>
+  onLuaScriptsChange: (scripts: LuaScript[]) => Promise<void>
 }
 
 export function Level4Tabs({

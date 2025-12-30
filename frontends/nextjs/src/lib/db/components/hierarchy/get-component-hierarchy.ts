@@ -1,11 +1,20 @@
 import { getAdapter } from '../../core/dbal-client'
 import type { ComponentNode } from '../types'
 
+type DBALComponentNodeRecord = {
+  id: string
+  type: string
+  parentId?: string | null
+  childIds: string
+  order: number
+  pageId: string
+}
+
 export async function getComponentHierarchy(): Promise<Record<string, ComponentNode>> {
   const adapter = getAdapter()
-  const result = await adapter.list('ComponentNode')
+  const result = (await adapter.list('ComponentNode')) as { data: DBALComponentNodeRecord[] }
   const hierarchy: Record<string, ComponentNode> = {}
-  for (const node of result.data as any[]) {
+  for (const node of result.data) {
     hierarchy[node.id] = {
       id: node.id,
       type: node.type,

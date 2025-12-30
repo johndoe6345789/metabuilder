@@ -1,3 +1,5 @@
+import type { JsonValue } from '@/types/utility-types'
+
 export interface DeclarativeComponentConfig {
   type: string
   category: string
@@ -8,7 +10,7 @@ export interface DeclarativeComponentConfig {
     name: string
     type: string
     label: string
-    defaultValue?: any
+    defaultValue?: JsonValue
     required: boolean
   }>
   config: {
@@ -16,7 +18,7 @@ export interface DeclarativeComponentConfig {
     styling: {
       className: string
     }
-    children: any[]
+    children: JsonValue[]
   }
 }
 
@@ -31,7 +33,7 @@ export interface MessageFormat {
 
 export interface LuaScriptDefinition {
   code: string
-  parameters: any[]
+  parameters: JsonValue[]
   returnType: string
   isSandboxed?: boolean
   allowedGlobals?: string[]

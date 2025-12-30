@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { Comment } from '../../types/level-types'
 
 const mockUpdate = vi.fn()
 const mockAdapter = { update: mockUpdate }
@@ -14,13 +15,15 @@ describe('updateComment', () => {
     mockUpdate.mockReset()
   })
 
-  it.each([
+  const cases: Array<{ commentId: string; updates: Partial<Comment> }> = [
     { commentId: 'c1', updates: { content: 'Updated' } },
     { commentId: 'c2', updates: { content: 'New text', updatedAt: 2000 } },
-  ])('should update $commentId', async ({ commentId, updates }) => {
+  ]
+
+  it.each(cases)('should update $commentId', async ({ commentId, updates }) => {
     mockUpdate.mockResolvedValue(undefined)
 
-    await updateComment(commentId, updates as any)
+    await updateComment(commentId, updates)
 
     expect(mockUpdate).toHaveBeenCalledWith('Comment', commentId, expect.any(Object))
   })

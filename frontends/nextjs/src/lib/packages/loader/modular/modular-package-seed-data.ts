@@ -17,6 +17,12 @@ export type ModularPackageMetadataSeed = {
   description: string
   author: string
   category: string
+  /** Minimum permission level required (1=Public, 2=User, 3=Moderator, 4=Admin, 5=God, 6=Supergod) */
+  minLevel: number
+  /** Package dependencies that must be loaded first */
+  dependencies: string[]
+  /** Icon path relative to package root */
+  icon?: string
 }
 
 /**

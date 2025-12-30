@@ -5,7 +5,13 @@
  * @param direction - Sort direction ('asc' or 'desc')
  * @returns Sorted copy of the records array
  */
-export const sortRecords = (records: any[], field: string, direction: 'asc' | 'desc'): any[] => {
+import type { JsonValue } from '@/types/utility-types'
+
+export const sortRecords = (
+  records: Record<string, JsonValue>[],
+  field: string,
+  direction: 'asc' | 'desc'
+): Record<string, JsonValue>[] => {
   return [...records].sort((a, b) => {
     const aVal = a[field]
     const bVal = b[field]

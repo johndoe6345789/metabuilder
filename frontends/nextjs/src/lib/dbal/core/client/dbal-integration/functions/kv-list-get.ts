@@ -1,4 +1,5 @@
 import { DBALClient, type DBALConfig } from '@/dbal'
+import type { JsonValue } from '@/types/utility-types'
 
 export async function kvListGet(
   key: string,
@@ -6,7 +7,7 @@ export async function kvListGet(
   userId = 'system',
   start?: number,
   end?: number
-): Promise<any[]> {
+): Promise<JsonValue[]> {
   if (!this.kvStore || !this.tenantManager) throw new Error('DBAL not initialized')
   const context = await this.tenantManager.getTenantContext(tenantId, userId)
   if (!context) throw new Error(`Tenant not found: ${tenantId}`)

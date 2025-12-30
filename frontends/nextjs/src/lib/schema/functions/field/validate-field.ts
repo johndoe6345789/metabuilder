@@ -1,4 +1,5 @@
 import type { FieldSchema } from '@/lib/schema-types'
+import type { JsonValue } from '@/types/utility-types'
 
 import { getFieldLabel } from './get-field-label'
 
@@ -8,7 +9,7 @@ import { getFieldLabel } from './get-field-label'
  * @param value - The value to validate
  * @returns Error message if validation fails, null otherwise
  */
-export const validateField = (field: FieldSchema, value: any): string | null => {
+export const validateField = (field: FieldSchema, value: JsonValue): string | null => {
   if (field.required && (value === undefined || value === null || value === '')) {
     return `${getFieldLabel(field)} is required`
   }

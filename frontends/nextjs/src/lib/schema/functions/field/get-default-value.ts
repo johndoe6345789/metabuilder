@@ -1,11 +1,12 @@
 import type { FieldSchema } from '@/lib/schema-types'
+import type { JsonValue } from '@/types/utility-types'
 
 /**
  * Get the default value for a field based on its type
  * @param field - The field schema
  * @returns The appropriate default value for the field type
  */
-export const getDefaultValue = (field: FieldSchema): any => {
+export const getDefaultValue = (field: FieldSchema): JsonValue => {
   if (field.default !== undefined) return field.default
 
   switch (field.type) {

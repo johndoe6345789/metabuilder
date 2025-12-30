@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-12-30T00:19:15.231Z",
+  "generatedAt": "2025-12-30T00:26:21.122Z",
   "packages": [
     {
       "packageId": "admin_dialog",
@@ -9,7 +9,10 @@
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "ui",
-      "dependencies": [],
+      "dependencies": [
+        "ui_dialogs",
+        "ui_permissions"
+      ],
       "exports": {
         "components": []
       },
@@ -23,7 +26,10 @@
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "gaming",
-      "dependencies": [],
+      "dependencies": [
+        "ui_permissions",
+        "dashboard"
+      ],
       "exports": {
         "components": []
       },
@@ -75,7 +81,10 @@
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "ui",
-      "dependencies": [],
+      "dependencies": [
+        "data_table",
+        "ui_permissions"
+      ],
       "exports": {
         "components": [
           "StatCard",
@@ -135,7 +144,11 @@
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "social",
-      "dependencies": [],
+      "dependencies": [
+        "ui_permissions",
+        "data_table",
+        "form_builder"
+      ],
       "exports": {
         "components": []
       },
@@ -212,7 +225,10 @@
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "social",
-      "dependencies": [],
+      "dependencies": [
+        "ui_permissions",
+        "form_builder"
+      ],
       "exports": {
         "components": [
           "social_hub_root",
@@ -256,7 +272,10 @@
       "icon": "static_content/icon.svg",
       "author": "MetaBuilder",
       "category": "media",
-      "dependencies": [],
+      "dependencies": [
+        "ui_permissions",
+        "dashboard"
+      ],
       "exports": {
         "components": []
       },

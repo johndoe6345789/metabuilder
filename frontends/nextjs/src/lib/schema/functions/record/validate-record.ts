@@ -1,4 +1,5 @@
 import type { ModelSchema } from '@/lib/schema-types'
+import type { JsonValue } from '@/types/utility-types'
 
 import { validateField } from '../field/validate-field'
 
@@ -8,7 +9,10 @@ import { validateField } from '../field/validate-field'
  * @param record - The record to validate
  * @returns Object mapping field names to error messages
  */
-export const validateRecord = (model: ModelSchema, record: any): Record<string, string> => {
+export const validateRecord = (
+  model: ModelSchema,
+  record: Record<string, JsonValue>
+): Record<string, string> => {
   const errors: Record<string, string> = {}
 
   for (const field of model.fields) {

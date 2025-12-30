@@ -12,6 +12,7 @@ import {
   getModelLabelPlural,
   sortRecords,
 } from '@/lib/schema-utils'
+import type { JsonValue } from '@/types/utility-types'
 
 import { createMockField, createMockModel } from './schema-utils.fixtures'
 
@@ -167,7 +168,7 @@ describe('schema-utils serialization', () => {
   })
 
   describe('sortRecords', () => {
-    let records: any[]
+    let records: Array<Record<string, JsonValue>>
 
     beforeEach(() => {
       records = [
@@ -201,7 +202,7 @@ describe('schema-utils serialization', () => {
   })
 
   describe('filterRecords', () => {
-    let records: any[]
+    let records: Array<Record<string, JsonValue>>
 
     beforeEach(() => {
       records = [

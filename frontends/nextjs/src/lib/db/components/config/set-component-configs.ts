@@ -1,12 +1,16 @@
 import { getAdapter } from '../../core/dbal-client'
 import type { ComponentConfig } from '../types'
 
+type DBALComponentConfigRecord = {
+  id: string
+}
+
 export async function setComponentConfigs(configs: Record<string, ComponentConfig>): Promise<void> {
   const adapter = getAdapter()
 
   // Delete existing configs
-  const existing = await adapter.list('ComponentConfig')
-  for (const c of existing.data as any[]) {
+  const existing = (await adapter.list('ComponentConfig')) as { data: DBALComponentConfigRecord[] }
+  for (const c of existing.data) {
     await adapter.delete('ComponentConfig', c.id)
   }
 

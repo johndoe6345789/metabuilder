@@ -1,8 +1,9 @@
 import { DBALClient, type DBALConfig } from '@/dbal'
+import type { JsonValue } from '@/types/utility-types'
 
 export async function set(
   key: string,
-  value: any,
+  value: JsonValue,
   context: TenantContext,
   ttl?: number
 ): Promise<void> {

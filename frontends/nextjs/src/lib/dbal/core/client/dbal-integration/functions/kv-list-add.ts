@@ -1,8 +1,9 @@
 import { DBALClient, type DBALConfig } from '@/dbal'
+import type { JsonValue } from '@/types/utility-types'
 
 export async function kvListAdd(
   key: string,
-  items: any[],
+  items: JsonValue[],
   tenantId = 'default',
   userId = 'system'
 ): Promise<void> {

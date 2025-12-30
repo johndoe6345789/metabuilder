@@ -50,6 +50,9 @@ export function exportAllPackagesForSeed(registry: PackageRegistry) {
       description: pkg.description,
       author: pkg.author,
       category: pkg.category,
+      minLevel: pkg.minLevel ?? 1,
+      dependencies: pkg.dependencies ?? [],
+      icon: 'static_content/icon.svg',
     })
   }
 
