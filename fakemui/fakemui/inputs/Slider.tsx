@@ -6,7 +6,7 @@ export interface SliderMark {
   label?: React.ReactNode
 }
 
-export interface SliderProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange' | 'value'> {
+export interface SliderProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange' | 'value' | 'size' | 'defaultValue'> {
   /** Current value (controlled) */
   value?: number | number[]
   /** Default value (uncontrolled) */
