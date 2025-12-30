@@ -947,11 +947,14 @@ export const componentRegistry: Record<string, AnyComponent> = {
   Link,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   IconButton,
   Menu,
   MenuItem,
+  Collapse,
+  Breadcrumbs,
   
   // Data
   Table,

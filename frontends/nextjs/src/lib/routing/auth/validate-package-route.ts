@@ -26,6 +26,8 @@ export interface PackageMetadata {
   version: string
   description?: string
   minLevel: number
+  /** Whether this package can be the primary package for a route (default: true) */
+  primary?: boolean
   /** Package dependencies that this package can access */
   dependencies?: string[]
   /** Dev dependencies (not included in runtime) */
@@ -110,7 +112,9 @@ export const getPackageEntities = (metadata: PackageMetadata): string[] => {
 export const validatePackageRoute = (
   packageId: string,
   entity: string | null,
-  user: SessionUser | null
+  user: SessionUser | null,
+  /** If true, checks if package can be primary (own a route). If false, only checks access. */
+  requirePrimary: boolean = true
 ): RouteClaimResult => {
   const metadata = loadPackageMetadata(packageId)
 
@@ -119,6 +123,16 @@ export const validatePackageRoute = (
       allowed: false,
       package: null,
       reason: `Package not found: ${packageId}`,
+    }
+  }
+
+  // Check if package can be primary (default true for backwards compatibility)
+  const canBePrimary = metadata.primary !== false
+  if (requirePrimary && !canBePrimary) {
+    return {
+      allowed: false,
+      package: metadata,
+      reason: `Package '${packageId}' cannot be a primary package (primary: false). It can only be used as a dependency.`,
     }
   }
 
