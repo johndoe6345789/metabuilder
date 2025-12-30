@@ -32,6 +32,13 @@ export async function initializeUsers() {
       createdAt: Date.now(),
     },
     {
+      id: 'user_moderator',
+      username: 'moderator',
+      email: 'moderator@metabuilder.local',
+      role: 'moderator',
+      createdAt: Date.now(),
+    },
+    {
       id: 'user_alice',
       username: 'alice',
       email: 'alice@example.com',

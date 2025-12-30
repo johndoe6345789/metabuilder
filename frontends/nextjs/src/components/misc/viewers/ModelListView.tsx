@@ -17,11 +17,11 @@ import {
   getRecordsKey,
   sortRecords,
 } from '@/lib/schema-utils'
-import type { JsonObject, JsonValue } from '@/types/utility-types'
+import type { JsonValue } from '@/types/utility-types'
 
 import { RecordForm } from './RecordForm'
 
-type RecordValue = string | number | boolean | null | JsonObject | JsonValue[]
+type RecordValue = JsonValue
 
 type RecordData = Record<string, RecordValue>
 
