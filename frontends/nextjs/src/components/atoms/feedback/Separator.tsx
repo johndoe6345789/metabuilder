@@ -1,24 +1,32 @@
 'use client'
 
-import { Divider, DividerProps } from '@mui/material'
+import { Divider } from '@/fakemui'
 import { forwardRef } from 'react'
 
 /**
  * Props for the Separator component
- * @extends {DividerProps} Inherits Material-UI Divider props
+ * Wrapper around fakemui Divider to maintain API compatibility
  */
-export interface SeparatorProps extends DividerProps {
+export interface SeparatorProps extends React.HTMLAttributes<HTMLHRElement> {
+  /** Orientation of the separator */
+  orientation?: 'horizontal' | 'vertical'
   /** Whether the separator is decorative (for accessibility) */
   decorative?: boolean
+  /** MUI sx prop - converted to className for compatibility */
+  sx?: any
 }
 
 const Separator = forwardRef<HTMLHRElement, SeparatorProps>(
-  ({ orientation = 'horizontal', decorative, ...props }, ref) => {
+  ({ orientation = 'horizontal', decorative, sx, className, ...props }, ref) => {
+    // Combine className with any sx-based classes
+    const combinedClassName = [className, sx?.className].filter(Boolean).join(' ')
+
     return (
       <Divider
         ref={ref}
         orientation={orientation}
         role={decorative ? 'presentation' : 'separator'}
+        className={combinedClassName}
         {...props}
       />
     )

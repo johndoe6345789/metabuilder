@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, CircularProgress, CircularProgressProps } from '@mui/material'
+import { CircularProgress } from '@/fakemui'
 import { forwardRef } from 'react'
 
 /** Spinner size options */
@@ -8,13 +8,17 @@ export type SpinnerSize = 'xs' | 'sm' | 'md' | 'lg'
 
 /**
  * Props for the Spinner component
- * @extends {CircularProgressProps} Inherits Material-UI CircularProgress props
+ * Wrapper around fakemui CircularProgress to maintain API compatibility
  */
-export interface SpinnerProps extends Omit<CircularProgressProps, 'size'> {
+export interface SpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Size of the spinner (xs: 16px, sm: 20px, md: 24px, lg: 40px) or a custom number */
   size?: SpinnerSize | number
   /** Whether to center the spinner in its container */
   centered?: boolean
+  /** Color of the spinner */
+  color?: string
+  /** MUI sx prop - converted to className for compatibility */
+  sx?: any
 }
 
 const sizeMap: Record<SpinnerSize, number> = {
@@ -25,16 +29,26 @@ const sizeMap: Record<SpinnerSize, number> = {
 }
 
 const Spinner = forwardRef<HTMLDivElement, SpinnerProps>(
-  ({ size = 'md', centered, ...props }, ref) => {
+  ({ size = 'md', centered, color, sx, className, ...props }, ref) => {
     const dimension = typeof size === 'number' ? size : sizeMap[size]
 
-    const spinner = <CircularProgress ref={ref} size={dimension} {...props} />
+    // Combine className with any sx-based classes
+    const combinedClassName = [className, sx?.className].filter(Boolean).join(' ')
+
+    const spinner = (
+      <CircularProgress
+        ref={ref}
+        size={dimension}
+        className={combinedClassName}
+        {...props}
+      />
+    )
 
     if (centered) {
       return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 2 }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
           {spinner}
-        </Box>
+        </div>
       )
     }
 

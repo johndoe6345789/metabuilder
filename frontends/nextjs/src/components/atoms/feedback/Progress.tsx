@@ -1,41 +1,44 @@
 'use client'
 
-import {
-  Box,
-  CircularProgress,
-  CircularProgressProps,
-  LinearProgress,
-  LinearProgressProps,
-  Typography,
-} from '@mui/material'
+import { LinearProgress, CircularProgress } from '@/fakemui'
 import { forwardRef } from 'react'
 
 /**
  * Props for the Progress component
- * @extends {LinearProgressProps} Inherits Material-UI LinearProgress props
+ * Wrapper around fakemui LinearProgress to maintain API compatibility
  */
-export interface ProgressProps extends LinearProgressProps {
+export interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Progress value (0-100) */
+  value?: number
   /** Whether to display a percentage label next to the progress bar */
   showLabel?: boolean
+  /** Variant of the progress bar */
+  variant?: 'determinate' | 'indeterminate'
+  /** Color of the progress bar */
+  color?: string
+  /** MUI sx prop - converted to className for compatibility */
+  sx?: any
 }
 
 const Progress = forwardRef<HTMLDivElement, ProgressProps>(
-  ({ value, showLabel, sx, ...props }, ref) => {
+  ({ value, showLabel, variant, color, sx, className, ...props }, ref) => {
+    // Combine className with any sx-based classes
+    const combinedClassName = [className, sx?.className].filter(Boolean).join(' ')
+
     if (showLabel && value !== undefined) {
       return (
-        <Box ref={ref} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Box sx={{ flex: 1 }}>
+        <div ref={ref} className={`progress-with-label ${combinedClassName}`} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ flex: 1 }}>
             <LinearProgress
-              variant="determinate"
               value={value}
-              sx={{ height: 8, borderRadius: 1, ...sx }}
+              className={combinedClassName}
               {...props}
             />
-          </Box>
-          <Typography variant="body2" color="text.secondary" sx={{ minWidth: 40 }}>
+          </div>
+          <span className="progress-label text-secondary" style={{ minWidth: '40px' }}>
             {Math.round(value)}%
-          </Typography>
-        </Box>
+          </span>
+        </div>
       )
     }
 
@@ -43,8 +46,7 @@ const Progress = forwardRef<HTMLDivElement, ProgressProps>(
       <LinearProgress
         ref={ref}
         value={value}
-        variant={value !== undefined ? 'determinate' : 'indeterminate'}
-        sx={{ height: 8, borderRadius: 1, ...sx }}
+        className={combinedClassName}
         {...props}
       />
     )

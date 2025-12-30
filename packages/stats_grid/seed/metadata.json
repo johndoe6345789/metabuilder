@@ -1,0 +1,32 @@
+{
+  "packageId": "stats_grid",
+  "name": "Stats Grid",
+  "version": "1.0.0",
+  "description": "Configurable statistics grid display for dashboards and monitoring",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [],
+  "devDependencies": ["lua_test"],
+  "exports": {
+    "components": [
+      "StatsGrid",
+      "StatCard"
+    ],
+    "scripts": [
+      "stats",
+      "formatters"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/stats.test.lua",
+      "tests/formatters.test.lua"
+    ],
+    "cases": [
+      "tests/stats.cases.json",
+      "tests/formatters.cases.json"
+    ]
+  },
+  "minLevel": 2
+}

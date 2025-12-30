@@ -1,12 +1,11 @@
 'use client'
 
-import { Tooltip as MuiTooltip } from '@mui/material'
-import { type ComponentProps, forwardRef, ReactElement, ReactNode } from 'react'
-
-type MuiTooltipProps = ComponentProps<typeof MuiTooltip>
+import { Tooltip as FakemuiTooltip } from '@/fakemui'
+import { forwardRef, ReactElement, ReactNode } from 'react'
 
 /**
  * Props for the Tooltip component
+ * Wrapper around fakemui Tooltip to maintain API compatibility
  */
 export interface TooltipProps {
   /** The element that triggers the tooltip */
@@ -27,13 +26,10 @@ export interface TooltipProps {
   onOpen?: () => void
   /** Callback when tooltip is closed */
   onClose?: () => void
-}
-
-const sideMap: Record<string, MuiTooltipProps['placement']> = {
-  top: 'top',
-  right: 'right',
-  bottom: 'bottom',
-  left: 'left',
+  /** MUI placement prop (mapped to side) */
+  placement?: 'top' | 'right' | 'bottom' | 'left'
+  /** MUI enterDelay prop (mapped to delayDuration) */
+  enterDelay?: number
 }
 
 const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
@@ -42,8 +38,10 @@ const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
       children,
       content,
       title,
-      side = 'top',
-      delayDuration = 300,
+      side,
+      placement,
+      delayDuration,
+      enterDelay,
       arrow = true,
       open,
       onOpen,
@@ -53,17 +51,15 @@ const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     ref
   ) => {
     return (
-      <MuiTooltip
+      <FakemuiTooltip
         title={content || title || ''}
-        placement={sideMap[side]}
-        enterDelay={delayDuration}
+        placement={side || placement || 'top'}
         arrow={arrow}
         open={open}
-        onOpen={onOpen}
-        onClose={onClose}
+        {...props}
       >
         {children}
-      </MuiTooltip>
+      </FakemuiTooltip>
     )
   }
 )

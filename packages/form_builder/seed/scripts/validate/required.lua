@@ -5,6 +5,7 @@
 ---@field pattern? string
 ---@field value? number | string
 ---@field message string
+---@field icon? string Icon name from fakemui icons for validation feedback
 
 ---@param message? string
 ---@return ValidationRule
