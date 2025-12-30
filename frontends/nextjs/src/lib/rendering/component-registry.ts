@@ -92,7 +92,9 @@ import type { ComponentType, FC } from 'react'
 
 // Type helper to cast components to generic LuaComponentProps
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyComponent = FC<any>
+// Type helper to cast components to generic LuaComponentProps
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyComponent = ComponentType<any>
 
 /**
  * Type definition for component props from Lua
@@ -104,8 +106,9 @@ export interface LuaComponentProps {
 
 /**
  * Component registry mapping Lua type names to React components
+ * Components are cast to AnyComponent to allow flexible prop passing from Lua
  */
-export const componentRegistry: Record<string, ComponentType<LuaComponentProps>> = {
+export const componentRegistry: Record<string, AnyComponent> = {
   // Layout
   Box,
   Stack,
@@ -121,6 +124,9 @@ export const componentRegistry: Record<string, ComponentType<LuaComponentProps>>
   CardActions,
   CardTitle: CardHeader, // Alias
   CardFooter: CardActions, // Alias
+  Drawer,
+  Modal,
+  Backdrop,
 
   // Inputs
   Button,
