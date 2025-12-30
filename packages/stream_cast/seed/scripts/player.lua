@@ -1,48 +1,24 @@
--- Stream player controls
+--- Stream player facade
+--- Re-exports single-function modules for backward compatibility
+
+---@type PlayerState
+local PLAYING = "playing"
+---@type PlayerState
+local PAUSED = "paused"
+---@type PlayerState
+local BUFFERING = "buffering"
+---@type PlayerState
+local OFFLINE = "offline"
+
 local M = {}
 
-M.PLAYING = "playing"
-M.PAUSED = "paused"
-M.BUFFERING = "buffering"
-M.OFFLINE = "offline"
+M.PLAYING = PLAYING
+M.PAUSED = PAUSED
+M.BUFFERING = BUFFERING
+M.OFFLINE = OFFLINE
 
-function M.render(stream)
-  return {
-    type = "video_player",
-    props = {
-      src = stream.url,
-      poster = stream.thumbnail,
-      autoplay = true,
-      controls = true
-    }
-  }
-end
-
-function M.render_controls(state)
-  return {
-    type = "player_controls",
-    children = {
-      { type = "button", props = { icon = state == M.PLAYING and "pause" or "play" } },
-      { type = "volume_slider", props = { min = 0, max = 100 } },
-      { type = "button", props = { icon = "maximize" } }
-    }
-  }
-end
-
-function M.render_status(state, viewers)
-  local colors = {
-    playing = "success",
-    paused = "warning",
-    buffering = "info",
-    offline = "error"
-  }
-  return {
-    type = "status_bar",
-    children = {
-      { type = "badge", props = { label = state, color = colors[state] } },
-      { type = "text", props = { text = viewers .. " viewers" } }
-    }
-  }
-end
+M.render = require("render_player")
+M.render_controls = require("render_player_controls")
+M.render_status = require("render_status")
 
 return M
