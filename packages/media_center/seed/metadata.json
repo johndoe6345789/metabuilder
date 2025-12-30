@@ -1,9 +1,10 @@
 {
-  "id": "media_center",
+  "packageId": "media_center",
   "name": "Media Center",
   "version": "1.1.0",
   "description": "Media processing dashboard with job queue, radio, TV, document conversion, and retro gaming",
   "author": "MetaBuilder",
+  "category": "media",
   "minLevel": 3,
   "tags": ["media", "streaming", "radio", "tv", "transcoding", "documents", "pdf", "retro", "gaming", "emulation"],
   "dependencies": ["notification_center", "data_table"],

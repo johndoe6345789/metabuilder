@@ -1,5 +1,6 @@
 {
-  "name": "screenshot_analyzer",
+  "packageId": "screenshot_analyzer",
+  "name": "Screenshot Analyzer",
   "version": "1.0.0",
   "description": "Screenshot Analyzer - Capture and analyze the current page",
   "author": "MetaBuilder",

@@ -1,7 +1,10 @@
 {
-  "name": "shared",
+  "packageId": "shared",
+  "name": "Shared Utilities",
   "version": "1.1.0",
   "description": "Shared types, utilities, and permission system for all Lua packages",
+  "author": "MetaBuilder",
+  "category": "core",
   "exports": [
     "types.ui_types",
     "permissions"

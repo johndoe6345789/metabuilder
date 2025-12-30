@@ -82,20 +82,24 @@ function validateComponentsJson(seedPath) {
 
   try {
     const content = fs.readFileSync(componentsPath, 'utf-8')
-    const components = JSON.parse(content)
-
-    if (!Array.isArray(components)) {
-      errors.push('components.json must be an array')
+    const parsed = JSON.parse(content)
+    
+    // Accept both formats: bare array or { components: [...] }
+    const components = Array.isArray(parsed) ? parsed : parsed.components
+    
+    if (!components || !Array.isArray(components)) {
+      errors.push('components.json must be an array or have a "components" array property')
       return { valid: false, errors, warnings }
     }
 
     for (let i = 0; i < components.length; i++) {
       const comp = components[i]
-      if (!comp.id) {
-        errors.push(`Component at index ${i} missing required field: id`)
+      // Accept either "id" or "name" for component identifier
+      if (!comp.id && !comp.name) {
+        errors.push(`Component at index ${i} missing required field: id or name`)
       }
-      if (!comp.type) {
-        errors.push(`Component at index ${i} missing required field: type`)
+      if (!comp.type && !comp.description) {
+        warnings.push(`Component at index ${i} has no type or description`)
       }
     }
 

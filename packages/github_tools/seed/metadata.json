@@ -1,5 +1,5 @@
 {
-  "id": "github_tools",
+  "packageId": "github_tools",
   "name": "GitHub Tools",
   "description": "GitHub integration tools including Actions viewer, run analysis, and workflow management",
   "version": "1.0.0",
