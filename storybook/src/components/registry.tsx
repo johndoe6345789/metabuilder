@@ -285,6 +285,123 @@ export const Sidebar: React.FC<LuaComponentProps> = ({ children, className = 'w-
   <aside className={className}>{children}</aside>
 )
 
+// Form inputs
+interface TextFieldProps extends LuaComponentProps {
+  label?: string
+  placeholder?: string
+  type?: string
+  fullWidth?: boolean
+  size?: 'small' | 'medium'
+}
+
+export const TextField: React.FC<TextFieldProps> = ({ 
+  label, 
+  placeholder, 
+  type = 'text',
+  fullWidth = false,
+  size = 'medium',
+  className = ''
+}) => (
+  <div className={`${fullWidth ? 'w-full' : ''} ${className}`}>
+    {label && <label className="block text-sm font-medium mb-1">{label}</label>}
+    <input 
+      type={type}
+      placeholder={placeholder}
+      className={`border rounded px-3 ${size === 'small' ? 'py-1 text-sm' : 'py-2'} ${fullWidth ? 'w-full' : ''}`}
+    />
+  </div>
+)
+
+interface SelectProps extends LuaComponentProps {
+  label?: string
+  options?: Array<{ value: string | number; label: string }>
+}
+
+export const Select: React.FC<SelectProps> = ({ label, options = [], className = '' }) => (
+  <div className={className}>
+    {label && <label className="block text-sm font-medium mb-1">{label}</label>}
+    <select className="border rounded px-3 py-2 w-full">
+      {options.map(opt => (
+        <option key={opt.value} value={opt.value}>{opt.label}</option>
+      ))}
+    </select>
+  </div>
+)
+
+// Navigation
+export const AppBar: React.FC<LuaComponentProps> = ({ children, className = 'bg-canvas border-b' }) => (
+  <header className={className}>{children}</header>
+)
+
+export const Toolbar: React.FC<LuaComponentProps> = ({ children, className = 'flex items-center gap-4 px-4 py-2' }) => (
+  <div className={className}>{children}</div>
+)
+
+export const Link: React.FC<LuaComponentProps & { href?: string }> = ({ href = '#', children, className = 'text-accent hover:underline' }) => (
+  <a href={href} className={className}>{children}</a>
+)
+
+// Lists
+export const List: React.FC<LuaComponentProps> = ({ children, className = 'flex flex-col' }) => (
+  <ul className={className}>{children}</ul>
+)
+
+export const ListItem: React.FC<LuaComponentProps & { button?: boolean; selected?: boolean }> = ({ 
+  button = false, 
+  selected = false,
+  children, 
+  className = '' 
+}) => (
+  <li className={`flex items-center gap-2 px-4 py-2 ${button ? 'cursor-pointer hover:bg-muted' : ''} ${selected ? 'bg-accent/10' : ''} ${className}`}>
+    {children}
+  </li>
+)
+
+// Data display
+interface TableProps extends LuaComponentProps {
+  columns?: Array<{ field: string; headerName: string; width?: number; flex?: number }>
+  rows?: Array<Record<string, unknown>>
+}
+
+export const Table: React.FC<TableProps> = ({ columns = [], rows = [], className = '' }) => (
+  <div className={`overflow-auto ${className}`}>
+    <table className="w-full border-collapse">
+      <thead>
+        <tr className="bg-muted">
+          {columns.map(col => (
+            <th key={col.field} className="text-left px-4 py-2 font-medium border-b" style={{ width: col.width }}>
+              {col.headerName}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, i) => (
+          <tr key={i} className="border-b hover:bg-muted/50">
+            {columns.map(col => (
+              <td key={col.field} className="px-4 py-2">
+                {String(row[col.field] ?? '')}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)
+
+export const Pagination: React.FC<LuaComponentProps & { count?: number; page?: number }> = ({ 
+  count = 1, 
+  page = 1,
+  className = 'flex items-center gap-2'
+}) => (
+  <div className={className}>
+    <button className="px-2 py-1 border rounded" disabled={page <= 1}>←</button>
+    <span className="text-sm">Page {page} of {count}</span>
+    <button className="px-2 py-1 border rounded" disabled={page >= count}>→</button>
+  </div>
+)
+
 /**
  * Component Registry - maps Lua type names to React components
  */
@@ -311,6 +428,8 @@ export const componentRegistry: Record<string, AnyComponent> = {
   
   // Inputs
   Button,
+  TextField,
+  Select,
   
   // Display
   Icon,
@@ -323,6 +442,15 @@ export const componentRegistry: Record<string, AnyComponent> = {
   // Navigation
   Tabs,
   Tab,
+  AppBar,
+  Toolbar,
+  Link,
+  List,
+  ListItem,
+  
+  // Data
+  Table,
+  Pagination,
   
   // App-specific (from Lua packages)
   Level4Header,
