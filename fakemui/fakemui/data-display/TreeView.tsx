@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import clsx from 'clsx'
-import styles from '../styles/TreeView.module.scss'
+import styles from '../../styles/TreeView.module.scss'
 
 export interface TreeNode {
   id: string
