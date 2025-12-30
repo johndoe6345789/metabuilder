@@ -21,6 +21,7 @@
 ---| "CardFooter"
 ---| "Button"
 ---| "IconButton"
+---| "Icon"
 ---| "Input"
 ---| "TextField"
 ---| "TextArea"
@@ -79,6 +80,11 @@
 ---@field disabled? boolean Disable button interactions
 ---@field onClick? string Action handler name
 ---@field data? any Additional data passed to handler
+
+---@class IconProps
+---@field name string Icon name from fakemui/icons
+---@field size? "small"|"medium"|"large"|"inherit" Icon size
+---@field className? string CSS class name
 
 ---@class InputProps
 ---@field label? string Input field label

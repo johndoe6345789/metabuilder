@@ -41,6 +41,7 @@ local M = {}
 ---@param props MenuProps
 ---@return UIComponent
 function M.render(props)
+  ---@type UIComponent[]
   local items = {}
   for _, item in ipairs(props.items or {}) do
     if M.can_show(props.user, item) then
@@ -69,20 +70,44 @@ function M.item(item)
     return {
       type = "DropdownMenu",
       children = {
-        { type = "DropdownMenuTrigger", props = { text = item.label } },
+        {
+          type = "DropdownMenuTrigger",
+          props = {
+            ---@type DropdownMenuTriggerProps
+            text = item.label
+          }
+        },
         { type = "DropdownMenuContent", children = M.sub_items(item.children) }
       }
     }
   end
-  return { type = "Button", props = { variant = "ghost", text = item.label, onClick = "navigate", data = item.path } }
+  return {
+    type = "Button",
+    props = {
+      ---@type ButtonProps
+      variant = "ghost",
+      text = item.label,
+      onClick = "navigate",
+      data = item.path
+    }
+  }
 end
 
 ---@param children MenuItem[]
 ---@return UIComponent[]
 function M.sub_items(children)
+  ---@type UIComponent[]
   local items = {}
   for _, c in ipairs(children) do
-    items[#items + 1] = { type = "DropdownMenuItem", props = { text = c.label, onClick = "navigate", data = c.path } }
+    items[#items + 1] = {
+      type = "DropdownMenuItem",
+      props = {
+        ---@type DropdownMenuItemProps
+        text = c.label,
+        onClick = "navigate",
+        data = c.path
+      }
+    }
   end
   return items
 end

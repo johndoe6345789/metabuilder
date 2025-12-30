@@ -1,6 +1,8 @@
 -- Render comments section
 -- Single function module for comments UI
 
+require("comments.types")
+
 local composer = require("comments.composer")
 local list = require("comments.list")
 

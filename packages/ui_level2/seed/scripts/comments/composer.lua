@@ -1,6 +1,8 @@
 -- Comment composer component
 -- Single function module for comments UI
 
+require("comments.types")
+
 ---@class Composer
 local M = {}
 

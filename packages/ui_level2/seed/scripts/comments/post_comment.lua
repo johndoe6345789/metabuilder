@@ -1,6 +1,8 @@
 -- Post comment handler
 -- Single function module for comments UI
 
+require("comments.types")
+
 ---@class PostComment
 local M = {}
 

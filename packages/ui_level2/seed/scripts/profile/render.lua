@@ -15,6 +15,14 @@ function M.render(ctx)
       {
         type = "CardHeader",
         children = {
+          {
+            type = "Icon",
+            props = {
+              ---@type IconProps
+              name = "IdCard",
+              size = "large"
+            }
+          },
           { type = "CardTitle", props = { text = "Your Profile" } }
         }
       },
