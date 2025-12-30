@@ -46,27 +46,30 @@ Use **Auto-Discovered Packages → Explorer** to:
 
 ```
 storybook/
-├── .storybook/           # Storybook configuration
-│   ├── main.ts           # Main config (addons, static dirs)
-│   └── preview.tsx       # Preview decorators and globals
+├── .storybook/              # Storybook configuration
+│   ├── main.ts              # Main config (addons, static dirs)
+│   └── preview.tsx          # Preview decorators and globals
+├── storybook.config.json    # ⭐ Auto-discovery configuration
 ├── src/
-│   ├── components/       # React components for rendering
-│   │   ├── registry.tsx  # Component registry (Lua type → React)
+│   ├── components/          # React components for rendering
+│   │   ├── registry.tsx     # Component registry (Lua type → React)
 │   │   └── LuaPackageRenderer.tsx
+│   ├── discovery/           # ⭐ Auto-discovery system
+│   │   └── package-discovery.ts  # Reads packages/index.json
+│   ├── lua/                 # ⭐ Real Lua execution
+│   │   └── executor.ts      # Fengari-based Lua runner
 │   ├── mocks/
-│   │   ├── lua-engine.ts # Mock Lua execution
-│   │   └── packages/     # Pre-rendered package outputs
-│   │       ├── dashboard.ts
-│   │       ├── ui-level4.ts
-│   │       └── user-manager.ts
-│   ├── stories/          # Storybook stories
+│   │   ├── lua-engine.ts    # Mock Lua execution (fallback)
+│   │   └── packages/        # Pre-rendered package outputs
+│   ├── stories/
 │   │   ├── Introduction.mdx
+│   │   ├── AutoDiscovered.stories.tsx  # ⭐ Interactive explorer
 │   │   ├── Components.stories.tsx
 │   │   └── LuaPackages.stories.tsx
 │   ├── styles/
-│   │   └── globals.scss  # Global styles
+│   │   └── globals.scss
 │   └── types/
-│       └── lua-types.ts  # TypeScript types
+│       └── lua-types.ts
 ├── package.json
 ├── tsconfig.json
 └── vite.config.ts
