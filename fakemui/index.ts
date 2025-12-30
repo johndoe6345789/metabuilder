@@ -26,7 +26,7 @@ export {
   Settings,
   User,
   UserCheck,
-  Menu,
+  Menu as MenuIcon,
   Eye,
   EyeSlash,
   Pencil,
