@@ -114,6 +114,9 @@ export async function discoverPackages(): Promise<DiscoveredPackage[]> {
     if (config.discovery.scanManifests) {
       scripts = await loadScriptManifest(pkg.packageId)
       
+      // Filter out scripts with missing required fields
+      scripts = scripts.filter(s => s && s.name && s.file)
+      
       // Filter out ignored scripts
       scripts = scripts.filter(s => 
         !config.scripts.ignoredScripts.some(ignored => 
