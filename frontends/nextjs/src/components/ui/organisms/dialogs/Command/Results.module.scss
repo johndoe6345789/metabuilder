@@ -1,0 +1,17 @@
+// Results.module.scss
+// Styles for Command results components
+
+.itemContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.itemLabel {
+  font-size: 0.875rem;
+}
+
+.itemDescription {
+  color: var(--text-secondary, #666);
+  font-size: 0.75rem;
+}

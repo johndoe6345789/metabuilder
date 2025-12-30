@@ -1,0 +1,68 @@
+// CommandList.module.scss
+// Styles for Command list components
+
+.list {
+  max-height: 300px;
+  overflow: auto;
+  padding: 0.5rem 0;
+}
+
+.empty {
+  padding: 3rem 0;
+  text-align: center;
+  color: var(--text-secondary, #666);
+  font-size: 0.875rem;
+}
+
+.group {
+  padding: 0.25rem 0;
+}
+
+.groupHeading {
+  padding: 0.5rem 1rem;
+  display: block;
+  color: var(--text-secondary, #666);
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.itemButton {
+  margin: 0 0.5rem;
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+
+  &.selected {
+    background-color: var(--action-selected, rgba(0, 0, 0, 0.08));
+  }
+}
+
+.itemIcon {
+  min-width: 32px;
+}
+
+.shortcutWrapper {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: 1rem;
+}
+
+.kbd {
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-family: monospace;
+  background-color: var(--action-hover, rgba(0, 0, 0, 0.04));
+  border-radius: 0.25rem;
+  border: 1px solid var(--border-color, #e0e0e0);
+  color: var(--text-secondary, #666);
+}
+
+.separator {
+  margin: 0.5rem 0;
+}
+
+.shortcut {
+  margin-left: auto;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary, #666);
+}

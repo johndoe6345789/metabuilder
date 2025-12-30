@@ -1,0 +1,32 @@
+// CommandDialogShell.module.scss
+// Styles for Command dialog components
+
+.dialogPaper {
+  position: fixed;
+  top: 20%;
+  margin: 0;
+  border-radius: var(--radius-md, 0.5rem);
+  max-height: 60vh;
+  overflow: hidden;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+
+.searchIcon {
+  color: var(--text-secondary, #666);
+  margin-right: 0.75rem;
+}
+
+.input {
+  flex: 1;
+  font-size: 0.875rem;
+
+  input {
+    padding: 0;
+  }
+}
