@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from '@/components/ui'
 import { securityScanner, type SecurityScanResult } from '@/lib/security-scanner'
+import type { JsonValue } from '@/types/utility-types'
 
 import { SchemaSection } from './json/SchemaSection'
 import { Toolbar } from './json/Toolbar'
@@ -21,9 +22,9 @@ interface JsonEditorProps {
   open: boolean
   onClose: () => void
   title: string
-  value: any
-  onSave: (value: any) => void
-  schema?: any
+  value: JsonValue
+  onSave: (value: JsonValue) => void
+  schema?: JsonValue
 }
 
 export function JsonEditor({ open, onClose, title, value, onSave, schema }: JsonEditorProps) {
@@ -41,7 +42,7 @@ export function JsonEditor({ open, onClose, title, value, onSave, schema }: Json
     }
   }, [open, value])
 
-  const parseJson = () => JSON.parse(jsonText)
+  const parseJson = (): JsonValue => JSON.parse(jsonText) as JsonValue
 
   const handleSave = () => {
     try {

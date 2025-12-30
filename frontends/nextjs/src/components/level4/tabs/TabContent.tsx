@@ -16,7 +16,8 @@ import { ThemeEditor } from '@/components/ThemeEditor'
 import { TabsContent } from '@/components/ui'
 import { UserManagement } from '@/components/UserManagement'
 import { WorkflowEditor } from '@/components/WorkflowEditor'
-import type { AppConfiguration, User } from '@/lib/level-types'
+import type { AppConfiguration, LuaScript, User, Workflow } from '@/lib/level-types'
+import type { ModelSchema } from '@/lib/types/schema-types'
 
 import type { Level4TabConfig } from './config'
 
@@ -25,9 +26,9 @@ interface Level4TabContentProps {
   appConfig: AppConfiguration
   user: User
   nerdMode: boolean
-  onSchemasChange: (schemas: any[]) => Promise<void>
-  onWorkflowsChange: (workflows: any[]) => Promise<void>
-  onLuaScriptsChange: (scripts: any[]) => Promise<void>
+  onSchemasChange: (schemas: ModelSchema[]) => Promise<void>
+  onWorkflowsChange: (workflows: Workflow[]) => Promise<void>
+  onLuaScriptsChange: (scripts: LuaScript[]) => Promise<void>
 }
 
 export function TabContent({
