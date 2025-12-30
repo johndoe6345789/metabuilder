@@ -1,4 +1,4 @@
-import { CheckCircle, WarningCircle } from '@phosphor-icons/react'
+import { CheckCircle, WarningCircle } from '@/fakemui/icons'
 
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import type { InstalledPackage } from '@/lib/package-types'

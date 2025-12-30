@@ -1,4 +1,4 @@
-import { Pencil, Trash } from '@phosphor-icons/react'
+import { Pencil, Trash } from '@/fakemui/icons'
 
 import { Badge, Button, Card, Separator } from '@/components/ui'
 import type { DropdownConfig } from '@/lib/database'

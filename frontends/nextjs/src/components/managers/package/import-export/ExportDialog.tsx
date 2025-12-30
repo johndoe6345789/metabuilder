@@ -1,4 +1,4 @@
-import { Database as DatabaseIcon, Export, FileArrowDown, Package } from '@phosphor-icons/react'
+import { Database as DatabaseIcon, Export, FileArrowDown, Package } from '@/fakemui/icons'
 import type React from 'react'
 
 import {

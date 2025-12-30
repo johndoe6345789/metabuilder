@@ -1,4 +1,4 @@
-import { ArrowSquareIn, FileArrowUp } from '@phosphor-icons/react'
+import { ArrowSquareIn, FileArrowUp } from '@/fakemui/icons'
 import type React from 'react'
 
 import {

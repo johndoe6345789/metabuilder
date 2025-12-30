@@ -1,4 +1,4 @@
-import { FloppyDisk, Plus, X } from '@phosphor-icons/react'
+import { FloppyDisk, Plus, X } from '@/fakemui/icons'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 

@@ -1,4 +1,4 @@
-import { ArrowSquareIn, Export, Package } from '@phosphor-icons/react'
+import { ArrowSquareIn, Export, Package } from '@/fakemui/icons'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui'

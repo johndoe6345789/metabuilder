@@ -1,4 +1,4 @@
-import { Package } from '@phosphor-icons/react'
+import { Package } from '@/fakemui/icons'
 
 import { ScrollArea, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import type { InstalledPackage, PackageManifest } from '@/lib/package-types'
