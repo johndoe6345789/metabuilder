@@ -10,8 +10,10 @@ export type { TenantAccessResult, TenantInfo } from './validate-tenant-access'
 
 export {
   clearPackageCache,
+  getAccessiblePackages,
   getPackageEntities,
   getPackageRoutes,
+  isPackageAccessible,
   loadPackageMetadata,
   packageClaimsRoute,
   validatePackageRoute,

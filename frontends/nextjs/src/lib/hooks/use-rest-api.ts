@@ -5,6 +5,10 @@
  * 
  * React hook for making RESTful API calls using the tenant routing pattern.
  * Works with the /api/v1/{tenant}/{package}/{entity}/... endpoints.
+ * 
+ * Supports accessing data from:
+ * - Primary package (default)
+ * - Dependency packages (by specifying packageId)
  */
 
 import { useState, useCallback } from 'react'
@@ -26,6 +30,8 @@ interface RequestOptions {
   skip?: number
   where?: Record<string, unknown>
   orderBy?: Record<string, 'asc' | 'desc'>
+  /** Override the package for this request (useful for dependency packages) */
+  packageId?: string
 }
 
 /**
