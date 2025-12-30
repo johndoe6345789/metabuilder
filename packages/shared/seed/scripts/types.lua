@@ -70,12 +70,38 @@
 ---@field level PermissionLevel Permission level
 
 ---@alias PermissionLevel
----| 1 # PUBLIC
+---| 0 # PUBLIC - No authentication required
+---| 1 # PUBLIC - No authentication required
 ---| 2 # USER
 ---| 3 # MODERATOR
 ---| 4 # ADMIN
 ---| 5 # GOD
 ---| 6 # SUPERGOD
+
+--------------------------------------------------------------------------------
+-- Permission Types
+--------------------------------------------------------------------------------
+
+---@class ComponentPermission
+---@field enabled boolean Component enabled/disabled
+---@field minLevel PermissionLevel Minimum permission level required
+---@field featureFlags? string[] Required feature flags (optional)
+---@field requireDatabase? boolean Whether this component requires database (optional)
+
+---@class PackagePermissions
+---@field enabled boolean Package enabled/disabled
+---@field minLevel PermissionLevel Minimum level to access package (0-6)
+---@field databaseRequired? boolean Whether package needs database connection
+---@field components? table<string, ComponentPermission> Per-component permissions
+
+---@class PermissionCheckResult
+---@field allowed boolean Whether access is allowed
+---@field reason? string Denial reason if not allowed
+---@field requiredLevel? PermissionLevel Required level if denied
+
+---@class FeatureFlagState
+---@field flags table<string, boolean> Active feature flags
+---@field databaseEnabled boolean Whether database is currently enabled
 
 --------------------------------------------------------------------------------
 -- Action Result Types
