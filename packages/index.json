@@ -155,6 +155,27 @@
       "minLevel": 2
     },
     {
+      "packageId": "dbal_demo",
+      "name": "DBAL Demo",
+      "version": "1.0.0",
+      "description": "DBAL Integration Demo - Demonstrates TypeScript DBAL client with MetaBuilder including KV store, blob storage, and caching.",
+      "icon": "🗄️",
+      "author": "MetaBuilder Team",
+      "category": "demo",
+      "dependencies": [],
+      "exports": {
+        "components": ["DBALDemo", "KVStorePanel", "BlobStoragePanel", "CachedDataPanel"],
+        "luaScripts": ["init", "kv_operations", "blob_operations", "cache_operations", "connection"]
+      },
+      "tags": ["dbal", "demo", "kv-store", "blob-storage", "cache"],
+      "minLevel": 3,
+      "bindings": {
+        "dbal": true,
+        "browser": false
+      },
+      "requiredHooks": ["dbal", "kv_store", "blob_storage", "cached_data"]
+    },
+    {
       "packageId": "irc_webchat",
       "name": "IRC Webchat",
       "version": "1.0.0",

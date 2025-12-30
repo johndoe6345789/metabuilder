@@ -3,7 +3,7 @@
  * TypeScript utilities for running Lua tests from packages
  */
 
-import type { JsonValue } from '@/types/utility-types'
+type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue }
 
 export interface LuaTestResult {
   name: string
