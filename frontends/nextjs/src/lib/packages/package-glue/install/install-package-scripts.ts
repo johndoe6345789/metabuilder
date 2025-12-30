@@ -2,8 +2,25 @@ import { getPackageScriptFiles } from './get-package-script-files'
 import { getPackageScripts } from './get-package-scripts'
 import type { PackageDefinition } from './types'
 
+type PackageLuaScript = {
+  id: string
+  name: string
+  code: string
+  category: string
+  packageId: string
+  path?: string
+  description?: string
+}
+
+type PackageScriptStore = {
+  set(table: 'lua_scripts', id: string, value: PackageLuaScript): Promise<void>
+}
+
 // Install package scripts into database
-export async function installPackageScripts(pkg: PackageDefinition, db: any): Promise<void> {
+export async function installPackageScripts(
+  pkg: PackageDefinition,
+  db: PackageScriptStore
+): Promise<void> {
   // Install legacy single script file if it exists
   const legacyScripts = getPackageScripts(pkg)
   if (legacyScripts) {

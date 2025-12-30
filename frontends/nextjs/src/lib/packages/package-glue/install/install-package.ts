@@ -4,11 +4,24 @@ import { installPackageComponents } from './install-package-components'
 import { installPackageScripts } from './install-package-scripts'
 import type { PackageRegistry } from './types'
 
+type InstalledPackageRecord = {
+  packageId: string
+  name: string
+  version: string
+  installedAt: number
+}
+
+type PackageInstallStore = {
+  set(table: 'installed_packages', id: string, value: InstalledPackageRecord): Promise<void>
+  set(table: 'components', id: string, value: { id: string }): Promise<void>
+  set(table: 'lua_scripts', id: string, value: { id: string }): Promise<void>
+}
+
 // Install entire package
 export async function installPackage(
   registry: PackageRegistry,
   packageId: string,
-  db: any
+  db: PackageInstallStore
 ): Promise<{ success: boolean; error?: string }> {
   const pkg = getPackage(registry, packageId)
 

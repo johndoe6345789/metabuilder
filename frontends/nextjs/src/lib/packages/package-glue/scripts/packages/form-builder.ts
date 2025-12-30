@@ -1,6 +1,6 @@
 import type { PackageSeedConfig } from '../types'
 
-const components: any[] = []
+const components: PackageSeedConfig['components'] = []
 const metadata: PackageSeedConfig['metadata'] = {
   packageId: 'form_builder',
   name: 'Form Builder',
@@ -11,7 +11,7 @@ const metadata: PackageSeedConfig['metadata'] = {
   dependencies: [],
   exports: { components: [] },
 }
-const examples: any = {}
+const examples: PackageSeedConfig['examples'] = {}
 
 export const formBuilder: PackageSeedConfig = {
   metadata,

@@ -2,11 +2,17 @@ import { getPackage } from './get-package'
 import { getPackageComponents } from './get-package-components'
 import type { PackageRegistry } from './types'
 
+type PackageUninstallStore = {
+  delete(table: 'components', id: string): Promise<void>
+  delete(table: 'lua_scripts', id: string): Promise<void>
+  delete(table: 'installed_packages', id: string): Promise<void>
+}
+
 // Uninstall package
 export async function uninstallPackage(
   registry: PackageRegistry,
   packageId: string,
-  db: any
+  db: PackageUninstallStore
 ): Promise<{ success: boolean; error?: string }> {
   const pkg = getPackage(registry, packageId)
 
