@@ -12,15 +12,16 @@
 
 | Area | Current State | Target State |
 |------|---------------|--------------|
-| @mui/material | ✅ **ELIMINATED from source** | ✅ Complete |
-| @mui/icons-material | ✅ Eliminated from source | ✅ Complete |
-| @phosphor-icons/react | In package.json | ❌ Remove from deps |
+| @mui/material | ✅ **ELIMINATED** | ✅ Complete |
+| @mui/icons-material | ✅ **ELIMINATED** | ✅ Complete |
+| @phosphor-icons/react | ✅ **ELIMINATED** | ✅ Complete |
+| @emotion/react | ✅ **ELIMINATED** | ✅ Complete |
 | fakemui icons | 357+ icons | ✅ Complete |
 | fakemui components | ~180 components | ✅ Full MUI parity |
 | Lua packages typed | ✅ All 43 packages | ✅ Complete |
 | Lua packages tested | 43/43 packages | ✅ Complete |
-| Dependencies | Still in package.json | Remove from package.json |
-| Bundle size | Large | Will reduce 15-25% |
+| Package validation | ✅ All exports match | ✅ Complete |
+| Dependencies | **7 removed from package.json** | ✅ Complete |
 
 ### Progress Today (2025-12-30)
 - ✅ **100+ TSX files migrated** from @mui/material to fakemui
@@ -29,6 +30,8 @@
 - ✅ **Missing tests added** - shared, config_summary, lua_test packages
 - ✅ **ToggleButtonGroup enhanced** - Full value management, exclusive mode
 - ✅ **40+ SCSS modules created** - Converted sx props to CSS modules
+- ✅ **14 packages fixed** - Added declarative component definitions
+- ✅ **7 dependencies removed** - @mui/*, @emotion/*, @phosphor-icons
 
 ---
 
@@ -55,10 +58,10 @@
 │   - All common MUI icons covered                                           │
 │   - Icon naming conventions documented                                     │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ PHASE 5: Package Validator Compliance                       [Hours: 2-4]   │
-│   - Run validator on all 43 packages                                       │
-│   - Fix any validation errors                                              │
-│   - Update validator rules if needed                                       │
+│ PHASE 5: Package Validator Compliance                       ✅ COMPLETE   │
+│   - Fixed 14 packages with empty components.json                           │
+│   - All packages now pass export/component validation                      │
+│   - Added declarative component definitions                                │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ PHASE 6: Lua Package Permissions System                     [Hours: 4-8]   │
 │   - Add database toggle to packages                                        │
@@ -85,11 +88,11 @@
 │   - CLI frontend integration                                               │
 │   - Abstract package rendering layer                                       │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ PHASE 11: Dependency Cleanup                                [Hours: 2-4]   │
-│   - Remove @mui/* from package.json                                        │
-│   - Remove @emotion/* from package.json                                    │
-│   - Remove @phosphor-icons/react                                           │
-│   - Verify build still works                                               │
+│ PHASE 11: Dependency Cleanup                                ✅ COMPLETE   │
+│   - Removed @mui/material, @mui/icons-material                             │
+│   - Removed @mui/x-data-grid, @mui/x-date-pickers                          │
+│   - Removed @emotion/react, @emotion/styled                                │
+│   - Removed @phosphor-icons/react                                          │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ PHASE 12: Verification & Polish                             [Hours: 4-8]   │
 │   - Playwright E2E tests                                                   │
