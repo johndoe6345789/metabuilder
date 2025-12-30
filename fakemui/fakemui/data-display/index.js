@@ -7,3 +7,5 @@ export { List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListItemAva
 export { Table, TableHead, TableBody, TableFooter, TableRow, TableCell, TableContainer, TablePagination, TableSortLabel } from './Table'
 export { Tooltip } from './Tooltip'
 export { Typography } from './Typography'
+export { Markdown } from './Markdown'
+export { Separator } from './Separator'

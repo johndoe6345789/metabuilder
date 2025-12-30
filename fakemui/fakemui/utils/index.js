@@ -12,3 +12,4 @@ export { useMediaQuery, useMediaQueryUp, useMediaQueryDown, useMediaQueryBetween
 export { GlobalStyles } from './GlobalStyles'
 export { classNames } from './classNames'
 export { ToastProvider, useToast } from './ToastContext'
+export { Iframe } from './Iframe'

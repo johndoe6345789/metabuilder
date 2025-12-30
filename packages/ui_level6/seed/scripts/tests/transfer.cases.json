@@ -1,0 +1,35 @@
+{
+  "transferForm": {
+    "valid": [
+      {
+        "fromId": "supergod_001",
+        "fromName": "Current SuperGod",
+        "toId": "god_002",
+        "toName": "Promoted God",
+        "description": "transfer from supergod to god"
+      },
+      {
+        "fromId": "supergod_001",
+        "fromName": "Admin User",
+        "toId": "admin_003",
+        "toName": "New Admin",
+        "description": "transfer between admins"
+      },
+      {
+        "fromId": "original_owner",
+        "fromName": "Original Owner",
+        "toId": "new_owner",
+        "toName": "New Owner",
+        "description": "full ownership transfer"
+      }
+    ]
+  },
+  "transferHistory": {
+    "columns": [
+      { "id": "date", "label": "Date", "type": "date" },
+      { "id": "from", "label": "From User" },
+      { "id": "to", "label": "To User" },
+      { "id": "reason", "label": "Reason" }
+    ]
+  }
+}
