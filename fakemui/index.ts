@@ -193,6 +193,9 @@ export {
   Zoom,
   Collapse,
   useMediaQuery,
+  useMediaQueryUp,
+  useMediaQueryDown,
+  useMediaQueryBetween,
 } from './fakemui/utils'
 
 // Atoms
