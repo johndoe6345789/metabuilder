@@ -15,12 +15,15 @@ qt_add_executable(dbal-qml
     main.cpp
     src/PackageRegistry.cpp
     src/ModPlayer.cpp
+    src/DBALClient.cpp
 )
 
 qt_add_qml_module(dbal-qml
     URI DBALObservatory
     VERSION 1.0
-    QML_FILES FrontPage.qml
+    QML_FILES 
+        FrontPage.qml
+        qmllib/dbal/DBALProvider.qml
 )
 
 target_link_libraries(dbal-qml PRIVATE Qt6::Core Qt6::Gui Qt6::Quick cpr::cpr libopenmpt::libopenmpt)
