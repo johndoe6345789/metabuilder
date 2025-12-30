@@ -1,7 +1,22 @@
 import { getDeclarativeRenderer } from '../renderer/get-declarative-renderer'
 import type { DeclarativeComponentConfig } from '../types'
 
-export function loadPackageComponents(packageContent: any) {
+interface LuaScriptConfig {
+  id: string
+  code: string
+  parameters?: { name: string }[]
+  returnType?: string
+  isSandboxed?: boolean
+  allowedGlobals?: string[]
+  timeoutMs?: number
+}
+
+interface PackageContent {
+  componentConfigs?: Record<string, DeclarativeComponentConfig>
+  luaScripts?: LuaScriptConfig[]
+}
+
+export function loadPackageComponents(packageContent: PackageContent) {
   const renderer = getDeclarativeRenderer()
 
   if (packageContent.componentConfigs) {
@@ -11,7 +26,7 @@ export function loadPackageComponents(packageContent: any) {
   }
 
   if (packageContent.luaScripts) {
-    packageContent.luaScripts.forEach((script: any) => {
+    packageContent.luaScripts.forEach((script: LuaScriptConfig) => {
       renderer.registerLuaScript(script.id, {
         code: script.code,
         parameters: script.parameters || [],

@@ -1,6 +1,8 @@
 import * as fengari from 'fengari-web'
 
 import { fromLua } from '@/lib/lua/functions/converters/from-lua'
+import type { JsonValue } from '@/types/utility-types'
+import type { LuaState } from '@/lib/lua/functions/types'
 
 const lua = fengari.lua
 
@@ -11,7 +13,7 @@ const lua = fengari.lua
  * @param functionName - Name of the function to call
  * @returns The result of the function call
  */
-export function callLuaFunction(L: any, tableIndex: number, functionName: string): any {
+export function callLuaFunction(L: LuaState, tableIndex: number, functionName: string): JsonValue {
   // Get the function from the table
   lua.lua_getfield(L, tableIndex, fengari.to_luastring(functionName))
 
