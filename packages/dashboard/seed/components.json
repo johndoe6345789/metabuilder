@@ -1,1 +1,94 @@
-[]
+[
+  {
+    "id": "stat_card",
+    "type": "Card",
+    "props": {
+      "variant": "outlined",
+      "className": "stat-card"
+    },
+    "children": [
+      {
+        "id": "stat_card_icon",
+        "type": "Box",
+        "props": {
+          "className": "stat-card-icon"
+        },
+        "children": []
+      },
+      {
+        "id": "stat_card_content",
+        "type": "Stack",
+        "props": {
+          "gap": 1
+        },
+        "children": [
+          {
+            "id": "stat_card_label",
+            "type": "Text",
+            "props": {
+              "variant": "caption",
+              "color": "secondary"
+            },
+            "children": []
+          },
+          {
+            "id": "stat_card_value",
+            "type": "Text",
+            "props": {
+              "variant": "h4",
+              "fontWeight": "bold"
+            },
+            "children": []
+          },
+          {
+            "id": "stat_card_trend",
+            "type": "Flex",
+            "props": {
+              "alignItems": "center",
+              "gap": 0.5
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dashboard_grid",
+    "type": "Grid",
+    "props": {
+      "container": true,
+      "spacing": 3,
+      "className": "dashboard-grid"
+    },
+    "children": []
+  },
+  {
+    "id": "widget",
+    "type": "Card",
+    "props": {
+      "variant": "elevation",
+      "className": "dashboard-widget"
+    },
+    "children": [
+      {
+        "id": "widget_header",
+        "type": "CardHeader",
+        "props": {},
+        "children": []
+      },
+      {
+        "id": "widget_content",
+        "type": "CardContent",
+        "props": {},
+        "children": []
+      },
+      {
+        "id": "widget_actions",
+        "type": "CardActions",
+        "props": {},
+        "children": []
+      }
+    ]
+  }
+]
