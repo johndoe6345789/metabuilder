@@ -1,4 +1,4 @@
-import { TableCell, TableHead, TableRow, Typography } from '@mui/material'
+import { TableCell, TableHead, TableRow, Typography } from '@/fakemui'
 
 import type { DataTableColumn } from './types'
 
@@ -15,18 +15,9 @@ export function Header<T>({ columns, actionsHeader }: HeaderProps<T>) {
           <TableCell
             key={column.key}
             align={column.align}
-            sx={{
-              borderBottom: 1,
-              borderColor: 'divider',
-              ...(column.width ? { width: column.width } : {}),
-              ...(column.sx ?? {}),
-            }}
+            className={`table-header-cell ${column.width ? `width-${column.width}` : ''}`}
           >
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{ textTransform: 'uppercase', letterSpacing: 0.2 }}
-            >
+            <Typography variant="caption" className="table-header-text">
               {column.label}
             </Typography>
           </TableCell>
@@ -35,13 +26,9 @@ export function Header<T>({ columns, actionsHeader }: HeaderProps<T>) {
         {actionsHeader ? (
           <TableCell
             align="right"
-            sx={{ borderBottom: 1, borderColor: 'divider', width: 1, whiteSpace: 'nowrap' }}
+            className="table-header-cell table-header-cell--actions"
           >
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{ textTransform: 'uppercase', letterSpacing: 0.2 }}
-            >
+            <Typography variant="caption" className="table-header-text">
               {actionsHeader}
             </Typography>
           </TableCell>

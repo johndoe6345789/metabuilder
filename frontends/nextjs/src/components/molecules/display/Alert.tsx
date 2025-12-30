@@ -1,16 +1,8 @@
 'use client'
 
-import {
-  Alert as MuiAlert,
-  AlertProps as MuiAlertProps,
-  AlertTitle as MuiAlertTitle,
-  Collapse,
-  IconButton,
-  SxProps,
-  Theme,
-} from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
+import { Alert as FakeMuiAlert, AlertTitle as FakeMuiAlertTitle, IconButton } from '@/fakemui'
 import { Close } from '@/fakemui/icons'
 
 export type AlertVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info'
@@ -22,10 +14,9 @@ export interface AlertProps {
   onDismiss?: () => void
   children?: ReactNode
   className?: string
-  sx?: SxProps<Theme>
 }
 
-const variantMap: Record<AlertVariant, MuiAlertProps['severity']> = {
+const variantMap: Record<AlertVariant, 'info' | 'error' | 'success' | 'warning'> = {
   default: 'info',
   destructive: 'error',
   success: 'success',
@@ -35,29 +26,29 @@ const variantMap: Record<AlertVariant, MuiAlertProps['severity']> = {
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(
   (
-    { variant = 'default', title, dismissible, onDismiss, children, className, sx, ...props },
+    { variant = 'default', title, dismissible, onDismiss, children, className, ...props },
     ref
   ) => {
     const severity = variantMap[variant]
 
     return (
-      <MuiAlert
+      <FakeMuiAlert
         ref={ref}
         severity={severity}
         variant="outlined"
-        className={className}
+        className={`alert ${className || ''}`}
         action={
           dismissible && onDismiss ? (
-            <IconButton aria-label="close" color="inherit" size="small" onClick={onDismiss}>
+            <IconButton aria-label="close" onClick={onDismiss}>
               <Close size={16} />
             </IconButton>
           ) : undefined
         }
-        sx={{ borderRadius: 1, ...sx }}
+        {...props}
       >
-        {title && <MuiAlertTitle>{title}</MuiAlertTitle>}
+        {title && <FakeMuiAlertTitle>{title}</FakeMuiAlertTitle>}
         {children}
-      </MuiAlert>
+      </FakeMuiAlert>
     )
   }
 )
@@ -65,13 +56,13 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
 Alert.displayName = 'Alert'
 
 // AlertTitle (for direct use)
-const AlertTitle = MuiAlertTitle
+const AlertTitle = FakeMuiAlertTitle
 
 // AlertDescription (shadcn compat)
 const AlertDescription = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <div ref={ref} {...props}>
+      <div ref={ref} className={`alert-description ${className || ''}`} {...props}>
         {children}
       </div>
     )

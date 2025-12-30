@@ -1,55 +1,41 @@
 'use client'
 
+import { forwardRef, ReactNode } from 'react'
+
 import {
   Box,
-  Dialog as MuiDialog,
-  DialogActions as MuiDialogActions,
-  DialogContent as MuiDialogContent,
-  DialogProps as MuiDialogProps,
-  DialogTitle as MuiDialogTitle,
+  DialogActions,
+  DialogContent as FakeMuiDialogContent,
+  DialogTitle as FakeMuiDialogTitle,
   IconButton,
+  Modal,
   Slide,
   Typography,
-} from '@mui/material'
-import { TransitionProps } from '@mui/material/transitions'
-import { forwardRef, ReactNode, useState } from 'react'
-
+} from '@/fakemui'
 import { Close } from '@/fakemui/icons'
 
-// Slide transition
-const Transition = forwardRef(function Transition(
-  props: TransitionProps & { children: React.ReactElement },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />
-})
-
 // Dialog
-export interface DialogProps extends Omit<MuiDialogProps, 'onClose'> {
+export interface DialogProps {
+  open?: boolean
   onOpenChange?: (open: boolean) => void
   onClose?: () => void
+  children?: ReactNode
+  className?: string
 }
 
 const Dialog = forwardRef<HTMLDivElement, DialogProps>(
-  ({ open, onOpenChange, onClose, children, ...props }, ref) => {
+  ({ open, onOpenChange, onClose, children, className, ...props }, ref) => {
     const handleClose = () => {
       onClose?.()
       onOpenChange?.(false)
     }
 
     return (
-      <MuiDialog
-        ref={ref}
-        open={open ?? false}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-        PaperProps={{
-          sx: { borderRadius: 2 },
-        }}
-        {...props}
-      >
-        {children}
-      </MuiDialog>
+      <Modal ref={ref} open={open} onClose={handleClose} className={className} {...props}>
+        <Slide direction="up" in={open}>
+          <div className="dialog-panel">{children}</div>
+        </Slide>
+      </Modal>
     )
   }
 )
@@ -68,7 +54,7 @@ const DialogTrigger = forwardRef<HTMLDivElement, DialogTriggerProps>(
       <Box
         ref={ref}
         onClick={onClick}
-        sx={{ display: 'inline-flex', cursor: 'pointer' }}
+        className="dialog-trigger"
         {...props}
       >
         {children}
@@ -87,29 +73,24 @@ interface DialogContentProps {
 }
 
 const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
-  ({ children, showCloseButton = true, onClose, ...props }, ref) => {
+  ({ children, showCloseButton = true, onClose, className, ...props }, ref) => {
     return (
-      <MuiDialogContent
+      <FakeMuiDialogContent
         ref={ref}
-        sx={{ position: 'relative', pt: showCloseButton ? 6 : 2 }}
+        className={`dialog-content ${showCloseButton ? 'dialog-content--with-close' : ''} ${className || ''}`}
         {...props}
       >
         {showCloseButton && onClose && (
           <IconButton
             aria-label="close"
             onClick={onClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: 'text.secondary',
-            }}
+            className="dialog-close-button"
           >
             <Close />
           </IconButton>
         )}
         {children}
-      </MuiDialogContent>
+      </FakeMuiDialogContent>
     )
   }
 )
@@ -117,9 +98,9 @@ DialogContent.displayName = 'DialogContent'
 
 // DialogHeader
 const DialogHeader = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <Box ref={ref} sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, pb: 2 }} {...props}>
+      <Box ref={ref} className={`dialog-header ${className || ''}`} {...props}>
         {children}
       </Box>
     )
@@ -129,11 +110,11 @@ DialogHeader.displayName = 'DialogHeader'
 
 // DialogFooter
 const DialogFooter = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <MuiDialogActions ref={ref} sx={{ px: 3, py: 2, gap: 1 }} {...props}>
+      <DialogActions ref={ref} className={`dialog-footer ${className || ''}`} {...props}>
         {children}
-      </MuiDialogActions>
+      </DialogActions>
     )
   }
 )
@@ -141,11 +122,11 @@ DialogFooter.displayName = 'DialogFooter'
 
 // DialogTitle
 const DialogTitle = forwardRef<HTMLHeadingElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <MuiDialogTitle ref={ref} sx={{ pb: 1 }} {...props}>
+      <FakeMuiDialogTitle ref={ref} className={`dialog-title ${className || ''}`} {...props}>
         {children}
-      </MuiDialogTitle>
+      </FakeMuiDialogTitle>
     )
   }
 )
@@ -155,9 +136,9 @@ DialogTitle.displayName = 'DialogTitle'
 const DialogDescription = forwardRef<
   HTMLParagraphElement,
   { children: ReactNode; className?: string }
->(({ children, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
-    <Typography ref={ref} variant="body2" color="text.secondary" {...props}>
+    <Typography ref={ref} variant="body2" className={`dialog-description ${className || ''}`} {...props}>
       {children}
     </Typography>
   )
@@ -174,7 +155,7 @@ const DialogClose = forwardRef<
       <Box
         ref={ref as unknown as React.Ref<HTMLDivElement>}
         onClick={onClick}
-        sx={{ display: 'inline-flex', cursor: 'pointer' }}
+        className="dialog-close"
       >
         {children}
       </Box>
