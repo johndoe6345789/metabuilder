@@ -1,130 +1,30 @@
--- CLI tool for validating packages
--- Usage: lua cli.lua <package_name> [options]
+--- CLI tool facade for validating packages
+--- Usage: lua cli.lua <package_name> [options]
+---@module cli
 
 local validate = require("validate")
+local parse_args = require("parse_args")
+local print_help = require("print_help")
+local output_json = require("output_json")
+local output_human = require("output_human")
 
+---@class CLI
 local M = {}
 
--- Parse command line arguments
-function M.parse_args(args)
-  local options = {
-    package_name = nil,
-    skipStructure = false,
-    skipLua = false,
-    verbose = false,
-    json_output = false
-  }
+M.parse_args = parse_args
+M.print_help = print_help
+M.output_json = output_json
+M.output_human = output_human
 
-  local i = 1
-  while i <= #args do
-    local arg = args[i]
-
-    if arg == "--skip-structure" then
-      options.skipStructure = true
-    elseif arg == "--skip-lua" then
-      options.skipLua = true
-    elseif arg == "--verbose" or arg == "-v" then
-      options.verbose = true
-    elseif arg == "--json" then
-      options.json_output = true
-    elseif arg == "--help" or arg == "-h" then
-      M.print_help()
-      os.exit(0)
-    elseif not options.package_name then
-      options.package_name = arg
-    end
-
-    i = i + 1
-  end
-
-  return options
-end
-
--- Print help message
-function M.print_help()
-  print([[
-Package Validator CLI
-
-Usage:
-  lua cli.lua <package_name> [options]
-
-Arguments:
-  package_name          Name of the package to validate
-
-Options:
-  --skip-structure      Skip folder structure validation
-  --skip-lua            Skip Lua file validation
-  --verbose, -v         Show detailed validation information
-  --json                Output results as JSON
-  --help, -h            Show this help message
-
-Examples:
-  # Validate audit_log package
-  lua cli.lua audit_log
-
-  # Validate with verbose output
-  lua cli.lua audit_log --verbose
-
-  # Skip structure validation
-  lua cli.lua audit_log --skip-structure
-
-  # Output as JSON (for CI/CD integration)
-  lua cli.lua audit_log --json
-
-Exit Codes:
-  0 - Validation passed
-  1 - Validation failed
-  2 - Invalid arguments or package not found
-]])
-end
-
--- Output results as JSON
-function M.output_json(results)
-  local json_output = {
-    valid = results.valid,
-    errors = results.errors,
-    warnings = results.warnings
-  }
-
-  -- Simple JSON serialization
-  local function serialize_array(arr)
-    local items = {}
-    for _, item in ipairs(arr) do
-      table.insert(items, '"' .. item:gsub('"', '\\"') .. '"')
-    end
-    return "[" .. table.concat(items, ",") .. "]"
-  end
-
-  print("{")
-  print('  "valid": ' .. tostring(results.valid) .. ',')
-  print('  "errors": ' .. serialize_array(results.errors) .. ',')
-  print('  "warnings": ' .. serialize_array(results.warnings))
-  print("}")
-end
-
--- Output results in human-readable format
-function M.output_human(results, verbose)
-  local output = validate.format_results(results)
-  print(output)
-
-  if verbose and #results.errors > 0 then
-    print("\n--- Detailed Error Information ---")
-    for i, err in ipairs(results.errors) do
-      print(i .. ". " .. err)
-    end
-  end
-
-  if verbose and #results.warnings > 0 then
-    print("\n--- Detailed Warning Information ---")
-    for i, warn in ipairs(results.warnings) do
-      print(i .. ". " .. warn)
-    end
-  end
-end
-
--- Main entry point
+--- Main entry point
+---@param args string[] Command line arguments
 function M.run(args)
-  local options = M.parse_args(args)
+  local options = parse_args(args)
+
+  if options.show_help then
+    print_help()
+    os.exit(0)
+  end
 
   if not options.package_name then
     print("Error: Package name is required")
@@ -151,9 +51,9 @@ function M.run(args)
 
   -- Output results
   if options.json_output then
-    M.output_json(results)
+    output_json(results)
   else
-    M.output_human(results, options.verbose)
+    output_human(results, options.verbose)
   end
 
   -- Exit with appropriate code

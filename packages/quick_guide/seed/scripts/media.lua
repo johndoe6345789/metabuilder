@@ -1,77 +1,22 @@
--- Media pane logic for quick guides
+--- Media pane logic facade for quick guides
+--- Re-exports media functions for backward compatibility
+---@module media
+
+local is_valid_url = require("is_valid_url")
+local is_image_url = require("is_image_url")
+local is_video_url = require("is_video_url")
+local prepare_media_state = require("prepare_media_state")
+local handle_thumbnail_change = require("handle_thumbnail_change")
+local handle_video_change = require("handle_video_change")
+
+---@class MediaModule
 local M = {}
 
--- Validate a URL (basic check)
-function M.isValidUrl(url)
-  if not url or url == "" then
-    return false
-  end
-  return string.match(url, "^https?://") ~= nil
-end
-
--- Check if URL is an image
-function M.isImageUrl(url)
-  if not M.isValidUrl(url) then
-    return false
-  end
-  local patterns = { "%.png$", "%.jpg$", "%.jpeg$", "%.gif$", "%.webp$", "%.svg$" }
-  for _, pattern in ipairs(patterns) do
-    if string.match(url:lower(), pattern) then
-      return true
-    end
-  end
-  return false
-end
-
--- Check if URL is a video embed
-function M.isVideoUrl(url)
-  if not M.isValidUrl(url) then
-    return false
-  end
-  local patterns = { "youtube%.com", "vimeo%.com", "%.mp4$", "%.webm$" }
-  for _, pattern in ipairs(patterns) do
-    if string.match(url:lower(), pattern) then
-      return true
-    end
-  end
-  return false
-end
-
--- Prepare media state
-function M.prepareMediaState(props)
-  props = props or {}
-  return {
-    thumbnailUrl = props.thumbnailUrl or "",
-    videoUrl = props.videoUrl or "",
-    thumbnailValid = M.isValidUrl(props.thumbnailUrl),
-    videoValid = M.isValidUrl(props.videoUrl),
-    thumbnailIsImage = M.isImageUrl(props.thumbnailUrl),
-    videoIsVideo = M.isVideoUrl(props.videoUrl)
-  }
-end
-
--- Handle thumbnail change
-function M.handleThumbnailChange(state, newUrl)
-  return {
-    thumbnailUrl = newUrl,
-    videoUrl = state.videoUrl,
-    thumbnailValid = M.isValidUrl(newUrl),
-    videoValid = state.videoValid,
-    thumbnailIsImage = M.isImageUrl(newUrl),
-    videoIsVideo = state.videoIsVideo
-  }
-end
-
--- Handle video change
-function M.handleVideoChange(state, newUrl)
-  return {
-    thumbnailUrl = state.thumbnailUrl,
-    videoUrl = newUrl,
-    thumbnailValid = state.thumbnailValid,
-    videoValid = M.isValidUrl(newUrl),
-    thumbnailIsImage = state.thumbnailIsImage,
-    videoIsVideo = M.isVideoUrl(newUrl)
-  }
-end
+M.isValidUrl = is_valid_url
+M.isImageUrl = is_image_url
+M.isVideoUrl = is_video_url
+M.prepareMediaState = prepare_media_state
+M.handleThumbnailChange = handle_thumbnail_change
+M.handleVideoChange = handle_video_change
 
 return M
