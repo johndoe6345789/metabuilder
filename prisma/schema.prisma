@@ -231,6 +231,56 @@ model SMTPConfig {
 }
 
 // =============================================================================
+// GENERIC KEY-VALUE STORAGE
+// =============================================================================
+
+model KeyValue {
+  id        String  @id @default(cuid())
+  tenantId  String?
+  namespace String  // Logical grouping: 'settings', 'cache', 'state', 'user_prefs', etc.
+  key       String
+  value     String  // JSON or plain text
+  type      String  @default("string") // string, json, number, boolean
+  expiresAt BigInt? // Optional TTL for cache-like usage
+  createdAt BigInt
+  updatedAt BigInt?
+
+  @@unique([tenantId, namespace, key])
+  @@index([tenantId])
+  @@index([namespace])
+  @@index([expiresAt])
+}
+
+model UserPreference {
+  id        String  @id @default(cuid())
+  userId    String
+  tenantId  String?
+  key       String  // theme, language, notifications_enabled, sidebar_collapsed, etc.
+  value     String  // JSON or plain value
+  createdAt BigInt
+  updatedAt BigInt?
+
+  @@unique([userId, tenantId, key])
+  @@index([userId])
+  @@index([tenantId])
+}
+
+model FeatureFlag {
+  id          String  @id @default(cuid())
+  tenantId    String?
+  name        String  // dark_mode, beta_features, new_editor, etc.
+  enabled     Boolean @default(false)
+  description String?
+  rules       String? // JSON: targeting rules (user roles, percentages, etc.)
+  createdAt   BigInt
+  updatedAt   BigInt?
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+  @@index([enabled])
+}
+
+// =============================================================================
 // COMPONENTS & UI
 // =============================================================================
 

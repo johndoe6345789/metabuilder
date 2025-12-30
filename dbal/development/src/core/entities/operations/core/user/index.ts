@@ -1,29 +1,46 @@
-import type { DBALAdapter } from '../../../../adapters/adapter'
-import type { User, ListOptions, ListResult } from '../../../../foundation/types'
-import { createUser } from './create'
-import { deleteUser } from './delete'
-import { updateUser } from './update'
-import { createManyUsers, deleteManyUsers, updateManyUsers } from './batch'
-import { listUsers, readUser } from './reads'
+// TODO: Implement user operations
+// import type { DBALAdapter } from '../../../../adapters/adapter'
+// import type { User, ListOptions, ListResult } from '../../../../foundation/types'
+// import { createUser } from './create'
+// import { deleteUser } from './delete'
+// import { updateUser } from './update'
+// import { createManyUsers, deleteManyUsers, updateManyUsers } from './batch'
+// import { listUsers, readUser } from './reads'
 
 export interface UserOperations {
-  create: (data: Omit<User, 'id' | 'createdAt' | 'updatedAt'>) => Promise<User>
-  read: (id: string) => Promise<User | null>
-  update: (id: string, data: Partial<User>) => Promise<User>
+  create: (data: any) => Promise<any>
+  read: (id: string) => Promise<any | null>
+  update: (id: string, data: any) => Promise<any>
   delete: (id: string) => Promise<boolean>
-  list: (options?: ListOptions) => Promise<ListResult<User>>
-  createMany: (data: Array<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>) => Promise<number>
-  updateMany: (filter: Record<string, unknown>, data: Partial<User>) => Promise<number>
-  deleteMany: (filter: Record<string, unknown>) => Promise<number>
+  list: (options?: any) => Promise<any>
+  createMany: (data: any[]) => Promise<number>
+  updateMany: (filter: any, data: any) => Promise<number>
+  deleteMany: (filter: any) => Promise<number>
 }
 
-export const createUserOperations = (adapter: DBALAdapter): UserOperations => ({
-  create: data => createUser(adapter, data),
-  read: id => readUser(adapter, id),
-  update: (id, data) => updateUser(adapter, id, data),
-  delete: id => deleteUser(adapter, id),
-  list: options => listUsers(adapter, options),
-  createMany: data => createManyUsers(adapter, data),
-  updateMany: (filter, data) => updateManyUsers(adapter, filter, data),
-  deleteMany: filter => deleteManyUsers(adapter, filter),
+export const createUserOperations = (adapter: any): UserOperations => ({
+  create: async (data) => {
+    throw new Error('User operations not yet implemented');
+  },
+  read: async (id) => {
+    throw new Error('User operations not yet implemented');
+  },
+  update: async (id, data) => {
+    throw new Error('User operations not yet implemented');
+  },
+  delete: async (id) => {
+    throw new Error('User operations not yet implemented');
+  },
+  list: async (options) => {
+    throw new Error('User operations not yet implemented');
+  },
+  createMany: async (data) => {
+    throw new Error('User operations not yet implemented');
+  },
+  updateMany: async (filter, data) => {
+    throw new Error('User operations not yet implemented');
+  },
+  deleteMany: async (filter) => {
+    throw new Error('User operations not yet implemented');
+  },
 })
