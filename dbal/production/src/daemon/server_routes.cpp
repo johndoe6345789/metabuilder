@@ -216,6 +216,193 @@ void Server::registerRoutes() {
     drogon::app().registerHandler("/api/dbal/schema", schema_handler, 
                                   {drogon::HttpMethod::Get, drogon::HttpMethod::Post});
 
+    // RESTful multi-tenant routes: /{tenant}/{package}/{entity}[/{id}[/{action}]]
+    // This is a catch-all handler for the RESTful pattern
+    auto restful_handler = [](const drogon::HttpRequestPtr& request,
+                              std::function<void(const drogon::HttpResponsePtr&)>&& callback,
+                              const std::string& tenant,
+                              const std::string& package,
+                              const std::string& entity) {
+        auto send_success = [&callback](const Json::Value& data) {
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            callback(build_json_response(body));
+        };
+        
+        auto send_error = [&callback](const std::string& message, int status) {
+            Json::Value body;
+            body["success"] = false;
+            body["error"] = message;
+            auto response = drogon::HttpResponse::newHttpJsonResponse(body);
+            response->setStatusCode(static_cast<drogon::HttpStatusCode>(status));
+            callback(response);
+        };
+        
+        // Build full path for parsing
+        std::string full_path = "/" + tenant + "/" + package + "/" + entity;
+        
+        // Parse the route
+        auto route = rpc::parseRoute(full_path);
+        
+        // Determine HTTP method
+        std::string method;
+        switch (request->method()) {
+            case drogon::HttpMethod::Get: method = "GET"; break;
+            case drogon::HttpMethod::Post: method = "POST"; break;
+            case drogon::HttpMethod::Put: method = "PUT"; break;
+            case drogon::HttpMethod::Patch: method = "PATCH"; break;
+            case drogon::HttpMethod::Delete: method = "DELETE"; break;
+            default: method = "UNKNOWN"; break;
+        }
+        
+        // Parse body for POST/PUT/PATCH
+        Json::Value body(Json::objectValue);
+        if (method == "POST" || method == "PUT" || method == "PATCH") {
+            std::istringstream stream(request->getBody());
+            Json::CharReaderBuilder reader;
+            JSONCPP_STRING errs;
+            Json::parseFromStream(reader, stream, &body, &errs);
+        }
+        
+        // Parse query parameters
+        std::map<std::string, std::string> query;
+        for (const auto& param : request->getParameters()) {
+            query[param.first] = param.second;
+        }
+        
+        rpc::handleRestfulRequest(route, method, body, query, send_success, send_error);
+    };
+    
+    // Handler with ID
+    auto restful_handler_with_id = [](const drogon::HttpRequestPtr& request,
+                                      std::function<void(const drogon::HttpResponsePtr&)>&& callback,
+                                      const std::string& tenant,
+                                      const std::string& package,
+                                      const std::string& entity,
+                                      const std::string& id) {
+        auto send_success = [&callback](const Json::Value& data) {
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            callback(build_json_response(body));
+        };
+        
+        auto send_error = [&callback](const std::string& message, int status) {
+            Json::Value body;
+            body["success"] = false;
+            body["error"] = message;
+            auto response = drogon::HttpResponse::newHttpJsonResponse(body);
+            response->setStatusCode(static_cast<drogon::HttpStatusCode>(status));
+            callback(response);
+        };
+        
+        std::string full_path = "/" + tenant + "/" + package + "/" + entity + "/" + id;
+        auto route = rpc::parseRoute(full_path);
+        
+        std::string method;
+        switch (request->method()) {
+            case drogon::HttpMethod::Get: method = "GET"; break;
+            case drogon::HttpMethod::Post: method = "POST"; break;
+            case drogon::HttpMethod::Put: method = "PUT"; break;
+            case drogon::HttpMethod::Patch: method = "PATCH"; break;
+            case drogon::HttpMethod::Delete: method = "DELETE"; break;
+            default: method = "UNKNOWN"; break;
+        }
+        
+        Json::Value body(Json::objectValue);
+        if (method == "POST" || method == "PUT" || method == "PATCH") {
+            std::istringstream stream(request->getBody());
+            Json::CharReaderBuilder reader;
+            JSONCPP_STRING errs;
+            Json::parseFromStream(reader, stream, &body, &errs);
+        }
+        
+        std::map<std::string, std::string> query;
+        for (const auto& param : request->getParameters()) {
+            query[param.first] = param.second;
+        }
+        
+        rpc::handleRestfulRequest(route, method, body, query, send_success, send_error);
+    };
+    
+    // Handler with ID and action
+    auto restful_handler_with_action = [](const drogon::HttpRequestPtr& request,
+                                          std::function<void(const drogon::HttpResponsePtr&)>&& callback,
+                                          const std::string& tenant,
+                                          const std::string& package,
+                                          const std::string& entity,
+                                          const std::string& id,
+                                          const std::string& action) {
+        auto send_success = [&callback](const Json::Value& data) {
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            callback(build_json_response(body));
+        };
+        
+        auto send_error = [&callback](const std::string& message, int status) {
+            Json::Value body;
+            body["success"] = false;
+            body["error"] = message;
+            auto response = drogon::HttpResponse::newHttpJsonResponse(body);
+            response->setStatusCode(static_cast<drogon::HttpStatusCode>(status));
+            callback(response);
+        };
+        
+        std::string full_path = "/" + tenant + "/" + package + "/" + entity + "/" + id + "/" + action;
+        auto route = rpc::parseRoute(full_path);
+        
+        std::string method;
+        switch (request->method()) {
+            case drogon::HttpMethod::Get: method = "GET"; break;
+            case drogon::HttpMethod::Post: method = "POST"; break;
+            case drogon::HttpMethod::Put: method = "PUT"; break;
+            case drogon::HttpMethod::Patch: method = "PATCH"; break;
+            case drogon::HttpMethod::Delete: method = "DELETE"; break;
+            default: method = "UNKNOWN"; break;
+        }
+        
+        Json::Value body(Json::objectValue);
+        if (method == "POST" || method == "PUT" || method == "PATCH") {
+            std::istringstream stream(request->getBody());
+            Json::CharReaderBuilder reader;
+            JSONCPP_STRING errs;
+            Json::parseFromStream(reader, stream, &body, &errs);
+        }
+        
+        std::map<std::string, std::string> query;
+        for (const auto& param : request->getParameters()) {
+            query[param.first] = param.second;
+        }
+        
+        rpc::handleRestfulRequest(route, method, body, query, send_success, send_error);
+    };
+    
+    // Register RESTful routes with path parameters
+    // Pattern: /{tenant}/{package}/{entity}
+    drogon::app().registerHandler(
+        "/{tenant}/{package}/{entity}",
+        restful_handler,
+        {drogon::HttpMethod::Get, drogon::HttpMethod::Post}
+    );
+    
+    // Pattern: /{tenant}/{package}/{entity}/{id}
+    drogon::app().registerHandler(
+        "/{tenant}/{package}/{entity}/{id}",
+        restful_handler_with_id,
+        {drogon::HttpMethod::Get, drogon::HttpMethod::Post, 
+         drogon::HttpMethod::Put, drogon::HttpMethod::Patch, 
+         drogon::HttpMethod::Delete}
+    );
+    
+    // Pattern: /{tenant}/{package}/{entity}/{id}/{action}
+    drogon::app().registerHandler(
+        "/{tenant}/{package}/{entity}/{id}/{action}",
+        restful_handler_with_action,
+        {drogon::HttpMethod::Get, drogon::HttpMethod::Post}
+    );
+
     routes_registered_ = true;
 }
 
