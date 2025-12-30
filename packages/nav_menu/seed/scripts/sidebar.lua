@@ -9,6 +9,7 @@ local M = {}
 ---@class SidebarItem
 ---@field label string
 ---@field path string
+---@field icon? string Icon name from fakemui icons
 
 ---@class SidebarProps
 ---@field items SidebarItem[]
@@ -49,15 +50,31 @@ end
 ---@return UIComponent
 function M.item(item, currentPath)
   local active = currentPath == item.path
+
+  -- Create button children with optional icon
+  local buttonChildren = {}
+
+  if item.icon then
+    table.insert(buttonChildren, {
+      type = "Icon",
+      props = { name = item.icon, size = "medium", className = "mr-2" }
+    })
+  end
+
+  table.insert(buttonChildren, {
+    type = "Typography",
+    props = { text = item.label }
+  })
+
   return {
     type = "Button",
     props = {
       variant = active and "secondary" or "ghost",
       className = "w-full justify-start",
-      text = item.label,
       onClick = "navigate",
       data = item.path
-    }
+    },
+    children = buttonChildren
   }
 end
 

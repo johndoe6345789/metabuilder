@@ -3,6 +3,7 @@
 ---@class Action
 ---@field label string Action button label
 ---@field handler string Action handler name
+---@field icon? string Icon name from fakemui icons
 
 ---@class ActionColumn
 ---@field type "actions" Column type identifier
