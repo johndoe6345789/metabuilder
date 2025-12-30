@@ -1,21 +1,11 @@
 'use client'
 
-import {
-  Box,
-  Divider,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  MenuItemProps,
-  MenuProps,
-  Typography,
-} from '@mui/material'
 import { forwardRef, MouseEvent as ReactMouseEvent, ReactNode } from 'react'
 
+import { Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from '@/fakemui'
 import { Check, ChevronRight } from '@/fakemui/icons'
 
-// DropdownMenu (uses MUI Menu under the hood)
+// DropdownMenu (uses FakeMUI Menu under the hood)
 export interface DropdownMenuProps {
   children: ReactNode
   open?: boolean
@@ -40,7 +30,7 @@ const DropdownMenuTrigger = forwardRef<HTMLDivElement, DropdownMenuTriggerProps>
       <Box
         ref={ref}
         onClick={onClick}
-        sx={{ display: 'inline-flex', cursor: 'pointer' }}
+        className="dropdown-menu-trigger"
         {...props}
       >
         {children}
@@ -51,33 +41,25 @@ const DropdownMenuTrigger = forwardRef<HTMLDivElement, DropdownMenuTriggerProps>
 DropdownMenuTrigger.displayName = 'DropdownMenuTrigger'
 
 // DropdownMenuContent
-export interface DropdownMenuContentProps extends Omit<MenuProps, 'open'> {
+export interface DropdownMenuContentProps {
+  children?: ReactNode
   align?: 'start' | 'center' | 'end'
   side?: 'top' | 'right' | 'bottom' | 'left'
   sideOffset?: number
+  anchorEl?: HTMLElement | null
+  onClose?: () => void
+  className?: string
 }
 
 const DropdownMenuContent = forwardRef<HTMLDivElement, DropdownMenuContentProps>(
-  ({ children, align = 'start', side = 'bottom', anchorEl, onClose, ...props }, ref) => {
-    const anchorOrigin = {
-      vertical: side === 'top' ? 'top' : 'bottom',
-      horizontal: align === 'end' ? 'right' : align === 'center' ? 'center' : 'left',
-    } as const
-
+  ({ children, align = 'start', side = 'bottom', anchorEl, onClose, className, ...props }, ref) => {
     return (
       <Menu
         ref={ref}
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
         onClose={onClose}
-        anchorOrigin={anchorOrigin}
-        transformOrigin={{
-          vertical: side === 'top' ? 'bottom' : 'top',
-          horizontal: anchorOrigin.horizontal,
-        }}
-        PaperProps={{
-          sx: { minWidth: 160, borderRadius: 1, mt: 0.5 },
-        }}
+        className={`dropdown-menu-content ${className || ''}`}
         {...props}
       >
         {children}
@@ -88,30 +70,28 @@ const DropdownMenuContent = forwardRef<HTMLDivElement, DropdownMenuContentProps>
 DropdownMenuContent.displayName = 'DropdownMenuContent'
 
 // DropdownMenuItem
-export interface DropdownMenuItemProps extends MenuItemProps {
+export interface DropdownMenuItemProps {
+  children?: ReactNode
   inset?: boolean
   icon?: ReactNode
   shortcut?: string
+  onClick?: () => void
+  disabled?: boolean
+  className?: string
 }
 
-const DropdownMenuItem = forwardRef<HTMLLIElement, DropdownMenuItemProps>(
-  ({ children, inset, icon, shortcut, sx, ...props }, ref) => {
+const DropdownMenuItem = forwardRef<HTMLButtonElement, DropdownMenuItemProps>(
+  ({ children, inset, icon, shortcut, className, ...props }, ref) => {
     return (
       <MenuItem
         ref={ref}
-        sx={{
-          py: 0.75,
-          px: 2,
-          fontSize: '0.875rem',
-          ...(inset && { pl: 6 }),
-          ...sx,
-        }}
+        className={`dropdown-menu-item ${inset ? 'dropdown-menu-item--inset' : ''} ${className || ''}`}
         {...props}
       >
-        {icon && <ListItemIcon sx={{ minWidth: 28 }}>{icon}</ListItemIcon>}
+        {icon && <ListItemIcon>{icon}</ListItemIcon>}
         <ListItemText>{children}</ListItemText>
         {shortcut && (
-          <Typography variant="caption" color="text.secondary" sx={{ ml: 2 }}>
+          <Typography variant="caption" className="dropdown-menu-shortcut">
             {shortcut}
           </Typography>
         )}
@@ -122,22 +102,24 @@ const DropdownMenuItem = forwardRef<HTMLLIElement, DropdownMenuItemProps>(
 DropdownMenuItem.displayName = 'DropdownMenuItem'
 
 // DropdownMenuCheckboxItem
-interface DropdownMenuCheckboxItemProps extends Omit<MenuItemProps, 'onChange'> {
+interface DropdownMenuCheckboxItemProps {
+  children?: ReactNode
   checked?: boolean
   onCheckedChange?: (checked: boolean) => void
+  className?: string
 }
 
-const DropdownMenuCheckboxItem = forwardRef<HTMLLIElement, DropdownMenuCheckboxItemProps>(
-  ({ children, checked, onCheckedChange, ...props }, ref) => {
+const DropdownMenuCheckboxItem = forwardRef<HTMLButtonElement, DropdownMenuCheckboxItemProps>(
+  ({ children, checked, onCheckedChange, className, ...props }, ref) => {
     return (
       <MenuItem
         ref={ref}
         onClick={() => onCheckedChange?.(!checked)}
-        sx={{ py: 0.75, px: 2 }}
+        className={`dropdown-menu-checkbox-item ${className || ''}`}
         {...props}
       >
-        <ListItemIcon sx={{ minWidth: 28 }}>
-          {checked && <CheckIcon fontSize="small" />}
+        <ListItemIcon>
+          {checked && <Check size={16} />}
         </ListItemIcon>
         <ListItemText>{children}</ListItemText>
       </MenuItem>
@@ -150,18 +132,11 @@ DropdownMenuCheckboxItem.displayName = 'DropdownMenuCheckboxItem'
 const DropdownMenuLabel = forwardRef<
   HTMLDivElement,
   { children: ReactNode; inset?: boolean; className?: string }
->(({ children, inset, ...props }, ref) => {
+>(({ children, inset, className, ...props }, ref) => {
   return (
     <Box
       ref={ref}
-      sx={{
-        px: 2,
-        py: 0.75,
-        fontSize: '0.75rem',
-        fontWeight: 600,
-        color: 'text.secondary',
-        ...(inset && { pl: 6 }),
-      }}
+      className={`dropdown-menu-label ${inset ? 'dropdown-menu-label--inset' : ''} ${className || ''}`}
       {...props}
     >
       {children}
@@ -171,15 +146,15 @@ const DropdownMenuLabel = forwardRef<
 DropdownMenuLabel.displayName = 'DropdownMenuLabel'
 
 // DropdownMenuSeparator
-const DropdownMenuSeparator = forwardRef<HTMLHRElement>((props, ref) => {
-  return <Divider ref={ref} sx={{ my: 0.5 }} {...props} />
+const DropdownMenuSeparator = forwardRef<HTMLHRElement, { className?: string }>((props, ref) => {
+  return <Divider ref={ref} className="dropdown-menu-separator" {...props} />
 })
 DropdownMenuSeparator.displayName = 'DropdownMenuSeparator'
 
 // DropdownMenuShortcut
 const DropdownMenuShortcut = ({ children }: { children: ReactNode }) => {
   return (
-    <Typography variant="caption" color="text.secondary" sx={{ ml: 'auto', pl: 2 }}>
+    <Typography variant="caption" className="dropdown-menu-shortcut">
       {children}
     </Typography>
   )
@@ -188,9 +163,9 @@ DropdownMenuShortcut.displayName = 'DropdownMenuShortcut'
 
 // DropdownMenuGroup
 const DropdownMenuGroup = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <Box ref={ref} {...props}>
+      <Box ref={ref} className={`dropdown-menu-group ${className || ''}`} {...props}>
         {children}
       </Box>
     )
@@ -204,13 +179,17 @@ DropdownMenuSub.displayName = 'DropdownMenuSub'
 
 // DropdownMenuSubTrigger
 const DropdownMenuSubTrigger = forwardRef<
-  HTMLLIElement,
+  HTMLButtonElement,
   { children: ReactNode; inset?: boolean; className?: string }
->(({ children, inset, ...props }, ref) => {
+>(({ children, inset, className, ...props }, ref) => {
   return (
-    <MenuItem ref={ref} sx={{ py: 0.75, px: 2, ...(inset && { pl: 6 }) }} {...props}>
+    <MenuItem
+      ref={ref}
+      className={`dropdown-menu-sub-trigger ${inset ? 'dropdown-menu-sub-trigger--inset' : ''} ${className || ''}`}
+      {...props}
+    >
       <ListItemText>{children}</ListItemText>
-      <ChevronRightIcon fontSize="small" sx={{ ml: 1 }} />
+      <ChevronRight size={16} />
     </MenuItem>
   )
 })
@@ -220,9 +199,9 @@ DropdownMenuSubTrigger.displayName = 'DropdownMenuSubTrigger'
 const DropdownMenuSubContent = forwardRef<
   HTMLDivElement,
   { children: ReactNode; className?: string }
->(({ children, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
-    <Box ref={ref} {...props}>
+    <Box ref={ref} className={`dropdown-menu-sub-content ${className || ''}`} {...props}>
       {children}
     </Box>
   )
@@ -242,9 +221,9 @@ const DropdownMenuRadioGroup = forwardRef<
     onValueChange?: (value: string) => void
     className?: string
   }
->(({ children, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
-    <Box ref={ref} {...props}>
+    <Box ref={ref} className={`dropdown-menu-radio-group ${className || ''}`} {...props}>
       {children}
     </Box>
   )
@@ -253,13 +232,13 @@ DropdownMenuRadioGroup.displayName = 'DropdownMenuRadioGroup'
 
 // DropdownMenuRadioItem
 const DropdownMenuRadioItem = forwardRef<
-  HTMLLIElement,
+  HTMLButtonElement,
   { children: ReactNode; value: string; className?: string }
->(({ children, value, ...props }, ref) => {
+>(({ children, value, className, ...props }, ref) => {
   return (
-    <MenuItem ref={ref} value={value} sx={{ py: 0.75, px: 2 }} {...props}>
-      <ListItemIcon sx={{ minWidth: 28 }}>
-        <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'primary.main' }} />
+    <MenuItem ref={ref} className={`dropdown-menu-radio-item ${className || ''}`} {...props}>
+      <ListItemIcon>
+        <Box className="dropdown-menu-radio-dot" />
       </ListItemIcon>
       <ListItemText>{children}</ListItemText>
     </MenuItem>

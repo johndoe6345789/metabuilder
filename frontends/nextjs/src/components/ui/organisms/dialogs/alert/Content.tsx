@@ -1,5 +1,7 @@
 'use client'
 
+import { forwardRef, ReactNode } from 'react'
+
 import {
   CheckCircleOutline as CheckCircleOutlineIcon,
   Close as CloseIcon,
@@ -7,14 +9,7 @@ import {
   InfoOutlined as InfoOutlinedIcon,
   WarningAmber as WarningAmberIcon,
 } from '@/fakemui/icons'
-import {
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  IconButton,
-  Typography,
-} from '@mui/material'
-import { forwardRef, ReactNode } from 'react'
+import { DialogContent, DialogTitle, IconButton, Typography } from '@/fakemui'
 
 interface AlertDialogContentProps {
   children: ReactNode
@@ -35,12 +30,8 @@ const AlertDialogContent = ({
       {showCloseButton && onClose && (
         <IconButton
           onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: 'text.secondary',
-          }}
+          className="alert-dialog-close"
+          aria-label="Close"
         >
           <CloseIcon />
         </IconButton>
@@ -77,14 +68,7 @@ const AlertDialogHeader = forwardRef<HTMLDivElement, AlertDialogHeaderProps>(
       <DialogTitle
         ref={ref}
         id="alert-dialog-title"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: iconElement ? 'center' : 'flex-start',
-          gap: 1,
-          pt: 3,
-          pb: 0,
-        }}
+        className={`alert-dialog-header ${iconElement ? 'alert-dialog-header--with-icon' : ''}`}
         {...props}
       >
         {iconElement}
@@ -106,12 +90,8 @@ const AlertDialogTitle = forwardRef<HTMLHeadingElement, AlertDialogTitleProps>(
       <Typography
         ref={ref}
         variant="h6"
-        component="span"
-        className={className}
-        sx={{
-          fontWeight: 600,
-          textAlign: 'inherit',
-        }}
+        as="span"
+        className={`alert-dialog-title ${className || ''}`}
         {...props}
       >
         {children}
@@ -129,8 +109,10 @@ interface AlertDialogDescriptionProps {
 const AlertDialogDescription = forwardRef<HTMLDivElement, AlertDialogDescriptionProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <DialogContent ref={ref} className={className} sx={{ pt: 2 }} {...props}>
-        <DialogContentText id="alert-dialog-description">{children}</DialogContentText>
+      <DialogContent ref={ref} className={className} {...props}>
+        <Typography variant="body2" id="alert-dialog-description">
+          {children}
+        </Typography>
       </DialogContent>
     )
   }

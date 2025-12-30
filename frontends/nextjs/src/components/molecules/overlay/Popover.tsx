@@ -1,7 +1,8 @@
 'use client'
 
-import { Box, Popover as MuiPopover, PopoverProps as MuiPopoverProps } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Box, Popover as FakeMuiPopover } from '@/fakemui'
 
 // Popover container
 export interface PopoverProps {
@@ -28,7 +29,7 @@ const PopoverTrigger = forwardRef<HTMLDivElement, PopoverTriggerProps>(
       <Box
         ref={ref}
         onClick={onClick}
-        sx={{ display: 'inline-flex', cursor: 'pointer' }}
+        className="popover-trigger"
         {...props}
       >
         {children}
@@ -39,15 +40,19 @@ const PopoverTrigger = forwardRef<HTMLDivElement, PopoverTriggerProps>(
 PopoverTrigger.displayName = 'PopoverTrigger'
 
 // PopoverContent
-export interface PopoverContentProps extends Omit<MuiPopoverProps, 'open'> {
+export interface PopoverContentProps {
+  children?: ReactNode
   align?: 'start' | 'center' | 'end'
   side?: 'top' | 'right' | 'bottom' | 'left'
   sideOffset?: number
+  anchorEl?: HTMLElement | null
+  onClose?: () => void
+  className?: string
 }
 
 const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
   (
-    { children, align = 'center', side = 'bottom', sideOffset = 4, anchorEl, onClose, ...props },
+    { children, align = 'center', side = 'bottom', sideOffset = 4, anchorEl, onClose, className, ...props },
     ref
   ) => {
     const anchorOrigin = {
@@ -56,7 +61,7 @@ const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
     } as const
 
     return (
-      <MuiPopover
+      <FakeMuiPopover
         ref={ref}
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
@@ -66,18 +71,11 @@ const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
           vertical: side === 'top' ? 'bottom' : 'top',
           horizontal: anchorOrigin.horizontal,
         }}
-        PaperProps={{
-          sx: {
-            p: 2,
-            borderRadius: 1,
-            boxShadow: 3,
-            mt: sideOffset / 8,
-          },
-        }}
+        className={`popover-content ${className || ''}`}
         {...props}
       >
         {children}
-      </MuiPopover>
+      </FakeMuiPopover>
     )
   }
 )
@@ -87,7 +85,7 @@ PopoverContent.displayName = 'PopoverContent'
 const PopoverAnchor = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
   ({ children, ...props }, ref) => {
     return (
-      <Box ref={ref} sx={{ display: 'inline-flex' }} {...props}>
+      <Box ref={ref} className="popover-anchor" {...props}>
         {children}
       </Box>
     )

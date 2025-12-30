@@ -1,6 +1,6 @@
-import { Box, Card, InputAdornment, Stack, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 
+import { Box, Card, Stack, TextField, Typography } from '@/fakemui'
 import { Search } from '@/fakemui/icons'
 
 import { getComponentIcon } from '@/components/get-component-icon'
@@ -23,39 +23,22 @@ export function ComponentCatalog({ onDragStart }: ComponentCatalogProps) {
   const categories = Array.from(new Set(componentCatalog.map(c => c.category)))
 
   return (
-    <Box
-      sx={{
-        width: theme => theme.custom.sidebar.width,
-        bgcolor: 'background.paper',
-        color: 'text.primary',
-        display: 'flex',
-        flexDirection: 'column',
-        borderRight: 1,
-        borderColor: 'divider',
-        height: '100vh',
-      }}
-    >
-      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-        <Typography variant="h6" sx={{ fontWeight: 700, mb: 1.5 }}>
+    <Box className="component-catalog">
+      <Box className="component-catalog__header">
+        <Typography variant="h6" className="component-catalog__title">
           Components
         </Typography>
-        <TextField
-          placeholder="Search components..."
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          size="small"
-          fullWidth
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search style={{ color: 'rgba(0,0,0,0.54)', fontSize: 18 }} />
-              </InputAdornment>
-            ),
-          }}
-        />
+        <div className="component-catalog__search">
+          <Search className="component-catalog__search-icon" />
+          <TextField
+            placeholder="Search components..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+          />
+        </div>
       </Box>
 
-      <Box sx={{ flex: 1, overflowY: 'auto', p: 2 }}>
+      <Box className="component-catalog__content">
         <Stack spacing={3}>
           {categories.map(category => {
             const categoryComponents = filteredComponents.filter(c => c.category === category)
@@ -63,55 +46,22 @@ export function ComponentCatalog({ onDragStart }: ComponentCatalogProps) {
 
             return (
               <Box key={category}>
-                <Typography
-                  variant="overline"
-                  sx={{
-                    display: 'block',
-                    fontWeight: 600,
-                    letterSpacing: '0.08em',
-                    color: 'text.secondary',
-                    mb: 1.5,
-                  }}
-                >
+                <Typography variant="overline" className="component-catalog__category-label">
                   {category}
                 </Typography>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-                    gap: 1.5,
-                  }}
-                >
+                <Box className="component-catalog__grid">
                   {categoryComponents.map(component => (
                     <Card
                       key={component.type}
                       draggable
                       onDragStart={() => onDragStart(component)}
-                      sx={{
-                        p: 1.5,
-                        cursor: 'grab',
-                        '&:active': { cursor: 'grabbing' },
-                        transition:
-                          'border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease',
-                        '&:hover': {
-                          borderColor: 'primary.main',
-                          boxShadow: 3,
-                          transform: 'translateY(-1px)',
-                        },
-                      }}
+                      className="component-catalog__card"
                     >
-                      <Stack spacing={1} alignItems="center" textAlign="center">
-                        <Box
-                          sx={{
-                            color: 'primary.main',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}
-                        >
-                          {getComponentIcon(component.icon, { sx: { fontSize: 20 } })}
+                      <Stack spacing={1} alignItems="center" className="text-center">
+                        <Box className="component-catalog__icon">
+                          {getComponentIcon(component.icon, { className: 'icon-sm' })}
                         </Box>
-                        <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                        <Typography variant="caption" className="font-semibold">
                           {component.label}
                         </Typography>
                       </Stack>

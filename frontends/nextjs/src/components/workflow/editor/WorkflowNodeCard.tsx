@@ -1,5 +1,4 @@
-import { Card, CardContent } from '@mui/material'
-
+import { Card, CardContent } from '@/fakemui'
 import { ArrowRight, Trash } from '@/fakemui/icons'
 
 import {
@@ -141,14 +140,14 @@ export const WorkflowNodeCard = ({
             </Badge>
             {index < totalNodes - 1 && (
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <ArrowRightIcon sx={{ fontSize: 12 }} />
+                <ArrowRight size={12} />
                 <span>Next</span>
               </div>
             )}
           </div>
         </div>
         <Button variant="ghost" size="sm" onClick={() => onDeleteNode(node.id)}>
-          <DeleteIcon sx={{ fontSize: 16 }} />
+          <Trash size={16} />
         </Button>
       </div>
     </CardContent>
