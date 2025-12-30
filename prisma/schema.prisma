@@ -1358,6 +1358,200 @@ model Event {
 }
 
 // =============================================================================
+// IRC & CHAT (irc_webchat package)
+// =============================================================================
+
+model IRCChannel {
+  id          String          @id @default(cuid())
+  tenantId    String
+  name        String          // #general, #help, etc.
+  topic       String?
+  description String?
+  mode        String          @default("public") // public, private, secret
+  password    String?         // For private channels
+  maxUsers    Int?
+  slowMode    Int?            // Seconds between messages
+  isDefault   Boolean         @default(false)
+  createdAt   BigInt
+  createdBy   String?
+  messages    IRCMessage[]
+  memberships IRCMembership[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+  @@index([isDefault])
+}
+
+model IRCMessage {
+  id          String     @id @default(cuid())
+  tenantId    String
+  channelId   String
+  userId      String
+  username    String
+  type        String     @default("message") // message, action, notice, system
+  content     String
+  isCommand   Boolean    @default(false)
+  metadata    String?    // JSON: mentions, links, etc.
+  createdAt   BigInt
+  channel     IRCChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@index([channelId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model IRCMembership {
+  id          String     @id @default(cuid())
+  channelId   String
+  userId      String
+  username    String
+  role        String     @default("user") // user, voice, halfop, op, admin, owner
+  joinedAt    BigInt
+  lastActive  BigInt?
+  isBanned    Boolean    @default(false)
+  isKicked    Boolean    @default(false)
+  kickReason  String?
+  metadata    String?    // JSON: user preferences
+  channel     IRCChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@unique([channelId, userId])
+  @@index([userId])
+}
+
+// =============================================================================
+// STREAMING (stream_cast package)
+// =============================================================================
+
+model StreamChannel {
+  id          String        @id @default(cuid())
+  tenantId    String
+  name        String
+  slug        String
+  description String?
+  thumbnail   String?
+  category    String?       // gaming, music, talk, art, etc.
+  status      String        @default("offline") // offline, live, scheduled
+  viewerCount Int           @default(0)
+  streamKey   String?       @unique
+  rtmpUrl     String?
+  hlsUrl      String?
+  chatEnabled Boolean       @default(true)
+  isPublic    Boolean       @default(true)
+  isMature    Boolean       @default(false)
+  metadata    String?       // JSON: bitrate, resolution, etc.
+  createdAt   BigInt
+  updatedAt   BigInt?
+  createdBy   String
+  schedules   StreamSchedule[]
+  scenes      StreamScene[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([status])
+  @@index([category])
+}
+
+model StreamSchedule {
+  id          String        @id @default(cuid())
+  channelId   String
+  title       String
+  description String?
+  startTime   BigInt
+  endTime     BigInt?
+  duration    Int?          // minutes
+  isRecurring Boolean       @default(false)
+  recurrence  String?       // JSON: cron/rrule
+  notifyAt    BigInt?
+  metadata    String?       // JSON: guests, topics, etc.
+  createdAt   BigInt
+  channel     StreamChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@index([channelId])
+  @@index([startTime])
+}
+
+model StreamScene {
+  id          String        @id @default(cuid())
+  channelId   String
+  name        String
+  layout      String        // JSON: scene composition
+  sources     String        // JSON: cameras, screens, overlays
+  transitions String?       // JSON: scene transitions
+  isActive    Boolean       @default(false)
+  sortOrder   Int           @default(0)
+  createdAt   BigInt
+  channel     StreamChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@index([channelId])
+  @@index([isActive])
+}
+
+// =============================================================================
+// CODEGEN STUDIO (codegen_studio package)
+// =============================================================================
+
+model CodegenProject {
+  id          String            @id @default(cuid())
+  tenantId    String
+  name        String
+  slug        String
+  description String?
+  language    String            // typescript, lua, python, etc.
+  framework   String?           // react, qt, fastapi, etc.
+  config      String            // JSON: project configuration
+  output      String?           // Generated code output path
+  status      String            @default("draft") // draft, generating, complete, error
+  lastGenAt   BigInt?
+  error       String?
+  createdAt   BigInt
+  updatedAt   BigInt?
+  createdBy   String
+  blueprints  CodegenBlueprint[]
+  templates   CodegenTemplate[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([status])
+}
+
+model CodegenBlueprint {
+  id          String          @id @default(cuid())
+  projectId   String
+  name        String
+  type        String          // model, api, component, service, etc.
+  schema      String          // JSON: blueprint definition
+  depends     String?         // JSON: dependencies on other blueprints
+  output      String?         // JSON: generated artifacts
+  validated   Boolean         @default(false)
+  createdAt   BigInt
+  updatedAt   BigInt?
+  project     CodegenProject  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, name])
+  @@index([projectId])
+  @@index([type])
+}
+
+model CodegenTemplate {
+  id          String          @id @default(cuid())
+  projectId   String?         // null for global templates
+  tenantId    String?
+  name        String
+  language    String
+  type        String          // model, api, component, test, etc.
+  template    String          // Template content with placeholders
+  variables   String?         // JSON: variable definitions
+  isBuiltin   Boolean         @default(false)
+  createdAt   BigInt
+  updatedAt   BigInt?
+  project     CodegenProject? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, name])
+  @@index([tenantId])
+  @@index([language, type])
+}
+
+// =============================================================================
 // API & INTEGRATIONS
 // =============================================================================
 
