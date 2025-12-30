@@ -1,3 +1,8 @@
+--- Module redirect
+--- DEPRECATED: Use settings.init instead
+---@module settings
+---@deprecated
+
 -- Admin settings dialog
 -- DEPRECATED: This file redirects to settings/ directory
 -- Functions are now split into single-function files

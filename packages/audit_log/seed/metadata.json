@@ -38,5 +38,31 @@
   "bindings": {
     "dbal": true,
     "browser": false
+  },
+  "permissions": {
+    "enabled": true,
+    "minLevel": 3,
+    "databaseRequired": true,
+    "components": {
+      "AuditLogViewer": {
+        "enabled": true,
+        "minLevel": 3,
+        "requireDatabase": true
+      },
+      "AuditStatsCard": {
+        "enabled": true,
+        "minLevel": 3,
+        "requireDatabase": true
+      },
+      "LogTable": {
+        "enabled": true,
+        "minLevel": 4,
+        "requireDatabase": true
+      },
+      "LogFilters": {
+        "enabled": true,
+        "minLevel": 3
+      }
+    }
   }
 }

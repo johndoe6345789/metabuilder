@@ -30,5 +30,34 @@
     "browser": false
   },
   "requiredHooks": ["dbal", "kv_store", "blob_storage", "cached_data"],
-  "layout": "layout.json"
+  "layout": "layout.json",
+  "permissions": {
+    "enabled": true,
+    "minLevel": 3,
+    "databaseRequired": true,
+    "components": {
+      "DBALDemo": {
+        "enabled": true,
+        "minLevel": 3,
+        "requireDatabase": true
+      },
+      "KVStorePanel": {
+        "enabled": true,
+        "minLevel": 3,
+        "requireDatabase": true,
+        "featureFlags": ["kv_store_enabled"]
+      },
+      "BlobStoragePanel": {
+        "enabled": true,
+        "minLevel": 4,
+        "requireDatabase": true,
+        "featureFlags": ["blob_storage_enabled"]
+      },
+      "CachedDataPanel": {
+        "enabled": true,
+        "minLevel": 3,
+        "requireDatabase": true
+      }
+    }
+  }
 }
