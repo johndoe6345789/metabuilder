@@ -103,6 +103,101 @@ const userManagerPackage: MockPackageDefinition = {
         },
       ],
     }),
+
+    // Script file aliases
+    'init.lua': (_ctx: LuaRenderContext) => ({
+      type: 'Alert',
+      props: { severity: 'info' },
+      children: [
+        { type: 'Typography', props: { variant: 'body2', text: 'init.lua contains lifecycle hooks - no visual render' } },
+      ],
+    }),
+
+    'render_users.lua': (_ctx: LuaRenderContext) => ({
+      type: 'Card',
+      children: [
+        {
+          type: 'CardHeader',
+          children: [
+            {
+              type: 'Flex',
+              props: { className: 'flex items-center justify-between' },
+              children: [
+                { type: 'Typography', props: { variant: 'h5', text: 'Users' } },
+                { type: 'Button', props: { variant: 'contained', children: 'Add User' } },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'CardContent',
+          children: [
+            {
+              type: 'Box',
+              props: { className: 'overflow-hidden rounded border' },
+              children: [
+                {
+                  type: 'Flex',
+                  props: { className: 'flex p-4 bg-muted font-medium border-b' },
+                  children: [
+                    { type: 'Box', props: { className: 'flex-1' }, children: [{ type: 'Typography', props: { text: 'Username' } }] },
+                    { type: 'Box', props: { className: 'flex-1' }, children: [{ type: 'Typography', props: { text: 'Email' } }] },
+                    { type: 'Box', props: { className: 'w-24' }, children: [{ type: 'Typography', props: { text: 'Level' } }] },
+                    { type: 'Box', props: { className: 'w-24' }, children: [{ type: 'Typography', props: { text: 'Actions' } }] },
+                  ],
+                },
+                {
+                  type: 'Flex',
+                  props: { className: 'flex p-4 border-b items-center' },
+                  children: [
+                    { type: 'Box', props: { className: 'flex-1' }, children: [{ type: 'Typography', props: { text: 'admin' } }] },
+                    { type: 'Box', props: { className: 'flex-1' }, children: [{ type: 'Typography', props: { text: 'admin@example.com' } }] },
+                    { type: 'Box', props: { className: 'w-24' }, children: [{ type: 'Badge', children: [{ type: 'Typography', props: { text: '6' } }] }] },
+                    { type: 'Box', props: { className: 'w-24' }, children: [{ type: 'Button', props: { size: 'small', children: 'Edit' } }] },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    }),
+
+    'list.lua': (_ctx: LuaRenderContext) => ({
+      type: 'Stack',
+      props: { className: 'space-y-2' },
+      children: [
+        { type: 'Typography', props: { variant: 'h6', text: 'User List' } },
+        { type: 'Typography', props: { variant: 'body2', text: '• admin (Level 6)' } },
+        { type: 'Typography', props: { variant: 'body2', text: '• moderator (Level 3)' } },
+        { type: 'Typography', props: { variant: 'body2', text: '• user1 (Level 2)' } },
+      ],
+    }),
+
+    'create_user.lua': (_ctx: LuaRenderContext) => ({
+      type: 'Card',
+      children: [
+        {
+          type: 'CardHeader',
+          children: [{ type: 'Typography', props: { variant: 'h5', text: 'Create User' } }],
+        },
+        {
+          type: 'CardContent',
+          children: [
+            {
+              type: 'Stack',
+              props: { className: 'space-y-4' },
+              children: [
+                { type: 'TextField', props: { label: 'Username', placeholder: 'Enter username' } },
+                { type: 'TextField', props: { label: 'Email', placeholder: 'user@example.com' } },
+                { type: 'TextField', props: { label: 'Password', type: 'password' } },
+                { type: 'Button', props: { variant: 'contained', children: 'Create User' } },
+              ],
+            },
+          ],
+        },
+      ],
+    }),
   },
 }
 
