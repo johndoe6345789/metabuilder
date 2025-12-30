@@ -1,7 +1,10 @@
 'use client'
 
-import { Tooltip as MuiTooltip, TooltipProps as MuiTooltipProps } from '@mui/material'
+import { Tooltip as FakeMuiTooltip } from '@fakemui/fakemui/data-display'
 import { forwardRef, ReactNode } from 'react'
+import styles from './Tooltip.module.scss'
+
+type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right'
 
 interface TooltipProviderProps {
   children: ReactNode
@@ -44,65 +47,42 @@ interface TooltipContentProps {
   children: ReactNode
   className?: string
   sideOffset?: number
-  side?: 'top' | 'right' | 'bottom' | 'left'
+  side?: TooltipPlacement
 }
 
 const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
-  ({ children, side = 'top', sideOffset = 4 }, ref) => {
+  ({ children, side = 'top', className = '' }, ref) => {
     return (
-      <MuiTooltip
-        ref={ref as React.Ref<HTMLDivElement>}
-        title={children}
+      <FakeMuiTooltip
+        ref={ref as React.Ref<HTMLSpanElement>}
+        title={typeof children === 'string' ? children : ''}
         placement={side}
-        arrow
-        slotProps={{
-          tooltip: {
-            sx: {
-              bgcolor: 'grey.900',
-              color: 'common.white',
-              fontSize: '0.75rem',
-              px: 1.5,
-              py: 0.75,
-              borderRadius: 1,
-            },
-          },
-        }}
+        className={`${styles.tooltipContent} ${className}`}
       >
         <span>{children}</span>
-      </MuiTooltip>
+      </FakeMuiTooltip>
     )
   }
 )
 TooltipContent.displayName = 'TooltipContent'
 
-// Simpler Tooltip wrapper that works with MUI pattern
+// Simpler Tooltip wrapper that works with fakemui pattern
 interface SimpleTooltipProps {
   title: ReactNode
   children: ReactNode
-  placement?: MuiTooltipProps['placement']
+  placement?: TooltipPlacement
+  className?: string
 }
 
-const SimpleTooltip = ({ title, children, placement = 'top' }: SimpleTooltipProps) => {
+const SimpleTooltip = ({ title, children, placement = 'top', className = '' }: SimpleTooltipProps) => {
   return (
-    <MuiTooltip
-      title={title}
+    <FakeMuiTooltip
+      title={typeof title === 'string' ? title : ''}
       placement={placement}
-      arrow
-      slotProps={{
-        tooltip: {
-          sx: {
-            bgcolor: 'grey.900',
-            color: 'common.white',
-            fontSize: '0.75rem',
-            px: 1.5,
-            py: 0.75,
-            borderRadius: 1,
-          },
-        },
-      }}
+      className={`${styles.simpleTooltip} ${className}`}
     >
       <span>{children}</span>
-    </MuiTooltip>
+    </FakeMuiTooltip>
   )
 }
 

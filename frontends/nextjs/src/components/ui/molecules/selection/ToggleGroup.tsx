@@ -1,7 +1,8 @@
 'use client'
 
-import { ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps } from '@mui/material'
+import { ToggleButton, ToggleButtonGroup } from '@fakemui/fakemui/inputs'
 import { forwardRef, ReactNode } from 'react'
+import styles from './ToggleGroup.module.scss'
 
 interface ToggleGroupProps {
   children: ReactNode
@@ -26,6 +27,7 @@ const ToggleGroup = forwardRef<HTMLDivElement, ToggleGroupProps>(
       disabled,
       variant = 'default',
       size = 'default',
+      className = '',
       ...props
     },
     ref
@@ -36,29 +38,27 @@ const ToggleGroup = forwardRef<HTMLDivElement, ToggleGroupProps>(
       }
     }
 
+    const sizeMap = {
+      sm: 'small' as const,
+      default: 'medium' as const,
+      lg: 'large' as const,
+    }
+
+    const classes = [
+      styles.toggleGroup,
+      variant === 'outline' ? styles.outline : styles.default,
+      className,
+    ].filter(Boolean).join(' ')
+
     return (
       <ToggleButtonGroup
         ref={ref}
         exclusive={type === 'single'}
-        value={value ?? defaultValue}
+        value={value ?? defaultValue ?? null}
         onChange={handleChange}
         disabled={disabled}
-        size={size === 'sm' ? 'small' : size === 'lg' ? 'large' : 'medium'}
-        sx={{
-          bgcolor: variant === 'outline' ? 'transparent' : 'action.hover',
-          borderRadius: 2,
-          border: variant === 'outline' ? 1 : 0,
-          borderColor: 'divider',
-          '& .MuiToggleButtonGroup-grouped': {
-            border: 0,
-            borderRadius: 1.5,
-            m: 0.5,
-            '&.Mui-selected': {
-              bgcolor: 'background.paper',
-              boxShadow: 1,
-            },
-          },
-        }}
+        size={sizeMap[size]}
+        className={classes}
         {...props}
       >
         {children}
@@ -76,19 +76,13 @@ interface ToggleGroupItemProps {
 }
 
 const ToggleGroupItem = forwardRef<HTMLButtonElement, ToggleGroupItemProps>(
-  ({ children, value, disabled, ...props }, ref) => {
+  ({ children, value, disabled, className = '', ...props }, ref) => {
     return (
       <ToggleButton
         ref={ref}
         value={value}
         disabled={disabled}
-        sx={{
-          px: 2,
-          py: 1,
-          fontSize: '0.875rem',
-          fontWeight: 500,
-          textTransform: 'none',
-        }}
+        className={`${styles.toggleGroupItem} ${className}`}
         {...props}
       >
         {children}
