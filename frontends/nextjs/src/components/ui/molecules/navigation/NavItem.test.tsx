@@ -15,8 +15,9 @@ describe('NavItem', () => {
     expect(screen.getByText(label)).toBeTruthy()
 
     const button = screen.getByRole('button')
+    // Check for CSS module active class pattern
     if (active) {
-      expect(button.classList.contains('Mui-selected')).toBe(true)
+      expect(button.className).toMatch(/navItemButtonSelected/)
     }
   })
 
@@ -49,7 +50,7 @@ describe('NavItem', () => {
     render(<NavItem label="Home" disabled={disabled} />)
 
     const button = screen.getByRole('button')
-    expect(button.getAttribute('aria-disabled')).toBe(shouldBeDisabled ? 'true' : null)
+    expect(button.hasAttribute('disabled')).toBe(shouldBeDisabled)
   })
 
   it('renders with secondary label', () => {
@@ -62,7 +63,7 @@ describe('NavItem', () => {
   it('renders with href for navigation', () => {
     render(<NavItem label="Home" href="/home" />)
 
-    // When href is provided, MUI renders it as a link, not a button
+    // When href is provided, fakemui renders it as a link, not a button
     const link = screen.getByRole('link')
     expect(link.getAttribute('href')).toBe('/home')
   })

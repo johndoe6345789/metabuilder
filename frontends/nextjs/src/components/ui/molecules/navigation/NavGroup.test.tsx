@@ -74,12 +74,12 @@ describe('NavGroup', () => {
       const button = screen.getByRole('button', { name: /Menu/i })
 
       if (disabled) {
-        expect(button.getAttribute('aria-disabled')).toBe('true')
+        expect(button.hasAttribute('disabled')).toBe(true)
         fireEvent.click(button)
         // Should not expand when disabled
         expect(screen.queryByText('Child')).toBeNull()
       } else {
-        expect(button.getAttribute('aria-disabled')).toBe(null)
+        expect(button.hasAttribute('disabled')).toBe(false)
       }
     }
   )
@@ -91,7 +91,7 @@ describe('NavGroup', () => {
       </NavGroup>
     )
 
-    // Check for MUI Divider component
+    // Check for fakemui Divider component (renders as hr)
     const divider = container.querySelector('hr')
     expect(divider).toBeTruthy()
   })
