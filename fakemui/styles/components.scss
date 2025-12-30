@@ -32,7 +32,7 @@
 
 // Task ID
 .task-id {
-  color: var(--text-disabled);
+  color: var(--color-text-disabled);
   display: block;
 }
 
@@ -43,7 +43,7 @@
 
 // Tabs container
 .tabs-container {
-  border-bottom: 1px solid var(--divider);
+  border-bottom: 1px solid var(--color-divider);
   margin-bottom: 1rem;
 }
 
@@ -98,7 +98,7 @@
 // Turn content
 .turn-content {
   padding: 1rem;
-  background-color: var(--background-default);
+  background-color: var(--color-bg);
 }
 
 // Patch header
@@ -118,17 +118,17 @@
 .patch-description {
   margin-bottom: 1rem;
   padding: 1rem;
-  background-color: var(--background-default);
+  background-color: var(--color-bg);
   border-radius: 4px;
 }
 
 // Text utilities
 .text-secondary {
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .text-disabled {
-  color: var(--text-disabled);
+  color: var(--color-text-disabled);
 }
 
 .text-center {
@@ -227,7 +227,7 @@
 .search-code-preview {
   margin-top: 0.5rem;
   padding: 0.5rem;
-  background-color: var(--background-default);
+  background-color: var(--color-bg);
   font-family: monospace;
   font-size: 0.75rem;
   overflow: hidden;
@@ -235,23 +235,23 @@
 
 .search-code-line {
   padding: 0.125rem 0;
-  
+
   .line-number {
-    color: var(--text-disabled);
+    color: var(--color-text-disabled);
     margin-right: 0.5rem;
     font-size: 0.7rem;
   }
-  
+
   .line-content {
     font-family: monospace;
     font-size: 0.75rem;
-    
+
     &.added {
-      color: var(--success);
+      color: var(--color-success);
     }
-    
+
     &.removed {
-      color: var(--error);
+      color: var(--color-error);
     }
   }
 }
@@ -268,8 +268,8 @@
 
 // Highlight for search matches
 .highlight {
-  background-color: var(--warning);
-  color: var(--warning-contrast);
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning);
   padding: 0 0.25rem;
   border-radius: 2px;
 }
@@ -293,33 +293,33 @@
 
 .doc-tabs-container {
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--divider);
+  border-bottom: 1px solid var(--color-divider);
 }
 
 .code-block {
   padding: 1rem;
-  background-color: #1e1e1e;
+  background-color: var(--color-code-bg);
   border-radius: 4px;
   position: relative;
   font-family: monospace;
   overflow: auto;
   margin: 0.5rem 0;
-  
+
   .copy-button {
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
-    color: #888;
-    
+    color: var(--color-text-secondary);
+
     svg {
       width: 16px;
       height: 16px;
     }
   }
-  
+
   .code-content {
     margin: 0;
-    color: #f8f8f2;
+    color: var(--color-code-text);
     font-size: 0.85rem;
     line-height: 1.6;
     white-space: pre-wrap;
@@ -329,19 +329,19 @@
 
 .endpoint-row {
   &:hover {
-    background-color: var(--action-hover);
+    background-color: var(--color-bg-hover);
   }
-  
+
   td {
     padding: 0.75rem;
-    border-bottom: 1px solid var(--divider);
+    border-bottom: 1px solid var(--color-divider);
   }
-  
+
   .method-chip {
     font-family: monospace;
     font-weight: bold;
   }
-  
+
   .endpoint-path {
     font-family: monospace;
     font-size: 0.875rem;
@@ -352,16 +352,16 @@
 .endpoints-table {
   width: 100%;
   border-collapse: collapse;
-  
+
   th {
     text-align: left;
     padding: 0.75rem;
-    border-bottom: 2px solid var(--divider);
+    border-bottom: 2px solid var(--color-divider);
     font-weight: 600;
   }
-  
+
   td {
     padding: 0.75rem;
-    border-bottom: 1px solid var(--divider);
+    border-bottom: 1px solid var(--color-divider);
   }
 }
