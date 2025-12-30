@@ -63,15 +63,16 @@ describe('NavLink', () => {
     )
 
     const link = screen.getByText('Home').closest('a')
-    // Check for active styling - MUI applies specific classes
+    // Check for active styling - fakemui applies CSS module classes
     expect(link).toBeTruthy()
+    expect(link?.className).toMatch(/navLinkActive/)
   })
 
   it('does not have underline by default', () => {
     render(<NavLink href="/home">Home</NavLink>)
 
     const link = screen.getByText('Home').closest('a')
-    // MUI Link with underline="none" doesn't add text-decoration
+    // fakemui Link with underline="none" doesn't add text-decoration
     expect(link).toBeTruthy()
   })
 })
