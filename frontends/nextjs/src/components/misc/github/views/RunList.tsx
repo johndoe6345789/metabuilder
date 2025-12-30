@@ -28,13 +28,14 @@ export function RunList({
   selectedRunId,
 }: RunListProps) {
   return (
-    <Card sx={{ borderWidth: 2, borderColor: 'divider' }}>
+    <Card style={{ borderWidth: 2, borderColor: 'var(--color-divider)' }}>
       <CardHeader>
         <Stack
-          direction={{ xs: 'column', lg: 'row' }}
+          direction="row"
           spacing={2}
-          alignItems={{ xs: 'flex-start', lg: 'center' }}
+          alignItems="center"
           justifyContent="space-between"
+          className="flex-wrap lg:flex-nowrap"
         >
           <Filters repoLabel={repoLabel} lastFetched={lastFetched} />
 

@@ -37,14 +37,14 @@ export const RunTable = ({
   }
 
   return (
-    <Card sx={{ borderWidth: 2, borderColor: 'divider' }}>
+    <Card style={{ borderWidth: 2, borderColor: 'var(--color-divider)' }}>
       <CardHeader>
         <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
           <Stack direction="row" spacing={1} alignItems="center">
             <CheckCircle size={24} style={{ color: 'var(--mui-palette-success-main)' }} />
             <CardTitle>Recent Workflow Runs</CardTitle>
           </Stack>
-          {isLoading && <Skeleton sx={{ width: 120, height: 12 }} />}
+          {isLoading && <Skeleton style={{ width: 120, height: 12 }} />}
         </Stack>
         <CardDescription>Latest GitHub Actions runs with status and controls</CardDescription>
       </CardHeader>
@@ -52,9 +52,9 @@ export const RunTable = ({
       <CardContent>
         {isLoading && !runs && (
           <Stack spacing={2}>
-            <Skeleton sx={{ height: 96 }} />
-            <Skeleton sx={{ height: 96 }} />
-            <Skeleton sx={{ height: 96 }} />
+            <Skeleton style={{ height: 96 }} />
+            <Skeleton style={{ height: 96 }} />
+            <Skeleton style={{ height: 96 }} />
           </Stack>
         )}
 
@@ -70,7 +70,7 @@ export const RunTable = ({
                 selectedRunId={selectedRunId}
               />
             ))}
-            <Box sx={{ textAlign: 'center', pt: 2 }}>
+            <Box style={{ textAlign: 'center', paddingTop: 16 }}>
               <Button variant="outline" onClick={copyRunsToClipboard}>
                 Copy All as JSON
               </Button>
