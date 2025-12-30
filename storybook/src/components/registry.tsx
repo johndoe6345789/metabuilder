@@ -485,6 +485,40 @@ export const Select: React.FC<SelectProps> = ({ label, options = [], className =
   </div>
 )
 
+// Label - standalone label component
+export const Label: React.FC<LuaComponentProps & { htmlFor?: string }> = ({ 
+  htmlFor, 
+  children, 
+  className = 'block text-sm font-medium mb-1' 
+}) => (
+  <label htmlFor={htmlFor} className={className}>{children}</label>
+)
+
+// Textarea - multiline text input
+interface TextareaProps extends LuaComponentProps {
+  label?: string
+  placeholder?: string
+  rows?: number
+  fullWidth?: boolean
+}
+
+export const Textarea: React.FC<TextareaProps> = ({ 
+  label, 
+  placeholder, 
+  rows = 4,
+  fullWidth = false,
+  className = ''
+}) => (
+  <div className={`${fullWidth ? 'w-full' : ''} ${className}`}>
+    {label && <label className="block text-sm font-medium mb-1">{label}</label>}
+    <textarea 
+      placeholder={placeholder}
+      rows={rows}
+      className={`border rounded px-3 py-2 ${fullWidth ? 'w-full' : ''}`}
+    />
+  </div>
+)
+
 // Navigation
 export const AppBar: React.FC<LuaComponentProps> = ({ children, className = 'bg-canvas border-b' }) => (
   <header className={className}>{children}</header>
