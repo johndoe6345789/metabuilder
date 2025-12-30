@@ -45,7 +45,7 @@ export function GitHubActionsFetcher() {
           <TabsTrigger value="analysis">Analysis</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="runs" sx={{ mt: 2 }}>
+        <TabsContent value="runs" style={{ marginTop: 16 }}>
           <RunList
             runs={runs}
             isLoading={isLoading}
@@ -68,7 +68,7 @@ export function GitHubActionsFetcher() {
         </TabsContent>
 
         {runLogs && (
-          <TabsContent value="logs" sx={{ mt: 2 }}>
+          <TabsContent value="logs" style={{ marginTop: 16 }}>
             <RunDetails
               runLogs={runLogs}
               runJobs={runJobs}
@@ -79,7 +79,7 @@ export function GitHubActionsFetcher() {
           </TabsContent>
         )}
 
-        <TabsContent value="analysis" sx={{ mt: 2 }}>
+        <TabsContent value="analysis" style={{ marginTop: 16 }}>
           <AnalysisPanel
             analysis={analysis}
             isAnalyzing={isAnalyzing}

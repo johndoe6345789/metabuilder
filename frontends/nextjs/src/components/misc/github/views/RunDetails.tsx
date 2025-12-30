@@ -39,7 +39,7 @@ export function RunDetails({
           <Description size={24} />
           <CardTitle>Workflow Logs</CardTitle>
           {selectedRunId && (
-            <Badge variant="secondary" sx={{ fontSize: '0.75rem' }}>
+            <Badge variant="secondary" style={{ fontSize: '0.75rem' }}>
               Run #{selectedRunId}
             </Badge>
           )}
@@ -53,7 +53,7 @@ export function RunDetails({
           {runJobs.length > 0 && (
             <Stack spacing={1.5}>
               <Typography variant="subtitle2">Jobs Summary</Typography>
-              <Stack direction="row" spacing={1} flexWrap="wrap">
+              <Stack direction="row" spacing={1} className="flex-wrap">
                 {runJobs.map(job => (
                   <Badge
                     key={job.id}
@@ -64,7 +64,7 @@ export function RunDetails({
                           ? 'destructive'
                           : 'outline'
                     }
-                    sx={{ fontSize: '0.75rem' }}
+                    style={{ fontSize: '0.75rem' }}
                   >
                     {job.name}: {job.conclusion || job.status}
                   </Badge>
@@ -74,19 +74,18 @@ export function RunDetails({
           )}
 
           <ScrollArea
-            sx={{
+            style={{
               height: 600,
               width: '100%',
-              border: 1,
-              borderColor: 'divider',
-              borderRadius: 1,
+              border: '1px solid var(--color-divider)',
+              borderRadius: 4,
             }}
           >
             <Box
               component="pre"
-              sx={{
-                m: 0,
-                p: 2,
+              style={{
+                margin: 0,
+                padding: 16,
                 fontSize: '0.75rem',
                 fontFamily: 'monospace',
                 whiteSpace: 'pre-wrap',
@@ -97,7 +96,7 @@ export function RunDetails({
             </Box>
           </ScrollArea>
 
-          <Stack direction="row" spacing={2} flexWrap="wrap">
+          <Stack direction="row" spacing={2} className="flex-wrap">
             <Button
               onClick={() => {
                 if (!runLogs) return
@@ -110,7 +109,7 @@ export function RunDetails({
             <Button
               onClick={onAnalyzeLogs}
               disabled={isAnalyzing}
-              startIcon={<RobotIcon sx={{ fontSize: 20 }} />}
+              startIcon={<Robot size={20} />}
             >
               {isAnalyzing ? 'Analyzing Logs...' : 'Analyze Logs with AI'}
             </Button>
