@@ -248,6 +248,8 @@ export { LockRounded } from './LockRounded'
 export { CheckCircleOutline } from './CheckCircleOutline'
 export { Cancel } from './Cancel'
 export { HighlightOff } from './HighlightOff'
+export { OpenInNew } from './OpenInNew'
+export { Autorenew } from './Autorenew'
 
 // Authentication & Access Control
 export { Profile } from './Profile'
