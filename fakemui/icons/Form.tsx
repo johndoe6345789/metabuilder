@@ -1,14 +1,11 @@
-import React from 'react';
-import { SvgIcon, SvgIconProps } from '../core/SvgIcon';
+import React from 'react'
+import { Icon, IconProps } from './Icon'
 
 /**
  * Form icon - represents form input
  */
-export const Form = React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => (
-  <SvgIcon ref={ref} {...props}>
+export const Form = (props: IconProps) => (
+  <Icon {...props}>
     <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-  </SvgIcon>
-));
-
-Form.displayName = 'Form';
-export default Form;
+  </Icon>
+)
