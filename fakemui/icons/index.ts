@@ -75,10 +75,47 @@ export { ChartLine } from './ChartLine'
 export { ShieldCheck } from './ShieldCheck'
 export { Lock } from './Lock'
 
-// Social
+// Social & Communication
 export { Star } from './Star'
 export { Heart } from './Heart'
 export { Share } from './Share'
 export { Smile } from './Smile'
 export { Inbox } from './Inbox'
 export { Edit } from './Edit'
+export { Chat } from './Chat'
+export { Send } from './Send'
+
+// Security & Network
+export { LockOpen } from './LockOpen'
+export { Key } from './Key'
+export { Shield } from './Shield'
+export { Globe } from './Globe'
+export { Cloud } from './Cloud'
+
+// Developer & Tools
+export { Terminal } from './Terminal'
+export { Archive } from './Archive'
+export { Clipboard } from './Clipboard'
+export { Package } from './Package'
+export { Layers } from './Layers'
+export { Tag } from './Tag'
+export { Bookmark } from './Bookmark'
+
+// Theme & Display
+export { Moon } from './Moon'
+export { Sun } from './Sun'
+export { Zap } from './Zap'
+export { Expand } from './Expand'
+export { Collapse } from './Collapse'
+export { ZoomIn } from './ZoomIn'
+export { ZoomOut } from './ZoomOut'
+
+// UI Controls
+export { MoreHorizontal } from './MoreHorizontal'
+export { MoreVertical } from './MoreVertical'
+export { Grip } from './Grip'
+export { Pin } from './Pin'
+export { Loader } from './Loader'
+export { Save } from './Save'
+export { Undo } from './Undo'
+export { Redo } from './Redo'
