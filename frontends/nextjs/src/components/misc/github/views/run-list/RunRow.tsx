@@ -1,11 +1,7 @@
-import {
-  Autorenew as RunningIcon,
-  Download as DownloadIcon,
-  OpenInNew as OpenInNewIcon,
-} from '@mui/icons-material'
 import { Box, Stack, Typography } from '@mui/material'
 
 import { Badge, Button, Card, CardContent } from '@/components/ui'
+import { Autorenew, Download, OpenInNew } from '@/fakemui/icons'
 
 import type { WorkflowRun } from '../types'
 import type { RunListProps } from './run-list.types'

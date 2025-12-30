@@ -1,7 +1,7 @@
-import { Download as DownloadIcon, Refresh as RefreshIcon } from '@mui/icons-material'
 import { Stack, Typography } from '@mui/material'
 
 import { Badge, Button } from '@/components/ui'
+import { Download, Refresh } from '@/fakemui/icons'
 
 import type { RunListProps } from './run-list.types'
 import { spinSx } from './run-list.types'

@@ -1,5 +1,6 @@
-import { CheckCircle as SuccessIcon } from '@mui/icons-material'
 import { Box, Stack } from '@mui/material'
+
+import { CheckCircle } from '@/fakemui/icons'
 
 import {
   Button,

@@ -1,13 +1,8 @@
-import {
-  Autorenew as RunningIcon,
-  Cancel as FailureIcon,
-  CheckCircle as SuccessIcon,
-  OpenInNew as OpenInNewIcon,
-} from '@mui/icons-material'
 import { Box, Stack, Typography } from '@mui/material'
 import { alpha } from '@mui/material/styles'
 
 import { Alert, AlertDescription, AlertTitle, Badge, Button } from '@/components/ui'
+import { Autorenew, Cancel, CheckCircle, OpenInNew } from '@/fakemui/icons'
 
 import type { WorkflowRun } from '../types'
 import type { PipelineSummary, RunListProps } from './run-list.types'
@@ -31,10 +26,10 @@ const SummaryAlert = ({ conclusion, summaryTone }: SummaryAlertProps) => (
     })}
   >
     <Stack direction="row" spacing={2} alignItems="flex-start">
-      {summaryTone === 'success' && <SuccessIcon sx={{ color: 'success.main', fontSize: 48 }} />}
-      {summaryTone === 'error' && <FailureIcon sx={{ color: 'error.main', fontSize: 48 }} />}
+      {summaryTone === 'success' && <CheckCircle size={48} style={{ color: 'var(--mui-palette-success-main)' }} />}
+      {summaryTone === 'error' && <Cancel size={48} style={{ color: 'var(--mui-palette-error-main)' }} />}
       {summaryTone === 'warning' && (
-        <RunningIcon sx={{ color: 'warning.main', fontSize: 48, ...spinSx }} />
+        <Autorenew size={48} style={{ color: 'var(--mui-palette-warning-main)', ...spinSx }} />
       )}
       <Box flex={1}>
         <AlertTitle>

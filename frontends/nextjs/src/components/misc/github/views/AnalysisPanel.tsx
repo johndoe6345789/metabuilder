@@ -1,5 +1,6 @@
-import { Info as InfoIcon, SmartToy as RobotIcon } from '@mui/icons-material'
 import { Box, Stack } from '@mui/material'
+
+import { Info, Robot } from '@/fakemui/icons'
 
 import {
   Alert,
@@ -33,7 +34,7 @@ export function AnalysisPanel({
     <Card>
       <CardHeader>
         <Stack direction="row" spacing={1} alignItems="center">
-          <RobotIcon sx={{ fontSize: 24 }} />
+          <Robot size={24} />
           <CardTitle>AI-Powered Workflow Analysis</CardTitle>
         </Stack>
         <CardDescription>

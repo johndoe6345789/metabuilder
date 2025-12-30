@@ -1,5 +1,6 @@
-import { Description as FileTextIcon, SmartToy as RobotIcon } from '@mui/icons-material'
 import { Box, Stack, Typography } from '@mui/material'
+
+import { Description, Robot } from '@/fakemui/icons'
 
 import {
   Badge,
@@ -35,7 +36,7 @@ export function RunDetails({
     <Card>
       <CardHeader>
         <Stack direction="row" spacing={1} alignItems="center">
-          <FileTextIcon sx={{ fontSize: 24 }} />
+          <Description size={24} />
           <CardTitle>Workflow Logs</CardTitle>
           {selectedRunId && (
             <Badge variant="secondary" sx={{ fontSize: '0.75rem' }}>
