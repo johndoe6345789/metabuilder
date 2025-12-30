@@ -15,6 +15,39 @@ local M = {}
 ---@field success boolean
 ---@field errorMessage string|nil
 
+---@class FilterByOperationCase
+---@field operation string|nil
+---@field expected integer
+---@field desc string
+
+---@class FilterByResourceCase
+---@field resource string|nil
+---@field expected integer
+---@field desc string
+
+---@class FilterBySuccessCase
+---@field success boolean|nil
+---@field expected integer
+---@field desc string
+---@field expectedId string|nil
+
+---@class FilterByUsernameCase
+---@field username string|nil
+---@field expected integer
+---@field desc string
+
+---@class FilterByDateRangeCase
+---@field startTime number|nil
+---@field endTime number|nil
+---@field expected integer
+---@field desc string
+
+---@class ApplyFiltersCase
+---@field filters ApplyFiltersInput|nil
+---@field expected integer
+---@field desc string
+---@field expectedFirstId string|nil
+
 ---@return AuditLogEntry[]
 local function createSampleLogs()
   return {
@@ -85,6 +118,8 @@ function M.defineTests(framework, assertions, mocks)
   local it_each = framework.it_each
   local beforeEach = framework.beforeEach
   local expect = assertions.expect
+  local cases = load_cases("filters.cases.json")
+  local cases = load_cases("filters.cases.json")
   
   -- Import filter modules
   local filterByOperation = require("filters.filter_by_operation")
@@ -98,19 +133,14 @@ function M.defineTests(framework, assertions, mocks)
   describe("audit_log filters", function()
     
     describe("filterByOperation", function()
+      ---@type AuditLogEntry[]
       local logs
       
       beforeEach(function()
         logs = createSampleLogs()
       end)
       
-      it_each({
-        { operation = "create", expected = 2 },
-        { operation = "read", expected = 1 },
-        { operation = "update", expected = 1 },
-        { operation = "delete", expected = 1 },
-        { operation = "nonexistent", expected = 0 }
-      })("should return $expected logs for operation '$operation'", function(tc)
+      it_each(cases.filter_by_operation, "$desc", function(tc)
         local result = filterByOperation.filterByOperation(logs, tc.operation)
         expect(#result).toBe(tc.expected)
       end)
@@ -132,18 +162,14 @@ function M.defineTests(framework, assertions, mocks)
     end)
     
     describe("filterByResource", function()
+      ---@type AuditLogEntry[]
       local logs
       
       beforeEach(function()
         logs = createSampleLogs()
       end)
       
-      it_each({
-        { resource = "user", expected = 2 },
-        { resource = "settings", expected = 1 },
-        { resource = "post", expected = 2 },
-        { resource = "nonexistent", expected = 0 }
-      })("should return $expected logs for resource '$resource'", function(tc)
+      it_each(cases.filter_by_resource, "$desc", function(tc)
         local result = filterByResource.filterByResource(logs, tc.resource)
         expect(#result).toBe(tc.expected)
       end)
@@ -155,21 +181,19 @@ function M.defineTests(framework, assertions, mocks)
     end)
     
     describe("filterBySuccess", function()
+      ---@type AuditLogEntry[]
       local logs
       
       beforeEach(function()
         logs = createSampleLogs()
       end)
       
-      it("should return 4 logs when success is true", function()
-        local result = filterBySuccess.filterBySuccess(logs, true)
-        expect(#result).toBe(4)
-      end)
-      
-      it("should return 1 log when success is false", function()
-        local result = filterBySuccess.filterBySuccess(logs, false)
-        expect(#result).toBe(1)
-        expect(result[1].id).toBe("log3")
+      it_each(cases.filter_by_success, "$desc", function(tc)
+        local result = filterBySuccess.filterBySuccess(logs, tc.success)
+        expect(#result).toBe(tc.expected)
+        if tc.expectedId then
+          expect(result[1].id).toBe(tc.expectedId)
+        end
       end)
       
       it("should return all logs when success is nil", function()
@@ -179,19 +203,14 @@ function M.defineTests(framework, assertions, mocks)
     end)
     
     describe("filterByUsername", function()
+      ---@type AuditLogEntry[]
       local logs
       
       beforeEach(function()
         logs = createSampleLogs()
       end)
       
-      it_each({
-        { username = "admin", expected = 3, desc = "case-insensitive match" },
-        { username = "ADMIN", expected = 3, desc = "uppercase match" },
-        { username = "viewer", expected = 1, desc = "exact match" },
-        { username = "editor", expected = 1, desc = "single match" },
-        { username = "nonexistent", expected = 0, desc = "no match" }
-      })("should handle $desc - '$username' -> $expected results", function(tc)
+      it_each(cases.filter_by_username, "$desc", function(tc)
         local result = filterByUsername.filterByUsername(logs, tc.username)
         expect(#result).toBe(tc.expected)
       end)

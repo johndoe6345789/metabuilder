@@ -1,6 +1,25 @@
 -- Menu tests for nav_menu package
 -- Tests menu rendering and permission filtering
 
+---@class MenuUser
+---@field level? number
+
+---@class MenuItem
+---@field label string
+---@field path? string
+---@field minLevel? number
+---@field children? MenuItem[]
+
+---@class MenuRenderProps
+---@field user MenuUser
+---@field items MenuItem[]
+
+---@class MenuShowTestCase
+---@field user MenuUser
+---@field item MenuItem
+---@field expected boolean
+---@field desc string
+
 describe("Menu", function()
   -- Mock check module
   local original_can_access
