@@ -11,23 +11,7 @@
 import { registerJsonMocks } from '../json-loader'
 
 // Auto-load packages that have components.json
-import { autoRegisterPackages } from '../auto-loader'
-
-// Packages known to have good components.json files
-const AUTO_LOAD_PACKAGES = [
-  'arcade_lobby',
-  'audit_log',
-  'code_editor',
-  'dashboard',
-  'data_table',
-  'form_builder',
-  'nav_menu',
-  'notification_center',
-  'stats_grid',
-  'ui_auth',
-  'ui_footer',
-  'ui_header',
-]
+import { autoRegisterPackage } from '../auto-loader'
 
 // Initialize on module load
 let initialized = false
@@ -35,9 +19,25 @@ export async function initializeMocks(): Promise<void> {
   if (initialized) return
   initialized = true
   
-  // Auto-load from real packages first
-  const autoLoaded = await autoRegisterPackages(AUTO_LOAD_PACKAGES)
-  console.log(`[Mocks] Auto-loaded ${autoLoaded.length} packages from workspace:`, autoLoaded)
+  // Fetch packages index and auto-load all packages
+  try {
+    const response = await fetch('/packages/index.json')
+    const index = await response.json()
+    const packageIds = index.packages?.map((p: { packageId: string }) => p.packageId) || []
+    
+    // Auto-load all packages in parallel
+    const results = await Promise.all(
+      packageIds.map(async (id: string) => {
+        const success = await autoRegisterPackage(id)
+        return success ? id : null
+      })
+    )
+    
+    const autoLoaded = results.filter(Boolean)
+    console.log(`[Mocks] Auto-loaded ${autoLoaded.length}/${packageIds.length} packages from workspace`)
+  } catch (err) {
+    console.warn('[Mocks] Failed to load packages index:', err)
+  }
   
   // Then register JSON overrides (these take precedence)
   registerJsonMocks()
