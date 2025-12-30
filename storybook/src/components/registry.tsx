@@ -623,6 +623,25 @@ export const ListItem: React.FC<LuaComponentProps & { button?: boolean; selected
   </li>
 )
 
+// ListItemIcon - icon container in list items
+export const ListItemIcon: React.FC<LuaComponentProps> = ({ children, className = 'flex-shrink-0 w-6 h-6 flex items-center justify-center' }) => (
+  <span className={className}>{children}</span>
+)
+
+// ListItemText - text container in list items
+interface ListItemTextProps extends LuaComponentProps {
+  primary?: string
+  secondary?: string
+}
+
+export const ListItemText: React.FC<ListItemTextProps> = ({ primary, secondary, children, className = 'flex flex-col' }) => (
+  <div className={className}>
+    {primary && <span className="text-sm font-medium">{primary}</span>}
+    {secondary && <span className="text-xs text-muted-foreground">{secondary}</span>}
+    {children}
+  </div>
+)
+
 // Data display
 interface TableProps extends LuaComponentProps {
   columns?: Array<{ field: string; headerName: string; width?: number; flex?: number }>
@@ -723,6 +742,8 @@ export const componentRegistry: Record<string, AnyComponent> = {
   Link,
   List,
   ListItem,
+  ListItemIcon,
+  ListItemText,
   IconButton,
   Menu,
   MenuItem,
