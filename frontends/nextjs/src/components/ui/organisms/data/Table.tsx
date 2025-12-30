@@ -2,35 +2,34 @@
 'use client'
 
 import {
-  Paper,
-  Table as MuiTable,
-  TableBody as MuiTableBody,
-  TableCell as MuiTableCell,
-  TableContainer,
-  TableFooter as MuiTableFooter,
-  TableHead as MuiTableHead,
-  TableRow as MuiTableRow,
-} from '@mui/material'
+  Table as FakeMuiTable,
+  TableBody as FakeMuiTableBody,
+  TableCell as FakeMuiTableCell,
+  TableContainer as FakeMuiTableContainer,
+  TableFooter as FakeMuiTableFooter,
+  TableHead as FakeMuiTableHead,
+  TableRow as FakeMuiTableRow,
+} from 'fakemui'
 import { forwardRef, ReactNode } from 'react'
+
+import styles from './Table.module.scss'
 
 interface TableProps {
   children: ReactNode
   className?: string
 }
 
-const Table = forwardRef<HTMLTableElement, TableProps>(({ children, ...props }, ref) => {
-  return (
-    <TableContainer
-      component={Paper}
-      elevation={0}
-      sx={{ border: 1, borderColor: 'divider', borderRadius: 2 }}
-    >
-      <MuiTable ref={ref} size="small" {...props}>
-        {children}
-      </MuiTable>
-    </TableContainer>
-  )
-})
+const Table = forwardRef<HTMLTableElement, TableProps>(
+  ({ children, className = '', ...props }, ref) => {
+    return (
+      <FakeMuiTableContainer className={`${styles.tableContainer} ${className}`}>
+        <FakeMuiTable ref={ref} size="small" {...props}>
+          {children}
+        </FakeMuiTable>
+      </FakeMuiTableContainer>
+    )
+  }
+)
 Table.displayName = 'Table'
 
 interface TableHeaderProps {
@@ -39,11 +38,11 @@ interface TableHeaderProps {
 }
 
 const TableHeader = forwardRef<HTMLTableSectionElement, TableHeaderProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <MuiTableHead ref={ref} sx={{ bgcolor: 'action.hover' }} {...props}>
+      <FakeMuiTableHead ref={ref} className={`${styles.tableHeader} ${className}`} {...props}>
         {children}
-      </MuiTableHead>
+      </FakeMuiTableHead>
     )
   }
 )
@@ -55,11 +54,11 @@ interface TableBodyProps {
 }
 
 const TableBody = forwardRef<HTMLTableSectionElement, TableBodyProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <MuiTableBody ref={ref} {...props}>
+      <FakeMuiTableBody ref={ref} className={className} {...props}>
         {children}
-      </MuiTableBody>
+      </FakeMuiTableBody>
     )
   }
 )
@@ -71,11 +70,11 @@ interface TableFooterProps {
 }
 
 const TableFooter = forwardRef<HTMLTableSectionElement, TableFooterProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <MuiTableFooter ref={ref} sx={{ bgcolor: 'action.hover' }} {...props}>
+      <FakeMuiTableFooter ref={ref} className={`${styles.tableFooter} ${className}`} {...props}>
         {children}
-      </MuiTableFooter>
+      </FakeMuiTableFooter>
     )
   }
 )
@@ -86,20 +85,15 @@ interface TableRowProps {
   className?: string
 }
 
-const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(({ children, ...props }, ref) => {
-  return (
-    <MuiTableRow
-      ref={ref}
-      sx={{
-        '&:last-child td, &:last-child th': { border: 0 },
-        '&:hover': { bgcolor: 'action.hover' },
-      }}
-      {...props}
-    >
-      {children}
-    </MuiTableRow>
-  )
-})
+const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
+  ({ children, className = '', ...props }, ref) => {
+    return (
+      <FakeMuiTableRow ref={ref} hover className={`${styles.tableRow} ${className}`} {...props}>
+        {children}
+      </FakeMuiTableRow>
+    )
+  }
+)
 TableRow.displayName = 'TableRow'
 
 interface TableHeadProps {
@@ -109,25 +103,17 @@ interface TableHeadProps {
 }
 
 const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
-  ({ children, onClick, ...props }, ref) => {
+  ({ children, onClick, className = '', ...props }, ref) => {
     return (
-      <MuiTableCell
+      <FakeMuiTableCell
         ref={ref}
-        component="th"
+        header
         onClick={onClick}
-        sx={{
-          fontWeight: 600,
-          fontSize: '0.75rem',
-          color: 'text.secondary',
-          textTransform: 'uppercase',
-          letterSpacing: '0.05em',
-          cursor: onClick ? 'pointer' : 'default',
-          '&:hover': onClick ? { bgcolor: 'action.hover' } : {},
-        }}
+        className={`${styles.tableHeadCell} ${onClick ? styles.clickable : ''} ${className}`}
         {...props}
       >
         {children}
-      </MuiTableCell>
+      </FakeMuiTableCell>
     )
   }
 )
@@ -140,11 +126,11 @@ interface TableCellProps {
 }
 
 const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <MuiTableCell ref={ref} sx={{ fontSize: '0.875rem' }} {...props}>
+      <FakeMuiTableCell ref={ref} className={`${styles.tableCell} ${className}`} {...props}>
         {children}
-      </MuiTableCell>
+      </FakeMuiTableCell>
     )
   }
 )
@@ -156,13 +142,9 @@ interface TableCaptionProps {
 }
 
 const TableCaption = forwardRef<HTMLTableCaptionElement, TableCaptionProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <caption
-        ref={ref}
-        style={{ captionSide: 'bottom', padding: '16px', color: 'inherit', fontSize: '0.875rem' }}
-        {...props}
-      >
+      <caption ref={ref} className={`${styles.tableCaption} ${className}`} {...props}>
         {children}
       </caption>
     )
