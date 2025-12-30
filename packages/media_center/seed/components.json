@@ -1,0 +1,487 @@
+{
+  "components": [
+    {
+      "id": "MediaDashboard",
+      "type": "container",
+      "props": {
+        "sx": {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": 3,
+          "p": 3
+        }
+      },
+      "children": [
+        {
+          "type": "typography",
+          "props": {
+            "variant": "h4",
+            "gutterBottom": true
+          },
+          "children": "Media Center"
+        },
+        {
+          "type": "grid",
+          "props": {
+            "container": true,
+            "spacing": 3
+          },
+          "children": [
+            {
+              "type": "grid",
+              "props": { "item": true, "xs": 12, "md": 4 },
+              "children": [
+                {
+                  "type": "card",
+                  "children": [
+                    {
+                      "type": "cardContent",
+                      "children": [
+                        {
+                          "type": "box",
+                          "props": {
+                            "sx": { "display": "flex", "alignItems": "center", "gap": 2 }
+                          },
+                          "children": [
+                            {
+                              "type": "icon",
+                              "props": { "name": "Queue", "color": "primary" }
+                            },
+                            {
+                              "type": "typography",
+                              "props": { "variant": "h6" },
+                              "children": "Job Queue"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "typography",
+                          "props": { "variant": "h3", "color": "primary" },
+                          "children": "{{stats.pending_jobs}}"
+                        },
+                        {
+                          "type": "typography",
+                          "props": { "variant": "body2", "color": "text.secondary" },
+                          "children": "Pending jobs"
+                        },
+                        {
+                          "type": "linearProgress",
+                          "props": {
+                            "variant": "determinate",
+                            "value": "{{stats.queue_utilization}}",
+                            "sx": { "mt": 2 }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "cardActions",
+                      "children": [
+                        {
+                          "type": "button",
+                          "props": { "size": "small" },
+                          "events": { "onClick": "navigateTo('/media/jobs')" },
+                          "children": "View All Jobs"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "props": { "item": true, "xs": 12, "md": 4 },
+              "children": [
+                {
+                  "type": "card",
+                  "children": [
+                    {
+                      "type": "cardContent",
+                      "children": [
+                        {
+                          "type": "box",
+                          "props": {
+                            "sx": { "display": "flex", "alignItems": "center", "gap": 2 }
+                          },
+                          "children": [
+                            {
+                              "type": "icon",
+                              "props": { "name": "Radio", "color": "secondary" }
+                            },
+                            {
+                              "type": "typography",
+                              "props": { "variant": "h6" },
+                              "children": "Radio"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "typography",
+                          "props": { "variant": "h3", "color": "secondary" },
+                          "children": "{{stats.radio_live}}"
+                        },
+                        {
+                          "type": "typography",
+                          "props": { "variant": "body2", "color": "text.secondary" },
+                          "children": "Live channels • {{stats.radio_listeners}} listeners"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "cardActions",
+                      "children": [
+                        {
+                          "type": "button",
+                          "props": { "size": "small" },
+                          "events": { "onClick": "navigateTo('/media/radio')" },
+                          "children": "Manage Radio"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "props": { "item": true, "xs": 12, "md": 4 },
+              "children": [
+                {
+                  "type": "card",
+                  "children": [
+                    {
+                      "type": "cardContent",
+                      "children": [
+                        {
+                          "type": "box",
+                          "props": {
+                            "sx": { "display": "flex", "alignItems": "center", "gap": 2 }
+                          },
+                          "children": [
+                            {
+                              "type": "icon",
+                              "props": { "name": "Tv", "color": "success" }
+                            },
+                            {
+                              "type": "typography",
+                              "props": { "variant": "h6" },
+                              "children": "TV Channels"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "typography",
+                          "props": { "variant": "h3", "color": "success.main" },
+                          "children": "{{stats.tv_live}}"
+                        },
+                        {
+                          "type": "typography",
+                          "props": { "variant": "body2", "color": "text.secondary" },
+                          "children": "Live channels • {{stats.tv_viewers}} viewers"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "cardActions",
+                      "children": [
+                        {
+                          "type": "button",
+                          "props": { "size": "small" },
+                          "events": { "onClick": "navigateTo('/media/tv')" },
+                          "children": "Manage TV"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "typography",
+          "props": { "variant": "h5", "sx": { "mt": 2 } },
+          "children": "Recent Jobs"
+        },
+        {
+          "type": "component",
+          "props": { "name": "JobQueueTable", "limit": 5 }
+        }
+      ]
+    },
+    {
+      "id": "JobQueueTable",
+      "type": "dataTable",
+      "props": {
+        "dataSource": "media_api.list_jobs",
+        "columns": [
+          { "field": "id", "headerName": "Job ID", "width": 120 },
+          { "field": "type", "headerName": "Type", "width": 150 },
+          { 
+            "field": "status", 
+            "headerName": "Status", 
+            "width": 120,
+            "renderCell": "StatusChip"
+          },
+          { 
+            "field": "progress", 
+            "headerName": "Progress", 
+            "width": 150,
+            "renderCell": "ProgressBar"
+          },
+          { "field": "created_at", "headerName": "Created", "width": 180, "type": "datetime" },
+          {
+            "field": "actions",
+            "headerName": "Actions",
+            "width": 150,
+            "renderCell": "JobActions"
+          }
+        ],
+        "pagination": true,
+        "pageSize": 10,
+        "autoRefresh": true,
+        "refreshInterval": 5000
+      }
+    },
+    {
+      "id": "RadioChannelCard",
+      "type": "card",
+      "props": {
+        "sx": { "height": "100%" }
+      },
+      "children": [
+        {
+          "type": "cardMedia",
+          "props": {
+            "component": "img",
+            "height": 140,
+            "image": "{{channel.artwork_url}}",
+            "alt": "{{channel.name}}"
+          }
+        },
+        {
+          "type": "cardContent",
+          "children": [
+            {
+              "type": "box",
+              "props": {
+                "sx": { "display": "flex", "justifyContent": "space-between", "alignItems": "center" }
+              },
+              "children": [
+                {
+                  "type": "typography",
+                  "props": { "variant": "h6" },
+                  "children": "{{channel.name}}"
+                },
+                {
+                  "type": "chip",
+                  "props": {
+                    "label": "{{channel.is_live ? 'LIVE' : 'Offline'}}",
+                    "color": "{{channel.is_live ? 'error' : 'default'}}",
+                    "size": "small"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "typography",
+              "props": { "variant": "body2", "color": "text.secondary" },
+              "children": "{{channel.description}}"
+            },
+            {
+              "type": "box",
+              "props": { "sx": { "mt": 2, "display": "flex", "gap": 1, "alignItems": "center" } },
+              "condition": "channel.is_live",
+              "children": [
+                {
+                  "type": "icon",
+                  "props": { "name": "People", "fontSize": "small" }
+                },
+                {
+                  "type": "typography",
+                  "props": { "variant": "caption" },
+                  "children": "{{channel.listener_count}} listeners"
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "props": { "sx": { "mt": 1 } },
+              "condition": "channel.is_live && channel.now_playing",
+              "children": [
+                {
+                  "type": "typography",
+                  "props": { "variant": "caption", "color": "text.secondary" },
+                  "children": "Now Playing:"
+                },
+                {
+                  "type": "typography",
+                  "props": { "variant": "body2", "fontWeight": "bold" },
+                  "children": "{{channel.now_playing.title}}"
+                },
+                {
+                  "type": "typography",
+                  "props": { "variant": "caption" },
+                  "children": "{{channel.now_playing.artist}}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cardActions",
+          "children": [
+            {
+              "type": "iconButton",
+              "props": { "color": "primary" },
+              "events": { "onClick": "radio_helpers.toggle_play(channel.id)" },
+              "children": [
+                {
+                  "type": "icon",
+                  "props": { "name": "{{channel.is_live ? 'Stop' : 'PlayArrow'}}" }
+                }
+              ]
+            },
+            {
+              "type": "iconButton",
+              "events": { "onClick": "openDialog('RadioChannelEditor', { channel: channel })" },
+              "children": [
+                {
+                  "type": "icon",
+                  "props": { "name": "Edit" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TvChannelCard",
+      "type": "card",
+      "props": {
+        "sx": { "height": "100%" }
+      },
+      "children": [
+        {
+          "type": "cardMedia",
+          "props": {
+            "component": "img",
+            "height": 140,
+            "image": "{{channel.logo_url}}",
+            "alt": "{{channel.name}}"
+          }
+        },
+        {
+          "type": "cardContent",
+          "children": [
+            {
+              "type": "box",
+              "props": {
+                "sx": { "display": "flex", "justifyContent": "space-between", "alignItems": "center" }
+              },
+              "children": [
+                {
+                  "type": "box",
+                  "children": [
+                    {
+                      "type": "chip",
+                      "props": {
+                        "label": "CH {{channel.channel_number}}",
+                        "size": "small",
+                        "sx": { "mr": 1 }
+                      }
+                    },
+                    {
+                      "type": "typography",
+                      "props": { "variant": "h6", "component": "span" },
+                      "children": "{{channel.name}}"
+                    }
+                  ]
+                },
+                {
+                  "type": "chip",
+                  "props": {
+                    "label": "{{channel.is_live ? 'LIVE' : 'Offline'}}",
+                    "color": "{{channel.is_live ? 'error' : 'default'}}",
+                    "size": "small"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "props": { "sx": { "mt": 2, "display": "flex", "gap": 1, "alignItems": "center" } },
+              "condition": "channel.is_live",
+              "children": [
+                {
+                  "type": "icon",
+                  "props": { "name": "Visibility", "fontSize": "small" }
+                },
+                {
+                  "type": "typography",
+                  "props": { "variant": "caption" },
+                  "children": "{{channel.viewer_count}} viewers"
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "props": { "sx": { "mt": 1 } },
+              "condition": "channel.is_live && channel.now_playing",
+              "children": [
+                {
+                  "type": "typography",
+                  "props": { "variant": "caption", "color": "text.secondary" },
+                  "children": "Now Playing:"
+                },
+                {
+                  "type": "typography",
+                  "props": { "variant": "body2", "fontWeight": "bold" },
+                  "children": "{{channel.now_playing.title}}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cardActions",
+          "children": [
+            {
+              "type": "iconButton",
+              "props": { "color": "primary" },
+              "events": { "onClick": "tv_helpers.toggle_channel(channel.id)" },
+              "children": [
+                {
+                  "type": "icon",
+                  "props": { "name": "{{channel.is_live ? 'Stop' : 'PlayArrow'}}" }
+                }
+              ]
+            },
+            {
+              "type": "iconButton",
+              "events": { "onClick": "navigateTo('/media/tv/' + channel.id + '/schedule')" },
+              "children": [
+                {
+                  "type": "icon",
+                  "props": { "name": "Schedule" }
+                }
+              ]
+            },
+            {
+              "type": "iconButton",
+              "events": { "onClick": "openDialog('TvChannelEditor', { channel: channel })" },
+              "children": [
+                {
+                  "type": "icon",
+                  "props": { "name": "Edit" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
