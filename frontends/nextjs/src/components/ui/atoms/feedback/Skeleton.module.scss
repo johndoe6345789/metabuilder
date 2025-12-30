@@ -1,0 +1,11 @@
+.skeleton {
+  background-color: var(--action-hover, rgba(0, 0, 0, 0.08));
+  border-radius: 4px;
+}
+
+// Dark mode support
+[data-theme='dark'] {
+  .skeleton {
+    background-color: var(--action-hover-dark, rgba(255, 255, 255, 0.08));
+  }
+}

@@ -1,0 +1,39 @@
+.badge {
+  height: auto;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.default {
+  background-color: var(--primary-main, #1976d2);
+  color: var(--primary-contrast-text, #fff);
+}
+
+.secondary {
+  background-color: var(--secondary-main, #9c27b0);
+  color: var(--secondary-contrast-text, #fff);
+}
+
+.destructive {
+  background-color: var(--error-main, #d32f2f);
+  color: var(--error-contrast-text, #fff);
+}
+
+.outline {
+  background-color: transparent;
+  border: 1px solid var(--border-color, #e0e0e0);
+  color: var(--text-primary, #333);
+}
+
+// Dark mode support
+[data-theme='dark'] {
+  .outline {
+    border-color: var(--border-color-dark, #424242);
+    color: var(--text-primary-dark, #fff);
+  }
+}

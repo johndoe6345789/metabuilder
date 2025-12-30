@@ -1,0 +1,20 @@
+.label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary, #333);
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Dark mode support
+[data-theme='dark'] {
+  .label {
+    color: var(--text-primary-dark, #fff);
+  }
+}
