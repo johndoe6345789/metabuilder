@@ -1,6 +1,7 @@
 import { ExpandMore as ExpandMoreIcon } from '@/fakemui/icons'
-import { Box, Button, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
+import { Box, Button, Menu, MenuItem, ListItemIcon, ListItemText } from '@/fakemui'
 import { ElementType, forwardRef, type MouseEvent, ReactNode } from 'react'
+import styles from './Navigation.module.scss'
 
 interface NavigationMenuProps {
   children: ReactNode
@@ -12,11 +13,7 @@ const NavigationMenu = forwardRef<HTMLDivElement, NavigationMenuProps>(
       <Box
         ref={ref}
         component="nav"
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 0.5,
-        }}
+        className={styles.navMenu}
         {...props}
       >
         {children}
@@ -36,14 +33,7 @@ const NavigationList = forwardRef<HTMLUListElement, NavigationListProps>(
       <Box
         ref={ref}
         component="ul"
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 0.5,
-          listStyle: 'none',
-          m: 0,
-          p: 0,
-        }}
+        className={styles.navList}
         {...props}
       >
         {children}
@@ -60,7 +50,7 @@ interface NavigationItemProps {
 const NavigationItem = forwardRef<HTMLLIElement, NavigationItemProps>(
   ({ children, ...props }, ref) => {
     return (
-      <Box component="li" ref={ref} sx={{ position: 'relative' }} {...props}>
+      <Box component="li" ref={ref} className={styles.navItem} {...props}>
         {children}
       </Box>
     )
@@ -80,16 +70,9 @@ const NavigationTrigger = forwardRef<HTMLButtonElement, NavigationTriggerProps>(
       <Button
         ref={ref}
         onClick={onClick}
-        color="inherit"
-        endIcon={hasDropdown ? <ExpandMoreIcon fontSize="small" /> : undefined}
-        sx={{
-          textTransform: 'none',
-          fontWeight: 500,
-          color: 'text.primary',
-          '&:hover': {
-            bgcolor: 'action.hover',
-          },
-        }}
+        variant="ghost"
+        endIcon={hasDropdown ? <ExpandMoreIcon /> : undefined}
+        className={styles.navTrigger}
         {...props}
       >
         {children}
@@ -114,21 +97,7 @@ const NavigationContent = forwardRef<HTMLDivElement, NavigationContentProps>(
         anchorEl={anchorEl}
         open={open}
         onClose={onClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        PaperProps={{
-          elevation: 2,
-          sx: {
-            mt: 1,
-            minWidth: 200,
-          },
-        }}
+        className={styles.navContent}
         {...props}
       >
         {children}
@@ -149,7 +118,7 @@ interface NavigationLinkProps {
   component?: ElementType
 }
 
-const NavigationLink = forwardRef<HTMLElement, NavigationLinkProps>(
+const NavigationLink = forwardRef<HTMLButtonElement, NavigationLinkProps>(
   (
     {
       children,
@@ -164,35 +133,25 @@ const NavigationLink = forwardRef<HTMLElement, NavigationLinkProps>(
     },
     ref
   ) => {
-    if (asChild || component) {
-      return (
-        <MenuItem
-          ref={ref}
-          component={component || 'a'}
-          href={href}
-          onClick={onClick}
-          disabled={disabled}
-          selected={active}
-          {...props}
-        >
-          {icon && <ListItemIcon>{icon}</ListItemIcon>}
-          <ListItemText>{children}</ListItemText>
-        </MenuItem>
-      )
+    const handleClick = () => {
+      if (href && !onClick) {
+        window.location.href = href
+      } else if (onClick) {
+        onClick()
+      }
     }
 
     return (
       <MenuItem
-        onClick={onClick}
+        ref={ref}
+        onClick={handleClick}
         disabled={disabled}
         selected={active}
-        sx={{
-          borderRadius: 1,
-        }}
+        className={`${styles.navLink} ${active ? styles.active : ''}`}
         {...props}
       >
-        {icon && <ListItemIcon>{icon}</ListItemIcon>}
-        <ListItemText>{children}</ListItemText>
+        {icon && <span className={styles.linkIcon}>{icon}</span>}
+        <span>{children}</span>
       </MenuItem>
     )
   }

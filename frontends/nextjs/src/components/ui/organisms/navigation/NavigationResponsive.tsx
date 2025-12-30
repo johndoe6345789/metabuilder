@@ -1,6 +1,7 @@
 import { Menu as MenuIcon } from '@/fakemui/icons'
-import { IconButton } from '@mui/material'
+import { IconButton } from '@/fakemui'
 import { forwardRef } from 'react'
+import styles from './Navigation.module.scss'
 
 interface NavigationMobileToggleProps {
   onClick: () => void
@@ -12,12 +13,7 @@ const NavigationMobileToggle = forwardRef<HTMLButtonElement, NavigationMobileTog
       <IconButton
         ref={ref}
         onClick={onClick}
-        edge="start"
-        color="inherit"
-        sx={{
-          display: { sm: 'none' },
-          mr: 2,
-        }}
+        className={styles.mobileToggle}
         {...props}
       >
         <MenuIcon />

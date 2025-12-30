@@ -1,5 +1,6 @@
-import { Box, Divider } from '@mui/material'
+import { Box, Divider } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
+import styles from './Navigation.module.scss'
 
 interface NavigationBrandProps {
   children: ReactNode
@@ -13,12 +14,7 @@ const NavigationBrand = forwardRef<HTMLDivElement, NavigationBrandProps>(
       <Box
         ref={ref}
         onClick={onClick}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          cursor: onClick || href ? 'pointer' : 'default',
-          mr: 2,
-        }}
+        className={`${styles.brand} ${onClick || href ? styles.clickable : ''}`}
         {...props}
       >
         {children}
@@ -29,12 +25,12 @@ const NavigationBrand = forwardRef<HTMLDivElement, NavigationBrandProps>(
 NavigationBrand.displayName = 'NavigationBrand'
 
 const NavigationSeparator = forwardRef<HTMLHRElement, Record<string, never>>((props, ref) => {
-  return <Divider ref={ref} orientation="vertical" flexItem sx={{ mx: 1 }} {...props} />
+  return <Divider ref={ref} vertical className={styles.separator} {...props} />
 })
 NavigationSeparator.displayName = 'NavigationSeparator'
 
 const NavigationSpacer = forwardRef<HTMLDivElement, Record<string, never>>((props, ref) => {
-  return <Box ref={ref} sx={{ flexGrow: 1 }} {...props} />
+  return <Box ref={ref} className={styles.spacer} {...props} />
 })
 NavigationSpacer.displayName = 'NavigationSpacer'
 

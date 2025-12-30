@@ -1,12 +1,13 @@
 'use client'
 
 import { Menu as MenuIcon } from '@/fakemui/icons'
-import { Box, Drawer, IconButton, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Drawer, IconButton, useMediaQuery } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
 
 import { MenuItemList, type MenuItemListProps, type SidebarItem } from './MenuItemList'
 import { SidebarHeader, type SidebarHeaderProps } from './Sidebar/Header'
 import { SidebarSection, SidebarSeparator } from './Sidebar/NavSections'
+import styles from './Navigation.module.scss'
 
 interface SidebarProps {
   children?: ReactNode
@@ -30,8 +31,8 @@ const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
     },
     ref
   ) => {
-    const theme = useTheme()
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+    // Use media query to determine mobile vs desktop
+    const isMobile = useMediaQuery('(max-width: 959px)')
     const actualVariant = isMobile ? 'temporary' : variant
 
     return (
@@ -41,20 +42,16 @@ const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
         anchor={anchor}
         open={open}
         onClose={onClose}
-        sx={{
-          width: open ? width : 0,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: width,
-            boxSizing: 'border-box',
-            bgcolor: 'background.paper',
-            borderRight: 1,
-            borderColor: 'divider',
-          },
-        }}
+        className={styles.sidebar}
+        style={{ 
+          '--sidebar-width': `${width}px`,
+          width: open ? width : 0 
+        } as React.CSSProperties}
         {...props}
       >
-        {children}
+        <div className={styles.sidebarPaper} style={{ width }}>
+          {children}
+        </div>
       </Drawer>
     )
   }
@@ -69,11 +66,7 @@ const SidebarContent = forwardRef<HTMLDivElement, SidebarContentProps>(
   ({ children, ...props }, ref) => (
     <Box
       ref={ref}
-      sx={{
-        flex: 1,
-        overflow: 'auto',
-        py: 1,
-      }}
+      className={styles.sidebarContent}
       {...props}
     >
       {children}
@@ -90,11 +83,7 @@ const SidebarFooter = forwardRef<HTMLDivElement, SidebarFooterProps>(
   ({ children, ...props }, ref) => (
     <Box
       ref={ref}
-      sx={{
-        p: 2,
-        borderTop: 1,
-        borderColor: 'divider',
-      }}
+      className={styles.sidebarFooter}
       {...props}
     >
       {children}
@@ -109,7 +98,7 @@ interface SidebarToggleProps {
 
 const SidebarToggle = forwardRef<HTMLButtonElement, SidebarToggleProps>(
   ({ onClick, ...props }, ref) => (
-    <IconButton ref={ref} onClick={onClick} edge="start" {...props}>
+    <IconButton ref={ref} onClick={onClick} {...props}>
       <MenuIcon />
     </IconButton>
   )

@@ -1,6 +1,7 @@
 import { ChevronLeft as ChevronLeftIcon } from '@/fakemui/icons'
-import { Box, IconButton } from '@mui/material'
+import { Box, IconButton } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
+import styles from '../Navigation.module.scss'
 
 interface SidebarHeaderProps {
   children?: ReactNode
@@ -13,18 +14,12 @@ const SidebarHeader = forwardRef<HTMLDivElement, SidebarHeaderProps>(
     return (
       <Box
         ref={ref}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          p: 2,
-          minHeight: 64,
-        }}
+        className={styles.sidebarHeader}
         {...props}
       >
         {children}
         {showCloseButton && onClose && (
-          <IconButton onClick={onClose} size="small">
+          <IconButton onClick={onClose} sm>
             <ChevronLeftIcon />
           </IconButton>
         )}

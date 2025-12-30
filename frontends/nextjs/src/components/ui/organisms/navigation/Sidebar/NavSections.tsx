@@ -1,5 +1,6 @@
-import { Box, Divider, Typography } from '@mui/material'
+import { Box, Divider, Typography } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
+import styles from '../Navigation.module.scss'
 
 interface SidebarSectionProps {
   title?: string
@@ -9,19 +10,11 @@ interface SidebarSectionProps {
 const SidebarSection = forwardRef<HTMLDivElement, SidebarSectionProps>(
   ({ title, children, ...props }, ref) => {
     return (
-      <Box ref={ref} sx={{ py: 1 }} {...props}>
+      <Box ref={ref} className={styles.sidebarSection} {...props}>
         {title && (
           <Typography
             variant="caption"
-            sx={{
-              px: 2,
-              py: 1,
-              display: 'block',
-              color: 'text.secondary',
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-            }}
+            className={styles.sectionTitle}
           >
             {title}
           </Typography>
@@ -34,7 +27,7 @@ const SidebarSection = forwardRef<HTMLDivElement, SidebarSectionProps>(
 SidebarSection.displayName = 'SidebarSection'
 
 const SidebarSeparator = forwardRef<HTMLHRElement, Record<string, never>>((props, ref) => {
-  return <Divider ref={ref} sx={{ my: 1 }} {...props} />
+  return <Divider ref={ref} className={styles.sidebarSeparator} {...props} />
 })
 SidebarSeparator.displayName = 'SidebarSeparator'
 

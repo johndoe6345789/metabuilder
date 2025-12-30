@@ -1,7 +1,7 @@
 'use client'
 
-import { AppBar, Slide, Toolbar, useScrollTrigger } from '@mui/material'
-import { forwardRef, ReactNode } from 'react'
+import { AppBar, Toolbar, Slide } from '@/fakemui'
+import { forwardRef, ReactNode, useEffect, useState } from 'react'
 
 import {
   NavigationContent,
@@ -13,6 +13,7 @@ import {
 } from './NavigationMenuItems'
 import { NavigationMobileToggle } from './NavigationResponsive'
 import { NavigationBrand, NavigationSeparator, NavigationSpacer } from './NavigationStyling'
+import styles from './Navigation.module.scss'
 
 interface NavigationProps {
   children: ReactNode
@@ -20,6 +21,29 @@ interface NavigationProps {
   color?: 'default' | 'inherit' | 'primary' | 'secondary' | 'transparent'
   elevation?: number
   hideOnScroll?: boolean
+}
+
+/**
+ * Custom hook to detect scroll direction for hide-on-scroll behavior
+ */
+const useScrollTrigger = (): boolean => {
+  const [trigger, setTrigger] = useState(false)
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY
+    const threshold = 100
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      setTrigger(currentScrollY > threshold && currentScrollY > lastScrollY)
+      lastScrollY = currentScrollY
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  return trigger
 }
 
 const Navigation = forwardRef<HTMLElement, NavigationProps>(
@@ -41,21 +65,16 @@ const Navigation = forwardRef<HTMLElement, NavigationProps>(
         ref={ref}
         position={position}
         color={color}
-        elevation={elevation}
-        sx={{
-          bgcolor: 'background.paper',
-          borderBottom: 1,
-          borderColor: 'divider',
-        }}
+        className={styles.appBar}
         {...props}
       >
-        <Toolbar>{children}</Toolbar>
+        <Toolbar className={styles.toolbar}>{children}</Toolbar>
       </AppBar>
     )
 
     if (hideOnScroll) {
       return (
-        <Slide appear={false} direction="down" in={!trigger}>
+        <Slide direction="down" in={!trigger}>
           {appBar}
         </Slide>
       )
