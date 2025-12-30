@@ -36,7 +36,7 @@ ApplicationWindow {
     
     function onStatusMessage(msg) {
         // Could show a snackbar/toast here
-        console.log("Status:", msg)
+        // Status messages handled via UI feedback
     }
     
     // Keyboard shortcut: Cmd/Ctrl+K for search
