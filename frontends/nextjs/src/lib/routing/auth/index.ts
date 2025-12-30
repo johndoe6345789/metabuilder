@@ -9,6 +9,7 @@ export { getUserTenants, validateTenantAccess } from './validate-tenant-access'
 export type { TenantAccessResult, TenantInfo } from './validate-tenant-access'
 
 export {
+  canBePrimaryPackage,
   clearPackageCache,
   getAccessiblePackages,
   getPackageEntities,

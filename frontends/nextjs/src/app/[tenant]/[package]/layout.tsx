@@ -10,7 +10,7 @@
 
 import { notFound } from 'next/navigation'
 
-import { loadPackageMetadata } from '@/lib/routing/auth/validate-package-route'
+import { canBePrimaryPackage, loadPackageMetadata } from '@/lib/routing/auth/validate-package-route'
 
 import { TenantProvider } from './tenant-context'
 
@@ -52,6 +52,12 @@ export default async function TenantLayout({
   const packageMetadata = loadPackageMetadata(pkg)
   if (!packageMetadata) {
     // Package doesn't exist
+    notFound()
+  }
+
+  // Verify package can be primary (not dependency-only)
+  if (!canBePrimaryPackage(pkg)) {
+    // Package has primary: false, can only be used as dependency
     notFound()
   }
 

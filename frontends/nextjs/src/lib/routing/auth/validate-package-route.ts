@@ -96,6 +96,16 @@ export const clearPackageCache = (): void => {
 }
 
 /**
+ * Check if a package can be a primary package (own routes)
+ * Returns false if package has `primary: false` in metadata
+ */
+export const canBePrimaryPackage = (packageId: string): boolean => {
+  const metadata = loadPackageMetadata(packageId)
+  if (!metadata) return false
+  return metadata.primary !== false
+}
+
+/**
  * Get available entities for a package
  * These are auto-generated CRUD routes from the schema
  */
