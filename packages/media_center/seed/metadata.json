@@ -1,11 +1,11 @@
 {
   "id": "media_center",
   "name": "Media Center",
-  "version": "1.0.0",
-  "description": "Media processing dashboard with job queue, radio, TV channel management, and document conversion",
+  "version": "1.1.0",
+  "description": "Media processing dashboard with job queue, radio, TV, document conversion, and retro gaming",
   "author": "MetaBuilder",
   "minLevel": 3,
-  "tags": ["media", "streaming", "radio", "tv", "transcoding", "documents", "pdf"],
+  "tags": ["media", "streaming", "radio", "tv", "transcoding", "documents", "pdf", "retro", "gaming", "emulation"],
   "dependencies": ["notification_center", "data_table"],
   "exports": {
     "components": [
@@ -21,21 +21,27 @@
       "TvEpgViewer",
       "MediaPlayer",
       "DocumentConverter",
-      "QuickConvertButtons"
+      "QuickConvertButtons",
+      "RetroGameLauncher",
+      "RetroGamePlayer",
+      "SaveStateManager",
+      "ActiveSessionsList"
     ],
     "pages": [
       "MediaOverviewPage",
       "JobsPage",
       "RadioPage",
       "TvPage",
-      "DocumentsPage"
+      "DocumentsPage",
+      "RetroPage"
     ],
     "scripts": [
       "media_api",
       "job_helpers",
       "radio_helpers",
       "tv_helpers",
-      "document_helpers"
+      "document_helpers",
+      "retro_helpers"
     ]
   },
   "routes": [
