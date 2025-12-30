@@ -51,7 +51,7 @@ export function AnalysisPanel({
               disabled={isAnalyzing}
               size="lg"
               fullWidth
-              startIcon={<RobotIcon sx={{ fontSize: 20 }} />}
+              startIcon={<Robot size={20} />}
             >
               {isAnalyzing ? 'Analyzing Logs...' : 'Analyze Downloaded Logs with AI'}
             </Button>
@@ -61,7 +61,7 @@ export function AnalysisPanel({
               disabled={isAnalyzing}
               size="lg"
               fullWidth
-              startIcon={<RobotIcon sx={{ fontSize: 20 }} />}
+              startIcon={<Robot size={20} />}
             >
               {isAnalyzing ? 'Analyzing...' : 'Analyze Workflows with AI'}
             </Button>
@@ -69,20 +69,19 @@ export function AnalysisPanel({
 
           {isAnalyzing && (
             <Stack spacing={2}>
-              <Skeleton sx={{ height: 128 }} />
-              <Skeleton sx={{ height: 128 }} />
-              <Skeleton sx={{ height: 128 }} />
+              <Skeleton style={{ height: 128 }} />
+              <Skeleton style={{ height: 128 }} />
+              <Skeleton style={{ height: 128 }} />
             </Stack>
           )}
 
           {analysis && !isAnalyzing && (
             <Box
-              sx={{
-                bgcolor: 'action.hover',
-                p: 3,
-                borderRadius: 2,
-                border: 1,
-                borderColor: 'divider',
+              style={{
+                backgroundColor: 'var(--color-action-hover)',
+                padding: 24,
+                borderRadius: 8,
+                border: '1px solid var(--color-divider)',
                 whiteSpace: 'pre-wrap',
               }}
             >
@@ -93,7 +92,7 @@ export function AnalysisPanel({
           {!analysis && !isAnalyzing && (
             <Alert>
               <Stack direction="row" spacing={1.5} alignItems="flex-start">
-                <InfoIcon sx={{ color: 'info.main', fontSize: 20 }} />
+                <Info size={20} style={{ color: 'var(--mui-palette-info-main)' }} />
                 <Box>
                   <AlertTitle>No Analysis Yet</AlertTitle>
                   <AlertDescription>
