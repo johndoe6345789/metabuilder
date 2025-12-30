@@ -683,10 +683,10 @@ end
 
 -- Streaming
 
---- Start streaming to RTMP
---- @param session_id string
---- @param rtmp_url string RTMP ingest URL
---- @return boolean success
+---Start streaming to RTMP
+---@param session_id string Session identifier
+---@param rtmp_url string RTMP ingest URL
+---@return boolean success Whether streaming started successfully
 function retro_helpers.start_streaming(session_id, rtmp_url)
     local response = http.post("/api/v1/retro/sessions/" .. session_id .. "/stream/start", {
         rtmp_url = rtmp_url
@@ -694,9 +694,9 @@ function retro_helpers.start_streaming(session_id, rtmp_url)
     return response.status == 200
 end
 
---- Stop streaming
---- @param session_id string
---- @return boolean success
+---Stop streaming
+---@param session_id string Session identifier
+---@return boolean success Whether streaming stopped successfully
 function retro_helpers.stop_streaming(session_id)
     local response = http.post("/api/v1/retro/sessions/" .. session_id .. "/stream/stop")
     return response.status == 200
@@ -704,17 +704,17 @@ end
 
 -- Shaders
 
---- Set shader preset
---- @param session_id string
---- @param preset string Shader preset name
+---Set shader preset
+---@param session_id string Session identifier
+---@param preset string Shader preset name
 function retro_helpers.set_shader(session_id, preset)
     http.patch("/api/v1/retro/sessions/" .. session_id, {
         shader_preset = preset
     })
 end
 
---- Get available shader presets
---- @return string[]
+---Get available shader presets
+---@return string[] presets Array of shader preset names
 function retro_helpers.get_shaders()
     local response = http.get("/api/v1/retro/shaders")
     if response.status == 200 then
@@ -725,19 +725,19 @@ end
 
 -- Cheats
 
---- Load cheat codes
---- @param session_id string
---- @param codes string[] Array of cheat codes (Game Genie, Action Replay, etc.)
+---Load cheat codes
+---@param session_id string Session identifier
+---@param codes string[] Array of cheat codes (Game Genie, Action Replay, etc.)
 function retro_helpers.load_cheats(session_id, codes)
     http.post("/api/v1/retro/sessions/" .. session_id .. "/cheats", {
         codes = codes
     })
 end
 
---- Enable/disable a cheat
---- @param session_id string
---- @param index number Cheat index
---- @param enabled boolean
+---Enable or disable a cheat
+---@param session_id string Session identifier
+---@param index number Cheat index
+---@param enabled boolean True to enable, false to disable
 function retro_helpers.set_cheat_enabled(session_id, index, enabled)
     http.patch("/api/v1/retro/sessions/" .. session_id .. "/cheats/" .. index, {
         enabled = enabled
@@ -746,11 +746,11 @@ end
 
 -- Netplay
 
---- Host a netplay session
---- @param session_id string
---- @param port number Port to listen on
---- @param password? string Optional password
---- @return string|nil room_code
+---Host a netplay session
+---@param session_id string Session identifier
+---@param port number Port to listen on
+---@param password? string Optional password
+---@return string|nil room_code Room code or nil if failed
 function retro_helpers.host_netplay(session_id, port, password)
     local response = http.post("/api/v1/retro/sessions/" .. session_id .. "/netplay/host", {
         port = port,
@@ -762,12 +762,12 @@ function retro_helpers.host_netplay(session_id, port, password)
     return nil
 end
 
---- Join a netplay session
---- @param session_id string
---- @param host string Host address
---- @param port number Port
---- @param password? string
---- @return boolean success
+---Join a netplay session
+---@param session_id string Session identifier
+---@param host string Host address
+---@param port number Port number
+---@param password? string Optional password
+---@return boolean success Whether join was successful
 function retro_helpers.join_netplay(session_id, host, port, password)
     local response = http.post("/api/v1/retro/sessions/" .. session_id .. "/netplay/join", {
         host = host,
@@ -777,18 +777,18 @@ function retro_helpers.join_netplay(session_id, host, port, password)
     return response.status == 200
 end
 
---- Disconnect from netplay
---- @param session_id string
+---Disconnect from netplay
+---@param session_id string Session identifier
 function retro_helpers.disconnect_netplay(session_id)
     http.post("/api/v1/retro/sessions/" .. session_id .. "/netplay/disconnect")
 end
 
 -- RetroAchievements
 
---- Login to RetroAchievements
---- @param username string
---- @param password string
---- @return string|nil token
+---Login to RetroAchievements
+---@param username string RetroAchievements username
+---@param password string RetroAchievements password
+---@return string|nil token Authentication token or nil if failed
 function retro_helpers.ra_login(username, password)
     local response = http.post("/api/v1/retro/retroachievements/login", {
         username = username,
@@ -800,9 +800,9 @@ function retro_helpers.ra_login(username, password)
     return nil
 end
 
---- Get achievements for current game
---- @param session_id string
---- @return table[] achievements
+---Get achievements for current game
+---@param session_id string Session identifier
+---@return Achievement[] achievements Array of achievements
 function retro_helpers.get_achievements(session_id)
     local response = http.get("/api/v1/retro/sessions/" .. session_id .. "/achievements")
     if response.status == 200 then
@@ -813,18 +813,19 @@ end
 
 -- Convenience functions
 
---- Quick start a game with auto-detected core
---- @param rom_path string
---- @param options? table Optional settings
---- @return string|nil session_id
+---Quick start a game with auto-detected core
+---@param rom_path string Path to ROM file
+---@param options? QuickStartOptions Optional configuration settings
+---@return string|nil session_id Session ID if successful
+---@return string|nil error Error message if failed
 function retro_helpers.quick_start(rom_path, options)
     options = options or {}
-    
+
     local core = retro_helpers.get_core_for_rom(rom_path)
     if not core then
         return nil, "No compatible core found for ROM"
     end
-    
+
     return retro_helpers.start_session({
         rom_path = rom_path,
         core_name = core.name,
@@ -836,9 +837,9 @@ function retro_helpers.quick_start(rom_path, options)
     })
 end
 
---- Format play time as HH:MM:SS
---- @param seconds number
---- @return string
+---Format play time as HH:MM:SS
+---@param seconds number Total seconds played
+---@return string formatted Formatted time string
 function retro_helpers.format_playtime(seconds)
     local hours = math.floor(seconds / 3600)
     local mins = math.floor((seconds % 3600) / 60)
