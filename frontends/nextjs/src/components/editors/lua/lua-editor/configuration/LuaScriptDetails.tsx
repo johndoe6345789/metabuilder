@@ -1,4 +1,4 @@
-import { Plus, Trash } from '@phosphor-icons/react'
+import { Plus, Trash } from '@/fakemui/icons'
 
 import { Badge, Button, CardContent, Input, Label } from '@/components/ui'
 import type { LuaScript } from '@/lib/level-types'

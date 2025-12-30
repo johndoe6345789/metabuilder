@@ -1,4 +1,4 @@
-import { BookOpen } from '@phosphor-icons/react'
+import { BookOpen } from '@/fakemui/icons'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 

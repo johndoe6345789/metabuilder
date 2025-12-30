@@ -1,4 +1,4 @@
-import { Play, ShieldCheck } from '@phosphor-icons/react'
+import { Play, ShieldCheck } from '@/fakemui/icons'
 
 import { Button, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import type { LuaScript } from '@/lib/level-types'

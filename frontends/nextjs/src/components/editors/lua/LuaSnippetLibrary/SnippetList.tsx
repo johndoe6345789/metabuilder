@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Code, Copy, Tag } from '@phosphor-icons/react'
+import { ArrowRight, Check, Code, Copy, Tag } from '@/fakemui/icons'
 
 import {
   Badge,

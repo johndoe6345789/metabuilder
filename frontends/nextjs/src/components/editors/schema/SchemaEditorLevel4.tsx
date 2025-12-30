@@ -1,4 +1,4 @@
-import { Plus, Trash } from '@phosphor-icons/react'
+import { Plus, Trash } from '@/fakemui/icons'
 
 import { SchemaTabs } from '@/components/schema/level4/Tabs'
 import { useSchemaLevel4 } from '@/components/schema/level4/useSchemaLevel4'

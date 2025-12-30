@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle } from '@phosphor-icons/react'
+import { CheckCircle, XCircle } from '@/fakemui/icons'
 
 import { Card, CardContent, CardHeader, CardTitle, Label } from '@/components/ui'
 import type { LuaExecutionResult } from '@/lib/lua-engine'
