@@ -69,7 +69,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
   defaultAnchorOrigin = { vertical: 'bottom', horizontal: 'left' },
 }) => {
   const [toasts, setToasts] = useState<Toast[]>([])
-  const timersRef = useRef<Map<string, NodeJS.Timeout>>(new Map())
+  const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
 
   // Clear timer when toast is removed
   const clearTimer = useCallback((id: string) => {
@@ -193,7 +193,6 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
             message={t.message}
             severity={t.severity}
             action={t.action}
-            onClose={() => close(t.id)}
           />
         </Snackbar>
       ))}
