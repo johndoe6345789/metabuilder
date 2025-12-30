@@ -541,6 +541,7 @@ export const componentRegistry: Record<string, AnyComponent> = {
   Chip,
   Divider,
   Alert,
+  Progress,
   
   // Navigation
   Tabs,
