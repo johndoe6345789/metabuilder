@@ -7,7 +7,9 @@
   "author": "MetaBuilder",
   "category": "tools",
   "dependencies": [],
-  "devDependencies": ["lua_test"],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": []
   },
@@ -21,5 +23,20 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 5
+  "minLevel": 5,
+  "primary": true,
+  "permissions": {
+    "codegen.templates.create": {
+      "minLevel": 5,
+      "description": "Create custom templates"
+    },
+    "codegen.generate": {
+      "minLevel": 5,
+      "description": "Generate code from templates"
+    },
+    "codegen.templates.view": {
+      "minLevel": 5,
+      "description": "View available code templates"
+    }
+  }
 }

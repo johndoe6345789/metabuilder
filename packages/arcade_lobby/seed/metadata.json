@@ -6,8 +6,13 @@
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "gaming",
-  "dependencies": ["ui_permissions", "dashboard"],
-  "devDependencies": ["lua_test"],
+  "dependencies": [
+    "ui_permissions",
+    "dashboard"
+  ],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": []
   },
@@ -21,5 +26,24 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 2
+  "minLevel": 2,
+  "primary": true,
+  "permissions": {
+    "arcade.lobby.view": {
+      "minLevel": 2,
+      "description": "View arcade lobby and game listings"
+    },
+    "arcade.party.create": {
+      "minLevel": 2,
+      "description": "Create party queues"
+    },
+    "arcade.tournament.join": {
+      "minLevel": 2,
+      "description": "Join tournaments"
+    },
+    "arcade.tournament.create": {
+      "minLevel": 3,
+      "description": "Create new tournaments"
+    }
+  }
 }

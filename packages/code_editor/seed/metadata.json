@@ -37,5 +37,20 @@
       "tests/editor.cases.json"
     ]
   },
-  "minLevel": 5
+  "minLevel": 5,
+  "primary": false,
+  "permissions": {
+    "editor.theme.apply": {
+      "minLevel": 5,
+      "description": "Apply editor themes"
+    },
+    "editor.code.edit": {
+      "minLevel": 5,
+      "description": "Edit code in editor"
+    },
+    "editor.code.view": {
+      "minLevel": 5,
+      "description": "View code in editor"
+    }
+  }
 }

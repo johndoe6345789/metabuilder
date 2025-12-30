@@ -1,1 +1,152 @@
-[]
+[
+  {
+    "id": "level5_layout",
+    "type": "Box",
+    "props": { "className": "min-h-screen bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950" },
+    "children": [
+      {
+        "id": "level5_header",
+        "type": "AppHeader",
+        "children": [
+          {
+            "type": "Toolbar",
+            "children": [
+              { "type": "Typography", "props": { "variant": "h6", "text": "Level 5 - God Panel" } },
+              { "type": "Box", "props": { "className": "flex-grow" } },
+              { "type": "Typography", "props": { "variant": "body2", "text": "{{user.username}}" } }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "level5_content",
+        "type": "Container",
+        "props": { "className": "max-w-7xl mx-auto px-4 py-8 space-y-8" },
+        "children": [
+          {
+            "id": "level5_intro",
+            "type": "Stack",
+            "props": { "className": "space-y-4" },
+            "children": [
+              { "type": "Typography", "props": { "variant": "overline", "text": "Level 5" } },
+              { "type": "Typography", "props": { "variant": "h2", "text": "Super God Panel", "className": "text-white" } },
+              { "type": "Typography", "props": { "variant": "body1", "text": "Govern tenants and manage cross-level operations.", "className": "text-gray-300" } }
+            ]
+          },
+          {
+            "id": "level5_tabs",
+            "type": "Card",
+            "children": [
+              {
+                "type": "Tabs",
+                "props": { "items": [
+                  { "value": "tenants", "label": "Tenants" },
+                  { "value": "gods", "label": "God Users" },
+                  { "value": "transfer", "label": "Transfer" }
+                ]}
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tenants_panel",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          { "type": "Typography", "props": { "variant": "h5", "text": "Tenant Management" } },
+          { "type": "Typography", "props": { "variant": "body2", "text": "Create, edit, and manage tenants across the platform.", "className": "text-muted-foreground" } }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "type": "Table",
+            "props": {
+              "columns": [
+                { "field": "name", "headerName": "Name" },
+                { "field": "slug", "headerName": "Slug" },
+                { "field": "users", "headerName": "Users" },
+                { "field": "status", "headerName": "Status" }
+              ],
+              "rows": [
+                { "name": "Acme Corp", "slug": "acme", "users": 42, "status": "Active" },
+                { "name": "Beta Inc", "slug": "beta", "users": 18, "status": "Active" },
+                { "name": "Test Tenant", "slug": "test", "users": 3, "status": "Inactive" }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gods_panel",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          { "type": "Typography", "props": { "variant": "h5", "text": "God Users" } },
+          { "type": "Typography", "props": { "variant": "body2", "text": "Users with elevated cross-tenant privileges.", "className": "text-muted-foreground" } }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "type": "List",
+            "children": [
+              {
+                "type": "ListItem",
+                "children": [
+                  { "type": "Avatar", "props": { "alt": "Admin" } },
+                  { "type": "ListItemText", "props": { "primary": "admin@metabuilder.dev", "secondary": "Level 5 - God" } }
+                ]
+              },
+              {
+                "type": "ListItem",
+                "children": [
+                  { "type": "Avatar", "props": { "alt": "System" } },
+                  { "type": "ListItemText", "props": { "primary": "system@metabuilder.dev", "secondary": "Level 6 - Supergod" } }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "transfer_panel",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          { "type": "Typography", "props": { "variant": "h5", "text": "Data Transfer" } },
+          { "type": "Typography", "props": { "variant": "body2", "text": "Transfer data and configurations between tenants.", "className": "text-muted-foreground" } }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "type": "Stack",
+            "props": { "className": "space-y-4" },
+            "children": [
+              { "type": "Select", "props": { "label": "Source Tenant", "options": [{ "value": "acme", "label": "Acme Corp" }, { "value": "beta", "label": "Beta Inc" }] } },
+              { "type": "Select", "props": { "label": "Target Tenant", "options": [{ "value": "acme", "label": "Acme Corp" }, { "value": "beta", "label": "Beta Inc" }] } },
+              { "type": "Button", "props": { "variant": "contained", "children": "Start Transfer" } }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

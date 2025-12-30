@@ -6,8 +6,13 @@
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
-  "dependencies": ["ui_dialogs", "ui_permissions"],
-  "devDependencies": ["lua_test"],
+  "dependencies": [
+    "ui_dialogs",
+    "ui_permissions"
+  ],
+  "devDependencies": [
+    "lua_test"
+  ],
   "exports": {
     "components": []
   },
@@ -21,5 +26,16 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 4
+  "minLevel": 4,
+  "primary": false,
+  "permissions": {
+    "admin.dialog.show": {
+      "minLevel": 4,
+      "description": "Display admin confirmation dialogs"
+    },
+    "admin.dialog.action": {
+      "minLevel": 4,
+      "description": "Execute admin dialog actions"
+    }
+  }
 }
