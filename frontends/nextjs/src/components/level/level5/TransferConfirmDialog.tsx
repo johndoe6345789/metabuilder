@@ -1,4 +1,4 @@
-import { Crown } from '@phosphor-icons/react'
+import { Crown } from '@/fakemui/icons'
 
 import {
   AlertDialog,

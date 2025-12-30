@@ -1,6 +1,6 @@
 'use client'
 
-import { ChatCircle, Users } from '@phosphor-icons/react'
+import { ChatCircle, Users } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 

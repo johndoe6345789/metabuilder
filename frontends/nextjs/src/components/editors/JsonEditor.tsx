@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react'
-import { Warning } from '@phosphor-icons/react'
+import { Warning } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 

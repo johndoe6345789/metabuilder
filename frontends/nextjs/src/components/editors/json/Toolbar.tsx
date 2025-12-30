@@ -1,4 +1,4 @@
-import { FloppyDisk, ShieldCheck, X } from '@phosphor-icons/react'
+import { FloppyDisk, ShieldCheck, X } from '@/fakemui/icons'
 
 import { Button, DialogFooter } from '@/components/ui'
 

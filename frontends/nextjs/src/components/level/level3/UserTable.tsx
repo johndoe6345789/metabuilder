@@ -1,4 +1,4 @@
-import { ChatCircle, MagnifyingGlass, PencilSimple, Trash, Users } from '@phosphor-icons/react'
+import { ChatCircle, MagnifyingGlass, PencilSimple, Trash, Users } from '@/fakemui/icons'
 import { useMemo } from 'react'
 
 import {

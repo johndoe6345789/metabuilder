@@ -1,5 +1,5 @@
 import Editor, { useMonaco } from '@monaco-editor/react'
-import { ArrowsOut, BookOpen, FileCode } from '@phosphor-icons/react'
+import { ArrowsOut, BookOpen, FileCode } from '@/fakemui/icons'
 import { useRef } from 'react'
 import { toast } from 'sonner'
 

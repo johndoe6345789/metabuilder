@@ -1,4 +1,4 @@
-import { GithubLogo, GoogleLogo, IconProps } from '@phosphor-icons/react'
+import { GithubLogo, GoogleLogo, type IconProps } from '@/fakemui/icons'
 
 import { Button, Separator } from '@/components/ui'
 

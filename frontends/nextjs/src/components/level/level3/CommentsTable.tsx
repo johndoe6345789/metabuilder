@@ -1,4 +1,4 @@
-import { Trash } from '@phosphor-icons/react'
+import { Trash } from '@/fakemui/icons'
 import { useMemo } from 'react'
 
 import {

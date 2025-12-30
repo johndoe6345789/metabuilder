@@ -1,4 +1,4 @@
-import { CheckCircle, WarningCircle } from '@phosphor-icons/react'
+import { CheckCircle, WarningCircle } from '@/fakemui/icons'
 
 import { Alert, AlertDescription, Badge } from '@/components/ui'
 

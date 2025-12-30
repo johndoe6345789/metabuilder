@@ -1,4 +1,4 @@
-import { ChatCircle, Users } from '@phosphor-icons/react'
+import { ChatCircle, Users } from '@/fakemui/icons'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
 import type { Comment, User } from '@/lib/level-types'

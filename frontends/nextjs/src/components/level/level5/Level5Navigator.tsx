@@ -1,4 +1,4 @@
-import { ArrowsLeftRight, Buildings, Camera, Eye, Users, Warning } from '@phosphor-icons/react'
+import { ArrowsLeftRight, Buildings, Camera, Eye, Users, Warning } from '@/fakemui/icons'
 
 import { Box, Typography } from '@mui/material'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
