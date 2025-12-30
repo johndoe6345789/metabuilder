@@ -622,35 +622,35 @@ end
 
 -- Speed control
 
---- Set game speed multiplier
---- @param session_id string
---- @param speed number Speed multiplier (0.25 to 4.0)
+---Set game speed multiplier
+---@param session_id string Session identifier
+---@param speed number Speed multiplier (0.25 to 4.0)
 function retro_helpers.set_speed(session_id, speed)
     http.patch("/api/v1/retro/sessions/" .. session_id, {
         speed = math.max(0.25, math.min(4.0, speed))
     })
 end
 
---- Toggle fast forward
---- @param session_id string
---- @param enabled boolean
+---Toggle fast forward
+---@param session_id string Session identifier
+---@param enabled boolean True to enable, false to disable
 function retro_helpers.set_fast_forward(session_id, enabled)
     http.patch("/api/v1/retro/sessions/" .. session_id, {
         fast_forward = enabled
     })
 end
 
---- Advance single frame (when paused)
---- @param session_id string
+---Advance single frame (when paused)
+---@param session_id string Session identifier
 function retro_helpers.frame_advance(session_id)
     http.post("/api/v1/retro/sessions/" .. session_id .. "/frame-advance")
 end
 
 -- Screenshots and recording
 
---- Take a screenshot
---- @param session_id string
---- @return string|nil path Path to screenshot
+---Take a screenshot
+---@param session_id string Session identifier
+---@return string|nil path Path to screenshot or nil if failed
 function retro_helpers.take_screenshot(session_id)
     local response = http.post("/api/v1/retro/sessions/" .. session_id .. "/screenshot")
     if response.status == 201 then
@@ -659,10 +659,10 @@ function retro_helpers.take_screenshot(session_id)
     return nil
 end
 
---- Start recording gameplay
---- @param session_id string
---- @param output_path string Where to save the recording
---- @return boolean success
+---Start recording gameplay
+---@param session_id string Session identifier
+---@param output_path string Where to save the recording
+---@return boolean success Whether recording started successfully
 function retro_helpers.start_recording(session_id, output_path)
     local response = http.post("/api/v1/retro/sessions/" .. session_id .. "/recording/start", {
         output_path = output_path
@@ -670,9 +670,9 @@ function retro_helpers.start_recording(session_id, output_path)
     return response.status == 200
 end
 
---- Stop recording
---- @param session_id string
---- @return string|nil path Path to recording
+---Stop recording
+---@param session_id string Session identifier
+---@return string|nil path Path to recording or nil if failed
 function retro_helpers.stop_recording(session_id)
     local response = http.post("/api/v1/retro/sessions/" .. session_id .. "/recording/stop")
     if response.status == 200 then
