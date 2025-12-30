@@ -1,12 +1,6 @@
 -- Save profile form handler
 
----@class FormData
----@field email string
-
----@class ProfileResponse
----@field success boolean
----@field action string
----@field email string
+require("profile.types")
 
 local M = {}
 

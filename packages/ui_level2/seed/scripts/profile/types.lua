@@ -23,6 +23,11 @@
 ---@field onClick string
 ---@field variant? string
 
+---@class IconProps
+---@field name string
+---@field size? "small"|"medium"|"large"|"inherit"
+---@field className? string
+
 ---@class FormData
 ---@field email string Email from form input
 

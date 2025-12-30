@@ -58,7 +58,10 @@ local function render(ctx)
   end
   return {
     type = "Stack",
-    props = { spacing = 4 },
+    props = {
+      ---@type StackProps
+      spacing = 4
+    },
     children = {
       {
         type = "Button",

@@ -126,7 +126,7 @@ export function StatusIndicator({ user, status }: StatusIndicatorProps) {
 ```typescript
 // src/components/organisms/CommentSection.tsx
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKV } from '@/hooks/data/useKV'
 import { Button, Input } from '@/components/atoms'
 import { ProfileCard } from '@/components/molecules'
 
@@ -271,7 +271,7 @@ export function FormField({ label, error, ...props }: FormFieldProps) {
 ### Pattern: Data List
 ```typescript
 // Organism handling data fetching and display
-import { useKV } from '@github/spark/hooks'
+import { useKV } from '@/hooks/data/useKV'
 import { Button } from '@/components/atoms'
 import { Card } from '@/components/ui'
 

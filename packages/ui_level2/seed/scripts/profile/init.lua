@@ -1,6 +1,8 @@
 -- Profile module facade
 -- Re-exports all profile functions for backward compatibility
 
+require("profile.types")
+
 local render_module = require("profile.render")
 local save_module = require("profile.save_profile")
 

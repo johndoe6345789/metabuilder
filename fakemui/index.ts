@@ -25,6 +25,7 @@ export {
   Search,
   Settings,
   User,
+  UserCheck,
   Menu,
   Eye,
   EyeSlash,

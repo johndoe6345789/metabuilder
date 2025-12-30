@@ -13,6 +13,7 @@
 ---@field deleteUser fun(userId: string): boolean
 ---@field editUser fun(userId: string, updates: ModerationUpdates): boolean
 ---@field banUser fun(userId: string, reason: string): boolean
+---@type Moderation
 local M = {}
 
 -- Import all single-function modules

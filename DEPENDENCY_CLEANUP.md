@@ -103,7 +103,7 @@
 "@github/spark": ">=0.43.1 <1",         // ⚠️  Evaluate - What is this?
 ```
 
-**Action Needed:** Verify @github/spark usage
+**Action Needed:** Verify any remaining @github/spark runtime usage (useKV imports replaced with local hook).
 
 ### Error Handling & Notifications
 ```json
@@ -170,9 +170,9 @@
 
 ### @github/spark
 **Current Version:** >=0.43.1 <1
-**Purpose:** Unknown - needs investigation
-**Action:** Search codebase for usage
-**Decision:** Keep or remove based on usage
+**Purpose:** Previously for `useKV` hook usage
+**Action:** Runtime imports replaced with local `@/hooks/data/useKV`; remaining references are docs and a module override type stub
+**Decision:** Candidate for removal once no other Spark features are needed
 
 ### @next/third-parties
 **Current Version:** ^16.1.1
