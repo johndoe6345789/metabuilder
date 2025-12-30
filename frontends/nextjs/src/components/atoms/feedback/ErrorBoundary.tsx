@@ -1,6 +1,6 @@
 'use client'
 
-import { Alert, Box, Button, Typography } from '@mui/material'
+import { Alert, Button, Typography } from '@/fakemui'
 import React, { Component, ReactNode } from 'react'
 
 import { logError, LogLevel } from '@/lib/errors/log-error'
@@ -58,19 +58,19 @@ export class ErrorBoundary extends Component<Props, State> {
 
       // Default error UI
       return (
-        <Box sx={{ p: 3 }}>
-          <Alert severity="error" sx={{ mb: 2 }}>
-            <Typography variant="h6" gutterBottom>
+        <div style={{ padding: '1.5rem' }}>
+          <Alert severity="error" style={{ marginBottom: '1rem' }}>
+            <Typography variant="h6">
               Something went wrong
             </Typography>
-            <Typography variant="body2" sx={{ mb: 2 }}>
+            <Typography variant="body2" style={{ marginBottom: '1rem' }}>
               {this.state.error?.message || 'An unexpected error occurred'}
             </Typography>
-            <Button variant="contained" color="primary" onClick={this.handleReset} size="small">
+            <Button variant="primary" onClick={this.handleReset} size="sm">
               Try Again
             </Button>
           </Alert>
-        </Box>
+        </div>
       )
     }
 

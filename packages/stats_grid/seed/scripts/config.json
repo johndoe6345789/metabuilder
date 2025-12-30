@@ -1,0 +1,14 @@
+{
+  "defaultGridClass": "grid gap-4 md:grid-cols-3 lg:grid-cols-6",
+  "defaultCardClass": "bg-black/40 border-white/10",
+  "colorClasses": {
+    "white": "text-white",
+    "red": "text-red-400",
+    "yellow": "text-yellow-400",
+    "blue": "text-blue-400",
+    "green": "text-green-400",
+    "orange": "text-orange-400",
+    "purple": "text-purple-400",
+    "gray": "text-gray-400"
+  }
+}
