@@ -1,8 +1,9 @@
 'use client'
 
 // Component Registry - Maps Lua component types to React components
-import { Box, Button, Stack, TextField, Typography } from '@mui/material'
 import React from 'react'
+
+import { Box, Button, Stack, TextField, Typography } from '@/fakemui'
 
 import type { LuaUIComponent } from './types/lua-ui-package'
 import type { JsonValue } from '@/types/utility-types'
@@ -43,7 +44,7 @@ export function generateComponentTree(
 
 /**
  * Convert Lua component props to React component props
- * Handles special cases like MUI component props
+ * Handles special cases like FakeMUI component props
  */
 function convertLuaPropsToReact(
   luaProps: Record<string, JsonValue>,
@@ -55,7 +56,7 @@ function convertLuaPropsToReact(
   switch (componentType) {
     case 'Input':
     case 'TextArea':
-      // Convert generic props to MUI TextField props
+      // Convert generic props to FakeMUI TextField props
       if (luaProps.type === 'email') {
         reactProps.type = 'email'
       }

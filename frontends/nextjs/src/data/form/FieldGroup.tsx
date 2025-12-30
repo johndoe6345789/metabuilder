@@ -1,5 +1,6 @@
-import { Box, Stack, Typography } from '@mui/material'
 import type { ReactNode } from 'react'
+
+import { Box, Stack, Typography } from '@/fakemui'
 
 interface FieldGroupProps {
   title: string
@@ -17,30 +18,21 @@ export function FieldGroup({
   spacing = 2,
 }: FieldGroupProps) {
   return (
-    <Stack
-      spacing={2}
-      sx={{
-        border: 1,
-        borderColor: 'divider',
-        borderRadius: 2,
-        p: 2,
-        backgroundColor: 'background.paper',
-      }}
-    >
+    <Stack spacing={2} className="field-group">
       <Stack direction="row" justifyContent="space-between" spacing={2} alignItems="flex-start">
         <Box>
-          <Typography variant="subtitle1" fontWeight={600} sx={{ lineHeight: 1.3 }}>
+          <Typography variant="subtitle1" className="field-group__title">
             {title}
           </Typography>
           {description ? (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+            <Typography variant="body2" className="field-group__description">
               {description}
             </Typography>
           ) : null}
         </Box>
 
         {actions ? (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>{actions}</Box>
+          <Box className="field-group__actions">{actions}</Box>
         ) : null}
       </Stack>
 
