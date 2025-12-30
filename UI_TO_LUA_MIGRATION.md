@@ -34,7 +34,7 @@
 Phase 1: fakemui Enhancement           ✅ Complete
 Phase 2: Audit Log                     ✅ Complete
 Phase 3: Quick Guide                   ✅ Complete
-Phase 4: Data Grid                     🔜 Next
+Phase 4: Data Grid                     ⏳ In Progress (scripts complete, frontend pending)
 Phase 5: GitHub Tools                  📋 Planned
 Phase 6: Workflow Editor               📋 Planned
 Phase 7: Schema Editor                 📋 Planned
@@ -128,7 +128,7 @@ Phase 11: Final Cleanup                📋 Planned
 
 ### Current State
 - Exists: `packages/data_table` (basic table)
-- Missing: Advanced features (sorting, filtering, export)
+- ✅ Scripts complete: sorting, filtering, selection, export
 - Frontend: Multiple table components using MUI
 
 ### Plan
@@ -162,14 +162,14 @@ Create `packages/data_table/seed/components.json`:
 ]
 ```
 
-**4.2 Create Lua Scripts**
-- `scripts/sorting.lua` - Column sorting logic
-- `scripts/filtering.lua` - Filter application
-- `scripts/pagination.lua` - Pagination state
-- `scripts/export.lua` - CSV/JSON export
-- `scripts/selection.lua` - Row selection
+**4.2 Create Lua Scripts** ✅ COMPLETE
+- `scripts/sorting.lua` ✅ Column sorting with `sortByColumn()`, `toggleSort()`, `getSortIndicator()`
+- `scripts/filtering.lua` ✅ Filter application with `applyFilters()`, `addFilter()`, `removeFilter()`
+- `scripts/pagination.lua` ✅ Pagination state (existed already)
+- `scripts/export.lua` ✅ CSV/JSON export with `exportToCsv()`, `exportToJson()`, `downloadCsv()`
+- `scripts/selection.lua` ✅ Row selection with `toggleRow()`, `selectAll()`, `deselectAll()`
 
-**4.3 Migrate Frontend Components**
+**4.3 Migrate Frontend Components** ⏳ PENDING
 Replace these MUI usages:
 - `@mui/x-data-grid` - DataGrid component (1 file)
 - `components/organisms/data/Table.tsx`
