@@ -341,6 +341,75 @@ export const Link: React.FC<LuaComponentProps & { href?: string }> = ({ href = '
   <a href={href} className={className}>{children}</a>
 )
 
+// IconButton - clickable icon with button behavior
+interface IconButtonProps extends LuaComponentProps {
+  onClick?: () => void
+  disabled?: boolean
+  size?: 'small' | 'medium' | 'large'
+  color?: 'primary' | 'secondary' | 'default' | 'inherit'
+}
+
+export const IconButton: React.FC<IconButtonProps> = ({ 
+  children, 
+  onClick, 
+  disabled = false,
+  size = 'medium',
+  className = '' 
+}) => {
+  const sizeClasses = {
+    small: 'p-1 text-sm',
+    medium: 'p-2',
+    large: 'p-3 text-lg'
+  }
+  return (
+    <button 
+      className={`rounded-full hover:bg-muted/50 transition-colors inline-flex items-center justify-center ${sizeClasses[size]} ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${className}`}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {children}
+    </button>
+  )
+}
+
+// Menu - dropdown menu container
+interface MenuProps extends LuaComponentProps {
+  open?: boolean
+  anchorEl?: unknown
+  onClose?: () => void
+}
+
+export const Menu: React.FC<MenuProps> = ({ children, className = '' }) => {
+  // Simplified menu - in storybook, always show children as a dropdown preview
+  return (
+    <div className={`absolute right-0 top-full mt-1 bg-canvas border rounded-md shadow-lg min-w-[160px] py-1 z-50 ${className}`}>
+      {children}
+    </div>
+  )
+}
+
+// MenuItem - individual menu item
+interface MenuItemProps extends LuaComponentProps {
+  onClick?: () => void
+  disabled?: boolean
+  selected?: boolean
+}
+
+export const MenuItem: React.FC<MenuItemProps> = ({ 
+  children, 
+  onClick, 
+  disabled = false,
+  selected = false,
+  className = '' 
+}) => (
+  <div 
+    className={`flex items-center gap-2 px-4 py-2 text-sm cursor-pointer hover:bg-muted ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${selected ? 'bg-accent/10' : ''} ${className}`}
+    onClick={disabled ? undefined : onClick}
+  >
+    {children}
+  </div>
+)
+
 // Lists
 export const List: React.FC<LuaComponentProps> = ({ children, className = 'flex flex-col' }) => (
   <ul className={className}>{children}</ul>
@@ -447,6 +516,9 @@ export const componentRegistry: Record<string, AnyComponent> = {
   Link,
   List,
   ListItem,
+  IconButton,
+  Menu,
+  MenuItem,
   
   // Data
   Table,
