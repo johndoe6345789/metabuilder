@@ -54,6 +54,31 @@ export const CardActions: React.FC<LuaComponentProps> = ({ className = 'p-6 pt-0
   <div className={className}>{children}</div>
 )
 
+export const CardDescription: React.FC<LuaComponentProps> = ({ className = 'text-sm text-muted-foreground', children }) => (
+  <p className={className}>{children}</p>
+)
+
+// ScrollArea - scrollable container
+export const ScrollArea: React.FC<LuaComponentProps & { maxHeight?: string | number }> = ({ 
+  className = 'overflow-auto', 
+  maxHeight,
+  children 
+}) => (
+  <div className={className} style={{ maxHeight: maxHeight || 'auto' }}>{children}</div>
+)
+
+// ComponentRef - placeholder for dynamic component references
+export const ComponentRef: React.FC<LuaComponentProps & { ref?: string; component?: string }> = ({ 
+  ref: refId,
+  component,
+  className = 'p-2 border border-dashed rounded bg-muted/30',
+  children 
+}) => (
+  <div className={className}>
+    {children || <span className="text-xs text-muted-foreground">Component: {component || refId || 'unknown'}</span>}
+  </div>
+)
+
 export const Paper: React.FC<LuaComponentProps> = ({ className = 'rounded border p-4 bg-canvas', children }) => (
   <div className={className}>{children}</div>
 )
@@ -520,9 +545,12 @@ export const componentRegistry: Record<string, AnyComponent> = {
   CardHeader,
   CardContent,
   CardActions,
+  CardDescription,
   CardTitle: CardHeader,
   CardFooter: CardActions,
   Paper,
+  ScrollArea,
+  ComponentRef,
   
   // Typography
   Typography,

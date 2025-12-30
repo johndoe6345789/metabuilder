@@ -22,10 +22,10 @@
 | 9 | CSS Designer | ✅ Complete | 100% |
 | 10 | Parameterized Tests | ✅ Complete | 95% |
 | 11 | Package Validator | ✅ Complete | 100% |
-| 12 | Multi-Frontend | 🟡 In Progress | 50% |
-| 13 | E2E Verification | 🟡 In Progress | 65% |
-| 14 | Documentation | 🟡 In Progress | 60% |
-| 15 | Package Schema System | 🟡 In Progress | 80% |
+| 12 | Multi-Frontend | 🟡 In Progress | 65% |
+| 13 | E2E Verification | 🟡 In Progress | 70% |
+| 14 | Documentation | 🟡 In Progress | 65% |
+| 15 | Package Schema System | ✅ Complete | 95% |
 
 ---
 
@@ -94,8 +94,26 @@
 - [x] notification_center (Notification) + Lua operations
 - [x] forum_forge (ForumCategory, ForumThread, ForumPost) + Lua operations
 - [x] irc_webchat (IRCChannel, IRCMessage, IRCMembership) + Lua operations
-- [x] media_center (MediaAsset, MediaJob)
-- [x] stream_cast (StreamChannel, StreamSchedule, StreamScene)
+- [x] media_center (MediaAsset, MediaJob) + Lua operations
+- [x] stream_cast (StreamChannel, StreamSchedule, StreamScene) + Lua operations
+
+### Packages with DBAL Operations (Using Core Entities)
+- [x] user_manager - User CRUD, permissions, search, bulk ops
+- [x] role_editor - Role management, user-role assignment, permissions
+- [x] workflow_editor - Workflow CRUD, execution, step logging
+- [x] codegen_studio - Project, Blueprint, Template management
+- [x] github_tools - GitHub connection, repos, webhooks, PR tracking
+- [x] smtp_config - SMTP config, email templates, email logs
+- [x] data_table - Generic CRUD helpers, table config, user preferences
+- [x] dashboard - Layout, widget, cache operations
+- [x] arcade_lobby - Game, Leaderboard, Session operations
+- [x] form_builder - Form, Field, Submission operations
+- [x] css_designer - Theme, Style Component, CSS generation
+- [x] schema_editor - Entity Schema CRUD, field/index/relation management
+- [x] code_editor - Snippets, Sessions, Revisions, Language config
+- [x] package_validator - Validation runs, issues, rules
+- [x] screenshot_analyzer - Screenshot, Analysis, Components, Colors
+- [x] social_hub - Profiles, Connections, Activity, Likes
 
 ### Multi-Frontend DBAL Support
 - [x] Qt6/QML DBALClient (C++ + QML provider)
