@@ -12,7 +12,7 @@
 ---@param username string Current username
 ---@param onlineUsers string[] List of online usernames
 ---@return IRCMessage Response message object
-function handleCommand(command, channelId, username, onlineUsers)
+local function handleCommand(command, channelId, username, onlineUsers)
   local parts = {}
   for part in string.gmatch(command, "%S+") do
     table.insert(parts, part)

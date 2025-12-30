@@ -1,3 +1,7 @@
+--- @class FlagResult Result of flagging a post
+--- @field flagged boolean Whether the post was flagged
+--- @field reasons string[] List of reasons for flagging
+
 --- Flag a post for moderation
 --- Checks content length and banned terms
 ---@param post { content?: string } Post to check

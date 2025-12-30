@@ -11,7 +11,7 @@
 ---@param username string Username of the user joining
 ---@param userId string User identifier of the user joining
 ---@return JoinMessage Join notification message object
-function userJoin(channelId, username, userId)
+local function userJoin(channelId, username, userId)
   local joinMsg = {
     id = "msg_" .. tostring(os.time()) .. "_" .. math.random(1000, 9999),
     channelId = channelId,
