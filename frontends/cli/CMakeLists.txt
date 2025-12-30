@@ -11,12 +11,22 @@ add_executable(metabuilder-cli
     src/main.cpp
     src/commands/command_dispatch.cpp
     src/commands/dbal_commands.cpp
+    src/commands/package_commands.cpp
+    src/lua/lua_runner.cpp
     src/utils/http_client.cpp
 )
 
 find_package(cpr CONFIG REQUIRED)
+find_package(lua REQUIRED)
+find_package(sol2 REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
-target_link_libraries(metabuilder-cli PRIVATE cpr::cpr)
+target_link_libraries(metabuilder-cli PRIVATE 
+    cpr::cpr
+    lua::lua
+    sol2::sol2
+    nlohmann_json::nlohmann_json
+)
 target_compile_features(metabuilder-cli PRIVATE cxx_std_20)
 target_include_directories(metabuilder-cli PRIVATE src)
 
