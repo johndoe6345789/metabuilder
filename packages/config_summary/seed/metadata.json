@@ -1,0 +1,32 @@
+{
+  "packageId": "config_summary",
+  "name": "Config Summary",
+  "version": "1.0.0",
+  "description": "Configuration summary panels for displaying system stats and metadata",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [],
+  "devDependencies": ["lua_test"],
+  "exports": {
+    "components": [
+      "ConfigSummary",
+      "SummaryRow"
+    ],
+    "scripts": [
+      "summary",
+      "aggregators"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/summary.test.lua",
+      "tests/aggregators.test.lua"
+    ],
+    "cases": [
+      "tests/summary.cases.json",
+      "tests/aggregators.cases.json"
+    ]
+  },
+  "minLevel": 4
+}
