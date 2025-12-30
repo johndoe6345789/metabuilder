@@ -901,3 +901,557 @@ model Invitation {
   @@index([token])
   @@index([status])
 }
+
+// =============================================================================
+// GITHUB INTEGRATION (github_tools package)
+// =============================================================================
+
+model GitHubRepository {
+  id           String         @id @default(cuid())
+  tenantId     String
+  owner        String
+  name         String
+  fullName     String         // "owner/repo"
+  url          String
+  cloneUrl     String?
+  description  String?
+  isPrivate    Boolean        @default(false)
+  defaultBranch String?
+  language     String?
+  starCount    Int            @default(0)
+  forkCount    Int            @default(0)
+  openIssues   Int            @default(0)
+  license      String?
+  topics       String?        // JSON: array of topics
+  lastSync     BigInt?
+  syncError    String?
+  enabled      Boolean        @default(true)
+  metadata     String?        // JSON: additional GitHub data
+  createdAt    BigInt
+  updatedAt    BigInt?
+  actions      GitHubAction[]
+  workflows    GitHubWorkflow[]
+
+  @@unique([tenantId, fullName])
+  @@index([tenantId])
+  @@index([owner])
+}
+
+model GitHubWorkflow {
+  id           String  @id @default(cuid())
+  repositoryId String
+  name         String
+  path         String
+  state        String  // active, deleted, disabled_fork, etc.
+  badge        String? // Badge URL
+  createdAt    BigInt
+  updatedAt    BigInt?
+  repository   GitHubRepository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+  @@unique([repositoryId, path])
+  @@index([repositoryId])
+}
+
+model GitHubAction {
+  id           String  @id @default(cuid())
+  repositoryId String
+  workflowId   String?
+  workflowName String
+  runId        BigInt
+  runNumber    Int
+  event        String  // push, pull_request, schedule, etc.
+  status       String  // queued, in_progress, completed
+  conclusion   String? // success, failure, cancelled, skipped
+  branch       String?
+  commitSha    String?
+  commitMsg    String?
+  actor        String? // Who triggered it
+  url          String
+  logsUrl      String?
+  triggeredAt  BigInt?
+  startedAt    BigInt?
+  completedAt  BigInt?
+  duration     Int?    // seconds
+  createdAt    BigInt
+  repository   GitHubRepository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+  @@unique([repositoryId, runId])
+  @@index([repositoryId])
+  @@index([status])
+  @@index([conclusion])
+  @@index([completedAt])
+}
+
+model GitHubIssue {
+  id           String  @id @default(cuid())
+  repositoryId String
+  issueNumber  Int
+  title        String
+  body         String?
+  state        String  // open, closed
+  author       String
+  labels       String? // JSON array
+  assignees    String? // JSON array
+  milestone    String?
+  comments     Int     @default(0)
+  locked       Boolean @default(false)
+  url          String
+  createdAt    BigInt
+  updatedAt    BigInt?
+  closedAt     BigInt?
+
+  @@unique([repositoryId, issueNumber])
+  @@index([repositoryId])
+  @@index([state])
+}
+
+// =============================================================================
+// GAMING & ARCADE (arcade_lobby package)
+// =============================================================================
+
+model Game {
+  id          String        @id @default(cuid())
+  tenantId    String
+  name        String
+  slug        String
+  description String?
+  thumbnail   String?
+  bannerImage String?
+  category    String        // platformer, puzzle, arcade, shooter, rpg, etc.
+  platform    String        // retroarch, web, native, etc.
+  core        String?       // RetroArch core name (snes9x, genesis_plus_gx, etc.)
+  romPath     String?
+  romHash     String?       // SHA256 for integrity
+  saveDataPath String?
+  configPath  String?
+  controls    String?       // JSON: button mappings
+  cheats      String?       // JSON: cheat codes
+  achievements String?      // JSON: achievement definitions
+  metadata    String?       // JSON: developer, release year, genre tags, etc.
+  rating      String?       // E, T, M, etc.
+  players     String        @default("1") // "1", "1-2", "1-4", etc.
+  enabled     Boolean       @default(true)
+  featured    Boolean       @default(false)
+  playCount   Int           @default(0)
+  favoriteCount Int         @default(0)
+  avgRating   Float?
+  createdAt   BigInt
+  updatedAt   BigInt?
+  sessions    GameSession[]
+  highScores  GameHighScore[]
+  saves       GameSave[]
+  reviews     GameReview[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([category])
+  @@index([platform])
+  @@index([featured, playCount])
+}
+
+model GameSession {
+  id           String  @id @default(cuid())
+  gameId       String
+  userId       String
+  startedAt    BigInt
+  endedAt      BigInt?
+  duration     Int?    // seconds
+  saveStateId  String? // Reference to GameSave
+  score        BigInt?
+  level        Int?
+  achievements String? // JSON: array of unlocked achievement IDs
+  stats        String? // JSON: game-specific stats
+  metadata     String? // JSON: controller used, settings, etc.
+  game         Game    @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId])
+  @@index([userId])
+  @@index([startedAt])
+}
+
+model GameHighScore {
+  id        String @id @default(cuid())
+  gameId    String
+  userId    String
+  username  String
+  score     BigInt
+  rank      Int?
+  level     Int?
+  character String? // For games with character selection
+  mode      String? // difficulty, speedrun, etc.
+  verified  Boolean @default(false)
+  replay    String? // Path to replay file
+  metadata  String? // JSON: additional context
+  createdAt BigInt
+  game      Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId, score])
+  @@index([gameId, rank])
+  @@index([userId])
+}
+
+model GameSave {
+  id          String  @id @default(cuid())
+  gameId      String
+  userId      String
+  name        String  // User-provided name
+  slot        Int     @default(0)
+  filePath    String
+  screenshot  String? // Thumbnail of save state
+  level       Int?
+  progress    Float?  // Percentage completion
+  playTime    Int?    // seconds
+  isAuto      Boolean @default(false)
+  metadata    String? // JSON: location, items, etc.
+  createdAt   BigInt
+  game        Game    @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, userId, slot])
+  @@index([gameId, userId])
+  @@index([createdAt])
+}
+
+model GameReview {
+  id        String  @id @default(cuid())
+  gameId    String
+  userId    String
+  username  String
+  rating    Int     // 1-5 stars
+  title     String?
+  review    String?
+  helpful   Int     @default(0)
+  notHelpful Int    @default(0)
+  verified  Boolean @default(false) // Did they actually play it?
+  createdAt BigInt
+  updatedAt BigInt?
+  game      Game    @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, userId])
+  @@index([gameId])
+  @@index([rating])
+}
+
+// =============================================================================
+// CSS DESIGNER & THEMING (css_designer package)
+// =============================================================================
+
+model CSSTheme {
+  id          String  @id @default(cuid())
+  tenantId    String
+  name        String
+  slug        String
+  description String?
+  author      String?
+  version     String  @default("1.0.0")
+  baseTheme   String? // Parent theme to extend
+  variables   String  // JSON: CSS custom properties { "--color-primary": "#ff0000" }
+  typography  String? // JSON: font families, sizes, weights
+  colors      String? // JSON: color palette definitions
+  spacing     String? // JSON: spacing scale
+  borders     String? // JSON: border radius, widths
+  shadows     String? // JSON: box shadow definitions
+  components  String? // JSON: component-specific overrides
+  animations  String? // JSON: transition/animation settings
+  breakpoints String? // JSON: responsive breakpoints
+  isDefault   Boolean @default(false)
+  isPublic    Boolean @default(false)
+  isDark      Boolean @default(false)
+  tags        String? // JSON: array of tags
+  preview     String? // Preview image URL
+  downloads   Int     @default(0)
+  rating      Float?
+  createdAt   BigInt
+  updatedAt   BigInt?
+  createdBy   String?
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([isPublic, isDefault])
+  @@index([isDark])
+}
+
+model CSSVariable {
+  id          String  @id @default(cuid())
+  themeId     String?
+  category    String  // color, spacing, typography, etc.
+  name        String  // --color-primary
+  value       String  // #1976d2
+  description String?
+  fallback    String? // Default value if theme not loaded
+  scope       String  @default("global") // global, component-specific
+  createdAt   BigInt
+
+  @@unique([themeId, name])
+  @@index([category])
+  @@index([scope])
+}
+
+// =============================================================================
+// DASHBOARD & WIDGETS (dashboard package)
+// =============================================================================
+
+model Dashboard {
+  id          String           @id @default(cuid())
+  tenantId    String
+  userId      String?
+  name        String
+  slug        String
+  description String?
+  layout      String           // JSON: grid layout config
+  isDefault   Boolean          @default(false)
+  isShared    Boolean          @default(false)
+  isPublic    Boolean          @default(false)
+  permissions String?          // JSON: who can view/edit
+  refreshRate Int?             // seconds
+  createdAt   BigInt
+  updatedAt   BigInt?
+  widgets     DashboardWidget[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([userId])
+  @@index([isPublic])
+}
+
+model DashboardWidget {
+  id          String     @id @default(cuid())
+  dashboardId String
+  type        String     // chart, stats, list, calendar, table, iframe, custom
+  title       String
+  subtitle    String?
+  dataSource  String     // JSON: query/API config
+  chartType   String?    // line, bar, pie, donut, area, etc.
+  config      String     // JSON: widget-specific configuration
+  position    String     // JSON: {x, y, w, h} grid position
+  minSize     String?    // JSON: {w, h} minimum dimensions
+  maxSize     String?    // JSON: {w, h} maximum dimensions
+  refreshRate Int?       // seconds, null = no auto-refresh
+  permissions String?    // JSON: role-based visibility
+  sortOrder   Int        @default(0)
+  enabled     Boolean    @default(true)
+  createdAt   BigInt
+  updatedAt   BigInt?
+  dashboard   Dashboard  @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+
+  @@index([dashboardId])
+  @@index([type])
+}
+
+model WidgetDataCache {
+  id         String @id @default(cuid())
+  widgetId   String
+  data       String // JSON: cached data
+  expiresAt  BigInt
+  cachedAt   BigInt
+  cacheKey   String
+
+  @@unique([widgetId, cacheKey])
+  @@index([expiresAt])
+}
+
+// =============================================================================
+// GUIDES & DOCUMENTATION (quick_guide package)
+// =============================================================================
+
+model Guide {
+  id          String      @id @default(cuid())
+  tenantId    String
+  title       String
+  slug        String
+  description String?
+  content     String      // Markdown content
+  category    String?     // getting-started, tutorials, reference, api
+  difficulty  String?     // beginner, intermediate, advanced
+  estimatedTime Int?      // minutes
+  tags        String?     // JSON array
+  icon        String?
+  author      String?
+  isPublished Boolean     @default(true)
+  isFeatured  Boolean     @default(false)
+  order       Int         @default(0)
+  version     String      @default("1.0.0")
+  views       Int         @default(0)
+  likes       Int         @default(0)
+  createdAt   BigInt
+  updatedAt   BigInt?
+  publishedAt BigInt?
+  createdBy   String?
+  steps       GuideStep[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([category])
+  @@index([isPublished, isFeatured])
+}
+
+model GuideStep {
+  id          String  @id @default(cuid())
+  guideId     String
+  title       String
+  content     String  // Markdown
+  order       Int
+  actionType  String? // click, input, navigate, wait, run, etc.
+  actionData  String? // JSON: element selector, value, etc.
+  validation  String? // JSON: success criteria
+  hints       String? // JSON: array of hints
+  screenshot  String? // Path to screenshot
+  videoUrl    String?
+  createdAt   BigInt
+  guide       Guide   @relation(fields: [guideId], references: [id], onDelete: Cascade)
+
+  @@index([guideId, order])
+}
+
+model GuideProgress {
+  id             String  @id @default(cuid())
+  guideId        String
+  userId         String
+  completedSteps String  // JSON: array of step IDs
+  progress       Float   @default(0) // 0-100
+  started At     BigInt
+  lastViewedAt   BigInt
+  completedAt    BigInt?
+
+  @@unique([guideId, userId])
+  @@index([userId])
+  @@index([guideId])
+}
+
+// =============================================================================
+// ANALYTICS & METRICS (for all packages)
+// =============================================================================
+
+model Metric {
+  id         String  @id @default(cuid())
+  tenantId   String
+  namespace  String  // package name or feature area
+  name       String  // metric name (page_views, api_calls, etc.)
+  value      Float
+  unit       String? // ms, bytes, count, etc.
+  dimensions String? // JSON: tags/dimensions
+  timestamp  BigInt
+
+  @@index([tenantId, namespace, name])
+  @@index([timestamp])
+}
+
+model Event {
+  id         String  @id @default(cuid())
+  tenantId   String
+  userId     String?
+  category   String  // user_action, system, error, etc.
+  action     String  // click, view, create, delete, etc.
+  label      String?
+  value      Float?
+  properties String? // JSON: additional event data
+  sessionId  String?
+  url        String?
+  referrer   String?
+  device     String? // desktop, mobile, tablet
+  os         String?
+  browser    String?
+  timestamp  BigInt
+
+  @@index([tenantId, category, action])
+  @@index([userId])
+  @@index([timestamp])
+}
+
+// =============================================================================
+// API & INTEGRATIONS
+// =============================================================================
+
+model APIKey {
+  id          String  @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  key         String  @unique
+  secret      String?
+  permissions String  // JSON: array of scopes
+  rateLimit   Int?    // requests per minute
+  ipWhitelist String? // JSON: array of allowed IPs
+  enabled     Boolean @default(true)
+  lastUsedAt  BigInt?
+  expiresAt   BigInt?
+  createdAt   BigInt
+  createdBy   String?
+
+  @@index([tenantId])
+  @@index([key])
+  @@index([enabled])
+}
+
+model OAuthToken {
+  id           String  @id @default(cuid())
+  userId       String
+  provider     String  // github, google, etc.
+  accessToken  String
+  refreshToken String?
+  tokenType    String  @default("Bearer")
+  scope        String?
+  expiresAt    BigInt?
+  metadata     String? // JSON: provider-specific data
+  createdAt    BigInt
+  updatedAt    BigInt?
+
+  @@unique([userId, provider])
+  @@index([provider])
+  @@index([expiresAt])
+}
+
+// =============================================================================
+// SEARCH & INDEXING
+// =============================================================================
+
+model SearchIndex {
+  id         String @id @default(cuid())
+  tenantId   String
+  entityType String
+  entityId   String
+  title      String
+  content    String // Searchable text content
+  metadata   String? // JSON: additional indexed fields
+  boost      Float  @default(1.0)
+  updatedAt  BigInt
+
+  @@unique([entityType, entityId])
+  @@index([tenantId])
+  @@index([entityType])
+}
+
+// =============================================================================
+// FEATURE FLAGS (Enhanced)
+// =============================================================================
+
+model FeatureFlagOverride {
+  id          String  @id @default(cuid())
+  flagId      String
+  targetType  String  // user, role, tenant
+  targetId    String
+  enabled     Boolean
+  createdAt   BigInt
+
+  @@unique([flagId, targetType, targetId])
+  @@index([flagId])
+}
+
+// =============================================================================
+// PACKAGE ENHANCEMENTS
+// =============================================================================
+
+model PackagePermission {
+  id          String  @id @default(cuid())
+  packageId   String
+  tenantId    String?
+  userId      String?
+  role        String?
+  permission  String  // read, write, execute, admin
+  resource    String? // Specific resource within package
+  granted     Boolean @default(true)
+  createdAt   BigInt
+
+  @@unique([packageId, tenantId, userId, permission, resource])
+  @@index([packageId])
+  @@index([tenantId])
+}
