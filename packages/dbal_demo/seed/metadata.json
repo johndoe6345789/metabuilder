@@ -8,9 +8,22 @@
   "category": "demo",
   "tags": ["dbal", "demo", "kv-store", "blob-storage", "cache"],
   "dependencies": [],
+  "devDependencies": ["lua_test"],
   "exports": {
     "components": ["DBALDemo", "KVStorePanel", "BlobStoragePanel", "CachedDataPanel"],
     "scripts": ["init", "kv_operations", "blob_operations", "cache_operations"]
+  },
+  "tests": {
+    "scripts": [
+      "tests/kv_operations.test.lua",
+      "tests/cache_operations.test.lua",
+      "tests/blob_operations.test.lua"
+    ],
+    "cases": [
+      "tests/kv_operations.cases.json",
+      "tests/cache_operations.cases.json",
+      "tests/blob_operations.cases.json"
+    ]
   },
   "bindings": {
     "dbal": true,
