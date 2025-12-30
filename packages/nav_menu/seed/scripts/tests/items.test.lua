@@ -13,29 +13,38 @@
 ---@field icon string|nil
 ---@field desc string
 
+---@class ItemsCases
+---@field menu_item MenuItemCase[]
+---@field menu_group MenuGroupCase[]
+
 local menu_item = require("items/item")
 local menu_group = require("items/group")
 local menu_divider = require("items/divider")
+---@type ItemsCases
 local cases = load_cases("items.cases.json")
 
 describe("Menu Item Builders", function()
   describe("menu_item", function()
     it.each(cases.menu_item, "$desc", function(testCase)
-      local result = menu_item(testCase.label, testCase.path, testCase.icon)
+      ---@type MenuItemCase
+      local tc = testCase
+      local result = menu_item(tc.label, tc.path, tc.icon)
       expect(result.type).toBe("menu_item")
-      expect(result.label).toBe(testCase.label)
-      expect(result.path).toBe(testCase.path)
-      if testCase.icon then
-        expect(result.icon).toBe(testCase.icon)
+      expect(result.label).toBe(tc.label)
+      expect(result.path).toBe(tc.path)
+      if tc.icon then
+        expect(result.icon).toBe(tc.icon)
       end
     end)
   end)
 
   describe("menu_group", function()
     it.each(cases.menu_group, "$desc", function(testCase)
-      local result = menu_group(testCase.label, testCase.children, testCase.icon)
+      ---@type MenuGroupCase
+      local tc = testCase
+      local result = menu_group(tc.label, tc.children, tc.icon)
       expect(result.type).toBe("menu_group")
-      expect(result.label).toBe(testCase.label)
+      expect(result.label).toBe(tc.label)
       expect(result.children).toBeType("table")
     end)
 

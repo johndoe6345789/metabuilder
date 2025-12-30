@@ -29,7 +29,8 @@ local M = {}
 ---@param ctx RenderContext
 ---@return UIComponent
 function M.render(ctx)
-  return {
+  ---@type UIComponent
+  local card = {
     type = "Card",
     children = {
       {
@@ -71,6 +72,7 @@ function M.render(ctx)
       }
     }
   }
+  return card
 end
 
 return M

@@ -31,6 +31,27 @@
       "desc": "no level user"
     }
   ],
+  "item": [
+    {
+      "desc": "simple item renders button",
+      "item": { "label": "Home", "path": "/" },
+      "expectedType": "Button",
+      "expectedText": "Home",
+      "expectedVariant": "ghost"
+    },
+    {
+      "desc": "nested item renders dropdown",
+      "item": {
+        "label": "Settings",
+        "children": [
+          { "label": "Profile", "path": "/profile" },
+          { "label": "Security", "path": "/security" }
+        ]
+      },
+      "expectedType": "DropdownMenu",
+      "expectedChildren": 2
+    }
+  ],
   "render": [
     {
       "props": {

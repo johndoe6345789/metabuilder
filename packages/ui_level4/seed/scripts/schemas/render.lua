@@ -40,9 +40,11 @@
 ---@param ctx SchemasRenderContext
 ---@return UIComponent
 local function render(ctx)
+  ---@type Schema[]
+  local schemas = ctx.schemas or {}
   ---@type UIComponent[]
   local items = {}
-  for _, s in ipairs(ctx.schemas or {}) do
+  for _, s in ipairs(schemas) do
     items[#items + 1] = {
       type = "Card",
       children = {

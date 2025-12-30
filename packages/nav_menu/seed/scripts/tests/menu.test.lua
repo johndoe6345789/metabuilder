@@ -44,7 +44,7 @@ describe("Menu", function()
   local cases = load_cases("menu.cases.json")
   local it_each = require("lua_test.it_each")
   
-  before(function()
+  beforeAll(function()
     -- Create mock for check.can_access
     package.loaded["check"] = {
       can_access = function(user, minLevel)
