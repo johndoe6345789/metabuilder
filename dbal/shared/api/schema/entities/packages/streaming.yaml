@@ -1,0 +1,291 @@
+entity: StreamChannel
+version: "1.0"
+description: "Live streaming channel"
+package: stream_cast
+
+fields:
+  id:
+    type: cuid
+    primary: true
+    generated: true
+    description: "Unique stream channel identifier"
+    
+  tenantId:
+    type: uuid
+    required: true
+    index: true
+    description: "Tenant this channel belongs to"
+    
+  name:
+    type: string
+    required: true
+    max_length: 100
+    description: "Channel name"
+    
+  slug:
+    type: string
+    required: true
+    pattern: "^[a-z0-9-]+$"
+    description: "URL-friendly slug"
+    
+  description:
+    type: string
+    nullable: true
+    description: "Channel description"
+    
+  thumbnail:
+    type: string
+    nullable: true
+    description: "Thumbnail image path"
+    
+  category:
+    type: string
+    nullable: true
+    index: true
+    description: "Content category"
+    
+  status:
+    type: enum
+    required: true
+    values: [offline, live, scheduled]
+    default: offline
+    index: true
+    description: "Current stream status"
+    
+  viewerCount:
+    type: integer
+    default: 0
+    description: "Current viewer count"
+    
+  streamKey:
+    type: string
+    nullable: true
+    unique: true
+    description: "Secret stream key"
+    
+  rtmpUrl:
+    type: string
+    nullable: true
+    description: "RTMP ingest URL"
+    
+  hlsUrl:
+    type: string
+    nullable: true
+    description: "HLS playback URL"
+    
+  chatEnabled:
+    type: boolean
+    default: true
+    description: "Whether chat is enabled"
+    
+  isPublic:
+    type: boolean
+    default: true
+    description: "Whether channel is publicly visible"
+    
+  isMature:
+    type: boolean
+    default: false
+    description: "Whether content is mature"
+    
+  metadata:
+    type: json
+    nullable: true
+    description: "Additional data (bitrate, resolution, etc.)"
+    
+  createdAt:
+    type: bigint
+    required: true
+    description: "Creation timestamp"
+    
+  updatedAt:
+    type: bigint
+    nullable: true
+    description: "Last update timestamp"
+    
+  createdBy:
+    type: uuid
+    required: true
+    description: "Channel owner"
+
+indexes:
+  - fields: [tenantId, slug]
+    unique: true
+    name: tenant_slug
+  - fields: [status, viewerCount]
+    name: live_popular
+
+acl:
+  create:
+    user: true
+  read:
+    public: true
+  update:
+    self: true
+    row_level: "createdBy = $user.id"
+    admin: true
+  delete:
+    self: true
+    row_level: "createdBy = $user.id"
+    admin: true
+
+---
+
+entity: StreamSchedule
+version: "1.0"
+description: "Scheduled stream event"
+package: stream_cast
+
+fields:
+  id:
+    type: cuid
+    primary: true
+    generated: true
+    description: "Unique schedule identifier"
+    
+  channelId:
+    type: cuid
+    required: true
+    index: true
+    description: "Parent channel"
+    
+  title:
+    type: string
+    required: true
+    max_length: 200
+    description: "Stream title"
+    
+  description:
+    type: string
+    nullable: true
+    description: "Stream description"
+    
+  startTime:
+    type: bigint
+    required: true
+    index: true
+    description: "Scheduled start timestamp"
+    
+  endTime:
+    type: bigint
+    nullable: true
+    description: "Expected end timestamp"
+    
+  duration:
+    type: integer
+    nullable: true
+    description: "Expected duration in minutes"
+    
+  isRecurring:
+    type: boolean
+    default: false
+    description: "Whether schedule repeats"
+    
+  recurrence:
+    type: json
+    nullable: true
+    description: "Recurrence rule (cron/rrule)"
+    
+  notifyAt:
+    type: bigint
+    nullable: true
+    description: "Notification timestamp"
+    
+  metadata:
+    type: json
+    nullable: true
+    description: "Additional data (guests, topics, etc.)"
+    
+  createdAt:
+    type: bigint
+    required: true
+    description: "Creation timestamp"
+
+indexes:
+  - fields: [channelId, startTime]
+    name: channel_time
+
+acl:
+  create:
+    user: true
+  read:
+    public: true
+  update:
+    self: true
+    admin: true
+  delete:
+    self: true
+    admin: true
+
+---
+
+entity: StreamScene
+version: "1.0"
+description: "Stream scene/layout configuration"
+package: stream_cast
+
+fields:
+  id:
+    type: cuid
+    primary: true
+    generated: true
+    description: "Unique scene identifier"
+    
+  channelId:
+    type: cuid
+    required: true
+    index: true
+    description: "Parent channel"
+    
+  name:
+    type: string
+    required: true
+    max_length: 100
+    description: "Scene name"
+    
+  layout:
+    type: json
+    required: true
+    description: "Scene layout composition"
+    
+  sources:
+    type: json
+    required: true
+    description: "Media sources (cameras, screens, overlays)"
+    
+  transitions:
+    type: json
+    nullable: true
+    description: "Scene transitions"
+    
+  isActive:
+    type: boolean
+    default: false
+    index: true
+    description: "Whether scene is currently active"
+    
+  sortOrder:
+    type: integer
+    default: 0
+    description: "Display order"
+    
+  createdAt:
+    type: bigint
+    required: true
+    description: "Creation timestamp"
+
+indexes:
+  - fields: [channelId, isActive]
+    name: channel_active
+
+acl:
+  create:
+    user: true
+  read:
+    user: true
+  update:
+    self: true
+    admin: true
+  delete:
+    self: true
+    admin: true
