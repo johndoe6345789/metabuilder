@@ -1,0 +1,31 @@
+{
+  "package_id_validation": [
+    { "pattern": "^[a-z_0-9]+$", "desc": "lowercase with underscores and numbers" }
+  ],
+  "version_validation": [
+    { "pattern": "^%d+%.%d+%.%d+$", "desc": "semantic version format" }
+  ],
+  "required_fields": [
+    { "field": "packageId", "desc": "package identifier" },
+    { "field": "name", "desc": "display name" },
+    { "field": "version", "desc": "version string" },
+    { "field": "description", "desc": "package description" }
+  ],
+  "required_dependencies": [
+    { "dep": "ui_permissions", "desc": "permission handling" },
+    { "dep": "ui_header", "desc": "application header" },
+    { "dep": "ui_intro", "desc": "intro section" },
+    { "dep": "schema_editor", "desc": "schema editing" },
+    { "dep": "workflow_editor", "desc": "workflow editing" }
+  ],
+  "min_levels": [
+    { "minLevel": 5, "desc": "requires god-level access" }
+  ],
+  "export_types": [
+    { "type": "pages", "desc": "page exports" },
+    { "type": "scripts", "desc": "lua script exports" }
+  ],
+  "expected_pages": [
+    { "name": "level5", "desc": "god panel page" }
+  ]
+}
