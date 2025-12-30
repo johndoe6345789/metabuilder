@@ -63,10 +63,10 @@ const AlertDialogHeader = forwardRef<HTMLDivElement, AlertDialogHeaderProps>(
       if (typeof icon !== 'string') return icon
 
       const iconMap = {
-        warning: <WarningAmberIcon color="warning" sx={{ fontSize: 40 }} />,
-        error: <ErrorOutlineIcon color="error" sx={{ fontSize: 40 }} />,
-        info: <InfoOutlinedIcon color="info" sx={{ fontSize: 40 }} />,
-        success: <CheckCircleOutlineIcon color="success" sx={{ fontSize: 40 }} />,
+        warning: <WarningAmberIcon size={40} style={{ color: '#ed6c02' }} />,
+        error: <ErrorOutlineIcon size={40} style={{ color: '#d32f2f' }} />,
+        info: <InfoOutlinedIcon size={40} style={{ color: '#0288d1' }} />,
+        success: <CheckCircleOutlineIcon size={40} style={{ color: '#2e7d32' }} />,
       }
       return iconMap[icon]
     }

@@ -24,11 +24,14 @@
   "tests": {
     "scripts": [
       "tests/metadata.test.lua",
-      "tests/components.test.lua"
+      "tests/components.test.lua",
+      "tests/gate.check.test.lua",
+      "tests/gate.wrap.test.lua"
     ],
     "cases": [
       "tests/metadata.cases.json",
-      "tests/components.cases.json"
+      "tests/components.cases.json",
+      "tests/gate.cases.json"
     ]
   },
   "minLevel": 2
