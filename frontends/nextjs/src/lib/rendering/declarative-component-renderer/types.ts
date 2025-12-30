@@ -1,5 +1,17 @@
 import type { JsonValue } from '@/types/utility-types'
 
+/**
+ * Binding capabilities that can be enabled for a component
+ */
+export interface ComponentBindings {
+  /** Enable DBAL bindings (KV store, blob storage, cache) */
+  dbal?: boolean
+  /** Enable browser bindings (DOM, page info, storage) */
+  browser?: boolean
+  /** Custom allowed globals for Lua sandbox */
+  allowedGlobals?: string[]
+}
+
 export interface DeclarativeComponentConfig {
   type: string
   category: string
@@ -20,6 +32,10 @@ export interface DeclarativeComponentConfig {
     }
     children: JsonValue[]
   }
+  /** Optional bindings to enable for this component's Lua scripts */
+  bindings?: ComponentBindings
+  /** React hooks this component requires (for hybrid components) */
+  requiredHooks?: string[]
 }
 
 export interface MessageFormat {

@@ -1,0 +1,21 @@
+{
+  "name": "dbal_demo",
+  "version": "1.0.0",
+  "description": "DBAL Integration Demo - Demonstrates TypeScript DBAL client with MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "minLevel": 3,
+  "category": "demo",
+  "tags": ["dbal", "demo", "kv-store", "blob-storage", "cache"],
+  "dependencies": [],
+  "exports": {
+    "components": ["DBALDemo", "KVStorePanel", "BlobStoragePanel", "CachedDataPanel"],
+    "scripts": ["init", "kv_operations", "blob_operations", "cache_operations"]
+  },
+  "bindings": {
+    "dbal": true,
+    "browser": false
+  },
+  "requiredHooks": ["dbal", "kv_store", "blob_storage", "cached_data"],
+  "layout": "layout.json"
+}

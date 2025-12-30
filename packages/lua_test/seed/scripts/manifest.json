@@ -1,0 +1,10 @@
+{
+  "scripts": [
+    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle initialization" },
+    { "file": "framework.lua", "name": "framework", "category": "core", "description": "Core test framework with describe/it blocks" },
+    { "file": "assertions.lua", "name": "assertions", "category": "core", "description": "Assertion functions (expect, assert_*)" },
+    { "file": "mocks.lua", "name": "mocks", "category": "utilities", "description": "Mock and spy utilities" },
+    { "file": "runner.lua", "name": "runner", "category": "core", "description": "Test runner and reporter" },
+    { "file": "helpers.lua", "name": "helpers", "category": "utilities", "description": "Test helper utilities" }
+  ]
+}

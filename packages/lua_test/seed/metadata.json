@@ -1,0 +1,15 @@
+{
+  "packageId": "lua_test",
+  "name": "Lua Test",
+  "version": "1.0.0",
+  "description": "Unit testing framework for Lua scripts in MetaBuilder packages",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "tools",
+  "dependencies": [],
+  "exports": {
+    "components": ["TestRunner", "TestResults"],
+    "scripts": ["framework", "runner", "assertions", "mocks"]
+  },
+  "minLevel": 3
+}

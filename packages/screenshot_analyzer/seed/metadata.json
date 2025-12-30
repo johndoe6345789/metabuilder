@@ -1,0 +1,21 @@
+{
+  "name": "screenshot_analyzer",
+  "version": "1.0.0",
+  "description": "Screenshot Analyzer - Capture and analyze the current page",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "minLevel": 5,
+  "category": "demo",
+  "tags": ["screenshot", "analysis", "browser", "dom"],
+  "dependencies": [],
+  "exports": {
+    "components": ["ScreenshotAnalyzer", "UploadSection", "ResultPanel", "PageInfo"],
+    "scripts": ["init", "capture", "analyze", "page_info"]
+  },
+  "bindings": {
+    "dbal": false,
+    "browser": true
+  },
+  "requiredHooks": [],
+  "layout": "layout.json"
+}
