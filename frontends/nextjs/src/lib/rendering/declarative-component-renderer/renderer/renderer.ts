@@ -20,7 +20,7 @@ export class DeclarativeComponentRenderer {
     registerLuaScript(this.state, scriptId, script)
   }
 
-  async executeLuaScript(scriptId: string, params: any[]): Promise<any> {
+  async executeLuaScript(scriptId: string, params: unknown[]): Promise<unknown> {
     return executeLuaScript(this.state, scriptId, params)
   }
 
@@ -32,15 +32,15 @@ export class DeclarativeComponentRenderer {
     return hasComponentConfig(this.state, componentType)
   }
 
-  interpolateValue(template: string, context: Record<string, any>): string {
+  interpolateValue(template: string, context: Record<string, unknown>): string {
     return interpolateValue(template, context)
   }
 
-  evaluateConditional(condition: string | boolean, context: Record<string, any>): boolean {
+  evaluateConditional(condition: string | boolean, context: Record<string, unknown>): boolean {
     return evaluateConditional(condition, context)
   }
 
-  resolveDataSource(dataSource: string, context: Record<string, any>): any[] {
+  resolveDataSource(dataSource: string, context: Record<string, unknown>): unknown[] {
     return resolveDataSource(dataSource, context)
   }
 }
