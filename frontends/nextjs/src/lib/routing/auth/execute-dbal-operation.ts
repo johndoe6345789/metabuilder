@@ -33,7 +33,7 @@ export interface ExecuteResult<T = unknown> {
  * Execute a DBAL operation with tenant isolation
  */
 export const executeDbalOperation = async (
-  operation: DBALOperation,
+  dbalOp: DbalOperation,
   options: ExecuteOptions
 ): Promise<ExecuteResult> => {
   const adapter = getAdapter()
@@ -43,7 +43,7 @@ export const executeDbalOperation = async (
   const tenantFilter = { tenantId: tenant.id }
 
   try {
-    switch (operation.type) {
+    switch (dbalOp.operation) {
       case 'list': {
         const listOptions = {
           filter: { ...tenantFilter, ...(body?.filter as Record<string, unknown>) },
@@ -52,7 +52,7 @@ export const executeDbalOperation = async (
           limit: typeof body?.limit === 'number' ? Math.min(body.limit, 100) : 20,
         }
         
-        const result = await adapter.list(operation.entity, listOptions)
+        const result = await adapter.list(dbalOp.entity, listOptions)
         
         return {
           success: true,
@@ -67,11 +67,11 @@ export const executeDbalOperation = async (
       }
 
       case 'read': {
-        if (!operation.id) {
+        if (!dbalOp.id) {
           return { success: false, error: 'ID required for read operation' }
         }
         
-        const record = await adapter.read(operation.entity, operation.id)
+        const record = await adapter.read(dbalOp.entity, dbalOp.id)
         
         if (!record) {
           return { success: false, error: 'Record not found' }
@@ -87,41 +87,38 @@ export const executeDbalOperation = async (
       }
 
       case 'create': {
-        if (!body || Object.keys(body).length === 0) {
+        const payload = dbalOp.payload || body
+        if (!payload || Object.keys(payload).length === 0) {
           return { success: false, error: 'Request body required for create' }
         }
         
-        const createData = {
-          ...body,
+        // Build create data, excluding meta fields
+        const { id, filter, sort, page, limit, ...cleanPayload } = payload as Record<string, unknown>
+        const createData: Record<string, unknown> = {
+          ...cleanPayload,
           tenantId: tenant.id,
           createdBy: user?.id,
           createdAt: Date.now(),
           updatedAt: Date.now(),
         }
         
-        // Remove meta fields that shouldn't be set directly
-        delete createData.id
-        delete createData.filter
-        delete createData.sort
-        delete createData.page
-        delete createData.limit
-        
-        const created = await adapter.create(operation.entity, createData)
+        const created = await adapter.create(dbalOp.entity, createData)
         
         return { success: true, data: created }
       }
 
       case 'update': {
-        if (!operation.id) {
+        if (!dbalOp.id) {
           return { success: false, error: 'ID required for update operation' }
         }
         
-        if (!body || Object.keys(body).length === 0) {
+        const payload = dbalOp.payload || body
+        if (!payload || Object.keys(payload).length === 0) {
           return { success: false, error: 'Request body required for update' }
         }
         
         // First verify record exists and belongs to tenant
-        const existing = await adapter.read(operation.entity, operation.id)
+        const existing = await adapter.read(dbalOp.entity, dbalOp.id)
         if (!existing) {
           return { success: false, error: 'Record not found' }
         }
@@ -132,7 +129,7 @@ export const executeDbalOperation = async (
         }
         
         const updateData = {
-          ...body,
+          ...payload,
           updatedBy: user?.id,
           updatedAt: Date.now(),
         }
@@ -145,18 +142,18 @@ export const executeDbalOperation = async (
         delete updateData.page
         delete updateData.limit
         
-        const updated = await adapter.update(operation.entity, operation.id, updateData)
+        const updated = await adapter.update(dbalOp.entity, dbalOp.id, updateData)
         
         return { success: true, data: updated }
       }
 
       case 'delete': {
-        if (!operation.id) {
+        if (!dbalOp.id) {
           return { success: false, error: 'ID required for delete operation' }
         }
         
         // First verify record exists and belongs to tenant
-        const existing = await adapter.read(operation.entity, operation.id)
+        const existing = await adapter.read(dbalOp.entity, dbalOp.id)
         if (!existing) {
           return { success: false, error: 'Record not found' }
         }
@@ -166,9 +163,9 @@ export const executeDbalOperation = async (
           return { success: false, error: 'Record not found' }
         }
         
-        const deleted = await adapter.delete(operation.entity, operation.id)
+        const deleted = await adapter.delete(dbalOp.entity, dbalOp.id)
         
-        return { success: true, data: { deleted, id: operation.id } }
+        return { success: true, data: { deleted, id: dbalOp.id } }
       }
 
       case 'action': {
@@ -176,12 +173,12 @@ export const executeDbalOperation = async (
         // For now, return info about what action was requested
         return {
           success: false,
-          error: `Custom action '${operation.action}' not implemented. Package handlers should override this.`,
+          error: `Custom action not implemented. Package handlers should override this.`,
         }
       }
 
       default:
-        return { success: false, error: `Unknown operation type: ${operation.type}` }
+        return { success: false, error: `Unknown operation: ${dbalOp.operation}` }
     }
   } catch (error) {
     console.error('DBAL operation failed:', error)
