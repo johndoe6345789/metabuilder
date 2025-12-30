@@ -1,14 +1,17 @@
 'use client'
 
-import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@/fakemui'
+
+import styles from './SidebarMenu.module.scss'
 
 // SidebarMenu (alias for List)
 const SidebarMenu = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <Box ref={ref} {...props}>
-        <List dense disablePadding>
+      <Box ref={ref} className={className} {...props}>
+        <List dense className={styles.sidebarMenuList}>
           {children}
         </List>
       </Box>
@@ -30,36 +33,39 @@ interface SidebarMenuItemProps {
 }
 
 const SidebarMenuItem = forwardRef<HTMLDivElement, SidebarMenuItemProps>(
-  ({ children, icon, label, href, active, disabled, onClick, ...props }, ref) => {
+  ({ children, icon, label, href, active, disabled, onClick, className = '', ...props }, ref) => {
     const content = children || label
+    const activeClass = active ? styles.active : ''
+
+    const buttonContent = (
+      <>
+        {icon && <ListItemIcon className={styles.sidebarMenuIcon}>{icon}</ListItemIcon>}
+        <ListItemText primary={content} className={styles.sidebarMenuText} />
+      </>
+    )
 
     return (
-      <ListItem disablePadding>
-        <Box ref={ref} sx={{ width: '100%' }} {...props}>
-          <ListItemButton
-            selected={active}
-            disabled={disabled}
-            onClick={onClick}
-            href={href}
-            component={href ? 'a' : 'button'}
-            sx={{
-              mx: 1,
-              borderRadius: 1,
-              '&.Mui-selected': {
-                bgcolor: 'primary.main',
-                color: 'primary.contrastText',
-                '& .MuiListItemIcon-root': {
-                  color: 'primary.contrastText',
-                },
-                '&:hover': {
-                  bgcolor: 'primary.dark',
-                },
-              },
-            }}
-          >
-            {icon && <ListItemIcon sx={{ minWidth: 36 }}>{icon}</ListItemIcon>}
-            <ListItemText primary={content} primaryTypographyProps={{ fontSize: '0.875rem' }} />
-          </ListItemButton>
+      <ListItem className={styles.sidebarMenuListItem}>
+        <Box ref={ref} className={`${styles.sidebarMenuItemWrapper} ${className}`} {...props}>
+          {href ? (
+            <a
+              href={href}
+              onClick={onClick}
+              className={`${styles.sidebarMenuButton} ${activeClass} ${disabled ? styles.disabled : ''}`}
+              aria-disabled={disabled}
+            >
+              {buttonContent}
+            </a>
+          ) : (
+            <ListItemButton
+              selected={active}
+              disabled={disabled}
+              onClick={onClick}
+              className={`${styles.sidebarMenuButton} ${activeClass}`}
+            >
+              {buttonContent}
+            </ListItemButton>
+          )}
         </Box>
       </ListItem>
     )

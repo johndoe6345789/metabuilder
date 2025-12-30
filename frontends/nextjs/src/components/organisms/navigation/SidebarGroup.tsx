@@ -1,9 +1,11 @@
 'use client'
 
-import { Box, Collapse, List, Typography } from '@mui/material'
 import { forwardRef, ReactNode, useState } from 'react'
 
+import { Box, Collapse, List, Typography } from '@/fakemui'
 import { ExpandLess, ExpandMore } from '@/fakemui/icons'
+
+import styles from './SidebarGroup.module.scss'
 
 // SidebarGroup
 interface SidebarGroupProps {
@@ -15,27 +17,19 @@ interface SidebarGroupProps {
 }
 
 const SidebarGroup = forwardRef<HTMLDivElement, SidebarGroupProps>(
-  ({ children, label, collapsible, defaultOpen = true, ...props }, ref) => {
+  ({ children, label, collapsible, defaultOpen = true, className = '', ...props }, ref) => {
     const [open, setOpen] = useState(defaultOpen)
 
     return (
-      <Box ref={ref} sx={{ mb: 1 }} {...props}>
+      <Box ref={ref} className={`${styles.sidebarGroup} ${className}`} {...props}>
         {label && (
           <Box
             onClick={collapsible ? () => setOpen(!open) : undefined}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              px: 2,
-              py: 1,
-              cursor: collapsible ? 'pointer' : 'default',
-            }}
+            className={`${styles.sidebarGroupHeader} ${collapsible ? styles.collapsible : ''}`}
           >
             <Typography
               variant="overline"
-              color="text.secondary"
-              sx={{ fontSize: '0.7rem', letterSpacing: 1 }}
+              className={styles.sidebarGroupLabel}
             >
               {label}
             </Typography>
@@ -45,12 +39,12 @@ const SidebarGroup = forwardRef<HTMLDivElement, SidebarGroupProps>(
         )}
         {collapsible ? (
           <Collapse in={open}>
-            <List dense disablePadding>
+            <List dense className={styles.sidebarGroupList}>
               {children}
             </List>
           </Collapse>
         ) : (
-          <List dense disablePadding>
+          <List dense className={styles.sidebarGroupList}>
             {children}
           </List>
         )}
@@ -62,13 +56,12 @@ SidebarGroup.displayName = 'SidebarGroup'
 
 // SidebarGroupLabel
 const SidebarGroupLabel = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
       <Typography
         ref={ref}
         variant="overline"
-        color="text.secondary"
-        sx={{ px: 2, py: 1, fontSize: '0.7rem', letterSpacing: 1 }}
+        className={`${styles.sidebarGroupLabelStandalone} ${className}`}
         {...props}
       >
         {children}
@@ -80,10 +73,10 @@ SidebarGroupLabel.displayName = 'SidebarGroupLabel'
 
 // SidebarGroupContent
 const SidebarGroupContent = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <Box ref={ref} {...props}>
-        <List dense disablePadding>
+      <Box ref={ref} className={className} {...props}>
+        <List dense className={styles.sidebarGroupList}>
           {children}
         </List>
       </Box>
