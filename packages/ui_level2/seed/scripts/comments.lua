@@ -1,5 +1,29 @@
+---@class Comments
 local M = {}
 
+---@class Comment
+---@field content string
+---@field author string
+
+---@class RenderContext
+---@field comments? Comment[]
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? UIComponent[]
+
+---@class PostForm
+---@field comment? string
+
+---@class PostResult
+---@field success boolean
+---@field error? string
+---@field action? string
+---@field content? string
+
+---@param ctx RenderContext
+---@return UIComponent
 function M.render(ctx)
   return {
     type = "Stack",
@@ -11,6 +35,7 @@ function M.render(ctx)
   }
 end
 
+---@return UIComponent
 function M.composer()
   return {
     type = "Card",
@@ -23,6 +48,8 @@ function M.composer()
   }
 end
 
+---@param comments Comment[]
+---@return UIComponent
 function M.list(comments)
   local items = {}
   for _, c in ipairs(comments) do
@@ -39,6 +66,8 @@ function M.list(comments)
   return { type = "Stack", props = { spacing = 2 }, children = items }
 end
 
+---@param form PostForm
+---@return PostResult
 function M.postComment(form)
   if not form.comment or form.comment == "" then
     return { success = false, error = "Comment required" }
