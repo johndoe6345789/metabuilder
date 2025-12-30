@@ -1,5 +1,38 @@
+-- Workflows tab module
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? UIComponent[]
+
+---@class WorkflowStep
+---@field id string
+---@field name string
+---@field type string
+
+---@class Workflow
+---@field id string
+---@field name string
+---@field description? string
+---@field steps? WorkflowStep[]
+
+---@class WorkflowsRenderContext
+---@field workflows? Workflow[]
+
+---@class ActionResult
+---@field success boolean
+---@field action string
+---@field id? string
+
+---@class WorkflowsModule
+---@field render fun(ctx: WorkflowsRenderContext): UIComponent
+---@field addWorkflow fun(): ActionResult
+
 local M = {}
 
+---Renders the workflows tab with a grid of workflow cards
+---@param ctx WorkflowsRenderContext
+---@return UIComponent
 function M.render(ctx)
   local items = {}
   for _, w in ipairs(ctx.workflows or {}) do
@@ -28,6 +61,8 @@ function M.render(ctx)
   }
 end
 
+---Opens the add workflow dialog
+---@return ActionResult
 function M.addWorkflow()
   return { success = true, action = "open_workflow_dialog" }
 end

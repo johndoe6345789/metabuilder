@@ -1,5 +1,19 @@
+-- Intro page render component
+
+---@class IntroProps
+---@field eyebrow? string
+---@field title? string
+---@field description? string
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? UIComponent[]
+
 local M = {}
 
+---@param props IntroProps
+---@return UIComponent
 function M.render(props)
   return {
     type = "Stack",

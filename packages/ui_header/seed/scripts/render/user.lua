@@ -1,4 +1,24 @@
 -- Header user section
+
+---@class User
+---@field avatar? string
+---@field name string
+---@field role? string
+
+---@class MenuItem
+---@field label? string
+---@field path? string
+---@field action? string
+---@field type? string
+
+---@class UserMenuComponent
+---@field type string
+---@field avatar? string
+---@field name? string
+---@field children? MenuItem[]
+
+---@param user? User
+---@return UserMenuComponent
 local function user_section(user)
   if not user then
     return {

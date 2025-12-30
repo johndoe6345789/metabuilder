@@ -1,5 +1,38 @@
+-- Schemas tab module
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? UIComponent[]
+
+---@class SchemaField
+---@field name string
+---@field type string
+
+---@class Schema
+---@field id string
+---@field name string
+---@field description? string
+---@field fields? SchemaField[]
+
+---@class SchemasRenderContext
+---@field schemas? Schema[]
+
+---@class ActionResult
+---@field success boolean
+---@field action string
+---@field id? string
+
+---@class SchemasModule
+---@field render fun(ctx: SchemasRenderContext): UIComponent
+---@field addSchema fun(): ActionResult
+---@field editSchema fun(ctx: table): ActionResult
+
 local M = {}
 
+---Renders the schemas tab with a grid of schema cards
+---@param ctx SchemasRenderContext
+---@return UIComponent
 function M.render(ctx)
   local items = {}
   for _, s in ipairs(ctx.schemas or {}) do
@@ -27,10 +60,15 @@ function M.render(ctx)
   }
 end
 
+---Opens the add schema dialog
+---@return ActionResult
 function M.addSchema()
   return { success = true, action = "open_schema_dialog" }
 end
 
+---Opens the edit schema dialog for the specified schema
+---@param ctx table
+---@return ActionResult
 function M.editSchema(ctx)
   return { success = true, action = "open_schema_dialog", id = ctx.schemaId }
 end

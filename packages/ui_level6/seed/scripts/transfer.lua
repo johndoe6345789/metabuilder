@@ -1,6 +1,30 @@
 -- Power transfer utilities for supergod
+
+---@class User
+---@field id string
+---@field name string
+
+---@class TransferFormComponent
+---@field type string
+---@field fromUser User
+---@field toUser User
+---@field confirmationRequired boolean
+---@field warningMessage string
+
+---@class HistoryColumnDefinition
+---@field id string
+---@field label string
+---@field type? string
+
+---@class TransferHistoryComponent
+---@field type string
+---@field columns HistoryColumnDefinition[]
+
 local M = {}
 
+---@param from_user User
+---@param to_user User
+---@return TransferFormComponent
 function M.transfer_form(from_user, to_user)
   return {
     type = "power_transfer_form",
@@ -11,6 +35,7 @@ function M.transfer_form(from_user, to_user)
   }
 end
 
+---@return TransferHistoryComponent
 function M.transfer_history()
   return {
     type = "transfer_history",

@@ -1,5 +1,20 @@
+-- Level 5 layout module
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? UIComponent[]
+
+---@class RenderContext
+---@field user table
+---@field user.username string
+---@field nerdMode boolean
+---@field tenants? table[]
+
 local M = {}
 
+---@param ctx RenderContext
+---@return UIComponent
 function M.render(ctx)
   return {
     type = "Box",
@@ -18,6 +33,8 @@ function M.render(ctx)
   }
 end
 
+---@param ctx RenderContext
+---@return UIComponent
 function M.navigator(ctx)
   return {
     type = "Tabs",

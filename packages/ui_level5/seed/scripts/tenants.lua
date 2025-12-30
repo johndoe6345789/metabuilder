@@ -1,5 +1,28 @@
+-- Tenant management for Level 5
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? UIComponent[]
+
+---@class Tenant
+---@field id string
+---@field name string
+---@field userCount number
+
+---@class TenantContext
+---@field tenants? Tenant[]
+---@field tenantId? string
+
+---@class ActionResult
+---@field success boolean
+---@field action string
+---@field id? string
+
 local M = {}
 
+---@param ctx TenantContext
+---@return UIComponent
 function M.render(ctx)
   local items = {}
   for _, t in ipairs(ctx.tenants or {}) do
@@ -28,10 +51,13 @@ function M.render(ctx)
   }
 end
 
+---@return ActionResult
 function M.createTenant()
   return { success = true, action = "open_create_dialog" }
 end
 
+---@param ctx TenantContext
+---@return ActionResult
 function M.deleteTenant(ctx)
   return { success = true, action = "confirm_delete", id = ctx.tenantId }
 end
