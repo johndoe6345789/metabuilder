@@ -138,6 +138,132 @@ const uiLevel4Package: MockPackageDefinition = {
         },
       ],
     }),
+
+    // Script file aliases - map .lua file names to their default renders
+    'init.lua': (_ctx: LuaRenderContext) => ({
+      type: 'Alert',
+      props: { severity: 'info' },
+      children: [
+        {
+          type: 'Typography',
+          props: { variant: 'body2', text: 'init.lua contains lifecycle hooks - no visual render' },
+        },
+      ],
+    }),
+
+    'layout.lua': (ctx: LuaRenderContext) => {
+      const nerdMode = ctx.nerdMode ?? false
+      const username = ctx.user?.username ?? 'Admin'
+      const desc = nerdMode
+        ? 'Design declaratively with schemas and Lua scripts.'
+        : 'Build visually with forms and drag-and-drop.'
+
+      return {
+        type: 'Box',
+        props: { className: 'min-h-screen bg-canvas' },
+        children: [
+          {
+            type: 'Level4Header',
+            props: { username, nerdMode },
+          },
+          {
+            type: 'Container',
+            props: { className: 'max-w-7xl mx-auto px-4 py-8 space-y-8' },
+            children: [
+              {
+                type: 'IntroSection',
+                props: {
+                  eyebrow: 'Level 4',
+                  title: 'Application Builder',
+                  description: desc,
+                },
+              },
+              {
+                type: 'Tabs',
+                props: {
+                  items: [
+                    { value: 'schemas', label: 'Schemas' },
+                    { value: 'workflows', label: 'Workflows' },
+                    { value: 'users', label: 'Users' },
+                    { value: 'settings', label: 'Settings' },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      }
+    },
+
+    'schemas.lua': (_ctx: LuaRenderContext) => ({
+      type: 'Stack',
+      props: { className: 'space-y-4' },
+      children: [
+        {
+          type: 'Card',
+          children: [
+            {
+              type: 'CardHeader',
+              children: [
+                { type: 'Typography', props: { variant: 'h5', text: 'Schema Editor' } },
+              ],
+            },
+            {
+              type: 'CardContent',
+              children: [
+                {
+                  type: 'Typography',
+                  props: { 
+                    variant: 'body2', 
+                    text: 'Define data models and validation rules for your application.',
+                    className: 'text-muted-foreground',
+                  },
+                },
+                {
+                  type: 'Button',
+                  props: { variant: 'contained', children: 'Create Schema' },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    }),
+
+    'workflows.lua': (_ctx: LuaRenderContext) => ({
+      type: 'Stack',
+      props: { className: 'space-y-4' },
+      children: [
+        {
+          type: 'Card',
+          children: [
+            {
+              type: 'CardHeader',
+              children: [
+                { type: 'Typography', props: { variant: 'h5', text: 'Workflow Designer' } },
+              ],
+            },
+            {
+              type: 'CardContent',
+              children: [
+                {
+                  type: 'Typography',
+                  props: { 
+                    variant: 'body2', 
+                    text: 'Create automated workflows with visual node-based editor.',
+                    className: 'text-muted-foreground',
+                  },
+                },
+                {
+                  type: 'Button',
+                  props: { variant: 'contained', children: 'New Workflow' },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    }),
   },
 }
 

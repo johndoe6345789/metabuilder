@@ -3,7 +3,7 @@
  * @description Check row-level access permissions
  */
 
-import { DBALError } from '@/core/foundation/errors'
+import { DBALError } from '../../core/foundation/errors'
 import type { ACLRule, User } from '../acl-adapter/types'
 
 /**

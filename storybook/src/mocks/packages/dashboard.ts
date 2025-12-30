@@ -152,6 +152,115 @@ const dashboardPackage: MockPackageDefinition = {
         },
       ],
     }),
+
+    // Script file aliases - map .lua file names to their default renders
+    'init.lua': (_ctx: LuaRenderContext) => ({
+      type: 'Alert',
+      props: { severity: 'info' },
+      children: [
+        {
+          type: 'Typography',
+          props: { variant: 'body2', text: 'init.lua contains lifecycle hooks (on_install, on_update) - no visual render' },
+        },
+      ],
+    }),
+    
+    'stats.lua': (_ctx: LuaRenderContext) => ({
+      type: 'Grid',
+      props: { className: 'grid grid-cols-4 gap-4' },
+      children: [
+        {
+          type: 'Card',
+          children: [
+            {
+              type: 'CardContent',
+              props: { className: 'p-6' },
+              children: [
+                { type: 'Typography', props: { variant: 'overline', text: 'Users' } },
+                { type: 'Typography', props: { variant: 'h4', text: '1,234' } },
+                { type: 'Typography', props: { variant: 'caption', text: '+12%', className: 'text-green-500' } },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'Card',
+          children: [
+            {
+              type: 'CardContent',
+              props: { className: 'p-6' },
+              children: [
+                { type: 'Typography', props: { variant: 'overline', text: 'Revenue' } },
+                { type: 'Typography', props: { variant: 'h4', text: '$45.2K' } },
+                { type: 'Typography', props: { variant: 'caption', text: '+8.1%', className: 'text-green-500' } },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'Card',
+          children: [
+            {
+              type: 'CardContent',
+              props: { className: 'p-6' },
+              children: [
+                { type: 'Typography', props: { variant: 'overline', text: 'Orders' } },
+                { type: 'Typography', props: { variant: 'h4', text: '892' } },
+                { type: 'Typography', props: { variant: 'caption', text: '-2.4%', className: 'text-red-500' } },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'Card',
+          children: [
+            {
+              type: 'CardContent',
+              props: { className: 'p-6' },
+              children: [
+                { type: 'Typography', props: { variant: 'overline', text: 'Active' } },
+                { type: 'Typography', props: { variant: 'h4', text: '573' } },
+                { type: 'Typography', props: { variant: 'caption', text: '+18%', className: 'text-green-500' } },
+              ],
+            },
+          ],
+        },
+      ],
+    }),
+    
+    'layout.lua': (ctx: LuaRenderContext) => ({
+      type: 'Box',
+      props: { className: 'min-h-screen bg-background' },
+      children: [
+        {
+          type: 'AppHeader',
+          children: [
+            {
+              type: 'Flex',
+              props: { className: 'flex items-center justify-between' },
+              children: [
+                { type: 'Typography', props: { variant: 'h5', text: 'Dashboard' } },
+                { type: 'Typography', props: { variant: 'body2', text: ctx.user?.username || 'Guest' } },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'Container',
+          props: { className: 'max-w-7xl mx-auto px-4 py-8 space-y-8' },
+          children: [
+            {
+              type: 'Typography',
+              props: { variant: 'h3', text: 'Welcome back!' },
+            },
+            {
+              type: 'Typography',
+              props: { variant: 'body1', text: 'Here\'s what\'s happening with your projects.', className: 'text-muted-foreground' },
+            },
+          ],
+        },
+      ],
+    }),
   },
 }
 
