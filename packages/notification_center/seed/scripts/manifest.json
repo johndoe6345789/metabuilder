@@ -17,6 +17,12 @@
       "name": "Notification List",
       "file": "list.lua",
       "description": "Notification list panel"
+    },
+    {
+      "id": "summary",
+      "name": "Notification Summary",
+      "file": "summary.lua",
+      "description": "Summary card with counts by severity"
     }
   ]
 }

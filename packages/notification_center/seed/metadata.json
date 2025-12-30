@@ -2,13 +2,21 @@
   "packageId": "notification_center",
   "name": "Notification Center",
   "version": "1.0.0",
-  "description": "Notification center components",
+  "description": "Notification center components and summary cards",
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
   "exports": {
-    "components": []
+    "components": [
+      "NotificationSummary"
+    ],
+    "scripts": [
+      "init",
+      "toast",
+      "list",
+      "summary"
+    ]
   },
   "minLevel": 1
 }

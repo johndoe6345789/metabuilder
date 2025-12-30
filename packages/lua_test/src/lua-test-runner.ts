@@ -48,15 +48,21 @@ export interface LuaTestConfig {
   filter?: string
 }
 
+export interface TestCaseFiles {
+  [filename: string]: string  // filename -> JSON content
+}
+
 /**
  * Generates Lua code that runs tests and returns results
  * This code uses the lua_test framework modules
  */
 export function generateTestRunnerCode(
   testCode: string,
-  config: LuaTestConfig = {}
+  config: LuaTestConfig = {},
+  testCaseFiles: TestCaseFiles = {}
 ): string {
   const configJson = JSON.stringify(config)
+  const testCaseFilesJson = JSON.stringify(testCaseFiles)
 
   return `
 -- Load lua_test framework modules
@@ -80,6 +86,32 @@ local helpers = (function()
   ${getHelpersModule()}
 end)()
 
+local json_parser = (function()
+  ${getJsonParserModule()}
+end)()
+
+-- Test case files loaded from package
+local _test_case_files = ${testCaseFilesJson}
+
+-- Load test cases from a JSON file
+function load_cases(filename, path)
+  local content = _test_case_files[filename]
+  if not content then
+    error("Test case file not found: " .. filename)
+  end
+  local data = json_parser.decode(content)
+  if path then
+    for segment in string.gmatch(path, "[^%.]+") do
+      if data and type(data) == "table" then
+        data = data[segment]
+      else
+        error("Invalid path: " .. path)
+      end
+    end
+  end
+  return data or {}
+end
+
 -- Configure framework
 local config = ${configJson}
 if config.timeout then framework.configure({ timeout = config.timeout }) end
@@ -95,6 +127,9 @@ beforeAll = framework.beforeAll
 afterAll = framework.afterAll
 beforeEach = framework.beforeEach
 afterEach = framework.afterEach
+it_each = framework.it_each
+fit_each = framework.fit_each
+xit_each = framework.xit_each
 expect = assertions.expect
 assertTrue = assertions.assertTrue
 assertFalse = assertions.assertFalse
@@ -164,6 +199,26 @@ function M.fit(name, fn)
   test.only = true
   return test
 end
+
+-- Parameterized test helper
+local function create_each(testFn)
+  return function(cases)
+    return function(nameTemplate, fn)
+      for _, testCase in ipairs(cases) do
+        local name = nameTemplate
+        for key, value in pairs(testCase) do
+          local strValue = type(value) == "table" and "[table]" or tostring(value)
+          name = string.gsub(name, "%$" .. key, strValue)
+        end
+        testFn(name, function() fn(testCase) end)
+      end
+    end
+  end
+end
+
+function M.it_each(cases) return create_each(M.it)(cases) end
+function M.fit_each(cases) return create_each(M.fit)(cases) end
+function M.xit_each(cases) return create_each(M.xit)(cases) end
 
 function M.beforeAll(fn) if M._currentSuite then M._currentSuite.beforeAll = fn end end
 function M.afterAll(fn) if M._currentSuite then M._currentSuite.afterAll = fn end end

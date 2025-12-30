@@ -1,1 +1,65 @@
-[]
+[
+  {
+    "id": "contact_form",
+    "type": "contact_form",
+    "name": "Contact Form",
+    "description": "Simple contact form with name, email, and message validation",
+    "props": {
+      "title": "Contact form",
+      "description": "Collect a name, email, and short message with simple validation.",
+      "submitLabel": "Send message",
+      "successTitle": "Message sent",
+      "successMessage": "Thanks for reaching out. We will get back to you shortly."
+    },
+    "bindings": {
+      "dbal": false,
+      "browser": false
+    },
+    "layout": {
+      "type": "Card",
+      "props": { "className": "max-w-xl" },
+      "children": [
+        {
+          "type": "CardHeader",
+          "children": [
+            { "type": "CardTitle", "props": { "text": "{{title}}" } },
+            { "type": "CardDescription", "props": { "text": "{{description}}" } }
+          ]
+        },
+        {
+          "type": "CardContent",
+          "children": [
+            {
+              "type": "form",
+              "props": { "className": "space-y-4" },
+              "events": { "onSubmit": "contact_form.handleSubmit" },
+              "children": [
+                {
+                  "type": "FormField",
+                  "props": { "name": "name", "label": "Name", "placeholder": "Your name", "required": true }
+                },
+                {
+                  "type": "FormField",
+                  "props": { "name": "email", "label": "Email", "type": "email", "placeholder": "you@example.com", "required": true, "helperText": "We will only use this to reply to your note." }
+                },
+                {
+                  "type": "FormField",
+                  "props": { "name": "message", "label": "Message", "type": "textarea", "placeholder": "How can we help?", "required": true, "rows": 4 }
+                },
+                {
+                  "type": "Button",
+                  "props": { "type": "submit", "text": "{{submitLabel}}" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "scripts": {
+      "onSubmit": "contact_form.handleSubmit",
+      "validate": "contact_form.validate",
+      "init": "contact_form.createInitialState"
+    }
+  }
+]

@@ -1,5 +1,7 @@
 -- Tests for ui_permissions levels.lua module
--- Uses parameterized tests
+-- Loads test cases from JSON file
+
+local cases = load_cases("levels.cases.json")
 
 describe("ui_permissions/levels", function()
   local LEVELS = {
@@ -12,26 +14,13 @@ describe("ui_permissions/levels", function()
   }
   
   describe("level values", function()
-    it_each({
-      { name = "PUBLIC",    value = 1 },
-      { name = "USER",      value = 2 },
-      { name = "MODERATOR", value = 3 },
-      { name = "ADMIN",     value = 4 },
-      { name = "GOD",       value = 5 },
-      { name = "SUPERGOD",  value = 6 },
-    })("should have $name as level $value", function(tc)
+    it_each(cases.level_values)("should have $name as level $value", function(tc)
       expect(LEVELS[tc.name]).toBe(tc.value)
     end)
   end)
   
   describe("level hierarchy", function()
-    it_each({
-      { lower = "PUBLIC",    higher = "USER" },
-      { lower = "USER",      higher = "MODERATOR" },
-      { lower = "MODERATOR", higher = "ADMIN" },
-      { lower = "ADMIN",     higher = "GOD" },
-      { lower = "GOD",       higher = "SUPERGOD" },
-    })("should have $lower < $higher", function(tc)
+    it_each(cases.level_hierarchy)("should have $lower < $higher", function(tc)
       expect(LEVELS[tc.lower]).toBeLessThan(LEVELS[tc.higher])
     end)
     

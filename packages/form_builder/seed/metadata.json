@@ -13,11 +13,13 @@
       "EmailField",
       "PasswordField",
       "NumberField",
-      "SearchBar"
+      "SearchBar",
+      "ContactForm"
     ],
     "scripts": [
       "fields",
-      "validate"
+      "validate",
+      "contact_form"
     ]
   },
   "minLevel": 1
