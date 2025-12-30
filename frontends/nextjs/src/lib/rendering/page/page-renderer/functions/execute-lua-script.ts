@@ -3,8 +3,9 @@ import { executeLuaScriptWithProfile } from '@/lib/lua/execute-lua-script-with-p
 import type { LuaEngine } from '@/lib/lua-engine'
 import type { ComponentInstance } from '@/lib/types/builder-types'
 import type { User } from '@/lib/types/level-types'
+import type { JsonValue } from '@/types/utility-types'
 
-export async function executeLuaScript(scriptId: string, context: Record<string, unknown>): Promise<unknown> {
+export async function executeLuaScript(scriptId: string, context: Record<string, JsonValue>): Promise<JsonValue> {
   const scripts = await Database.getLuaScripts()
   const script = scripts.find(s => s.id === scriptId)
   if (!script) {

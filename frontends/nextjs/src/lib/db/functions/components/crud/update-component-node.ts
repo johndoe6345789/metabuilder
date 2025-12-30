@@ -15,7 +15,13 @@ export const updateComponentNode = async (
   nodeId: string,
   updates: Partial<ComponentNode>
 ): Promise<void> => {
-  const data: any = {}
+  const data: Partial<{
+    type: string
+    parentId: string | null
+    childIds: string
+    order: number
+    pageId: string
+  }> = {}
   if (updates.type !== undefined) data.type = updates.type
   if (updates.parentId !== undefined) data.parentId = updates.parentId
   if (updates.childIds !== undefined) data.childIds = JSON.stringify(updates.childIds)

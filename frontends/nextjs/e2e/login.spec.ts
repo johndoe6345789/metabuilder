@@ -1,7 +1,7 @@
-import { expect,test } from '@playwright/test';
+import { expect, test, Page } from '@playwright/test';
 
 // Helper function to navigate to login page
-async function navigateToLogin(page: any) {
+async function navigateToLogin(page: Page) {
   await page.goto('/');
   // Click "Sign In" button to navigate to login page
   await page.getByRole('button', { name: /sign in|get started/i }).first().click();
