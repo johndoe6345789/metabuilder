@@ -627,6 +627,7 @@ export const componentRegistry: Record<string, AnyComponent> = {
   Divider,
   Alert,
   Progress,
+  LinearProgress: Progress,
   CircularProgress,
   Skeleton,
   
