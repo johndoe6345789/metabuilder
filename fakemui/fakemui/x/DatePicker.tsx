@@ -117,7 +117,7 @@ export function DatePicker({
 
   const inputProps = {
     type: 'date',
-    value: formatDate(currentValue),
+    value: formatDate(currentValue ?? null),
     onChange: handleChange,
     disabled,
     min,
@@ -180,7 +180,7 @@ export function TimePicker({
 
   const inputProps = {
     type: 'time',
-    value: formatTime(currentValue),
+    value: formatTime(currentValue ?? null),
     onChange: handleChange,
     disabled,
     ref: inputRef,
@@ -250,7 +250,7 @@ export function DateTimePicker({
 
   const inputProps = {
     type: 'datetime-local',
-    value: formatDateTime(currentValue),
+    value: formatDateTime(currentValue ?? null),
     onChange: handleChange,
     disabled,
     min,
