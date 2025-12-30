@@ -1,14 +1,8 @@
 'use client'
 
-import {
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  Select as MuiSelect,
-  SelectProps as MuiSelectProps,
-} from '@mui/material'
-import { forwardRef, ReactNode } from 'react'
+import { forwardRef, ReactNode, SelectHTMLAttributes } from 'react'
 
+import { Box, FormControl, FormHelperText, FormLabel, Select as FakeMuiSelect } from '@/fakemui'
 import { KeyboardArrowDown } from '@/fakemui/icons'
 
 import { SelectContent } from './SelectContent'
@@ -20,12 +14,17 @@ import { SelectSeparator } from './SelectSeparator'
 import { SelectTrigger } from './SelectTrigger'
 import { SelectValue } from './SelectValue'
 
-export interface SelectProps extends Omit<MuiSelectProps<string>, 'onChange'> {
+import styles from './Select.module.scss'
+
+export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange'> {
   onValueChange?: (value: string) => void
   helperText?: ReactNode
+  label?: ReactNode
+  error?: boolean
+  fullWidth?: boolean
 }
 
-const Select = forwardRef<HTMLDivElement, SelectProps>(
+const Select = forwardRef<HTMLSelectElement, SelectProps>(
   (
     {
       onValueChange,
@@ -35,27 +34,30 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
       error,
       helperText,
       children,
-      sx,
-      variant = 'outlined',
+      className,
+      fullWidth = true,
       ...props
     },
     ref
   ) => {
     return (
-      <FormControl ref={ref} fullWidth error={error} sx={sx}>
-        {label && <InputLabel>{label}</InputLabel>}
-        <MuiSelect<string>
-          value={value}
-          defaultValue={defaultValue}
-          label={label}
-          variant={variant}
-          onChange={e => onValueChange?.(e.target.value as string)}
-          IconComponent={KeyboardArrowDownIcon}
-          {...props}
-        >
-          {children}
-        </MuiSelect>
-        {helperText && <FormHelperText>{helperText}</FormHelperText>}
+      <FormControl className={`${styles.selectWrapper} ${fullWidth ? styles.fullWidth : ''} ${className || ''}`}>
+        {label && <FormLabel>{label}</FormLabel>}
+        <Box className={styles.selectContainer}>
+          <FakeMuiSelect
+            ref={ref}
+            value={value as string}
+            defaultValue={defaultValue as string}
+            onChange={e => onValueChange?.(e.target.value)}
+            error={error}
+            className={styles.select}
+            {...props}
+          >
+            {children}
+          </FakeMuiSelect>
+          <KeyboardArrowDown size={16} className={styles.icon} />
+        </Box>
+        {helperText && <FormHelperText error={error}>{helperText}</FormHelperText>}
       </FormControl>
     )
   }
