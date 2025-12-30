@@ -1,0 +1,59 @@
+{
+  "formatLabel": [
+    {
+      "desc": "formats snake_case to Title Case",
+      "input": "total_errors",
+      "expected": "Total errors"
+    },
+    {
+      "desc": "formats camelCase to Title Case",
+      "input": "totalErrors",
+      "expected": "Total Errors"
+    },
+    {
+      "desc": "capitalizes first letter",
+      "input": "total",
+      "expected": "Total"
+    }
+  ],
+  "formatValue": [
+    {
+      "desc": "formats small numbers as-is",
+      "input": 42,
+      "expected": "42"
+    },
+    {
+      "desc": "formats thousands with K suffix",
+      "input": 5000,
+      "expected": "5.0K"
+    },
+    {
+      "desc": "formats millions with M suffix",
+      "input": 2500000,
+      "expected": "2.5M"
+    }
+  ],
+  "createStatItems": [
+    {
+      "desc": "creates items from stats without config",
+      "input": {
+        "total": 100,
+        "errors": 5
+      },
+      "expected_count": 2
+    },
+    {
+      "desc": "creates items from stats with config",
+      "input": {
+        "total": 100,
+        "errors": 5,
+        "warnings": 10
+      },
+      "config": [
+        {"key": "total", "label": "Total", "color": "white"},
+        {"key": "errors", "label": "Errors", "color": "red"}
+      ],
+      "expected_count": 2
+    }
+  ]
+}
