@@ -1,14 +1,8 @@
 'use client'
 
-import {
-  Divider,
-  FormControl,
-  MenuItem,
-  Select as MuiSelect,
-  SelectChangeEvent,
-  Typography,
-} from '@mui/material'
 import { createContext, forwardRef, ReactNode, useContext, useState } from 'react'
+
+import { Divider, FormControl, MenuItem, Select as FakeMuiSelect, Typography } from '@/fakemui'
 
 interface SelectContextType {
   value: string
@@ -35,7 +29,7 @@ const Select = ({ children, value, defaultValue, onValueChange, disabled }: Sele
 
   return (
     <SelectContext.Provider value={{ value: currentValue, onValueChange: handleChange }}>
-      <FormControl fullWidth disabled={disabled} size="small">
+      <FormControl className={disabled ? 'form-control--disabled' : ''}>
         {children}
       </FormControl>
     </SelectContext.Provider>
@@ -64,22 +58,22 @@ interface SelectTriggerProps {
   id?: string
 }
 
-const SelectTrigger = forwardRef<HTMLDivElement, SelectTriggerProps>(
-  ({ children, size = 'default', id, ...props }, ref) => {
+const SelectTrigger = forwardRef<HTMLSelectElement, SelectTriggerProps>(
+  ({ children, size = 'default', id, className, ...props }, ref) => {
     const context = useContext(SelectContext)
 
     return (
-      <MuiSelect
+      <FakeMuiSelect
         ref={ref}
         value={context?.value ?? ''}
-        onChange={(e: SelectChangeEvent) => context?.onValueChange(e.target.value)}
-        size={size === 'sm' ? 'small' : 'medium'}
-        displayEmpty
-        renderValue={() => children}
+        onChange={(e) => context?.onValueChange(e.target.value)}
+        sm={size === 'sm'}
         id={id}
-        sx={{ minHeight: size === 'sm' ? 32 : 40 }}
+        className={className}
         {...props}
-      />
+      >
+        {children}
+      </FakeMuiSelect>
     )
   }
 )
@@ -98,7 +92,7 @@ interface SelectLabelProps {
 
 const SelectLabel = ({ children }: SelectLabelProps) => {
   return (
-    <Typography variant="caption" color="text.secondary" sx={{ px: 2, py: 1, display: 'block' }}>
+    <Typography variant="caption" className="select-label">
       {children}
     </Typography>
   )
@@ -110,10 +104,15 @@ interface SelectItemProps {
   disabled?: boolean
 }
 
-const SelectItem = forwardRef<HTMLLIElement, SelectItemProps>(
+const SelectItem = forwardRef<HTMLButtonElement, SelectItemProps>(
   ({ children, value, disabled }, ref) => {
+    const context = useContext(SelectContext)
     return (
-      <MenuItem ref={ref} value={value} disabled={disabled}>
+      <MenuItem
+        ref={ref}
+        onClick={() => !disabled && context?.onValueChange(value)}
+        disabled={disabled}
+      >
         {children}
       </MenuItem>
     )
@@ -121,7 +120,7 @@ const SelectItem = forwardRef<HTMLLIElement, SelectItemProps>(
 )
 SelectItem.displayName = 'SelectItem'
 
-const SelectSeparator = () => <Divider sx={{ my: 0.5 }} />
+const SelectSeparator = () => <Divider className="select-separator" />
 const SelectScrollUpButton = () => null
 const SelectScrollDownButton = () => null
 

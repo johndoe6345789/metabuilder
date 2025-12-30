@@ -1,13 +1,13 @@
 'use client'
 
+import { forwardRef, ReactNode, useState } from 'react'
+
 import {
-  Accordion as MuiAccordion,
+  Accordion as FakeMuiAccordion,
   AccordionDetails,
   AccordionSummary,
   Typography,
-} from '@mui/material'
-import { forwardRef, ReactNode, useState } from 'react'
-
+} from '@/fakemui'
 import { ExpandMore } from '@/fakemui/icons'
 
 interface AccordionProps {
@@ -39,39 +39,19 @@ interface AccordionItemProps {
 }
 
 const AccordionItem = forwardRef<HTMLDivElement, AccordionItemProps>(
-  ({ children, value, disabled, ...props }, ref) => {
+  ({ children, value, disabled, className, ...props }, ref) => {
     const [expanded, setExpanded] = useState(false)
 
     return (
-      <MuiAccordion
+      <FakeMuiAccordion
         ref={ref}
         expanded={expanded}
-        onChange={(_, isExpanded) => setExpanded(isExpanded)}
         disabled={disabled}
-        disableGutters
-        elevation={0}
-        sx={{
-          border: 1,
-          borderColor: 'divider',
-          '&:not(:last-child)': {
-            borderBottom: 0,
-          },
-          '&:first-of-type': {
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-          },
-          '&:last-of-type': {
-            borderBottomLeftRadius: 8,
-            borderBottomRightRadius: 8,
-          },
-          '&::before': {
-            display: 'none',
-          },
-        }}
+        className={`accordion-item ${expanded ? 'accordion-item--expanded' : ''} ${className || ''}`}
         {...props}
       >
-        {children}
-      </MuiAccordion>
+        <div onClick={() => !disabled && setExpanded(!expanded)}>{children}</div>
+      </FakeMuiAccordion>
     )
   }
 )
@@ -83,22 +63,17 @@ interface AccordionTriggerProps {
 }
 
 const AccordionTrigger = forwardRef<HTMLButtonElement, AccordionTriggerProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
       <AccordionSummary
-        ref={ref as unknown as React.Ref<HTMLDivElement>}
-        expandIcon={<ExpandMoreIcon />}
-        sx={{
-          '& .MuiAccordionSummary-content': {
-            my: 1.5,
-          },
-          '&:hover': {
-            textDecoration: 'underline',
-          },
-        }}
+        ref={ref}
+        expandIcon={<ExpandMore />}
+        className={className}
         {...props}
       >
-        <Typography fontWeight={500}>{children}</Typography>
+        <Typography variant="body1" className="font-medium">
+          {children}
+        </Typography>
       </AccordionSummary>
     )
   }
@@ -111,9 +86,9 @@ interface AccordionContentProps {
 }
 
 const AccordionContent = forwardRef<HTMLDivElement, AccordionContentProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <AccordionDetails ref={ref} sx={{ pt: 0, pb: 2 }} {...props}>
+      <AccordionDetails ref={ref} className={className} {...props}>
         {children}
       </AccordionDetails>
     )

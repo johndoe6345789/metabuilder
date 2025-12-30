@@ -1,13 +1,8 @@
 'use client'
 
-import {
-  Alert as MuiAlert,
-  AlertProps as MuiAlertProps,
-  AlertTitle as MuiAlertTitle,
-  SxProps,
-  Theme,
-} from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Alert as FakeMuiAlert, AlertTitle as FakeMuiAlertTitle } from '@/fakemui'
 
 export type AlertVariant = 'default' | 'destructive'
 
@@ -15,27 +10,22 @@ export interface AlertProps {
   variant?: AlertVariant
   children?: ReactNode
   className?: string
-  sx?: SxProps<Theme>
 }
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(
-  ({ variant = 'default', children, className, sx, ...props }, ref) => {
+  ({ variant = 'default', children, className, ...props }, ref) => {
     const severity = variant === 'destructive' ? 'error' : 'info'
 
     return (
-      <MuiAlert
+      <FakeMuiAlert
         ref={ref}
         severity={severity}
         variant="outlined"
         className={className}
-        sx={{
-          borderRadius: 2,
-          ...sx,
-        }}
         {...props}
       >
         {children}
-      </MuiAlert>
+      </FakeMuiAlert>
     )
   }
 )
@@ -49,9 +39,9 @@ interface AlertTitleProps {
 
 const AlertTitle = forwardRef<HTMLDivElement, AlertTitleProps>(({ children, ...props }, ref) => {
   return (
-    <MuiAlertTitle ref={ref} {...props}>
+    <FakeMuiAlertTitle ref={ref} {...props}>
       {children}
-    </MuiAlertTitle>
+    </FakeMuiAlertTitle>
   )
 })
 AlertTitle.displayName = 'AlertTitle'

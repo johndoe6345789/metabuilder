@@ -1,13 +1,8 @@
 'use client'
 
-import {
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup as MuiRadioGroup,
-} from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Radio, RadioGroup as FakeMuiRadioGroup } from '@/fakemui'
 
 interface RadioGroupProps {
   children: ReactNode
@@ -19,18 +14,18 @@ interface RadioGroupProps {
 }
 
 const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
-  ({ children, defaultValue, value, onValueChange, disabled, ...props }, ref) => {
+  ({ children, defaultValue, value, onValueChange, disabled, className, ...props }, ref) => {
     return (
-      <MuiRadioGroup
+      <FakeMuiRadioGroup
         ref={ref}
         defaultValue={defaultValue}
         value={value}
         onChange={e => onValueChange?.(e.target.value)}
-        sx={{ gap: 1 }}
+        className={`radio-group ${disabled ? 'radio-group--disabled' : ''} ${className || ''}`}
         {...props}
       >
         {children}
-      </MuiRadioGroup>
+      </FakeMuiRadioGroup>
     )
   }
 )
@@ -43,23 +38,15 @@ interface RadioGroupItemProps {
   id?: string
 }
 
-const RadioGroupItem = forwardRef<HTMLButtonElement, RadioGroupItemProps>(
-  ({ value, disabled, id, ...props }, ref) => {
+const RadioGroupItem = forwardRef<HTMLInputElement, RadioGroupItemProps>(
+  ({ value, disabled, id, className, ...props }, ref) => {
     return (
       <Radio
         ref={ref}
         value={value}
         disabled={disabled}
         id={id}
-        size="small"
-        sx={{
-          p: 0,
-          width: 16,
-          height: 16,
-          '& .MuiSvgIcon-root': {
-            fontSize: 16,
-          },
-        }}
+        className={`radio-item ${className || ''}`}
         {...props}
       />
     )
