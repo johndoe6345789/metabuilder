@@ -10,12 +10,16 @@ import {
   type SchemaRegistry,
 } from '@/lib/schema/schema-registry'
 
-const REGISTRY_PATH = path.join(process.cwd(), '..', '..', '..', 'prisma', 'schema-registry.json')
-const PRISMA_GENERATED_PATH = path.join(process.cwd(), '..', '..', '..', 'prisma', 'generated-from-packages.prisma')
+// Use consistent path resolution
+const getRegistryPath = () => path.join(process.cwd(), '..', '..', '..', 'prisma', 'schema-registry.json')
+const getPrismaOutputPath = () => path.join(process.cwd(), '..', '..', '..', 'prisma', 'generated-from-packages.prisma')
 
 /**
  * GET /api/dbal/schema
  * Returns the current schema registry status
+ * 
+ * Note: This endpoint is for admin/system use.
+ * For tenant-scoped data, use /api/v1/{tenant}/{package}/{entity}
  */
 export async function GET() {
   try {
