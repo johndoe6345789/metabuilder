@@ -17,22 +17,25 @@ import { DialogHeader, type DialogHeaderProps } from './dialog/Header'
 
 import styles from './Dialog.module.scss'
 
-export interface DialogProps extends Omit<MuiDialogProps, 'onClose'> {
+export interface DialogProps {
+  open?: boolean
   onOpenChange?: (open: boolean) => void
   onClose?: () => void
+  children?: ReactNode
+  className?: string
 }
 
 const Dialog = forwardRef<HTMLDivElement, DialogProps>(
-  ({ open, onOpenChange, onClose, children, ...props }, ref) => {
+  ({ open, onOpenChange, onClose, children, className, ...props }, ref) => {
     const handleClose = () => {
       onClose?.()
       onOpenChange?.(false)
     }
 
     return (
-      <MuiDialog ref={ref} open={open ?? false} onClose={handleClose} {...props}>
+      <FakeMuiDialog ref={ref} open={open ?? false} onClose={handleClose} className={className} {...props}>
         {children}
-      </MuiDialog>
+      </FakeMuiDialog>
     )
   }
 )
@@ -47,7 +50,7 @@ interface DialogTriggerProps {
 const DialogTrigger = forwardRef<HTMLDivElement, DialogTriggerProps>(
   ({ children, onClick, ...props }, ref) => {
     return (
-      <Box ref={ref} onClick={onClick} sx={{ display: 'inline-flex' }} {...props}>
+      <Box ref={ref} onClick={onClick} className={styles.trigger} {...props}>
         {children}
       </Box>
     )
@@ -74,7 +77,7 @@ const DialogClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
         <Box
           ref={ref as unknown as React.Ref<HTMLDivElement>}
           onClick={onClick}
-          sx={{ display: 'inline-flex' }}
+          className={styles.trigger}
           {...props}
         >
           {children}
@@ -86,10 +89,10 @@ const DialogClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
         ref={ref}
         aria-label="close"
         onClick={onClick}
-        sx={{ position: 'absolute', right: 8, top: 8, color: 'text.secondary' }}
+        className={styles.closeButton}
         {...props}
       >
-        <CloseIcon />
+        <Close />
       </IconButton>
     )
   }
@@ -104,9 +107,9 @@ interface DialogTitleProps {
 const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitleProps>((props, ref) => {
   const { children, ...rest } = props
   return (
-    <MuiDialogTitle ref={ref} {...rest}>
+    <FakeMuiDialogTitle ref={ref} {...rest}>
       {children}
-    </MuiDialogTitle>
+    </FakeMuiDialogTitle>
   )
 })
 DialogTitle.displayName = 'DialogTitle'
@@ -117,9 +120,14 @@ interface DialogDescriptionProps {
 }
 
 const DialogDescription = forwardRef<HTMLParagraphElement, DialogDescriptionProps>((props, ref) => {
-  const { children, ...rest } = props
+  const { children, className, ...rest } = props
   return (
-    <Typography ref={ref} variant="body2" color="text.secondary" {...rest}>
+    <Typography
+      ref={ref}
+      variant="body2"
+      className={`${styles.description} ${className ?? ''}`}
+      {...rest}
+    >
       {children}
     </Typography>
   )
