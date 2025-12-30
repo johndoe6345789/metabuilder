@@ -8,7 +8,7 @@ import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
 import { requireDBALApiKey } from '@/lib/api/require-dbal-api-key'
-import { setCredential } from '@/lib/db/credentials/set-credential'
+import { setCredential } from '@/lib/security/secure-db'
 import { hashPassword } from '@/lib/db/hash-password'
 import { callDaemon } from '@/lib/dbal/daemon/client'
 import type { User, UserRole } from '@/lib/level-types'

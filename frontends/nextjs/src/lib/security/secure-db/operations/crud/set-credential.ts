@@ -1,4 +1,4 @@
-import { setCredential as setCredentialRecord } from '@/lib/db/credentials'
+import { setCredential as setCredentialRecord } from '@/lib/security/secure-db'
 
 import { executeQuery } from '../execute-query'
 import { sanitizeInput } from '../sanitize-input'
