@@ -4,7 +4,12 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui'
-import type { BuilderState, ComponentDefinition, ComponentInstance } from '@/lib/builder-types'
+import type {
+  BuilderState,
+  ComponentDefinition,
+  ComponentInstance,
+  ComponentProps,
+} from '@/lib/builder-types'
 
 import { Canvas } from './Canvas'
 import { CodeEditor } from './CodeEditor'
@@ -63,7 +68,7 @@ export function Builder({ onLogout }: BuilderProps) {
     })
   }
 
-  const handleUpdateProps = (id: string, props: any) => {
+  const handleUpdateProps = (id: string, props: ComponentProps) => {
     setBuilderState(current => {
       if (!current) return { components: [], selectedId: null }
       return {

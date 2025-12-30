@@ -13,6 +13,12 @@ interface PackageFiltersProps {
   onSortChange: (value: 'name' | 'downloads' | 'rating') => void
 }
 
+type SortBy = PackageFiltersProps['sortBy']
+
+function isSortBy(value: string): value is SortBy {
+  return value === 'name' || value === 'downloads' || value === 'rating'
+}
+
 export function PackageFilters({
   searchQuery,
   categoryFilter,
@@ -52,7 +58,12 @@ export function PackageFilters({
           </SelectContent>
         </Select>
 
-        <Select value={sortBy} onValueChange={value => onSortChange(value as any)}>
+        <Select
+          value={sortBy}
+          onValueChange={value => {
+            if (isSortBy(value)) onSortChange(value)
+          }}
+        >
           <SelectTrigger className="w-[180px]">
             <TrendUp size={16} className="mr-2" />
             <SelectValue placeholder="Sort by" />

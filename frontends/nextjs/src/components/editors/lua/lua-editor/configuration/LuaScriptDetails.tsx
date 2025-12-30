@@ -2,15 +2,16 @@ import { Plus, Trash } from '@phosphor-icons/react'
 
 import { Badge, Button, CardContent, Input, Label } from '@/components/ui'
 import type { LuaScript } from '@/lib/level-types'
+import type { JsonValue } from '@/types/utility-types'
 
 interface LuaScriptDetailsProps {
   script: LuaScript
-  testInputs: Record<string, any>
+  testInputs: Record<string, JsonValue>
   onUpdateScript: (updates: Partial<LuaScript>) => void
   onAddParameter: () => void
   onDeleteParameter: (index: number) => void
   onUpdateParameter: (index: number, updates: { name?: string; type?: string }) => void
-  onTestInputChange: (paramName: string, value: any) => void
+  onTestInputChange: (paramName: string, value: JsonValue) => void
 }
 
 export const LuaScriptDetails = ({
