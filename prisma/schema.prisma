@@ -1308,7 +1308,7 @@ model GuideProgress {
   userId         String
   completedSteps String  // JSON: array of step IDs
   progress       Float   @default(0) // 0-100
-  started At     BigInt
+  startedAt      BigInt
   lastViewedAt   BigInt
   completedAt    BigInt?
 
