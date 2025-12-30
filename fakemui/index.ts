@@ -192,6 +192,7 @@ export {
   Slide,
   Zoom,
   Collapse,
+  useMediaQuery,
 } from './fakemui/utils'
 
 // Atoms

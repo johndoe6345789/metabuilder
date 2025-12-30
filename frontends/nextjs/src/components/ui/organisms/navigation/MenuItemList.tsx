@@ -1,16 +1,9 @@
 'use client'
 
 import { ExpandLess, ExpandMore } from '@/fakemui/icons'
-import {
-  Box,
-  Collapse,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material'
+import { Box, Collapse, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@/fakemui'
 import { forwardRef, ReactNode, useState } from 'react'
+import styles from './Navigation.module.scss'
 
 interface SidebarItem {
   label: string
@@ -49,7 +42,7 @@ const MenuItemList = forwardRef<HTMLUListElement, MenuItemListProps>(
 
       return (
         <Box key={item.label}>
-          <ListItem disablePadding>
+          <ListItem className={styles.menuItem}>
             <ListItemButton
               onClick={() => {
                 if (hasChildren) {
@@ -59,26 +52,25 @@ const MenuItemList = forwardRef<HTMLUListElement, MenuItemListProps>(
                 }
               }}
               disabled={item.disabled}
-              sx={{
-                pl: 2 + depth * 2,
-                minHeight: dense ? 40 : 48,
-              }}
+              className={`${styles.menuItemButton} ${dense ? styles.dense : ''}`}
+              style={{ paddingLeft: `${16 + depth * 16}px` }}
             >
-              {item.icon && <ListItemIcon sx={{ minWidth: 36 }}>{item.icon}</ListItemIcon>}
+              {item.icon && <ListItemIcon className={styles.menuItemIcon}>{item.icon}</ListItemIcon>}
               <ListItemText
                 primary={item.label}
-                primaryTypographyProps={{
-                  variant: dense ? 'body2' : 'body1',
-                  fontWeight: depth === 0 ? 500 : 400,
-                }}
+                className={`${styles.menuItemText} ${depth > 0 ? styles.nested : ''}`}
               />
-              {item.badge && <Box sx={{ mr: 1 }}>{item.badge}</Box>}
-              {hasChildren && (isOpen ? <ExpandLess /> : <ExpandMore />)}
+              {item.badge && <span className={styles.menuItemBadge}>{item.badge}</span>}
+              {hasChildren && (
+                <span className={styles.expandIcon}>
+                  {isOpen ? <ExpandLess /> : <ExpandMore />}
+                </span>
+              )}
             </ListItemButton>
           </ListItem>
           {hasChildren && (
-            <Collapse in={isOpen} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding dense={dense}>
+            <Collapse in={isOpen}>
+              <List dense={dense} className={styles.nestedList}>
                 {item.children!.map(child => renderItem(child, depth + 1))}
               </List>
             </Collapse>
@@ -88,7 +80,7 @@ const MenuItemList = forwardRef<HTMLUListElement, MenuItemListProps>(
     }
 
     return (
-      <List ref={ref} dense={dense} {...props}>
+      <List ref={ref} dense={dense} className={`${styles.menuList} ${dense ? styles.dense : ''}`} {...props}>
         {items.map(item => renderItem(item))}
       </List>
     )
