@@ -226,6 +226,39 @@ export const Alert: React.FC<LuaComponentProps & { severity?: 'info' | 'success'
   return <div className={`p-4 rounded border ${colors[severity]} ${className}`}>{children}</div>
 }
 
+// Progress bar component
+interface ProgressProps extends LuaComponentProps {
+  value?: number
+  max?: number
+  variant?: 'determinate' | 'indeterminate'
+  color?: 'primary' | 'secondary' | 'success' | 'error'
+}
+
+export const Progress: React.FC<ProgressProps> = ({
+  value = 0,
+  max = 100,
+  variant = 'determinate',
+  color = 'primary',
+  className = '',
+}) => {
+  const percentage = Math.min(100, Math.max(0, (value / max) * 100))
+  const colorClasses = {
+    primary: 'bg-accent',
+    secondary: 'bg-muted-foreground',
+    success: 'bg-green-500',
+    error: 'bg-red-500',
+  }
+  
+  return (
+    <div className={`w-full h-2 bg-muted rounded-full overflow-hidden ${className}`}>
+      <div 
+        className={`h-full ${colorClasses[color]} transition-all duration-300 ${variant === 'indeterminate' ? 'animate-pulse' : ''}`}
+        style={{ width: variant === 'determinate' ? `${percentage}%` : '50%' }}
+      />
+    </div>
+  )
+}
+
 export const Badge: React.FC<LuaComponentProps & { color?: string }> = ({
   color: _color = 'default',
   className = '',
@@ -494,6 +527,7 @@ export const componentRegistry: Record<string, AnyComponent> = {
   // Typography
   Typography,
   Text: Typography,
+  Heading: Typography,
   
   // Inputs
   Button,

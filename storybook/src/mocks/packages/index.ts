@@ -15,14 +15,15 @@ import { autoRegisterPackages } from '../auto-loader'
 
 // Packages known to have good components.json files
 const AUTO_LOAD_PACKAGES = [
+  'arcade_lobby',
   'dashboard',
-  'ui_header',
-  'ui_footer',
-  'nav_menu',
   'data_table',
-  'stats_grid',
   'form_builder',
+  'nav_menu',
   'notification_center',
+  'stats_grid',
+  'ui_footer',
+  'ui_header',
 ]
 
 // Initialize on module load
