@@ -99,6 +99,7 @@ export { Mail } from './Mail'
 export { Envelope } from './Envelope'
 export { EnvelopeSimple } from './EnvelopeSimple'
 export { Bell } from './Bell'
+export { BellOff } from './BellOff'
 export { ChatCircle } from './ChatCircle'
 export { PaperPlaneTilt } from './PaperPlaneTilt'
 

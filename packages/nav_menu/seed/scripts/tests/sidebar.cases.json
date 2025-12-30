@@ -1,0 +1,46 @@
+{
+  "render": [
+    {
+      "props": {
+        "title": "Dashboard",
+        "items": [
+          { "label": "Home", "path": "/" },
+          { "label": "Settings", "path": "/settings" }
+        ]
+      },
+      "expectedChildren": 2,
+      "desc": "renders header and items"
+    }
+  ],
+  "render_default_title": [
+    {
+      "props": { "items": [] },
+      "expectedTitle": "Menu",
+      "desc": "default title when missing"
+    }
+  ],
+  "header": [
+    { "props": { "title": "Admin" }, "expected": "Admin", "desc": "custom title" },
+    { "props": {}, "expected": "Menu", "desc": "default title" }
+  ],
+  "item": [
+    {
+      "item": { "label": "Home", "path": "/" },
+      "currentPath": "/",
+      "expectedVariant": "secondary",
+      "desc": "active item"
+    },
+    {
+      "item": { "label": "Home", "path": "/" },
+      "currentPath": "/other",
+      "expectedVariant": "ghost",
+      "desc": "inactive item"
+    },
+    {
+      "item": { "label": "Home", "path": "/" },
+      "currentPath": null,
+      "expectedVariant": "ghost",
+      "desc": "no current path"
+    }
+  ]
+}

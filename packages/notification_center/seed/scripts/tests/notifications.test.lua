@@ -1,7 +1,45 @@
 -- Notification Center functionality tests
 -- Uses lua_test framework with parameterized test cases
 
+---@class NotificationItem
+---@field label? string
+---@field count? number
+---@field severity? string
+
+---@class CalculateTotalCase
+---@field items NotificationItem[]|nil
+---@field expected integer
+---@field desc string
+
+---@class SeverityClassCase
+---@field severity string|nil
+---@field expected string
+---@field desc string
+
+---@class ToastDurationCase
+---@field message string
+---@field duration number|nil
+---@field expected_duration integer
+---@field desc string
+
+---@class SummaryTitleCase
+---@field title string|nil
+---@field expected_title string
+---@field desc string
+
+---@class SummaryItemsCase
+---@field items NotificationItem[]|nil
+---@field expected_count integer
+---@field desc string
+
+---@class NotificationCases
+---@field calculate_total CalculateTotalCase[]
+---@field get_severity_class SeverityClassCase[]
+---@field toast_duration ToastDurationCase[]
+---@field prepare_summary { title_variations: SummaryTitleCase[], items_processing: SummaryItemsCase[] }
+
 describe("Calculate Total", function()
+  ---@type NotificationCases
   local cases = load_cases("notifications.cases.json")
   local calculate_total = require("calculate_total")
   
