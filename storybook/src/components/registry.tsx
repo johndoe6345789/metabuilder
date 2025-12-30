@@ -883,6 +883,68 @@ export const Pagination: React.FC<LuaComponentProps & { count?: number; page?: n
 )
 
 /**
+ * Parse Lua annotations to extract parameter info
+ */
+interface LuaParam {
+  name: string
+  type: string
+  description: string
+}
+
+interface LuaFunctionInfo {
+  params: LuaParam[]
+  returnType?: string
+  returnDesc?: string
+}
+
+function parseLuaAnnotations(code: string): LuaFunctionInfo {
+  const params: LuaParam[] = []
+  let returnType: string | undefined
+  let returnDesc: string | undefined
+  
+  // Match ---@param name type description
+  const paramRegex = /---@param\s+(\w+)\s+(\w+)\s*(.*)/g
+  let match
+  while ((match = paramRegex.exec(code)) !== null) {
+    params.push({
+      name: match[1],
+      type: match[2],
+      description: match[3].trim()
+    })
+  }
+  
+  // Match ---@return type description
+  const returnMatch = code.match(/---@return\s+(\w+)\s*(.*)/)
+  if (returnMatch) {
+    returnType = returnMatch[1]
+    returnDesc = returnMatch[2].trim()
+  }
+  
+  // If no annotations, try to parse function signature
+  if (params.length === 0) {
+    const funcMatch = code.match(/(?:local\s+)?function\s+\w*\s*\(([^)]*)\)/)
+    if (funcMatch && funcMatch[1]) {
+      const argNames = funcMatch[1].split(',').map(a => a.trim()).filter(Boolean)
+      for (const name of argNames) {
+        params.push({ name, type: 'any', description: '' })
+      }
+    }
+  }
+  
+  return { params, returnType, returnDesc }
+}
+
+function getDefaultValue(type: string): string {
+  switch (type) {
+    case 'number': return '0'
+    case 'string': return ''
+    case 'boolean': return 'false'
+    case 'table': return '{}'
+    default: return ''
+  }
+}
+
+/**
  * LuaScriptViewer - Shows Lua utility scripts with code and execution
  */
 export const LuaScriptViewer: React.FC<LuaComponentProps & {
@@ -893,9 +955,10 @@ export const LuaScriptViewer: React.FC<LuaComponentProps & {
   packageId?: string
 }> = ({ scriptFile, scriptName, description, category, packageId }) => {
   const [code, setCode] = React.useState<string | null>(null)
+  const [funcInfo, setFuncInfo] = React.useState<LuaFunctionInfo | null>(null)
+  const [inputs, setInputs] = React.useState<Record<string, string>>({})
   const [result, setResult] = React.useState<string | null>(null)
   const [error, setError] = React.useState<string | null>(null)
-  const [testInput, setTestInput] = React.useState('1735570800000') // Default timestamp
   const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
@@ -912,6 +975,23 @@ export const LuaScriptViewer: React.FC<LuaComponentProps & {
         if (response.ok) {
           const luaCode = await response.text()
           setCode(luaCode)
+          
+          // Parse annotations and set up default inputs
+          const info = parseLuaAnnotations(luaCode)
+          setFuncInfo(info)
+          
+          const defaultInputs: Record<string, string> = {}
+          for (const param of info.params) {
+            // Smart defaults based on param name/type
+            if (param.name.includes('timestamp') || param.name.includes('time')) {
+              defaultInputs[param.name] = String(Date.now())
+            } else if (param.type === 'boolean') {
+              defaultInputs[param.name] = 'true'
+            } else {
+              defaultInputs[param.name] = getDefaultValue(param.type)
+            }
+          }
+          setInputs(defaultInputs)
         } else {
           setError(`Failed to load: ${response.statusText}`)
         }
@@ -923,8 +1003,12 @@ export const LuaScriptViewer: React.FC<LuaComponentProps & {
     loadScript()
   }, [scriptFile, packageId])
 
+  const updateInput = (name: string, value: string) => {
+    setInputs(prev => ({ ...prev, [name]: value }))
+  }
+
   const runScript = async () => {
-    if (!code) return
+    if (!code || !funcInfo) return
     setError(null)
     setResult(null)
     
@@ -956,15 +1040,27 @@ export const LuaScriptViewer: React.FC<LuaComponentProps & {
       const returnType = lua.lua_type(L, -1)
       
       if (returnType === lua.LUA_TFUNCTION) {
-        // Call the function with test input
-        const input = parseFloat(testInput) || testInput
-        if (typeof input === 'number') {
-          lua.lua_pushnumber(L, input)
-        } else {
-          lua.lua_pushstring(L, to_luastring(input))
+        // Push all parameters in order
+        for (const param of funcInfo.params) {
+          const value = inputs[param.name] || ''
+          
+          if (param.type === 'number') {
+            lua.lua_pushnumber(L, parseFloat(value) || 0)
+          } else if (param.type === 'boolean') {
+            lua.lua_pushboolean(L, value === 'true' || value === '1' ? 1 : 0)
+          } else if (param.type === 'table') {
+            try {
+              const tableData = JSON.parse(value || '{}')
+              pushTable(lua, L, to_luastring, tableData)
+            } catch {
+              lua.lua_createtable(L, 0, 0)
+            }
+          } else {
+            lua.lua_pushstring(L, to_luastring(value))
+          }
         }
         
-        const callResult = lua.lua_pcall(L, 1, 1, 0)
+        const callResult = lua.lua_pcall(L, funcInfo.params.length, 1, 0)
         if (callResult !== lua.LUA_OK) {
           setError(`Call error: ${to_jsstring(lua.lua_tostring(L, -1))}`)
           lua.lua_close(L)
@@ -979,10 +1075,17 @@ export const LuaScriptViewer: React.FC<LuaComponentProps & {
           setResult(String(lua.lua_tonumber(L, -1)))
         } else if (resultType === lua.LUA_TBOOLEAN) {
           setResult(lua.lua_toboolean(L, -1) ? 'true' : 'false')
+        } else if (resultType === lua.LUA_TTABLE) {
+          setResult(JSON.stringify(tableToJs(lua, L, to_jsstring, -1), null, 2))
+        } else if (resultType === lua.LUA_TNIL) {
+          setResult('nil')
         } else {
           const typeNames = ['nil', 'boolean', 'lightuserdata', 'number', 'string', 'table', 'function', 'userdata', 'thread']
           setResult(`[${typeNames[resultType] || 'unknown'}]`)
         }
+      } else if (returnType === lua.LUA_TTABLE) {
+        // Module table - look for exported function
+        setResult('Module returned (select a specific function)')
       } else {
         const typeNames = ['nil', 'boolean', 'lightuserdata', 'number', 'string', 'table', 'function', 'userdata', 'thread']
         setResult(`Script returned: ${typeNames[returnType] || 'unknown'}`)
@@ -1012,30 +1115,74 @@ export const LuaScriptViewer: React.FC<LuaComponentProps & {
       {/* Code viewer */}
       <div className="border rounded-lg overflow-hidden">
         <div className="bg-muted px-4 py-2 text-sm font-medium border-b">Lua Code</div>
-        <pre className="p-4 bg-[#1e1e1e] text-[#d4d4d4] overflow-x-auto text-sm font-mono">
+        <pre className="p-4 bg-[#1e1e1e] text-[#d4d4d4] overflow-x-auto text-sm font-mono max-h-64 overflow-y-auto">
           {code || 'No code loaded'}
         </pre>
       </div>
       
-      {/* Test runner */}
-      <div className="border rounded-lg p-4 space-y-3">
-        <div className="font-medium">Test Execution</div>
-        <div className="flex gap-2 items-center">
-          <label className="text-sm text-muted-foreground">Input:</label>
-          <input 
-            type="text"
-            value={testInput}
-            onChange={e => setTestInput(e.target.value)}
-            className="flex-1 px-3 py-2 border rounded text-sm"
-            placeholder="Enter test input..."
-          />
-          <button 
-            onClick={runScript}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
-          >
-            ▶ Run
-          </button>
+      {/* Test runner with dynamic inputs */}
+      <div className="border rounded-lg p-4 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="font-medium">Test Execution</div>
+          {funcInfo?.returnType && (
+            <span className="text-xs text-muted-foreground">
+              Returns: <code className="bg-muted px-1 rounded">{funcInfo.returnType}</code>
+              {funcInfo.returnDesc && ` - ${funcInfo.returnDesc}`}
+            </span>
+          )}
         </div>
+        
+        {/* Dynamic parameter inputs */}
+        {funcInfo && funcInfo.params.length > 0 ? (
+          <div className="space-y-3">
+            {funcInfo.params.map(param => (
+              <div key={param.name} className="space-y-1">
+                <label className="flex items-center gap-2 text-sm">
+                  <span className="font-medium">{param.name}</span>
+                  <code className="text-xs bg-muted px-1 rounded text-muted-foreground">{param.type}</code>
+                  {param.description && (
+                    <span className="text-muted-foreground">— {param.description}</span>
+                  )}
+                </label>
+                {param.type === 'boolean' ? (
+                  <select
+                    value={inputs[param.name] || 'false'}
+                    onChange={e => updateInput(param.name, e.target.value)}
+                    className="w-full px-3 py-2 border rounded text-sm"
+                  >
+                    <option value="true">true</option>
+                    <option value="false">false</option>
+                  </select>
+                ) : param.type === 'table' ? (
+                  <textarea
+                    value={inputs[param.name] || '{}'}
+                    onChange={e => updateInput(param.name, e.target.value)}
+                    className="w-full px-3 py-2 border rounded text-sm font-mono"
+                    rows={3}
+                    placeholder='{"key": "value"}'
+                  />
+                ) : (
+                  <input 
+                    type={param.type === 'number' ? 'number' : 'text'}
+                    value={inputs[param.name] || ''}
+                    onChange={e => updateInput(param.name, e.target.value)}
+                    className="w-full px-3 py-2 border rounded text-sm"
+                    placeholder={`Enter ${param.name}...`}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">No parameters detected</p>
+        )}
+        
+        <button 
+          onClick={runScript}
+          className="w-full px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 flex items-center justify-center gap-2"
+        >
+          ▶ Run Script
+        </button>
         
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded text-sm">
@@ -1046,8 +1193,9 @@ export const LuaScriptViewer: React.FC<LuaComponentProps & {
         {result && (
           <div className="p-3 bg-green-50 border border-green-200 rounded">
             <span className="text-sm text-muted-foreground">Result: </span>
-            <code className="font-mono font-medium">{result}</code>
+            <pre className="font-mono font-medium whitespace-pre-wrap">{result}</pre>
           </div>
+        )}
         )}
       </div>
     </div>
