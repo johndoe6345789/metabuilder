@@ -18,6 +18,10 @@
     "scripts": [
       "tests/check.test.lua",
       "tests/levels.test.lua"
+    ],
+    "cases": [
+      "tests/check.cases.json",
+      "tests/levels.cases.json"
     ]
   },
   "minLevel": 1

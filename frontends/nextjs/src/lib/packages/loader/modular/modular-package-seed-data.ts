@@ -16,6 +16,8 @@ export type ModularPackageScriptSeed = {
 export type ModularPackageTestConfig = {
   /** Lua test script paths relative to scripts/ directory */
   scripts?: string[]
+  /** JSON test case file paths relative to scripts/ directory */
+  cases?: string[]
 }
 
 export type ModularPackageMetadataSeed = {

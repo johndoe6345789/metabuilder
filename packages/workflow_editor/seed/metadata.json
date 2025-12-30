@@ -23,6 +23,9 @@
   "tests": {
     "scripts": [
       "tests/status.test.lua"
+    ],
+    "cases": [
+      "tests/status.cases.json"
     ]
   },
   "minLevel": 5
