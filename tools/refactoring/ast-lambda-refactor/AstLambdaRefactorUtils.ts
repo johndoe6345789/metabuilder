@@ -16,44 +16,44 @@ import { main } from './functions/main'
  * This is a convenience wrapper. Prefer importing individual functions.
  */
 export class AstLambdaRefactorUtils {
-  static log(...args: any[]) {
-    return log(...args as any)
+  static log(...args: Parameters<typeof log>) {
+    return log(...args)
   }
 
-  static toKebabCase(...args: any[]) {
-    return toKebabCase(...args as any)
+  static toKebabCase(...args: Parameters<typeof toKebabCase>) {
+    return toKebabCase(...args)
   }
 
-  static toClassName(...args: any[]) {
-    return toClassName(...args as any)
+  static toClassName(...args: Parameters<typeof toClassName>) {
+    return toClassName(...args)
   }
 
-  static async createFunctionFile(...args: any[]) {
-    return await createFunctionFile(...args as any)
+  static async createFunctionFile(...args: Parameters<typeof createFunctionFile>) {
+    return await createFunctionFile(...args)
   }
 
-  static async createIndexFile(...args: any[]) {
-    return await createIndexFile(...args as any)
+  static async createIndexFile(...args: Parameters<typeof createIndexFile>) {
+    return await createIndexFile(...args)
   }
 
-  static async createClassWrapper(...args: any[]) {
-    return await createClassWrapper(...args as any)
+  static async createClassWrapper(...args: Parameters<typeof createClassWrapper>) {
+    return await createClassWrapper(...args)
   }
 
-  static async replaceOriginal(...args: any[]) {
-    return await replaceOriginal(...args as any)
+  static async replaceOriginal(...args: Parameters<typeof replaceOriginal>) {
+    return await replaceOriginal(...args)
   }
 
-  static async refactorFile(...args: any[]) {
-    return await refactorFile(...args as any)
+  static async refactorFile(...args: Parameters<typeof refactorFile>) {
+    return await refactorFile(...args)
   }
 
-  static async bulkRefactor(...args: any[]) {
-    return await bulkRefactor(...args as any)
+  static async bulkRefactor(...args: Parameters<typeof bulkRefactor>) {
+    return await bulkRefactor(...args)
   }
 
-  static async main(...args: any[]) {
-    return await main(...args as any)
+  static async main(...args: Parameters<typeof main>) {
+    return await main(...args)
   }
 
 }

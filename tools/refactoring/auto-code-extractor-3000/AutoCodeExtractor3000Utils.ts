@@ -22,68 +22,68 @@ import { main } from './functions/main'
  * This is a convenience wrapper. Prefer importing individual functions.
  */
 export class AutoCodeExtractor3000Utils {
-  static log(...args: any[]) {
-    return log(...args as any)
+  static log(...args: Parameters<typeof log>) {
+    return log(...args)
   }
 
-  static async loadExtractionRegistry(...args: any[]) {
-    return await loadExtractionRegistry(...args as any)
+  static async loadExtractionRegistry(...args: Parameters<typeof loadExtractionRegistry>) {
+    return await loadExtractionRegistry(...args)
   }
 
-  static async saveExtractionRegistry(...args: any[]) {
-    return await saveExtractionRegistry(...args as any)
+  static async saveExtractionRegistry(...args: Parameters<typeof saveExtractionRegistry>) {
+    return await saveExtractionRegistry(...args)
   }
 
-  static async scanAndCategorizeFiles(...args: any[]) {
-    return await scanAndCategorizeFiles(...args as any)
+  static async scanAndCategorizeFiles(...args: Parameters<typeof scanAndCategorizeFiles>) {
+    return await scanAndCategorizeFiles(...args)
   }
 
-  static filterFiles(...args: any[]) {
-    return filterFiles(...args as any)
+  static filterFiles(...args: Parameters<typeof filterFiles>) {
+    return filterFiles(...args)
   }
 
-  static async confirmExecution(...args: any[]) {
-    return await confirmExecution(...args as any)
+  static async confirmExecution(...args: Parameters<typeof confirmExecution>) {
+    return await confirmExecution(...args)
   }
 
-  static async extractBatch(...args: any[]) {
-    return await extractBatch(...args as any)
+  static async extractBatch(...args: Parameters<typeof extractBatch>) {
+    return await extractBatch(...args)
   }
 
-  static async runLinting(...args: any[]) {
-    return await runLinting(...args as any)
+  static async runLinting(...args: Parameters<typeof runLinting>) {
+    return await runLinting(...args)
   }
 
-  static async runTests(...args: any[]) {
-    return await runTests(...args as any)
+  static async runTests(...args: Parameters<typeof runTests>) {
+    return await runTests(...args)
   }
 
-  static async updateProgressReport(...args: any[]) {
-    return await updateProgressReport(...args as any)
+  static async updateProgressReport(...args: Parameters<typeof updateProgressReport>) {
+    return await updateProgressReport(...args)
   }
 
-  static async saveResults(...args: any[]) {
-    return await saveResults(...args as any)
+  static async saveResults(...args: Parameters<typeof saveResults>) {
+    return await saveResults(...args)
   }
 
-  static printSummary(...args: any[]) {
-    return printSummary(...args as any)
+  static printSummary(...args: Parameters<typeof printSummary>) {
+    return printSummary(...args)
   }
 
-  static async run(...args: any[]) {
-    return await run(...args as any)
+  static async run(...args: Parameters<typeof run>) {
+    return await run(...args)
   }
 
-  static showHelp(...args: any[]) {
-    return showHelp(...args as any)
+  static showHelp(...args: Parameters<typeof showHelp>) {
+    return showHelp(...args)
   }
 
-  static parseArgs(...args: any[]) {
-    return parseArgs(...args as any)
+  static parseArgs(...args: Parameters<typeof parseArgs>) {
+    return parseArgs(...args)
   }
 
-  static async main(...args: any[]) {
-    return await main(...args as any)
+  static async main(...args: Parameters<typeof main>) {
+    return await main(...args)
   }
 
 }
