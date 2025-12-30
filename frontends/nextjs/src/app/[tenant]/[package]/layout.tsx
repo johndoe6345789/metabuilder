@@ -3,10 +3,15 @@
  * 
  * This layout wraps all pages under /{tenant}/{package}/...
  * It provides tenant context to all child components.
+ * 
+ * A page has one PRIMARY package (from the URL) but may use
+ * components and data from additional packages (dependencies).
  */
 
-import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
+
+import { loadPackageMetadata } from '@/lib/routing/auth/validate-package-route'
+
 import { TenantProvider } from './tenant-context'
 
 interface TenantLayoutProps {
@@ -17,6 +22,25 @@ interface TenantLayoutProps {
   }>
 }
 
+/**
+ * Load package dependencies recursively (1 level deep for now)
+ */
+function getPackageDependencies(packageId: string): { id: string; name?: string }[] {
+  const metadata = loadPackageMetadata(packageId)
+  if (!metadata?.dependencies) {
+    return []
+  }
+  
+  return metadata.dependencies.map(depId => {
+    const depMetadata = loadPackageMetadata(depId)
+    return {
+      id: depId,
+      name: depMetadata?.name,
+      minLevel: depMetadata?.minLevel,
+    }
+  })
+}
+
 export default async function TenantLayout({
   children,
   params,
@@ -24,23 +48,40 @@ export default async function TenantLayout({
   const resolvedParams = await params
   const { tenant, package: pkg } = resolvedParams
 
-  // Validate tenant exists
-  // TODO: Check against database
+  // Load primary package metadata
+  const packageMetadata = loadPackageMetadata(pkg)
+  if (!packageMetadata) {
+    // Package doesn't exist
+    notFound()
+  }
+
+  // Load dependencies that this page can also use
+  const additionalPackages = getPackageDependencies(pkg)
+
+  // TODO: Validate tenant exists against database
   // const tenantData = await getTenant(tenant)
   // if (!tenantData) {
   //   notFound()
   // }
 
-  // Validate package exists and is installed for tenant
-  // TODO: Check against database
+  // TODO: Validate package is installed for this tenant
   // const packageInstalled = await isPackageInstalled(tenant, pkg)
   // if (!packageInstalled) {
   //   notFound()
   // }
 
   return (
-    <TenantProvider tenant={tenant} packageId={pkg}>
-      <div className="tenant-layout" data-tenant={tenant} data-package={pkg}>
+    <TenantProvider 
+      tenant={tenant} 
+      packageId={pkg}
+      additionalPackages={additionalPackages}
+    >
+      <div 
+        className="tenant-layout" 
+        data-tenant={tenant} 
+        data-package={pkg}
+        data-packages={[pkg, ...additionalPackages.map(p => p.id)].join(',')}
+      >
         {children}
       </div>
     </TenantProvider>

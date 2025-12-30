@@ -26,6 +26,10 @@ export interface PackageMetadata {
   version: string
   description?: string
   minLevel: number
+  /** Package dependencies that this package can access */
+  dependencies?: string[]
+  /** Dev dependencies (not included in runtime) */
+  devDependencies?: string[]
   routes?: PackageRoute[]
   schema?: {
     entities?: string[]
@@ -42,6 +46,8 @@ export interface RouteClaimResult {
   package: PackageMetadata | null
   reason?: string
   entities?: string[]
+  /** Packages accessible from this route (primary + dependencies) */
+  accessiblePackages?: string[]
 }
 
 // Cache loaded package metadata
