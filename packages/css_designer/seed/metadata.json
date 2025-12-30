@@ -1,5 +1,6 @@
 {
-  "name": "css_designer",
+  "packageId": "css_designer",
+  "name": "CSS Designer",
   "version": "1.0.0",
   "description": "Visual CSS designer for creating and editing style overlays. Provides color pickers, font selectors, spacing controls, and exports to SCSS.",
   "author": "MetaBuilder",

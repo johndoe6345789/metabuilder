@@ -1,5 +1,6 @@
 {
-  "name": "dbal_demo",
+  "packageId": "dbal_demo",
+  "name": "DBAL Demo",
   "version": "1.0.0",
   "description": "DBAL Integration Demo - Demonstrates TypeScript DBAL client with MetaBuilder",
   "author": "MetaBuilder",

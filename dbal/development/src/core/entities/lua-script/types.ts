@@ -28,3 +28,22 @@ export interface Result<T> {
     message: string;
   };
 }
+
+export interface ListOptions {
+  filter?: Record<string, any>;
+  sort?: Record<string, 'asc' | 'desc'>;
+  page?: number;
+  limit?: number;
+  skip?: number;
+  take?: number;
+  where?: Record<string, any>;
+  orderBy?: Record<string, 'asc' | 'desc'>;
+}
+
+export interface ListResult<T> {
+  items?: T[];
+  data?: T[];
+  total: number;
+  skip?: number;
+  take?: number;
+}
