@@ -1,5 +1,4 @@
-import { Chip, Stack, Typography } from '@mui/material'
-
+import { Chip, Stack, Typography } from '@/fakemui'
 import { CheckCircle, XCircle } from '@/fakemui/icons'
 
 interface WorkflowRunStatusProps {

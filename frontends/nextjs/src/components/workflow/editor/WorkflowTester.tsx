@@ -1,5 +1,4 @@
-import { Card, CardContent, CardHeader } from '@mui/material'
-
+import { Card, CardContent, CardHeader } from '@/fakemui'
 import { CheckCircle, Lightning, XCircle } from '@/fakemui/icons'
 
 import { CardTitle } from '@/components/ui'

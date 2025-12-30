@@ -1,5 +1,4 @@
-import { Card, CardContent, CardHeader } from '@mui/material'
-
+import { Card, CardContent, CardHeader } from '@/fakemui'
 import { Play } from '@/fakemui/icons'
 
 import { CardDescription, CardTitle } from '@/components/ui'

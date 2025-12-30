@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from '@mui/material'
+import { Card, CardContent, CardHeader } from '@/fakemui'
 
 import { Badge, Button } from '@/components/ui'
 import { Plus, Trash } from '@/fakemui/icons'
