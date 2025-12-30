@@ -105,7 +105,7 @@ const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
               color: 'text.secondary',
             }}
           >
-            <CloseIcon />
+            <Close />
           </IconButton>
         )}
         {children}
@@ -182,7 +182,7 @@ const DialogClose = forwardRef<
   }
   return (
     <IconButton ref={ref} aria-label="close" onClick={onClick} {...props}>
-      <CloseIcon />
+      <Close />
     </IconButton>
   )
 })
