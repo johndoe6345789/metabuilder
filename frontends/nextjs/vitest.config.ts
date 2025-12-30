@@ -12,8 +12,17 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
     },
+    deps: {
+      // Use inline to avoid duplicate React instances in tests
+      optimizer: {
+        web: {
+          include: ['@/fakemui', 'react', 'react-dom']
+        }
+      }
+    }
   },
   resolve: {
+    dedupe: ['react', 'react-dom'],
     alias: [
       // fakemui aliases must be first (more specific matches first)
       { find: /^@\/fakemui\/(.+)$/, replacement: resolve(__dirname, '../../fakemui/$1') },
