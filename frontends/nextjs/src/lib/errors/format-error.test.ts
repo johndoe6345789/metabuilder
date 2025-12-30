@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { DBALError, DBALErrorCode } from '@/dbal/development/src/core/foundation/errors'
+import { DBALError, DBALErrorCode } from '@/dbal/core/foundation/errors'
 
 import { formatError } from './format-error'
 
