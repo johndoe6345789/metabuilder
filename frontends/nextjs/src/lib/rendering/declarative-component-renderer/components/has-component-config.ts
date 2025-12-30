@@ -1,4 +1,4 @@
-import type { DeclarativeRendererState } from './renderer-state'
+import type { DeclarativeRendererState } from '../renderer/renderer-state'
 
 export function hasComponentConfig(
   state: DeclarativeRendererState,

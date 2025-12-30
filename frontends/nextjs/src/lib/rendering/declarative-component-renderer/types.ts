@@ -47,9 +47,15 @@ export interface MessageFormat {
   type: 'message' | 'system' | 'join' | 'leave'
 }
 
+export interface LuaScriptParameter {
+  name: string
+  type?: string
+  defaultValue?: JsonValue
+}
+
 export interface LuaScriptDefinition {
   code: string
-  parameters: JsonValue[]
+  parameters: LuaScriptParameter[]
   returnType: string
   isSandboxed?: boolean
   allowedGlobals?: string[]

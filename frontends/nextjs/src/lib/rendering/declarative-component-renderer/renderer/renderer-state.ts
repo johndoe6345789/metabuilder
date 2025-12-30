@@ -1,4 +1,4 @@
-import type { DeclarativeComponentConfig, LuaScriptDefinition } from './types'
+import type { DeclarativeComponentConfig, LuaScriptDefinition } from '../types'
 
 export interface DeclarativeRendererState {
   componentConfigs: Record<string, DeclarativeComponentConfig>

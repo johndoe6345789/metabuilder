@@ -1,5 +1,5 @@
-import type { DeclarativeRendererState } from './renderer-state'
-import type { DeclarativeComponentConfig } from './types'
+import type { DeclarativeRendererState } from '../renderer/renderer-state'
+import type { DeclarativeComponentConfig } from '../types'
 
 export function getComponentConfig(
   state: DeclarativeRendererState,

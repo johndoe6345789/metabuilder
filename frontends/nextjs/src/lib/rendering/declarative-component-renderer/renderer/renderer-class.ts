@@ -7,7 +7,7 @@ import { resolveDataSource } from '../evaluation/resolve-data-source'
 import { executeLuaScript } from '../lua/execute-lua-script'
 import { registerLuaScript } from '../lua/register-lua-script'
 import { createDeclarativeRendererState } from './renderer-state'
-import type { DeclarativeComponentConfig, LuaScriptDefinition } from './types'
+import type { DeclarativeComponentConfig, LuaScriptDefinition } from '../types'
 
 export class DeclarativeComponentRenderer {
   private state = createDeclarativeRendererState()

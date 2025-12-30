@@ -1,5 +1,5 @@
 import { executeLuaScriptWithProfile } from '../../../lua/execute-lua-script-with-profile'
-import type { DeclarativeRendererState } from './renderer-state'
+import type { DeclarativeRendererState } from '../renderer/renderer-state'
 
 export async function executeLuaScript(
   state: DeclarativeRendererState,
