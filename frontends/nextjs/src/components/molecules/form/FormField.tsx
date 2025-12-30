@@ -1,12 +1,13 @@
 'use client'
 
-import { Box, InputAdornment, TextField } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
+import { Box, TextField } from '@/fakemui'
 import { Search } from '@/fakemui/icons'
 
-import { Input } from '../atoms/Input'
 import { Label } from '../atoms/Label'
+
+import styles from './FormField.module.scss'
 
 // FormField - combines label and input
 export interface FormFieldProps {
@@ -20,9 +21,9 @@ export interface FormFieldProps {
 }
 
 const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
-  ({ label, name, error, required, helperText, children, ...props }, ref) => {
+  ({ label, name, error, required, helperText, children, className, ...props }, ref) => {
     return (
-      <Box ref={ref} sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }} {...props}>
+      <Box ref={ref} className={`${styles.formField} ${className || ''}`} {...props}>
         {label && (
           <Label htmlFor={name} required={required} error={!!error}>
             {label}
@@ -30,15 +31,9 @@ const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
         )}
         {children}
         {(error || helperText) && (
-          <Box
-            component="span"
-            sx={{
-              fontSize: '0.75rem',
-              color: error ? 'error.main' : 'text.secondary',
-            }}
-          >
+          <span className={`${styles.helperText} ${error ? styles.error : ''}`}>
             {error || helperText}
-          </Box>
+          </span>
         )}
       </Box>
     )
@@ -56,29 +51,16 @@ export interface SearchInputProps {
 }
 
 const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
-  ({ value, onChange, placeholder = 'Search...', fullWidth = true, ...props }, ref) => {
+  ({ value, onChange, placeholder = 'Search...', fullWidth = true, className, ...props }, ref) => {
     return (
       <TextField
-        inputRef={ref}
+        ref={ref}
         value={value}
         onChange={e => onChange?.(e.target.value)}
         placeholder={placeholder}
         fullWidth={fullWidth}
-        size="small"
-        slotProps={{
-          input: {
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon fontSize="small" color="action" />
-              </InputAdornment>
-            ),
-          },
-        }}
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            borderRadius: 1,
-          },
-        }}
+        className={`${styles.searchInput} ${className || ''}`}
+        startAdornment={<Search size={16} className={styles.searchIcon} />}
         {...props}
       />
     )
@@ -93,38 +75,11 @@ export interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextArea
 }
 
 const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ error, fullWidth = true, style, ...props }, ref) => {
+  ({ error, fullWidth = true, className, ...props }, ref) => {
     return (
-      <Box
-        component="textarea"
+      <textarea
         ref={ref}
-        sx={{
-          width: fullWidth ? '100%' : 'auto',
-          minHeight: 80,
-          px: 1.5,
-          py: 1,
-          fontSize: '0.875rem',
-          fontFamily: 'inherit',
-          border: 1,
-          borderColor: error ? 'error.main' : 'divider',
-          borderRadius: 1,
-          bgcolor: 'background.paper',
-          resize: 'vertical',
-          transition: 'border-color 0.2s, box-shadow 0.2s',
-          '&:hover': {
-            borderColor: error ? 'error.main' : 'text.secondary',
-          },
-          '&:focus': {
-            outline: 'none',
-            borderColor: error ? 'error.main' : 'primary.main',
-            boxShadow: theme =>
-              `0 0 0 2px ${error ? theme.palette.error.main : theme.palette.primary.main}25`,
-          },
-          '&:disabled': {
-            opacity: 0.5,
-            cursor: 'not-allowed',
-          },
-        }}
+        className={`${styles.textarea} ${error ? styles.error : ''} ${fullWidth ? styles.fullWidth : ''} ${className || ''}`}
         {...props}
       />
     )
