@@ -1,6 +1,6 @@
 'use client'
 
-import { Pencil, Plus, Trash, UserCircle } from '@phosphor-icons/react'
+import { Pencil, Plus, Trash, UserCircle } from '@/fakemui/icons'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 

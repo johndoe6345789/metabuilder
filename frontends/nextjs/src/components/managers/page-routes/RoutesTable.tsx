@@ -1,4 +1,4 @@
-import { Eye, LockKey, Pencil, Trash } from '@phosphor-icons/react'
+import { Eye, LockKey, Pencil, Trash } from '@/fakemui/icons'
 
 import {
   Badge,

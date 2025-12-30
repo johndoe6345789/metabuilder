@@ -1,5 +1,5 @@
 'use client'
-import { FunnelSimple, PencilSimple, Trash } from '@phosphor-icons/react'
+import { FunnelSimple, PencilSimple, Trash } from '@/fakemui/icons'
 import { useMemo, useState } from 'react'
 
 import {

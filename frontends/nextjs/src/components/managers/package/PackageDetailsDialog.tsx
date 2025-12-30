@@ -1,4 +1,4 @@
-import { Download, Star, Tag, Trash, User } from '@phosphor-icons/react'
+import { Download, Star, Tag, Trash, User } from '@/fakemui/icons'
 
 import {
   Badge,

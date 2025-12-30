@@ -1,5 +1,5 @@
 'use client'
-import { Clock, ShieldWarning, UserSwitch } from '@phosphor-icons/react'
+import { Clock, ShieldWarning, UserSwitch } from '@/fakemui/icons'
 import { useMemo, useState } from 'react'
 
 import {

@@ -1,4 +1,4 @@
-import { Eye, EyeSlash, Warning } from '@phosphor-icons/react'
+import { Eye, EyeSlash, Warning } from '@/fakemui/icons'
 import { useState } from 'react'
 
 import {

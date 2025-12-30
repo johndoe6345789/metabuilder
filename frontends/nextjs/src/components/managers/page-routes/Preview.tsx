@@ -1,4 +1,4 @@
-import { Eye, LockKey } from '@phosphor-icons/react'
+import { Eye, LockKey } from '@/fakemui/icons'
 
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import type { PageConfig } from '@/lib/level-types'
