@@ -52,4 +52,59 @@ function M.check_component_access(userLevel, componentPermissions)
   return M.check_access(userLevel, componentPermissions, featureFlags, databaseEnabled)
 end
 
+---Check if user has a specific permission (new-style permissions map)
+---@param userLevel PermissionLevel User's permission level
+---@param permissions PackagePermissions The permissions map from metadata.json
+---@param permission string The permission key to check (e.g., "forum.post.create")
+---@return PermissionCheckResult
+function M.has_permission(userLevel, permissions, permission)
+  if not permissions then
+    return { allowed = false, reason = "No permissions defined" }
+  end
+  
+  local permDef = permissions[permission]
+  if not permDef then
+    return { allowed = false, reason = "Permission not found: " .. permission }
+  end
+  
+  if userLevel < permDef.minLevel then
+    return {
+      allowed = false,
+      reason = "Insufficient level for " .. permission,
+      requiredLevel = permDef.minLevel
+    }
+  end
+  
+  -- Check feature flags if defined
+  if permDef.featureFlags then
+    local flagsOk = M.check_required_flags(permDef.featureFlags)
+    if not flagsOk.allowed then
+      return flagsOk
+    end
+  end
+  
+  -- Check database if required
+  if permDef.requireDatabase and not M.is_database_enabled() then
+    return { allowed = false, reason = "Database required for " .. permission }
+  end
+  
+  return { allowed = true }
+end
+
+---Get all permissions a user has from a permissions map
+---@param userLevel PermissionLevel User's permission level
+---@param permissions PackagePermissions The permissions map from metadata.json
+---@return string[] List of permission keys the user has
+function M.get_user_permissions(userLevel, permissions)
+  if not permissions then return {} end
+  
+  local result = {}
+  for permKey, permDef in pairs(permissions) do
+    if userLevel >= permDef.minLevel then
+      table.insert(result, permKey)
+    end
+  end
+  return result
+end
+
 return M

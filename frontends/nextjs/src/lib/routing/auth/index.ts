@@ -13,13 +13,22 @@ export {
   clearPackageCache,
   getAccessiblePackages,
   getPackageEntities,
+  getPackagePermissions,
   getPackageRoutes,
+  getUserPermissions,
+  hasPermission,
   isPackageAccessible,
   loadPackageMetadata,
   packageClaimsRoute,
   validatePackageRoute,
 } from './validate-package-route'
-export type { PackageMetadata, PackageRoute, RouteClaimResult } from './validate-package-route'
+export type {
+  PackageMetadata,
+  PackagePermissionDef,
+  PackagePermissions,
+  PackageRoute,
+  RouteClaimResult,
+} from './validate-package-route'
 
 export { executeDbalOperation, executePackageAction } from './execute-dbal-operation'
 export type { ExecuteOptions, ExecuteResult } from './execute-dbal-operation'

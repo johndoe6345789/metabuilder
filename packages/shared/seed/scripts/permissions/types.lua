@@ -15,7 +15,7 @@
 ---| 6 # SUPERGOD - System owner
 
 --------------------------------------------------------------------------------
--- Component Permission
+-- Component Permission (Legacy)
 --------------------------------------------------------------------------------
 
 ---@class ComponentPermission
@@ -25,14 +25,27 @@
 ---@field requireDatabase? boolean Whether this component requires database (optional)
 
 --------------------------------------------------------------------------------
--- Package Permissions
+-- Package Permissions (Legacy Style)
 --------------------------------------------------------------------------------
 
----@class PackagePermissions
+---@class PackagePermissionsLegacy
 ---@field enabled boolean Package enabled/disabled
 ---@field minLevel PermissionLevel Minimum level to access package (0-6)
 ---@field databaseRequired? boolean Whether package needs database connection
 ---@field components? table<string, ComponentPermission> Per-component permissions
+
+--------------------------------------------------------------------------------
+-- Permission Definition (New Style)
+-- Each permission is a key like "forum.post.create" with a definition
+--------------------------------------------------------------------------------
+
+---@class PermissionDef
+---@field minLevel PermissionLevel Minimum level required for this permission
+---@field description string Human-readable description
+---@field featureFlags? string[] Optional feature flags required
+---@field requireDatabase? boolean Whether database connection is required
+
+---@alias PackagePermissions table<string, PermissionDef>
 
 --------------------------------------------------------------------------------
 -- Permission Check Result
