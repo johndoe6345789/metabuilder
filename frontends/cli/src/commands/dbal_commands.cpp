@@ -181,6 +181,101 @@ int dbal_execute(const HttpClient &client, const std::vector<std::string> &args)
   return 0;
 }
 
+int dbal_rest(const HttpClient &client, const std::vector<std::string> &args) {
+  if (args.size() < 5) {
+    std::cout << "Usage: dbal rest <tenant> <package> <entity> [id] [method|action] [data...]\n";
+    std::cout << "\nExamples:\n";
+    std::cout << "  dbal rest acme forum_forge posts                    # GET list\n";
+    std::cout << "  dbal rest acme forum_forge posts 123                # GET by id\n";
+    std::cout << "  dbal rest acme forum_forge posts POST title=Hello   # POST create\n";
+    std::cout << "  dbal rest acme forum_forge posts 123 PUT title=New  # PUT update\n";
+    std::cout << "  dbal rest acme forum_forge posts 123 DELETE         # DELETE\n";
+    std::cout << "  dbal rest acme forum_forge posts 123 like POST      # Custom action\n";
+    return 1;
+  }
+  
+  std::string tenant = args[2];
+  std::string package = args[3];
+  std::string entity = args[4];
+  std::string id;
+  std::string method = "GET";
+  std::string action;
+  std::vector<std::string> data_args;
+  
+  // Parse remaining arguments
+  size_t i = 5;
+  
+  // Check if next arg is an ID (not a method)
+  if (i < args.size()) {
+    std::string arg = args[i];
+    // If it's not a method keyword, treat as ID
+    if (arg != "GET" && arg != "POST" && arg != "PUT" && arg != "PATCH" && arg != "DELETE") {
+      id = arg;
+      i++;
+    }
+  }
+  
+  // Check for method or action
+  if (i < args.size()) {
+    std::string arg = args[i];
+    if (arg == "GET" || arg == "POST" || arg == "PUT" || arg == "PATCH" || arg == "DELETE") {
+      method = arg;
+      i++;
+    } else if (!id.empty()) {
+      // If we have an ID and this isn't a method, it might be an action
+      action = arg;
+      i++;
+      // Check if next is a method
+      if (i < args.size()) {
+        arg = args[i];
+        if (arg == "GET" || arg == "POST" || arg == "PUT" || arg == "PATCH" || arg == "DELETE") {
+          method = arg;
+          i++;
+        }
+      }
+    }
+  }
+  
+  // Remaining args are data
+  while (i < args.size()) {
+    data_args.push_back(args[i]);
+    i++;
+  }
+  
+  // Build URL
+  std::string url = "/" + tenant + "/" + package + "/" + entity;
+  if (!id.empty()) {
+    url += "/" + id;
+  }
+  if (!action.empty()) {
+    url += "/" + action;
+  }
+  
+  std::cout << method << " " << url << "\n";
+  
+  // Build body if we have data
+  std::string body;
+  if (!data_args.empty()) {
+    body = build_json_body(data_args);
+    std::cout << "Body: " << body << "\n";
+  }
+  
+  // Make request based on method
+  if (method == "GET") {
+    print_response(client.get(url));
+  } else if (method == "POST") {
+    print_response(client.post(url, body.empty() ? "{}" : body));
+  } else if (method == "PUT") {
+    print_response(client.put(url, body.empty() ? "{}" : body));
+  } else if (method == "PATCH") {
+    print_response(client.patch(url, body.empty() ? "{}" : body));
+  } else if (method == "DELETE") {
+    print_response(client.del(url));
+  }
+  
+  return 0;
+}
+
 int dbal_schema(const HttpClient &client, const std::vector<std::string> &args) {
   if (args.size() < 3) {
     std::cout << "Usage: dbal schema <subcommand>\n";
@@ -327,6 +422,10 @@ int handle_dbal(const HttpClient &client, const std::vector<std::string> &args) 
   
   if (subcommand == "execute") {
     return dbal_execute(client, args);
+  }
+  
+  if (subcommand == "rest") {
+    return dbal_rest(client, args);
   }
   
   if (subcommand == "schema") {
