@@ -255,6 +255,26 @@
       "minLevel": 5
     },
     {
+      "packageId": "screenshot_analyzer",
+      "name": "Screenshot Analyzer",
+      "version": "1.0.0",
+      "description": "Screenshot Analyzer - Capture and analyze the current page with DOM inspection, structure analysis, and recommendations.",
+      "icon": "📸",
+      "author": "MetaBuilder Team",
+      "category": "demo",
+      "dependencies": [],
+      "exports": {
+        "components": ["ScreenshotAnalyzer", "UploadSection", "ResultPanel", "PageInfo"],
+        "luaScripts": ["init", "capture", "analyze", "page_info"]
+      },
+      "tags": ["screenshot", "analysis", "browser", "dom"],
+      "minLevel": 5,
+      "bindings": {
+        "dbal": false,
+        "browser": true
+      }
+    },
+    {
       "packageId": "social_hub",
       "name": "Social Hub",
       "version": "1.0.0",
