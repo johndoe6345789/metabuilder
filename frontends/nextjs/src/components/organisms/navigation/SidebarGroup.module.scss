@@ -1,0 +1,41 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.sidebarGroup {
+  margin-bottom: 0.5rem;
+}
+
+.sidebarGroupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  
+  &.collapsible {
+    cursor: pointer;
+    
+    &:hover {
+      background-color: var(--action-hover, rgba(0, 0, 0, 0.04));
+    }
+  }
+}
+
+.sidebarGroupLabel {
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+}
+
+.sidebarGroupLabelStandalone {
+  display: block;
+  padding: 0.5rem 1rem;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+}
+
+.sidebarGroupList {
+  padding: 0;
+}

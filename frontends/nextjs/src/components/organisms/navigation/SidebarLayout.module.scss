@@ -1,0 +1,26 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid var(--divider, rgba(0, 0, 0, 0.12));
+}
+
+.sidebarContent {
+  flex: 1;
+  overflow: auto;
+  padding: 0.5rem 0;
+}
+
+.sidebarFooter {
+  padding: 1rem;
+  border-top: 1px solid var(--divider, rgba(0, 0, 0, 0.12));
+}
+
+.sidebarInset {
+  flex: 1;
+  overflow: auto;
+}
