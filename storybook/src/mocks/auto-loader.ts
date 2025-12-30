@@ -19,12 +19,19 @@ interface PackageComponent {
   type: string
   props?: Record<string, unknown>
   children?: PackageComponent[]
+  layout?: PackageComponent  // Some components define their tree in 'layout' instead of directly
 }
 
 /**
  * Convert a PackageComponent to LuaUIComponent
+ * Handles both direct children and layout-based component definitions
  */
 function packageComponentToLua(component: PackageComponent): LuaUIComponent {
+  // If component has a layout property, use that as the actual component tree
+  if (component.layout) {
+    return packageComponentToLua(component.layout)
+  }
+  
   return {
     type: component.type,
     props: component.props,
