@@ -29,5 +29,9 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 1
+  "minLevel": 1,
+  "schema": {
+    "entities": ["Notification"],
+    "path": "schema/entities.yaml"
+  }
 }

@@ -35,6 +35,10 @@
     "cases": []
   },
   "minLevel": 3,
+  "schema": {
+    "entities": ["AuditLog"],
+    "path": "schema/entities.yaml"
+  },
   "bindings": {
     "dbal": true,
     "browser": false
