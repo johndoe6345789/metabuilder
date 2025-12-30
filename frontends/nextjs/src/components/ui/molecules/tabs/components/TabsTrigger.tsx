@@ -1,6 +1,6 @@
 'use client'
 
-import { Box } from '@fakemui/layout/Box'
+import { Box } from '@/fakemui'
 import type { MouseEvent, CSSProperties, ButtonHTMLAttributes } from 'react'
 import { forwardRef, useContext } from 'react'
 

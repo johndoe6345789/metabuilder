@@ -1,0 +1,28 @@
+{
+  "hex_to_rgb": [
+    { "hex": "#ff0000", "expected": { "r": 255, "g": 0, "b": 0 } },
+    { "hex": "#00ff00", "expected": { "r": 0, "g": 255, "b": 0 } },
+    { "hex": "#0000ff", "expected": { "r": 0, "g": 0, "b": 255 } },
+    { "hex": "#ffffff", "expected": { "r": 255, "g": 255, "b": 255 } },
+    { "hex": "#000000", "expected": { "r": 0, "g": 0, "b": 0 } },
+    { "hex": "#1976d2", "expected": { "r": 25, "g": 118, "b": 210 } },
+    { "hex": "ff0000", "expected": { "r": 255, "g": 0, "b": 0 } },
+    { "hex": "#f00", "expected": { "r": 255, "g": 0, "b": 0 } },
+    { "hex": "abc", "expected": { "r": 170, "g": 187, "b": 204 } },
+    { "hex": "#808080", "expected": { "r": 128, "g": 128, "b": 128 } },
+    { "hex": null, "expected": null },
+    { "hex": "", "expected": null },
+    { "hex": "invalid", "expected": null },
+    { "hex": "#gggggg", "expected": null }
+  ],
+  "rgb_to_hex": [
+    { "r": 255, "g": 0, "b": 0, "expected": "#ff0000" },
+    { "r": 0, "g": 255, "b": 0, "expected": "#00ff00" },
+    { "r": 0, "g": 0, "b": 255, "expected": "#0000ff" },
+    { "r": 255, "g": 255, "b": 255, "expected": "#ffffff" },
+    { "r": 0, "g": 0, "b": 0, "expected": "#000000" },
+    { "r": 25, "g": 118, "b": 210, "expected": "#1976d2" },
+    { "r": 128, "g": 128, "b": 128, "expected": "#808080" },
+    { "r": 170, "g": 187, "b": 204, "expected": "#aabbcc" }
+  ]
+}
