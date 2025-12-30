@@ -1,7 +1,10 @@
 'use client'
 
-import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Box, Drawer, useMediaQueryDown } from '@/fakemui'
+
+import styles from './SidebarCore.module.scss'
 
 // Sidebar container
 export interface SidebarProps {
@@ -28,8 +31,7 @@ const SidebarCore = forwardRef<HTMLDivElement, SidebarProps>(
     },
     ref
   ) => {
-    const theme = useTheme()
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+    const isMobile = useMediaQueryDown('md')
 
     if (isMobile || variant === 'temporary') {
       return (
@@ -38,9 +40,8 @@ const SidebarCore = forwardRef<HTMLDivElement, SidebarProps>(
           anchor={side}
           open={open}
           onClose={() => onOpenChange?.(false)}
-          PaperProps={{
-            sx: { width },
-          }}
+          className={styles.sidebarDrawer}
+          style={{ '--sidebar-width': `${width}px` } as React.CSSProperties}
           {...props}
         >
           {children}
@@ -48,29 +49,18 @@ const SidebarCore = forwardRef<HTMLDivElement, SidebarProps>(
       )
     }
 
+    const sidebarWidth = open ? width : collapsedWidth
+    const openClass = open ? styles.open : styles.collapsed
+
     return (
       <Box
         ref={ref}
         component="nav"
-        sx={{
-          width: open ? width : collapsedWidth,
-          flexShrink: 0,
-          transition: 'width 0.2s',
-          overflow: 'hidden',
-        }}
+        className={`${styles.sidebarCore} ${openClass}`}
+        style={{ '--sidebar-width': `${sidebarWidth}px`, '--sidebar-inner-width': `${width}px` } as React.CSSProperties}
         {...props}
       >
-        <Box
-          sx={{
-            width,
-            height: '100%',
-            bgcolor: 'background.paper',
-            borderRight: 1,
-            borderColor: 'divider',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
+        <Box className={styles.sidebarInner}>
           {children}
         </Box>
       </Box>

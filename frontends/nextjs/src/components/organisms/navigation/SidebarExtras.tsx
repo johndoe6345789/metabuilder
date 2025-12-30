@@ -1,14 +1,18 @@
 'use client'
 
-import { Box, Divider, IconButton } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
+import { Box, Divider, IconButton } from '@/fakemui'
 import { Menu } from '@/fakemui/icons'
 
+import styles from './SidebarExtras.module.scss'
+
 // SidebarSeparator
-const SidebarSeparator = forwardRef<HTMLHRElement>((props, ref) => {
-  return <Divider ref={ref} sx={{ my: 1 }} {...props} />
-})
+const SidebarSeparator = forwardRef<HTMLHRElement, { className?: string }>(
+  ({ className = '', ...props }, ref) => {
+    return <Divider ref={ref} className={`${styles.sidebarSeparator} ${className}`} {...props} />
+  }
+)
 SidebarSeparator.displayName = 'SidebarSeparator'
 
 // SidebarTrigger
@@ -18,9 +22,9 @@ interface SidebarTriggerProps {
 }
 
 const SidebarTrigger = forwardRef<HTMLButtonElement, SidebarTriggerProps>(
-  ({ onClick, ...props }, ref) => {
+  ({ onClick, className = '', ...props }, ref) => {
     return (
-      <IconButton ref={ref} onClick={onClick} size="small" {...props}>
+      <IconButton ref={ref} onClick={onClick} sm className={`${styles.sidebarTrigger} ${className}`} {...props}>
         <Menu />
       </IconButton>
     )
@@ -29,26 +33,17 @@ const SidebarTrigger = forwardRef<HTMLButtonElement, SidebarTriggerProps>(
 SidebarTrigger.displayName = 'SidebarTrigger'
 
 // SidebarRail
-const SidebarRail = forwardRef<HTMLDivElement, { className?: string }>((props, ref) => {
-  return (
-    <Box
-      ref={ref}
-      sx={{
-        position: 'absolute',
-        right: -4,
-        top: 0,
-        bottom: 0,
-        width: 8,
-        cursor: 'col-resize',
-        '&:hover': {
-          bgcolor: 'primary.main',
-          opacity: 0.2,
-        },
-      }}
-      {...props}
-    />
-  )
-})
+const SidebarRail = forwardRef<HTMLDivElement, { className?: string }>(
+  ({ className = '', ...props }, ref) => {
+    return (
+      <Box
+        ref={ref}
+        className={`${styles.sidebarRail} ${className}`}
+        {...props}
+      />
+    )
+  }
+)
 SidebarRail.displayName = 'SidebarRail'
 
 // SidebarProvider

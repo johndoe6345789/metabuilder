@@ -1,9 +1,11 @@
 'use client'
 
-import { Button, Menu } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
+import { Button, Menu } from '@/fakemui'
 import { KeyboardArrowDown } from '@/fakemui/icons'
+
+import styles from './NavigationMenuTrigger.module.scss'
 
 // NavigationMenuTrigger
 interface NavigationMenuTriggerProps {
@@ -13,20 +15,14 @@ interface NavigationMenuTriggerProps {
 }
 
 const NavigationMenuTrigger = forwardRef<HTMLButtonElement, NavigationMenuTriggerProps>(
-  ({ children, onClick, ...props }, ref) => {
+  ({ children, className = '', onClick, ...props }, ref) => {
     return (
       <Button
         ref={ref}
         onClick={onClick}
+        variant="ghost"
         endIcon={<KeyboardArrowDown />}
-        sx={{
-          color: 'text.primary',
-          textTransform: 'none',
-          fontWeight: 500,
-          '&:hover': {
-            bgcolor: 'action.hover',
-          },
-        }}
+        className={`${styles.navigationMenuTrigger} ${className}`}
         {...props}
       >
         {children}
@@ -46,23 +42,13 @@ interface NavigationMenuContentProps {
 }
 
 const NavigationMenuContent = forwardRef<HTMLDivElement, NavigationMenuContentProps>(
-  ({ children, anchorEl, open, onClose, ...props }, ref) => {
+  ({ children, className = '', anchorEl: _anchorEl, open, onClose, ...props }, ref) => {
     return (
       <Menu
         ref={ref}
-        anchorEl={anchorEl}
-        open={open ?? Boolean(anchorEl)}
+        open={open}
         onClose={onClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-        PaperProps={{
-          sx: {
-            mt: 1,
-            minWidth: 200,
-            borderRadius: 1,
-            boxShadow: 3,
-          },
-        }}
+        className={`${styles.navigationMenuContent} ${className}`}
         {...props}
       >
         {children}

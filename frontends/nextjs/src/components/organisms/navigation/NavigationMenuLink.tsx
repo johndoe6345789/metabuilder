@@ -1,7 +1,10 @@
 'use client'
 
-import { Box, Button } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Box, Button } from '@/fakemui'
+
+import styles from './NavigationMenuLink.module.scss'
 
 // NavigationMenuLink
 interface NavigationMenuLinkProps {
@@ -13,23 +16,30 @@ interface NavigationMenuLinkProps {
 }
 
 const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLinkProps>(
-  ({ children, href, active, onClick, ...props }, ref) => {
+  ({ children, href, active, onClick, className = '', ...props }, ref) => {
+    const activeClass = active ? styles.active : ''
+    
+    // Use anchor element if href is provided
+    if (href) {
+      return (
+        <a
+          ref={ref}
+          href={href}
+          onClick={onClick}
+          className={`${styles.navigationMenuLink} ${activeClass} ${className}`}
+          {...props}
+        >
+          {children}
+        </a>
+      )
+    }
+    
     return (
       <Button
-        ref={ref}
-        component={href ? 'a' : 'button'}
-        href={href}
+        ref={ref as React.Ref<HTMLButtonElement>}
         onClick={onClick}
-        sx={{
-          color: active ? 'primary.main' : 'text.primary',
-          textTransform: 'none',
-          fontWeight: 500,
-          minWidth: 'auto',
-          px: 2,
-          '&:hover': {
-            bgcolor: 'action.hover',
-          },
-        }}
+        variant="ghost"
+        className={`${styles.navigationMenuLink} ${activeClass} ${className}`}
         {...props}
       >
         {children}
@@ -40,41 +50,28 @@ const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLinkProps
 NavigationMenuLink.displayName = 'NavigationMenuLink'
 
 // NavigationMenuIndicator
-const NavigationMenuIndicator = forwardRef<HTMLDivElement, { className?: string }>((props, ref) => {
-  return (
-    <Box
-      ref={ref}
-      sx={{
-        position: 'absolute',
-        bottom: 0,
-        height: 2,
-        bgcolor: 'primary.main',
-        transition: 'all 0.2s',
-      }}
-      {...props}
-    />
-  )
-})
+const NavigationMenuIndicator = forwardRef<HTMLDivElement, { className?: string }>(
+  ({ className = '', ...props }, ref) => {
+    return (
+      <Box
+        ref={ref}
+        className={`${styles.navigationMenuIndicator} ${className}`}
+        {...props}
+      />
+    )
+  }
+)
 NavigationMenuIndicator.displayName = 'NavigationMenuIndicator'
 
 // NavigationMenuViewport
 const NavigationMenuViewport = forwardRef<
   HTMLDivElement,
   { children?: ReactNode; className?: string }
->(({ children, ...props }, ref) => {
+>(({ children, className = '', ...props }, ref) => {
   return (
     <Box
       ref={ref}
-      sx={{
-        position: 'absolute',
-        top: '100%',
-        left: 0,
-        right: 0,
-        bgcolor: 'background.paper',
-        borderRadius: 1,
-        boxShadow: 3,
-        overflow: 'hidden',
-      }}
+      className={`${styles.navigationMenuViewport} ${className}`}
       {...props}
     >
       {children}
@@ -83,24 +80,8 @@ const NavigationMenuViewport = forwardRef<
 })
 NavigationMenuViewport.displayName = 'NavigationMenuViewport'
 
-// Helper: navigationMenuTriggerStyle (returns sx props for consistent styling)
-const navigationMenuTriggerStyle = () => ({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  px: 2,
-  py: 1,
-  fontSize: '0.875rem',
-  fontWeight: 500,
-  borderRadius: 1,
-  transition: 'all 0.2s',
-  '&:hover': {
-    bgcolor: 'action.hover',
-  },
-  '&:focus': {
-    bgcolor: 'action.focus',
-  },
-})
+// Helper: navigationMenuTriggerStyle (returns className for consistent styling)
+const navigationMenuTriggerStyle = () => styles.triggerStyle
 
 export {
   NavigationMenuIndicator,

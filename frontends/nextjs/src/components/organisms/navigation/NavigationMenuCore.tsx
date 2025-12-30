@@ -1,7 +1,10 @@
 'use client'
 
-import { Box } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Box } from '@/fakemui'
+
+import styles from './NavigationMenuCore.module.scss'
 
 // NavigationMenu container
 export interface NavigationMenuProps {
@@ -11,16 +14,15 @@ export interface NavigationMenuProps {
 }
 
 const NavigationMenuCore = forwardRef<HTMLDivElement, NavigationMenuProps>(
-  ({ children, orientation = 'horizontal', ...props }, ref) => {
+  ({ children, className = '', orientation = 'horizontal', ...props }, ref) => {
+    const orientationClass = orientation === 'horizontal' 
+      ? styles.horizontal 
+      : styles.vertical
+    
     return (
       <Box
         ref={ref}
-        sx={{
-          display: 'flex',
-          flexDirection: orientation === 'horizontal' ? 'row' : 'column',
-          alignItems: orientation === 'horizontal' ? 'center' : 'stretch',
-          gap: 0.5,
-        }}
+        className={`${styles.navigationMenu} ${orientationClass} ${className}`}
         {...props}
       >
         {children}
@@ -34,20 +36,12 @@ NavigationMenuCore.displayName = 'NavigationMenuCore'
 const NavigationMenuList = forwardRef<
   HTMLUListElement,
   { children: ReactNode; className?: string }
->(({ children, ...props }, ref) => {
+>(({ children, className = '', ...props }, ref) => {
   return (
     <Box
       ref={ref}
       component="ul"
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 0.5,
-        listStyle: 'none',
-        m: 0,
-        p: 0,
-      }}
+      className={`${styles.navigationMenuList} ${className}`}
       {...props}
     >
       {children}
@@ -63,9 +57,14 @@ interface NavigationMenuItemProps {
 }
 
 const NavigationMenuItem = forwardRef<HTMLLIElement, NavigationMenuItemProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <Box ref={ref} component="li" sx={{ position: 'relative' }} {...props}>
+      <Box 
+        ref={ref} 
+        component="li" 
+        className={`${styles.navigationMenuItem} ${className}`} 
+        {...props}
+      >
         {children}
       </Box>
     )
