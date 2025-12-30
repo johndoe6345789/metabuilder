@@ -1,4 +1,4 @@
-import { Envelope } from '@phosphor-icons/react'
+import { Envelope } from '@/fakemui/icons'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Button } from '@/components/ui'

@@ -1,4 +1,4 @@
-import { CaretDown, CaretRight, GearSix, Trash, Tree } from '@phosphor-icons/react'
+import { CaretDown, CaretRight, GearSix, Trash, Tree } from '@/fakemui/icons'
 import type React from 'react'
 
 import { Badge, Button } from '@/components/ui'

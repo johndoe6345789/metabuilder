@@ -1,4 +1,4 @@
-import { ArrowsOutCardinal, Plus, Tree } from '@phosphor-icons/react'
+import { ArrowsOutCardinal, Plus, Tree } from '@/fakemui/icons'
 import { useCallback, useId, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 

@@ -1,4 +1,4 @@
-import { Lock } from '@phosphor-icons/react'
+import { Lock } from '@/fakemui/icons'
 import { useState } from 'react'
 import { toast } from 'sonner'
 

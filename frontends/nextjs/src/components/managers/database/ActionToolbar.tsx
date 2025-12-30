@@ -1,4 +1,4 @@
-import { ArrowsClockwise, Export, Trash, UploadSimple } from '@phosphor-icons/react'
+import { ArrowsClockwise, Export, Trash, UploadSimple } from '@/fakemui/icons'
 
 import { Button } from '@/components/ui'
 

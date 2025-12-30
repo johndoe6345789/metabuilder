@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react'
-import { FloppyDisk, Warning, X } from '@phosphor-icons/react'
+import { FloppyDisk, Warning, X } from '@/fakemui/icons'
 import { useState } from 'react'
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui'

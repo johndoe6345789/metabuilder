@@ -1,4 +1,4 @@
-import { Trash } from '@phosphor-icons/react'
+import { Trash } from '@/fakemui/icons'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { Button } from '@/components/ui'

@@ -1,4 +1,4 @@
-import { Eye, Layout, ShieldCheck } from '@phosphor-icons/react'
+import { Eye, Layout, ShieldCheck } from '@/fakemui/icons'
 
 import {
   Badge,

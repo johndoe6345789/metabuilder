@@ -1,4 +1,4 @@
-import { Download, Eye, House, SignOut, Terminal, Upload } from '@phosphor-icons/react'
+import { Download, Eye, House, SignOut, Terminal, Upload } from '@/fakemui/icons'
 
 import { Button } from '@/components/ui'
 import { Badge } from '@/components/ui'

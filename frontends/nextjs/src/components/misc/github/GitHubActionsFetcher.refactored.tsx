@@ -1,4 +1,4 @@
-import { ArrowClockwise, Info, Warning } from '@phosphor-icons/react'
+import { ArrowClockwise, Info, Warning } from '@/fakemui/icons'
 import { useEffect } from 'react'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'

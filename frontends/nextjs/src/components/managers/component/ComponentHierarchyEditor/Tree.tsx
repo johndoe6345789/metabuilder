@@ -1,4 +1,4 @@
-import { Cursor } from '@phosphor-icons/react'
+import { Cursor } from '@/fakemui/icons'
 import type React from 'react'
 
 import type { ComponentNode } from '@/lib/database'

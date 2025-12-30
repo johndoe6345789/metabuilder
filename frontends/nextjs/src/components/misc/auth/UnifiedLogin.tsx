@@ -1,4 +1,4 @@
-import { ArrowLeft, Envelope, SignIn, UserPlus } from '@phosphor-icons/react'
+import { ArrowLeft, Envelope, SignIn, UserPlus } from '@/fakemui/icons'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
