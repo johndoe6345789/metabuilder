@@ -27,6 +27,7 @@ export async function buildPackageRegistry(): Promise<PackageRegistry> {
         author: indexEntry?.author ?? 'MetaBuilder',
         category: indexEntry?.category ?? 'ui',
         dependencies: indexEntry?.dependencies ?? [],
+        minLevel: indexEntry?.minLevel ?? 1,
         exports: indexEntry?.exports ?? { components: [] },
       },
       components: [],
@@ -43,6 +44,7 @@ export async function buildPackageRegistry(): Promise<PackageRegistry> {
 
     registry[packageId] = {
       ...metadata,
+      minLevel: metadata.minLevel ?? 1,
       components,
       scripts,
       scriptFiles,
