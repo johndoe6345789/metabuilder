@@ -18,8 +18,8 @@ const config: StorybookConfig = {
   staticDirs: [
     // Serve Lua packages from root
     { from: '../../packages', to: '/packages' },
-    // Serve storybook config
-    { from: '..', to: '/' },
+    // Serve storybook config file
+    { from: '../storybook.config.json', to: '/storybook.config.json' },
   ],
   async viteFinal(config) {
     return mergeConfig(config, {

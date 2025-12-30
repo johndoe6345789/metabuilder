@@ -46,10 +46,13 @@ export class ACLAdapter implements DBALAdapter {
 
   async upsert(
     entity: string,
-    filter: Record<string, unknown>,
+    uniqueField: string,
+    uniqueValue: unknown,
     createData: Record<string, unknown>,
     updateData: Record<string, unknown>,
   ): Promise<unknown> {
+    // Convert uniqueField/uniqueValue to filter object for backward compatibility
+    const filter = { [uniqueField]: uniqueValue }
     return this.writeStrategy.upsert(entity, filter, createData, updateData)
   }
 
