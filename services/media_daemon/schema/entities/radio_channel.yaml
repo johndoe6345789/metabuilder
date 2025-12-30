@@ -1,0 +1,162 @@
+# Radio Channel Entity Schema
+
+entity: RadioChannel
+version: "1.0"
+description: "Radio streaming channel configuration"
+
+fields:
+  id:
+    type: uuid
+    primary: true
+    generated: true
+    description: "Unique channel identifier"
+  
+  tenant_id:
+    type: uuid
+    required: true
+    indexed: true
+    description: "Tenant for multi-tenancy isolation"
+  
+  name:
+    type: string
+    required: true
+    max_length: 256
+    description: "Channel display name"
+  
+  slug:
+    type: string
+    required: true
+    max_length: 64
+    unique_within: tenant_id
+    pattern: "^[a-z0-9-]+$"
+    description: "URL-friendly channel identifier"
+  
+  description:
+    type: string
+    max_length: 2048
+    description: "Channel description"
+  
+  artwork_url:
+    type: string
+    max_length: 512
+    description: "Channel artwork/logo URL"
+  
+  is_live:
+    type: boolean
+    default: false
+    indexed: true
+    description: "Whether channel is currently streaming"
+  
+  # Audio Settings
+  bitrate_kbps:
+    type: integer
+    default: 128
+    min: 64
+    max: 320
+    description: "Audio bitrate in kbps"
+  
+  codec:
+    type: enum
+    values: [mp3, aac, opus, flac]
+    default: mp3
+    description: "Audio codec"
+  
+  sample_rate:
+    type: integer
+    default: 44100
+    values: [22050, 44100, 48000]
+    description: "Audio sample rate in Hz"
+  
+  # Crossfade
+  crossfade_enabled:
+    type: boolean
+    default: true
+    description: "Enable crossfade between tracks"
+  
+  crossfade_ms:
+    type: integer
+    default: 3000
+    min: 0
+    max: 10000
+    description: "Crossfade duration in milliseconds"
+  
+  # Normalization
+  normalization_enabled:
+    type: boolean
+    default: true
+    description: "Enable audio normalization"
+  
+  target_lufs:
+    type: float
+    default: -14.0
+    min: -23.0
+    max: -9.0
+    description: "Target loudness in LUFS"
+  
+  # Auto-DJ
+  auto_dj_enabled:
+    type: boolean
+    default: false
+    description: "Enable auto-DJ mode"
+  
+  auto_dj_folders:
+    type: json
+    description: "Folders to scan for auto-DJ music"
+  
+  shuffle:
+    type: boolean
+    default: true
+    description: "Shuffle playlist in auto-DJ mode"
+  
+  # Statistics
+  listener_count:
+    type: integer
+    default: 0
+    description: "Current listener count"
+  
+  total_plays:
+    type: integer
+    default: 0
+    description: "Total tracks played"
+  
+  uptime_seconds:
+    type: integer
+    default: 0
+    description: "Total streaming uptime"
+  
+  # Metadata
+  stream_url:
+    type: string
+    max_length: 512
+    description: "HLS/Icecast stream URL"
+  
+  metadata:
+    type: json
+    description: "Additional metadata"
+  
+  created_at:
+    type: timestamp
+    auto_now_add: true
+    description: "Channel creation timestamp"
+  
+  updated_at:
+    type: timestamp
+    auto_now: true
+    description: "Last update timestamp"
+
+indexes:
+  - fields: [tenant_id, slug]
+    unique: true
+    name: idx_radio_tenant_slug
+  - fields: [tenant_id, is_live]
+    name: idx_radio_tenant_live
+
+acl:
+  create:
+    min_level: 3  # Admin
+  read:
+    public: true  # Anyone can see channel info
+  update:
+    min_level: 3  # Admin
+  delete:
+    min_level: 4  # God

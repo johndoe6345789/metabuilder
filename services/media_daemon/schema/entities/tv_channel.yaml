@@ -1,0 +1,201 @@
+# TV Channel Entity Schema
+
+entity: TvChannel
+version: "1.0"
+description: "TV channel configuration with scheduling and EPG"
+
+fields:
+  id:
+    type: uuid
+    primary: true
+    generated: true
+    description: "Unique channel identifier"
+  
+  tenant_id:
+    type: uuid
+    required: true
+    indexed: true
+    description: "Tenant for multi-tenancy isolation"
+  
+  channel_number:
+    type: integer
+    required: true
+    min: 1
+    max: 9999
+    unique_within: tenant_id
+    description: "Channel number for EPG"
+  
+  name:
+    type: string
+    required: true
+    max_length: 256
+    description: "Channel display name"
+  
+  slug:
+    type: string
+    required: true
+    max_length: 64
+    unique_within: tenant_id
+    pattern: "^[a-z0-9-]+$"
+    description: "URL-friendly channel identifier"
+  
+  description:
+    type: string
+    max_length: 2048
+    description: "Channel description"
+  
+  logo_url:
+    type: string
+    max_length: 512
+    description: "Channel logo URL"
+  
+  category:
+    type: enum
+    values: [general, news, sports, movies, series, kids, music, documentary, lifestyle, other]
+    default: general
+    description: "Channel category"
+  
+  is_live:
+    type: boolean
+    default: false
+    indexed: true
+    description: "Whether channel is currently streaming"
+  
+  # Video Settings
+  resolutions:
+    type: json
+    default: '["1080p", "720p", "480p"]'
+    description: "Available resolutions"
+  
+  video_codec:
+    type: enum
+    values: [h264, h265, vp9, av1]
+    default: h264
+    description: "Video codec"
+  
+  video_preset:
+    type: enum
+    values: [ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow]
+    default: fast
+    description: "Encoding preset"
+  
+  audio_codec:
+    type: enum
+    values: [aac, ac3, eac3, opus]
+    default: aac
+    description: "Audio codec"
+  
+  audio_bitrate_kbps:
+    type: integer
+    default: 128
+    description: "Audio bitrate in kbps"
+  
+  # HLS Settings
+  segment_duration:
+    type: integer
+    default: 4
+    min: 2
+    max: 10
+    description: "HLS segment duration in seconds"
+  
+  playlist_size:
+    type: integer
+    default: 10
+    min: 3
+    max: 30
+    description: "HLS playlist window size"
+  
+  # Filler Content
+  filler_playlist:
+    type: string
+    max_length: 512
+    description: "Path to filler content playlist"
+  
+  offline_image:
+    type: string
+    max_length: 512
+    description: "Image to show when offline"
+  
+  # Bumpers/Commercials
+  intro_bumper:
+    type: string
+    max_length: 512
+    description: "Path to intro bumper video"
+  
+  outro_bumper:
+    type: string
+    max_length: 512
+    description: "Path to outro bumper video"
+  
+  commercial_break_duration:
+    type: integer
+    default: 120
+    description: "Commercial break duration in seconds"
+  
+  commercials_playlist:
+    type: json
+    description: "List of commercial video paths"
+  
+  # Statistics
+  viewer_count:
+    type: integer
+    default: 0
+    description: "Current viewer count"
+  
+  peak_viewers:
+    type: integer
+    default: 0
+    description: "Peak viewer count"
+  
+  uptime_seconds:
+    type: integer
+    default: 0
+    description: "Total streaming uptime"
+  
+  # Stream URLs
+  hls_url:
+    type: string
+    max_length: 512
+    description: "HLS stream URL"
+  
+  dash_url:
+    type: string
+    max_length: 512
+    description: "DASH stream URL"
+  
+  # Metadata
+  metadata:
+    type: json
+    description: "Additional metadata"
+  
+  created_at:
+    type: timestamp
+    auto_now_add: true
+    description: "Channel creation timestamp"
+  
+  updated_at:
+    type: timestamp
+    auto_now: true
+    description: "Last update timestamp"
+
+indexes:
+  - fields: [tenant_id, channel_number]
+    unique: true
+    name: idx_tv_tenant_number
+  - fields: [tenant_id, slug]
+    unique: true
+    name: idx_tv_tenant_slug
+  - fields: [tenant_id, is_live]
+    name: idx_tv_tenant_live
+  - fields: [tenant_id, category]
+    name: idx_tv_tenant_category
+
+acl:
+  create:
+    min_level: 3  # Admin
+  read:
+    public: true  # Anyone can see channel info
+  update:
+    min_level: 3  # Admin
+  delete:
+    min_level: 4  # God
