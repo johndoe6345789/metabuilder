@@ -30,9 +30,18 @@ const mockPackageRegistry = new Map<string, MockPackageDefinition>()
 
 /**
  * Register a mock package
+ * If the package already exists, merges renders instead of replacing
  */
 export function registerMockPackage(pkg: MockPackageDefinition): void {
-  mockPackageRegistry.set(pkg.metadata.packageId, pkg)
+  const existing = mockPackageRegistry.get(pkg.metadata.packageId)
+  if (existing) {
+    // Merge renders - new renders override existing ones with same name
+    existing.renders = { ...existing.renders, ...pkg.renders }
+    // Update metadata
+    existing.metadata = pkg.metadata
+  } else {
+    mockPackageRegistry.set(pkg.metadata.packageId, pkg)
+  }
 }
 
 /**

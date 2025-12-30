@@ -2,7 +2,7 @@
 
 ## Overview
 
-MetaBuilder uses a unified RESTful routing pattern across all frontends and the DBAL daemon. This pattern provides consistent, predictable URLs for accessing tenant-scoped, package-specific data.
+MetaBuilder uses a unified RESTful routing pattern across all frontends and the DBAL daemon. This pattern provides consistent, predictable URLs for accessing tenant-scoped, package-specific data with full authentication, authorization, and tenant isolation.
 
 ## Route Pattern
 
@@ -31,6 +31,67 @@ MetaBuilder uses a unified RESTful routing pattern across all frontends and the 
 | `PATCH`  | `/{t}/{p}/{e}/{id}`                   | Partial update |
 | `DELETE` | `/{t}/{p}/{e}/{id}`                   | Delete         |
 | `POST`   | `/{t}/{p}/{e}/{id}/{action}`          | Custom action  |
+
+## Authentication & Authorization
+
+### Request Flow
+
+```
+Request → Session Validation → Package Validation → Tenant Validation → DBAL Execute
+```
+
+1. **Session Validation**: Extract user from `mb_session` cookie
+2. **Package Validation**: Check package exists and user meets `minLevel`
+3. **Tenant Validation**: Verify user belongs to or can access the tenant
+4. **DBAL Execution**: Execute operation with tenant isolation
+
+### Access Rules
+
+| User Level | Can Access                                    |
+|------------|-----------------------------------------------|
+| 1 (Public) | Public routes (minLevel: 1) only             |
+| 2 (User)   | Own tenant, packages with minLevel ≤ 2       |
+| 3 (Mod)    | Own tenant, packages with minLevel ≤ 3       |
+| 4 (Admin)  | Own tenant, packages with minLevel ≤ 4       |
+| 5+ (God)   | All tenants, all packages                    |
+
+### Package Route Claiming
+
+Packages claim routes through `metadata.json`:
+
+```json
+{
+  "packageId": "forum_forge",
+  "minLevel": 2,
+  "schema": {
+    "entities": ["ForumCategory", "ForumThread", "ForumPost"]
+  }
+}
+```
+
+This automatically generates CRUD routes for each entity:
+- `GET /{tenant}/forum_forge/forumcategory` - List
+- `POST /{tenant}/forum_forge/forumcategory` - Create
+- `GET /{tenant}/forum_forge/forumcategory/{id}` - Read
+- `PUT /{tenant}/forum_forge/forumcategory/{id}` - Update
+- `DELETE /{tenant}/forum_forge/forumcategory/{id}` - Delete
+
+### Custom Actions
+
+Packages can define custom actions:
+
+```json
+{
+  "routes": [
+    { "path": "/posts/:id/publish", "method": "POST", "handler": "publish", "level": 3 }
+  ]
+}
+```
+
+Built-in actions available for all entities:
+- `POST /{t}/{p}/{e}/count` - Count records
+- `POST /{t}/{p}/{e}/{id}/exists` - Check existence  
+- `GET /{t}/{p}/{e}/schema` - Get entity schema
 
 ## Entity Naming Conventions
 
