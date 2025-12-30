@@ -1,21 +1,16 @@
 'use client'
 
-import { Box } from '@mui/material'
+import { Box } from '@/fakemui'
 import { forwardRef } from 'react'
+
+import styles from './pagination.module.scss'
 
 const PaginationEllipsis = forwardRef<HTMLSpanElement, Record<string, never>>((props, ref) => {
   return (
     <Box
       ref={ref}
       component="span"
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 36,
-        height: 36,
-        color: 'text.secondary',
-      }}
+      className={styles.paginationEllipsis}
       {...props}
     >
       ...

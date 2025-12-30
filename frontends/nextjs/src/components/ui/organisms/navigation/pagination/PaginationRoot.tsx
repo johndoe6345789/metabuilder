@@ -1,6 +1,6 @@
 'use client'
 
-import { Pagination as MuiPagination } from '@mui/material'
+import { Pagination as FakeMuiPagination } from '@/fakemui'
 import { forwardRef } from 'react'
 
 interface PaginationProps {
@@ -38,11 +38,11 @@ const Pagination = forwardRef<HTMLElement, PaginationProps>(
     ref
   ) => {
     return (
-      <MuiPagination
-        ref={ref}
+      <FakeMuiPagination
+        ref={ref as React.Ref<HTMLElement>}
         count={count}
         page={page}
-        onChange={(_, newPage) => onChange(newPage)}
+        onChange={onChange}
         siblingCount={siblingCount}
         boundaryCount={boundaryCount}
         showFirstButton={showFirstButton}

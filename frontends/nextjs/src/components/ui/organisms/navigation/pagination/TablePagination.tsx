@@ -1,17 +1,10 @@
 'use client'
 
+import { Box, FormControl, IconButton, Select, Typography } from '@/fakemui'
 import { FirstPage as FirstPageIcon, LastPage as LastPageIcon } from '@/fakemui/icons'
-import {
-  Box,
-  FormControl,
-  IconButton,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Typography,
-} from '@mui/material'
-import { forwardRef } from 'react'
+import { forwardRef, ChangeEvent } from 'react'
 
+import styles from './pagination.module.scss'
 import { NextIcon, PreviousIcon } from './paginationIcons'
 
 interface TablePaginationProps {
@@ -44,57 +37,56 @@ const TablePagination = forwardRef<HTMLDivElement, TablePaginationProps>(
     const startItem = (page - 1) * pageSize + 1
     const endItem = Math.min(page * pageSize, count)
 
-    const handlePageSizeChange = (event: SelectChangeEvent<number>) => {
+    const handlePageSizeChange = (event: ChangeEvent<HTMLSelectElement>) => {
       onPageSizeChange(Number(event.target.value))
     }
 
     return (
       <Box
         ref={ref}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 2,
-          py: 1,
-        }}
+        className={styles.tablePagination}
         {...props}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="body2" color="text.secondary">
+        <Box className={styles.tablePaginationRowsPerPage}>
+          <Typography variant="body2" className={styles.tablePaginationLabel}>
             Rows per page:
           </Typography>
-          <FormControl size="small" disabled={disabled}>
-            <Select value={pageSize} onChange={handlePageSizeChange} sx={{ minWidth: 70 }}>
+          <FormControl sm>
+            <Select
+              value={pageSize}
+              onChange={handlePageSizeChange}
+              disabled={disabled}
+              sm
+              className={styles.tablePaginationSelect}
+            >
               {pageSizeOptions.map(option => (
-                <MenuItem key={option} value={option}>
+                <option key={option} value={option}>
                   {option}
-                </MenuItem>
+                </option>
               ))}
             </Select>
           </FormControl>
         </Box>
 
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" className={styles.tablePaginationLabel}>
           {count === 0 ? '0' : `${startItem}-${endItem}`} of {count}
         </Typography>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+        <Box className={styles.tablePaginationActions}>
           {showFirstLastButtons && (
             <IconButton
               onClick={() => onPageChange(1)}
               disabled={disabled || page === 1}
-              size="small"
+              sm
               aria-label="Go to first page"
             >
-              <FirstPageIcon fontSize="small" />
+              <FirstPageIcon size={16} />
             </IconButton>
           )}
           <IconButton
             onClick={() => onPageChange(page - 1)}
             disabled={disabled || page === 1}
-            size="small"
+            sm
             aria-label="Go to previous page"
           >
             <PreviousIcon />
@@ -102,7 +94,7 @@ const TablePagination = forwardRef<HTMLDivElement, TablePaginationProps>(
           <IconButton
             onClick={() => onPageChange(page + 1)}
             disabled={disabled || page === totalPages}
-            size="small"
+            sm
             aria-label="Go to next page"
           >
             <NextIcon />
@@ -111,10 +103,10 @@ const TablePagination = forwardRef<HTMLDivElement, TablePaginationProps>(
             <IconButton
               onClick={() => onPageChange(totalPages)}
               disabled={disabled || page === totalPages}
-              size="small"
+              sm
               aria-label="Go to last page"
             >
-              <LastPageIcon fontSize="small" />
+              <LastPageIcon size={16} />
             </IconButton>
           )}
         </Box>

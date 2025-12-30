@@ -1,0 +1,128 @@
+// Pagination component styles
+// Migrated from @mui/material sx props to SCSS modules
+
+// PaginationContent
+.paginationContent {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+// PaginationEllipsis
+.paginationEllipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: var(--text-secondary, #666);
+}
+
+// PaginationLink
+.paginationLink {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  background-color: transparent;
+  color: var(--text-primary, #333);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--action-hover, rgba(0, 0, 0, 0.04));
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.paginationLinkSmall {
+  min-width: 28px;
+  height: 28px;
+}
+
+.paginationLinkLarge {
+  min-width: 44px;
+  height: 44px;
+}
+
+.paginationLinkActive {
+  background-color: var(--primary-main, #1976d2);
+  color: var(--primary-contrast-text, #fff);
+
+  &:hover:not(:disabled) {
+    background-color: var(--primary-dark, #1565c0);
+  }
+}
+
+// SimplePagination
+.simplePagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.simplePaginationButton {
+  border: 1px solid var(--divider, rgba(0, 0, 0, 0.12));
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--action-hover, rgba(0, 0, 0, 0.04));
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.simplePaginationLabel {
+  margin: 0 0.25rem;
+}
+
+// TablePagination
+.tablePagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.tablePaginationRowsPerPage {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tablePaginationLabel {
+  color: var(--text-secondary, #666);
+}
+
+.tablePaginationSelect {
+  min-width: 70px;
+}
+
+.tablePaginationActions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}

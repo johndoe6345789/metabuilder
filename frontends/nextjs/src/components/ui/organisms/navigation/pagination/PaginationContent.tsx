@@ -1,7 +1,9 @@
 'use client'
 
-import { Box } from '@mui/material'
+import { Box } from '@/fakemui'
 import { forwardRef, ReactNode } from 'react'
+
+import styles from './pagination.module.scss'
 
 interface PaginationContentProps {
   children: ReactNode
@@ -17,14 +19,7 @@ const PaginationContent = forwardRef<HTMLUListElement, PaginationContentProps>(
       <Box
         ref={ref}
         component="ul"
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 0.5,
-          listStyle: 'none',
-          p: 0,
-          m: 0,
-        }}
+        className={styles.paginationContent}
         {...props}
       >
         {children}

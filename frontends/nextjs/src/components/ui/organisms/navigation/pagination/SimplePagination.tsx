@@ -1,8 +1,9 @@
 'use client'
 
-import { Box, IconButton, Typography } from '@mui/material'
+import { Box, IconButton, Typography } from '@/fakemui'
 import { forwardRef } from 'react'
 
+import styles from './pagination.module.scss'
 import { NextIcon, PreviousIcon } from './paginationIcons'
 
 interface SimplePaginationProps {
@@ -32,50 +33,27 @@ const SimplePagination = forwardRef<HTMLDivElement, SimplePaginationProps>(
     return (
       <Box
         ref={ref}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 2,
-        }}
+        className={styles.simplePagination}
         {...props}
       >
         <IconButton
           onClick={onPrevious}
           disabled={disabled || !hasPrevious}
-          size="small"
-          sx={{
-            border: 1,
-            borderColor: 'divider',
-            borderRadius: 1,
-            px: 2,
-            py: 1,
-            '&:hover': {
-              bgcolor: 'action.hover',
-            },
-          }}
+          sm
+          className={styles.simplePaginationButton}
         >
           <PreviousIcon />
-          <Typography variant="body2" sx={{ ml: 0.5 }}>
+          <Typography variant="body2" className={styles.simplePaginationLabel}>
             {previousLabel}
           </Typography>
         </IconButton>
         <IconButton
           onClick={onNext}
           disabled={disabled || !hasNext}
-          size="small"
-          sx={{
-            border: 1,
-            borderColor: 'divider',
-            borderRadius: 1,
-            px: 2,
-            py: 1,
-            '&:hover': {
-              bgcolor: 'action.hover',
-            },
-          }}
+          sm
+          className={styles.simplePaginationButton}
         >
-          <Typography variant="body2" sx={{ mr: 0.5 }}>
+          <Typography variant="body2" className={styles.simplePaginationLabel}>
             {nextLabel}
           </Typography>
           <NextIcon />
