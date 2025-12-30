@@ -70,56 +70,15 @@ export const extractEntityFromPrefix = (prefixedName: string): string | null => 
   return parts.slice(2).join('_')
 }
 
-// Simple YAML parser for our specific schema format
-// Using a lightweight approach to avoid external dependency
+// Use proper YAML parser
+import { parse as parseYamlLib, stringify as stringifyYamlLib } from 'yaml'
+
 const parseYaml = (content: string): unknown => {
-  // For complex YAML, we'd use a proper parser
-  // This handles our entities.yaml format
-  try {
-    // Try JSON first (YAML is superset of JSON)
-    return JSON.parse(content)
-  } catch {
-    // Basic YAML parsing for our schema files
-    // In production, install 'yaml' package
-    const lines = content.split('\n')
-    const result: Record<string, unknown> = {}
-    let currentKey = ''
-    let currentValue: unknown[] = []
-    let inArray = false
-    
-    for (const line of lines) {
-      const trimmed = line.trim()
-      if (!trimmed || trimmed.startsWith('#')) continue
-      
-      const match = trimmed.match(/^(\w+):\s*(.*)$/)
-      if (match) {
-        if (currentKey && inArray) {
-          result[currentKey] = currentValue
-        }
-        currentKey = match[1]
-        const val = match[2]
-        if (val === '' || val === '|' || val === '>') {
-          currentValue = []
-          inArray = true
-        } else {
-          result[currentKey] = val
-          inArray = false
-        }
-      } else if (trimmed.startsWith('- ') && inArray) {
-        currentValue.push(trimmed.slice(2))
-      }
-    }
-    
-    if (currentKey && inArray) {
-      result[currentKey] = currentValue
-    }
-    
-    return result
-  }
+  return parseYamlLib(content)
 }
 
 const stringifyYaml = (obj: unknown): string => {
-  return JSON.stringify(obj, null, 2)
+  return stringifyYamlLib(obj)
 }
 
 // Types

@@ -68,8 +68,8 @@ export const ScrollArea: React.FC<LuaComponentProps & { maxHeight?: string | num
 )
 
 // ComponentRef - placeholder for dynamic component references
-export const ComponentRef: React.FC<LuaComponentProps & { ref?: string; component?: string }> = ({ 
-  ref: refId,
+export const ComponentRef: React.FC<LuaComponentProps & { refId?: string; component?: string }> = ({ 
+  refId,
   component,
   className = 'p-2 border border-dashed rounded bg-muted/30',
   children 
