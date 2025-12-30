@@ -9,6 +9,7 @@
   "dependencies": [
     "ui_permissions"
   ],
+  "devDependencies": ["lua_test"],
   "exports": {
     "pages": [
       "login"
@@ -18,6 +19,11 @@
       "login_actions"
     ],
     "components": []
+  },
+  "tests": {
+    "scripts": [
+      "tests/validate.test.lua"
+    ]
   },
   "minLevel": 1
 }

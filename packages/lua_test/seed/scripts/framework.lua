@@ -66,6 +66,29 @@ function M.it(name, fn)
   return test
 end
 
+-- Parameterized tests - it.each(cases)(name, fn)
+-- cases: array of test case objects
+-- name: string with $fieldName placeholders for interpolation
+-- fn: function(testCase) that receives each case
+function M.it_each(cases)
+  return function(nameTemplate, fn)
+    for _, testCase in ipairs(cases) do
+      -- Interpolate $fieldName in the name template
+      local name = nameTemplate
+      for key, value in pairs(testCase) do
+        local placeholder = "$" .. key
+        local strValue = type(value) == "table" and "[table]" or tostring(value)
+        name = string.gsub(name, "%$" .. key, strValue)
+      end
+      
+      -- Create test with the interpolated name
+      M.it(name, function()
+        fn(testCase)
+      end)
+    end
+  end
+end
+
 -- Skip a test
 function M.xit(name, fn)
   if not M._currentSuite then
@@ -90,6 +113,39 @@ function M.fit(name, fn)
   local test = M.it(name, fn)
   test.only = true
   return test
+end
+
+-- Parameterized fit - fit.each(cases)(name, fn)
+function M.fit_each(cases)
+  return function(nameTemplate, fn)
+    for _, testCase in ipairs(cases) do
+      local name = nameTemplate
+      for key, value in pairs(testCase) do
+        local placeholder = "$" .. key
+        local strValue = type(value) == "table" and "[table]" or tostring(value)
+        name = string.gsub(name, "%$" .. key, strValue)
+      end
+      M.fit(name, function()
+        fn(testCase)
+      end)
+    end
+  end
+end
+
+-- Parameterized xit - xit.each(cases)(name, fn)
+function M.xit_each(cases)
+  return function(nameTemplate, fn)
+    for _, testCase in ipairs(cases) do
+      local name = nameTemplate
+      for key, value in pairs(testCase) do
+        local strValue = type(value) == "table" and "[table]" or tostring(value)
+        name = string.gsub(name, "%$" .. key, strValue)
+      end
+      M.xit(name, function()
+        fn(testCase)
+      end)
+    end
+  end
 end
 
 -- Setup hooks

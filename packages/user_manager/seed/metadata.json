@@ -10,6 +10,7 @@
     "ui_permissions",
     "data_table"
   ],
+  "devDependencies": ["lua_test"],
   "exports": {
     "scripts": [
       "list",
@@ -19,6 +20,11 @@
       "UserManagement",
       "UserList",
       "UserActions"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/actions.test.lua"
     ]
   },
   "minLevel": 4

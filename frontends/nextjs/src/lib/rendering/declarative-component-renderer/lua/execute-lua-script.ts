@@ -38,7 +38,11 @@ end
   const result = await executeLuaScriptWithProfile(
     wrappedCode,
     { data: { params: paramContext } },
-    script
+    {
+      isSandboxed: script.isSandboxed,
+      allowedGlobals: script.allowedGlobals,
+      timeoutMs: script.timeoutMs,
+    }
   )
 
   if (!result.success) {

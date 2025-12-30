@@ -7,6 +7,7 @@
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": ["data_table", "ui_permissions"],
+  "devDependencies": ["lua_test"],
   "exports": {
     "components": [
       "StatCard",
@@ -16,6 +17,11 @@
     "scripts": [
       "stats",
       "layout"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/stats.test.lua"
     ]
   },
   "minLevel": 2

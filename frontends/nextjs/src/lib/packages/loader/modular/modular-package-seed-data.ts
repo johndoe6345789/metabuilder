@@ -10,6 +10,14 @@ export type ModularPackageScriptSeed = {
   description?: string
 }
 
+/**
+ * Test configuration for packages that include Lua tests
+ */
+export type ModularPackageTestConfig = {
+  /** Lua test script paths relative to scripts/ directory */
+  scripts?: string[]
+}
+
 export type ModularPackageMetadataSeed = {
   packageId: string
   name: string
@@ -21,8 +29,12 @@ export type ModularPackageMetadataSeed = {
   minLevel: number
   /** Package dependencies that must be loaded first */
   dependencies: string[]
+  /** Development dependencies (e.g., lua_test for testing) */
+  devDependencies?: string[]
   /** Icon path relative to package root */
   icon?: string
+  /** Test configuration for Lua scripts */
+  tests?: ModularPackageTestConfig
 }
 
 /**

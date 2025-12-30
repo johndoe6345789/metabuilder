@@ -7,11 +7,18 @@
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
+  "devDependencies": ["lua_test"],
   "exports": {
     "scripts": [
       "permissions"
     ],
     "components": []
+  },
+  "tests": {
+    "scripts": [
+      "tests/check.test.lua",
+      "tests/levels.test.lua"
+    ]
   },
   "minLevel": 1
 }

@@ -11,6 +11,40 @@ A unit testing framework for Lua scripts in MetaBuilder packages.
 - **Test filtering**: Run specific tests with `.only` or name filters
 - **Detailed reporting**: Text and JSON output formats
 
+## Package Integration
+
+To use lua_test in your package, add it as a `devDependency` and declare your test files in `metadata.json`:
+
+```json
+{
+  "packageId": "my_package",
+  "name": "My Package",
+  "version": "1.0.0",
+  "dependencies": ["ui_permissions"],
+  "devDependencies": ["lua_test"],
+  "exports": {
+    "scripts": ["my_script"]
+  },
+  "tests": {
+    "scripts": [
+      "tests/my_script.test.lua"
+    ]
+  }
+}
+```
+
+Place your test files in `seed/scripts/tests/`:
+
+```
+packages/my_package/
+├── seed/
+│   ├── metadata.json
+│   └── scripts/
+│       ├── my_script.lua
+│       └── tests/
+│           └── my_script.test.lua
+```
+
 ## Quick Start
 
 ```lua
