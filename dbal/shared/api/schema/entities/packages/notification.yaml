@@ -1,0 +1,88 @@
+entity: Notification
+version: "1.0"
+description: "User notification for alerts, messages, and system events"
+package: notification_center
+
+fields:
+  id:
+    type: cuid
+    primary: true
+    generated: true
+    description: "Unique notification identifier"
+    
+  tenantId:
+    type: uuid
+    required: true
+    index: true
+    description: "Tenant this notification belongs to"
+    
+  userId:
+    type: uuid
+    required: true
+    index: true
+    description: "User to receive the notification"
+    
+  type:
+    type: enum
+    required: true
+    values: [info, warning, success, error, mention, reply, follow, like, system]
+    description: "Notification type for styling/filtering"
+    
+  title:
+    type: string
+    required: true
+    max_length: 200
+    description: "Notification title"
+    
+  message:
+    type: string
+    required: true
+    description: "Notification message content"
+    
+  icon:
+    type: string
+    nullable: true
+    description: "Optional icon name"
+    
+  read:
+    type: boolean
+    default: false
+    index: true
+    description: "Whether notification has been read"
+    
+  data:
+    type: json
+    nullable: true
+    description: "Additional data (action URLs, entity refs, etc.)"
+    
+  createdAt:
+    type: bigint
+    required: true
+    index: true
+    description: "Creation timestamp"
+    
+  expiresAt:
+    type: bigint
+    nullable: true
+    index: true
+    description: "Optional expiration timestamp"
+
+indexes:
+  - fields: [userId, read]
+    name: user_unread
+  - fields: [tenantId, createdAt]
+    name: tenant_time
+
+acl:
+  create:
+    system: true
+    admin: true
+  read:
+    self: true
+    row_level: "userId = $user.id"
+  update:
+    self: true
+    row_level: "userId = $user.id"
+  delete:
+    self: true
+    row_level: "userId = $user.id"
