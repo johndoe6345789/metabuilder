@@ -1,38 +1,16 @@
--- User list rendering
+--- User list rendering facade
+--- Re-exports user list functions for backward compatibility
+---@module list
+
+local get_columns = require("get_columns")
+local render_row = require("render_row")
+local render_users = require("render_users")
+
+---@class ListModule
 local M = {}
 
-function M.columns()
-  return {
-    { id = "username", label = "Username", sortable = true },
-    { id = "email", label = "Email", sortable = true },
-    { id = "role", label = "Role", sortable = true },
-    { id = "level", label = "Level", sortable = true },
-    { id = "active", label = "Status", type = "badge" },
-    { id = "actions", label = "", type = "actions" }
-  }
-end
-
-function M.render_row(user)
-  return {
-    username = user.username,
-    email = user.email,
-    role = user.role,
-    level = user.level,
-    active = user.active and "Active" or "Inactive",
-    actions = { "edit", "delete" }
-  }
-end
-
-function M.render(users)
-  local rows = {}
-  for _, user in ipairs(users) do
-    table.insert(rows, M.render_row(user))
-  end
-  return {
-    type = "data_table",
-    columns = M.columns(),
-    rows = rows
-  }
-end
+M.columns = get_columns
+M.render_row = render_row
+M.render = render_users
 
 return M
