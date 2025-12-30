@@ -20,6 +20,8 @@ interface PackageInfo {
   id: string
   name?: string
   minLevel?: number
+  /** Whether this package can own routes (true) or is dependency-only (false) */
+  primary?: boolean
 }
 
 interface TenantContextValue {
