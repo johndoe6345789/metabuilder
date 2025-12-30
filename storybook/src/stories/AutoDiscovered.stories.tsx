@@ -16,7 +16,8 @@ import {
   type DiscoveredPackage 
 } from '../discovery/package-discovery'
 import { loadAndExecuteLuaFile, type LuaExecutionResult } from '../lua/executor'
-import { executeMockRender, getMockPackage } from '../mocks/packages'
+import { executeMockRender, getMockPackage, initializeMocks } from '../mocks/packages'
+import { loadPackageComponents } from '../mocks/auto-loader'
 import type { LuaRenderContext, LuaUIComponent } from '../types/lua-types'
 
 const meta: Meta = {
@@ -126,9 +127,13 @@ function PackageExplorer() {
   const [selectedVariant, setSelectedVariant] = useState<string>('Admin')
   const [debug, setDebug] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [componentIds, setComponentIds] = useState<string[]>([])
   
   useEffect(() => {
     async function load() {
+      // Initialize mocks (loads from real packages + JSON overrides)
+      await initializeMocks()
+      
       const [pkgs, variants] = await Promise.all([
         discoverPackages(),
         getContextVariants()
