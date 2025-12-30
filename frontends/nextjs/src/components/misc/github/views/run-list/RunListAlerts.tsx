@@ -16,13 +16,13 @@ type SummaryAlertProps = {
 
 const SummaryAlert = ({ conclusion, summaryTone }: SummaryAlertProps) => (
   <Alert
-    sx={theme => ({
+    sx={{
       borderWidth: 2,
-      borderColor: theme.palette[summaryTone].main,
-      bgcolor: alpha(theme.palette[summaryTone].main, 0.08),
+      borderColor: `var(--mui-palette-${summaryTone}-main)`,
+      bgcolor: `color-mix(in srgb, var(--mui-palette-${summaryTone}-main) 8%, transparent)`,
       alignItems: 'flex-start',
       mb: 2,
-    })}
+    }}
   >
     <Stack direction="row" spacing={2} alignItems="flex-start">
       {summaryTone === 'success' && <CheckCircle size={48} style={{ color: 'var(--mui-palette-success-main)' }} />}
