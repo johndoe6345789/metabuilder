@@ -4,6 +4,15 @@
 
 local M = {}
 local json = require('json')
+local prefix = require('shared.db.prefix')
+
+-- Package ID for entity prefixing
+local PACKAGE_ID = 'forum_forge'
+
+-- Helper to get prefixed entity name
+local function entity(name)
+  return prefix.getPrefixedName(PACKAGE_ID, name)
+end
 
 ---------------------------------------------------------------------------
 -- CATEGORY OPERATIONS
