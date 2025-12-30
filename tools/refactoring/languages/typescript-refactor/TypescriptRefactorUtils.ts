@@ -13,32 +13,32 @@ import { generateIndexFile } from './functions/generate-index-file'
  * This is a convenience wrapper. Prefer importing individual functions.
  */
 export class TypescriptRefactorUtils {
-  static getFunctionExtension(...args: any[]) {
-    return getFunctionExtension(...args as any)
+  static getFunctionExtension(...args: Parameters<typeof getFunctionExtension>) {
+    return getFunctionExtension(...args)
   }
 
-  static async extractFunctions(...args: any[]) {
-    return await extractFunctions(...args as any)
+  static async extractFunctions(...args: Parameters<typeof extractFunctions>) {
+    return await extractFunctions(...args)
   }
 
-  static async extractDependencies(...args: any[]) {
-    return await extractDependencies(...args as any)
+  static async extractDependencies(...args: Parameters<typeof extractDependencies>) {
+    return await extractDependencies(...args)
   }
 
-  static generateFunctionFile(...args: any[]) {
-    return generateFunctionFile(...args as any)
+  static generateFunctionFile(...args: Parameters<typeof generateFunctionFile>) {
+    return generateFunctionFile(...args)
   }
 
-  static async generateModule(...args: any[]) {
-    return await generateModule(...args as any)
+  static async generateModule(...args: Parameters<typeof generateModule>) {
+    return await generateModule(...args)
   }
 
-  static generateClassWrapper(...args: any[]) {
-    return generateClassWrapper(...args as any)
+  static generateClassWrapper(...args: Parameters<typeof generateClassWrapper>) {
+    return generateClassWrapper(...args)
   }
 
-  static generateIndexFile(...args: any[]) {
-    return generateIndexFile(...args as any)
+  static generateIndexFile(...args: Parameters<typeof generateIndexFile>) {
+    return generateIndexFile(...args)
   }
 
 }

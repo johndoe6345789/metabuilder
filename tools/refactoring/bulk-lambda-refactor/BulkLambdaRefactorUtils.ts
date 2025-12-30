@@ -17,48 +17,48 @@ import { main } from './functions/main'
  * This is a convenience wrapper. Prefer importing individual functions.
  */
 export class BulkLambdaRefactorUtils {
-  static log(...args: any[]) {
-    return log(...args as any)
+  static log(...args: Parameters<typeof log>) {
+    return log(...args)
   }
 
-  static toKebabCase(...args: any[]) {
-    return toKebabCase(...args as any)
+  static toKebabCase(...args: Parameters<typeof toKebabCase>) {
+    return toKebabCase(...args)
   }
 
-  static toClassName(...args: any[]) {
-    return toClassName(...args as any)
+  static toClassName(...args: Parameters<typeof toClassName>) {
+    return toClassName(...args)
   }
 
-  static async writeFunctions(...args: any[]) {
-    return await writeFunctions(...args as any)
+  static async writeFunctions(...args: Parameters<typeof writeFunctions>) {
+    return await writeFunctions(...args)
   }
 
-  static async writeClassWrapper(...args: any[]) {
-    return await writeClassWrapper(...args as any)
+  static async writeClassWrapper(...args: Parameters<typeof writeClassWrapper>) {
+    return await writeClassWrapper(...args)
   }
 
-  static async writeIndex(...args: any[]) {
-    return await writeIndex(...args as any)
+  static async writeIndex(...args: Parameters<typeof writeIndex>) {
+    return await writeIndex(...args)
   }
 
-  static async writeReexportFile(...args: any[]) {
-    return await writeReexportFile(...args as any)
+  static async writeReexportFile(...args: Parameters<typeof writeReexportFile>) {
+    return await writeReexportFile(...args)
   }
 
-  static async refactorFile(...args: any[]) {
-    return await refactorFile(...args as any)
+  static async refactorFile(...args: Parameters<typeof refactorFile>) {
+    return await refactorFile(...args)
   }
 
-  static async bulkRefactor(...args: any[]) {
-    return await bulkRefactor(...args as any)
+  static async bulkRefactor(...args: Parameters<typeof bulkRefactor>) {
+    return await bulkRefactor(...args)
   }
 
-  static async runLintFix(...args: any[]) {
-    return await runLintFix(...args as any)
+  static async runLintFix(...args: Parameters<typeof runLintFix>) {
+    return await runLintFix(...args)
   }
 
-  static async main(...args: any[]) {
-    return await main(...args as any)
+  static async main(...args: Parameters<typeof main>) {
+    return await main(...args)
   }
 
 }

@@ -9,16 +9,16 @@ import { main } from './functions/main'
  * This is a convenience wrapper. Prefer importing individual functions.
  */
 export class OrchestrateRefactorUtils {
-  static async loadFilesFromReport(...args: any[]) {
-    return await loadFilesFromReport(...args as any)
+  static async loadFilesFromReport(...args: Parameters<typeof loadFilesFromReport>) {
+    return await loadFilesFromReport(...args)
   }
 
-  static async runCommand(...args: any[]) {
-    return await runCommand(...args as any)
+  static async runCommand(...args: Parameters<typeof runCommand>) {
+    return await runCommand(...args)
   }
 
-  static async main(...args: any[]) {
-    return await main(...args as any)
+  static async main(...args: Parameters<typeof main>) {
+    return await main(...args)
   }
 
 }
