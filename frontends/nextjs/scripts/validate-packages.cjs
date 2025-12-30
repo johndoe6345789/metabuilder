@@ -84,11 +84,26 @@ function validateComponentsJson(seedPath) {
     const content = fs.readFileSync(componentsPath, 'utf-8')
     const parsed = JSON.parse(content)
     
-    // Accept both formats: bare array or { components: [...] }
-    const components = Array.isArray(parsed) ? parsed : parsed.components
+    // Accept multiple formats:
+    // 1. Bare array: [{ id, type, ... }]
+    // 2. Wrapped array: { components: [...] }
+    // 3. Object keyed by name: { ComponentName: { type, ... } }
+    
+    let components
+    if (Array.isArray(parsed)) {
+      components = parsed
+    } else if (parsed.components && Array.isArray(parsed.components)) {
+      components = parsed.components
+    } else if (typeof parsed === 'object' && parsed !== null) {
+      // Convert object format to array
+      components = Object.entries(parsed).map(([name, def]) => ({
+        name,
+        ...def
+      }))
+    }
     
     if (!components || !Array.isArray(components)) {
-      errors.push('components.json must be an array or have a "components" array property')
+      errors.push('components.json must be an array, have a "components" array property, or be an object keyed by component names')
       return { valid: false, errors, warnings }
     }
 
