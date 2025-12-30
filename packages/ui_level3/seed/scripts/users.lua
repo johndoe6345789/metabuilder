@@ -1,5 +1,22 @@
+---@class User
+---@field id string User ID
+---@field username string Display username
+---@field email string? User email address
+---@field role string User role/permission level
+
+---@class UsersContext
+---@field users User[]? List of users to display
+
+---@class UIComponent
+---@field type string Component type name
+---@field props table? Component properties
+---@field children table[]? Child components
+
 local M = {}
 
+---Renders a table displaying users with edit and delete actions
+---@param ctx UsersContext Context data containing user list
+---@return UIComponent Table component with user rows
 function M.render(ctx)
   local rows = {}
   for _, u in ipairs(ctx.users or {}) do

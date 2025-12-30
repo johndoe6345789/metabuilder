@@ -1,5 +1,21 @@
+-- Layout module for Level 2 UI components
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? UIComponent[]
+
+---@class RenderContext
+---@field user table
+---@field user.username string
+---@field user.email? string
+
+---@type table
 local M = {}
 
+---Renders the main layout component with user context
+---@param ctx RenderContext
+---@return UIComponent
 function M.render(ctx)
   return {
     type = "Box",
@@ -18,6 +34,8 @@ function M.render(ctx)
   }
 end
 
+---Renders tabs component with profile, comments, and chat sections
+---@return UIComponent
 function M.tabs()
   return {
     type = "Tabs",

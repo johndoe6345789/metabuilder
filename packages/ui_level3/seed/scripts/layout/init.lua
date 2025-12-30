@@ -1,3 +1,8 @@
+---@class LayoutModule
+---@field admin_sidebar fun(items: table[]?): table Admin sidebar component creator
+---@field admin_toolbar fun(actions: table[]?): table Admin toolbar component creator
+---@field admin_content fun(children: table[]?): table Admin content area component creator
+
 -- Level 3 layout module
 local layout = {
   admin_sidebar = require("layout.admin_sidebar"),

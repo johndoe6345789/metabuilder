@@ -1,5 +1,23 @@
+-- Header render component
+
+---@class HeaderProps
+---@field variant? "default"|"admin"
+---@field title? string
+---@field showHome? boolean
+---@field username? string
+---@field showBadge? boolean
+---@field showAvatar? boolean
+---@field showLogout? boolean
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? UIComponent[]
+
 local M = {}
 
+---@param props HeaderProps
+---@return UIComponent
 function M.render(props)
   local variant = props.variant or "default"
   local bg = variant == "admin" and "bg-sidebar" or "bg-card"
@@ -20,6 +38,8 @@ function M.render(props)
   }
 end
 
+---@param props HeaderProps
+---@return UIComponent
 function M.logo_section(props)
   return {
     type = "Flex",
@@ -35,6 +55,8 @@ function M.logo_section(props)
   }
 end
 
+---@param props HeaderProps
+---@return UIComponent
 function M.user_section(props)
   local children = {}
   if props.username and props.showBadge then

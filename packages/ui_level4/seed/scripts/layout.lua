@@ -1,7 +1,28 @@
+-- Level 4 layout module
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? UIComponent[]
+
+---@class User
+---@field username string
+
+---@class RenderContext
+---@field nerdMode boolean
+---@field user User
+
+---@class Level4Module
+---@field render fun(ctx: RenderContext): UIComponent
+---@field tabs fun(ctx: RenderContext): UIComponent
+
 local M = {}
 
+---Renders the main Level 4 application builder layout
+---@param ctx RenderContext
+---@return UIComponent
 function M.render(ctx)
-  local desc = ctx.nerdMode 
+  local desc = ctx.nerdMode
     and "Design declaratively with schemas and Lua scripts."
     or "Build visually with forms and drag-and-drop."
   return {
@@ -21,6 +42,9 @@ function M.render(ctx)
   }
 end
 
+---Renders the tabbed interface for Schemas, Workflows, and Lua Scripts
+---@param ctx RenderContext
+---@return UIComponent
 function M.tabs(ctx)
   return {
     type = "Tabs",

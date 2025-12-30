@@ -1,5 +1,19 @@
+---@class LayoutContext
+---@field user table User object with username and id
+---@field userCount integer Number of users
+---@field commentCount integer Number of comments
+---@field flaggedCount integer Number of flagged items
+
+---@class UIComponent
+---@field type string Component type name
+---@field props table? Component properties
+---@field children table[]? Child components
+
 local M = {}
 
+---Renders the main admin panel layout
+---@param ctx LayoutContext Context data for rendering
+---@return UIComponent Box component with admin panel layout
 function M.render(ctx)
   return {
     type = "Box",
@@ -19,6 +33,9 @@ function M.render(ctx)
   }
 end
 
+---Creates stats grid component with user and content statistics
+---@param ctx LayoutContext Context data containing statistics
+---@return UIComponent Grid component with stat cards
 function M.stats(ctx)
   return {
     type = "Grid",
@@ -31,6 +48,8 @@ function M.stats(ctx)
   }
 end
 
+---Creates tabbed interface for users and comments management
+---@return UIComponent Tabs component with content sections
 function M.tabs()
   return {
     type = "Tabs",
