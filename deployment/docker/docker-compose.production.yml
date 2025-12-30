@@ -142,7 +142,7 @@ services:
           cpus: '0.25'
           memory: 128M
 
-  # Media Processing Daemon (Job Queue, Radio, TV)
+  # Media Processing Daemon (Job Queue, Radio, TV, Retro Gaming)
   media-daemon:
     build:
       context: ../../services/media_daemon
@@ -158,16 +158,27 @@ services:
       MEDIA_AUDIO_WORKERS: 4
       MEDIA_DOC_WORKERS: 4
       MEDIA_IMAGE_WORKERS: 8
+      # Plugin toggles
       MEDIA_RADIO_ENABLED: "true"
       MEDIA_TV_ENABLED: "true"
+      MEDIA_RETRO_ENABLED: "true"
+      # Icecast for radio
       ICECAST_HOST: icecast
       ICECAST_PASSWORD: ${ICECAST_PASSWORD:-hackme}
+      # Libretro settings
+      LIBRETRO_CORES_DIR: /data/cores
+      LIBRETRO_SYSTEM_DIR: /data/system
+      LIBRETRO_SAVES_DIR: /data/saves
     volumes:
       - media_library:/data/media:ro
       - media_output:/data/output
       - media_cache:/data/cache
       - hls_output:/data/hls
       - media_temp:/data/temp
+      - retro_cores:/data/cores
+      - retro_system:/data/system
+      - retro_saves:/data/saves
+      - retro_roms:/data/roms:ro
     ports:
       - "8090:8090"
     restart: unless-stopped
@@ -283,6 +294,15 @@ volumes:
   hls_output:
     driver: local
   icecast_logs:
+    driver: local
+  # Retro gaming volumes
+  retro_cores:
+    driver: local
+  retro_system:
+    driver: local
+  retro_saves:
+    driver: local
+  retro_roms:
     driver: local
 
 networks:

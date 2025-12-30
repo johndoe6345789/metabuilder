@@ -72,6 +72,20 @@
       "title": "TV Channels",
       "icon": "Tv",
       "minLevel": 3
+    },
+    {
+      "path": "/media/retro",
+      "component": "RetroPage",
+      "title": "Retro Gaming",
+      "icon": "SportsEsports",
+      "minLevel": 2
+    },
+    {
+      "path": "/media/retro/:sessionId",
+      "component": "RetroGamePlayer",
+      "title": "Now Playing",
+      "icon": "SportsEsports",
+      "minLevel": 2
     }
   ],
   "permissions": {
@@ -110,6 +124,18 @@
     "media.tv.schedule": {
       "minLevel": 3,
       "description": "Manage TV schedule"
+    },
+    "media.retro.play": {
+      "minLevel": 2,
+      "description": "Play retro games"
+    },
+    "media.retro.stream": {
+      "minLevel": 3,
+      "description": "Stream retro gameplay"
+    },
+    "media.retro.manage_cores": {
+      "minLevel": 4,
+      "description": "Install/remove emulator cores"
     }
   },
   "settings": {
