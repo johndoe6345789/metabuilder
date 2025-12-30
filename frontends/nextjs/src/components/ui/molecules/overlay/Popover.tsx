@@ -1,7 +1,8 @@
 'use client'
 
-import { Box } from '@mui/material'
+import { Box } from '@fakemui/fakemui/layout'
 import { forwardRef, ReactNode } from 'react'
+import styles from './Popover.module.scss'
 
 interface PopoverProps {
   children: ReactNode
@@ -15,12 +16,13 @@ Popover.displayName = 'Popover'
 interface PopoverTriggerProps {
   children: ReactNode
   asChild?: boolean
+  className?: string
 }
 
 const PopoverTrigger = forwardRef<HTMLDivElement, PopoverTriggerProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <Box ref={ref} sx={{ display: 'inline-flex' }} {...props}>
+      <Box ref={ref} className={`${styles.popoverTrigger} ${className}`} {...props}>
         {children}
       </Box>
     )
@@ -36,21 +38,11 @@ interface PopoverContentProps {
 }
 
 const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
-  ({ children, align = 'center', sideOffset = 4, ...props }, ref) => {
+  ({ children, align = 'center', sideOffset = 4, className = '', ...props }, ref) => {
     return (
       <Box
         ref={ref}
-        sx={{
-          zIndex: 50,
-          minWidth: 200,
-          bgcolor: 'background.paper',
-          borderRadius: 2,
-          border: 1,
-          borderColor: 'divider',
-          boxShadow: 3,
-          p: 2,
-          outline: 'none',
-        }}
+        className={`${styles.popoverContent} ${className}`}
         {...props}
       >
         {children}
@@ -60,9 +52,9 @@ const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
 )
 PopoverContent.displayName = 'PopoverContent'
 
-const PopoverAnchor = forwardRef<HTMLDivElement, { children?: ReactNode }>(
-  ({ children, ...props }, ref) => (
-    <Box ref={ref} {...props}>
+const PopoverAnchor = forwardRef<HTMLDivElement, { children?: ReactNode; className?: string }>(
+  ({ children, className = '', ...props }, ref) => (
+    <Box ref={ref} className={className} {...props}>
       {children}
     </Box>
   )

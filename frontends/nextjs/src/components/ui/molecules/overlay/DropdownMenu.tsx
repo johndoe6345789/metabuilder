@@ -1,7 +1,10 @@
 'use client'
 
-import { Box, Divider, MenuItem } from '@mui/material'
+import { Box } from '@fakemui/fakemui/layout'
+import { MenuItem } from '@fakemui/fakemui/navigation'
+import { Divider } from '@fakemui/fakemui/data-display'
 import { forwardRef, ReactNode } from 'react'
+import styles from './DropdownMenu.module.scss'
 
 interface DropdownMenuProps {
   children: ReactNode
@@ -15,14 +18,15 @@ DropdownMenu.displayName = 'DropdownMenu'
 interface DropdownMenuTriggerProps {
   children: ReactNode
   asChild?: boolean
+  className?: string
 }
 
 const DropdownMenuTrigger = forwardRef<HTMLButtonElement, DropdownMenuTriggerProps>(
-  ({ children, asChild, ...props }, ref) => {
+  ({ children, asChild, className = '', ...props }, ref) => {
     return (
       <Box
-        ref={ref as unknown as React.Ref<HTMLDivElement>}
-        sx={{ display: 'inline-flex' }}
+        ref={ref as unknown as React.Ref<HTMLElement>}
+        className={`${styles.dropdownMenuTrigger} ${className}`}
         {...props}
       >
         {children}
@@ -40,9 +44,9 @@ interface DropdownMenuContentProps {
 }
 
 const DropdownMenuContent = forwardRef<HTMLDivElement, DropdownMenuContentProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <Box ref={ref} {...props}>
+      <Box ref={ref} className={`${styles.dropdownMenuContent} ${className}`} {...props}>
         {children}
       </Box>
     )
@@ -59,20 +63,14 @@ interface DropdownMenuItemProps {
   inset?: boolean
 }
 
-const DropdownMenuItem = forwardRef<HTMLLIElement, DropdownMenuItemProps>(
-  ({ children, disabled, onSelect, onClick, inset, ...props }, ref) => {
+const DropdownMenuItem = forwardRef<HTMLButtonElement, DropdownMenuItemProps>(
+  ({ children, disabled, onSelect, onClick, inset, className = '', ...props }, ref) => {
     return (
       <MenuItem
         ref={ref}
         disabled={disabled}
         onClick={onSelect || onClick}
-        sx={{
-          fontSize: '0.875rem',
-          py: 1,
-          px: 2,
-          pl: inset ? 4 : 2,
-          minHeight: 'auto',
-        }}
+        className={`${styles.dropdownMenuItem} ${inset ? styles.inset : ''} ${className}`}
         {...props}
       >
         {children}
@@ -89,17 +87,11 @@ interface DropdownMenuLabelProps {
 }
 
 const DropdownMenuLabel = forwardRef<HTMLDivElement, DropdownMenuLabelProps>(
-  ({ children, inset, ...props }, ref) => {
+  ({ children, inset, className = '', ...props }, ref) => {
     return (
       <Box
         ref={ref}
-        sx={{
-          px: 2,
-          py: 1,
-          pl: inset ? 4 : 2,
-          fontSize: '0.875rem',
-          fontWeight: 600,
-        }}
+        className={`${styles.dropdownMenuLabel} ${inset ? styles.inset : ''} ${className}`}
         {...props}
       >
         {children}
@@ -109,9 +101,15 @@ const DropdownMenuLabel = forwardRef<HTMLDivElement, DropdownMenuLabelProps>(
 )
 DropdownMenuLabel.displayName = 'DropdownMenuLabel'
 
-const DropdownMenuSeparator = forwardRef<HTMLHRElement>((props, ref) => {
-  return <Divider ref={ref} sx={{ my: 0.5 }} {...props} />
-})
+interface DropdownMenuSeparatorProps {
+  className?: string
+}
+
+const DropdownMenuSeparator = forwardRef<HTMLHRElement, DropdownMenuSeparatorProps>(
+  ({ className = '', ...props }, ref) => {
+    return <Divider ref={ref} className={`${styles.dropdownMenuSeparator} ${className}`} {...props} />
+  }
+)
 DropdownMenuSeparator.displayName = 'DropdownMenuSeparator'
 
 interface DropdownMenuShortcutProps {
@@ -119,20 +117,11 @@ interface DropdownMenuShortcutProps {
   className?: string
 }
 
-const DropdownMenuShortcut = ({ children, ...props }: DropdownMenuShortcutProps) => {
+const DropdownMenuShortcut = ({ children, className = '', ...props }: DropdownMenuShortcutProps) => {
   return (
-    <Box
-      component="span"
-      sx={{
-        ml: 'auto',
-        fontSize: '0.75rem',
-        letterSpacing: '0.1em',
-        color: 'text.secondary',
-      }}
-      {...props}
-    >
+    <span className={`${styles.dropdownMenuShortcut} ${className}`} {...props}>
       {children}
-    </Box>
+    </span>
   )
 }
 DropdownMenuShortcut.displayName = 'DropdownMenuShortcut'
@@ -146,18 +135,18 @@ DropdownMenuPortal.displayName = 'DropdownMenuPortal'
 const DropdownMenuSub = ({ children }: { children: ReactNode }) => <>{children}</>
 DropdownMenuSub.displayName = 'DropdownMenuSub'
 
-const DropdownMenuSubContent = forwardRef<HTMLDivElement, { children: ReactNode }>(
-  ({ children, ...props }, ref) => (
-    <Box ref={ref} {...props}>
+const DropdownMenuSubContent = forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
+  ({ children, className = '', ...props }, ref) => (
+    <Box ref={ref} className={className} {...props}>
       {children}
     </Box>
   )
 )
 DropdownMenuSubContent.displayName = 'DropdownMenuSubContent'
 
-const DropdownMenuSubTrigger = forwardRef<HTMLLIElement, DropdownMenuItemProps>(
-  ({ children, ...props }, ref) => (
-    <MenuItem ref={ref} {...props}>
+const DropdownMenuSubTrigger = forwardRef<HTMLButtonElement, DropdownMenuItemProps>(
+  ({ children, className = '', ...props }, ref) => (
+    <MenuItem ref={ref} className={className} {...props}>
       {children}
     </MenuItem>
   )
@@ -169,9 +158,9 @@ interface DropdownMenuCheckboxItemProps extends DropdownMenuItemProps {
   onCheckedChange?: (checked: boolean) => void
 }
 
-const DropdownMenuCheckboxItem = forwardRef<HTMLLIElement, DropdownMenuCheckboxItemProps>(
-  ({ children, checked, onCheckedChange, ...props }, ref) => (
-    <MenuItem ref={ref} onClick={() => onCheckedChange?.(!checked)} {...props}>
+const DropdownMenuCheckboxItem = forwardRef<HTMLButtonElement, DropdownMenuCheckboxItemProps>(
+  ({ children, checked, onCheckedChange, className = '', ...props }, ref) => (
+    <MenuItem ref={ref} onClick={() => onCheckedChange?.(!checked)} className={className} {...props}>
       {children}
     </MenuItem>
   )
@@ -191,9 +180,9 @@ interface DropdownMenuRadioItemProps extends DropdownMenuItemProps {
   value: string
 }
 
-const DropdownMenuRadioItem = forwardRef<HTMLLIElement, DropdownMenuRadioItemProps>(
-  ({ children, value, ...props }, ref) => (
-    <MenuItem ref={ref} {...props}>
+const DropdownMenuRadioItem = forwardRef<HTMLButtonElement, DropdownMenuRadioItemProps>(
+  ({ children, value, className = '', ...props }, ref) => (
+    <MenuItem ref={ref} className={className} {...props}>
       {children}
     </MenuItem>
   )

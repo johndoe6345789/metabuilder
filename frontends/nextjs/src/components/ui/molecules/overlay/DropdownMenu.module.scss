@@ -1,0 +1,40 @@
+// DropdownMenu styles - migrated from MUI sx prop
+
+.dropdownMenuTrigger {
+  display: inline-flex;
+}
+
+.dropdownMenuContent {
+  min-width: 180px;
+}
+
+.dropdownMenuItem {
+  font-size: 0.875rem;
+  padding: 8px 16px;
+  min-height: auto;
+
+  &.inset {
+    padding-left: 32px;
+  }
+}
+
+.dropdownMenuLabel {
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+
+  &.inset {
+    padding-left: 32px;
+  }
+}
+
+.dropdownMenuSeparator {
+  margin: 4px 0;
+}
+
+.dropdownMenuShortcut {
+  margin-left: auto;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+}

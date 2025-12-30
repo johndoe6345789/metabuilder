@@ -1,36 +1,38 @@
 'use client'
 
-import type { CardProps as MuiCardProps } from '@mui/material'
 import {
-  Box,
-  Card as MuiCard,
+  Card as FakeMuiCard,
+  CardContent as FakeMuiCardContent,
   CardActions,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  Typography,
-} from '@mui/material'
+  CardTitle as FakeMuiCardTitle,
+  CardDescription as FakeMuiCardDescription,
+  CardFooter as FakeMuiCardFooter,
+} from '@fakemui/fakemui/surfaces'
+import { Box } from '@fakemui/fakemui/layout'
 import { forwardRef, ReactNode } from 'react'
+import styles from './Card.module.scss'
 
-export interface CardProps extends MuiCardProps {
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: ReactNode
+  raised?: boolean
+  clickable?: boolean
 }
 
-const Card = forwardRef<HTMLDivElement, CardProps>(({ children, sx, ...props }, ref) => {
-  return (
-    <MuiCard
-      ref={ref}
-      sx={{
-        borderRadius: 2,
-        boxShadow: 1,
-        ...sx,
-      }}
-      {...props}
-    >
-      {children}
-    </MuiCard>
-  )
-})
+const Card = forwardRef<HTMLDivElement, CardProps>(
+  ({ children, className = '', raised, clickable, ...props }, ref) => {
+    return (
+      <FakeMuiCard
+        ref={ref}
+        raised={raised}
+        clickable={clickable}
+        className={`${styles.card} ${className}`}
+        {...props}
+      >
+        {children}
+      </FakeMuiCard>
+    )
+  }
+)
 Card.displayName = 'Card'
 
 interface CardHeaderProps {
@@ -39,9 +41,9 @@ interface CardHeaderProps {
 }
 
 const CardHeaderComponent = forwardRef<HTMLDivElement, CardHeaderProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <Box ref={ref} sx={{ p: 3, pb: 0 }} {...props}>
+      <Box ref={ref} className={`${styles.cardHeader} ${className}`} {...props}>
         {children}
       </Box>
     )
@@ -54,13 +56,15 @@ interface CardTitleProps {
   className?: string
 }
 
-const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(({ children, ...props }, ref) => {
-  return (
-    <Typography ref={ref} variant="h6" component="h3" fontWeight={600} {...props}>
-      {children}
-    </Typography>
-  )
-})
+const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
+  ({ children, className = '', ...props }, ref) => {
+    return (
+      <FakeMuiCardTitle ref={ref} className={`${styles.cardTitle} ${className}`} {...props}>
+        {children}
+      </FakeMuiCardTitle>
+    )
+  }
+)
 CardTitle.displayName = 'CardTitle'
 
 interface CardDescriptionProps {
@@ -69,11 +73,11 @@ interface CardDescriptionProps {
 }
 
 const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <Typography ref={ref} variant="body2" color="text.secondary" {...props}>
+      <FakeMuiCardDescription ref={ref} className={`${styles.cardDescription} ${className}`} {...props}>
         {children}
-      </Typography>
+      </FakeMuiCardDescription>
     )
   }
 )
@@ -85,11 +89,11 @@ interface CardContentProps {
 }
 
 const CardContentComponent = forwardRef<HTMLDivElement, CardContentProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className = '', ...props }, ref) => {
     return (
-      <CardContent ref={ref} sx={{ p: 3 }} {...props}>
+      <FakeMuiCardContent ref={ref} className={`${styles.cardContent} ${className}`} {...props}>
         {children}
-      </CardContent>
+      </FakeMuiCardContent>
     )
   }
 )
@@ -100,13 +104,15 @@ interface CardFooterProps {
   className?: string
 }
 
-const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(({ children, ...props }, ref) => {
-  return (
-    <CardActions ref={ref} sx={{ p: 3, pt: 0 }} {...props}>
-      {children}
-    </CardActions>
-  )
-})
+const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
+  ({ children, className = '', ...props }, ref) => {
+    return (
+      <FakeMuiCardFooter ref={ref} className={`${styles.cardFooter} ${className}`} {...props}>
+        {children}
+      </FakeMuiCardFooter>
+    )
+  }
+)
 CardFooter.displayName = 'CardFooter'
 
 export {
