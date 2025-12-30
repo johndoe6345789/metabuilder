@@ -283,7 +283,7 @@ export const loadPackageSchema = (packagePath: string): PackageSchema | null => 
   if (!fs.existsSync(schemaPath)) {
     return null
   }
-  return yaml.parse(fs.readFileSync(schemaPath, 'utf-8'))
+  return parseYaml(fs.readFileSync(schemaPath, 'utf-8')) as PackageSchema
 }
 
 /**
@@ -330,7 +330,7 @@ export const validateAndQueueSchema = (
         action: existing ? 'alter' : 'create',
         currentChecksum: existing?.checksum || null,
         newChecksum,
-        schemaYaml: yaml.stringify(entity),
+        schemaYaml: stringifyYaml(entity),
         prismaPreview,
         status: 'pending',
         createdAt: Date.now(),

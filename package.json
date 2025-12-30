@@ -14,7 +14,15 @@
     "extract:quick": "cd frontends/nextjs && npm run extract:quick",
     "extract:auto": "cd frontends/nextjs && npm run extract:auto",
     "extract:all": "cd frontends/nextjs && npm run extract:all",
-    "extract:help": "cd frontends/nextjs && npm run extract:help"
+    "extract:help": "cd frontends/nextjs && npm run extract:help",
+    "schema:scan": "npx ts-node tools/codegen/schema-cli.ts scan",
+    "schema:list": "npx ts-node tools/codegen/schema-cli.ts list",
+    "schema:approve": "npx ts-node tools/codegen/schema-cli.ts approve",
+    "schema:generate": "npx ts-node tools/codegen/schema-cli.ts generate",
+    "schema:status": "npx ts-node tools/codegen/schema-cli.ts status",
+    "schema:preview": "npx ts-node tools/codegen/schema-cli.ts preview",
+    "db:generate": "npx prisma generate",
+    "db:migrate": "npx prisma migrate dev"
   },
   "devDependencies": {
     "@prisma/client": "^7.2.0",
