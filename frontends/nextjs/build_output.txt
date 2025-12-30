@@ -15,3 +15,88 @@
   · serverActions
 
   Creating an optimized production build ...
+Failed to compile.
+
+./src/lib/dbal/database-dbal/core/get-dbal.server.ts
+Error:   x You're importing a component that needs "server-only". That only works in a Server Component which is not supported in the pages/ directory. Read more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[C:\Users\richa\GitHub\metabuilder\frontends\nextjs\src\lib\dbal\database-dbal\core\get-dbal.server.ts:1:1]
+ 1 | import 'server-only'
+   : ^^^^^^^^^^^^^^^^^^^^
+ 2 | 
+ 3 | import type { DBALClient } from '@/dbal'
+   `----
+
+Import trace for requested module:
+./src/lib/dbal/database-dbal/core/get-dbal.server.ts
+./src/lib/dbal/database-dbal/users/dbal-update-user.server.ts
+./src/lib/db/users/super-god/transfer-super-god-power.ts
+./src/lib/db/core/operations.ts
+./src/lib/db/core/index.ts
+./src/lib/database.ts
+./src/components/misc/auth/UnifiedLogin.tsx
+./src/components/UnifiedLogin.tsx
+./src/app/login/page.tsx
+
+../../dbal/development/src/adapters/prisma/operations/utils.ts
+Module not found: Can't resolve '../../core/foundation/errors'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+../../dbal/development/src/adapters/prisma/operations/crud.ts
+../../dbal/development/src/adapters/prisma/index.ts
+../../dbal/development/src/core/client/adapter-factory.ts
+../../dbal/development/src/core/client/builders.ts
+../../dbal/development/src/core/client.ts
+../../dbal/development/src/index.ts
+./src/lib/dbal/database-dbal/core/initialize-dbal.server.ts
+./src/lib/dbal/core/client/database-dbal.server.ts
+./src/app/api/users/[userId]/handlers/delete-user.ts
+./src/app/api/users/[userId]/route.ts
+
+../../dbal/development/src/blob/providers/filesystem/operations/downloads.ts
+Module not found: Can't resolve '../../../core/foundation/errors'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+../../dbal/development/src/blob/providers/filesystem/index.ts
+../../dbal/development/src/blob/index.ts
+../../dbal/development/src/index.ts
+./src/lib/dbal/database-dbal/core/initialize-dbal.server.ts
+./src/lib/dbal/core/client/database-dbal.server.ts
+./src/app/api/users/[userId]/handlers/delete-user.ts
+./src/app/api/users/[userId]/route.ts
+
+../../dbal/development/src/blob/providers/filesystem/operations/listing.ts
+Module not found: Can't resolve '../../../core/foundation/errors'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+../../dbal/development/src/blob/providers/filesystem/index.ts
+../../dbal/development/src/blob/index.ts
+../../dbal/development/src/index.ts
+./src/lib/dbal/database-dbal/core/initialize-dbal.server.ts
+./src/lib/dbal/core/client/database-dbal.server.ts
+./src/app/api/users/[userId]/handlers/delete-user.ts
+./src/app/api/users/[userId]/route.ts
+
+../../dbal/development/src/blob/providers/filesystem/operations/maintenance.ts
+Module not found: Can't resolve '../../../core/foundation/errors'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+../../dbal/development/src/blob/providers/filesystem/index.ts
+../../dbal/development/src/blob/index.ts
+../../dbal/development/src/index.ts
+./src/lib/dbal/database-dbal/core/initialize-dbal.server.ts
+./src/lib/dbal/core/client/database-dbal.server.ts
+./src/app/api/users/[userId]/handlers/delete-user.ts
+./src/app/api/users/[userId]/route.ts
+
+
+> Build failed because of webpack errors
