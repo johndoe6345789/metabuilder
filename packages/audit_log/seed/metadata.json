@@ -1,0 +1,29 @@
+{
+  "packageId": "audit_log",
+  "name": "Audit Log",
+  "version": "1.0.0",
+  "description": "Security audit log viewer and stats dashboard",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "admin",
+  "dependencies": [],
+  "exports": {
+    "components": [
+      "AuditLogViewer",
+      "AuditStatsCard",
+      "LogTable",
+      "LogFilters"
+    ],
+    "scripts": [
+      "init",
+      "stats",
+      "filters",
+      "formatting"
+    ]
+  },
+  "minLevel": 3,
+  "bindings": {
+    "dbal": true,
+    "browser": false
+  }
+}
