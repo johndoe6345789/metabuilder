@@ -147,6 +147,74 @@ void Server::registerRoutes() {
     drogon::app().registerHandler("/api/status", status_handler, {drogon::HttpMethod::Get});
     drogon::app().registerHandler("/api/dbal", rpc_handler, {drogon::HttpMethod::Post});
 
+    // Schema management routes
+    auto schema_handler = [](const drogon::HttpRequestPtr& request,
+                             std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
+        // Get paths from environment or use defaults
+        const char* env_registry = std::getenv("DBAL_SCHEMA_REGISTRY_PATH");
+        const char* env_packages = std::getenv("DBAL_PACKAGES_PATH");
+        const char* env_output = std::getenv("DBAL_PRISMA_OUTPUT_PATH");
+        
+        const std::string registry_path = env_registry ? env_registry : "/app/prisma/schema-registry.json";
+        const std::string packages_path = env_packages ? env_packages : "/app/packages";
+        const std::string output_path = env_output ? env_output : "/app/prisma/generated-from-packages.prisma";
+        
+        auto send_success = [&callback](const Json::Value& data) {
+            callback(build_json_response(data));
+        };
+        
+        auto send_error = [&callback](const std::string& message, int status) {
+            Json::Value body;
+            body["success"] = false;
+            body["error"] = message;
+            auto response = drogon::HttpResponse::newHttpJsonResponse(body);
+            response->setStatusCode(static_cast<drogon::HttpStatusCode>(status));
+            callback(response);
+        };
+        
+        // Handle GET - list/status
+        if (request->method() == drogon::HttpMethod::Get) {
+            rpc::handle_schema_list(registry_path, send_success, send_error);
+            return;
+        }
+        
+        // Handle POST - actions
+        std::istringstream stream(request->getBody());
+        Json::CharReaderBuilder reader_builder;
+        Json::Value body;
+        JSONCPP_STRING errs;
+        if (!Json::parseFromStream(reader_builder, stream, &body, &errs)) {
+            send_error("Invalid JSON payload", 400);
+            return;
+        }
+        
+        const std::string action = body.get("action", "").asString();
+        const std::string id = body.get("id", "").asString();
+        
+        if (action == "scan") {
+            rpc::handle_schema_scan(registry_path, packages_path, send_success, send_error);
+        } else if (action == "approve") {
+            if (id.empty()) {
+                send_error("Migration ID required", 400);
+                return;
+            }
+            rpc::handle_schema_approve(registry_path, id, send_success, send_error);
+        } else if (action == "reject") {
+            if (id.empty()) {
+                send_error("Migration ID required", 400);
+                return;
+            }
+            rpc::handle_schema_reject(registry_path, id, send_success, send_error);
+        } else if (action == "generate") {
+            rpc::handle_schema_generate(registry_path, output_path, send_success, send_error);
+        } else {
+            send_error("Unknown action: " + action, 400);
+        }
+    };
+    
+    drogon::app().registerHandler("/api/dbal/schema", schema_handler, 
+                                  {drogon::HttpMethod::Get, drogon::HttpMethod::Post});
+
     routes_registered_ = true;
 }
 

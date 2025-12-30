@@ -44,6 +44,7 @@ add_executable(dbal_daemon
     ${DBAL_SRC_DIR}/daemon/server_helpers/serialization.cpp
     ${DBAL_SRC_DIR}/daemon/server_helpers/response.cpp
     ${DBAL_SRC_DIR}/daemon/rpc_user_actions.cpp
+    ${DBAL_SRC_DIR}/daemon/rpc_schema_actions.cpp
     ${DBAL_SRC_DIR}/daemon/security.cpp
 )
 
