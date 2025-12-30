@@ -6,6 +6,37 @@ import { Meta } from '@storybook/blocks'
 
 This Storybook renders **Lua packages** from the MetaBuilder platform without running the actual application.
 
+## Quick Start
+
+1. **Explorer** - Use the Auto-Discovered Packages → Explorer to browse all packages interactively
+2. **Component Registry** - See all available components in Components → Registry
+3. **Manual Stories** - Pre-configured stories in Lua Packages → Renderer
+
+## Auto-Discovery
+
+The storybook automatically discovers packages using `storybook.config.json`:
+
+```json
+{
+  "discovery": {
+    "enabled": true,
+    "includedCategories": ["ui", "admin", "gaming", "social", "editors"],
+    "excludedPackages": ["shared", "lua_test"],
+    "minLevel": 1,
+    "maxLevel": 6
+  }
+}
+```
+
+### Context Variants
+
+Test packages with different user contexts:
+
+- **Guest** - Level 1 user
+- **Admin** - Level 4 user  
+- **Admin (Nerd Mode)** - Level 4 with nerdMode enabled
+- **Supergod** - Level 6 user
+
 ## How It Works
 
 1. **Lua packages** in `/packages/*/seed/scripts/` define UI as component trees
