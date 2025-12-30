@@ -1,6 +1,5 @@
 import type React from 'react'
 
-import { NotificationSummaryCard } from '@/components/NotificationSummaryCard'
 import {
   Alert,
   Avatar,
@@ -42,7 +41,7 @@ export function RenderNode({ component, renderChildren, user }: RenderNodeProps)
       <div className="p-4 border-2 border-dashed border-accent">
         Lua Package Component: {type}
         <div className="text-xs text-muted-foreground mt-2">
-          This component is rendered from packages/irc_webchat
+          This component is rendered from a Lua package
         </div>
       </div>
     )
@@ -65,13 +64,14 @@ export function RenderNode({ component, renderChildren, user }: RenderNodeProps)
       return <Card className={props.className || 'p-6'}>{renderChildren()}</Card>
 
     case 'NotificationSummary':
+      // Now handled via Lua package notification_center
       return (
-        <NotificationSummaryCard
-          title={props.title}
-          subtitle={props.subtitle}
-          totalLabel={props.totalLabel}
-          items={props.items}
-        />
+        <div className="p-4 border-2 border-dashed border-accent">
+          Lua Package Component: NotificationSummary
+          <div className="text-xs text-muted-foreground mt-2">
+            Migrated to packages/notification_center
+          </div>
+        </div>
       )
 
     case 'Button':
