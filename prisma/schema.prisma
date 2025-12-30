@@ -6,11 +6,15 @@ datasource db {
   provider = "sqlite"
 }
 
+// =============================================================================
+// CORE IDENTITY & AUTH
+// =============================================================================
+
 model User {
   id                      String                 @id
   username                String                 @unique
   email                   String                 @unique
-  role                    String
+  role                    String                 // public|user|moderator|admin|god|supergod
   profilePicture          String?
   bio                     String?
   createdAt               BigInt
@@ -24,6 +28,14 @@ model User {
   passwordChangeTimestamp BigInt?
   firstLogin              Boolean                @default(false)
   sessions                Session[]
+  notifications           Notification[]
+  auditLogs               AuditLog[]
+  mediaAssets             MediaAsset[]
+  forumPosts              ForumPost[]
+  forumThreads            ForumThread[]
+
+  @@index([tenantId])
+  @@index([role])
 }
 
 model Credential {
@@ -38,138 +50,168 @@ model Session {
   expiresAt    BigInt
   createdAt    BigInt
   lastActivity BigInt
+  ipAddress    String?
+  userAgent    String?
   user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([expiresAt])
+  @@index([token])
 }
 
-model Workflow {
-  id          String  @id
-  name        String
-  description String?
-  nodes       String
-  edges       String
-  enabled     Boolean
-}
-
-model LuaScript {
-  id          String  @id
-  name        String
-  description String?
-  code        String
-  parameters  String
-  returnType  String?
-  isSandboxed Boolean @default(true)
-  allowedGlobals String @default("[]")
-  timeoutMs   Int     @default(5000)
-}
-
-model PageConfig {
-  id            String  @id
-  path          String
-  title         String
-  level         Int
-  componentTree String
-  requiresAuth  Boolean
-  requiredRole  String?
-}
-
-model ModelSchema {
-  id          String  @id @default(cuid())
-  name        String  @unique
-  label       String?
-  labelPlural String?
-  icon        String?
-  fields      String
-  listDisplay String?
-  listFilter  String?
-  searchFields String?
-  ordering    String?
-}
-
-model AppConfiguration {
-  id          String @id
-  name        String
-  schemas     String
-  workflows   String
-  luaScripts  String
-  pages       String
-  theme       String
-}
-
-model Comment {
-  id        String   @id
-  userId    String
-  content   String
-  createdAt BigInt
-  updatedAt BigInt?
-  parentId  String?
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model ComponentNode {
-  id        String  @id
-  type      String
-  parentId  String?
-  childIds  String
-  order     Int
-  pageId    String
-}
-
-model ComponentConfig {
-  id                    String  @id
-  componentId           String
-  props                 String
-  styles                String
-  events                String
-  conditionalRendering  String?
-}
-
-model CssCategory {
-  id      String @id @default(cuid())
-  name    String @unique
-  classes String
-}
-
-model DropdownConfig {
-  id      String @id
-  name    String @unique
-  label   String
-  options String
-}
-
-model InstalledPackage {
-  packageId   String  @id
-  installedAt BigInt
-  version     String
-  enabled     Boolean
-}
-
-model PackageData {
-  packageId String @id
-  data      String
-}
+// =============================================================================
+// MULTI-TENANCY
+// =============================================================================
 
 model Tenant {
-  id             String  @id
+  id             String           @id
   name           String
+  slug           String           @unique
   ownerId        String
   createdAt      BigInt
   homepageConfig String?
-  owner          User    @relation("TenantOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  settings       String?          // JSON: theme, features, limits
+  owner          User             @relation("TenantOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   users          User[]
+  workflows      Workflow[]
+  luaScripts     LuaScript[]
+  pages          PageConfig[]
+  schemas        ModelSchema[]
+  notifications  Notification[]
+  auditLogs      AuditLog[]
+  mediaAssets    MediaAsset[]
+  forumCategories ForumCategory[]
+
+  @@index([slug])
+  @@index([ownerId])
 }
 
-model PowerTransferRequest {
+// =============================================================================
+// ROUTING & PAGES
+// =============================================================================
+
+model PageConfig {
+  id            String   @id
+  tenantId      String?
+  packageId     String?  // Which package defined this route
+  path          String   // Route pattern: /media/jobs, /forum/:id
+  title         String
+  description   String?  // SEO meta description
+  icon          String?  // Icon for navigation menus
+  component     String?  // Named component reference
+  componentTree String   // JSON: full component tree
+  level         Int      // Required permission level 1-6
+  requiresAuth  Boolean
+  requiredRole  String?
+  parentPath    String?  // Parent route for hierarchy
+  sortOrder     Int      @default(0)
+  isPublished   Boolean  @default(true)
+  params        String?  // JSON: route parameter definitions
+  meta          String?  // JSON: additional metadata (og tags, etc.)
+  createdAt     BigInt?
+  updatedAt     BigInt?
+  tenant        Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, path])
+  @@index([tenantId])
+  @@index([packageId])
+  @@index([level])
+  @@index([parentPath])
+}
+
+// =============================================================================
+// WORKFLOWS & SCRIPTING
+// =============================================================================
+
+model Workflow {
+  id          String  @id
+  tenantId    String?
+  name        String
+  description String?
+  nodes       String  // JSON: WorkflowNode[]
+  edges       String  // JSON: WorkflowEdge[]
+  enabled     Boolean
+  version     Int     @default(1)
+  createdAt   BigInt?
+  updatedAt   BigInt?
+  createdBy   String?
+  tenant      Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([enabled])
+}
+
+model LuaScript {
+  id             String  @id
+  tenantId       String?
+  name           String
+  description    String?
+  code           String
+  parameters     String  // JSON: Array<{name, type}>
+  returnType     String?
+  isSandboxed    Boolean @default(true)
+  allowedGlobals String  @default("[]")
+  timeoutMs      Int     @default(5000)
+  version        Int     @default(1)
+  createdAt      BigInt?
+  updatedAt      BigInt?
+  createdBy      String?
+  tenant         Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([name])
+}
+
+// =============================================================================
+// DATA SCHEMAS
+// =============================================================================
+
+model ModelSchema {
+  id           String  @id @default(cuid())
+  tenantId     String?
+  name         String
+  label        String?
+  labelPlural  String?
+  icon         String?
+  fields       String  // JSON: field definitions
+  listDisplay  String? // JSON: columns to show in list
+  listFilter   String? // JSON: filterable fields
+  searchFields String? // JSON: searchable fields
+  ordering     String? // JSON: default sort order
+  validations  String? // JSON: validation rules
+  hooks        String? // JSON: lifecycle hooks (Lua script refs)
+  tenant       Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+}
+
+model DynamicData {
+  id        String  @id @default(cuid())
+  tenantId  String
+  schemaId  String  // Reference to ModelSchema
+  data      String  // JSON: actual record data
+  createdAt BigInt
+  updatedAt BigInt?
+  createdBy String?
+  updatedBy String?
+
+  @@index([tenantId, schemaId])
+  @@index([createdAt])
+}
+
+// =============================================================================
+// APP CONFIGURATION
+// =============================================================================
+
+model AppConfiguration {
   id         String @id
-  fromUserId String
-  toUserId   String
-  status     String
-  createdAt  BigInt
-  expiresAt  BigInt
-  fromUser   User   @relation("PowerTransferFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
-  toUser     User   @relation("PowerTransferTo", fields: [toUserId], references: [id], onDelete: Cascade)
+  name       String
+  schemas    String // JSON
+  workflows  String // JSON
+  luaScripts String // JSON
+  pages      String // JSON
+  theme      String // JSON
 }
 
 model SystemConfig {
@@ -188,23 +230,297 @@ model SMTPConfig {
   fromName  String
 }
 
-model PasswordResetToken {
-  username String @id
-  token    String
+// =============================================================================
+// COMPONENTS & UI
+// =============================================================================
+
+model ComponentNode {
+  id        String  @id
+  type      String
+  parentId  String?
+  childIds  String  // JSON: string[]
+  order     Int
+  pageId    String
+
+  @@index([pageId])
+  @@index([parentId])
+}
+
+model ComponentConfig {
+  id                   String  @id
+  componentId          String
+  props                String  // JSON
+  styles               String  // JSON
+  events               String  // JSON
+  conditionalRendering String? // JSON
+
+  @@index([componentId])
+}
+
+model CssCategory {
+  id      String @id @default(cuid())
+  name    String @unique
+  classes String // JSON: string[]
+}
+
+model DropdownConfig {
+  id      String @id
+  name    String @unique
+  label   String
+  options String // JSON: Array<{value, label}>
+}
+
+// =============================================================================
+// PACKAGES
+// =============================================================================
+
+model InstalledPackage {
+  packageId   String  @id
+  tenantId    String?
+  installedAt BigInt
+  version     String
+  enabled     Boolean
+  config      String? // JSON: package-specific configuration
+
+  @@index([tenantId])
+}
+
+model PackageData {
+  packageId String @id
+  data      String // JSON
+}
+
+// =============================================================================
+// CONTENT: COMMENTS
+// =============================================================================
+
+model Comment {
+  id        String  @id
+  tenantId  String?
+  userId    String
+  content   String
+  createdAt BigInt
+  updatedAt BigInt?
+  parentId  String?
+  entityType String? // What this comment is on: 'post', 'thread', 'media', etc.
+  entityId  String?  // ID of the entity being commented on
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([parentId])
+  @@index([entityType, entityId])
+}
+
+// =============================================================================
+// CONTENT: FORUM
+// =============================================================================
+
+model ForumCategory {
+  id          String        @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  icon        String?
+  slug        String
+  sortOrder   Int           @default(0)
+  parentId    String?       // For nested categories
+  createdAt   BigInt
+  tenant      Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  threads     ForumThread[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([parentId])
+}
+
+model ForumThread {
+  id           String      @id @default(cuid())
+  tenantId     String
+  categoryId   String
+  authorId     String
+  title        String
+  content      String
+  slug         String
+  isPinned     Boolean     @default(false)
+  isLocked     Boolean     @default(false)
+  viewCount    Int         @default(0)
+  replyCount   Int         @default(0)
+  lastReplyAt  BigInt?
+  lastReplyBy  String?
+  createdAt    BigInt
+  updatedAt    BigInt?
+  category     ForumCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  author       User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  posts        ForumPost[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([categoryId])
+  @@index([authorId])
+  @@index([isPinned, lastReplyAt])
+}
+
+model ForumPost {
+  id        String      @id @default(cuid())
+  tenantId  String
+  threadId  String
+  authorId  String
+  content   String
+  likes     Int         @default(0)
+  isEdited  Boolean     @default(false)
+  createdAt BigInt
+  updatedAt BigInt?
+  thread    ForumThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  author    User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([threadId])
+  @@index([authorId])
+}
+
+// =============================================================================
+// MEDIA
+// =============================================================================
+
+model MediaAsset {
+  id            String  @id @default(cuid())
+  tenantId      String
+  userId        String
+  filename      String
+  originalName  String
+  mimeType      String
+  size          BigInt
+  path          String
+  thumbnailPath String?
+  width         Int?
+  height        Int?
+  duration      Int?    // For video/audio in seconds
+  metadata      String? // JSON: EXIF, tags, etc.
+  createdAt     BigInt
+  tenant        Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([mimeType])
+}
+
+model MediaJob {
+  id          String  @id @default(cuid())
+  tenantId    String
+  userId      String
+  type        String  // transcode, thumbnail, convert, etc.
+  status      String  // pending, processing, completed, failed
+  priority    Int     @default(0)
+  inputPath   String
+  outputPath  String?
+  params      String  // JSON: job-specific parameters
+  progress    Int     @default(0)
+  error       String?
+  startedAt   BigInt?
+  completedAt BigInt?
+  createdAt   BigInt
+
+  @@index([tenantId])
+  @@index([status, priority])
+  @@index([userId])
+}
+
+// =============================================================================
+// NOTIFICATIONS
+// =============================================================================
+
+model Notification {
+  id        String  @id @default(cuid())
+  tenantId  String
+  userId    String
+  type      String  // info, warning, success, error, mention, reply, etc.
+  title     String
+  message   String
+  icon      String?
+  read      Boolean @default(false)
+  data      String? // JSON: action URLs, entity references, etc.
+  createdAt BigInt
+  expiresAt BigInt?
+  tenant    Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([userId, read])
+  @@index([createdAt])
+}
+
+// =============================================================================
+// AUDIT & LOGGING
+// =============================================================================
+
+model AuditLog {
+  id        String  @id @default(cuid())
+  tenantId  String
+  userId    String?
+  username  String?
+  action    String  // create, update, delete, login, logout, etc.
+  entity    String  // User, Workflow, Page, etc.
+  entityId  String?
+  oldValue  String? // JSON: previous state
+  newValue  String? // JSON: new state
+  ipAddress String?
+  userAgent String?
+  details   String? // JSON: additional context
+  timestamp BigInt
+  tenant    Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user      User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([entity, entityId])
+  @@index([action])
+  @@index([timestamp])
 }
 
 model ErrorLog {
-  id          String  @id @default(cuid())
-  timestamp   BigInt
-  level       String  // 'error', 'warning', 'info'
-  message     String
-  stack       String?
-  context     String? // JSON string with additional context
-  userId      String?
-  username    String?
-  tenantId    String?
-  source      String? // Component/file where error occurred
-  resolved    Boolean @default(false)
-  resolvedAt  BigInt?
-  resolvedBy  String?
+  id         String  @id @default(cuid())
+  timestamp  BigInt
+  level      String  // error, warning, info
+  message    String
+  stack      String?
+  context    String? // JSON: additional context
+  userId     String?
+  username   String?
+  tenantId   String?
+  source     String? // Component/file where error occurred
+  resolved   Boolean @default(false)
+  resolvedAt BigInt?
+  resolvedBy String?
+
+  @@index([tenantId])
+  @@index([level])
+  @@index([timestamp])
+  @@index([resolved])
+}
+
+// =============================================================================
+// AUTH TOKENS & SECURITY
+// =============================================================================
+
+model PasswordResetToken {
+  username  String @id
+  token     String
+  expiresAt BigInt?
+  createdAt BigInt?
+}
+
+model PowerTransferRequest {
+  id         String @id
+  fromUserId String
+  toUserId   String
+  status     String // pending, accepted, rejected
+  createdAt  BigInt
+  expiresAt  BigInt
+  fromUser   User   @relation("PowerTransferFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser     User   @relation("PowerTransferTo", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([expiresAt])
 }

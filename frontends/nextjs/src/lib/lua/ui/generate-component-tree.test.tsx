@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
 import React from 'react'
+import { describe, expect, it } from 'vitest'
 
 import { generateComponentTree } from './generate-component-tree'
 import type { LuaUIComponent } from './types/lua-ui-package'

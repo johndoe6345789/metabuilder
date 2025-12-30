@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
 import { join } from 'path'
+import { describe, expect, it } from 'vitest'
 
 import { loadLuaUIPackage } from './load-lua-ui-package'
 
