@@ -11,6 +11,7 @@
 #include "dbal/core/errors.hpp"
 #include "rpc_user_actions.hpp"
 #include "rpc_schema_actions.hpp"
+#include "rpc_restful_handler.hpp"
 
 namespace dbal {
 namespace daemon {
