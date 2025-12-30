@@ -1,4 +1,5 @@
 #include "command_dispatch.h"
+#include "dbal_commands.h"
 
 #include <cpr/cpr.h>
 #include <iostream>
@@ -14,6 +15,7 @@ Available commands:
   user get <userId>           Get a user by ID
   tenant list                 List all tenants
   tenant get <tenantId>       Get a tenant by ID
+  dbal <subcommand>           DBAL operations (use 'dbal help' for details)
 )";
 }
 
@@ -125,6 +127,10 @@ int dispatch(const HttpClient &client, const std::vector<std::string> &args) {
 
   if (args[0] == "tenant") {
     return handle_tenant(client, args);
+  }
+
+  if (args[0] == "dbal") {
+    return handle_dbal(client, args);
   }
 
   print_help();
