@@ -101,7 +101,8 @@ function createTemplateVars(ctx: LuaRenderContext): TemplateVariables {
  * Each component becomes a render with its id as the key
  */
 function componentsToRenders(
-  components: PackageComponent[]
+  components: PackageComponent[],
+  scripts: Array<{ file: string; name: string; description?: string; category?: string }> = []
 ): Record<string, (ctx: LuaRenderContext) => LuaUIComponent> {
   const renders: Record<string, (ctx: LuaRenderContext) => LuaUIComponent> = {}
 
@@ -128,6 +129,46 @@ function componentsToRenders(
         renders[alias] = mainRender
       }
     }
+  }
+
+  // Add stub renders for utility scripts (non-rendering scripts from manifest)
+  // This prevents "Render function not found" errors when someone clicks on them
+  for (const script of scripts) {
+    const scriptFile = script.file
+    const scriptName = script.name
+    
+    // Skip if already registered
+    if (renders[scriptFile] || renders[scriptName]) continue
+    
+    // Create a friendly stub that shows script info
+    const stubRender = () => ({
+      type: 'Alert',
+      props: { severity: 'info' },
+      children: [
+        {
+          type: 'Typography',
+          props: { variant: 'subtitle1', text: `📜 ${script.name}` },
+        },
+        {
+          type: 'Typography',
+          props: { 
+            variant: 'body2', 
+            text: script.description || 'Utility script (no visual render)',
+          },
+        },
+        script.category ? {
+          type: 'Typography',
+          props: { 
+            variant: 'caption', 
+            text: `Category: ${script.category}`,
+            className: 'text-muted-foreground',
+          },
+        } : null,
+      ].filter(Boolean),
+    })
+    
+    renders[scriptFile] = stubRender
+    renders[scriptName] = stubRender
   }
 
   // Add a special "all_components" render that shows all components
@@ -159,9 +200,10 @@ function componentsToRenders(
  * Reads metadata.json and components.json directly
  */
 export async function autoLoadPackage(packageId: string): Promise<MockPackageDefinition | null> {
-  const [metadata, components] = await Promise.all([
+  const [metadata, components, scripts] = await Promise.all([
     loadPackageMetadata(packageId),
     loadPackageComponents(packageId),
+    loadPackageScripts(packageId),
   ])
 
   if (!metadata) {
@@ -169,8 +211,8 @@ export async function autoLoadPackage(packageId: string): Promise<MockPackageDef
     return null
   }
 
-  // Generate renders from components
-  const renders = componentsToRenders(components)
+  // Generate renders from components, passing scripts for stub generation
+  const renders = componentsToRenders(components, scripts)
 
   // Add an info render for packages with no components
   if (Object.keys(renders).length === 0) {
