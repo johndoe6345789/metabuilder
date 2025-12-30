@@ -7,3 +7,13 @@ export {
   type PageDefinition,
   PageRenderer,
 } from './page-renderer'
+
+// Component registry for Lua to React mapping
+export {
+  componentRegistry,
+  getComponentByType,
+  hasComponent,
+  getRegisteredComponentTypes,
+  registerComponent,
+  type LuaComponentProps,
+} from './component-registry'

@@ -26,7 +26,7 @@ Atoms are the smallest, indivisible UI elements in the MetaBuilder component lib
 | `Badge` | Status indicator chip | `Chip` |
 | `Avatar` | User/entity image with fallback | `MuiAvatar` |
 | `IconButton` | Icon-only button | `MuiIconButton` |
-| `Icon` | Icon wrapper for MUI icons | `@mui/icons-material` |
+| `Icon` | Icon wrapper for fakemui icons | `@/fakemui/icons` |
 | `Link` | Navigation link with Next.js integration | `MuiLink` + `NextLink` |
 | `Text` | Typography with weight/alignment options | `Typography` |
 

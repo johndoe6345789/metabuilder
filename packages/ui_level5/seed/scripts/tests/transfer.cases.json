@@ -1,0 +1,43 @@
+{
+  "initiateTransfer": {
+    "authorized": [
+      { "userLevel": 6, "tenantId": "tenant_001", "description": "supergod can initiate transfer" }
+    ],
+    "unauthorized": [
+      { "userLevel": 1, "description": "public cannot initiate" },
+      { "userLevel": 2, "description": "user cannot initiate" },
+      { "userLevel": 3, "description": "moderator cannot initiate" },
+      { "userLevel": 4, "description": "admin cannot initiate" },
+      { "userLevel": 5, "description": "god cannot initiate" }
+    ]
+  },
+  "confirmTransfer": {
+    "valid": [
+      { "tenantId": "tenant_001", "targetUserId": "new_owner_1", "description": "transfer to new owner" },
+      { "tenantId": "tenant_002", "targetUserId": "admin_user", "description": "transfer to admin" }
+    ],
+    "missingTarget": [
+      { "tenantId": "tenant_001", "description": "missing target user" }
+    ],
+    "unauthorized": [
+      { "userLevel": 1, "description": "public cannot confirm" },
+      { "userLevel": 2, "description": "user cannot confirm" },
+      { "userLevel": 3, "description": "moderator cannot confirm" },
+      { "userLevel": 4, "description": "admin cannot confirm" },
+      { "userLevel": 5, "description": "god cannot confirm" }
+    ]
+  },
+  "assignGod": {
+    "authorized": [
+      { "targetUserId": "user_123", "description": "assign god to user" },
+      { "targetUserId": "admin_456", "description": "promote admin to god" }
+    ],
+    "unauthorized": [
+      { "userLevel": 1, "description": "public cannot assign god" },
+      { "userLevel": 2, "description": "user cannot assign god" },
+      { "userLevel": 3, "description": "moderator cannot assign god" },
+      { "userLevel": 4, "description": "admin cannot assign god" },
+      { "userLevel": 5, "description": "god cannot assign god" }
+    ]
+  }
+}

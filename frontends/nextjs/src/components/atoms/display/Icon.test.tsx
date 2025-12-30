@@ -7,15 +7,15 @@ describe('Icon', () => {
   it.each([
     { name: 'Home', size: 'small' },
     { name: 'Settings', size: 'medium' },
-    { name: 'Delete', size: 'large' },
-    { name: 'Add', size: 'inherit' },
+    { name: 'Trash', size: 'large' },
+    { name: 'Plus', size: 'inherit' },
   ] as const)('renders icon $name with size $size', ({ name, size }) => {
     const { container } = render(<Icon name={name} size={size} />)
     expect(container.querySelector('svg')).not.toBeNull()
   })
 
   it('applies custom sx styles', () => {
-    const { container } = render(<Icon name="Home" sx={{ color: 'primary.main' }} />)
+    const { container } = render(<Icon name="Home" sx={{ color: 'blue' }} />)
     expect(container.querySelector('svg')).not.toBeNull()
   })
 

@@ -15,5 +15,15 @@
     "pages": ["level6"],
     "scripts": ["layout", "tenants", "transfer", "system"],
     "components": []
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua",
+      "tests/transfer.test.lua"
+    ],
+    "cases": [
+      "tests/transfer.cases.json"
+    ]
   }
 }

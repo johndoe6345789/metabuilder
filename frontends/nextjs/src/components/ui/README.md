@@ -37,9 +37,11 @@ import { Button, Input } from '@/components/ui/atoms'
 import { Card, Select } from '@/components/ui/molecules'
 import { Table, Form } from '@/components/ui/organisms'
 
-// Direct MUI imports are also fine
+// Direct MUI imports are also fine for layout/typography
 import { Box, Typography, Grid } from '@mui/material'
-import { Add as AddIcon } from '@mui/icons-material'
+
+// Use fakemui for icons
+import { Plus, Trash, Settings } from '@/fakemui/icons'
 ```
 
 ## Atomic Design Pattern
