@@ -362,6 +362,7 @@ export const loadPackageSchema = (packagePath: string): PackageSchema | null => 
 
 /**
  * Validate and queue schema changes for a package
+ * Uses prefixed entity names to prevent cross-package collisions
  */
 export const validateAndQueueSchema = (
   packageId: string,
@@ -377,30 +378,28 @@ export const validateAndQueueSchema = (
   }
   
   for (const entity of schema.entities) {
+    // Use prefixed entity name to avoid collisions
+    const prefixedName = getPrefixedEntityName(packageId, entity.name)
     const newChecksum = computeSchemaChecksum(entity)
-    const existing = registry.entities[entity.name]
+    const existing = registry.entities[prefixedName]
     
-    // Check for conflicts with other packages
+    // Check for conflicts - with prefixes, only same package can conflict
     if (existing && existing.ownerPackage !== packageId) {
-      if (existing.checksum !== newChecksum) {
-        errors.push(
-          `Entity "${entity.name}" owned by "${existing.ownerPackage}" has different schema. ` +
-          `Current: ${existing.checksum}, Proposed: ${newChecksum}. ` +
-          `Packages must use identical schema or coordinate versions.`
-        )
-        continue
-      }
-      // Same checksum = compatible, skip
+      // This should be rare with prefixes, but check anyway
+      errors.push(
+        `Entity "${prefixedName}" owned by "${existing.ownerPackage}" conflicts. ` +
+        `This is unexpected with prefixes - please report this bug.`
+      )
       continue
     }
     
     // New entity or updated schema
     if (!existing || existing.checksum !== newChecksum) {
-      const prismaPreview = entityToPrisma(entity)
+      const prismaPreview = entityToPrisma(entity, packageId)
       const item: MigrationQueueItem = {
         id: crypto.randomUUID(),
         packageId,
-        entityName: entity.name,
+        entityName: prefixedName, // Store prefixed name
         action: existing ? 'alter' : 'create',
         currentChecksum: existing?.checksum || null,
         newChecksum,

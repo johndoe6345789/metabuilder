@@ -9,6 +9,7 @@
  *   reject <id>         - Reject a migration
  *   generate            - Generate Prisma fragment for approved migrations
  *   status              - Show overall migration status
+ *   prefix <pkg> <entity> - Show prefixed entity name
  */
 
 import * as path from 'path'
@@ -25,6 +26,10 @@ import {
   loadPackageSchema,
   computeSchemaChecksum,
   entityToPrisma,
+  getPrefixedEntityName,
+  packageToPascalCase,
+  extractPackageFromPrefix,
+  extractEntityFromPrefix,
   type SchemaRegistry,
 } from './schema-registry'
 
@@ -63,12 +68,14 @@ Commands:
   ${colors.green}reject${colors.reset} <id>      Reject a migration
   ${colors.green}generate${colors.reset}          Generate Prisma fragment
   ${colors.green}preview${colors.reset} <pkg>    Preview Prisma output for package
+  ${colors.green}prefix${colors.reset} <pkg> [entity]  Show prefixed entity name
   ${colors.green}status${colors.reset}            Show migration status
 
 Examples:
   npx ts-node tools/codegen/schema-cli.ts scan
   npx ts-node tools/codegen/schema-cli.ts approve all
   npx ts-node tools/codegen/schema-cli.ts preview audit_log
+  npx ts-node tools/codegen/schema-cli.ts prefix forum_forge Post
 `)
 }
 
@@ -258,6 +265,33 @@ const cmdStatus = (registry: SchemaRegistry): void => {
   }
 }
 
+const cmdPrefix = (packageId: string, entityName?: string): void => {
+  console.log(`\n${colors.cyan}Entity Prefix Info${colors.reset}\n`)
+  console.log(`Package:      ${packageId}`)
+  console.log(`Pascal Case:  ${packageToPascalCase(packageId)}`)
+  console.log(`Prefix:       Pkg_${packageToPascalCase(packageId)}_`)
+  
+  if (entityName) {
+    const prefixed = getPrefixedEntityName(packageId, entityName)
+    console.log(`\n${colors.green}Entity:${colors.reset}       ${entityName}`)
+    console.log(`${colors.green}Prefixed:${colors.reset}     ${prefixed}`)
+    console.log(`${colors.green}Table:${colors.reset}        ${packageId}_${entityName.toLowerCase()}`)
+  } else {
+    // Show all entities from package schema
+    const pkgPath = path.join(PACKAGES_PATH, packageId)
+    const schema = loadPackageSchema(pkgPath)
+    if (schema && schema.entities) {
+      console.log(`\n${colors.yellow}Entities in package:${colors.reset}`)
+      for (const entity of schema.entities) {
+        const prefixed = getPrefixedEntityName(packageId, entity.name)
+        console.log(`  ${entity.name} → ${prefixed}`)
+        console.log(`    ${colors.dim}Table: ${packageId}_${entity.name.toLowerCase()}${colors.reset}`)
+      }
+    }
+  }
+  console.log('')
+}
+
 // Main
 const main = (): void => {
   const args = process.argv.slice(2)
@@ -320,6 +354,14 @@ const main = (): void => {
       break
     case 'status':
       cmdStatus(registry)
+      break
+    case 'prefix':
+      if (!args[1]) {
+        log.error('Package name required')
+        log.info('Usage: prefix <package> [entity]')
+        break
+      }
+      cmdPrefix(args[1], args[2])
       break
     default:
       log.error(`Unknown command: ${command}`)
