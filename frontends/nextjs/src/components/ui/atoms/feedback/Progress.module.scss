@@ -1,0 +1,19 @@
+.progress {
+  height: 8px;
+  border-radius: 4px;
+  background-color: var(--action-hover, rgba(0, 0, 0, 0.08));
+  overflow: hidden;
+
+  // Override fakemui progress bar styling
+  :global(.fakemui-progress-bar),
+  :global([class*="bar"]) {
+    border-radius: 4px;
+  }
+}
+
+// Dark mode support
+[data-theme='dark'] {
+  .progress {
+    background-color: var(--action-hover-dark, rgba(255, 255, 255, 0.08));
+  }
+}

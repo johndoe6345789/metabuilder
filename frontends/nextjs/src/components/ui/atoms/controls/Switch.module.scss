@@ -1,0 +1,11 @@
+.switch {
+  // Switch styling - fakemui uses default styling
+  // Add any custom overrides here if needed
+  display: inline-flex;
+  align-items: center;
+  
+  :global(.switch-track) {
+    width: 34px;
+    height: 14px;
+  }
+}
