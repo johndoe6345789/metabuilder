@@ -94,7 +94,7 @@ export function Level2({ user, onLogout, onNavigate }: Level2Props) {
           </TabsContent>
 
           <TabsContent value="chat" className="space-y-6">
-            <ChatTabContent user={currentUser} />
+            <ChatTabContent />
           </TabsContent>
         </Tabs>
       </div>

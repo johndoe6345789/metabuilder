@@ -1,6 +1,5 @@
 import type React from 'react'
 
-import { IRCWebchatDeclarative } from '@/components/misc/demos/IRCWebchatDeclarative'
 import { NotificationSummaryCard } from '@/components/NotificationSummaryCard'
 import {
   Alert,
@@ -39,21 +38,11 @@ export function RenderNode({ component, renderChildren, user }: RenderNodeProps)
   const renderer = getDeclarativeRenderer()
 
   if (renderer.hasComponentConfig(type)) {
-    if (type === 'IRCWebchat' && user) {
-      return (
-        <IRCWebchatDeclarative
-          user={user}
-          channelName={props.channelName || 'general'}
-          onClose={props.onClose}
-        />
-      )
-    }
-
     return (
       <div className="p-4 border-2 border-dashed border-accent">
-        Declarative Component: {type}
+        Lua Package Component: {type}
         <div className="text-xs text-muted-foreground mt-2">
-          This is a package-defined component
+          This component is rendered from packages/irc_webchat
         </div>
       </div>
     )

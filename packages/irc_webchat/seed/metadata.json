@@ -9,6 +9,7 @@
   "dependencies": [],
   "exports": {
     "components": ["IRCWebchat"],
+    "layouts": ["layout.json"],
     "luaScripts": [
       "send_message",
       "handle_command",
