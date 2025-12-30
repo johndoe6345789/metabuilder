@@ -1,4 +1,4 @@
-import 'server-only'
+// import 'server-only'
 
 import { DBALClient } from '@/dbal'
 import type { DBALConfig } from '@/dbal/runtime/config'
