@@ -1,10 +1,12 @@
 'use client'
 
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
-import CloseIcon from '@mui/icons-material/Close'
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import WarningAmberIcon from '@mui/icons-material/WarningAmber'
+import {
+  CheckCircleOutline as CheckCircleOutlineIcon,
+  Close as CloseIcon,
+  ErrorOutline as ErrorOutlineIcon,
+  InfoOutlined as InfoOutlinedIcon,
+  WarningAmber as WarningAmberIcon,
+} from '@/fakemui/icons'
 import {
   DialogContent,
   DialogContentText,

@@ -1,7 +1,6 @@
 'use client'
 
-import FirstPageIcon from '@mui/icons-material/FirstPage'
-import LastPageIcon from '@mui/icons-material/LastPage'
+import { FirstPage as FirstPageIcon, LastPage as LastPageIcon } from '@/fakemui/icons'
 import {
   Box,
   FormControl,

@@ -1,4 +1,4 @@
-import MenuIcon from '@mui/icons-material/Menu'
+import { Menu as MenuIcon } from '@/fakemui/icons'
 import { IconButton } from '@mui/material'
 import { forwardRef } from 'react'
 

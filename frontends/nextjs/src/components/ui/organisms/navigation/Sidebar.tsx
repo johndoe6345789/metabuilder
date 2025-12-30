@@ -1,6 +1,6 @@
 'use client'
 
-import MenuIcon from '@mui/icons-material/Menu'
+import { Menu as MenuIcon } from '@/fakemui/icons'
 import { Box, Drawer, IconButton, useMediaQuery, useTheme } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 

@@ -1,4 +1,4 @@
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import { ChevronLeft as ChevronLeftIcon } from '@/fakemui/icons'
 import { Box, IconButton } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 

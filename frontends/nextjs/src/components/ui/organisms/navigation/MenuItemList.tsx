@@ -1,7 +1,6 @@
 'use client'
 
-import ExpandLess from '@mui/icons-material/ExpandLess'
-import ExpandMore from '@mui/icons-material/ExpandMore'
+import { ExpandLess, ExpandMore } from '@/fakemui/icons'
 import {
   Box,
   Collapse,

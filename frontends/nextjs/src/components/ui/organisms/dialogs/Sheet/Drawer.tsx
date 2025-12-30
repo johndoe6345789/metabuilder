@@ -1,6 +1,6 @@
 'use client'
 
-import CloseIcon from '@mui/icons-material/Close'
+import { Close as CloseIcon } from '@/fakemui/icons'
 import { Box, Drawer, DrawerProps, IconButton } from '@mui/material'
 import { forwardRef, ReactNode, SyntheticEvent } from 'react'
 

@@ -1,4 +1,4 @@
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { ExpandMore as ExpandMoreIcon } from '@/fakemui/icons'
 import { Box, Button, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
 import { ElementType, forwardRef, type MouseEvent, ReactNode } from 'react'
 

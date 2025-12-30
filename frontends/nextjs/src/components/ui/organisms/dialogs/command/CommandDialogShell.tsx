@@ -1,6 +1,6 @@
 'use client'
 
-import SearchIcon from '@mui/icons-material/Search'
+import { Search as SearchIcon } from '@/fakemui/icons'
 import { Box, Dialog, InputBase } from '@mui/material'
 import { forwardRef } from 'react'
 
