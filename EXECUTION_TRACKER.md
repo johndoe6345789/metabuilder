@@ -22,10 +22,10 @@
 | 9 | CSS Designer | ✅ Complete | 100% |
 | 10 | Parameterized Tests | ✅ Complete | 95% |
 | 11 | Package Validator | ✅ Complete | 100% |
-| 12 | Multi-Frontend | 🟡 In Progress | 40% |
-| 13 | E2E Verification | 🟡 In Progress | 60% |
-| 14 | Documentation | 🟡 In Progress | 55% |
-| 15 | Package Schema System | 🟡 In Progress | 70% |
+| 12 | Multi-Frontend | 🟡 In Progress | 50% |
+| 13 | E2E Verification | 🟡 In Progress | 65% |
+| 14 | Documentation | 🟡 In Progress | 60% |
+| 15 | Package Schema System | 🟡 In Progress | 80% |
 
 ---
 
@@ -65,11 +65,14 @@
 - **Created schema migration queue** for admin approval workflow
 - **Created Qt6/QML DBAL bridge** (DBALClient.h/cpp, DBALProvider.qml)
 - **Added schema:* npm scripts** for CLI management
+- **Created Lua DB operations** for 4 packages (audit_log, notification_center, forum_forge, irc_webchat)
+- **Added CLI DBAL commands** with create/read/update/delete/list/execute support
+- **Extended HttpClient** with PATCH and DELETE methods
 
 ### 🎯 Active Work Items
-1. Multi-frontend support (Qt6/QML, CLI) - **70% complete**
-2. E2E verification with Playwright - **65% complete**
-3. Documentation completion - **60% complete**
+1. Multi-frontend support (Qt6/QML, CLI) - **75% complete**
+2. E2E verification with Playwright - **70% complete**
+3. Documentation completion - **65% complete**
 
 ---
 
@@ -82,16 +85,24 @@
 - [x] Prisma codegen from YAML definitions
 - [x] Docker startup hook for migrations
 - [x] CLI tools (`npm run schema:*`)
+- [x] Lua DBAL operations for packages
 - [ ] WebSocket real-time sync
 - [ ] Schema versioning & rollback
 
 ### Packages with Schema
-- [x] audit_log (AuditLog)
-- [x] notification_center (Notification)
-- [x] forum_forge (ForumCategory, ForumThread, ForumPost)
-- [x] irc_webchat (IRCChannel, IRCMessage, IRCMembership)
-- [ ] media_center (MediaAsset, MediaJob)
-- [ ] stream_cast (StreamChannel, StreamSchedule, StreamScene)
+- [x] audit_log (AuditLog) + Lua operations
+- [x] notification_center (Notification) + Lua operations
+- [x] forum_forge (ForumCategory, ForumThread, ForumPost) + Lua operations
+- [x] irc_webchat (IRCChannel, IRCMessage, IRCMembership) + Lua operations
+- [x] media_center (MediaAsset, MediaJob)
+- [x] stream_cast (StreamChannel, StreamSchedule, StreamScene)
+
+### Multi-Frontend DBAL Support
+- [x] Qt6/QML DBALClient (C++ + QML provider)
+- [x] CLI DBAL commands (create, read, update, delete, list, execute)
+- [x] CMakeLists.txt updated for Qt6 and CLI
+- [ ] CLI auth token management
+- [ ] Qt6 WebSocket subscriptions
 
 ---
 
