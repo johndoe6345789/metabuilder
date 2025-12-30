@@ -150,6 +150,7 @@ function componentsToRenders(
         scriptName: script.name,
         description: script.description || 'Utility script',
         category: script.category,
+        packageId,
       },
     })
     
@@ -198,7 +199,7 @@ export async function autoLoadPackage(packageId: string): Promise<MockPackageDef
   }
 
   // Generate renders from components, passing scripts for stub generation
-  const renders = componentsToRenders(components, scripts)
+  const renders = componentsToRenders(components, scripts, packageId)
 
   // Add an info render for packages with no components
   if (Object.keys(renders).length === 0) {
