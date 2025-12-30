@@ -17,6 +17,8 @@ M.operationColors = {
 M.resourceIcons = {
   user = "User",
   credential = "ShieldCheck",
+  post = "ClipboardCheck",
+  settings = "Settings",
   default = "ChartLine"
 }
 

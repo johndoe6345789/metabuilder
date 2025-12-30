@@ -40,19 +40,51 @@
 ---@param ctx SchemasRenderContext
 ---@return UIComponent
 local function render(ctx)
+  ---@type UIComponent[]
   local items = {}
   for _, s in ipairs(ctx.schemas or {}) do
     items[#items + 1] = {
       type = "Card",
       children = {
-        { type = "CardHeader", children = { { type = "CardTitle", props = { text = s.name } } } },
-        { type = "CardContent", children = {
-          { type = "Typography", props = { text = s.description or "No description" } },
-          { type = "Badge", props = { text = #(s.fields or {}) .. " fields" } }
-        }},
-        { type = "CardFooter", children = {
-          { type = "Button", props = { text = "Edit", onClick = "editSchema", data = s.id } }
-        }}
+        {
+          type = "CardHeader",
+          children = {
+            { type = "CardTitle", props = { text = s.name } }
+          }
+        },
+        {
+          type = "CardContent",
+          children = {
+            {
+              type = "Typography",
+              props = {
+                ---@type TypographyProps
+                text = s.description or "No description"
+              }
+            },
+            {
+              type = "Badge",
+              props = {
+                ---@type BadgeProps
+                text = #(s.fields or {}) .. " fields"
+              }
+            }
+          }
+        },
+        {
+          type = "CardFooter",
+          children = {
+            {
+              type = "Button",
+              props = {
+                ---@type ButtonProps
+                text = "Edit",
+                onClick = "editSchema",
+                data = s.id
+              }
+            }
+          }
+        }
       }
     }
   end
@@ -60,8 +92,23 @@ local function render(ctx)
     type = "Stack",
     props = { spacing = 4 },
     children = {
-      { type = "Button", props = { text = "Add Schema", onClick = "addSchema" } },
-      { type = "Grid", props = { cols = 2, gap = 4 }, children = items }
+      {
+        type = "Button",
+        props = {
+          ---@type ButtonProps
+          text = "Add Schema",
+          onClick = "addSchema"
+        }
+      },
+      {
+        type = "Grid",
+        props = {
+          ---@type GridProps
+          cols = 2,
+          gap = 4
+        },
+        children = items
+      }
     }
   }
 end

@@ -1,16 +1,26 @@
 -- Items tests for nav_menu package
 -- Tests menu item builder functions
 
+---@class MenuItemCase
+---@field label string
+---@field path string
+---@field icon string|nil
+---@field desc string
+
+---@class MenuGroupCase
+---@field label string
+---@field children table|nil
+---@field icon string|nil
+---@field desc string
+
 local menu_item = require("items/item")
 local menu_group = require("items/group")
 local menu_divider = require("items/divider")
+local cases = load_cases("items.cases.json")
 
 describe("Menu Item Builders", function()
   describe("menu_item", function()
-    it.each({
-      { label = "Home", path = "/", icon = nil, desc = "without icon" },
-      { label = "Settings", path = "/settings", icon = "gear", desc = "with icon" },
-    })("should create item $desc", function(testCase)
+    it.each(cases.menu_item, "$desc", function(testCase)
       local result = menu_item(testCase.label, testCase.path, testCase.icon)
       expect(result.type).toBe("menu_item")
       expect(result.label).toBe(testCase.label)
@@ -22,10 +32,7 @@ describe("Menu Item Builders", function()
   end)
 
   describe("menu_group", function()
-    it.each({
-      { label = "Admin", children = nil, icon = nil, desc = "empty group" },
-      { label = "Settings", children = {}, icon = "gear", desc = "empty children array" },
-    })("should create group $desc", function(testCase)
+    it.each(cases.menu_group, "$desc", function(testCase)
       local result = menu_group(testCase.label, testCase.children, testCase.icon)
       expect(result.type).toBe("menu_group")
       expect(result.label).toBe(testCase.label)

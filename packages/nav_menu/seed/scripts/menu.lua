@@ -21,6 +21,23 @@ local M = {}
 ---@field items MenuItem[]
 ---@field user User
 
+---@class FlexProps
+---@field className string
+
+---@class ButtonProps
+---@field variant string
+---@field text string
+---@field onClick string
+---@field data? string
+
+---@class DropdownMenuTriggerProps
+---@field text string
+
+---@class DropdownMenuItemProps
+---@field text string
+---@field onClick string
+---@field data? string
+
 ---@param props MenuProps
 ---@return UIComponent
 function M.render(props)

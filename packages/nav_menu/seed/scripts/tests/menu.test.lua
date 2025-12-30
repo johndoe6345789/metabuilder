@@ -20,15 +20,29 @@
 ---@field expected boolean
 ---@field desc string
 
+---@class MenuItemRenderTestCase
+---@field item MenuItem
+---@field expectedType string
+---@field expectedText? string
+---@field expectedVariant? string
+---@field expectedChildren? integer
+---@field desc string
+
 ---@class MenuRenderTestCase
 ---@field props MenuRenderProps
 ---@field expectedChildren integer
 ---@field desc string
 
+---@class MenuCases
+---@field can_show MenuShowTestCase[]
+---@field item MenuItemRenderTestCase[]
+---@field render MenuRenderTestCase[]
+
 describe("Menu", function()
   -- Mock check module
-  ---@type { can_show: MenuShowTestCase[], render: MenuRenderTestCase[] }
+  ---@type MenuCases
   local cases = load_cases("menu.cases.json")
+  local it_each = require("lua_test.it_each")
   
   before(function()
     -- Create mock for check.can_access
@@ -42,38 +56,39 @@ describe("Menu", function()
   local menu = require("menu")
 
   describe("can_show", function()
-    it.each(cases.can_show, "$desc", function(testCase)
-      local result = menu.can_show(testCase.user, testCase.item)
-      expect(result).toBe(testCase.expected)
+    it_each(cases.can_show, "$desc", function(testCase)
+      ---@type MenuShowTestCase
+      local tc = testCase
+      local result = menu.can_show(tc.user, tc.item)
+      expect(result).toBe(tc.expected)
     end)
   end)
 
   describe("item", function()
-    it("should render button for simple item", function()
-      local result = menu.item({ label = "Home", path = "/" })
-      expect(result.type).toBe("Button")
-      expect(result.props.text).toBe("Home")
-      expect(result.props.variant).toBe("ghost")
-    end)
-
-    it("should render dropdown for item with children", function()
-      local result = menu.item({
-        label = "Settings",
-        children = {
-          { label = "Profile", path = "/profile" },
-          { label = "Security", path = "/security" }
-        }
-      })
-      expect(result.type).toBe("DropdownMenu")
-      expect(#result.children).toBe(2)
+    it_each(cases.item, "$desc", function(testCase)
+      ---@type MenuItemRenderTestCase
+      local tc = testCase
+      local result = menu.item(tc.item)
+      expect(result.type).toBe(tc.expectedType)
+      if tc.expectedText then
+        expect(result.props.text).toBe(tc.expectedText)
+      end
+      if tc.expectedVariant then
+        expect(result.props.variant).toBe(tc.expectedVariant)
+      end
+      if tc.expectedChildren then
+        expect(#result.children).toBe(tc.expectedChildren)
+      end
     end)
   end)
 
   describe("render", function()
-    it.each(cases.render, "$desc", function(testCase)
-      local result = menu.render(testCase.props)
+    it_each(cases.render, "$desc", function(testCase)
+      ---@type MenuRenderTestCase
+      local tc = testCase
+      local result = menu.render(tc.props)
       expect(result.type).toBe("Flex")
-      expect(#result.children).toBe(testCase.expectedChildren)
+      expect(#result.children).toBe(tc.expectedChildren)
     end)
   end)
 end)

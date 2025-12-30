@@ -14,6 +14,7 @@
 ---@class ButtonProps
 ---@field text string
 ---@field onClick string
+---@field variant? string
 
 ---@class UserInfo
 ---@field username string
@@ -43,6 +44,7 @@ function M.render(ctx)
           {
             type = "Input",
             props = {
+              ---@type InputProps
               label = "Username",
               value = ctx.user.username,
               disabled = true
@@ -51,6 +53,7 @@ function M.render(ctx)
           {
             type = "Input",
             props = {
+              ---@type InputProps
               label = "Email",
               name = "email",
               value = ctx.user.email or ""
@@ -59,6 +62,7 @@ function M.render(ctx)
           {
             type = "Button",
             props = {
+              ---@type ButtonProps
               text = "Save Changes",
               onClick = "saveProfile"
             }
