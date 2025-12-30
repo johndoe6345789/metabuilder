@@ -1,11 +1,20 @@
 'use client'
 
-import { Box } from '@mui/material'
 import { forwardRef } from 'react'
 
-const SelectSeparator = forwardRef<HTMLHRElement>((props, ref) => {
-  return <Box ref={ref} component="hr" sx={{ my: 0.5, borderColor: 'divider' }} {...props} />
-})
+import { Divider } from '@/fakemui'
+
+import styles from './SelectSeparator.module.scss'
+
+interface SelectSeparatorProps {
+  className?: string
+}
+
+const SelectSeparator = forwardRef<HTMLHRElement, SelectSeparatorProps>(
+  ({ className, ...props }, ref) => {
+    return <Divider ref={ref} className={`${styles.selectSeparator} ${className || ''}`} {...props} />
+  }
+)
 
 SelectSeparator.displayName = 'SelectSeparator'
 

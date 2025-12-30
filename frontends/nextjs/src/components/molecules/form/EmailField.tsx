@@ -1,9 +1,8 @@
 'use client'
 
-import { TextField } from '@mui/material'
-import { InputAdornment } from '@mui/material'
 import { forwardRef } from 'react'
 
+import { TextField } from '@/fakemui'
 import { Email } from '@/fakemui/icons'
 
 export interface EmailFieldProps {
@@ -37,13 +36,14 @@ const EmailField = forwardRef<HTMLInputElement, EmailFieldProps>(
       disabled = false,
       autoComplete = 'email',
       showIcon = true,
+      className,
       ...props
     },
     ref
   ) => {
     return (
       <TextField
-        inputRef={ref}
+        ref={ref}
         type="email"
         label={label}
         name={name}
@@ -56,23 +56,12 @@ const EmailField = forwardRef<HTMLInputElement, EmailFieldProps>(
         fullWidth={fullWidth}
         disabled={disabled}
         autoComplete={autoComplete}
-        size="small"
-        slotProps={{
-          input: showIcon
-            ? {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Email size={16} style={{ color: 'rgba(0,0,0,0.54)' }} />
-                  </InputAdornment>
-                ),
-              }
-            : undefined,
-        }}
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            borderRadius: 1,
-          },
-        }}
+        className={className}
+        startAdornment={
+          showIcon ? (
+            <Email size={16} style={{ color: 'rgba(0,0,0,0.54)' }} />
+          ) : undefined
+        }
         {...props}
       />
     )

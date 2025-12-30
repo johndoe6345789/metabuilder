@@ -1,16 +1,20 @@
 'use client'
 
-import { MenuItem, MenuItemProps } from '@mui/material'
-import { forwardRef } from 'react'
+import { forwardRef, ButtonHTMLAttributes } from 'react'
 
-export interface SelectItemProps extends MenuItemProps {
+import { MenuItem } from '@/fakemui'
+
+export interface SelectItemProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  value?: string | number
   textValue?: string
+  selected?: boolean
+  disabled?: boolean
 }
 
-const SelectItem = forwardRef<HTMLLIElement, SelectItemProps>(
-  ({ value, children, ...props }, ref) => {
+const SelectItem = forwardRef<HTMLButtonElement, SelectItemProps>(
+  ({ value, children, selected, disabled, ...props }, ref) => {
     return (
-      <MenuItem ref={ref} value={value} {...props}>
+      <MenuItem ref={ref} selected={selected} disabled={disabled} data-value={value} {...props}>
         {children}
       </MenuItem>
     )

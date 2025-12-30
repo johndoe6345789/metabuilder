@@ -1,8 +1,8 @@
 'use client'
 
-import { Box, IconButton, InputAdornment, TextField } from '@mui/material'
 import { forwardRef, useState } from 'react'
 
+import { IconButton, TextField } from '@/fakemui'
 import { Visibility, VisibilityOff } from '@/fakemui/icons'
 
 export interface PasswordFieldProps {
@@ -34,6 +34,7 @@ const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
       fullWidth = true,
       disabled = false,
       autoComplete = 'current-password',
+      className,
       ...props
     },
     ref
@@ -46,7 +47,7 @@ const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
 
     return (
       <TextField
-        inputRef={ref}
+        ref={ref}
         type={showPassword ? 'text' : 'password'}
         label={label}
         name={name}
@@ -59,34 +60,22 @@ const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
         fullWidth={fullWidth}
         disabled={disabled}
         autoComplete={autoComplete}
-        size="small"
-        slotProps={{
-          input: {
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={togglePasswordVisibility}
-                  onMouseDown={e => e.preventDefault()}
-                  edge="end"
-                  size="small"
-                  disabled={disabled}
-                >
-                  {showPassword ? (
-                    <VisibilityOff size={16} />
-                  ) : (
-                    <Visibility size={16} />
-                  )}
-                </IconButton>
-              </InputAdornment>
-            ),
-          },
-        }}
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            borderRadius: 1,
-          },
-        }}
+        className={className}
+        endAdornment={
+          <IconButton
+            aria-label="toggle password visibility"
+            onClick={togglePasswordVisibility}
+            onMouseDown={e => e.preventDefault()}
+            disabled={disabled}
+            sm
+          >
+            {showPassword ? (
+              <VisibilityOff size={16} />
+            ) : (
+              <Visibility size={16} />
+            )}
+          </IconButton>
+        }
         {...props}
       />
     )

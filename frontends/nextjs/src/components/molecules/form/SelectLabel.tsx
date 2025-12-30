@@ -1,24 +1,25 @@
 'use client'
 
-import { Box } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Box } from '@/fakemui'
+
+import styles from './SelectLabel.module.scss'
 
 interface SelectLabelProps {
   children: ReactNode
   className?: string
 }
 
-const SelectLabel = forwardRef<HTMLDivElement, SelectLabelProps>(({ children, ...props }, ref) => {
-  return (
-    <Box
-      ref={ref}
-      sx={{ px: 2, py: 1, fontSize: '0.75rem', fontWeight: 600, color: 'text.secondary' }}
-      {...props}
-    >
-      {children}
-    </Box>
-  )
-})
+const SelectLabel = forwardRef<HTMLDivElement, SelectLabelProps>(
+  ({ children, className, ...props }, ref) => {
+    return (
+      <Box ref={ref} className={`${styles.selectLabel} ${className || ''}`} {...props}>
+        {children}
+      </Box>
+    )
+  }
+)
 
 SelectLabel.displayName = 'SelectLabel'
 

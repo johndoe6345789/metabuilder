@@ -1,9 +1,11 @@
 'use client'
 
-import { Box } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
 
+import { Box } from '@/fakemui'
 import { KeyboardArrowDown } from '@/fakemui/icons'
+
+import styles from './SelectTrigger.module.scss'
 
 interface SelectTriggerProps {
   children: ReactNode
@@ -11,28 +13,11 @@ interface SelectTriggerProps {
 }
 
 const SelectTrigger = forwardRef<HTMLDivElement, SelectTriggerProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <Box
-        ref={ref}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          px: 1.5,
-          py: 1,
-          border: 1,
-          borderColor: 'divider',
-          borderRadius: 1,
-          cursor: 'pointer',
-          '&:hover': {
-            borderColor: 'text.secondary',
-          },
-        }}
-        {...props}
-      >
+      <Box ref={ref} className={`${styles.selectTrigger} ${className || ''}`} {...props}>
         {children}
-        <KeyboardArrowDown size={16} style={{ marginLeft: 4, color: 'rgba(0,0,0,0.54)' }} />
+        <KeyboardArrowDown size={16} className={styles.icon} />
       </Box>
     )
   }

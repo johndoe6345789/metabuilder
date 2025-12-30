@@ -1,20 +1,24 @@
 'use client'
 
-import { Box } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Box } from '@/fakemui'
+
+import styles from './SelectValue.module.scss'
 
 interface SelectValueProps {
   placeholder?: string
   children?: ReactNode
+  className?: string
 }
 
 const SelectValue = forwardRef<HTMLSpanElement, SelectValueProps>(
-  ({ placeholder, children, ...props }, ref) => {
+  ({ placeholder, children, className, ...props }, ref) => {
     return (
       <Box
         component="span"
         ref={ref}
-        sx={{ color: children ? 'text.primary' : 'text.secondary' }}
+        className={`${styles.selectValue} ${children ? styles.hasValue : styles.placeholder} ${className || ''}`}
         {...props}
       >
         {children || placeholder}

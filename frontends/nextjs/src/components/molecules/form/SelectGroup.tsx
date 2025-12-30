@@ -1,7 +1,8 @@
 'use client'
 
-import { Box } from '@mui/material'
 import { forwardRef, ReactNode } from 'react'
+
+import { Box } from '@/fakemui'
 
 interface SelectGroupProps {
   children: ReactNode

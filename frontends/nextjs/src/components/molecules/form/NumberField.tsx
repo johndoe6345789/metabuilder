@@ -1,7 +1,10 @@
 'use client'
 
-import { TextField } from '@mui/material'
 import { forwardRef } from 'react'
+
+import { TextField } from '@/fakemui'
+
+import styles from './NumberField.module.scss'
 
 export interface NumberFieldProps {
   label?: string
@@ -36,13 +39,14 @@ const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
       min,
       max,
       step = 1,
+      className,
       ...props
     },
     ref
   ) => {
     return (
       <TextField
-        inputRef={ref}
+        ref={ref}
         type="number"
         label={label}
         name={name}
@@ -54,27 +58,10 @@ const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
         placeholder={placeholder}
         fullWidth={fullWidth}
         disabled={disabled}
-        size="small"
-        slotProps={{
-          htmlInput: {
-            min,
-            max,
-            step,
-          },
-        }}
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            borderRadius: 1,
-          },
-          '& input[type=number]': {
-            MozAppearance: 'textfield',
-          },
-          '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button':
-            {
-              WebkitAppearance: 'none',
-              margin: 0,
-            },
-        }}
+        min={min}
+        max={max}
+        step={step}
+        className={`${styles.numberField} ${className || ''}`}
         {...props}
       />
     )
