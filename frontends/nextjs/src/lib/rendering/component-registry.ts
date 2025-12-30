@@ -88,6 +88,9 @@ import {
   Popover,
 } from '@/fakemui'
 
+// Import Icon component from atoms
+import { Icon } from '@/components/atoms/display/Icon'
+
 import type { ComponentType, FC } from 'react'
 
 // Type helper to cast components to generic LuaComponentProps
@@ -222,6 +225,9 @@ export const componentRegistry: Record<string, AnyComponent> = {
 
   // Utils
   Tooltip,
+
+  // Icons
+  Icon,
 }
 
 /**
