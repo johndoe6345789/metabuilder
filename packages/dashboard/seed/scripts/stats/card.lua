@@ -1,25 +1,30 @@
--- Dashboard stat card component
+-- Create a stat card component
+require("stats.types")
 
----@class StatCardConfig
----@field type string
----@field title string
----@field value string|number
----@field icon? string
----@field trend? table
+---@class StatCard
+local M = {}
 
----@param title string Card title
----@param value string|number Card value to display
----@param icon? string Optional icon identifier
----@param trend? table Optional trend indicator data
----@return StatCardConfig
-local function stat_card(title, value, icon, trend)
+---@param props StatCardProps
+---@return UIComponent
+function M.create(props)
   return {
-    type = "stat_card",
-    title = title,
-    value = value,
-    icon = icon,
-    trend = trend
+    type = "Card",
+    props = { className = props.className },
+    children = {
+      {
+        type = "CardContent",
+        props = { className = "p-6" },
+        children = {
+          { type = "Typography", props = { variant = "overline", text = props.label, className = "text-muted-foreground" } },
+          { type = "Typography", props = { variant = "h4", text = tostring(props.value) } },
+          props.change and {
+            type = "Typography",
+            props = { variant = "caption", text = props.change, className = props.positive and "text-green-500" or "text-red-500" }
+          } or nil
+        }
+      }
+    }
   }
 end
 
-return stat_card
+return M
