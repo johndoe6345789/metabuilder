@@ -52,7 +52,7 @@ export const RefreshControls = ({
       disabled={!runs || runs.length === 0}
       variant="outline"
       size="sm"
-      startIcon={<DownloadIcon sx={{ fontSize: 18 }} />}
+      startIcon={<Download size={18} />}
     >
       Download JSON
     </Button>
@@ -61,7 +61,7 @@ export const RefreshControls = ({
       onClick={onRefresh}
       disabled={isLoading}
       size="lg"
-      startIcon={<RefreshIcon sx={isLoading ? spinSx : undefined} />}
+      startIcon={<Refresh style={isLoading ? spinSx : undefined} />}
     >
       {isLoading ? 'Fetching...' : 'Refresh'}
     </Button>

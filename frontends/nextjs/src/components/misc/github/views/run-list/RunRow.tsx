@@ -85,9 +85,9 @@ export const RunRow = ({
               disabled={isSelectedRun}
               startIcon={
                 isSelectedRun ? (
-                  <RunningIcon sx={{ fontSize: 16, ...spinSx }} />
+                  <Autorenew size={16} style={spinSx} />
                 ) : (
-                  <DownloadIcon sx={{ fontSize: 16 }} />
+                  <Download size={16} />
                 )
               }
             >
@@ -100,7 +100,7 @@ export const RunRow = ({
               href={run.html_url}
               target="_blank"
               rel="noopener noreferrer"
-              endIcon={<OpenInNewIcon sx={{ fontSize: 16 }} />}
+              endIcon={<OpenInNew size={16} />}
             >
               View
             </Button>

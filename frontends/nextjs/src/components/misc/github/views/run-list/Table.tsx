@@ -41,7 +41,7 @@ export const RunTable = ({
       <CardHeader>
         <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
           <Stack direction="row" spacing={1} alignItems="center">
-            <SuccessIcon sx={{ color: 'success.main', fontSize: 24 }} />
+            <CheckCircle size={24} style={{ color: 'var(--mui-palette-success-main)' }} />
             <CardTitle>Recent Workflow Runs</CardTitle>
           </Stack>
           {isLoading && <Skeleton sx={{ width: 120, height: 12 }} />}
