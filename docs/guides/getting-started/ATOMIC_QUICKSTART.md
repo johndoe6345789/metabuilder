@@ -149,7 +149,7 @@ function UserList() {
 ```typescript
 // src/components/organisms/UserProfileForm.tsx
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKV } from '@/hooks/data/useKV'
 import { Button, Input, Label, Avatar } from '@/components/atoms'
 import { ProfileCard } from '@/components/molecules'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'

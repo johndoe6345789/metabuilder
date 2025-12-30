@@ -271,7 +271,7 @@ Complex feature with business logic.
 // src/components/organisms/AdvancedSearch.tsx
 import { Button, Input } from '@/components/atoms'
 import { SearchBar } from '@/components/molecules'
-import { useKV } from '@github/spark/hooks'
+import { useKV } from '@/hooks/data/useKV'
 
 export function AdvancedSearch() {
   const [history, setHistory] = useKV('search-history', [])
