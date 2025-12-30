@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { LuaScript } from '../../types/level-types'
 
 const mockList = vi.fn()
 const mockDelete = vi.fn()
@@ -23,7 +24,7 @@ describe('setLuaScripts', () => {
     mockDelete.mockResolvedValue(undefined)
     mockCreate.mockResolvedValue(undefined)
 
-    await setLuaScripts([
+    const scripts: LuaScript[] = [
       {
         id: 'new',
         name: 'New',
@@ -32,7 +33,9 @@ describe('setLuaScripts', () => {
         allowedGlobals: ['math'],
         timeoutMs: 1500,
       },
-    ] as any)
+    ]
+
+    await setLuaScripts(scripts)
 
     expect(mockDelete).toHaveBeenCalledTimes(1)
     expect(mockCreate).toHaveBeenCalledTimes(1)

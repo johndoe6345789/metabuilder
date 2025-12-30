@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { Workflow } from '../../types/level-types'
 
 const mockList = vi.fn()
 const mockDelete = vi.fn()
@@ -23,7 +24,11 @@ describe('setWorkflows', () => {
     mockDelete.mockResolvedValue(undefined)
     mockCreate.mockResolvedValue(undefined)
 
-    await setWorkflows([{ id: 'new', name: 'New', nodes: [], edges: [], enabled: true }] as any)
+    const workflows: Workflow[] = [
+      { id: 'new', name: 'New', nodes: [], edges: [], enabled: true },
+    ]
+
+    await setWorkflows(workflows)
 
     expect(mockDelete).toHaveBeenCalledTimes(1)
     expect(mockCreate).toHaveBeenCalledTimes(1)

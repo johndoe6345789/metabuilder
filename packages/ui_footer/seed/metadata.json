@@ -8,8 +8,13 @@
   "category": "ui",
   "dependencies": [],
   "exports": {
-    "components": ["AppFooter"],
-    "scripts": ["footer"],
+    "components": [
+      "AppFooter"
+    ],
+    "scripts": [
+      "footer"
+    ],
     "pages": []
-  }
+  },
+  "minLevel": 1
 }

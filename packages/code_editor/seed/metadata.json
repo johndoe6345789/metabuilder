@@ -8,7 +8,17 @@
   "category": "editors",
   "dependencies": [],
   "exports": {
-    "scripts": ["json", "lua", "theme"],
-    "components": ["CodeEditor", "JsonEditor", "LuaEditor", "ThemeEditor"]
-  }
+    "scripts": [
+      "json",
+      "lua",
+      "theme"
+    ],
+    "components": [
+      "CodeEditor",
+      "JsonEditor",
+      "LuaEditor",
+      "ThemeEditor"
+    ]
+  },
+  "minLevel": 5
 }

@@ -39,5 +39,6 @@
       "social_hub_feed_post_2_body",
       "social_hub_feed_post_2_badge"
     ]
-  }
+  },
+  "minLevel": 2
 }

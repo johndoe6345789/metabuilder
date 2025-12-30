@@ -8,7 +8,16 @@
   "category": "editors",
   "dependencies": [],
   "exports": {
-    "scripts": ["editor", "status", "run"],
-    "components": ["WorkflowEditor", "WorkflowRunCard", "WorkflowRunStatus"]
-  }
+    "scripts": [
+      "editor",
+      "status",
+      "run"
+    ],
+    "components": [
+      "WorkflowEditor",
+      "WorkflowRunCard",
+      "WorkflowRunStatus"
+    ]
+  },
+  "minLevel": 5
 }

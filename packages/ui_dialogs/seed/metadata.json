@@ -8,7 +8,15 @@
   "category": "ui",
   "dependencies": [],
   "exports": {
-    "components": ["ConfirmDialog", "AlertDialog", "FormDialog"],
-    "scripts": ["confirm", "alert"]
-  }
+    "components": [
+      "ConfirmDialog",
+      "AlertDialog",
+      "FormDialog"
+    ],
+    "scripts": [
+      "confirm",
+      "alert"
+    ]
+  },
+  "minLevel": 1
 }

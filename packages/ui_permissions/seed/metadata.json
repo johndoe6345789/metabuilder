@@ -8,7 +8,10 @@
   "category": "ui",
   "dependencies": [],
   "exports": {
-    "scripts": ["permissions"],
+    "scripts": [
+      "permissions"
+    ],
     "components": []
-  }
+  },
+  "minLevel": 1
 }

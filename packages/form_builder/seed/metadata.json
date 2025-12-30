@@ -8,7 +8,17 @@
   "category": "ui",
   "dependencies": [],
   "exports": {
-    "components": ["FormField", "EmailField", "PasswordField", "NumberField", "SearchBar"],
-    "scripts": ["fields", "validate"]
-  }
+    "components": [
+      "FormField",
+      "EmailField",
+      "PasswordField",
+      "NumberField",
+      "SearchBar"
+    ],
+    "scripts": [
+      "fields",
+      "validate"
+    ]
+  },
+  "minLevel": 1
 }

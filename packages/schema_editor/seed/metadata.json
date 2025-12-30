@@ -6,9 +6,20 @@
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "editors",
-  "dependencies": ["form_builder"],
+  "dependencies": [
+    "form_builder"
+  ],
   "exports": {
-    "scripts": ["fields", "tables", "relations"],
-    "components": ["SchemaEditor", "TableEditor", "FieldEditor"]
-  }
+    "scripts": [
+      "fields",
+      "tables",
+      "relations"
+    ],
+    "components": [
+      "SchemaEditor",
+      "TableEditor",
+      "FieldEditor"
+    ]
+  },
+  "minLevel": 5
 }

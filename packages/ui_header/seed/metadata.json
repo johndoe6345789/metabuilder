@@ -6,10 +6,17 @@
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
-  "dependencies": ["ui_permissions"],
+  "dependencies": [
+    "ui_permissions"
+  ],
   "exports": {
-    "components": ["AppHeader"],
-    "scripts": ["header"],
+    "components": [
+      "AppHeader"
+    ],
+    "scripts": [
+      "header"
+    ],
     "pages": []
-  }
+  },
+  "minLevel": 2
 }

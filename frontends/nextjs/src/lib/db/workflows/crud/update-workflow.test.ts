@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { Workflow } from '../../types/level-types'
 
 const mockUpdate = vi.fn()
 const mockAdapter = { update: mockUpdate }
@@ -20,7 +21,7 @@ describe('updateWorkflow', () => {
   ])('should update $id', async ({ id, updates }) => {
     mockUpdate.mockResolvedValue(undefined)
 
-    await updateWorkflow(id, updates as any)
+    await updateWorkflow(id, updates as Partial<Workflow>)
 
     expect(mockUpdate).toHaveBeenCalledWith('Workflow', id, expect.any(Object))
   })

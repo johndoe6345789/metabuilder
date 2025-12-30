@@ -6,9 +6,19 @@
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
-  "dependencies": ["ui_permissions"],
+  "dependencies": [
+    "ui_permissions"
+  ],
   "exports": {
-    "components": ["AccessDenied", "AuthGate", "PageLoader"],
-    "scripts": ["denied", "gate"]
-  }
+    "components": [
+      "AccessDenied",
+      "AuthGate",
+      "PageLoader"
+    ],
+    "scripts": [
+      "denied",
+      "gate"
+    ]
+  },
+  "minLevel": 2
 }

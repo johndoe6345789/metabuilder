@@ -8,7 +8,15 @@
   "category": "ui",
   "dependencies": [],
   "exports": {
-    "components": ["StatCard", "DashboardGrid", "Widget"],
-    "scripts": ["stats", "layout"]
-  }
+    "components": [
+      "StatCard",
+      "DashboardGrid",
+      "Widget"
+    ],
+    "scripts": [
+      "stats",
+      "layout"
+    ]
+  },
+  "minLevel": 2
 }

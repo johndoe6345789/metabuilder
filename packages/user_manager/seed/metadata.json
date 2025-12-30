@@ -6,9 +6,20 @@
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "managers",
-  "dependencies": ["ui_permissions", "data_table"],
+  "dependencies": [
+    "ui_permissions",
+    "data_table"
+  ],
   "exports": {
-    "scripts": ["list", "actions"],
-    "components": ["UserManagement", "UserList", "UserActions"]
-  }
+    "scripts": [
+      "list",
+      "actions"
+    ],
+    "components": [
+      "UserManagement",
+      "UserList",
+      "UserActions"
+    ]
+  },
+  "minLevel": 4
 }

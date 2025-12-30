@@ -1,8 +1,9 @@
--- Permission level constants (5-level system)
+-- Permission level constants (6-level system)
 return {
   PUBLIC = 1,
   USER = 2,
-  ADMIN = 3,
-  GOD = 4,
-  SUPERGOD = 5
+  MODERATOR = 3,
+  ADMIN = 4,
+  GOD = 5,
+  SUPERGOD = 6
 }

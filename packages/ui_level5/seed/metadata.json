@@ -6,10 +6,21 @@
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
-  "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
+  "dependencies": [
+    "ui_permissions",
+    "ui_header",
+    "ui_intro"
+  ],
   "exports": {
-    "pages": ["level5"],
-    "scripts": ["layout", "tenants", "transfer"],
+    "pages": [
+      "level5"
+    ],
+    "scripts": [
+      "layout",
+      "tenants",
+      "transfer"
+    ],
     "components": []
-  }
+  },
+  "minLevel": 5
 }

@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { Comment } from '../../types/level-types'
 
 const mockCreate = vi.fn()
 const mockAdapter = { create: mockCreate }
@@ -14,7 +15,7 @@ describe('addComment', () => {
     mockCreate.mockReset()
   })
 
-  it.each([
+  const cases: Array<{ name: string; comment: Comment }> = [
     {
       name: 'basic comment',
       comment: { id: 'c1', userId: 'u1', content: 'Hello', createdAt: 1000 },
@@ -23,10 +24,12 @@ describe('addComment', () => {
       name: 'reply comment',
       comment: { id: 'c2', userId: 'u1', content: 'Reply', createdAt: 2000, parentId: 'c1' },
     },
-  ])('should add $name', async ({ comment }) => {
+  ]
+
+  it.each(cases)('should add $name', async ({ comment }) => {
     mockCreate.mockResolvedValue(undefined)
 
-    await addComment(comment as any)
+    await addComment(comment)
 
     expect(mockCreate).toHaveBeenCalledWith(
       'Comment',

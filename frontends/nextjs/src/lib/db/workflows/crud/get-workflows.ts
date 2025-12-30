@@ -1,13 +1,22 @@
 import { getAdapter } from '../../core/dbal-client'
 import type { Workflow } from '../../types/level-types'
 
+type DBALWorkflowRecord = {
+  id: string
+  name: string
+  description?: string | null
+  nodes: string
+  edges: string
+  enabled: boolean
+}
+
 /**
  * Get all workflows
  */
 export async function getWorkflows(): Promise<Workflow[]> {
   const adapter = getAdapter()
-  const result = await adapter.list('Workflow')
-  return (result.data as any[]).map(w => ({
+  const result = (await adapter.list('Workflow')) as { data: DBALWorkflowRecord[] }
+  return result.data.map(w => ({
     id: w.id,
     name: w.name,
     description: w.description || undefined,
