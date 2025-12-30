@@ -332,3 +332,23 @@ export { HighQuality } from './HighQuality'
 export { AspectRatio } from './AspectRatio'
 export { Speed } from './Speed'
 export { Timer } from './Timer'
+
+// Backup & Recovery
+export { Backup } from './Backup'
+export { Restore } from './Restore'
+export { Storage } from './Storage'
+
+// Admin & Management
+export { AdminPanelSettings } from './AdminPanelSettings'
+export { ManageAccounts } from './ManageAccounts'
+export { AccountTree } from './AccountTree'
+export { Domain } from './Domain'
+
+// Security & Verification
+export { SecurityUpdate } from './SecurityUpdate'
+export { VpnKey } from './VpnKey'
+export { VerifiedUser } from './VerifiedUser'
+export { Policy } from './Policy'
+
+// Help & Support
+export { Help } from './Help'

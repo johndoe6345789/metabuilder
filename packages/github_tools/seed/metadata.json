@@ -1,0 +1,15 @@
+{
+  "id": "github_tools",
+  "name": "GitHub Tools",
+  "description": "GitHub integration tools including Actions viewer, run analysis, and workflow management",
+  "version": "1.0.0",
+  "author": "MetaBuilder",
+  "minLevel": 2,
+  "category": "development",
+  "tags": ["github", "ci-cd", "workflow", "actions"],
+  "dependencies": [],
+  "exports": {
+    "components": ["GitHubViewer", "RunList", "RunDetails", "AnalysisPanel", "RunFilters"],
+    "scripts": ["fetch_runs", "analyze", "filter", "status"]
+  }
+}
