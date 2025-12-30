@@ -24,11 +24,12 @@ export async function deleteBlob(
     }
 
     return true
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
+  } catch (error) {
+    const fsError = error as NodeJS.ErrnoException
+    if (fsError.code === 'ENOENT') {
       throw DBALError.notFound(`Blob not found: ${key}`)
     }
-    throw DBALError.internal(`Filesystem delete failed: ${error.message}`)
+    throw DBALError.internal(`Filesystem delete failed: ${fsError.message}`)
   }
 }
 
@@ -56,11 +57,12 @@ export async function copyBlob(
     } catch {
       return await readMetadata(context, destKey)
     }
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
+  } catch (error) {
+    const fsError = error as NodeJS.ErrnoException
+    if (fsError.code === 'ENOENT') {
       throw DBALError.notFound(`Source blob not found: ${sourceKey}`)
     }
-    throw DBALError.internal(`Filesystem copy failed: ${error.message}`)
+    throw DBALError.internal(`Filesystem copy failed: ${fsError.message}`)
   }
 }
 

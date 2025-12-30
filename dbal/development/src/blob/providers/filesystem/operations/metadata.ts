@@ -28,11 +28,12 @@ export async function readMetadata(
         lastModified: stats.mtime,
       }
     }
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
+  } catch (error) {
+    const fsError = error as NodeJS.ErrnoException
+    if (fsError.code === 'ENOENT') {
       throw DBALError.notFound(`Blob not found: ${key}`)
     }
-    throw DBALError.internal(`Filesystem get metadata failed: ${error.message}`)
+    throw DBALError.internal(`Filesystem get metadata failed: ${fsError.message}`)
   }
 }
 

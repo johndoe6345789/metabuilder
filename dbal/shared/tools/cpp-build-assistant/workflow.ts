@@ -13,8 +13,9 @@ export const execCommand = (command: string, cppDir: string, options: ExecOption
       stdio: options.silent ? 'pipe' : 'inherit',
     })
     return { success: true, output: result as string }
-  } catch (error: any) {
-    return { success: false, error: error.message, output: error.stdout }
+  } catch (error: unknown) {
+    const execError = error as { message?: string; stdout?: string }
+    return { success: false, error: execError.message, output: execError.stdout }
   }
 }
 

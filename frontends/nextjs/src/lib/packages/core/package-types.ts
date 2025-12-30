@@ -1,3 +1,5 @@
+import type { JsonObject, JsonValue } from '@/types/utility-types'
+
 export interface PackageManifest {
   id: string
   name: string
@@ -24,18 +26,18 @@ export interface PackageManifest {
 }
 
 export interface PackageContent {
-  schemas: unknown[]
-  pages: unknown[]
-  workflows: unknown[]
-  luaScripts: unknown[]
-  componentHierarchy: Record<string, unknown>
-  componentConfigs: Record<string, unknown>
-  cssClasses?: unknown[]
-  dropdownConfigs?: unknown[]
+  schemas: JsonValue[]
+  pages: JsonValue[]
+  workflows: JsonValue[]
+  luaScripts: JsonValue[]
+  componentHierarchy: JsonObject
+  componentConfigs: JsonObject
+  cssClasses?: JsonValue[]
+  dropdownConfigs?: JsonValue[]
   seedData?: PackageSeedData
 }
 
-export type PackageSeedRecord = Record<string, unknown>
+export type PackageSeedRecord = JsonObject
 
 export type PackageSeedData = Record<string, PackageSeedRecord[]>
 

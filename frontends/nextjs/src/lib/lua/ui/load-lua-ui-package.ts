@@ -6,6 +6,8 @@ import { createLuaEngine } from '@/lib/lua/engine/core/create-lua-engine'
 import { fromLua } from '@/lib/lua/functions/converters/from-lua'
 import { pushToLua } from '@/lib/lua/functions/converters/push-to-lua'
 
+import type { JsonValue } from '@/types/utility-types'
+
 import { normalizeLuaComponent } from './normalize-lua-structure'
 import type { LuaUIManifest, LuaUIPackage, LuaUIPage } from './types/lua-ui-package'
 
@@ -87,7 +89,7 @@ export async function loadLuaUIPackage(packagePath: string): Promise<LuaUIPackag
   }
 
   // Load all action files
-  const actions: Record<string, (...args: any[]) => any> = {}
+  const actions: Record<string, (...args: JsonValue[]) => JsonValue> = {}
   if (manifest.actions) {
     for (const actionManifest of manifest.actions) {
       const actionPath = join(packagePath, actionManifest.file)
@@ -150,8 +152,8 @@ export async function loadLuaUIPackage(packagePath: string): Promise<LuaUIPackag
 /**
  * Create a JavaScript wrapper function that calls a Lua function
  */
-function createLuaFunctionWrapper(luaSource: string, functionName: string): (...args: any[]) => any {
-  return (...args: any[]) => {
+function createLuaFunctionWrapper(luaSource: string, functionName: string): (...args: JsonValue[]) => JsonValue {
+  return (...args: JsonValue[]) => {
     // Create a new Lua engine for this call
     const engine = createLuaEngine()
     const L = engine.L
@@ -190,7 +192,7 @@ function createLuaFunctionWrapper(luaSource: string, functionName: string): (...
     }
 
     // Get the result
-    const result = fromLua(L, -1)
+    const result = fromLua(L, -1) as JsonValue
     engine.destroy()
 
     return result

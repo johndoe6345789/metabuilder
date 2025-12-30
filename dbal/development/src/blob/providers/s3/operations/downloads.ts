@@ -25,11 +25,12 @@ export async function downloadBuffer(
     }
 
     return Buffer.concat(chunks)
-  } catch (error: any) {
-    if (error.name === 'NoSuchKey') {
+  } catch (error) {
+    const s3Error = error as { name?: string; message?: string }
+    if (s3Error.name === 'NoSuchKey') {
       throw DBALError.notFound(`Blob not found: ${key}`)
     }
-    throw DBALError.internal(`S3 download failed: ${error.message}`)
+    throw DBALError.internal(`S3 download failed: ${s3Error.message}`)
   }
 }
 
@@ -47,12 +48,13 @@ export async function downloadStream(
       Range: buildRangeHeader(options),
     })
 
-    const response = await context.s3Client.send(command)
-    return response.Body as any
-  } catch (error: any) {
-    if (error.name === 'NoSuchKey') {
+    const response = await context.s3Client.send(command) as { Body: ReadableStream | NodeJS.ReadableStream }
+    return response.Body
+  } catch (error) {
+    const s3Error = error as { name?: string; message?: string }
+    if (s3Error.name === 'NoSuchKey') {
       throw DBALError.notFound(`Blob not found: ${key}`)
     }
-    throw DBALError.internal(`S3 download stream failed: ${error.message}`)
+    throw DBALError.internal(`S3 download stream failed: ${s3Error.message}`)
   }
 }

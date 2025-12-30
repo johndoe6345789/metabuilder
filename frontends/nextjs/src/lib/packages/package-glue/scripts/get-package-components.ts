@@ -1,3 +1,5 @@
-export function getPackageComponents(packageId: string): unknown[] {
-  return []
+import type { PackageComponent, PackageDefinition } from '../types'
+
+export function getPackageComponents(pkg: PackageDefinition): PackageComponent[] {
+  return pkg.components ?? []
 }

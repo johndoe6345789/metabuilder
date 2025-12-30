@@ -17,8 +17,9 @@ async function ensureWritableDestination(
     try {
       await fs.access(filePath)
       throw DBALError.conflict(`Blob already exists: ${filePath}`)
-    } catch (error: any) {
-      if (error.code !== 'ENOENT') {
+    } catch (error) {
+      const fsError = error as NodeJS.ErrnoException
+      if (fsError.code !== 'ENOENT') {
         throw error
       }
     }
@@ -52,11 +53,12 @@ export async function uploadBuffer(
     await fs.writeFile(metaPath, JSON.stringify(metadata, null, 2))
 
     return metadata
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof DBALError) {
       throw error
     }
-    throw DBALError.internal(`Filesystem upload failed: ${error.message}`)
+    const fsError = error as Error
+    throw DBALError.internal(`Filesystem upload failed: ${fsError.message}`)
   }
 }
 
@@ -100,10 +102,11 @@ export async function uploadStream(
     await writeMetadata(context, key, metadata)
 
     return metadata
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof DBALError) {
       throw error
     }
-    throw DBALError.internal(`Filesystem stream upload failed: ${error.message}`)
+    const fsError = error as Error
+    throw DBALError.internal(`Filesystem stream upload failed: ${fsError.message}`)
   }
 }

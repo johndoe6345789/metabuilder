@@ -24,11 +24,12 @@ export async function getMetadata(
       lastModified: response.LastModified || new Date(),
       customMetadata: response.Metadata,
     }
-  } catch (error: any) {
-    if (error.name === 'NotFound') {
+  } catch (error: unknown) {
+    const s3Error = error as { name?: string; message?: string }
+    if (s3Error.name === 'NotFound') {
       throw DBALError.notFound(`Blob not found: ${key}`)
     }
-    throw DBALError.internal(`S3 head object failed: ${error.message}`)
+    throw DBALError.internal(`S3 head object failed: ${s3Error.message || 'Unknown error'}`)
   }
 }
 
@@ -49,7 +50,8 @@ export async function generatePresignedUrl(
     return await getSignedUrl(context.s3Client, command, {
       expiresIn: expirationSeconds,
     })
-  } catch (error: any) {
-    throw DBALError.internal(`S3 presigned URL generation failed: ${error.message}`)
+  } catch (error: unknown) {
+    const s3Error = error as { message?: string }
+    throw DBALError.internal(`S3 presigned URL generation failed: ${s3Error.message || 'Unknown error'}`)
   }
 }

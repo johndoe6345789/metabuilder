@@ -1,9 +1,22 @@
 import type { PrismaContext } from '../types'
 import { DBALError } from '../../core/foundation/errors'
 
-export function getModel(context: PrismaContext, entity: string): any {
+type PrismaModelDelegate = {
+  findMany: (...args: unknown[]) => Promise<unknown[]>
+  findUnique: (...args: unknown[]) => Promise<unknown | null>
+  findFirst: (...args: unknown[]) => Promise<unknown | null>
+  create: (...args: unknown[]) => Promise<unknown>
+  createMany: (...args: unknown[]) => Promise<{ count: number }>
+  update: (...args: unknown[]) => Promise<unknown>
+  updateMany: (...args: unknown[]) => Promise<{ count: number }>
+  delete: (...args: unknown[]) => Promise<unknown>
+  deleteMany: (...args: unknown[]) => Promise<{ count: number }>
+  upsert: (...args: unknown[]) => Promise<unknown>
+}
+
+export function getModel(context: PrismaContext, entity: string): PrismaModelDelegate {
   const modelName = entity.charAt(0).toLowerCase() + entity.slice(1)
-  const model = (context.prisma as any)[modelName]
+  const model = (context.prisma as Record<string, PrismaModelDelegate>)[modelName]
 
   if (!model) {
     throw DBALError.notFound(`Entity ${entity} not found`)

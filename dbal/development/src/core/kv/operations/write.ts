@@ -73,7 +73,7 @@ export async function deleteValue(
 export async function listAdd(
   state: KVStoreState,
   key: string,
-  items: any[],
+  items: StorableValue[],
   context: TenantContext
 ): Promise<number> {
   if (!context.canWrite('kv')) {
@@ -95,7 +95,7 @@ export async function listAdd(
 export async function listRemove(
   state: KVStoreState,
   key: string,
-  valueToRemove: any,
+  valueToRemove: StorableValue,
   context: TenantContext
 ): Promise<number> {
   if (!context.canWrite('kv')) {

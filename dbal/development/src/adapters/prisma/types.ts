@@ -1,4 +1,5 @@
 import type { AdapterCapabilities } from '../adapter'
+import type { PrismaClient } from '@prisma/client'
 
 export type PrismaAdapterDialect = 'postgres' | 'mysql' | 'sqlite' | 'generic'
 
@@ -8,9 +9,16 @@ export interface PrismaAdapterOptions {
 }
 
 export interface PrismaContext {
-  prisma: any
+  prisma: PrismaClient
   queryTimeout: number
   dialect: PrismaAdapterDialect
+}
+
+export interface ListOptions {
+  filter?: Record<string, unknown>
+  sort?: Record<string, 'asc' | 'desc'>
+  limit?: number
+  offset?: number
 }
 
 export interface PrismaOperations {
@@ -18,7 +26,7 @@ export interface PrismaOperations {
   read(entity: string, id: string): Promise<unknown | null>
   update(entity: string, id: string, data: Record<string, unknown>): Promise<unknown>
   delete(entity: string, id: string): Promise<boolean>
-  list(entity: string, options?: any): Promise<any>
+  list(entity: string, options?: ListOptions): Promise<unknown[]>
   findFirst(entity: string, filter?: Record<string, unknown>): Promise<unknown | null>
   findByField(entity: string, field: string, value: unknown): Promise<unknown | null>
   upsert(

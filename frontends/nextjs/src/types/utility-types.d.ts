@@ -1,12 +1,12 @@
 /**
- * Utility types for type-safe replacements of `any`
+ * Utility types for safer, flexible replacements
  *
- * Use these types instead of `any` for better type safety.
+ * Use these types for better type safety.
  */
 
 /**
- * Represents any valid JSON value
- * Use this instead of `any` for JSON data
+ * Represents a valid JSON value
+ * Use this for JSON data
  */
 export type JsonValue =
   | string

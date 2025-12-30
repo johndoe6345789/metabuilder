@@ -1,6 +1,6 @@
 import { TenantContext } from '../foundation/tenant-context'
 
-export type StorableValue = string | number | boolean | null | object | Array<any>
+export type StorableValue = string | number | boolean | null | object | StorableValue[]
 
 export interface KVStoreEntry {
   key: string
@@ -29,9 +29,9 @@ export interface KVStore {
   set(key: string, value: StorableValue, context: TenantContext, ttl?: number): Promise<void>
   delete(key: string, context: TenantContext): Promise<boolean>
   exists(key: string, context: TenantContext): Promise<boolean>
-  listAdd(key: string, items: any[], context: TenantContext): Promise<number>
-  listGet(key: string, context: TenantContext, start?: number, end?: number): Promise<any[]>
-  listRemove(key: string, value: any, context: TenantContext): Promise<number>
+  listAdd(key: string, items: StorableValue[], context: TenantContext): Promise<number>
+  listGet(key: string, context: TenantContext, start?: number, end?: number): Promise<StorableValue[]>
+  listRemove(key: string, value: StorableValue, context: TenantContext): Promise<number>
   listLength(key: string, context: TenantContext): Promise<number>
   listClear(key: string, context: TenantContext): Promise<void>
   mget(keys: string[], context: TenantContext): Promise<Map<string, StorableValue | null>>

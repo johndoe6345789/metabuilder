@@ -23,7 +23,7 @@ export function isExpired(entry: KVStoreEntry): boolean {
   return Boolean(entry.expiresAt && entry.expiresAt < new Date())
 }
 
-export function deepEquals(a: any, b: any): boolean {
+export function deepEquals(a: StorableValue, b: StorableValue): boolean {
   return JSON.stringify(a) === JSON.stringify(b)
 }
 

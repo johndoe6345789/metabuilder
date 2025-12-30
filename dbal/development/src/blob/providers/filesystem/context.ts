@@ -22,7 +22,8 @@ export function createFilesystemContext(config: BlobStorageConfig): FilesystemCo
 async function ensureBasePath(basePath: string) {
   try {
     await fs.mkdir(basePath, { recursive: true })
-  } catch (error: any) {
-    throw new Error(`Failed to create base path: ${error.message}`)
+  } catch (error) {
+    const fsError = error as NodeJS.ErrnoException
+    throw new Error(`Failed to create base path: ${fsError.message}`)
   }
 }

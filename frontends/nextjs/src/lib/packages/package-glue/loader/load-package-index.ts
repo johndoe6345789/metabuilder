@@ -6,7 +6,7 @@ export interface PackageIndexEntry {
   author?: string
   category?: string
   dependencies?: string[]
-  exports?: { components?: unknown[] }
+  exports?: { components?: string[] }
 }
 
 interface PackageIndexResponse {

@@ -1,8 +1,14 @@
 import type { BlobStorageConfig } from '../../blob-storage'
 
+/** S3Client type from @aws-sdk/client-s3 - using interface to avoid requiring the package */
+interface S3ClientLike {
+  send(command: unknown): Promise<unknown>
+  destroy(): void
+}
+
 export interface S3Context {
   bucket: string
-  s3Client: any
+  s3Client: S3ClientLike
 }
 
 export async function createS3Context(config: BlobStorageConfig): Promise<S3Context> {

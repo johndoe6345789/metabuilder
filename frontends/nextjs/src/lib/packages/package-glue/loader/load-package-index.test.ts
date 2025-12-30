@@ -4,12 +4,12 @@ import { loadPackageIndex } from './load-package-index'
 
 const originalFetch = global.fetch
 
-const mockFetch = vi.fn()
+const mockFetch = vi.fn<typeof fetch>()
 
 describe('loadPackageIndex', () => {
   beforeEach(() => {
     mockFetch.mockReset()
-    global.fetch = mockFetch as unknown as typeof fetch
+    global.fetch = mockFetch
   })
 
   afterEach(() => {

@@ -31,8 +31,9 @@ export async function listBlobs(
       nextToken: response.NextContinuationToken,
       isTruncated: response.IsTruncated || false,
     }
-  } catch (error: any) {
-    throw DBALError.internal(`S3 list failed: ${error.message}`)
+  } catch (error) {
+    const s3Error = error as Error
+    throw DBALError.internal(`S3 list failed: ${s3Error.message}`)
   }
 }
 

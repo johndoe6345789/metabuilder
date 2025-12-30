@@ -23,15 +23,15 @@ export class InMemoryKVStore implements KVStore {
     return exists(this.state, key, context)
   }
 
-  listAdd(key: string, items: any[], context: TenantContext): Promise<number> {
+  listAdd(key: string, items: StorableValue[], context: TenantContext): Promise<number> {
     return listAdd(this.state, key, items, context)
   }
 
-  listGet(key: string, context: TenantContext, start?: number, end?: number): Promise<any[]> {
+  listGet(key: string, context: TenantContext, start?: number, end?: number): Promise<StorableValue[]> {
     return listGet(this.state, key, context, start, end)
   }
 
-  listRemove(key: string, value: any, context: TenantContext): Promise<number> {
+  listRemove(key: string, value: StorableValue, context: TenantContext): Promise<number> {
     return listRemove(this.state, key, value, context)
   }
 

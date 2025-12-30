@@ -1,4 +1,5 @@
 import { promises as fs, createReadStream } from 'fs'
+import type { ReadStreamOptions } from 'fs'
 import type { DownloadOptions } from '../../../blob-storage'
 import { DBALError } from '../../../core/foundation/errors'
 import type { FilesystemContext } from '../context'
@@ -26,14 +27,15 @@ export async function downloadBuffer(
     }
 
     return data
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
+  } catch (error) {
+    const fsError = error as NodeJS.ErrnoException
+    if (fsError.code === 'ENOENT') {
       throw DBALError.notFound(`Blob not found: ${key}`)
     }
     if (error instanceof DBALError) {
       throw error
     }
-    throw DBALError.internal(`Filesystem download failed: ${error.message}`)
+    throw DBALError.internal(`Filesystem download failed: ${fsError.message}`)
   }
 }
 
@@ -47,7 +49,7 @@ export async function downloadStream(
   try {
     await fs.access(filePath)
 
-    const streamOptions: any = {}
+    const streamOptions: { start?: number; end?: number } = {}
     if (options.offset !== undefined) {
       streamOptions.start = options.offset
     }
@@ -56,10 +58,11 @@ export async function downloadStream(
     }
 
     return createReadStream(filePath, streamOptions)
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
+  } catch (error) {
+    const fsError = error as NodeJS.ErrnoException
+    if (fsError.code === 'ENOENT') {
       throw DBALError.notFound(`Blob not found: ${key}`)
     }
-    throw DBALError.internal(`Filesystem download stream failed: ${error.message}`)
+    throw DBALError.internal(`Filesystem download stream failed: ${fsError.message}`)
   }
 }

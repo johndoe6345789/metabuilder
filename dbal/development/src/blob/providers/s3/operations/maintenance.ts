@@ -17,8 +17,9 @@ export async function deleteObject(
 
     await context.s3Client.send(command)
     return true
-  } catch (error: any) {
-    throw DBALError.internal(`S3 delete failed: ${error.message}`)
+  } catch (error: unknown) {
+    const s3Error = error as { message?: string }
+    throw DBALError.internal(`S3 delete failed: ${s3Error.message || 'Unknown error'}`)
   }
 }
 
@@ -39,10 +40,11 @@ export async function copyObject(
     await context.s3Client.send(command)
 
     return await getMetadata(context, destKey)
-  } catch (error: any) {
-    if (error.name === 'NoSuchKey') {
+  } catch (error: unknown) {
+    const s3Error = error as { name?: string; message?: string }
+    if (s3Error.name === 'NoSuchKey') {
       throw DBALError.notFound(`Source blob not found: ${sourceKey}`)
     }
-    throw DBALError.internal(`S3 copy failed: ${error.message}`)
+    throw DBALError.internal(`S3 copy failed: ${s3Error.message || 'Unknown error'}`)
   }
 }

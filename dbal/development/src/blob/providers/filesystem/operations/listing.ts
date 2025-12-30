@@ -22,8 +22,9 @@ export async function listBlobs(
       isTruncated: items.length > maxKeys,
       nextToken: items.length > maxKeys ? items[maxKeys].key : undefined,
     }
-  } catch (error: any) {
-    throw DBALError.internal(`Filesystem list failed: ${error.message}`)
+  } catch (error) {
+    const fsError = error as Error
+    throw DBALError.internal(`Filesystem list failed: ${fsError.message}`)
   }
 }
 

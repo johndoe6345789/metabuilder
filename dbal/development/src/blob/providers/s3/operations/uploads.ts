@@ -29,11 +29,12 @@ export async function uploadBuffer(
       lastModified: new Date(),
       customMetadata: options.metadata,
     }
-  } catch (error: any) {
-    if (error.name === 'NoSuchBucket') {
+  } catch (error: unknown) {
+    const s3Error = error as { name?: string; message?: string }
+    if (s3Error.name === 'NoSuchBucket') {
       throw DBALError.notFound(`Bucket not found: ${context.bucket}`)
     }
-    throw DBALError.internal(`S3 upload failed: ${error.message}`)
+    throw DBALError.internal(`S3 upload failed: ${s3Error.message || 'Unknown error'}`)
   }
 }
 
@@ -68,7 +69,8 @@ export async function uploadStream(
       lastModified: new Date(),
       customMetadata: options.metadata,
     }
-  } catch (error: any) {
-    throw DBALError.internal(`S3 stream upload failed: ${error.message}`)
+  } catch (error: unknown) {
+    const s3Error = error as { message?: string }
+    throw DBALError.internal(`S3 stream upload failed: ${s3Error.message || 'Unknown error'}`)
   }
 }
