@@ -1,11 +1,21 @@
 -- lua_test package initialization
 -- Unit testing framework for MetaBuilder Lua scripts
 
+---@class LuaTestModule
+---@field version string Package version
+---@field name string Package name
 local M = {}
 
 M.version = "1.0.0"
 M.name = "lua_test"
 
+---@class LuaTestInitResult
+---@field success boolean Whether initialization succeeded
+---@field message string Initialization message
+---@field version string Package version
+
+---Initialize the Lua test framework
+---@return LuaTestInitResult
 function M.init()
   return {
     success = true,
@@ -14,6 +24,14 @@ function M.init()
   }
 end
 
+---@class LuaTestInfo
+---@field name string Package name
+---@field version string Package version
+---@field description string Package description
+---@field features string[] List of framework features
+
+---Get information about the test framework
+---@return LuaTestInfo
 function M.info()
   return {
     name = M.name,
