@@ -1,5 +1,20 @@
+---@class Layout
 local M = {}
 
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? table
+
+---@class LayoutProps
+---@field header? table
+---@field footer? table
+---@field sidebar? table
+---@field children? table
+---@field className? string
+
+---@param props LayoutProps
+---@return UIComponent
 function M.standard(props)
   return {
     type = "Box",
@@ -16,6 +31,8 @@ function M.standard(props)
   }
 end
 
+---@param props LayoutProps
+---@return UIComponent
 function M.with_sidebar(props)
   return {
     type = "Flex",

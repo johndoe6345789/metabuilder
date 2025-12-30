@@ -1,4 +1,17 @@
 -- Text column definition
+
+---@class TextColumn
+---@field type "text"
+---@field id string Column identifier
+---@field label string Column header label
+---@field width string Column width (e.g., "auto", "100px")
+---@field sortable boolean Whether the column is sortable
+
+---Create a text column definition
+---@param id string Column identifier
+---@param label string Column header label
+---@param width? string Column width (default: "auto")
+---@return TextColumn
 local function text_column(id, label, width)
   return {
     type = "text",

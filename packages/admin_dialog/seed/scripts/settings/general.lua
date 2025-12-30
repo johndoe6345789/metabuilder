@@ -1,4 +1,17 @@
 -- Admin settings general section
+
+---@class SettingsSection
+---@field type string
+---@field id string
+---@field title string
+---@field fields SettingsField[]
+
+---@class SettingsField
+---@field id string
+---@field type string
+---@field label string
+
+---@return SettingsSection
 local function general_settings()
   return {
     type = "settings_section",

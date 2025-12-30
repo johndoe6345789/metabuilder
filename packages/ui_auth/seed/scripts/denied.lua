@@ -1,5 +1,19 @@
+---@class AccessDenied
 local M = {}
 
+---@class DeniedProps
+---@field title? string
+---@field description? string
+---@field actionLabel? string
+---@field onAction? string
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? table
+
+---@param props DeniedProps
+---@return UIComponent
 function M.render(props)
   return {
     type = "Stack",

@@ -1,6 +1,20 @@
 -- User management dialog
+
+---@class UserDialog
 local M = {}
 
+---@class User
+---@field username string
+---@field email string
+---@field role string
+---@field active boolean
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? table
+
+---@return UIComponent
 function M.render_create()
   return {
     type = "dialog",
@@ -17,6 +31,8 @@ function M.render_create()
   }
 end
 
+---@param user User
+---@return UIComponent
 function M.render_edit(user)
   return {
     type = "dialog",

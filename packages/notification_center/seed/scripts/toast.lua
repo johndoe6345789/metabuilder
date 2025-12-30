@@ -1,6 +1,18 @@
 -- Toast notification utilities
+
+---@class ToastUtils
 local M = {}
 
+---@class Toast
+---@field type string
+---@field variant "info"|"success"|"warning"|"error"
+---@field message string
+---@field duration number
+---@field icon string
+
+---@param message string
+---@param duration? number
+---@return Toast
 function M.success(message, duration)
   return {
     type = "toast",
@@ -11,6 +23,9 @@ function M.success(message, duration)
   }
 end
 
+---@param message string
+---@param duration? number
+---@return Toast
 function M.error(message, duration)
   return {
     type = "toast",
@@ -21,6 +36,9 @@ function M.error(message, duration)
   }
 end
 
+---@param message string
+---@param duration? number
+---@return Toast
 function M.warning(message, duration)
   return {
     type = "toast",
@@ -31,6 +49,9 @@ function M.warning(message, duration)
   }
 end
 
+---@param message string
+---@param duration? number
+---@return Toast
 function M.info(message, duration)
   return {
     type = "toast",

@@ -1,5 +1,20 @@
+---@class Stats
 local M = {}
 
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? table
+
+---@class StatCardProps
+---@field label string
+---@field value number|string
+---@field change? string
+---@field positive? boolean
+---@field className? string
+
+---@param props StatCardProps
+---@return UIComponent
 function M.card(props)
   return {
     type = "Card",
@@ -21,6 +36,8 @@ function M.card(props)
   }
 end
 
+---@param stats StatCardProps[]
+---@return UIComponent
 function M.grid(stats)
   local items = {}
   for _, s in ipairs(stats) do

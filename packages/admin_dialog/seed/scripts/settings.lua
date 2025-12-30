@@ -1,6 +1,14 @@
 -- Admin settings dialog
+
+---@class SettingsDialog
 local M = {}
 
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? table
+
+---@return UIComponent
 function M.render_general()
   return {
     type = "dialog",
@@ -17,6 +25,7 @@ function M.render_general()
   }
 end
 
+---@return UIComponent
 function M.render_security()
   return {
     type = "dialog",

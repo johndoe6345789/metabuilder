@@ -1,5 +1,16 @@
+---@class FooterRender
 local M = {}
 
+---@class FooterProps
+---@field text? string
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? table
+
+---@param props FooterProps
+---@return UIComponent
 function M.render(props)
   local text = props.text or "© 2024 MetaBuilder. Built with visual workflows."
   return {

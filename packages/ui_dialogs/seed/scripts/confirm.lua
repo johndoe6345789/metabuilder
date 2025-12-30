@@ -1,5 +1,20 @@
+---@class Confirm
 local M = {}
 
+---@class ConfirmProps
+---@field open boolean
+---@field title? string
+---@field message string
+---@field confirmText? string
+---@field destructive? boolean
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? table
+
+---@param props ConfirmProps
+---@return UIComponent
 function M.render(props)
   return {
     type = "Dialog",

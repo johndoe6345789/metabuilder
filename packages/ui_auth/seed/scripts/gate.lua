@@ -1,6 +1,28 @@
 local check = require("check")
+
+---@class AuthGate
 local M = {}
 
+---@class User
+---@field id string
+---@field level? number
+
+---@class GateContext
+---@field user? User
+---@field requiredLevel? number
+---@field children? table
+
+---@class CheckResult
+---@field allowed boolean
+---@field reason? string
+---@field redirect? string
+
+---@class UIComponent
+---@field type string
+---@field props? table
+
+---@param ctx GateContext
+---@return CheckResult
 function M.check(ctx)
   if not ctx.user then
     return { allowed = false, reason = "not_authenticated", redirect = "/login" }
@@ -11,6 +33,8 @@ function M.check(ctx)
   return { allowed = true }
 end
 
+---@param ctx GateContext
+---@return UIComponent|table
 function M.wrap(ctx)
   local result = M.check(ctx)
   if not result.allowed then

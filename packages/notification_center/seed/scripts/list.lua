@@ -1,6 +1,25 @@
 -- Notification list utilities
+
+---@class NotificationListUtils
 local M = {}
 
+---@class Notification
+---@field id string|number
+---@field title string
+---@field message string
+---@field created_at string|number
+---@field read? boolean
+---@field icon? string
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? table
+---@field content? string
+---@field variant? string
+
+---@param notification Notification
+---@return UIComponent
 function M.render_item(notification)
   return {
     type = "notification_item",
@@ -15,6 +34,8 @@ function M.render_item(notification)
   }
 end
 
+---@param notifications Notification[]
+---@return UIComponent
 function M.render_list(notifications)
   local items = {}
   for _, n in ipairs(notifications) do
@@ -26,6 +47,8 @@ function M.render_list(notifications)
   }
 end
 
+---@param count number
+---@return UIComponent|nil
 function M.render_badge(count)
   if count > 0 then
     return {

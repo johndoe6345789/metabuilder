@@ -1,5 +1,17 @@
+---@class AudiencePulse
 local M = {}
 
+---@class Metrics
+---@field messagesPerMinute? number
+---@field reactionsPerMinute? number
+---@field viewers? number
+
+---@class PulseResult
+---@field score number
+---@field tier "surging"|"steady"|"cooling"
+
+---@param metrics Metrics
+---@return PulseResult
 function M.score(metrics)
   local messages = metrics.messagesPerMinute or 0
   local reactions = metrics.reactionsPerMinute or 0

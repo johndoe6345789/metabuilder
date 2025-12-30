@@ -1,5 +1,22 @@
+---@class SidebarModule
 local M = {}
 
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? table
+
+---@class SidebarItem
+---@field label string
+---@field path string
+
+---@class SidebarProps
+---@field items SidebarItem[]
+---@field currentPath? string
+---@field title? string
+
+---@param props SidebarProps
+---@return UIComponent
 function M.render(props)
   local items = {}
   for _, item in ipairs(props.items or {}) do
@@ -15,6 +32,8 @@ function M.render(props)
   }
 end
 
+---@param props SidebarProps
+---@return UIComponent
 function M.header(props)
   return {
     type = "Box",
@@ -25,6 +44,9 @@ function M.header(props)
   }
 end
 
+---@param item SidebarItem
+---@param currentPath? string
+---@return UIComponent
 function M.item(item, currentPath)
   local active = currentPath == item.path
   return {

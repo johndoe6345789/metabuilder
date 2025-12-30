@@ -1,5 +1,19 @@
+---@class Alert
 local M = {}
 
+---@class AlertProps
+---@field open boolean
+---@field variant? "info"|"warning"|"error"
+---@field title string
+---@field message string
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? table
+
+---@param props AlertProps
+---@return UIComponent
 function M.render(props)
   local variant = props.variant or "info"
   local icon = variant == "error" and "alert-circle" or variant == "warning" and "alert-triangle" or "info"
