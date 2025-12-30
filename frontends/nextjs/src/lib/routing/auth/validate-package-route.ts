@@ -20,6 +20,27 @@ export interface PackageRoute {
   description?: string
 }
 
+/**
+ * Permission definition for a specific action
+ */
+export interface PackagePermissionDef {
+  /** Minimum level required to use this permission */
+  minLevel: number
+  /** Human-readable description of what this permission allows */
+  description: string
+  /** Optional feature flags that must be enabled */
+  featureFlags?: string[]
+  /** Whether database connection is required */
+  requireDatabase?: boolean
+}
+
+/**
+ * Package permissions map
+ * Key is the permission identifier (e.g., "forum.post.create")
+ * Value is the permission definition
+ */
+export type PackagePermissions = Record<string, PackagePermissionDef>
+
 export interface PackageMetadata {
   packageId: string
   name: string
@@ -41,6 +62,11 @@ export interface PackageMetadata {
     components?: string[]
     scripts?: string[]
   }
+  /** 
+   * Fine-grained permissions declared by this package
+   * Keys are permission identifiers like "forum.post.create"
+   */
+  permissions?: PackagePermissions
 }
 
 export interface RouteClaimResult {
@@ -103,6 +129,54 @@ export const canBePrimaryPackage = (packageId: string): boolean => {
   const metadata = loadPackageMetadata(packageId)
   if (!metadata) return false
   return metadata.primary !== false
+}
+
+/**
+ * Check if a user has a specific permission from a package
+ */
+export const hasPermission = (
+  user: SessionUser | null,
+  packageId: string,
+  permission: string
+): boolean => {
+  const metadata = loadPackageMetadata(packageId)
+  if (!metadata) return false
+  
+  // If no permissions defined, fall back to minLevel check
+  if (!metadata.permissions) {
+    return (user?.level ?? 0) >= metadata.minLevel
+  }
+  
+  const permDef = metadata.permissions[permission]
+  if (!permDef) return false
+  
+  return (user?.level ?? 0) >= permDef.minLevel
+}
+
+/**
+ * Get all permissions a user has for a package
+ */
+export const getUserPermissions = (
+  user: SessionUser | null,
+  packageId: string
+): string[] => {
+  const metadata = loadPackageMetadata(packageId)
+  if (!metadata?.permissions) return []
+  
+  const userLevel = user?.level ?? 0
+  return Object.entries(metadata.permissions)
+    .filter(([, def]) => userLevel >= def.minLevel)
+    .map(([perm]) => perm)
+}
+
+/**
+ * Get all declared permissions for a package
+ */
+export const getPackagePermissions = (
+  packageId: string
+): PackagePermissions | null => {
+  const metadata = loadPackageMetadata(packageId)
+  return metadata?.permissions ?? null
 }
 
 /**
