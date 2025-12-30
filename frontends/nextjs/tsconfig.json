@@ -29,6 +29,12 @@
       "@/*": [
         "./src/*"
       ],
+      "@/fakemui": [
+        "../../fakemui"
+      ],
+      "@/fakemui/*": [
+        "../../fakemui/*"
+      ],
       "@/dbal": [
         "../../dbal/development/src"
       ],
