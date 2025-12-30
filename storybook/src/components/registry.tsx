@@ -556,6 +556,116 @@ export const Switch: React.FC<SwitchProps> = ({
   )
 }
 
+// FormField - wrapper for form inputs with label and error
+interface FormFieldProps extends LuaComponentProps {
+  label?: string
+  error?: string
+  required?: boolean
+  helperText?: string
+}
+
+export const FormField: React.FC<FormFieldProps> = ({ 
+  label, 
+  error, 
+  required,
+  helperText,
+  children,
+  className = 'mb-4' 
+}) => (
+  <div className={className}>
+    {label && (
+      <label className="block text-sm font-medium mb-1">
+        {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
+      </label>
+    )}
+    {children}
+    {helperText && !error && <p className="text-xs text-muted-foreground mt-1">{helperText}</p>}
+    {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+  </div>
+)
+
+// ConditionalRender - renders children based on condition (always renders in Storybook for preview)
+interface ConditionalRenderProps extends LuaComponentProps {
+  condition?: boolean
+  when?: string
+  fallback?: React.ReactNode
+}
+
+export const ConditionalRender: React.FC<ConditionalRenderProps> = ({ 
+  children,
+  className = '' 
+}) => (
+  <div className={className}>{children}</div>
+)
+
+// Image - image component
+interface ImageProps extends LuaComponentProps {
+  src?: string
+  alt?: string
+  width?: string | number
+  height?: string | number
+  objectFit?: 'contain' | 'cover' | 'fill' | 'none'
+}
+
+export const Image: React.FC<ImageProps> = ({ 
+  src, 
+  alt = 'Image',
+  width,
+  height,
+  objectFit = 'cover',
+  className = '' 
+}) => (
+  src ? (
+    <img 
+      src={src} 
+      alt={alt} 
+      className={className}
+      style={{ width, height, objectFit }}
+    />
+  ) : (
+    <div 
+      className={`bg-muted flex items-center justify-center text-muted-foreground ${className}`}
+      style={{ width: width || 200, height: height || 150 }}
+    >
+      [Image: {alt}]
+    </div>
+  )
+)
+
+// Iframe - embedded frame
+interface IframeProps extends LuaComponentProps {
+  src?: string
+  title?: string
+  width?: string | number
+  height?: string | number
+  allowFullScreen?: boolean
+}
+
+export const Iframe: React.FC<IframeProps> = ({ 
+  src, 
+  title = 'Embedded content',
+  width = '100%',
+  height = 400,
+  className = '' 
+}) => (
+  src ? (
+    <iframe 
+      src={src} 
+      title={title}
+      className={`border rounded ${className}`}
+      style={{ width, height }}
+    />
+  ) : (
+    <div 
+      className={`bg-muted border rounded flex items-center justify-center text-muted-foreground ${className}`}
+      style={{ width, height }}
+    >
+      [Iframe: {title}]
+    </div>
+  )
+)
+
 // Navigation
 export const AppBar: React.FC<LuaComponentProps> = ({ children, className = 'bg-canvas border-b' }) => (
   <header className={className}>{children}</header>
@@ -753,6 +863,14 @@ export const componentRegistry: Record<string, AnyComponent> = {
   Label,
   Textarea,
   Switch,
+  FormField,
+  
+  // Media
+  Image,
+  Iframe,
+  
+  // Conditional
+  ConditionalRender,
   
   // Display
   Icon,
