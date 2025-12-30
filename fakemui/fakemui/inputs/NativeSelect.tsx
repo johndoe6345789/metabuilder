@@ -5,7 +5,7 @@ import { useFormControl } from './FormControl'
  * Props for NativeSelect component
  */
 export interface NativeSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  children: React.ReactNode
+  children?: React.ReactNode
   /** Visual variant */
   variant?: 'standard' | 'outlined' | 'filled'
   /** Icon component to use for dropdown indicator */

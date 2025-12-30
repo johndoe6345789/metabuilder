@@ -4,7 +4,7 @@ import React, { forwardRef, Children, cloneElement, isValidElement } from 'react
  * Props for ButtonGroup component
  */
 export interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode
+  children?: React.ReactNode
   /** Button size to apply to all children */
   size?: 'sm' | 'md' | 'lg'
   /** Button variant to apply to all children */

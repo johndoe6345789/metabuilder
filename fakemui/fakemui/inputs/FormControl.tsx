@@ -23,7 +23,7 @@ export const useFormControl = () => useContext(FormControlContext)
  * Props for FormControl component
  */
 export interface FormControlProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode
+  children?: React.ReactNode
   /** Whether the field is required */
   required?: boolean
   /** Whether the field is disabled */

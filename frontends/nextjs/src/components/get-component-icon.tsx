@@ -3,14 +3,14 @@ import {
   Article,
   Autorenew,
   Chat,
-  CheckBox,
+  Checkbox,
   CropFree,
   CropPortrait,
   FormatAlignLeft,
   GridView,
   LocalOffer,
   LooksOne,
-  Remove,
+  Minus,
   TableChart,
   TextFields,
   ToggleOn,
@@ -20,21 +20,21 @@ import {
   ViewColumn,
   ViewStream,
   WarningAmber,
-} from '@mui/icons-material'
-import type { SvgIconProps } from '@mui/material/SvgIcon'
+  type IconProps,
+} from '@/fakemui/icons'
 import type { ComponentType, ReactElement } from 'react'
 
-const iconMap: Record<string, ComponentType<SvgIconProps>> = {
+const iconMap: Record<string, ComponentType<IconProps>> = {
   Article,
   Card: CropPortrait,
   Chat,
-  CheckSquare: CheckBox,
+  CheckSquare: Checkbox,
   CircleNotch: Autorenew,
   Columns: ViewColumn,
   CursorClick: TouchApp,
   FrameCorners: CropFree,
   GridFour: GridView,
-  Minus: Remove,
+  Minus,
   Seal: Verified,
   SlidersHorizontal: Tune,
   Stack: ViewStream,
@@ -48,7 +48,7 @@ const iconMap: Record<string, ComponentType<SvgIconProps>> = {
   Warning: WarningAmber,
 }
 
-export function getComponentIcon(iconName: string, props?: SvgIconProps): ReactElement | null {
+export function getComponentIcon(iconName: string, props?: IconProps): ReactElement | null {
   const Icon = iconMap[iconName]
   return Icon ? <Icon {...props} /> : null
 }

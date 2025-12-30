@@ -80,3 +80,37 @@ export const CardMedia: React.FC<CardMediaProps> = ({ image, alt = '', height, c
     aria-label={alt}
   />
 )
+
+// Additional Card subcomponents for Lua package compatibility
+export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+  children?: React.ReactNode
+  text?: string
+}
+
+export const CardTitle: React.FC<CardTitleProps> = ({ children, text, className = '', ...props }) => (
+  <h3 className={`card-title ${className}`} {...props}>
+    {text || children}
+  </h3>
+)
+
+export interface CardDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {
+  children?: React.ReactNode
+  text?: string
+}
+
+export const CardDescription: React.FC<CardDescriptionProps> = ({ children, text, className = '', ...props }) => (
+  <p className={`card-description ${className}`} {...props}>
+    {text || children}
+  </p>
+)
+
+export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
+  children?: React.ReactNode
+}
+
+export const CardFooter: React.FC<CardFooterProps> = ({ children, className = '', ...props }) => (
+  <div className={`card-footer ${className}`} {...props}>
+    {children}
+  </div>
+)
+

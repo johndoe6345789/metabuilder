@@ -20,7 +20,7 @@ export const useRadioGroup = () => useContext(RadioGroupContext)
  * Props for RadioGroup component
  */
 export interface RadioGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
-  children: React.ReactNode
+  children?: React.ReactNode
   /** Name attribute for all radio buttons */
   name?: string
   /** Currently selected value */
