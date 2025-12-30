@@ -1,4 +1,4 @@
-import { Buildings, House } from '@phosphor-icons/react'
+import { Buildings, House } from '@/fakemui/icons'
 
 import { Button } from '@/components/ui'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
