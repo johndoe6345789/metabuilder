@@ -7,6 +7,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import type { JsonValue } from '@/types/utility-types'
+
 import { notifySubscribers, subscribe } from './kv-utils/kv-store'
 import { deleteStoredValue, readStoredValue, writeStoredValue } from './kv-utils/storage-operations'
 
@@ -25,7 +27,7 @@ function registerStorageListener(): void {
   })
 }
 
-export function useKV<T = any>(
+export function useKV<T = JsonValue>(
   key: string,
   defaultValue?: T
 ): [T | undefined, (newValueOrUpdater: T | ((prev: T | undefined) => T)) => Promise<void>] {

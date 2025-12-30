@@ -33,7 +33,20 @@ const renderComponent = (overrides?: { onInitiate?: () => void }) => {
   return { onInitiateTransfer }
 }
 
-const mockFetch = (payload: any) => {
+type TransferRequest = {
+  id: string
+  fromUserId: string
+  toUserId: string
+  status: 'pending' | 'accepted' | 'rejected'
+  createdAt: number
+  expiresAt: number
+}
+
+type TransferHistoryResponse = {
+  requests: TransferRequest[]
+}
+
+const mockFetch = (payload: TransferHistoryResponse) => {
   const fetchMock = vi.fn(async () => ({
     ok: true,
     json: async () => payload,
