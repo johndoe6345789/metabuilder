@@ -37,7 +37,10 @@
       "Bash(done)",
       "Bash(eslint:*)",
       "Bash(bunx eslint:*)",
-      "Bash(bun test:*)"
+      "Bash(bun test:*)",
+      "Bash(136*100/234)",
+      "Bash(\")",
+      "Bash(python3:*)"
     ]
   }
 }

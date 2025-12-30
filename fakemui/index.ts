@@ -4,13 +4,38 @@
 // Icons
 export {
   Icon,
+  // Actions
   Plus,
   Trash,
   Copy,
+  Check,
+  X,
+  // Navigation
   ArrowUp,
   ArrowDown,
   ArrowClockwise,
+  ChevronUp,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  // Files & UI
   FloppyDisk,
+  Search,
+  Settings,
+  User,
+  Menu,
+  Eye,
+  EyeSlash,
+  Pencil,
+  // Communication & Time
+  Calendar,
+  Clock,
+  Mail,
+  Bell,
+  // Social
+  Star,
+  Heart,
+  Share,
 } from './icons'
 export type { IconProps } from './icons'
 

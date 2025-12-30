@@ -25,20 +25,44 @@ function MyComponent() {
 
 ## Available Icons
 
-Current icon count: **7 icons**
+Current icon count: **27 icons**
 
-### Actions
+### Actions (5)
 - `Plus` - Add, create, new
 - `Trash` - Delete, remove
 - `Copy` - Duplicate, copy
+- `Check` - Confirm, success, done
+- `X` - Close, cancel, dismiss
 
-### Navigation
+### Navigation (7)
 - `ArrowUp` - Move up, scroll up
 - `ArrowDown` - Move down, scroll down
 - `ArrowClockwise` - Refresh, reload, retry
+- `ChevronUp` - Expand up, collapse
+- `ChevronDown` - Expand down, show more
+- `ChevronLeft` - Previous, back
+- `ChevronRight` - Next, forward
 
-### Files
+### Files & UI (8)
 - `FloppyDisk` - Save, export
+- `Search` - Find, filter
+- `Settings` - Configure, preferences
+- `User` - Profile, account
+- `Menu` - Hamburger menu, navigation
+- `Eye` - View, show, visible
+- `EyeSlash` - Hide, hidden, password
+- `Pencil` - Edit, modify
+
+### Communication & Time (4)
+- `Calendar` - Date, schedule, events
+- `Clock` - Time, duration
+- `Mail` - Email, message, contact
+- `Bell` - Notifications, alerts
+
+### Social (3)
+- `Star` - Favorite, bookmark, featured
+- `Heart` - Like, love, favorite
+- `Share` - Share, export, send
 
 ---
 
@@ -219,23 +243,23 @@ export const Plus = (props: IconProps) => (
 - [x] ArrowClockwise
 - [x] FloppyDisk
 
-### Phase 2: Common Icons (0/20) 🚧
-- [ ] Check
-- [ ] X (Close)
-- [ ] ChevronUp/Down/Left/Right (4 icons)
-- [ ] Search
-- [ ] Settings
-- [ ] User
-- [ ] Menu
-- [ ] Eye/EyeSlash
-- [ ] Edit (Pencil)
-- [ ] Calendar
-- [ ] Clock
-- [ ] Mail
-- [ ] Bell
-- [ ] Star
-- [ ] Heart
-- [ ] Share
+### Phase 2: Common Icons (20/20) ✅
+- [x] Check
+- [x] X (Close)
+- [x] ChevronUp/Down/Left/Right (4 icons)
+- [x] Search
+- [x] Settings
+- [x] User
+- [x] Menu
+- [x] Eye/EyeSlash
+- [x] Edit (Pencil)
+- [x] Calendar
+- [x] Clock
+- [x] Mail
+- [x] Bell
+- [x] Star
+- [x] Heart
+- [x] Share
 
 ### Phase 3: Specialized Icons (0/30+) ⏳
 Add as needed based on component migration
