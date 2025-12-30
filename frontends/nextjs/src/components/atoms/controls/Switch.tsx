@@ -1,35 +1,35 @@
 'use client'
 
-import { FormControlLabel, Switch as MuiSwitch } from '@mui/material'
-import { type ComponentProps, forwardRef } from 'react'
-
-type MuiSwitchProps = ComponentProps<typeof MuiSwitch>
+import { Switch as FakemuiSwitch } from '@/fakemui'
+import { forwardRef } from 'react'
 
 /**
  * Props for the Switch component
- * @extends {MuiSwitchProps} Inherits Material-UI Switch props
+ * Wrapper around fakemui Switch to maintain API compatibility
  */
-export interface SwitchProps extends MuiSwitchProps {
+export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
   /** Optional label text to display next to the switch */
-  label?: string
+  label?: React.ReactNode
+  /** MUI color prop (ignored for compatibility) */
+  color?: string
+  /** MUI size prop (ignored for compatibility) */
+  size?: string
+  /** MUI sx prop - converted to className for compatibility */
+  sx?: any
 }
 
-const Switch = forwardRef<HTMLButtonElement, SwitchProps>(({ label, ...props }, ref) => {
-  if (label) {
-    return (
-      <FormControlLabel
-        control={<MuiSwitch ref={ref} {...props} />}
-        label={label}
-        sx={{
-          '& .MuiFormControlLabel-label': {
-            fontSize: '0.875rem',
-          },
-        }}
-      />
-    )
-  }
+const Switch = forwardRef<HTMLInputElement, SwitchProps>(({ label, color, size, sx, className, ...props }, ref) => {
+  // Combine className with any sx-based classes
+  const combinedClassName = [className, sx?.className].filter(Boolean).join(' ')
 
-  return <MuiSwitch ref={ref} {...props} />
+  return (
+    <FakemuiSwitch
+      ref={ref}
+      label={label}
+      className={combinedClassName}
+      {...props}
+    />
+  )
 })
 
 Switch.displayName = 'Switch'
