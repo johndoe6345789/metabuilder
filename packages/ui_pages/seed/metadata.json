@@ -19,10 +19,21 @@
     "ui_level5",
     "ui_level6"
   ],
+  "devDependencies": ["lua_test"],
   "exports": {
     "pages": [],
     "scripts": [],
     "components": []
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
+    ]
   },
   "minLevel": 1
 }

@@ -11,6 +11,7 @@
     "ui_header",
     "ui_intro"
   ],
+  "devDependencies": ["lua_test"],
   "exports": {
     "pages": [
       "level2"
@@ -21,6 +22,16 @@
       "comments"
     ],
     "components": []
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
+    ]
   },
   "minLevel": 2
 }
