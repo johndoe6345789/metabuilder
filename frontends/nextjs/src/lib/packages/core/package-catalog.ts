@@ -2,7 +2,6 @@ import {
   ecommerceBasicPackage,
   forumClassicPackage,
   guestbookRetroPackage,
-  ircWebchatPackage,
   retroGamesPackage,
   spotifyClonePackage,
   youtubeClonePackage,
@@ -19,5 +18,4 @@ export const PACKAGE_CATALOG: Record<string, PackageCatalogEntry> = {
   'spotify-clone': spotifyClonePackage,
   'retro-games': retroGamesPackage,
   'ecommerce-basic': ecommerceBasicPackage,
-  'irc-webchat': ircWebchatPackage,
 }

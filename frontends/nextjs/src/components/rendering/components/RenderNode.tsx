@@ -1,6 +1,6 @@
 import type React from 'react'
 
-import { IRCWebchatDeclarative } from '@/components/IRCWebchatDeclarative'
+import { IRCWebchatDeclarative } from '@/components/misc/demos/IRCWebchatDeclarative'
 import { NotificationSummaryCard } from '@/components/NotificationSummaryCard'
 import {
   Alert,
