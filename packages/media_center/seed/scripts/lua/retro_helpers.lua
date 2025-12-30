@@ -160,43 +160,51 @@ end
 
 -- Convenience functions for directions
 
---- Tap UP
+---Tap UP button
+---@param session_id string Session identifier
+---@param player? number Player number (default 0)
 function retro_helpers.up(session_id, player)
     retro_helpers.tap(session_id, retro_helpers.BUTTON.UP, player)
 end
 
---- Tap DOWN
+---Tap DOWN button
+---@param session_id string Session identifier
+---@param player? number Player number (default 0)
 function retro_helpers.down(session_id, player)
     retro_helpers.tap(session_id, retro_helpers.BUTTON.DOWN, player)
 end
 
---- Tap LEFT
+---Tap LEFT button
+---@param session_id string Session identifier
+---@param player? number Player number (default 0)
 function retro_helpers.left(session_id, player)
     retro_helpers.tap(session_id, retro_helpers.BUTTON.LEFT, player)
 end
 
---- Tap RIGHT
+---Tap RIGHT button
+---@param session_id string Session identifier
+---@param player? number Player number (default 0)
 function retro_helpers.right(session_id, player)
     retro_helpers.tap(session_id, retro_helpers.BUTTON.RIGHT, player)
 end
 
---- Hold a direction
---- @param session_id string
---- @param direction string "up", "down", "left", "right"
---- @param duration_ms number How long to hold
---- @param player? number Player number
+---Hold a direction
+---@param session_id string Session identifier
+---@param direction string "up", "down", "left", "right"
+---@param duration_ms number How long to hold in milliseconds
+---@param player? number Player number (default 0)
 function retro_helpers.hold_direction(session_id, direction, duration_ms, player)
     retro_helpers.press(session_id, direction, player)
     sleep(duration_ms)
     retro_helpers.release(session_id, direction, player)
 end
 
---- Move in a diagonal direction
---- @param session_id string
---- @param horizontal string "left" or "right"
---- @param vertical string "up" or "down"
---- @param duration_ms? number Hold duration
---- @param player? number Player number
+---Move in a diagonal direction
+---@param session_id string Session identifier
+---@param horizontal string "left" or "right"
+---@param vertical string "up" or "down"
+---@param duration_ms? number Hold duration (default 50)
+---@param player? number Player number (default 0)
 function retro_helpers.diagonal(session_id, horizontal, vertical, duration_ms, player)
     duration_ms = duration_ms or 50
     retro_helpers.press(session_id, horizontal, player)
@@ -210,12 +218,12 @@ end
 -- Analog Stick Input
 -- ============================================================================
 
---- Set analog stick position
---- @param session_id string
---- @param stick string "left" or "right"
---- @param x number -1.0 to 1.0 (left to right)
---- @param y number -1.0 to 1.0 (up to down)
---- @param player? number Player number (default 0)
+---Set analog stick position
+---@param session_id string Session identifier
+---@param stick string "left" or "right"
+---@param x number -1.0 to 1.0 (left to right)
+---@param y number -1.0 to 1.0 (up to down)
+---@param player? number Player number (default 0)
 function retro_helpers.set_analog(session_id, stick, x, y, player)
     player = player or 0
     http.post("/api/v1/retro/sessions/" .. session_id .. "/input/analog", {
@@ -226,21 +234,21 @@ function retro_helpers.set_analog(session_id, stick, x, y, player)
     })
 end
 
---- Center (release) analog stick
---- @param session_id string
---- @param stick string "left" or "right"
---- @param player? number
+---Center (release) analog stick
+---@param session_id string Session identifier
+---@param stick string "left" or "right"
+---@param player? number Player number (default 0)
 function retro_helpers.center_analog(session_id, stick, player)
     retro_helpers.set_analog(session_id, stick, 0, 0, player)
 end
 
---- Move analog stick in a direction and return to center
---- @param session_id string
---- @param stick string "left" or "right"
---- @param x number -1.0 to 1.0
---- @param y number -1.0 to 1.0
---- @param duration_ms? number How long to hold (default 100)
---- @param player? number
+---Move analog stick in a direction and return to center
+---@param session_id string Session identifier
+---@param stick string "left" or "right"
+---@param x number -1.0 to 1.0 horizontal axis
+---@param y number -1.0 to 1.0 vertical axis
+---@param duration_ms? number How long to hold (default 100)
+---@param player? number Player number (default 0)
 function retro_helpers.flick_analog(session_id, stick, x, y, duration_ms, player)
     duration_ms = duration_ms or 100
     retro_helpers.set_analog(session_id, stick, x, y, player)
@@ -252,10 +260,10 @@ end
 -- Combo/Macro System
 -- ============================================================================
 
---- Execute a sequence of inputs
---- @param session_id string
---- @param inputs table[] Array of {button, duration_ms, wait_after_ms}
---- @param player? number
+---Execute a sequence of inputs
+---@param session_id string Session identifier
+---@param inputs ComboInput[] Array of input specifications
+---@param player? number Player number (default 0)
 function retro_helpers.combo(session_id, inputs, player)
     for _, input in ipairs(inputs) do
         if input.button then
