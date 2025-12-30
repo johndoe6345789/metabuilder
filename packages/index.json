@@ -767,6 +767,28 @@
         ]
       },
       "minLevel": 5
+    },
+    {
+      "packageId": "package_validator",
+      "name": "Package Validator",
+      "version": "1.0.0",
+      "description": "Validates package structure including JSON schemas, Lua files, and folder organization",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "tools",
+      "dependencies": [],
+      "exports": {
+        "components": [],
+        "scripts": [
+          "validate",
+          "metadata_schema",
+          "component_schema",
+          "lua_validator",
+          "structure_validator",
+          "cli"
+        ]
+      },
+      "minLevel": 5
     }
   ]
 }
