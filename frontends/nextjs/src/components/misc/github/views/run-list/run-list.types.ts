@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material/styles'
+import type { CSSProperties } from 'react'
 
 import type { WorkflowRun } from '../types'
 
@@ -39,10 +39,6 @@ export interface RunListProps {
   selectedRunId: number | null
 }
 
-export const spinSx: SxProps<Theme> = {
+export const spinStyle: CSSProperties = {
   animation: 'spin 1s linear infinite',
-  '@keyframes spin': {
-    from: { transform: 'rotate(0deg)' },
-    to: { transform: 'rotate(360deg)' },
-  },
 }
