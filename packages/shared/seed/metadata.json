@@ -1,0 +1,8 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "description": "Shared types and utilities for all Lua packages",
+  "exports": ["types.ui_types"],
+  "dependencies": [],
+  "minLevel": 0
+}
