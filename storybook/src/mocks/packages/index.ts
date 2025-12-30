@@ -23,6 +23,7 @@ const AUTO_LOAD_PACKAGES = [
   'nav_menu',
   'notification_center',
   'stats_grid',
+  'ui_auth',
   'ui_footer',
   'ui_header',
 ]

@@ -284,6 +284,63 @@ export const Progress: React.FC<ProgressProps> = ({
   )
 }
 
+// CircularProgress - spinning loader
+interface CircularProgressProps extends LuaComponentProps {
+  size?: 'small' | 'medium' | 'large' | number
+  color?: 'primary' | 'secondary' | 'inherit'
+}
+
+export const CircularProgress: React.FC<CircularProgressProps> = ({
+  size = 'medium',
+  className = '',
+}) => {
+  const sizeMap = { small: 16, medium: 24, large: 40 }
+  const actualSize = typeof size === 'number' ? size : sizeMap[size]
+  
+  return (
+    <div 
+      className={`inline-block animate-spin rounded-full border-2 border-current border-t-transparent ${className}`}
+      style={{ width: actualSize, height: actualSize }}
+      role="progressbar"
+    />
+  )
+}
+
+// Skeleton - loading placeholder
+interface SkeletonProps extends LuaComponentProps {
+  variant?: 'text' | 'circular' | 'rectangular' | 'rounded'
+  width?: string | number
+  height?: string | number
+  animation?: 'pulse' | 'wave' | false
+}
+
+export const Skeleton: React.FC<SkeletonProps> = ({
+  variant = 'text',
+  width,
+  height,
+  animation = 'pulse',
+  className = '',
+}) => {
+  const variantClasses = {
+    text: 'rounded h-4',
+    circular: 'rounded-full',
+    rectangular: '',
+    rounded: 'rounded-md',
+  }
+  
+  const animationClass = animation === 'pulse' ? 'animate-pulse' : animation === 'wave' ? 'animate-pulse' : ''
+  
+  return (
+    <div 
+      className={`bg-muted ${variantClasses[variant]} ${animationClass} ${className}`}
+      style={{ 
+        width: width || (variant === 'circular' ? 40 : '100%'), 
+        height: height || (variant === 'text' ? 16 : variant === 'circular' ? 40 : 100) 
+      }}
+    />
+  )
+}
+
 export const Badge: React.FC<LuaComponentProps & { color?: string }> = ({
   color: _color = 'default',
   className = '',
@@ -570,6 +627,8 @@ export const componentRegistry: Record<string, AnyComponent> = {
   Divider,
   Alert,
   Progress,
+  CircularProgress,
+  Skeleton,
   
   // Navigation
   Tabs,
