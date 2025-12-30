@@ -1,4 +1,16 @@
 -- Email field component
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? UIComponent[]
+
+---@class EmailFieldProps
+---@field name string
+---@field label? string
+
+---@param props EmailFieldProps
+---@return UIComponent
 local function email(props)
   return {
     type = "Box",

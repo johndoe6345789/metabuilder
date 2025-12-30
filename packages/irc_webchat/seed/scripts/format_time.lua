@@ -1,6 +1,5 @@
--- Format Timestamp
--- Formats a timestamp for display in 12-hour format
-
+---@param timestamp number Unix timestamp in milliseconds
+---@return string Formatted time string in HH:MM AM/PM format
 function formatTime(timestamp)
   local date = os.date("*t", timestamp / 1000)
   local hour = date.hour

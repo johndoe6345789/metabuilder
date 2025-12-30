@@ -1,7 +1,7 @@
 -- Number column definition
 
 ---@class NumberColumn
----@field type "number"
+---@field type "number" Column type identifier
 ---@field id string Column identifier
 ---@field label string Column header label
 ---@field width string Column width (e.g., "100px")
@@ -12,7 +12,7 @@
 ---@param id string Column identifier
 ---@param label string Column header label
 ---@param width? string Column width (default: "100px")
----@return NumberColumn
+---@return NumberColumn number_column The number column definition
 local function number_column(id, label, width)
   return {
     type = "number",

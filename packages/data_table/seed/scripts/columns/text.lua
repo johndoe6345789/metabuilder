@@ -1,7 +1,7 @@
 -- Text column definition
 
 ---@class TextColumn
----@field type "text"
+---@field type "text" Column type identifier
 ---@field id string Column identifier
 ---@field label string Column header label
 ---@field width string Column width (e.g., "auto", "100px")
@@ -11,7 +11,7 @@
 ---@param id string Column identifier
 ---@param label string Column header label
 ---@param width? string Column width (default: "auto")
----@return TextColumn
+---@return TextColumn text_column The text column definition
 local function text_column(id, label, width)
   return {
     type = "text",

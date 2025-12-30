@@ -1,4 +1,18 @@
 -- Number field component
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? UIComponent[]
+
+---@class NumberFieldProps
+---@field name string
+---@field label? string
+---@field min? number
+---@field max? number
+
+---@param props NumberFieldProps
+---@return UIComponent
 local function number(props)
   return {
     type = "Box",

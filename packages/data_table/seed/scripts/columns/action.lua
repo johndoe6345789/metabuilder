@@ -5,7 +5,7 @@
 ---@field handler string Action handler name
 
 ---@class ActionColumn
----@field type "actions"
+---@field type "actions" Column type identifier
 ---@field id string Column identifier
 ---@field label string Column header label (typically empty)
 ---@field width string Column width (e.g., "120px")
@@ -14,7 +14,7 @@
 ---Create an action column definition
 ---@param id string Column identifier
 ---@param actions? Action[] Array of actions (default: {})
----@return ActionColumn
+---@return ActionColumn action_column The action column definition
 local function action_column(id, actions)
   return {
     type = "actions",

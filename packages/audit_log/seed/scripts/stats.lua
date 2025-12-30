@@ -1,7 +1,42 @@
 -- Statistics calculation for audit logs
 local M = {}
 
--- Calculate stats from a list of logs
+---@class AuditLog
+---@field id string
+---@field operation string
+---@field resource string
+---@field resourceId string
+---@field username string
+---@field timestamp number
+---@field ipAddress string
+---@field success boolean
+---@field errorMessage string?
+
+---@class AuditStats
+---@field total number
+---@field successful number
+---@field failed number
+---@field rateLimit number
+
+---@class OperationStats
+---@field total number
+---@field successful number
+---@field failed number
+
+---@class StatCard
+---@field title string
+---@field value number
+---@field icon string
+---@field color string
+
+---@class StatsDisplay
+---@field cards StatCard[]
+---@field byOperation table<string, OperationStats>
+---@field byResource table<string, OperationStats>
+
+--- Calculate stats from a list of logs
+---@param logs AuditLog[] | nil
+---@return AuditStats
 function M.calculateStats(logs)
   local stats = {
     total = 0,
@@ -9,36 +44,38 @@ function M.calculateStats(logs)
     failed = 0,
     rateLimit = 0
   }
-  
+
   if not logs then
     return stats
   end
-  
+
   stats.total = #logs
-  
+
   for _, log in ipairs(logs) do
     if log.success then
       stats.successful = stats.successful + 1
     else
       stats.failed = stats.failed + 1
     end
-    
+
     if log.errorMessage and string.match(log.errorMessage, "Rate limit") then
       stats.rateLimit = stats.rateLimit + 1
     end
   end
-  
+
   return stats
 end
 
--- Get stats by operation type
+--- Get stats grouped by operation type
+---@param logs AuditLog[] | nil
+---@return table<string, OperationStats>
 function M.getStatsByOperation(logs)
   local byOperation = {}
-  
+
   if not logs then
     return byOperation
   end
-  
+
   for _, log in ipairs(logs) do
     local op = log.operation or "UNKNOWN"
     if not byOperation[op] then
@@ -51,18 +88,20 @@ function M.getStatsByOperation(logs)
       byOperation[op].failed = byOperation[op].failed + 1
     end
   end
-  
+
   return byOperation
 end
 
--- Get stats by resource type
+--- Get stats grouped by resource type
+---@param logs AuditLog[] | nil
+---@return table<string, OperationStats>
 function M.getStatsByResource(logs)
   local byResource = {}
-  
+
   if not logs then
     return byResource
   end
-  
+
   for _, log in ipairs(logs) do
     local res = log.resource or "unknown"
     if not byResource[res] then
@@ -75,14 +114,16 @@ function M.getStatsByResource(logs)
       byResource[res].failed = byResource[res].failed + 1
     end
   end
-  
+
   return byResource
 end
 
--- Prepare stats for display
+--- Prepare stats for display
+---@param logs AuditLog[] | nil
+---@return StatsDisplay
 function M.prepareStatsDisplay(logs)
   local stats = M.calculateStats(logs)
-  
+
   return {
     cards = {
       {

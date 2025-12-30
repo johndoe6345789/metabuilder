@@ -1,4 +1,18 @@
 -- Textarea field component
+
+---@class UIComponent
+---@field type string
+---@field props? table
+---@field children? UIComponent[]
+
+---@class TextareaFieldProps
+---@field name string
+---@field label? string
+---@field rows? number
+---@field placeholder? string
+
+---@param props TextareaFieldProps
+---@return UIComponent
 local function textarea(props)
   return {
     type = "Box",

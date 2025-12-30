@@ -1,6 +1,17 @@
--- Handle IRC Command
--- Processes IRC commands like /help, /users, /clear, /me
+---@class IRCMessage
+---@field id string Message identifier
+---@field username string Username of the sender
+---@field userId string User identifier
+---@field message string Message content
+---@field type string Message type (system, command, join, leave, message)
+---@field timestamp number Timestamp in milliseconds
+---@field channelId string Channel identifier
 
+---@param command string IRC command string (e.g., "/help", "/users", "/clear", "/me <action>")
+---@param channelId string Channel identifier
+---@param username string Current username
+---@param onlineUsers string[] List of online usernames
+---@return IRCMessage Response message object
 function handleCommand(command, channelId, username, onlineUsers)
   local parts = {}
   for part in string.gmatch(command, "%S+") do
