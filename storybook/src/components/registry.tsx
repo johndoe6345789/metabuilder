@@ -694,6 +694,8 @@ export const componentRegistry: Record<string, AnyComponent> = {
   Button,
   TextField,
   Select,
+  Label,
+  Textarea,
   
   // Display
   Icon,
