@@ -1,0 +1,78 @@
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Introduction" />
+
+# MetaBuilder Lua Package Storybook
+
+This Storybook renders **Lua packages** from the MetaBuilder platform without running the actual application.
+
+## How It Works
+
+1. **Lua packages** in `/packages/*/seed/scripts/` define UI as component trees
+2. **Mock data** mirrors the output structure of Lua render functions
+3. **LuaPackageRenderer** converts the component tree to React components
+4. **Component Registry** maps Lua type names to React implementations
+
+## Package Structure
+
+Each Lua package follows this structure:
+
+```
+packages/
+└── {package_name}/
+    └── seed/
+        ├── metadata.json      # Package info
+        ├── components.json    # Component definitions
+        └── scripts/
+            ├── manifest.json  # Script manifest
+            ├── init.lua       # Initialization
+            └── *.lua          # Render functions
+```
+
+## Lua Render Output
+
+Lua render functions return component trees like:
+
+```lua
+return {
+  type = "Card",
+  props = { className = "p-4" },
+  children = {
+    { type = "Typography", props = { variant = "h5", text = "Title" } },
+    { type = "Button", props = { children = "Click Me" } }
+  }
+}
+```
+
+## Adding New Package Mocks
+
+1. Create a file in `src/mocks/packages/{package-name}.ts`
+2. Define the `MockPackageDefinition` with metadata and renders
+3. Call `registerMockPackage()` to register it
+4. Import it in `src/mocks/packages/index.ts`
+5. Create stories in `src/stories/`
+
+## Available Component Types
+
+The component registry maps these Lua types to React:
+
+### Layout
+- `Box`, `Stack`, `Flex`, `Grid`, `Container`
+
+### Surfaces
+- `Card`, `CardHeader`, `CardContent`, `CardActions`, `Paper`
+
+### Typography
+- `Typography` (with variants: h1-h6, body1, body2, caption, overline)
+
+### Inputs
+- `Button` (variants: contained, outlined, text)
+
+### Display
+- `Icon`, `Avatar`, `Badge`, `Chip`, `Divider`, `Alert`
+
+### Navigation
+- `Tabs`, `Tab`
+
+### App-Specific
+- `Level4Header`, `IntroSection`, `AppHeader`, `AppFooter`, `Sidebar`
