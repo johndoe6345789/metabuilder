@@ -99,7 +99,10 @@ const nextConfig: NextConfig = {
         path: false,
         crypto: false,
         stream: false,
+        'stream/promises': false,
         os: false,
+        buffer: false,
+        util: false,
       }
     }
 
