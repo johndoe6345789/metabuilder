@@ -1,5 +1,13 @@
-import { ArrowDownward, ArrowUpward, ContentCopy, Delete as DeleteIcon } from '@mui/icons-material'
-import { Box, IconButton, Tooltip, Typography } from '@mui/material'
+import {
+  Box,
+  IconButton,
+  Tooltip,
+  Typography,
+  ArrowDown as ArrowDownward,
+  ArrowUp as ArrowUpward,
+  Copy as ContentCopy,
+  Trash as DeleteIcon,
+} from '@/fakemui'
 import type { MouseEvent } from 'react'
 
 import styles from '../LuaBlocksEditor.module.scss'

@@ -1,5 +1,4 @@
-import { Add as AddIcon } from '@mui/icons-material'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Typography, Plus as AddIcon } from '@/fakemui'
 import type { MouseEvent } from 'react'
 
 import styles from '../LuaBlocksEditor.module.scss'

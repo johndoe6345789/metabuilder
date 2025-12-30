@@ -1,4 +1,3 @@
-import { Add as AddIcon } from '@mui/icons-material'
 import {
   Box,
   Button,
@@ -8,7 +7,8 @@ import {
   Stack,
   TextField,
   Typography,
-} from '@mui/material'
+  Plus as AddIcon,
+} from '@/fakemui'
 import type { MouseEvent } from 'react'
 
 import type { LuaScript } from '@/lib/level-types'

@@ -1,5 +1,15 @@
-import { ContentCopy, Refresh as RefreshIcon, Save as SaveIcon } from '@mui/icons-material'
-import { Box, Button, Card, CardContent, CardHeader, Stack, Tooltip } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Stack,
+  Tooltip,
+  Copy as ContentCopy,
+  ArrowClockwise as RefreshIcon,
+  FloppyDisk as SaveIcon,
+} from '@/fakemui'
 
 import type { LuaScript } from '@/lib/level-types'
 

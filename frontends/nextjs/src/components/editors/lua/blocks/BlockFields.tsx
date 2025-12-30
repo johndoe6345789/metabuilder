@@ -1,4 +1,4 @@
-import { Box, MenuItem, TextField, Typography } from '@mui/material'
+import { Box, MenuItem, TextField, Typography } from '@/fakemui'
 
 import styles from '../LuaBlocksEditor.module.scss'
 import type { BlockDefinition, LuaBlock } from '../types'

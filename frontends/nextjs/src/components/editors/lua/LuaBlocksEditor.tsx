@@ -1,4 +1,3 @@
-import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import {
   Box,
   Button,
@@ -14,7 +13,9 @@ import {
   Stack,
   Tooltip,
   Typography,
-} from '@mui/material'
+  Plus as AddIcon,
+  Trash as DeleteIcon,
+} from '@/fakemui'
 
 import type { LuaScript } from '@/lib/level-types'
 

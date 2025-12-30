@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box } from '@/fakemui'
 import type { MouseEvent } from 'react'
 
 import styles from '../LuaBlocksEditor.module.scss'
