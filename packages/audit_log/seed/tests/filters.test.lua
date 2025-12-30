@@ -153,7 +153,9 @@ function M.defineTests(framework, assertions, mocks)
         logs = createSampleLogs()
       end)
       
-      it_each(cases.filter_by_operation, "$desc", function(tc)
+      it_each(cases.filter_by_operation, "$desc", function(testCase)
+        ---@type FilterByOperationCase
+        local tc = testCase
         local result = filterByOperation.filterByOperation(logs, tc.operation)
         expect(#result).toBe(tc.expected)
       end)
@@ -172,7 +174,9 @@ function M.defineTests(framework, assertions, mocks)
         logs = createSampleLogs()
       end)
       
-      it_each(cases.filter_by_resource, "$desc", function(tc)
+      it_each(cases.filter_by_resource, "$desc", function(testCase)
+        ---@type FilterByResourceCase
+        local tc = testCase
         local result = filterByResource.filterByResource(logs, tc.resource)
         expect(#result).toBe(tc.expected)
       end)
@@ -187,7 +191,9 @@ function M.defineTests(framework, assertions, mocks)
         logs = createSampleLogs()
       end)
       
-      it_each(cases.filter_by_success, "$desc", function(tc)
+      it_each(cases.filter_by_success, "$desc", function(testCase)
+        ---@type FilterBySuccessCase
+        local tc = testCase
         local result = filterBySuccess.filterBySuccess(logs, tc.success)
         expect(#result).toBe(tc.expected)
         if tc.expectedId then
@@ -205,7 +211,9 @@ function M.defineTests(framework, assertions, mocks)
         logs = createSampleLogs()
       end)
       
-      it_each(cases.filter_by_username, "$desc", function(tc)
+      it_each(cases.filter_by_username, "$desc", function(testCase)
+        ---@type FilterByUsernameCase
+        local tc = testCase
         local result = filterByUsername.filterByUsername(logs, tc.username)
         expect(#result).toBe(tc.expected)
       end)
@@ -220,7 +228,9 @@ function M.defineTests(framework, assertions, mocks)
         logs = createSampleLogs()
       end)
       
-      it_each(cases.filter_by_date_range, "$desc", function(tc)
+      it_each(cases.filter_by_date_range, "$desc", function(testCase)
+        ---@type FilterByDateRangeCase
+        local tc = testCase
         local result = filterByDateRange.filterByDateRange(logs, tc.startTime, tc.endTime)
         expect(#result).toBe(tc.expected)
       end)
@@ -234,7 +244,9 @@ function M.defineTests(framework, assertions, mocks)
         logs = createSampleLogs()
       end)
       
-      it_each(cases.apply_filters, "$desc", function(tc)
+      it_each(cases.apply_filters, "$desc", function(testCase)
+        ---@type ApplyFiltersCase
+        local tc = testCase
         local result = applyFilters.applyFilters(logs, tc.filters)
         expect(#result).toBe(tc.expected)
         if tc.expectedFirstId then

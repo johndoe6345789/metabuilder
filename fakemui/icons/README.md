@@ -25,7 +25,9 @@ function MyComponent() {
 
 ## Available Icons
 
-Current icon count: **27 icons**
+This section highlights core, commonly used icons. For the complete set, refer to `fakemui/icons/index.ts`.
+
+Current icon count: **310 icons** (see `fakemui/icons/index.ts` for the full list)
 
 ### Actions (5)
 - `Plus` - Add, create, new
