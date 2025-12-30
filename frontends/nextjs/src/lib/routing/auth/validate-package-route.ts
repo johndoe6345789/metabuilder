@@ -171,11 +171,42 @@ export const validatePackageRoute = (
     }
   }
 
+  // Build list of accessible packages (primary + dependencies)
+  const accessiblePackages = [packageId, ...(metadata.dependencies || [])]
+
   return {
     allowed: true,
     package: metadata,
     entities,
+    accessiblePackages,
   }
+}
+
+/**
+ * Get all packages accessible from a primary package
+ * Returns primary package + all dependencies
+ */
+export const getAccessiblePackages = (primaryPackageId: string): string[] => {
+  const metadata = loadPackageMetadata(primaryPackageId)
+  if (!metadata) {
+    return [primaryPackageId]
+  }
+  return [primaryPackageId, ...(metadata.dependencies || [])]
+}
+
+/**
+ * Check if targetPackage is accessible from primaryPackage
+ * (either the same package or a declared dependency)
+ */
+export const isPackageAccessible = (
+  primaryPackageId: string,
+  targetPackageId: string
+): boolean => {
+  if (primaryPackageId === targetPackageId) {
+    return true
+  }
+  const metadata = loadPackageMetadata(primaryPackageId)
+  return metadata?.dependencies?.includes(targetPackageId) || false
 }
 
 /**
