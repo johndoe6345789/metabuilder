@@ -1,33 +1,26 @@
 'use client'
 
 import { Search as SearchIcon } from '@/fakemui/icons'
-import { Box, Dialog, InputBase } from '@mui/material'
+import { Box } from '@/fakemui/fakemui/layout'
+import { Dialog, DialogPanel } from '@/fakemui/fakemui/utils'
+import { InputBase } from '@/fakemui/fakemui/inputs'
 import { forwardRef } from 'react'
 
 import type { CommandDialogProps, CommandInputProps } from './command.types'
+import styles from './CommandDialogShell.module.scss'
 
 const CommandDialogRoot = forwardRef<HTMLDivElement, CommandDialogProps>(
   ({ open, onClose, children, ...props }, ref) => {
     return (
       <Dialog
-        ref={ref}
         open={open}
         onClose={onClose}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{
-          sx: {
-            position: 'fixed',
-            top: '20%',
-            m: 0,
-            borderRadius: 2,
-            maxHeight: '60vh',
-            overflow: 'hidden',
-          },
-        }}
+        className={styles.dialog}
         {...props}
       >
-        {children}
+        <DialogPanel ref={ref} sm className={styles.dialogPaper}>
+          {children}
+        </DialogPanel>
       </Dialog>
     )
   }
@@ -40,30 +33,16 @@ const CommandInput = forwardRef<HTMLInputElement, CommandInputProps>(
     ref
   ) => {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          px: 2,
-          py: 1.5,
-          borderBottom: 1,
-          borderColor: 'divider',
-        }}
-      >
-        <SearchIcon sx={{ color: 'text.secondary', mr: 1.5 }} />
+      <Box className={styles.inputWrapper}>
+        <SearchIcon className={styles.searchIcon} />
         <InputBase
-          ref={ref}
+          inputRef={ref}
           placeholder={placeholder}
           value={value}
           onChange={e => onChange?.(e.target.value)}
           autoFocus={autoFocus}
           fullWidth
-          sx={{
-            fontSize: '0.875rem',
-            '& input': {
-              p: 0,
-            },
-          }}
+          className={styles.input}
           {...props}
         />
       </Box>

@@ -1,24 +1,21 @@
 'use client'
 
-import { Box, Typography } from '@mui/material'
+import { Box } from '@/fakemui/fakemui/layout'
+import { Typography } from '@/fakemui/fakemui/data-display'
 import { forwardRef, ReactNode } from 'react'
+
+import styles from './Header.module.scss'
 
 interface SheetHeaderProps {
   children: ReactNode
   className?: string
 }
 
-const SheetHeader = forwardRef<HTMLDivElement, SheetHeaderProps>(({ children, ...props }, ref) => {
+const SheetHeader = forwardRef<HTMLDivElement, SheetHeaderProps>(({ children, className, ...props }, ref) => {
   return (
     <Box
       ref={ref}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 0.5,
-        pb: 2,
-        textAlign: 'left',
-      }}
+      className={`${styles.header} ${className || ''}`}
       {...props}
     >
       {children}
@@ -32,18 +29,11 @@ interface SheetFooterProps {
   className?: string
 }
 
-const SheetFooter = forwardRef<HTMLDivElement, SheetFooterProps>(({ children, ...props }, ref) => {
+const SheetFooter = forwardRef<HTMLDivElement, SheetFooterProps>(({ children, className, ...props }, ref) => {
   return (
     <Box
       ref={ref}
-      sx={{
-        display: 'flex',
-        flexDirection: { xs: 'column-reverse', sm: 'row' },
-        gap: 1,
-        pt: 2,
-        mt: 'auto',
-        justifyContent: { sm: 'flex-end' },
-      }}
+      className={`${styles.footer} ${className || ''}`}
       {...props}
     >
       {children}
@@ -58,16 +48,12 @@ interface SheetTitleProps {
 }
 
 const SheetTitle = forwardRef<HTMLHeadingElement, SheetTitleProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
       <Typography
-        ref={ref}
         variant="h6"
-        component="h2"
-        sx={{
-          fontWeight: 600,
-          lineHeight: 1.2,
-        }}
+        as="h2"
+        className={`${styles.title} ${className || ''}`}
         {...props}
       >
         {children}
@@ -83,9 +69,9 @@ interface SheetDescriptionProps {
 }
 
 const SheetDescription = forwardRef<HTMLParagraphElement, SheetDescriptionProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     return (
-      <Typography ref={ref} variant="body2" color="text.secondary" {...props}>
+      <Typography variant="body2" className={`${styles.description} ${className || ''}`} {...props}>
         {children}
       </Typography>
     )

@@ -1,15 +1,7 @@
 'use client'
 
-import {
-  Box,
-  Divider,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from '@mui/material'
+import { Box } from '@/fakemui/fakemui/layout'
+import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@/fakemui/fakemui/data-display'
 import { forwardRef } from 'react'
 
 import type {
@@ -19,10 +11,11 @@ import type {
   CommandListProps,
   CommandShortcutProps,
 } from './command.types'
+import styles from './CommandList.module.scss'
 
 const CommandList = forwardRef<HTMLDivElement, CommandListProps>(({ children, ...props }, ref) => {
   return (
-    <Box ref={ref} sx={{ maxHeight: 300, overflow: 'auto', py: 1 }} {...props}>
+    <Box ref={ref} className={styles.list} {...props}>
       {children}
     </Box>
   )
@@ -32,11 +25,7 @@ CommandList.displayName = 'CommandList'
 const CommandEmpty = forwardRef<HTMLDivElement, CommandEmptyProps>(
   ({ children = 'No results found.', ...props }, ref) => {
     return (
-      <Box
-        ref={ref}
-        sx={{ py: 6, textAlign: 'center', color: 'text.secondary', fontSize: '0.875rem' }}
-        {...props}
-      >
+      <Box ref={ref} className={styles.empty} {...props}>
         {children}
       </Box>
     )
@@ -47,23 +36,16 @@ CommandEmpty.displayName = 'CommandEmpty'
 const CommandGroup = forwardRef<HTMLDivElement, CommandGroupProps>(
   ({ heading, children, ...props }, ref) => {
     return (
-      <Box ref={ref} sx={{ py: 0.5 }} {...props}>
+      <Box ref={ref} className={styles.group} {...props}>
         {heading && (
           <Typography
             variant="caption"
-            sx={{
-              px: 2,
-              py: 1,
-              display: 'block',
-              color: 'text.secondary',
-              fontWeight: 600,
-              fontSize: '0.75rem',
-            }}
+            className={styles.groupHeading}
           >
             {heading}
           </Typography>
         )}
-        <List disablePadding dense>
+        <List dense>
           {children}
         </List>
       </Box>
@@ -75,35 +57,21 @@ CommandGroup.displayName = 'CommandGroup'
 const CommandItem = forwardRef<HTMLLIElement, CommandItemProps>(
   ({ children, icon, shortcut, onSelect, disabled = false, selected = false, ...props }, ref) => {
     return (
-      <ListItem ref={ref} disablePadding {...props}>
+      <ListItem ref={ref} borderless {...props}>
         <ListItemButton
           onClick={onSelect}
           disabled={disabled}
           selected={selected}
-          sx={{ mx: 1, borderRadius: 1, py: 1.5, '&.Mui-selected': { bgcolor: 'action.selected' } }}
+          className={`${styles.itemButton} ${selected ? styles.selected : ''}`}
         >
-          {icon && <ListItemIcon sx={{ minWidth: 32 }}>{icon}</ListItemIcon>}
-          <ListItemText primary={children} primaryTypographyProps={{ variant: 'body2' }} />
+          {icon && <ListItemIcon className={styles.itemIcon}>{icon}</ListItemIcon>}
+          <ListItemText primary={children} />
           {shortcut && shortcut.length > 0 && (
-            <Box sx={{ display: 'flex', gap: 0.5, ml: 2 }}>
+            <Box className={styles.shortcutWrapper}>
               {shortcut.map((key, index) => (
-                <Box
-                  key={index}
-                  component="kbd"
-                  sx={{
-                    px: 1,
-                    py: 0.25,
-                    fontSize: '0.75rem',
-                    fontFamily: 'monospace',
-                    bgcolor: 'action.hover',
-                    borderRadius: 0.5,
-                    border: 1,
-                    borderColor: 'divider',
-                    color: 'text.secondary',
-                  }}
-                >
+                <kbd key={index} className={styles.kbd}>
                   {key}
-                </Box>
+                </kbd>
               ))}
             </Box>
           )}
@@ -115,7 +83,7 @@ const CommandItem = forwardRef<HTMLLIElement, CommandItemProps>(
 CommandItem.displayName = 'CommandItem'
 
 const CommandSeparator = forwardRef<HTMLHRElement, Record<string, never>>((props, ref) => {
-  return <Divider ref={ref} sx={{ my: 1 }} {...props} />
+  return <Divider ref={ref} className={styles.separator} {...props} />
 })
 CommandSeparator.displayName = 'CommandSeparator'
 
@@ -125,7 +93,7 @@ const CommandShortcut = forwardRef<HTMLSpanElement, CommandShortcutProps>(
       <Box
         ref={ref}
         component="span"
-        sx={{ ml: 'auto', fontSize: '0.75rem', letterSpacing: '0.05em', color: 'text.secondary' }}
+        className={styles.shortcut}
         {...props}
       >
         {children}
