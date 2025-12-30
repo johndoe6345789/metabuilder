@@ -883,6 +883,106 @@ export const Pagination: React.FC<LuaComponentProps & { count?: number; page?: n
 )
 
 /**
+ * Helper to push a JS object/array as a Lua table
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function pushTable(lua: any, L: any, to_luastring: any, data: unknown): void {
+  if (Array.isArray(data)) {
+    lua.lua_createtable(L, data.length, 0)
+    data.forEach((item, i) => {
+      if (typeof item === 'number') {
+        lua.lua_pushnumber(L, item)
+      } else if (typeof item === 'string') {
+        lua.lua_pushstring(L, to_luastring(item))
+      } else if (typeof item === 'boolean') {
+        lua.lua_pushboolean(L, item ? 1 : 0)
+      } else if (typeof item === 'object' && item !== null) {
+        pushTable(lua, L, to_luastring, item)
+      } else {
+        lua.lua_pushnil(L)
+      }
+      lua.lua_rawseti(L, -2, i + 1)
+    })
+  } else if (typeof data === 'object' && data !== null) {
+    const entries = Object.entries(data as Record<string, unknown>)
+    lua.lua_createtable(L, 0, entries.length)
+    for (const [key, val] of entries) {
+      lua.lua_pushstring(L, to_luastring(key))
+      if (typeof val === 'number') {
+        lua.lua_pushnumber(L, val)
+      } else if (typeof val === 'string') {
+        lua.lua_pushstring(L, to_luastring(val))
+      } else if (typeof val === 'boolean') {
+        lua.lua_pushboolean(L, val ? 1 : 0)
+      } else if (typeof val === 'object' && val !== null) {
+        pushTable(lua, L, to_luastring, val)
+      } else {
+        lua.lua_pushnil(L)
+      }
+      lua.lua_rawset(L, -3)
+    }
+  } else {
+    lua.lua_createtable(L, 0, 0)
+  }
+}
+
+/**
+ * Convert Lua table at stack index to JS object
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function tableToJs(lua: any, L: any, to_jsstring: any, index: number): unknown {
+  const result: Record<string, unknown> = {}
+  const arrayPart: unknown[] = []
+  let isArray = true
+  let maxIdx = 0
+  
+  lua.lua_pushnil(L)
+  while (lua.lua_next(L, index < 0 ? index - 1 : index) !== 0) {
+    const keyType = lua.lua_type(L, -2)
+    const valType = lua.lua_type(L, -1)
+    
+    let value: unknown
+    if (valType === lua.LUA_TSTRING) {
+      value = to_jsstring(lua.lua_tostring(L, -1))
+    } else if (valType === lua.LUA_TNUMBER) {
+      value = lua.lua_tonumber(L, -1)
+    } else if (valType === lua.LUA_TBOOLEAN) {
+      value = lua.lua_toboolean(L, -1) !== 0
+    } else if (valType === lua.LUA_TTABLE) {
+      value = tableToJs(lua, L, to_jsstring, -1)
+    } else if (valType === lua.LUA_TNIL) {
+      value = null
+    } else {
+      value = `[${valType}]`
+    }
+    
+    if (keyType === lua.LUA_TNUMBER) {
+      const idx = lua.lua_tonumber(L, -2)
+      if (Number.isInteger(idx) && idx > 0) {
+        arrayPart[idx - 1] = value
+        maxIdx = Math.max(maxIdx, idx)
+      } else {
+        isArray = false
+        result[String(idx)] = value
+      }
+    } else if (keyType === lua.LUA_TSTRING) {
+      isArray = false
+      result[to_jsstring(lua.lua_tostring(L, -2))] = value
+    }
+    
+    lua.lua_pop(L, 1)
+  }
+  
+  if (isArray && maxIdx === arrayPart.length && maxIdx > 0) {
+    return arrayPart
+  }
+  
+  // Merge array part
+  arrayPart.forEach((v, i) => { result[String(i + 1)] = v })
+  return result
+}
+
+/**
  * Parse Lua annotations to extract parameter info
  */
 interface LuaParam {
@@ -1195,7 +1295,6 @@ export const LuaScriptViewer: React.FC<LuaComponentProps & {
             <span className="text-sm text-muted-foreground">Result: </span>
             <pre className="font-mono font-medium whitespace-pre-wrap">{result}</pre>
           </div>
-        )}
         )}
       </div>
     </div>
