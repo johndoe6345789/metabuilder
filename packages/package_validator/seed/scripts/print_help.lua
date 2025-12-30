@@ -1,4 +1,5 @@
 --- Prints CLI help message
+---@return nil
 local function print_help()
   print([[
 Package Validator CLI
