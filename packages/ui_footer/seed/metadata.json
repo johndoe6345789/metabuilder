@@ -7,6 +7,7 @@
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [],
+  "devDependencies": ["lua_test"],
   "exports": {
     "components": [
       "AppFooter"
@@ -15,6 +16,16 @@
       "footer"
     ],
     "pages": []
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
+    ]
   },
   "minLevel": 1
 }

@@ -9,6 +9,7 @@
   "dependencies": [
     "ui_permissions"
   ],
+  "devDependencies": ["lua_test"],
   "exports": {
     "components": [
       "AccessDenied",
@@ -18,6 +19,16 @@
     "scripts": [
       "denied",
       "gate"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
     ]
   },
   "minLevel": 2
