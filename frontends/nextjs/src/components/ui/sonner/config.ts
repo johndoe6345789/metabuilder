@@ -1,4 +1,8 @@
-import { type AlertColor } from '@mui/material'
+/**
+ * Alert severity levels for toast notifications
+ * Replaces MUI's AlertColor type
+ */
+export type AlertSeverity = 'success' | 'info' | 'warning' | 'error'
 
 export type ToastPosition =
   | 'top-left'
@@ -15,7 +19,7 @@ export interface ToastOptions {
   id?: string | number
 }
 
-export type ToastType = AlertColor | 'default'
+export type ToastType = AlertSeverity | 'default'
 
 export interface Toast {
   id: string | number

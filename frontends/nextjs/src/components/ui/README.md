@@ -1,8 +1,8 @@
 # UI Components Directory
 
-## ⚠️ IMPORTANT: This project does NOT use Radix UI or Tailwind CSS
+## ⚠️ IMPORTANT: This project uses fakemui, NOT Material-UI or Radix UI
 
-This directory uses **Material-UI (MUI)** exclusively, organized with **Atomic Design** principles.
+This directory uses **fakemui** (our custom UI library), organized with **Atomic Design** principles.
 
 ## Directory Structure
 
@@ -37,8 +37,8 @@ import { Button, Input } from '@/components/ui/atoms'
 import { Card, Select } from '@/components/ui/molecules'
 import { Table, Form } from '@/components/ui/organisms'
 
-// Direct MUI imports are also fine for layout/typography
-import { Box, Typography, Grid } from '@mui/material'
+// Use fakemui for layout components
+import { Box, Typography, Grid } from '@/fakemui'
 
 // Use fakemui for icons
 import { Plus, Trash, Settings } from '@/fakemui/icons'
@@ -71,10 +71,10 @@ Complex, distinct UI sections:
 
 ## Styling
 
-Use MUI's `sx` prop or SASS modules:
+Use fakemui's `sx` prop or SASS modules:
 
 ```tsx
-// MUI sx prop (recommended)
+// fakemui sx prop (recommended)
 <Box sx={{ display: 'flex', gap: 2, p: 3 }}>
 
 // SASS module
@@ -89,11 +89,11 @@ backward compatibility. Avoid `@/components/ui/<component>` imports and use:
 - `atoms/`
 - `molecules/`
 - `organisms/`
-- Or direct MUI imports
+- Or direct fakemui imports from `@/fakemui`
 
 ## Documentation
 
 - [UI Standards](../../../../UI_STANDARDS.md) - Project UI policy
 - [UI Migration Guide](../../../../docs/UI_MIGRATION.md) - Complete migration reference
-- [MUI Theme](../../theme/mui-theme.ts) - Theme configuration
-- [Material-UI Docs](https://mui.com/) - Official documentation
+- [FakeMUI Theme](../../theme/fakemui-theme.ts) - Theme configuration
+- [FakeMUI README](../../../../fakemui/README.md) - Component library documentation

@@ -1,70 +1,65 @@
-import '@mui/material/styles'
+/**
+ * Custom theme properties for layout and design tokens
+ * These types are used by fakemui's theming system
+ */
 
-// Custom theme properties for layout and design tokens
-declare module '@mui/material/styles' {
-  interface Theme {
-    custom: {
-      fonts: {
-        body: string
-        heading: string
-        mono: string
-      }
-      borderRadius: {
-        none: number
-        sm: number
-        md: number
-        lg: number
-        xl: number
-        full: number
-      }
-      contentWidth: {
-        sm: string
-        md: string
-        lg: string
-        xl: string
-        full: string
-      }
-      sidebar: {
-        width: number
-        collapsedWidth: number
-      }
-      header: {
-        height: number
-      }
-    }
-  }
-
-  interface ThemeOptions {
-    custom?: {
-      fonts?: {
-        body?: string
-        heading?: string
-        mono?: string
-      }
-      borderRadius?: {
-        none?: number
-        sm?: number
-        md?: number
-        lg?: number
-        xl?: number
-        full?: number
-      }
-      contentWidth?: {
-        sm?: string
-        md?: string
-        lg?: string
-        xl?: string
-        full?: string
-      }
-      sidebar?: {
-        width?: number
-        collapsedWidth?: number
-      }
-      header?: {
-        height?: number
-      }
-    }
-  }
+export interface CustomFonts {
+  body: string
+  heading: string
+  mono: string
 }
 
-export {}
+export interface CustomBorderRadius {
+  none: number
+  sm: number
+  md: number
+  lg: number
+  xl: number
+  full: number
+}
+
+export interface CustomContentWidth {
+  sm: string
+  md: string
+  lg: string
+  xl: string
+  full: string
+}
+
+export interface CustomSidebar {
+  width: number
+  collapsedWidth: number
+}
+
+export interface CustomHeader {
+  height: number
+}
+
+export interface CustomThemeProperties {
+  fonts: CustomFonts
+  borderRadius: CustomBorderRadius
+  contentWidth: CustomContentWidth
+  sidebar: CustomSidebar
+  header: CustomHeader
+}
+
+export interface CustomThemeOptions {
+  fonts?: Partial<CustomFonts>
+  borderRadius?: Partial<CustomBorderRadius>
+  contentWidth?: Partial<CustomContentWidth>
+  sidebar?: Partial<CustomSidebar>
+  header?: Partial<CustomHeader>
+}
+
+/**
+ * Extended theme interface for fakemui
+ */
+export interface FakeMuiTheme {
+  mode: 'light' | 'dark'
+  custom: CustomThemeProperties
+}
+
+export interface FakeMuiThemeOptions {
+  mode?: 'light' | 'dark'
+  custom?: CustomThemeOptions
+}

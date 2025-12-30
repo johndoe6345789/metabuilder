@@ -1,9 +1,41 @@
-import { alpha, ThemeOptions } from '@mui/material/styles'
-
 import { colors } from './base/colors'
 import { fonts } from './base/fonts'
 
-export const getComponentOverrides = (mode: 'light' | 'dark'): ThemeOptions['components'] => {
+/**
+ * Helper to apply alpha transparency to a color
+ * Replaces MUI's alpha utility
+ */
+const alpha = (color: string, opacity: number): string => {
+  // Handle hex colors
+  if (color.startsWith('#')) {
+    const hex = color.slice(1)
+    const r = parseInt(hex.slice(0, 2), 16)
+    const g = parseInt(hex.slice(2, 4), 16)
+    const b = parseInt(hex.slice(4, 6), 16)
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`
+  }
+  // Handle rgb/rgba colors
+  if (color.startsWith('rgb')) {
+    const match = color.match(/\d+/g)
+    if (match && match.length >= 3) {
+      return `rgba(${match[0]}, ${match[1]}, ${match[2]}, ${opacity})`
+    }
+  }
+  return color
+}
+
+/**
+ * Component style overrides for fakemui theming
+ * This replaces MUI's ThemeOptions['components'] structure
+ */
+export interface ComponentOverrides {
+  [componentName: string]: {
+    defaultProps?: Record<string, unknown>
+    styleOverrides?: Record<string, unknown>
+  }
+}
+
+export const getComponentOverrides = (mode: 'light' | 'dark'): ComponentOverrides => {
   const isDark = mode === 'dark'
   const n = colors.neutral
 

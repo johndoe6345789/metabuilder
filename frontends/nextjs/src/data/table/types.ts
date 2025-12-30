@@ -1,11 +1,20 @@
-import type { TableCellProps } from '@mui/material'
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
+
+/**
+ * Cell alignment options (replaces MUI TableCellProps['align'])
+ */
+export type TableCellAlign = 'left' | 'center' | 'right' | 'justify' | 'inherit'
+
+/**
+ * Style properties for table cells (replaces MUI's sx prop)
+ */
+export type TableCellStyle = CSSProperties
 
 export interface DataTableColumn<T> {
   key: string
   label: string
-  align?: TableCellProps['align']
+  align?: TableCellAlign
   width?: number | string
   render?: (row: T, rowIndex: number) => ReactNode
-  sx?: TableCellProps['sx']
+  sx?: TableCellStyle
 }
