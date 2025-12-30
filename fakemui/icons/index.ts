@@ -365,3 +365,39 @@ export { Policy } from './Policy'
 
 // Help & Support
 export { Help } from './Help'
+
+// Rich Text Editing Icons
+export { FormatBold } from './FormatBold'
+export { FormatItalic } from './FormatItalic'
+export { FormatUnderline } from './FormatUnderline'
+export { FormatStrikethrough } from './FormatStrikethrough'
+export { FormatListBulleted } from './FormatListBulleted'
+export { FormatListNumbered } from './FormatListNumbered'
+export { FormatQuote } from './FormatQuote'
+export { InsertLink } from './InsertLink'
+export { InsertPhoto } from './InsertPhoto'
+export { AttachFile } from './AttachFile'
+
+// Date & Time
+export { DateRange } from './DateRange'
+export { AccessTime } from './AccessTime'
+
+// Color & Styling
+export { ColorPicker } from './ColorPicker'
+
+// Devices
+export { Smartphone } from './Smartphone'
+export { Tablet } from './Tablet'
+export { Desktop } from './Desktop'
+
+// Internationalization
+export { Language } from './Language'
+export { QrCode } from './QrCode'
+
+// Image Manipulation
+export { RotateLeft } from './RotateLeft'
+export { RotateRight } from './RotateRight'
+
+// Theme Toggles
+export { DarkMode } from './DarkMode'
+export { LightMode } from './LightMode'
