@@ -130,6 +130,7 @@ export const componentRegistry: Record<string, AnyComponent> = {
   Drawer,
   Modal,
   Backdrop,
+  Popover,
 
   // Inputs
   Button,

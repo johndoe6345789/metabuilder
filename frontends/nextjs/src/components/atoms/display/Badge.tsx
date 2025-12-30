@@ -1,7 +1,7 @@
 'use client'
 
-import { Chip, ChipProps } from '@mui/material'
-import { forwardRef, HTMLAttributes } from 'react'
+import { Chip } from '@/fakemui'
+import { forwardRef } from 'react'
 
 /** Badge visual style variants */
 export type BadgeVariant =
@@ -14,30 +14,46 @@ export type BadgeVariant =
 
 /**
  * Props for the Badge component
- * @extends {ChipProps} Inherits Material-UI Chip props
+ * Uses fakemui Chip component for badge functionality
  */
-export interface BadgeProps extends Omit<ChipProps, 'variant'> {
+export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Visual style variant of the badge */
   variant?: BadgeVariant
-}
-
-const variantMap: Record<
-  BadgeVariant,
-  { color: ChipProps['color']; variant: ChipProps['variant'] }
-> = {
-  default: { color: 'primary', variant: 'filled' },
-  secondary: { color: 'secondary', variant: 'filled' },
-  destructive: { color: 'error', variant: 'filled' },
-  outline: { color: 'default', variant: 'outlined' },
-  success: { color: 'success', variant: 'filled' },
-  warning: { color: 'warning', variant: 'filled' },
+  /** Label text */
+  label?: string | React.ReactNode
+  /** Size of the badge */
+  size?: 'small' | 'medium'
+  /** MUI sx prop - converted to className for compatibility */
+  sx?: any
+  /** Whether badge is clickable */
+  clickable?: boolean
+  /** Delete handler */
+  onDelete?: () => void
 }
 
 const Badge = forwardRef<HTMLDivElement, BadgeProps>(
-  ({ variant = 'default', size = 'small', ...props }, ref) => {
-    const config = variantMap[variant]
+  ({ variant = 'default', size = 'small', label, children, sx, className, ...props }, ref) => {
+    // Map variant to color class
+    const variantClass =
+      variant === 'destructive' ? 'chip--error' :
+      variant === 'success' ? 'chip--success' :
+      variant === 'warning' ? 'chip--warning' :
+      variant === 'secondary' ? 'chip--secondary' :
+      variant === 'outline' ? 'chip--outline' :
+      ''
 
-    return <Chip ref={ref} color={config.color} variant={config.variant} size={size} {...props} />
+    // Combine className with any sx-based classes
+    const combinedClassName = [className, sx?.className, variantClass].filter(Boolean).join(' ')
+
+    return (
+      <Chip
+        ref={ref}
+        label={label || children}
+        size={size}
+        className={combinedClassName}
+        {...props}
+      />
+    )
   }
 )
 

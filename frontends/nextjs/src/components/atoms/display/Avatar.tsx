@@ -1,11 +1,6 @@
 'use client'
 
-import {
-  Avatar as MuiAvatar,
-  AvatarGroup as MuiAvatarGroup,
-  AvatarGroupProps as MuiAvatarGroupProps,
-  AvatarProps as MuiAvatarProps,
-} from '@mui/material'
+import { Avatar as FakemuiAvatar, AvatarGroup as FakemuiAvatarGroup } from '@/fakemui'
 import { forwardRef } from 'react'
 
 /** Avatar size options */
@@ -13,49 +8,54 @@ export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 /**
  * Props for the Avatar component
- * @extends {MuiAvatarProps} Inherits Material-UI Avatar props
+ * Wrapper around fakemui Avatar to maintain API compatibility
  */
-export interface AvatarProps extends Omit<MuiAvatarProps, 'sizes'> {
-  /** Size of the avatar (xs: 24px, sm: 32px, md: 40px, lg: 56px, xl: 80px) */
+export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Size of the avatar */
   size?: AvatarSize
   /** Fallback text to display when no image is provided */
   fallback?: string
-}
-
-const sizeMap: Record<AvatarSize, number> = {
-  xs: 24,
-  sm: 32,
-  md: 40,
-  lg: 56,
-  xl: 80,
+  /** Image source */
+  src?: string
+  /** Alt text for image */
+  alt?: string
+  /** MUI sx prop - converted to className for compatibility */
+  sx?: any
 }
 
 const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
-  ({ size = 'md', fallback, children, sx, ...props }, ref) => {
-    const dimension = sizeMap[size]
+  ({ size = 'md', fallback, children, sx, src, alt, className, ...props }, ref) => {
+    // Map size to fakemui size props
+    const sizeProps = {
+      sm: size === 'xs' || size === 'sm',
+      md: size === 'md',
+      lg: size === 'lg',
+      xl: size === 'xl',
+    }
+
+    // Combine className with any sx-based classes
+    const combinedClassName = [className, sx?.className].filter(Boolean).join(' ')
 
     return (
-      <MuiAvatar
+      <FakemuiAvatar
         ref={ref}
-        sx={{
-          width: dimension,
-          height: dimension,
-          fontSize: dimension * 0.4,
-          ...sx,
-        }}
+        src={src}
+        alt={alt}
+        className={combinedClassName}
+        {...sizeProps}
         {...props}
       >
         {children || fallback}
-      </MuiAvatar>
+      </FakemuiAvatar>
     )
   }
 )
 
 Avatar.displayName = 'Avatar'
 
-// Re-export AvatarGroup
-const AvatarGroup = MuiAvatarGroup
+// Re-export AvatarGroup and create compatibility components
+const AvatarGroup = FakemuiAvatarGroup
 const AvatarFallback = ({ children }: { children: React.ReactNode }) => <>{children}</>
-const AvatarImage = MuiAvatar
+const AvatarImage = Avatar
 
 export { Avatar, AvatarFallback, AvatarGroup, AvatarImage }
