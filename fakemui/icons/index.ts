@@ -457,3 +457,36 @@ export { RotateRight } from './RotateRight'
 // Theme Toggles
 export { DarkMode } from './DarkMode'
 export { LightMode } from './LightMode'
+
+// Additional Text Formatting
+export { FormatAlignCenter } from './FormatAlignCenter'
+export { FormatAlignRight } from './FormatAlignRight'
+export { FormatAlignJustify } from './FormatAlignJustify'
+export { FormatIndentIncrease } from './FormatIndentIncrease'
+export { FormatIndentDecrease } from './FormatIndentDecrease'
+export { FormatClear } from './FormatClear'
+export { Superscript } from './Superscript'
+export { Subscript } from './Subscript'
+export { Spellcheck } from './Spellcheck'
+
+// Status & Progress
+export { HourglassEmpty } from './HourglassEmpty'
+export { HourglassFull } from './HourglassFull'
+export { Pending } from './Pending'
+export { PendingActions } from './PendingActions'
+export { PublishedWithChanges } from './PublishedWithChanges'
+
+// Communication
+export { Forum } from './Forum'
+export { Comment } from './Comment'
+export { CommentOutlined } from './CommentOutlined'
+export { Announcement } from './Announcement'
+export { Campaign } from './Campaign'
+
+// Charts & Trends
+export { TrendDown } from './TrendDown'
+export { TrendingFlat } from './TrendingFlat'
+export { DonutLarge } from './DonutLarge'
+export { DonutSmall } from './DonutSmall'
+export { StackedBarChart } from './StackedBarChart'
+export { StackedLineChart } from './StackedLineChart'
