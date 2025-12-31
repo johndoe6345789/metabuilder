@@ -1,9 +1,10 @@
 # YAML Schema Meta-Schema (Draft 2025-11)
 # Source: https://github.com/johndoe6345789/yaml-schema
+# Location: schemas/yaml-schema.yaml
 #
 # This meta-schema enables IDE validation for YAML files in the MetaBuilder project.
 # YAML files should include the following directive at the top:
-#   # yaml-language-server: $schema=../../yaml-schema.yaml
+#   # yaml-language-server: $schema=../../../../../schemas/yaml-schema.yaml
 #
 # Used by:
 # - packages/*/seed/schema/entities.yaml (database entity definitions)

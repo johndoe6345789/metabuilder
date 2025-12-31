@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../../../../yaml-schema.yaml
+# yaml-language-server: $schema=../../../../../schemas/yaml-schema.yaml
 # Schema definitions for json_script_example package
 # Demonstrates entity modeling for JSON script-based applications
 
