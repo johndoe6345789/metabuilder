@@ -12,23 +12,28 @@ All functions in this package are defined in `seed/script.json` and executed via
 
 ```
 json_script_example/
-├── README.md                    # This file
-├── MODULES.md                   # Import/export guide
-├── TYPES.md                     # Type system documentation
+├── README.md                      # This file
+├── MODULES.md                     # Import/export guide
+├── TYPES.md                       # Type system documentation
 ├── seed/
-│   ├── metadata.json            # Package configuration
-│   ├── script.json              # Main example functions (with docstrings!)
-│   ├── math_utils.json          # Math utility module
-│   ├── validation.json          # Validation module
-│   ├── combined_example.json    # Multi-module example
-│   ├── types.json               # TypeScript-style type definitions
-│   └── styles.json              # Design tokens
+│   ├── metadata.json              # Package configuration
+│   ├── script.json                # Main example functions (with docstrings!)
+│   ├── script.schema.json         # 📋 JSON Schema for scripts
+│   ├── math_utils.json            # Math utility module
+│   ├── validation.json            # Validation module
+│   ├── combined_example.json      # Multi-module example
+│   ├── components.json            # UI component definitions
+│   ├── types.json                 # TypeScript-style type definitions
+│   ├── types.schema.json          # 📋 JSON Schema for types
+│   └── styles.json                # Design tokens
 ├── tests/
-│   ├── README.md                # Testing guide
-│   ├── math.test.logic.json     # Test assertion functions
-│   └── math.test.parameters.json # Test data by category
+│   ├── README.md                  # Testing guide
+│   ├── math.test.logic.json       # Test assertion functions
+│   ├── math.test.parameters.json  # Test data by category
+│   ├── test.schema.json           # 📋 JSON Schema for test logic
+│   └── test-parameters.schema.json # 📋 JSON Schema for test parameters
 └── static_content/
-    └── icon.svg                 # Package icon
+    └── icon.svg                   # Package icon
 ```
 
 ## Documentation
@@ -43,6 +48,34 @@ All functions include **comprehensive docstrings** with:
 - **Metadata** - Version, tags, categories
 
 See [SCRIPT_JSON_DOCSTRINGS.md](../shared/seed/SCRIPT_JSON_DOCSTRINGS.md) for the full docstring specification.
+
+## JSON Schema Validation
+
+All JSON files include `$schema` references for **IDE autocomplete, validation, and documentation**:
+
+- **script.schema.json** - Validates script.json, math_utils.json, validation.json, components.json
+  - Ensures correct expression/statement syntax
+  - Validates function signatures and parameters
+  - Checks docstring format
+
+- **types.schema.json** - Validates types.json
+  - Ensures type definitions are well-formed
+  - Validates property definitions
+  - Checks enum values
+
+- **test.schema.json** - Validates test logic files (*.test.logic.json)
+  - Ensures test functions return correct format
+  - Validates test case structure
+
+- **test-parameters.schema.json** - Validates test parameter files (*.test.parameters.json)
+  - Ensures test data is organized correctly
+  - Validates input/expected structure
+
+Benefits:
+- ✅ **IDE Support** - IntelliSense autocomplete in VS Code, JetBrains IDEs
+- ✅ **Real-time Validation** - Catch errors while editing
+- ✅ **Documentation** - Hover tooltips explain each field
+- ✅ **Type Safety** - Ensure JSON matches specification
 
 ## Exported Functions
 
