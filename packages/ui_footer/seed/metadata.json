@@ -2,7 +2,7 @@
   "packageId": "ui_footer",
   "name": "App Footer",
   "version": "1.0.0",
-  "description": "Shared footer with copyright and links",
+  "description": "Shared footer with copyright and links, includes simple and full variants",
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
@@ -12,7 +12,8 @@
   ],
   "exports": {
     "components": [
-      "AppFooter"
+      "app_footer",
+      "app_footer_simple"
     ],
     "scripts": [
       "footer"
