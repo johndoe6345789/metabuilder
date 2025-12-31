@@ -67,14 +67,53 @@ local function eval_expression(expr, context)
     elseif op == "*" then return left * right
     elseif op == "/" then return left / right
     elseif op == "%" then return left % right
-    elseif op == "==" then return left == right
-    elseif op == "!=" or op == "~=" then return left ~= right
+    elseif op == "==" or op == "===" then return left == right
+    elseif op == "!=" or op == "~=" or op == "!==" then return left ~= right
     elseif op == "<" then return left < right
     elseif op == ">" then return left > right
     elseif op == "<=" then return left <= right
     elseif op == ">=" then return left >= right
-    elseif op == "&&" or op == "and" then return left and right
-    elseif op == "||" or op == "or" then return left or right
+    end
+  end
+
+  -- Logical expressions (short-circuit evaluation)
+  if expr_type == "logical_expression" then
+    local op = expr.operator
+
+    if op == "&&" or op == "and" then
+      local left = eval_expression(expr.left, context)
+      if not left then return left end  -- Short-circuit
+      return eval_expression(expr.right, context)
+    elseif op == "||" or op == "or" then
+      local left = eval_expression(expr.left, context)
+      if left then return left end  -- Short-circuit
+      return eval_expression(expr.right, context)
+    elseif op == "??" then
+      local left = eval_expression(expr.left, context)
+      if left ~= nil then return left end  -- Null coalescing
+      return eval_expression(expr.right, context)
+    end
+  end
+
+  -- Unary expressions
+  if expr_type == "unary_expression" then
+    local arg = eval_expression(expr.argument, context)
+    local op = expr.operator
+
+    if op == "!" or op == "not" then return not arg
+    elseif op == "-" then return -arg
+    elseif op == "+" then return arg
+    elseif op == "~" then return ~arg  -- Bitwise NOT (Lua 5.3+)
+    end
+  end
+
+  -- Conditional expression (ternary)
+  if expr_type == "conditional_expression" then
+    local test = eval_expression(expr.test, context)
+    if test then
+      return eval_expression(expr.consequent, context)
+    else
+      return eval_expression(expr.alternate, context)
     end
   end
 
@@ -82,7 +121,13 @@ local function eval_expression(expr, context)
   if expr_type == "member_access" then
     local obj = eval_expression(expr.object, context)
     if type(obj) == "table" then
-      return obj[expr.property]
+      -- Computed property access
+      if expr.computed then
+        local prop = eval_expression(expr.property, context)
+        return obj[prop]
+      else
+        return obj[expr.property]
+      end
     end
     return nil
   end
@@ -222,6 +267,29 @@ local function execute_statement(stmt, context)
     return nil
   end
 
+  -- For-each loop (ipairs/for...of)
+  if stmt_type == "for_each_loop" then
+    local iterable = eval_expression(stmt.iterable, context)
+    if type(iterable) == "table" then
+      context.local_vars = context.local_vars or {}
+      for _, item in ipairs(iterable) do
+        context.local_vars[stmt.iterator] = item
+        for _, s in ipairs(stmt.body or {}) do
+          local result = execute_statement(s, context)
+          if result and result.type == "return" then
+            return result
+          end
+        end
+      end
+    end
+    return nil
+  end
+
+  -- Comment (ignored at runtime)
+  if stmt_type == "comment" then
+    return nil
+  end
+
   return nil
 end
 
@@ -254,13 +322,22 @@ function M.execute_function(script_json, function_name, args)
     context.constants[const.name] = const.value
   end
 
-  -- Set parameters
+  -- Set parameters with defaults
   args = args or {}
   for i, param in ipairs(func_def.params or {}) do
     local value = args[i]
-    if value == nil and param.default then
-      value = resolve_ref(param.default, context)
+
+    -- Handle default values
+    if value == nil and param.default ~= nil then
+      if type(param.default) == "string" and param.default:match("^%$ref:") then
+        value = resolve_ref(param.default, context)
+      elseif type(param.default) == "table" then
+        value = eval_expression(param.default, context)
+      else
+        value = param.default
+      end
     end
+
     context.params[param.name] = value
   end
 
