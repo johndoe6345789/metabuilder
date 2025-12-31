@@ -52,13 +52,19 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => {
-      // Load story-specific package styles
+      // Load story-specific package styles on demand
       useEffect(() => {
         const storyPackage = (Story as any)?.parameters?.package
-        if (storyPackage && !PACKAGES_TO_LOAD.includes(storyPackage)) {
-          loadAndInjectStyles(storyPackage).then((css) => {
-            console.log(`✓ Loaded story-specific styles for ${storyPackage}`)
-          })
+        if (storyPackage) {
+          // Check if already loaded
+          const existingStyle = document.getElementById(`styles-${storyPackage}`)
+          if (!existingStyle) {
+            loadAndInjectStyles(storyPackage).then((css) => {
+              console.log(`✓ Story-specific: ${storyPackage} (${css.length} bytes)`)
+            }).catch((error) => {
+              console.warn(`✗ Story-specific ${storyPackage}:`, error)
+            })
+          }
         }
       }, [])
 
