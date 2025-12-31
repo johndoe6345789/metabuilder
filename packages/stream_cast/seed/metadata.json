@@ -14,6 +14,11 @@
     "lua_test"
   ],
   "exports": {
+    "scripts": [
+      "control_room",
+      "scene_manager",
+      "stream_schedule"
+    ],
     "components": []
   },
   "tests": {
@@ -62,6 +67,19 @@
     "styles": "seed/styles.json"
   },
   "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Control Room",
+        "render": "control_room"
+      },
+      {
+        "name": "Scene Manager",
+        "render": "scene_manager"
+      },
+      {
+        "name": "Stream Schedule",
+        "render": "stream_schedule"
+      }
+    ]
   }
 }
