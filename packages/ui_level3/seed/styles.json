@@ -421,6 +421,51 @@
 
   "rules": [
     {
+      "id": "rule_l3_button",
+      "selector": "l3_button_base",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 0 },
+        "sourceOrder": 1
+      },
+      "appearance": { "ref": "admin_logo_appearance" },
+      "enabled": true
+    },
+    {
+      "id": "rule_l3_card",
+      "selector": "l3_card_base",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 0 },
+        "sourceOrder": 2
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_l3_table",
+      "selector": "l3_table_base",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 0 },
+        "sourceOrder": 3
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_l3_input",
+      "selector": "l3_input_base",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 0 },
+        "sourceOrder": 4
+      },
+      "enabled": true
+    },
+    {
       "id": "rule_admin_nav",
       "selector": "admin_nav_selector",
       "priority": {
