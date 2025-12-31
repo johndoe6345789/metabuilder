@@ -59,5 +59,10 @@
     "cases": [
       "tests/metadata.cases.json"
     ]
+  },
+  "runtime": {
+    "script_json": "seed/script.json",
+    "types_json": "seed/types.json",
+    "executor": "seed/scripts/runtime/script_executor.lua"
   }
 }
