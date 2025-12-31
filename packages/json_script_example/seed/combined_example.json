@@ -1,0 +1,200 @@
+{
+  "schema_version": "2.1.0",
+  "package": "json_script_example",
+  "description": "Example using imports from other script files",
+
+  "imports": [
+    {
+      "from": "math_utils",
+      "import": ["add", "multiply", "clamp", "PI"]
+    },
+    {
+      "from": "validation",
+      "import": ["validateRange", "isNotEmpty"]
+    }
+  ],
+
+  "exports": {
+    "functions": ["calculateArea", "validateInput"]
+  },
+
+  "functions": [
+    {
+      "id": "calculate_area_fn",
+      "name": "calculateArea",
+      "description": "Calculate area of rectangle using imported math functions",
+      "exported": true,
+      "params": [
+        {"name": "width", "type": "number"},
+        {"name": "height", "type": "number"}
+      ],
+      "returnType": "number",
+      "body": [
+        {
+          "type": "comment",
+          "text": "Use imported multiply function"
+        },
+        {
+          "type": "const_declaration",
+          "name": "area",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:imports.math_utils.multiply",
+            "args": ["$ref:params.width", "$ref:params.height"]
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Clamp area between 0 and 1000"
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:imports.math_utils.clamp",
+            "args": ["$ref:local.area", 0, 1000]
+          }
+        }
+      ]
+    },
+    {
+      "id": "validate_input_fn",
+      "name": "validateInput",
+      "description": "Validate form input using imported validation functions",
+      "exported": true,
+      "params": [
+        {
+          "name": "input",
+          "type": "object",
+          "description": "Input object with name and age"
+        }
+      ],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "const_declaration",
+          "name": "errors",
+          "value": {
+            "type": "object_literal",
+            "properties": {}
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Validate name is not empty"
+        },
+        {
+          "type": "const_declaration",
+          "name": "nameValid",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:imports.validation.isNotEmpty",
+            "args": [{
+              "type": "member_access",
+              "object": "$ref:params.input",
+              "property": "name"
+            }]
+          }
+        },
+        {
+          "type": "if_statement",
+          "condition": {
+            "type": "unary_expression",
+            "operator": "!",
+            "argument": "$ref:local.nameValid"
+          },
+          "then": [
+            {
+              "type": "assignment",
+              "target": "$ref:local.errors",
+              "value": {
+                "type": "object_literal",
+                "properties": {
+                  "name": "Name is required"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "comment",
+          "text": "Validate age is in valid range (0-120)"
+        },
+        {
+          "type": "const_declaration",
+          "name": "ageValid",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:imports.validation.validateRange",
+            "args": [
+              {
+                "type": "member_access",
+                "object": "$ref:params.input",
+                "property": "age"
+              },
+              0,
+              120
+            ]
+          }
+        },
+        {
+          "type": "if_statement",
+          "condition": {
+            "type": "unary_expression",
+            "operator": "!",
+            "argument": "$ref:local.ageValid"
+          },
+          "then": [
+            {
+              "type": "assignment",
+              "target": "$ref:local.errors",
+              "value": {
+                "type": "object_literal",
+                "properties": {
+                  "name": {
+                    "type": "member_access",
+                    "object": "$ref:local.errors",
+                    "property": "name"
+                  },
+                  "age": "Age must be between 0 and 120"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "comment",
+          "text": "Return validation result"
+        },
+        {
+          "type": "const_declaration",
+          "name": "hasErrors",
+          "value": {
+            "type": "binary_expression",
+            "left": {
+              "type": "call_expression",
+              "callee": "$ref:imports.Object.keys",
+              "args": ["$ref:local.errors"]
+            },
+            "operator": ">",
+            "right": 0
+          }
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "valid": {
+                "type": "unary_expression",
+                "operator": "!",
+                "argument": "$ref:local.hasErrors"
+              },
+              "errors": "$ref:local.errors"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
