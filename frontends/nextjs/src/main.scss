@@ -2,15 +2,10 @@
 // Main SCSS Entry Point
 // ========================================
 
-// Theme & Variables
+// Import FakeMUI base styles
+@import '../../fakemui/styles/base.scss';
+@import '../../fakemui/styles/components.scss';
+
+// Theme & Variables (keep for any additional custom variables)
 @use './styles/core/theme.scss' as *;
 @use './styles/variables.scss' as *;
-
-// Utilities
-@use './styles/core/_mixins.scss' as *;
-
-// Global Styles
-@use './styles/core/_base.scss' as *;
-
-// Components
-@use './styles/core/_components.scss' as *;
