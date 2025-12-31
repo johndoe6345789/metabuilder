@@ -75,6 +75,52 @@
       "renders": {
         "render_users": { "description": "User management table" }
       }
+    },
+    "json_script_example": {
+      "featured": true,
+      "category": "examples",
+      "description": "JSON Script Runtime Examples",
+      "stories": [
+        {
+          "name": "All Expressions",
+          "function": "all_expressions",
+          "args": [10, 5],
+          "argControls": {
+            "a": { "type": "number", "default": 10, "label": "First Number" },
+            "b": { "type": "number", "default": 5, "label": "Second Number" }
+          }
+        },
+        {
+          "name": "All Statements",
+          "function": "all_statements",
+          "args": [[1, 2, 3, 4, 5]],
+          "argControls": {
+            "items": { "type": "array", "default": [1, 2, 3, 4, 5], "label": "Numbers Array" }
+          }
+        },
+        {
+          "name": "All Operators",
+          "function": "all_operators",
+          "args": [10, 5],
+          "argControls": {
+            "x": { "type": "number", "default": 10, "label": "X" },
+            "y": { "type": "number", "default": 5, "label": "Y" }
+          }
+        },
+        {
+          "name": "Control Flow",
+          "function": "control_flow",
+          "args": [42],
+          "argControls": {
+            "value": { "type": "number", "default": 42, "label": "Value to Classify" }
+          }
+        },
+        {
+          "name": "Data Structures",
+          "function": "data_structures",
+          "args": []
+        }
+      ]
     }
   }
 }
