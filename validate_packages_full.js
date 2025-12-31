@@ -147,19 +147,33 @@ packages.forEach(pkg => {
 
   // Validate permissions structure
   if (data.permissions) {
-    Object.keys(data.permissions).forEach(permKey => {
-      const perm = data.permissions[permKey];
-      if (typeof perm !== 'object') {
-        errors.push('permissions.' + permKey + ' must be an object');
-      } else {
-        if (!('minLevel' in perm)) {
-          warnings.push('permissions.' + permKey + ' should have minLevel');
-        }
-        if (!('description' in perm)) {
-          warnings.push('permissions.' + permKey + ' should have description');
-        }
+    // Check if this is component-level permissions (has enabled, minLevel at root)
+    const hasComponentPermissions = 'enabled' in data.permissions && 'components' in data.permissions;
+
+    if (hasComponentPermissions) {
+      // Component-level permissions structure (audit_log, dbal_demo style)
+      if (typeof data.permissions.enabled !== 'boolean') {
+        warnings.push('permissions.enabled should be a boolean');
       }
-    });
+      if (typeof data.permissions.minLevel !== 'number') {
+        warnings.push('permissions.minLevel should be a number');
+      }
+    } else {
+      // Standard permission-key structure
+      Object.keys(data.permissions).forEach(permKey => {
+        const perm = data.permissions[permKey];
+        if (typeof perm !== 'object' || Array.isArray(perm)) {
+          errors.push('permissions.' + permKey + ' must be an object');
+        } else {
+          if (!('minLevel' in perm)) {
+            warnings.push('permissions.' + permKey + ' should have minLevel');
+          }
+          if (!('description' in perm)) {
+            warnings.push('permissions.' + permKey + ' should have description');
+          }
+        }
+      });
+    }
   }
 
   // Report results
