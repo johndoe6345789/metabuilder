@@ -33,6 +33,19 @@
     "styles": "seed/styles.json"
   },
   "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Permissions Check",
+        "render": "permissions.check_access"
+      },
+      {
+        "name": "Permission Flags",
+        "render": "permissions.manage_flags"
+      },
+      {
+        "name": "Level Enforcement",
+        "render": "permissions.enforce_level"
+      }
+    ]
   }
 }
