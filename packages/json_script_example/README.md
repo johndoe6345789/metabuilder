@@ -27,7 +27,8 @@ json_script_example/
 │   ├── types.schema.json          # 📋 JSON Schema for types
 │   ├── styles.json                # Design tokens
 │   └── schema/
-│       └── entities.yaml          # 🗄️ Database entity definitions
+│       ├── entities.yaml          # 🗄️ Database entity definitions
+│       └── entities.schema.json   # 📋 JSON Schema for entities
 ├── tests/
 │   ├── README.md                  # Testing guide
 │   ├── math.test.logic.json       # Test assertion functions
@@ -72,6 +73,12 @@ All JSON files include `$schema` references for **IDE autocomplete, validation, 
 - **test-parameters.schema.json** - Validates test parameter files (*.test.parameters.json)
   - Ensures test data is organized correctly
   - Validates input/expected structure
+
+- **entities.schema.json** - Validates entity definition files (entities.yaml)
+  - Ensures entity structure is well-formed
+  - Validates field types and constraints
+  - Checks relationship definitions
+  - Validates ACL rules
 
 Benefits:
 - ✅ **IDE Support** - IntelliSense autocomplete in VS Code, JetBrains IDEs
