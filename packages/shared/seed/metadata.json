@@ -5,17 +5,19 @@
   "description": "Shared types, utilities, and permission system for all Lua packages",
   "author": "MetaBuilder",
   "category": "core",
-  "exports": [
-    "types.ui_types",
-    "permissions"
-  ],
-  "scripts": [
-    "permissions",
-    "permissions.check_access",
-    "permissions.enforce_level",
-    "permissions.manage_flags",
-    "permissions.database_toggle"
-  ],
+  "exports": {
+    "types": [
+      "ui_types"
+    ],
+    "scripts": [
+      "permissions",
+      "permissions.check_access",
+      "permissions.enforce_level",
+      "permissions.manage_flags",
+      "permissions.database_toggle"
+    ],
+    "components": []
+  },
   "dependencies": [],
   "minLevel": 0,
   "primary": false,
