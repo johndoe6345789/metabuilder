@@ -165,22 +165,35 @@ export class StylesCompiler {
     };
 
     const baseClass = typeMap[predicate.targetType] || `.${predicate.targetType.toLowerCase()}`;
+    const packagePrefix = this.schema.package || '';
 
-    // Add classes
-    const classSelectors = predicate.classes.map(c => `.${c}`).join('');
+    // Add classes with package prefix
+    const classSelectors = predicate.classes.map(c => {
+      // If class already has package prefix, use as-is
+      if (c.startsWith(packagePrefix + '_')) {
+        return `.${c}`;
+      }
+      // Otherwise, add package prefix
+      return `.${packagePrefix}_${c}`;
+    }).join('');
 
     // Add states
     const stateSelectors = predicate.states.map(s => `:${s}`).join('');
 
-    // Generate selector that works with or without base FakeMUI class
-    // E.g., `.l3-button` will style both `<button class="l3-button">` and `<button class="button l3-button">`
+    // Generate selector with package prefix
+    // E.g., ui_level3 + "button" => `.ui_level3_button`
     css = `${classSelectors}${stateSelectors}`;
 
     // Handle relationship
     if (predicate.relationship) {
       const ancestorType = typeMap[predicate.relationship.ancestor.targetType] ||
                           `.${predicate.relationship.ancestor.targetType.toLowerCase()}`;
-      const ancestorClasses = predicate.relationship.ancestor.classes.map(c => `.${c}`).join('');
+      const ancestorClasses = predicate.relationship.ancestor.classes.map(c => {
+        if (c.startsWith(packagePrefix + '_')) {
+          return `.${c}`;
+        }
+        return `.${packagePrefix}_${c}`;
+      }).join('');
 
       if (predicate.relationship.type === 'descendant') {
         css = `${ancestorType}${ancestorClasses} ${css}`;
