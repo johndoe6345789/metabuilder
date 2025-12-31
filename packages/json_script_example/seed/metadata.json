@@ -50,18 +50,6 @@
     "styles": "seed/styles.json",
     "types": "seed/types.json"
   },
-  "storybook": {
-    "stories": [
-      {
-        "name": "Expression Examples",
-        "render": "all_expressions"
-      },
-      {
-        "name": "Statement Examples",
-        "render": "all_statements"
-      }
-    ]
-  },
   "runtime": {
     "scripts": [
       "seed/script.json",

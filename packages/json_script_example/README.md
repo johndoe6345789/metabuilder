@@ -14,9 +14,10 @@ All functions in this package are defined in `seed/script.json` and executed via
 json_script_example/
 ├── README.md                    # This file
 ├── MODULES.md                   # Import/export guide
+├── TYPES.md                     # Type system documentation
 ├── seed/
 │   ├── metadata.json            # Package configuration
-│   ├── script.json              # Main example functions
+│   ├── script.json              # Main example functions (with docstrings!)
 │   ├── math_utils.json          # Math utility module
 │   ├── validation.json          # Validation module
 │   ├── combined_example.json    # Multi-module example
@@ -29,6 +30,19 @@ json_script_example/
 └── static_content/
     └── icon.svg                 # Package icon
 ```
+
+## Documentation
+
+All functions include **comprehensive docstrings** with:
+- **Summary** - One-line description
+- **Detailed description** - Full explanation of behavior
+- **Parameter documentation** - Type, description for each param
+- **Return type documentation** - What the function returns
+- **Usage examples** - Code samples showing how to use the function
+- **Related functions** - Cross-references to similar functions
+- **Metadata** - Version, tags, categories
+
+See [SCRIPT_JSON_DOCSTRINGS.md](../shared/seed/SCRIPT_JSON_DOCSTRINGS.md) for the full docstring specification.
 
 ## Exported Functions
 
