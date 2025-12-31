@@ -10,6 +10,7 @@ local OPTIONAL_STRUCTURE = {
   ["seed/scripts/"] = "directory",
   ["seed/scripts/init.lua"] = "file",
   ["seed/scripts/tests/"] = "directory",
+  ["seed/styles.json"] = "file",
   ["static_content/"] = "directory",
   ["static_content/icon.svg"] = "file",
   ["README.md"] = "file",
