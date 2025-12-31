@@ -13,10 +13,19 @@ All functions in this package are defined in `seed/script.json` and executed via
 ```
 json_script_example/
 ├── README.md                    # This file
+├── MODULES.md                   # Import/export guide
 ├── seed/
 │   ├── metadata.json            # Package configuration
-│   ├── script.json              # All functions defined in JSON
+│   ├── script.json              # Main example functions
+│   ├── math_utils.json          # Math utility module
+│   ├── validation.json          # Validation module
+│   ├── combined_example.json    # Multi-module example
+│   ├── types.json               # TypeScript-style type definitions
 │   └── styles.json              # Design tokens
+├── tests/
+│   ├── README.md                # Testing guide
+│   ├── math.test.logic.json     # Test assertion functions
+│   └── math.test.parameters.json # Test data by category
 └── static_content/
     └── icon.svg                 # Package icon
 ```
