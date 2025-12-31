@@ -214,26 +214,192 @@
         },
         {
           "type": "comment",
-          "text": "TODO: Load and validate metadata.json"
+          "text": "Build path to metadata.json"
+        },
+        {
+          "type": "const_declaration",
+          "name": "metadataPath",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:imports.path.join",
+            "args": [
+              "$ref:params.packagePath",
+              "seed",
+              "metadata.json"
+            ]
+          }
         },
         {
           "type": "comment",
-          "text": "Required fields: packageId, name, version, category, exports"
+          "text": "Check if metadata.json exists"
+        },
+        {
+          "type": "if_statement",
+          "test": {
+            "type": "unary_expression",
+            "operator": "!",
+            "argument": {
+              "type": "call_expression",
+              "callee": "$ref:imports.fs.existsSync",
+              "args": ["$ref:local.metadataPath"]
+            }
+          },
+          "consequent": [
+            {
+              "type": "expression_statement",
+              "expression": {
+                "type": "call_expression",
+                "callee": {
+                  "type": "member_access",
+                  "object": "$ref:local.errors",
+                  "property": "push"
+                },
+                "args": [
+                  {
+                    "type": "object_literal",
+                    "properties": {
+                      "code": "MISSING_METADATA",
+                      "message": "metadata.json not found in seed/ directory",
+                      "severity": "error"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "object_literal",
+                "properties": {
+                  "valid": false,
+                  "errors": "$ref:local.errors"
+                }
+              }
+            }
+          ]
         },
         {
           "type": "comment",
-          "text": "Validate runtime.scripts array exists and points to valid files"
+          "text": "Read and parse metadata.json"
+        },
+        {
+          "type": "const_declaration",
+          "name": "metadataContent",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:imports.fs.readFile",
+            "args": [
+              "$ref:local.metadataPath",
+              "utf8"
+            ]
+          }
+        },
+        {
+          "type": "const_declaration",
+          "name": "metadata",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:imports.JSON.parse",
+            "args": ["$ref:local.metadataContent"]
+          }
         },
         {
           "type": "comment",
-          "text": "Validate exports match actual exported items"
+          "text": "Validate required fields"
+        },
+        {
+          "type": "const_declaration",
+          "name": "requiredFields",
+          "value": {
+            "type": "array_literal",
+            "elements": [
+              "packageId",
+              "name",
+              "version",
+              "category"
+            ]
+          }
+        },
+        {
+          "type": "for_of_statement",
+          "iterator": "field",
+          "iterable": "$ref:local.requiredFields",
+          "body": [
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "unary_expression",
+                "operator": "!",
+                "argument": {
+                  "type": "member_access",
+                  "object": "$ref:local.metadata",
+                  "property": "$ref:local.field"
+                }
+              },
+              "consequent": [
+                {
+                  "type": "expression_statement",
+                  "expression": {
+                    "type": "call_expression",
+                    "callee": {
+                      "type": "member_access",
+                      "object": "$ref:local.errors",
+                      "property": "push"
+                    },
+                    "args": [
+                      {
+                        "type": "object_literal",
+                        "properties": {
+                          "file": "metadata.json",
+                          "code": "MISSING_REQUIRED_FIELD",
+                          "message": {
+                            "type": "template_literal",
+                            "template": "Missing required field: ${field}",
+                            "values": {
+                              "field": "$ref:local.field"
+                            }
+                          },
+                          "severity": "error"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "comment",
+          "text": "TODO: Validate packageId format (lowercase, underscores only)"
+        },
+        {
+          "type": "comment",
+          "text": "TODO: Validate version follows semantic versioning"
+        },
+        {
+          "type": "comment",
+          "text": "TODO: Validate runtime.scripts array points to valid files"
+        },
+        {
+          "type": "comment",
+          "text": "TODO: Validate exports match actual exported items"
         },
         {
           "type": "return",
           "value": {
             "type": "object_literal",
             "properties": {
-              "valid": true,
+              "valid": {
+                "type": "binary_expression",
+                "left": {
+                  "type": "member_access",
+                  "object": "$ref:local.errors",
+                  "property": "length"
+                },
+                "operator": "==",
+                "right": 0
+              },
               "errors": "$ref:local.errors"
             }
           }
