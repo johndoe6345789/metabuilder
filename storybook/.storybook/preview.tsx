@@ -3,32 +3,34 @@ import React, { useEffect } from 'react'
 
 import '../src/styles/globals.scss'
 import { loadAndInjectStyles } from '../src/styles/compiler'
+import { discoverPackagesWithStyles } from '../src/utils/packageDiscovery'
 
-// Auto-load styles from common packages
-const PACKAGES_TO_LOAD = [
-  'shared',
-  'ui_home',
-  'ui_header',
-  'ui_footer',
-  'ui_level2',
-  'ui_level3',
-  'ui_level4',
-]
-
-// Load styles on Storybook initialization
+// Dynamically load all package styles
 if (typeof window !== 'undefined') {
-  Promise.all(
-    PACKAGES_TO_LOAD.map(async (packageId) => {
-      try {
-        const css = await loadAndInjectStyles(packageId)
-        console.log(`✓ Loaded styles for ${packageId} (${css.length} bytes)`)
-      } catch (error) {
-        console.warn(`✗ Failed to load styles for ${packageId}:`, error)
-      }
+  discoverPackagesWithStyles()
+    .then((packageIds) => {
+      console.log(`📦 Discovered ${packageIds.length} packages with styles:`, packageIds)
+      return Promise.all(
+        packageIds.map(async (packageId) => {
+          try {
+            const css = await loadAndInjectStyles(packageId)
+            console.log(`✓ ${packageId} (${css.length} bytes)`)
+            return { packageId, success: true, size: css.length }
+          } catch (error) {
+            console.warn(`✗ ${packageId}:`, error)
+            return { packageId, success: false, size: 0 }
+          }
+        })
+      )
     })
-  ).then(() => {
-    console.log('📦 All package styles loaded')
-  })
+    .then((results) => {
+      const successful = results.filter(r => r.success)
+      const totalSize = successful.reduce((sum, r) => sum + r.size, 0)
+      console.log(`✅ ${successful.length} packages loaded (${(totalSize / 1024).toFixed(1)}KB)`)
+    })
+    .catch((error) => {
+      console.error('❌ Discovery failed:', error)
+    })
 }
 
 const preview: Preview = {
