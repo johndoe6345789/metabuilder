@@ -63,14 +63,16 @@
   "storybook": {
     "stories": [
       {
-        "type": "component",
-        "component": "Button",
-        "args": { "label": "Admin Button" }
+        "name": "ModeratorLayout",
+        "render": "layout"
       },
       {
-        "type": "component",
-        "component": "Card",
-        "args": { "title": "Admin Card" }
+        "name": "UserManagement",
+        "render": "users"
+      },
+      {
+        "name": "ContentModeration",
+        "render": "moderation"
       }
     ]
   }
