@@ -10,6 +10,9 @@ const PACKAGES_TO_LOAD = [
   'ui_home',
   'ui_header',
   'ui_footer',
+  'ui_level2',
+  'ui_level3',
+  'ui_level4',
 ]
 
 // Load styles on Storybook initialization
