@@ -58,6 +58,35 @@ This permission-based approach enables:
 - **Sandboxing**: Runtime can enforce permission boundaries
 - **npm Integration**: External dependencies can reference npm packages with version constraints
 
+**Example Use Cases for External Dependencies**:
+```json
+{
+  "externalDependencies": {
+    "axios": {
+      "description": "HTTP client for API validation",
+      "version": "^1.0.0",
+      "functions": ["get", "post"]
+    },
+    "glob": {
+      "description": "File pattern matching",
+      "version": "^10.0.0",
+      "functions": ["sync"]
+    },
+    "cheerio": {
+      "description": "HTML parsing for documentation validation",
+      "version": "^1.0.0",
+      "functions": ["load"]
+    },
+    "pg": {
+      "description": "PostgreSQL client for database schema validation",
+      "version": "^8.0.0",
+      "functions": ["Client"],
+      "permissions": ["db.connect", "db.query"]
+    }
+  }
+}
+```
+
 ### Validation Functions
 
 All functions exported from [seed/validator.json](seed/validator.json):
@@ -90,15 +119,27 @@ All functions exported from [seed/validator.json](seed/validator.json):
 
 ### ⚠️ Implementation Notes
 
-The current implementation contains stub logic with TODO comments. Full implementation requires:
+**Partial Implementation**: The `validate_metadata` function has been fully implemented as a concrete example, showing:
+- How to use external dependencies in JSON script format
+- Path construction using `$ref:imports.path.join`
+- File system operations using `$ref:imports.fs.*`
+- JSON parsing using `$ref:imports.JSON.parse`
+- Iteration over arrays with `for_of_statement`
+- Dynamic property access using `$ref:local.field`
+- Template literals for error messages
+- Structured error object creation
+
+**Remaining Work**: Other validation functions (`validate_scripts`, `validate_types`, etc.) still contain stub logic with TODO comments.
+
+**Runtime Requirements**:
 
 1. **External Dependency Resolution**: The runtime needs to provide the external dependencies declared in `externalDependencies`. These are imported via the `external:` prefix in the imports section.
 
 2. **Permission Enforcement**: The runtime should check that the package has the required permissions (`fs.read`, `fs.list`, `fs.stat`) before allowing file system access.
 
-3. **Reference Resolution**: Cross-file validation logic needs to be implemented (e.g., exports match actual exported items, imports reference valid modules)
+3. **Error Handling**: The runtime should handle errors from external dependencies (e.g., file not found, JSON parse errors) and convert them to ValidationError objects.
 
-The architecture is complete - external dependencies are declared in metadata.json, imported in validator.json, and gated by permissions. When the runtime supports external dependency injection, the TODO sections can be replaced with actual validation logic.
+The architecture is complete - external dependencies are declared in metadata.json, imported in validator.json, and gated by permissions. The `validate_metadata` implementation provides a template for completing the remaining validation functions.
 
 ## Type Definitions
 
