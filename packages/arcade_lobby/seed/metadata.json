@@ -14,6 +14,11 @@
     "lua_test"
   ],
   "exports": {
+    "scripts": [
+      "game_browser",
+      "party_queue",
+      "tournament_list"
+    ],
     "components": []
   },
   "tests": {
@@ -50,6 +55,19 @@
     "styles": "seed/styles.json"
   },
   "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Game Browser",
+        "render": "game_browser"
+      },
+      {
+        "name": "Party Queue",
+        "render": "party_queue"
+      },
+      {
+        "name": "Tournament List",
+        "render": "tournament_list"
+      }
+    ]
   }
 }
