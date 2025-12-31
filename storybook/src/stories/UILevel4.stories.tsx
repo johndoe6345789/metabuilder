@@ -237,13 +237,29 @@ const SchemaEditor: React.FC = () => (
         <h3 style={{ margin: 0, fontSize: '1.125rem' }}>Models</h3>
         <button
           style={{
-            padding: '0.5rem',
+            padding: '0.5rem 0.75rem',
             backgroundColor: 'var(--color-primary)',
             color: 'var(--color-primary-foreground)',
             border: 'none',
             borderRadius: '0.375rem',
             cursor: 'pointer',
-            fontSize: '0.875rem'
+            fontSize: '1rem',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minWidth: '36px',
+            minHeight: '36px',
+            transition: 'all 200ms ease-in-out',
+            boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.05)'
+            e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.15)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)'
+            e.currentTarget.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.1)'
           }}
         >
           ➕
