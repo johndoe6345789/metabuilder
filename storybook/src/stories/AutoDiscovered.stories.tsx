@@ -57,12 +57,12 @@ function PackageExplorer() {
             <button
               key={pkg.id}
               className={`button ${pkg.id}_button`}
-              onClick={() => setSelectedLevel(pkg.level)}
+              onClick={() => setSelectedPkg(pkg.id)}
               style={{
                 width: '100%',
                 marginBottom: '0.5rem',
                 textAlign: 'left',
-                opacity: selectedLevel === pkg.level ? 1 : 0.7,
+                opacity: selectedPkg === pkg.id ? 1 : 0.7,
               }}
             >
               {pkg.name}
