@@ -1,0 +1,104 @@
+{
+  "name": "Statement Tests",
+  "description": "Test all statement types in JSON script",
+  "tests": [
+    {
+      "name": "For-each loop with array",
+      "function": "all_statements",
+      "args": [[10, 20, 30, 40, 50]],
+      "expected": {
+        "count": 5,
+        "sum": 150,
+        "average": 30,
+        "error": null
+      }
+    },
+    {
+      "name": "For-each loop with empty array",
+      "function": "all_statements",
+      "args": [[]],
+      "expected": {
+        "count": 0,
+        "sum": 0,
+        "average": 0,
+        "error": null
+      }
+    },
+    {
+      "name": "For-each loop with single item",
+      "function": "all_statements",
+      "args": [[100]],
+      "expected": {
+        "count": 1,
+        "sum": 100,
+        "average": 100,
+        "error": null
+      }
+    },
+    {
+      "name": "Control flow - negative",
+      "function": "control_flow",
+      "args": [-5],
+      "expected": "negative"
+    },
+    {
+      "name": "Control flow - zero",
+      "function": "control_flow",
+      "args": [0],
+      "expected": "zero"
+    },
+    {
+      "name": "Control flow - small",
+      "function": "control_flow",
+      "args": [5],
+      "expected": "small"
+    },
+    {
+      "name": "Control flow - medium",
+      "function": "control_flow",
+      "args": [50],
+      "expected": "medium"
+    },
+    {
+      "name": "Control flow - large",
+      "function": "control_flow",
+      "args": [150],
+      "expected": "large"
+    },
+    {
+      "name": "Control flow - boundary (10)",
+      "function": "control_flow",
+      "args": [10],
+      "expected": "medium"
+    },
+    {
+      "name": "Control flow - boundary (100)",
+      "function": "control_flow",
+      "args": [100],
+      "expected": "large"
+    },
+    {
+      "name": "Data structures - no parameters",
+      "function": "data_structures",
+      "args": [],
+      "expected": {
+        "numbers": [1, 2, 3, 4, 5],
+        "person": {
+          "name": "John Doe",
+          "age": 30,
+          "email": "john@example.com",
+          "active": true
+        },
+        "config": {
+          "server": {
+            "host": "localhost",
+            "port": 3000,
+            "protocol": "http"
+          },
+          "features": ["auth", "api", "dashboard"]
+        },
+        "extractedName": "John Doe"
+      }
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "name": "Expression Tests",
+  "description": "Test all expression types in JSON script",
+  "tests": [
+    {
+      "name": "Binary expressions - addition",
+      "function": "all_expressions",
+      "args": [10, 5],
+      "expected": {
+        "sum": 15,
+        "diff": 5,
+        "product": 50,
+        "max": 10,
+        "bothPositive": true,
+        "message": "Sum: 15, Product: 50, Max: 10"
+      }
+    },
+    {
+      "name": "Binary expressions - negative numbers",
+      "function": "all_expressions",
+      "args": [-10, 5],
+      "expected": {
+        "sum": -5,
+        "diff": -15,
+        "product": -50,
+        "max": 5,
+        "bothPositive": false,
+        "message": "Sum: -5, Product: -50, Max: 5"
+      }
+    },
+    {
+      "name": "Binary expressions - equal values",
+      "function": "all_expressions",
+      "args": [7, 7],
+      "expected": {
+        "sum": 14,
+        "diff": 0,
+        "product": 49,
+        "max": 7,
+        "bothPositive": true,
+        "message": "Sum: 14, Product: 49, Max: 7"
+      }
+    },
+    {
+      "name": "All operators - basic arithmetic",
+      "function": "all_operators",
+      "args": [10, 3],
+      "expected": {
+        "arithmetic": {
+          "add": 13,
+          "subtract": 7,
+          "multiply": 30,
+          "divide": 3.3333333333333335,
+          "modulo": 1
+        },
+        "comparison": {
+          "equal": false,
+          "notEqual": true,
+          "lessThan": false,
+          "greaterThan": true,
+          "lessOrEqual": false,
+          "greaterOrEqual": true
+        },
+        "logical": {
+          "and": 3,
+          "or": 10,
+          "not": false
+        },
+        "unary": {
+          "negate": -10,
+          "plus": 10
+        }
+      }
+    },
+    {
+      "name": "All operators - equal values",
+      "function": "all_operators",
+      "args": [5, 5],
+      "expected": {
+        "arithmetic": {
+          "add": 10,
+          "subtract": 0,
+          "multiply": 25,
+          "divide": 1,
+          "modulo": 0
+        },
+        "comparison": {
+          "equal": true,
+          "notEqual": false,
+          "lessThan": false,
+          "greaterThan": false,
+          "lessOrEqual": true,
+          "greaterOrEqual": true
+        },
+        "logical": {
+          "and": 5,
+          "or": 5,
+          "not": false
+        },
+        "unary": {
+          "negate": -5,
+          "plus": 5
+        }
+      }
+    }
+  ]
+}
