@@ -1,24 +1,11 @@
 /**
- * Auto-Generated Package Stories
- * 
- * This file auto-discovers packages from packages/index.json
- * and generates Storybook stories for each package's render functions.
+ * Auto-Discovered Packages Explorer
+ *
+ * Demonstrates the package discovery system with proper FakeMUI + package-prefixed styling
  */
 
 import type { Meta, StoryObj } from '@storybook/react'
-import { useEffect, useState } from 'react'
-
-import { LuaPackageRenderer } from '../components/LuaPackageRenderer'
-import { 
-  discoverPackages, 
-  getContextVariants, 
-  getDefaultContext,
-  type DiscoveredPackage 
-} from '../discovery/package-discovery'
-import { loadAndExecuteLuaFile, type LuaExecutionResult } from '../lua/executor'
-import { executeMockRender, getMockPackage, initializeMocks } from '../mocks/packages'
-import { loadPackageComponents } from '../mocks/auto-loader'
-import type { LuaRenderContext } from '../types/lua-types'
+import { useState } from 'react'
 
 const meta: Meta = {
   title: 'Auto-Discovered Packages',
@@ -31,346 +18,200 @@ export default meta
 type Story = StoryObj
 
 /**
- * PackageStoryRenderer - Renders a package's Lua script
+ * Simple Package Explorer using FakeMUI classes + package prefixes
  */
-interface PackageStoryRendererProps {
-  packageId: string
-  scriptName: string
-  context?: LuaRenderContext
-  useMock?: boolean
-  debug?: boolean
-}
+function PackageExplorer() {
+  const [selectedLevel, setSelectedLevel] = useState<number>(3)
 
-function PackageStoryRenderer({ 
-  packageId, 
-  scriptName, 
-  context,
-  useMock = true,
-  debug = false 
-}: PackageStoryRendererProps) {
-  const [result, setResult] = useState<LuaExecutionResult | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [currentContext, setCurrentContext] = useState<LuaRenderContext | null>(context || null)
-  
-  useEffect(() => {
-    async function load() {
-      // Load default context if not provided
-      if (!currentContext) {
-        const defaultCtx = await getDefaultContext()
-        setCurrentContext(defaultCtx)
-        return // Will re-run when context is set
-      }
-      
-      setLoading(true)
-      
-      // Try mock first if available
-      if (useMock) {
-        const mockPkg = getMockPackage(packageId)
-        if (mockPkg) {
-          const mockResult = executeMockRender(packageId, scriptName, currentContext)
-          setResult(mockResult)
-          setLoading(false)
-          return
-        }
-      }
-      
-      // Fall back to actual Lua execution
-      const luaResult = await loadAndExecuteLuaFile(packageId, scriptName, currentContext)
-      setResult(luaResult)
-      setLoading(false)
-    }
-    
-    load()
-  }, [packageId, scriptName, currentContext, useMock])
-  
-  if (loading) {
-    return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        <div>Loading {packageId}/{scriptName}...</div>
-      </div>
-    )
-  }
-  
-  if (!result || !result.success || !result.result) {
-    return (
-      <div style={{ padding: '2rem' }}>
-        <div style={{ 
-          padding: '1rem', 
-          background: '#fef2f2', 
-          border: '1px solid #fecaca',
-          borderRadius: '8px',
-          color: '#991b1b'
-        }}>
-          <strong>Error loading {packageId}/{scriptName}</strong>
-          <p>{result?.error || 'Unknown error'}</p>
-          {result?.logs && result.logs.length > 0 && (
-            <pre style={{ marginTop: '0.5rem', fontSize: '0.75rem' }}>
-              {result.logs.join('\n')}
-            </pre>
-          )}
+  // Mock package data
+  const packages = [
+    { id: 'ui_level2', name: 'Level 2 - User Dashboard', level: 2, color: 'green' },
+    { id: 'ui_level3', name: 'Level 3 - Admin Panel', level: 3, color: 'orange' },
+    { id: 'ui_level4', name: 'Level 4 - God Panel', level: 4, color: 'purple' },
+    { id: 'ui_level5', name: 'Level 5 - Super God', level: 5, color: 'blue' },
+  ]
+
+  const currentPkg = packages.find(p => p.level === selectedLevel)
+
+  return (
+    <div className="section" style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Sidebar - uses FakeMUI .panel class */}
+      <aside className="panel" style={{ width: '280px', borderRight: '1px solid var(--color-border)' }}>
+        <div style={{ padding: '1.5rem 1rem', borderBottom: '1px solid var(--color-border)' }}>
+          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Packages</h2>
+          <p style={{ margin: '0.5rem 0 0', fontSize: '0.875rem', color: 'var(--color-muted-foreground)' }}>
+            {packages.length} discovered
+          </p>
         </div>
-      </div>
-    )
-  }
-  
-  return <LuaPackageRenderer component={result.result} debug={debug} />
+
+        <nav style={{ padding: '0.5rem' }}>
+          {packages.map(pkg => (
+            <button
+              key={pkg.id}
+              className={`button ${pkg.id}_button`}
+              onClick={() => setSelectedLevel(pkg.level)}
+              style={{
+                width: '100%',
+                marginBottom: '0.5rem',
+                textAlign: 'left',
+                opacity: selectedLevel === pkg.level ? 1 : 0.7,
+              }}
+            >
+              {pkg.name}
+            </button>
+          ))}
+        </nav>
+      </aside>
+
+      {/* Main content */}
+      <main style={{ flex: 1, padding: '2rem' }}>
+        {currentPkg && (
+          <>
+            <header style={{ marginBottom: '2rem' }}>
+              <h1 style={{ margin: 0, fontSize: '2rem' }}>{currentPkg.name}</h1>
+              <p style={{ margin: '0.5rem 0 0', color: 'var(--color-muted-foreground)' }}>
+                Package ID: <code>{currentPkg.id}</code>
+              </p>
+            </header>
+
+            <section>
+              <h2 style={{ marginBottom: '1rem' }}>Themed Components</h2>
+
+              {/* Buttons */}
+              <div className="card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
+                <h3 style={{ margin: '0 0 1rem' }}>Buttons</h3>
+                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                  <button className={`button ${currentPkg.id}_button`}>
+                    {currentPkg.name} Button
+                  </button>
+                  <button className="button">
+                    Standard FakeMUI Button
+                  </button>
+                </div>
+                <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--color-muted-foreground)' }}>
+                  The left button uses <code>.{currentPkg.id}_button</code> which adds theme styling on top of FakeMUI <code>.button</code>
+                </p>
+              </div>
+
+              {/* Cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+                <div className={`card ${currentPkg.id}_card`}>
+                  <div style={{ padding: '1.5rem' }}>
+                    <h4 style={{ margin: '0 0 0.5rem' }}>Themed Card</h4>
+                    <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-muted-foreground)' }}>
+                      Uses <code>.{currentPkg.id}_card</code>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="card">
+                  <div style={{ padding: '1.5rem' }}>
+                    <h4 style={{ margin: '0 0 0.5rem' }}>Standard Card</h4>
+                    <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-muted-foreground)' }}>
+                      Uses only <code>.card</code>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Table */}
+              <div className="card" style={{ padding: '1.5rem' }}>
+                <h3 style={{ margin: '0 0 1rem' }}>Table</h3>
+                <table className={`table ${currentPkg.id}_table`}>
+                  <thead>
+                    <tr>
+                      <th>Component</th>
+                      <th>Class Name</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Button</td>
+                      <td><code>.{currentPkg.id}_button</code></td>
+                      <td>✓ Loaded</td>
+                    </tr>
+                    <tr>
+                      <td>Card</td>
+                      <td><code>.{currentPkg.id}_card</code></td>
+                      <td>✓ Loaded</td>
+                    </tr>
+                    <tr>
+                      <td>Table</td>
+                      <td><code>.{currentPkg.id}_table</code></td>
+                      <td>✓ Loaded</td>
+                    </tr>
+                    <tr>
+                      <td>Input</td>
+                      <td><code>.{currentPkg.id}_input</code></td>
+                      <td>✓ Loaded</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </>
+        )}
+      </main>
+    </div>
+  )
 }
 
 /**
- * PackageExplorer - Interactive browser for all discovered packages
+ * Package List - Simple grid of all packages
  */
-function PackageExplorer() {
-  const [packages, setPackages] = useState<DiscoveredPackage[]>([])
-  const [selectedPkg, setSelectedPkg] = useState<string | null>(null)
-  const [selectedScript, setSelectedScript] = useState<string | null>(null)
-  const [contextVariants, setContextVariants] = useState<Array<{ name: string; context: LuaRenderContext }>>([])
-  const [selectedVariant, setSelectedVariant] = useState<string>('Admin')
-  const [debug, setDebug] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [componentIds, setComponentIds] = useState<string[]>([])
-  
-  useEffect(() => {
-    async function load() {
-      // Initialize mocks (loads from real packages + JSON overrides)
-      await initializeMocks()
-      
-      const [pkgs, variants] = await Promise.all([
-        discoverPackages(),
-        getContextVariants()
-      ])
-      setPackages(pkgs)
-      setContextVariants(variants)
-      setLoading(false)
-      
-      // Auto-select first featured package
-      const featured = pkgs.find(p => p.featured)
-      if (featured) {
-        setSelectedPkg(featured.metadata.packageId)
-        const renderScript = featured.scripts.find(s => s.hasRenderFunction)
-        if (renderScript) {
-          setSelectedScript(renderScript.file)
-        }
-      }
-    }
-    load()
-  }, [])
-  
-  if (loading) {
-    return (
-      <div style={{
-        padding: '3rem',
-        textAlign: 'center',
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'var(--color-background)'
-      }}>
-        <div style={{
-          fontSize: '2rem',
-          marginBottom: '1rem',
-          animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
-        }}>
-          📦
-        </div>
-        <div style={{
-          fontSize: '1.125rem',
-          fontWeight: 600,
-          color: 'var(--color-foreground)',
-          marginBottom: '0.5rem'
-        }}>
-          Discovering Packages
-        </div>
-        <div style={{
-          fontSize: '0.875rem',
-          color: 'var(--color-muted-foreground)'
-        }}>
-          Auto-loading MetaBuilder components...
-        </div>
-      </div>
-    )
-  }
-  
-  const currentPackage = packages.find(p => p.metadata.packageId === selectedPkg)
-  const currentVariant = contextVariants.find(v => v.name === selectedVariant)
-  
+function PackageList() {
+  const packages = [
+    { id: 'shared', name: 'Shared', description: 'Base design system tokens' },
+    { id: 'ui_home', name: 'UI Home', description: 'Landing page components' },
+    { id: 'ui_header', name: 'UI Header', description: 'Navigation header' },
+    { id: 'ui_footer', name: 'UI Footer', description: 'Site footer' },
+    { id: 'ui_level2', name: 'Level 2', description: 'User dashboard theme' },
+    { id: 'ui_level3', name: 'Level 3', description: 'Admin panel theme' },
+    { id: 'ui_level4', name: 'Level 4', description: 'God-tier builder theme' },
+    { id: 'ui_level5', name: 'Level 5', description: 'Super god theme' },
+    { id: 'ui_level6', name: 'Level 6', description: 'Supergod theme' },
+    { id: 'admin_panel', name: 'Admin Panel', description: 'Admin components' },
+    { id: 'code_editor', name: 'Code Editor', description: 'Code editing components' },
+    { id: 'css_designer', name: 'CSS Designer', description: 'Visual CSS designer' },
+  ]
+
   return (
-    <div style={{ display: 'flex', height: '100vh', background: 'var(--color-background)' }}>
-      {/* Sidebar */}
-      <div style={{
-        width: '320px',
-        borderRight: '1px solid var(--color-border)',
-        overflow: 'auto',
-        background: 'var(--color-muted)',
-        display: 'flex',
-        flexDirection: 'column'
-      }}>
-        <div style={{
-          padding: '1.5rem 1rem',
-          borderBottom: '1px solid var(--color-border)',
-          background: 'var(--color-background)'
-        }}>
-          <h3 style={{
-            margin: 0,
-            fontSize: '1.25rem',
-            fontWeight: 700,
-            color: 'var(--color-foreground)',
-            marginBottom: '0.5rem'
-          }}>
-            Package Explorer
-          </h3>
-          <div style={{
-            fontSize: '0.875rem',
-            color: 'var(--color-muted-foreground)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}>
-            <span style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '1.5rem',
-              height: '1.5rem',
-              borderRadius: '0.375rem',
-              background: 'var(--color-primary)',
-              color: 'var(--color-primary-foreground)',
-              fontSize: '0.75rem',
-              fontWeight: 600
-            }}>
-              {packages.length}
-            </span>
-            packages discovered
-          </div>
-        </div>
-        
+    <div style={{ padding: '2rem' }}>
+      <header style={{ marginBottom: '2rem' }}>
+        <h1 style={{ margin: '0 0 0.5rem' }}>Discovered Packages</h1>
+        <p style={{ margin: 0, color: 'var(--color-muted-foreground)' }}>
+          {packages.length} packages with V2 schema styles loaded
+        </p>
+      </header>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
         {packages.map(pkg => (
-          <div
-            key={pkg.metadata.packageId}
-            style={{
-              padding: '0.75rem 1rem',
-              cursor: 'pointer',
-              background: selectedPkg === pkg.metadata.packageId ? '#e0e7ff' : 'transparent',
-              borderBottom: '1px solid #e5e7eb',
-            }}
-            onClick={async () => {
-              setSelectedPkg(pkg.metadata.packageId)
-              // Load component IDs from components.json
-              const components = await loadPackageComponents(pkg.metadata.packageId)
-              setComponentIds(components.map(c => c.id))
-              // Select first render or all_components
-              const renderScript = pkg.scripts.find(s => s.hasRenderFunction)
-              if (renderScript) {
-                setSelectedScript(renderScript.file)
-              } else if (components.length > 0) {
-                setSelectedScript('all_components')
-              } else {
-                setSelectedScript(null)
-              }
-            }}
-          >
-            <div style={{ fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              {pkg.featured && <span title="Featured">⭐</span>}
-              {pkg.metadata.name}
-            </div>
-            <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
-              {pkg.metadata.category} · Level {pkg.metadata.minLevel}
-            </div>
-            {pkg.scripts.length > 0 && (
-              <div style={{ fontSize: '0.7rem', color: '#9ca3af', marginTop: '0.25rem' }}>
-                {pkg.scripts.length} scripts
+          <div key={pkg.id} className="card">
+            <div style={{ padding: '1.5rem' }}>
+              <h3 style={{ margin: '0 0 0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                {pkg.name}
+                {(pkg.id.includes('level') || pkg.id === 'admin_panel') && (
+                  <span style={{
+                    fontSize: '0.75rem',
+                    padding: '0.125rem 0.5rem',
+                    background: 'var(--color-primary)',
+                    color: 'var(--color-primary-foreground)',
+                    borderRadius: '0.25rem'
+                  }}>
+                    Themed
+                  </span>
+                )}
+              </h3>
+              <p style={{ margin: '0 0 1rem', fontSize: '0.875rem', color: 'var(--color-muted-foreground)' }}>
+                {pkg.description}
+              </p>
+              <div style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: 'var(--color-muted-foreground)' }}>
+                {pkg.id}
               </div>
-            )}
+            </div>
           </div>
         ))}
-      </div>
-      
-      {/* Main content */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {/* Toolbar */}
-        <div style={{ 
-          padding: '0.75rem 1rem', 
-          borderBottom: '1px solid #e5e7eb',
-          display: 'flex',
-          gap: '1rem',
-          alignItems: 'center',
-          background: '#fff'
-        }}>
-          {currentPackage && (
-            <>
-              <select 
-                value={selectedScript || ''} 
-                onChange={e => setSelectedScript(e.target.value)}
-                style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #d1d5db' }}
-              >
-                <option value="">Select render...</option>
-                {/* Component IDs from components.json */}
-                {componentIds.length > 0 && (
-                  <optgroup label="📦 Components (from package)">
-                    <option value="all_components">🔲 All Components</option>
-                    {componentIds.map(id => (
-                      <option key={id} value={id}>
-                        {id}
-                      </option>
-                    ))}
-                  </optgroup>
-                )}
-                {/* Scripts from manifest */}
-                {currentPackage.scripts.length > 0 && (
-                  <optgroup label="📜 Scripts">
-                    {currentPackage.scripts.map(s => (
-                      <option key={s.file} value={s.file}>
-                        {s.name} {s.hasRenderFunction && '✨'}
-                      </option>
-                    ))}
-                  </optgroup>
-                )}
-              </select>
-              
-              <select 
-                value={selectedVariant} 
-                onChange={e => setSelectedVariant(e.target.value)}
-                style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #d1d5db' }}
-              >
-                {contextVariants.map(v => (
-                  <option key={v.name} value={v.name}>{v.name}</option>
-                ))}
-              </select>
-              
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}>
-                <input 
-                  type="checkbox" 
-                  checked={debug} 
-                  onChange={e => setDebug(e.target.checked)} 
-                />
-                Debug
-              </label>
-            </>
-          )}
-        </div>
-        
-        {/* Preview */}
-        <div style={{ flex: 1, overflow: 'auto' }}>
-          {currentPackage && selectedScript && currentVariant ? (
-            <PackageStoryRenderer
-              packageId={currentPackage.metadata.packageId}
-              scriptName={selectedScript}
-              context={currentVariant.context}
-              debug={debug}
-            />
-          ) : (
-            <div style={{ 
-              padding: '2rem', 
-              textAlign: 'center', 
-              color: '#6b7280' 
-            }}>
-              {currentPackage 
-                ? 'Select a script to preview' 
-                : 'Select a package from the sidebar'}
-            </div>
-          )}
-        </div>
       </div>
     </div>
   )
@@ -384,7 +225,7 @@ export const Explorer: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Browse and preview all auto-discovered packages with different context variants (Admin, User, God-level permissions).'
+        story: 'Browse packages and see themed components using FakeMUI base classes + package-specific prefixes.'
       }
     }
   }
@@ -393,57 +234,13 @@ export const Explorer: Story = {
 /**
  * Package List - Shows all discovered packages
  */
-export const PackageList: Story = {
-  render: () => {
-    const [packages, setPackages] = useState<DiscoveredPackage[]>([])
-    const [loading, setLoading] = useState(true)
-    
-    useEffect(() => {
-      discoverPackages().then(pkgs => {
-        setPackages(pkgs)
-        setLoading(false)
-      })
-    }, [])
-    
-    if (loading) return <div style={{ padding: '2rem' }}>Loading...</div>
-    
-    return (
-      <div style={{ padding: '2rem' }}>
-        <h2 style={{ marginBottom: '1rem' }}>Discovered Packages ({packages.length})</h2>
-        <div style={{ 
-          display: 'grid', 
-          gap: '1rem', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' 
-        }}>
-          {packages.map(pkg => (
-            <div 
-              key={pkg.metadata.packageId}
-              style={{ 
-                padding: '1rem', 
-                border: '1px solid #e5e7eb', 
-                borderRadius: '8px',
-                background: pkg.featured ? '#fffbeb' : '#fff',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                {pkg.featured && <span>⭐</span>}
-                <h3 style={{ margin: 0 }}>{pkg.metadata.name}</h3>
-              </div>
-              <p style={{ margin: '0.5rem 0', color: '#6b7280', fontSize: '0.875rem' }}>
-                {pkg.metadata.description}
-              </p>
-              <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
-                <div>ID: {pkg.metadata.packageId}</div>
-                <div>Category: {pkg.metadata.category}</div>
-                <div>Level: {pkg.metadata.minLevel}</div>
-                {pkg.scripts.length > 0 && (
-                  <div>Scripts: {pkg.scripts.map(s => s.name).join(', ')}</div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  },
+export const PackageListStory: Story = {
+  render: () => <PackageList />,
+  parameters: {
+    docs: {
+      description: {
+        story: 'Grid view of all discovered packages in the system.'
+      }
+    }
+  }
 }
