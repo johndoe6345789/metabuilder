@@ -1,0 +1,59 @@
+{
+  "packageId": "json_script_example",
+  "name": "JSON Script Example",
+  "version": "1.0.0",
+  "description": "Comprehensive example demonstrating the full JSON script specification",
+  "author": "MetaBuilder",
+  "category": "examples",
+  "icon": "static_content/icon.svg",
+  "minLevel": 0,
+  "primary": false,
+  "dependencies": [],
+  "devDependencies": ["lua_test"],
+  "exports": {
+    "scripts": [
+      "all_expressions",
+      "all_statements",
+      "all_operators",
+      "control_flow",
+      "data_structures"
+    ],
+    "components": []
+  },
+  "tests": {
+    "scripts": [
+      "tests/expressions.test.lua",
+      "tests/statements.test.lua"
+    ],
+    "cases": [
+      "tests/expressions.cases.json",
+      "tests/statements.cases.json"
+    ]
+  },
+  "permissions": {
+    "example.view": {
+      "minLevel": 0,
+      "description": "View examples"
+    }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
+  },
+  "storybook": {
+    "stories": [
+      {
+        "name": "Expression Examples",
+        "render": "all_expressions"
+      },
+      {
+        "name": "Statement Examples",
+        "render": "all_statements"
+      }
+    ]
+  },
+  "runtime": {
+    "script_json": "seed/script.json",
+    "executor": "../shared/seed/scripts/runtime/script_executor.lua",
+    "description": "All functions defined in script.json, executed via runtime"
+  }
+}
