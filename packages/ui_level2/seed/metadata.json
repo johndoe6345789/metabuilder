@@ -56,22 +56,28 @@
     },
     "level2.dashboard.view": {
       "minLevel": 2,
-      "description": "View user dashboard"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "View user dashboard",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Profile",
+        "render": "profile"
+      },
+      {
+        "name": "Comments",
+        "render": "comments"
+      }
+    ]
   }
 }

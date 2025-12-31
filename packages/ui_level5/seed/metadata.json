@@ -56,22 +56,32 @@
     },
     "level5.packages.manage": {
       "minLevel": 5,
-      "description": "Manage packages"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Manage packages",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "GodPanel",
+        "render": "layout"
+      },
+      {
+        "name": "Schemas",
+        "render": "schemas"
+      },
+      {
+        "name": "Workflows",
+        "render": "workflows"
+      }
+    ]
   }
 }
