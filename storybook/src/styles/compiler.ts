@@ -151,16 +151,20 @@ export class StylesCompiler {
     const { predicate } = selector;
     let css = '';
 
-    // Map component types to HTML elements or classes
+    // Map component types to FakeMUI classes
     const typeMap: Record<string, string> = {
       'Text': '.text',
-      'Button': 'button',
+      'Button': '.button',
       'Card': '.card',
       'Box': '.box',
-      'Input': 'input',
+      'Input': '.input',
+      'Table': '.table',
+      'TableRow': '.table-row',
+      'Nav': '.nav',
+      'Section': '.section',
     };
 
-    const baseSelector = typeMap[predicate.targetType] || `.${predicate.targetType.toLowerCase()}`;
+    const baseClass = typeMap[predicate.targetType] || `.${predicate.targetType.toLowerCase()}`;
 
     // Add classes
     const classSelectors = predicate.classes.map(c => `.${c}`).join('');
@@ -168,7 +172,9 @@ export class StylesCompiler {
     // Add states
     const stateSelectors = predicate.states.map(s => `:${s}`).join('');
 
-    css = `${baseSelector}${classSelectors}${stateSelectors}`;
+    // Generate selector that works with or without base FakeMUI class
+    // E.g., `.l3-button` will style both `<button class="l3-button">` and `<button class="button l3-button">`
+    css = `${classSelectors}${stateSelectors}`;
 
     // Handle relationship
     if (predicate.relationship) {
