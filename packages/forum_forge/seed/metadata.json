@@ -15,6 +15,11 @@
     "lua_test"
   ],
   "exports": {
+    "scripts": [
+      "create_thread",
+      "view_categories",
+      "thread_list"
+    ],
     "components": []
   },
   "tests": {
@@ -63,6 +68,19 @@
     "styles": "seed/styles.json"
   },
   "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Create Thread",
+        "render": "create_thread"
+      },
+      {
+        "name": "View Categories",
+        "render": "view_categories"
+      },
+      {
+        "name": "Thread List",
+        "render": "thread_list"
+      }
+    ]
   }
 }
