@@ -14,6 +14,11 @@
     "lua_test"
   ],
   "exports": {
+    "scripts": [
+      "confirm_dialog",
+      "delete_confirm",
+      "action_dialog"
+    ],
     "components": []
   },
   "tests": {
@@ -42,6 +47,19 @@
     "styles": "seed/styles.json"
   },
   "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Confirm Dialog",
+        "render": "confirm_dialog"
+      },
+      {
+        "name": "Delete Confirmation",
+        "render": "delete_confirm"
+      },
+      {
+        "name": "Action Dialog",
+        "render": "action_dialog"
+      }
+    ]
   }
 }
