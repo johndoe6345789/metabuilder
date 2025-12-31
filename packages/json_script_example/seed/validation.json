@@ -1,5 +1,5 @@
 {
-  "$schema": "./script.schema.json",
+  "$schema": "./validation.schema.json",
   "schema_version": "2.1.0",
   "package": "json_script_example",
   "description": "Validation utility functions",

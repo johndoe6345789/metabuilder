@@ -1,4 +1,5 @@
 {
+  "$schema": "./metadata.schema.json",
   "packageId": "json_script_example",
   "name": "JSON Script Example",
   "version": "1.0.0",
