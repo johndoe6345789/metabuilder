@@ -31,34 +31,34 @@
 
   "selectors": [
     {
-      "id": "l3_button_base",
+      "id": "button_base",
       "predicate": {
         "targetType": "Button",
-        "classes": ["l3-button"],
+        "classes": ["button"],
         "states": []
       }
     },
     {
-      "id": "l3_card_base",
+      "id": "card_base",
       "predicate": {
         "targetType": "Card",
-        "classes": ["l3-card"],
+        "classes": ["card"],
         "states": []
       }
     },
     {
-      "id": "l3_table_base",
+      "id": "table_base",
       "predicate": {
         "targetType": "Table",
-        "classes": ["l3-table"],
+        "classes": ["table"],
         "states": []
       }
     },
     {
-      "id": "l3_input_base",
+      "id": "input_base",
       "predicate": {
         "targetType": "Input",
-        "classes": ["l3-input"],
+        "classes": ["input"],
         "states": []
       }
     },
@@ -421,8 +421,8 @@
 
   "rules": [
     {
-      "id": "rule_l3_button",
-      "selector": "l3_button_base",
+      "id": "rule_button",
+      "selector": "button_base",
       "priority": {
         "importance": "normal",
         "origin": "package",
@@ -433,8 +433,8 @@
       "enabled": true
     },
     {
-      "id": "rule_l3_card",
-      "selector": "l3_card_base",
+      "id": "rule_card",
+      "selector": "card_base",
       "priority": {
         "importance": "normal",
         "origin": "package",
@@ -444,8 +444,8 @@
       "enabled": true
     },
     {
-      "id": "rule_l3_table",
-      "selector": "l3_table_base",
+      "id": "rule_table",
+      "selector": "table_base",
       "priority": {
         "importance": "normal",
         "origin": "package",
@@ -455,8 +455,8 @@
       "enabled": true
     },
     {
-      "id": "rule_l3_input",
-      "selector": "l3_input_base",
+      "id": "rule_input",
+      "selector": "input_base",
       "priority": {
         "importance": "normal",
         "origin": "package",
