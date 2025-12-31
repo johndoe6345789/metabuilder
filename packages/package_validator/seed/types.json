@@ -1,0 +1,267 @@
+{
+  "$schema": "../../json_script_example/seed/types.schema.json",
+  "schema_version": "2.1.0",
+  "package": "package_validator",
+  "description": "Type definitions for package validation",
+
+  "exports": {
+    "types": [
+      "ValidationResult",
+      "ValidationError",
+      "ValidationWarning",
+      "PackageMetadata",
+      "ScriptFile",
+      "TypeDefinition",
+      "ComponentDefinition"
+    ]
+  },
+
+  "types": [
+    {
+      "id": "validation_result",
+      "name": "ValidationResult",
+      "exported": true,
+      "type": "object",
+      "docstring": {
+        "summary": "Result of a validation operation",
+        "description": "Contains validation status, errors, warnings, and detailed results",
+        "since": "2.0.0"
+      },
+      "properties": {
+        "valid": {
+          "type": "boolean",
+          "required": true,
+          "description": "Whether validation passed"
+        },
+        "errors": {
+          "type": "array",
+          "required": true,
+          "description": "Array of validation errors"
+        },
+        "warnings": {
+          "type": "array",
+          "required": false,
+          "description": "Array of validation warnings"
+        },
+        "details": {
+          "type": "object",
+          "required": false,
+          "description": "Detailed validation results by category"
+        }
+      }
+    },
+    {
+      "id": "validation_error",
+      "name": "ValidationError",
+      "exported": true,
+      "type": "object",
+      "docstring": {
+        "summary": "A validation error",
+        "description": "Describes a validation failure with location and message",
+        "since": "2.0.0"
+      },
+      "properties": {
+        "file": {
+          "type": "string",
+          "required": false,
+          "description": "File where error occurred"
+        },
+        "line": {
+          "type": "number",
+          "required": false,
+          "description": "Line number where error occurred"
+        },
+        "code": {
+          "type": "string",
+          "required": true,
+          "description": "Error code (e.g., 'MISSING_FIELD', 'INVALID_SYNTAX')"
+        },
+        "message": {
+          "type": "string",
+          "required": true,
+          "description": "Human-readable error message"
+        },
+        "severity": {
+          "type": "string",
+          "required": false,
+          "description": "Error severity (error, warning, info)"
+        }
+      }
+    },
+    {
+      "id": "validation_warning",
+      "name": "ValidationWarning",
+      "exported": true,
+      "type": "object",
+      "docstring": {
+        "summary": "A validation warning",
+        "description": "Describes a potential issue that doesn't prevent validation from passing",
+        "since": "2.0.0"
+      },
+      "properties": {
+        "file": {
+          "type": "string",
+          "required": false,
+          "description": "File where warning occurred"
+        },
+        "code": {
+          "type": "string",
+          "required": true,
+          "description": "Warning code"
+        },
+        "message": {
+          "type": "string",
+          "required": true,
+          "description": "Human-readable warning message"
+        }
+      }
+    },
+    {
+      "id": "package_metadata",
+      "name": "PackageMetadata",
+      "exported": true,
+      "type": "object",
+      "docstring": {
+        "summary": "Package metadata structure",
+        "description": "Represents the contents of metadata.json",
+        "since": "2.0.0"
+      },
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique package identifier"
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "description": "Package display name"
+        },
+        "version": {
+          "type": "string",
+          "required": true,
+          "description": "Semantic version"
+        },
+        "category": {
+          "type": "string",
+          "required": true,
+          "description": "Package category"
+        },
+        "exports": {
+          "type": "object",
+          "required": true,
+          "description": "Exported scripts, types, and components"
+        },
+        "runtime": {
+          "type": "object",
+          "required": false,
+          "description": "Runtime configuration including scripts array"
+        }
+      }
+    },
+    {
+      "id": "script_file",
+      "name": "ScriptFile",
+      "exported": true,
+      "type": "object",
+      "docstring": {
+        "summary": "JSON script file structure",
+        "description": "Represents a script.json file",
+        "since": "2.0.0"
+      },
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "required": true,
+          "description": "Schema version"
+        },
+        "package": {
+          "type": "string",
+          "required": true,
+          "description": "Package identifier"
+        },
+        "functions": {
+          "type": "array",
+          "required": false,
+          "description": "Function definitions"
+        },
+        "constants": {
+          "type": "array",
+          "required": false,
+          "description": "Constant definitions"
+        }
+      }
+    },
+    {
+      "id": "type_definition",
+      "name": "TypeDefinition",
+      "exported": true,
+      "type": "object",
+      "docstring": {
+        "summary": "Type definition structure",
+        "description": "Represents a type in types.json",
+        "since": "2.0.0"
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "required": true,
+          "description": "Type identifier"
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "description": "Type name (PascalCase)"
+        },
+        "type": {
+          "type": "string",
+          "required": true,
+          "description": "Base type"
+        },
+        "exported": {
+          "type": "boolean",
+          "required": false,
+          "description": "Whether type is exported"
+        }
+      }
+    },
+    {
+      "id": "component_definition",
+      "name": "ComponentDefinition",
+      "exported": true,
+      "type": "object",
+      "docstring": {
+        "summary": "Component definition structure",
+        "description": "Represents a component in components.json",
+        "since": "2.0.0"
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "required": true,
+          "description": "Component identifier"
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "description": "Component name (PascalCase)"
+        },
+        "exported": {
+          "type": "boolean",
+          "required": false,
+          "description": "Whether component is exported"
+        },
+        "props": {
+          "type": "array",
+          "required": false,
+          "description": "Component props definitions"
+        },
+        "render": {
+          "type": "object",
+          "required": true,
+          "description": "Render template"
+        }
+      }
+    }
+  ]
+}
