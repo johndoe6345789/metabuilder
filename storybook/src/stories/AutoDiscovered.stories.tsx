@@ -5,11 +5,15 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react'
+import packageIndex from '../../../packages/index.json'
 
 interface PackageClassDemoProps {
   packageId: string
   className: string
 }
+
+// Extract package IDs from the index
+const packageIds = packageIndex.packages.map(pkg => pkg.packageId)
 
 const meta: Meta = {
   title: 'Auto-Discovered Packages',
@@ -31,7 +35,7 @@ export const ClassDemo: StoryObj<PackageClassDemoProps> = {
   argTypes: {
     packageId: {
       control: 'select',
-      options: ['shared', 'ui_home', 'ui_header', 'ui_footer', 'ui_level2', 'ui_level3', 'ui_level4', 'ui_level5', 'ui_level6', 'admin_panel', 'code_editor', 'css_designer'],
+      options: packageIds,
     },
     className: {
       control: 'select',
