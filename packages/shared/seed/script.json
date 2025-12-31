@@ -1,0 +1,835 @@
+{
+  "schema_version": "1.0.0",
+  "package": "shared",
+  "description": "Complete TypeScript/JavaScript abstraction - functions, promises, async operations, control flow",
+
+  "imports": [
+    {
+      "id": "react_import",
+      "module": "react",
+      "imports": ["useState", "useEffect", "useCallback"],
+      "type": "named"
+    },
+    {
+      "id": "axios_import",
+      "module": "axios",
+      "default": "axios",
+      "type": "default"
+    }
+  ],
+
+  "constants": [
+    {
+      "id": "api_base_url",
+      "name": "API_BASE_URL",
+      "value": "https://api.example.com",
+      "type": "string",
+      "exported": true
+    },
+    {
+      "id": "max_retries",
+      "name": "MAX_RETRIES",
+      "value": 3,
+      "type": "number",
+      "exported": true
+    },
+    {
+      "id": "default_config",
+      "name": "DEFAULT_CONFIG",
+      "type": "object",
+      "value": {
+        "timeout": 5000,
+        "retries": "$ref:constants.max_retries",
+        "baseUrl": "$ref:constants.api_base_url"
+      },
+      "exported": true
+    }
+  ],
+
+  "variables": [
+    {
+      "id": "cache_store",
+      "name": "cacheStore",
+      "kind": "let",
+      "type": "Map<string, any>",
+      "initialValue": {
+        "expression": "new Map()",
+        "type": "constructor"
+      },
+      "exported": false
+    }
+  ],
+
+  "functions": [
+    {
+      "id": "fetch_user_data",
+      "name": "fetchUserData",
+      "async": true,
+      "exported": true,
+      "params": [
+        {
+          "name": "userId",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "object",
+          "optional": true,
+          "default": {}
+        }
+      ],
+      "returnType": "Promise<User>",
+      "body": [
+        {
+          "type": "const_declaration",
+          "name": "cacheKey",
+          "value": {
+            "type": "template_literal",
+            "template": "user_${userId}"
+          }
+        },
+        {
+          "type": "if_statement",
+          "condition": {
+            "type": "call_expression",
+            "callee": "$ref:variables.cache_store.has",
+            "args": ["$ref:local.cacheKey"]
+          },
+          "then": [
+            {
+              "type": "return",
+              "value": {
+                "type": "call_expression",
+                "callee": "$ref:variables.cache_store.get",
+                "args": ["$ref:local.cacheKey"]
+              }
+            }
+          ]
+        },
+        {
+          "type": "try_catch",
+          "try": [
+            {
+              "type": "const_declaration",
+              "name": "response",
+              "value": {
+                "type": "await",
+                "expression": {
+                  "type": "call_expression",
+                  "callee": "$ref:imports.axios.get",
+                  "args": [
+                    {
+                      "type": "template_literal",
+                      "template": "${API_BASE_URL}/users/${userId}"
+                    },
+                    "$ref:params.options"
+                  ]
+                }
+              }
+            },
+            {
+              "type": "const_declaration",
+              "name": "userData",
+              "value": {
+                "type": "member_access",
+                "object": "$ref:local.response",
+                "property": "data"
+              }
+            },
+            {
+              "type": "call_expression",
+              "callee": "$ref:variables.cache_store.set",
+              "args": [
+                "$ref:local.cacheKey",
+                "$ref:local.userData"
+              ]
+            },
+            {
+              "type": "return",
+              "value": "$ref:local.userData"
+            }
+          ],
+          "catch": {
+            "param": "error",
+            "body": [
+              {
+                "type": "call_expression",
+                "callee": "console.error",
+                "args": [
+                  "Failed to fetch user:",
+                  "$ref:catch.error"
+                ]
+              },
+              {
+                "type": "throw",
+                "value": "$ref:catch.error"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "retry_with_backoff",
+      "name": "retryWithBackoff",
+      "async": true,
+      "exported": true,
+      "generic": ["T"],
+      "params": [
+        {
+          "name": "fn",
+          "type": "() => Promise<T>"
+        },
+        {
+          "name": "maxRetries",
+          "type": "number",
+          "default": "$ref:constants.max_retries"
+        }
+      ],
+      "returnType": "Promise<T>",
+      "body": [
+        {
+          "type": "for_loop",
+          "init": {
+            "type": "const_declaration",
+            "name": "i",
+            "value": 0
+          },
+          "condition": {
+            "type": "binary_expression",
+            "left": "$ref:local.i",
+            "operator": "<",
+            "right": "$ref:params.maxRetries"
+          },
+          "update": {
+            "type": "update_expression",
+            "operator": "++",
+            "argument": "$ref:local.i"
+          },
+          "body": [
+            {
+              "type": "try_catch",
+              "try": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "await",
+                    "expression": {
+                      "type": "call_expression",
+                      "callee": "$ref:params.fn",
+                      "args": []
+                    }
+                  }
+                }
+              ],
+              "catch": {
+                "param": "error",
+                "body": [
+                  {
+                    "type": "if_statement",
+                    "condition": {
+                      "type": "binary_expression",
+                      "left": "$ref:local.i",
+                      "operator": "===",
+                      "right": {
+                        "type": "binary_expression",
+                        "left": "$ref:params.maxRetries",
+                        "operator": "-",
+                        "right": 1
+                      }
+                    },
+                    "then": [
+                      {
+                        "type": "throw",
+                        "value": "$ref:catch.error"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "await",
+                    "expression": {
+                      "type": "call_expression",
+                      "callee": "$ref:functions.delay",
+                      "args": [
+                        {
+                          "type": "binary_expression",
+                          "left": 1000,
+                          "operator": "*",
+                          "right": {
+                            "type": "call_expression",
+                            "callee": "Math.pow",
+                            "args": [2, "$ref:local.i"]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "delay_fn",
+      "name": "delay",
+      "async": false,
+      "exported": true,
+      "params": [
+        {
+          "name": "ms",
+          "type": "number"
+        }
+      ],
+      "returnType": "Promise<void>",
+      "body": [
+        {
+          "type": "return",
+          "value": {
+            "type": "new_expression",
+            "callee": "Promise",
+            "args": [
+              {
+                "type": "arrow_function",
+                "params": ["resolve"],
+                "body": [
+                  {
+                    "type": "call_expression",
+                    "callee": "setTimeout",
+                    "args": [
+                      "$ref:params.resolve",
+                      "$ref:params.ms"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "map_async",
+      "name": "mapAsync",
+      "async": true,
+      "exported": true,
+      "generic": ["T", "R"],
+      "params": [
+        {
+          "name": "array",
+          "type": "T[]"
+        },
+        {
+          "name": "mapper",
+          "type": "(item: T, index: number) => Promise<R>"
+        }
+      ],
+      "returnType": "Promise<R[]>",
+      "body": [
+        {
+          "type": "return",
+          "value": {
+            "type": "call_expression",
+            "callee": "Promise.all",
+            "args": [
+              {
+                "type": "call_expression",
+                "callee": {
+                  "type": "member_access",
+                  "object": "$ref:params.array",
+                  "property": "map"
+                },
+                "args": ["$ref:params.mapper"]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "debounce_fn",
+      "name": "debounce",
+      "async": false,
+      "exported": true,
+      "generic": ["T extends any[]"],
+      "params": [
+        {
+          "name": "fn",
+          "type": "(...args: T) => void"
+        },
+        {
+          "name": "delay",
+          "type": "number"
+        }
+      ],
+      "returnType": "(...args: T) => void",
+      "body": [
+        {
+          "type": "let_declaration",
+          "name": "timeoutId",
+          "value": null,
+          "valueType": "NodeJS.Timeout | null"
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "arrow_function",
+            "params": ["...args"],
+            "body": [
+              {
+                "type": "if_statement",
+                "condition": "$ref:local.timeoutId",
+                "then": [
+                  {
+                    "type": "call_expression",
+                    "callee": "clearTimeout",
+                    "args": ["$ref:local.timeoutId"]
+                  }
+                ]
+              },
+              {
+                "type": "assignment",
+                "target": "$ref:local.timeoutId",
+                "value": {
+                  "type": "call_expression",
+                  "callee": "setTimeout",
+                  "args": [
+                    {
+                      "type": "arrow_function",
+                      "params": [],
+                      "body": [
+                        {
+                          "type": "call_expression",
+                          "callee": "$ref:params.fn",
+                          "args": ["...$ref:params.args"]
+                        }
+                      ]
+                    },
+                    "$ref:params.delay"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+
+  "classes": [
+    {
+      "id": "api_client_class",
+      "name": "ApiClient",
+      "exported": true,
+      "properties": [
+        {
+          "name": "baseUrl",
+          "type": "string",
+          "visibility": "private"
+        },
+        {
+          "name": "timeout",
+          "type": "number",
+          "visibility": "private"
+        }
+      ],
+      "constructor": {
+        "params": [
+          {
+            "name": "config",
+            "type": "{ baseUrl: string; timeout?: number }"
+          }
+        ],
+        "body": [
+          {
+            "type": "assignment",
+            "target": "this.baseUrl",
+            "value": {
+              "type": "member_access",
+              "object": "$ref:params.config",
+              "property": "baseUrl"
+            }
+          },
+          {
+            "type": "assignment",
+            "target": "this.timeout",
+            "value": {
+              "type": "logical_expression",
+              "left": {
+                "type": "member_access",
+                "object": "$ref:params.config",
+                "property": "timeout"
+              },
+              "operator": "??",
+              "right": 5000
+            }
+          }
+        ]
+      },
+      "methods": [
+        {
+          "name": "get",
+          "async": true,
+          "visibility": "public",
+          "generic": ["T"],
+          "params": [
+            {
+              "name": "endpoint",
+              "type": "string"
+            }
+          ],
+          "returnType": "Promise<T>",
+          "body": [
+            {
+              "type": "const_declaration",
+              "name": "url",
+              "value": {
+                "type": "template_literal",
+                "template": "${this.baseUrl}${endpoint}"
+              }
+            },
+            {
+              "type": "const_declaration",
+              "name": "response",
+              "value": {
+                "type": "await",
+                "expression": {
+                  "type": "call_expression",
+                  "callee": "fetch",
+                  "args": [
+                    "$ref:local.url",
+                    {
+                      "type": "object_literal",
+                      "properties": {
+                        "method": "GET",
+                        "signal": {
+                          "type": "member_access",
+                          "object": {
+                            "type": "call_expression",
+                            "callee": "AbortSignal.timeout",
+                            "args": ["this.timeout"]
+                          },
+                          "property": ""
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "await",
+                "expression": {
+                  "type": "call_expression",
+                  "callee": {
+                    "type": "member_access",
+                    "object": "$ref:local.response",
+                    "property": "json"
+                  },
+                  "args": []
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "post",
+          "async": true,
+          "visibility": "public",
+          "generic": ["T", "R"],
+          "params": [
+            {
+              "name": "endpoint",
+              "type": "string"
+            },
+            {
+              "name": "data",
+              "type": "T"
+            }
+          ],
+          "returnType": "Promise<R>",
+          "body": [
+            {
+              "type": "const_declaration",
+              "name": "url",
+              "value": {
+                "type": "template_literal",
+                "template": "${this.baseUrl}${endpoint}"
+              }
+            },
+            {
+              "type": "const_declaration",
+              "name": "response",
+              "value": {
+                "type": "await",
+                "expression": {
+                  "type": "call_expression",
+                  "callee": "fetch",
+                  "args": [
+                    "$ref:local.url",
+                    {
+                      "type": "object_literal",
+                      "properties": {
+                        "method": "POST",
+                        "headers": {
+                          "Content-Type": "application/json"
+                        },
+                        "body": {
+                          "type": "call_expression",
+                          "callee": "JSON.stringify",
+                          "args": ["$ref:params.data"]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "await",
+                "expression": {
+                  "type": "call_expression",
+                  "callee": {
+                    "type": "member_access",
+                    "object": "$ref:local.response",
+                    "property": "json"
+                  },
+                  "args": []
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "hooks": [
+    {
+      "id": "use_fetch_hook",
+      "name": "useFetch",
+      "exported": true,
+      "generic": ["T"],
+      "params": [
+        {
+          "name": "url",
+          "type": "string"
+        }
+      ],
+      "returnType": "{ data: T | null; loading: boolean; error: Error | null }",
+      "body": [
+        {
+          "type": "const_declaration",
+          "name": "[data, setData]",
+          "value": {
+            "type": "call_expression",
+            "callee": "useState",
+            "args": [null],
+            "typeArgs": ["T | null"]
+          }
+        },
+        {
+          "type": "const_declaration",
+          "name": "[loading, setLoading]",
+          "value": {
+            "type": "call_expression",
+            "callee": "useState",
+            "args": [true],
+            "typeArgs": ["boolean"]
+          }
+        },
+        {
+          "type": "const_declaration",
+          "name": "[error, setError]",
+          "value": {
+            "type": "call_expression",
+            "callee": "useState",
+            "args": [null],
+            "typeArgs": ["Error | null"]
+          }
+        },
+        {
+          "type": "call_expression",
+          "callee": "useEffect",
+          "args": [
+            {
+              "type": "arrow_function",
+              "params": [],
+              "async": true,
+              "body": [
+                {
+                  "type": "try_catch",
+                  "try": [
+                    {
+                      "type": "const_declaration",
+                      "name": "response",
+                      "value": {
+                        "type": "await",
+                        "expression": {
+                          "type": "call_expression",
+                          "callee": "fetch",
+                          "args": ["$ref:params.url"]
+                        }
+                      }
+                    },
+                    {
+                      "type": "const_declaration",
+                      "name": "json",
+                      "value": {
+                        "type": "await",
+                        "expression": {
+                          "type": "call_expression",
+                          "callee": {
+                            "type": "member_access",
+                            "object": "$ref:local.response",
+                            "property": "json"
+                          },
+                          "args": []
+                        }
+                      }
+                    },
+                    {
+                      "type": "call_expression",
+                      "callee": "$ref:local.setData",
+                      "args": ["$ref:local.json"]
+                    }
+                  ],
+                  "catch": {
+                    "param": "err",
+                    "body": [
+                      {
+                        "type": "call_expression",
+                        "callee": "$ref:local.setError",
+                        "args": ["$ref:catch.err"]
+                      }
+                    ]
+                  },
+                  "finally": [
+                    {
+                      "type": "call_expression",
+                      "callee": "$ref:local.setLoading",
+                      "args": [false]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "array_literal",
+              "elements": ["$ref:params.url"]
+            }
+          ]
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "data": "$ref:local.data",
+              "loading": "$ref:local.loading",
+              "error": "$ref:local.error"
+            }
+          }
+        }
+      ]
+    }
+  ],
+
+  "generators": [
+    {
+      "id": "range_generator",
+      "name": "range",
+      "exported": true,
+      "generator": true,
+      "params": [
+        {
+          "name": "start",
+          "type": "number"
+        },
+        {
+          "name": "end",
+          "type": "number"
+        }
+      ],
+      "returnType": "Generator<number>",
+      "body": [
+        {
+          "type": "for_loop",
+          "init": {
+            "type": "let_declaration",
+            "name": "i",
+            "value": "$ref:params.start"
+          },
+          "condition": {
+            "type": "binary_expression",
+            "left": "$ref:local.i",
+            "operator": "<=",
+            "right": "$ref:params.end"
+          },
+          "update": {
+            "type": "update_expression",
+            "operator": "++",
+            "argument": "$ref:local.i"
+          },
+          "body": [
+            {
+              "type": "yield",
+              "value": "$ref:local.i"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "events": [
+    {
+      "id": "user_logged_in_event",
+      "name": "UserLoggedInEvent",
+      "type": "CustomEvent",
+      "detail": {
+        "userId": "string",
+        "timestamp": "number"
+      }
+    }
+  ],
+
+  "event_handlers": [
+    {
+      "id": "handle_user_login",
+      "event": "$ref:events.user_logged_in_event",
+      "handler": {
+        "type": "arrow_function",
+        "params": [
+          {
+            "name": "event",
+            "type": "UserLoggedInEvent"
+          }
+        ],
+        "body": [
+          {
+            "type": "call_expression",
+            "callee": "console.log",
+            "args": [
+              "User logged in:",
+              {
+                "type": "member_access",
+                "object": {
+                  "type": "member_access",
+                  "object": "$ref:params.event",
+                  "property": "detail"
+                },
+                "property": "userId"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
