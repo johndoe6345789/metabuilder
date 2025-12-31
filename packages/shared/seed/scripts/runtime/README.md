@@ -1,15 +1,60 @@
-# JSON Script Runtime Executor
+# JSON Script Runtime Executors
 
-A Lua runtime interpreter that executes TypeScript/JavaScript functions defined in JSON format (script.json) without code generation.
+Complete runtime execution environment for JSON Script Specification v2.1.0, available in Lua, JavaScript (ES6), and JavaScript (CommonJS).
 
 ## Overview
 
-Instead of compiling `script.json` to TypeScript/JavaScript, this runtime executes the JSON AST directly, allowing dynamic function execution from declarative JSON definitions.
+Instead of compiling JSON scripts to code, these runtimes interpret and execute script.json files directly, enabling:
 
-## Architecture
+- 🔄 Hot reload without recompilation
+- 🔒 Sandboxed execution environment
+- 🌐 Cross-platform portability (Lua, Node.js, Browser)
+- 📝 Easy debugging and inspection
+- 🧩 Plugin systems without arbitrary code execution
 
+## Available Runtimes
+
+### 1. Lua Runtime (`script_executor.lua`)
+For Lua/LÖVE2D environments
+
+```lua
+local executor = require("script_executor")
+local result = executor.execute_function(script_json, "my_function", {arg1, arg2})
 ```
-script.json (JSON AST) → script_executor.lua → Lua Runtime
+
+### 2. JavaScript ES6 Modules (`script_executor.js`, `script_executor.d.ts`)
+For modern JavaScript with TypeScript support
+
+```javascript
+import { executeFunction } from './script_executor.js';
+const result = executeFunction(scriptJson, 'my_function', [arg1, arg2]);
+```
+
+### 3. JavaScript CommonJS (`script_executor.cjs`)
+For Node.js and legacy environments
+
+```javascript
+const { executeFunction } = require('./script_executor.cjs');
+const result = executeFunction(scriptJson, 'my_function', [arg1, arg2]);
+```
+
+## Test Framework
+
+### JSON Test Runner (`test_runner.cjs`)
+```bash
+node test_cli.cjs <script.json> <test-suite.json>
+```
+
+Example test results:
+```
+============================================================
+Test Suite: Expression Tests
+============================================================
+✅ Binary expressions - addition (1.00ms)
+✅ All operators - basic arithmetic (0.00ms)
+============================================================
+Results: 5/5 passed (0 failed)
+🎉 All tests passed!
 ```
 
 ### Supported Features
