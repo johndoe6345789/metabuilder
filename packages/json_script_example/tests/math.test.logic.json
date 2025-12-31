@@ -1,0 +1,178 @@
+{
+  "schema_version": "2.1.0",
+  "package": "json_script_example",
+  "description": "Test logic for math operations",
+
+  "functions": [
+    {
+      "id": "test_add",
+      "name": "test_add",
+      "description": "Test addition operation",
+      "params": [
+        {
+          "name": "testCase",
+          "type": "object",
+          "description": "Test case with input {a, b} and expected result"
+        }
+      ],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "comment",
+          "text": "Calculate actual result"
+        },
+        {
+          "type": "const_declaration",
+          "name": "actual",
+          "value": {
+            "type": "binary_expression",
+            "left": {
+              "type": "member_access",
+              "object": "$ref:params.testCase",
+              "property": "a"
+            },
+            "operator": "+",
+            "right": {
+              "type": "member_access",
+              "object": "$ref:params.testCase",
+              "property": "b"
+            }
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Compare to expected"
+        },
+        {
+          "type": "const_declaration",
+          "name": "passed",
+          "value": {
+            "type": "binary_expression",
+            "left": "$ref:local.actual",
+            "operator": "==",
+            "right": {
+              "type": "member_access",
+              "object": "$ref:params.testCase",
+              "property": "expected"
+            }
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Return test result"
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "passed": "$ref:local.passed",
+              "actual": "$ref:local.actual",
+              "expected": {
+                "type": "member_access",
+                "object": "$ref:params.testCase",
+                "property": "expected"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "test_divide",
+      "name": "test_divide",
+      "description": "Test division operation with zero handling",
+      "params": [
+        {
+          "name": "testCase",
+          "type": "object"
+        }
+      ],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "comment",
+          "text": "Check for division by zero"
+        },
+        {
+          "type": "const_declaration",
+          "name": "divisor",
+          "value": {
+            "type": "member_access",
+            "object": "$ref:params.testCase",
+            "property": "b"
+          }
+        },
+        {
+          "type": "if_statement",
+          "condition": {
+            "type": "binary_expression",
+            "left": "$ref:local.divisor",
+            "operator": "==",
+            "right": 0
+          },
+          "then": [
+            {
+              "type": "return",
+              "value": {
+                "type": "object_literal",
+                "properties": {
+                  "passed": true,
+                  "error": "Division by zero",
+                  "expectedError": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "comment",
+          "text": "Perform division"
+        },
+        {
+          "type": "const_declaration",
+          "name": "actual",
+          "value": {
+            "type": "binary_expression",
+            "left": {
+              "type": "member_access",
+              "object": "$ref:params.testCase",
+              "property": "a"
+            },
+            "operator": "/",
+            "right": "$ref:local.divisor"
+          }
+        },
+        {
+          "type": "const_declaration",
+          "name": "passed",
+          "value": {
+            "type": "binary_expression",
+            "left": "$ref:local.actual",
+            "operator": "==",
+            "right": {
+              "type": "member_access",
+              "object": "$ref:params.testCase",
+              "property": "expected"
+            }
+          }
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "passed": "$ref:local.passed",
+              "actual": "$ref:local.actual",
+              "expected": {
+                "type": "member_access",
+                "object": "$ref:params.testCase",
+                "property": "expected"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

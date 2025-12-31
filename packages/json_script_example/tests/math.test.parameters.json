@@ -1,0 +1,68 @@
+{
+  "test_add": {
+    "positive_numbers": [
+      {
+        "desc": "Adding two positive numbers",
+        "input": {"a": 5, "b": 3, "expected": 8}
+      },
+      {
+        "desc": "Adding zero",
+        "input": {"a": 10, "b": 0, "expected": 10}
+      },
+      {
+        "desc": "Large numbers",
+        "input": {"a": 1000, "b": 2000, "expected": 3000}
+      }
+    ],
+    "negative_numbers": [
+      {
+        "desc": "Adding two negative numbers",
+        "input": {"a": -5, "b": -3, "expected": -8}
+      },
+      {
+        "desc": "Positive and negative",
+        "input": {"a": 10, "b": -3, "expected": 7}
+      },
+      {
+        "desc": "Negative and positive",
+        "input": {"a": -10, "b": 15, "expected": 5}
+      }
+    ],
+    "edge_cases": [
+      {
+        "desc": "Both zero",
+        "input": {"a": 0, "b": 0, "expected": 0}
+      },
+      {
+        "desc": "Very large numbers",
+        "input": {"a": 999999, "b": 1, "expected": 1000000}
+      }
+    ]
+  },
+  "test_divide": {
+    "valid_division": [
+      {
+        "desc": "Simple division",
+        "input": {"a": 10, "b": 2, "expected": 5}
+      },
+      {
+        "desc": "Division with remainder",
+        "input": {"a": 10, "b": 3, "expected": 3.3333333333333335}
+      },
+      {
+        "desc": "Division resulting in 1",
+        "input": {"a": 7, "b": 7, "expected": 1}
+      }
+    ],
+    "edge_cases": [
+      {
+        "desc": "Divide by zero (should handle gracefully)",
+        "input": {"a": 10, "b": 0, "expectedError": true}
+      },
+      {
+        "desc": "Zero divided by number",
+        "input": {"a": 0, "b": 5, "expected": 0}
+      }
+    ]
+  }
+}
