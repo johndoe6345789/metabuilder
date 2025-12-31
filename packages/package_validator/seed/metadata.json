@@ -2,7 +2,7 @@
   "packageId": "package_validator",
   "name": "Package Validator",
   "version": "1.0.0",
-  "description": "Validates package structure including JSON schemas, Lua files, and folder organization",
+  "description": "Validates JSON-based package structure including scripts, types, components, and tests",
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "tools",
@@ -14,27 +14,23 @@
   "exports": {
     "components": [],
     "scripts": [
-      "validate",
-      "metadata_schema",
-      "component_schema",
-      "lua_validator",
-      "structure_validator",
-      "cli"
+      "validate_package",
+      "validate_metadata",
+      "validate_scripts",
+      "validate_types",
+      "validate_components",
+      "validate_tests",
+      "validate_storybook"
     ]
   },
-  "tests": {
+  "runtime": {
     "scripts": [
-      "tests/metadata.test.lua",
-      "tests/component.test.lua",
-      "tests/validate.test.lua",
-      "tests/lua_validator.test.lua",
-      "tests/structure_validator.test.lua",
-      "tests/devdependencies.test.lua",
-      "tests/parameterized.test.lua"
+      "seed/validator.json"
     ],
-    "cases": [
-      "tests/cases.json"
-    ]
+    "main": "seed/validator.json"
+  },
+  "tests": {
+    "parameterized": []
   },
   "minLevel": 5,
   "permissions": {
@@ -44,22 +40,27 @@
     },
     "package.validate.metadata": {
       "minLevel": 5,
-      "description": "Validate metadata.json schemas"
+      "description": "Validate metadata.json structure"
     },
-    "package.validate.lua": {
+    "package.validate.scripts": {
       "minLevel": 5,
-      "description": "Validate Lua script syntax"
+      "description": "Validate JSON script files"
     },
-    "package.validate.structure": {
+    "package.validate.types": {
       "minLevel": 5,
-      "description": "Validate package folder structure"
+      "description": "Validate type definitions"
     },
     "package.validate.components": {
       "minLevel": 5,
-      "description": "Validate component definitions",
-      "storybook": {
-        "stories": []
-      }
+      "description": "Validate component definitions"
+    },
+    "package.validate.tests": {
+      "minLevel": 5,
+      "description": "Validate test files"
+    },
+    "package.validate.storybook": {
+      "minLevel": 5,
+      "description": "Validate storybook configuration"
     }
   },
   "seed": {
@@ -71,8 +72,40 @@
   "storybook": {
     "stories": [
       {
-        "name": "Package_Validator",
-        "render": "validate"
+        "name": "Validate Package",
+        "type": "function",
+        "function": "validate_package",
+        "args": ["packages/json_script_example"],
+        "argControls": {
+          "packagePath": {
+            "type": "text",
+            "default": "packages/json_script_example"
+          }
+        }
+      },
+      {
+        "name": "Validate Metadata",
+        "type": "function",
+        "function": "validate_metadata",
+        "args": ["packages/json_script_example"],
+        "argControls": {
+          "packagePath": {
+            "type": "text",
+            "default": "packages/json_script_example"
+          }
+        }
+      },
+      {
+        "name": "Validate Scripts",
+        "type": "function",
+        "function": "validate_scripts",
+        "args": ["packages/json_script_example"],
+        "argControls": {
+          "packagePath": {
+            "type": "text",
+            "default": "packages/json_script_example"
+          }
+        }
       }
     ]
   }
