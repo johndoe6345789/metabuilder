@@ -324,13 +324,24 @@ const SchemaEditor: React.FC = () => (
             <label style={{ fontSize: '0.875rem', fontWeight: 500 }}>Fields</label>
             <button
               style={{
-                padding: '0.25rem 0.75rem',
+                padding: '0.375rem 0.75rem',
                 backgroundColor: 'var(--color-primary)',
                 color: 'var(--color-primary-foreground)',
                 border: 'none',
                 borderRadius: '0.375rem',
                 cursor: 'pointer',
-                fontSize: '0.75rem'
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                transition: 'all 200ms ease-in-out',
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-1px)'
+                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.15)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.1)'
               }}
             >
               Add Field
