@@ -1,0 +1,58 @@
+operations:
+  create:
+    description: "Create a new Lua script"
+    input:
+      required: [name, code, is_sandboxed, allowed_globals, timeout_ms, created_by]
+      optional: [description]
+    output: LuaScript
+    acl_required: ["lua_script:create"]
+    validation:
+      - name_unique: "Lua script name must be unique"
+      - timeout_range: "Timeout must be between 100 and 30000 ms"
+    errors:
+      - CONFLICT: "Lua script name already exists"
+      - VALIDATION_ERROR: "Invalid script input"
+      
+  read:
+    description: "Get Lua script by ID"
+    input:
+      required: [id]
+    output: LuaScript
+    acl_required: ["lua_script:read"]
+    errors:
+      - NOT_FOUND: "Lua script not found"
+      
+  update:
+    description: "Update Lua script"
+    input:
+      required: [id]
+      optional: [name, description, code, is_sandboxed, allowed_globals, timeout_ms]
+    output: LuaScript
+    acl_required: ["lua_script:update"]
+    validation:
+      - timeout_range: "Timeout must be between 100 and 30000 ms"
+    errors:
+      - NOT_FOUND: "Lua script not found"
+      - CONFLICT: "Lua script name already exists"
+      - VALIDATION_ERROR: "Invalid script update"
+      
+  delete:
+    description: "Delete Lua script"
+    input:
+      required: [id]
+    output: boolean
+    acl_required: ["lua_script:delete"]
+    errors:
+      - NOT_FOUND: "Lua script not found"
+      
+  list:
+    description: "List Lua scripts with filtering and pagination"
+    input:
+      optional: [created_by, is_sandboxed, page, limit, sort]
+    output: LuaScript[]
+    acl_required: ["lua_script:read"]
+    pagination: true
+    max_limit: 100
+    default_limit: 20
+    errors:
+      - VALIDATION_ERROR: "Invalid pagination parameters"

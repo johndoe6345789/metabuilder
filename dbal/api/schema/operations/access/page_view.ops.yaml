@@ -1,0 +1,66 @@
+operations:
+  create:
+    description: "Create new page"
+    input:
+      required: [slug, title, level, layout]
+      optional: [description, is_active]
+    output: PageView
+    acl_required: ["page:create"]
+    validation:
+      - slug_unique: "Page slug must be unique"
+      - slug_format: "Slug must be URL-safe"
+      - level_valid: "Level must be 1-5"
+    errors:
+      - CONFLICT: "Page with this slug already exists"
+      - VALIDATION_ERROR: "Invalid input"
+      
+  read:
+    description: "Get page by ID or slug"
+    input:
+      optional: [id, slug]
+    output: PageView
+    acl_required: []
+    public: true
+    errors:
+      - NOT_FOUND: "Page not found"
+      - VALIDATION_ERROR: "Must provide id or slug"
+      
+  update:
+    description: "Update page"
+    input:
+      required: [id]
+      optional: [slug, title, description, level, layout, is_active]
+    output: PageView
+    acl_required: ["page:update"]
+    errors:
+      - NOT_FOUND: "Page not found"
+      - CONFLICT: "Slug already in use"
+      
+  delete:
+    description: "Delete page"
+    input:
+      required: [id]
+    output: boolean
+    acl_required: ["page:delete"]
+    cascade: true
+    errors:
+      - NOT_FOUND: "Page not found"
+      
+  list:
+    description: "List pages with filtering"
+    input:
+      optional: [level, is_active, page, limit, sort]
+    output: PageView[]
+    acl_required: []
+    public: true
+    pagination: true
+    errors: []
+      
+  get_by_level:
+    description: "Get all pages for a specific level"
+    input:
+      required: [level]
+    output: PageView[]
+    acl_required: []
+    public: true
+    errors: []

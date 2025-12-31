@@ -1,0 +1,141 @@
+capabilities:
+  description: "Backend adapter capabilities matrix"
+  
+  adapters:
+    prisma:
+      display_name: "Prisma ORM"
+      description: "Multi-database ORM with migrations"
+      version: "6.3+"
+      features:
+        transactions: true
+        nested_transactions: true
+        joins: true
+        full_text_search: false
+        ttl: false
+        json_queries: true
+        aggregations: true
+        relations: true
+        migrations: true
+        schema_introspection: true
+        connection_pooling: true
+        read_replicas: false
+      supported_databases:
+        - postgresql
+        - mysql
+        - sqlite
+        - sqlserver
+        - mongodb
+        - cockroachdb
+      limitations:
+        - "Full-text search depends on database"
+        - "TTL not natively supported"
+      performance:
+        bulk_insert: excellent
+        bulk_update: good
+        complex_queries: excellent
+        
+    sqlite:
+      display_name: "SQLite Direct"
+      description: "Embedded SQL database"
+      version: "3.40+"
+      features:
+        transactions: true
+        nested_transactions: true
+        joins: true
+        full_text_search: true
+        ttl: false
+        json_queries: true
+        aggregations: true
+        relations: true
+        migrations: manual
+        schema_introspection: true
+        connection_pooling: false
+        read_replicas: false
+      supported_databases:
+        - sqlite
+      limitations:
+        - "Single writer at a time"
+        - "No connection pooling"
+        - "TTL requires manual cleanup"
+      performance:
+        bulk_insert: good
+        bulk_update: good
+        complex_queries: good
+        
+    mongodb:
+      display_name: "MongoDB Driver"
+      description: "Document database"
+      version: "6.0+"
+      features:
+        transactions: true
+        nested_transactions: false
+        joins: false
+        full_text_search: true
+        ttl: true
+        json_queries: true
+        aggregations: true
+        relations: false
+        migrations: manual
+        schema_introspection: false
+        connection_pooling: true
+        read_replicas: true
+      supported_databases:
+        - mongodb
+      limitations:
+        - "No native joins (use $lookup)"
+        - "No foreign keys"
+        - "Schema-less (validation optional)"
+      performance:
+        bulk_insert: excellent
+        bulk_update: excellent
+        complex_queries: good
+
+  feature_matrix:
+    transactions:
+      description: "ACID transaction support"
+      supported_by: [prisma, sqlite, mongodb]
+      required_for: ["Multi-step operations", "Data consistency"]
+      
+    joins:
+      description: "SQL-style JOIN operations"
+      supported_by: [prisma, sqlite]
+      fallback: "Multiple queries with in-memory join"
+      
+    full_text_search:
+      description: "Full-text search capabilities"
+      supported_by: [sqlite, mongodb]
+      fallback: "LIKE queries or external search engine"
+      
+    ttl:
+      description: "Automatic expiration of records"
+      supported_by: [mongodb]
+      fallback: "Manual cleanup job"
+      
+    json_queries:
+      description: "Query JSON fields"
+      supported_by: [prisma, sqlite, mongodb]
+      
+    aggregations:
+      description: "Aggregate functions (COUNT, SUM, etc.)"
+      supported_by: [prisma, sqlite, mongodb]
+      
+    relations:
+      description: "Foreign key relationships"
+      supported_by: [prisma, sqlite]
+      
+    migrations:
+      description: "Schema migration support"
+      supported_by: [prisma]
+      manual: [sqlite, mongodb]
+
+  capability_detection:
+    runtime_check: true
+    negotiation: true
+    graceful_degradation: true
+    
+  version_compatibility:
+    min_api_version: "1.0"
+    current_api_version: "1.0"
+    breaking_changes:
+      - version: "2.0"
+        changes: ["TBD"]

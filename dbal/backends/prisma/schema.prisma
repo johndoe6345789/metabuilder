@@ -1,0 +1,132 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  role      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  workflows     Workflow[]
+  luaScripts    LuaScript[]
+  installedPackages Package[]
+}
+
+model Credential {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  passwordHash String
+  firstLogin   Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  token        String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  lastActivity DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model PageView {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  title       String
+  description String?
+  level       Int
+  layout      String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  components ComponentHierarchy[]
+  
+  @@index([level])
+  @@index([isActive])
+}
+
+model ComponentHierarchy {
+  id            String   @id @default(uuid())
+  pageId        String
+  parentId      String?
+  componentType String
+  order         Int      @default(0)
+  props         String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  page   PageView               @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  parent ComponentHierarchy?    @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
+  children ComponentHierarchy[] @relation("ParentChild")
+  
+  @@index([pageId])
+  @@index([parentId])
+  @@index([pageId, order])
+}
+
+model Workflow {
+  id            String   @id @default(uuid())
+  name          String   @unique
+  description   String?
+  trigger       String
+  triggerConfig String
+  steps         String
+  isActive      Boolean  @default(true)
+  createdBy     String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  creator User @relation(fields: [createdBy], references: [id])
+  
+  @@index([trigger])
+  @@index([isActive])
+}
+
+model LuaScript {
+  id             String   @id @default(uuid())
+  name           String   @unique
+  description    String?
+  code           String
+  isSandboxed    Boolean  @default(true)
+  allowedGlobals String
+  timeoutMs      Int      @default(5000)
+  createdBy      String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  creator User @relation(fields: [createdBy], references: [id])
+  
+  @@index([isSandboxed])
+}
+
+model Package {
+  id          String    @id @default(uuid())
+  name        String
+  version     String
+  description String?
+  author      String
+  manifest    String
+  isInstalled Boolean   @default(false)
+  installedAt DateTime?
+  installedBy String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  installer User? @relation(fields: [installedBy], references: [id])
+  
+  @@unique([name, version])
+  @@index([isInstalled])
+}
