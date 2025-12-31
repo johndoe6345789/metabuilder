@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/json-script-test-parameters.schema.json",
+  "title": "JSON Script Test Parameters",
+  "description": "Test data organized by category for parameterized testing",
+  "type": "object",
+  "description": "Each property is a test function name, containing categories of test cases",
+  "patternProperties": {
+    "^test_": {
+      "type": "object",
+      "description": "Test categories for a specific test function",
+      "patternProperties": {
+        ".*": {
+          "type": "array",
+          "description": "Test cases in this category",
+          "items": {
+            "type": "object",
+            "required": ["desc", "input"],
+            "properties": {
+              "desc": {
+                "type": "string",
+                "description": "Test case description"
+              },
+              "input": {
+                "type": "object",
+                "description": "Test input data"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

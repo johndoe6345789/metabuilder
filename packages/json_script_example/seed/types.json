@@ -1,8 +1,8 @@
 {
+  "$schema": "./types.schema.json",
   "schema_version": "2.1.0",
   "package": "json_script_example",
   "description": "Type definitions for json_script_example package",
-
   "types": [
     {
       "id": "arithmetic_result",
@@ -11,11 +11,26 @@
       "exported": true,
       "description": "Result of arithmetic operations",
       "properties": {
-        "add": {"type": "number", "description": "Sum of two numbers"},
-        "subtract": {"type": "number", "description": "Difference of two numbers"},
-        "multiply": {"type": "number", "description": "Product of two numbers"},
-        "divide": {"type": "number", "description": "Quotient of two numbers"},
-        "modulo": {"type": "number", "description": "Remainder after division"}
+        "add": {
+          "type": "number",
+          "description": "Sum of two numbers"
+        },
+        "subtract": {
+          "type": "number",
+          "description": "Difference of two numbers"
+        },
+        "multiply": {
+          "type": "number",
+          "description": "Product of two numbers"
+        },
+        "divide": {
+          "type": "number",
+          "description": "Quotient of two numbers"
+        },
+        "modulo": {
+          "type": "number",
+          "description": "Remainder after division"
+        }
       }
     },
     {
@@ -25,12 +40,24 @@
       "exported": true,
       "description": "Result of comparison operations",
       "properties": {
-        "equal": {"type": "boolean"},
-        "notEqual": {"type": "boolean"},
-        "lessThan": {"type": "boolean"},
-        "greaterThan": {"type": "boolean"},
-        "lessOrEqual": {"type": "boolean"},
-        "greaterOrEqual": {"type": "boolean"}
+        "equal": {
+          "type": "boolean"
+        },
+        "notEqual": {
+          "type": "boolean"
+        },
+        "lessThan": {
+          "type": "boolean"
+        },
+        "greaterThan": {
+          "type": "boolean"
+        },
+        "lessOrEqual": {
+          "type": "boolean"
+        },
+        "greaterOrEqual": {
+          "type": "boolean"
+        }
       }
     },
     {
@@ -40,9 +67,18 @@
       "exported": true,
       "description": "Result of logical operations",
       "properties": {
-        "and": {"type": "any", "description": "Result of AND operation (returns last truthy or first falsy)"},
-        "or": {"type": "any", "description": "Result of OR operation (returns first truthy or last falsy)"},
-        "not": {"type": "boolean", "description": "Logical negation"}
+        "and": {
+          "type": "any",
+          "description": "Result of AND operation (returns last truthy or first falsy)"
+        },
+        "or": {
+          "type": "any",
+          "description": "Result of OR operation (returns first truthy or last falsy)"
+        },
+        "not": {
+          "type": "boolean",
+          "description": "Logical negation"
+        }
       }
     },
     {
@@ -52,8 +88,14 @@
       "exported": true,
       "description": "Result of unary operations",
       "properties": {
-        "negate": {"type": "number", "description": "Negated number"},
-        "plus": {"type": "number", "description": "Unary plus (converts to number)"}
+        "negate": {
+          "type": "number",
+          "description": "Negated number"
+        },
+        "plus": {
+          "type": "number",
+          "description": "Unary plus (converts to number)"
+        }
       }
     },
     {
@@ -63,10 +105,18 @@
       "exported": true,
       "description": "Complete demonstration of all operators",
       "properties": {
-        "arithmetic": {"type": "ArithmeticResult"},
-        "comparison": {"type": "ComparisonResult"},
-        "logical": {"type": "LogicalResult"},
-        "unary": {"type": "UnaryResult"}
+        "arithmetic": {
+          "type": "ArithmeticResult"
+        },
+        "comparison": {
+          "type": "ComparisonResult"
+        },
+        "logical": {
+          "type": "LogicalResult"
+        },
+        "unary": {
+          "type": "UnaryResult"
+        }
       }
     },
     {
@@ -76,12 +126,30 @@
       "exported": true,
       "description": "Result from all_expressions function",
       "properties": {
-        "sum": {"type": "number", "description": "Sum of a + b"},
-        "diff": {"type": "number", "description": "Difference of a - b"},
-        "product": {"type": "number", "description": "Product of a * b"},
-        "max": {"type": "number", "description": "Maximum of a and b"},
-        "bothPositive": {"type": "boolean", "description": "True if both a and b are positive"},
-        "message": {"type": "string", "description": "Template literal with interpolated values"}
+        "sum": {
+          "type": "number",
+          "description": "Sum of a + b"
+        },
+        "diff": {
+          "type": "number",
+          "description": "Difference of a - b"
+        },
+        "product": {
+          "type": "number",
+          "description": "Product of a * b"
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum of a and b"
+        },
+        "bothPositive": {
+          "type": "boolean",
+          "description": "True if both a and b are positive"
+        },
+        "message": {
+          "type": "string",
+          "description": "Template literal with interpolated values"
+        }
       }
     },
     {
@@ -91,10 +159,22 @@
       "exported": true,
       "description": "Result from all_statements function",
       "properties": {
-        "count": {"type": "number", "description": "Number of items processed"},
-        "sum": {"type": "number", "description": "Sum of all items"},
-        "average": {"type": "number", "description": "Average of all items"},
-        "error": {"type": "string | null", "description": "Error message if any occurred"}
+        "count": {
+          "type": "number",
+          "description": "Number of items processed"
+        },
+        "sum": {
+          "type": "number",
+          "description": "Sum of all items"
+        },
+        "average": {
+          "type": "number",
+          "description": "Average of all items"
+        },
+        "error": {
+          "type": "string | null",
+          "description": "Error message if any occurred"
+        }
       }
     },
     {
@@ -104,10 +184,22 @@
       "exported": true,
       "description": "Person object structure",
       "properties": {
-        "name": {"type": "string", "required": true},
-        "age": {"type": "number", "required": true},
-        "email": {"type": "string", "required": true},
-        "active": {"type": "boolean", "required": true}
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "age": {
+          "type": "number",
+          "required": true
+        },
+        "email": {
+          "type": "string",
+          "required": true
+        },
+        "active": {
+          "type": "boolean",
+          "required": true
+        }
       }
     },
     {
@@ -117,9 +209,18 @@
       "exported": true,
       "description": "Server configuration object",
       "properties": {
-        "host": {"type": "string", "description": "Server hostname"},
-        "port": {"type": "number", "description": "Server port"},
-        "protocol": {"type": "string", "description": "Protocol (http/https)"}
+        "host": {
+          "type": "string",
+          "description": "Server hostname"
+        },
+        "port": {
+          "type": "number",
+          "description": "Server port"
+        },
+        "protocol": {
+          "type": "string",
+          "description": "Protocol (http/https)"
+        }
       }
     },
     {
@@ -129,8 +230,13 @@
       "exported": true,
       "description": "Application configuration",
       "properties": {
-        "server": {"type": "ServerConfig"},
-        "features": {"type": "string[]", "description": "Enabled feature flags"}
+        "server": {
+          "type": "ServerConfig"
+        },
+        "features": {
+          "type": "string[]",
+          "description": "Enabled feature flags"
+        }
       }
     },
     {
@@ -140,10 +246,22 @@
       "exported": true,
       "description": "Result from data_structures function",
       "properties": {
-        "numbers": {"type": "number[]", "description": "Array of numbers"},
-        "person": {"type": "Person", "description": "Person object"},
-        "config": {"type": "AppConfig", "description": "Configuration object"},
-        "extractedName": {"type": "string", "description": "Name extracted from person object"}
+        "numbers": {
+          "type": "number[]",
+          "description": "Array of numbers"
+        },
+        "person": {
+          "type": "Person",
+          "description": "Person object"
+        },
+        "config": {
+          "type": "AppConfig",
+          "description": "Configuration object"
+        },
+        "extractedName": {
+          "type": "string",
+          "description": "Name extracted from person object"
+        }
       }
     },
     {
@@ -152,7 +270,13 @@
       "type": "string",
       "exported": true,
       "description": "Value classification",
-      "enum": ["negative", "zero", "small", "medium", "large"]
+      "enum": [
+        "negative",
+        "zero",
+        "small",
+        "medium",
+        "large"
+      ]
     },
     {
       "id": "test_case_input",
@@ -161,9 +285,18 @@
       "exported": true,
       "description": "Generic test case input with expected result",
       "properties": {
-        "a": {"type": "number", "description": "First operand"},
-        "b": {"type": "number", "description": "Second operand"},
-        "expected": {"type": "any", "description": "Expected result"}
+        "a": {
+          "type": "number",
+          "description": "First operand"
+        },
+        "b": {
+          "type": "number",
+          "description": "Second operand"
+        },
+        "expected": {
+          "type": "any",
+          "description": "Expected result"
+        }
       }
     },
     {
@@ -173,10 +306,23 @@
       "exported": true,
       "description": "Test execution result",
       "properties": {
-        "passed": {"type": "boolean", "required": true, "description": "Whether test passed"},
-        "actual": {"type": "any", "description": "Actual result"},
-        "expected": {"type": "any", "description": "Expected result"},
-        "error": {"type": "string | null", "description": "Error message if test failed"}
+        "passed": {
+          "type": "boolean",
+          "required": true,
+          "description": "Whether test passed"
+        },
+        "actual": {
+          "type": "any",
+          "description": "Actual result"
+        },
+        "expected": {
+          "type": "any",
+          "description": "Expected result"
+        },
+        "error": {
+          "type": "string | null",
+          "description": "Error message if test failed"
+        }
       }
     },
     {
@@ -197,8 +343,15 @@
       "exported": true,
       "description": "Result of validation operation",
       "properties": {
-        "valid": {"type": "boolean", "required": true, "description": "Whether input is valid"},
-        "errors": {"type": "ValidationErrors", "description": "Validation errors if any"}
+        "valid": {
+          "type": "boolean",
+          "required": true,
+          "description": "Whether input is valid"
+        },
+        "errors": {
+          "type": "ValidationErrors",
+          "description": "Validation errors if any"
+        }
       }
     },
     {
@@ -208,13 +361,18 @@
       "exported": true,
       "description": "Generic form input data",
       "properties": {
-        "name": {"type": "string"},
-        "age": {"type": "number"},
-        "email": {"type": "string"}
+        "name": {
+          "type": "string"
+        },
+        "age": {
+          "type": "number"
+        },
+        "email": {
+          "type": "string"
+        }
       }
     }
   ],
-
   "exports": {
     "types": [
       "ArithmeticResult",
