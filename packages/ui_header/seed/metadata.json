@@ -41,22 +41,24 @@
     },
     "header.view": {
       "minLevel": 1,
-      "description": "View application header"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "View application header",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "AppHeader",
+        "render": "header"
+      }
+    ]
   }
 }

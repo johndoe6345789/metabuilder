@@ -45,22 +45,28 @@
     },
     "dashboard.widgets.add": {
       "minLevel": 3,
-      "description": "Add dashboard widgets"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Add dashboard widgets",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "StatsCard",
+        "render": "stats"
+      },
+      {
+        "name": "DashboardLayout",
+        "render": "layout"
+      }
+    ]
   }
 }

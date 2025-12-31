@@ -35,22 +35,24 @@
   "permissions": {
     "footer.view": {
       "minLevel": 1,
-      "description": "View application footer"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "View application footer",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "AppFooter",
+        "render": "footer"
+      }
+    ]
   }
 }

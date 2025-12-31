@@ -55,22 +55,24 @@
     },
     "home.server.status": {
       "minLevel": 1,
-      "description": "View server status"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "View server status",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "HomePage",
+        "render": "home_ui"
+      }
+    ]
   }
 }
