@@ -44,5 +44,8 @@
       "minLevel": 4,
       "description": "Configure navigation menus"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

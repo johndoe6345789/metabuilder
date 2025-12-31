@@ -41,5 +41,8 @@
       "minLevel": 3,
       "description": "Configure stats grids"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

@@ -50,5 +50,8 @@
       "minLevel": 1,
       "description": "Filter table data"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

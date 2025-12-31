@@ -60,5 +60,8 @@
       "minLevel": 2,
       "description": "View CSS designer"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

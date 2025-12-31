@@ -52,5 +52,8 @@
       "minLevel": 5,
       "description": "View code in editor"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

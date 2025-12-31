@@ -43,5 +43,8 @@
       "minLevel": 2,
       "description": "Access auth-gated content"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

@@ -58,5 +58,8 @@
       "minLevel": 2,
       "description": "Create forum posts"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

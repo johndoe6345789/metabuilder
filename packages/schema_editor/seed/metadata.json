@@ -57,5 +57,8 @@
       "minLevel": 5,
       "description": "Run schema migrations"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

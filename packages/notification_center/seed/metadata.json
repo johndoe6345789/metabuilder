@@ -56,5 +56,8 @@
       "minLevel": 4,
       "description": "Broadcast notifications"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

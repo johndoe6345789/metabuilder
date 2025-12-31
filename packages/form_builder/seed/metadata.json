@@ -54,5 +54,8 @@
       "minLevel": 3,
       "description": "Create form definitions"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

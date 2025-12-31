@@ -36,5 +36,8 @@
       "minLevel": 1,
       "description": "View intro sections"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

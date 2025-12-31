@@ -79,5 +79,8 @@
       "minLevel": 2,
       "description": "Delete own posts"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

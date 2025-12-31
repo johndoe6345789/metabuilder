@@ -57,5 +57,8 @@
       "minLevel": 5,
       "description": "Edit workflows"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

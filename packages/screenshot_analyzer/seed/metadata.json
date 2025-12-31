@@ -61,5 +61,8 @@
       "minLevel": 5,
       "description": "Capture screenshots"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

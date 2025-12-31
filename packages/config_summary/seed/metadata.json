@@ -41,5 +41,8 @@
       "minLevel": 4,
       "description": "View configuration summaries"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

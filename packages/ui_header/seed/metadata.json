@@ -43,5 +43,8 @@
       "minLevel": 1,
       "description": "View application header"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

@@ -71,5 +71,8 @@
       }
     }
   },
-  "primary": true
+  "primary": true,
+  "seed": {
+    "styles": "seed/styles.json"
+  }
 }

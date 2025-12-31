@@ -37,5 +37,8 @@
       "minLevel": 1,
       "description": "View application footer"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

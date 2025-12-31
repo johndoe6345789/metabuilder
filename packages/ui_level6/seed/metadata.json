@@ -63,5 +63,8 @@
       "minLevel": 6,
       "description": "System administration"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

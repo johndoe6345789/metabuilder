@@ -56,5 +56,8 @@
       "minLevel": 3,
       "description": "Moderate content"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

@@ -37,5 +37,8 @@
       "minLevel": 1,
       "description": "Read permission levels"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

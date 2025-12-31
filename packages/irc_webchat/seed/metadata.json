@@ -72,5 +72,8 @@
       "minLevel": 3,
       "description": "Create IRC channels"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

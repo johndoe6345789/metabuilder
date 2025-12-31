@@ -30,5 +30,8 @@
       "minLevel": 3,
       "description": "View test results"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

@@ -37,5 +37,8 @@
       "minLevel": 3,
       "description": "Create quick guides"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

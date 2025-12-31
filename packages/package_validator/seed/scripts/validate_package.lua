@@ -2,6 +2,7 @@ local validate_metadata = require("validate_metadata")
 local validate_components = require("validate_components")
 local validate_package_structure = require("validate_package_structure")
 local validate_script_exports = require("validate_script_exports")
+local validate_styles = require("validate_styles")
 local format_results = require("format_results")
 
 --- Validates a complete package
@@ -93,6 +94,24 @@ local function validate_package(package_path, options)
     end
     for _, warn in ipairs(script_warnings) do
       table.insert(results.warnings, "Lua: " .. warn)
+    end
+  end
+
+  -- 5. Validate styles.json (optional)
+  if not options.skipStyles then
+    local styles_result = validate_styles(package_path)
+    if not styles_result.success then
+      results.valid = false
+    end
+    for _, msg in ipairs(styles_result.messages or {}) do
+      if styles_result.success then
+        table.insert(results.warnings, "Styles: " .. msg)
+      else
+        table.insert(results.errors, "Styles: " .. msg)
+      end
+    end
+    for _, warn in ipairs(styles_result.warnings or {}) do
+      table.insert(results.warnings, "Styles: " .. warn)
     end
   end
 

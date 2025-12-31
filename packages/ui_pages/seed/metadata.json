@@ -44,5 +44,8 @@
       "minLevel": 1,
       "description": "Access bundled UI pages"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

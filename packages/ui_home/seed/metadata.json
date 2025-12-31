@@ -57,5 +57,8 @@
       "minLevel": 1,
       "description": "View server status"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

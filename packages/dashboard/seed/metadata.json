@@ -47,5 +47,8 @@
       "minLevel": 3,
       "description": "Add dashboard widgets"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

@@ -58,5 +58,8 @@
       "minLevel": 2,
       "description": "View user dashboard"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

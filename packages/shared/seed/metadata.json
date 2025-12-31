@@ -28,5 +28,8 @@
       "minLevel": 0,
       "description": "Access shared type definitions"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

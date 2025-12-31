@@ -53,5 +53,8 @@
       "minLevel": 4,
       "description": "Edit roles"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

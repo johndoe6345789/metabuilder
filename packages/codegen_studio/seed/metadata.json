@@ -60,5 +60,8 @@
       "minLevel": 5,
       "description": "Generate package scaffolding"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

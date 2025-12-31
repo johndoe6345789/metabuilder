@@ -57,5 +57,8 @@
       "minLevel": 2,
       "description": "View streams"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

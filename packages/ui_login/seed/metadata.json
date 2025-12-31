@@ -45,5 +45,8 @@
       "minLevel": 1,
       "description": "View login page"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

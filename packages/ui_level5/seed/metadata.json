@@ -58,5 +58,8 @@
       "minLevel": 5,
       "description": "Manage packages"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

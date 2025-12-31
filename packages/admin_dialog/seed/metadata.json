@@ -37,5 +37,8 @@
       "minLevel": 4,
       "description": "Execute admin dialog actions"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }

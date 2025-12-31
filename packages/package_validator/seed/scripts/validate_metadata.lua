@@ -180,6 +180,25 @@ local function validate_metadata(metadata)
     end
   end
 
+  -- Validate seed section (optional)
+  if metadata.seed then
+    if type(metadata.seed) ~= "table" then
+      table.insert(errors, "seed must be an object")
+    else
+      if metadata.seed.styles then
+        if type(metadata.seed.styles) ~= "string" then
+          table.insert(errors, "seed.styles must be a string path")
+        end
+      end
+      -- Add other seed fields as needed
+      if metadata.seed.data then
+        if type(metadata.seed.data) ~= "string" then
+          table.insert(errors, "seed.data must be a string path")
+        end
+      end
+    end
+  end
+
   return #errors == 0, errors
 end
 

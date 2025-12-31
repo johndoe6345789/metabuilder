@@ -56,5 +56,8 @@
       "minLevel": 4,
       "description": "Ban users"
     }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
   }
 }
