@@ -16,6 +16,26 @@
     ]
   },
 
+  "imports": [
+    {
+      "from": "external:fs",
+      "import": ["readFile", "existsSync", "readdir", "statSync"]
+    },
+    {
+      "from": "external:path",
+      "import": ["join", "resolve", "basename", "dirname", "extname"]
+    },
+    {
+      "from": "external:JSON",
+      "import": ["parse", "stringify"]
+    },
+    {
+      "from": "external:ajv",
+      "import": ["compile", "validate"],
+      "optional": true
+    }
+  ],
+
   "functions": [
     {
       "id": "validate_package",

@@ -14,8 +14,49 @@ Following the MetaBuilder principle: **"everything goes in package, everything e
 
 - All validation logic is in `validator.json`
 - Validation functions are exported for use by other packages
-- Runtime environment provides file system APIs
+- External dependencies declared in `metadata.json`
 - No external configuration needed
+
+### External Dependencies
+
+The validator declares external dependencies in `metadata.json` under `externalDependencies`:
+
+**Required:**
+- **fs** - File system operations (readFile, existsSync, readdir, statSync)
+- **path** - Path manipulation utilities (join, resolve, basename, dirname, extname)
+- **JSON** - JSON parsing (parse, stringify)
+
+**Optional:**
+- **ajv** (v8.0.0+) - JSON Schema validator for validating against *.schema.json files
+
+These external dependencies are imported in validator.json using the `external:` prefix:
+```json
+"imports": [
+  {
+    "from": "external:fs",
+    "import": ["readFile", "existsSync", "readdir", "statSync"]
+  },
+  {
+    "from": "external:path",
+    "import": ["join", "resolve", "basename", "dirname", "extname"]
+  }
+]
+```
+
+### Permissions
+
+The package declares required permissions for accessing external APIs:
+- `fs.read` - Read files from the file system
+- `fs.list` - List directory contents
+- `fs.stat` - Get file metadata
+- `external.ajv` - Use AJV JSON Schema validator (optional)
+
+This permission-based approach enables:
+- **Security**: Fine-grained control over what packages can access
+- **Auditing**: Clear visibility into external API usage
+- **Flexibility**: Packages can request different external dependencies (e.g., databases, HTTP clients, parsers)
+- **Sandboxing**: Runtime can enforce permission boundaries
+- **npm Integration**: External dependencies can reference npm packages with version constraints
 
 ### Validation Functions
 
@@ -43,16 +84,13 @@ All functions exported from [seed/validator.json](seed/validator.json):
 
 The current implementation contains stub logic with TODO comments. Full implementation requires:
 
-1. **Runtime File System APIs**: The JSON script runtime needs to provide:
-   - `fs.readFile(path)` - Read file contents
-   - `fs.existsSync(path)` - Check if file exists
-   - `fs.readdir(path)` - List directory contents
-   - `path.join(...paths)` - Join path segments
-   - `JSON.parse(content)` - Parse JSON strings
+1. **External Dependency Resolution**: The runtime needs to provide the external dependencies declared in `externalDependencies`. These are imported via the `external:` prefix in the imports section.
 
-2. **JSON Schema Validation**: Integration with JSON schema validator for validating against *.schema.json files
+2. **Permission Enforcement**: The runtime should check that the package has the required permissions (`fs.read`, `fs.list`, `fs.stat`) before allowing file system access.
 
-3. **Reference Resolution**: Cross-file validation (e.g., exports match actual exported items, imports reference valid modules)
+3. **Reference Resolution**: Cross-file validation logic needs to be implemented (e.g., exports match actual exported items, imports reference valid modules)
+
+The architecture is complete - external dependencies are declared in metadata.json, imported in validator.json, and gated by permissions. When the runtime supports external dependency injection, the TODO sections can be replaced with actual validation logic.
 
 ## Type Definitions
 
