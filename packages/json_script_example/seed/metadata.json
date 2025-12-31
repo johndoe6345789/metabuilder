@@ -21,13 +21,11 @@
     "components": []
   },
   "tests": {
-    "scripts": [
-      "tests/expressions.test.lua",
-      "tests/statements.test.lua"
-    ],
-    "cases": [
-      "tests/expressions.cases.json",
-      "tests/statements.cases.json"
+    "parameterized": [
+      {
+        "logic": "tests/math.test.logic.json",
+        "parameters": "tests/math.test.parameters.json"
+      }
     ]
   },
   "permissions": {

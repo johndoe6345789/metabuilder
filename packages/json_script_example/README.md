@@ -224,25 +224,59 @@ local result = executor.load_and_execute(
 
 ## Running the Examples
 
-### Via Lua Require
+### JavaScript/Node.js
+```javascript
+const { executeFunction } = require('../shared/seed/scripts/runtime/script_executor.cjs');
+const fs = require('fs');
+
+const scriptJson = JSON.parse(fs.readFileSync('seed/script.json', 'utf-8'));
+const result = executeFunction(scriptJson, 'all_expressions', [10, 5]);
+console.log(result);
+// { sum: 15, diff: 5, product: 50, max: 10, bothPositive: true, ... }
+```
+
+### Lua
 ```lua
 local executor = require("shared.seed.scripts.runtime.script_executor")
 local json = require("json")
 
--- Load script.json
 local file = io.open("packages/json_script_example/seed/script.json", "r")
 local script_json = json.decode(file:read("*all"))
 file:close()
 
--- Run any function
 local result = executor.execute_function(script_json, "all_expressions", {10, 5})
 print(json.encode(result))
 ```
 
-### Via CLI (future)
+## Testing
+
+Run parameterized tests:
+
 ```bash
-metabuilder-cli package run json_script_example all_expressions 10 5
+cd packages/shared/seed/scripts/runtime
+
+node test_parameterized_cli.cjs \
+  ../../../../json_script_example/tests/math.test.logic.json \
+  ../../../../json_script_example/tests/math.test.parameters.json
 ```
+
+Output:
+```
+============================================================
+Parameterized Test Results
+============================================================
+
+📦 Function: test_add
+   8/8 tests passed
+
+  ✅ positive_numbers (3/3)
+  ✅ negative_numbers (3/3)
+  ✅ edge_cases (2/2)
+
+🎉 All parameterized tests passed!
+```
+
+See [tests/README.md](tests/README.md) for more information on testing.
 
 ## Performance Benchmarks
 
