@@ -42,9 +42,21 @@
     "auth.gate.access": {
       "minLevel": 2,
       "description": "Access auth-gated content"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

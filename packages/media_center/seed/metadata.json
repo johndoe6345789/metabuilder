@@ -108,7 +108,11 @@
       "title": "Now Playing",
       "icon": "SportsEsports",
       "minLevel": 2
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   ],
   "permissions": {
     "media.jobs.submit": {
@@ -158,7 +162,11 @@
     "media.retro.manage_cores": {
       "minLevel": 4,
       "description": "Install/remove emulator cores"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "settings": {
     "media_daemon_url": {
@@ -193,7 +201,11 @@
       ],
       "default": "auto",
       "description": "Default audio streaming quality (kbps)"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "tests": {
     "unit": [
@@ -208,5 +220,13 @@
   "primary": true,
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

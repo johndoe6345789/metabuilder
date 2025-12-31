@@ -57,9 +57,21 @@
     "forum.post.create": {
       "minLevel": 2,
       "description": "Create forum posts"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

@@ -71,9 +71,21 @@
     "irc.channel.create": {
       "minLevel": 3,
       "description": "Create IRC channels"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

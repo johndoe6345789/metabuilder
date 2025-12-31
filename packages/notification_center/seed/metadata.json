@@ -55,9 +55,21 @@
     "notifications.broadcast": {
       "minLevel": 4,
       "description": "Broadcast notifications"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

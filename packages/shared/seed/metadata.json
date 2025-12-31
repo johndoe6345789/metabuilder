@@ -27,9 +27,21 @@
     "shared.types.access": {
       "minLevel": 0,
       "description": "Access shared type definitions"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

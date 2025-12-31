@@ -57,9 +57,21 @@
     "package.validate.components": {
       "minLevel": 5,
       "description": "Validate component definitions"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

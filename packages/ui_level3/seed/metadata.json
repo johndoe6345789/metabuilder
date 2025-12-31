@@ -59,5 +59,19 @@
   },
   "seed": {
     "styles": "seed/styles.json"
+  },
+  "storybook": {
+    "stories": [
+      {
+        "type": "component",
+        "component": "Button",
+        "args": { "label": "Admin Button" }
+      },
+      {
+        "type": "component",
+        "component": "Card",
+        "args": { "title": "Admin Card" }
+      }
+    ]
   }
 }

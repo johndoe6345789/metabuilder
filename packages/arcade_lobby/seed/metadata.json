@@ -44,9 +44,21 @@
     "arcade.tournament.create": {
       "minLevel": 3,
       "description": "Create new tournaments"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

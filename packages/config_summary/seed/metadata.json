@@ -40,9 +40,21 @@
     "config.summary.view": {
       "minLevel": 4,
       "description": "View configuration summaries"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

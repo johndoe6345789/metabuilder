@@ -43,9 +43,21 @@
     "pages.bundle.access": {
       "minLevel": 1,
       "description": "Access bundled UI pages"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

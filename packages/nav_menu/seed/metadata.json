@@ -43,9 +43,21 @@
     "nav.menu.configure": {
       "minLevel": 4,
       "description": "Configure navigation menus"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

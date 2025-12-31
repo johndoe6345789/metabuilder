@@ -36,9 +36,21 @@
     "permissions.level.read": {
       "minLevel": 1,
       "description": "Read permission levels"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

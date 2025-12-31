@@ -41,9 +41,21 @@
     "github.workflow.trigger": {
       "minLevel": 3,
       "description": "Trigger workflow runs"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

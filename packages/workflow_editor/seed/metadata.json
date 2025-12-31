@@ -56,9 +56,21 @@
     "workflow.edit": {
       "minLevel": 5,
       "description": "Edit workflows"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

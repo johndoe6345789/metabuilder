@@ -68,11 +68,27 @@
       "LogFilters": {
         "enabled": true,
         "minLevel": 3
-      }
-    }
+      ,
+  "storybook": {
+    "stories": []
+  }
+}
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "primary": true,
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

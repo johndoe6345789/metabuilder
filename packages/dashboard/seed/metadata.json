@@ -46,9 +46,21 @@
     "dashboard.widgets.add": {
       "minLevel": 3,
       "description": "Add dashboard widgets"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

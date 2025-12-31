@@ -57,9 +57,21 @@
     "level2.dashboard.view": {
       "minLevel": 2,
       "description": "View user dashboard"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

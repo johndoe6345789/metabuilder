@@ -57,9 +57,21 @@
     "level5.packages.manage": {
       "minLevel": 5,
       "description": "Manage packages"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

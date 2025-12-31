@@ -44,9 +44,21 @@
     "smtp.test": {
       "minLevel": 5,
       "description": "Test SMTP connection"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }

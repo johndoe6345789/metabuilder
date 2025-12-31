@@ -78,9 +78,21 @@
     "social.post.delete": {
       "minLevel": 2,
       "description": "Delete own posts"
-    }
+    ,
+  "storybook": {
+    "stories": []
+  }
+}
   },
   "seed": {
     "styles": "seed/styles.json"
+  ,
+  "storybook": {
+    "stories": []
+  }
+}
+,
+  "storybook": {
+    "stories": []
   }
 }
