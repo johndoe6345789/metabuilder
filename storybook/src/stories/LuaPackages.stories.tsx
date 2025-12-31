@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { LuaPackageRenderer } from '../components/LuaPackageRenderer'
-import { executeMockRender, createDefaultContext, listMockPackages } from '../mocks/packages'
-import type { LuaRenderContext } from '../types/lua-types'
+// Import Lua loader from main frontend
+import { loadLuaUIPackage } from '../../../frontends/nextjs/src/lib/lua/ui/load-lua-ui-package'
 
 /**
  * The LuaPackageRenderer renders Lua UI component trees to React.
