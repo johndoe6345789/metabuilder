@@ -48,22 +48,24 @@
     },
     "datatable.filter": {
       "minLevel": 1,
-      "description": "Filter table data"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Filter table data",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "DataGrid",
+        "render": "component"
+      }
+    ]
   }
 }

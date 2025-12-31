@@ -58,22 +58,24 @@
     },
     "css.designer.view": {
       "minLevel": 2,
-      "description": "View CSS designer"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "View CSS designer",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "CSSDesigner",
+        "render": "component"
+      }
+    ]
   }
 }
