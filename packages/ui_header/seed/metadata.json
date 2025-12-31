@@ -2,7 +2,7 @@
   "packageId": "ui_header",
   "name": "App Header",
   "version": "1.0.0",
-  "description": "Shared navigation header with user avatar and actions",
+  "description": "Shared navigation header with user avatar, actions, and landing page nav variant",
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
@@ -14,7 +14,8 @@
   ],
   "exports": {
     "components": [
-      "AppHeader"
+      "app_header",
+      "landing_nav"
     ],
     "scripts": [
       "header"
@@ -31,7 +32,7 @@
       "tests/components.cases.json"
     ]
   },
-  "minLevel": 2,
+  "minLevel": 1,
   "primary": false,
   "permissions": {
     "header.user.menu": {
@@ -39,7 +40,7 @@
       "description": "Access user menu"
     },
     "header.view": {
-      "minLevel": 2,
+      "minLevel": 1,
       "description": "View application header"
     }
   }
