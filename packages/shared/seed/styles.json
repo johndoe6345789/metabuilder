@@ -1,0 +1,82 @@
+[
+  {
+    "id": "global_base_theme",
+    "type": "global",
+    "category": "theme-variables",
+    "description": "Base theme color variables using OKLCH color space",
+    "priority": 1,
+    "css": ":root {\n  --background: oklch(0.98 0 0);\n  --foreground: oklch(0.25 0 0);\n\n  --card: oklch(1 0 0);\n  --card-foreground: oklch(0.25 0 0);\n  --popover: oklch(1 0 0);\n  --popover-foreground: oklch(0.25 0 0);\n\n  --primary: oklch(0.45 0.15 265);\n  --primary-foreground: oklch(0.98 0 0);\n  --secondary: oklch(0.65 0.02 250);\n  --secondary-foreground: oklch(0.25 0 0);\n  --muted: oklch(0.95 0.01 250);\n  --muted-foreground: oklch(0.5 0.01 250);\n  --accent: oklch(0.75 0.15 195);\n  --accent-foreground: oklch(0.2 0.05 250);\n  --destructive: oklch(0.55 0.22 25);\n  --destructive-foreground: oklch(0.98 0 0);\n\n  --border: oklch(0.88 0.01 250);\n  --input: oklch(0.88 0.01 250);\n  --ring: oklch(0.75 0.15 195);\n\n  --sidebar: oklch(0.25 0.03 250);\n  --sidebar-foreground: oklch(0.85 0.01 250);\n  --sidebar-primary: oklch(0.75 0.15 195);\n  --sidebar-primary-foreground: oklch(0.98 0 0);\n  --sidebar-accent: oklch(0.35 0.04 250);\n  --sidebar-accent-foreground: oklch(0.85 0.01 250);\n  --sidebar-border: oklch(0.35 0.04 250);\n  --sidebar-ring: oklch(0.75 0.15 195);\n\n  --radius: 0.5rem;\n\n  /* RGB equivalents for use in rgba() */\n  --color-primary-rgb: 74, 58, 199;\n  --color-accent-rgb: 56, 189, 248;\n}"
+  },
+  {
+    "id": "global_tailwind_theme",
+    "type": "global",
+    "category": "theme-mapping",
+    "description": "Tailwind CSS theme variable mappings",
+    "priority": 2,
+    "css": "@theme {\n  --color-background: var(--background);\n  --color-foreground: var(--foreground);\n  --color-card: var(--card);\n  --color-card-foreground: var(--card-foreground);\n  --color-popover: var(--popover);\n  --color-popover-foreground: var(--popover-foreground);\n  --color-primary: var(--primary);\n  --color-primary-foreground: var(--primary-foreground);\n  --color-secondary: var(--secondary);\n  --color-secondary-foreground: var(--secondary-foreground);\n  --color-muted: var(--muted);\n  --color-muted-foreground: var(--muted-foreground);\n  --color-accent: var(--accent);\n  --color-accent-foreground: var(--accent-foreground);\n  --color-destructive: var(--destructive);\n  --color-destructive-foreground: var(--destructive-foreground);\n  --color-border: var(--border);\n  --color-input: var(--input);\n  --color-ring: var(--ring);\n\n  --color-sidebar: var(--sidebar);\n  --color-sidebar-foreground: var(--sidebar-foreground);\n  --color-sidebar-primary: var(--sidebar-primary);\n  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);\n  --color-sidebar-accent: var(--sidebar-accent);\n  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);\n  --color-sidebar-border: var(--sidebar-border);\n  --color-sidebar-ring: var(--sidebar-ring);\n\n  --radius-sm: calc(var(--radius) * 0.5);\n  --radius-md: var(--radius);\n  --radius-lg: calc(var(--radius) * 1.5);\n  --radius-xl: calc(var(--radius) * 2);\n  --radius-2xl: calc(var(--radius) * 3);\n  --radius-full: 9999px;\n}"
+  },
+  {
+    "id": "global_typography",
+    "type": "global",
+    "category": "typography",
+    "description": "Global typography settings and font families",
+    "priority": 3,
+    "css": "body {\n  font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\n\nh1, h2, h3, h4, h5, h6 {\n  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;\n}\n\ncode, pre, .font-mono {\n  font-family: 'JetBrains Mono', 'Courier New', monospace;\n}"
+  },
+  {
+    "id": "global_base_styles",
+    "type": "global",
+    "category": "base",
+    "description": "Global base styles and resets",
+    "priority": 4,
+    "css": "* {\n  border-color: var(--border);\n}\n\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%;\n}\n\n#root {\n  min-height: 100%;\n  display: flex;\n  flex-direction: column;\n}"
+  },
+  {
+    "id": "utility_flex_center",
+    "type": "utility",
+    "category": "layout",
+    "className": "flex-center",
+    "description": "Flexbox center utility",
+    "css": ".flex-center {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}"
+  },
+  {
+    "id": "utility_text_gradient",
+    "type": "utility",
+    "category": "text",
+    "className": "text-gradient",
+    "description": "Gradient text utility",
+    "css": ".text-gradient {\n  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);\n  background-clip: text;\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  color: transparent;\n}"
+  },
+  {
+    "id": "utility_glass_effect",
+    "type": "utility",
+    "category": "effects",
+    "className": "glass-effect",
+    "description": "Glassmorphism effect utility",
+    "css": ".glass-effect {\n  background: rgba(255, 255, 255, 0.8);\n  backdrop-filter: blur(10px);\n  -webkit-backdrop-filter: blur(10px);\n}"
+  },
+  {
+    "id": "animation_fade_in",
+    "type": "animation",
+    "category": "animations",
+    "className": "fade-in",
+    "description": "Fade in animation",
+    "css": "@keyframes fadeIn {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n\n.fade-in {\n  animation: fadeIn 0.3s ease-in-out;\n}"
+  },
+  {
+    "id": "animation_slide_up",
+    "type": "animation",
+    "category": "animations",
+    "className": "slide-up",
+    "description": "Slide up animation",
+    "css": "@keyframes slideUp {\n  from {\n    transform: translateY(20px);\n    opacity: 0;\n  }\n  to {\n    transform: translateY(0);\n    opacity: 1;\n  }\n}\n\n.slide-up {\n  animation: slideUp 0.4s ease-out;\n}"
+  },
+  {
+    "id": "responsive_container",
+    "type": "utility",
+    "category": "layout",
+    "className": "container-responsive",
+    "description": "Responsive container utility",
+    "css": ".container-responsive {\n  width: 100%;\n  max-width: 1280px;\n  margin-left: auto;\n  margin-right: auto;\n  padding-left: 1rem;\n  padding-right: 1rem;\n}\n\n@media (min-width: 640px) {\n  .container-responsive {\n    padding-left: 1.5rem;\n    padding-right: 1.5rem;\n  }\n}\n\n@media (min-width: 1024px) {\n  .container-responsive {\n    padding-left: 2rem;\n    padding-right: 2rem;\n  }\n}"
+  }
+]
