@@ -1,156 +1,110 @@
 # Package Validator
 
-A comprehensive Lua-based validation system for MetaBuilder packages. Validates JSON schemas, Lua files, folder structure, and naming conventions.
+JSON-based package validator for modern JSON script packages. Validates package structure including metadata, scripts, types, components, and tests.
 
-## Features
+## Overview
 
-- **Metadata Validation**: Validates `metadata.json` files for correct structure and required fields
-- **Component Validation**: Validates `components.json` files with nested layout structures
-- **Lua File Validation**: Checks Lua syntax, module patterns, and code quality
-- **Folder Structure Validation**: Ensures proper package organization and file placement
-- **Naming Convention Validation**: Validates package, script, and component naming
-- **Comprehensive Error Reporting**: Provides detailed error messages and warnings
-- **Test Coverage**: Includes comprehensive test suite for all validation rules
+The package_validator has been rewritten to work with JSON-based packages instead of Lua. All validation logic is defined in [seed/validator.json](seed/validator.json) using the JSON script format.
 
-## Package Structure
+## Architecture
 
-```
-package_validator/
-├── seed/
-│   ├── metadata.json          # Package metadata
-│   ├── components.json        # Component definitions (empty for this package)
-│   └── scripts/
-│       ├── init.lua                  # Main entry point
-│       ├── validate.lua              # Validation orchestrator
-│       ├── metadata_schema.lua       # Metadata validation rules
-│       ├── component_schema.lua      # Component validation rules
-│       ├── lua_validator.lua         # Lua file validation
-│       ├── structure_validator.lua   # Folder structure validation
-│       └── tests/
-│           ├── metadata.test.lua
-│           ├── component.test.lua
-│           ├── validate.test.lua
-│           ├── lua_validator.test.lua
-│           └── structure_validator.test.lua
-├── static_content/
-│   └── icon.svg
-└── examples/
-    └── validate_audit_log.lua
-```
+### Package-Centric Design
+
+Following the MetaBuilder principle: **"everything goes in package, everything else is a loader"**
+
+- All validation logic is in `validator.json`
+- Validation functions are exported for use by other packages
+- Runtime environment provides file system APIs
+- No external configuration needed
+
+### Validation Functions
+
+All functions exported from [seed/validator.json](seed/validator.json):
+
+- **validate_package** - Validates entire package structure
+- **validate_metadata** - Validates metadata.json
+- **validate_scripts** - Validates JSON script files
+- **validate_types** - Validates types.json
+- **validate_components** - Validates components.json
+- **validate_tests** - Validates test files
+- **validate_storybook** - Validates storybook configuration
+
+## Current Status
+
+### ✅ Completed
+
+- Created validator.json with all validation function signatures
+- Added comprehensive docstrings to all functions
+- Defined ValidationResult, ValidationError, and ValidationWarning types in types.json
+- Updated metadata.json to export new JSON-based validators
+- Added Storybook integration for testing validators
+
+### ⚠️ Implementation Notes
+
+The current implementation contains stub logic with TODO comments. Full implementation requires:
+
+1. **Runtime File System APIs**: The JSON script runtime needs to provide:
+   - `fs.readFile(path)` - Read file contents
+   - `fs.existsSync(path)` - Check if file exists
+   - `fs.readdir(path)` - List directory contents
+   - `path.join(...paths)` - Join path segments
+   - `JSON.parse(content)` - Parse JSON strings
+
+2. **JSON Schema Validation**: Integration with JSON schema validator for validating against *.schema.json files
+
+3. **Reference Resolution**: Cross-file validation (e.g., exports match actual exported items, imports reference valid modules)
+
+## Type Definitions
+
+See [seed/types.json](seed/types.json) for all validation-related types:
+
+- `ValidationResult` - Result structure with valid/errors/warnings/details
+- `ValidationError` - Error with file/line/code/message/severity
+- `ValidationWarning` - Warning with file/code/message
+- `PackageMetadata` - Structure of metadata.json
+- `ScriptFile` - Structure of script.json files
+- `TypeDefinition` - Structure of type definitions
+- `ComponentDefinition` - Structure of component definitions
 
 ## Usage
 
-### Validate a Complete Package
-
-```lua
-local package_validator = require("init")
-
--- Validate a package by ID (runs all validators)
-local results = package_validator.validate_package("audit_log")
-
--- Check if validation passed
-if results.valid then
-  print("Package is valid!")
-else
-  print("Validation failed:")
-  for _, error in ipairs(results.errors) do
-    print("  - " .. error)
-  end
-end
-```
-
-### Validate with Options
-
-```lua
-local package_validator = require("init")
-
--- Skip specific validators
-local results = package_validator.validate_package("audit_log", {
-  skipStructure = true,  -- Skip folder structure validation
-  skipLua = true         -- Skip Lua file validation
-})
-```
-
-### Validate Metadata Only
-
-```lua
-local package_validator = require("init")
-
-local metadata = {
-  packageId = "my_package",
-  name = "My Package",
-  version = "1.0.0",
-  description = "A test package",
-  author = "MetaBuilder",
-  category = "ui"
+```javascript
+// Validate entire package
+const result = validate_package('packages/json_script_example');
+if (result.valid) {
+  console.log('✓ Package is valid');
+} else {
+  result.errors.forEach(err => {
+    console.error(`${err.file}: ${err.message}`);
+  });
 }
 
-local valid, errors = package_validator.validate_metadata(metadata)
+// Validate specific aspects
+const metadataResult = validate_metadata('packages/json_script_example');
+const scriptsResult = validate_scripts('packages/json_script_example');
+const typesResult = validate_types('packages/json_script_example');
 ```
 
-### Validate Components Only
+## Storybook
 
-```lua
-local package_validator = require("init")
+The package includes Storybook stories for testing validation functions interactively. See the "Storybook" tab in the MetaBuilder UI.
 
-local components = {
-  {
-    id = "my_component",
-    type = "MyComponent",
-    layout = {
-      type = "Box",
-      children = {}
-    }
-  }
-}
+Stories:
+- **Validate Package** - Test full package validation
+- **Validate Metadata** - Test metadata.json validation
+- **Validate Scripts** - Test script file validation
 
-local valid, errors = package_validator.validate_components(components)
-```
+## Migration from Lua
 
-### Validate Lua Files
+This package previously used Lua-based validation. The Lua files have been replaced with JSON script equivalents:
 
-```lua
-local lua_validator = require("lua_validator")
-
--- Check syntax
-local lua_code = [[
-  local M = {}
-  function M.test()
-    return true
-  end
-  return M
-]]
-
-local valid, errors = lua_validator.validate_lua_syntax("test.lua", lua_code)
-
--- Check structure and patterns
-local warnings = lua_validator.validate_lua_structure("test.lua", lua_code)
-
--- Check code quality
-local quality_warnings = lua_validator.check_lua_quality("test.lua", lua_code)
-```
-
-## Validation Rules
-
-### Metadata (metadata.json)
-
-**Required Fields:**
-- `packageId` (string, lowercase and underscores only)
-- `name` (string)
-- `version` (string, semantic versioning: X.Y.Z)
-- `description` (string)
-- `author` (string)
-- `category` (string)
-
-**Optional Fields:**
-- `dependencies` (array of strings)
-- `devDependencies` (array of strings) - Development-only dependencies like `package_validator`
-- `exports` (object with `components`, `scripts`, `pages` arrays)
-- `minLevel` (number, 1-6)
-- `bindings` (object with `dbal`, `browser` booleans)
-- `icon` (string)
-- `tags` (array)
-- `requiredHooks` (array)
+| Old (Lua) | New (JSON Script) |
+|-----------|-------------------|
+| validate.lua | validate_package function |
+| metadata_schema.lua | validate_metadata function |
+| lua_validator.lua | *(removed - JSON only)* |
+| structure_validator.lua | *(integrated into validate_package)* |
+| component_schema.lua | validate_components function |
 
 ### Components (components.json)
 
