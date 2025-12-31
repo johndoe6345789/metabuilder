@@ -1,0 +1,6 @@
+{
+  "component_fields": [
+    { "field": "id", "type": "string", "desc": "unique identifier" },
+    { "field": "type", "type": "string", "desc": "component type" }
+  ]
+}

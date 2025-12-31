@@ -1,0 +1,95 @@
+{
+  "packageId": "dbal_demo",
+  "name": "DBAL Demo",
+  "version": "1.0.0",
+  "description": "DBAL Integration Demo - Demonstrates TypeScript DBAL client with MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "minLevel": 3,
+  "category": "demo",
+  "tags": [
+    "dbal",
+    "demo",
+    "kv-store",
+    "blob-storage",
+    "cache"
+  ],
+  "dependencies": [],
+  "devDependencies": [
+    "lua_test"
+  ],
+  "exports": {
+    "components": [
+      "DBALDemo",
+      "KVStorePanel",
+      "BlobStoragePanel",
+      "CachedDataPanel"
+    ],
+    "scripts": [
+      "init",
+      "kv_operations",
+      "blob_operations",
+      "cache_operations"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/kv_operations.test.lua",
+      "tests/cache_operations.test.lua",
+      "tests/blob_operations.test.lua"
+    ],
+    "cases": [
+      "tests/kv_operations.cases.json",
+      "tests/cache_operations.cases.json",
+      "tests/blob_operations.cases.json"
+    ]
+  },
+  "bindings": {
+    "dbal": true,
+    "browser": false
+  },
+  "requiredHooks": [
+    "dbal",
+    "kv_store",
+    "blob_storage",
+    "cached_data"
+  ],
+  "layout": "layout.json",
+  "permissions": {
+    "enabled": true,
+    "minLevel": 3,
+    "databaseRequired": true,
+    "components": {
+      "DBALDemo": {
+        "enabled": true,
+        "minLevel": 3,
+        "requireDatabase": true
+      },
+      "KVStorePanel": {
+        "enabled": true,
+        "minLevel": 3,
+        "requireDatabase": true,
+        "featureFlags": [
+          "kv_store_enabled"
+        ]
+      },
+      "BlobStoragePanel": {
+        "enabled": true,
+        "minLevel": 4,
+        "requireDatabase": true,
+        "featureFlags": [
+          "blob_storage_enabled"
+        ]
+      },
+      "CachedDataPanel": {
+        "enabled": true,
+        "minLevel": 3,
+        "requireDatabase": true
+      }
+    }
+  },
+  "primary": true,
+  "seed": {
+    "styles": "seed/styles.json"
+  }
+}

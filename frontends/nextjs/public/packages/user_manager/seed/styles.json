@@ -1,0 +1,11 @@
+[
+  {
+    "id": "user_manager_base",
+    "type": "component",
+    "category": "package",
+    "className": "user_manager",
+    "description": "Base styles for User Manager package",
+    "priority": 100,
+    "css": ".user_manager {\n  /* Add package-specific styles here */\n}"
+  }
+]

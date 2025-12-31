@@ -1,0 +1,602 @@
+{
+  "schema_version": "2.0.0",
+  "package": "ui_level3",
+
+  "tokens": {
+    "colors": {
+      "level3-primary": {
+        "type": "color",
+        "value": "oklch(0.65 0.18 35)",
+        "metadata": {
+          "name": "Level 3 Orange",
+          "category": "brand"
+        }
+      },
+      "level3-accent": {
+        "type": "color",
+        "value": "oklch(0.70 0.20 40)",
+        "metadata": {
+          "name": "Level 3 Accent Orange",
+          "category": "brand"
+        }
+      }
+    },
+    "spacing": {
+      "unit": {
+        "type": "length",
+        "value": { "number": 0.25, "unit": "rem" }
+      }
+    }
+  },
+
+  "selectors": [
+    {
+      "id": "button_base",
+      "predicate": {
+        "targetType": "Button",
+        "classes": ["button"],
+        "states": []
+      }
+    },
+    {
+      "id": "card_base",
+      "predicate": {
+        "targetType": "Card",
+        "classes": ["card"],
+        "states": []
+      }
+    },
+    {
+      "id": "table_base",
+      "predicate": {
+        "targetType": "Table",
+        "classes": ["table"],
+        "states": []
+      }
+    },
+    {
+      "id": "input_base",
+      "predicate": {
+        "targetType": "Input",
+        "classes": ["input"],
+        "states": []
+      }
+    },
+    {
+      "id": "admin_nav_selector",
+      "predicate": {
+        "targetType": "Nav",
+        "classes": ["admin-nav"],
+        "states": []
+      }
+    },
+    {
+      "id": "admin_panel_selector",
+      "predicate": {
+        "targetType": "Section",
+        "classes": ["admin-panel"],
+        "states": []
+      }
+    },
+    {
+      "id": "admin_logo_selector",
+      "predicate": {
+        "targetType": "Box",
+        "classes": ["admin-logo"],
+        "states": []
+      }
+    },
+    {
+      "id": "data_table_selector",
+      "predicate": {
+        "targetType": "Table",
+        "classes": ["data-table"],
+        "states": []
+      }
+    },
+    {
+      "id": "stat_card_selector",
+      "predicate": {
+        "targetType": "Card",
+        "classes": ["stat-card"],
+        "states": []
+      }
+    },
+    {
+      "id": "model_browser_selector",
+      "predicate": {
+        "targetType": "Card",
+        "classes": ["model-browser"],
+        "states": []
+      }
+    },
+    {
+      "id": "table_row_selector",
+      "predicate": {
+        "targetType": "TableRow",
+        "classes": ["table-row"],
+        "states": []
+      }
+    },
+    {
+      "id": "table_row_hover_selector",
+      "predicate": {
+        "targetType": "TableRow",
+        "classes": ["table-row"],
+        "states": ["hover"]
+      }
+    },
+    {
+      "id": "admin_title_selector",
+      "predicate": {
+        "targetType": "Text",
+        "classes": ["admin-title"],
+        "states": []
+      }
+    },
+    {
+      "id": "search_input_selector",
+      "predicate": {
+        "targetType": "Input",
+        "classes": ["search-input"],
+        "states": []
+      }
+    }
+  ],
+
+  "effects": [
+    {
+      "id": "admin_nav_sticky",
+      "properties": {
+        "position": {
+          "type": "keyword",
+          "value": "sticky"
+        },
+        "top": {
+          "type": "length",
+          "value": { "number": 0, "unit": "px" }
+        },
+        "zIndex": {
+          "type": "number",
+          "value": 50
+        }
+      }
+    },
+    {
+      "id": "admin_panel_layout",
+      "properties": {
+        "padding": {
+          "type": "responsive",
+          "breakpoints": {
+            "xs": { "value": 1, "unit": "rem" },
+            "sm": { "value": 1.5, "unit": "rem" },
+            "lg": { "value": 2, "unit": "rem" }
+          }
+        },
+        "maxWidth": {
+          "type": "length",
+          "value": { "number": 1536, "unit": "px" }
+        }
+      }
+    },
+    {
+      "id": "admin_logo_size",
+      "properties": {
+        "width": {
+          "type": "length",
+          "value": { "number": 32, "unit": "px" }
+        },
+        "height": {
+          "type": "length",
+          "value": { "number": 32, "unit": "px" }
+        },
+        "borderRadius": {
+          "type": "length",
+          "value": { "number": 0.5, "unit": "rem" }
+        }
+      }
+    },
+    {
+      "id": "stat_card_spacing",
+      "properties": {
+        "padding": {
+          "type": "spacing",
+          "value": { "multiplier": 6, "unit": "spacing.unit" }
+        }
+      }
+    },
+    {
+      "id": "model_browser_spacing",
+      "properties": {
+        "padding": {
+          "type": "spacing",
+          "value": { "multiplier": 6, "unit": "spacing.unit" }
+        }
+      }
+    },
+    {
+      "id": "table_row_effects",
+      "properties": {
+        "transition": {
+          "type": "keyword",
+          "value": "background-color"
+        }
+      }
+    },
+    {
+      "id": "table_row_hover_bg",
+      "properties": {
+        "backgroundColor": {
+          "type": "color",
+          "value": { "token": "muted" }
+        }
+      }
+    },
+    {
+      "id": "admin_title_typography",
+      "properties": {
+        "fontWeight": {
+          "type": "number",
+          "value": 700
+        },
+        "fontSize": {
+          "type": "responsive",
+          "breakpoints": {
+            "xs": { "value": 1.875, "unit": "rem" },
+            "md": { "value": 1.875, "unit": "rem" }
+          }
+        }
+      }
+    },
+    {
+      "id": "search_input_padding",
+      "properties": {
+        "paddingLeft": {
+          "type": "length",
+          "value": { "number": 2.25, "unit": "rem" }
+        }
+      }
+    },
+    {
+      "id": "stats_grid_layout",
+      "properties": {
+        "display": {
+          "type": "keyword",
+          "value": "grid"
+        },
+        "gap": {
+          "type": "length",
+          "value": { "number": 1.5, "unit": "rem" }
+        },
+        "gridTemplateColumns": {
+          "type": "responsive",
+          "breakpoints": {
+            "xs": { "value": "1fr" },
+            "md": { "value": "repeat(3, 1fr)" }
+          }
+        }
+      }
+    }
+  ],
+
+  "appearance": [
+    {
+      "id": "admin_nav_appearance",
+      "layers": [
+        {
+          "type": "background",
+          "properties": {
+            "color": { "token": "sidebar" }
+          }
+        },
+        {
+          "type": "border",
+          "properties": {
+            "width": { "value": 0, "unit": "px" },
+            "bottomWidth": { "value": 1, "unit": "px" },
+            "style": "solid",
+            "color": { "token": "border" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "admin_logo_appearance",
+      "layers": [
+        {
+          "type": "background",
+          "properties": {
+            "gradient": {
+              "type": "linear",
+              "angle": 135,
+              "stops": [
+                { "position": 0, "color": { "value": "#f97316" } },
+                { "position": 1, "color": { "value": "#ea580c" } }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "stat_card_appearance",
+      "layers": [
+        {
+          "type": "background",
+          "properties": {
+            "color": { "token": "card" }
+          }
+        },
+        {
+          "type": "border",
+          "properties": {
+            "width": { "value": 1, "unit": "px" },
+            "style": "solid",
+            "color": { "token": "border" },
+            "radius": { "value": 0.5, "unit": "rem" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "model_browser_appearance",
+      "layers": [
+        {
+          "type": "background",
+          "properties": {
+            "color": { "token": "card" }
+          }
+        },
+        {
+          "type": "border",
+          "properties": {
+            "width": { "value": 1, "unit": "px" },
+            "style": "solid",
+            "color": { "token": "border" },
+            "radius": { "value": 0.5, "unit": "rem" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "table_row_appearance",
+      "layers": [
+        {
+          "type": "border",
+          "properties": {
+            "width": { "value": 0, "unit": "px" },
+            "bottomWidth": { "value": 1, "unit": "px" },
+            "style": "solid",
+            "color": { "token": "border" }
+          }
+        }
+      ]
+    }
+  ],
+
+  "layouts": [
+    {
+      "id": "admin_nav_flex",
+      "type": "flex",
+      "constraints": {
+        "direction": "row",
+        "justify": "space-between",
+        "align": "center"
+      }
+    },
+    {
+      "id": "stats_grid",
+      "type": "grid",
+      "constraints": {
+        "columns": {
+          "type": "responsive",
+          "breakpoints": {
+            "xs": 1,
+            "md": 3
+          }
+        },
+        "gap": { "number": 1.5, "unit": "rem" }
+      }
+    },
+    {
+      "id": "logo_flex",
+      "type": "flex",
+      "constraints": {
+        "direction": "row",
+        "align": "center",
+        "gap": { "number": 0.5, "unit": "rem" }
+      }
+    }
+  ],
+
+  "transitions": [
+    {
+      "id": "table_row_hover_transition",
+      "trigger": { "state": "hover" },
+      "properties": ["backgroundColor"],
+      "duration": { "value": 150, "unit": "ms" },
+      "easing": "ease-in-out"
+    }
+  ],
+
+  "rules": [
+    {
+      "id": "rule_button",
+      "selector": "button_base",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 0 },
+        "sourceOrder": 1
+      },
+      "appearance": { "ref": "admin_logo_appearance" },
+      "enabled": true
+    },
+    {
+      "id": "rule_card",
+      "selector": "card_base",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 0 },
+        "sourceOrder": 2
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_table",
+      "selector": "table_base",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 0 },
+        "sourceOrder": 3
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_input",
+      "selector": "input_base",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 0 },
+        "sourceOrder": 4
+      },
+      "enabled": true
+    },
+    {
+      "id": "rule_admin_nav",
+      "selector": "admin_nav_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 10
+      },
+      "effects": { "ref": "admin_nav_sticky" },
+      "appearance": { "ref": "admin_nav_appearance" },
+      "enabled": true
+    },
+    {
+      "id": "rule_admin_panel",
+      "selector": "admin_panel_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 20
+      },
+      "effects": { "ref": "admin_panel_layout" },
+      "enabled": true
+    },
+    {
+      "id": "rule_admin_logo",
+      "selector": "admin_logo_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 30
+      },
+      "effects": { "ref": "admin_logo_size" },
+      "appearance": { "ref": "admin_logo_appearance" },
+      "enabled": true
+    },
+    {
+      "id": "rule_stat_card",
+      "selector": "stat_card_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 40
+      },
+      "effects": { "ref": "stat_card_spacing" },
+      "appearance": { "ref": "stat_card_appearance" },
+      "enabled": true
+    },
+    {
+      "id": "rule_model_browser",
+      "selector": "model_browser_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 50
+      },
+      "effects": { "ref": "model_browser_spacing" },
+      "appearance": { "ref": "model_browser_appearance" },
+      "enabled": true
+    },
+    {
+      "id": "rule_table_row",
+      "selector": "table_row_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 60
+      },
+      "effects": { "ref": "table_row_effects" },
+      "appearance": { "ref": "table_row_appearance" },
+      "transition": { "ref": "table_row_hover_transition" },
+      "enabled": true
+    },
+    {
+      "id": "rule_table_row_hover",
+      "selector": "table_row_hover_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 2, "types": 1 },
+        "sourceOrder": 61
+      },
+      "effects": { "ref": "table_row_hover_bg" },
+      "enabled": true
+    },
+    {
+      "id": "rule_admin_title",
+      "selector": "admin_title_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 70
+      },
+      "effects": { "ref": "admin_title_typography" },
+      "enabled": true
+    },
+    {
+      "id": "rule_search_input",
+      "selector": "search_input_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 80
+      },
+      "effects": { "ref": "search_input_padding" },
+      "enabled": true
+    }
+  ],
+
+  "environments": [
+    {
+      "id": "mobile",
+      "conditions": {
+        "viewport": {
+          "maxWidth": { "value": 768, "unit": "px" }
+        }
+      }
+    },
+    {
+      "id": "desktop",
+      "conditions": {
+        "viewport": {
+          "minWidth": { "value": 1024, "unit": "px" }
+        }
+      }
+    }
+  ]
+}

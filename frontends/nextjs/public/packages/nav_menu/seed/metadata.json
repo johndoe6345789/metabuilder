@@ -1,0 +1,51 @@
+{
+  "packageId": "nav_menu",
+  "name": "Navigation Menu",
+  "version": "1.0.0",
+  "description": "Sidebar, navigation menus, and breadcrumbs",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [
+    "ui_permissions"
+  ],
+  "devDependencies": [
+    "lua_test"
+  ],
+  "exports": {
+    "components": [
+      "Sidebar",
+      "NavigationMenu",
+      "Breadcrumbs"
+    ],
+    "scripts": [
+      "sidebar",
+      "menu"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
+    ]
+  },
+  "minLevel": 2,
+  "primary": false,
+  "permissions": {
+    "nav.menu.view": {
+      "minLevel": 2,
+      "description": "View navigation menus"
+    },
+    "nav.menu.configure": {
+      "minLevel": 4,
+      "description": "Configure navigation menus"
+    }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
+  }
+}

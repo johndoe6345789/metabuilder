@@ -1,0 +1,7 @@
+{
+  "scripts": [
+    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle" },
+    { "file": "sidebar.lua", "name": "sidebar", "category": "ui", "description": "Sidebar rendering" },
+    { "file": "menu.lua", "name": "menu", "category": "ui", "description": "Navigation menu" }
+  ]
+}

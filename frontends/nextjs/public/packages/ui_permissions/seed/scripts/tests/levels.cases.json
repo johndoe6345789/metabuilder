@@ -1,0 +1,17 @@
+{
+  "level_values": [
+    { "name": "PUBLIC", "value": 1 },
+    { "name": "USER", "value": 2 },
+    { "name": "MODERATOR", "value": 3 },
+    { "name": "ADMIN", "value": 4 },
+    { "name": "GOD", "value": 5 },
+    { "name": "SUPERGOD", "value": 6 }
+  ],
+  "level_hierarchy": [
+    { "lower": "PUBLIC", "higher": "USER" },
+    { "lower": "USER", "higher": "MODERATOR" },
+    { "lower": "MODERATOR", "higher": "ADMIN" },
+    { "lower": "ADMIN", "higher": "GOD" },
+    { "lower": "GOD", "higher": "SUPERGOD" }
+  ]
+}

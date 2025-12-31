@@ -1,0 +1,11 @@
+[
+  {
+    "id": "ui_permissions_base",
+    "type": "component",
+    "category": "package",
+    "className": "ui_permissions",
+    "description": "Base styles for Ui Permissions package",
+    "priority": 100,
+    "css": ".ui_permissions {\n  /* Add package-specific styles here */\n}"
+  }
+]

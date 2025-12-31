@@ -1,0 +1,41 @@
+{
+  "check": {
+    "unauthenticated": [
+      { "user": null, "requiredLevel": 1, "description": "null user with level requirement" },
+      { "user": null, "requiredLevel": null, "description": "null user without level requirement" }
+    ],
+    "authorized": [
+      { "userLevel": 1, "requiredLevel": 1, "description": "exact level match" },
+      { "userLevel": 2, "requiredLevel": 1, "description": "higher than required" },
+      { "userLevel": 5, "requiredLevel": 3, "description": "admin accessing moderator page" },
+      { "userLevel": 6, "requiredLevel": 1, "description": "supergod accessing public page" }
+    ],
+    "unauthorized": [
+      { "userLevel": 1, "requiredLevel": 2, "description": "public trying moderator" },
+      { "userLevel": 2, "requiredLevel": 3, "description": "user trying admin" },
+      { "userLevel": 3, "requiredLevel": 4, "description": "moderator trying admin" },
+      { "userLevel": 0, "requiredLevel": 1, "description": "guest trying public user" }
+    ],
+    "noLevelRequired": [
+      { "userLevel": 1, "description": "public user on open page" },
+      { "userLevel": 0, "description": "guest on open page" },
+      { "userLevel": 6, "description": "supergod on open page" }
+    ]
+  },
+  "wrap": {
+    "allowed": [
+      { "userLevel": 3, "requiredLevel": 2, "description": "moderator accessing user content" },
+      { "userLevel": 2, "requiredLevel": 2, "description": "user accessing user content" },
+      { "userLevel": 5, "requiredLevel": 1, "description": "god accessing public content" }
+    ],
+    "redirect": [
+      { "description": "redirect null user to login" },
+      { "description": "redirect missing user to login" }
+    ],
+    "denied": [
+      { "userLevel": 1, "requiredLevel": 3, "description": "public user denied mod area" },
+      { "userLevel": 2, "requiredLevel": 4, "description": "user denied admin area" },
+      { "userLevel": 3, "requiredLevel": 5, "description": "mod denied god area" }
+    ]
+  }
+}

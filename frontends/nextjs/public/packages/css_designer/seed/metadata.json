@@ -1,0 +1,67 @@
+{
+  "packageId": "css_designer",
+  "name": "CSS Designer",
+  "version": "1.0.0",
+  "description": "Visual CSS designer for creating and editing style overlays. Provides color pickers, font selectors, spacing controls, and exports to SCSS.",
+  "author": "MetaBuilder",
+  "category": "design",
+  "minLevel": 2,
+  "databaseRequired": false,
+  "dependencies": [
+    "shared"
+  ],
+  "devDependencies": [
+    "lua_test"
+  ],
+  "exports": {
+    "components": [
+      "CSSDesigner",
+      "ColorPaletteEditor",
+      "FontSelector",
+      "SpacingEditor",
+      "BorderEditor",
+      "ShadowEditor",
+      "StylePreview"
+    ]
+  },
+  "scripts": [
+    "init.lua",
+    "types.lua",
+    "colors/init.lua",
+    "colors/color_picker.lua",
+    "colors/palette.lua",
+    "fonts/init.lua",
+    "fonts/font_selector.lua",
+    "spacing/init.lua",
+    "spacing/spacing_editor.lua",
+    "borders/init.lua",
+    "borders/border_editor.lua",
+    "shadows/init.lua",
+    "shadows/shadow_editor.lua",
+    "export/init.lua",
+    "export/to_scss.lua",
+    "export/to_css.lua"
+  ],
+  "tests": [
+    "tests/colors.test.lua",
+    "tests/export.test.lua"
+  ],
+  "primary": true,
+  "permissions": {
+    "css.designer.export": {
+      "minLevel": 2,
+      "description": "Export to SCSS/CSS"
+    },
+    "css.designer.edit": {
+      "minLevel": 2,
+      "description": "Edit CSS styles"
+    },
+    "css.designer.view": {
+      "minLevel": 2,
+      "description": "View CSS designer"
+    }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
+  }
+}

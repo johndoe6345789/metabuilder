@@ -1,0 +1,64 @@
+{
+  "packageId": "workflow_editor",
+  "name": "Workflow Editor",
+  "version": "1.0.0",
+  "description": "Workflow editor and run status components",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "editors",
+  "dependencies": [],
+  "devDependencies": [
+    "lua_test"
+  ],
+  "exports": {
+    "scripts": [
+      "editor",
+      "status",
+      "run"
+    ],
+    "components": [
+      "WorkflowEditor",
+      "WorkflowRunCard",
+      "WorkflowRunStatus"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/status.test.lua",
+      "tests/editor.test.lua",
+      "tests/run.test.lua"
+    ],
+    "cases": [
+      "tests/status.cases.json",
+      "tests/editor.cases.json",
+      "tests/run.cases.json"
+    ]
+  },
+  "minLevel": 5,
+  "primary": true,
+  "permissions": {
+    "workflow.view": {
+      "minLevel": 5,
+      "description": "View workflows"
+    },
+    "workflow.create": {
+      "minLevel": 5,
+      "description": "Create workflows"
+    },
+    "workflow.delete": {
+      "minLevel": 5,
+      "description": "Delete workflows"
+    },
+    "workflow.run": {
+      "minLevel": 5,
+      "description": "Run workflows"
+    },
+    "workflow.edit": {
+      "minLevel": 5,
+      "description": "Edit workflows"
+    }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
+  }
+}

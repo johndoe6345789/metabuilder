@@ -1,0 +1,21 @@
+{
+  "name": "@metabuilder/github-tools",
+  "version": "1.0.0",
+  "description": "GitHub integration tools including Actions viewer, run analysis, and workflow management",
+  "main": "seed/index.ts",
+  "scripts": {
+    "test": "lua-test --package github_tools"
+  },
+  "keywords": [
+    "github",
+    "actions",
+    "ci-cd",
+    "workflow",
+    "metabuilder"
+  ],
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "devDependencies": {
+    "@metabuilder/lua-test": "workspace:*"
+  }
+}

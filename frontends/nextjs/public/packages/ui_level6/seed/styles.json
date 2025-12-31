@@ -1,0 +1,11 @@
+[
+  {
+    "id": "ui_level6_base",
+    "type": "component",
+    "category": "package",
+    "className": "ui_level6",
+    "description": "Base styles for Ui Level6 package",
+    "priority": 100,
+    "css": ".ui_level6 {\n  /* Add package-specific styles here */\n}"
+  }
+]

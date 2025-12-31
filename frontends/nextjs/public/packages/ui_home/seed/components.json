@@ -1,0 +1,1036 @@
+[
+  {
+    "id": "home_page",
+    "type": "Box",
+    "props": {
+      "component": "main",
+      "className": "home-page",
+      "sx": {
+        "minHeight": "100vh",
+        "background": "linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.05) 0%, transparent 50%, rgba(var(--color-accent-rgb), 0.05) 100%)"
+      }
+    },
+    "children": [
+      { "$ref": "hero_section" },
+      { "$ref": "features_section" },
+      { "$ref": "about_section" },
+      { "$ref": "contact_section" }
+    ]
+  },
+  {
+    "id": "hero_section",
+    "type": "Box",
+    "props": {
+      "component": "section",
+      "className": "hero-section",
+      "sx": {
+        "py": { "xs": 8, "md": 12 },
+        "px": { "xs": 2, "md": 4 }
+      }
+    },
+    "children": [
+      {
+        "id": "hero_container",
+        "type": "Container",
+        "props": {
+          "maxWidth": "lg",
+          "className": "hero-container"
+        },
+        "children": [
+          {
+            "id": "hero_content",
+            "type": "Stack",
+            "props": {
+              "spacing": 3,
+              "alignItems": "center",
+              "className": "hero-content",
+              "sx": {
+                "textAlign": "center"
+              }
+            },
+            "children": [
+              {
+                "id": "hero_title",
+                "type": "Text",
+                "props": {
+                  "variant": "h1",
+                  "children": "Build Anything, Visually",
+                  "className": "hero-title",
+                  "sx": {
+                    "fontWeight": 700,
+                    "fontSize": { "xs": "2.5rem", "sm": "3.5rem", "md": "4rem" },
+                    "lineHeight": 1.1,
+                    "background": "linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 50%, var(--color-primary) 100%)",
+                    "backgroundClip": "text",
+                    "WebkitBackgroundClip": "text",
+                    "WebkitTextFillColor": "transparent",
+                    "color": "transparent"
+                  }
+                },
+                "children": []
+              },
+              {
+                "id": "hero_subtitle",
+                "type": "Text",
+                "props": {
+                  "variant": "h5",
+                  "children": "A 6-level meta-architecture for creating entire applications through visual workflows, schema editors, and embedded scripting. No code required.",
+                  "className": "hero-subtitle",
+                  "sx": {
+                    "color": "text.secondary",
+                    "fontWeight": 400,
+                    "maxWidth": "600px",
+                    "fontSize": { "xs": "1rem", "md": "1.25rem" },
+                    "lineHeight": 1.6
+                  }
+                },
+                "children": []
+              },
+              {
+                "id": "hero_cta_group",
+                "type": "Stack",
+                "props": {
+                  "direction": { "xs": "column", "sm": "row" },
+                  "spacing": 2,
+                  "className": "hero-cta-group",
+                  "sx": {
+                    "mt": 2,
+                    "flexWrap": "wrap",
+                    "justifyContent": "center"
+                  }
+                },
+                "children": [
+                  {
+                    "id": "hero_cta_primary",
+                    "type": "Button",
+                    "props": {
+                      "variant": "contained",
+                      "color": "primary",
+                      "size": "large",
+                      "children": "Get Started",
+                      "className": "hero-cta-primary",
+                      "onClick": "{{onNavigate(2)}}",
+                      "sx": {
+                        "px": 4,
+                        "py": 1.5,
+                        "fontSize": "1rem",
+                        "fontWeight": 600,
+                        "borderRadius": 2
+                      }
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "hero_cta_secondary",
+                    "type": "Button",
+                    "props": {
+                      "variant": "outlined",
+                      "color": "primary",
+                      "size": "large",
+                      "children": "Watch Demo",
+                      "className": "hero-cta-secondary",
+                      "sx": {
+                        "px": 4,
+                        "py": 1.5,
+                        "fontSize": "1rem",
+                        "fontWeight": 600,
+                        "borderRadius": 2
+                      }
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "features_section",
+    "type": "Box",
+    "props": {
+      "component": "section",
+      "id": "features",
+      "className": "features-section",
+      "sx": {
+        "py": { "xs": 6, "md": 10 },
+        "px": { "xs": 2, "md": 4 }
+      }
+    },
+    "children": [
+      {
+        "id": "features_container",
+        "type": "Container",
+        "props": {
+          "maxWidth": "lg",
+          "className": "features-container"
+        },
+        "children": [
+          {
+            "id": "features_header",
+            "type": "Text",
+            "props": {
+              "variant": "h2",
+              "children": "Six Levels of Power",
+              "className": "features-header",
+              "sx": {
+                "fontWeight": 700,
+                "textAlign": "center",
+                "mb": 6
+              }
+            },
+            "children": []
+          },
+          {
+            "id": "features_grid",
+            "type": "Grid",
+            "props": {
+              "container": true,
+              "spacing": 3,
+              "className": "features-grid"
+            },
+            "children": [
+              {
+                "id": "feature_card_1_wrapper",
+                "type": "Grid",
+                "props": { "item": true, "xs": 12, "sm": 6, "lg": 4 },
+                "children": [{ "$ref": "feature_card_1" }]
+              },
+              {
+                "id": "feature_card_2_wrapper",
+                "type": "Grid",
+                "props": { "item": true, "xs": 12, "sm": 6, "lg": 4 },
+                "children": [{ "$ref": "feature_card_2" }]
+              },
+              {
+                "id": "feature_card_3_wrapper",
+                "type": "Grid",
+                "props": { "item": true, "xs": 12, "sm": 6, "lg": 4 },
+                "children": [{ "$ref": "feature_card_3" }]
+              },
+              {
+                "id": "feature_card_4_wrapper",
+                "type": "Grid",
+                "props": { "item": true, "xs": 12, "sm": 6, "lg": 4 },
+                "children": [{ "$ref": "feature_card_4" }]
+              },
+              {
+                "id": "feature_card_5_wrapper",
+                "type": "Grid",
+                "props": { "item": true, "xs": 12, "sm": 6, "lg": 4 },
+                "children": [{ "$ref": "feature_card_5" }]
+              },
+              {
+                "id": "feature_card_6_wrapper",
+                "type": "Grid",
+                "props": { "item": true, "xs": 12, "sm": 6, "lg": 4 },
+                "children": [{ "$ref": "feature_card_6" }]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "feature_card_1",
+    "type": "Card",
+    "props": {
+      "className": "feature-card feature-card--level1",
+      "sx": {
+        "height": "100%",
+        "border": 2,
+        "borderColor": "divider",
+        "transition": "border-color 0.2s ease-in-out, transform 0.2s ease-in-out",
+        "&:hover": {
+          "borderColor": "primary.main",
+          "transform": "translateY(-2px)"
+        }
+      }
+    },
+    "children": [
+      {
+        "id": "feature_card_1_header",
+        "type": "CardHeader",
+        "props": {
+          "className": "feature-card-header"
+        },
+        "children": [
+          {
+            "id": "feature_card_1_icon",
+            "type": "Box",
+            "props": {
+              "className": "feature-icon",
+              "sx": {
+                "width": 48,
+                "height": 48,
+                "borderRadius": 2,
+                "background": "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "color": "white",
+                "fontWeight": 700,
+                "fontSize": "1.25rem",
+                "mb": 2
+              }
+            },
+            "children": [
+              {
+                "id": "feature_card_1_icon_text",
+                "type": "Text",
+                "props": { "children": "1" },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "feature_card_1_title",
+            "type": "Text",
+            "props": {
+              "variant": "h6",
+              "children": "Public Website",
+              "sx": { "fontWeight": 600 }
+            },
+            "children": []
+          },
+          {
+            "id": "feature_card_1_desc",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "children": "Beautiful landing pages with responsive design and hamburger menus",
+              "sx": { "color": "text.secondary", "mt": 1 }
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "feature_card_1_content",
+        "type": "CardContent",
+        "props": { "className": "feature-card-content" },
+        "children": [
+          {
+            "id": "feature_card_1_body",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "children": "Perfect for marketing sites, portfolios, and public-facing content",
+              "sx": { "color": "text.secondary" }
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "feature_card_2",
+    "type": "Card",
+    "props": {
+      "className": "feature-card feature-card--level2",
+      "sx": {
+        "height": "100%",
+        "border": 2,
+        "borderColor": "divider",
+        "transition": "border-color 0.2s ease-in-out, transform 0.2s ease-in-out",
+        "&:hover": {
+          "borderColor": "primary.main",
+          "transform": "translateY(-2px)"
+        }
+      }
+    },
+    "children": [
+      {
+        "id": "feature_card_2_header",
+        "type": "CardHeader",
+        "props": { "className": "feature-card-header" },
+        "children": [
+          {
+            "id": "feature_card_2_icon",
+            "type": "Box",
+            "props": {
+              "className": "feature-icon",
+              "sx": {
+                "width": 48,
+                "height": 48,
+                "borderRadius": 2,
+                "background": "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "color": "white",
+                "fontWeight": 700,
+                "fontSize": "1.25rem",
+                "mb": 2
+              }
+            },
+            "children": [
+              {
+                "id": "feature_card_2_icon_text",
+                "type": "Text",
+                "props": { "children": "2" },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "feature_card_2_title",
+            "type": "Text",
+            "props": {
+              "variant": "h6",
+              "children": "User Area",
+              "sx": { "fontWeight": 600 }
+            },
+            "children": []
+          },
+          {
+            "id": "feature_card_2_desc",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "children": "Authenticated dashboards with profiles and comment systems",
+              "sx": { "color": "text.secondary", "mt": 1 }
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "feature_card_2_content",
+        "type": "CardContent",
+        "props": { "className": "feature-card-content" },
+        "children": [
+          {
+            "id": "feature_card_2_body",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "children": "User registration, profile management, and interactive features",
+              "sx": { "color": "text.secondary" }
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "feature_card_3",
+    "type": "Card",
+    "props": {
+      "className": "feature-card feature-card--level3",
+      "sx": {
+        "height": "100%",
+        "border": 2,
+        "borderColor": "divider",
+        "transition": "border-color 0.2s ease-in-out, transform 0.2s ease-in-out",
+        "&:hover": {
+          "borderColor": "primary.main",
+          "transform": "translateY(-2px)"
+        }
+      }
+    },
+    "children": [
+      {
+        "id": "feature_card_3_header",
+        "type": "CardHeader",
+        "props": { "className": "feature-card-header" },
+        "children": [
+          {
+            "id": "feature_card_3_icon",
+            "type": "Box",
+            "props": {
+              "className": "feature-icon",
+              "sx": {
+                "width": 48,
+                "height": 48,
+                "borderRadius": 2,
+                "background": "linear-gradient(135deg, #f97316 0%, #ea580c 100%)",
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "color": "white",
+                "fontWeight": 700,
+                "fontSize": "1.25rem",
+                "mb": 2
+              }
+            },
+            "children": [
+              {
+                "id": "feature_card_3_icon_text",
+                "type": "Text",
+                "props": { "children": "3" },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "feature_card_3_title",
+            "type": "Text",
+            "props": {
+              "variant": "h6",
+              "children": "Moderator Panel",
+              "sx": { "fontWeight": 600 }
+            },
+            "children": []
+          },
+          {
+            "id": "feature_card_3_desc",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "children": "Content moderation and user management tools",
+              "sx": { "color": "text.secondary", "mt": 1 }
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "feature_card_3_content",
+        "type": "CardContent",
+        "props": { "className": "feature-card-content" },
+        "children": [
+          {
+            "id": "feature_card_3_body",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "children": "Review content, manage reports, and maintain community standards",
+              "sx": { "color": "text.secondary" }
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "feature_card_4",
+    "type": "Card",
+    "props": {
+      "className": "feature-card feature-card--level4",
+      "sx": {
+        "height": "100%",
+        "border": 2,
+        "borderColor": "divider",
+        "transition": "border-color 0.2s ease-in-out, transform 0.2s ease-in-out",
+        "&:hover": {
+          "borderColor": "primary.main",
+          "transform": "translateY(-2px)"
+        }
+      }
+    },
+    "children": [
+      {
+        "id": "feature_card_4_header",
+        "type": "CardHeader",
+        "props": { "className": "feature-card-header" },
+        "children": [
+          {
+            "id": "feature_card_4_icon",
+            "type": "Box",
+            "props": {
+              "className": "feature-icon",
+              "sx": {
+                "width": 48,
+                "height": 48,
+                "borderRadius": 2,
+                "background": "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "color": "white",
+                "fontWeight": 700,
+                "fontSize": "1.25rem",
+                "mb": 2
+              }
+            },
+            "children": [
+              {
+                "id": "feature_card_4_icon_text",
+                "type": "Text",
+                "props": { "children": "4" },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "feature_card_4_title",
+            "type": "Text",
+            "props": {
+              "variant": "h6",
+              "children": "Admin Panel",
+              "sx": { "fontWeight": 600 }
+            },
+            "children": []
+          },
+          {
+            "id": "feature_card_4_desc",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "children": "Django-style data management with CRUD operations and filters",
+              "sx": { "color": "text.secondary", "mt": 1 }
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "feature_card_4_content",
+        "type": "CardContent",
+        "props": { "className": "feature-card-content" },
+        "children": [
+          {
+            "id": "feature_card_4_body",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "children": "Complete control over data models with list views and inline editing",
+              "sx": { "color": "text.secondary" }
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "feature_card_5",
+    "type": "Card",
+    "props": {
+      "className": "feature-card feature-card--level5",
+      "sx": {
+        "height": "100%",
+        "border": 2,
+        "borderColor": "divider",
+        "transition": "border-color 0.2s ease-in-out, transform 0.2s ease-in-out",
+        "&:hover": {
+          "borderColor": "primary.main",
+          "transform": "translateY(-2px)"
+        }
+      }
+    },
+    "children": [
+      {
+        "id": "feature_card_5_header",
+        "type": "CardHeader",
+        "props": { "className": "feature-card-header" },
+        "children": [
+          {
+            "id": "feature_card_5_icon",
+            "type": "Box",
+            "props": {
+              "className": "feature-icon",
+              "sx": {
+                "width": 48,
+                "height": 48,
+                "borderRadius": 2,
+                "background": "linear-gradient(135deg, #a855f7 0%, #9333ea 100%)",
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "color": "white",
+                "fontWeight": 700,
+                "fontSize": "1.25rem",
+                "mb": 2
+              }
+            },
+            "children": [
+              {
+                "id": "feature_card_5_icon_text",
+                "type": "Text",
+                "props": { "children": "5" },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "feature_card_5_title",
+            "type": "Text",
+            "props": {
+              "variant": "h6",
+              "children": "God-Tier Builder",
+              "sx": { "fontWeight": 600 }
+            },
+            "children": []
+          },
+          {
+            "id": "feature_card_5_desc",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "children": "Meta-builder with workflows, schemas, and Lua scripting",
+              "sx": { "color": "text.secondary", "mt": 1 }
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "feature_card_5_content",
+        "type": "CardContent",
+        "props": { "className": "feature-card-content" },
+        "children": [
+          {
+            "id": "feature_card_5_body",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "children": "Design and generate entire applications procedurally",
+              "sx": { "color": "text.secondary" }
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "feature_card_6",
+    "type": "Card",
+    "props": {
+      "className": "feature-card feature-card--level6",
+      "sx": {
+        "height": "100%",
+        "border": 2,
+        "borderColor": "warning.main",
+        "background": "linear-gradient(135deg, rgba(251, 191, 36, 0.05) 0%, rgba(234, 179, 8, 0.05) 100%)",
+        "transition": "border-color 0.2s ease-in-out, transform 0.2s ease-in-out",
+        "&:hover": {
+          "borderColor": "warning.dark",
+          "transform": "translateY(-2px)"
+        }
+      }
+    },
+    "children": [
+      {
+        "id": "feature_card_6_header",
+        "type": "CardHeader",
+        "props": { "className": "feature-card-header" },
+        "children": [
+          {
+            "id": "feature_card_6_icon",
+            "type": "Box",
+            "props": {
+              "className": "feature-icon",
+              "sx": {
+                "width": 48,
+                "height": 48,
+                "borderRadius": 2,
+                "background": "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "color": "white",
+                "fontWeight": 700,
+                "fontSize": "1.25rem",
+                "mb": 2
+              }
+            },
+            "children": [
+              {
+                "id": "feature_card_6_icon_text",
+                "type": "Text",
+                "props": { "children": "6" },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "feature_card_6_title_row",
+            "type": "Stack",
+            "props": {
+              "direction": "row",
+              "spacing": 1,
+              "alignItems": "center"
+            },
+            "children": [
+              {
+                "id": "feature_card_6_title",
+                "type": "Text",
+                "props": {
+                  "variant": "h6",
+                  "children": "Super God Panel",
+                  "sx": { "fontWeight": 600 }
+                },
+                "children": []
+              },
+              {
+                "id": "feature_card_6_badge",
+                "type": "Chip",
+                "props": {
+                  "label": "NEW",
+                  "size": "small",
+                  "sx": {
+                    "bgcolor": "rgba(245, 158, 11, 0.2)",
+                    "color": "warning.dark",
+                    "fontWeight": 600,
+                    "fontSize": "0.65rem"
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "feature_card_6_desc",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "children": "Multi-tenant control with power transfer and homepage management",
+              "sx": { "color": "text.secondary", "mt": 1 }
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "feature_card_6_content",
+        "type": "CardContent",
+        "props": { "className": "feature-card-content" },
+        "children": [
+          {
+            "id": "feature_card_6_body",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "children": "Supreme administrator access for multi-tenant architecture",
+              "sx": { "color": "text.secondary" }
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "about_section",
+    "type": "Box",
+    "props": {
+      "component": "section",
+      "id": "about",
+      "className": "about-section",
+      "sx": {
+        "py": { "xs": 6, "md": 10 },
+        "px": { "xs": 2, "md": 4 },
+        "bgcolor": "action.hover"
+      }
+    },
+    "children": [
+      {
+        "id": "about_container",
+        "type": "Container",
+        "props": {
+          "maxWidth": "md",
+          "className": "about-container"
+        },
+        "children": [
+          {
+            "id": "about_content",
+            "type": "Stack",
+            "props": {
+              "spacing": 3,
+              "alignItems": "center",
+              "className": "about-content",
+              "sx": {
+                "textAlign": "center"
+              }
+            },
+            "children": [
+              {
+                "id": "about_title",
+                "type": "Text",
+                "props": {
+                  "variant": "h2",
+                  "children": "About MetaBuilder",
+                  "className": "about-title",
+                  "sx": {
+                    "fontWeight": 700
+                  }
+                },
+                "children": []
+              },
+              {
+                "id": "about_description_1",
+                "type": "Text",
+                "props": {
+                  "variant": "body1",
+                  "children": "MetaBuilder is a revolutionary platform that lets you build entire application stacks through visual interfaces. From public websites to complex admin panels, everything is generated from declarative configurations, workflows, and embedded scripts.",
+                  "className": "about-description",
+                  "sx": {
+                    "color": "text.secondary",
+                    "fontSize": { "xs": "1rem", "md": "1.125rem" },
+                    "lineHeight": 1.7
+                  }
+                },
+                "children": []
+              },
+              {
+                "id": "about_description_2",
+                "type": "Text",
+                "props": {
+                  "variant": "body1",
+                  "children": "Whether you're a designer who wants to create without code, or a developer who wants to work at a higher level of abstraction, MetaBuilder adapts to your needs.",
+                  "className": "about-description",
+                  "sx": {
+                    "color": "text.secondary",
+                    "fontSize": { "xs": "1rem", "md": "1.125rem" },
+                    "lineHeight": 1.7
+                  }
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "contact_section",
+    "type": "Box",
+    "props": {
+      "component": "section",
+      "id": "contact",
+      "className": "contact-section",
+      "sx": {
+        "py": { "xs": 6, "md": 10 },
+        "px": { "xs": 2, "md": 4 }
+      }
+    },
+    "children": [
+      {
+        "id": "contact_container",
+        "type": "Container",
+        "props": {
+          "maxWidth": "sm",
+          "className": "contact-container"
+        },
+        "children": [
+          {
+            "id": "contact_card",
+            "type": "Card",
+            "props": {
+              "className": "contact-card",
+              "sx": {
+                "p": { "xs": 3, "md": 4 }
+              }
+            },
+            "children": [
+              {
+                "id": "contact_header",
+                "type": "Stack",
+                "props": {
+                  "spacing": 1,
+                  "alignItems": "center",
+                  "className": "contact-header",
+                  "sx": {
+                    "textAlign": "center",
+                    "mb": 4
+                  }
+                },
+                "children": [
+                  {
+                    "id": "contact_title",
+                    "type": "Text",
+                    "props": {
+                      "variant": "h4",
+                      "children": "Get in Touch",
+                      "className": "contact-title",
+                      "sx": { "fontWeight": 600 }
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "contact_subtitle",
+                    "type": "Text",
+                    "props": {
+                      "variant": "body2",
+                      "children": "Have questions? We'd love to hear from you.",
+                      "className": "contact-subtitle",
+                      "sx": { "color": "text.secondary" }
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "contact_form",
+                "type": "Stack",
+                "props": {
+                  "component": "form",
+                  "spacing": 3,
+                  "className": "contact-form"
+                },
+                "children": [
+                  {
+                    "id": "contact_field_name",
+                    "type": "TextField",
+                    "props": {
+                      "label": "Name",
+                      "placeholder": "Your name",
+                      "fullWidth": true,
+                      "variant": "outlined",
+                      "className": "contact-field contact-field--name"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "contact_field_email",
+                    "type": "TextField",
+                    "props": {
+                      "label": "Email",
+                      "placeholder": "your@email.com",
+                      "type": "email",
+                      "fullWidth": true,
+                      "variant": "outlined",
+                      "className": "contact-field contact-field--email"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "contact_field_message",
+                    "type": "TextField",
+                    "props": {
+                      "label": "Message",
+                      "placeholder": "Your message...",
+                      "fullWidth": true,
+                      "multiline": true,
+                      "rows": 4,
+                      "variant": "outlined",
+                      "className": "contact-field contact-field--message"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "contact_submit",
+                    "type": "Button",
+                    "props": {
+                      "variant": "contained",
+                      "color": "primary",
+                      "fullWidth": true,
+                      "size": "large",
+                      "children": "Send Message",
+                      "className": "contact-submit",
+                      "sx": {
+                        "py": 1.5,
+                        "fontWeight": 600
+                      }
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

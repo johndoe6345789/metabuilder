@@ -1,0 +1,98 @@
+# Schema definitions owned by audit_log package
+# Checksum is auto-generated and validated when multiple packages reference same entity
+
+entities:
+  - name: AuditLog
+    version: "1.0"
+    description: "Audit log entry for tracking user and system actions"
+    checksum: null  # Auto-computed from fields
+    
+    fields:
+      id:
+        type: cuid
+        primary: true
+        generated: true
+        
+      tenantId:
+        type: string
+        required: true
+        index: true
+        
+      userId:
+        type: string
+        nullable: true
+        index: true
+        
+      username:
+        type: string
+        nullable: true
+        
+      action:
+        type: string
+        required: true
+        index: true
+        enum: [create, update, delete, login, logout, access, execute, export, import]
+        
+      entity:
+        type: string
+        required: true
+        maxLength: 100
+        
+      entityId:
+        type: string
+        nullable: true
+        
+      oldValue:
+        type: string
+        nullable: true
+        description: "JSON: previous state"
+        
+      newValue:
+        type: string
+        nullable: true
+        description: "JSON: new state"
+        
+      ipAddress:
+        type: string
+        nullable: true
+        maxLength: 45
+        
+      userAgent:
+        type: string
+        nullable: true
+        
+      details:
+        type: string
+        nullable: true
+        description: "JSON: additional context"
+        
+      timestamp:
+        type: bigint
+        required: true
+        index: true
+
+    indexes:
+      - fields: [tenantId]
+      - fields: [userId]
+      - fields: [entity, entityId]
+      - fields: [action]
+      - fields: [timestamp]
+
+    relations:
+      - name: tenant
+        type: belongsTo
+        entity: Tenant
+        field: tenantId
+        onDelete: Cascade
+      - name: user
+        type: belongsTo
+        entity: User
+        field: userId
+        onDelete: SetNull
+        optional: true
+
+    acl:
+      create: [admin, system]
+      read: [admin, god]
+      update: [supergod]
+      delete: [supergod]

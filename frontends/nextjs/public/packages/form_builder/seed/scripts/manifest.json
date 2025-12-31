@@ -1,0 +1,8 @@
+{
+  "scripts": [
+    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle" },
+    { "file": "fields.lua", "name": "fields", "category": "ui", "description": "Form field renderers" },
+    { "file": "validate.lua", "name": "validate", "category": "validation", "description": "Field validation" },
+    { "file": "contact_form.lua", "name": "contact_form", "category": "forms", "description": "Contact form config and logic" }
+  ]
+}

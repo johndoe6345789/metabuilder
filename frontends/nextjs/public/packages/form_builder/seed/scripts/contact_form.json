@@ -1,0 +1,31 @@
+{
+  "title": "Contact form",
+  "description": "Collect a name, email, and short message with simple validation.",
+  "submitLabel": "Send message",
+  "successTitle": "Message sent",
+  "successMessage": "Thanks for reaching out. We will get back to you shortly.",
+  "fields": [
+    {
+      "name": "name",
+      "label": "Name",
+      "placeholder": "Your name",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "email",
+      "label": "Email",
+      "placeholder": "you@example.com",
+      "type": "email",
+      "required": true,
+      "helperText": "We will only use this to reply to your note."
+    },
+    {
+      "name": "message",
+      "label": "Message",
+      "placeholder": "How can we help?",
+      "type": "textarea",
+      "required": true
+    }
+  ]
+}

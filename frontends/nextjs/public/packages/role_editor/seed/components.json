@@ -1,0 +1,546 @@
+[
+  {
+    "id": "role_editor",
+    "type": "Card",
+    "name": "RoleEditor",
+    "description": "Main editor with role selection and permission toggles",
+    "props": {
+      "variant": "outlined",
+      "className": "role-editor"
+    },
+    "children": [
+      {
+        "id": "role_editor_header",
+        "type": "Box",
+        "props": {
+          "className": "role-editor-header",
+          "sx": {
+            "p": 3,
+            "borderBottom": 1,
+            "borderColor": "divider"
+          }
+        },
+        "children": [
+          {
+            "id": "role_editor_title_row",
+            "type": "Flex",
+            "props": {
+              "justifyContent": "space-between",
+              "alignItems": "center",
+              "sx": {
+                "mb": 2
+              }
+            },
+            "children": [
+              {
+                "id": "role_editor_title",
+                "type": "Text",
+                "props": {
+                  "variant": "h5",
+                  "fontWeight": "bold"
+                },
+                "children": []
+              },
+              {
+                "id": "role_editor_dirty_indicator",
+                "type": "Chip",
+                "props": {
+                  "label": "Unsaved Changes",
+                  "color": "warning",
+                  "size": "small",
+                  "visible": "{{state.isDirty}}"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "role_editor_role_selector",
+            "type": "Box",
+            "props": {
+              "sx": {
+                "display": "flex",
+                "gap": 2,
+                "flexWrap": "wrap"
+              }
+            },
+            "children": [
+              {
+                "id": "role_editor_role_grid",
+                "type": "Grid",
+                "props": {
+                  "container": true,
+                  "spacing": 2
+                },
+                "children": [
+                  {
+                    "id": "role_editor_role_item_template",
+                    "type": "Grid",
+                    "props": {
+                      "item": true,
+                      "xs": 12,
+                      "sm": 6,
+                      "md": 4,
+                      "lg": 2
+                    },
+                    "children": [
+                      {
+                        "id": "role_editor_role_card_ref",
+                        "type": "ComponentRef",
+                        "props": {
+                          "ref": "role_card",
+                          "bindRole": "{{item.role}}",
+                          "bindInfo": "{{item.info}}",
+                          "bindSelected": "{{state.selectedRole === item.role}}"
+                        },
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "role_editor_content",
+        "type": "Box",
+        "props": {
+          "className": "role-editor-content",
+          "sx": {
+            "p": 3
+          }
+        },
+        "children": [
+          {
+            "id": "role_editor_selected_role_header",
+            "type": "Flex",
+            "props": {
+              "alignItems": "center",
+              "gap": 2,
+              "sx": {
+                "mb": 3
+              }
+            },
+            "children": [
+              {
+                "id": "role_editor_selected_role_title",
+                "type": "Text",
+                "props": {
+                  "variant": "h6",
+                  "fontWeight": "bold"
+                },
+                "children": []
+              },
+              {
+                "id": "role_editor_selected_role_level",
+                "type": "Chip",
+                "props": {
+                  "label": "Level {{state.selectedRoleInfo.level}}",
+                  "color": "primary",
+                  "size": "small",
+                  "variant": "outlined"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "role_editor_permissions_container",
+            "type": "Box",
+            "props": {
+              "className": "role-editor-permissions"
+            },
+            "children": [
+              {
+                "id": "role_editor_permissions_title",
+                "type": "Text",
+                "props": {
+                  "variant": "subtitle1",
+                  "fontWeight": "bold",
+                  "sx": {
+                    "mb": 2
+                  }
+                },
+                "children": []
+              },
+              {
+                "id": "role_editor_permissions_list",
+                "type": "List",
+                "props": {
+                  "className": "permissions-list",
+                  "dense": true
+                },
+                "children": [
+                  {
+                    "id": "role_editor_permission_item_template",
+                    "type": "ListItem",
+                    "props": {
+                      "divider": true,
+                      "secondaryAction": true
+                    },
+                    "children": [
+                      {
+                        "id": "role_editor_permission_content",
+                        "type": "ListItemText",
+                        "props": {
+                          "primary": "{{item.name}}",
+                          "secondary": "{{item.description}}"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "role_editor_permission_inherited_chip",
+                        "type": "Chip",
+                        "props": {
+                          "label": "Inherited",
+                          "size": "small",
+                          "color": "secondary",
+                          "variant": "outlined",
+                          "visible": "{{item.inherited}}",
+                          "sx": {
+                            "mr": 2
+                          }
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "role_editor_permission_toggle",
+                        "type": "Switch",
+                        "props": {
+                          "checked": "{{item.enabled}}",
+                          "disabled": "{{props.readonly || item.inherited}}",
+                          "onChange": "togglePermission",
+                          "color": "primary"
+                        },
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "role_editor_category_sections",
+            "type": "Stack",
+            "props": {
+              "spacing": 3
+            },
+            "children": [
+              {
+                "id": "role_editor_category_template",
+                "type": "Card",
+                "props": {
+                  "variant": "outlined"
+                },
+                "children": [
+                  {
+                    "id": "role_editor_category_header",
+                    "type": "Box",
+                    "props": {
+                      "sx": {
+                        "p": 2,
+                        "backgroundColor": "action.hover"
+                      }
+                    },
+                    "children": [
+                      {
+                        "id": "role_editor_category_title",
+                        "type": "Text",
+                        "props": {
+                          "variant": "subtitle1",
+                          "fontWeight": "bold"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "role_editor_category_permissions",
+                    "type": "List",
+                    "props": {
+                      "dense": true
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "role_editor_footer",
+        "type": "Box",
+        "props": {
+          "className": "role-editor-footer",
+          "sx": {
+            "p": 2,
+            "borderTop": 1,
+            "borderColor": "divider",
+            "display": "flex",
+            "justifyContent": "flex-end",
+            "gap": 2
+          }
+        },
+        "children": [
+          {
+            "id": "role_editor_cancel_button",
+            "type": "Button",
+            "props": {
+              "variant": "outlined",
+              "color": "secondary",
+              "onClick": "handleCancel",
+              "disabled": "{{!state.isDirty}}"
+            },
+            "children": []
+          },
+          {
+            "id": "role_editor_save_button",
+            "type": "Button",
+            "props": {
+              "variant": "contained",
+              "color": "primary",
+              "onClick": "handleSave",
+              "disabled": "{{!state.isDirty || props.readonly}}"
+            },
+            "children": []
+          }
+        ]
+      }
+    ],
+    "scripts": {
+      "init": "role.initialize",
+      "selectRole": "role.selectRole",
+      "togglePermission": "role.togglePermission",
+      "handleSave": "role.saveChanges",
+      "handleCancel": "role.cancelChanges"
+    }
+  },
+  {
+    "id": "role_card",
+    "type": "Card",
+    "name": "RoleCard",
+    "description": "A card showing role name, level, and permission summary",
+    "props": {
+      "variant": "outlined",
+      "className": "role-card",
+      "sx": {
+        "cursor": "pointer",
+        "transition": "all 0.2s ease-in-out",
+        "&:hover": {
+          "borderColor": "primary.main",
+          "transform": "translateY(-2px)"
+        }
+      }
+    },
+    "children": [
+      {
+        "id": "role_card_content",
+        "type": "Box",
+        "props": {
+          "sx": {
+            "p": 2
+          }
+        },
+        "children": [
+          {
+            "id": "role_card_header",
+            "type": "Flex",
+            "props": {
+              "justifyContent": "space-between",
+              "alignItems": "flex-start",
+              "sx": {
+                "mb": 1
+              }
+            },
+            "children": [
+              {
+                "id": "role_card_badge_container",
+                "type": "Box",
+                "props": {
+                  "visible": "{{props.showBadge}}",
+                  "sx": {
+                    "fontSize": 24
+                  }
+                },
+                "children": [
+                  {
+                    "id": "role_card_badge_icon",
+                    "type": "Icon",
+                    "props": {
+                      "name": "{{props.info.badge}}",
+                      "color": "primary"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "role_card_level_chip",
+                "type": "Chip",
+                "props": {
+                  "label": "L{{props.info.level}}",
+                  "size": "small",
+                  "color": "default",
+                  "variant": "{{props.info.variant}}"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "role_card_title",
+            "type": "Text",
+            "props": {
+              "variant": "subtitle1",
+              "fontWeight": "bold",
+              "sx": {
+                "mb": 0.5
+              }
+            },
+            "children": []
+          },
+          {
+            "id": "role_card_blurb",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "color": "text.secondary",
+              "sx": {
+                "mb": 2
+              }
+            },
+            "children": []
+          },
+          {
+            "id": "role_card_highlights",
+            "type": "Stack",
+            "props": {
+              "spacing": 0.5
+            },
+            "children": [
+              {
+                "id": "role_card_highlight_template",
+                "type": "Flex",
+                "props": {
+                  "alignItems": "center",
+                  "gap": 1
+                },
+                "children": [
+                  {
+                    "id": "role_card_highlight_icon",
+                    "type": "Icon",
+                    "props": {
+                      "name": "Check",
+                      "size": "small",
+                      "color": "success"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "role_card_highlight_text",
+                    "type": "Text",
+                    "props": {
+                      "variant": "caption",
+                      "color": "text.secondary"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "role_card_selected_indicator",
+            "type": "Box",
+            "props": {
+              "visible": "{{props.selected}}",
+              "sx": {
+                "position": "absolute",
+                "top": 0,
+                "left": 0,
+                "right": 0,
+                "height": 3,
+                "backgroundColor": "primary.main",
+                "borderRadius": "4px 4px 0 0"
+              }
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "role_card_footer",
+        "type": "Box",
+        "props": {
+          "sx": {
+            "px": 2,
+            "py": 1,
+            "borderTop": 1,
+            "borderColor": "divider",
+            "backgroundColor": "action.hover"
+          }
+        },
+        "children": [
+          {
+            "id": "role_card_permission_summary",
+            "type": "Flex",
+            "props": {
+              "justifyContent": "space-between",
+              "alignItems": "center"
+            },
+            "children": [
+              {
+                "id": "role_card_permission_count",
+                "type": "Text",
+                "props": {
+                  "variant": "caption",
+                  "color": "text.secondary"
+                },
+                "children": []
+              },
+              {
+                "id": "role_card_permission_chips",
+                "type": "Flex",
+                "props": {
+                  "gap": 0.5
+                },
+                "children": [
+                  {
+                    "id": "role_card_own_chip",
+                    "type": "Chip",
+                    "props": {
+                      "label": "{{props.ownPermissionCount}}",
+                      "size": "small",
+                      "color": "primary",
+                      "variant": "filled"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "role_card_inherited_chip",
+                    "type": "Chip",
+                    "props": {
+                      "label": "+{{props.inheritedPermissionCount}}",
+                      "size": "small",
+                      "color": "secondary",
+                      "variant": "outlined",
+                      "visible": "{{props.inheritedPermissionCount > 0}}"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "scripts": {
+      "onClick": "role.handleCardClick"
+    }
+  }
+]

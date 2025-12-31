@@ -1,0 +1,794 @@
+{
+  "generatedAt": "2025-12-30T00:26:21.122Z",
+  "packages": [
+    {
+      "packageId": "admin_dialog",
+      "name": "Admin Dialog",
+      "version": "1.0.0",
+      "description": "Admin dialog components",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_dialogs",
+        "ui_permissions"
+      ],
+      "exports": {
+        "components": []
+      },
+      "minLevel": 4
+    },
+    {
+      "packageId": "arcade_lobby",
+      "name": "Arcade Lobby",
+      "version": "1.0.0",
+      "description": "Gaming lobby for tournaments, party queues, and highlights.",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "gaming",
+      "dependencies": [
+        "ui_permissions",
+        "dashboard"
+      ],
+      "exports": {
+        "components": []
+      },
+      "minLevel": 2
+    },
+    {
+      "packageId": "audit_log",
+      "name": "Audit Log",
+      "version": "1.0.0",
+      "description": "Security audit log viewer and stats dashboard",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "admin",
+      "dependencies": [],
+      "exports": {
+        "components": [
+          "AuditLogViewer",
+          "AuditStatsCard",
+          "LogTable",
+          "LogFilters"
+        ],
+        "scripts": [
+          "init",
+          "stats",
+          "filters",
+          "formatting"
+        ]
+      },
+      "minLevel": 3
+    },
+    {
+      "packageId": "codegen_studio",
+      "name": "Codegen Studio",
+      "version": "1.0.0",
+      "description": "Generate Next.js, React, and CLI starters from configurable templates.",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "tools",
+      "dependencies": [],
+      "exports": {
+        "components": []
+      },
+      "minLevel": 5
+    },
+    {
+      "packageId": "code_editor",
+      "name": "Code Editor",
+      "version": "1.0.0",
+      "description": "Code editor components for JSON, Lua, and themes",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "editors",
+      "dependencies": [],
+      "exports": {
+        "scripts": [
+          "json",
+          "lua",
+          "theme"
+        ],
+        "components": [
+          "CodeEditor",
+          "JsonEditor",
+          "LuaEditor",
+          "ThemeEditor"
+        ]
+      },
+      "minLevel": 5
+    },
+    {
+      "packageId": "dashboard",
+      "name": "Dashboard",
+      "version": "1.0.0",
+      "description": "Dashboard layouts, stat cards, and widgets",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "data_table",
+        "ui_permissions"
+      ],
+      "exports": {
+        "components": [
+          "StatCard",
+          "DashboardGrid",
+          "Widget"
+        ],
+        "scripts": [
+          "stats",
+          "layout"
+        ]
+      },
+      "minLevel": 2
+    },
+    {
+      "packageId": "data_table",
+      "name": "Data Table",
+      "version": "1.0.0",
+      "description": "Data table components",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": []
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "form_builder",
+      "name": "Form Builder",
+      "version": "1.0.0",
+      "description": "Form fields, validation, and submission handling",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": [
+          "FormField",
+          "EmailField",
+          "PasswordField",
+          "NumberField",
+          "SearchBar"
+        ],
+        "scripts": [
+          "fields",
+          "validate"
+        ]
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "forum_forge",
+      "name": "Forum Forge",
+      "version": "1.0.0",
+      "description": "Modern forum starter with categories, threads, and moderation lanes.",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "social",
+      "dependencies": [
+        "ui_permissions",
+        "data_table",
+        "form_builder"
+      ],
+      "exports": {
+        "components": []
+      },
+      "minLevel": 2
+    },
+    {
+      "packageId": "dbal_demo",
+      "name": "DBAL Demo",
+      "version": "1.0.0",
+      "description": "DBAL Integration Demo - Demonstrates TypeScript DBAL client with MetaBuilder including KV store, blob storage, and caching.",
+      "icon": "🗄️",
+      "author": "MetaBuilder Team",
+      "category": "demo",
+      "dependencies": [],
+      "exports": {
+        "components": ["DBALDemo", "KVStorePanel", "BlobStoragePanel", "CachedDataPanel"],
+        "luaScripts": ["init", "kv_operations", "blob_operations", "cache_operations", "connection"]
+      },
+      "tags": ["dbal", "demo", "kv-store", "blob-storage", "cache"],
+      "minLevel": 3,
+      "bindings": {
+        "dbal": true,
+        "browser": false
+      },
+      "requiredHooks": ["dbal", "kv_store", "blob_storage", "cached_data"]
+    },
+    {
+      "packageId": "irc_webchat",
+      "name": "IRC Webchat",
+      "version": "1.0.0",
+      "description": "Classic IRC-style webchat with channels, commands, online users, and real-time messaging. Perfect for community chat rooms.",
+      "icon": "💬",
+      "author": "MetaBuilder Team",
+      "category": "social",
+      "dependencies": [],
+      "exports": {
+        "components": ["IRCWebchat"],
+        "luaScripts": ["send_message", "handle_command", "format_time", "user_join", "user_leave"]
+      },
+      "tags": ["chat", "irc", "messaging", "realtime"],
+      "minLevel": 2
+    },
+    {
+      "packageId": "nav_menu",
+      "name": "Navigation Menu",
+      "version": "1.0.0",
+      "description": "Sidebar, navigation menus, and breadcrumbs",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions"
+      ],
+      "exports": {
+        "components": [
+          "Sidebar",
+          "NavigationMenu",
+          "Breadcrumbs"
+        ],
+        "scripts": [
+          "sidebar",
+          "menu"
+        ]
+      },
+      "minLevel": 2
+    },
+    {
+      "packageId": "notification_center",
+      "name": "Notification Center",
+      "version": "1.0.0",
+      "description": "Notification center components",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": []
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "quick_guide",
+      "name": "Quick Guide",
+      "version": "1.0.0",
+      "description": "Quick guide builder with steps and media management",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": [
+          "StepsEditor",
+          "MediaPane",
+          "QuickGuideBuilder"
+        ],
+        "scripts": [
+          "init",
+          "steps",
+          "media"
+        ]
+      },
+      "minLevel": 2
+    },
+    {
+      "packageId": "schema_editor",
+      "name": "Schema Editor",
+      "version": "1.0.0",
+      "description": "Database schema editor components",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "editors",
+      "dependencies": [
+        "form_builder"
+      ],
+      "exports": {
+        "scripts": [
+          "fields",
+          "tables",
+          "relations"
+        ],
+        "components": [
+          "SchemaEditor",
+          "TableEditor",
+          "FieldEditor"
+        ]
+      },
+      "minLevel": 5
+    },
+    {
+      "packageId": "screenshot_analyzer",
+      "name": "Screenshot Analyzer",
+      "version": "1.0.0",
+      "description": "Screenshot Analyzer - Capture and analyze the current page with DOM inspection, structure analysis, and recommendations.",
+      "icon": "📸",
+      "author": "MetaBuilder Team",
+      "category": "demo",
+      "dependencies": [],
+      "exports": {
+        "components": ["ScreenshotAnalyzer", "UploadSection", "ResultPanel", "PageInfo"],
+        "luaScripts": ["init", "capture", "analyze", "page_info"]
+      },
+      "tags": ["screenshot", "analysis", "browser", "dom"],
+      "minLevel": 5,
+      "bindings": {
+        "dbal": false,
+        "browser": true
+      }
+    },
+    {
+      "packageId": "social_hub",
+      "name": "Social Hub",
+      "version": "1.0.0",
+      "description": "Modern social feed with creator tools and live rooms",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "social",
+      "dependencies": [
+        "ui_permissions",
+        "form_builder"
+      ],
+      "exports": {
+        "components": [
+          "social_hub_root",
+          "social_hub_hero",
+          "social_hub_heading",
+          "social_hub_subtitle",
+          "social_hub_stats",
+          "social_hub_stat_1",
+          "social_hub_stat_label_1",
+          "social_hub_stat_value_1",
+          "social_hub_stat_2",
+          "social_hub_stat_label_2",
+          "social_hub_stat_value_2",
+          "social_hub_stat_3",
+          "social_hub_stat_label_3",
+          "social_hub_stat_value_3",
+          "social_hub_composer",
+          "social_hub_composer_label",
+          "social_hub_composer_input",
+          "social_hub_composer_actions",
+          "social_hub_composer_publish",
+          "social_hub_composer_media",
+          "social_hub_feed",
+          "social_hub_feed_post_1",
+          "social_hub_feed_post_1_title",
+          "social_hub_feed_post_1_body",
+          "social_hub_feed_post_1_badge",
+          "social_hub_feed_post_2",
+          "social_hub_feed_post_2_title",
+          "social_hub_feed_post_2_body",
+          "social_hub_feed_post_2_badge"
+        ]
+      },
+      "minLevel": 2
+    },
+    {
+      "packageId": "stream_cast",
+      "name": "Stream Cast",
+      "version": "1.0.0",
+      "description": "Live streaming control room with schedules, scenes, and audience pulse.",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "media",
+      "dependencies": [
+        "ui_permissions",
+        "dashboard"
+      ],
+      "exports": {
+        "components": []
+      },
+      "minLevel": 2
+    },
+    {
+      "packageId": "ui_auth",
+      "name": "Auth UI",
+      "version": "1.0.0",
+      "description": "Access denied, auth gate, and loading states",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions"
+      ],
+      "exports": {
+        "components": [
+          "AccessDenied",
+          "AuthGate",
+          "PageLoader"
+        ],
+        "scripts": [
+          "denied",
+          "gate"
+        ]
+      },
+      "minLevel": 2
+    },
+    {
+      "packageId": "ui_dialogs",
+      "name": "UI Dialogs",
+      "version": "1.0.0",
+      "description": "Confirmation, alert, and form dialogs",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": [
+          "ConfirmDialog",
+          "AlertDialog",
+          "FormDialog"
+        ],
+        "scripts": [
+          "confirm",
+          "alert"
+        ]
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "ui_footer",
+      "name": "App Footer",
+      "version": "1.0.0",
+      "description": "Shared footer with copyright and links",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": [
+          "AppFooter"
+        ],
+        "scripts": [
+          "footer"
+        ],
+        "pages": []
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "ui_header",
+      "name": "App Header",
+      "version": "1.0.0",
+      "description": "Shared navigation header with user avatar and actions",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions"
+      ],
+      "exports": {
+        "components": [
+          "AppHeader"
+        ],
+        "scripts": [
+          "header"
+        ],
+        "pages": []
+      },
+      "minLevel": 2
+    },
+    {
+      "packageId": "ui_home",
+      "name": "Home Page",
+      "version": "1.0.0",
+      "description": "Level 1 home page with server status",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions"
+      ],
+      "exports": {
+        "pages": [
+          "level1"
+        ],
+        "scripts": [
+          "home_ui",
+          "navigate"
+        ],
+        "components": []
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "ui_intro",
+      "name": "Intro Section",
+      "version": "1.0.0",
+      "description": "Page intro with eyebrow, title, and description",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "components": [
+          "IntroSection"
+        ],
+        "scripts": [
+          "intro"
+        ],
+        "pages": []
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "ui_level2",
+      "name": "Level 2 - User Dashboard",
+      "version": "1.0.0",
+      "description": "User dashboard with profile, comments, and chat",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions",
+        "ui_header",
+        "ui_intro"
+      ],
+      "exports": {
+        "pages": [
+          "level2"
+        ],
+        "scripts": [
+          "layout",
+          "profile",
+          "comments"
+        ],
+        "components": []
+      },
+      "minLevel": 2
+    },
+    {
+      "packageId": "ui_level3",
+      "name": "Level 3 - Moderator Panel",
+      "version": "1.0.0",
+      "description": "Moderator panel for content moderation",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions",
+        "ui_header",
+        "ui_intro"
+      ],
+      "exports": {
+        "pages": [
+          "level3"
+        ],
+        "scripts": [
+          "layout",
+          "users",
+          "moderation"
+        ],
+        "components": []
+      },
+      "minLevel": 3
+    },
+    {
+      "packageId": "ui_level4",
+      "name": "Level 4 - Admin Panel",
+      "version": "1.0.0",
+      "description": "Admin panel for user and system management",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions",
+        "ui_header",
+        "ui_intro",
+        "user_manager",
+        "admin_dialog"
+      ],
+      "exports": {
+        "pages": [
+          "level4"
+        ],
+        "scripts": [
+          "layout",
+          "users",
+          "settings"
+        ],
+        "components": []
+      },
+      "minLevel": 4
+    },
+    {
+      "packageId": "ui_level5",
+      "name": "Level 5 - God Panel",
+      "version": "1.0.0",
+      "description": "God panel for application building, schemas, and workflows",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions",
+        "ui_header",
+        "ui_intro",
+        "schema_editor",
+        "workflow_editor"
+      ],
+      "exports": {
+        "pages": [
+          "level5"
+        ],
+        "scripts": [
+          "layout",
+          "schemas",
+          "workflows"
+        ],
+        "components": []
+      },
+      "minLevel": 5
+    },
+    {
+      "packageId": "ui_level6",
+      "name": "Level 6 - Supergod Panel",
+      "version": "1.0.0",
+      "description": "Supergod panel for tenant management and system administration",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "minLevel": 6,
+      "dependencies": [
+        "ui_permissions",
+        "ui_header",
+        "ui_intro"
+      ],
+      "exports": {
+        "pages": [
+          "level6"
+        ],
+        "scripts": [
+          "layout",
+          "tenants",
+          "transfer",
+          "system"
+        ],
+        "components": []
+      }
+    },
+    {
+      "packageId": "ui_login",
+      "name": "Login Page",
+      "version": "1.0.0",
+      "description": "Login and registration page with form validation",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions"
+      ],
+      "exports": {
+        "pages": [
+          "login"
+        ],
+        "scripts": [
+          "login_ui",
+          "login_actions"
+        ],
+        "components": []
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "ui_pages",
+      "name": "UI Pages Bundle",
+      "version": "2.0.0",
+      "description": "Meta-package that bundles all UI page packages",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [
+        "ui_permissions",
+        "ui_header",
+        "ui_footer",
+        "ui_intro",
+        "ui_login",
+        "ui_home",
+        "ui_level2",
+        "ui_level3",
+        "ui_level4",
+        "ui_level5",
+        "ui_level6"
+      ],
+      "exports": {
+        "pages": [],
+        "scripts": [],
+        "components": []
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "ui_permissions",
+      "name": "UI Permissions",
+      "version": "1.0.0",
+      "description": "Shared permission utilities for page access control",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "ui",
+      "dependencies": [],
+      "exports": {
+        "scripts": [
+          "permissions"
+        ],
+        "components": []
+      },
+      "minLevel": 1
+    },
+    {
+      "packageId": "user_manager",
+      "name": "User Manager",
+      "version": "1.0.0",
+      "description": "User management components and actions",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "managers",
+      "dependencies": [
+        "ui_permissions",
+        "data_table"
+      ],
+      "exports": {
+        "scripts": [
+          "list",
+          "actions"
+        ],
+        "components": [
+          "UserManagement",
+          "UserList",
+          "UserActions"
+        ]
+      },
+      "minLevel": 4
+    },
+    {
+      "packageId": "workflow_editor",
+      "name": "Workflow Editor",
+      "version": "1.0.0",
+      "description": "Workflow editor and run status components",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "editors",
+      "dependencies": [],
+      "exports": {
+        "scripts": [
+          "editor",
+          "status",
+          "run"
+        ],
+        "components": [
+          "WorkflowEditor",
+          "WorkflowRunCard",
+          "WorkflowRunStatus"
+        ]
+      },
+      "minLevel": 5
+    },
+    {
+      "packageId": "package_validator",
+      "name": "Package Validator",
+      "version": "1.0.0",
+      "description": "Validates package structure including JSON schemas, Lua files, and folder organization",
+      "icon": "static_content/icon.svg",
+      "author": "MetaBuilder",
+      "category": "tools",
+      "dependencies": [],
+      "exports": {
+        "components": [],
+        "scripts": [
+          "validate",
+          "metadata_schema",
+          "component_schema",
+          "lua_validator",
+          "structure_validator",
+          "cli"
+        ]
+      },
+      "minLevel": 5
+    }
+  ]
+}

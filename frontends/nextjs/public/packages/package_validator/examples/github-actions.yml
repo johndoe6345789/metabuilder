@@ -1,0 +1,75 @@
+# GitHub Actions workflow for validating packages
+# Place this in .github/workflows/validate-packages.yml
+
+name: Validate Packages
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'packages/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'packages/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Lua
+      uses: leafo/gh-actions-lua@v10
+      with:
+        luaVersion: "5.4"
+
+    - name: Get modified packages
+      id: changed-packages
+      run: |
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          PACKAGES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^packages/' | cut -d'/' -f2 | sort -u)
+        else
+          PACKAGES=$(git diff --name-only HEAD~1 | grep '^packages/' | cut -d'/' -f2 | sort -u)
+        fi
+        echo "packages=$PACKAGES" >> $GITHUB_OUTPUT
+        echo "Modified packages: $PACKAGES"
+
+    - name: Validate packages
+      run: |
+        FAILED=0
+        PACKAGES="${{ steps.changed-packages.outputs.packages }}"
+
+        if [ -z "$PACKAGES" ]; then
+          echo "No packages modified"
+          exit 0
+        fi
+
+        for PACKAGE in $PACKAGES; do
+          echo "::group::Validating $PACKAGE"
+
+          if lua packages/package_validator/seed/scripts/cli.lua "$PACKAGE" --verbose; then
+            echo "✅ $PACKAGE passed validation"
+          else
+            echo "❌ $PACKAGE failed validation"
+            FAILED=1
+          fi
+
+          echo "::endgroup::"
+        done
+
+        exit $FAILED
+
+    - name: Comment on PR (if failed)
+      if: failure() && github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '❌ Package validation failed. Please check the action logs for details.'
+          })

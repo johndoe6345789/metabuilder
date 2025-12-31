@@ -1,0 +1,167 @@
+{
+  "toggleRow": {
+    "single_mode": [
+      {
+        "desc": "Select first row in single mode",
+        "initial_selected": {},
+        "index": 1,
+        "expected_selected": {
+          "1": true
+        }
+      },
+      {
+        "desc": "Switch selection in single mode",
+        "initial_selected": {
+          "1": true
+        },
+        "index": 2,
+        "expected_selected": {
+          "2": true
+        }
+      },
+      {
+        "desc": "Deselect same row in single mode",
+        "initial_selected": {
+          "1": true
+        },
+        "index": 1,
+        "expected_selected": {}
+      },
+      {
+        "desc": "Select row 5 in single mode",
+        "initial_selected": {
+          "3": true
+        },
+        "index": 5,
+        "expected_selected": {
+          "5": true
+        }
+      }
+    ],
+    "multiple_mode": [
+      {
+        "desc": "Select first row in multiple mode",
+        "initial_selected": {},
+        "index": 1,
+        "expected_selected": {
+          "1": true
+        }
+      },
+      {
+        "desc": "Select second row while first selected",
+        "initial_selected": {
+          "1": true
+        },
+        "index": 2,
+        "expected_selected": {
+          "1": true,
+          "2": true
+        }
+      },
+      {
+        "desc": "Deselect row 1 in multiple mode",
+        "initial_selected": {
+          "1": true,
+          "2": true
+        },
+        "index": 1,
+        "expected_selected": {
+          "2": true
+        }
+      },
+      {
+        "desc": "Toggle multiple selections",
+        "initial_selected": {
+          "1": true,
+          "3": true,
+          "5": true
+        },
+        "index": 3,
+        "expected_selected": {
+          "1": true,
+          "5": true
+        }
+      },
+      {
+        "desc": "Select non-consecutive rows",
+        "initial_selected": {
+          "2": true,
+          "5": true
+        },
+        "index": 8,
+        "expected_selected": {
+          "2": true,
+          "5": true,
+          "8": true
+        }
+      }
+    ]
+  },
+  "selectRange": [
+    {
+      "desc": "Select range 1-5",
+      "initial_selected": {},
+      "from_index": 1,
+      "to_index": 5,
+      "expected_start": 1,
+      "expected_end": 5
+    },
+    {
+      "desc": "Select reverse range 5-1",
+      "initial_selected": {},
+      "from_index": 5,
+      "to_index": 1,
+      "expected_start": 1,
+      "expected_end": 5
+    },
+    {
+      "desc": "Select range 3-7",
+      "initial_selected": {},
+      "from_index": 3,
+      "to_index": 7,
+      "expected_start": 3,
+      "expected_end": 7
+    },
+    {
+      "desc": "Extend selection with range",
+      "initial_selected": {
+        "1": true,
+        "2": true
+      },
+      "from_index": 5,
+      "to_index": 8,
+      "expected_start": 5,
+      "expected_end": 8,
+      "preserve_indices": [1, 2]
+    },
+    {
+      "desc": "Select single row as range",
+      "initial_selected": {},
+      "from_index": 3,
+      "to_index": 3,
+      "expected_start": 3,
+      "expected_end": 3
+    },
+    {
+      "desc": "Select large range 1-20",
+      "initial_selected": {},
+      "from_index": 1,
+      "to_index": 20,
+      "expected_start": 1,
+      "expected_end": 20
+    },
+    {
+      "desc": "Overlapping range preserves existing",
+      "initial_selected": {
+        "2": true,
+        "8": true,
+        "10": true
+      },
+      "from_index": 5,
+      "to_index": 9,
+      "expected_start": 5,
+      "expected_end": 9,
+      "preserve_indices": [2, 10]
+    }
+  ]
+}

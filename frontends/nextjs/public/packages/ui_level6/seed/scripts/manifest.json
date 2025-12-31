@@ -1,0 +1,9 @@
+{
+  "scripts": [
+    { "name": "init", "path": "init.lua", "description": "Level 6 initialization" },
+    { "name": "layout", "path": "layout.lua", "description": "Supergod layout components" },
+    { "name": "tenants", "path": "tenants.lua", "description": "Tenant management" },
+    { "name": "transfer", "path": "transfer.lua", "description": "Power transfer utilities" },
+    { "name": "system", "path": "system.lua", "description": "System administration" }
+  ]
+}

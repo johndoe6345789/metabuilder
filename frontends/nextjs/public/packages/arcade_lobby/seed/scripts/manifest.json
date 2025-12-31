@@ -1,0 +1,28 @@
+{
+  "scripts": [
+    {
+      "file": "init.lua",
+      "name": "init",
+      "category": "lifecycle",
+      "description": "Lifecycle hooks for installation and removal"
+    },
+    {
+      "file": "matchmaking.lua",
+      "name": "matchmaking",
+      "category": "matching",
+      "description": "Compute matchmaking buckets based on party size"
+    },
+    {
+      "file": "queue_metrics.lua",
+      "name": "queue_metrics",
+      "category": "analytics",
+      "description": "Summarize queue health and wait times"
+    },
+    {
+      "file": "permissions.lua",
+      "name": "permissions",
+      "category": "security",
+      "description": "Role checks for tournament creation"
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "compare": {
+    "numbers": {
+      "asc": [
+        { "a": 1, "b": 2, "expected": true },
+        { "a": 2, "b": 1, "expected": false },
+        { "a": 5, "b": 5, "expected": false },
+        { "a": -1, "b": 0, "expected": true },
+        { "a": 0, "b": -1, "expected": false }
+      ],
+      "desc": [
+        { "a": 2, "b": 1, "expected": true },
+        { "a": 1, "b": 2, "expected": false },
+        { "a": 5, "b": 5, "expected": false },
+        { "a": 0, "b": -1, "expected": true }
+      ]
+    },
+    "strings": {
+      "asc": [
+        { "a": "apple", "b": "banana", "expected": true },
+        { "a": "banana", "b": "apple", "expected": false },
+        { "a": "apple", "b": "Apple", "expected": false },
+        { "a": "aaa", "b": "aab", "expected": true }
+      ],
+      "desc": [
+        { "a": "banana", "b": "apple", "expected": true },
+        { "a": "apple", "b": "banana", "expected": false },
+        { "a": "zzz", "b": "aaa", "expected": true }
+      ]
+    },
+    "nil_values": [
+      { "a": null, "b": null, "direction": "asc", "expected": false, "description": "nil vs nil (asc)" },
+      { "a": null, "b": "value", "direction": "asc", "expected": false, "description": "nil pushed to end (asc)" },
+      { "a": null, "b": "value", "direction": "desc", "expected": true, "description": "nil pushed to end (desc)" },
+      { "a": "value", "b": null, "direction": "asc", "expected": true, "description": "value before nil (asc)" }
+    ],
+    "mixed_types": [
+      { "a": "10", "b": "2", "aType": "string", "bType": "string", "expected": true },
+      { "a": 10, "b": "20", "aType": "number", "bType": "string", "expected": true }
+    ]
+  },
+  "createSortState": {
+    "withOptions": [
+      { "column": "name", "direction": "asc" },
+      { "column": "age", "direction": "desc" },
+      { "column": "id", "direction": "asc" }
+    ]
+  },
+  "toggleSort": {
+    "scenarios": [
+      {
+        "description": "clicking unsorted column sets asc",
+        "currentColumn": null,
+        "currentDirection": "asc",
+        "clickedColumn": "name",
+        "expectedColumn": "name",
+        "expectedDirection": "asc"
+      },
+      {
+        "description": "clicking same column toggles direction",
+        "currentColumn": "name",
+        "currentDirection": "asc",
+        "clickedColumn": "name",
+        "expectedColumn": "name",
+        "expectedDirection": "desc"
+      },
+      {
+        "description": "clicking different column resets to asc",
+        "currentColumn": "name",
+        "currentDirection": "desc",
+        "clickedColumn": "age",
+        "expectedColumn": "age",
+        "expectedDirection": "asc"
+      },
+      {
+        "description": "clicking same column (desc) clears sort",
+        "currentColumn": "name",
+        "currentDirection": "desc",
+        "clickedColumn": "name",
+        "expectedColumn": null,
+        "expectedDirection": "asc"
+      }
+    ]
+  },
+  "sortByColumn": {
+    "scenarios": [
+      {
+        "description": "sort numbers ascending",
+        "data": [
+          { "id": 3, "value": 30 },
+          { "id": 1, "value": 10 },
+          { "id": 2, "value": 20 }
+        ],
+        "column": "value",
+        "direction": "asc",
+        "expectedOrder": [1, 2, 3]
+      },
+      {
+        "description": "sort numbers descending",
+        "data": [
+          { "id": 1, "value": 10 },
+          { "id": 2, "value": 20 },
+          { "id": 3, "value": 30 }
+        ],
+        "column": "value",
+        "direction": "desc",
+        "expectedOrder": [3, 2, 1]
+      },
+      {
+        "description": "sort strings ascending",
+        "data": [
+          { "id": 2, "name": "Bob" },
+          { "id": 1, "name": "Alice" },
+          { "id": 3, "name": "Charlie" }
+        ],
+        "column": "name",
+        "direction": "asc",
+        "expectedOrder": [1, 2, 3]
+      },
+      {
+        "description": "sort with nil values",
+        "data": [
+          { "id": 2, "name": "Bob" },
+          { "id": 3, "name": null },
+          { "id": 1, "name": "Alice" }
+        ],
+        "column": "name",
+        "direction": "asc",
+        "expectedOrder": [1, 2, 3]
+      }
+    ]
+  }
+}

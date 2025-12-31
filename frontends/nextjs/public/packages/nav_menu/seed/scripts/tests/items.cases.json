@@ -1,0 +1,10 @@
+{
+  "menu_item": [
+    { "desc": "without icon", "label": "Home", "path": "/", "icon": null },
+    { "desc": "with icon", "label": "Settings", "path": "/settings", "icon": "gear" }
+  ],
+  "menu_group": [
+    { "desc": "empty group", "label": "Admin", "children": null, "icon": null },
+    { "desc": "empty children array", "label": "Settings", "children": [], "icon": "gear" }
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "DBALDemo": {
+    "type": "DBALDemo",
+    "category": "demo",
+    "label": "DBAL Demo",
+    "description": "Demonstration of the TypeScript DBAL client integrated with MetaBuilder",
+    "icon": "database",
+    "props": [
+      {
+        "name": "defaultEndpoint",
+        "type": "string",
+        "label": "Default Endpoint",
+        "defaultValue": "",
+        "required": false
+      },
+      {
+        "name": "defaultApiKey",
+        "type": "string",
+        "label": "Default API Key",
+        "defaultValue": "",
+        "required": false
+      }
+    ],
+    "config": {
+      "layout": "container",
+      "styling": {
+        "className": "dbal-demo-container"
+      },
+      "children": [
+        {
+          "type": "header",
+          "props": {
+            "title": "DBAL Integration Demo",
+            "description": "Demonstration of the TypeScript DBAL client integrated with MetaBuilder"
+          }
+        },
+        {
+          "type": "grid",
+          "props": { "columns": 2, "gap": 4 },
+          "children": [
+            { "type": "ConnectionForm", "props": {} },
+            { "type": "ResultPanel", "props": { "title": "Connection Details" } }
+          ]
+        },
+        { "type": "LogsPanel", "props": { "title": "Demo Logs" } },
+        {
+          "type": "tabs",
+          "props": {
+            "defaultValue": "kv",
+            "tabs": [
+              { "value": "kv", "label": "Key-Value Store" },
+              { "value": "blob", "label": "Blob Storage" },
+              { "value": "cache", "label": "Cached Data" }
+            ]
+          },
+          "children": [
+            { "type": "KVStorePanel", "props": {} },
+            { "type": "BlobStoragePanel", "props": {} },
+            { "type": "CachedDataPanel", "props": {} }
+          ]
+        }
+      ]
+    },
+    "bindings": {
+      "dbal": true
+    },
+    "requiredHooks": ["dbal", "kv_store", "blob_storage", "cached_data"]
+  },
+  "KVStorePanel": {
+    "type": "KVStorePanel",
+    "category": "demo",
+    "label": "KV Store Panel",
+    "description": "Key-Value store operations panel",
+    "icon": "key",
+    "props": [],
+    "config": {
+      "layout": "card",
+      "styling": { "className": "kv-store-panel" },
+      "children": [
+        {
+          "type": "card",
+          "props": { "title": "Key-Value Operations", "description": "Basic get/set/delete operations" },
+          "children": [
+            { "type": "input", "props": { "name": "key", "label": "Key", "defaultValue": "demo-key" } },
+            { "type": "input", "props": { "name": "value", "label": "Value", "defaultValue": "Hello, DBAL!" } },
+            { "type": "input", "props": { "name": "ttl", "label": "TTL (seconds)", "type": "number" } },
+            {
+              "type": "button-group",
+              "children": [
+                { "type": "button", "props": { "label": "Set", "action": "kv_set" } },
+                { "type": "button", "props": { "label": "Get", "action": "kv_get" } },
+                { "type": "button", "props": { "label": "Delete", "action": "kv_delete", "variant": "destructive" } }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "card",
+          "props": { "title": "List Operations", "description": "Add and retrieve list items" },
+          "children": [
+            { "type": "input", "props": { "name": "listKey", "label": "List Key", "defaultValue": "demo-list" } },
+            {
+              "type": "button-group",
+              "children": [
+                { "type": "button", "props": { "label": "Add Items", "action": "kv_list_add" } },
+                { "type": "button", "props": { "label": "Get Items", "action": "kv_list_get" } }
+              ]
+            },
+            { "type": "list-display", "props": { "dataSource": "listItems" } }
+          ]
+        }
+      ]
+    },
+    "bindings": { "dbal": true },
+    "requiredHooks": ["kv_store"]
+  },
+  "BlobStoragePanel": {
+    "type": "BlobStoragePanel",
+    "category": "demo",
+    "label": "Blob Storage Panel",
+    "description": "Blob storage operations panel",
+    "icon": "file",
+    "props": [],
+    "config": {
+      "layout": "card",
+      "styling": { "className": "blob-storage-panel" },
+      "children": [
+        {
+          "type": "card",
+          "props": { "title": "Blob Storage Operations", "description": "Upload, download, and manage binary data" },
+          "children": [
+            { "type": "input", "props": { "name": "fileName", "label": "File Name", "defaultValue": "demo.txt" } },
+            { "type": "textarea", "props": { "name": "fileContent", "label": "Content", "defaultValue": "Hello from DBAL blob storage!" } },
+            {
+              "type": "button-group",
+              "children": [
+                { "type": "button", "props": { "label": "Upload", "action": "blob_upload" } },
+                { "type": "button", "props": { "label": "Download", "action": "blob_download" } },
+                { "type": "button", "props": { "label": "Delete", "action": "blob_delete", "variant": "destructive" } },
+                { "type": "button", "props": { "label": "List Files", "action": "blob_list" } }
+              ]
+            },
+            { "type": "code-display", "props": { "dataSource": "downloadedContent", "language": "text" } },
+            { "type": "list-display", "props": { "dataSource": "files" } }
+          ]
+        }
+      ]
+    },
+    "bindings": { "dbal": true },
+    "requiredHooks": ["blob_storage"]
+  },
+  "CachedDataPanel": {
+    "type": "CachedDataPanel",
+    "category": "demo",
+    "label": "Cached Data Panel",
+    "description": "Cached data hook demonstration",
+    "icon": "clock",
+    "props": [],
+    "config": {
+      "layout": "card",
+      "styling": { "className": "cached-data-panel" },
+      "children": [
+        {
+          "type": "card",
+          "props": { "title": "Cached Data Hook", "description": "Automatic caching with React hooks" },
+          "children": [
+            { "type": "status-badge", "props": { "condition": "loading", "text": "Loading cached data..." } },
+            { "type": "status-badge", "props": { "condition": "error", "text": "Error: {{error}}", "variant": "destructive" } },
+            {
+              "type": "data-display",
+              "props": { "dataSource": "cachedData", "title": "Cached Preferences" }
+            },
+            { "type": "input", "props": { "name": "theme", "label": "Theme", "defaultValue": "dark" } },
+            { "type": "input", "props": { "name": "language", "label": "Language", "defaultValue": "en" } },
+            { "type": "checkbox", "props": { "name": "notifications", "label": "Notifications", "defaultValue": true } },
+            {
+              "type": "button-group",
+              "children": [
+                { "type": "button", "props": { "label": "Save Preferences", "action": "cache_save" } },
+                { "type": "button", "props": { "label": "Clear Cache", "action": "cache_clear", "variant": "outline" } }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "bindings": { "dbal": true },
+    "requiredHooks": ["cached_data"]
+  }
+}

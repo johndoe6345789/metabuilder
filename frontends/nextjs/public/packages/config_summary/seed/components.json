@@ -1,0 +1,188 @@
+[
+  {
+    "id": "config_summary",
+    "type": "Card",
+    "props": {
+      "variant": "outlined",
+      "className": "config-summary"
+    },
+    "children": [
+      {
+        "id": "config_summary_header",
+        "type": "Box",
+        "props": {
+          "className": "config-summary-header",
+          "sx": {
+            "p": 2,
+            "borderBottom": 1,
+            "borderColor": "divider"
+          }
+        },
+        "children": [
+          {
+            "id": "config_summary_title",
+            "type": "Text",
+            "props": {
+              "variant": "h6",
+              "fontWeight": "bold",
+              "className": "config-summary-title"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "config_summary_content",
+        "type": "Box",
+        "props": {
+          "className": "config-summary-content",
+          "sx": {
+            "p": 2
+          }
+        },
+        "children": [
+          {
+            "id": "config_summary_table",
+            "type": "Table",
+            "props": {
+              "size": "small",
+              "className": "config-summary-table"
+            },
+            "children": [
+              {
+                "id": "config_summary_tbody",
+                "type": "TableBody",
+                "props": {},
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "config_summary_footer",
+        "type": "Box",
+        "props": {
+          "className": "config-summary-footer",
+          "sx": {
+            "p": 1,
+            "borderTop": 1,
+            "borderColor": "divider",
+            "display": "none"
+          }
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "summary_row",
+    "type": "TableRow",
+    "props": {
+      "className": "summary-row"
+    },
+    "children": [
+      {
+        "id": "summary_row_label_cell",
+        "type": "TableCell",
+        "props": {
+          "className": "summary-row-label-cell",
+          "sx": {
+            "fontWeight": "medium",
+            "color": "text.secondary",
+            "width": "40%",
+            "py": 1
+          }
+        },
+        "children": [
+          {
+            "id": "summary_row_label",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "className": "summary-row-label"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "summary_row_value_cell",
+        "type": "TableCell",
+        "props": {
+          "className": "summary-row-value-cell",
+          "sx": {
+            "py": 1
+          }
+        },
+        "children": [
+          {
+            "id": "summary_row_value",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "fontWeight": "medium",
+              "className": "summary-row-value"
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "config_summary_stack",
+    "type": "Stack",
+    "props": {
+      "spacing": 2,
+      "className": "config-summary-stack"
+    },
+    "children": []
+  },
+  {
+    "id": "summary_row_inline",
+    "type": "Box",
+    "props": {
+      "className": "summary-row-inline",
+      "sx": {
+        "display": "flex",
+        "justifyContent": "space-between",
+        "alignItems": "center",
+        "py": 1
+      }
+    },
+    "children": [
+      {
+        "id": "summary_row_inline_label",
+        "type": "Text",
+        "props": {
+          "variant": "body2",
+          "color": "text.secondary",
+          "className": "summary-row-inline-label"
+        },
+        "children": []
+      },
+      {
+        "id": "summary_row_inline_value",
+        "type": "Text",
+        "props": {
+          "variant": "body2",
+          "fontWeight": "medium",
+          "className": "summary-row-inline-value"
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "summary_divider",
+    "type": "Divider",
+    "props": {
+      "className": "summary-divider",
+      "sx": {
+        "my": 1
+      }
+    },
+    "children": []
+  }
+]

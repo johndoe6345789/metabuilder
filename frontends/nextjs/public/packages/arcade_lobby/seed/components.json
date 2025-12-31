@@ -1,0 +1,370 @@
+[
+  {
+    "id": "arcade_lobby_root",
+    "type": "Stack",
+    "props": {
+      "className": "flex flex-col gap-6"
+    },
+    "children": [
+      {
+        "id": "arcade_lobby_hero",
+        "type": "Card",
+        "props": {
+          "className": "p-6"
+        },
+        "children": [
+          {
+            "id": "arcade_lobby_title",
+            "type": "Heading",
+            "props": {
+              "children": "Arcade Lobby",
+              "level": "2",
+              "className": "text-2xl font-bold"
+            },
+            "children": []
+          },
+          {
+            "id": "arcade_lobby_tagline",
+            "type": "Text",
+            "props": {
+              "children": "Drop into live queues, join tournaments, and spotlight the best plays of the night."
+            },
+            "children": []
+          },
+          {
+            "id": "arcade_lobby_badges",
+            "type": "Flex",
+            "props": {
+              "className": "flex gap-2"
+            },
+            "children": [
+              {
+                "id": "arcade_lobby_badge_queue",
+                "type": "Badge",
+                "props": {
+                  "children": "Matchmaking",
+                  "variant": "secondary"
+                },
+                "children": []
+              },
+              {
+                "id": "arcade_lobby_badge_live",
+                "type": "Badge",
+                "props": {
+                  "children": "Live tournaments",
+                  "variant": "secondary"
+                },
+                "children": []
+              },
+              {
+                "id": "arcade_lobby_badge_party",
+                "type": "Badge",
+                "props": {
+                  "children": "Party chat",
+                  "variant": "outline"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "arcade_lobby_stats",
+        "type": "Grid",
+        "props": {
+          "className": "grid grid-cols-3 gap-4"
+        },
+        "children": [
+          {
+            "id": "arcade_lobby_stat_players",
+            "type": "Card",
+            "props": {
+              "className": "p-4"
+            },
+            "children": [
+              {
+                "id": "arcade_lobby_stat_players_label",
+                "type": "Text",
+                "props": {
+                  "children": "Players online",
+                  "className": "text-sm text-muted-foreground"
+                },
+                "children": []
+              },
+              {
+                "id": "arcade_lobby_stat_players_value",
+                "type": "Heading",
+                "props": {
+                  "children": "8,420",
+                  "level": "3",
+                  "className": "text-xl font-semibold"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "arcade_lobby_stat_queues",
+            "type": "Card",
+            "props": {
+              "className": "p-4"
+            },
+            "children": [
+              {
+                "id": "arcade_lobby_stat_queues_label",
+                "type": "Text",
+                "props": {
+                  "children": "Queues open",
+                  "className": "text-sm text-muted-foreground"
+                },
+                "children": []
+              },
+              {
+                "id": "arcade_lobby_stat_queues_value",
+                "type": "Heading",
+                "props": {
+                  "children": "14",
+                  "level": "3",
+                  "className": "text-xl font-semibold"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "arcade_lobby_stat_tournaments",
+            "type": "Card",
+            "props": {
+              "className": "p-4"
+            },
+            "children": [
+              {
+                "id": "arcade_lobby_stat_tournaments_label",
+                "type": "Text",
+                "props": {
+                  "children": "Tournaments",
+                  "className": "text-sm text-muted-foreground"
+                },
+                "children": []
+              },
+              {
+                "id": "arcade_lobby_stat_tournaments_value",
+                "type": "Heading",
+                "props": {
+                  "children": "3 live",
+                  "level": "3",
+                  "className": "text-xl font-semibold"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "arcade_lobby_games",
+        "type": "Card",
+        "props": {
+          "className": "p-6"
+        },
+        "children": [
+          {
+            "id": "arcade_lobby_games_title",
+            "type": "Heading",
+            "props": {
+              "children": "Featured queues",
+              "level": "3",
+              "className": "text-xl font-semibold"
+            },
+            "children": []
+          },
+          {
+            "id": "arcade_lobby_games_grid",
+            "type": "Grid",
+            "props": {
+              "className": "grid grid-cols-3 gap-4"
+            },
+            "children": [
+              {
+                "id": "arcade_lobby_game_1",
+                "type": "Card",
+                "props": {
+                  "className": "p-4"
+                },
+                "children": [
+                  {
+                    "id": "arcade_lobby_game_1_title",
+                    "type": "Heading",
+                    "props": {
+                      "children": "Neon Rush",
+                      "level": "4",
+                      "className": "text-lg font-semibold"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "arcade_lobby_game_1_text",
+                    "type": "Text",
+                    "props": {
+                      "children": "Fast-paced sprint arenas · Avg wait 45s",
+                      "className": "text-sm text-muted-foreground"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "arcade_lobby_game_2",
+                "type": "Card",
+                "props": {
+                  "className": "p-4"
+                },
+                "children": [
+                  {
+                    "id": "arcade_lobby_game_2_title",
+                    "type": "Heading",
+                    "props": {
+                      "children": "Gridline",
+                      "level": "4",
+                      "className": "text-lg font-semibold"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "arcade_lobby_game_2_text",
+                    "type": "Text",
+                    "props": {
+                      "children": "Team tactics mode · Avg wait 2m",
+                      "className": "text-sm text-muted-foreground"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "arcade_lobby_game_3",
+                "type": "Card",
+                "props": {
+                  "className": "p-4"
+                },
+                "children": [
+                  {
+                    "id": "arcade_lobby_game_3_title",
+                    "type": "Heading",
+                    "props": {
+                      "children": "Star Kart",
+                      "level": "4",
+                      "className": "text-lg font-semibold"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "arcade_lobby_game_3_text",
+                    "type": "Text",
+                    "props": {
+                      "children": "Party racing · Avg wait 30s",
+                      "className": "text-sm text-muted-foreground"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "arcade_lobby_cta",
+        "type": "Card",
+        "props": {
+          "className": "p-6"
+        },
+        "children": [
+          {
+            "id": "arcade_lobby_cta_title",
+            "type": "Heading",
+            "props": {
+              "children": "Party up",
+              "level": "3",
+              "className": "text-xl font-semibold"
+            },
+            "children": []
+          },
+          {
+            "id": "arcade_lobby_cta_text",
+            "type": "Text",
+            "props": {
+              "children": "Create a squad, invite friends, and keep the lobby humming.",
+              "className": "text-sm text-muted-foreground"
+            },
+            "children": []
+          },
+          {
+            "id": "arcade_lobby_cta_actions",
+            "type": "Flex",
+            "props": {
+              "className": "flex flex-wrap gap-2"
+            },
+            "children": [
+              {
+                "id": "arcade_lobby_cta_party",
+                "type": "Button",
+                "props": {
+                  "children": "Start party",
+                  "variant": "default"
+                },
+                "children": []
+              },
+              {
+                "id": "arcade_lobby_cta_tournament",
+                "type": "Button",
+                "props": {
+                  "children": "Create tournament",
+                  "variant": "outline"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "arcade_lobby_queue",
+        "type": "Card",
+        "props": {
+          "className": "p-6"
+        },
+        "children": [
+          {
+            "id": "arcade_lobby_queue_title",
+            "type": "Heading",
+            "props": {
+              "children": "Queue status",
+              "level": "3",
+              "className": "text-xl font-semibold"
+            },
+            "children": []
+          },
+          {
+            "id": "arcade_lobby_queue_text",
+            "type": "Text",
+            "props": {
+              "children": "Neon Rush matchmaking is ramping up. Estimated wait: 45s.",
+              "className": "text-sm text-muted-foreground"
+            },
+            "children": []
+          },
+          {
+            "id": "arcade_lobby_queue_progress",
+            "type": "Progress",
+            "props": {
+              "value": 65
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "id": "forum_forge_base",
+    "type": "component",
+    "category": "package",
+    "className": "forum_forge",
+    "description": "Base styles for Forum Forge package",
+    "priority": 100,
+    "css": ".forum_forge {\n  /* Add package-specific styles here */\n}"
+  }
+]

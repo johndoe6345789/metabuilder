@@ -1,0 +1,11 @@
+[
+  {
+    "id": "dbal_demo_base",
+    "type": "component",
+    "category": "package",
+    "className": "dbal_demo",
+    "description": "Base styles for Dbal Demo package",
+    "priority": 100,
+    "css": ".dbal_demo {\n  /* Add package-specific styles here */\n}"
+  }
+]

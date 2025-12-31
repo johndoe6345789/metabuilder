@@ -1,0 +1,11 @@
+[
+  {
+    "id": "package_validator_base",
+    "type": "component",
+    "category": "package",
+    "className": "package_validator",
+    "description": "Base styles for Package Validator package",
+    "priority": 100,
+    "css": ".package_validator {\n  /* Add package-specific styles here */\n}"
+  }
+]

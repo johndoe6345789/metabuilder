@@ -1,0 +1,10 @@
+[
+  {
+    "id": "page_chat",
+    "path": "/chat",
+    "title": "IRC Webchat",
+    "level": 2,
+    "requiresAuth": true,
+    "requiredRole": "user"
+  }
+]

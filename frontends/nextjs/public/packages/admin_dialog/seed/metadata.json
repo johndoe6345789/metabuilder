@@ -1,0 +1,44 @@
+{
+  "packageId": "admin_dialog",
+  "name": "Admin Dialog",
+  "version": "1.0.0",
+  "description": "Admin dialog components",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [
+    "ui_dialogs",
+    "ui_permissions"
+  ],
+  "devDependencies": [
+    "lua_test"
+  ],
+  "exports": {
+    "components": []
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
+    ]
+  },
+  "minLevel": 4,
+  "primary": false,
+  "permissions": {
+    "admin.dialog.show": {
+      "minLevel": 4,
+      "description": "Display admin confirmation dialogs"
+    },
+    "admin.dialog.action": {
+      "minLevel": 4,
+      "description": "Execute admin dialog actions"
+    }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
+  }
+}

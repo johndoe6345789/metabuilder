@@ -1,0 +1,6 @@
+{
+  "scripts": [
+    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle" },
+    { "file": "navigate.lua", "name": "navigate", "category": "actions", "description": "Navigation handlers" }
+  ]
+}

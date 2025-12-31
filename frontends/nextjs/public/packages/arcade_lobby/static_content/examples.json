@@ -1,0 +1,13 @@
+{
+  "examples": {
+    "queues": [
+      { "game": "Neon Rush", "players": 120, "waitSeconds": 45 },
+      { "game": "Gridline", "players": 48, "waitSeconds": 120 },
+      { "game": "Star Kart", "players": 64, "waitSeconds": 30 }
+    ],
+    "tournaments": [
+      { "name": "Midnight Sprint", "status": "live", "players": 64 },
+      { "name": "Weekend Circuit", "status": "registering", "players": 32 }
+    ]
+  }
+}

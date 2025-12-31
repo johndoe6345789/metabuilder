@@ -1,0 +1,86 @@
+{
+  "ui_component_types": [
+    { "type": "box", "hasProps": true, "hasChildren": true },
+    { "type": "typography", "hasProps": true, "hasChildren": false },
+    { "type": "button", "hasProps": true, "hasChildren": false },
+    { "type": "form", "hasProps": true, "hasChildren": true },
+    { "type": "input", "hasProps": true, "hasChildren": false }
+  ],
+  "typography_variants": [
+    { "variant": "h1", "isHeading": true },
+    { "variant": "h2", "isHeading": true },
+    { "variant": "h3", "isHeading": true },
+    { "variant": "h4", "isHeading": true },
+    { "variant": "h5", "isHeading": true },
+    { "variant": "h6", "isHeading": true },
+    { "variant": "body1", "isHeading": false },
+    { "variant": "body2", "isHeading": false },
+    { "variant": "caption", "isHeading": false },
+    { "variant": "overline", "isHeading": false },
+    { "variant": "subtitle1", "isHeading": false },
+    { "variant": "subtitle2", "isHeading": false }
+  ],
+  "button_variants": [
+    { "variant": "contained", "desc": "solid filled button" },
+    { "variant": "outlined", "desc": "border only button" },
+    { "variant": "text", "desc": "text only button" }
+  ],
+  "button_colors": [
+    { "color": "primary", "valid": true },
+    { "color": "secondary", "valid": true },
+    { "color": "error", "valid": true },
+    { "color": "warning", "valid": true },
+    { "color": "info", "valid": true },
+    { "color": "success", "valid": true },
+    { "color": "invalid", "valid": false }
+  ],
+  "button_sizes": [
+    { "size": "small", "valid": true },
+    { "size": "medium", "valid": true },
+    { "size": "large", "valid": true },
+    { "size": "xlarge", "valid": false }
+  ],
+  "permission_levels": [
+    { "level": 1, "name": "PUBLIC" },
+    { "level": 2, "name": "USER" },
+    { "level": 3, "name": "MODERATOR" },
+    { "level": 4, "name": "ADMIN" },
+    { "level": 5, "name": "GOD" },
+    { "level": 6, "name": "SUPERGOD" }
+  ],
+  "api_response_scenarios": [
+    { "success": true, "hasData": true, "hasError": false, "desc": "successful response" },
+    { "success": false, "hasData": false, "hasError": true, "desc": "error response" },
+    { "success": true, "hasData": false, "hasError": false, "desc": "empty success" }
+  ],
+  "validation_result_scenarios": [
+    { "valid": true, "hasErrors": false, "desc": "valid input" },
+    { "valid": false, "hasErrors": true, "desc": "invalid with errors" }
+  ],
+  "event_types": [
+    { "type": "click", "hasTarget": true },
+    { "type": "change", "hasTarget": true },
+    { "type": "submit", "hasTarget": true },
+    { "type": "focus", "hasTarget": true },
+    { "type": "blur", "hasTarget": true }
+  ],
+  "edge_cases": {
+    "empty_strings": [
+      { "input": "", "expected": true, "desc": "empty string is empty" },
+      { "input": "  ", "expected": true, "desc": "whitespace only is empty" },
+      { "input": "text", "expected": false, "desc": "text is not empty" }
+    ],
+    "nil_values": [
+      { "field": "props", "optional": true },
+      { "field": "children", "optional": true },
+      { "field": "key", "optional": true },
+      { "field": "type", "optional": false }
+    ],
+    "nested_components": [
+      { "depth": 0, "valid": true, "desc": "root component" },
+      { "depth": 1, "valid": true, "desc": "one level nested" },
+      { "depth": 5, "valid": true, "desc": "deeply nested" },
+      { "depth": 100, "valid": true, "desc": "very deep nesting" }
+    ]
+  }
+}

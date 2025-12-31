@@ -1,0 +1,181 @@
+[
+  {
+    "id": "code_editor",
+    "type": "Card",
+    "props": {
+      "variant": "outlined",
+      "className": "code-editor-container"
+    },
+    "children": [
+      {
+        "id": "code_editor_toolbar",
+        "type": "Toolbar",
+        "props": {
+          "variant": "dense"
+        },
+        "children": [
+          {
+            "id": "code_editor_language_select",
+            "type": "Select",
+            "props": {
+              "size": "small",
+              "label": "Language"
+            },
+            "children": []
+          },
+          {
+            "id": "code_editor_theme_select",
+            "type": "Select",
+            "props": {
+              "size": "small",
+              "label": "Theme"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "code_editor_content",
+        "type": "Box",
+        "props": {
+          "className": "code-editor-content",
+          "sx": {
+            "height": "400px",
+            "overflow": "auto"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "code_editor_status",
+        "type": "Box",
+        "props": {
+          "className": "code-editor-status"
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "json_editor",
+    "type": "Card",
+    "props": {
+      "variant": "outlined",
+      "className": "json-editor-container"
+    },
+    "children": [
+      {
+        "id": "json_editor_toolbar",
+        "type": "Toolbar",
+        "props": {
+          "variant": "dense"
+        },
+        "children": [
+          {
+            "id": "json_editor_format_btn",
+            "type": "IconButton",
+            "props": {
+              "title": "Format JSON"
+            },
+            "children": []
+          },
+          {
+            "id": "json_editor_validate_btn",
+            "type": "IconButton",
+            "props": {
+              "title": "Validate JSON"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "json_editor_content",
+        "type": "Box",
+        "props": {
+          "className": "json-editor-content"
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "lua_editor",
+    "type": "Card",
+    "props": {
+      "variant": "outlined",
+      "className": "lua-editor-container"
+    },
+    "children": [
+      {
+        "id": "lua_editor_toolbar",
+        "type": "Toolbar",
+        "props": {
+          "variant": "dense"
+        },
+        "children": [
+          {
+            "id": "lua_editor_run_btn",
+            "type": "Button",
+            "props": {
+              "variant": "contained",
+              "color": "primary",
+              "size": "small"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "lua_editor_content",
+        "type": "Box",
+        "props": {
+          "className": "lua-editor-content"
+        },
+        "children": []
+      },
+      {
+        "id": "lua_editor_output",
+        "type": "Box",
+        "props": {
+          "className": "lua-editor-output"
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "theme_editor",
+    "type": "Card",
+    "props": {
+      "variant": "outlined",
+      "className": "theme-editor-container"
+    },
+    "children": [
+      {
+        "id": "theme_editor_toolbar",
+        "type": "Toolbar",
+        "props": {
+          "variant": "dense"
+        },
+        "children": []
+      },
+      {
+        "id": "theme_editor_preview",
+        "type": "Box",
+        "props": {
+          "className": "theme-editor-preview"
+        },
+        "children": []
+      },
+      {
+        "id": "theme_editor_controls",
+        "type": "Stack",
+        "props": {
+          "spacing": 2
+        },
+        "children": []
+      }
+    ]
+  }
+]

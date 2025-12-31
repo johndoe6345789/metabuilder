@@ -1,0 +1,64 @@
+{
+  "packageId": "schema_editor",
+  "name": "Schema Editor",
+  "version": "1.0.0",
+  "description": "Database schema editor components",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "editors",
+  "dependencies": [
+    "form_builder"
+  ],
+  "devDependencies": [
+    "lua_test"
+  ],
+  "exports": {
+    "scripts": [
+      "fields",
+      "tables",
+      "relations"
+    ],
+    "components": [
+      "SchemaEditor",
+      "TableEditor",
+      "FieldEditor"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua",
+      "tests/field_definitions.test.lua",
+      "tests/table_operations.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json",
+      "tests/field_definitions.cases.json",
+      "tests/table_operations.cases.json"
+    ]
+  },
+  "minLevel": 5,
+  "primary": true,
+  "permissions": {
+    "schema.view": {
+      "minLevel": 5,
+      "description": "View database schemas"
+    },
+    "schema.create": {
+      "minLevel": 5,
+      "description": "Create new schemas"
+    },
+    "schema.edit": {
+      "minLevel": 5,
+      "description": "Edit database schemas"
+    },
+    "schema.migrate": {
+      "minLevel": 5,
+      "description": "Run schema migrations"
+    }
+  },
+  "seed": {
+    "styles": "seed/styles.json"
+  }
+}

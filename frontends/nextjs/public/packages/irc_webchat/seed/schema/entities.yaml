@@ -1,0 +1,230 @@
+# Schema definitions owned by irc_webchat package
+
+entities:
+  - name: IRCChannel
+    version: "1.0"
+    description: "IRC-style chat channel"
+    checksum: null
+    
+    fields:
+      id:
+        type: cuid
+        primary: true
+        generated: true
+        
+      tenantId:
+        type: string
+        required: true
+        index: true
+        
+      name:
+        type: string
+        required: true
+        maxLength: 50
+        
+      topic:
+        type: string
+        nullable: true
+        maxLength: 500
+        
+      description:
+        type: string
+        nullable: true
+        
+      mode:
+        type: string
+        required: true
+        default: "public"
+        enum: [public, private, secret]
+        
+      password:
+        type: string
+        nullable: true
+        
+      maxUsers:
+        type: int
+        nullable: true
+        
+      slowMode:
+        type: int
+        nullable: true
+        description: "Seconds between messages"
+        
+      isDefault:
+        type: boolean
+        default: false
+        index: true
+        
+      createdAt:
+        type: bigint
+        required: true
+        
+      createdBy:
+        type: string
+        nullable: true
+
+    indexes:
+      - fields: [tenantId, name]
+        unique: true
+      - fields: [tenantId]
+      - fields: [isDefault]
+
+    relations:
+      - name: messages
+        type: hasMany
+        entity: IRCMessage
+        foreignKey: channelId
+      - name: memberships
+        type: hasMany
+        entity: IRCMembership
+        foreignKey: channelId
+
+    acl:
+      create: [moderator]
+      read: [user]
+      update: [moderator]
+      delete: [admin]
+
+  - name: IRCMessage
+    version: "1.0"
+    description: "IRC chat message"
+    checksum: null
+    
+    fields:
+      id:
+        type: cuid
+        primary: true
+        generated: true
+        
+      tenantId:
+        type: string
+        required: true
+        
+      channelId:
+        type: string
+        required: true
+        index: true
+        
+      userId:
+        type: string
+        required: true
+        index: true
+        
+      username:
+        type: string
+        required: true
+        
+      type:
+        type: string
+        required: true
+        default: "message"
+        enum: [message, action, notice, system, join, part, kick, ban]
+        
+      content:
+        type: string
+        required: true
+        
+      isCommand:
+        type: boolean
+        default: false
+        
+      metadata:
+        type: string
+        nullable: true
+        description: "JSON: mentions, links, etc."
+        
+      createdAt:
+        type: bigint
+        required: true
+        index: true
+
+    indexes:
+      - fields: [channelId]
+      - fields: [userId]
+      - fields: [createdAt]
+
+    relations:
+      - name: channel
+        type: belongsTo
+        entity: IRCChannel
+        field: channelId
+        onDelete: Cascade
+
+    acl:
+      create: [user]
+      read: [user]
+      update: [supergod]
+      delete: [moderator]
+
+  - name: IRCMembership
+    version: "1.0"
+    description: "User membership in an IRC channel"
+    checksum: null
+    
+    fields:
+      id:
+        type: cuid
+        primary: true
+        generated: true
+        
+      channelId:
+        type: string
+        required: true
+        index: true
+        
+      userId:
+        type: string
+        required: true
+        index: true
+        
+      username:
+        type: string
+        required: true
+        
+      role:
+        type: string
+        required: true
+        default: "user"
+        enum: [user, voice, halfop, op, admin, owner]
+        
+      joinedAt:
+        type: bigint
+        required: true
+        
+      lastActive:
+        type: bigint
+        nullable: true
+        
+      isBanned:
+        type: boolean
+        default: false
+        
+      isKicked:
+        type: boolean
+        default: false
+        
+      kickReason:
+        type: string
+        nullable: true
+        
+      metadata:
+        type: string
+        nullable: true
+
+    indexes:
+      - fields: [channelId, userId]
+        unique: true
+      - fields: [userId]
+
+    relations:
+      - name: channel
+        type: belongsTo
+        entity: IRCChannel
+        field: channelId
+        onDelete: Cascade
+
+    acl:
+      create: [user]
+      read: [user]
+      update: [moderator]
+      delete: [moderator]

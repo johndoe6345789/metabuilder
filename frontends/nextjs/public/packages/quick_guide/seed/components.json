@@ -1,0 +1,225 @@
+[
+  {
+    "id": "steps_editor",
+    "type": "steps_editor",
+    "name": "Steps Editor",
+    "description": "Editor for quick guide steps with add, edit, remove, and reorder",
+    "props": {
+      "steps": []
+    },
+    "layout": {
+      "type": "Card",
+      "props": { "className": "h-full" },
+      "children": [
+        {
+          "type": "CardHeader",
+          "props": { "className": "flex items-center justify-between space-y-0" },
+          "children": [
+            {
+              "type": "Box",
+              "children": [
+                {
+                  "type": "CardTitle",
+                  "props": { "className": "flex items-center gap-2" },
+                  "children": [
+                    { "type": "Icon", "props": { "name": "ListNumbers", "size": 20 } },
+                    { "type": "Text", "props": { "text": "Steps" } }
+                  ]
+                },
+                {
+                  "type": "CardDescription",
+                  "props": { "text": "Keep your quick guide instructions concise and actionable." }
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "props": { "className": "flex items-center gap-2" },
+              "children": [
+                {
+                  "type": "Button",
+                  "props": { "variant": "secondary", "size": "sm" },
+                  "events": { "onClick": "steps.resetOrdering" },
+                  "children": [
+                    { "type": "Icon", "props": { "name": "ArrowCounterClockwise", "size": 16 } },
+                    { "type": "Text", "props": { "text": "Reset IDs" } }
+                  ]
+                },
+                {
+                  "type": "Button",
+                  "props": { "size": "sm" },
+                  "events": { "onClick": "steps.addStep" },
+                  "children": [
+                    { "type": "Icon", "props": { "name": "Plus", "size": 16 } },
+                    { "type": "Text", "props": { "text": "Add Step" } }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "CardContent",
+          "props": { "className": "space-y-4" },
+          "children": [
+            {
+              "type": "List",
+              "props": { "dataSource": "steps", "emptyText": "Add your first step to get started." },
+              "itemTemplate": {
+                "type": "Box",
+                "props": { "className": "rounded-lg border border-border/80 bg-card/60 p-4 shadow-sm" },
+                "children": [
+                  {
+                    "type": "Box",
+                    "props": { "className": "mb-3 flex items-center justify-between" },
+                    "children": [
+                      {
+                        "type": "Box",
+                        "props": { "className": "flex items-center gap-2 text-sm text-muted-foreground" },
+                        "children": [
+                          { "type": "Badge", "props": { "variant": "outline", "text": "Step {{index}}" } },
+                          { "type": "Text", "props": { "text": "Duration: {{item.duration}}" } }
+                        ]
+                      },
+                      {
+                        "type": "Button",
+                        "props": { "variant": "ghost", "size": "icon" },
+                        "events": { "onClick": "steps.removeStep" }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Grid",
+                    "props": { "cols": 2, "gap": 3 },
+                    "children": [
+                      {
+                        "type": "FormField",
+                        "props": { "name": "title", "label": "Title", "value": "{{item.title}}", "placeholder": "Give this step a short name" }
+                      },
+                      {
+                        "type": "FormField",
+                        "props": { "name": "duration", "label": "Expected duration", "value": "{{item.duration}}", "placeholder": "e.g. 30s, 1-2 min" }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "FormField",
+                    "props": { "name": "description", "label": "Description", "type": "textarea", "value": "{{item.description}}", "rows": 3, "placeholder": "Outline the actions or context for this step" }
+                  },
+                  {
+                    "type": "FormField",
+                    "props": { "name": "mediaUrl", "label": "Media URL (optional)", "value": "{{item.mediaUrl}}", "placeholder": "Link to an image, GIF, or short video" }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "scripts": {
+      "addStep": "steps.addStep",
+      "removeStep": "steps.removeStep",
+      "updateStep": "steps.updateStep",
+      "resetOrdering": "steps.resetOrdering"
+    }
+  },
+  {
+    "id": "media_pane",
+    "type": "media_pane",
+    "name": "Media Pane",
+    "description": "Media management pane for thumbnail and video URLs",
+    "props": {
+      "thumbnailUrl": "",
+      "videoUrl": ""
+    },
+    "layout": {
+      "type": "Card",
+      "props": { "className": "h-full" },
+      "children": [
+        {
+          "type": "CardHeader",
+          "props": { "className": "space-y-1" },
+          "children": [
+            {
+              "type": "CardTitle",
+              "props": { "className": "flex items-center gap-2" },
+              "children": [
+                { "type": "Icon", "props": { "name": "FilmSlate", "size": 20 } },
+                { "type": "Text", "props": { "text": "Media" } }
+              ]
+            },
+            {
+              "type": "CardDescription",
+              "props": { "text": "Optional visuals to make the quick guide easier to follow." }
+            }
+          ]
+        },
+        {
+          "type": "CardContent",
+          "props": { "className": "space-y-4" },
+          "children": [
+            {
+              "type": "Box",
+              "props": { "className": "space-y-2" },
+              "children": [
+                {
+                  "type": "FormField",
+                  "props": { "name": "thumbnailUrl", "label": "Thumbnail image", "value": "{{thumbnailUrl}}", "placeholder": "https://images.example.com/quick-guide.png", "helperText": "Shown in dashboards and previews." }
+                },
+                {
+                  "type": "ConditionalRender",
+                  "props": { "condition": "{{thumbnailUrl}}" },
+                  "children": [
+                    {
+                      "type": "Box",
+                      "props": { "className": "relative aspect-[16/9] overflow-hidden rounded-lg border bg-muted" },
+                      "children": [
+                        { "type": "Image", "props": { "src": "{{thumbnailUrl}}", "alt": "Quick guide thumbnail", "fill": true, "className": "object-cover" } }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "props": { "className": "space-y-2" },
+              "children": [
+                {
+                  "type": "FormField",
+                  "props": { "name": "videoUrl", "label": "Demo video (optional)", "value": "{{videoUrl}}", "placeholder": "YouTube or direct MP4 link", "helperText": "Embed a short clip that shows the flow in action." }
+                },
+                {
+                  "type": "ConditionalRender",
+                  "props": { "condition": "{{videoUrl}}" },
+                  "children": [
+                    {
+                      "type": "Box",
+                      "props": { "className": "rounded-lg border bg-black p-3" },
+                      "children": [
+                        { "type": "Badge", "props": { "variant": "secondary", "text": "Preview" } },
+                        {
+                          "type": "Box",
+                          "props": { "className": "aspect-video overflow-hidden rounded-md bg-muted mt-2" },
+                          "children": [
+                            { "type": "Iframe", "props": { "src": "{{videoUrl}}", "className": "h-full w-full" } }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "scripts": {
+      "init": "media.prepareMediaState",
+      "onThumbnailChange": "media.handleThumbnailChange",
+      "onVideoChange": "media.handleVideoChange"
+    }
+  }
+]
