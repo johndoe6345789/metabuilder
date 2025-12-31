@@ -9,14 +9,25 @@
       "name": "MAX_VALUE",
       "value": 100,
       "type": "number",
-      "exported": true
+      "exported": true,
+      "docstring": {
+        "summary": "Maximum allowed value for calculations",
+        "description": "Used as an upper bound in validation and clamping operations",
+        "since": "1.0.0",
+        "see": ["clamp"]
+      }
     },
     {
       "id": "app_name",
       "name": "APP_NAME",
       "value": "JSON Script Demo",
       "type": "string",
-      "exported": true
+      "exported": true,
+      "docstring": {
+        "summary": "Application display name",
+        "description": "Used in UI headers and logging messages",
+        "since": "1.0.0"
+      }
     },
     {
       "id": "config",
@@ -27,7 +38,12 @@
         "timeout": 5000,
         "maxRetries": 3
       },
-      "exported": true
+      "exported": true,
+      "docstring": {
+        "summary": "Default application configuration",
+        "description": "Contains default settings for debug mode, request timeout, and retry logic",
+        "since": "1.0.0"
+      }
     }
   ],
 
@@ -38,6 +54,39 @@
       "description": "Demonstrates all expression types",
       "async": false,
       "exported": true,
+      "docstring": {
+        "summary": "Demonstrates all JSON script expression types",
+        "description": "Comprehensive example showing binary expressions, logical expressions with short-circuit evaluation, unary expressions, conditional (ternary) expressions, template literals, and object literals.",
+        "params": [
+          {
+            "name": "a",
+            "type": "number",
+            "description": "First number for arithmetic and comparison operations"
+          },
+          {
+            "name": "b",
+            "type": "number",
+            "description": "Second number for arithmetic and comparison operations"
+          }
+        ],
+        "returns": {
+          "type": "ExpressionsDemoResult",
+          "description": "Object containing results of various expressions including sum, diff, product, max, bothPositive, and formatted message"
+        },
+        "examples": [
+          {
+            "title": "Basic usage",
+            "code": "const result = all_expressions(10, 5);\n// result.sum === 15\n// result.product === 50\n// result.max === 10"
+          },
+          {
+            "title": "Negative numbers",
+            "code": "const result = all_expressions(-3, 7);\n// result.bothPositive === false\n// result.max === 7"
+          }
+        ],
+        "see": ["all_statements", "all_operators"],
+        "since": "1.0.0",
+        "tags": ["demo", "expressions", "examples"]
+      },
       "params": [
         {
           "name": "a",
@@ -212,6 +261,34 @@
       "description": "Demonstrates all statement types",
       "async": false,
       "exported": true,
+      "docstring": {
+        "summary": "Demonstrates all JSON script statement types",
+        "description": "Comprehensive example showing variable declarations (const, let), for-each loops, if/else statements, try/catch/finally error handling, and return statements.",
+        "params": [
+          {
+            "name": "items",
+            "type": "number[]",
+            "description": "Array of numbers to process and calculate statistics on"
+          }
+        ],
+        "returns": {
+          "type": "StatementsDemoResult",
+          "description": "Object containing count, sum, average, and any error that occurred"
+        },
+        "examples": [
+          {
+            "title": "Basic usage",
+            "code": "const result = all_statements([1, 2, 3, 4, 5]);\n// result.count === 5\n// result.sum === 15\n// result.average === 3"
+          },
+          {
+            "title": "Empty array",
+            "code": "const result = all_statements([]);\n// result.count === 0\n// result.average === 0"
+          }
+        ],
+        "see": ["all_expressions", "control_flow"],
+        "since": "1.0.0",
+        "tags": ["demo", "statements", "loops", "error-handling"]
+      },
       "params": [
         {
           "name": "items",
@@ -370,6 +447,35 @@
       "description": "Demonstrates all operators",
       "async": false,
       "exported": true,
+      "docstring": {
+        "summary": "Demonstrates all supported operators",
+        "description": "Comprehensive demonstration of arithmetic (+, -, *, /, %), comparison (==, !=, <, >, <=, >=), logical (&&, ||, !), and unary (-, +) operators.",
+        "params": [
+          {
+            "name": "x",
+            "type": "number",
+            "description": "First operand"
+          },
+          {
+            "name": "y",
+            "type": "number",
+            "description": "Second operand"
+          }
+        ],
+        "returns": {
+          "type": "OperatorsDemoResult",
+          "description": "Nested object containing results of all operator categories: arithmetic, comparison, logical, and unary"
+        },
+        "examples": [
+          {
+            "title": "Positive numbers",
+            "code": "const result = all_operators(10, 5);\n// result.arithmetic.add === 15\n// result.arithmetic.divide === 2\n// result.comparison.greaterThan === true"
+          }
+        ],
+        "see": ["all_expressions"],
+        "since": "1.0.0",
+        "tags": ["demo", "operators", "arithmetic", "comparison", "logical"]
+      },
       "params": [
         {
           "name": "x",
@@ -511,6 +617,46 @@
       "description": "Demonstrates control flow patterns",
       "async": false,
       "exported": true,
+      "docstring": {
+        "summary": "Demonstrates control flow patterns with nested if/else",
+        "description": "Shows how to implement switch/case-like behavior using nested if/else statements. Classifies a number into categories: negative, zero, small (< 10), medium (< 100), or large (>= 100).",
+        "params": [
+          {
+            "name": "value",
+            "type": "number",
+            "description": "Number to classify"
+          }
+        ],
+        "returns": {
+          "type": "Classification",
+          "description": "Classification string: 'negative', 'zero', 'small', 'medium', or 'large'"
+        },
+        "examples": [
+          {
+            "title": "Negative number",
+            "code": "control_flow(-5) // Returns 'negative'"
+          },
+          {
+            "title": "Zero",
+            "code": "control_flow(0) // Returns 'zero'"
+          },
+          {
+            "title": "Small positive",
+            "code": "control_flow(7) // Returns 'small'"
+          },
+          {
+            "title": "Medium number",
+            "code": "control_flow(50) // Returns 'medium'"
+          },
+          {
+            "title": "Large number",
+            "code": "control_flow(500) // Returns 'large'"
+          }
+        ],
+        "see": ["all_statements"],
+        "since": "1.0.0",
+        "tags": ["demo", "control-flow", "classification"]
+      },
       "params": [
         {
           "name": "value",
@@ -603,6 +749,24 @@
       "description": "Demonstrates working with objects and arrays",
       "async": false,
       "exported": true,
+      "docstring": {
+        "summary": "Demonstrates working with objects and arrays",
+        "description": "Shows how to create array literals, object literals, nested structures, and access object properties using member access. Creates example person, config, and number array data structures.",
+        "params": [],
+        "returns": {
+          "type": "DataStructuresResult",
+          "description": "Object containing example data structures: numbers array, person object, config object with nested server settings, and extracted name property"
+        },
+        "examples": [
+          {
+            "title": "Basic usage",
+            "code": "const result = data_structures();\n// result.numbers === [1, 2, 3, 4, 5]\n// result.person.name === 'John Doe'\n// result.config.server.port === 3000\n// result.extractedName === 'John Doe'"
+          }
+        ],
+        "see": ["all_expressions"],
+        "since": "1.0.0",
+        "tags": ["demo", "data-structures", "objects", "arrays"]
+      },
       "params": [],
       "returnType": "object",
       "body": [
