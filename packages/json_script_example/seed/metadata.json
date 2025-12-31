@@ -18,6 +18,18 @@
       "control_flow",
       "data_structures"
     ],
+    "types": [
+      "ArithmeticResult",
+      "ComparisonResult",
+      "LogicalResult",
+      "OperatorsDemoResult",
+      "ExpressionsDemoResult",
+      "StatementsDemoResult",
+      "DataStructuresResult",
+      "Classification",
+      "TestResult",
+      "ValidationResult"
+    ],
     "components": []
   },
   "tests": {

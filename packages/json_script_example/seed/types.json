@@ -1,0 +1,239 @@
+{
+  "schema_version": "2.1.0",
+  "package": "json_script_example",
+  "description": "Type definitions for json_script_example package",
+
+  "types": [
+    {
+      "id": "arithmetic_result",
+      "name": "ArithmeticResult",
+      "type": "object",
+      "exported": true,
+      "description": "Result of arithmetic operations",
+      "properties": {
+        "add": {"type": "number", "description": "Sum of two numbers"},
+        "subtract": {"type": "number", "description": "Difference of two numbers"},
+        "multiply": {"type": "number", "description": "Product of two numbers"},
+        "divide": {"type": "number", "description": "Quotient of two numbers"},
+        "modulo": {"type": "number", "description": "Remainder after division"}
+      }
+    },
+    {
+      "id": "comparison_result",
+      "name": "ComparisonResult",
+      "type": "object",
+      "exported": true,
+      "description": "Result of comparison operations",
+      "properties": {
+        "equal": {"type": "boolean"},
+        "notEqual": {"type": "boolean"},
+        "lessThan": {"type": "boolean"},
+        "greaterThan": {"type": "boolean"},
+        "lessOrEqual": {"type": "boolean"},
+        "greaterOrEqual": {"type": "boolean"}
+      }
+    },
+    {
+      "id": "logical_result",
+      "name": "LogicalResult",
+      "type": "object",
+      "exported": true,
+      "description": "Result of logical operations",
+      "properties": {
+        "and": {"type": "any", "description": "Result of AND operation (returns last truthy or first falsy)"},
+        "or": {"type": "any", "description": "Result of OR operation (returns first truthy or last falsy)"},
+        "not": {"type": "boolean", "description": "Logical negation"}
+      }
+    },
+    {
+      "id": "unary_result",
+      "name": "UnaryResult",
+      "type": "object",
+      "exported": true,
+      "description": "Result of unary operations",
+      "properties": {
+        "negate": {"type": "number", "description": "Negated number"},
+        "plus": {"type": "number", "description": "Unary plus (converts to number)"}
+      }
+    },
+    {
+      "id": "operators_demo_result",
+      "name": "OperatorsDemoResult",
+      "type": "object",
+      "exported": true,
+      "description": "Complete demonstration of all operators",
+      "properties": {
+        "arithmetic": {"type": "ArithmeticResult"},
+        "comparison": {"type": "ComparisonResult"},
+        "logical": {"type": "LogicalResult"},
+        "unary": {"type": "UnaryResult"}
+      }
+    },
+    {
+      "id": "expressions_demo_result",
+      "name": "ExpressionsDemoResult",
+      "type": "object",
+      "exported": true,
+      "description": "Result from all_expressions function",
+      "properties": {
+        "sum": {"type": "number", "description": "Sum of a + b"},
+        "diff": {"type": "number", "description": "Difference of a - b"},
+        "product": {"type": "number", "description": "Product of a * b"},
+        "max": {"type": "number", "description": "Maximum of a and b"},
+        "bothPositive": {"type": "boolean", "description": "True if both a and b are positive"},
+        "message": {"type": "string", "description": "Template literal with interpolated values"}
+      }
+    },
+    {
+      "id": "statements_demo_result",
+      "name": "StatementsDemoResult",
+      "type": "object",
+      "exported": true,
+      "description": "Result from all_statements function",
+      "properties": {
+        "count": {"type": "number", "description": "Number of items processed"},
+        "sum": {"type": "number", "description": "Sum of all items"},
+        "average": {"type": "number", "description": "Average of all items"},
+        "error": {"type": "string | null", "description": "Error message if any occurred"}
+      }
+    },
+    {
+      "id": "person_type",
+      "name": "Person",
+      "type": "object",
+      "exported": true,
+      "description": "Person object structure",
+      "properties": {
+        "name": {"type": "string", "required": true},
+        "age": {"type": "number", "required": true},
+        "email": {"type": "string", "required": true},
+        "active": {"type": "boolean", "required": true}
+      }
+    },
+    {
+      "id": "server_config",
+      "name": "ServerConfig",
+      "type": "object",
+      "exported": true,
+      "description": "Server configuration object",
+      "properties": {
+        "host": {"type": "string", "description": "Server hostname"},
+        "port": {"type": "number", "description": "Server port"},
+        "protocol": {"type": "string", "description": "Protocol (http/https)"}
+      }
+    },
+    {
+      "id": "app_config",
+      "name": "AppConfig",
+      "type": "object",
+      "exported": true,
+      "description": "Application configuration",
+      "properties": {
+        "server": {"type": "ServerConfig"},
+        "features": {"type": "string[]", "description": "Enabled feature flags"}
+      }
+    },
+    {
+      "id": "data_structures_result",
+      "name": "DataStructuresResult",
+      "type": "object",
+      "exported": true,
+      "description": "Result from data_structures function",
+      "properties": {
+        "numbers": {"type": "number[]", "description": "Array of numbers"},
+        "person": {"type": "Person", "description": "Person object"},
+        "config": {"type": "AppConfig", "description": "Configuration object"},
+        "extractedName": {"type": "string", "description": "Name extracted from person object"}
+      }
+    },
+    {
+      "id": "classification",
+      "name": "Classification",
+      "type": "string",
+      "exported": true,
+      "description": "Value classification",
+      "enum": ["negative", "zero", "small", "medium", "large"]
+    },
+    {
+      "id": "test_case_input",
+      "name": "TestCaseInput",
+      "type": "object",
+      "exported": true,
+      "description": "Generic test case input with expected result",
+      "properties": {
+        "a": {"type": "number", "description": "First operand"},
+        "b": {"type": "number", "description": "Second operand"},
+        "expected": {"type": "any", "description": "Expected result"}
+      }
+    },
+    {
+      "id": "test_result",
+      "name": "TestResult",
+      "type": "object",
+      "exported": true,
+      "description": "Test execution result",
+      "properties": {
+        "passed": {"type": "boolean", "required": true, "description": "Whether test passed"},
+        "actual": {"type": "any", "description": "Actual result"},
+        "expected": {"type": "any", "description": "Expected result"},
+        "error": {"type": "string | null", "description": "Error message if test failed"}
+      }
+    },
+    {
+      "id": "validation_errors",
+      "name": "ValidationErrors",
+      "type": "object",
+      "exported": true,
+      "description": "Validation error messages by field",
+      "additionalProperties": {
+        "type": "string",
+        "description": "Error message for field"
+      }
+    },
+    {
+      "id": "validation_result",
+      "name": "ValidationResult",
+      "type": "object",
+      "exported": true,
+      "description": "Result of validation operation",
+      "properties": {
+        "valid": {"type": "boolean", "required": true, "description": "Whether input is valid"},
+        "errors": {"type": "ValidationErrors", "description": "Validation errors if any"}
+      }
+    },
+    {
+      "id": "form_input",
+      "name": "FormInput",
+      "type": "object",
+      "exported": true,
+      "description": "Generic form input data",
+      "properties": {
+        "name": {"type": "string"},
+        "age": {"type": "number"},
+        "email": {"type": "string"}
+      }
+    }
+  ],
+
+  "exports": {
+    "types": [
+      "ArithmeticResult",
+      "ComparisonResult",
+      "LogicalResult",
+      "UnaryResult",
+      "OperatorsDemoResult",
+      "ExpressionsDemoResult",
+      "StatementsDemoResult",
+      "Person",
+      "ServerConfig",
+      "AppConfig",
+      "DataStructuresResult",
+      "Classification",
+      "TestCaseInput",
+      "TestResult",
+      "ValidationErrors",
+      "ValidationResult",
+      "FormInput"
+    ]
+  }
+}
