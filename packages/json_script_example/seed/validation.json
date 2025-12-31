@@ -1,12 +1,15 @@
 {
+  "$schema": "./script.schema.json",
   "schema_version": "2.1.0",
   "package": "json_script_example",
   "description": "Validation utility functions",
-
   "exports": {
-    "functions": ["isEmail", "isNotEmpty", "validateRange"]
+    "functions": [
+      "isEmail",
+      "isNotEmpty",
+      "validateRange"
+    ]
   },
-
   "functions": [
     {
       "id": "is_email_fn",
@@ -14,7 +17,10 @@
       "description": "Check if string is a valid email",
       "exported": true,
       "params": [
-        {"name": "email", "type": "string"}
+        {
+          "name": "email",
+          "type": "string"
+        }
       ],
       "returnType": "boolean",
       "body": [
@@ -30,7 +36,10 @@
             "left": {
               "type": "call_expression",
               "callee": "$ref:imports.string.indexOf",
-              "args": ["$ref:params.email", "@"]
+              "args": [
+                "$ref:params.email",
+                "@"
+              ]
             },
             "operator": ">",
             "right": 0
@@ -44,13 +53,19 @@
             "left": {
               "type": "call_expression",
               "callee": "$ref:imports.string.lastIndexOf",
-              "args": ["$ref:params.email", "."]
+              "args": [
+                "$ref:params.email",
+                "."
+              ]
             },
             "operator": ">",
             "right": {
               "type": "call_expression",
               "callee": "$ref:imports.string.indexOf",
-              "args": ["$ref:params.email", "@"]
+              "args": [
+                "$ref:params.email",
+                "@"
+              ]
             }
           }
         },
@@ -71,7 +86,10 @@
       "description": "Check if string is not empty after trimming",
       "exported": true,
       "params": [
-        {"name": "str", "type": "string"}
+        {
+          "name": "str",
+          "type": "string"
+        }
       ],
       "returnType": "boolean",
       "body": [
@@ -81,7 +99,9 @@
           "value": {
             "type": "call_expression",
             "callee": "$ref:imports.string.trim",
-            "args": ["$ref:params.str"]
+            "args": [
+              "$ref:params.str"
+            ]
           }
         },
         {
@@ -105,9 +125,18 @@
       "description": "Check if number is within range",
       "exported": true,
       "params": [
-        {"name": "value", "type": "number"},
-        {"name": "min", "type": "number"},
-        {"name": "max", "type": "number"}
+        {
+          "name": "value",
+          "type": "number"
+        },
+        {
+          "name": "min",
+          "type": "number"
+        },
+        {
+          "name": "max",
+          "type": "number"
+        }
       ],
       "returnType": "boolean",
       "body": [

@@ -1,13 +1,21 @@
 {
+  "$schema": "./script.schema.json",
   "schema_version": "2.1.0",
   "package": "json_script_example",
   "description": "Math utility functions",
-
   "exports": {
-    "functions": ["add", "subtract", "multiply", "divide", "clamp"],
-    "constants": ["PI", "E"]
+    "functions": [
+      "add",
+      "subtract",
+      "multiply",
+      "divide",
+      "clamp"
+    ],
+    "constants": [
+      "PI",
+      "E"
+    ]
   },
-
   "constants": [
     {
       "id": "pi_const",
@@ -24,7 +32,6 @@
       "exported": true
     }
   ],
-
   "functions": [
     {
       "id": "add_fn",
@@ -32,8 +39,14 @@
       "description": "Add two numbers",
       "exported": true,
       "params": [
-        {"name": "a", "type": "number"},
-        {"name": "b", "type": "number"}
+        {
+          "name": "a",
+          "type": "number"
+        },
+        {
+          "name": "b",
+          "type": "number"
+        }
       ],
       "returnType": "number",
       "body": [
@@ -54,8 +67,14 @@
       "description": "Subtract two numbers",
       "exported": true,
       "params": [
-        {"name": "a", "type": "number"},
-        {"name": "b", "type": "number"}
+        {
+          "name": "a",
+          "type": "number"
+        },
+        {
+          "name": "b",
+          "type": "number"
+        }
       ],
       "returnType": "number",
       "body": [
@@ -76,8 +95,14 @@
       "description": "Multiply two numbers",
       "exported": true,
       "params": [
-        {"name": "a", "type": "number"},
-        {"name": "b", "type": "number"}
+        {
+          "name": "a",
+          "type": "number"
+        },
+        {
+          "name": "b",
+          "type": "number"
+        }
       ],
       "returnType": "number",
       "body": [
@@ -98,8 +123,14 @@
       "description": "Divide two numbers",
       "exported": true,
       "params": [
-        {"name": "a", "type": "number"},
-        {"name": "b", "type": "number"}
+        {
+          "name": "a",
+          "type": "number"
+        },
+        {
+          "name": "b",
+          "type": "number"
+        }
       ],
       "returnType": "number",
       "body": [
@@ -139,9 +170,18 @@
       "description": "Clamp a value between min and max",
       "exported": true,
       "params": [
-        {"name": "value", "type": "number"},
-        {"name": "min", "type": "number"},
-        {"name": "max", "type": "number"}
+        {
+          "name": "value",
+          "type": "number"
+        },
+        {
+          "name": "min",
+          "type": "number"
+        },
+        {
+          "name": "max",
+          "type": "number"
+        }
       ],
       "returnType": "number",
       "body": [

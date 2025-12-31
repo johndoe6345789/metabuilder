@@ -1,12 +1,15 @@
 {
+  "$schema": "./script.schema.json",
   "schema_version": "2.1.0",
   "package": "json_script_example",
   "description": "UI component examples using JSON script",
-
   "exports": {
-    "components": ["ExpressionDemo", "OperatorDemo", "ResultDisplay"]
+    "components": [
+      "ExpressionDemo",
+      "OperatorDemo",
+      "ResultDisplay"
+    ]
   },
-
   "components": [
     {
       "id": "expression_demo",
@@ -42,7 +45,12 @@
           }
         ],
         "since": "1.0.0",
-        "tags": ["component", "demo", "interactive", "expressions"]
+        "tags": [
+          "component",
+          "demo",
+          "interactive",
+          "expressions"
+        ]
       },
       "props": [
         {
@@ -114,7 +122,9 @@
       },
       "handlers": {
         "setA": {
-          "params": ["value"],
+          "params": [
+            "value"
+          ],
           "body": [
             {
               "type": "setState",
@@ -125,7 +135,9 @@
           ]
         },
         "setB": {
-          "params": ["value"],
+          "params": [
+            "value"
+          ],
           "body": [
             {
               "type": "setState",
@@ -144,7 +156,10 @@
               "value": {
                 "type": "call_expression",
                 "callee": "$ref:imports.script.all_expressions",
-                "args": ["$ref:state.a", "$ref:state.b"]
+                "args": [
+                  "$ref:state.a",
+                  "$ref:state.b"
+                ]
               }
             }
           ]
@@ -175,7 +190,12 @@
           }
         ],
         "since": "1.0.0",
-        "tags": ["component", "demo", "operators", "table"]
+        "tags": [
+          "component",
+          "demo",
+          "operators",
+          "table"
+        ]
       },
       "props": [
         {
@@ -347,7 +367,10 @@
               "value": {
                 "type": "call_expression",
                 "callee": "$ref:imports.script.all_operators",
-                "args": ["$ref:props.x", "$ref:props.y"]
+                "args": [
+                  "$ref:props.x",
+                  "$ref:props.y"
+                ]
               }
             }
           ]
@@ -369,7 +392,11 @@
           }
         ],
         "since": "1.0.0",
-        "tags": ["component", "display", "results"]
+        "tags": [
+          "component",
+          "display",
+          "results"
+        ]
       },
       "props": [
         {
@@ -474,11 +501,13 @@
       }
     }
   ],
-
   "imports": [
     {
       "from": "script",
-      "import": ["all_expressions", "all_operators"]
+      "import": [
+        "all_expressions",
+        "all_operators"
+      ]
     }
   ]
 }

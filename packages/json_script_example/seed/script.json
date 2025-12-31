@@ -1,8 +1,8 @@
 {
+  "$schema": "./script.schema.json",
   "schema_version": "2.1.0",
   "package": "json_script_example",
   "description": "Complete demonstration of JSON script specification",
-
   "constants": [
     {
       "id": "max_value",
@@ -14,7 +14,9 @@
         "summary": "Maximum allowed value for calculations",
         "description": "Used as an upper bound in validation and clamping operations",
         "since": "1.0.0",
-        "see": ["clamp"]
+        "see": [
+          "clamp"
+        ]
       }
     },
     {
@@ -46,7 +48,6 @@
       }
     }
   ],
-
   "functions": [
     {
       "id": "all_expressions_demo",
@@ -83,9 +84,16 @@
             "code": "const result = all_expressions(-3, 7);\n// result.bothPositive === false\n// result.max === 7"
           }
         ],
-        "see": ["all_statements", "all_operators"],
+        "see": [
+          "all_statements",
+          "all_operators"
+        ],
         "since": "1.0.0",
-        "tags": ["demo", "expressions", "examples"]
+        "tags": [
+          "demo",
+          "expressions",
+          "examples"
+        ]
       },
       "params": [
         {
@@ -285,9 +293,17 @@
             "code": "const result = all_statements([]);\n// result.count === 0\n// result.average === 0"
           }
         ],
-        "see": ["all_expressions", "control_flow"],
+        "see": [
+          "all_expressions",
+          "control_flow"
+        ],
         "since": "1.0.0",
-        "tags": ["demo", "statements", "loops", "error-handling"]
+        "tags": [
+          "demo",
+          "statements",
+          "loops",
+          "error-handling"
+        ]
       },
       "params": [
         {
@@ -472,9 +488,17 @@
             "code": "const result = all_operators(10, 5);\n// result.arithmetic.add === 15\n// result.arithmetic.divide === 2\n// result.comparison.greaterThan === true"
           }
         ],
-        "see": ["all_expressions"],
+        "see": [
+          "all_expressions"
+        ],
         "since": "1.0.0",
-        "tags": ["demo", "operators", "arithmetic", "comparison", "logical"]
+        "tags": [
+          "demo",
+          "operators",
+          "arithmetic",
+          "comparison",
+          "logical"
+        ]
       },
       "params": [
         {
@@ -653,9 +677,15 @@
             "code": "control_flow(500) // Returns 'large'"
           }
         ],
-        "see": ["all_statements"],
+        "see": [
+          "all_statements"
+        ],
         "since": "1.0.0",
-        "tags": ["demo", "control-flow", "classification"]
+        "tags": [
+          "demo",
+          "control-flow",
+          "classification"
+        ]
       },
       "params": [
         {
@@ -763,9 +793,16 @@
             "code": "const result = data_structures();\n// result.numbers === [1, 2, 3, 4, 5]\n// result.person.name === 'John Doe'\n// result.config.server.port === 3000\n// result.extractedName === 'John Doe'"
           }
         ],
-        "see": ["all_expressions"],
+        "see": [
+          "all_expressions"
+        ],
         "since": "1.0.0",
-        "tags": ["demo", "data-structures", "objects", "arrays"]
+        "tags": [
+          "demo",
+          "data-structures",
+          "objects",
+          "arrays"
+        ]
       },
       "params": [],
       "returnType": "object",
@@ -779,7 +816,13 @@
           "name": "numbers",
           "value": {
             "type": "array_literal",
-            "elements": [1, 2, 3, 4, 5]
+            "elements": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
           }
         },
         {
@@ -819,7 +862,11 @@
               },
               "features": {
                 "type": "array_literal",
-                "elements": ["auth", "api", "dashboard"]
+                "elements": [
+                  "auth",
+                  "api",
+                  "dashboard"
+                ]
               }
             }
           }

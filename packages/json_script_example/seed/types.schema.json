@@ -1,0 +1,128 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/json-script-types.schema.json",
+  "title": "JSON Script Types",
+  "description": "TypeScript-style type definitions for JSON scripts",
+  "type": "object",
+  "required": ["schema_version", "package", "types"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Type file description"
+    },
+    "types": {
+      "type": "array",
+      "description": "Type definitions",
+      "items": {
+        "$ref": "#/definitions/typeDefinition"
+      }
+    },
+    "exports": {
+      "type": "object",
+      "properties": {
+        "types": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "typeDefinition": {
+      "type": "object",
+      "required": ["id", "name", "type"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Type name (PascalCase)"
+        },
+        "type": {
+          "type": "string",
+          "description": "Base type",
+          "enum": ["object", "string", "number", "boolean", "array", "null", "any"]
+        },
+        "exported": {
+          "type": "boolean",
+          "description": "Whether type is exported"
+        },
+        "description": {
+          "type": "string",
+          "description": "Type description"
+        },
+        "docstring": {
+          "type": "object",
+          "properties": {
+            "summary": { "type": "string" },
+            "description": { "type": "string" },
+            "examples": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "code": { "type": "string" }
+                }
+              }
+            },
+            "see": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "since": { "type": "string" }
+          }
+        },
+        "properties": {
+          "type": "object",
+          "description": "Object type properties",
+          "additionalProperties": {
+            "$ref": "#/definitions/propertyDefinition"
+          }
+        },
+        "enum": {
+          "type": "array",
+          "description": "Enum values",
+          "items": { "type": "string" }
+        },
+        "additionalProperties": {
+          "type": "object",
+          "description": "Schema for dynamic keys",
+          "properties": {
+            "type": { "type": "string" },
+            "description": { "type": "string" }
+          }
+        }
+      }
+    },
+    "propertyDefinition": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Property type"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether property is required"
+        },
+        "description": {
+          "type": "string",
+          "description": "Property description"
+        }
+      }
+    }
+  }
+}

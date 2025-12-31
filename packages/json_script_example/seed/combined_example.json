@@ -1,23 +1,32 @@
 {
+  "$schema": "./script.schema.json",
   "schema_version": "2.1.0",
   "package": "json_script_example",
   "description": "Example using imports from other script files",
-
   "imports": [
     {
       "from": "math_utils",
-      "import": ["add", "multiply", "clamp", "PI"]
+      "import": [
+        "add",
+        "multiply",
+        "clamp",
+        "PI"
+      ]
     },
     {
       "from": "validation",
-      "import": ["validateRange", "isNotEmpty"]
+      "import": [
+        "validateRange",
+        "isNotEmpty"
+      ]
     }
   ],
-
   "exports": {
-    "functions": ["calculateArea", "validateInput"]
+    "functions": [
+      "calculateArea",
+      "validateInput"
+    ]
   },
-
   "functions": [
     {
       "id": "calculate_area_fn",
@@ -25,8 +34,14 @@
       "description": "Calculate area of rectangle using imported math functions",
       "exported": true,
       "params": [
-        {"name": "width", "type": "number"},
-        {"name": "height", "type": "number"}
+        {
+          "name": "width",
+          "type": "number"
+        },
+        {
+          "name": "height",
+          "type": "number"
+        }
       ],
       "returnType": "number",
       "body": [
@@ -40,7 +55,10 @@
           "value": {
             "type": "call_expression",
             "callee": "$ref:imports.math_utils.multiply",
-            "args": ["$ref:params.width", "$ref:params.height"]
+            "args": [
+              "$ref:params.width",
+              "$ref:params.height"
+            ]
           }
         },
         {
@@ -52,7 +70,11 @@
           "value": {
             "type": "call_expression",
             "callee": "$ref:imports.math_utils.clamp",
-            "args": ["$ref:local.area", 0, 1000]
+            "args": [
+              "$ref:local.area",
+              0,
+              1000
+            ]
           }
         }
       ]
@@ -89,11 +111,13 @@
           "value": {
             "type": "call_expression",
             "callee": "$ref:imports.validation.isNotEmpty",
-            "args": [{
-              "type": "member_access",
-              "object": "$ref:params.input",
-              "property": "name"
-            }]
+            "args": [
+              {
+                "type": "member_access",
+                "object": "$ref:params.input",
+                "property": "name"
+              }
+            ]
           }
         },
         {
@@ -174,7 +198,9 @@
             "left": {
               "type": "call_expression",
               "callee": "$ref:imports.Object.keys",
-              "args": ["$ref:local.errors"]
+              "args": [
+                "$ref:local.errors"
+              ]
             },
             "operator": ">",
             "right": 0
