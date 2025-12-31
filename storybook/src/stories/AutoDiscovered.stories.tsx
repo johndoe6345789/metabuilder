@@ -21,17 +21,25 @@ type Story = StoryObj
  * Simple Package Explorer using FakeMUI classes + package prefixes
  */
 function PackageExplorer() {
-  const [selectedLevel, setSelectedLevel] = useState<number>(3)
+  const [selectedPkg, setSelectedPkg] = useState<string>('ui_level3')
 
-  // Mock package data
+  // All discovered packages
   const packages = [
-    { id: 'ui_level2', name: 'Level 2 - User Dashboard', level: 2, color: 'green' },
-    { id: 'ui_level3', name: 'Level 3 - Admin Panel', level: 3, color: 'orange' },
-    { id: 'ui_level4', name: 'Level 4 - God Panel', level: 4, color: 'purple' },
-    { id: 'ui_level5', name: 'Level 5 - Super God', level: 5, color: 'blue' },
+    { id: 'shared', name: 'Shared', description: 'Base design system tokens', themed: false },
+    { id: 'ui_home', name: 'UI Home', description: 'Landing page components', themed: false },
+    { id: 'ui_header', name: 'UI Header', description: 'Navigation header', themed: false },
+    { id: 'ui_footer', name: 'UI Footer', description: 'Site footer', themed: false },
+    { id: 'ui_level2', name: 'Level 2', description: 'User dashboard theme', themed: true },
+    { id: 'ui_level3', name: 'Level 3', description: 'Admin panel theme', themed: true },
+    { id: 'ui_level4', name: 'Level 4', description: 'God-tier builder theme', themed: true },
+    { id: 'ui_level5', name: 'Level 5', description: 'Super god theme', themed: true },
+    { id: 'ui_level6', name: 'Level 6', description: 'Supergod theme', themed: true },
+    { id: 'admin_panel', name: 'Admin Panel', description: 'Admin components', themed: true },
+    { id: 'code_editor', name: 'Code Editor', description: 'Code editing components', themed: false },
+    { id: 'css_designer', name: 'CSS Designer', description: 'Visual CSS designer', themed: false },
   ]
 
-  const currentPkg = packages.find(p => p.level === selectedLevel)
+  const currentPkg = packages.find(p => p.id === selectedPkg)
 
   return (
     <div className="section" style={{ display: 'flex', minHeight: '100vh' }}>
