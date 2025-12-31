@@ -1,11 +1,438 @@
-[
-  {
-    "id": "ui_level2_base",
-    "type": "component",
-    "category": "package",
-    "className": "ui_level2",
-    "description": "Base styles for Ui Level2 package",
-    "priority": 100,
-    "css": ".ui_level2 {\n  /* Add package-specific styles here */\n}"
-  }
-]
+{
+  "schema_version": "2.0.0",
+  "package": "ui_level2",
+
+  "tokens": {
+    "colors": {
+      "level2-primary": {
+        "type": "color",
+        "value": "oklch(0.60 0.15 145)",
+        "metadata": {
+          "name": "Level 2 Green",
+          "category": "brand"
+        }
+      },
+      "level2-accent": {
+        "type": "color",
+        "value": "oklch(0.55 0.18 150)",
+        "metadata": {
+          "name": "Level 2 Accent Green",
+          "category": "brand"
+        }
+      }
+    },
+    "spacing": {
+      "unit": {
+        "type": "length",
+        "value": { "number": 0.25, "unit": "rem" }
+      }
+    }
+  },
+
+  "selectors": [
+    {
+      "id": "level2_nav_selector",
+      "predicate": {
+        "targetType": "Nav",
+        "classes": ["level2-nav"],
+        "states": []
+      }
+    },
+    {
+      "id": "user_dashboard_selector",
+      "predicate": {
+        "targetType": "Section",
+        "classes": ["user-dashboard"],
+        "states": []
+      }
+    },
+    {
+      "id": "profile_card_selector",
+      "predicate": {
+        "targetType": "Card",
+        "classes": ["profile-card"],
+        "states": []
+      }
+    },
+    {
+      "id": "comment_box_selector",
+      "predicate": {
+        "targetType": "Box",
+        "classes": ["comment-box"],
+        "states": []
+      }
+    },
+    {
+      "id": "comment_item_selector",
+      "predicate": {
+        "targetType": "Box",
+        "classes": ["comment-item"],
+        "states": []
+      }
+    },
+    {
+      "id": "comment_item_hover_selector",
+      "predicate": {
+        "targetType": "Box",
+        "classes": ["comment-item"],
+        "states": ["hover"]
+      }
+    },
+    {
+      "id": "user_avatar_selector",
+      "predicate": {
+        "targetType": "Box",
+        "classes": ["user-avatar"],
+        "states": []
+      }
+    }
+  ],
+
+  "effects": [
+    {
+      "id": "level2_nav_sticky",
+      "properties": {
+        "position": {
+          "type": "keyword",
+          "value": "sticky"
+        },
+        "top": {
+          "type": "length",
+          "value": { "number": 0, "unit": "px" }
+        },
+        "zIndex": {
+          "type": "number",
+          "value": 50
+        }
+      }
+    },
+    {
+      "id": "dashboard_layout",
+      "properties": {
+        "padding": {
+          "type": "responsive",
+          "breakpoints": {
+            "xs": { "value": 1, "unit": "rem" },
+            "md": { "value": 2, "unit": "rem" }
+          }
+        },
+        "maxWidth": {
+          "type": "length",
+          "value": { "number": 1280, "unit": "px" }
+        }
+      }
+    },
+    {
+      "id": "profile_card_spacing",
+      "properties": {
+        "padding": {
+          "type": "spacing",
+          "value": { "multiplier": 6, "unit": "spacing.unit" }
+        }
+      }
+    },
+    {
+      "id": "comment_box_effects",
+      "properties": {
+        "padding": {
+          "type": "spacing",
+          "value": { "multiplier": 4, "unit": "spacing.unit" }
+        },
+        "marginBottom": {
+          "type": "length",
+          "value": { "number": 1.5, "unit": "rem" }
+        }
+      }
+    },
+    {
+      "id": "comment_item_effects",
+      "properties": {
+        "padding": {
+          "type": "spacing",
+          "value": { "multiplier": 3, "unit": "spacing.unit" }
+        },
+        "marginBottom": {
+          "type": "length",
+          "value": { "number": 0.75, "unit": "rem" }
+        }
+      }
+    },
+    {
+      "id": "comment_item_hover_transform",
+      "properties": {
+        "backgroundColor": {
+          "type": "color",
+          "value": { "token": "muted" }
+        }
+      }
+    },
+    {
+      "id": "user_avatar_size",
+      "properties": {
+        "width": {
+          "type": "length",
+          "value": { "number": 32, "unit": "px" }
+        },
+        "height": {
+          "type": "length",
+          "value": { "number": 32, "unit": "px" }
+        }
+      }
+    }
+  ],
+
+  "appearance": [
+    {
+      "id": "level2_nav_appearance",
+      "layers": [
+        {
+          "type": "background",
+          "properties": {
+            "color": { "token": "card" }
+          }
+        },
+        {
+          "type": "border",
+          "properties": {
+            "width": { "value": 0, "unit": "px" },
+            "bottomWidth": { "value": 1, "unit": "px" },
+            "style": "solid",
+            "color": { "token": "border" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "profile_card_appearance",
+      "layers": [
+        {
+          "type": "background",
+          "properties": {
+            "color": { "token": "card" }
+          }
+        },
+        {
+          "type": "border",
+          "properties": {
+            "width": { "value": 1, "unit": "px" },
+            "style": "solid",
+            "color": { "token": "border" },
+            "radius": { "value": 0.5, "unit": "rem" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "comment_box_appearance",
+      "layers": [
+        {
+          "type": "background",
+          "properties": {
+            "color": { "token": "card" }
+          }
+        },
+        {
+          "type": "border",
+          "properties": {
+            "width": { "value": 1, "unit": "px" },
+            "style": "solid",
+            "color": { "token": "border" },
+            "radius": { "value": 0.375, "unit": "rem" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "comment_item_appearance",
+      "layers": [
+        {
+          "type": "background",
+          "properties": {
+            "color": { "token": "background" }
+          }
+        },
+        {
+          "type": "border",
+          "properties": {
+            "width": { "value": 1, "unit": "px" },
+            "style": "solid",
+            "color": { "token": "border" },
+            "radius": { "value": 0.375, "unit": "rem" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "user_avatar_appearance",
+      "layers": [
+        {
+          "type": "background",
+          "properties": {
+            "gradient": {
+              "type": "linear",
+              "angle": 135,
+              "stops": [
+                { "position": 0, "color": { "value": "#22c55e" } },
+                { "position": 1, "color": { "value": "#16a34a" } }
+              ]
+            }
+          }
+        },
+        {
+          "type": "border",
+          "properties": {
+            "radius": { "value": 9999, "unit": "px" }
+          }
+        }
+      ]
+    }
+  ],
+
+  "layouts": [
+    {
+      "id": "dashboard_grid",
+      "type": "grid",
+      "constraints": {
+        "columns": {
+          "type": "responsive",
+          "breakpoints": {
+            "xs": 1,
+            "lg": 2
+          }
+        },
+        "gap": { "number": 2, "unit": "rem" }
+      }
+    },
+    {
+      "id": "nav_flex",
+      "type": "flex",
+      "constraints": {
+        "direction": "row",
+        "justify": "space-between",
+        "align": "center"
+      }
+    }
+  ],
+
+  "transitions": [
+    {
+      "id": "comment_hover_transition",
+      "trigger": { "state": "hover" },
+      "properties": ["backgroundColor"],
+      "duration": { "value": 150, "unit": "ms" },
+      "easing": "ease-in-out"
+    }
+  ],
+
+  "rules": [
+    {
+      "id": "rule_level2_nav",
+      "selector": "level2_nav_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 10
+      },
+      "effects": { "ref": "level2_nav_sticky" },
+      "appearance": { "ref": "level2_nav_appearance" },
+      "enabled": true
+    },
+    {
+      "id": "rule_user_dashboard",
+      "selector": "user_dashboard_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 20
+      },
+      "effects": { "ref": "dashboard_layout" },
+      "enabled": true
+    },
+    {
+      "id": "rule_profile_card",
+      "selector": "profile_card_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 30
+      },
+      "effects": { "ref": "profile_card_spacing" },
+      "appearance": { "ref": "profile_card_appearance" },
+      "enabled": true
+    },
+    {
+      "id": "rule_comment_box",
+      "selector": "comment_box_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 40
+      },
+      "effects": { "ref": "comment_box_effects" },
+      "appearance": { "ref": "comment_box_appearance" },
+      "enabled": true
+    },
+    {
+      "id": "rule_comment_item",
+      "selector": "comment_item_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 50
+      },
+      "effects": { "ref": "comment_item_effects" },
+      "appearance": { "ref": "comment_item_appearance" },
+      "transition": { "ref": "comment_hover_transition" },
+      "enabled": true
+    },
+    {
+      "id": "rule_comment_item_hover",
+      "selector": "comment_item_hover_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 2, "types": 1 },
+        "sourceOrder": 51
+      },
+      "effects": { "ref": "comment_item_hover_transform" },
+      "enabled": true
+    },
+    {
+      "id": "rule_user_avatar",
+      "selector": "user_avatar_selector",
+      "priority": {
+        "importance": "normal",
+        "origin": "package",
+        "specificity": { "ids": 0, "classes": 1, "types": 1 },
+        "sourceOrder": 60
+      },
+      "effects": { "ref": "user_avatar_size" },
+      "appearance": { "ref": "user_avatar_appearance" },
+      "enabled": true
+    }
+  ],
+
+  "environments": [
+    {
+      "id": "mobile",
+      "conditions": {
+        "viewport": {
+          "maxWidth": { "value": 768, "unit": "px" }
+        }
+      }
+    },
+    {
+      "id": "desktop",
+      "conditions": {
+        "viewport": {
+          "minWidth": { "value": 1024, "unit": "px" }
+        }
+      }
+    }
+  ]
+}
