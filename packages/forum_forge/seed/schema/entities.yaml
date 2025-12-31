@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../../../yaml-schema.yaml
 # Schema definitions owned by forum_forge package
 
 entities:

@@ -74,11 +74,16 @@ All JSON files include `$schema` references for **IDE autocomplete, validation, 
   - Ensures test data is organized correctly
   - Validates input/expected structure
 
-- **entities.schema.json** - Validates entity definition files (entities.yaml)
+- **entities.schema.json** - Validates entity definition files (entities.yaml) structure
   - Ensures entity structure is well-formed
   - Validates field types and constraints
   - Checks relationship definitions
   - Validates ACL rules
+
+**YAML Validation:**
+- **yaml-schema.yaml** (project root) - YAML meta-schema for validating YAML file structure
+  - entities.yaml includes `# yaml-language-server: $schema=` directive
+  - Provides IDE validation for YAML syntax and structure
 
 Benefits:
 - ✅ **IDE Support** - IntelliSense autocomplete in VS Code, JetBrains IDEs
