@@ -156,25 +156,92 @@ function PackageExplorer() {
   }, [])
   
   if (loading) {
-    return <div style={{ padding: '2rem' }}>Loading packages...</div>
+    return (
+      <div style={{
+        padding: '3rem',
+        textAlign: 'center',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'var(--color-background)'
+      }}>
+        <div style={{
+          fontSize: '2rem',
+          marginBottom: '1rem',
+          animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+        }}>
+          📦
+        </div>
+        <div style={{
+          fontSize: '1.125rem',
+          fontWeight: 600,
+          color: 'var(--color-foreground)',
+          marginBottom: '0.5rem'
+        }}>
+          Discovering Packages
+        </div>
+        <div style={{
+          fontSize: '0.875rem',
+          color: 'var(--color-muted-foreground)'
+        }}>
+          Auto-loading MetaBuilder components...
+        </div>
+      </div>
+    )
   }
   
   const currentPackage = packages.find(p => p.metadata.packageId === selectedPkg)
   const currentVariant = contextVariants.find(v => v.name === selectedVariant)
   
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
+    <div style={{ display: 'flex', height: '100vh', background: 'var(--color-background)' }}>
       {/* Sidebar */}
-      <div style={{ 
-        width: '280px', 
-        borderRight: '1px solid #e5e7eb', 
+      <div style={{
+        width: '320px',
+        borderRight: '1px solid var(--color-border)',
         overflow: 'auto',
-        background: '#f9fafb'
+        background: 'var(--color-muted)',
+        display: 'flex',
+        flexDirection: 'column'
       }}>
-        <div style={{ padding: '1rem', borderBottom: '1px solid #e5e7eb' }}>
-          <h3 style={{ margin: 0, fontSize: '1rem' }}>Packages</h3>
-          <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
-            {packages.length} discovered
+        <div style={{
+          padding: '1.5rem 1rem',
+          borderBottom: '1px solid var(--color-border)',
+          background: 'var(--color-background)'
+        }}>
+          <h3 style={{
+            margin: 0,
+            fontSize: '1.25rem',
+            fontWeight: 700,
+            color: 'var(--color-foreground)',
+            marginBottom: '0.5rem'
+          }}>
+            Package Explorer
+          </h3>
+          <div style={{
+            fontSize: '0.875rem',
+            color: 'var(--color-muted-foreground)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }}>
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '1.5rem',
+              height: '1.5rem',
+              borderRadius: '0.375rem',
+              background: 'var(--color-primary)',
+              color: 'var(--color-primary-foreground)',
+              fontSize: '0.75rem',
+              fontWeight: 600
+            }}>
+              {packages.length}
+            </span>
+            packages discovered
           </div>
         </div>
         
@@ -314,6 +381,13 @@ function PackageExplorer() {
  */
 export const Explorer: Story = {
   render: () => <PackageExplorer />,
+  parameters: {
+    docs: {
+      description: {
+        story: 'Browse and preview all auto-discovered packages with different context variants (Admin, User, God-level permissions).'
+      }
+    }
+  }
 }
 
 /**
