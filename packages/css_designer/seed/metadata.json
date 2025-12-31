@@ -77,5 +77,6 @@
         "render": "component"
       }
     ]
-  }
+  },
+  "icon": "static_content/icon.svg"
 }

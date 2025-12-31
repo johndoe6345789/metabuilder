@@ -59,5 +59,17 @@
         "render": "fetch_runs"
       }
     ]
+  },
+  "icon": "static_content/icon.svg",
+  "devDependencies": [
+    "lua_test"
+  ],
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json"
+    ]
   }
 }

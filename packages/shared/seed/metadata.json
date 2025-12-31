@@ -49,5 +49,15 @@
         "render": "permissions.enforce_level"
       }
     ]
+  },
+  "icon": "static_content/icon.svg",
+  "devDependencies": [],
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json"
+    ]
   }
 }

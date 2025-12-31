@@ -47,5 +47,14 @@
         "render": "framework"
       }
     ]
+  },
+  "devDependencies": [],
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json"
+    ]
   }
 }

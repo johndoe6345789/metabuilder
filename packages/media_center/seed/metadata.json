@@ -228,5 +228,9 @@
         "render": "media_api"
       }
     ]
-  }
+  },
+  "icon": "static_content/icon.svg",
+  "devDependencies": [
+    "lua_test"
+  ]
 }

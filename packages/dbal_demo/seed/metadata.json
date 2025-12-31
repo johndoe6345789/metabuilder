@@ -108,5 +108,6 @@
         "render": "init"
       }
     ]
-  }
+  },
+  "icon": "static_content/icon.svg"
 }
