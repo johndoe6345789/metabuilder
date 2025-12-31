@@ -31,6 +31,38 @@
 
   "selectors": [
     {
+      "id": "l3_button_base",
+      "predicate": {
+        "targetType": "Button",
+        "classes": ["l3-button"],
+        "states": []
+      }
+    },
+    {
+      "id": "l3_card_base",
+      "predicate": {
+        "targetType": "Card",
+        "classes": ["l3-card"],
+        "states": []
+      }
+    },
+    {
+      "id": "l3_table_base",
+      "predicate": {
+        "targetType": "Table",
+        "classes": ["l3-table"],
+        "states": []
+      }
+    },
+    {
+      "id": "l3_input_base",
+      "predicate": {
+        "targetType": "Input",
+        "classes": ["l3-input"],
+        "states": []
+      }
+    },
+    {
       "id": "admin_nav_selector",
       "predicate": {
         "targetType": "Nav",
