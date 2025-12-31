@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/index.schema.json",
+  "title": "MetaBuilder Schema Index",
+  "description": "Master index of all MetaBuilder schemas with cross-references",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "schemas": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "$ref": "https://metabuilder.dev/schemas/package-metadata.schema.json"
+        },
+        "entities": {
+          "$ref": "https://metabuilder.dev/schemas/entities.schema.json"
+        },
+        "types": {
+          "$ref": "https://metabuilder.dev/schemas/json-script-types.schema.json"
+        },
+        "scripts": {
+          "$ref": "https://metabuilder.dev/schemas/json-script.schema.json"
+        },
+        "components": {
+          "$ref": "https://metabuilder.dev/schemas/json-script-components.schema.json"
+        },
+        "validation": {
+          "$ref": "https://metabuilder.dev/schemas/json-script-validation.schema.json"
+        },
+        "styles": {
+          "$ref": "https://metabuilder.dev/schemas/package-styles.schema.json"
+        },
+        "api": {
+          "$ref": "https://metabuilder.dev/schemas/api.schema.json"
+        },
+        "events": {
+          "$ref": "https://metabuilder.dev/schemas/events.schema.json"
+        },
+        "config": {
+          "$ref": "https://metabuilder.dev/schemas/config.schema.json"
+        },
+        "jobs": {
+          "$ref": "https://metabuilder.dev/schemas/jobs.schema.json"
+        },
+        "permissions": {
+          "$ref": "https://metabuilder.dev/schemas/permissions.schema.json"
+        },
+        "forms": {
+          "$ref": "https://metabuilder.dev/schemas/forms.schema.json"
+        },
+        "migrations": {
+          "$ref": "https://metabuilder.dev/schemas/migrations.schema.json"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "schemaMetadata": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Schema name"
+        },
+        "version": {
+          "type": "string",
+          "description": "Schema version"
+        },
+        "description": {
+          "type": "string",
+          "description": "Schema description"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Schema URL"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["stable", "beta", "alpha", "deprecated"],
+          "description": "Schema stability status"
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "Other schemas this depends on",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

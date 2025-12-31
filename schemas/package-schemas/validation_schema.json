@@ -1,0 +1,385 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/json-script-validation.schema.json",
+  "title": "JSON Script Validation Functions",
+  "description": "Validation utility function definitions for JSON scripts",
+  "type": "object",
+  "required": ["schemaVersion", "package"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Validation module description"
+    },
+    "imports": {
+      "type": "array",
+      "description": "Module imports",
+      "items": {
+        "$ref": "#/definitions/import"
+      }
+    },
+    "exports": {
+      "type": "object",
+      "description": "Exported validation functions and patterns",
+      "properties": {
+        "functions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "patterns": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "patterns": {
+      "type": "object",
+      "description": "Reusable validation patterns",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Email validation regex"
+        },
+        "url": {
+          "type": "string",
+          "description": "URL validation regex"
+        },
+        "uuid": {
+          "type": "string",
+          "description": "UUID validation regex"
+        },
+        "phoneUS": {
+          "type": "string",
+          "description": "US phone number regex"
+        },
+        "zipUS": {
+          "type": "string",
+          "description": "US ZIP code regex"
+        },
+        "creditCard": {
+          "type": "string",
+          "description": "Credit card validation regex"
+        },
+        "ipv4": {
+          "type": "string",
+          "description": "IPv4 address regex"
+        },
+        "ipv6": {
+          "type": "string",
+          "description": "IPv6 address regex"
+        }
+      },
+      "additionalProperties": {
+        "type": "string",
+        "description": "Custom validation pattern"
+      }
+    },
+    "functions": {
+      "type": "array",
+      "description": "Validation function definitions",
+      "items": {
+        "$ref": "#/definitions/validationFunction"
+      }
+    }
+  },
+  "definitions": {
+    "import": {
+      "type": "object",
+      "required": ["from", "import"],
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "Module to import from"
+        },
+        "import": {
+          "type": "array",
+          "description": "Items to import",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "validationFunction": {
+      "type": "object",
+      "required": ["id", "name", "params", "returnType", "body"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique function identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Function name (camelCase)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Function description"
+        },
+        "exported": {
+          "type": "boolean",
+          "description": "Whether function is exported",
+          "default": false
+        },
+        "async": {
+          "type": "boolean",
+          "description": "Whether validator is async (for server-side validation)",
+          "default": false
+        },
+        "severity": {
+          "type": "string",
+          "description": "Default severity level for validation failures",
+          "enum": ["error", "warning", "info"],
+          "default": "error"
+        },
+        "composable": {
+          "type": "boolean",
+          "description": "Whether this validator can be composed with others",
+          "default": true
+        },
+        "docstring": {
+          "$ref": "#/definitions/docstring"
+        },
+        "params": {
+          "type": "array",
+          "description": "Function parameters",
+          "items": {
+            "$ref": "#/definitions/param"
+          }
+        },
+        "returnType": {
+          "type": "string",
+          "description": "Return type",
+          "enum": ["boolean", "string", "number", "object", "array", "void", "ValidationResult", "Promise<ValidationResult>"]
+        },
+        "body": {
+          "type": "array",
+          "description": "Function body statements",
+          "items": {
+            "$ref": "#/definitions/statement"
+          }
+        }
+      }
+    },
+    "param": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Parameter name"
+        },
+        "type": {
+          "type": "string",
+          "description": "Parameter type",
+          "enum": ["string", "number", "boolean", "object", "array", "any"]
+        },
+        "optional": {
+          "type": "boolean",
+          "description": "Whether parameter is optional",
+          "default": false
+        },
+        "default": {
+          "description": "Default value"
+        },
+        "description": {
+          "type": "string",
+          "description": "Parameter description"
+        },
+        "sanitize": {
+          "type": "boolean",
+          "description": "Whether to sanitize this parameter (XSS/SQL injection prevention)",
+          "default": false
+        }
+      }
+    },
+    "statement": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Statement type",
+          "enum": [
+            "comment",
+            "const_declaration",
+            "let_declaration",
+            "assignment",
+            "if_statement",
+            "switch_statement",
+            "for_each_loop",
+            "while_loop",
+            "return",
+            "throw",
+            "call_expression",
+            "try_catch",
+            "await_expression"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "description": "Comment text (for comment type)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Variable name (for declarations)"
+        },
+        "value": {
+          "description": "Value or expression"
+        },
+        "target": {
+          "type": "string",
+          "description": "Assignment target"
+        },
+        "condition": {
+          "description": "Condition expression (for if/while)"
+        },
+        "then": {
+          "type": "array",
+          "description": "Then branch statements",
+          "items": { "$ref": "#/definitions/statement" }
+        },
+        "else": {
+          "type": "array",
+          "description": "Else branch statements",
+          "items": { "$ref": "#/definitions/statement" }
+        },
+        "discriminant": {
+          "description": "Switch discriminant expression"
+        },
+        "cases": {
+          "type": "array",
+          "description": "Switch cases",
+          "items": {
+            "type": "object",
+            "properties": {
+              "test": { "description": "Case test value" },
+              "consequent": {
+                "type": "array",
+                "items": { "$ref": "#/definitions/statement" }
+              }
+            }
+          }
+        },
+        "default": {
+          "type": "array",
+          "description": "Default case",
+          "items": { "$ref": "#/definitions/statement" }
+        },
+        "iterator": {
+          "type": "string",
+          "description": "Loop iterator variable"
+        },
+        "iterable": {
+          "description": "Iterable expression"
+        },
+        "body": {
+          "type": "array",
+          "description": "Loop/try body",
+          "items": { "$ref": "#/definitions/statement" }
+        },
+        "callee": {
+          "type": "string",
+          "description": "Function to call"
+        },
+        "args": {
+          "type": "array",
+          "description": "Function arguments"
+        },
+        "argument": {
+          "description": "Throw/await argument"
+        },
+        "catch": {
+          "type": "object",
+          "properties": {
+            "param": { "type": "string" },
+            "body": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/statement" }
+            }
+          }
+        },
+        "finally": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/statement" }
+        }
+      }
+    },
+    "docstring": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "Brief summary"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description"
+        },
+        "params": {
+          "type": "array",
+          "description": "Parameter documentation",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "returns": {
+          "type": "object",
+          "description": "Return value documentation",
+          "properties": {
+            "type": { "type": "string" },
+            "description": { "type": "string" }
+          }
+        },
+        "examples": {
+          "type": "array",
+          "description": "Usage examples",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "code": { "type": "string" },
+              "input": { "description": "Example input" },
+              "output": { "description": "Example output/result" }
+            }
+          }
+        },
+        "throws": {
+          "type": "array",
+          "description": "Exception documentation",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "since": {
+          "type": "string",
+          "description": "Version when added"
+        },
+        "see": {
+          "type": "array",
+          "description": "Related references",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}
