@@ -30,7 +30,11 @@
       "TestResult",
       "ValidationResult"
     ],
-    "components": []
+    "components": [
+      "ExpressionDemo",
+      "OperatorDemo",
+      "ResultDisplay"
+    ]
   },
   "tests": {
     "parameterized": [
@@ -54,6 +58,7 @@
     "stories": [
       {
         "name": "All Expressions",
+        "type": "function",
         "function": "all_expressions",
         "args": [10, 5],
         "argControls": {
@@ -63,11 +68,13 @@
       },
       {
         "name": "All Statements",
+        "type": "function",
         "function": "all_statements",
         "args": [[1, 2, 3, 4, 5]]
       },
       {
         "name": "All Operators",
+        "type": "function",
         "function": "all_operators",
         "args": [10, 5],
         "argControls": {
@@ -77,6 +84,7 @@
       },
       {
         "name": "Control Flow",
+        "type": "function",
         "function": "control_flow",
         "args": [42],
         "argControls": {
@@ -85,8 +93,35 @@
       },
       {
         "name": "Data Structures",
+        "type": "function",
         "function": "data_structures",
         "args": []
+      },
+      {
+        "name": "Expression Demo Component",
+        "type": "component",
+        "component": "ExpressionDemo",
+        "props": {
+          "initialA": 10,
+          "initialB": 5
+        },
+        "propControls": {
+          "initialA": { "type": "number", "default": 10, "min": -100, "max": 100, "step": 1 },
+          "initialB": { "type": "number", "default": 5, "min": -100, "max": 100, "step": 1 }
+        }
+      },
+      {
+        "name": "Operator Demo Component",
+        "type": "component",
+        "component": "OperatorDemo",
+        "props": {
+          "x": 10,
+          "y": 5
+        },
+        "propControls": {
+          "x": { "type": "number", "default": 10, "min": -100, "max": 100, "step": 1 },
+          "y": { "type": "number", "default": 5, "min": -100, "max": 100, "step": 1 }
+        }
       }
     ]
   },
@@ -94,7 +129,8 @@
     "scripts": [
       "seed/script.json",
       "seed/math_utils.json",
-      "seed/validation.json"
+      "seed/validation.json",
+      "seed/components.json"
     ],
     "main": "seed/script.json",
     "executor": {
