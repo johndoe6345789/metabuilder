@@ -19,6 +19,11 @@ function resolveRef(ref, context) {
   const path = ref.substring(5); // Remove "$ref:"
   const parts = path.split('.');
 
+  // Map 'local' to 'local_vars' for compatibility
+  if (parts[0] === 'local') {
+    parts[0] = 'local_vars';
+  }
+
   let value = context;
   for (const part of parts) {
     if (value === null || typeof value !== 'object') {
