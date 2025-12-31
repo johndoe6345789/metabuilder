@@ -2,12 +2,14 @@
   "packageId": "ui_home",
   "name": "Home Page",
   "version": "1.0.0",
-  "description": "Level 1 home page with server status",
+  "description": "Level 1 home page with hero, features, about, and contact sections - the original MetaBuilder landing experience",
   "icon": "static_content/icon.svg",
   "author": "MetaBuilder",
   "category": "ui",
   "dependencies": [
-    "ui_permissions"
+    "ui_permissions",
+    "ui_header",
+    "ui_footer"
   ],
   "devDependencies": [
     "lua_test"
@@ -20,7 +22,19 @@
       "home_ui",
       "navigate"
     ],
-    "components": []
+    "components": [
+      "home_page",
+      "hero_section",
+      "features_section",
+      "feature_card_1",
+      "feature_card_2",
+      "feature_card_3",
+      "feature_card_4",
+      "feature_card_5",
+      "feature_card_6",
+      "about_section",
+      "contact_section"
+    ]
   },
   "tests": {
     "scripts": [

@@ -1,5 +1,46 @@
 [
   {
+    "id": "app_footer_simple",
+    "type": "Box",
+    "props": {
+      "component": "footer",
+      "className": "app-footer app-footer--simple",
+      "sx": {
+        "borderTop": 1,
+        "borderColor": "divider",
+        "bgcolor": "action.hover",
+        "py": 4,
+        "mt": 10
+      }
+    },
+    "children": [
+      {
+        "id": "app_footer_simple_container",
+        "type": "Container",
+        "props": {
+          "maxWidth": "lg",
+          "className": "footer-container"
+        },
+        "children": [
+          {
+            "id": "app_footer_simple_content",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "children": "© 2025 MetaBuilder. Built with the power of visual workflows and declarative schemas.",
+              "className": "footer-copyright",
+              "sx": {
+                "color": "text.secondary",
+                "textAlign": "center"
+              }
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "app_footer",
     "type": "Box",
     "props": {
