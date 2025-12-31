@@ -52,7 +52,8 @@
   },
   "seed": {
     "styles": "seed/styles.json",
-    "types": "seed/types.json"
+    "types": "seed/types.json",
+    "schema": "seed/schema/entities.yaml"
   },
   "storybook": {
     "stories": [

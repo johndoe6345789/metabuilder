@@ -25,7 +25,9 @@ json_script_example/
 │   ├── components.json            # UI component definitions
 │   ├── types.json                 # TypeScript-style type definitions
 │   ├── types.schema.json          # 📋 JSON Schema for types
-│   └── styles.json                # Design tokens
+│   ├── styles.json                # Design tokens
+│   └── schema/
+│       └── entities.yaml          # 🗄️ Database entity definitions
 ├── tests/
 │   ├── README.md                  # Testing guide
 │   ├── math.test.logic.json       # Test assertion functions
@@ -76,6 +78,46 @@ Benefits:
 - ✅ **Real-time Validation** - Catch errors while editing
 - ✅ **Documentation** - Hover tooltips explain each field
 - ✅ **Type Safety** - Ensure JSON matches specification
+
+## Database Schema (entities.yaml)
+
+The package includes **example entity definitions** in [seed/schema/entities.yaml](seed/schema/entities.yaml) demonstrating data modeling for JSON script-based applications:
+
+### Entities
+
+**Calculator** - Calculator instance with user preferences
+- Fields: id, userId, name, mode (basic/scientific/programmer), precision, theme
+- Relations: hasMany calculations, belongsTo user
+- ACL: User-scoped (self-only access)
+
+**Calculation** - Individual calculation history entries
+- Fields: id, calculatorId, expression, result, operationType, isStarred, tags, metadata
+- Relations: belongsTo calculator
+- ACL: Row-level security via calculator.userId
+
+**ExpressionTemplate** - Reusable calculation templates with variables
+- Fields: id, name, template, variables, category, isPublic, useCount
+- Relations: belongsTo user
+- ACL: Public if shared, otherwise self-only
+- Example: `"${principal} * (1 + ${rate}/100)^${years}"` for compound interest
+
+**ValidationRule** - Custom input validation rules
+- Fields: id, name, ruleType (range/pattern/custom), config, errorMessage
+- Relations: belongsTo user
+- ACL: User-scoped
+
+**ComponentState** - Persisted UI component state
+- Fields: id, componentName (ExpressionDemo/OperatorDemo/ResultDisplay), state, isDefault
+- Relations: belongsTo user
+- Use case: Save and restore component configurations
+
+This schema demonstrates:
+- **Entity relationships** (belongsTo, hasMany)
+- **Field types** (string, int, float, boolean, json, bigint, cuid)
+- **Field constraints** (required, nullable, maxLength, min, max, enum, default)
+- **Indexes** for query performance
+- **Access control** (ACL with row-level security)
+- **JSON fields** for flexible metadata storage
 
 ## Exported Functions
 

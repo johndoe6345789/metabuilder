@@ -1,0 +1,366 @@
+# Schema definitions for json_script_example package
+# Demonstrates entity modeling for JSON script-based applications
+
+entities:
+  - name: Calculator
+    version: "1.0"
+    description: "Calculator instance storing calculation history and preferences"
+    checksum: null
+
+    fields:
+      id:
+        type: cuid
+        primary: true
+        generated: true
+
+      userId:
+        type: string
+        required: true
+        index: true
+        description: "Owner of this calculator instance"
+
+      name:
+        type: string
+        required: true
+        maxLength: 100
+        default: "My Calculator"
+        description: "User-friendly name for this calculator"
+
+      mode:
+        type: string
+        required: true
+        default: "basic"
+        enum: [basic, scientific, programmer]
+        description: "Calculator mode"
+
+      precision:
+        type: int
+        required: true
+        default: 2
+        min: 0
+        max: 10
+        description: "Decimal precision for results"
+
+      theme:
+        type: string
+        nullable: true
+        enum: [light, dark, auto]
+        default: "auto"
+
+      lastUsedAt:
+        type: bigint
+        nullable: true
+        description: "Last time this calculator was used"
+
+      createdAt:
+        type: bigint
+        required: true
+
+    indexes:
+      - fields: [userId]
+      - fields: [userId, lastUsedAt]
+
+    relations:
+      - name: calculations
+        type: hasMany
+        entity: Calculation
+        foreignKey: calculatorId
+      - name: user
+        type: belongsTo
+        entity: User
+        field: userId
+        onDelete: Cascade
+
+    acl:
+      create: [user]
+      read: [self]
+      update: [self]
+      delete: [self]
+      rowLevel: "userId = $user.id"
+
+  - name: Calculation
+    version: "1.0"
+    description: "Individual calculation entry in history"
+    checksum: null
+
+    fields:
+      id:
+        type: cuid
+        primary: true
+        generated: true
+
+      calculatorId:
+        type: string
+        required: true
+        index: true
+        description: "Calculator instance this belongs to"
+
+      expression:
+        type: string
+        required: true
+        maxLength: 500
+        description: "The calculation expression (e.g., '10 + 5 * 2')"
+
+      result:
+        type: float
+        required: true
+        description: "Calculated result"
+
+      operationType:
+        type: string
+        required: true
+        enum: [arithmetic, comparison, logical, bitwise]
+        description: "Type of operation performed"
+
+      isStarred:
+        type: boolean
+        default: false
+        description: "Whether user starred this calculation"
+
+      tags:
+        type: json
+        nullable: true
+        description: "User-defined tags for organization"
+
+      metadata:
+        type: json
+        nullable: true
+        description: "Additional metadata (intermediate steps, variables, etc.)"
+
+      createdAt:
+        type: bigint
+        required: true
+
+    indexes:
+      - fields: [calculatorId, createdAt]
+      - fields: [calculatorId, isStarred]
+      - fields: [operationType]
+
+    relations:
+      - name: calculator
+        type: belongsTo
+        entity: Calculator
+        field: calculatorId
+        onDelete: Cascade
+
+    acl:
+      create: [user]
+      read: [self]
+      update: [self]
+      delete: [self]
+      rowLevel: "calculator.userId = $user.id"
+
+  - name: ExpressionTemplate
+    version: "1.0"
+    description: "Reusable expression templates with variables"
+    checksum: null
+
+    fields:
+      id:
+        type: cuid
+        primary: true
+        generated: true
+
+      userId:
+        type: string
+        required: true
+        index: true
+        description: "Creator of this template"
+
+      name:
+        type: string
+        required: true
+        maxLength: 100
+        description: "Template name"
+
+      description:
+        type: string
+        nullable: true
+        maxLength: 500
+        description: "What this template does"
+
+      template:
+        type: string
+        required: true
+        maxLength: 1000
+        description: "Expression template with ${variable} placeholders"
+
+      variables:
+        type: json
+        required: true
+        description: "Variable definitions with types and defaults"
+
+      category:
+        type: string
+        nullable: true
+        enum: [math, finance, physics, engineering, custom]
+        description: "Template category"
+
+      isPublic:
+        type: boolean
+        default: false
+        description: "Whether this template is shared publicly"
+
+      useCount:
+        type: int
+        default: 0
+        description: "Number of times this template has been used"
+
+      createdAt:
+        type: bigint
+        required: true
+
+      updatedAt:
+        type: bigint
+        nullable: true
+
+    indexes:
+      - fields: [userId]
+      - fields: [category]
+      - fields: [isPublic, category]
+      - fields: [userId, name]
+        unique: true
+
+    relations:
+      - name: user
+        type: belongsTo
+        entity: User
+        field: userId
+        onDelete: Cascade
+
+    acl:
+      create: [user]
+      read: [public_if_shared]
+      update: [self]
+      delete: [self]
+      rowLevel: "userId = $user.id OR isPublic = true"
+
+  - name: ValidationRule
+    version: "1.0"
+    description: "Custom validation rules for input validation"
+    checksum: null
+
+    fields:
+      id:
+        type: cuid
+        primary: true
+        generated: true
+
+      userId:
+        type: string
+        required: true
+        index: true
+
+      name:
+        type: string
+        required: true
+        maxLength: 100
+        description: "Rule name"
+
+      ruleType:
+        type: string
+        required: true
+        enum: [range, pattern, custom]
+        description: "Type of validation rule"
+
+      config:
+        type: json
+        required: true
+        description: "Rule configuration (min, max, regex, function, etc.)"
+
+      errorMessage:
+        type: string
+        required: true
+        maxLength: 200
+        description: "Error message when validation fails"
+
+      isActive:
+        type: boolean
+        default: true
+        description: "Whether this rule is currently active"
+
+      createdAt:
+        type: bigint
+        required: true
+
+    indexes:
+      - fields: [userId]
+      - fields: [ruleType]
+
+    relations:
+      - name: user
+        type: belongsTo
+        entity: User
+        field: userId
+        onDelete: Cascade
+
+    acl:
+      create: [user]
+      read: [self]
+      update: [self]
+      delete: [self]
+      rowLevel: "userId = $user.id"
+
+  - name: ComponentState
+    version: "1.0"
+    description: "Persisted state for interactive components"
+    checksum: null
+
+    fields:
+      id:
+        type: cuid
+        primary: true
+        generated: true
+
+      userId:
+        type: string
+        required: true
+        index: true
+
+      componentName:
+        type: string
+        required: true
+        enum: [ExpressionDemo, OperatorDemo, ResultDisplay]
+        description: "Which component this state belongs to"
+
+      state:
+        type: json
+        required: true
+        description: "Serialized component state"
+
+      isDefault:
+        type: boolean
+        default: false
+        description: "Whether this is the user's default state for this component"
+
+      label:
+        type: string
+        nullable: true
+        maxLength: 50
+        description: "Optional label for this saved state"
+
+      createdAt:
+        type: bigint
+        required: true
+
+      updatedAt:
+        type: bigint
+        nullable: true
+
+    indexes:
+      - fields: [userId, componentName]
+      - fields: [userId, componentName, isDefault]
+
+    relations:
+      - name: user
+        type: belongsTo
+        entity: User
+        field: userId
+        onDelete: Cascade
+
+    acl:
+      create: [user]
+      read: [self]
+      update: [self]
+      delete: [self]
+      rowLevel: "userId = $user.id"
