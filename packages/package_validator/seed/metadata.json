@@ -21,7 +21,20 @@
       "validate_components",
       "validate_tests",
       "validate_storybook"
+    ],
+    "types": [
+      "ValidationResult",
+      "ValidationError",
+      "ValidationWarning",
+      "PackageMetadata",
+      "ScriptFile",
+      "TypeDefinition",
+      "ComponentDefinition"
     ]
+  },
+  "seed": {
+    "styles": "seed/styles.json",
+    "types": "seed/types.json"
   },
   "runtime": {
     "scripts": [
@@ -61,12 +74,6 @@
     "package.validate.storybook": {
       "minLevel": 5,
       "description": "Validate storybook configuration"
-    }
-  },
-  "seed": {
-    "styles": "seed/styles.json",
-    "storybook": {
-      "stories": []
     }
   },
   "storybook": {
