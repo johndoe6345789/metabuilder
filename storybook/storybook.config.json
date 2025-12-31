@@ -7,9 +7,9 @@
   "discovery": {
     "enabled": true,
     "scanManifests": true,
-    "includedCategories": ["ui", "admin", "gaming", "social", "editors"],
+    "includedCategories": ["ui", "admin", "gaming", "social", "editors", "examples"],
     "excludedPackages": ["shared", "lua_test"],
-    "minLevel": 1,
+    "minLevel": 0,
     "maxLevel": 6
   },
 
@@ -46,7 +46,13 @@
 
   "scripts": {
     "renderFunctions": ["render", "main", "layout", "login_form", "register_form", "forgot_password", "form", "page", "view"],
-    "ignoredScripts": ["test", "types", "utils", "init", "validate", "actions", "formatting", "format_time", "format", "send_message", "handle_command", "user_join", "user_leave", "helper", "db"]
+    "ignoredScripts": ["test", "types", "utils", "init", "validate", "actions", "formatting", "format_time", "format", "send_message", "handle_command", "user_join", "user_leave", "helper", "db"],
+    "jsonScripts": {
+      "enabled": true,
+      "executor": "javascript",
+      "includeFunctions": ["all_expressions", "all_statements", "all_operators", "control_flow", "data_structures"],
+      "renderMode": "json_output"
+    }
   },
 
   "manualOverrides": {
