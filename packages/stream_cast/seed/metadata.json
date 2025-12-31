@@ -56,20 +56,11 @@
     "stream.view": {
       "minLevel": 2,
       "description": "View streams"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+    }
   },
   "seed": {
     "styles": "seed/styles.json"
-  ,
-  "storybook": {
-    "stories": []
-  }
-}
-,
+  },
   "storybook": {
     "stories": []
   }

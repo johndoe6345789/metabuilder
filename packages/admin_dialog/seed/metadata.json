@@ -36,20 +36,11 @@
     "admin.dialog.action": {
       "minLevel": 4,
       "description": "Execute admin dialog actions"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+    }
   },
   "seed": {
     "styles": "seed/styles.json"
-  ,
-  "storybook": {
-    "stories": []
-  }
-}
-,
+  },
   "storybook": {
     "stories": []
   }
