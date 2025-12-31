@@ -1,0 +1,89 @@
+[
+  {
+    "id": "global_theme",
+    "type": "global",
+    "category": "theme",
+    "description": "Global theme variables and color definitions",
+    "css": ":root {\n  --background: oklch(0.98 0 0);\n  --foreground: oklch(0.25 0 0);\n\n  --card: oklch(1 0 0);\n  --card-foreground: oklch(0.25 0 0);\n  --popover: oklch(1 0 0);\n  --popover-foreground: oklch(0.25 0 0);\n\n  --primary: oklch(0.45 0.15 265);\n  --primary-foreground: oklch(0.98 0 0);\n  --secondary: oklch(0.65 0.02 250);\n  --secondary-foreground: oklch(0.25 0 0);\n  --muted: oklch(0.95 0.01 250);\n  --muted-foreground: oklch(0.5 0.01 250);\n  --accent: oklch(0.75 0.15 195);\n  --accent-foreground: oklch(0.2 0.05 250);\n  --destructive: oklch(0.55 0.22 25);\n  --destructive-foreground: oklch(0.98 0 0);\n\n  --border: oklch(0.88 0.01 250);\n  --input: oklch(0.88 0.01 250);\n  --ring: oklch(0.75 0.15 195);\n\n  --sidebar: oklch(0.25 0.03 250);\n  --sidebar-foreground: oklch(0.85 0.01 250);\n  --sidebar-primary: oklch(0.75 0.15 195);\n  --sidebar-primary-foreground: oklch(0.98 0 0);\n  --sidebar-accent: oklch(0.35 0.04 250);\n  --sidebar-accent-foreground: oklch(0.85 0.01 250);\n  --sidebar-border: oklch(0.35 0.04 250);\n  --sidebar-ring: oklch(0.75 0.15 195);\n\n  --radius: 0.5rem;\n}"
+  },
+  {
+    "id": "home_page_styles",
+    "type": "component",
+    "category": "page",
+    "className": "home-page",
+    "description": "Landing page main container styling",
+    "css": ".home-page {\n  min-height: 100vh;\n  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.05) 0%, transparent 50%, rgba(var(--color-accent-rgb), 0.05) 100%);\n}"
+  },
+  {
+    "id": "hero_section_styles",
+    "type": "component",
+    "category": "section",
+    "className": "hero-section",
+    "description": "Hero section styling for landing page",
+    "css": ".hero-section {\n  padding: 4rem 1rem;\n}\n\n@media (min-width: 768px) {\n  .hero-section {\n    padding: 6rem 2rem;\n  }\n}"
+  },
+  {
+    "id": "hero_title_styles",
+    "type": "component",
+    "category": "text",
+    "className": "hero-title",
+    "description": "Hero title with gradient text effect",
+    "css": ".hero-title {\n  font-weight: 700;\n  font-size: 2.5rem;\n  line-height: 1.1;\n  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 50%, var(--color-primary) 100%);\n  background-clip: text;\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  color: transparent;\n}\n\n@media (min-width: 640px) {\n  .hero-title {\n    font-size: 3.5rem;\n  }\n}\n\n@media (min-width: 768px) {\n  .hero-title {\n    font-size: 4rem;\n  }\n}"
+  },
+  {
+    "id": "hero_subtitle_styles",
+    "type": "component",
+    "category": "text",
+    "className": "hero-subtitle",
+    "description": "Hero subtitle styling",
+    "css": ".hero-subtitle {\n  color: var(--muted-foreground);\n  font-weight: 400;\n  max-width: 600px;\n  font-size: 1rem;\n  line-height: 1.6;\n}\n\n@media (min-width: 768px) {\n  .hero-subtitle {\n    font-size: 1.25rem;\n  }\n}"
+  },
+  {
+    "id": "feature_card_styles",
+    "type": "component",
+    "category": "card",
+    "className": "feature-card",
+    "description": "Feature card base styling with hover effects",
+    "css": ".feature-card {\n  height: 100%;\n  border: 2px solid var(--border);\n  transition: border-color 0.2s ease-in-out, transform 0.2s ease-in-out;\n}\n\n.feature-card:hover {\n  border-color: var(--primary);\n  transform: translateY(-2px);\n}"
+  },
+  {
+    "id": "feature_icon_styles",
+    "type": "component",
+    "category": "icon",
+    "className": "feature-icon",
+    "description": "Feature card icon styling with gradients",
+    "css": ".feature-icon {\n  width: 48px;\n  height: 48px;\n  border-radius: 0.5rem;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: white;\n  font-weight: 700;\n  font-size: 1.25rem;\n  margin-bottom: 1rem;\n}\n\n.feature-card--level1 .feature-icon {\n  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);\n}\n\n.feature-card--level2 .feature-icon {\n  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);\n}\n\n.feature-card--level3 .feature-icon {\n  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);\n}\n\n.feature-card--level4 .feature-icon {\n  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);\n}\n\n.feature-card--level5 .feature-icon {\n  background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);\n}\n\n.feature-card--level6 .feature-icon {\n  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);\n}"
+  },
+  {
+    "id": "features_section_styles",
+    "type": "component",
+    "category": "section",
+    "className": "features-section",
+    "description": "Features section styling",
+    "css": ".features-section {\n  padding: 3rem 1rem;\n}\n\n@media (min-width: 768px) {\n  .features-section {\n    padding: 5rem 2rem;\n  }\n}"
+  },
+  {
+    "id": "about_section_styles",
+    "type": "component",
+    "category": "section",
+    "className": "about-section",
+    "description": "About section styling with background",
+    "css": ".about-section {\n  padding: 3rem 1rem;\n  background-color: rgba(0, 0, 0, 0.02);\n}\n\n@media (min-width: 768px) {\n  .about-section {\n    padding: 5rem 2rem;\n  }\n}"
+  },
+  {
+    "id": "contact_section_styles",
+    "type": "component",
+    "category": "section",
+    "className": "contact-section",
+    "description": "Contact section styling",
+    "css": ".contact-section {\n  padding: 3rem 1rem;\n}\n\n@media (min-width: 768px) {\n  .contact-section {\n    padding: 5rem 2rem;\n  }\n}"
+  },
+  {
+    "id": "contact_card_styles",
+    "type": "component",
+    "category": "card",
+    "className": "contact-card",
+    "description": "Contact form card styling",
+    "css": ".contact-card {\n  padding: 1.5rem;\n}\n\n@media (min-width: 768px) {\n  .contact-card {\n    padding: 2rem;\n  }\n}"
+  }
+]
