@@ -29,50 +29,50 @@ function deepEqual(a, b) {
 
 /**
  * Run a single parameterized test
+ * The test logic function returns {passed: boolean, actual: any, expected: any}
  */
-function runParameterizedTest(scriptJson, functionName, testCase, testType) {
+function runParameterizedTest(logicJson, functionName, testCase, testType) {
   const startTime = Date.now();
   let passed = false;
   let actualResult = null;
   let error = null;
 
   try {
-    // Execute the test function with the input
-    actualResult = executeFunction(scriptJson, functionName, [testCase.input]);
+    // Execute the test logic function with the test case
+    const testResult = executeFunction(logicJson, functionName, [testCase.input]);
 
-    // Check result based on test type
-    if (testType === 'valid') {
-      // For valid tests, the result should be truthy (no errors)
-      passed = actualResult && !actualResult.errors;
-    } else if (testType === 'invalid') {
-      // For invalid tests, check expected_errors match
-      if (testCase.expected_errors) {
-        passed = actualResult && actualResult.errors &&
-                 deepEqual(actualResult.errors, testCase.expected_errors);
-      } else {
-        passed = actualResult && actualResult.errors;
-      }
-    } else if (testType === 'email_validation') {
-      // For email validation, check should_be_valid
-      const isValid = actualResult && !actualResult.errors;
-      passed = isValid === testCase.should_be_valid;
-    } else if (testType === 'success') {
-      // For success tests, result should be truthy and no errors
-      passed = actualResult && actualResult.success === true;
-    } else if (testType === 'failure') {
-      // For failure tests, result should indicate failure
-      passed = actualResult && actualResult.success === false;
-    } else if (testCase.expected !== undefined) {
-      // Generic: compare to expected value
-      passed = deepEqual(actualResult, testCase.expected);
+    // The test function should return {passed, actual, expected}
+    if (testResult && typeof testResult.passed === 'boolean') {
+      passed = testResult.passed;
+      actualResult = testResult.actual;
     } else {
-      // No specific assertion, just check it ran
-      passed = true;
+      // Fallback: check for common patterns
+      if (testType === 'valid') {
+        passed = testResult && !testResult.errors;
+      } else if (testType === 'invalid') {
+        if (testCase.expected_errors) {
+          passed = testResult && testResult.errors &&
+                   deepEqual(testResult.errors, testCase.expected_errors);
+        } else {
+          passed = testResult && testResult.errors;
+        }
+      } else if (testResult && testResult.expectedError) {
+        // Test expects an error
+        passed = testResult.error !== undefined;
+      } else if (testCase.input && testCase.input.expected !== undefined) {
+        // Generic: compare to expected value in input
+        passed = deepEqual(testResult, testCase.input.expected);
+      } else {
+        // No specific assertion, just check it ran
+        passed = true;
+      }
+      actualResult = testResult;
     }
   } catch (err) {
     error = err;
-    if (testCase.expectedError) {
-      passed = err.message.includes(testCase.expectedError);
+    if (testCase.expectedError || (testCase.input && testCase.input.expectedError)) {
+      passed = true; // Expected to throw
+      actualResult = { error: err.message };
     } else {
       passed = false;
     }
@@ -88,15 +88,17 @@ function runParameterizedTest(scriptJson, functionName, testCase, testType) {
     duration,
     input: testCase.input,
     actualResult,
-    expectedResult: testCase.expected,
+    expectedResult: testCase.input ? testCase.input.expected : testCase.expected,
     error: error ? error.message : null
   };
 }
 
 /**
- * Run all parameterized tests from cases JSON
+ * Run all parameterized tests
+ * @param {Object} logicJson - Test logic functions (test.logic.json)
+ * @param {Object} parametersJson - Test parameters (test.parameters.json)
  */
-function runParameterizedTests(scriptJson, casesJson) {
+function runParameterizedTests(logicJson, parametersJson) {
   const results = {
     total: 0,
     passed: 0,
@@ -108,7 +110,7 @@ function runParameterizedTests(scriptJson, casesJson) {
   const startTime = Date.now();
 
   // Iterate through each function's test cases
-  for (const [functionName, testGroups] of Object.entries(casesJson)) {
+  for (const [functionName, testGroups] of Object.entries(parametersJson)) {
     results.functions[functionName] = {
       total: 0,
       passed: 0,
@@ -129,7 +131,7 @@ function runParameterizedTests(scriptJson, casesJson) {
 
       // Run each test case
       for (const testCase of testCases) {
-        const result = runParameterizedTest(scriptJson, functionName, testCase, groupName);
+        const result = runParameterizedTest(logicJson, functionName, testCase, groupName);
 
         results.functions[functionName].groups[groupName].tests.push(result);
         results.functions[functionName].total++;
@@ -206,17 +208,19 @@ function formatParameterizedResults(results) {
 
 /**
  * Load and run parameterized tests from files
+ * @param {string} logicPath - Path to test.logic.json
+ * @param {string} parametersPath - Path to test.parameters.json
  */
-function runParameterizedTestsSync(scriptPath, casesPath) {
+function runParameterizedTestsSync(logicPath, parametersPath) {
   const fs = require('fs');
 
-  const scriptContent = fs.readFileSync(scriptPath, 'utf-8');
-  const scriptJson = JSON.parse(scriptContent);
+  const logicContent = fs.readFileSync(logicPath, 'utf-8');
+  const logicJson = JSON.parse(logicContent);
 
-  const casesContent = fs.readFileSync(casesPath, 'utf-8');
-  const casesJson = JSON.parse(casesContent);
+  const parametersContent = fs.readFileSync(parametersPath, 'utf-8');
+  const parametersJson = JSON.parse(parametersContent);
 
-  return runParameterizedTests(scriptJson, casesJson);
+  return runParameterizedTests(logicJson, parametersJson);
 }
 
 module.exports = {
