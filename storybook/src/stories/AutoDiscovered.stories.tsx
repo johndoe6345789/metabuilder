@@ -42,28 +42,19 @@ function PackageExplorer() {
   const currentPkg = packages.find(p => p.id === selectedPkg)
 
   return (
-    <div className="section" style={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar - uses FakeMUI .panel class */}
-      <aside className="panel" style={{ width: '280px', borderRight: '1px solid var(--color-border)' }}>
-        <div style={{ padding: '1.5rem 1rem', borderBottom: '1px solid var(--color-border)' }}>
-          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Packages</h2>
-          <p style={{ margin: '0.5rem 0 0', fontSize: '0.875rem', color: 'var(--color-muted-foreground)' }}>
-            {packages.length} discovered
-          </p>
+    <div className="section">
+      <aside className="panel">
+        <div>
+          <h2>Packages</h2>
+          <p>{packages.length} discovered</p>
         </div>
 
-        <nav style={{ padding: '0.5rem' }}>
+        <nav>
           {packages.map(pkg => (
             <button
               key={pkg.id}
               className={`button ${pkg.id}_button`}
               onClick={() => setSelectedPkg(pkg.id)}
-              style={{
-                width: '100%',
-                marginBottom: '0.5rem',
-                textAlign: 'left',
-                opacity: selectedPkg === pkg.id ? 1 : 0.7,
-              }}
             >
               {pkg.name}
             </button>
@@ -71,24 +62,20 @@ function PackageExplorer() {
         </nav>
       </aside>
 
-      {/* Main content */}
-      <main style={{ flex: 1, padding: '2rem' }}>
+      <main>
         {currentPkg && (
           <>
-            <header style={{ marginBottom: '2rem' }}>
-              <h1 style={{ margin: 0, fontSize: '2rem' }}>{currentPkg.name}</h1>
-              <p style={{ margin: '0.5rem 0 0', color: 'var(--color-muted-foreground)' }}>
-                Package ID: <code>{currentPkg.id}</code>
-              </p>
+            <header>
+              <h1>{currentPkg.name}</h1>
+              <p>Package ID: <code>{currentPkg.id}</code></p>
             </header>
 
             <section>
-              <h2 style={{ marginBottom: '1rem' }}>Themed Components</h2>
+              <h2>Themed Components</h2>
 
-              {/* Buttons */}
-              <div className="card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
-                <h3 style={{ margin: '0 0 1rem' }}>Buttons</h3>
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <div className="card">
+                <h3>Buttons</h3>
+                <div>
                   <button className={`button ${currentPkg.id}_button`}>
                     {currentPkg.name} Button
                   </button>
@@ -96,35 +83,29 @@ function PackageExplorer() {
                     Standard FakeMUI Button
                   </button>
                 </div>
-                <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--color-muted-foreground)' }}>
+                <p>
                   The left button uses <code>.{currentPkg.id}_button</code> which adds theme styling on top of FakeMUI <code>.button</code>
                 </p>
               </div>
 
-              {/* Cards */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+              <div>
                 <div className={`card ${currentPkg.id}_card`}>
-                  <div style={{ padding: '1.5rem' }}>
-                    <h4 style={{ margin: '0 0 0.5rem' }}>Themed Card</h4>
-                    <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-muted-foreground)' }}>
-                      Uses <code>.{currentPkg.id}_card</code>
-                    </p>
+                  <div>
+                    <h4>Themed Card</h4>
+                    <p>Uses <code>.{currentPkg.id}_card</code></p>
                   </div>
                 </div>
 
                 <div className="card">
-                  <div style={{ padding: '1.5rem' }}>
-                    <h4 style={{ margin: '0 0 0.5rem' }}>Standard Card</h4>
-                    <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-muted-foreground)' }}>
-                      Uses only <code>.card</code>
-                    </p>
+                  <div>
+                    <h4>Standard Card</h4>
+                    <p>Uses only <code>.card</code></p>
                   </div>
                 </div>
               </div>
 
-              {/* Table */}
-              <div className="card" style={{ padding: '1.5rem' }}>
-                <h3 style={{ margin: '0 0 1rem' }}>Table</h3>
+              <div className="card">
+                <h3>Table</h3>
                 <table className={`table ${currentPkg.id}_table`}>
                   <thead>
                     <tr>
@@ -185,38 +166,24 @@ function PackageList() {
   ]
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <header style={{ marginBottom: '2rem' }}>
-        <h1 style={{ margin: '0 0 0.5rem' }}>Discovered Packages</h1>
-        <p style={{ margin: 0, color: 'var(--color-muted-foreground)' }}>
-          {packages.length} packages with V2 schema styles loaded
-        </p>
+    <div>
+      <header>
+        <h1>Discovered Packages</h1>
+        <p>{packages.length} packages with V2 schema styles loaded</p>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
+      <div>
         {packages.map(pkg => (
           <div key={pkg.id} className="card">
-            <div style={{ padding: '1.5rem' }}>
-              <h3 style={{ margin: '0 0 0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div>
+              <h3>
                 {pkg.name}
                 {(pkg.id.includes('level') || pkg.id === 'admin_panel') && (
-                  <span style={{
-                    fontSize: '0.75rem',
-                    padding: '0.125rem 0.5rem',
-                    background: 'var(--color-primary)',
-                    color: 'var(--color-primary-foreground)',
-                    borderRadius: '0.25rem'
-                  }}>
-                    Themed
-                  </span>
+                  <span>Themed</span>
                 )}
               </h3>
-              <p style={{ margin: '0 0 1rem', fontSize: '0.875rem', color: 'var(--color-muted-foreground)' }}>
-                {pkg.description}
-              </p>
-              <div style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: 'var(--color-muted-foreground)' }}>
-                {pkg.id}
-              </div>
+              <p>{pkg.description}</p>
+              <div><code>{pkg.id}</code></div>
             </div>
           </div>
         ))}
