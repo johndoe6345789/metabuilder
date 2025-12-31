@@ -4,8 +4,12 @@
  * Usage: node test_cli.js <script.json> <test-suite.json>
  */
 
-const { runTestSuiteSync, formatResults } = require('./test_runner.js');
-const path = require('path');
+import { runTestSuiteSync, formatResults } from './test_runner.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function main() {
   const args = process.argv.slice(2);
