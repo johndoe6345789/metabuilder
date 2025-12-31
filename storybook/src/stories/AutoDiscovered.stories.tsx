@@ -14,7 +14,7 @@ const meta: Meta = {
 export default meta
 
 export const ClassDemo: StoryObj<{ packageId: string; className: string }> = {
-  args: { packageId: 'ui_level3', className: 'button' },
+  args: { packageId: packageIds[0], className: 'button' },
   argTypes: {
     packageId: { control: 'select', options: packageIds },
     className: { control: 'select', options: ['button', 'card', 'table', 'input'] },
