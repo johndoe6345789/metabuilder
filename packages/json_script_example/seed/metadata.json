@@ -50,6 +50,46 @@
     "styles": "seed/styles.json",
     "types": "seed/types.json"
   },
+  "storybook": {
+    "stories": [
+      {
+        "name": "All Expressions",
+        "function": "all_expressions",
+        "args": [10, 5],
+        "argControls": {
+          "a": { "type": "number", "default": 10, "min": -100, "max": 100, "step": 1 },
+          "b": { "type": "number", "default": 5, "min": -100, "max": 100, "step": 1 }
+        }
+      },
+      {
+        "name": "All Statements",
+        "function": "all_statements",
+        "args": [[1, 2, 3, 4, 5]]
+      },
+      {
+        "name": "All Operators",
+        "function": "all_operators",
+        "args": [10, 5],
+        "argControls": {
+          "x": { "type": "number", "default": 10, "min": -100, "max": 100, "step": 1 },
+          "y": { "type": "number", "default": 5, "min": -100, "max": 100, "step": 1 }
+        }
+      },
+      {
+        "name": "Control Flow",
+        "function": "control_flow",
+        "args": [42],
+        "argControls": {
+          "value": { "type": "number", "default": 42, "min": -100, "max": 200, "step": 1 }
+        }
+      },
+      {
+        "name": "Data Structures",
+        "function": "data_structures",
+        "args": []
+      }
+    ]
+  },
   "runtime": {
     "scripts": [
       "seed/script.json",
