@@ -1,0 +1,695 @@
+{
+  "schema_version": "2.1.0",
+  "package": "json_script_example",
+  "description": "Complete demonstration of JSON script specification",
+
+  "constants": [
+    {
+      "id": "max_value",
+      "name": "MAX_VALUE",
+      "value": 100,
+      "type": "number",
+      "exported": true
+    },
+    {
+      "id": "app_name",
+      "name": "APP_NAME",
+      "value": "JSON Script Demo",
+      "type": "string",
+      "exported": true
+    },
+    {
+      "id": "config",
+      "name": "DEFAULT_CONFIG",
+      "type": "object",
+      "value": {
+        "debug": true,
+        "timeout": 5000,
+        "maxRetries": 3
+      },
+      "exported": true
+    }
+  ],
+
+  "functions": [
+    {
+      "id": "all_expressions_demo",
+      "name": "all_expressions",
+      "description": "Demonstrates all expression types",
+      "async": false,
+      "exported": true,
+      "params": [
+        {
+          "name": "a",
+          "type": "number"
+        },
+        {
+          "name": "b",
+          "type": "number"
+        }
+      ],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "comment",
+          "text": "=== Binary Expressions ==="
+        },
+        {
+          "type": "const_declaration",
+          "name": "sum",
+          "value": {
+            "type": "binary_expression",
+            "left": "$ref:params.a",
+            "operator": "+",
+            "right": "$ref:params.b"
+          }
+        },
+        {
+          "type": "const_declaration",
+          "name": "diff",
+          "value": {
+            "type": "binary_expression",
+            "left": "$ref:params.a",
+            "operator": "-",
+            "right": "$ref:params.b"
+          }
+        },
+        {
+          "type": "const_declaration",
+          "name": "product",
+          "value": {
+            "type": "binary_expression",
+            "left": "$ref:params.a",
+            "operator": "*",
+            "right": "$ref:params.b"
+          }
+        },
+        {
+          "type": "comment",
+          "text": "=== Logical Expressions (with short-circuit) ==="
+        },
+        {
+          "type": "const_declaration",
+          "name": "bothPositive",
+          "value": {
+            "type": "logical_expression",
+            "left": {
+              "type": "binary_expression",
+              "left": "$ref:params.a",
+              "operator": ">",
+              "right": 0
+            },
+            "operator": "&&",
+            "right": {
+              "type": "binary_expression",
+              "left": "$ref:params.b",
+              "operator": ">",
+              "right": 0
+            }
+          }
+        },
+        {
+          "type": "const_declaration",
+          "name": "eitherPositive",
+          "value": {
+            "type": "logical_expression",
+            "left": {
+              "type": "binary_expression",
+              "left": "$ref:params.a",
+              "operator": ">",
+              "right": 0
+            },
+            "operator": "||",
+            "right": {
+              "type": "binary_expression",
+              "left": "$ref:params.b",
+              "operator": ">",
+              "right": 0
+            }
+          }
+        },
+        {
+          "type": "comment",
+          "text": "=== Unary Expressions ==="
+        },
+        {
+          "type": "const_declaration",
+          "name": "negatedA",
+          "value": {
+            "type": "unary_expression",
+            "operator": "-",
+            "argument": "$ref:params.a"
+          }
+        },
+        {
+          "type": "const_declaration",
+          "name": "notBothPositive",
+          "value": {
+            "type": "unary_expression",
+            "operator": "!",
+            "argument": "$ref:local.bothPositive"
+          }
+        },
+        {
+          "type": "comment",
+          "text": "=== Conditional Expression (ternary) ==="
+        },
+        {
+          "type": "const_declaration",
+          "name": "max",
+          "value": {
+            "type": "conditional_expression",
+            "test": {
+              "type": "binary_expression",
+              "left": "$ref:params.a",
+              "operator": ">",
+              "right": "$ref:params.b"
+            },
+            "consequent": "$ref:params.a",
+            "alternate": "$ref:params.b"
+          }
+        },
+        {
+          "type": "comment",
+          "text": "=== Template Literal ==="
+        },
+        {
+          "type": "const_declaration",
+          "name": "message",
+          "value": {
+            "type": "template_literal",
+            "template": "Sum: ${sum}, Product: ${product}, Max: ${max}"
+          }
+        },
+        {
+          "type": "comment",
+          "text": "=== Object Literal ==="
+        },
+        {
+          "type": "const_declaration",
+          "name": "result",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "sum": "$ref:local.sum",
+              "diff": "$ref:local.diff",
+              "product": "$ref:local.product",
+              "max": "$ref:local.max",
+              "bothPositive": "$ref:local.bothPositive",
+              "message": "$ref:local.message"
+            }
+          }
+        },
+        {
+          "type": "return",
+          "value": "$ref:local.result"
+        }
+      ]
+    },
+    {
+      "id": "all_statements_demo",
+      "name": "all_statements",
+      "description": "Demonstrates all statement types",
+      "async": false,
+      "exported": true,
+      "params": [
+        {
+          "name": "items",
+          "type": "array"
+        }
+      ],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "comment",
+          "text": "=== Variable Declarations ==="
+        },
+        {
+          "type": "const_declaration",
+          "name": "count",
+          "value": 0
+        },
+        {
+          "type": "let_declaration",
+          "name": "sum",
+          "value": 0
+        },
+        {
+          "type": "comment",
+          "text": "=== For-Each Loop ==="
+        },
+        {
+          "type": "for_each_loop",
+          "iterator": "item",
+          "iterable": "$ref:params.items",
+          "body": [
+            {
+              "type": "assignment",
+              "target": "$ref:local.sum",
+              "value": {
+                "type": "binary_expression",
+                "left": "$ref:local.sum",
+                "operator": "+",
+                "right": "$ref:local.item"
+              }
+            },
+            {
+              "type": "assignment",
+              "target": "$ref:local.count",
+              "value": {
+                "type": "binary_expression",
+                "left": "$ref:local.count",
+                "operator": "+",
+                "right": 1
+              }
+            }
+          ]
+        },
+        {
+          "type": "comment",
+          "text": "=== If/Else Statement ==="
+        },
+        {
+          "type": "let_declaration",
+          "name": "average",
+          "value": 0
+        },
+        {
+          "type": "if_statement",
+          "condition": {
+            "type": "binary_expression",
+            "left": "$ref:local.count",
+            "operator": ">",
+            "right": 0
+          },
+          "then": [
+            {
+              "type": "assignment",
+              "target": "$ref:local.average",
+              "value": {
+                "type": "binary_expression",
+                "left": "$ref:local.sum",
+                "operator": "/",
+                "right": "$ref:local.count"
+              }
+            }
+          ],
+          "else": [
+            {
+              "type": "assignment",
+              "target": "$ref:local.average",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "type": "comment",
+          "text": "=== Try/Catch/Finally ==="
+        },
+        {
+          "type": "let_declaration",
+          "name": "error",
+          "value": null
+        },
+        {
+          "type": "try_catch",
+          "try": [
+            {
+              "type": "comment",
+              "text": "Try to divide by zero"
+            },
+            {
+              "type": "const_declaration",
+              "name": "result",
+              "value": {
+                "type": "binary_expression",
+                "left": 100,
+                "operator": "/",
+                "right": "$ref:local.count"
+              }
+            }
+          ],
+          "catch": {
+            "param": "err",
+            "body": [
+              {
+                "type": "assignment",
+                "target": "$ref:local.error",
+                "value": "$ref:catch.err"
+              }
+            ]
+          },
+          "finally": [
+            {
+              "type": "comment",
+              "text": "Always executes"
+            }
+          ]
+        },
+        {
+          "type": "comment",
+          "text": "=== Return Statement ==="
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "count": "$ref:local.count",
+              "sum": "$ref:local.sum",
+              "average": "$ref:local.average",
+              "error": "$ref:local.error"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "all_operators_demo",
+      "name": "all_operators",
+      "description": "Demonstrates all operators",
+      "async": false,
+      "exported": true,
+      "params": [
+        {
+          "name": "x",
+          "type": "number"
+        },
+        {
+          "name": "y",
+          "type": "number"
+        }
+      ],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "arithmetic": {
+                "type": "object_literal",
+                "properties": {
+                  "add": {
+                    "type": "binary_expression",
+                    "left": "$ref:params.x",
+                    "operator": "+",
+                    "right": "$ref:params.y"
+                  },
+                  "subtract": {
+                    "type": "binary_expression",
+                    "left": "$ref:params.x",
+                    "operator": "-",
+                    "right": "$ref:params.y"
+                  },
+                  "multiply": {
+                    "type": "binary_expression",
+                    "left": "$ref:params.x",
+                    "operator": "*",
+                    "right": "$ref:params.y"
+                  },
+                  "divide": {
+                    "type": "binary_expression",
+                    "left": "$ref:params.x",
+                    "operator": "/",
+                    "right": "$ref:params.y"
+                  },
+                  "modulo": {
+                    "type": "binary_expression",
+                    "left": "$ref:params.x",
+                    "operator": "%",
+                    "right": "$ref:params.y"
+                  }
+                }
+              },
+              "comparison": {
+                "type": "object_literal",
+                "properties": {
+                  "equal": {
+                    "type": "binary_expression",
+                    "left": "$ref:params.x",
+                    "operator": "==",
+                    "right": "$ref:params.y"
+                  },
+                  "notEqual": {
+                    "type": "binary_expression",
+                    "left": "$ref:params.x",
+                    "operator": "!=",
+                    "right": "$ref:params.y"
+                  },
+                  "lessThan": {
+                    "type": "binary_expression",
+                    "left": "$ref:params.x",
+                    "operator": "<",
+                    "right": "$ref:params.y"
+                  },
+                  "greaterThan": {
+                    "type": "binary_expression",
+                    "left": "$ref:params.x",
+                    "operator": ">",
+                    "right": "$ref:params.y"
+                  },
+                  "lessOrEqual": {
+                    "type": "binary_expression",
+                    "left": "$ref:params.x",
+                    "operator": "<=",
+                    "right": "$ref:params.y"
+                  },
+                  "greaterOrEqual": {
+                    "type": "binary_expression",
+                    "left": "$ref:params.x",
+                    "operator": ">=",
+                    "right": "$ref:params.y"
+                  }
+                }
+              },
+              "logical": {
+                "type": "object_literal",
+                "properties": {
+                  "and": {
+                    "type": "logical_expression",
+                    "left": "$ref:params.x",
+                    "operator": "&&",
+                    "right": "$ref:params.y"
+                  },
+                  "or": {
+                    "type": "logical_expression",
+                    "left": "$ref:params.x",
+                    "operator": "||",
+                    "right": "$ref:params.y"
+                  },
+                  "not": {
+                    "type": "unary_expression",
+                    "operator": "!",
+                    "argument": "$ref:params.x"
+                  }
+                }
+              },
+              "unary": {
+                "type": "object_literal",
+                "properties": {
+                  "negate": {
+                    "type": "unary_expression",
+                    "operator": "-",
+                    "argument": "$ref:params.x"
+                  },
+                  "plus": {
+                    "type": "unary_expression",
+                    "operator": "+",
+                    "argument": "$ref:params.x"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "control_flow_demo",
+      "name": "control_flow",
+      "description": "Demonstrates control flow patterns",
+      "async": false,
+      "exported": true,
+      "params": [
+        {
+          "name": "value",
+          "type": "number"
+        }
+      ],
+      "returnType": "string",
+      "body": [
+        {
+          "type": "comment",
+          "text": "Nested if/else (acts like switch/case)"
+        },
+        {
+          "type": "if_statement",
+          "condition": {
+            "type": "binary_expression",
+            "left": "$ref:params.value",
+            "operator": "<",
+            "right": 0
+          },
+          "then": [
+            {
+              "type": "return",
+              "value": "negative"
+            }
+          ],
+          "else": [
+            {
+              "type": "if_statement",
+              "condition": {
+                "type": "binary_expression",
+                "left": "$ref:params.value",
+                "operator": "==",
+                "right": 0
+              },
+              "then": [
+                {
+                  "type": "return",
+                  "value": "zero"
+                }
+              ],
+              "else": [
+                {
+                  "type": "if_statement",
+                  "condition": {
+                    "type": "binary_expression",
+                    "left": "$ref:params.value",
+                    "operator": "<",
+                    "right": 10
+                  },
+                  "then": [
+                    {
+                      "type": "return",
+                      "value": "small"
+                    }
+                  ],
+                  "else": [
+                    {
+                      "type": "if_statement",
+                      "condition": {
+                        "type": "binary_expression",
+                        "left": "$ref:params.value",
+                        "operator": "<",
+                        "right": 100
+                      },
+                      "then": [
+                        {
+                          "type": "return",
+                          "value": "medium"
+                        }
+                      ],
+                      "else": [
+                        {
+                          "type": "return",
+                          "value": "large"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data_structures_demo",
+      "name": "data_structures",
+      "description": "Demonstrates working with objects and arrays",
+      "async": false,
+      "exported": true,
+      "params": [],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "comment",
+          "text": "=== Array Literal ==="
+        },
+        {
+          "type": "const_declaration",
+          "name": "numbers",
+          "value": {
+            "type": "array_literal",
+            "elements": [1, 2, 3, 4, 5]
+          }
+        },
+        {
+          "type": "comment",
+          "text": "=== Object Literal ==="
+        },
+        {
+          "type": "const_declaration",
+          "name": "person",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "name": "John Doe",
+              "age": 30,
+              "email": "john@example.com",
+              "active": true
+            }
+          }
+        },
+        {
+          "type": "comment",
+          "text": "=== Nested Structures ==="
+        },
+        {
+          "type": "const_declaration",
+          "name": "config",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "server": {
+                "type": "object_literal",
+                "properties": {
+                  "host": "localhost",
+                  "port": 3000,
+                  "protocol": "http"
+                }
+              },
+              "features": {
+                "type": "array_literal",
+                "elements": ["auth", "api", "dashboard"]
+              }
+            }
+          }
+        },
+        {
+          "type": "comment",
+          "text": "=== Member Access ==="
+        },
+        {
+          "type": "const_declaration",
+          "name": "personName",
+          "value": {
+            "type": "member_access",
+            "object": "$ref:local.person",
+            "property": "name"
+          }
+        },
+        {
+          "type": "comment",
+          "text": "=== Return Combined Result ==="
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "numbers": "$ref:local.numbers",
+              "person": "$ref:local.person",
+              "config": "$ref:local.config",
+              "extractedName": "$ref:local.personName"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
