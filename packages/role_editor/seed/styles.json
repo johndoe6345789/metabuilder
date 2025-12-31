@@ -1,0 +1,11 @@
+[
+  {
+    "id": "role_editor_base",
+    "type": "component",
+    "category": "package",
+    "className": "role_editor",
+    "description": "Base styles for Role Editor package",
+    "priority": 100,
+    "css": ".role_editor {\n  /* Add package-specific styles here */\n}"
+  }
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "id": "stats_grid_base",
+    "type": "component",
+    "category": "package",
+    "className": "stats_grid",
+    "description": "Base styles for Stats Grid package",
+    "priority": 100,
+    "css": ".stats_grid {\n  /* Add package-specific styles here */\n}"
+  }
+]

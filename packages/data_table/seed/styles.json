@@ -1,0 +1,11 @@
+[
+  {
+    "id": "data_table_base",
+    "type": "component",
+    "category": "package",
+    "className": "data_table",
+    "description": "Base styles for Data Table package",
+    "priority": 100,
+    "css": ".data_table {\n  /* Add package-specific styles here */\n}"
+  }
+]

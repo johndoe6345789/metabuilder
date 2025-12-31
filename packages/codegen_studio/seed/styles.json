@@ -1,0 +1,11 @@
+[
+  {
+    "id": "codegen_studio_base",
+    "type": "component",
+    "category": "package",
+    "className": "codegen_studio",
+    "description": "Base styles for Codegen Studio package",
+    "priority": 100,
+    "css": ".codegen_studio {\n  /* Add package-specific styles here */\n}"
+  }
+]

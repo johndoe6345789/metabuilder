@@ -1,0 +1,11 @@
+[
+  {
+    "id": "smtp_config_base",
+    "type": "component",
+    "category": "package",
+    "className": "smtp_config",
+    "description": "Base styles for Smtp Config package",
+    "priority": 100,
+    "css": ".smtp_config {\n  /* Add package-specific styles here */\n}"
+  }
+]

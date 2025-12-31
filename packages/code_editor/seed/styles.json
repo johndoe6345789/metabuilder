@@ -1,0 +1,11 @@
+[
+  {
+    "id": "code_editor_base",
+    "type": "component",
+    "category": "package",
+    "className": "code_editor",
+    "description": "Base styles for Code Editor package",
+    "priority": 100,
+    "css": ".code_editor {\n  /* Add package-specific styles here */\n}"
+  }
+]

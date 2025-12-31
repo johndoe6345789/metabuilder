@@ -1,0 +1,11 @@
+[
+  {
+    "id": "ui_auth_base",
+    "type": "component",
+    "category": "package",
+    "className": "ui_auth",
+    "description": "Base styles for Ui Auth package",
+    "priority": 100,
+    "css": ".ui_auth {\n  /* Add package-specific styles here */\n}"
+  }
+]
