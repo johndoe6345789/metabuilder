@@ -150,14 +150,28 @@ const ModelBrowser: React.FC = () => (
           placeholder="Search..."
           className="input search-input"
           style={{
-            paddingLeft: '2.25rem',
-            padding: '0.5rem 1rem',
+            padding: '0.5rem 1rem 0.5rem 2.25rem',
             border: '1px solid var(--color-input)',
             borderRadius: '0.375rem',
-            width: '16rem'
+            width: '16rem',
+            fontSize: '0.875rem',
+            fontFamily: 'inherit',
+            backgroundColor: 'var(--color-background)',
+            color: 'var(--color-foreground)',
+            outline: 'none',
+            transition: 'border-color 200ms ease-in-out'
           }}
+          onFocus={(e) => e.target.style.borderColor = 'var(--color-ring)'}
+          onBlur={(e) => e.target.style.borderColor = 'var(--color-input)'}
         />
-        <span style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)' }}>🔍</span>
+        <span style={{
+          position: 'absolute',
+          left: '0.75rem',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          pointerEvents: 'none',
+          color: 'var(--color-muted-foreground)'
+        }}>🔍</span>
       </div>
     </div>
 
