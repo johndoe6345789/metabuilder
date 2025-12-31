@@ -39,22 +39,24 @@
     },
     "stats.grid.configure": {
       "minLevel": 3,
-      "description": "Configure stats grids"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Configure stats grids",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Stats_Grid",
+        "render": "stats"
+      }
+    ]
   }
 }

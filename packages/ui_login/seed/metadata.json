@@ -43,22 +43,24 @@
     },
     "login.view": {
       "minLevel": 1,
-      "description": "View login page"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "View login page",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Login_Page",
+        "render": "login_ui"
+      }
+    ]
   }
 }

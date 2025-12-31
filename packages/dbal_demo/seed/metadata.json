@@ -84,28 +84,29 @@
       "CachedDataPanel": {
         "enabled": true,
         "minLevel": 3,
-        "requireDatabase": true
-      ,
-  "storybook": {
-    "stories": []
-  }
-}
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+        "requireDatabase": true,
+        "storybook": {
+          "stories": []
+        }
+      },
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "primary": true,
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "DBAL_Demo",
+        "render": "init"
+      }
+    ]
   }
 }

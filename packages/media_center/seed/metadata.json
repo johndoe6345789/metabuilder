@@ -107,12 +107,11 @@
       "component": "RetroGamePlayer",
       "title": "Now Playing",
       "icon": "SportsEsports",
-      "minLevel": 2
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "minLevel": 2,
+      "storybook": {
+        "stories": []
+      }
+    }
   ],
   "permissions": {
     "media.jobs.submit": {
@@ -161,12 +160,11 @@
     },
     "media.retro.manage_cores": {
       "minLevel": 4,
-      "description": "Install/remove emulator cores"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Install/remove emulator cores",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "settings": {
     "media_daemon_url": {
@@ -200,12 +198,11 @@
         "64"
       ],
       "default": "auto",
-      "description": "Default audio streaming quality (kbps)"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Default audio streaming quality (kbps)",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "tests": {
     "unit": [
@@ -219,14 +216,17 @@
   },
   "primary": true,
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Media_Center",
+        "render": "media_api"
+      }
+    ]
   }
 }

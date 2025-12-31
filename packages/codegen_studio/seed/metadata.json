@@ -58,22 +58,24 @@
     },
     "codegen.package.scaffold": {
       "minLevel": 5,
-      "description": "Generate package scaffolding"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Generate package scaffolding",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Codegen_Studio",
+        "render": "init"
+      }
+    ]
   }
 }

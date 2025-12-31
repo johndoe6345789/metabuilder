@@ -57,22 +57,24 @@
     },
     "users.list": {
       "minLevel": 4,
-      "description": "List all users"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "List all users",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "UserManagement",
+        "render": "list"
+      }
+    ]
   }
 }

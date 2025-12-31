@@ -55,22 +55,24 @@
     },
     "schema.migrate": {
       "minLevel": 5,
-      "description": "Run schema migrations"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Run schema migrations",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "SchemaEditor",
+        "render": "fields"
+      }
+    ]
   }
 }

@@ -50,22 +50,24 @@
     },
     "editor.code.view": {
       "minLevel": 5,
-      "description": "View code in editor"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "View code in editor",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Code_Editor",
+        "render": "json"
+      }
+    ]
   }
 }

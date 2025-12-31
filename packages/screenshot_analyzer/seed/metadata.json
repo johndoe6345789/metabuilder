@@ -59,22 +59,24 @@
     },
     "screenshot.capture": {
       "minLevel": 5,
-      "description": "Capture screenshots"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Capture screenshots",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Screenshot_Analyzer",
+        "render": "init"
+      }
+    ]
   }
 }

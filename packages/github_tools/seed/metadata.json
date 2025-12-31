@@ -40,22 +40,24 @@
     },
     "github.workflow.trigger": {
       "minLevel": 3,
-      "description": "Trigger workflow runs"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Trigger workflow runs",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "GitHub_Tools",
+        "render": "fetch_runs"
+      }
+    ]
   }
 }

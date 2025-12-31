@@ -56,22 +56,24 @@
     },
     "package.validate.components": {
       "minLevel": 5,
-      "description": "Validate component definitions"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Validate component definitions",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Package_Validator",
+        "render": "validate"
+      }
+    ]
   }
 }

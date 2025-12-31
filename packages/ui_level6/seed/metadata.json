@@ -61,22 +61,24 @@
     },
     "level6.system.admin": {
       "minLevel": 6,
-      "description": "System administration"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "System administration",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Level_6",
+        "render": "layout"
+      }
+    ]
   }
 }

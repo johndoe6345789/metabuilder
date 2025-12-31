@@ -44,22 +44,24 @@
     },
     "dialog.form": {
       "minLevel": 1,
-      "description": "Use form dialogs"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Use form dialogs",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "ConfirmDialog",
+        "render": "confirm"
+      }
+    ]
   }
 }

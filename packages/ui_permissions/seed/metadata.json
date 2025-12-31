@@ -35,22 +35,24 @@
     },
     "permissions.level.read": {
       "minLevel": 1,
-      "description": "Read permission levels"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Read permission levels",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "UI_Permissions",
+        "render": "permissions"
+      }
+    ]
   }
 }

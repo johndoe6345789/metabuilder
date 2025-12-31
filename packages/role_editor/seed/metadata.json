@@ -51,22 +51,24 @@
     },
     "role.edit": {
       "minLevel": 4,
-      "description": "Edit roles"
-    ,
-  "storybook": {
-    "stories": []
-  }
-}
+      "description": "Edit roles",
+      "storybook": {
+        "stories": []
+      }
+    }
   },
   "seed": {
-    "styles": "seed/styles.json"
-  ,
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
   "storybook": {
-    "stories": []
-  }
-}
-,
-  "storybook": {
-    "stories": []
+    "stories": [
+      {
+        "name": "Role_Editor",
+        "render": "role"
+      }
+    ]
   }
 }
