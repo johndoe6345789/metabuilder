@@ -52,8 +52,16 @@
     ]
   },
   "runtime": {
-    "script_json": "seed/script.json",
-    "executor": "../shared/seed/scripts/runtime/script_executor.lua",
-    "description": "All functions defined in script.json, executed via runtime"
+    "scripts": [
+      "seed/script.json",
+      "seed/math_utils.json",
+      "seed/validation.json"
+    ],
+    "main": "seed/script.json",
+    "executor": {
+      "lua": "../shared/seed/scripts/runtime/script_executor.lua",
+      "javascript": "../shared/seed/scripts/runtime/script_executor.cjs"
+    },
+    "description": "Multiple script files with import/export support"
   }
 }
