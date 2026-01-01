@@ -119,6 +119,10 @@
     "field": {
       "type": "object",
       "required": ["type"],
+      "not": {
+        "required": ["primary"],
+        "description": "DEPRECATED: field.primary is no longer supported. Use entity.primaryKey instead."
+      },
       "properties": {
         "type": {
           "type": "string",

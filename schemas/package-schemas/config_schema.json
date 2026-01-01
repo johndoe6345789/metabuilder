@@ -284,7 +284,7 @@
         },
         "provider": {
           "type": "string",
-          "description": "Secret provider/vault",
+          "description": "Secret provider/vault. PRODUCTION: Use managed vaults (aws-secrets-manager, azure-key-vault, hashicorp-vault, gcp-secret-manager) for secure secret storage with rotation and access control. DEVELOPMENT: env/file are acceptable for local development but should NEVER be used in production. SECURITY: Secrets in env vars or files can be exposed in logs, process listings, or source control.",
           "enum": ["env", "file", "aws-secrets-manager", "azure-key-vault", "hashicorp-vault", "gcp-secret-manager", "custom"]
         },
         "path": {

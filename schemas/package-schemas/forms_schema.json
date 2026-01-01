@@ -237,6 +237,51 @@
           "type": "array",
           "description": "Fields this field depends on",
           "items": { "type": "string" }
+        },
+        "aria": {
+          "type": "object",
+          "description": "ARIA accessibility attributes",
+          "properties": {
+            "label": {
+              "type": "string",
+              "description": "ARIA label (overrides visible label for screen readers)"
+            },
+            "describedBy": {
+              "type": "string",
+              "description": "ID of element describing this field"
+            },
+            "labelledBy": {
+              "type": "string",
+              "description": "ID of element labeling this field"
+            },
+            "required": {
+              "type": "boolean",
+              "description": "Mark as required for screen readers"
+            },
+            "invalid": {
+              "type": "boolean",
+              "description": "Mark as invalid for screen readers"
+            },
+            "live": {
+              "type": "string",
+              "enum": ["off", "polite", "assertive"],
+              "description": "ARIA live region setting"
+            },
+            "role": {
+              "type": "string",
+              "description": "ARIA role override"
+            }
+          }
+        },
+        "tabIndex": {
+          "type": "integer",
+          "description": "Tab order index for keyboard navigation",
+          "default": 0
+        },
+        "autoFocus": {
+          "type": "boolean",
+          "description": "Auto-focus this field on form load",
+          "default": false
         }
       }
     },

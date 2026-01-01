@@ -232,7 +232,7 @@
         },
         "required": {
           "type": "boolean",
-          "description": "Whether request body is required",
+          "description": "Whether request body is required. Defaults to true for POST/PUT/PATCH methods, false for GET/DELETE. It is recommended to explicitly set this value based on your API design.",
           "default": false
         },
         "maxSize": {

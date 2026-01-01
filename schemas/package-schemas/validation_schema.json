@@ -440,6 +440,63 @@
           "items": { "type": "string" }
         }
       }
+    },
+    "ValidationResult": {
+      "type": "object",
+      "description": "Structured validation result returned by validator functions",
+      "required": ["valid"],
+      "properties": {
+        "valid": {
+          "type": "boolean",
+          "description": "Whether validation passed"
+        },
+        "errors": {
+          "type": "array",
+          "description": "Validation errors (if any)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string",
+                "description": "Field name that failed validation"
+              },
+              "message": {
+                "type": "string",
+                "description": "Error message"
+              },
+              "code": {
+                "type": "string",
+                "description": "Error code for programmatic handling"
+              },
+              "severity": {
+                "type": "string",
+                "enum": ["error", "warning", "info"],
+                "default": "error"
+              }
+            },
+            "required": ["message"]
+          },
+          "default": []
+        },
+        "warnings": {
+          "type": "array",
+          "description": "Non-blocking validation warnings",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {"type": "string"},
+              "message": {"type": "string"}
+            },
+            "required": ["message"]
+          },
+          "default": []
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Additional validation metadata",
+          "additionalProperties": true
+        }
+      }
     }
   }
 }
