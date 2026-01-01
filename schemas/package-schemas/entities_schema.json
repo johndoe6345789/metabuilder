@@ -142,10 +142,6 @@
           ],
           "description": "Field data type"
         },
-        "primary": {
-          "type": "boolean",
-          "description": "Whether this is a primary key (deprecated, use entity.primaryKey instead)"
-        },
         "generated": {
           "type": "boolean",
           "description": "Whether this field is auto-generated"
