@@ -1,7 +1,0 @@
-{
-  "scripts": [
-    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package initialization" },
-    { "file": "steps.lua", "name": "steps", "category": "editor", "description": "Steps editor operations" },
-    { "file": "media.lua", "name": "media", "category": "editor", "description": "Media pane operations" }
-  ]
-}

@@ -1,7 +1,0 @@
-{
-  "scripts": [
-    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle" },
-    { "file": "confirm.lua", "name": "confirm", "category": "ui", "description": "Confirmation dialog" },
-    { "file": "alert.lua", "name": "alert", "category": "ui", "description": "Alert dialog" }
-  ]
-}

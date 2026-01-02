@@ -1,8 +1,0 @@
-{
-  "scripts": [
-    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle" },
-    { "file": "layout.lua", "name": "layout", "category": "ui", "description": "Page layout" },
-    { "file": "users.lua", "name": "users", "category": "ui", "description": "Users table" },
-    { "file": "moderation.lua", "name": "moderation", "category": "actions", "description": "Moderation actions" }
-  ]
-}
