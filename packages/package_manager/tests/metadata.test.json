@@ -1,0 +1,139 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/tests.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "package_manager",
+  "description": "Package metadata validation tests",
+
+  "testSuites": [
+    {
+      "id": "package-metadata",
+      "name": "Package Metadata Tests",
+      "description": "Validate package.json metadata structure and values",
+      "tags": ["metadata", "validation"],
+
+      "tests": [
+        {
+          "id": "test-package-id",
+          "name": "should have correct packageId",
+          "act": {
+            "type": "function_call",
+            "target": "getPackageMetadata",
+            "input": "package_manager"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result.packageId",
+                "expected": "package_manager",
+                "description": "Package ID should match"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-min-level",
+          "name": "should require Admin level",
+          "act": {
+            "type": "function_call",
+            "target": "getPackageMetadata",
+            "input": "package_manager"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result.minLevel",
+                "expected": 4,
+                "description": "minLevel should be 4 (Admin)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-icon-exists",
+          "name": "should have an icon file",
+          "act": {
+            "type": "function_call",
+            "target": "checkFileExists",
+            "input": "package_manager/static_content/icon.svg"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "truthy",
+                "actual": "result",
+                "description": "Icon file should exist"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-category",
+          "name": "should be in tools category",
+          "act": {
+            "type": "function_call",
+            "target": "getPackageMetadata",
+            "input": "package_manager"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result.category",
+                "expected": "tools",
+                "description": "Category should be tools"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-schema-valid",
+          "name": "package.json should be valid against schema",
+          "act": {
+            "type": "function_call",
+            "target": "validateAgainstSchema",
+            "input": {
+              "file": "package_manager/package.json",
+              "schema": "https://metabuilder.dev/schemas/package-metadata.schema.json"
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "truthy",
+                "actual": "result.valid",
+                "description": "package.json should be valid"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-exports-components",
+          "name": "should export required components",
+          "act": {
+            "type": "function_call",
+            "target": "getPackageMetadata",
+            "input": "package_manager"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "contains",
+                "actual": "result.exports.components",
+                "expected": "PackageManager",
+                "description": "Should export PackageManager component"
+              },
+              {
+                "type": "contains",
+                "actual": "result.exports.components",
+                "expected": "PackageBrowser",
+                "description": "Should export PackageBrowser component"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

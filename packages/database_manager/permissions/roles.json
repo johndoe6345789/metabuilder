@@ -1,0 +1,71 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "database_manager",
+  "description": "Database manager access permissions - SuperGod level only",
+  "permissions": [
+    {
+      "id": "database.view",
+      "name": "View Database Statistics",
+      "description": "View database statistics and schema information",
+      "resource": "database",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "database.export",
+      "name": "Export Database",
+      "description": "Export database data to JSON",
+      "resource": "database",
+      "action": "export",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "database.import",
+      "name": "Import Database",
+      "description": "Import database data from JSON",
+      "resource": "database",
+      "action": "import",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "database.initialize",
+      "name": "Initialize Database",
+      "description": "Initialize database with migrations and seed data",
+      "resource": "database",
+      "action": "initialize",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "database.clear",
+      "name": "Clear Database",
+      "description": "Clear all data from the database",
+      "resource": "database",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 6
+    },
+    {
+      "id": "database.vacuum",
+      "name": "Vacuum Database",
+      "description": "Optimize database storage",
+      "resource": "database",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 5
+    }
+  ],
+  "resources": [
+    {
+      "id": "database",
+      "name": "Database",
+      "type": "system",
+      "description": "Database administration resources",
+      "actions": ["read", "export", "import", "initialize", "delete", "manage"]
+    }
+  ]
+}

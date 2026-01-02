@@ -1,0 +1,882 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "database_manager",
+  "description": "Database management components including stats, export/import, and schema visualization",
+  "components": [
+    {
+      "id": "database_manager",
+      "name": "DatabaseManager",
+      "description": "Main database management interface with tabs for different operations",
+      "props": [
+        {
+          "name": "tenantId",
+          "type": "string",
+          "required": true,
+          "description": "Current tenant ID"
+        },
+        {
+          "name": "userLevel",
+          "type": "number",
+          "required": true,
+          "description": "Current user permission level"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "database-manager",
+          "children": [
+            {
+              "type": "Paper",
+              "elevation": 1,
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "mb": 3,
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "h5",
+                      "children": "Database Manager"
+                    },
+                    {
+                      "type": "Chip",
+                      "label": "SuperGod Access",
+                      "color": "error",
+                      "size": "small"
+                    }
+                  ]
+                },
+                {
+                  "type": "Tabs",
+                  "value": "{{activeTab}}",
+                  "onChange": "{{handleTabChange}}",
+                  "children": [
+                    {
+                      "type": "Tab",
+                      "label": "Statistics",
+                      "value": "stats"
+                    },
+                    {
+                      "type": "Tab",
+                      "label": "Schema",
+                      "value": "schema"
+                    },
+                    {
+                      "type": "Tab",
+                      "label": "Export/Import",
+                      "value": "export"
+                    },
+                    {
+                      "type": "Tab",
+                      "label": "Operations",
+                      "value": "operations"
+                    }
+                  ]
+                },
+                {
+                  "type": "Divider",
+                  "sx": { "my": 2 }
+                },
+                {
+                  "type": "TabPanel",
+                  "value": "stats",
+                  "children": [
+                    {
+                      "type": "ComponentRef",
+                      "ref": "database_stats"
+                    }
+                  ]
+                },
+                {
+                  "type": "TabPanel",
+                  "value": "schema",
+                  "children": [
+                    {
+                      "type": "ComponentRef",
+                      "ref": "schema_visualizer"
+                    }
+                  ]
+                },
+                {
+                  "type": "TabPanel",
+                  "value": "export",
+                  "children": [
+                    {
+                      "type": "ComponentRef",
+                      "ref": "export_import_panel"
+                    }
+                  ]
+                },
+                {
+                  "type": "TabPanel",
+                  "value": "operations",
+                  "children": [
+                    {
+                      "type": "ComponentRef",
+                      "ref": "database_operations"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "database_stats",
+      "name": "DatabaseStats",
+      "description": "Database statistics dashboard showing counts and health metrics",
+      "props": [
+        {
+          "name": "tenantId",
+          "type": "string",
+          "required": false,
+          "description": "Filter stats by tenant"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "database-stats",
+          "children": [
+            {
+              "type": "Typography",
+              "variant": "h6",
+              "mb": 2,
+              "children": "Database Statistics"
+            },
+            {
+              "type": "Grid",
+              "container": true,
+              "spacing": 2,
+              "children": [
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 3,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "type": "Stack",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "Icon",
+                                  "name": "People",
+                                  "color": "primary",
+                                  "sx": { "fontSize": 40 }
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "h4",
+                                  "children": "{{stats.users}}"
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "body2",
+                                  "color": "textSecondary",
+                                  "children": "Users"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 3,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "type": "Stack",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "Icon",
+                                  "name": "Description",
+                                  "color": "success",
+                                  "sx": { "fontSize": 40 }
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "h4",
+                                  "children": "{{stats.schemas}}"
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "body2",
+                                  "color": "textSecondary",
+                                  "children": "Schemas"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 3,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "type": "Stack",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "Icon",
+                                  "name": "Extension",
+                                  "color": "warning",
+                                  "sx": { "fontSize": 40 }
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "h4",
+                                  "children": "{{stats.packages}}"
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "body2",
+                                  "color": "textSecondary",
+                                  "children": "Packages"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 3,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "type": "Stack",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "Icon",
+                                  "name": "Business",
+                                  "color": "info",
+                                  "sx": { "fontSize": 40 }
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "h4",
+                                  "children": "{{stats.tenants}}"
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "body2",
+                                  "color": "textSecondary",
+                                  "children": "Tenants"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "mt": 3,
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "subtitle1",
+                  "mb": 1,
+                  "children": "Additional Metrics"
+                },
+                {
+                  "type": "Grid",
+                  "container": true,
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "md": 2,
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "body2",
+                          "color": "textSecondary",
+                          "children": "Workflows"
+                        },
+                        {
+                          "type": "Typography",
+                          "variant": "h6",
+                          "children": "{{stats.workflows}}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "md": 2,
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "body2",
+                          "color": "textSecondary",
+                          "children": "UI Pages"
+                        },
+                        {
+                          "type": "Typography",
+                          "variant": "h6",
+                          "children": "{{stats.uiPages}}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "md": 2,
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "body2",
+                          "color": "textSecondary",
+                          "children": "Comments"
+                        },
+                        {
+                          "type": "Typography",
+                          "variant": "h6",
+                          "children": "{{stats.comments}}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "md": 2,
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "body2",
+                          "color": "textSecondary",
+                          "children": "CSS Classes"
+                        },
+                        {
+                          "type": "Typography",
+                          "variant": "h6",
+                          "children": "{{stats.cssClasses}}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "md": 2,
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "body2",
+                          "color": "textSecondary",
+                          "children": "Error Logs"
+                        },
+                        {
+                          "type": "Typography",
+                          "variant": "h6",
+                          "children": "{{stats.errorLogs}}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "md": 2,
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "body2",
+                          "color": "textSecondary",
+                          "children": "Sessions"
+                        },
+                        {
+                          "type": "Typography",
+                          "variant": "h6",
+                          "children": "{{stats.sessions}}"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "export_import_panel",
+      "name": "ExportImportPanel",
+      "description": "Panel for exporting and importing database data",
+      "props": [
+        {
+          "name": "tenantId",
+          "type": "string",
+          "required": true,
+          "description": "Current tenant ID"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "export-import-panel",
+          "children": [
+            {
+              "type": "Grid",
+              "container": true,
+              "spacing": 3,
+              "children": [
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 6,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "type": "Stack",
+                              "spacing": 2,
+                              "children": [
+                                {
+                                  "type": "Typography",
+                                  "variant": "h6",
+                                  "children": "Export Database"
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "body2",
+                                  "color": "textSecondary",
+                                  "children": "Export all database data to a JSON file for backup or migration."
+                                },
+                                {
+                                  "type": "FormGroup",
+                                  "children": [
+                                    {
+                                      "type": "FormControlLabel",
+                                      "control": {
+                                        "type": "Checkbox",
+                                        "checked": "{{exportOptions.includeUsers}}",
+                                        "onChange": "{{handleExportOptionChange('includeUsers')}}"
+                                      },
+                                      "label": "Include Users"
+                                    },
+                                    {
+                                      "type": "FormControlLabel",
+                                      "control": {
+                                        "type": "Checkbox",
+                                        "checked": "{{exportOptions.includeSchemas}}",
+                                        "onChange": "{{handleExportOptionChange('includeSchemas')}}"
+                                      },
+                                      "label": "Include Schemas"
+                                    },
+                                    {
+                                      "type": "FormControlLabel",
+                                      "control": {
+                                        "type": "Checkbox",
+                                        "checked": "{{exportOptions.includeWorkflows}}",
+                                        "onChange": "{{handleExportOptionChange('includeWorkflows')}}"
+                                      },
+                                      "label": "Include Workflows"
+                                    },
+                                    {
+                                      "type": "FormControlLabel",
+                                      "control": {
+                                        "type": "Checkbox",
+                                        "checked": "{{exportOptions.includePackages}}",
+                                        "onChange": "{{handleExportOptionChange('includePackages')}}"
+                                      },
+                                      "label": "Include Packages"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Button",
+                                  "variant": "contained",
+                                  "color": "primary",
+                                  "startIcon": {
+                                    "type": "Icon",
+                                    "name": "Download"
+                                  },
+                                  "onClick": "{{handleExport}}",
+                                  "children": "Export to JSON"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 6,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "type": "Stack",
+                              "spacing": 2,
+                              "children": [
+                                {
+                                  "type": "Typography",
+                                  "variant": "h6",
+                                  "children": "Import Database"
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "body2",
+                                  "color": "textSecondary",
+                                  "children": "Import database data from a previously exported JSON file."
+                                },
+                                {
+                                  "type": "Alert",
+                                  "severity": "warning",
+                                  "children": "Importing data will merge with existing records. Duplicate IDs will be skipped."
+                                },
+                                {
+                                  "type": "Button",
+                                  "variant": "outlined",
+                                  "component": "label",
+                                  "startIcon": {
+                                    "type": "Icon",
+                                    "name": "Upload"
+                                  },
+                                  "children": [
+                                    "Select JSON File",
+                                    {
+                                      "type": "input",
+                                      "hidden": true,
+                                      "accept": ".json",
+                                      "onChange": "{{handleFileSelect}}"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "conditional",
+                                  "condition": "{{selectedFile}}",
+                                  "then": {
+                                    "type": "Stack",
+                                    "spacing": 1,
+                                    "children": [
+                                      {
+                                        "type": "Typography",
+                                        "variant": "body2",
+                                        "children": "Selected: {{selectedFile.name}}"
+                                      },
+                                      {
+                                        "type": "Button",
+                                        "variant": "contained",
+                                        "color": "success",
+                                        "onClick": "{{handleImport}}",
+                                        "children": "Import Data"
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "schema_visualizer",
+      "name": "SchemaVisualizer",
+      "description": "Visual representation of database schema and entity relationships",
+      "props": [],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "schema-visualizer",
+          "children": [
+            {
+              "type": "Typography",
+              "variant": "h6",
+              "mb": 2,
+              "children": "Database Schema"
+            },
+            {
+              "type": "List",
+              "children": [
+                {
+                  "type": "each",
+                  "items": "{{entities}}",
+                  "as": "entity",
+                  "render": {
+                    "type": "ListItem",
+                    "children": [
+                      {
+                        "type": "ListItemIcon",
+                        "children": [
+                          {
+                            "type": "Icon",
+                            "name": "TableChart"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "ListItemText",
+                        "primary": "{{entity.name}}",
+                        "secondary": "{{entity.recordCount}} records"
+                      },
+                      {
+                        "type": "IconButton",
+                        "onClick": "{{handleViewEntity(entity)}}",
+                        "children": [
+                          {
+                            "type": "Icon",
+                            "name": "Visibility"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "database_operations",
+      "name": "DatabaseOperations",
+      "description": "Dangerous database operations panel (clear, initialize, etc.)",
+      "props": [],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "database-operations",
+          "children": [
+            {
+              "type": "Alert",
+              "severity": "error",
+              "sx": { "mb": 3 },
+              "children": "Warning: These operations can permanently affect your database. Use with extreme caution."
+            },
+            {
+              "type": "Stack",
+              "spacing": 3,
+              "children": [
+                {
+                  "type": "Card",
+                  "variant": "outlined",
+                  "children": [
+                    {
+                      "type": "CardContent",
+                      "children": [
+                        {
+                          "type": "Stack",
+                          "direction": "row",
+                          "justifyContent": "space-between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "Box",
+                              "children": [
+                                {
+                                  "type": "Typography",
+                                  "variant": "subtitle1",
+                                  "children": "Initialize Database"
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "body2",
+                                  "color": "textSecondary",
+                                  "children": "Run database migrations and seed initial data"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Button",
+                              "variant": "outlined",
+                              "color": "primary",
+                              "onClick": "{{handleInitialize}}",
+                              "children": "Initialize"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Card",
+                  "variant": "outlined",
+                  "sx": { "borderColor": "error.main" },
+                  "children": [
+                    {
+                      "type": "CardContent",
+                      "children": [
+                        {
+                          "type": "Stack",
+                          "direction": "row",
+                          "justifyContent": "space-between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "Box",
+                              "children": [
+                                {
+                                  "type": "Typography",
+                                  "variant": "subtitle1",
+                                  "color": "error",
+                                  "children": "Clear Database"
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "body2",
+                                  "color": "textSecondary",
+                                  "children": "Remove all data from the database (irreversible)"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Button",
+                              "variant": "contained",
+                              "color": "error",
+                              "onClick": "{{handleClearDatabase}}",
+                              "children": "Clear Database"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Card",
+                  "variant": "outlined",
+                  "children": [
+                    {
+                      "type": "CardContent",
+                      "children": [
+                        {
+                          "type": "Stack",
+                          "direction": "row",
+                          "justifyContent": "space-between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "Box",
+                              "children": [
+                                {
+                                  "type": "Typography",
+                                  "variant": "subtitle1",
+                                  "children": "Vacuum Database"
+                                },
+                                {
+                                  "type": "Typography",
+                                  "variant": "body2",
+                                  "color": "textSecondary",
+                                  "children": "Optimize database by reclaiming unused space"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Button",
+                              "variant": "outlined",
+                              "onClick": "{{handleVacuum}}",
+                              "children": "Vacuum"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Component Editor",
+  "description": "Visual component hierarchy editor for building dynamic UI trees",
+  "stories": [
+    {
+      "name": "ComponentHierarchyEditor",
+      "render": "editor",
+      "description": "Full component hierarchy editor interface",
+      "args": {
+        "componentTree": {
+          "id": "root",
+          "type": "Box",
+          "props": {},
+          "children": [
+            {
+              "id": "header",
+              "type": "Paper",
+              "props": { "elevation": 1 },
+              "children": [
+                {
+                  "id": "title",
+                  "type": "Typography",
+                  "props": { "variant": "h5" },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "content",
+              "type": "Grid",
+              "props": { "container": true, "spacing": 2 },
+              "children": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "ComponentCatalog",
+      "render": "catalog",
+      "description": "Component catalog browser",
+      "args": {
+        "categories": [
+          {
+            "name": "Layout",
+            "expanded": true,
+            "components": [
+              { "name": "Box", "icon": "CheckBoxOutlineBlank" },
+              { "name": "Grid", "icon": "GridView" },
+              { "name": "Stack", "icon": "ViewStream" }
+            ]
+          },
+          {
+            "name": "Surfaces",
+            "expanded": false,
+            "components": [
+              { "name": "Paper", "icon": "Article" },
+              { "name": "Card", "icon": "CreditCard" }
+            ]
+          },
+          {
+            "name": "Inputs",
+            "expanded": false,
+            "components": [
+              { "name": "TextField", "icon": "TextFields" },
+              { "name": "Button", "icon": "SmartButton" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "ComponentTree",
+      "render": "tree",
+      "description": "Interactive component tree view",
+      "args": {
+        "tree": {
+          "id": "root",
+          "type": "Box",
+          "children": [
+            {
+              "id": "child1",
+              "type": "Paper",
+              "children": []
+            },
+            {
+              "id": "child2",
+              "type": "Typography",
+              "children": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "ComponentConfig",
+      "render": "config",
+      "description": "Component configuration panel",
+      "args": {
+        "component": {
+          "id": "sample-button",
+          "type": "Button",
+          "props": {
+            "variant": "contained",
+            "color": "primary"
+          },
+          "propDefinitions": [
+            { "name": "variant", "type": "string", "description": "Button variant" },
+            { "name": "color", "type": "string", "description": "Button color" },
+            { "name": "disabled", "type": "boolean", "description": "Disable the button" }
+          ]
+        }
+      }
+    }
+  ],
+  "renders": {
+    "editor": {
+      "description": "Full editor view",
+      "featured": true
+    },
+    "catalog": {
+      "description": "Component catalog"
+    },
+    "tree": {
+      "description": "Tree view"
+    },
+    "config": {
+      "description": "Config panel"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "admin-user",
+      "username": "admin",
+      "level": 4,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  }
+}

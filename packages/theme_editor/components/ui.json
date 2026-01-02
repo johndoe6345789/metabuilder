@@ -1,0 +1,815 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "theme_editor",
+  "description": "Theme customization components for colors, fonts, and CSS variables",
+  "components": [
+    {
+      "id": "theme_editor",
+      "name": "ThemeEditor",
+      "description": "Main theme editing interface with palette and preview",
+      "props": [
+        {
+          "name": "tenantId",
+          "type": "string",
+          "required": true,
+          "description": "Current tenant ID"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "theme-editor",
+          "children": [
+            {
+              "type": "Paper",
+              "elevation": 1,
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "mb": 3,
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "h5",
+                      "children": "Theme Editor"
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 1,
+                      "children": [
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "startIcon": {
+                            "type": "Icon",
+                            "name": "Upload"
+                          },
+                          "onClick": "{{handleImportTheme}}",
+                          "children": "Import"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "startIcon": {
+                            "type": "Icon",
+                            "name": "Download"
+                          },
+                          "onClick": "{{handleExportTheme}}",
+                          "children": "Export"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "startIcon": {
+                            "type": "Icon",
+                            "name": "Save"
+                          },
+                          "onClick": "{{handleSaveTheme}}",
+                          "children": "Save Theme"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Tabs",
+                  "value": "{{activeTab}}",
+                  "onChange": "{{handleTabChange}}",
+                  "children": [
+                    {
+                      "type": "Tab",
+                      "label": "Colors",
+                      "value": "colors"
+                    },
+                    {
+                      "type": "Tab",
+                      "label": "Typography",
+                      "value": "typography"
+                    },
+                    {
+                      "type": "Tab",
+                      "label": "CSS Variables",
+                      "value": "variables"
+                    },
+                    {
+                      "type": "Tab",
+                      "label": "Preview",
+                      "value": "preview"
+                    }
+                  ]
+                },
+                {
+                  "type": "Divider",
+                  "sx": { "my": 2 }
+                },
+                {
+                  "type": "Grid",
+                  "container": true,
+                  "spacing": 3,
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "md": 8,
+                      "children": [
+                        {
+                          "type": "TabPanel",
+                          "value": "colors",
+                          "children": [
+                            {
+                              "type": "ComponentRef",
+                              "ref": "color_palette_editor"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TabPanel",
+                          "value": "typography",
+                          "children": [
+                            {
+                              "type": "ComponentRef",
+                              "ref": "font_selector"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TabPanel",
+                          "value": "variables",
+                          "children": [
+                            {
+                              "type": "ComponentRef",
+                              "ref": "css_variable_editor"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "TabPanel",
+                          "value": "preview",
+                          "children": [
+                            {
+                              "type": "ComponentRef",
+                              "ref": "theme_preview",
+                              "props": {
+                                "fullWidth": true
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "md": 4,
+                      "children": [
+                        {
+                          "type": "Card",
+                          "variant": "outlined",
+                          "children": [
+                            {
+                              "type": "CardContent",
+                              "children": [
+                                {
+                                  "type": "Typography",
+                                  "variant": "subtitle2",
+                                  "mb": 2,
+                                  "children": "Live Preview"
+                                },
+                                {
+                                  "type": "ComponentRef",
+                                  "ref": "theme_preview",
+                                  "props": {
+                                    "compact": true
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "color_palette_editor",
+      "name": "ColorPaletteEditor",
+      "description": "Editor for theme color palette with light/dark mode support",
+      "props": [],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "children": [
+            {
+              "type": "Stack",
+              "direction": "row",
+              "justifyContent": "space-between",
+              "alignItems": "center",
+              "mb": 3,
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "h6",
+                  "children": "Color Palette"
+                },
+                {
+                  "type": "ToggleButtonGroup",
+                  "value": "{{colorMode}}",
+                  "exclusive": true,
+                  "onChange": "{{handleModeChange}}",
+                  "size": "small",
+                  "children": [
+                    {
+                      "type": "ToggleButton",
+                      "value": "light",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "LightMode"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ToggleButton",
+                      "value": "dark",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "DarkMode"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "container": true,
+              "spacing": 2,
+              "children": [
+                {
+                  "type": "each",
+                  "items": "{{colorGroups}}",
+                  "as": "group",
+                  "render": {
+                    "type": "Grid",
+                    "item": true,
+                    "xs": 12,
+                    "sm": 6,
+                    "children": [
+                      {
+                        "type": "Card",
+                        "variant": "outlined",
+                        "children": [
+                          {
+                            "type": "CardContent",
+                            "children": [
+                              {
+                                "type": "Typography",
+                                "variant": "subtitle2",
+                                "mb": 2,
+                                "children": "{{group.name}}"
+                              },
+                              {
+                                "type": "Stack",
+                                "spacing": 2,
+                                "children": [
+                                  {
+                                    "type": "each",
+                                    "items": "{{group.colors}}",
+                                    "as": "color",
+                                    "render": {
+                                      "type": "ComponentRef",
+                                      "ref": "color_picker",
+                                      "props": {
+                                        "label": "{{color.label}}",
+                                        "value": "{{color.value}}",
+                                        "onChange": "{{(val) => handleColorChange(color.key, val)}}"
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "color_picker",
+      "name": "ColorPicker",
+      "description": "Individual color picker with hex input",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "onChange",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "direction": "row",
+          "spacing": 2,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "Box",
+              "sx": {
+                "width": 40,
+                "height": 40,
+                "borderRadius": 1,
+                "backgroundColor": "{{value}}",
+                "border": "1px solid",
+                "borderColor": "divider",
+                "cursor": "pointer"
+              },
+              "onClick": "{{handleOpenPicker}}"
+            },
+            {
+              "type": "Stack",
+              "sx": { "flexGrow": 1 },
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "body2",
+                  "children": "{{label}}"
+                },
+                {
+                  "type": "TextField",
+                  "value": "{{value}}",
+                  "onChange": "{{(e) => onChange(e.target.value)}}",
+                  "size": "small",
+                  "sx": { "maxWidth": 120 },
+                  "inputProps": {
+                    "style": { "fontFamily": "monospace" }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "font_selector",
+      "name": "FontSelector",
+      "description": "Typography configuration with font family selection",
+      "props": [],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "children": [
+            {
+              "type": "Typography",
+              "variant": "h6",
+              "mb": 3,
+              "children": "Typography"
+            },
+            {
+              "type": "Stack",
+              "spacing": 3,
+              "children": [
+                {
+                  "type": "FormControl",
+                  "fullWidth": true,
+                  "children": [
+                    {
+                      "type": "InputLabel",
+                      "children": "Body Font Family"
+                    },
+                    {
+                      "type": "Select",
+                      "value": "{{fonts.body}}",
+                      "onChange": "{{handleBodyFontChange}}",
+                      "label": "Body Font Family",
+                      "children": [
+                        {
+                          "type": "MenuItem",
+                          "value": "IBM Plex Sans",
+                          "children": "IBM Plex Sans"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": "Inter",
+                          "children": "Inter"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": "Roboto",
+                          "children": "Roboto"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": "Open Sans",
+                          "children": "Open Sans"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": "system-ui",
+                          "children": "System Default"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "FormControl",
+                  "fullWidth": true,
+                  "children": [
+                    {
+                      "type": "InputLabel",
+                      "children": "Heading Font Family"
+                    },
+                    {
+                      "type": "Select",
+                      "value": "{{fonts.heading}}",
+                      "onChange": "{{handleHeadingFontChange}}",
+                      "label": "Heading Font Family",
+                      "children": [
+                        {
+                          "type": "MenuItem",
+                          "value": "Space Grotesk",
+                          "children": "Space Grotesk"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": "IBM Plex Sans",
+                          "children": "IBM Plex Sans"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": "Inter",
+                          "children": "Inter"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": "Montserrat",
+                          "children": "Montserrat"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "FormControl",
+                  "fullWidth": true,
+                  "children": [
+                    {
+                      "type": "InputLabel",
+                      "children": "Code Font Family"
+                    },
+                    {
+                      "type": "Select",
+                      "value": "{{fonts.code}}",
+                      "onChange": "{{handleCodeFontChange}}",
+                      "label": "Code Font Family",
+                      "children": [
+                        {
+                          "type": "MenuItem",
+                          "value": "JetBrains Mono",
+                          "children": "JetBrains Mono"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": "Fira Code",
+                          "children": "Fira Code"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": "Source Code Pro",
+                          "children": "Source Code Pro"
+                        },
+                        {
+                          "type": "MenuItem",
+                          "value": "monospace",
+                          "children": "System Monospace"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Divider"
+                },
+                {
+                  "type": "Typography",
+                  "variant": "subtitle2",
+                  "children": "Border Radius"
+                },
+                {
+                  "type": "Slider",
+                  "value": "{{borderRadius}}",
+                  "onChange": "{{handleBorderRadiusChange}}",
+                  "min": 0,
+                  "max": 24,
+                  "step": 2,
+                  "marks": true,
+                  "valueLabelDisplay": "auto"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css_variable_editor",
+      "name": "CSSVariableEditor",
+      "description": "Editor for custom CSS variables",
+      "props": [],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "children": [
+            {
+              "type": "Stack",
+              "direction": "row",
+              "justifyContent": "space-between",
+              "alignItems": "center",
+              "mb": 3,
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "h6",
+                  "children": "CSS Variables"
+                },
+                {
+                  "type": "Button",
+                  "variant": "outlined",
+                  "size": "small",
+                  "startIcon": {
+                    "type": "Icon",
+                    "name": "Add"
+                  },
+                  "onClick": "{{handleAddVariable}}",
+                  "children": "Add Variable"
+                }
+              ]
+            },
+            {
+              "type": "TableContainer",
+              "component": "Paper",
+              "variant": "outlined",
+              "children": [
+                {
+                  "type": "Table",
+                  "size": "small",
+                  "children": [
+                    {
+                      "type": "TableHead",
+                      "children": [
+                        {
+                          "type": "TableRow",
+                          "children": [
+                            {
+                              "type": "TableCell",
+                              "children": "Variable Name"
+                            },
+                            {
+                              "type": "TableCell",
+                              "children": "Value"
+                            },
+                            {
+                              "type": "TableCell",
+                              "align": "right",
+                              "children": "Actions"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TableBody",
+                      "children": [
+                        {
+                          "type": "each",
+                          "items": "{{cssVariables}}",
+                          "as": "variable",
+                          "render": {
+                            "type": "TableRow",
+                            "children": [
+                              {
+                                "type": "TableCell",
+                                "children": [
+                                  {
+                                    "type": "Typography",
+                                    "fontFamily": "monospace",
+                                    "variant": "body2",
+                                    "children": "--{{variable.name}}"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "TableCell",
+                                "children": [
+                                  {
+                                    "type": "TextField",
+                                    "value": "{{variable.value}}",
+                                    "onChange": "{{(e) => handleVariableChange(variable.name, e.target.value)}}",
+                                    "size": "small",
+                                    "sx": { "maxWidth": 200 }
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "TableCell",
+                                "align": "right",
+                                "children": [
+                                  {
+                                    "type": "IconButton",
+                                    "size": "small",
+                                    "color": "error",
+                                    "onClick": "{{() => handleRemoveVariable(variable.name)}}",
+                                    "children": [
+                                      {
+                                        "type": "Icon",
+                                        "name": "Delete",
+                                        "fontSize": "small"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "theme_preview",
+      "name": "ThemePreview",
+      "description": "Live preview of theme changes",
+      "props": [
+        {
+          "name": "compact",
+          "type": "boolean",
+          "required": false,
+          "default": false
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "required": false,
+          "default": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "theme-preview",
+          "children": [
+            {
+              "type": "Stack",
+              "spacing": 2,
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "h6",
+                  "children": "Preview Heading"
+                },
+                {
+                  "type": "Typography",
+                  "variant": "body1",
+                  "children": "This is body text to preview your theme settings."
+                },
+                {
+                  "type": "Typography",
+                  "variant": "body2",
+                  "color": "textSecondary",
+                  "children": "Secondary text for less important content."
+                },
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "spacing": 1,
+                  "children": [
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "size": "small",
+                      "children": "Primary"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "outlined",
+                      "size": "small",
+                      "children": "Outlined"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "text",
+                      "size": "small",
+                      "children": "Text"
+                    }
+                  ]
+                },
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "spacing": 1,
+                  "children": [
+                    {
+                      "type": "Chip",
+                      "label": "Default",
+                      "size": "small"
+                    },
+                    {
+                      "type": "Chip",
+                      "label": "Primary",
+                      "color": "primary",
+                      "size": "small"
+                    },
+                    {
+                      "type": "Chip",
+                      "label": "Success",
+                      "color": "success",
+                      "size": "small"
+                    },
+                    {
+                      "type": "Chip",
+                      "label": "Error",
+                      "color": "error",
+                      "size": "small"
+                    }
+                  ]
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{!compact}}",
+                  "then": {
+                    "type": "Card",
+                    "variant": "outlined",
+                    "children": [
+                      {
+                        "type": "CardContent",
+                        "children": [
+                          {
+                            "type": "Typography",
+                            "variant": "subtitle2",
+                            "children": "Card Component"
+                          },
+                          {
+                            "type": "Typography",
+                            "variant": "body2",
+                            "children": "This is a preview card."
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

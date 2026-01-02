@@ -1,0 +1,111 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "dropdown_manager",
+  "description": "Dropdown configuration management functions",
+  "functions": [
+    {
+      "id": "dropdown_list",
+      "name": "listDropdowns",
+      "exported": true,
+      "description": "List all dropdown configurations",
+      "category": "dropdowns",
+      "luaScript": "dropdowns.lua"
+    },
+    {
+      "id": "dropdown_get",
+      "name": "getDropdown",
+      "exported": true,
+      "description": "Get a specific dropdown by ID or name",
+      "category": "dropdowns",
+      "luaScript": "dropdowns.lua"
+    },
+    {
+      "id": "dropdown_create",
+      "name": "createDropdown",
+      "exported": true,
+      "description": "Create a new dropdown configuration",
+      "category": "dropdowns",
+      "luaScript": "dropdowns.lua"
+    },
+    {
+      "id": "dropdown_update",
+      "name": "updateDropdown",
+      "exported": true,
+      "description": "Update an existing dropdown",
+      "category": "dropdowns",
+      "luaScript": "dropdowns.lua"
+    },
+    {
+      "id": "dropdown_delete",
+      "name": "deleteDropdown",
+      "exported": true,
+      "description": "Delete a dropdown configuration",
+      "category": "dropdowns",
+      "luaScript": "dropdowns.lua"
+    },
+    {
+      "id": "dropdown_get_options",
+      "name": "getDropdownOptions",
+      "exported": true,
+      "description": "Get options for a specific dropdown",
+      "category": "dropdowns",
+      "luaScript": "dropdowns.lua"
+    },
+    {
+      "id": "dropdown_add_option",
+      "name": "addOption",
+      "exported": true,
+      "description": "Add an option to a dropdown",
+      "category": "dropdowns",
+      "luaScript": "dropdowns.lua"
+    },
+    {
+      "id": "dropdown_remove_option",
+      "name": "removeOption",
+      "exported": true,
+      "description": "Remove an option from a dropdown",
+      "category": "dropdowns",
+      "luaScript": "dropdowns.lua"
+    },
+    {
+      "id": "dropdown_reorder_options",
+      "name": "reorderOptions",
+      "exported": true,
+      "description": "Reorder options in a dropdown",
+      "category": "dropdowns",
+      "luaScript": "dropdowns.lua"
+    },
+    {
+      "id": "dropdown_search",
+      "name": "searchDropdowns",
+      "exported": true,
+      "description": "Search dropdowns by name or description",
+      "category": "dropdowns",
+      "luaScript": "dropdowns.lua"
+    },
+    {
+      "id": "dropdown_validate",
+      "name": "validateDropdown",
+      "exported": true,
+      "description": "Validate dropdown configuration",
+      "category": "dropdowns",
+      "luaScript": "dropdowns.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "listDropdowns",
+      "getDropdown",
+      "createDropdown",
+      "updateDropdown",
+      "deleteDropdown",
+      "getDropdownOptions",
+      "addOption",
+      "removeOption",
+      "reorderOptions",
+      "searchDropdowns",
+      "validateDropdown"
+    ]
+  }
+}

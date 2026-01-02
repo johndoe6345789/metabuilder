@@ -48,6 +48,35 @@ Configuration file for the TLC model checker that specifies:
 - Temporal properties to verify
 - State space constraints for bounded model checking
 
+### Schema-Driven Package System: `package_system.tla`
+
+**NEW** - Detailed specification for the overhauled package system, aligned with `schemas/package-schemas/`:
+
+- **Multi-Source Package Loading**: Local, remote, and git package sources with priority-based resolution
+- **Schema Validation**: Validates packages against 16+ JSON schemas (metadata, entities, components, scripts, types, etc.)
+- **Dependency Resolution**: Transitive dependency tracking with version constraints
+- **Conflict Resolution**: Strategies for same package in multiple sources (priority, latest-version, local-first, remote-first)
+- **Permission Integration**: Package `minLevel` enforced against 6-level permission system
+- **Safety Properties**:
+  - `AdminOnlyPackageManagement`: Only Level 4+ users can install/enable/disable packages
+  - `SupergodOnlySourceManagement`: Only Level 6 can manage package sources
+  - `EnabledImpliesInstalled`: Enabled packages must be installed
+  - `DependencyIntegrity`: Enabled packages have all dependencies enabled
+  - `NoCyclicDependencies`: No circular dependency chains
+  - `SchemaValidationRequired`: Packages must pass schema validation before install
+  - `PermissionLevelEnforcement`: Package minLevel respected
+  - `ConflictsResolvedBeforeInstall`: Multi-source conflicts resolved before installation
+  - `PackageAuditCompleteness`: All package operations are logged
+- **Liveness Properties**:
+  - `EventualOperationCompletion`: Pending operations eventually complete or fail
+  - `EventualValidation`: Schema validations eventually complete
+  - `EventualConflictResolution`: Conflicts are eventually resolved
+  - `EventualIndexRefresh`: Source indexes eventually refresh after fetch
+
+### `package_system.cfg`
+
+Configuration for package system model checking with sample packages, sources, and schema types from the actual codebase.
+
 ### Future Functionality: `workflow_system.tla`
 
 Specification for advanced workflow execution features:
@@ -171,11 +200,53 @@ The DBAL enforces:
 
 ### Package System
 
-Packages are self-contained feature modules that can be:
+Packages are self-contained feature modules managed through a schema-driven system:
 
+**Basic Operations (metabuilder.tla)**:
 - Installed by admins (Level 4+)
 - Enabled or disabled per-tenant
 - Tracked through state transitions: `available` → `installing` → `installed` ↔ `disabled`
+
+**Advanced Features (package_system.tla)**:
+- Multi-source loading: Local (`packages/`), remote registries, git repositories
+- Schema validation against 16+ JSON schemas in `schemas/package-schemas/`
+- Dependency resolution with version constraints (semver)
+- Conflict resolution when package exists in multiple sources
+- Permission-level filtering via `minLevel` property
+
+**Schema Alignment**:
+```
+schemas/package-schemas/
+├── metadata_schema.json    → Package identity, version, minLevel
+├── entities_schema.json    → Database entities (Prisma-like)
+├── components_schema.json  → UI component definitions
+├── script_schema.json      → Lua/JSON script logic
+├── types_schema.json       → Type definitions
+├── validation_schema.json  → Data validators
+├── api_schema.json         → REST/GraphQL endpoints
+├── events_schema.json      → Event-driven patterns
+├── jobs_schema.json        → Background tasks
+├── permissions_schema.json → RBAC/ABAC rules
+├── forms_schema.json       → Dynamic form definitions
+├── styles_schema.json      → Design tokens
+├── migrations_schema.json  → Database migrations
+├── assets_schema.json      → Static assets
+├── storybook_schema.json   → Storybook config
+└── index_schema.json       → Master registry validation
+```
+
+**Package Structure**:
+```
+packages/{name}/
+├── package.json           # Metadata (validated against metadata_schema.json)
+├── components/            # UI components
+├── scripts/               # Lua/JSON scripts
+├── permissions/           # Permission definitions
+├── static_content/        # Assets including icon.svg
+├── styles/                # SCSS/design tokens
+├── storybook/             # Storybook stories
+└── tests/                 # Test suites
+```
 
 ## Using the Specification
 
@@ -298,10 +369,22 @@ ExecuteWorkflow(user, workflow) ==
 This specification aligns with the MetaBuilder architecture documentation:
 
 - `docs/architecture/security-docs/5-level-system.md` → Permission model (extended to 6 levels)
-- `docs/architecture/data/data-driven-architecture.md` → Package system
+- `schemas/package-schemas/` → **16+ JSON schemas defining package structure**
+- `docs/packages/package-sources.md` → **Multi-source package loading architecture**
+- `packages/*/package.json` → **Package metadata structure**
 - `dbal/README.md` → DBAL state machine and security model
 - `README.md` → Multi-tenant system
 - `docs/todo/improvements/20-FUTURE-FEATURES-TODO.md` → Future features specifications
+
+### Schema-Specification Traceability
+
+| Schema File | TLA+ Concept | Location |
+|-------------|--------------|----------|
+| `metadata_schema.json` | `PackageEntry`, `PackageIndexEntry` | `package_system.tla` |
+| `entities_schema.json` | `DataRecords` (typed) | `metabuilder.tla` |
+| `components_schema.json` | `exports.components` | `package_system.tla` |
+| `permissions_schema.json` | `PermissionLevel`, `minLevel` | Both |
+| `validation_schema.json` | `SchemaValidationRequired` invariant | `package_system.tla` |
 
 ## Modeling Future Features
 
@@ -316,6 +399,7 @@ Before implementing complex features like workflows or real-time collaboration, 
 
 ### 2. API Contract Definition
 The specifications define precise contracts for:
+- **Package System**: Schema validation, multi-source resolution, dependency management
 - **Workflow System**: Template creation, execution triggers, step dependencies
 - **Collaboration**: Session management, concurrent editing, notification delivery
 - **Integrations**: Webhook delivery guarantees, OAuth token lifecycle, rate limiting
@@ -334,11 +418,17 @@ The specifications can guide:
 - Multi-tenant isolation test cases
 - Load testing parameters (rate limits, concurrent users)
 
-### Running Future Feature Specs
+### Running Feature Specs
 
-Model check individual future features:
+Model check individual features:
 
 ```bash
+# Check core system (permissions, DBAL, basic packages)
+java -cp tla2tools.jar tlc2.TLC spec/metabuilder.tla -config spec/metabuilder.cfg
+
+# Check schema-driven package system (multi-source, validation, dependencies)
+java -cp tla2tools.jar tlc2.TLC spec/package_system.tla -config spec/package_system.cfg
+
 # Check workflow system
 java -cp tla2tools.jar tlc2.TLC spec/workflow_system.tla -config spec/workflow_system.cfg
 
@@ -347,6 +437,12 @@ java -cp tla2tools.jar tlc2.TLC spec/collaboration.tla -config spec/collaboratio
 
 # Check integrations system
 java -cp tla2tools.jar tlc2.TLC spec/integrations.tla -config spec/integrations.cfg
+```
+
+Or use the validation script:
+
+```bash
+cd spec && ./validate-specs.sh
 ```
 
 Each specification is standalone and can be verified independently. This modular approach allows:

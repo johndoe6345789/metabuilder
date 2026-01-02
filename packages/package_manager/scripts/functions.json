@@ -1,0 +1,129 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "package_manager",
+  "description": "Package management functions for listing, installing, and managing packages",
+  "functions": [
+    {
+      "id": "pkg_list_all",
+      "name": "listPackages",
+      "exported": true,
+      "description": "List all available packages with their status",
+      "category": "packages",
+      "luaScript": "packages.lua"
+    },
+    {
+      "id": "pkg_get_info",
+      "name": "getPackageInfo",
+      "exported": true,
+      "description": "Get detailed information about a specific package",
+      "category": "packages",
+      "luaScript": "packages.lua"
+    },
+    {
+      "id": "pkg_install",
+      "name": "installPackage",
+      "exported": true,
+      "description": "Install a package and its dependencies",
+      "category": "packages",
+      "luaScript": "packages.lua"
+    },
+    {
+      "id": "pkg_uninstall",
+      "name": "uninstallPackage",
+      "exported": true,
+      "description": "Uninstall a package",
+      "category": "packages",
+      "luaScript": "packages.lua"
+    },
+    {
+      "id": "pkg_enable",
+      "name": "enablePackage",
+      "exported": true,
+      "description": "Enable a disabled package",
+      "category": "packages",
+      "luaScript": "packages.lua"
+    },
+    {
+      "id": "pkg_disable",
+      "name": "disablePackage",
+      "exported": true,
+      "description": "Disable an enabled package",
+      "category": "packages",
+      "luaScript": "packages.lua"
+    },
+    {
+      "id": "pkg_toggle",
+      "name": "togglePackage",
+      "exported": true,
+      "description": "Toggle package enabled/disabled state",
+      "category": "packages",
+      "luaScript": "packages.lua"
+    },
+    {
+      "id": "pkg_validate",
+      "name": "validatePackage",
+      "exported": true,
+      "description": "Validate package structure and metadata",
+      "category": "packages",
+      "luaScript": "packages.lua"
+    },
+    {
+      "id": "dep_get_tree",
+      "name": "getDependencyTree",
+      "exported": true,
+      "description": "Get dependency tree for a package",
+      "category": "dependencies",
+      "luaScript": "dependencies.lua"
+    },
+    {
+      "id": "dep_check_conflicts",
+      "name": "checkDependencyConflicts",
+      "exported": true,
+      "description": "Check for dependency conflicts before installation",
+      "category": "dependencies",
+      "luaScript": "dependencies.lua"
+    },
+    {
+      "id": "dep_resolve",
+      "name": "resolveDependencies",
+      "exported": true,
+      "description": "Resolve and order dependencies for installation",
+      "category": "dependencies",
+      "luaScript": "dependencies.lua"
+    },
+    {
+      "id": "pkg_search",
+      "name": "searchPackages",
+      "exported": true,
+      "description": "Search packages by name, description, or keywords",
+      "category": "packages",
+      "luaScript": "packages.lua"
+    },
+    {
+      "id": "pkg_filter_category",
+      "name": "filterByCategory",
+      "exported": true,
+      "description": "Filter packages by category",
+      "category": "packages",
+      "luaScript": "packages.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "listPackages",
+      "getPackageInfo",
+      "installPackage",
+      "uninstallPackage",
+      "enablePackage",
+      "disablePackage",
+      "togglePackage",
+      "validatePackage",
+      "getDependencyTree",
+      "checkDependencyConflicts",
+      "resolveDependencies",
+      "searchPackages",
+      "filterByCategory"
+    ]
+  }
+}

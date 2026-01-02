@@ -1,0 +1,120 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Route Manager Components",
+  "description": "Page route configuration and access control",
+  "stories": [
+    {
+      "name": "RouteList",
+      "render": "list",
+      "description": "Table of configured routes",
+      "args": {
+        "routes": [
+          {
+            "id": "1",
+            "path": "/",
+            "title": "Home",
+            "accessLevel": 0,
+            "accessLevelName": "Public",
+            "requireAuth": false,
+            "enabled": true
+          },
+          {
+            "id": "2",
+            "path": "/dashboard",
+            "title": "Dashboard",
+            "accessLevel": 2,
+            "accessLevelName": "Moderator",
+            "requireAuth": true,
+            "enabled": true
+          },
+          {
+            "id": "3",
+            "path": "/admin",
+            "title": "Admin Panel",
+            "accessLevel": 4,
+            "accessLevelName": "God",
+            "requireAuth": true,
+            "enabled": true
+          },
+          {
+            "id": "4",
+            "path": "/legacy",
+            "title": "Legacy Page",
+            "accessLevel": 1,
+            "accessLevelName": "User",
+            "requireAuth": true,
+            "enabled": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "RouteEditor",
+      "render": "editor",
+      "description": "Route creation/editing dialog",
+      "args": {
+        "route": {
+          "path": "/new-page",
+          "title": "New Page",
+          "description": "A new page",
+          "accessLevel": 1,
+          "requireAuth": true,
+          "enabled": true,
+          "component": "NewPage"
+        },
+        "isNew": true
+      }
+    },
+    {
+      "name": "AccessControlSettings",
+      "render": "access",
+      "description": "Access level configuration",
+      "args": {
+        "accessLevel": 2,
+        "requireAuth": true
+      }
+    },
+    {
+      "name": "RoutePreview",
+      "render": "preview",
+      "description": "Route preview dialog",
+      "args": {
+        "route": {
+          "path": "/dashboard",
+          "title": "Dashboard",
+          "accessLevel": 2,
+          "requireAuth": true,
+          "enabled": true
+        }
+      }
+    }
+  ],
+  "renders": {
+    "list": {
+      "description": "Route table view",
+      "featured": true
+    },
+    "editor": {
+      "description": "Route editor dialog"
+    },
+    "access": {
+      "description": "Access control settings"
+    },
+    "preview": {
+      "description": "Route preview"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "admin-user",
+      "username": "admin",
+      "level": 4,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  }
+}

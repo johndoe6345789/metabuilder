@@ -1,0 +1,97 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/test-parameters.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "database_manager",
+  "description": "Parameterized test data for database manager tests",
+
+  "parameters": {
+    "validStats": [
+      {
+        "name": "empty database",
+        "stats": {
+          "users": 0,
+          "schemas": 0,
+          "packages": 0,
+          "tenants": 1,
+          "workflows": 0,
+          "uiPages": 0,
+          "comments": 0,
+          "cssClasses": 0,
+          "errorLogs": 0,
+          "sessions": 0
+        }
+      },
+      {
+        "name": "typical production database",
+        "stats": {
+          "users": 150,
+          "schemas": 45,
+          "packages": 44,
+          "tenants": 5,
+          "workflows": 22,
+          "uiPages": 60,
+          "comments": 1200,
+          "cssClasses": 300,
+          "errorLogs": 25,
+          "sessions": 80
+        }
+      },
+      {
+        "name": "large enterprise database",
+        "stats": {
+          "users": 5000,
+          "schemas": 200,
+          "packages": 100,
+          "tenants": 50,
+          "workflows": 150,
+          "uiPages": 500,
+          "comments": 50000,
+          "cssClasses": 1000,
+          "errorLogs": 500,
+          "sessions": 2000
+        }
+      }
+    ],
+    "exportOptions": [
+      {
+        "name": "full export",
+        "options": {
+          "includeUsers": true,
+          "includeSchemas": true,
+          "includeWorkflows": true,
+          "includePackages": true
+        }
+      },
+      {
+        "name": "users only",
+        "options": {
+          "includeUsers": true,
+          "includeSchemas": false,
+          "includeWorkflows": false,
+          "includePackages": false
+        }
+      },
+      {
+        "name": "schemas and workflows",
+        "options": {
+          "includeUsers": false,
+          "includeSchemas": true,
+          "includeWorkflows": true,
+          "includePackages": false
+        }
+      }
+    ],
+    "entities": [
+      { "name": "users", "table": "User" },
+      { "name": "schemas", "table": "Schema" },
+      { "name": "workflows", "table": "Workflow" },
+      { "name": "ui_pages", "table": "UIPage" },
+      { "name": "tenants", "table": "Tenant" },
+      { "name": "packages", "table": "Package" },
+      { "name": "comments", "table": "Comment" },
+      { "name": "css_classes", "table": "CssClass" },
+      { "name": "error_logs", "table": "ErrorLog" },
+      { "name": "sessions", "table": "Session" }
+    ]
+  }
+}

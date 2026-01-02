@@ -1,14 +1,22 @@
 ---------------------------- MODULE metabuilder ----------------------------
 (***************************************************************************
- * MetaBuilder Formal Specification                                        *
+ * MetaBuilder Core Formal Specification                                   *
  *                                                                          *
  * This TLA+ specification models the core behavior of MetaBuilder,        *
  * a data-driven, multi-tenant platform with:                              *
  *   - 6-level hierarchical permission system                              *
  *   - Multi-tenant data isolation                                         *
  *   - Database Abstraction Layer (DBAL) with dual implementations         *
- *   - Package management system                                           *
+ *   - Basic package lifecycle (install/enable/disable)                    *
  *   - Declarative component rendering                                     *
+ *                                                                          *
+ * Related Specifications:                                                 *
+ *   - package_system.tla: Detailed schema-driven package system with      *
+ *     multi-source support, validation, dependencies, and versioning      *
+ *     (aligned with schemas/package-schemas/*.json)                       *
+ *   - workflow_system.tla: Advanced workflow execution                    *
+ *   - collaboration.tla: Real-time collaboration features                 *
+ *   - integrations.tla: Webhook, OAuth, and API key ecosystem             *
  ***************************************************************************)
 
 EXTENDS Naturals, Sequences, FiniteSets, TLC

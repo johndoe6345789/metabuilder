@@ -1,0 +1,62 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "package_manager",
+  "description": "Package manager access permissions",
+  "permissions": [
+    {
+      "id": "packages.view",
+      "name": "View Packages",
+      "description": "View available packages",
+      "resource": "packages",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "packages.install",
+      "name": "Install Packages",
+      "description": "Install new packages",
+      "resource": "packages",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "packages.uninstall",
+      "name": "Uninstall Packages",
+      "description": "Uninstall packages",
+      "resource": "packages",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "packages.toggle",
+      "name": "Toggle Packages",
+      "description": "Enable or disable packages",
+      "resource": "packages",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "packages.validate",
+      "name": "Validate Packages",
+      "description": "Validate package structure",
+      "resource": "packages",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3
+    }
+  ],
+  "resources": [
+    {
+      "id": "packages",
+      "name": "Packages",
+      "type": "system",
+      "description": "Package management resources",
+      "actions": ["read", "create", "delete", "manage"]
+    }
+  ]
+}

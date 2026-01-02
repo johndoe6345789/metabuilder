@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Database cylinder -->
+  <ellipse cx="32" cy="16" rx="18" ry="6" fill="none"/>
+  <path d="M14 16 L14 48 C14 51.3 22 54 32 54 C42 54 50 51.3 50 48 L50 16"/>
+  <ellipse cx="32" cy="48" rx="18" ry="6" fill="none"/>
+  <!-- Middle separator -->
+  <path d="M14 32 C14 35.3 22 38 32 38 C42 38 50 35.3 50 32"/>
+  <!-- Data rows indicator -->
+  <path d="M20 24 L44 24 M20 40 L44 40" stroke-width="1.5"/>
+  <!-- Admin gear -->
+  <circle cx="48" cy="48" r="10" fill="none" stroke-width="1.5"/>
+  <circle cx="48" cy="48" r="3" fill="currentColor"/>
+  <path d="M48 38 L48 41 M48 55 L48 58 M38 48 L41 48 M55 48 L58 48 M41 41 L43.5 43.5 M52.5 52.5 L55 55 M41 55 L43.5 52.5 M52.5 43.5 L55 41" stroke-width="1.5"/>
+</svg>

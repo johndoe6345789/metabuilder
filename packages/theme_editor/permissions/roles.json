@@ -1,0 +1,53 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "theme_editor",
+  "description": "Theme editor access permissions",
+  "permissions": [
+    {
+      "id": "theme.view",
+      "name": "View Theme",
+      "description": "View current theme settings",
+      "resource": "theme",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "theme.edit",
+      "name": "Edit Theme",
+      "description": "Modify theme settings",
+      "resource": "theme",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "theme.export",
+      "name": "Export Theme",
+      "description": "Export theme as JSON",
+      "resource": "theme",
+      "action": "export",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "theme.import",
+      "name": "Import Theme",
+      "description": "Import theme from JSON",
+      "resource": "theme",
+      "action": "import",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "theme",
+      "name": "Theme",
+      "type": "system",
+      "description": "Theme configuration resources",
+      "actions": ["read", "update", "export", "import"]
+    }
+  ]
+}

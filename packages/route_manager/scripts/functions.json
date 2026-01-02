@@ -1,0 +1,120 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "route_manager",
+  "description": "Route management functions for CRUD operations and validation",
+  "functions": [
+    {
+      "id": "route_list",
+      "name": "listRoutes",
+      "exported": true,
+      "description": "List all configured routes",
+      "category": "routes",
+      "luaScript": "routes.lua"
+    },
+    {
+      "id": "route_get",
+      "name": "getRoute",
+      "exported": true,
+      "description": "Get a specific route by ID or path",
+      "category": "routes",
+      "luaScript": "routes.lua"
+    },
+    {
+      "id": "route_create",
+      "name": "createRoute",
+      "exported": true,
+      "description": "Create a new route configuration",
+      "category": "routes",
+      "luaScript": "routes.lua"
+    },
+    {
+      "id": "route_update",
+      "name": "updateRoute",
+      "exported": true,
+      "description": "Update an existing route",
+      "category": "routes",
+      "luaScript": "routes.lua"
+    },
+    {
+      "id": "route_delete",
+      "name": "deleteRoute",
+      "exported": true,
+      "description": "Delete a route configuration",
+      "category": "routes",
+      "luaScript": "routes.lua"
+    },
+    {
+      "id": "route_toggle",
+      "name": "toggleRoute",
+      "exported": true,
+      "description": "Enable or disable a route",
+      "category": "routes",
+      "luaScript": "routes.lua"
+    },
+    {
+      "id": "route_validate",
+      "name": "validateRoute",
+      "exported": true,
+      "description": "Validate route configuration",
+      "category": "validation",
+      "luaScript": "validation.lua"
+    },
+    {
+      "id": "route_validate_path",
+      "name": "validatePath",
+      "exported": true,
+      "description": "Validate route path format",
+      "category": "validation",
+      "luaScript": "validation.lua"
+    },
+    {
+      "id": "route_check_conflicts",
+      "name": "checkPathConflicts",
+      "exported": true,
+      "description": "Check for conflicting route paths",
+      "category": "validation",
+      "luaScript": "validation.lua"
+    },
+    {
+      "id": "route_filter_level",
+      "name": "filterByAccessLevel",
+      "exported": true,
+      "description": "Filter routes by access level",
+      "category": "routes",
+      "luaScript": "routes.lua"
+    },
+    {
+      "id": "route_search",
+      "name": "searchRoutes",
+      "exported": true,
+      "description": "Search routes by path or title",
+      "category": "routes",
+      "luaScript": "routes.lua"
+    },
+    {
+      "id": "route_get_level_name",
+      "name": "getAccessLevelName",
+      "exported": true,
+      "description": "Get human-readable name for access level",
+      "category": "routes",
+      "luaScript": "routes.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "listRoutes",
+      "getRoute",
+      "createRoute",
+      "updateRoute",
+      "deleteRoute",
+      "toggleRoute",
+      "validateRoute",
+      "validatePath",
+      "checkPathConflicts",
+      "filterByAccessLevel",
+      "searchRoutes",
+      "getAccessLevelName"
+    ]
+  }
+}
