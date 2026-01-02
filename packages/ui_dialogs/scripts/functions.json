@@ -1,0 +1,139 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-functions.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_dialogs",
+  "functions": [
+    {
+      "id": "handleConfirm",
+      "namespace": "confirm",
+      "name": "handleConfirm",
+      "description": "Handle confirm button click in dialog",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "object",
+          "required": true,
+          "description": "Click event object"
+        }
+      ],
+      "returns": {
+        "type": "void"
+      },
+      "implementation": "function(event) { this.setState({ open: false }); if (this.props.onConfirm) { this.props.onConfirm(event); } }"
+    },
+    {
+      "id": "handleCancel",
+      "namespace": "confirm",
+      "name": "handleCancel",
+      "description": "Handle cancel button click in dialog",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "object",
+          "required": true,
+          "description": "Click event object"
+        }
+      ],
+      "returns": {
+        "type": "void"
+      },
+      "implementation": "function(event) { this.setState({ open: false }); if (this.props.onCancel) { this.props.onCancel(event); } }"
+    },
+    {
+      "id": "handleClose",
+      "namespace": "confirm",
+      "name": "handleClose",
+      "description": "Handle dialog close event",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "object",
+          "required": true,
+          "description": "Close event object"
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "required": false,
+          "description": "Close reason (backdropClick, escapeKeyDown)"
+        }
+      ],
+      "returns": {
+        "type": "void"
+      },
+      "implementation": "function(event, reason) { if (reason !== 'backdropClick') { this.setState({ open: false }); if (this.props.onClose) { this.props.onClose(event, reason); } } }"
+    },
+    {
+      "id": "handleSubmit",
+      "namespace": "confirm",
+      "name": "handleSubmit",
+      "description": "Handle form submission in form dialog",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "object",
+          "required": true,
+          "description": "Submit event object"
+        }
+      ],
+      "returns": {
+        "type": "Promise<void>"
+      },
+      "implementation": "async function(event) { event.preventDefault(); const isValid = this.validate(); if (!isValid) return; this.setState({ isSubmitting: true }); try { if (this.props.onSubmit) { await this.props.onSubmit(event); } this.setState({ open: false, isSubmitting: false }); } catch (error) { this.setState({ isSubmitting: false }); throw error; } }"
+    },
+    {
+      "id": "validate",
+      "namespace": "confirm",
+      "name": "validate",
+      "description": "Validate form fields in form dialog",
+      "parameters": [],
+      "returns": {
+        "type": "boolean",
+        "description": "True if validation passes"
+      },
+      "implementation": "function() { if (this.props.validate) { return this.props.validate(); } return true; }"
+    },
+    {
+      "id": "handleAlertConfirm",
+      "namespace": "alert",
+      "name": "handleConfirm",
+      "description": "Handle OK button click in alert dialog",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "object",
+          "required": true,
+          "description": "Click event object"
+        }
+      ],
+      "returns": {
+        "type": "void"
+      },
+      "implementation": "function(event) { this.setState({ open: false }); if (this.props.onConfirm) { this.props.onConfirm(event); } }"
+    },
+    {
+      "id": "handleAlertClose",
+      "namespace": "alert",
+      "name": "handleClose",
+      "description": "Handle alert dialog close event",
+      "parameters": [
+        {
+          "name": "event",
+          "type": "object",
+          "required": true,
+          "description": "Close event object"
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "required": false,
+          "description": "Close reason"
+        }
+      ],
+      "returns": {
+        "type": "void"
+      },
+      "implementation": "function(event, reason) { this.setState({ open: false }); if (this.props.onClose) { this.props.onClose(event, reason); } }"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_dialogs",
+  "name": "UI Dialogs",
+  "version": "1.0.0",
+  "description": "Confirmation, alert, and form dialogs for user interactions",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 1,
+  "primary": false,
+  "dependencies": {},
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "ConfirmDialog",
+      "AlertDialog",
+      "FormDialog"
+    ],
+    "scripts": [
+      "confirm",
+      "alert"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/metadata.cases.json"
+      },
+      {
+        "parameters": "tests/components.cases.json"
+      }
+    ]
+  }
+}
