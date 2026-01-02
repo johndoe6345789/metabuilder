@@ -1,0 +1,427 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/migrations.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "advanced-features",
+  "description": "Complex database migrations with data transformations",
+  "migrations": [
+    {
+      "version": "001",
+      "timestamp": "2024-01-01T00:00:00Z",
+      "description": "Create orders and order_items tables with full schema",
+      "author": "platform-team",
+      "up": [
+        {
+          "type": "createTable",
+          "table": "orders",
+          "columns": [
+            {
+              "name": "id",
+              "type": "uuid",
+              "primary": true,
+              "nullable": false
+            },
+            {
+              "name": "order_number",
+              "type": "string",
+              "length": 20,
+              "nullable": false,
+              "unique": true
+            },
+            {
+              "name": "customer_id",
+              "type": "uuid",
+              "nullable": false
+            },
+            {
+              "name": "status",
+              "type": "enum",
+              "enum": ["pending", "processing", "shipped", "delivered", "cancelled", "refunded"],
+              "nullable": false,
+              "default": "pending"
+            },
+            {
+              "name": "total_amount",
+              "type": "decimal",
+              "precision": 10,
+              "scale": 2,
+              "nullable": false
+            },
+            {
+              "name": "currency",
+              "type": "string",
+              "length": 3,
+              "nullable": false,
+              "default": "USD"
+            },
+            {
+              "name": "shipping_address",
+              "type": "jsonb",
+              "nullable": false
+            },
+            {
+              "name": "billing_address",
+              "type": "jsonb",
+              "nullable": true
+            },
+            {
+              "name": "metadata",
+              "type": "jsonb",
+              "nullable": true
+            },
+            {
+              "name": "tracking_number",
+              "type": "string",
+              "length": 100,
+              "nullable": true
+            },
+            {
+              "name": "notes",
+              "type": "text",
+              "nullable": true
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp",
+              "nullable": false
+            },
+            {
+              "name": "updated_at",
+              "type": "timestamp",
+              "nullable": false
+            },
+            {
+              "name": "deleted_at",
+              "type": "timestamp",
+              "nullable": true
+            }
+          ],
+          "indexes": [
+            {
+              "name": "idx_orders_customer",
+              "columns": ["customer_id"]
+            },
+            {
+              "name": "idx_orders_status",
+              "columns": ["status"]
+            },
+            {
+              "name": "idx_orders_created",
+              "columns": ["created_at"]
+            },
+            {
+              "name": "idx_orders_tracking",
+              "columns": ["tracking_number"]
+            }
+          ],
+          "options": {
+            "comment": "Customer orders table with soft delete support"
+          }
+        },
+        {
+          "type": "createTable",
+          "table": "order_items",
+          "columns": [
+            {
+              "name": "id",
+              "type": "uuid",
+              "primary": true,
+              "nullable": false
+            },
+            {
+              "name": "order_id",
+              "type": "uuid",
+              "nullable": false
+            },
+            {
+              "name": "product_id",
+              "type": "uuid",
+              "nullable": false
+            },
+            {
+              "name": "quantity",
+              "type": "integer",
+              "nullable": false,
+              "default": 1
+            },
+            {
+              "name": "unit_price",
+              "type": "decimal",
+              "precision": 10,
+              "scale": 2,
+              "nullable": false
+            },
+            {
+              "name": "discount",
+              "type": "decimal",
+              "precision": 5,
+              "scale": 2,
+              "nullable": false,
+              "default": 0
+            },
+            {
+              "name": "subtotal",
+              "type": "decimal",
+              "precision": 10,
+              "scale": 2,
+              "nullable": false
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp",
+              "nullable": false
+            },
+            {
+              "name": "updated_at",
+              "type": "timestamp",
+              "nullable": false
+            }
+          ],
+          "foreignKeys": [
+            {
+              "name": "fk_order_items_order",
+              "columns": ["order_id"],
+              "references": {
+                "table": "orders",
+                "columns": ["id"]
+              },
+              "onDelete": "CASCADE",
+              "onUpdate": "CASCADE"
+            }
+          ],
+          "indexes": [
+            {
+              "name": "idx_order_items_order",
+              "columns": ["order_id"]
+            },
+            {
+              "name": "idx_order_items_product",
+              "columns": ["product_id"]
+            }
+          ]
+        }
+      ],
+      "down": [
+        {
+          "type": "dropTable",
+          "table": "order_items",
+          "cascade": true
+        },
+        {
+          "type": "dropTable",
+          "table": "orders",
+          "cascade": true
+        }
+      ],
+      "transactional": true
+    },
+    {
+      "version": "002",
+      "timestamp": "2024-01-15T00:00:00Z",
+      "description": "Add payment tracking columns",
+      "author": "payments-team",
+      "dependencies": ["001"],
+      "up": [
+        {
+          "type": "addColumn",
+          "table": "orders",
+          "column": {
+            "name": "payment_status",
+            "type": "enum",
+            "enum": ["pending", "authorized", "captured", "failed", "refunded"],
+            "nullable": false,
+            "default": "pending"
+          }
+        },
+        {
+          "type": "addColumn",
+          "table": "orders",
+          "column": {
+            "name": "payment_method",
+            "type": "string",
+            "length": 50,
+            "nullable": true
+          }
+        },
+        {
+          "type": "addColumn",
+          "table": "orders",
+          "column": {
+            "name": "payment_id",
+            "type": "string",
+            "length": 100,
+            "nullable": true,
+            "comment": "External payment processor ID"
+          }
+        },
+        {
+          "type": "addIndex",
+          "table": "orders",
+          "index": {
+            "name": "idx_orders_payment_status",
+            "columns": ["payment_status"]
+          }
+        }
+      ],
+      "down": [
+        {
+          "type": "dropIndex",
+          "table": "orders",
+          "name": "idx_orders_payment_status"
+        },
+        {
+          "type": "dropColumn",
+          "table": "orders",
+          "column": "payment_id"
+        },
+        {
+          "type": "dropColumn",
+          "table": "orders",
+          "column": "payment_method"
+        },
+        {
+          "type": "dropColumn",
+          "table": "orders",
+          "column": "payment_status"
+        }
+      ],
+      "transactional": true
+    },
+    {
+      "version": "003",
+      "timestamp": "2024-02-01T00:00:00Z",
+      "description": "Migrate order numbers to new format",
+      "author": "platform-team",
+      "dependencies": ["002"],
+      "up": [
+        {
+          "type": "sql",
+          "sql": [
+            "-- Temporarily remove unique constraint",
+            "ALTER TABLE orders DROP CONSTRAINT IF EXISTS orders_order_number_key;",
+            "-- Update order numbers to new format",
+            "UPDATE orders SET order_number = 'ORD-' || TO_CHAR(created_at, 'YYYY') || '-' || LPAD(CAST(id AS TEXT), 6, '0') WHERE order_number NOT LIKE 'ORD-%';",
+            "-- Re-add unique constraint",
+            "ALTER TABLE orders ADD CONSTRAINT orders_order_number_key UNIQUE (order_number);"
+          ]
+        }
+      ],
+      "down": [
+        {
+          "type": "sql",
+          "sql": "-- Cannot reliably reverse order number migration"
+        }
+      ],
+      "transactional": true
+    },
+    {
+      "version": "004",
+      "timestamp": "2024-02-15T00:00:00Z",
+      "description": "Add order fulfillment tracking",
+      "author": "operations-team",
+      "dependencies": ["003"],
+      "up": [
+        {
+          "type": "createTable",
+          "table": "order_fulfillments",
+          "columns": [
+            {
+              "name": "id",
+              "type": "uuid",
+              "primary": true,
+              "nullable": false
+            },
+            {
+              "name": "order_id",
+              "type": "uuid",
+              "nullable": false
+            },
+            {
+              "name": "warehouse_id",
+              "type": "uuid",
+              "nullable": false
+            },
+            {
+              "name": "status",
+              "type": "enum",
+              "enum": ["pending", "picking", "packing", "shipped", "cancelled"],
+              "nullable": false,
+              "default": "pending"
+            },
+            {
+              "name": "picked_at",
+              "type": "timestamp",
+              "nullable": true
+            },
+            {
+              "name": "packed_at",
+              "type": "timestamp",
+              "nullable": true
+            },
+            {
+              "name": "shipped_at",
+              "type": "timestamp",
+              "nullable": true
+            },
+            {
+              "name": "tracking_url",
+              "type": "string",
+              "length": 500,
+              "nullable": true
+            },
+            {
+              "name": "notes",
+              "type": "text",
+              "nullable": true
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp",
+              "nullable": false
+            },
+            {
+              "name": "updated_at",
+              "type": "timestamp",
+              "nullable": false
+            }
+          ],
+          "foreignKeys": [
+            {
+              "name": "fk_fulfillments_order",
+              "columns": ["order_id"],
+              "references": {
+                "table": "orders",
+                "columns": ["id"]
+              },
+              "onDelete": "CASCADE"
+            }
+          ],
+          "indexes": [
+            {
+              "name": "idx_fulfillments_order",
+              "columns": ["order_id"]
+            },
+            {
+              "name": "idx_fulfillments_status",
+              "columns": ["status"]
+            }
+          ]
+        }
+      ],
+      "down": [
+        {
+          "type": "dropTable",
+          "table": "order_fulfillments",
+          "cascade": true
+        }
+      ],
+      "transactional": true
+    }
+  ],
+  "config": {
+    "tableName": "schema_migrations",
+    "autoRun": false,
+    "validateChecksums": true,
+    "allowOutOfOrder": false,
+    "lockTimeout": 300
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-types.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "advanced-features",
+  "description": "Advanced TypeScript type definitions with generics and utilities",
+  "types": [
+    {
+      "id": "paginated_response",
+      "name": "PaginatedResponse",
+      "kind": "generic",
+      "exported": true,
+      "description": "Generic paginated response wrapper",
+      "typeParameters": ["T"],
+      "properties": {
+        "data": {
+          "type": "T[]",
+          "required": true,
+          "description": "Array of items"
+        },
+        "pagination": {
+          "type": "PaginationInfo",
+          "required": true,
+          "description": "Pagination metadata"
+        }
+      }
+    },
+    {
+      "id": "pagination_info",
+      "name": "PaginationInfo",
+      "kind": "object",
+      "exported": true,
+      "properties": {
+        "page": {
+          "type": "number",
+          "required": true
+        },
+        "limit": {
+          "type": "number",
+          "required": true
+        },
+        "total": {
+          "type": "number",
+          "required": true
+        },
+        "totalPages": {
+          "type": "number",
+          "required": true
+        },
+        "hasNext": {
+          "type": "boolean",
+          "required": true
+        },
+        "hasPrev": {
+          "type": "boolean",
+          "required": true
+        }
+      }
+    },
+    {
+      "id": "order_list_response",
+      "name": "OrderListResponse",
+      "kind": "alias",
+      "exported": true,
+      "description": "Paginated order list response",
+      "aliasOf": "PaginatedResponse<Order>"
+    },
+    {
+      "id": "api_response",
+      "name": "ApiResponse",
+      "kind": "generic",
+      "exported": true,
+      "description": "Generic API response wrapper",
+      "typeParameters": ["T"],
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "required": true
+        },
+        "data": {
+          "type": "T",
+          "required": false
+        },
+        "error": {
+          "type": "ApiError",
+          "required": false
+        },
+        "meta": {
+          "type": "Record<string, any>",
+          "required": false
+        }
+      }
+    },
+    {
+      "id": "api_error",
+      "name": "ApiError",
+      "kind": "object",
+      "exported": true,
+      "properties": {
+        "code": {
+          "type": "string",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "required": true
+        },
+        "details": {
+          "type": "Record<string, any>",
+          "required": false
+        },
+        "timestamp": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    {
+      "id": "partial_order",
+      "name": "PartialOrder",
+      "kind": "utility",
+      "exported": true,
+      "description": "Partial Order type for updates",
+      "utility": {
+        "type": "Partial",
+        "targetType": "Order"
+      }
+    },
+    {
+      "id": "readonly_order",
+      "name": "ReadonlyOrder",
+      "kind": "utility",
+      "exported": true,
+      "description": "Readonly Order type",
+      "utility": {
+        "type": "Readonly",
+        "targetType": "Order"
+      }
+    },
+    {
+      "id": "order_keys",
+      "name": "OrderKeys",
+      "kind": "utility",
+      "exported": true,
+      "description": "Union of Order property keys",
+      "utility": {
+        "type": "keyof",
+        "targetType": "Order"
+      }
+    },
+    {
+      "id": "result_type",
+      "name": "Result",
+      "kind": "generic",
+      "exported": true,
+      "description": "Result type for operations that can fail",
+      "typeParameters": ["T", "E = Error"],
+      "union": [
+        {
+          "kind": "object",
+          "properties": {
+            "ok": { "type": "true", "required": true },
+            "value": { "type": "T", "required": true }
+          }
+        },
+        {
+          "kind": "object",
+          "properties": {
+            "ok": { "type": "false", "required": true },
+            "error": { "type": "E", "required": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "async_operation",
+      "name": "AsyncOperation",
+      "kind": "generic",
+      "exported": true,
+      "description": "Async operation with loading and error states",
+      "typeParameters": ["T"],
+      "union": [
+        {
+          "kind": "object",
+          "properties": {
+            "status": { "type": "'idle'", "required": true },
+            "data": { "type": "null", "required": true }
+          }
+        },
+        {
+          "kind": "object",
+          "properties": {
+            "status": { "type": "'loading'", "required": true },
+            "data": { "type": "null", "required": true }
+          }
+        },
+        {
+          "kind": "object",
+          "properties": {
+            "status": { "type": "'success'", "required": true },
+            "data": { "type": "T", "required": true }
+          }
+        },
+        {
+          "kind": "object",
+          "properties": {
+            "status": { "type": "'error'", "required": true },
+            "data": { "type": "null", "required": true },
+            "error": { "type": "Error", "required": true }
+          }
+        }
+      ]
+    }
+  ],
+  "exports": {
+    "types": [
+      "PaginatedResponse",
+      "PaginationInfo",
+      "OrderListResponse",
+      "ApiResponse",
+      "ApiError",
+      "PartialOrder",
+      "ReadonlyOrder",
+      "OrderKeys",
+      "Result",
+      "AsyncOperation"
+    ]
+  }
+}

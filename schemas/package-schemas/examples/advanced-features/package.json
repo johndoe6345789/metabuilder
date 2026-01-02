@@ -1,0 +1,14 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "advanced-features",
+  "name": "Advanced Features Package",
+  "version": "1.0.0",
+  "description": "Demonstrates advanced MetaBuilder features and patterns",
+  "author": "MetaBuilder Team",
+  "license": "MIT",
+  "tags": ["advanced", "examples", "features"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metabuilder/advanced-features"
+  }
+}

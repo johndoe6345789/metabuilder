@@ -1,0 +1,355 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "advanced-features",
+  "description": "Advanced ABAC (Attribute-Based Access Control) with dynamic policies",
+  "roles": [
+    {
+      "id": "super-admin",
+      "name": "Super Administrator",
+      "description": "Full system access with no restrictions",
+      "level": 100,
+      "permissions": ["*"],
+      "system": true,
+      "metadata": {
+        "color": "#dc2626",
+        "icon": "shield-check"
+      }
+    },
+    {
+      "id": "admin",
+      "name": "Administrator",
+      "description": "Administrative access",
+      "level": 90,
+      "permissions": [
+        "orders.*",
+        "users.read",
+        "users.update",
+        "products.*",
+        "reports.read",
+        "settings.update"
+      ],
+      "system": true
+    },
+    {
+      "id": "order-manager",
+      "name": "Order Manager",
+      "description": "Manage all orders and customer service",
+      "level": 50,
+      "permissions": [
+        "orders.*",
+        "customers.read",
+        "products.read",
+        "shipping.manage"
+      ],
+      "inherits": ["customer-service"]
+    },
+    {
+      "id": "customer-service",
+      "name": "Customer Service",
+      "description": "Handle customer inquiries and basic order management",
+      "level": 30,
+      "permissions": [
+        "orders.read",
+        "orders.update",
+        "customers.read",
+        "tickets.manage"
+      ]
+    },
+    {
+      "id": "warehouse-staff",
+      "name": "Warehouse Staff",
+      "description": "Manage inventory and fulfillment",
+      "level": 25,
+      "permissions": [
+        "orders.read",
+        "inventory.*",
+        "shipping.create",
+        "shipping.update"
+      ]
+    },
+    {
+      "id": "analyst",
+      "name": "Data Analyst",
+      "description": "Read-only access to data and reports",
+      "level": 20,
+      "permissions": [
+        "orders.read",
+        "products.read",
+        "customers.read",
+        "reports.*",
+        "analytics.*"
+      ]
+    },
+    {
+      "id": "customer",
+      "name": "Customer",
+      "description": "Standard customer account",
+      "level": 10,
+      "permissions": [
+        "orders.read.own",
+        "orders.create",
+        "profile.manage.own"
+      ],
+      "default": true
+    }
+  ],
+  "permissions": [
+    {
+      "id": "orders.manage.high-value",
+      "name": "Manage High-Value Orders",
+      "description": "Manage orders over $10,000",
+      "resource": "orders",
+      "action": "manage",
+      "scope": "custom",
+      "conditions": [
+        {
+          "type": "attribute",
+          "attribute": "order.totalAmount",
+          "operator": "greaterThan",
+          "value": 10000
+        },
+        {
+          "type": "role",
+          "operator": "in",
+          "value": ["admin", "order-manager"]
+        }
+      ],
+      "priority": 10
+    },
+    {
+      "id": "orders.cancel.recent",
+      "name": "Cancel Recent Orders",
+      "description": "Cancel orders within 24 hours of creation",
+      "resource": "orders",
+      "action": "delete",
+      "conditions": [
+        {
+          "type": "custom",
+          "expression": "helpers.isWithinHours(order.createdAt, 24)"
+        }
+      ]
+    },
+    {
+      "id": "data.export.restricted",
+      "name": "Export Restricted Data",
+      "description": "Export sensitive customer data",
+      "resource": "data",
+      "action": "execute",
+      "conditions": [
+        {
+          "type": "role",
+          "operator": "in",
+          "value": ["admin", "analyst"]
+        },
+        {
+          "type": "time",
+          "timeRange": {
+            "start": "09:00",
+            "end": "17:00",
+            "timezone": "America/New_York",
+            "days": ["monday", "tuesday", "wednesday", "thursday", "friday"]
+          }
+        },
+        {
+          "type": "ip",
+          "ipRanges": ["10.0.0.0/8", "192.168.0.0/16"]
+        }
+      ],
+      "priority": 20
+    }
+  ],
+  "resources": [
+    {
+      "id": "orders",
+      "name": "Orders",
+      "type": "entity",
+      "description": "Customer orders",
+      "actions": ["create", "read", "update", "delete", "manage"],
+      "ownership": {
+        "enabled": true,
+        "field": "customerId",
+        "allowedActions": ["read", "update"]
+      },
+      "attributes": [
+        {
+          "name": "totalAmount",
+          "type": "number",
+          "description": "Order total amount"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "description": "Order status"
+        },
+        {
+          "name": "createdAt",
+          "type": "date",
+          "description": "Order creation date"
+        }
+      ],
+      "hierarchical": false
+    },
+    {
+      "id": "inventory",
+      "name": "Inventory",
+      "type": "entity",
+      "description": "Product inventory",
+      "actions": ["read", "update", "manage"],
+      "attributes": [
+        {
+          "name": "warehouseId",
+          "type": "string",
+          "description": "Warehouse location"
+        },
+        {
+          "name": "quantity",
+          "type": "number",
+          "description": "Stock quantity"
+        }
+      ]
+    },
+    {
+      "id": "reports",
+      "name": "Reports",
+      "type": "custom",
+      "description": "Business reports and analytics",
+      "actions": ["read", "execute"],
+      "attributes": [
+        {
+          "name": "sensitivity",
+          "type": "string",
+          "description": "Data sensitivity level"
+        },
+        {
+          "name": "department",
+          "type": "string",
+          "description": "Owning department"
+        }
+      ]
+    }
+  ],
+  "policies": [
+    {
+      "id": "regional_data_access",
+      "name": "Regional Data Access Policy",
+      "description": "Restrict data access by user region",
+      "effect": "allow",
+      "priority": 50,
+      "rules": [
+        {
+          "resources": ["orders/*", "customers/*"],
+          "actions": ["read", "update"],
+          "conditions": [
+            {
+              "type": "attribute",
+              "attribute": "user.region",
+              "operator": "equals",
+              "value": "resource.region"
+            }
+          ]
+        }
+      ],
+      "subjects": {
+        "roles": ["order-manager", "customer-service"]
+      },
+      "enabled": true
+    },
+    {
+      "id": "high_value_approval",
+      "name": "High-Value Order Approval",
+      "description": "Require approval for orders over $5000",
+      "effect": "deny",
+      "priority": 75,
+      "rules": [
+        {
+          "resources": ["orders"],
+          "actions": ["create", "update"],
+          "conditions": [
+            {
+              "type": "attribute",
+              "attribute": "order.totalAmount",
+              "operator": "greaterThan",
+              "value": 5000
+            },
+            {
+              "type": "attribute",
+              "attribute": "order.approved",
+              "operator": "notEquals",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "pci_compliance",
+      "name": "PCI Compliance Policy",
+      "description": "Restrict payment data access",
+      "effect": "deny",
+      "priority": 100,
+      "rules": [
+        {
+          "resources": ["payments/*/full-card-number"],
+          "actions": ["read"],
+          "conditions": [
+            {
+              "type": "role",
+              "operator": "notIn",
+              "value": ["super-admin", "payment-processor"]
+            }
+          ]
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "gdpr_data_export",
+      "name": "GDPR Data Export Policy",
+      "description": "Control customer data exports",
+      "effect": "allow",
+      "priority": 60,
+      "rules": [
+        {
+          "resources": ["customers/*/data-export"],
+          "actions": ["execute"],
+          "conditions": [
+            {
+              "type": "ownership",
+              "attribute": "customerId",
+              "operator": "equals",
+              "value": "currentUser.id"
+            }
+          ]
+        }
+      ],
+      "enabled": true
+    }
+  ],
+  "config": {
+    "enabled": true,
+    "model": "hybrid",
+    "defaultDeny": true,
+    "caching": {
+      "enabled": true,
+      "ttl": 300
+    },
+    "audit": {
+      "enabled": true,
+      "logDenials": true,
+      "logGrants": true,
+      "handler": "audit.logPermissionCheck"
+    },
+    "superAdmin": {
+      "enabled": true,
+      "roleId": "super-admin",
+      "bypassAll": true
+    },
+    "delegation": {
+      "enabled": true,
+      "maxDepth": 2,
+      "requireApproval": true
+    }
+  }
+}

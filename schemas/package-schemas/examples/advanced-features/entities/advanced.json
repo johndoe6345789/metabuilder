@@ -1,0 +1,181 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/entities.schema.json",
+  "schemaVersion": "2.0.0",
+  "entities": [
+    {
+      "name": "Order",
+      "version": "1.0",
+      "description": "E-commerce order entity with advanced features",
+      "tableName": "orders",
+      "softDelete": true,
+      "timestamps": true,
+      "fields": {
+        "id": {
+          "type": "uuid",
+          "required": true,
+          "primaryKey": true,
+          "description": "Unique order identifier"
+        },
+        "orderNumber": {
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "length": 20,
+          "description": "Human-readable order number"
+        },
+        "customerId": {
+          "type": "uuid",
+          "required": true,
+          "index": true,
+          "description": "Reference to customer"
+        },
+        "status": {
+          "type": "enum",
+          "required": true,
+          "enum": ["pending", "processing", "shipped", "delivered", "cancelled", "refunded"],
+          "default": "pending",
+          "description": "Order status"
+        },
+        "totalAmount": {
+          "type": "decimal",
+          "required": true,
+          "precision": 10,
+          "scale": 2,
+          "description": "Total order amount in currency"
+        },
+        "currency": {
+          "type": "string",
+          "required": true,
+          "length": 3,
+          "default": "USD",
+          "description": "ISO 4217 currency code"
+        },
+        "shippingAddress": {
+          "type": "json",
+          "required": true,
+          "description": "Shipping address as JSON"
+        },
+        "billingAddress": {
+          "type": "json",
+          "required": false,
+          "description": "Billing address (defaults to shipping)"
+        },
+        "metadata": {
+          "type": "json",
+          "required": false,
+          "description": "Additional order metadata"
+        },
+        "trackingNumber": {
+          "type": "string",
+          "required": false,
+          "length": 100,
+          "description": "Shipment tracking number"
+        },
+        "notes": {
+          "type": "text",
+          "required": false,
+          "description": "Internal notes"
+        }
+      },
+      "indexes": [
+        {
+          "name": "idx_orders_customer_status",
+          "fields": ["customerId", "status"],
+          "unique": false
+        },
+        {
+          "name": "idx_orders_order_number",
+          "fields": ["orderNumber"],
+          "unique": true
+        },
+        {
+          "name": "idx_orders_created_at",
+          "fields": ["createdAt"],
+          "unique": false
+        }
+      ],
+      "relations": [
+        {
+          "name": "customer",
+          "type": "belongsTo",
+          "entity": "Customer",
+          "foreignKey": "customerId"
+        },
+        {
+          "name": "items",
+          "type": "hasMany",
+          "entity": "OrderItem",
+          "foreignKey": "orderId"
+        }
+      ]
+    },
+    {
+      "name": "OrderItem",
+      "version": "1.0",
+      "description": "Individual items in an order",
+      "tableName": "order_items",
+      "timestamps": true,
+      "fields": {
+        "id": {
+          "type": "uuid",
+          "required": true,
+          "primaryKey": true
+        },
+        "orderId": {
+          "type": "uuid",
+          "required": true,
+          "index": true
+        },
+        "productId": {
+          "type": "uuid",
+          "required": true,
+          "index": true
+        },
+        "quantity": {
+          "type": "integer",
+          "required": true,
+          "default": 1,
+          "validation": {
+            "min": 1
+          }
+        },
+        "unitPrice": {
+          "type": "decimal",
+          "required": true,
+          "precision": 10,
+          "scale": 2
+        },
+        "discount": {
+          "type": "decimal",
+          "required": false,
+          "precision": 5,
+          "scale": 2,
+          "default": 0
+        },
+        "subtotal": {
+          "type": "decimal",
+          "required": true,
+          "precision": 10,
+          "scale": 2,
+          "computed": {
+            "expression": "quantity * unitPrice * (1 - discount / 100)"
+          }
+        }
+      },
+      "relations": [
+        {
+          "name": "order",
+          "type": "belongsTo",
+          "entity": "Order",
+          "foreignKey": "orderId"
+        },
+        {
+          "name": "product",
+          "type": "belongsTo",
+          "entity": "Product",
+          "foreignKey": "productId"
+        }
+      ]
+    }
+  ]
+}
