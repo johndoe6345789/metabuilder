@@ -1,0 +1,39 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "audit_log",
+  "name": "Audit Log",
+  "version": "1.0.0",
+  "description": "Security audit log viewer and stats dashboard",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "admin",
+  "minLevel": 3,
+  "primary": true,
+  "dependencies": {},
+  "devDependencies": {
+    "lua_test": "*",
+    "package_validator": "*"
+  },
+  "exports": {
+    "components": [
+      "AuditLogViewer",
+      "AuditStatsCard",
+      "LogTable",
+      "LogFilters"
+    ],
+    "scripts": [
+      "init",
+      "stats",
+      "filters",
+      "formatting"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua",
+      "tests/stats.test.lua",
+      "tests/filters.test.lua"
+    ]
+  }
+}
