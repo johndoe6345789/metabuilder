@@ -1,5 +1,5 @@
 {
-  "$schema": "https://metabuilder.dev/schemas/json-script-functions.schema.json",
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
   "schemaVersion": "2.0.0",
   "package": "ui_dialogs",
   "functions": [
