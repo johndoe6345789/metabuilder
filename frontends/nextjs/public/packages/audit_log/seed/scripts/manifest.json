@@ -1,8 +1,0 @@
-{
-  "scripts": [
-    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package initialization" },
-    { "file": "stats.lua", "name": "stats", "category": "analytics", "description": "Statistics calculation" },
-    { "file": "filters.lua", "name": "filters", "category": "data", "description": "Log filtering" },
-    { "file": "formatting.lua", "name": "formatting", "category": "ui", "description": "Display formatting" }
-  ]
-}
