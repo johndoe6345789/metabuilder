@@ -1,4 +1,1 @@
-1. Read schemas folder first.
-2. Pick a package from packages/archive to convert.
-3. Make a folder in packages for this new package.
-4. Using the schema info, make json files based on this set of schemas.
+Find stuff that the nextjs frontend does and the package systen doesnt, then make/edit packages. Usually user facing stuff. Also all the packages might want SVG icons.
