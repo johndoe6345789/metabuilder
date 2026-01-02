@@ -1,0 +1,433 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "form_builder",
+  "description": "Reusable form field components with built-in validation",
+  "components": [
+    {
+      "id": "form_field",
+      "name": "FormField",
+      "description": "Generic form field with label, validation, and error display",
+      "props": [
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "default": "text",
+          "enum": ["text", "email", "password", "number", "tel", "url", "textarea"]
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "helperText",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "rows",
+          "type": "number",
+          "default": 3
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "state": [
+        {
+          "name": "error",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "touched",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "handlers": {
+        "onChange": "fields.handleChange",
+        "onBlur": "fields.handleBlur",
+        "validate": "validate.validateField"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "form-field",
+          "children": [
+            {
+              "type": "Label",
+              "htmlFor": "{{name}}",
+              "children": [
+                "{{label}}",
+                {
+                  "type": "conditional",
+                  "condition": "{{required}}",
+                  "then": {
+                    "type": "span",
+                    "className": "text-red-500",
+                    "children": " *"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{type === 'textarea'}}",
+              "then": {
+                "type": "Textarea",
+                "id": "{{name}}",
+                "name": "{{name}}",
+                "placeholder": "{{placeholder}}",
+                "required": "{{required}}",
+                "rows": "{{rows}}",
+                "value": "{{value}}",
+                "onChange": "onChange",
+                "onBlur": "onBlur"
+              },
+              "else": {
+                "type": "Input",
+                "id": "{{name}}",
+                "name": "{{name}}",
+                "type": "{{type}}",
+                "placeholder": "{{placeholder}}",
+                "required": "{{required}}",
+                "value": "{{value}}",
+                "onChange": "onChange",
+                "onBlur": "onBlur"
+              }
+            },
+            {
+              "type": "conditional",
+              "condition": "{{helperText && !error}}",
+              "then": {
+                "type": "Text",
+                "variant": "caption",
+                "color": "secondary",
+                "children": "{{helperText}}"
+              }
+            },
+            {
+              "type": "conditional",
+              "condition": "{{error && touched}}",
+              "then": {
+                "type": "Text",
+                "variant": "caption",
+                "color": "error",
+                "children": "{{error}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "email_field",
+      "name": "EmailField",
+      "description": "Email input field with validation",
+      "props": [
+        {
+          "name": "name",
+          "type": "string",
+          "default": "email"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "Email"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": true
+        }
+      ],
+      "handlers": {
+        "validate": "validate.validateEmail"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "FormField",
+          "name": "{{name}}",
+          "label": "{{label}}",
+          "type": "email",
+          "required": "{{required}}",
+          "placeholder": "you@example.com"
+        }
+      }
+    },
+    {
+      "id": "password_field",
+      "name": "PasswordField",
+      "description": "Password input field with show/hide toggle",
+      "props": [
+        {
+          "name": "name",
+          "type": "string",
+          "default": "password"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "Password"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": true
+        },
+        {
+          "name": "showStrength",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "state": [
+        {
+          "name": "showPassword",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "handlers": {
+        "toggleVisibility": "fields.togglePasswordVisibility",
+        "validate": "validate.validatePassword"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "password-field",
+          "children": [
+            {
+              "type": "FormField",
+              "name": "{{name}}",
+              "label": "{{label}}",
+              "type": "{{showPassword ? 'text' : 'password'}}",
+              "required": "{{required}}"
+            },
+            {
+              "type": "Button",
+              "variant": "ghost",
+              "size": "sm",
+              "onClick": "toggleVisibility",
+              "children": "{{showPassword ? 'Hide' : 'Show'}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "search_bar",
+      "name": "SearchBar",
+      "description": "Search input with icon and clear button",
+      "props": [
+        {
+          "name": "placeholder",
+          "type": "string",
+          "default": "Search..."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "handlers": {
+        "onChange": "fields.handleSearch",
+        "onClear": "fields.clearSearch"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "search-bar",
+          "children": [
+            {
+              "type": "Icon",
+              "name": "Search",
+              "size": 20
+            },
+            {
+              "type": "Input",
+              "type": "search",
+              "placeholder": "{{placeholder}}",
+              "value": "{{value}}",
+              "onChange": "onChange"
+            },
+            {
+              "type": "conditional",
+              "condition": "{{value}}",
+              "then": {
+                "type": "Button",
+                "variant": "ghost",
+                "size": "sm",
+                "onClick": "onClear",
+                "children": [
+                  {
+                    "type": "Icon",
+                    "name": "X",
+                    "size": 16
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "contact_form",
+      "name": "ContactForm",
+      "description": "Complete contact form with name, email, and message",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "default": "Contact form"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "default": "Collect a name, email, and short message with simple validation."
+        },
+        {
+          "name": "submitLabel",
+          "type": "string",
+          "default": "Send message"
+        }
+      ],
+      "state": [
+        {
+          "name": "submitted",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "handlers": {
+        "onSubmit": "contact_form.handleSubmit",
+        "validate": "contact_form.validate"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "max-w-xl",
+          "children": [
+            {
+              "type": "CardHeader",
+              "children": [
+                {
+                  "type": "CardTitle",
+                  "text": "{{title}}"
+                },
+                {
+                  "type": "CardDescription",
+                  "text": "{{description}}"
+                }
+              ]
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "conditional",
+                  "condition": "{{!submitted}}",
+                  "then": {
+                    "type": "form",
+                    "className": "space-y-4",
+                    "onSubmit": "onSubmit",
+                    "children": [
+                      {
+                        "type": "FormField",
+                        "name": "name",
+                        "label": "Name",
+                        "placeholder": "Your name",
+                        "required": true
+                      },
+                      {
+                        "type": "FormField",
+                        "name": "email",
+                        "label": "Email",
+                        "type": "email",
+                        "placeholder": "you@example.com",
+                        "required": true,
+                        "helperText": "We will only use this to reply to your note."
+                      },
+                      {
+                        "type": "FormField",
+                        "name": "message",
+                        "label": "Message",
+                        "type": "textarea",
+                        "placeholder": "How can we help?",
+                        "required": true,
+                        "rows": 4
+                      },
+                      {
+                        "type": "Button",
+                        "type": "submit",
+                        "disabled": "{{loading}}",
+                        "children": "{{loading ? 'Sending...' : submitLabel}}"
+                      }
+                    ]
+                  },
+                  "else": {
+                    "type": "Box",
+                    "className": "text-center py-8",
+                    "children": [
+                      {
+                        "type": "Icon",
+                        "name": "CheckCircle",
+                        "size": 48,
+                        "color": "success"
+                      },
+                      {
+                        "type": "Text",
+                        "variant": "h6",
+                        "children": "Message sent"
+                      },
+                      {
+                        "type": "Text",
+                        "variant": "body2",
+                        "color": "secondary",
+                        "children": "Thanks for reaching out. We will get back to you shortly."
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["FormField", "EmailField", "PasswordField", "NumberField", "SearchBar", "ContactForm"]
+  }
+}

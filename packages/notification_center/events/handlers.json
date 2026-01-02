@@ -1,0 +1,48 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/events.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "notification_center",
+  "description": "Notification event definitions and handlers",
+  "events": [
+    {
+      "name": "notification.created",
+      "version": "1.0.0",
+      "description": "Fired when a new notification is created",
+      "payload": "Notification"
+    },
+    {
+      "name": "notification.read",
+      "version": "1.0.0",
+      "description": "Fired when a notification is marked as read",
+      "payload": {
+        "notificationId": "string",
+        "userId": "string"
+      }
+    },
+    {
+      "name": "notification.dismissed",
+      "version": "1.0.0",
+      "description": "Fired when a notification is dismissed",
+      "payload": {
+        "notificationId": "string",
+        "userId": "string"
+      }
+    }
+  ],
+  "subscribers": [
+    {
+      "id": "show_toast_on_create",
+      "name": "Show Toast on Notification",
+      "events": ["notification.created"],
+      "handler": "toast.showToast",
+      "description": "Display toast when new notification arrives"
+    },
+    {
+      "id": "update_count_on_read",
+      "name": "Update Count on Read",
+      "events": ["notification.read"],
+      "handler": "summary.prepareSummary",
+      "description": "Update notification count when marked as read"
+    }
+  ]
+}

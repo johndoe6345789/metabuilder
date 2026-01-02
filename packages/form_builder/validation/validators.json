@@ -1,0 +1,123 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/validation.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "form_builder",
+  "description": "Validation patterns and functions for form fields",
+  "patterns": {
+    "email": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+    "password": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$",
+    "url": "^https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$",
+    "phone": "^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$",
+    "zipCode": "^[0-9]{5}(?:-[0-9]{4})?$",
+    "username": "^[a-zA-Z0-9_-]{3,16}$"
+  },
+  "functions": [
+    {
+      "id": "validate_email",
+      "name": "validateEmail",
+      "description": "Validate email address format",
+      "params": [
+        {
+          "name": "email",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "returnType": "boolean",
+      "async": false,
+      "pattern": "email",
+      "errorMessage": "Please enter a valid email address"
+    },
+    {
+      "id": "validate_password",
+      "name": "validatePassword",
+      "description": "Validate password strength (min 8 chars, uppercase, lowercase, number)",
+      "params": [
+        {
+          "name": "password",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "returnType": "boolean",
+      "async": false,
+      "pattern": "password",
+      "errorMessage": "Password must be at least 8 characters and contain uppercase, lowercase, and numbers"
+    },
+    {
+      "id": "validate_required",
+      "name": "validateRequired",
+      "description": "Check if field has a value",
+      "params": [
+        {
+          "name": "value",
+          "type": "any",
+          "required": true
+        }
+      ],
+      "returnType": "boolean",
+      "async": false,
+      "errorMessage": "This field is required"
+    },
+    {
+      "id": "validate_min_length",
+      "name": "validateMinLength",
+      "description": "Check minimum string length",
+      "params": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "minLength",
+          "type": "number",
+          "required": true
+        }
+      ],
+      "returnType": "boolean",
+      "async": false,
+      "errorMessage": "Must be at least ${minLength} characters"
+    },
+    {
+      "id": "validate_max_length",
+      "name": "validateMaxLength",
+      "description": "Check maximum string length",
+      "params": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "required": true
+        }
+      ],
+      "returnType": "boolean",
+      "async": false,
+      "errorMessage": "Must be no more than ${maxLength} characters"
+    },
+    {
+      "id": "validate_url",
+      "name": "validateURL",
+      "description": "Validate URL format",
+      "params": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "returnType": "boolean",
+      "async": false,
+      "pattern": "url",
+      "errorMessage": "Please enter a valid URL"
+    }
+  ],
+  "exports": {
+    "patterns": ["email", "password", "url", "phone", "zipCode", "username"],
+    "functions": ["validateEmail", "validatePassword", "validateRequired", "validateMinLength", "validateMaxLength", "validateURL"]
+  }
+}
