@@ -1,7 +1,0 @@
-export { deletePackageData } from './data/delete-package-data'
-export { getPackageData } from './data/get-package-data'
-export { listInstalledPackages } from './data/list-installed-packages'
-export { setPackageData } from './data/set-package-data'
-export { installPackage } from './lifecycle/install-package'
-export { togglePackageEnabled } from './lifecycle/toggle-package-enabled'
-export { uninstallPackage } from './lifecycle/uninstall-package'
