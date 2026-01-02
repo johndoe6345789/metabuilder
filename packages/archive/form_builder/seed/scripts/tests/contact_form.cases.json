@@ -1,0 +1,211 @@
+{
+  "validate": {
+    "valid": [
+      {
+        "desc": "Valid complete form",
+        "input": {
+          "name": "John Doe",
+          "email": "john@example.com",
+          "message": "Hello world"
+        }
+      },
+      {
+        "desc": "Valid with trimmed whitespace",
+        "input": {
+          "name": "  Jane Smith  ",
+          "email": "  jane@test.com  ",
+          "message": "  Test message  "
+        }
+      },
+      {
+        "desc": "Valid with long message",
+        "input": {
+          "name": "Bob",
+          "email": "bob@company.org",
+          "message": "This is a very long message that spans multiple lines and contains lots of details about the inquiry."
+        }
+      }
+    ],
+    "invalid": [
+      {
+        "desc": "Missing all required fields",
+        "input": {
+          "name": "",
+          "email": "",
+          "message": ""
+        },
+        "expected_errors": {
+          "name": true,
+          "email": true,
+          "message": true
+        }
+      },
+      {
+        "desc": "Missing name",
+        "input": {
+          "name": "",
+          "email": "test@test.com",
+          "message": "Hello"
+        },
+        "expected_errors": {
+          "name": true
+        }
+      },
+      {
+        "desc": "Missing email",
+        "input": {
+          "name": "John",
+          "email": "",
+          "message": "Hello"
+        },
+        "expected_errors": {
+          "email": true
+        }
+      },
+      {
+        "desc": "Missing message",
+        "input": {
+          "name": "John",
+          "email": "john@test.com",
+          "message": ""
+        },
+        "expected_errors": {
+          "message": true
+        }
+      },
+      {
+        "desc": "Whitespace-only values treated as empty",
+        "input": {
+          "name": "   ",
+          "email": "   ",
+          "message": "   "
+        },
+        "expected_errors": {
+          "name": true,
+          "email": true,
+          "message": true
+        }
+      }
+    ],
+    "email_validation": [
+      {
+        "desc": "Valid email with subdomain",
+        "input": {
+          "name": "Test",
+          "email": "user@mail.example.com",
+          "message": "Hi"
+        },
+        "should_be_valid": true
+      },
+      {
+        "desc": "Valid email with plus sign",
+        "input": {
+          "name": "Test",
+          "email": "user+tag@example.com",
+          "message": "Hi"
+        },
+        "should_be_valid": true
+      },
+      {
+        "desc": "Invalid email - no @ symbol",
+        "input": {
+          "name": "Test",
+          "email": "notanemail.com",
+          "message": "Hi"
+        },
+        "should_be_valid": false
+      },
+      {
+        "desc": "Invalid email - no domain",
+        "input": {
+          "name": "Test",
+          "email": "user@",
+          "message": "Hi"
+        },
+        "should_be_valid": false
+      },
+      {
+        "desc": "Invalid email - no local part",
+        "input": {
+          "name": "Test",
+          "email": "@example.com",
+          "message": "Hi"
+        },
+        "should_be_valid": false
+      },
+      {
+        "desc": "Invalid email - spaces in email",
+        "input": {
+          "name": "Test",
+          "email": "user @example.com",
+          "message": "Hi"
+        },
+        "should_be_valid": false
+      },
+      {
+        "desc": "Invalid email - no TLD",
+        "input": {
+          "name": "Test",
+          "email": "user@example",
+          "message": "Hi"
+        },
+        "should_be_valid": false
+      },
+      {
+        "desc": "Invalid email - multiple @ symbols",
+        "input": {
+          "name": "Test",
+          "email": "user@@example.com",
+          "message": "Hi"
+        },
+        "should_be_valid": false
+      }
+    ]
+  },
+  "handleSubmit": {
+    "success": [
+      {
+        "desc": "Successful submission with valid data",
+        "input": {
+          "name": "Alice Johnson",
+          "email": "alice@example.com",
+          "message": "I would like to inquire about your services."
+        }
+      },
+      {
+        "desc": "Successful submission with trimmed data",
+        "input": {
+          "name": "  Bob  ",
+          "email": "  bob@test.com  ",
+          "message": "  Hello there  "
+        }
+      }
+    ],
+    "failure": [
+      {
+        "desc": "Failed submission - missing fields",
+        "input": {
+          "name": "",
+          "email": "",
+          "message": ""
+        }
+      },
+      {
+        "desc": "Failed submission - invalid email",
+        "input": {
+          "name": "Charlie",
+          "email": "not-an-email",
+          "message": "Test message"
+        }
+      },
+      {
+        "desc": "Failed submission - partial data",
+        "input": {
+          "name": "David",
+          "email": "",
+          "message": "Hello"
+        }
+      }
+    ]
+  }
+}

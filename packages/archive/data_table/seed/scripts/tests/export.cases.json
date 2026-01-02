@@ -1,0 +1,181 @@
+{
+  "escapeCsv": [
+    {
+      "desc": "Simple string without special chars",
+      "input": "hello",
+      "expected": "hello"
+    },
+    {
+      "desc": "String with comma",
+      "input": "hello,world",
+      "expected": "\"hello,world\""
+    },
+    {
+      "desc": "String with double quotes",
+      "input": "say \"hello\"",
+      "expected": "\"say \"\"hello\"\"\""
+    },
+    {
+      "desc": "String with newline",
+      "input": "line1\nline2",
+      "expected": "\"line1\nline2\""
+    },
+    {
+      "desc": "String with carriage return",
+      "input": "text\rmore",
+      "expected": "\"text\rmore\""
+    },
+    {
+      "desc": "Empty string",
+      "input": "",
+      "expected": ""
+    },
+    {
+      "desc": "Null value",
+      "input": null,
+      "expected": ""
+    },
+    {
+      "desc": "Number value",
+      "input": 123,
+      "expected": "123"
+    },
+    {
+      "desc": "Boolean true",
+      "input": true,
+      "expected": "true"
+    },
+    {
+      "desc": "Boolean false",
+      "input": false,
+      "expected": "false"
+    },
+    {
+      "desc": "String with all special chars",
+      "input": "test,\"data\"\nwith,everything",
+      "expected": "\"test,\"\"data\"\"\nwith,everything\""
+    }
+  ],
+  "exportToCsv": [
+    {
+      "desc": "Simple CSV with headers",
+      "data": [
+        { "name": "Alice", "age": 30 },
+        { "name": "Bob", "age": 25 }
+      ],
+      "columns": [
+        { "id": "name", "label": "Name" },
+        { "id": "age", "label": "Age" }
+      ],
+      "options": {},
+      "expected_line_count": 3,
+      "expected_lines": [
+        "Name,Age",
+        "Alice,30",
+        "Bob,25"
+      ]
+    },
+    {
+      "desc": "CSV without headers",
+      "data": [
+        { "name": "Alice", "age": 30 }
+      ],
+      "columns": [
+        { "id": "name", "label": "Name" },
+        { "id": "age", "label": "Age" }
+      ],
+      "options": {
+        "includeHeaders": false
+      },
+      "expected_line_count": 1,
+      "expected_first_line": "Alice,30"
+    },
+    {
+      "desc": "CSV with special characters",
+      "data": [
+        { "name": "Smith, John", "email": "john@example.com" }
+      ],
+      "columns": [
+        { "id": "name", "label": "Name" },
+        { "id": "email", "label": "Email" }
+      ],
+      "options": {},
+      "expected_line_count": 2,
+      "expected_lines": [
+        "Name,Email",
+        "\"Smith, John\",john@example.com"
+      ]
+    },
+    {
+      "desc": "CSV with quotes in data",
+      "data": [
+        { "quote": "He said \"hello\"" }
+      ],
+      "columns": [
+        { "id": "quote", "label": "Quote" }
+      ],
+      "options": {},
+      "expected_line_count": 2,
+      "expected_lines": [
+        "Quote",
+        "\"He said \"\"hello\"\"\""
+      ]
+    },
+    {
+      "desc": "CSV with custom delimiter",
+      "data": [
+        { "a": "1", "b": "2" }
+      ],
+      "columns": [
+        { "id": "a", "label": "A" },
+        { "id": "b", "label": "B" }
+      ],
+      "options": {
+        "delimiter": ";"
+      },
+      "expected_line_count": 2,
+      "expected_lines": [
+        "A;B",
+        "1;2"
+      ]
+    },
+    {
+      "desc": "CSV with multiple rows",
+      "data": [
+        { "id": "1", "name": "Alice" },
+        { "id": "2", "name": "Bob" },
+        { "id": "3", "name": "Charlie" }
+      ],
+      "columns": [
+        { "id": "id", "label": "ID" },
+        { "id": "name", "label": "Name" }
+      ],
+      "options": {},
+      "expected_line_count": 4,
+      "expected_lines": [
+        "ID,Name",
+        "1,Alice",
+        "2,Bob",
+        "3,Charlie"
+      ]
+    },
+    {
+      "desc": "CSV with null values",
+      "data": [
+        { "name": "Alice", "age": null },
+        { "name": null, "age": 25 }
+      ],
+      "columns": [
+        { "id": "name", "label": "Name" },
+        { "id": "age", "label": "Age" }
+      ],
+      "options": {},
+      "expected_line_count": 3,
+      "expected_lines": [
+        "Name,Age",
+        "Alice,",
+        ",25"
+      ]
+    }
+  ]
+}

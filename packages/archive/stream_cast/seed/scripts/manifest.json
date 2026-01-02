@@ -1,0 +1,28 @@
+{
+  "scripts": [
+    {
+      "id": "init",
+      "name": "Stream Cast Init",
+      "file": "init.lua",
+      "description": "Initialize stream cast module"
+    },
+    {
+      "id": "player",
+      "name": "Stream Player",
+      "file": "player.lua",
+      "description": "Video player controls"
+    },
+    {
+      "id": "schedule",
+      "name": "Stream Schedule",
+      "file": "schedule.lua",
+      "description": "Stream scheduling"
+    },
+    {
+      "id": "scenes",
+      "name": "Scene Manager",
+      "file": "scenes.lua",
+      "description": "Stream scene management"
+    }
+  ]
+}

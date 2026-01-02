@@ -1,0 +1,58 @@
+{
+  "packageId": "ui_footer",
+  "name": "App Footer",
+  "version": "1.0.0",
+  "description": "Shared footer with copyright and links, includes simple and full variants",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [],
+  "devDependencies": [
+    "lua_test"
+  ],
+  "exports": {
+    "components": [
+      "app_footer",
+      "app_footer_simple"
+    ],
+    "scripts": [
+      "footer"
+    ],
+    "pages": []
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
+    ]
+  },
+  "minLevel": 1,
+  "primary": false,
+  "permissions": {
+    "footer.view": {
+      "minLevel": 1,
+      "description": "View application footer",
+      "storybook": {
+        "stories": []
+      }
+    }
+  },
+  "seed": {
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
+  "storybook": {
+    "stories": [
+      {
+        "name": "AppFooter",
+        "render": "footer"
+      }
+    ]
+  }
+}

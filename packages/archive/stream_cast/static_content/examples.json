@@ -1,0 +1,19 @@
+{
+  "examples": {
+    "schedule": [
+      { "time": "00:00", "scene": "intro" },
+      { "time": "00:10", "scene": "main" },
+      { "time": "00:30", "scene": "qa" }
+    ],
+    "scenes": [
+      { "id": "intro", "label": "Intro", "destination": "studio_a" },
+      { "id": "main", "label": "Main", "destination": "studio_b" },
+      { "id": "qa", "label": "Q&A", "destination": "studio_c" }
+    ],
+    "pulseMetrics": {
+      "messagesPerMinute": 420,
+      "reactionsPerMinute": 180,
+      "viewers": 3482
+    }
+  }
+}

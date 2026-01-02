@@ -1,0 +1,67 @@
+[
+  {
+    "id": "notification_summary",
+    "type": "notification_summary",
+    "name": "Notification Summary Card",
+    "description": "Summary card showing notification counts by severity level",
+    "props": {
+      "title": "Notification Summary",
+      "subtitle": null,
+      "totalLabel": "Total",
+      "items": []
+    },
+    "layout": {
+      "type": "Card",
+      "props": { "className": "space-y-4 p-4" },
+      "children": [
+        {
+          "type": "Box",
+          "props": { "className": "space-y-1" },
+          "children": [
+            {
+              "type": "Typography",
+              "props": { "variant": "overline", "className": "tracking-[0.3em] text-muted-foreground", "text": "{{title}}" }
+            },
+            {
+              "type": "Box",
+              "props": { "className": "flex items-baseline justify-between gap-3" },
+              "children": [
+                { "type": "Typography", "props": { "variant": "h3", "className": "font-bold", "text": "{{total}}" } },
+                { "type": "Badge", "props": { "variant": "secondary", "text": "{{totalLabel}}" } }
+              ]
+            }
+          ]
+        },
+        { "type": "Separator" },
+        {
+          "type": "List",
+          "props": { "dataSource": "items", "className": "space-y-3" },
+          "itemTemplate": {
+            "type": "Box",
+            "props": { "className": "flex items-center justify-between gap-3" },
+            "children": [
+              {
+                "type": "Box",
+                "children": [
+                  { "type": "Typography", "props": { "variant": "body2", "fontWeight": "semibold", "text": "{{item.label}}" } },
+                  { "type": "Typography", "props": { "variant": "caption", "color": "textSecondary", "text": "{{item.hint}}" } }
+                ]
+              },
+              {
+                "type": "Box",
+                "props": { "className": "flex items-center gap-2" },
+                "children": [
+                  { "type": "Badge", "props": { "variant": "outline", "className": "{{item.classes}}", "text": "{{item.count}}" } },
+                  { "type": "Typography", "props": { "variant": "overline", "className": "tracking-[0.4em]", "text": "{{item.severity}}" } }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "scripts": {
+      "init": "summary.prepareSummary"
+    }
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "severityClasses": {
+    "critical": { "text": "text-red-700", "border": "border-red-200", "bg": "bg-red-50" },
+    "warning": { "text": "text-amber-700", "border": "border-amber-200", "bg": "bg-amber-50" },
+    "info": { "text": "text-sky-700", "border": "border-sky-200", "bg": "bg-sky-50" }
+  },
+  "defaultItems": [
+    { "label": "Errors", "count": 3, "severity": "critical", "hint": "Take action immediately" },
+    { "label": "Pending Reviews", "count": 5, "severity": "warning", "hint": "Awaiting triage" },
+    { "label": "Messages", "count": 12, "severity": "info", "hint": "System notifications only" }
+  ]
+}

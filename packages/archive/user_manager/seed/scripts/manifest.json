@@ -1,0 +1,22 @@
+{
+  "scripts": [
+    {
+      "id": "init",
+      "name": "User Manager Init",
+      "file": "init.lua",
+      "description": "Initialize user manager module"
+    },
+    {
+      "id": "list",
+      "name": "User List",
+      "file": "list.lua",
+      "description": "Render user list table"
+    },
+    {
+      "id": "actions",
+      "name": "User Actions",
+      "file": "actions.lua",
+      "description": "User management actions"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "package_id_validation": [
+    { "pattern": "^[a-z_]+$", "desc": "lowercase with underscores only" }
+  ],
+  "version_validation": [
+    { "pattern": "^%d+%.%d+%.%d+$", "desc": "semantic version format" }
+  ],
+  "required_fields": [
+    { "field": "packageId", "desc": "package identifier" },
+    { "field": "name", "desc": "display name" },
+    { "field": "version", "desc": "version string" },
+    { "field": "description", "desc": "package description" }
+  ],
+  "export_types": [
+    { "type": "components", "desc": "component exports" },
+    { "type": "scripts", "desc": "lua script exports" }
+  ],
+  "expected_components": [
+    { "name": "ConfirmDialog", "desc": "confirmation dialog" },
+    { "name": "AlertDialog", "desc": "alert dialog" },
+    { "name": "FormDialog", "desc": "form dialog" }
+  ]
+}

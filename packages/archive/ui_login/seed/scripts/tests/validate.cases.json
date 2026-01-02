@@ -1,0 +1,46 @@
+{
+  "login": {
+    "valid": [
+      { "username": "user", "password": "123456", "desc": "minimum valid password" },
+      { "username": "admin", "password": "password123", "desc": "normal credentials" },
+      { "username": "a", "password": "securepass", "desc": "single char username" },
+      { "username": "longuser", "password": "verylongpassword", "desc": "long credentials" }
+    ],
+    "invalid_username": [
+      { "username": "", "password": "password123", "field": "username", "desc": "empty username" },
+      { "username": null, "password": "password123", "field": "username", "desc": "nil username" }
+    ],
+    "invalid_password": [
+      { "username": "user", "password": "", "desc": "empty password" },
+      { "username": "user", "password": "12345", "desc": "5 char password" },
+      { "username": "user", "password": "a", "desc": "1 char password" },
+      { "username": "user", "password": null, "desc": "nil password" }
+    ]
+  },
+  "register": {
+    "valid": [
+      { "username": "abc", "email": "a@b.co", "password": "12345678", "desc": "minimum valid" },
+      { "username": "testuser", "email": "test@example.com", "password": "securepass", "desc": "normal registration" },
+      { "username": "user123", "email": "user@mail.org", "password": "password123", "desc": "alphanumeric username" }
+    ],
+    "invalid_username": [
+      { "username": "", "email": "test@example.com", "password": "password123", "desc": "empty username" },
+      { "username": "ab", "email": "test@example.com", "password": "password123", "desc": "2 char username" },
+      { "username": "a", "email": "test@example.com", "password": "password123", "desc": "1 char username" }
+    ],
+    "invalid_email": [
+      { "email": "", "desc": "empty email" },
+      { "email": "invalid", "desc": "no @ symbol" },
+      { "email": "test@", "desc": "no domain" },
+      { "email": "@example.com", "desc": "no local part" },
+      { "email": "test@example", "desc": "no TLD" },
+      { "email": "test@.com", "desc": "empty domain name" }
+    ],
+    "invalid_password": [
+      { "password": "", "len": 0, "desc": "empty password" },
+      { "password": "1234567", "len": 7, "desc": "7 char password" },
+      { "password": "short", "len": 5, "desc": "5 char password" },
+      { "password": "a", "len": 1, "desc": "1 char password" }
+    ]
+  }
+}

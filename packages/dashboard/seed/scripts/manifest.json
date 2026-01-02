@@ -1,7 +1,0 @@
-{
-  "scripts": [
-    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle" },
-    { "file": "stats.lua", "name": "stats", "category": "ui", "description": "Stat card components" },
-    { "file": "layout.lua", "name": "layout", "category": "ui", "description": "Dashboard layouts" }
-  ]
-}

@@ -1,0 +1,687 @@
+{
+  "$schema": "../../json_script_example/seed/script.schema.json",
+  "schema_version": "2.1.0",
+  "package": "package_validator",
+  "description": "JSON-based package validator for modern JSON script packages",
+
+  "exports": {
+    "functions": [
+      "validate_package",
+      "validate_metadata",
+      "validate_scripts",
+      "validate_types",
+      "validate_components",
+      "validate_tests",
+      "validate_storybook"
+    ]
+  },
+
+  "imports": [
+    {
+      "from": "external:fs",
+      "import": ["readFile", "existsSync", "readdir", "statSync"]
+    },
+    {
+      "from": "external:path",
+      "import": ["join", "resolve", "basename", "dirname", "extname"]
+    },
+    {
+      "from": "external:JSON",
+      "import": ["parse", "stringify"]
+    },
+    {
+      "from": "external:ajv",
+      "import": ["compile", "validate"],
+      "optional": true
+    }
+  ],
+
+  "functions": [
+    {
+      "id": "validate_package",
+      "name": "validate_package",
+      "exported": true,
+      "docstring": {
+        "summary": "Validates an entire package structure",
+        "description": "Comprehensive validation of package including metadata, scripts, types, components, tests, and storybook configuration.",
+        "params": [
+          {
+            "name": "packagePath",
+            "type": "string",
+            "description": "Path to package directory"
+          }
+        ],
+        "returns": {
+          "type": "ValidationResult",
+          "description": "Validation result with errors and warnings"
+        },
+        "examples": [
+          {
+            "title": "Validate json_script_example",
+            "code": "const result = validate_package('packages/json_script_example');\nif (result.valid) console.log('✓ Package is valid');"
+          }
+        ],
+        "since": "2.0.0",
+        "tags": ["validation", "package", "json-scripts"]
+      },
+      "params": [
+        {
+          "name": "packagePath",
+          "type": "string"
+        }
+      ],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "const_declaration",
+          "name": "errors",
+          "value": {
+            "type": "array_literal",
+            "elements": []
+          }
+        },
+        {
+          "type": "const_declaration",
+          "name": "warnings",
+          "value": {
+            "type": "array_literal",
+            "elements": []
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Validate metadata.json"
+        },
+        {
+          "type": "const_declaration",
+          "name": "metadataResult",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:local.validate_metadata",
+            "args": ["$ref:params.packagePath"]
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Validate JSON scripts"
+        },
+        {
+          "type": "const_declaration",
+          "name": "scriptsResult",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:local.validate_scripts",
+            "args": ["$ref:params.packagePath"]
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Validate types.json if present"
+        },
+        {
+          "type": "const_declaration",
+          "name": "typesResult",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:local.validate_types",
+            "args": ["$ref:params.packagePath"]
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Validate components if present"
+        },
+        {
+          "type": "const_declaration",
+          "name": "componentsResult",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:local.validate_components",
+            "args": ["$ref:params.packagePath"]
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Return aggregated results"
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "valid": {
+                "type": "binary_expression",
+                "left": {
+                  "type": "member_access",
+                  "object": "$ref:local.errors",
+                  "property": "length"
+                },
+                "operator": "==",
+                "right": 0
+              },
+              "errors": "$ref:local.errors",
+              "warnings": "$ref:local.warnings",
+              "details": {
+                "type": "object_literal",
+                "properties": {
+                  "metadata": "$ref:local.metadataResult",
+                  "scripts": "$ref:local.scriptsResult",
+                  "types": "$ref:local.typesResult",
+                  "components": "$ref:local.componentsResult"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "validate_metadata",
+      "name": "validate_metadata",
+      "exported": true,
+      "docstring": {
+        "summary": "Validates package metadata.json",
+        "description": "Checks metadata.json for required fields, correct structure, valid exports, and proper configuration.",
+        "params": [
+          {
+            "name": "packagePath",
+            "type": "string",
+            "description": "Path to package directory"
+          }
+        ],
+        "returns": {
+          "type": "ValidationResult",
+          "description": "Validation result for metadata"
+        },
+        "since": "2.0.0",
+        "tags": ["validation", "metadata"]
+      },
+      "params": [
+        {
+          "name": "packagePath",
+          "type": "string"
+        }
+      ],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "const_declaration",
+          "name": "errors",
+          "value": {
+            "type": "array_literal",
+            "elements": []
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Build path to metadata.json"
+        },
+        {
+          "type": "const_declaration",
+          "name": "metadataPath",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:imports.path.join",
+            "args": [
+              "$ref:params.packagePath",
+              "seed",
+              "metadata.json"
+            ]
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Check if metadata.json exists"
+        },
+        {
+          "type": "if_statement",
+          "test": {
+            "type": "unary_expression",
+            "operator": "!",
+            "argument": {
+              "type": "call_expression",
+              "callee": "$ref:imports.fs.existsSync",
+              "args": ["$ref:local.metadataPath"]
+            }
+          },
+          "consequent": [
+            {
+              "type": "expression_statement",
+              "expression": {
+                "type": "call_expression",
+                "callee": {
+                  "type": "member_access",
+                  "object": "$ref:local.errors",
+                  "property": "push"
+                },
+                "args": [
+                  {
+                    "type": "object_literal",
+                    "properties": {
+                      "code": "MISSING_METADATA",
+                      "message": "metadata.json not found in seed/ directory",
+                      "severity": "error"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "object_literal",
+                "properties": {
+                  "valid": false,
+                  "errors": "$ref:local.errors"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "comment",
+          "text": "Read and parse metadata.json"
+        },
+        {
+          "type": "const_declaration",
+          "name": "metadataContent",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:imports.fs.readFile",
+            "args": [
+              "$ref:local.metadataPath",
+              "utf8"
+            ]
+          }
+        },
+        {
+          "type": "const_declaration",
+          "name": "metadata",
+          "value": {
+            "type": "call_expression",
+            "callee": "$ref:imports.JSON.parse",
+            "args": ["$ref:local.metadataContent"]
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Validate required fields"
+        },
+        {
+          "type": "const_declaration",
+          "name": "requiredFields",
+          "value": {
+            "type": "array_literal",
+            "elements": [
+              "packageId",
+              "name",
+              "version",
+              "category"
+            ]
+          }
+        },
+        {
+          "type": "for_of_statement",
+          "iterator": "field",
+          "iterable": "$ref:local.requiredFields",
+          "body": [
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "unary_expression",
+                "operator": "!",
+                "argument": {
+                  "type": "member_access",
+                  "object": "$ref:local.metadata",
+                  "property": "$ref:local.field"
+                }
+              },
+              "consequent": [
+                {
+                  "type": "expression_statement",
+                  "expression": {
+                    "type": "call_expression",
+                    "callee": {
+                      "type": "member_access",
+                      "object": "$ref:local.errors",
+                      "property": "push"
+                    },
+                    "args": [
+                      {
+                        "type": "object_literal",
+                        "properties": {
+                          "file": "metadata.json",
+                          "code": "MISSING_REQUIRED_FIELD",
+                          "message": {
+                            "type": "template_literal",
+                            "template": "Missing required field: ${field}",
+                            "values": {
+                              "field": "$ref:local.field"
+                            }
+                          },
+                          "severity": "error"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "comment",
+          "text": "TODO: Validate packageId format (lowercase, underscores only)"
+        },
+        {
+          "type": "comment",
+          "text": "TODO: Validate version follows semantic versioning"
+        },
+        {
+          "type": "comment",
+          "text": "TODO: Validate runtime.scripts array points to valid files"
+        },
+        {
+          "type": "comment",
+          "text": "TODO: Validate exports match actual exported items"
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "valid": {
+                "type": "binary_expression",
+                "left": {
+                  "type": "member_access",
+                  "object": "$ref:local.errors",
+                  "property": "length"
+                },
+                "operator": "==",
+                "right": 0
+              },
+              "errors": "$ref:local.errors"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "validate_scripts",
+      "name": "validate_scripts",
+      "exported": true,
+      "docstring": {
+        "summary": "Validates JSON script files",
+        "description": "Validates all script files listed in metadata.json runtime.scripts, checking for:\n- Valid JSON syntax\n- Correct schema version\n- Valid expressions and statements\n- Proper imports/exports\n- Docstring format",
+        "params": [
+          {
+            "name": "packagePath",
+            "type": "string",
+            "description": "Path to package directory"
+          }
+        ],
+        "returns": {
+          "type": "ValidationResult",
+          "description": "Validation result for scripts"
+        },
+        "since": "2.0.0",
+        "tags": ["validation", "scripts", "json"]
+      },
+      "params": [
+        {
+          "name": "packagePath",
+          "type": "string"
+        }
+      ],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "const_declaration",
+          "name": "errors",
+          "value": {
+            "type": "array_literal",
+            "elements": []
+          }
+        },
+        {
+          "type": "comment",
+          "text": "TODO: Validate each script file"
+        },
+        {
+          "type": "comment",
+          "text": "Check for valid $schema reference"
+        },
+        {
+          "type": "comment",
+          "text": "Validate expression/statement syntax"
+        },
+        {
+          "type": "comment",
+          "text": "Check import/export consistency"
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "valid": true,
+              "errors": "$ref:local.errors"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "validate_types",
+      "name": "validate_types",
+      "exported": true,
+      "docstring": {
+        "summary": "Validates types.json file",
+        "description": "Validates type definitions including:\n- Valid JSON syntax\n- Correct schema reference\n- Well-formed type definitions\n- Property definitions\n- Exported types match metadata",
+        "params": [
+          {
+            "name": "packagePath",
+            "type": "string",
+            "description": "Path to package directory"
+          }
+        ],
+        "returns": {
+          "type": "ValidationResult",
+          "description": "Validation result for types"
+        },
+        "since": "2.0.0",
+        "tags": ["validation", "types", "typescript"]
+      },
+      "params": [
+        {
+          "name": "packagePath",
+          "type": "string"
+        }
+      ],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "const_declaration",
+          "name": "errors",
+          "value": {
+            "type": "array_literal",
+            "elements": []
+          }
+        },
+        {
+          "type": "comment",
+          "text": "TODO: Validate types.json if it exists"
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "valid": true,
+              "errors": "$ref:local.errors"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "validate_components",
+      "name": "validate_components",
+      "exported": true,
+      "docstring": {
+        "summary": "Validates component definitions",
+        "description": "Validates components.json file including:\n- Valid JSON syntax\n- Component structure (props, render, state, handlers)\n- Docstrings\n- Exported components match metadata",
+        "params": [
+          {
+            "name": "packagePath",
+            "type": "string",
+            "description": "Path to package directory"
+          }
+        ],
+        "returns": {
+          "type": "ValidationResult",
+          "description": "Validation result for components"
+        },
+        "since": "2.0.0",
+        "tags": ["validation", "components", "ui"]
+      },
+      "params": [
+        {
+          "name": "packagePath",
+          "type": "string"
+        }
+      ],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "const_declaration",
+          "name": "errors",
+          "value": {
+            "type": "array_literal",
+            "elements": []
+          }
+        },
+        {
+          "type": "comment",
+          "text": "TODO: Validate components.json if it exists"
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "valid": true,
+              "errors": "$ref:local.errors"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "validate_tests",
+      "name": "validate_tests",
+      "exported": true,
+      "docstring": {
+        "summary": "Validates test files",
+        "description": "Validates parameterized test structure:\n- Test logic files (*.test.logic.json)\n- Test parameter files (*.test.parameters.json)\n- Correct $schema references\n- Test function naming (test_*)\n- Valid test case structure",
+        "params": [
+          {
+            "name": "packagePath",
+            "type": "string",
+            "description": "Path to package directory"
+          }
+        ],
+        "returns": {
+          "type": "ValidationResult",
+          "description": "Validation result for tests"
+        },
+        "since": "2.0.0",
+        "tags": ["validation", "testing"]
+      },
+      "params": [
+        {
+          "name": "packagePath",
+          "type": "string"
+        }
+      ],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "const_declaration",
+          "name": "errors",
+          "value": {
+            "type": "array_literal",
+            "elements": []
+          }
+        },
+        {
+          "type": "comment",
+          "text": "TODO: Validate test files"
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "valid": true,
+              "errors": "$ref:local.errors"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "validate_storybook",
+      "name": "validate_storybook",
+      "exported": true,
+      "docstring": {
+        "summary": "Validates storybook configuration",
+        "description": "Validates storybook section in metadata.json:\n- Stories reference valid functions/components\n- Arg controls match function parameters\n- Prop controls match component props\n- Story types are correct (function/component)",
+        "params": [
+          {
+            "name": "packagePath",
+            "type": "string",
+            "description": "Path to package directory"
+          }
+        ],
+        "returns": {
+          "type": "ValidationResult",
+          "description": "Validation result for storybook config"
+        },
+        "since": "2.0.0",
+        "tags": ["validation", "storybook"]
+      },
+      "params": [
+        {
+          "name": "packagePath",
+          "type": "string"
+        }
+      ],
+      "returnType": "object",
+      "body": [
+        {
+          "type": "const_declaration",
+          "name": "errors",
+          "value": {
+            "type": "array_literal",
+            "elements": []
+          }
+        },
+        {
+          "type": "comment",
+          "text": "TODO: Validate storybook configuration"
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "object_literal",
+            "properties": {
+              "valid": true,
+              "errors": "$ref:local.errors"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

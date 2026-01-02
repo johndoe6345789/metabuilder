@@ -1,0 +1,54 @@
+{
+  "getRoleLabel": [
+    {
+      "desc": "returns correct label for public role",
+      "input": "public",
+      "expected": "Public"
+    },
+    {
+      "desc": "returns correct label for user role",
+      "input": "user",
+      "expected": "User"
+    },
+    {
+      "desc": "returns correct label for admin role",
+      "input": "admin",
+      "expected": "Admin"
+    },
+    {
+      "desc": "returns correct label for god role",
+      "input": "god",
+      "expected": "God"
+    }
+  ],
+  "isValidRole": [
+    {
+      "desc": "returns true for valid roles",
+      "input": "admin",
+      "expected": true
+    },
+    {
+      "desc": "returns false for invalid roles",
+      "input": "invalid",
+      "expected": false
+    }
+  ],
+  "getAllRoles": [
+    {
+      "desc": "returns all roles in correct order",
+      "expected": ["public", "user", "moderator", "admin", "god", "supergod"]
+    }
+  ],
+  "filterRoles": [
+    {
+      "desc": "returns all roles when no filter provided",
+      "input": null,
+      "expected_length": 6
+    },
+    {
+      "desc": "returns filtered roles when list provided",
+      "input": ["user", "admin"],
+      "expected_length": 2
+    }
+  ]
+}

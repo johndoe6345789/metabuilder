@@ -1,0 +1,661 @@
+[
+  {
+    "id": "landing_nav",
+    "type": "Box",
+    "props": {
+      "component": "nav",
+      "className": "landing-nav",
+      "sx": {
+        "borderBottom": 1,
+        "borderColor": "divider",
+        "bgcolor": "rgba(var(--color-card-rgb), 0.5)",
+        "backdropFilter": "blur(8px)",
+        "position": "sticky",
+        "top": 0,
+        "zIndex": 50
+      }
+    },
+    "children": [
+      {
+        "id": "landing_nav_container",
+        "type": "Container",
+        "props": {
+          "maxWidth": "lg",
+          "className": "landing-nav-container"
+        },
+        "children": [
+          {
+            "id": "landing_nav_content",
+            "type": "Stack",
+            "props": {
+              "direction": "row",
+              "justifyContent": "space-between",
+              "alignItems": "center",
+              "className": "landing-nav-content",
+              "sx": {
+                "height": 64
+              }
+            },
+            "children": [
+              {
+                "id": "landing_nav_brand",
+                "type": "Stack",
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "spacing": 1.5,
+                  "className": "landing-nav-brand"
+                },
+                "children": [
+                  {
+                    "id": "landing_nav_logo_box",
+                    "type": "Box",
+                    "props": {
+                      "className": "landing-nav-logo",
+                      "sx": {
+                        "width": 32,
+                        "height": 32,
+                        "borderRadius": 2,
+                        "background": "linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)"
+                      }
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "landing_nav_brand_text",
+                    "type": "Text",
+                    "props": {
+                      "variant": "h6",
+                      "children": "MetaBuilder",
+                      "sx": {
+                        "fontWeight": 700,
+                        "fontSize": "1.25rem"
+                      }
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "landing_nav_links_desktop",
+                "type": "Stack",
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "spacing": 2,
+                  "className": "landing-nav-links",
+                  "sx": {
+                    "display": { "xs": "none", "md": "flex" }
+                  }
+                },
+                "children": [
+                  {
+                    "id": "landing_nav_link_features",
+                    "type": "Link",
+                    "props": {
+                      "href": "#features",
+                      "children": "Features",
+                      "className": "nav-link",
+                      "sx": {
+                        "color": "text.secondary",
+                        "fontSize": "0.875rem",
+                        "textDecoration": "none",
+                        "transition": "color 0.2s",
+                        "&:hover": {
+                          "color": "text.primary"
+                        }
+                      }
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "landing_nav_link_about",
+                    "type": "Link",
+                    "props": {
+                      "href": "#about",
+                      "children": "About",
+                      "className": "nav-link",
+                      "sx": {
+                        "color": "text.secondary",
+                        "fontSize": "0.875rem",
+                        "textDecoration": "none",
+                        "transition": "color 0.2s",
+                        "&:hover": {
+                          "color": "text.primary"
+                        }
+                      }
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "landing_nav_link_contact",
+                    "type": "Link",
+                    "props": {
+                      "href": "#contact",
+                      "children": "Contact",
+                      "className": "nav-link",
+                      "sx": {
+                        "color": "text.secondary",
+                        "fontSize": "0.875rem",
+                        "textDecoration": "none",
+                        "transition": "color 0.2s",
+                        "&:hover": {
+                          "color": "text.primary"
+                        }
+                      }
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "landing_nav_signin_btn",
+                    "type": "Button",
+                    "props": {
+                      "variant": "outlined",
+                      "size": "small",
+                      "children": "Sign In",
+                      "onClick": "{{onNavigate(2)}}",
+                      "startIcon": { "$ref": "icon_user" },
+                      "sx": {
+                        "ml": 1
+                      }
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "landing_nav_admin_btn",
+                    "type": "Button",
+                    "props": {
+                      "variant": "contained",
+                      "size": "small",
+                      "children": "Admin",
+                      "onClick": "{{onNavigate(4)}}",
+                      "startIcon": { "$ref": "icon_shield" }
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "landing_nav_mobile_toggle",
+                "type": "IconButton",
+                "props": {
+                  "aria-label": "Toggle menu",
+                  "onClick": "{{toggleMenu}}",
+                  "className": "landing-nav-mobile-toggle",
+                  "sx": {
+                    "display": { "xs": "flex", "md": "none" },
+                    "p": 1,
+                    "borderRadius": 2
+                  }
+                },
+                "children": [
+                  {
+                    "id": "landing_nav_mobile_icon",
+                    "type": "Icon",
+                    "props": {
+                      "name": "{{menuOpen ? 'Close' : 'Menu'}}",
+                      "size": 24
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "landing_nav_mobile_menu",
+        "type": "Box",
+        "props": {
+          "className": "landing-nav-mobile-menu",
+          "data-show-when": "menuOpen",
+          "sx": {
+            "display": { "xs": "block", "md": "none" },
+            "borderTop": 1,
+            "borderColor": "divider",
+            "bgcolor": "background.paper",
+            "px": 2,
+            "py": 2
+          }
+        },
+        "children": [
+          {
+            "id": "landing_nav_mobile_links",
+            "type": "Stack",
+            "props": {
+              "spacing": 2,
+              "className": "landing-nav-mobile-links"
+            },
+            "children": [
+              {
+                "id": "landing_nav_mobile_link_features",
+                "type": "Link",
+                "props": {
+                  "href": "#features",
+                  "children": "Features",
+                  "sx": {
+                    "display": "block",
+                    "color": "text.secondary",
+                    "fontSize": "0.875rem",
+                    "textDecoration": "none",
+                    "&:hover": { "color": "text.primary" }
+                  }
+                },
+                "children": []
+              },
+              {
+                "id": "landing_nav_mobile_link_about",
+                "type": "Link",
+                "props": {
+                  "href": "#about",
+                  "children": "About",
+                  "sx": {
+                    "display": "block",
+                    "color": "text.secondary",
+                    "fontSize": "0.875rem",
+                    "textDecoration": "none",
+                    "&:hover": { "color": "text.primary" }
+                  }
+                },
+                "children": []
+              },
+              {
+                "id": "landing_nav_mobile_link_contact",
+                "type": "Link",
+                "props": {
+                  "href": "#contact",
+                  "children": "Contact",
+                  "sx": {
+                    "display": "block",
+                    "color": "text.secondary",
+                    "fontSize": "0.875rem",
+                    "textDecoration": "none",
+                    "&:hover": { "color": "text.primary" }
+                  }
+                },
+                "children": []
+              },
+              {
+                "id": "landing_nav_mobile_signin_btn",
+                "type": "Button",
+                "props": {
+                  "variant": "outlined",
+                  "fullWidth": true,
+                  "size": "small",
+                  "children": "Sign In",
+                  "onClick": "{{onNavigate(2)}}",
+                  "startIcon": { "$ref": "icon_user" }
+                },
+                "children": []
+              },
+              {
+                "id": "landing_nav_mobile_admin_btn",
+                "type": "Button",
+                "props": {
+                  "variant": "contained",
+                  "fullWidth": true,
+                  "size": "small",
+                  "children": "Admin",
+                  "onClick": "{{onNavigate(4)}}",
+                  "startIcon": { "$ref": "icon_shield" }
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "app_header",
+    "type": "AppBar",
+    "props": {
+      "position": "sticky",
+      "color": "default",
+      "elevation": 1,
+      "className": "app-header"
+    },
+    "children": [
+      {
+        "id": "app_header_toolbar",
+        "type": "Toolbar",
+        "props": {
+          "className": "app-header-toolbar"
+        },
+        "children": [
+          {
+            "id": "app_header_logo_section",
+            "type": "Flex",
+            "props": {
+              "className": "flex items-center gap-2"
+            },
+            "children": [
+              {
+                "id": "app_header_logo_link",
+                "type": "Link",
+                "props": {
+                  "href": "/",
+                  "className": "flex items-center gap-2 no-underline"
+                },
+                "children": [
+                  {
+                    "id": "app_header_logo_image",
+                    "type": "Box",
+                    "props": {
+                      "component": "img",
+                      "src": "/logo.svg",
+                      "alt": "MetaBuilder Logo",
+                      "className": "header-logo",
+                      "sx": {
+                        "height": 32,
+                        "width": "auto"
+                      }
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "app_header_logo_text",
+                    "type": "Text",
+                    "props": {
+                      "variant": "h6",
+                      "children": "MetaBuilder",
+                      "className": "font-bold text-foreground"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "app_header_nav_section",
+            "type": "Box",
+            "props": {
+              "className": "header-nav-section",
+              "sx": {
+                "flexGrow": 1,
+                "display": "flex",
+                "justifyContent": "center"
+              }
+            },
+            "children": [
+              {
+                "id": "app_header_nav_links",
+                "type": "Stack",
+                "props": {
+                  "direction": "row",
+                  "spacing": 1,
+                  "className": "header-nav-links"
+                },
+                "children": [
+                  {
+                    "id": "app_header_nav_home",
+                    "type": "Button",
+                    "props": {
+                      "variant": "text",
+                      "href": "/",
+                      "children": "Home",
+                      "className": "nav-link"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "app_header_nav_features",
+                    "type": "Button",
+                    "props": {
+                      "variant": "text",
+                      "href": "/features",
+                      "children": "Features",
+                      "className": "nav-link"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "app_header_nav_docs",
+                    "type": "Button",
+                    "props": {
+                      "variant": "text",
+                      "href": "/docs",
+                      "children": "Docs",
+                      "className": "nav-link"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "app_header_nav_packages",
+                    "type": "Button",
+                    "props": {
+                      "variant": "text",
+                      "href": "/packages",
+                      "children": "Packages",
+                      "className": "nav-link"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "app_header_actions_section",
+            "type": "Flex",
+            "props": {
+              "className": "flex items-center gap-2"
+            },
+            "children": [
+              {
+                "id": "app_header_theme_toggle",
+                "type": "IconButton",
+                "props": {
+                  "aria-label": "Toggle theme",
+                  "onClick": "toggleTheme",
+                  "size": "small"
+                },
+                "children": [
+                  {
+                    "id": "app_header_theme_icon",
+                    "type": "Icon",
+                    "props": {
+                      "name": "Brightness4"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "app_header_notifications",
+                "type": "IconButton",
+                "props": {
+                  "aria-label": "Notifications",
+                  "onClick": "openNotifications",
+                  "size": "small"
+                },
+                "children": [
+                  {
+                    "id": "app_header_notifications_icon",
+                    "type": "Icon",
+                    "props": {
+                      "name": "Notifications"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "app_header_user_section",
+            "type": "Box",
+            "props": {
+              "className": "header-user-section"
+            },
+            "children": [
+              {
+                "id": "app_header_user_menu",
+                "type": "Menu",
+                "props": {
+                  "trigger": "app_header_user_avatar_button",
+                  "anchorOrigin": {
+                    "vertical": "bottom",
+                    "horizontal": "right"
+                  },
+                  "transformOrigin": {
+                    "vertical": "top",
+                    "horizontal": "right"
+                  }
+                },
+                "children": [
+                  {
+                    "id": "app_header_user_avatar_button",
+                    "type": "IconButton",
+                    "props": {
+                      "aria-label": "User menu",
+                      "size": "small",
+                      "className": "user-avatar-button"
+                    },
+                    "children": [
+                      {
+                        "id": "app_header_user_avatar",
+                        "type": "Avatar",
+                        "props": {
+                          "src": "{{user.avatarUrl}}",
+                          "alt": "{{user.username}}",
+                          "sx": {
+                            "width": 32,
+                            "height": 32
+                          }
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "app_header_menu_profile",
+                    "type": "MenuItem",
+                    "props": {
+                      "onClick": "navigate",
+                      "href": "/profile"
+                    },
+                    "children": [
+                      {
+                        "id": "app_header_menu_profile_icon",
+                        "type": "Icon",
+                        "props": {
+                          "name": "Person",
+                          "className": "menu-item-icon"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_header_menu_profile_text",
+                        "type": "Text",
+                        "props": {
+                          "children": "Profile"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "app_header_menu_settings",
+                    "type": "MenuItem",
+                    "props": {
+                      "onClick": "navigate",
+                      "href": "/settings"
+                    },
+                    "children": [
+                      {
+                        "id": "app_header_menu_settings_icon",
+                        "type": "Icon",
+                        "props": {
+                          "name": "Settings",
+                          "className": "menu-item-icon"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_header_menu_settings_text",
+                        "type": "Text",
+                        "props": {
+                          "children": "Settings"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "app_header_menu_divider",
+                    "type": "Divider",
+                    "props": {},
+                    "children": []
+                  },
+                  {
+                    "id": "app_header_menu_logout",
+                    "type": "MenuItem",
+                    "props": {
+                      "onClick": "logout"
+                    },
+                    "children": [
+                      {
+                        "id": "app_header_menu_logout_icon",
+                        "type": "Icon",
+                        "props": {
+                          "name": "Logout",
+                          "className": "menu-item-icon"
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "app_header_menu_logout_text",
+                        "type": "Text",
+                        "props": {
+                          "children": "Logout"
+                        },
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "app_header_auth_buttons",
+                "type": "Stack",
+                "props": {
+                  "direction": "row",
+                  "spacing": 1,
+                  "className": "auth-buttons",
+                  "data-show-when": "!user"
+                },
+                "children": [
+                  {
+                    "id": "app_header_login_button",
+                    "type": "Button",
+                    "props": {
+                      "variant": "text",
+                      "href": "/login",
+                      "children": "Login"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "app_header_signup_button",
+                    "type": "Button",
+                    "props": {
+                      "variant": "contained",
+                      "color": "primary",
+                      "href": "/register",
+                      "children": "Sign Up"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

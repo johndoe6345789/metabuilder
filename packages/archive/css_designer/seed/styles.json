@@ -1,0 +1,74 @@
+[
+  {
+    "id": "css_designer_layout",
+    "type": "component",
+    "category": "layout",
+    "className": "css-designer-layout",
+    "description": "Main layout for CSS Designer package",
+    "css": ".css-designer-layout {\n  display: grid;\n  grid-template-columns: 300px 1fr 400px;\n  gap: 1rem;\n  height: 100vh;\n  padding: 1rem;\n  background: var(--background);\n}\n\n@media (max-width: 1024px) {\n  .css-designer-layout {\n    grid-template-columns: 1fr;\n    overflow-y: auto;\n  }\n}"
+  },
+  {
+    "id": "css_editor_panel",
+    "type": "component",
+    "category": "panel",
+    "className": "css-editor-panel",
+    "description": "CSS code editor panel styling",
+    "css": ".css-editor-panel {\n  background: var(--card);\n  border: 1px solid var(--border);\n  border-radius: var(--radius);\n  padding: 1.5rem;\n  overflow: hidden;\n  display: flex;\n  flex-direction: column;\n}\n\n.css-editor-panel-header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  margin-bottom: 1rem;\n  padding-bottom: 1rem;\n  border-bottom: 1px solid var(--border);\n}\n\n.css-editor-panel-title {\n  font-weight: 600;\n  font-size: 1rem;\n  color: var(--foreground);\n}\n\n.css-editor-panel-actions {\n  display: flex;\n  gap: 0.5rem;\n}"
+  },
+  {
+    "id": "css_color_picker",
+    "type": "component",
+    "category": "form-control",
+    "className": "css-color-picker",
+    "description": "Color picker component styling",
+    "css": ".css-color-picker {\n  display: flex;\n  flex-direction: column;\n  gap: 0.5rem;\n  margin-bottom: 1rem;\n}\n\n.css-color-picker-label {\n  font-size: 0.875rem;\n  font-weight: 500;\n  color: var(--foreground);\n}\n\n.css-color-picker-input {\n  display: flex;\n  gap: 0.75rem;\n  align-items: center;\n}\n\n.css-color-picker-swatch {\n  width: 40px;\n  height: 40px;\n  border-radius: var(--radius-md);\n  border: 2px solid var(--border);\n  cursor: pointer;\n  transition: transform 0.2s ease-in-out;\n}\n\n.css-color-picker-swatch:hover {\n  transform: scale(1.05);\n}\n\n.css-color-picker-value {\n  flex: 1;\n  padding: 0.5rem 0.75rem;\n  border: 1px solid var(--border);\n  border-radius: var(--radius-md);\n  font-family: var(--font-mono, monospace);\n  font-size: 0.875rem;\n  background: var(--background);\n}"
+  },
+  {
+    "id": "css_style_preview",
+    "type": "component",
+    "category": "preview",
+    "className": "css-style-preview",
+    "description": "Live preview panel for CSS changes",
+    "css": ".css-style-preview {\n  background: var(--card);\n  border: 1px solid var(--border);\n  border-radius: var(--radius);\n  padding: 1.5rem;\n  overflow-y: auto;\n}\n\n.css-style-preview-header {\n  margin-bottom: 1.5rem;\n  padding-bottom: 1rem;\n  border-bottom: 1px solid var(--border);\n}\n\n.css-style-preview-content {\n  display: flex;\n  flex-direction: column;\n  gap: 1.5rem;\n}\n\n.preview-section {\n  padding: 1.5rem;\n  border: 1px dashed var(--border);\n  border-radius: var(--radius-md);\n  background: var(--background);\n}"
+  },
+  {
+    "id": "css_property_group",
+    "type": "component",
+    "category": "form-group",
+    "className": "css-property-group",
+    "description": "Grouped CSS property editor",
+    "css": ".css-property-group {\n  background: var(--card);\n  border: 1px solid var(--border);\n  border-radius: var(--radius);\n  padding: 1rem;\n  margin-bottom: 1rem;\n}\n\n.css-property-group-header {\n  display: flex;\n  align-items: center;\n  gap: 0.75rem;\n  margin-bottom: 1rem;\n  cursor: pointer;\n  user-select: none;\n}\n\n.css-property-group-icon {\n  width: 24px;\n  height: 24px;\n  color: var(--primary);\n}\n\n.css-property-group-title {\n  font-weight: 600;\n  font-size: 0.875rem;\n  color: var(--foreground);\n  flex: 1;\n}\n\n.css-property-group-toggle {\n  color: var(--muted-foreground);\n  transition: transform 0.2s ease-in-out;\n}\n\n.css-property-group-toggle.expanded {\n  transform: rotate(180deg);\n}\n\n.css-property-group-content {\n  display: flex;\n  flex-direction: column;\n  gap: 1rem;\n}"
+  },
+  {
+    "id": "css_slider_control",
+    "type": "component",
+    "category": "form-control",
+    "className": "css-slider-control",
+    "description": "Slider control for numeric CSS values",
+    "css": ".css-slider-control {\n  display: flex;\n  flex-direction: column;\n  gap: 0.5rem;\n}\n\n.css-slider-control-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n\n.css-slider-control-label {\n  font-size: 0.875rem;\n  font-weight: 500;\n  color: var(--foreground);\n}\n\n.css-slider-control-value {\n  font-size: 0.875rem;\n  font-family: var(--font-mono, monospace);\n  color: var(--primary);\n  font-weight: 600;\n}\n\n.css-slider-control-input {\n  width: 100%;\n  height: 4px;\n  background: var(--muted);\n  border-radius: 2px;\n  outline: none;\n  cursor: pointer;\n}\n\n.css-slider-control-input::-webkit-slider-thumb {\n  appearance: none;\n  width: 16px;\n  height: 16px;\n  background: var(--primary);\n  border-radius: 50%;\n  cursor: pointer;\n  transition: transform 0.2s ease-in-out;\n}\n\n.css-slider-control-input::-webkit-slider-thumb:hover {\n  transform: scale(1.2);\n}\n\n.css-slider-control-input::-moz-range-thumb {\n  width: 16px;\n  height: 16px;\n  background: var(--primary);\n  border: none;\n  border-radius: 50%;\n  cursor: pointer;\n  transition: transform 0.2s ease-in-out;\n}\n\n.css-slider-control-input::-moz-range-thumb:hover {\n  transform: scale(1.2);\n}"
+  },
+  {
+    "id": "css_export_panel",
+    "type": "component",
+    "category": "panel",
+    "className": "css-export-panel",
+    "description": "CSS export options panel",
+    "css": ".css-export-panel {\n  background: var(--card);\n  border: 1px solid var(--border);\n  border-radius: var(--radius);\n  padding: 1.5rem;\n  margin-top: 1rem;\n}\n\n.css-export-options {\n  display: flex;\n  flex-direction: column;\n  gap: 1rem;\n  margin-bottom: 1.5rem;\n}\n\n.css-export-option {\n  display: flex;\n  align-items: center;\n  gap: 0.75rem;\n  padding: 1rem;\n  border: 1px solid var(--border);\n  border-radius: var(--radius-md);\n  cursor: pointer;\n  transition: all 0.2s ease-in-out;\n}\n\n.css-export-option:hover {\n  border-color: var(--primary);\n  background: var(--muted);\n}\n\n.css-export-option.selected {\n  border-color: var(--primary);\n  background: var(--accent);\n}\n\n.css-export-button {\n  width: 100%;\n  padding: 0.75rem;\n  background: var(--primary);\n  color: var(--primary-foreground);\n  border: none;\n  border-radius: var(--radius-md);\n  font-weight: 600;\n  cursor: pointer;\n  transition: opacity 0.2s ease-in-out;\n}\n\n.css-export-button:hover {\n  opacity: 0.9;\n}"
+  },
+  {
+    "id": "css_code_output",
+    "type": "component",
+    "category": "code",
+    "className": "css-code-output",
+    "description": "Generated CSS code output display",
+    "css": ".css-code-output {\n  background: var(--muted);\n  border: 1px solid var(--border);\n  border-radius: var(--radius);\n  padding: 1rem;\n  font-family: var(--font-mono, monospace);\n  font-size: 0.875rem;\n  line-height: 1.6;\n  overflow-x: auto;\n  max-height: 400px;\n  overflow-y: auto;\n}\n\n.css-code-output pre {\n  margin: 0;\n  color: var(--foreground);\n}\n\n.css-code-output code {\n  font-family: inherit;\n}"
+  },
+  {
+    "id": "css_database_indicator",
+    "type": "component",
+    "category": "status",
+    "className": "css-db-indicator",
+    "description": "Database sync status indicator",
+    "css": ".css-db-indicator {\n  display: flex;\n  align-items: center;\n  gap: 0.5rem;\n  padding: 0.5rem 0.75rem;\n  background: var(--muted);\n  border-radius: var(--radius-md);\n  font-size: 0.75rem;\n  color: var(--muted-foreground);\n}\n\n.css-db-indicator-dot {\n  width: 8px;\n  height: 8px;\n  border-radius: 50%;\n  background: var(--muted-foreground);\n}\n\n.css-db-indicator.synced .css-db-indicator-dot {\n  background: var(--success, #22c55e);\n  animation: pulse 2s infinite;\n}\n\n.css-db-indicator.error .css-db-indicator-dot {\n  background: var(--destructive);\n}\n\n@keyframes pulse {\n  0%, 100% {\n    opacity: 1;\n  }\n  50% {\n    opacity: 0.5;\n  }\n}"
+  }
+]

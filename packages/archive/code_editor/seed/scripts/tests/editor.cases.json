@@ -1,0 +1,159 @@
+{
+  "theme_render": [
+    {
+      "theme": null,
+      "expectedPrimary": "#1976d2",
+      "expectedSecondary": "#dc004e",
+      "expectedMode": "light",
+      "desc": "default theme"
+    },
+    {
+      "theme": {},
+      "expectedPrimary": "#1976d2",
+      "expectedSecondary": "#dc004e",
+      "expectedMode": "light",
+      "desc": "empty theme object"
+    },
+    {
+      "theme": { "primary": "#ff0000" },
+      "expectedPrimary": "#ff0000",
+      "expectedSecondary": "#dc004e",
+      "expectedMode": "light",
+      "desc": "custom primary only"
+    },
+    {
+      "theme": { "secondary": "#00ff00" },
+      "expectedPrimary": "#1976d2",
+      "expectedSecondary": "#00ff00",
+      "expectedMode": "light",
+      "desc": "custom secondary only"
+    },
+    {
+      "theme": { "mode": "dark" },
+      "expectedPrimary": "#1976d2",
+      "expectedSecondary": "#dc004e",
+      "expectedMode": "dark",
+      "desc": "dark mode"
+    },
+    {
+      "theme": { "primary": "#123456", "secondary": "#654321", "mode": "dark" },
+      "expectedPrimary": "#123456",
+      "expectedSecondary": "#654321",
+      "expectedMode": "dark",
+      "desc": "full custom theme"
+    }
+  ],
+  "theme_modes": [
+    { "mode": "light", "desc": "light mode" },
+    { "mode": "dark", "desc": "dark mode" },
+    { "mode": "system", "desc": "system mode" }
+  ],
+  "color_picker": [
+    { "name": "primary", "value": "#1976d2", "desc": "primary color" },
+    { "name": "secondary", "value": "#dc004e", "desc": "secondary color" },
+    { "name": "background", "value": "#ffffff", "desc": "background color" },
+    { "name": "text", "value": "#000000", "desc": "text color" },
+    { "name": "error", "value": "#f44336", "desc": "error color" }
+  ],
+  "color_formats": [
+    { "value": "#fff", "desc": "shorthand hex" },
+    { "value": "#ffffff", "desc": "full hex" },
+    { "value": "#FFFFFF", "desc": "uppercase hex" },
+    { "value": "#aabbcc", "desc": "lowercase hex" }
+  ],
+  "json_parsing": [
+    {
+      "input": "{}",
+      "expected": {},
+      "desc": "empty object"
+    },
+    {
+      "input": "{\"key\": \"value\"}",
+      "expected": { "key": "value" },
+      "desc": "simple key-value"
+    },
+    {
+      "input": "{\"number\": 42}",
+      "expected": { "number": 42 },
+      "desc": "number value"
+    },
+    {
+      "input": "{\"bool\": true}",
+      "expected": { "bool": true },
+      "desc": "boolean value"
+    },
+    {
+      "input": "{\"array\": [1, 2, 3]}",
+      "expected": { "array": [1, 2, 3] },
+      "desc": "array value"
+    },
+    {
+      "input": "{\"nested\": {\"inner\": \"value\"}}",
+      "expected": { "nested": { "inner": "value" } },
+      "desc": "nested object"
+    }
+  ],
+  "json_stringify": [
+    { "input": {}, "desc": "empty object" },
+    { "input": { "key": "value" }, "desc": "simple key-value" },
+    { "input": { "a": 1, "b": 2 }, "desc": "multiple keys" },
+    { "input": { "arr": [1, 2, 3] }, "desc": "with array" }
+  ],
+  "lua_syntax_check": [
+    { "code": "local x = 1", "valid": true, "desc": "simple assignment" },
+    { "code": "function test() end", "valid": true, "desc": "empty function" },
+    { "code": "for i = 1, 10 do end", "valid": true, "desc": "for loop" },
+    { "code": "if true then end", "valid": true, "desc": "if statement" },
+    { "code": "local t = {}", "valid": true, "desc": "empty table" },
+    { "code": "return 1 + 2", "valid": true, "desc": "return expression" }
+  ],
+  "editor_modes": [
+    { "mode": "lua", "desc": "Lua mode" },
+    { "mode": "json", "desc": "JSON mode" },
+    { "mode": "javascript", "desc": "JavaScript mode" },
+    { "mode": "typescript", "desc": "TypeScript mode" },
+    { "mode": "markdown", "desc": "Markdown mode" }
+  ],
+  "editor_options": [
+    {
+      "option": "lineNumbers",
+      "value": true,
+      "desc": "line numbers enabled"
+    },
+    {
+      "option": "lineNumbers",
+      "value": false,
+      "desc": "line numbers disabled"
+    },
+    {
+      "option": "wordWrap",
+      "value": "on",
+      "desc": "word wrap on"
+    },
+    {
+      "option": "wordWrap",
+      "value": "off",
+      "desc": "word wrap off"
+    },
+    {
+      "option": "fontSize",
+      "value": 14,
+      "desc": "default font size"
+    },
+    {
+      "option": "fontSize",
+      "value": 18,
+      "desc": "large font size"
+    },
+    {
+      "option": "tabSize",
+      "value": 2,
+      "desc": "2-space tabs"
+    },
+    {
+      "option": "tabSize",
+      "value": 4,
+      "desc": "4-space tabs"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "defaults": {
+    "host": "smtp.example.com",
+    "port": 587,
+    "username": "",
+    "password": "",
+    "fromEmail": "noreply@metabuilder.com",
+    "fromName": "MetaBuilder System",
+    "secure": true
+  },
+  "fields": [
+    {
+      "name": "host",
+      "label": "SMTP Host",
+      "type": "text",
+      "placeholder": "smtp.example.com",
+      "required": true
+    },
+    {
+      "name": "port",
+      "label": "SMTP Port",
+      "type": "number",
+      "placeholder": "587",
+      "required": true
+    },
+    {
+      "name": "username",
+      "label": "Username",
+      "type": "text",
+      "placeholder": "your-username",
+      "required": true
+    },
+    {
+      "name": "password",
+      "label": "Password",
+      "type": "password",
+      "placeholder": "your-password",
+      "required": true
+    },
+    {
+      "name": "fromEmail",
+      "label": "From Email",
+      "type": "email",
+      "placeholder": "noreply@metabuilder.com",
+      "required": true
+    },
+    {
+      "name": "fromName",
+      "label": "From Name",
+      "type": "text",
+      "placeholder": "MetaBuilder System",
+      "required": true
+    },
+    {
+      "name": "secure",
+      "label": "Use Secure Connection (TLS/SSL)",
+      "type": "boolean",
+      "required": false
+    }
+  ]
+}

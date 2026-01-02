@@ -1,0 +1,28 @@
+{
+  "scripts": [
+    {
+      "id": "init",
+      "name": "Social Hub Init",
+      "file": "init.lua",
+      "description": "Initialize social hub module"
+    },
+    {
+      "id": "feed",
+      "name": "Feed Rendering",
+      "file": "feed.lua",
+      "description": "Social feed post rendering"
+    },
+    {
+      "id": "composer",
+      "name": "Post Composer",
+      "file": "composer.lua",
+      "description": "Create and publish posts"
+    },
+    {
+      "id": "stats",
+      "name": "Social Stats",
+      "file": "stats.lua",
+      "description": "Social statistics display"
+    }
+  ]
+}

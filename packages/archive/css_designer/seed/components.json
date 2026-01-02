@@ -1,0 +1,242 @@
+{
+  "components": [
+    {
+      "id": "CSSDesigner",
+      "type": "layout",
+      "props": {
+        "title": "CSS Designer",
+        "layout": "sidebar"
+      },
+      "children": [
+        { "ref": "ColorPaletteEditor" },
+        { "ref": "FontSelector" },
+        { "ref": "SpacingEditor" },
+        { "ref": "BorderEditor" },
+        { "ref": "ShadowEditor" },
+        { "ref": "StylePreview" }
+      ],
+      "scripts": {
+        "onInit": "init.lua",
+        "onSave": "export/to_scss.lua"
+      }
+    },
+    {
+      "id": "ColorPaletteEditor",
+      "type": "form",
+      "props": {
+        "title": "Color Palette",
+        "icon": "Palette"
+      },
+      "children": [
+        {
+          "type": "color_picker",
+          "props": { "id": "primary", "label": "Primary Color", "defaultValue": "#1976d2" }
+        },
+        {
+          "type": "color_picker",
+          "props": { "id": "secondary", "label": "Secondary Color", "defaultValue": "#9c27b0" }
+        },
+        {
+          "type": "color_picker",
+          "props": { "id": "background", "label": "Background", "defaultValue": "#ffffff" }
+        },
+        {
+          "type": "color_picker",
+          "props": { "id": "surface", "label": "Surface", "defaultValue": "#f5f5f5" }
+        },
+        {
+          "type": "color_picker",
+          "props": { "id": "text_primary", "label": "Text Primary", "defaultValue": "#212121" }
+        },
+        {
+          "type": "color_picker",
+          "props": { "id": "text_secondary", "label": "Text Secondary", "defaultValue": "#757575" }
+        },
+        {
+          "type": "color_picker",
+          "props": { "id": "error", "label": "Error", "defaultValue": "#f44336" }
+        },
+        {
+          "type": "color_picker",
+          "props": { "id": "warning", "label": "Warning", "defaultValue": "#ff9800" }
+        },
+        {
+          "type": "color_picker",
+          "props": { "id": "success", "label": "Success", "defaultValue": "#4caf50" }
+        },
+        {
+          "type": "color_picker",
+          "props": { "id": "info", "label": "Info", "defaultValue": "#2196f3" }
+        }
+      ],
+      "scripts": {
+        "onColorChange": "colors/color_picker.lua"
+      }
+    },
+    {
+      "id": "FontSelector",
+      "type": "form",
+      "props": {
+        "title": "Typography",
+        "icon": "TextFields"
+      },
+      "children": [
+        {
+          "type": "select",
+          "props": {
+            "id": "fontFamily",
+            "label": "Font Family",
+            "options": [
+              { "value": "IBM Plex Sans", "label": "IBM Plex Sans (Default)" },
+              { "value": "Inter", "label": "Inter" },
+              { "value": "Roboto", "label": "Roboto" },
+              { "value": "Open Sans", "label": "Open Sans" },
+              { "value": "system-ui", "label": "System UI" }
+            ]
+          }
+        },
+        {
+          "type": "select",
+          "props": {
+            "id": "headingFont",
+            "label": "Heading Font",
+            "options": [
+              { "value": "Space Grotesk", "label": "Space Grotesk (Default)" },
+              { "value": "Poppins", "label": "Poppins" },
+              { "value": "Montserrat", "label": "Montserrat" }
+            ]
+          }
+        },
+        {
+          "type": "select",
+          "props": {
+            "id": "codeFont",
+            "label": "Code Font",
+            "options": [
+              { "value": "JetBrains Mono", "label": "JetBrains Mono (Default)" },
+              { "value": "Fira Code", "label": "Fira Code" },
+              { "value": "Source Code Pro", "label": "Source Code Pro" }
+            ]
+          }
+        },
+        {
+          "type": "slider",
+          "props": {
+            "id": "baseFontSize",
+            "label": "Base Font Size",
+            "min": 12,
+            "max": 20,
+            "defaultValue": 16,
+            "unit": "px"
+          }
+        }
+      ],
+      "scripts": {
+        "onFontChange": "fonts/font_selector.lua"
+      }
+    },
+    {
+      "id": "SpacingEditor",
+      "type": "form",
+      "props": {
+        "title": "Spacing",
+        "icon": "Grid"
+      },
+      "children": [
+        {
+          "type": "slider",
+          "props": { "id": "spacingUnit", "label": "Base Unit", "min": 4, "max": 16, "defaultValue": 8, "unit": "px" }
+        },
+        {
+          "type": "slider",
+          "props": { "id": "borderRadius", "label": "Border Radius", "min": 0, "max": 24, "defaultValue": 4, "unit": "px" }
+        },
+        {
+          "type": "slider",
+          "props": { "id": "containerWidth", "label": "Container Width", "min": 900, "max": 1400, "defaultValue": 1200, "unit": "px" }
+        }
+      ],
+      "scripts": {
+        "onSpacingChange": "spacing/spacing_editor.lua"
+      }
+    },
+    {
+      "id": "BorderEditor",
+      "type": "form",
+      "props": {
+        "title": "Borders",
+        "icon": "CropFree"
+      },
+      "children": [
+        {
+          "type": "slider",
+          "props": { "id": "borderWidth", "label": "Border Width", "min": 0, "max": 4, "defaultValue": 1, "unit": "px" }
+        },
+        {
+          "type": "color_picker",
+          "props": { "id": "borderColor", "label": "Border Color", "defaultValue": "#e0e0e0" }
+        },
+        {
+          "type": "select",
+          "props": {
+            "id": "borderStyle",
+            "label": "Border Style",
+            "options": [
+              { "value": "solid", "label": "Solid" },
+              { "value": "dashed", "label": "Dashed" },
+              { "value": "dotted", "label": "Dotted" }
+            ]
+          }
+        }
+      ],
+      "scripts": {
+        "onBorderChange": "borders/border_editor.lua"
+      }
+    },
+    {
+      "id": "ShadowEditor",
+      "type": "form",
+      "props": {
+        "title": "Shadows",
+        "icon": "Layers"
+      },
+      "children": [
+        {
+          "type": "slider",
+          "props": { "id": "shadowBlur", "label": "Blur Radius", "min": 0, "max": 24, "defaultValue": 4, "unit": "px" }
+        },
+        {
+          "type": "slider",
+          "props": { "id": "shadowSpread", "label": "Spread", "min": 0, "max": 12, "defaultValue": 0, "unit": "px" }
+        },
+        {
+          "type": "slider",
+          "props": { "id": "shadowOpacity", "label": "Opacity", "min": 0, "max": 100, "defaultValue": 15, "unit": "%" }
+        }
+      ],
+      "scripts": {
+        "onShadowChange": "shadows/shadow_editor.lua"
+      }
+    },
+    {
+      "id": "StylePreview",
+      "type": "preview",
+      "props": {
+        "title": "Preview",
+        "icon": "Eye"
+      },
+      "children": [
+        {
+          "type": "card",
+          "props": { "className": "preview-card" },
+          "children": [
+            { "type": "typography", "props": { "variant": "h4", "text": "Heading Preview" } },
+            { "type": "typography", "props": { "variant": "body1", "text": "This is body text to preview your typography settings." } },
+            { "type": "button", "props": { "variant": "contained", "text": "Primary Button" } },
+            { "type": "button", "props": { "variant": "outlined", "text": "Secondary Button" } }
+          ]
+        }
+      ]
+    }
+  ]
+}

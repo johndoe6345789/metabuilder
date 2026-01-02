@@ -1,0 +1,121 @@
+{
+  "render": [
+    {
+      "desc": "Renders new workflow with default name",
+      "input": null,
+      "expected_name": "New Workflow",
+      "expected_steps_count": 0
+    },
+    {
+      "desc": "Renders existing workflow with name",
+      "input": {
+        "id": "wf-123",
+        "name": "Deploy Pipeline",
+        "steps": []
+      },
+      "expected_id": "wf-123",
+      "expected_name": "Deploy Pipeline",
+      "expected_steps_count": 0
+    },
+    {
+      "desc": "Renders workflow with steps",
+      "input": {
+        "id": "wf-456",
+        "name": "Build & Test",
+        "steps": [
+          { "type": "build" },
+          { "type": "test" }
+        ]
+      },
+      "expected_id": "wf-456",
+      "expected_name": "Build & Test",
+      "expected_steps_count": 2
+    },
+    {
+      "desc": "Renders workflow without ID",
+      "input": {
+        "name": "CI Pipeline"
+      },
+      "expected_name": "CI Pipeline",
+      "expected_steps_count": 0
+    }
+  ],
+  "add_step": [
+    {
+      "desc": "Adds build step without config",
+      "step_type": "build",
+      "config": null
+    },
+    {
+      "desc": "Adds test step with config",
+      "step_type": "test",
+      "config": {
+        "framework": "jest",
+        "coverage": true
+      }
+    },
+    {
+      "desc": "Adds deploy step with target",
+      "step_type": "deploy",
+      "config": {
+        "target": "production",
+        "region": "us-east-1"
+      }
+    },
+    {
+      "desc": "Adds notification step",
+      "step_type": "notify",
+      "config": {
+        "channel": "slack",
+        "webhook": "https://hooks.slack.com/..."
+      }
+    },
+    {
+      "desc": "Adds approval step",
+      "step_type": "approval",
+      "config": {
+        "approvers": ["admin", "devops"]
+      }
+    },
+    {
+      "desc": "Adds script step with inline code",
+      "step_type": "script",
+      "config": {
+        "language": "bash",
+        "code": "echo 'Hello World'"
+      }
+    }
+  ],
+  "connect_steps": [
+    {
+      "desc": "Connects two steps without condition",
+      "from": "step-1",
+      "to": "step-2",
+      "condition": null
+    },
+    {
+      "desc": "Connects steps with success condition",
+      "from": "build",
+      "to": "test",
+      "condition": "on_success"
+    },
+    {
+      "desc": "Connects steps with failure condition",
+      "from": "test",
+      "to": "notify-failure",
+      "condition": "on_failure"
+    },
+    {
+      "desc": "Connects steps with always condition",
+      "from": "deploy",
+      "to": "cleanup",
+      "condition": "always"
+    },
+    {
+      "desc": "Connects approval to deploy",
+      "from": "approval-step",
+      "to": "deploy-prod",
+      "condition": "approved"
+    }
+  ]
+}

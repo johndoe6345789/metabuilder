@@ -1,0 +1,236 @@
+{
+  "ScreenshotAnalyzer": {
+    "type": "ScreenshotAnalyzer",
+    "category": "demo",
+    "label": "Screenshot Analyzer",
+    "description": "Capture and analyze the current page",
+    "icon": "camera",
+    "props": [],
+    "config": {
+      "layout": "container",
+      "styling": {
+        "className": "screenshot-analyzer-container"
+      },
+      "children": [
+        {
+          "type": "header",
+          "props": {
+            "title": "Screenshot Analyzer",
+            "description": "Capture and analyze the current page"
+          },
+          "children": [
+            { "type": "chip", "props": { "label": "Local Analysis", "color": "secondary" } }
+          ]
+        },
+        { "type": "UploadSection", "props": {} },
+        { "type": "ResultPanel", "props": {} },
+        { "type": "PageInfo", "props": {} }
+      ]
+    },
+    "bindings": {
+      "browser": true
+    }
+  },
+  "UploadSection": {
+    "type": "UploadSection",
+    "category": "demo",
+    "label": "Upload Section",
+    "description": "Screenshot capture and download controls",
+    "icon": "upload",
+    "props": [
+      {
+        "name": "screenshotData",
+        "type": "string",
+        "label": "Screenshot Data",
+        "defaultValue": null,
+        "required": false
+      }
+    ],
+    "config": {
+      "layout": "card",
+      "styling": { "className": "upload-section" },
+      "children": [
+        {
+          "type": "card",
+          "props": { "title": "Capture", "description": "Take a screenshot of the current page" },
+          "children": [
+            {
+              "type": "conditional",
+              "props": { "condition": "!screenshotData" },
+              "children": [
+                {
+                  "type": "upload-zone",
+                  "props": {
+                    "icon": "camera",
+                    "title": "Capture Screenshot",
+                    "description": "Click to capture the current page"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "props": { "condition": "screenshotData" },
+              "children": [
+                { "type": "image-preview", "props": { "src": "{{screenshotData}}", "alt": "Screenshot" } }
+              ]
+            },
+            {
+              "type": "button-group",
+              "children": [
+                {
+                  "type": "button",
+                  "props": {
+                    "label": "Capture",
+                    "icon": "camera",
+                    "action": "capture_screenshot",
+                    "loading": "{{isCapturing}}"
+                  }
+                },
+                {
+                  "type": "button",
+                  "props": {
+                    "label": "Download",
+                    "icon": "download",
+                    "action": "download_screenshot",
+                    "disabled": "{{!screenshotData}}",
+                    "variant": "outline"
+                  }
+                },
+                {
+                  "type": "button",
+                  "props": {
+                    "label": "Re-analyze",
+                    "icon": "refresh",
+                    "action": "reanalyze",
+                    "disabled": "{{!screenshotData}}",
+                    "loading": "{{isAnalyzing}}",
+                    "variant": "outline"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "bindings": { "browser": true }
+  },
+  "ResultPanel": {
+    "type": "ResultPanel",
+    "category": "demo",
+    "label": "Result Panel",
+    "description": "Analysis results display",
+    "icon": "chart",
+    "props": [
+      {
+        "name": "analysisReport",
+        "type": "string",
+        "label": "Analysis Report",
+        "defaultValue": "",
+        "required": false
+      },
+      {
+        "name": "analysisResult",
+        "type": "object",
+        "label": "Analysis Result",
+        "defaultValue": null,
+        "required": false
+      }
+    ],
+    "config": {
+      "layout": "card",
+      "styling": { "className": "result-panel" },
+      "children": [
+        {
+          "type": "conditional",
+          "props": { "condition": "analysisReport" },
+          "children": [
+            {
+              "type": "card",
+              "props": { "title": "Analysis Report" },
+              "children": [
+                { "type": "markdown", "props": { "content": "{{analysisReport}}" } }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "conditional",
+          "props": { "condition": "analysisResult" },
+          "children": [
+            {
+              "type": "tabs",
+              "props": {
+                "defaultValue": "summary",
+                "tabs": [
+                  { "value": "summary", "label": "Summary" },
+                  { "value": "components", "label": "Components" },
+                  { "value": "recommendations", "label": "Recommendations" }
+                ]
+              },
+              "children": [
+                {
+                  "type": "data-display",
+                  "props": { "dataSource": "analysisResult.summary", "title": "Summary" }
+                },
+                {
+                  "type": "list-display",
+                  "props": { "dataSource": "analysisResult.components", "title": "Detected Components" }
+                },
+                {
+                  "type": "list-display",
+                  "props": { "dataSource": "analysisResult.recommendations", "title": "Recommendations" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "bindings": { "browser": false }
+  },
+  "PageInfo": {
+    "type": "PageInfo",
+    "category": "demo",
+    "label": "Page Information",
+    "description": "Current page metadata display",
+    "icon": "info",
+    "props": [],
+    "config": {
+      "layout": "card",
+      "styling": { "className": "page-info" },
+      "children": [
+        {
+          "type": "card",
+          "props": { "title": "Page Information" },
+          "children": [
+            {
+              "type": "grid",
+              "props": { "columns": 2, "gap": 2 },
+              "children": [
+                {
+                  "type": "info-item",
+                  "props": { "label": "Title", "value": "{{pageTitle}}", "font": "monospace" }
+                },
+                {
+                  "type": "info-item",
+                  "props": { "label": "URL", "value": "{{pageUrl}}", "font": "monospace", "truncate": true }
+                },
+                {
+                  "type": "info-item",
+                  "props": { "label": "Viewport", "value": "{{viewport.width}} × {{viewport.height}}", "font": "monospace" }
+                },
+                {
+                  "type": "info-item",
+                  "props": { "label": "User Agent", "value": "{{userAgent}}", "font": "monospace", "truncate": true }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "bindings": { "browser": true }
+  }
+}

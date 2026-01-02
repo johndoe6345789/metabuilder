@@ -1,0 +1,187 @@
+[
+  {
+    "id": "level2_layout",
+    "type": "Box",
+    "props": { "className": "min-h-screen bg-background" },
+    "children": [
+      {
+        "id": "level2_header",
+        "type": "AppHeader",
+        "children": [
+          {
+            "type": "Toolbar",
+            "children": [
+              { "type": "Typography", "props": { "variant": "h6", "text": "Level 2 - User Dashboard" } },
+              { "type": "Badge", "props": { "children": "User" } },
+              { "type": "Box", "props": { "className": "flex-grow" } },
+              { "type": "Typography", "props": { "variant": "body2", "text": "{{user.username}}" } }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "level2_content",
+        "type": "Container",
+        "props": { "className": "max-w-7xl mx-auto px-4 py-8 space-y-8" },
+        "children": [
+          {
+            "id": "level2_intro",
+            "type": "Stack",
+            "props": { "className": "space-y-4" },
+            "children": [
+              { "type": "Typography", "props": { "variant": "overline", "text": "Level 2" } },
+              { "type": "Typography", "props": { "variant": "h2", "text": "Your Dashboard" } },
+              { "type": "Typography", "props": { "variant": "body1", "text": "Manage your profile, comments, and chat.", "className": "text-muted-foreground" } }
+            ]
+          },
+          {
+            "id": "level2_tabs",
+            "type": "Card",
+            "children": [
+              {
+                "type": "Tabs",
+                "props": { "items": [
+                  { "value": "profile", "label": "Profile" },
+                  { "value": "comments", "label": "Comments" },
+                  { "value": "chat", "label": "Chat" }
+                ]}
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "profile_panel",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          { "type": "Typography", "props": { "variant": "h5", "text": "Your Profile" } },
+          { "type": "Typography", "props": { "variant": "body2", "text": "View and update your personal information.", "className": "text-muted-foreground" } }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "type": "Stack",
+            "props": { "spacing": 3 },
+            "children": [
+              {
+                "type": "Box",
+                "props": { "className": "flex items-center gap-4" },
+                "children": [
+                  { "type": "Avatar", "props": { "src": "{{user.avatar}}", "alt": "{{user.username}}", "size": "large" } },
+                  {
+                    "type": "Stack",
+                    "children": [
+                      { "type": "Typography", "props": { "variant": "h6", "text": "{{user.username}}" } },
+                      { "type": "Typography", "props": { "variant": "body2", "text": "{{user.email}}", "className": "text-muted-foreground" } }
+                    ]
+                  }
+                ]
+              },
+              { "type": "Divider" },
+              {
+                "type": "Grid",
+                "props": { "container": true, "spacing": 2 },
+                "children": [
+                  {
+                    "type": "Grid",
+                    "props": { "item": true, "xs": 12, "md": 6 },
+                    "children": [
+                      { "type": "TextField", "props": { "label": "Display Name", "fullWidth": true, "defaultValue": "{{user.displayName}}" } }
+                    ]
+                  },
+                  {
+                    "type": "Grid",
+                    "props": { "item": true, "xs": 12, "md": 6 },
+                    "children": [
+                      { "type": "TextField", "props": { "label": "Email", "fullWidth": true, "defaultValue": "{{user.email}}", "disabled": true } }
+                    ]
+                  }
+                ]
+              },
+              { "type": "Button", "props": { "variant": "contained", "children": "Save Changes" } }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "comments_panel",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          { "type": "Typography", "props": { "variant": "h5", "text": "Your Comments" } },
+          { "type": "Typography", "props": { "variant": "body2", "text": "View and manage comments you've posted.", "className": "text-muted-foreground" } }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "type": "List",
+            "children": [
+              {
+                "type": "ListItem",
+                "children": [
+                  { "type": "ListItemText", "props": { "primary": "Great article on Lua scripting!", "secondary": "Posted 2 days ago on 'Getting Started with Lua'" } },
+                  { "type": "IconButton", "props": { "icon": "Edit", "size": "small" } },
+                  { "type": "IconButton", "props": { "icon": "Delete", "size": "small" } }
+                ]
+              },
+              {
+                "type": "ListItem",
+                "children": [
+                  { "type": "ListItemText", "props": { "primary": "Thanks for the help!", "secondary": "Posted 1 week ago on 'Component Rendering'" } },
+                  { "type": "IconButton", "props": { "icon": "Edit", "size": "small" } },
+                  { "type": "IconButton", "props": { "icon": "Delete", "size": "small" } }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "chat_panel",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          { "type": "Typography", "props": { "variant": "h5", "text": "Chat" } },
+          { "type": "Typography", "props": { "variant": "body2", "text": "Connect with other users in real-time.", "className": "text-muted-foreground" } }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "type": "Box",
+            "props": { "className": "h-64 border rounded p-4 mb-4 overflow-y-auto bg-muted" },
+            "children": [
+              { "type": "Typography", "props": { "variant": "body2", "text": "Welcome to the chat room!", "className": "text-center text-muted-foreground" } }
+            ]
+          },
+          {
+            "type": "Box",
+            "props": { "className": "flex gap-2" },
+            "children": [
+              { "type": "TextField", "props": { "placeholder": "Type a message...", "fullWidth": true, "size": "small" } },
+              { "type": "Button", "props": { "variant": "contained", "children": "Send" } }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

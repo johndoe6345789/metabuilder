@@ -1,0 +1,49 @@
+{
+  "save": {
+    "valid": [
+      { "key": "user:session", "data": { "token": "abc123" }, "ttl": 3600 },
+      { "key": "api:response", "data": { "items": [] }, "ttl": 300 },
+      { "key": "computed:result", "data": 12345, "ttl": null },
+      { "key": "page:render", "data": "<html>...</html>", "ttl": 7200 },
+      { "key": "query:results", "data": [1, 2, 3], "ttl": 1800 }
+    ],
+    "invalid": [
+      { "key": "", "data": {}, "reason": "empty_key" },
+      { "key": null, "data": {}, "reason": "null_key" }
+    ]
+  },
+  "get": {
+    "hit": [
+      { "key": "user:session", "cached_data": { "token": "abc123" } },
+      { "key": "api:response", "cached_data": { "items": ["a", "b"] } },
+      { "key": "computed:result", "cached_data": 12345 }
+    ],
+    "miss": [
+      { "key": "expired:session" },
+      { "key": "nonexistent:key" },
+      { "key": "cleared:cache" }
+    ],
+    "invalid": [
+      { "key": "", "reason": "empty_key" },
+      { "key": null, "reason": "null_key" }
+    ]
+  },
+  "clear": {
+    "success": [
+      { "key": "user:session" },
+      { "key": "api:response" },
+      { "key": "temp:data" }
+    ],
+    "invalid": [
+      { "key": "", "reason": "empty_key" },
+      { "key": null, "reason": "null_key" }
+    ]
+  },
+  "preferences": {
+    "valid": [
+      { "prefs": { "theme": "dark", "language": "en", "notifications": true } },
+      { "prefs": { "theme": "light", "language": "es", "notifications": false } },
+      { "prefs": { "theme": "dark", "language": "fr", "notifications": true } }
+    ]
+  }
+}

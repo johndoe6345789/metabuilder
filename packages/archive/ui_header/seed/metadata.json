@@ -1,0 +1,64 @@
+{
+  "packageId": "ui_header",
+  "name": "App Header",
+  "version": "1.0.0",
+  "description": "Shared navigation header with user avatar, actions, and landing page nav variant",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "ui",
+  "dependencies": [
+    "ui_permissions"
+  ],
+  "devDependencies": [
+    "lua_test"
+  ],
+  "exports": {
+    "components": [
+      "app_header",
+      "landing_nav"
+    ],
+    "scripts": [
+      "header"
+    ],
+    "pages": []
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json"
+    ]
+  },
+  "minLevel": 1,
+  "primary": false,
+  "permissions": {
+    "header.user.menu": {
+      "minLevel": 2,
+      "description": "Access user menu"
+    },
+    "header.view": {
+      "minLevel": 1,
+      "description": "View application header",
+      "storybook": {
+        "stories": []
+      }
+    }
+  },
+  "seed": {
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
+  "storybook": {
+    "stories": [
+      {
+        "name": "AppHeader",
+        "render": "header"
+      }
+    ]
+  }
+}

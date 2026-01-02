@@ -1,8 +1,0 @@
-{
-  "defaultWrapperClass": "mt-8 p-6 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg border-2 border-dashed border-primary/30",
-  "defaultTitleClass": "font-semibold mb-2",
-  "defaultGridClass": "grid gap-2 text-sm",
-  "defaultRowClass": "flex justify-between",
-  "defaultLabelClass": "text-muted-foreground",
-  "defaultValueClass": "font-medium"
-}

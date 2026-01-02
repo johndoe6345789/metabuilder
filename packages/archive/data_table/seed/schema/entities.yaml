@@ -1,0 +1,75 @@
+# Data Table Schema Definitions
+# Package: data_table
+# Version: 1.0.0
+
+entities:
+  - name: TableConfig
+    description: Table display configuration
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: tenantId
+        type: String
+        required: true
+      - name: tableKey
+        type: String
+        required: true
+        description: Unique identifier for the table
+      - name: config
+        type: Json
+        required: true
+        description: Column definitions, filters, default sort
+      - name: createdAt
+        type: DateTime
+        required: true
+      - name: updatedAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: table_config_tenant_key_idx
+        fields: [tenantId, tableKey]
+        unique: true
+    acl:
+      create: [admin]
+      read: [user, admin]
+      update: [admin]
+      delete: [admin]
+
+  - name: UserTablePreference
+    description: User-specific table preferences
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: userId
+        type: String
+        required: true
+      - name: tableKey
+        type: String
+        required: true
+      - name: columns
+        type: Json
+        required: false
+        description: Visible columns in order
+      - name: columnWidths
+        type: Json
+        required: false
+        description: Column width preferences
+      - name: createdAt
+        type: DateTime
+        required: true
+      - name: updatedAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: user_pref_user_table_idx
+        fields: [userId, tableKey]
+        unique: true
+    acl:
+      create: [user]
+      read: [owner]
+      update: [owner]
+      delete: [owner]

@@ -1,0 +1,176 @@
+{
+  "packageId": "package_validator",
+  "name": "Package Validator",
+  "version": "1.0.0",
+  "description": "Validates JSON-based package structure including scripts, types, components, and tests",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "tools",
+  "primary": true,
+  "dependencies": [],
+  "devDependencies": [
+    "lua_test"
+  ],
+  "externalDependencies": {
+    "fs": {
+      "description": "File system operations for reading package files",
+      "required": true,
+      "functions": [
+        "readFile",
+        "existsSync",
+        "readdir",
+        "statSync"
+      ]
+    },
+    "path": {
+      "description": "Path manipulation utilities",
+      "required": true,
+      "functions": [
+        "join",
+        "resolve",
+        "basename",
+        "dirname",
+        "extname"
+      ]
+    },
+    "JSON": {
+      "description": "JSON parsing and validation",
+      "required": true,
+      "functions": [
+        "parse",
+        "stringify"
+      ]
+    },
+    "ajv": {
+      "description": "JSON Schema validator (Another JSON Schema Validator)",
+      "required": false,
+      "version": "^8.0.0",
+      "functions": [
+        "compile",
+        "validate"
+      ]
+    }
+  },
+  "exports": {
+    "components": [],
+    "scripts": [
+      "validate_package",
+      "validate_metadata",
+      "validate_scripts",
+      "validate_types",
+      "validate_components",
+      "validate_tests",
+      "validate_storybook"
+    ],
+    "types": [
+      "ValidationResult",
+      "ValidationError",
+      "ValidationWarning",
+      "PackageMetadata",
+      "ScriptFile",
+      "TypeDefinition",
+      "ComponentDefinition"
+    ]
+  },
+  "seed": {
+    "styles": "seed/styles.json",
+    "types": "seed/types.json"
+  },
+  "runtime": {
+    "scripts": [
+      "seed/validator.json"
+    ],
+    "main": "seed/validator.json"
+  },
+  "tests": {
+    "parameterized": []
+  },
+  "minLevel": 5,
+  "permissions": {
+    "package.validate": {
+      "minLevel": 5,
+      "description": "Run package validation checks"
+    },
+    "fs.read": {
+      "minLevel": 5,
+      "description": "Read files from the file system for validation"
+    },
+    "fs.list": {
+      "minLevel": 5,
+      "description": "List directory contents to discover package files"
+    },
+    "fs.stat": {
+      "minLevel": 5,
+      "description": "Get file metadata (size, type, timestamps)"
+    },
+    "external.ajv": {
+      "minLevel": 5,
+      "description": "Use AJV JSON Schema validator for schema validation",
+      "optional": true
+    },
+    "package.validate.metadata": {
+      "minLevel": 5,
+      "description": "Validate metadata.json structure"
+    },
+    "package.validate.scripts": {
+      "minLevel": 5,
+      "description": "Validate JSON script files"
+    },
+    "package.validate.types": {
+      "minLevel": 5,
+      "description": "Validate type definitions"
+    },
+    "package.validate.components": {
+      "minLevel": 5,
+      "description": "Validate component definitions"
+    },
+    "package.validate.tests": {
+      "minLevel": 5,
+      "description": "Validate test files"
+    },
+    "package.validate.storybook": {
+      "minLevel": 5,
+      "description": "Validate storybook configuration"
+    }
+  },
+  "storybook": {
+    "stories": [
+      {
+        "name": "Validate Package",
+        "type": "function",
+        "function": "validate_package",
+        "args": ["packages/json_script_example"],
+        "argControls": {
+          "packagePath": {
+            "type": "text",
+            "default": "packages/json_script_example"
+          }
+        }
+      },
+      {
+        "name": "Validate Metadata",
+        "type": "function",
+        "function": "validate_metadata",
+        "args": ["packages/json_script_example"],
+        "argControls": {
+          "packagePath": {
+            "type": "text",
+            "default": "packages/json_script_example"
+          }
+        }
+      },
+      {
+        "name": "Validate Scripts",
+        "type": "function",
+        "function": "validate_scripts",
+        "args": ["packages/json_script_example"],
+        "argControls": {
+          "packagePath": {
+            "type": "text",
+            "default": "packages/json_script_example"
+          }
+        }
+      }
+    ]
+  }
+}

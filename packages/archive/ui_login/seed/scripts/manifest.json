@@ -1,0 +1,10 @@
+{
+  "scripts": [
+    { "file": "login_form.lua", "name": "login_form", "category": "render", "description": "Login form UI" },
+    { "file": "register_form.lua", "name": "register_form", "category": "render", "description": "Registration form UI" },
+    { "file": "forgot_password.lua", "name": "forgot_password", "category": "render", "description": "Password reset form" },
+    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle" },
+    { "file": "validate.lua", "name": "validate", "category": "validation", "description": "Form validation" },
+    { "file": "actions.lua", "name": "actions", "category": "actions", "description": "Login/register handlers" }
+  ]
+}

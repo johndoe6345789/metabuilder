@@ -1,0 +1,249 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/json-script-validation.schema.json",
+  "title": "JSON Script Validation Functions",
+  "description": "Validation utility function definitions for JSON scripts",
+  "type": "object",
+  "required": ["schema_version", "package"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schema_version": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Validation module description"
+    },
+    "imports": {
+      "type": "array",
+      "description": "Module imports",
+      "items": {
+        "$ref": "#/definitions/import"
+      }
+    },
+    "exports": {
+      "type": "object",
+      "description": "Exported validation functions",
+      "properties": {
+        "functions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "functions": {
+      "type": "array",
+      "description": "Validation function definitions",
+      "items": {
+        "$ref": "#/definitions/validationFunction"
+      }
+    }
+  },
+  "definitions": {
+    "import": {
+      "type": "object",
+      "required": ["from", "import"],
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "Module to import from"
+        },
+        "import": {
+          "type": "array",
+          "description": "Items to import",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "validationFunction": {
+      "type": "object",
+      "required": ["id", "name", "params", "returnType", "body"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique function identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Function name (camelCase)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Function description"
+        },
+        "exported": {
+          "type": "boolean",
+          "description": "Whether function is exported",
+          "default": false
+        },
+        "docstring": {
+          "$ref": "#/definitions/docstring"
+        },
+        "params": {
+          "type": "array",
+          "description": "Function parameters",
+          "items": {
+            "$ref": "#/definitions/param"
+          }
+        },
+        "returnType": {
+          "type": "string",
+          "description": "Return type",
+          "enum": ["boolean", "string", "number", "object", "array", "void", "ValidationResult"]
+        },
+        "body": {
+          "type": "array",
+          "description": "Function body statements",
+          "items": {
+            "$ref": "#/definitions/statement"
+          }
+        }
+      }
+    },
+    "param": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Parameter name"
+        },
+        "type": {
+          "type": "string",
+          "description": "Parameter type",
+          "enum": ["string", "number", "boolean", "object", "array", "any"]
+        },
+        "optional": {
+          "type": "boolean",
+          "description": "Whether parameter is optional",
+          "default": false
+        },
+        "default": {
+          "description": "Default value"
+        },
+        "description": {
+          "type": "string",
+          "description": "Parameter description"
+        }
+      }
+    },
+    "statement": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Statement type",
+          "enum": [
+            "comment",
+            "const_declaration",
+            "let_declaration",
+            "assignment",
+            "if",
+            "return",
+            "call_expression",
+            "throw"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "description": "Comment text (for comment type)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Variable name (for declarations)"
+        },
+        "value": {
+          "description": "Value or expression"
+        },
+        "condition": {
+          "description": "Condition expression (for if)"
+        },
+        "then": {
+          "type": "array",
+          "description": "Then branch statements",
+          "items": { "$ref": "#/definitions/statement" }
+        },
+        "else": {
+          "type": "array",
+          "description": "Else branch statements",
+          "items": { "$ref": "#/definitions/statement" }
+        }
+      }
+    },
+    "docstring": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "Brief summary"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description"
+        },
+        "params": {
+          "type": "array",
+          "description": "Parameter documentation",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "returns": {
+          "type": "object",
+          "description": "Return value documentation",
+          "properties": {
+            "type": { "type": "string" },
+            "description": { "type": "string" }
+          }
+        },
+        "examples": {
+          "type": "array",
+          "description": "Usage examples",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "code": { "type": "string" },
+              "output": { "type": "string" }
+            }
+          }
+        },
+        "throws": {
+          "type": "array",
+          "description": "Exception documentation",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "since": {
+          "type": "string",
+          "description": "Version when added"
+        },
+        "see": {
+          "type": "array",
+          "description": "Related references",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

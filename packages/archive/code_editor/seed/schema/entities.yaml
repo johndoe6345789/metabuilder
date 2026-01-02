@@ -1,0 +1,163 @@
+# Code Editor Schema Definitions
+# Package: code_editor
+# Version: 1.0.0
+
+entities:
+  - name: CodeSnippet
+    description: Saved code snippet
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: tenantId
+        type: String
+        required: true
+      - name: userId
+        type: String
+        required: true
+      - name: title
+        type: String
+        required: true
+      - name: language
+        type: String
+        required: true
+      - name: code
+        type: String
+        required: true
+      - name: description
+        type: String
+        required: false
+      - name: tags
+        type: Json
+        required: false
+        description: Array of tag strings
+      - name: isPublic
+        type: Boolean
+        required: true
+        default: false
+      - name: version
+        type: Int
+        required: true
+        default: 1
+      - name: createdAt
+        type: DateTime
+        required: true
+      - name: updatedAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: snippet_tenant_user_idx
+        fields: [tenantId, userId]
+      - name: snippet_tenant_public_idx
+        fields: [tenantId, isPublic]
+      - name: snippet_language_idx
+        fields: [language]
+    acl:
+      create: [user]
+      read: [owner, public_if_public, admin]
+      update: [owner]
+      delete: [owner, admin]
+
+  - name: EditorSession
+    description: Saved editor session state
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: tenantId
+        type: String
+        required: true
+      - name: userId
+        type: String
+        required: true
+      - name: name
+        type: String
+        required: true
+      - name: files
+        type: Json
+        required: true
+        description: Array of open file states
+      - name: createdAt
+        type: DateTime
+        required: true
+      - name: updatedAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: session_tenant_user_name_idx
+        fields: [tenantId, userId, name]
+        unique: true
+    acl:
+      create: [user]
+      read: [owner]
+      update: [owner]
+      delete: [owner]
+
+  - name: FileRevision
+    description: File revision history
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: tenantId
+        type: String
+        required: true
+      - name: filePath
+        type: String
+        required: true
+      - name: content
+        type: String
+        required: true
+      - name: userId
+        type: String
+        required: true
+      - name: message
+        type: String
+        required: false
+      - name: createdAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: revision_tenant_file_idx
+        fields: [tenantId, filePath]
+    acl:
+      create: [user]
+      read: [user, admin]
+      update: [none]
+      delete: [admin]
+
+  - name: LanguageConfig
+    description: Language-specific editor configuration
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: tenantId
+        type: String
+        required: true
+      - name: language
+        type: String
+        required: true
+      - name: config
+        type: Json
+        required: true
+        description: Language-specific settings
+      - name: createdAt
+        type: DateTime
+        required: true
+      - name: updatedAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: lang_config_tenant_lang_idx
+        fields: [tenantId, language]
+        unique: true
+    acl:
+      create: [admin]
+      read: [user, admin]
+      update: [admin]
+      delete: [admin]

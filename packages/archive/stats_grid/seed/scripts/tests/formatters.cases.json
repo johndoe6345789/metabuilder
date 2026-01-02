@@ -1,0 +1,26 @@
+{
+  "formatLabel": [
+    {
+      "desc": "handles simple words",
+      "input": "users",
+      "expected": "Users"
+    },
+    {
+      "desc": "handles underscores",
+      "input": "active_users",
+      "expected": "Active users"
+    }
+  ],
+  "formatValue": [
+    {
+      "desc": "handles zero",
+      "input": 0,
+      "expected": "0"
+    },
+    {
+      "desc": "handles negative numbers",
+      "input": -100,
+      "expected": "-100"
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "$schema": "./metadata.schema.json",
+  "packageId": "json_script_example",
+  "name": "JSON Script Example",
+  "version": "1.0.0",
+  "description": "Comprehensive example demonstrating the full JSON script specification",
+  "author": "MetaBuilder",
+  "category": "examples",
+  "icon": "static_content/icon.svg",
+  "minLevel": 0,
+  "primary": false,
+  "dependencies": [],
+  "devDependencies": ["lua_test"],
+  "exports": {
+    "scripts": [
+      "all_expressions",
+      "all_statements",
+      "all_operators",
+      "control_flow",
+      "data_structures"
+    ],
+    "types": [
+      "ArithmeticResult",
+      "ComparisonResult",
+      "LogicalResult",
+      "OperatorsDemoResult",
+      "ExpressionsDemoResult",
+      "StatementsDemoResult",
+      "DataStructuresResult",
+      "Classification",
+      "TestResult",
+      "ValidationResult"
+    ],
+    "components": [
+      "ExpressionDemo",
+      "OperatorDemo",
+      "ResultDisplay"
+    ]
+  },
+  "tests": {
+    "parameterized": [
+      {
+        "logic": "tests/math.test.logic.json",
+        "parameters": "tests/math.test.parameters.json"
+      }
+    ]
+  },
+  "permissions": {
+    "example.view": {
+      "minLevel": 0,
+      "description": "View examples"
+    }
+  },
+  "seed": {
+    "styles": "seed/styles.json",
+    "types": "seed/types.json",
+    "schema": "seed/schema/entities.yaml"
+  },
+  "storybook": {
+    "stories": [
+      {
+        "name": "All Expressions",
+        "type": "function",
+        "function": "all_expressions",
+        "args": [10, 5],
+        "argControls": {
+          "a": { "type": "number", "default": 10, "min": -100, "max": 100, "step": 1 },
+          "b": { "type": "number", "default": 5, "min": -100, "max": 100, "step": 1 }
+        }
+      },
+      {
+        "name": "All Statements",
+        "type": "function",
+        "function": "all_statements",
+        "args": [[1, 2, 3, 4, 5]]
+      },
+      {
+        "name": "All Operators",
+        "type": "function",
+        "function": "all_operators",
+        "args": [10, 5],
+        "argControls": {
+          "x": { "type": "number", "default": 10, "min": -100, "max": 100, "step": 1 },
+          "y": { "type": "number", "default": 5, "min": -100, "max": 100, "step": 1 }
+        }
+      },
+      {
+        "name": "Control Flow",
+        "type": "function",
+        "function": "control_flow",
+        "args": [42],
+        "argControls": {
+          "value": { "type": "number", "default": 42, "min": -100, "max": 200, "step": 1 }
+        }
+      },
+      {
+        "name": "Data Structures",
+        "type": "function",
+        "function": "data_structures",
+        "args": []
+      },
+      {
+        "name": "Expression Demo Component",
+        "type": "component",
+        "component": "ExpressionDemo",
+        "props": {
+          "initialA": 10,
+          "initialB": 5
+        },
+        "propControls": {
+          "initialA": { "type": "number", "default": 10, "min": -100, "max": 100, "step": 1 },
+          "initialB": { "type": "number", "default": 5, "min": -100, "max": 100, "step": 1 }
+        }
+      },
+      {
+        "name": "Operator Demo Component",
+        "type": "component",
+        "component": "OperatorDemo",
+        "props": {
+          "x": 10,
+          "y": 5
+        },
+        "propControls": {
+          "x": { "type": "number", "default": 10, "min": -100, "max": 100, "step": 1 },
+          "y": { "type": "number", "default": 5, "min": -100, "max": 100, "step": 1 }
+        }
+      }
+    ]
+  },
+  "runtime": {
+    "scripts": [
+      "seed/script.json",
+      "seed/math_utils.json",
+      "seed/validation.json",
+      "seed/components.json"
+    ],
+    "main": "seed/script.json",
+    "executor": {
+      "lua": "../shared/seed/scripts/runtime/script_executor.lua",
+      "javascript": "../shared/seed/scripts/runtime/script_executor.cjs"
+    },
+    "description": "Multiple script files with import/export support"
+  }
+}

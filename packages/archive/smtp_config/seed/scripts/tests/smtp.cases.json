@@ -1,0 +1,71 @@
+{
+  "getDefaults": [
+    {
+      "desc": "returns default SMTP configuration",
+      "expected_keys": ["host", "port", "username", "password", "fromEmail", "fromName", "secure"]
+    }
+  ],
+  "getFields": [
+    {
+      "desc": "returns all field definitions",
+      "expected_count": 7
+    }
+  ],
+  "validate": {
+    "valid": [
+      {
+        "desc": "accepts valid configuration",
+        "input": {
+          "host": "smtp.gmail.com",
+          "port": 587,
+          "username": "user@example.com",
+          "password": "password123",
+          "fromEmail": "noreply@example.com",
+          "fromName": "Test System",
+          "secure": true
+        }
+      }
+    ],
+    "invalid": [
+      {
+        "desc": "rejects missing host",
+        "input": {
+          "host": "",
+          "port": 587,
+          "username": "user",
+          "password": "pass",
+          "fromEmail": "test@example.com",
+          "fromName": "Test",
+          "secure": true
+        },
+        "expected_error": "host"
+      },
+      {
+        "desc": "rejects invalid port",
+        "input": {
+          "host": "smtp.example.com",
+          "port": 99999,
+          "username": "user",
+          "password": "pass",
+          "fromEmail": "test@example.com",
+          "fromName": "Test",
+          "secure": true
+        },
+        "expected_error": "port"
+      },
+      {
+        "desc": "rejects invalid email format",
+        "input": {
+          "host": "smtp.example.com",
+          "port": 587,
+          "username": "user",
+          "password": "pass",
+          "fromEmail": "invalid-email",
+          "fromName": "Test",
+          "secure": true
+        },
+        "expected_error": "fromEmail"
+      }
+    ]
+  }
+}

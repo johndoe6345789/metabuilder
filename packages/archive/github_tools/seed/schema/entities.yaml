@@ -1,0 +1,254 @@
+# GitHub Tools Schema Definitions
+# Package: github_tools
+# Version: 1.0.0
+
+entities:
+  - name: GitHubConnection
+    description: GitHub account connection
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: tenantId
+        type: String
+        required: true
+      - name: userId
+        type: String
+        required: true
+      - name: githubUsername
+        type: String
+        required: true
+      - name: accessToken
+        type: String
+        required: true
+        description: Encrypted access token
+      - name: scopes
+        type: Json
+        required: false
+        description: Authorized OAuth scopes
+      - name: expiresAt
+        type: DateTime
+        required: false
+      - name: createdAt
+        type: DateTime
+        required: true
+      - name: updatedAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: github_conn_tenant_user_idx
+        fields: [tenantId, userId]
+        unique: true
+    acl:
+      create: [user]
+      read: [owner, admin]
+      update: [owner]
+      delete: [owner, admin]
+
+  - name: GitHubRepository
+    description: Synced GitHub repository
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: tenantId
+        type: String
+        required: true
+      - name: connectionId
+        type: String
+        required: true
+      - name: owner
+        type: String
+        required: true
+      - name: name
+        type: String
+        required: true
+      - name: fullName
+        type: String
+        required: true
+      - name: description
+        type: String
+        required: false
+      - name: isPrivate
+        type: Boolean
+        required: true
+        default: false
+      - name: defaultBranch
+        type: String
+        required: false
+      - name: metadata
+        type: Json
+        required: false
+        description: Stars, forks, language, etc.
+      - name: syncedAt
+        type: DateTime
+        required: true
+      - name: createdAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: repo_connection_idx
+        fields: [connectionId]
+      - name: repo_fullname_idx
+        fields: [tenantId, fullName]
+        unique: true
+    relations:
+      - name: connection
+        type: belongsTo
+        target: GitHubConnection
+        foreignKey: connectionId
+    acl:
+      create: [system]
+      read: [owner, admin]
+      update: [system]
+      delete: [owner, admin]
+
+  - name: GitHubWebhook
+    description: Registered GitHub webhook
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: tenantId
+        type: String
+        required: true
+      - name: repositoryId
+        type: String
+        required: true
+      - name: githubWebhookId
+        type: String
+        required: true
+      - name: events
+        type: Json
+        required: true
+        description: Array of subscribed events
+      - name: secret
+        type: String
+        required: true
+        description: Webhook secret for verification
+      - name: isActive
+        type: Boolean
+        required: true
+        default: true
+      - name: createdAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: webhook_repo_idx
+        fields: [repositoryId]
+    relations:
+      - name: repository
+        type: belongsTo
+        target: GitHubRepository
+        foreignKey: repositoryId
+    acl:
+      create: [user]
+      read: [owner, admin]
+      update: [owner, admin]
+      delete: [owner, admin]
+
+  - name: GitHubWebhookEvent
+    description: Received webhook event log
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: tenantId
+        type: String
+        required: true
+      - name: webhookId
+        type: String
+        required: true
+      - name: eventType
+        type: String
+        required: true
+      - name: deliveryId
+        type: String
+        required: true
+      - name: payload
+        type: Json
+        required: true
+      - name: processedAt
+        type: DateTime
+        required: false
+      - name: receivedAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: event_webhook_idx
+        fields: [webhookId]
+      - name: event_type_idx
+        fields: [tenantId, eventType]
+    relations:
+      - name: webhook
+        type: belongsTo
+        target: GitHubWebhook
+        foreignKey: webhookId
+    acl:
+      create: [system]
+      read: [owner, admin]
+      update: [system]
+      delete: [admin]
+
+  - name: GitHubPullRequest
+    description: Tracked pull request
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: tenantId
+        type: String
+        required: true
+      - name: repositoryId
+        type: String
+        required: true
+      - name: number
+        type: Int
+        required: true
+      - name: title
+        type: String
+        required: true
+      - name: state
+        type: String
+        required: true
+        description: open, closed, merged
+      - name: author
+        type: String
+        required: true
+      - name: baseBranch
+        type: String
+        required: true
+      - name: headBranch
+        type: String
+        required: true
+      - name: metadata
+        type: Json
+        required: false
+        description: Labels, reviewers, checks
+      - name: syncedAt
+        type: DateTime
+        required: true
+      - name: createdAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: pr_repo_number_idx
+        fields: [repositoryId, number]
+        unique: true
+      - name: pr_state_idx
+        fields: [repositoryId, state]
+    relations:
+      - name: repository
+        type: belongsTo
+        target: GitHubRepository
+        foreignKey: repositoryId
+    acl:
+      create: [system]
+      read: [owner, admin]
+      update: [system]
+      delete: [admin]

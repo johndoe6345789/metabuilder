@@ -1,0 +1,81 @@
+{
+  "packageId": "codegen_studio",
+  "name": "Codegen Studio",
+  "version": "1.1.0",
+  "description": "Generate Next.js, React, CLI starters, and MetaBuilder packages from configurable templates.",
+  "icon": "static_content/icon.svg",
+  "author": "MetaBuilder",
+  "category": "tools",
+  "dependencies": [],
+  "devDependencies": [
+    "lua_test"
+  ],
+  "exports": {
+    "components": [
+      "CodegenStudio",
+      "TemplateSelector",
+      "PackageGenerator"
+    ],
+    "scripts": [
+      "init",
+      "blueprint",
+      "package_template",
+      "package_template.generator",
+      "package_template.templates",
+      "package_template.cli"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua",
+      "package_template/tests/generator.test.lua"
+    ],
+    "cases": [
+      "tests/metadata.cases.json",
+      "tests/components.cases.json",
+      "package_template/tests/generator.cases.json"
+    ]
+  },
+  "minLevel": 5,
+  "primary": true,
+  "permissions": {
+    "codegen.templates.view": {
+      "minLevel": 5,
+      "description": "View available code templates"
+    },
+    "codegen.templates.create": {
+      "minLevel": 5,
+      "description": "Create custom templates"
+    },
+    "codegen.generate": {
+      "minLevel": 5,
+      "description": "Generate code from templates"
+    },
+    "codegen.package.create": {
+      "minLevel": 5,
+      "description": "Create new MetaBuilder packages"
+    },
+    "codegen.package.scaffold": {
+      "minLevel": 5,
+      "description": "Generate package scaffolding",
+      "storybook": {
+        "stories": []
+      }
+    }
+  },
+  "seed": {
+    "styles": "seed/styles.json",
+    "storybook": {
+      "stories": []
+    }
+  },
+  "storybook": {
+    "stories": [
+      {
+        "name": "Codegen_Studio",
+        "render": "init"
+      }
+    ]
+  }
+}

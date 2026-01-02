@@ -1,8 +1,0 @@
-{
-  "scripts": [
-    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle" },
-    { "file": "layout.lua", "name": "layout", "category": "ui", "description": "Page layout" },
-    { "file": "profile.lua", "name": "profile", "category": "ui", "description": "Profile tab" },
-    { "file": "comments.lua", "name": "comments", "category": "ui", "description": "Comments tab" }
-  ]
-}

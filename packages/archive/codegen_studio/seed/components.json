@@ -1,0 +1,419 @@
+[
+  {
+    "id": "codegen_studio_root",
+    "type": "Stack",
+    "props": {
+      "className": "flex flex-col gap-6"
+    },
+    "children": [
+      {
+        "id": "codegen_studio_hero",
+        "type": "Card",
+        "props": {
+          "className": "p-6"
+        },
+        "children": [
+          {
+            "id": "codegen_studio_title",
+            "type": "Heading",
+            "props": {
+              "children": "Codegen Studio",
+              "level": "2",
+              "className": "text-2xl font-bold"
+            },
+            "children": []
+          },
+          {
+            "id": "codegen_studio_tagline",
+            "type": "Text",
+            "props": {
+              "children": "Ship a new app in minutes with curated templates and export-ready bundles."
+            },
+            "children": []
+          },
+          {
+            "id": "codegen_studio_badges",
+            "type": "Flex",
+            "props": {
+              "className": "flex gap-2"
+            },
+            "children": [
+              {
+                "id": "codegen_studio_badge_next",
+                "type": "Badge",
+                "props": {
+                  "children": "Next.js",
+                  "variant": "secondary"
+                },
+                "children": []
+              },
+              {
+                "id": "codegen_studio_badge_react",
+                "type": "Badge",
+                "props": {
+                  "children": "React",
+                  "variant": "secondary"
+                },
+                "children": []
+              },
+              {
+                "id": "codegen_studio_badge_cli",
+                "type": "Badge",
+                "props": {
+                  "children": "CLI",
+                  "variant": "outline"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "codegen_studio_stats",
+        "type": "Grid",
+        "props": {
+          "className": "grid grid-cols-3 gap-4"
+        },
+        "children": [
+          {
+            "id": "codegen_studio_stat_templates",
+            "type": "Card",
+            "props": {
+              "className": "p-4"
+            },
+            "children": [
+              {
+                "id": "codegen_studio_stat_templates_label",
+                "type": "Text",
+                "props": {
+                  "children": "Templates ready",
+                  "className": "text-sm text-muted-foreground"
+                },
+                "children": []
+              },
+              {
+                "id": "codegen_studio_stat_templates_value",
+                "type": "Heading",
+                "props": {
+                  "children": "12",
+                  "level": "3",
+                  "className": "text-xl font-semibold"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "codegen_studio_stat_targets",
+            "type": "Card",
+            "props": {
+              "className": "p-4"
+            },
+            "children": [
+              {
+                "id": "codegen_studio_stat_targets_label",
+                "type": "Text",
+                "props": {
+                  "children": "Targets",
+                  "className": "text-sm text-muted-foreground"
+                },
+                "children": []
+              },
+              {
+                "id": "codegen_studio_stat_targets_value",
+                "type": "Heading",
+                "props": {
+                  "children": "Web · CLI · Desktop",
+                  "level": "4",
+                  "className": "text-lg font-semibold"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "codegen_studio_stat_exports",
+            "type": "Card",
+            "props": {
+              "className": "p-4"
+            },
+            "children": [
+              {
+                "id": "codegen_studio_stat_exports_label",
+                "type": "Text",
+                "props": {
+                  "children": "Last export",
+                  "className": "text-sm text-muted-foreground"
+                },
+                "children": []
+              },
+              {
+                "id": "codegen_studio_stat_exports_value",
+                "type": "Heading",
+                "props": {
+                  "children": "2m ago",
+                  "level": "3",
+                  "className": "text-xl font-semibold"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "codegen_studio_setup",
+        "type": "Card",
+        "props": {
+          "className": "p-6"
+        },
+        "children": [
+          {
+            "id": "codegen_studio_setup_title",
+            "type": "Heading",
+            "props": {
+              "children": "Project setup",
+              "level": "3",
+              "className": "text-xl font-semibold"
+            },
+            "children": []
+          },
+          {
+            "id": "codegen_studio_setup_grid",
+            "type": "Grid",
+            "props": {
+              "className": "grid grid-cols-2 gap-4"
+            },
+            "children": [
+              {
+                "id": "codegen_studio_field_name",
+                "type": "Stack",
+                "props": {
+                  "className": "flex flex-col gap-2"
+                },
+                "children": [
+                  {
+                    "id": "codegen_studio_field_name_label",
+                    "type": "Label",
+                    "props": {
+                      "children": "Project name"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "codegen_studio_field_name_input",
+                    "type": "Input",
+                    "props": {
+                      "placeholder": "nebula-launch"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "codegen_studio_field_package",
+                "type": "Stack",
+                "props": {
+                  "className": "flex flex-col gap-2"
+                },
+                "children": [
+                  {
+                    "id": "codegen_studio_field_package_label",
+                    "type": "Label",
+                    "props": {
+                      "children": "Package id"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "codegen_studio_field_package_input",
+                    "type": "Input",
+                    "props": {
+                      "placeholder": "nebula_launch"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "codegen_studio_field_runtime",
+                "type": "Stack",
+                "props": {
+                  "className": "flex flex-col gap-2"
+                },
+                "children": [
+                  {
+                    "id": "codegen_studio_field_runtime_label",
+                    "type": "Label",
+                    "props": {
+                      "children": "Target runtime"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "codegen_studio_field_runtime_input",
+                    "type": "Input",
+                    "props": {
+                      "placeholder": "web | cli | desktop"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "codegen_studio_field_tone",
+                "type": "Stack",
+                "props": {
+                  "className": "flex flex-col gap-2"
+                },
+                "children": [
+                  {
+                    "id": "codegen_studio_field_tone_label",
+                    "type": "Label",
+                    "props": {
+                      "children": "Design tone"
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "codegen_studio_field_tone_input",
+                    "type": "Input",
+                    "props": {
+                      "placeholder": "newsroom · cozy · neon"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "codegen_studio_field_brief",
+            "type": "Stack",
+            "props": {
+              "className": "flex flex-col gap-2"
+            },
+            "children": [
+              {
+                "id": "codegen_studio_field_brief_label",
+                "type": "Label",
+                "props": {
+                  "children": "Creative brief"
+                },
+                "children": []
+              },
+              {
+                "id": "codegen_studio_field_brief_input",
+                "type": "Textarea",
+                "props": {
+                  "placeholder": "Describe the product and target audience...",
+                  "rows": 3
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "codegen_studio_actions",
+        "type": "Flex",
+        "props": {
+          "className": "flex flex-wrap gap-2"
+        },
+        "children": [
+          {
+            "id": "codegen_studio_action_generate",
+            "type": "Button",
+            "props": {
+              "children": "Generate zip",
+              "variant": "default"
+            },
+            "children": []
+          },
+          {
+            "id": "codegen_studio_action_preview",
+            "type": "Button",
+            "props": {
+              "children": "Preview manifest",
+              "variant": "outline"
+            },
+            "children": []
+          },
+          {
+            "id": "codegen_studio_action_preset",
+            "type": "Button",
+            "props": {
+              "children": "Save preset",
+              "variant": "ghost"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "codegen_studio_plan",
+        "type": "Card",
+        "props": {
+          "className": "p-6"
+        },
+        "children": [
+          {
+            "id": "codegen_studio_plan_title",
+            "type": "Heading",
+            "props": {
+              "children": "Generation plan",
+              "level": "3",
+              "className": "text-xl font-semibold"
+            },
+            "children": []
+          },
+          {
+            "id": "codegen_studio_plan_text",
+            "type": "Text",
+            "props": {
+              "children": "• Scaffold Next.js app shell\n• Add package metadata + Lua hooks\n• Produce CLI bundle + desktop notes\n• Export a ready-to-ship zip"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "codegen_studio_status",
+        "type": "Card",
+        "props": {
+          "className": "p-6"
+        },
+        "children": [
+          {
+            "id": "codegen_studio_status_alert",
+            "type": "Alert",
+            "props": {
+              "variant": "default"
+            },
+            "children": [
+              {
+                "id": "codegen_studio_status_text",
+                "type": "Text",
+                "props": {
+                  "children": "Queue ready. Waiting on an approved build request.",
+                  "className": "text-sm"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "codegen_studio_status_progress",
+            "type": "Progress",
+            "props": {
+              "value": 35
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+]

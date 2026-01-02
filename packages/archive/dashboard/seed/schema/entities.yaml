@@ -1,0 +1,89 @@
+# Dashboard Schema Definitions
+# Package: dashboard
+# Version: 1.0.0
+
+entities:
+  - name: DashboardLayout
+    description: User or tenant dashboard layout configuration
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: tenantId
+        type: String
+        required: true
+      - name: userId
+        type: String
+        required: false
+        description: If null, this is a tenant-wide layout
+      - name: name
+        type: String
+        required: true
+      - name: widgets
+        type: Json
+        required: true
+        description: Array of widget configurations with positions
+      - name: settings
+        type: Json
+        required: false
+        description: Layout-specific settings
+      - name: isDefault
+        type: Boolean
+        required: true
+        default: false
+      - name: createdAt
+        type: DateTime
+        required: true
+      - name: updatedAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: dashboard_tenant_user_idx
+        fields: [tenantId, userId]
+      - name: dashboard_tenant_name_idx
+        fields: [tenantId, name]
+        unique: true
+    acl:
+      create: [user, admin]
+      read: [user, admin]
+      update: [owner, admin]
+      delete: [owner, admin]
+
+  - name: WidgetCache
+    description: Cached data for dashboard widgets
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: tenantId
+        type: String
+        required: true
+      - name: cacheKey
+        type: String
+        required: true
+      - name: widgetType
+        type: String
+        required: true
+      - name: data
+        type: Json
+        required: true
+      - name: expiresAt
+        type: DateTime
+        required: false
+      - name: createdAt
+        type: DateTime
+        required: true
+      - name: updatedAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: widget_cache_tenant_key_idx
+        fields: [tenantId, cacheKey]
+        unique: true
+    acl:
+      create: [system]
+      read: [user, admin]
+      update: [system]
+      delete: [system]

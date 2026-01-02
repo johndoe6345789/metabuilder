@@ -1,7 +1,0 @@
-{
-  "scripts": [
-    { "file": "init.lua", "name": "init", "category": "lifecycle", "description": "Package lifecycle" },
-    { "file": "denied.lua", "name": "denied", "category": "ui", "description": "Access denied view" },
-    { "file": "gate.lua", "name": "gate", "category": "security", "description": "Auth gate logic" }
-  ]
-}

@@ -1,0 +1,640 @@
+[
+  {
+    "id": "stats_grid",
+    "type": "Grid",
+    "props": {
+      "container": true,
+      "spacing": 3,
+      "className": "stats-grid"
+    },
+    "children": [
+      {
+        "id": "stats_grid_header",
+        "type": "Box",
+        "props": {
+          "className": "stats-grid-header",
+          "sx": {
+            "width": "100%",
+            "mb": 2
+          }
+        },
+        "children": [
+          {
+            "id": "stats_grid_title",
+            "type": "Text",
+            "props": {
+              "variant": "h5",
+              "fontWeight": "bold"
+            },
+            "children": []
+          },
+          {
+            "id": "stats_grid_description",
+            "type": "Text",
+            "props": {
+              "variant": "body2",
+              "color": "secondary"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "stats_grid_content",
+        "type": "Grid",
+        "props": {
+          "container": true,
+          "spacing": 2
+        },
+        "children": []
+      },
+      {
+        "id": "stats_grid_empty",
+        "type": "Box",
+        "props": {
+          "className": "stats-grid-empty",
+          "sx": {
+            "display": "flex",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "width": "100%",
+            "py": 4
+          }
+        },
+        "children": [
+          {
+            "id": "stats_grid_empty_text",
+            "type": "Text",
+            "props": {
+              "variant": "body1",
+              "color": "secondary"
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "stat_card",
+    "type": "Card",
+    "props": {
+      "variant": "outlined",
+      "className": "stat-card"
+    },
+    "children": [
+      {
+        "id": "stat_card_header",
+        "type": "Flex",
+        "props": {
+          "justifyContent": "space-between",
+          "alignItems": "flex-start",
+          "className": "stat-card-header"
+        },
+        "children": [
+          {
+            "id": "stat_card_icon_container",
+            "type": "Box",
+            "props": {
+              "className": "stat-card-icon",
+              "sx": {
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "width": 48,
+                "height": 48,
+                "borderRadius": 2,
+                "bgcolor": "primary.light"
+              }
+            },
+            "children": [
+              {
+                "id": "stat_card_icon",
+                "type": "Icon",
+                "props": {
+                  "name": "BarChart",
+                  "size": 24
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "stat_card_trend_badge",
+            "type": "Box",
+            "props": {
+              "className": "stat-card-trend-badge",
+              "sx": {
+                "display": "flex",
+                "alignItems": "center",
+                "gap": 0.5,
+                "px": 1,
+                "py": 0.5,
+                "borderRadius": 1
+              }
+            },
+            "children": [
+              {
+                "id": "stat_card_trend_icon",
+                "type": "Icon",
+                "props": {
+                  "name": "TrendingUp",
+                  "size": 16
+                },
+                "children": []
+              },
+              {
+                "id": "stat_card_trend_value",
+                "type": "Text",
+                "props": {
+                  "variant": "caption",
+                  "fontWeight": "medium"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "stat_card_content",
+        "type": "Stack",
+        "props": {
+          "gap": 1,
+          "className": "stat-card-content",
+          "sx": {
+            "mt": 2
+          }
+        },
+        "children": [
+          {
+            "id": "stat_card_label",
+            "type": "Text",
+            "props": {
+              "variant": "caption",
+              "color": "secondary",
+              "textTransform": "uppercase",
+              "letterSpacing": 0.5
+            },
+            "children": []
+          },
+          {
+            "id": "stat_card_value",
+            "type": "Text",
+            "props": {
+              "variant": "h4",
+              "fontWeight": "bold"
+            },
+            "children": []
+          },
+          {
+            "id": "stat_card_comparison",
+            "type": "Flex",
+            "props": {
+              "alignItems": "center",
+              "gap": 1,
+              "className": "stat-card-comparison"
+            },
+            "children": [
+              {
+                "id": "stat_card_change",
+                "type": "Text",
+                "props": {
+                  "variant": "body2"
+                },
+                "children": []
+              },
+              {
+                "id": "stat_card_period",
+                "type": "Text",
+                "props": {
+                  "variant": "caption",
+                  "color": "secondary"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "stat_card_sparkline",
+        "type": "Box",
+        "props": {
+          "className": "stat-card-sparkline",
+          "sx": {
+            "mt": 2,
+            "height": 40,
+            "width": "100%"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "stat_card_footer",
+        "type": "Box",
+        "props": {
+          "className": "stat-card-footer",
+          "sx": {
+            "mt": 2,
+            "pt": 2,
+            "borderTop": 1,
+            "borderColor": "divider"
+          }
+        },
+        "children": [
+          {
+            "id": "stat_card_target",
+            "type": "Flex",
+            "props": {
+              "justifyContent": "space-between",
+              "alignItems": "center"
+            },
+            "children": [
+              {
+                "id": "stat_card_target_label",
+                "type": "Text",
+                "props": {
+                  "variant": "caption",
+                  "color": "secondary"
+                },
+                "children": []
+              },
+              {
+                "id": "stat_card_target_value",
+                "type": "Text",
+                "props": {
+                  "variant": "caption",
+                  "fontWeight": "medium"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "stat_card_progress",
+            "type": "Box",
+            "props": {
+              "className": "stat-card-progress",
+              "sx": {
+                "mt": 1,
+                "height": 4,
+                "width": "100%",
+                "borderRadius": 2,
+                "bgcolor": "action.hover"
+              }
+            },
+            "children": [
+              {
+                "id": "stat_card_progress_bar",
+                "type": "Box",
+                "props": {
+                  "sx": {
+                    "height": "100%",
+                    "borderRadius": 2,
+                    "bgcolor": "primary.main"
+                  }
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "stat_card_small",
+    "type": "Card",
+    "props": {
+      "variant": "outlined",
+      "className": "stat-card stat-card-small",
+      "sx": {
+        "p": 2
+      }
+    },
+    "children": [
+      {
+        "id": "stat_card_small_content",
+        "type": "Flex",
+        "props": {
+          "alignItems": "center",
+          "gap": 2
+        },
+        "children": [
+          {
+            "id": "stat_card_small_icon",
+            "type": "Box",
+            "props": {
+              "sx": {
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "width": 36,
+                "height": 36,
+                "borderRadius": 1,
+                "bgcolor": "primary.light"
+              }
+            },
+            "children": [
+              {
+                "id": "stat_card_small_icon_inner",
+                "type": "Icon",
+                "props": {
+                  "name": "BarChart",
+                  "size": 18
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "stat_card_small_info",
+            "type": "Stack",
+            "props": {
+              "gap": 0.5,
+              "flex": 1
+            },
+            "children": [
+              {
+                "id": "stat_card_small_label",
+                "type": "Text",
+                "props": {
+                  "variant": "caption",
+                  "color": "secondary"
+                },
+                "children": []
+              },
+              {
+                "id": "stat_card_small_value",
+                "type": "Text",
+                "props": {
+                  "variant": "h6",
+                  "fontWeight": "bold"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "stat_card_small_trend",
+            "type": "Flex",
+            "props": {
+              "alignItems": "center",
+              "gap": 0.5
+            },
+            "children": [
+              {
+                "id": "stat_card_small_trend_icon",
+                "type": "Icon",
+                "props": {
+                  "name": "TrendingUp",
+                  "size": 14
+                },
+                "children": []
+              },
+              {
+                "id": "stat_card_small_trend_value",
+                "type": "Text",
+                "props": {
+                  "variant": "caption"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "stat_card_large",
+    "type": "Card",
+    "props": {
+      "variant": "elevation",
+      "className": "stat-card stat-card-large",
+      "sx": {
+        "p": 3
+      }
+    },
+    "children": [
+      {
+        "id": "stat_card_large_header",
+        "type": "Flex",
+        "props": {
+          "justifyContent": "space-between",
+          "alignItems": "center",
+          "sx": {
+            "mb": 3
+          }
+        },
+        "children": [
+          {
+            "id": "stat_card_large_title_group",
+            "type": "Flex",
+            "props": {
+              "alignItems": "center",
+              "gap": 2
+            },
+            "children": [
+              {
+                "id": "stat_card_large_icon",
+                "type": "Box",
+                "props": {
+                  "sx": {
+                    "display": "flex",
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                    "width": 56,
+                    "height": 56,
+                    "borderRadius": 2,
+                    "bgcolor": "primary.light"
+                  }
+                },
+                "children": [
+                  {
+                    "id": "stat_card_large_icon_inner",
+                    "type": "Icon",
+                    "props": {
+                      "name": "BarChart",
+                      "size": 28
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "stat_card_large_title",
+                "type": "Stack",
+                "props": {
+                  "gap": 0.5
+                },
+                "children": [
+                  {
+                    "id": "stat_card_large_label",
+                    "type": "Text",
+                    "props": {
+                      "variant": "subtitle2",
+                      "color": "secondary",
+                      "textTransform": "uppercase",
+                      "letterSpacing": 1
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "stat_card_large_value",
+                    "type": "Text",
+                    "props": {
+                      "variant": "h3",
+                      "fontWeight": "bold"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "stat_card_large_trend",
+            "type": "Box",
+            "props": {
+              "sx": {
+                "display": "flex",
+                "flexDirection": "column",
+                "alignItems": "flex-end",
+                "gap": 0.5
+              }
+            },
+            "children": [
+              {
+                "id": "stat_card_large_trend_badge",
+                "type": "Flex",
+                "props": {
+                  "alignItems": "center",
+                  "gap": 0.5,
+                  "sx": {
+                    "px": 1.5,
+                    "py": 0.5,
+                    "borderRadius": 1,
+                    "bgcolor": "success.light"
+                  }
+                },
+                "children": [
+                  {
+                    "id": "stat_card_large_trend_icon",
+                    "type": "Icon",
+                    "props": {
+                      "name": "TrendingUp",
+                      "size": 18
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "stat_card_large_trend_value",
+                    "type": "Text",
+                    "props": {
+                      "variant": "body2",
+                      "fontWeight": "bold"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "stat_card_large_trend_period",
+                "type": "Text",
+                "props": {
+                  "variant": "caption",
+                  "color": "secondary"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "stat_card_large_sparkline",
+        "type": "Box",
+        "props": {
+          "className": "stat-card-sparkline-large",
+          "sx": {
+            "height": 80,
+            "width": "100%",
+            "mb": 2
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "stat_card_large_footer",
+        "type": "Flex",
+        "props": {
+          "justifyContent": "space-between",
+          "alignItems": "center",
+          "sx": {
+            "pt": 2,
+            "borderTop": 1,
+            "borderColor": "divider"
+          }
+        },
+        "children": [
+          {
+            "id": "stat_card_large_target_info",
+            "type": "Stack",
+            "props": {
+              "gap": 0.5
+            },
+            "children": [
+              {
+                "id": "stat_card_large_target_label",
+                "type": "Text",
+                "props": {
+                  "variant": "caption",
+                  "color": "secondary"
+                },
+                "children": []
+              },
+              {
+                "id": "stat_card_large_target_value",
+                "type": "Text",
+                "props": {
+                  "variant": "body1",
+                  "fontWeight": "medium"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "stat_card_large_range",
+            "type": "Stack",
+            "props": {
+              "gap": 0.5,
+              "alignItems": "flex-end"
+            },
+            "children": [
+              {
+                "id": "stat_card_large_range_label",
+                "type": "Text",
+                "props": {
+                  "variant": "caption",
+                  "color": "secondary"
+                },
+                "children": []
+              },
+              {
+                "id": "stat_card_large_range_value",
+                "type": "Text",
+                "props": {
+                  "variant": "body2"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

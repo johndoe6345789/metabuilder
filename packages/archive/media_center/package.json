@@ -1,0 +1,21 @@
+{
+  "name": "@metabuilder/media-center",
+  "version": "1.0.0",
+  "description": "Media center package with TV, radio, retro gaming, and document helpers",
+  "main": "seed/index.ts",
+  "scripts": {
+    "test": "lua-test --package media_center"
+  },
+  "keywords": [
+    "media",
+    "tv",
+    "radio",
+    "retro-gaming",
+    "metabuilder"
+  ],
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "devDependencies": {
+    "@metabuilder/lua-test": "workspace:*"
+  }
+}

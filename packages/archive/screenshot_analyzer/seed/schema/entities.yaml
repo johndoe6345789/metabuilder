@@ -1,0 +1,202 @@
+# Screenshot Analyzer Schema Definitions
+# Package: screenshot_analyzer
+# Version: 1.0.0
+
+entities:
+  - name: Screenshot
+    description: Uploaded screenshot for analysis
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: tenantId
+        type: String
+        required: true
+      - name: userId
+        type: String
+        required: true
+      - name: url
+        type: String
+        required: true
+        description: Image URL or base64 data
+      - name: filename
+        type: String
+        required: false
+      - name: metadata
+        type: Json
+        required: false
+        description: Image dimensions, format, etc.
+      - name: status
+        type: String
+        required: true
+        default: uploaded
+        description: uploaded, analyzing, analyzed, failed
+      - name: createdAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: screenshot_tenant_user_idx
+        fields: [tenantId, userId]
+      - name: screenshot_status_idx
+        fields: [status]
+    acl:
+      create: [user]
+      read: [owner, admin]
+      update: [owner, admin]
+      delete: [owner, admin]
+
+  - name: ScreenshotAnalysis
+    description: Analysis result for a screenshot
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: screenshotId
+        type: String
+        required: true
+      - name: analysisType
+        type: String
+        required: true
+        description: component, color, layout, accessibility
+      - name: result
+        type: Json
+        required: true
+        description: Analysis result data
+      - name: confidence
+        type: Float
+        required: false
+      - name: createdAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: analysis_screenshot_idx
+        fields: [screenshotId]
+      - name: analysis_type_idx
+        fields: [screenshotId, analysisType]
+    relations:
+      - name: screenshot
+        type: belongsTo
+        target: Screenshot
+        foreignKey: screenshotId
+    acl:
+      create: [system]
+      read: [owner, admin]
+      update: [none]
+      delete: [admin]
+
+  - name: DetectedComponent
+    description: UI component detected in screenshot
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: analysisId
+        type: String
+        required: true
+      - name: componentType
+        type: String
+        required: true
+        description: button, input, card, etc.
+      - name: bounds
+        type: Json
+        required: true
+        description: x, y, width, height
+      - name: confidence
+        type: Float
+        required: true
+      - name: properties
+        type: Json
+        required: false
+        description: Detected properties (color, text, etc.)
+      - name: createdAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: component_analysis_idx
+        fields: [analysisId]
+    relations:
+      - name: analysis
+        type: belongsTo
+        target: ScreenshotAnalysis
+        foreignKey: analysisId
+    acl:
+      create: [system]
+      read: [owner, admin]
+      update: [none]
+      delete: [admin]
+
+  - name: ColorPalette
+    description: Extracted color palette from screenshot
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: analysisId
+        type: String
+        required: true
+      - name: colors
+        type: Json
+        required: true
+        description: Array of color objects
+      - name: dominantColor
+        type: String
+        required: false
+      - name: createdAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: palette_analysis_idx
+        fields: [analysisId]
+    relations:
+      - name: analysis
+        type: belongsTo
+        target: ScreenshotAnalysis
+        foreignKey: analysisId
+    acl:
+      create: [system]
+      read: [owner, admin]
+      update: [none]
+      delete: [admin]
+
+  - name: GeneratedCode
+    description: Code generated from screenshot analysis
+    fields:
+      - name: id
+        type: String
+        required: true
+        primary: true
+      - name: screenshotId
+        type: String
+        required: true
+      - name: framework
+        type: String
+        required: true
+        description: react, vue, html, qml
+      - name: code
+        type: String
+        required: true
+      - name: metadata
+        type: Json
+        required: false
+      - name: createdAt
+        type: DateTime
+        required: true
+    indexes:
+      - name: generated_screenshot_idx
+        fields: [screenshotId]
+      - name: generated_framework_idx
+        fields: [screenshotId, framework]
+    relations:
+      - name: screenshot
+        type: belongsTo
+        target: Screenshot
+        foreignKey: screenshotId
+    acl:
+      create: [system]
+      read: [owner, admin]
+      update: [none]
+      delete: [owner, admin]

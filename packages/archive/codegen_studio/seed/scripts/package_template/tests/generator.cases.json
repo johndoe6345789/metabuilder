@@ -1,0 +1,110 @@
+[
+  {
+    "name": "valid_basic_config",
+    "input": {
+      "packageId": "test_package",
+      "name": "Test Package",
+      "description": "A test package",
+      "category": "ui",
+      "minLevel": 2,
+      "primary": true,
+      "withSchema": false,
+      "withTests": true
+    },
+    "expected": {
+      "valid": true,
+      "errorCount": 0
+    }
+  },
+  {
+    "name": "valid_with_schema",
+    "input": {
+      "packageId": "data_package",
+      "name": "Data Package",
+      "description": "Package with schema",
+      "category": "tools",
+      "minLevel": 3,
+      "primary": true,
+      "withSchema": true,
+      "entities": ["DataRecord", "DataLog"]
+    },
+    "expected": {
+      "valid": true,
+      "errorCount": 0
+    }
+  },
+  {
+    "name": "invalid_package_id_uppercase",
+    "input": {
+      "packageId": "TestPackage",
+      "name": "Test",
+      "description": "Test",
+      "category": "ui",
+      "minLevel": 2,
+      "primary": true
+    },
+    "expected": {
+      "valid": false
+    }
+  },
+  {
+    "name": "invalid_category",
+    "input": {
+      "packageId": "test_package",
+      "name": "Test",
+      "description": "Test",
+      "category": "not_a_category",
+      "minLevel": 2,
+      "primary": true
+    },
+    "expected": {
+      "valid": false
+    }
+  },
+  {
+    "name": "invalid_min_level_too_high",
+    "input": {
+      "packageId": "test_package",
+      "name": "Test",
+      "description": "Test",
+      "category": "ui",
+      "minLevel": 10,
+      "primary": true
+    },
+    "expected": {
+      "valid": false
+    }
+  },
+  {
+    "name": "missing_entities_for_schema",
+    "input": {
+      "packageId": "test_package",
+      "name": "Test",
+      "description": "Test",
+      "category": "ui",
+      "minLevel": 2,
+      "primary": true,
+      "withSchema": true,
+      "entities": []
+    },
+    "expected": {
+      "valid": false
+    }
+  },
+  {
+    "name": "dependency_package",
+    "input": {
+      "packageId": "shared_utils",
+      "name": "Shared Utils",
+      "description": "Shared utilities",
+      "category": "core",
+      "minLevel": 1,
+      "primary": false,
+      "withSchema": false
+    },
+    "expected": {
+      "valid": true,
+      "errorCount": 0
+    }
+  }
+]
