@@ -1,0 +1,66 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "dbal_demo",
+  "name": "DBAL Demo",
+  "version": "1.0.0",
+  "description": "DBAL Integration Demo - Demonstrates TypeScript DBAL client with MetaBuilder",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "demo",
+  "minLevel": 3,
+  "primary": true,
+  "tags": [
+    "dbal",
+    "demo",
+    "kv-store",
+    "blob-storage",
+    "cache"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "DBALDemo",
+      "KVStorePanel",
+      "BlobStoragePanel",
+      "CachedDataPanel"
+    ],
+    "scripts": [
+      "init",
+      "kv_operations",
+      "blob_operations",
+      "cache_operations",
+      "connection"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/kv_operations.test.lua",
+      "tests/cache_operations.test.lua",
+      "tests/blob_operations.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/kv_operations.cases.json"
+      },
+      {
+        "parameters": "tests/cache_operations.cases.json"
+      },
+      {
+        "parameters": "tests/blob_operations.cases.json"
+      }
+    ]
+  },
+  "bindings": {
+    "dbal": true,
+    "browser": false
+  },
+  "requiredHooks": [
+    "dbal",
+    "kv_store",
+    "blob_storage",
+    "cached_data"
+  ]
+}

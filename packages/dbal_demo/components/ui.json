@@ -1,0 +1,412 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "dbal_demo",
+  "description": "DBAL Demo components for key-value store, blob storage, and cache operations",
+  "components": [
+    {
+      "id": "dbal_demo",
+      "name": "DBALDemo",
+      "description": "Demonstration of the TypeScript DBAL client integrated with MetaBuilder",
+      "category": "demo",
+      "icon": "database",
+      "props": [
+        {
+          "name": "defaultEndpoint",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Default DBAL endpoint URL"
+        },
+        {
+          "name": "defaultApiKey",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Default API key for authentication"
+        }
+      ],
+      "bindings": {
+        "dbal": true
+      },
+      "requiredHooks": ["dbal", "kv_store", "blob_storage", "cached_data"],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "dbal-demo-container",
+          "children": [
+            {
+              "type": "Box",
+              "className": "dbal-demo-header",
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h4",
+                  "children": "DBAL Integration Demo"
+                },
+                {
+                  "type": "Text",
+                  "variant": "body2",
+                  "color": "secondary",
+                  "children": "Demonstration of the TypeScript DBAL client integrated with MetaBuilder"
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "container": true,
+              "spacing": 4,
+              "columns": 2,
+              "children": [
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 6,
+                  "children": {
+                    "type": "ConnectionForm",
+                    "props": {}
+                  }
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 6,
+                  "children": {
+                    "type": "ResultPanel",
+                    "props": {
+                      "title": "Connection Details"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "LogsPanel",
+              "props": {
+                "title": "Demo Logs"
+              }
+            },
+            {
+              "type": "Tabs",
+              "defaultValue": "kv",
+              "children": [
+                {
+                  "type": "TabList",
+                  "children": [
+                    { "type": "Tab", "value": "kv", "label": "Key-Value Store" },
+                    { "type": "Tab", "value": "blob", "label": "Blob Storage" },
+                    { "type": "Tab", "value": "cache", "label": "Cached Data" }
+                  ]
+                },
+                {
+                  "type": "TabPanel",
+                  "value": "kv",
+                  "children": { "type": "KVStorePanel", "props": {} }
+                },
+                {
+                  "type": "TabPanel",
+                  "value": "blob",
+                  "children": { "type": "BlobStoragePanel", "props": {} }
+                },
+                {
+                  "type": "TabPanel",
+                  "value": "cache",
+                  "children": { "type": "CachedDataPanel", "props": {} }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "kv_store_panel",
+      "name": "KVStorePanel",
+      "description": "Key-Value store operations panel",
+      "category": "demo",
+      "icon": "key",
+      "props": [],
+      "bindings": {
+        "dbal": true
+      },
+      "requiredHooks": ["kv_store"],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "kv-store-panel",
+          "children": [
+            {
+              "type": "Card",
+              "variant": "outlined",
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "title": "Key-Value Operations",
+                  "subheader": "Basic get/set/delete operations"
+                },
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "spacing": 2,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "name": "key",
+                          "label": "Key",
+                          "defaultValue": "demo-key",
+                          "fullWidth": true
+                        },
+                        {
+                          "type": "TextField",
+                          "name": "value",
+                          "label": "Value",
+                          "defaultValue": "Hello, DBAL!",
+                          "fullWidth": true
+                        },
+                        {
+                          "type": "TextField",
+                          "name": "ttl",
+                          "label": "TTL (seconds)",
+                          "type": "number",
+                          "fullWidth": true
+                        },
+                        {
+                          "type": "ButtonGroup",
+                          "children": [
+                            { "type": "Button", "label": "Set", "action": "kv_set", "variant": "contained" },
+                            { "type": "Button", "label": "Get", "action": "kv_get", "variant": "outlined" },
+                            { "type": "Button", "label": "Delete", "action": "kv_delete", "variant": "outlined", "color": "error" }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Card",
+              "variant": "outlined",
+              "sx": { "mt": 2 },
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "title": "List Operations",
+                  "subheader": "Add and retrieve list items"
+                },
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "spacing": 2,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "name": "listKey",
+                          "label": "List Key",
+                          "defaultValue": "demo-list",
+                          "fullWidth": true
+                        },
+                        {
+                          "type": "ButtonGroup",
+                          "children": [
+                            { "type": "Button", "label": "Add Items", "action": "kv_list_add", "variant": "contained" },
+                            { "type": "Button", "label": "Get Items", "action": "kv_list_get", "variant": "outlined" }
+                          ]
+                        },
+                        {
+                          "type": "ListDisplay",
+                          "dataSource": "listItems"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "blob_storage_panel",
+      "name": "BlobStoragePanel",
+      "description": "Blob storage operations panel",
+      "category": "demo",
+      "icon": "file",
+      "props": [],
+      "bindings": {
+        "dbal": true
+      },
+      "requiredHooks": ["blob_storage"],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "blob-storage-panel",
+          "children": [
+            {
+              "type": "Card",
+              "variant": "outlined",
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "title": "Blob Storage Operations",
+                  "subheader": "Upload, download, and manage binary data"
+                },
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "spacing": 2,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "name": "fileName",
+                          "label": "File Name",
+                          "defaultValue": "demo.txt",
+                          "fullWidth": true
+                        },
+                        {
+                          "type": "TextField",
+                          "name": "fileContent",
+                          "label": "Content",
+                          "defaultValue": "Hello from DBAL blob storage!",
+                          "multiline": true,
+                          "rows": 4,
+                          "fullWidth": true
+                        },
+                        {
+                          "type": "ButtonGroup",
+                          "children": [
+                            { "type": "Button", "label": "Upload", "action": "blob_upload", "variant": "contained" },
+                            { "type": "Button", "label": "Download", "action": "blob_download", "variant": "outlined" },
+                            { "type": "Button", "label": "Delete", "action": "blob_delete", "variant": "outlined", "color": "error" },
+                            { "type": "Button", "label": "List Files", "action": "blob_list", "variant": "outlined" }
+                          ]
+                        },
+                        {
+                          "type": "CodeDisplay",
+                          "dataSource": "downloadedContent",
+                          "language": "text"
+                        },
+                        {
+                          "type": "ListDisplay",
+                          "dataSource": "files"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cached_data_panel",
+      "name": "CachedDataPanel",
+      "description": "Cached data hook demonstration",
+      "category": "demo",
+      "icon": "clock",
+      "props": [],
+      "bindings": {
+        "dbal": true
+      },
+      "requiredHooks": ["cached_data"],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "cached-data-panel",
+          "children": [
+            {
+              "type": "Card",
+              "variant": "outlined",
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "title": "Cached Data Hook",
+                  "subheader": "Automatic caching with React hooks"
+                },
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "spacing": 2,
+                      "children": [
+                        {
+                          "type": "conditional",
+                          "condition": "{{loading}}",
+                          "then": {
+                            "type": "Chip",
+                            "label": "Loading cached data...",
+                            "color": "info"
+                          }
+                        },
+                        {
+                          "type": "conditional",
+                          "condition": "{{error}}",
+                          "then": {
+                            "type": "Alert",
+                            "severity": "error",
+                            "children": "Error: {{error}}"
+                          }
+                        },
+                        {
+                          "type": "DataDisplay",
+                          "dataSource": "cachedData",
+                          "title": "Cached Preferences"
+                        },
+                        {
+                          "type": "TextField",
+                          "name": "theme",
+                          "label": "Theme",
+                          "defaultValue": "dark",
+                          "fullWidth": true
+                        },
+                        {
+                          "type": "TextField",
+                          "name": "language",
+                          "label": "Language",
+                          "defaultValue": "en",
+                          "fullWidth": true
+                        },
+                        {
+                          "type": "FormControlLabel",
+                          "control": {
+                            "type": "Checkbox",
+                            "name": "notifications",
+                            "defaultChecked": true
+                          },
+                          "label": "Notifications"
+                        },
+                        {
+                          "type": "ButtonGroup",
+                          "children": [
+                            { "type": "Button", "label": "Save Preferences", "action": "cache_save", "variant": "contained" },
+                            { "type": "Button", "label": "Clear Cache", "action": "cache_clear", "variant": "outlined" }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

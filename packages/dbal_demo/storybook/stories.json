@@ -1,0 +1,112 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "DBAL Demo Components",
+  "description": "DBAL integration demo with key-value store, blob storage, and cache operations",
+  "stories": [
+    {
+      "name": "DBALDemo",
+      "render": "init",
+      "description": "Complete DBAL demo interface with all panels",
+      "args": {
+        "defaultEndpoint": "",
+        "defaultApiKey": ""
+      }
+    },
+    {
+      "name": "KVStorePanel",
+      "render": "kv_operations",
+      "description": "Key-value store operations panel",
+      "args": {}
+    },
+    {
+      "name": "BlobStoragePanel",
+      "render": "blob_operations",
+      "description": "Blob storage operations panel",
+      "args": {}
+    },
+    {
+      "name": "CachedDataPanel",
+      "render": "cache_operations",
+      "description": "Cached data hook demonstration",
+      "args": {}
+    }
+  ],
+  "renders": {
+    "init": {
+      "description": "Complete DBAL demo initialization",
+      "featured": true
+    },
+    "kv_operations": {
+      "description": "Key-value store operations"
+    },
+    "blob_operations": {
+      "description": "Blob storage operations"
+    },
+    "cache_operations": {
+      "description": "Cache operations with preferences"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_admin",
+      "level": 3,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    },
+    "dbal": {
+      "connected": false,
+      "endpoint": ""
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Admin User",
+      "description": "Can access all DBAL demo features except blob storage",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "God User",
+      "description": "Full access including blob storage",
+      "context": {
+        "user": {
+          "username": "god_user",
+          "level": 4
+        }
+      }
+    },
+    {
+      "name": "Connected State",
+      "description": "DBAL connection established",
+      "context": {
+        "dbal": {
+          "connected": true,
+          "endpoint": "http://localhost:3001"
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["init", "kv_operations", "blob_operations", "cache_operations"],
+    "ignoredScripts": ["tests", "connection"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "css_designer",
+  "name": "CSS Designer",
+  "version": "1.0.0",
+  "description": "Visual CSS designer for creating and editing style overlays. Provides color pickers, font selectors, spacing controls, and exports to SCSS.",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "design",
+  "minLevel": 2,
+  "primary": true,
+  "databaseRequired": false,
+  "dependencies": {
+    "shared": "*"
+  },
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "CSSDesigner",
+      "ColorPaletteEditor",
+      "FontSelector",
+      "SpacingEditor",
+      "BorderEditor",
+      "ShadowEditor",
+      "StylePreview"
+    ],
+    "scripts": [
+      "init",
+      "colors",
+      "fonts",
+      "spacing",
+      "borders",
+      "shadows",
+      "export"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/colors.test.lua",
+      "tests/export.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/colors.cases.json"
+      },
+      {
+        "parameters": "tests/export.cases.json"
+      }
+    ]
+  },
+  "icon": "static_content/icon.svg"
+}

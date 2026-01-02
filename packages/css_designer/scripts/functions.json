@@ -1,0 +1,129 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "css_designer",
+  "description": "CSS Designer Lua functions for color manipulation, styling, and export",
+  "functions": [
+    {
+      "id": "init",
+      "name": "init",
+      "exported": true,
+      "description": "Initialize the CSS designer module",
+      "category": "core",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "get_default_theme",
+      "name": "getDefaultTheme",
+      "exported": true,
+      "description": "Get default theme configuration with all color, typography, and spacing values",
+      "category": "core",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "hex_to_rgb",
+      "name": "hexToRgb",
+      "exported": true,
+      "description": "Convert hex color to RGB object",
+      "category": "colors",
+      "luaScript": "colors/color_picker.lua"
+    },
+    {
+      "id": "rgb_to_hex",
+      "name": "rgbToHex",
+      "exported": true,
+      "description": "Convert RGB object to hex color string",
+      "category": "colors",
+      "luaScript": "colors/color_picker.lua"
+    },
+    {
+      "id": "hex_to_hsl",
+      "name": "hexToHsl",
+      "exported": true,
+      "description": "Convert hex color to HSL object",
+      "category": "colors",
+      "luaScript": "colors/color_picker.lua"
+    },
+    {
+      "id": "hsl_to_hex",
+      "name": "hslToHex",
+      "exported": true,
+      "description": "Convert HSL object to hex color string",
+      "category": "colors",
+      "luaScript": "colors/color_picker.lua"
+    },
+    {
+      "id": "generate_palette",
+      "name": "generatePalette",
+      "exported": true,
+      "description": "Generate color palette from base colors",
+      "category": "colors",
+      "luaScript": "colors/palette.lua"
+    },
+    {
+      "id": "update_font_settings",
+      "name": "updateFontSettings",
+      "exported": true,
+      "description": "Update typography settings",
+      "category": "fonts",
+      "luaScript": "fonts/font_selector.lua"
+    },
+    {
+      "id": "update_spacing",
+      "name": "updateSpacing",
+      "exported": true,
+      "description": "Update spacing configuration",
+      "category": "spacing",
+      "luaScript": "spacing/spacing_editor.lua"
+    },
+    {
+      "id": "update_borders",
+      "name": "updateBorders",
+      "exported": true,
+      "description": "Update border styling configuration",
+      "category": "borders",
+      "luaScript": "borders/border_editor.lua"
+    },
+    {
+      "id": "update_shadows",
+      "name": "updateShadows",
+      "exported": true,
+      "description": "Update shadow styling configuration",
+      "category": "shadows",
+      "luaScript": "shadows/shadow_editor.lua"
+    },
+    {
+      "id": "export_to_scss",
+      "name": "exportToScss",
+      "exported": true,
+      "description": "Export theme configuration to SCSS variables",
+      "category": "export",
+      "luaScript": "export/to_scss.lua"
+    },
+    {
+      "id": "export_to_css",
+      "name": "exportToCss",
+      "exported": true,
+      "description": "Export theme configuration to CSS custom properties",
+      "category": "export",
+      "luaScript": "export/to_css.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "init",
+      "getDefaultTheme",
+      "hexToRgb",
+      "rgbToHex",
+      "hexToHsl",
+      "hslToHex",
+      "generatePalette",
+      "updateFontSettings",
+      "updateSpacing",
+      "updateBorders",
+      "updateShadows",
+      "exportToScss",
+      "exportToCss"
+    ]
+  }
+}
