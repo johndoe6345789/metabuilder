@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "/Users/rmac/Documents/GitHub/metabuilder/frontends/qt6",
+    "cmake.sourceDirectory": "/home/rewrich/Documents/GitHub/metabuilder/dbal/production/build-config",
     "chat.mcp.discovery.enabled": {
         "claude-desktop": true,
         "windsurf": true,
