@@ -1,6 +1,5 @@
 {
-  "$schema": "https://metabuilder.dev/schemas/storybook.schema.json",
-  "schemaVersion": "1.0.0",
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
   "package": "media_center",
   "description": "Storybook stories for Media Center components",
   "stories": [
