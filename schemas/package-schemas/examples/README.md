@@ -48,6 +48,7 @@ A production-ready example demonstrating all major features.
 - `jobs/tasks.json` - Background jobs
 - `migrations/versions.json` - Database migrations
 - `styles/tokens.json` - Design tokens
+- `storybook/config.json` - Storybook configuration for preview and docs
 
 **Purpose:** Reference implementation, production patterns, best practices
 
@@ -62,6 +63,7 @@ A production-ready example demonstrating all major features.
 - ✅ Event-driven architecture
 - ✅ Background job scheduling
 - ✅ Dynamic form generation
+- ✅ Storybook integration with context variants and controls
 
 ## Advanced Features
 

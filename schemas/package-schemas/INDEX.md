@@ -105,6 +105,7 @@ import type { PackageMetadata, Entity } from '@metabuilder/schema-types';
 | Forms | [forms_schema.json](forms_schema.json) | Dynamic forms | 1.0.0 |
 | Migrations | [migrations_schema.json](migrations_schema.json) | DB migrations | 1.0.0 |
 | Assets | [assets_schema.json](assets_schema.json) | Static assets | 1.0.0 |
+| Storybook | [storybook_schema.json](storybook_schema.json) | Storybook config | 1.0.0 |
 
 ### Utility Schemas
 | Schema | File | Purpose |

@@ -25,6 +25,7 @@ Complete JSON Schema collection for MetaBuilder packages, providing declarative 
 14. **migrations_schema.json** - Database migration definitions
 15. **assets_schema.json** - Static assets (images, fonts, icons, files)
 16. **index_schema.json** - Master schema index
+17. **storybook_schema.json** - Storybook configuration for package preview
 
 ## 🚀 Quick Start
 
@@ -57,8 +58,10 @@ my-package/
 │   └── roles.json           # permissions_schema.json
 ├── forms/
 │   └── forms.json           # forms_schema.json
-└── migrations/
-    └── versions.json        # migrations_schema.json
+├── migrations/
+│   └── versions.json        # migrations_schema.json
+└── storybook/
+    └── config.json          # storybook_schema.json
 ```
 
 ## 📚 Schema Details
@@ -553,6 +556,59 @@ my-package/
 
 ## 🔧 Validation
 
+### 16. Storybook Schema (NEW)
+**Purpose**: Storybook configuration for package preview and documentation
+
+**Key Features**:
+- Story definitions with render function references
+- Interactive controls for function/component arguments
+- Context variants for testing different user scenarios
+- Package-level rendering configuration
+- Storybook parameters (backgrounds, viewport, layout)
+- Auto-discovery configuration
+- Support for featured packages and renders
+
+**Example**:
+```json
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Dashboard Components",
+  "description": "Dashboard layouts and stat cards",
+  "stories": [
+    {
+      "name": "StatsCard",
+      "render": "stats",
+      "description": "Single stat card with trend indicator"
+    },
+    {
+      "name": "DashboardLayout",
+      "render": "layout"
+    }
+  ],
+  "renders": {
+    "stats.card": {
+      "description": "Single stat card with trend indicator",
+      "featured": true
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Admin",
+      "context": { "user": { "level": 4 } }
+    },
+    {
+      "name": "Guest",
+      "context": { "user": { "level": 1 } }
+    }
+  ],
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": { "default": "light" }
+  }
+}
+```
+
 All schemas are valid JSON Schema Draft-07. Validate your data:
 
 ```bash
@@ -581,8 +637,11 @@ metadata_schema.json (root)
 │   └── entities_schema.json (resource definitions)
 ├── forms_schema.json (user input)
 │   └── validation_schema.json (form validation)
-└── migrations_schema.json (schema evolution)
-    └── entities_schema.json (target schema)
+├── migrations_schema.json (schema evolution)
+│   └── entities_schema.json (target schema)
+└── storybook_schema.json (preview/docs)
+    ├── components_schema.json (story components)
+    └── scripts_schema.json (render functions)
 ```
 
 ## 📦 NPM Package Usage

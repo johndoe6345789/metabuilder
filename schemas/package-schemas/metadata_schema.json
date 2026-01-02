@@ -197,17 +197,7 @@
       }
     },
     "storybook": {
-      "type": "object",
-      "description": "Storybook configuration",
-      "properties": {
-        "stories": {
-          "type": "array",
-          "description": "Story definitions",
-          "items": {
-            "$ref": "#/definitions/story"
-          }
-        }
-      }
+      "$ref": "#/definitions/storybookConfig"
     },
     "runtime": {
       "type": "object",
@@ -276,9 +266,210 @@
         }
       }
     },
+    "storybookConfig": {
+      "type": "object",
+      "description": "Storybook configuration for package preview and documentation",
+      "properties": {
+        "featured": {
+          "type": "boolean",
+          "description": "Whether this package should be featured/highlighted in Storybook",
+          "default": false
+        },
+        "excludeFromDiscovery": {
+          "type": "boolean",
+          "description": "Exclude this package from auto-discovery",
+          "default": false
+        },
+        "category": {
+          "type": "string",
+          "description": "Override category for Storybook organization"
+        },
+        "title": {
+          "type": "string",
+          "description": "Display title in Storybook (defaults to package name)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Extended description shown in Storybook docs"
+        },
+        "stories": {
+          "type": "array",
+          "description": "Story definitions",
+          "items": {
+            "$ref": "#/definitions/story"
+          }
+        },
+        "renders": {
+          "type": "object",
+          "description": "Map of render function names to their metadata",
+          "additionalProperties": {
+            "$ref": "#/definitions/renderMetadata"
+          }
+        },
+        "defaultContext": {
+          "$ref": "#/definitions/storybookContext",
+          "description": "Default context for this package's stories"
+        },
+        "contextVariants": {
+          "type": "array",
+          "description": "Package-specific context variants",
+          "items": {
+            "$ref": "#/definitions/contextVariant"
+          }
+        },
+        "scripts": {
+          "type": "object",
+          "description": "Script rendering configuration",
+          "properties": {
+            "renderFunctions": {
+              "type": "array",
+              "description": "Function names that produce renderable output",
+              "items": { "type": "string" },
+              "examples": [["render", "main", "layout", "form", "page", "view"]]
+            },
+            "ignoredScripts": {
+              "type": "array",
+              "description": "Script names to exclude from Storybook",
+              "items": { "type": "string" },
+              "examples": [["test", "utils", "init", "validate", "actions"]]
+            }
+          }
+        },
+        "argTypes": {
+          "type": "object",
+          "description": "Global Storybook argTypes for all stories in package",
+          "additionalProperties": {
+            "$ref": "#/definitions/control"
+          }
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Storybook parameters (backgrounds, viewport, etc.)",
+          "properties": {
+            "backgrounds": {
+              "type": "object",
+              "properties": {
+                "default": { "type": "string" },
+                "values": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": { "type": "string" },
+                      "value": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            },
+            "viewport": {
+              "type": "object",
+              "properties": {
+                "defaultViewport": { "type": "string" }
+              }
+            },
+            "layout": {
+              "type": "string",
+              "enum": ["centered", "fullscreen", "padded"],
+              "description": "Story layout mode"
+            },
+            "docs": {
+              "type": "object",
+              "properties": {
+                "description": { "type": "string" },
+                "source": {
+                  "type": "object",
+                  "properties": {
+                    "type": { 
+                      "type": "string",
+                      "enum": ["code", "dynamic", "auto"]
+                    },
+                    "language": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    },
+    "renderMetadata": {
+      "type": "object",
+      "description": "Metadata for a render function in Storybook",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of what the render produces"
+        },
+        "featured": {
+          "type": "boolean",
+          "description": "Highlight this render in the package's stories",
+          "default": false
+        },
+        "args": {
+          "type": "object",
+          "description": "Default arguments for this render function",
+          "additionalProperties": true
+        },
+        "argTypes": {
+          "type": "object",
+          "description": "Storybook controls for render function arguments",
+          "additionalProperties": {
+            "$ref": "#/definitions/control"
+          }
+        }
+      }
+    },
+    "storybookContext": {
+      "type": "object",
+      "description": "Context passed to Lua render functions",
+      "properties": {
+        "user": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "username": { "type": "string" },
+            "level": { 
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "email": { "type": "string" }
+          }
+        },
+        "tenant": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "name": { "type": "string" }
+          }
+        },
+        "nerdMode": { "type": "boolean" },
+        "theme": { 
+          "type": "string",
+          "enum": ["light", "dark"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "contextVariant": {
+      "type": "object",
+      "required": ["name", "context"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Variant display name"
+        },
+        "context": {
+          "$ref": "#/definitions/storybookContext",
+          "description": "Context overrides for this variant"
+        }
+      }
+    },
     "story": {
       "type": "object",
-      "required": ["name", "type"],
+      "required": ["name"],
       "properties": {
         "name": {
           "type": "string",
@@ -287,7 +478,11 @@
         "type": {
           "type": "string",
           "description": "Story type",
-          "enum": ["function", "component"]
+          "enum": ["function", "component", "script", "render"]
+        },
+        "render": {
+          "type": "string",
+          "description": "Render function or script name to execute"
         },
         "function": {
           "type": "string",
@@ -297,13 +492,33 @@
           "type": "string",
           "description": "Component name (for component stories)"
         },
+        "script": {
+          "type": "string",
+          "description": "Script file path (for script stories)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Story description for documentation"
+        },
         "args": {
-          "type": "array",
-          "description": "Function arguments"
+          "oneOf": [
+            {
+              "type": "array",
+              "description": "Ordered function arguments"
+            },
+            {
+              "type": "object",
+              "description": "Named function arguments"
+            }
+          ]
         },
         "props": {
           "type": "object",
           "description": "Component props"
+        },
+        "context": {
+          "$ref": "#/definitions/storybookContext",
+          "description": "Custom context for this story"
         },
         "argControls": {
           "type": "object",
@@ -318,35 +533,112 @@
           "additionalProperties": {
             "$ref": "#/definitions/control"
           }
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Story-specific Storybook parameters",
+          "additionalProperties": true
+        },
+        "decorators": {
+          "type": "array",
+          "description": "Decorator function references",
+          "items": { "type": "string" }
         }
       }
     },
     "control": {
       "type": "object",
       "required": ["type"],
+      "description": "Storybook control definition for interactive args",
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["number", "string", "boolean", "select", "object", "array", "color", "date"]
+          "enum": ["number", "range", "string", "text", "boolean", "select", "multi-select", "radio", "inline-radio", "check", "inline-check", "object", "array", "color", "date", "file"],
+          "description": "Control type determining the UI element"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name for the control"
+        },
+        "description": {
+          "type": "string",
+          "description": "Help text shown for this control"
         },
         "default": {
-          "description": "Default value"
+          "description": "Default value for the control"
         },
         "min": {
           "type": "number",
-          "description": "Minimum value (for number)"
+          "description": "Minimum value (for number/range)"
         },
         "max": {
           "type": "number",
-          "description": "Maximum value (for number)"
+          "description": "Maximum value (for number/range)"
         },
         "step": {
           "type": "number",
-          "description": "Step value (for number)"
+          "description": "Step increment (for number/range)"
         },
         "options": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Simple string options"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": { "type": "string" },
+                  "value": {}
+                },
+                "required": ["label", "value"]
+              },
+              "description": "Labeled options with arbitrary values"
+            }
+          ],
+          "description": "Options (for select/radio/check controls)"
+        },
+        "labels": {
+          "type": "object",
+          "description": "Custom labels for option values",
+          "additionalProperties": { "type": "string" }
+        },
+        "accept": {
+          "type": "string",
+          "description": "Accepted file types (for file control)",
+          "examples": [".png,.jpg", "image/*", "application/json"]
+        },
+        "presetColors": {
           "type": "array",
-          "description": "Options (for select)"
+          "items": { "type": "string" },
+          "description": "Preset color swatches (for color control)"
+        },
+        "if": {
+          "type": "object",
+          "description": "Conditional visibility based on other arg values",
+          "properties": {
+            "arg": { "type": "string" },
+            "eq": {},
+            "neq": {},
+            "truthy": { "type": "boolean" },
+            "exists": { "type": "boolean" }
+          }
+        },
+        "mapping": {
+          "type": "object",
+          "description": "Map option values to different actual values",
+          "additionalProperties": true
+        },
+        "table": {
+          "type": "object",
+          "description": "Table category grouping",
+          "properties": {
+            "category": { "type": "string" },
+            "subcategory": { "type": "string" }
+          }
         }
       }
     }
