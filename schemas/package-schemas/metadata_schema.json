@@ -422,50 +422,10 @@
       }
     },
     "storybookContext": {
-      "type": "object",
-      "description": "Context passed to Lua render functions",
-      "properties": {
-        "user": {
-          "type": "object",
-          "properties": {
-            "id": { "type": "string" },
-            "username": { "type": "string" },
-            "level": { 
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 6
-            },
-            "email": { "type": "string" }
-          }
-        },
-        "tenant": {
-          "type": "object",
-          "properties": {
-            "id": { "type": "string" },
-            "name": { "type": "string" }
-          }
-        },
-        "nerdMode": { "type": "boolean" },
-        "theme": { 
-          "type": "string",
-          "enum": ["light", "dark"]
-        }
-      },
-      "additionalProperties": true
+      "$ref": "storybook-common-definitions.json#/definitions/storybookContext"
     },
     "contextVariant": {
-      "type": "object",
-      "required": ["name", "context"],
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Variant display name"
-        },
-        "context": {
-          "$ref": "#/definitions/storybookContext",
-          "description": "Context overrides for this variant"
-        }
-      }
+      "$ref": "storybook-common-definitions.json#/definitions/contextVariant"
     },
     "story": {
       "type": "object",
@@ -547,100 +507,7 @@
       }
     },
     "control": {
-      "type": "object",
-      "required": ["type"],
-      "description": "Storybook control definition for interactive args",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": ["number", "range", "string", "text", "boolean", "select", "multi-select", "radio", "inline-radio", "check", "inline-check", "object", "array", "color", "date", "file"],
-          "description": "Control type determining the UI element"
-        },
-        "name": {
-          "type": "string",
-          "description": "Display name for the control"
-        },
-        "description": {
-          "type": "string",
-          "description": "Help text shown for this control"
-        },
-        "default": {
-          "description": "Default value for the control"
-        },
-        "min": {
-          "type": "number",
-          "description": "Minimum value (for number/range)"
-        },
-        "max": {
-          "type": "number",
-          "description": "Maximum value (for number/range)"
-        },
-        "step": {
-          "type": "number",
-          "description": "Step increment (for number/range)"
-        },
-        "options": {
-          "oneOf": [
-            {
-              "type": "array",
-              "items": { "type": "string" },
-              "description": "Simple string options"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "label": { "type": "string" },
-                  "value": {}
-                },
-                "required": ["label", "value"]
-              },
-              "description": "Labeled options with arbitrary values"
-            }
-          ],
-          "description": "Options (for select/radio/check controls)"
-        },
-        "labels": {
-          "type": "object",
-          "description": "Custom labels for option values",
-          "additionalProperties": { "type": "string" }
-        },
-        "accept": {
-          "type": "string",
-          "description": "Accepted file types (for file control)",
-          "examples": [".png,.jpg", "image/*", "application/json"]
-        },
-        "presetColors": {
-          "type": "array",
-          "items": { "type": "string" },
-          "description": "Preset color swatches (for color control)"
-        },
-        "if": {
-          "type": "object",
-          "description": "Conditional visibility based on other arg values",
-          "properties": {
-            "arg": { "type": "string" },
-            "eq": {},
-            "neq": {},
-            "truthy": { "type": "boolean" },
-            "exists": { "type": "boolean" }
-          }
-        },
-        "mapping": {
-          "type": "object",
-          "description": "Map option values to different actual values",
-          "additionalProperties": true
-        },
-        "table": {
-          "type": "object",
-          "description": "Table category grouping",
-          "properties": {
-            "category": { "type": "string" },
-            "subcategory": { "type": "string" }
-          }
-        }
-      }
+      "$ref": "storybook-common-definitions.json#/definitions/control"
     }
   }
 }

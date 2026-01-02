@@ -24,6 +24,7 @@ Welcome to the MetaBuilder Schema documentation. This index helps you navigate a
 - [QUICKSTART.md](QUICKSTART.md) - Quick start patterns and examples
 
 ### Recent Changes
+- [CODE_REVIEW_IMPROVEMENTS.md](CODE_REVIEW_IMPROVEMENTS.md) - Latest improvements (2026-01-02) ✨
 - [REVIEW_SUMMARY.md](REVIEW_SUMMARY.md) - Complete code review results
 - [IMPROVEMENTS_SUMMARY.md](IMPROVEMENTS_SUMMARY.md) - v2.0 security & features
 - [CHANGES_APPLIED.md](CHANGES_APPLIED.md) - Applied improvements log
@@ -97,21 +98,22 @@ import type { PackageMetadata, Entity } from '@metabuilder/schema-types';
 ### Extended Schemas
 | Schema | File | Purpose | Version |
 |--------|------|---------|---------|
-| API | [api_schema.json](api_schema.json) | REST/GraphQL | 1.0.0 |
-| Events | [events_schema.json](events_schema.json) | Event-driven | 1.0.0 |
-| Config | [config_schema.json](config_schema.json) | Configuration | 1.0.0 |
-| Jobs | [jobs_schema.json](jobs_schema.json) | Background tasks | 1.0.0 |
-| Permissions | [permissions_schema.json](permissions_schema.json) | RBAC/ABAC | 1.0.0 |
-| Forms | [forms_schema.json](forms_schema.json) | Dynamic forms | 1.0.0 |
-| Migrations | [migrations_schema.json](migrations_schema.json) | DB migrations | 1.0.0 |
-| Assets | [assets_schema.json](assets_schema.json) | Static assets | 1.0.0 |
-| Storybook | [storybook_schema.json](storybook_schema.json) | Storybook config | 1.0.0 |
+| API | [api_schema.json](api_schema.json) | REST/GraphQL | 2.0.0 |
+| Events | [events_schema.json](events_schema.json) | Event-driven | 2.0.0 |
+| Config | [config_schema.json](config_schema.json) | Configuration | 2.0.0 |
+| Jobs | [jobs_schema.json](jobs_schema.json) | Background tasks | 2.0.0 |
+| Permissions | [permissions_schema.json](permissions_schema.json) | RBAC/ABAC | 2.0.0 |
+| Forms | [forms_schema.json](forms_schema.json) | Dynamic forms | 2.0.0 |
+| Migrations | [migrations_schema.json](migrations_schema.json) | DB migrations | 2.0.0 |
+| Assets | [assets_schema.json](assets_schema.json) | Static assets | 2.0.0 |
+| Storybook | [storybook_schema.json](storybook_schema.json) | Storybook config | 2.0.0 |
 
 ### Utility Schemas
-| Schema | File | Purpose |
-|--------|------|---------|
-| Index | [index_schema.json](index_schema.json) | Master registry & validation |
-| Stdlib | [stdlib_schema.json](stdlib_schema.json) | Standard library |
+| Schema | File | Purpose | Version |
+|--------|------|---------|---------|
+| Index | [index_schema.json](index_schema.json) | Master registry & validation | 2.0.0 |
+| Stdlib | [stdlib_schema.json](stdlib_schema.json) | Standard library | - |
+| Storybook Common | [storybook-common-definitions.json](storybook-common-definitions.json) | Shared Storybook definitions | 2.0.0 |
 
 ---
 

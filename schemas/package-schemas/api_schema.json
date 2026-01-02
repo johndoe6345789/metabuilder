@@ -14,7 +14,7 @@
       "type": "string",
       "description": "Schema version",
       "pattern": "^\\d+\\.\\d+\\.\\d+$",
-      "default": "1.0.0"
+      "default": "2.0.0"
     },
     "package": {
       "type": "string",
@@ -232,8 +232,7 @@
         },
         "required": {
           "type": "boolean",
-          "description": "Whether request body is required. Defaults to true for POST/PUT/PATCH methods, false for GET/DELETE. It is recommended to explicitly set this value based on your API design.",
-          "default": false
+          "description": "Whether request body is required. Recommendation: set to true for POST/PUT/PATCH methods where body contains data, false for GET/DELETE methods. Explicitly specify this value for clarity."
         },
         "maxSize": {
           "type": "integer",
