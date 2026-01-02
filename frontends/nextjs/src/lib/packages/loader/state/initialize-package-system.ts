@@ -1,4 +1,4 @@
-import { PACKAGE_CATALOG } from '../../../package-lib/package-catalog'
+import { PACKAGE_CATALOG } from '../../core/package-catalog'
 import { loadPackageComponents } from '../../../rendering/declarative-component-renderer'
 import {
   buildPackageRegistry,

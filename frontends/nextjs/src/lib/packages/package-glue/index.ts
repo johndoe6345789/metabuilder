@@ -54,8 +54,7 @@ export {
   resolveDependencyOrder,
   uninstallPackage,
 }
-export { getPackageGlue } from './get-package-glue'
-export { PackageGlue, packageGlue } from './package-glue'
+export { PackageGlue, packageGlue, getPackageGlue } from './package-glue'
 
 // Package sources - multi-source repository support
 export type { PackageRepoConfig } from './package-repo-config'

@@ -1,5 +1,28 @@
 # MetaBuilder Documentation
 
+This folder contains project documentation for MetaBuilder. It is organised by topic to make information easy to find.
+
+Top-level layout
+
+- `architecture/` — design documents and system architecture
+- `guides/` — how-to guides and developer workflows
+- `migrations/` — migration notes and compatibility docs
+- `packages/` — package-related docs and seeds
+- `testing/` — tests and e2e information
+- `archive/` — archived or deprecated docs
+
+Housekeeping
+
+- Keep actively maintained docs in the topic folders above.
+- Move outdated or reference-only files to `archive/` and document the reason in `ARCHIVE.md`.
+- Consolidate overlapping docs (e.g., testing notes) into a single canonical file such as `TESTING_COMPLETE.md`.
+
+Next steps
+
+- Review `docs/ARCHIVE.md` for archiving criteria and run the suggested git move commands when ready.
+- If you want, I can identify and prepare a list of candidate files to archive.
+# MetaBuilder Documentation
+
 ## Quick Links
 
 - [Migration Status](MIGRATION.md) - MUI elimination & Lua package migration

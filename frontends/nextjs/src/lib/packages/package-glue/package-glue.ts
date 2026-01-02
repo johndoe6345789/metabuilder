@@ -17,8 +17,6 @@ import { uninstallPackage } from './uninstall-package'
 
 /**
  * PackageGlue - Wrapper class for package registry helpers
- *
- * Each method delegates to a single-function module.
  */
 export class PackageGlue {
   buildPackageRegistry = buildPackageRegistry
@@ -40,3 +38,4 @@ export class PackageGlue {
 }
 
 export const packageGlue = new PackageGlue()
+export const getPackageGlue = (): PackageGlue => packageGlue

@@ -1,4 +1,4 @@
-import { PACKAGE_CATALOG } from '../../package-lib/package-catalog'
+import { PACKAGE_CATALOG } from '../core/package-catalog'
 
 /**
  * Get list of all installed package IDs from the catalog

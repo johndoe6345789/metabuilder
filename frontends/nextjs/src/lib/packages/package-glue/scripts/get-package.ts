@@ -1,4 +1,11 @@
-export function getPackage(packageId: string): null {
-  // Placeholder: packages not available in this build context
-  return null
+import type { PackageDefinition, PackageRegistry } from '../types'
+
+/**
+ * Get a package by ID from a registry
+ */
+export function getPackage(
+  registry: PackageRegistry,
+  packageId: string
+): PackageDefinition | undefined {
+  return registry[packageId]
 }

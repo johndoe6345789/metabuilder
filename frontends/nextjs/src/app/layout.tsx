@@ -4,6 +4,7 @@ import type { Metadata, Viewport } from 'next'
 
 import { PackageStyleLoader } from '@/components/PackageStyleLoader'
 import { Providers } from './providers'
+import { loadPackage } from '@/lib/packages/unified-package-loader'
 
 // List of packages to load styles from
 const PACKAGES_WITH_STYLES = [
@@ -46,7 +47,14 @@ export const viewport: Viewport = {
   ],
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // Load header/footer packages using unified loader
+  const headerPkg = await loadPackage('ui_header')
+  const footerPkg = await loadPackage('ui_footer')
+
+  const headerName = headerPkg?.name ?? null
+  const footerName = footerPkg?.name ?? null
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -59,7 +67,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <PackageStyleLoader packages={PACKAGES_WITH_STYLES} />
-        <Providers>{children}</Providers>
+
+        {/* Render a simple header/footer when package metadata is available */}
+        {headerName ? (
+          <header className="app-header">{headerName}</header>
+        ) : null}
+
+        <Providers>
+          {children}
+        </Providers>
+
+        {footerName ? (
+          <footer className="app-footer">{footerName}</footer>
+        ) : null}
       </body>
     </html>
   )
