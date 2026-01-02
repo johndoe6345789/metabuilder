@@ -4,8 +4,18 @@
   "title": "Entity Schema Definition",
   "description": "Database entity definitions for MetaBuilder packages",
   "type": "object",
-  "required": ["entities"],
+  "required": ["schemaVersion", "entities"],
   "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "2.0.0"
+    },
     "entities": {
       "type": "array",
       "description": "Array of entity definitions",

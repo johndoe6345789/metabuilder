@@ -1,0 +1,180 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/entities.schema.json",
+  "schemaVersion": "2.0.0",
+  "entities": [
+    {
+      "name": "User",
+      "version": "1.0",
+      "description": "User entity with authentication and profile",
+      "primaryKey": "id",
+      "timestamps": true,
+      "softDelete": true,
+      "fields": {
+        "id": {
+          "type": "uuid",
+          "generated": true,
+          "description": "Unique user identifier"
+        },
+        "email": {
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "maxLength": 255,
+          "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+          "description": "User email address"
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "maxLength": 255,
+          "description": "User full name"
+        },
+        "passwordHash": {
+          "type": "string",
+          "required": true,
+          "description": "Hashed password"
+        },
+        "role": {
+          "type": "enum",
+          "enum": ["user", "admin", "moderator"],
+          "default": "user",
+          "description": "User role"
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether user account is active"
+        },
+        "lastLoginAt": {
+          "type": "datetime",
+          "nullable": true,
+          "description": "Last login timestamp"
+        }
+      },
+      "indexes": [
+        {
+          "fields": ["email"],
+          "unique": true,
+          "name": "idx_user_email"
+        },
+        {
+          "fields": ["role", "isActive"],
+          "name": "idx_user_role_active"
+        }
+      ],
+      "relations": [
+        {
+          "name": "posts",
+          "type": "hasMany",
+          "entity": "Post",
+          "foreignKey": "userId",
+          "onDelete": "Cascade"
+        },
+        {
+          "name": "profile",
+          "type": "hasOne",
+          "entity": "Profile",
+          "foreignKey": "userId",
+          "onDelete": "Cascade"
+        }
+      ],
+      "acl": {
+        "create": ["admin"],
+        "read": ["user", "admin", "moderator"],
+        "update": ["admin"],
+        "delete": ["admin"],
+        "rowLevel": "id = currentUser.id OR currentUser.role = 'admin'"
+      }
+    },
+    {
+      "name": "Post",
+      "version": "1.0",
+      "description": "Blog post entity",
+      "primaryKey": "id",
+      "timestamps": true,
+      "softDelete": true,
+      "fields": {
+        "id": {
+          "type": "uuid",
+          "generated": true
+        },
+        "userId": {
+          "type": "uuid",
+          "required": true,
+          "index": true
+        },
+        "title": {
+          "type": "string",
+          "required": true,
+          "maxLength": 500
+        },
+        "content": {
+          "type": "text",
+          "required": true
+        },
+        "status": {
+          "type": "enum",
+          "enum": ["draft", "published", "archived"],
+          "default": "draft"
+        },
+        "publishedAt": {
+          "type": "datetime",
+          "nullable": true
+        }
+      },
+      "relations": [
+        {
+          "name": "author",
+          "type": "belongsTo",
+          "entity": "User",
+          "field": "userId"
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "version": "1.0",
+      "description": "User profile with additional information",
+      "primaryKey": "id",
+      "timestamps": true,
+      "fields": {
+        "id": {
+          "type": "uuid",
+          "generated": true
+        },
+        "userId": {
+          "type": "uuid",
+          "required": true,
+          "unique": true
+        },
+        "bio": {
+          "type": "text",
+          "nullable": true
+        },
+        "avatarUrl": {
+          "type": "string",
+          "maxLength": 500,
+          "nullable": true
+        },
+        "website": {
+          "type": "string",
+          "maxLength": 500,
+          "nullable": true
+        },
+        "location": {
+          "type": "string",
+          "maxLength": 255,
+          "nullable": true
+        }
+      },
+      "relations": [
+        {
+          "name": "user",
+          "type": "belongsTo",
+          "entity": "User",
+          "field": "userId"
+        }
+      ]
+    }
+  ]
+}

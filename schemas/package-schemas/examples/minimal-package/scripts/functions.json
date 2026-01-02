@@ -1,0 +1,47 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "minimal-example",
+  "description": "Simple greeting function",
+  "functions": [
+    {
+      "id": "greet_user",
+      "name": "greetUser",
+      "exported": true,
+      "params": [
+        {
+          "name": "name",
+          "type": "string",
+          "sanitize": true
+        }
+      ],
+      "returnType": "string",
+      "body": [
+        {
+          "type": "return",
+          "value": {
+            "type": "template_literal",
+            "parts": [
+              "Hello, ",
+              {
+                "type": "identifier",
+                "name": "name"
+              },
+              "!"
+            ]
+          }
+        }
+      ],
+      "docstring": {
+        "summary": "Greets a user by name",
+        "params": [
+          {
+            "name": "name",
+            "description": "The user's name"
+          }
+        ],
+        "returns": "A greeting message"
+      }
+    }
+  ]
+}

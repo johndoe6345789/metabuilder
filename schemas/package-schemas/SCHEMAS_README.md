@@ -23,7 +23,8 @@ Complete JSON Schema collection for MetaBuilder packages, providing declarative 
 12. **permissions_schema.json** - RBAC and access control
 13. **forms_schema.json** - Dynamic form definitions
 14. **migrations_schema.json** - Database migration definitions
-15. **index_schema.json** - Master schema index
+15. **assets_schema.json** - Static assets (images, fonts, icons, files)
+16. **index_schema.json** - Master schema index
 
 ## 🚀 Quick Start
 
@@ -489,6 +490,67 @@ my-package/
 }
 ```
 
+### 15. Assets Schema (NEW)
+**Purpose**: Static asset management (images, fonts, icons, files)
+
+**Key Features**:
+- Image assets with responsive variants
+- Font definitions with multiple formats
+- Icon management (SVG, PNG, sprite sheets)
+- Generic file assets (PDFs, documents)
+- Video and audio assets
+- CDN configuration
+- Optimization settings (compression, formats)
+- Caching strategies
+- Asset metadata and licensing
+
+**Example**:
+```json
+{
+  "basePath": "/assets",
+  "images": [
+    {
+      "id": "logo",
+      "path": "/images/logo.svg",
+      "alt": "Company Logo",
+      "format": "svg",
+      "priority": "high",
+      "variants": [
+        {
+          "width": 200,
+          "path": "/images/logo-200.webp",
+          "format": "webp"
+        }
+      ]
+    }
+  ],
+  "fonts": [
+    {
+      "id": "primary_font",
+      "family": "Inter",
+      "category": "sans-serif",
+      "files": [
+        {
+          "path": "/fonts/inter-regular.woff2",
+          "format": "woff2",
+          "weight": 400
+        }
+      ],
+      "display": "swap",
+      "preload": true
+    }
+  ],
+  "optimization": {
+    "images": {
+      "compress": true,
+      "quality": 85,
+      "formats": ["webp", "avif", "original"],
+      "responsive": true
+    }
+  }
+}
+```
+
 ## 🔧 Validation
 
 All schemas are valid JSON Schema Draft-07. Validate your data:
@@ -611,6 +673,6 @@ MIT License - see individual package metadata for details
 
 ---
 
-**Schema Version**: 1.0.0  
-**Last Updated**: 2024-12-31  
+**Schema Version**: 2.0.0
+**Last Updated**: 2026-01-01
 **Maintained by**: MetaBuilder Team

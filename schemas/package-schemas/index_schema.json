@@ -297,6 +297,29 @@
                 "value": "password"
               },
               "message": "Password field must use secure password pattern"
+            },
+            {
+              "id": "schema-version-compatibility",
+              "description": "Schema versions must be compatible across package",
+              "severity": "error",
+              "type": "version_compatibility",
+              "condition": {
+                "schemas": ["api", "script", "entities", "types", "components", "validation", "events", "jobs", "forms", "permissions", "config", "migrations", "styles"],
+                "operator": "major_version_match"
+              },
+              "message": "Incompatible schema versions detected. All schemas must have compatible MAJOR versions. Found: ${versions}"
+            },
+            {
+              "id": "minimum-schema-version",
+              "description": "Schemas should use minimum version 2.0.0 for security",
+              "severity": "warning",
+              "type": "version_check",
+              "condition": {
+                "schemas": ["validation", "script"],
+                "operator": "greater_than_or_equal",
+                "value": "2.0.0"
+              },
+              "message": "Schema '${schema}' version ${version} is below recommended 2.0.0 (security improvements)"
             }
           ]
         }
