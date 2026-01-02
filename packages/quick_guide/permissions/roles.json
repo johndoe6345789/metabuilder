@@ -45,7 +45,7 @@
     {
       "id": "quick_guide",
       "name": "Quick Guide",
-      "type": "content",
+      "type": "entity",
       "description": "Quick guide resources for step-by-step instructions",
       "actions": ["read", "create", "update", "delete"]
     }

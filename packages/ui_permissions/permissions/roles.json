@@ -27,7 +27,7 @@
       "name": "Assign Permission Levels",
       "description": "Assign permission levels to users",
       "resource": "permissions",
-      "action": "write",
+      "action": "update",
       "scope": "tenant",
       "minLevel": 4
     },
@@ -45,9 +45,9 @@
     {
       "id": "permissions",
       "name": "Permissions",
-      "type": "system",
+      "type": "custom",
       "description": "Permission system resources",
-      "actions": ["read", "write", "admin"]
+      "actions": ["read", "update", "admin"]
     }
   ],
   "levels": [

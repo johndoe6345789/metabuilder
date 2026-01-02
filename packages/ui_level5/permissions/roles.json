@@ -108,49 +108,49 @@
     {
       "id": "level5",
       "name": "Level 5 Panel",
-      "type": "ui",
+      "type": "component",
       "description": "God panel interface",
       "actions": ["read"]
     },
     {
       "id": "schemas",
       "name": "Database Schemas",
-      "type": "data",
+      "type": "entity",
       "description": "Database schema definitions",
       "actions": ["read", "manage"]
     },
     {
       "id": "workflows",
       "name": "Workflows",
-      "type": "data",
+      "type": "entity",
       "description": "Workflow definitions",
       "actions": ["read", "manage"]
     },
     {
       "id": "packages",
       "name": "Packages",
-      "type": "data",
+      "type": "entity",
       "description": "Package management",
       "actions": ["read", "manage"]
     },
     {
       "id": "tenants",
       "name": "Tenants",
-      "type": "data",
+      "type": "entity",
       "description": "Tenant entities",
       "actions": ["read", "create", "update", "delete"]
     },
     {
       "id": "gods",
       "name": "God Users",
-      "type": "data",
+      "type": "entity",
       "description": "Users with elevated privileges",
       "actions": ["read", "create"]
     },
     {
       "id": "transfer",
       "name": "Data Transfer",
-      "type": "operation",
+      "type": "custom",
       "description": "Cross-tenant data transfer operations",
       "actions": ["create", "execute"]
     }

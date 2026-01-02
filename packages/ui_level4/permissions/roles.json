@@ -18,7 +18,7 @@
       "name": "Edit System Settings",
       "description": "Edit system settings in the admin panel",
       "resource": "level4.settings",
-      "action": "write",
+      "action": "update",
       "scope": "global",
       "minLevel": 4
     },
@@ -36,7 +36,7 @@
       "name": "Ban Users",
       "description": "Ban or suspend user accounts",
       "resource": "level4.users",
-      "action": "ban",
+      "action": "manage",
       "scope": "global",
       "minLevel": 4
     },
@@ -45,7 +45,7 @@
       "name": "Edit Schemas",
       "description": "Create and modify schemas",
       "resource": "level4.schemas",
-      "action": "write",
+      "action": "update",
       "scope": "global",
       "minLevel": 4
     },
@@ -54,7 +54,7 @@
       "name": "Edit Workflows",
       "description": "Create and modify workflows",
       "resource": "level4.workflows",
-      "action": "write",
+      "action": "update",
       "scope": "global",
       "minLevel": 4
     },
@@ -72,7 +72,7 @@
       "name": "Edit Lua Scripts",
       "description": "Create and modify Lua scripts",
       "resource": "level4.lua",
-      "action": "write",
+      "action": "update",
       "scope": "global",
       "minLevel": 4
     }
@@ -81,44 +81,44 @@
     {
       "id": "level4",
       "name": "Admin Panel",
-      "type": "ui",
+      "type": "component",
       "description": "Level 4 Admin Panel",
       "actions": ["read"]
     },
     {
       "id": "level4.settings",
       "name": "System Settings",
-      "type": "config",
+      "type": "custom",
       "description": "System configuration settings",
-      "actions": ["read", "write"]
+      "actions": ["read", "update"]
     },
     {
       "id": "level4.users",
       "name": "User Management",
       "type": "entity",
       "description": "User accounts and permissions",
-      "actions": ["read", "write", "manage", "ban"]
+      "actions": ["read", "update", "manage"]
     },
     {
       "id": "level4.schemas",
       "name": "Schemas",
-      "type": "config",
+      "type": "custom",
       "description": "Schema definitions",
-      "actions": ["read", "write"]
+      "actions": ["read", "update"]
     },
     {
       "id": "level4.workflows",
       "name": "Workflows",
-      "type": "automation",
+      "type": "function",
       "description": "Workflow definitions and execution",
-      "actions": ["read", "write", "execute"]
+      "actions": ["read", "update", "execute"]
     },
     {
       "id": "level4.lua",
       "name": "Lua Scripts",
-      "type": "code",
+      "type": "function",
       "description": "Lua script definitions",
-      "actions": ["read", "write", "execute"]
+      "actions": ["read", "update", "execute"]
     }
   ]
 }

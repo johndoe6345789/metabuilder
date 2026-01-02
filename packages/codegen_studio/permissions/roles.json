@@ -45,7 +45,7 @@
       "name": "Scaffold Packages",
       "description": "Generate package scaffolding",
       "resource": "codegen_packages",
-      "action": "scaffold",
+      "action": "create",
       "scope": "global",
       "minLevel": 5
     }
@@ -54,23 +54,23 @@
     {
       "id": "codegen_templates",
       "name": "Code Templates",
-      "type": "content",
+      "type": "file",
       "description": "Code generation templates",
       "actions": ["read", "create", "update", "delete"]
     },
     {
       "id": "codegen_output",
       "name": "Generated Output",
-      "type": "content",
+      "type": "file",
       "description": "Generated code and files",
-      "actions": ["create", "read", "download"]
+      "actions": ["create", "read"]
     },
     {
       "id": "codegen_packages",
       "name": "Package Scaffolding",
-      "type": "content",
+      "type": "file",
       "description": "MetaBuilder package scaffolding",
-      "actions": ["create", "scaffold", "read"]
+      "actions": ["create", "read"]
     }
   ]
 }

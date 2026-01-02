@@ -90,7 +90,7 @@
     {
       "id": "pages",
       "name": "UI Pages",
-      "type": "ui",
+      "type": "component",
       "description": "UI page resources",
       "actions": ["read", "create", "delete"]
     }

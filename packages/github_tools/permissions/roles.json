@@ -18,7 +18,7 @@
       "name": "Analyze GitHub Actions Runs",
       "description": "Analyze GitHub Actions run statistics",
       "resource": "github_runs",
-      "action": "analyze",
+      "action": "read",
       "scope": "global",
       "minLevel": 2
     },
@@ -45,7 +45,7 @@
       "name": "Manage GitHub Configuration",
       "description": "Configure GitHub repository settings and tokens",
       "resource": "github_config",
-      "action": "write",
+      "action": "update",
       "scope": "global",
       "minLevel": 3
     }
@@ -54,30 +54,30 @@
     {
       "id": "github_runs",
       "name": "GitHub Workflow Runs",
-      "type": "external",
+      "type": "api",
       "description": "GitHub Actions workflow runs",
-      "actions": ["read", "analyze"]
+      "actions": ["read"]
     },
     {
       "id": "github_workflow",
       "name": "GitHub Workflows",
-      "type": "external",
+      "type": "api",
       "description": "GitHub Actions workflow definitions",
       "actions": ["read", "execute"]
     },
     {
       "id": "github_logs",
       "name": "GitHub Job Logs",
-      "type": "external",
+      "type": "api",
       "description": "GitHub Actions job logs",
       "actions": ["read"]
     },
     {
       "id": "github_config",
       "name": "GitHub Configuration",
-      "type": "config",
+      "type": "custom",
       "description": "GitHub integration configuration",
-      "actions": ["read", "write"]
+      "actions": ["read", "update"]
     }
   ]
 }

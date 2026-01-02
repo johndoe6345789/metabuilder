@@ -18,7 +18,7 @@
       "name": "Configure Navigation Menu",
       "description": "Configure navigation menus and menu items",
       "resource": "navigation",
-      "action": "configure",
+      "action": "manage",
       "scope": "global",
       "minLevel": 4
     },
@@ -36,7 +36,7 @@
       "name": "Configure Sidebar",
       "description": "Configure sidebar items and layout",
       "resource": "sidebar",
-      "action": "configure",
+      "action": "manage",
       "scope": "global",
       "minLevel": 4
     },
@@ -54,21 +54,21 @@
     {
       "id": "navigation",
       "name": "Navigation Menu",
-      "type": "ui",
+      "type": "component",
       "description": "Horizontal navigation menu resources",
-      "actions": ["read", "configure"]
+      "actions": ["read", "manage"]
     },
     {
       "id": "sidebar",
       "name": "Sidebar",
-      "type": "ui",
+      "type": "component",
       "description": "Sidebar navigation resources",
-      "actions": ["read", "configure"]
+      "actions": ["read", "manage"]
     },
     {
       "id": "breadcrumbs",
       "name": "Breadcrumbs",
-      "type": "ui",
+      "type": "component",
       "description": "Breadcrumb navigation resources",
       "actions": ["read"]
     }

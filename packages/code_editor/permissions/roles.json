@@ -18,7 +18,7 @@
       "name": "Edit Code",
       "description": "Edit code in editor",
       "resource": "code_editor",
-      "action": "write",
+      "action": "update",
       "scope": "global",
       "minLevel": 5
     },
@@ -27,7 +27,7 @@
       "name": "Apply Editor Themes",
       "description": "Apply and customize editor themes",
       "resource": "code_editor",
-      "action": "configure",
+      "action": "manage",
       "scope": "global",
       "minLevel": 5
     },
@@ -45,9 +45,9 @@
     {
       "id": "code_editor",
       "name": "Code Editor",
-      "type": "ui",
+      "type": "component",
       "description": "Code editor resources",
-      "actions": ["read", "write", "configure", "execute"]
+      "actions": ["read", "update", "manage", "execute"]
     }
   ]
 }

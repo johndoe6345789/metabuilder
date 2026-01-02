@@ -27,7 +27,7 @@
       "name": "Modify Examples",
       "description": "Modify and experiment with JSON script examples",
       "resource": "json_script_example",
-      "action": "write",
+      "action": "update",
       "scope": "global",
       "minLevel": 2
     }
@@ -36,9 +36,9 @@
     {
       "id": "json_script_example",
       "name": "JSON Script Example",
-      "type": "package",
+      "type": "component",
       "description": "JSON script example and demonstration resources",
-      "actions": ["read", "execute", "write"]
+      "actions": ["read", "execute", "update"]
     }
   ]
 }

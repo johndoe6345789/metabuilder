@@ -45,7 +45,7 @@
       "name": "Moderate Content",
       "description": "Moderate social content",
       "resource": "social_feed",
-      "action": "moderate",
+      "action": "manage",
       "scope": "global",
       "minLevel": 3
     }
@@ -54,14 +54,14 @@
     {
       "id": "social_feed",
       "name": "Social Feed",
-      "type": "ui",
+      "type": "component",
       "description": "Social feed resources",
-      "actions": ["read", "moderate"]
+      "actions": ["read", "manage"]
     },
     {
       "id": "social_post",
       "name": "Social Post",
-      "type": "data",
+      "type": "entity",
       "description": "Individual social post resources",
       "actions": ["create", "read", "update", "delete"]
     }

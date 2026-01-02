@@ -27,7 +27,7 @@
       "name": "Configure Test Runner",
       "description": "Configure test runner settings and filters",
       "resource": "lua_test",
-      "action": "configure",
+      "action": "manage",
       "scope": "global",
       "minLevel": 4
     },
@@ -36,7 +36,7 @@
       "name": "Debug Tests",
       "description": "Access detailed debug output and error traces",
       "resource": "lua_test",
-      "action": "debug",
+      "action": "execute",
       "scope": "global",
       "minLevel": 4
     }
@@ -45,9 +45,9 @@
     {
       "id": "lua_test",
       "name": "Lua Test Framework",
-      "type": "tool",
+      "type": "function",
       "description": "Lua unit testing framework resources",
-      "actions": ["read", "execute", "configure", "debug"]
+      "actions": ["read", "execute", "manage"]
     }
   ]
 }

@@ -27,7 +27,7 @@
       "name": "Export CSS/SCSS",
       "description": "Export theme to CSS or SCSS files",
       "resource": "css_designer",
-      "action": "export",
+      "action": "read",
       "scope": "global",
       "minLevel": 2
     },
@@ -45,9 +45,9 @@
     {
       "id": "css_designer",
       "name": "CSS Designer",
-      "type": "ui",
+      "type": "component",
       "description": "CSS Designer resources for theme editing and export",
-      "actions": ["read", "update", "export", "manage"]
+      "actions": ["read", "update", "manage"]
     }
   ]
 }

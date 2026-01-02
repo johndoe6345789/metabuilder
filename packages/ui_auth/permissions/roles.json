@@ -9,7 +9,7 @@
       "name": "Access Auth-Gated Content",
       "description": "Access content protected by auth gates",
       "resource": "auth_gate",
-      "action": "access",
+      "action": "read",
       "scope": "global",
       "minLevel": 2
     },
@@ -18,7 +18,7 @@
       "name": "Bypass Auth Gate",
       "description": "Bypass authentication requirements (admin only)",
       "resource": "auth_gate",
-      "action": "bypass",
+      "action": "admin",
       "scope": "global",
       "minLevel": 4
     },
@@ -36,7 +36,7 @@
       "name": "Configure Page Loader",
       "description": "Configure page loader appearance",
       "resource": "page_loader",
-      "action": "configure",
+      "action": "update",
       "scope": "global",
       "minLevel": 3
     }
@@ -45,23 +45,23 @@
     {
       "id": "auth_gate",
       "name": "Auth Gate",
-      "type": "security",
+      "type": "custom",
       "description": "Authentication gate wrapper",
-      "actions": ["access", "bypass"]
+      "actions": ["read", "admin"]
     },
     {
       "id": "access_denied",
       "name": "Access Denied",
-      "type": "ui",
+      "type": "component",
       "description": "Access denied page component",
       "actions": ["read"]
     },
     {
       "id": "page_loader",
       "name": "Page Loader",
-      "type": "ui",
+      "type": "component",
       "description": "Page loading component",
-      "actions": ["read", "configure"]
+      "actions": ["read", "update"]
     }
   ]
 }

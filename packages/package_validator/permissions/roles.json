@@ -27,7 +27,7 @@
       "name": "List Directories",
       "description": "List directory contents to discover package files",
       "resource": "filesystem",
-      "action": "list",
+      "action": "read",
       "scope": "global",
       "minLevel": 5
     },
@@ -36,7 +36,7 @@
       "name": "File Metadata",
       "description": "Get file metadata (size, type, timestamps)",
       "resource": "filesystem",
-      "action": "stat",
+      "action": "read",
       "scope": "global",
       "minLevel": 5
     },
@@ -55,7 +55,7 @@
       "name": "Validate Metadata",
       "description": "Validate metadata.json structure",
       "resource": "package_validator",
-      "action": "validate",
+      "action": "execute",
       "scope": "global",
       "minLevel": 5
     },
@@ -64,7 +64,7 @@
       "name": "Validate Scripts",
       "description": "Validate JSON script files",
       "resource": "package_validator",
-      "action": "validate",
+      "action": "execute",
       "scope": "global",
       "minLevel": 5
     },
@@ -73,7 +73,7 @@
       "name": "Validate Types",
       "description": "Validate type definitions",
       "resource": "package_validator",
-      "action": "validate",
+      "action": "execute",
       "scope": "global",
       "minLevel": 5
     },
@@ -82,7 +82,7 @@
       "name": "Validate Components",
       "description": "Validate component definitions",
       "resource": "package_validator",
-      "action": "validate",
+      "action": "execute",
       "scope": "global",
       "minLevel": 5
     },
@@ -91,7 +91,7 @@
       "name": "Validate Tests",
       "description": "Validate test files",
       "resource": "package_validator",
-      "action": "validate",
+      "action": "execute",
       "scope": "global",
       "minLevel": 5
     },
@@ -100,7 +100,7 @@
       "name": "Validate Storybook",
       "description": "Validate storybook configuration",
       "resource": "package_validator",
-      "action": "validate",
+      "action": "execute",
       "scope": "global",
       "minLevel": 5
     }
@@ -109,21 +109,21 @@
     {
       "id": "package_validator",
       "name": "Package Validator",
-      "type": "tool",
+      "type": "function",
       "description": "Package validation tool resources",
-      "actions": ["execute", "validate"]
+      "actions": ["execute"]
     },
     {
       "id": "filesystem",
       "name": "File System",
-      "type": "system",
+      "type": "file",
       "description": "File system access for validation",
-      "actions": ["read", "list", "stat"]
+      "actions": ["read"]
     },
     {
       "id": "external",
       "name": "External Dependencies",
-      "type": "system",
+      "type": "custom",
       "description": "External library access",
       "actions": ["execute"]
     }

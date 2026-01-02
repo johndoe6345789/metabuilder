@@ -18,7 +18,7 @@
       "name": "Submit Login",
       "description": "Submit login credentials",
       "resource": "login",
-      "action": "submit",
+      "action": "execute",
       "scope": "global",
       "minLevel": 1
     },
@@ -36,7 +36,7 @@
       "name": "Submit Registration",
       "description": "Submit registration form",
       "resource": "register",
-      "action": "submit",
+      "action": "execute",
       "scope": "global",
       "minLevel": 1
     },
@@ -45,7 +45,7 @@
       "name": "Request Password Reset",
       "description": "Request password reset email",
       "resource": "password",
-      "action": "reset",
+      "action": "execute",
       "scope": "global",
       "minLevel": 1
     }
@@ -54,23 +54,23 @@
     {
       "id": "login",
       "name": "Login",
-      "type": "ui",
+      "type": "component",
       "description": "Login page and authentication",
-      "actions": ["read", "submit"]
+      "actions": ["read", "execute"]
     },
     {
       "id": "register",
       "name": "Register",
-      "type": "ui",
+      "type": "component",
       "description": "User registration",
-      "actions": ["read", "submit"]
+      "actions": ["read", "execute"]
     },
     {
       "id": "password",
       "name": "Password",
-      "type": "auth",
+      "type": "custom",
       "description": "Password management",
-      "actions": ["reset"]
+      "actions": ["execute"]
     }
   ]
 }

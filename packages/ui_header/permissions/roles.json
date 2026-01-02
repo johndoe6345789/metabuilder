@@ -18,7 +18,7 @@
       "name": "Access User Menu",
       "description": "Access user dropdown menu in header",
       "resource": "header",
-      "action": "interact",
+      "action": "execute",
       "scope": "global",
       "minLevel": 2
     },
@@ -36,7 +36,7 @@
       "name": "Toggle Theme",
       "description": "Toggle light/dark theme from header",
       "resource": "header",
-      "action": "configure",
+      "action": "manage",
       "scope": "global",
       "minLevel": 1
     }
@@ -45,9 +45,9 @@
     {
       "id": "header",
       "name": "Header",
-      "type": "ui",
+      "type": "component",
       "description": "Application header resources",
-      "actions": ["read", "interact", "admin", "configure"]
+      "actions": ["read", "execute", "admin", "manage"]
     }
   ]
 }

@@ -45,7 +45,7 @@
       "name": "Run Migrations",
       "description": "Run schema migrations to apply changes",
       "resource": "schema",
-      "action": "migrate",
+      "action": "execute",
       "scope": "global",
       "minLevel": 5
     },
@@ -54,7 +54,7 @@
       "name": "Export Schemas",
       "description": "Export schema definitions to SQL or other formats",
       "resource": "schema",
-      "action": "export",
+      "action": "read",
       "scope": "global",
       "minLevel": 5
     }
@@ -63,21 +63,21 @@
     {
       "id": "schema",
       "name": "Database Schema",
-      "type": "data",
+      "type": "entity",
       "description": "Database schema definitions including tables, fields, and relations",
-      "actions": ["read", "create", "update", "delete", "migrate", "export"]
+      "actions": ["read", "create", "update", "delete", "execute"]
     },
     {
       "id": "table",
       "name": "Database Table",
-      "type": "data",
+      "type": "entity",
       "description": "Individual database table definitions",
       "actions": ["read", "create", "update", "delete"]
     },
     {
       "id": "field",
       "name": "Table Field",
-      "type": "data",
+      "type": "entity",
       "description": "Individual table field/column definitions",
       "actions": ["read", "create", "update", "delete"]
     }

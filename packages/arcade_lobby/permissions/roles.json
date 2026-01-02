@@ -54,7 +54,7 @@
     {
       "id": "arcade_lobby",
       "name": "Arcade Lobby",
-      "type": "ui",
+      "type": "component",
       "description": "Main arcade lobby interface",
       "actions": ["read"]
     },

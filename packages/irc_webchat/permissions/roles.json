@@ -18,7 +18,7 @@
       "name": "Join IRC Channels",
       "description": "Join IRC channels",
       "resource": "irc_channel",
-      "action": "join",
+      "action": "execute",
       "scope": "global",
       "minLevel": 2
     },
@@ -45,7 +45,7 @@
       "name": "Moderate IRC Channels",
       "description": "Moderate IRC channels (kick, ban, mute users)",
       "resource": "irc_channel",
-      "action": "moderate",
+      "action": "manage",
       "scope": "channel",
       "minLevel": 3
     },
@@ -63,21 +63,21 @@
     {
       "id": "irc_channel",
       "name": "IRC Channel",
-      "type": "entity",
+      "type": "custom",
       "description": "IRC chat channel",
-      "actions": ["read", "join", "create", "moderate", "delete"]
+      "actions": ["read", "execute", "create", "manage", "delete"]
     },
     {
       "id": "irc_message",
       "name": "IRC Message",
-      "type": "entity",
+      "type": "custom",
       "description": "IRC chat message",
       "actions": ["read", "create", "delete"]
     },
     {
       "id": "irc_membership",
       "name": "IRC Membership",
-      "type": "entity",
+      "type": "custom",
       "description": "IRC channel membership",
       "actions": ["read", "create", "delete"]
     }

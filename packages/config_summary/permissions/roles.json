@@ -18,7 +18,7 @@
       "name": "Export Configuration Data",
       "description": "Export configuration data from summaries",
       "resource": "config_summary",
-      "action": "export",
+      "action": "read",
       "scope": "global",
       "minLevel": 4
     },
@@ -27,7 +27,7 @@
       "name": "Configure Summary Display",
       "description": "Configure which data appears in configuration summaries",
       "resource": "config_summary",
-      "action": "configure",
+      "action": "manage",
       "scope": "global",
       "minLevel": 5
     }
@@ -36,9 +36,9 @@
     {
       "id": "config_summary",
       "name": "Configuration Summary",
-      "type": "ui",
+      "type": "component",
       "description": "Configuration summary panel resources",
-      "actions": ["read", "export", "configure"]
+      "actions": ["read", "manage"]
     }
   ]
 }

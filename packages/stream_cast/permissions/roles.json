@@ -18,7 +18,7 @@
       "name": "Start Broadcast",
       "description": "Start live broadcast",
       "resource": "stream",
-      "action": "broadcast",
+      "action": "execute",
       "scope": "global",
       "minLevel": 3
     },
@@ -54,7 +54,7 @@
       "name": "Moderate Stream",
       "description": "Use moderation controls during live streams",
       "resource": "stream",
-      "action": "moderate",
+      "action": "manage",
       "scope": "global",
       "minLevel": 3
     }
@@ -63,21 +63,21 @@
     {
       "id": "stream",
       "name": "Stream",
-      "type": "media",
+      "type": "custom",
       "description": "Live stream resources",
-      "actions": ["read", "create", "broadcast", "moderate"]
+      "actions": ["read", "create", "execute", "manage"]
     },
     {
       "id": "scene",
       "name": "Scene",
-      "type": "media",
+      "type": "custom",
       "description": "Stream scene resources",
       "actions": ["read", "create", "manage", "delete"]
     },
     {
       "id": "schedule",
       "name": "Schedule",
-      "type": "media",
+      "type": "custom",
       "description": "Stream schedule resources",
       "actions": ["read", "create", "manage", "delete"]
     }

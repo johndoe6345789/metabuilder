@@ -36,7 +36,7 @@
       "name": "Moderate Forum",
       "description": "Moderate forum content including flagging, editing, and removing posts",
       "resource": "forum",
-      "action": "moderate",
+      "action": "manage",
       "scope": "global",
       "minLevel": 3
     },
@@ -54,28 +54,28 @@
     {
       "id": "forum",
       "name": "Forum",
-      "type": "content",
+      "type": "custom",
       "description": "Forum resources including categories, threads, and posts",
-      "actions": ["read", "moderate"]
+      "actions": ["read", "manage"]
     },
     {
       "id": "forum.thread",
       "name": "Forum Thread",
-      "type": "content",
+      "type": "custom",
       "description": "Forum thread resources",
       "actions": ["create", "read", "update", "delete"]
     },
     {
       "id": "forum.post",
       "name": "Forum Post",
-      "type": "content",
+      "type": "custom",
       "description": "Forum post/reply resources",
       "actions": ["create", "read", "update", "delete"]
     },
     {
       "id": "forum.category",
       "name": "Forum Category",
-      "type": "config",
+      "type": "custom",
       "description": "Forum category configuration",
       "actions": ["manage", "read"]
     }

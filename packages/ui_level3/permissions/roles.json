@@ -45,7 +45,7 @@
       "name": "Ban Users",
       "description": "Ban users from the platform",
       "resource": "level3.users",
-      "action": "ban",
+      "action": "manage",
       "scope": "global",
       "minLevel": 3
     },
@@ -72,7 +72,7 @@
       "name": "Moderate Content",
       "description": "Moderate content",
       "resource": "level3.content",
-      "action": "moderate",
+      "action": "manage",
       "scope": "global",
       "minLevel": 3
     },
@@ -90,30 +90,30 @@
     {
       "id": "level3",
       "name": "Moderator Panel",
-      "type": "ui",
+      "type": "component",
       "description": "Level 3 moderator panel resources",
       "actions": ["read"]
     },
     {
       "id": "level3.users",
       "name": "User Management",
-      "type": "data",
+      "type": "entity",
       "description": "User management resources",
-      "actions": ["read", "update", "delete", "ban"]
+      "actions": ["read", "update", "delete", "manage"]
     },
     {
       "id": "level3.reports",
       "name": "Reports",
-      "type": "data",
+      "type": "entity",
       "description": "User-submitted reports",
       "actions": ["read", "update"]
     },
     {
       "id": "level3.content",
       "name": "Content",
-      "type": "data",
+      "type": "entity",
       "description": "User-generated content",
-      "actions": ["moderate", "delete"]
+      "actions": ["manage", "delete"]
     }
   ]
 }

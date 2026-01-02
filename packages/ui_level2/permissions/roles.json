@@ -90,28 +90,28 @@
     {
       "id": "level2",
       "name": "Level 2 Dashboard",
-      "type": "ui",
+      "type": "component",
       "description": "Level 2 user dashboard resources",
       "actions": ["read"]
     },
     {
       "id": "level2.profile",
       "name": "User Profile",
-      "type": "data",
+      "type": "entity",
       "description": "User profile data",
       "actions": ["read", "update"]
     },
     {
       "id": "level2.comments",
       "name": "User Comments",
-      "type": "data",
+      "type": "entity",
       "description": "User comments",
       "actions": ["read", "create", "update", "delete"]
     },
     {
       "id": "level2.chat",
       "name": "Chat",
-      "type": "feature",
+      "type": "custom",
       "description": "Real-time chat feature",
       "actions": ["read", "create"]
     }

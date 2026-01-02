@@ -28,7 +28,7 @@
       "name": "Write KV Store",
       "description": "Write to key-value store",
       "resource": "kv_store",
-      "action": "write",
+      "action": "update",
       "scope": "global",
       "minLevel": 3,
       "featureFlags": ["kv_store_enabled"]
@@ -58,7 +58,7 @@
       "name": "Write Blob Storage",
       "description": "Upload files to blob storage",
       "resource": "blob_storage",
-      "action": "write",
+      "action": "update",
       "scope": "global",
       "minLevel": 4,
       "featureFlags": ["blob_storage_enabled"]
@@ -87,7 +87,7 @@
       "name": "Write Cache",
       "description": "Write to cache",
       "resource": "cached_data",
-      "action": "write",
+      "action": "update",
       "scope": "global",
       "minLevel": 3
     },
@@ -105,30 +105,30 @@
     {
       "id": "dbal_demo",
       "name": "DBAL Demo",
-      "type": "ui",
+      "type": "component",
       "description": "DBAL demo interface",
       "actions": ["read"]
     },
     {
       "id": "kv_store",
       "name": "Key-Value Store",
-      "type": "data",
+      "type": "entity",
       "description": "Key-value storage operations",
-      "actions": ["read", "write", "delete"]
+      "actions": ["read", "update", "delete"]
     },
     {
       "id": "blob_storage",
       "name": "Blob Storage",
-      "type": "data",
+      "type": "entity",
       "description": "Binary large object storage operations",
-      "actions": ["read", "write", "delete"]
+      "actions": ["read", "update", "delete"]
     },
     {
       "id": "cached_data",
       "name": "Cached Data",
-      "type": "data",
+      "type": "entity",
       "description": "Cache storage operations",
-      "actions": ["read", "write", "delete"]
+      "actions": ["read", "update", "delete"]
     }
   ]
 }

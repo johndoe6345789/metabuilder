@@ -18,7 +18,7 @@
       "name": "Configure Footer",
       "description": "Configure footer content and links",
       "resource": "footer",
-      "action": "configure",
+      "action": "manage",
       "scope": "global",
       "minLevel": 3
     },
@@ -36,9 +36,9 @@
     {
       "id": "footer",
       "name": "Footer",
-      "type": "ui",
+      "type": "component",
       "description": "Application footer resources",
-      "actions": ["read", "configure", "update"]
+      "actions": ["read", "manage", "update"]
     }
   ]
 }

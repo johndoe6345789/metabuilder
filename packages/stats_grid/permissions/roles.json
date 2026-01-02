@@ -18,7 +18,7 @@
       "name": "Configure Stats Grid",
       "description": "Configure statistics grids layout and settings",
       "resource": "stats_grid",
-      "action": "configure",
+      "action": "manage",
       "scope": "global",
       "minLevel": 3
     },
@@ -45,9 +45,9 @@
     {
       "id": "stats_grid",
       "name": "Stats Grid",
-      "type": "ui",
+      "type": "component",
       "description": "Statistics grid resources",
-      "actions": ["read", "configure", "create", "delete"]
+      "actions": ["read", "manage", "create", "delete"]
     }
   ]
 }

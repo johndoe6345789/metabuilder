@@ -36,7 +36,7 @@
       "name": "Assign Roles",
       "description": "Assign roles to users",
       "resource": "role",
-      "action": "assign",
+      "action": "manage",
       "scope": "global",
       "minLevel": 4
     },
@@ -56,7 +56,7 @@
       "name": "Role",
       "type": "entity",
       "description": "User role resources",
-      "actions": ["read", "create", "update", "assign", "delete"]
+      "actions": ["read", "create", "update", "manage", "delete"]
     }
   ],
   "roleDefinitions": {

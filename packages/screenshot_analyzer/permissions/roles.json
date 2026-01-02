@@ -9,7 +9,7 @@
       "name": "Upload Screenshots",
       "description": "Upload screenshots for analysis",
       "resource": "screenshot",
-      "action": "upload",
+      "action": "create",
       "scope": "global",
       "minLevel": 5
     },
@@ -18,7 +18,7 @@
       "name": "Analyze Screenshots",
       "description": "Analyze screenshots and page content",
       "resource": "screenshot",
-      "action": "analyze",
+      "action": "execute",
       "scope": "global",
       "minLevel": 5
     },
@@ -27,7 +27,7 @@
       "name": "Capture Screenshots",
       "description": "Capture screenshots of the current page",
       "resource": "screenshot",
-      "action": "capture",
+      "action": "execute",
       "scope": "global",
       "minLevel": 5
     },
@@ -36,7 +36,7 @@
       "name": "Download Screenshots",
       "description": "Download captured screenshots",
       "resource": "screenshot",
-      "action": "download",
+      "action": "read",
       "scope": "global",
       "minLevel": 5
     },
@@ -54,9 +54,9 @@
     {
       "id": "screenshot",
       "name": "Screenshot",
-      "type": "browser",
+      "type": "custom",
       "description": "Screenshot capture and analysis resources",
-      "actions": ["upload", "analyze", "capture", "download", "read"]
+      "actions": ["create", "execute", "read"]
     }
   ]
 }

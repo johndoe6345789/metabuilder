@@ -18,7 +18,7 @@
       "name": "Edit SMTP Configuration",
       "description": "Edit SMTP configuration settings",
       "resource": "smtp_config",
-      "action": "write",
+      "action": "update",
       "scope": "global",
       "minLevel": 5
     },
@@ -36,9 +36,9 @@
     {
       "id": "smtp_config",
       "name": "SMTP Configuration",
-      "type": "config",
+      "type": "entity",
       "description": "SMTP email server configuration",
-      "actions": ["read", "write", "execute"]
+      "actions": ["read", "update", "execute"]
     }
   ]
 }

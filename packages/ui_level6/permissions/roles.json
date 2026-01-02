@@ -45,7 +45,7 @@
       "name": "Transfer Ownership",
       "description": "Transfer ownership",
       "resource": "ownership",
-      "action": "transfer",
+      "action": "manage",
       "scope": "global",
       "minLevel": 6
     },
@@ -63,28 +63,28 @@
     {
       "id": "level6",
       "name": "Level 6 Panel",
-      "type": "ui",
+      "type": "component",
       "description": "Supergod panel resources",
       "actions": ["read"]
     },
     {
       "id": "tenants",
       "name": "Tenants",
-      "type": "data",
+      "type": "entity",
       "description": "Tenant management resources",
       "actions": ["create", "read", "update", "delete"]
     },
     {
       "id": "ownership",
       "name": "Ownership",
-      "type": "action",
+      "type": "custom",
       "description": "Ownership transfer resources",
-      "actions": ["transfer"]
+      "actions": ["manage"]
     },
     {
       "id": "system",
       "name": "System",
-      "type": "admin",
+      "type": "custom",
       "description": "System administration resources",
       "actions": ["admin", "read"]
     }

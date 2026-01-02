@@ -54,7 +54,7 @@
       "name": "Manage Radio Channels",
       "description": "Create and edit radio channels",
       "resource": "radio",
-      "action": "write",
+      "action": "update",
       "scope": "tenant",
       "minLevel": 3
     },
@@ -72,7 +72,7 @@
       "name": "Manage TV Channels",
       "description": "Create and edit TV channels",
       "resource": "tv",
-      "action": "write",
+      "action": "update",
       "scope": "tenant",
       "minLevel": 3
     },
@@ -81,7 +81,7 @@
       "name": "Manage TV Schedule",
       "description": "Manage TV broadcast schedule",
       "resource": "tv_schedule",
-      "action": "write",
+      "action": "update",
       "scope": "tenant",
       "minLevel": 3
     },
@@ -99,7 +99,7 @@
       "name": "Stream Retro Gameplay",
       "description": "Stream retro gameplay to others",
       "resource": "retro",
-      "action": "stream",
+      "action": "execute",
       "scope": "tenant",
       "minLevel": 3
     },
@@ -117,42 +117,42 @@
     {
       "id": "media_jobs",
       "name": "Media Jobs",
-      "type": "data",
+      "type": "entity",
       "description": "Media processing job queue",
       "actions": ["create", "read", "delete"]
     },
     {
       "id": "radio",
       "name": "Radio",
-      "type": "media",
+      "type": "custom",
       "description": "Radio streaming resources",
-      "actions": ["read", "write"]
+      "actions": ["read", "update"]
     },
     {
       "id": "tv",
       "name": "TV",
-      "type": "media",
+      "type": "custom",
       "description": "TV streaming resources",
-      "actions": ["read", "write"]
+      "actions": ["read", "update"]
     },
     {
       "id": "tv_schedule",
       "name": "TV Schedule",
-      "type": "data",
+      "type": "entity",
       "description": "TV broadcast scheduling",
-      "actions": ["read", "write"]
+      "actions": ["read", "update"]
     },
     {
       "id": "retro",
       "name": "Retro Gaming",
-      "type": "media",
+      "type": "custom",
       "description": "Retro gaming emulation",
-      "actions": ["execute", "stream"]
+      "actions": ["execute"]
     },
     {
       "id": "retro_cores",
       "name": "Emulator Cores",
-      "type": "system",
+      "type": "custom",
       "description": "Emulator core management",
       "actions": ["admin"]
     }

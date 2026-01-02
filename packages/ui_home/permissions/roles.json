@@ -36,7 +36,7 @@
       "name": "Navigate to Level 2",
       "description": "Navigate to authenticated user area",
       "resource": "home",
-      "action": "navigate",
+      "action": "execute",
       "scope": "global",
       "minLevel": 2
     },
@@ -45,7 +45,7 @@
       "name": "Navigate to Level 3",
       "description": "Navigate to moderator panel",
       "resource": "home",
-      "action": "navigate",
+      "action": "execute",
       "scope": "global",
       "minLevel": 3
     }
@@ -54,9 +54,9 @@
     {
       "id": "home",
       "name": "Home Page",
-      "type": "ui",
+      "type": "component",
       "description": "Home page resources",
-      "actions": ["read", "create", "navigate"]
+      "actions": ["read", "create", "execute"]
     }
   ]
 }
