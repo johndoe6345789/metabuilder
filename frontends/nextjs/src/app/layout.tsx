@@ -4,7 +4,7 @@ import type { Metadata, Viewport } from 'next'
 
 import { PackageStyleLoader } from '@/components/PackageStyleLoader'
 import { Providers } from './providers'
-import { loadPackage } from '@/lib/packages/unified-package-loader'
+import { loadPackage } from '@/lib/packages/unified'
 
 // List of packages to load styles from
 const PACKAGES_WITH_STYLES = [
