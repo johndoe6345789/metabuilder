@@ -1,0 +1,39 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "config_summary",
+  "name": "Config Summary",
+  "version": "1.0.0",
+  "description": "Configuration summary panels for displaying system stats and metadata",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 4,
+  "primary": false,
+  "dependencies": {},
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "ConfigSummary",
+      "SummaryRow",
+      "SummaryRowInline",
+      "SummaryDivider"
+    ],
+    "scripts": [
+      "summary",
+      "aggregators"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/summary.test.lua",
+      "tests/aggregators.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/config.cases.json"
+      }
+    ]
+  }
+}

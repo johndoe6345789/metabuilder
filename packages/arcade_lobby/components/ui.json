@@ -1,0 +1,450 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "arcade_lobby",
+  "description": "Arcade lobby components including game browser, party queue, and tournament list",
+  "components": [
+    {
+      "id": "arcade_lobby",
+      "name": "ArcadeLobby",
+      "description": "Main arcade lobby layout with game queues and player stats",
+      "props": [
+        {
+          "name": "playersOnline",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Number of players currently online"
+        },
+        {
+          "name": "queuesOpen",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Number of queues currently open"
+        },
+        {
+          "name": "liveTournaments",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Number of live tournaments"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "direction": "column",
+          "spacing": 3,
+          "className": "arcade-lobby",
+          "children": [
+            {
+              "type": "Card",
+              "variant": "outlined",
+              "className": "arcade-lobby-hero",
+              "children": [
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h4",
+                      "fontWeight": "bold",
+                      "children": "Arcade Lobby"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body2",
+                      "color": "secondary",
+                      "children": "Drop into live queues, join tournaments, and spotlight the best plays of the night."
+                    },
+                    {
+                      "type": "Flex",
+                      "gap": 1,
+                      "sx": { "mt": 2 },
+                      "children": [
+                        {
+                          "type": "Chip",
+                          "label": "Matchmaking",
+                          "color": "secondary",
+                          "size": "small"
+                        },
+                        {
+                          "type": "Chip",
+                          "label": "Live tournaments",
+                          "color": "secondary",
+                          "size": "small"
+                        },
+                        {
+                          "type": "Chip",
+                          "label": "Party chat",
+                          "variant": "outlined",
+                          "size": "small"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "game_browser",
+      "name": "GameBrowser",
+      "description": "Grid of featured game queues with wait times",
+      "props": [
+        {
+          "name": "games",
+          "type": "array",
+          "required": true,
+          "description": "List of games to display"
+        },
+        {
+          "name": "columns",
+          "type": "number",
+          "required": false,
+          "default": 3,
+          "description": "Number of grid columns"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "game-browser",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h5",
+                  "fontWeight": "semibold",
+                  "children": "Featured queues"
+                },
+                {
+                  "type": "Grid",
+                  "container": true,
+                  "spacing": 2,
+                  "sx": { "mt": 2 },
+                  "children": {
+                    "type": "iterator",
+                    "items": "{{games}}",
+                    "itemTemplate": {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "sm": 6,
+                      "md": 4,
+                      "children": [
+                        {
+                          "type": "Card",
+                          "variant": "outlined",
+                          "children": [
+                            {
+                              "type": "CardContent",
+                              "children": [
+                                {
+                                  "type": "Text",
+                                  "variant": "subtitle1",
+                                  "fontWeight": "semibold",
+                                  "children": "{{item.title}}"
+                                },
+                                {
+                                  "type": "Text",
+                                  "variant": "caption",
+                                  "color": "secondary",
+                                  "children": "{{item.description}} · Avg wait {{item.waitTime}}"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "party_queue",
+      "name": "PartyQueue",
+      "description": "Party creation and queue status component",
+      "props": [
+        {
+          "name": "queueName",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Current queue name"
+        },
+        {
+          "name": "progress",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Queue progress percentage"
+        },
+        {
+          "name": "estimatedWait",
+          "type": "string",
+          "required": false,
+          "default": "Unknown",
+          "description": "Estimated wait time"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "party-queue",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h5",
+                  "fontWeight": "semibold",
+                  "children": "Queue status"
+                },
+                {
+                  "type": "Text",
+                  "variant": "body2",
+                  "color": "secondary",
+                  "children": "{{queueName}} matchmaking is ramping up. Estimated wait: {{estimatedWait}}."
+                },
+                {
+                  "type": "LinearProgress",
+                  "variant": "determinate",
+                  "value": "{{progress}}",
+                  "sx": { "mt": 2 }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tournament_list",
+      "name": "TournamentList",
+      "description": "List of available tournaments with join actions",
+      "props": [
+        {
+          "name": "tournaments",
+          "type": "array",
+          "required": true,
+          "description": "List of tournaments"
+        },
+        {
+          "name": "canCreate",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether user can create tournaments"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "tournament-list",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h5",
+                      "fontWeight": "semibold",
+                      "children": "Tournaments"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{canCreate}}",
+                      "then": {
+                        "type": "Button",
+                        "variant": "outlined",
+                        "size": "small",
+                        "children": "Create tournament"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Stack",
+                  "spacing": 1,
+                  "sx": { "mt": 2 },
+                  "children": {
+                    "type": "iterator",
+                    "items": "{{tournaments}}",
+                    "itemTemplate": {
+                      "type": "Card",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "type": "Flex",
+                              "justifyContent": "space-between",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "Stack",
+                                  "children": [
+                                    {
+                                      "type": "Text",
+                                      "variant": "subtitle1",
+                                      "fontWeight": "medium",
+                                      "children": "{{item.name}}"
+                                    },
+                                    {
+                                      "type": "Text",
+                                      "variant": "caption",
+                                      "color": "secondary",
+                                      "children": "{{item.participants}} participants · {{item.status}}"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Button",
+                                  "variant": "contained",
+                                  "size": "small",
+                                  "children": "Join"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "stat_card_players",
+      "name": "PlayersOnlineStat",
+      "description": "Stat card showing players currently online",
+      "props": [
+        {
+          "name": "count",
+          "type": "number",
+          "required": true,
+          "description": "Number of players online"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "stat-card",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "caption",
+                  "color": "secondary",
+                  "children": "Players online"
+                },
+                {
+                  "type": "Text",
+                  "variant": "h5",
+                  "fontWeight": "semibold",
+                  "children": "{{count}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "party_cta",
+      "name": "PartyCTA",
+      "description": "Call to action for creating parties and tournaments",
+      "props": [
+        {
+          "name": "canCreateTournament",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether user can create tournaments"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "party-cta",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h5",
+                  "fontWeight": "semibold",
+                  "children": "Party up"
+                },
+                {
+                  "type": "Text",
+                  "variant": "body2",
+                  "color": "secondary",
+                  "children": "Create a squad, invite friends, and keep the lobby humming."
+                },
+                {
+                  "type": "Flex",
+                  "gap": 1,
+                  "sx": { "mt": 2 },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "children": "Start party"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{canCreateTournament}}",
+                      "then": {
+                        "type": "Button",
+                        "variant": "outlined",
+                        "children": "Create tournament"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

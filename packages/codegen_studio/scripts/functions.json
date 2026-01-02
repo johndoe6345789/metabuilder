@@ -1,0 +1,120 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "codegen_studio",
+  "description": "Codegen Studio functions for template generation, blueprint creation, and package scaffolding",
+  "functions": [
+    {
+      "id": "init_on_install",
+      "name": "onInstall",
+      "exported": true,
+      "description": "Initialize Codegen Studio on package install",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "init_on_uninstall",
+      "name": "onUninstall",
+      "exported": true,
+      "description": "Clean up Codegen Studio on package uninstall",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "blueprint_build",
+      "name": "buildBlueprint",
+      "exported": true,
+      "description": "Build project blueprint from input configuration",
+      "category": "generation",
+      "luaScript": "blueprint.lua"
+    },
+    {
+      "id": "generator_get_default_config",
+      "name": "getDefaultConfig",
+      "exported": true,
+      "description": "Get default package configuration for a given package ID",
+      "category": "generation",
+      "luaScript": "package_template/generator.lua"
+    },
+    {
+      "id": "generator_validate_config",
+      "name": "validateConfig",
+      "exported": true,
+      "description": "Validate package configuration before generation",
+      "category": "validation",
+      "luaScript": "package_template/generator.lua"
+    },
+    {
+      "id": "generator_generate_package",
+      "name": "generatePackage",
+      "exported": true,
+      "description": "Generate complete package from configuration",
+      "category": "generation",
+      "luaScript": "package_template/generator.lua"
+    },
+    {
+      "id": "templates_get_categories",
+      "name": "getCategories",
+      "exported": true,
+      "description": "Get list of available package categories",
+      "category": "templates",
+      "luaScript": "package_template/templates.lua"
+    },
+    {
+      "id": "templates_generate_metadata",
+      "name": "generateMetadata",
+      "exported": true,
+      "description": "Generate metadata.json content from config",
+      "category": "templates",
+      "luaScript": "package_template/templates.lua"
+    },
+    {
+      "id": "templates_generate_permissions",
+      "name": "generateDefaultPermissions",
+      "exported": true,
+      "description": "Generate default permissions based on package config",
+      "category": "templates",
+      "luaScript": "package_template/templates.lua"
+    },
+    {
+      "id": "cli_print_help",
+      "name": "printHelp",
+      "exported": true,
+      "description": "Print CLI usage help",
+      "category": "cli",
+      "luaScript": "package_template/cli.lua"
+    },
+    {
+      "id": "cli_parse_args",
+      "name": "parseArgs",
+      "exported": true,
+      "description": "Parse command line arguments",
+      "category": "cli",
+      "luaScript": "package_template/cli.lua"
+    },
+    {
+      "id": "cli_run",
+      "name": "runCli",
+      "exported": true,
+      "description": "Run CLI command with parsed arguments",
+      "category": "cli",
+      "luaScript": "package_template/cli.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "onInstall",
+      "onUninstall",
+      "buildBlueprint",
+      "getDefaultConfig",
+      "validateConfig",
+      "generatePackage",
+      "getCategories",
+      "generateMetadata",
+      "generateDefaultPermissions",
+      "printHelp",
+      "parseArgs",
+      "runCli"
+    ]
+  }
+}

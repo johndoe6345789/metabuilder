@@ -1,0 +1,57 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "arcade_lobby",
+  "description": "Arcade lobby matchmaking, queue metrics, and permission functions",
+  "functions": [
+    {
+      "id": "matchmaking_assign_bucket",
+      "name": "assignBucket",
+      "exported": true,
+      "description": "Assign party to matchmaking bucket based on size",
+      "category": "matching",
+      "luaScript": "matchmaking.lua"
+    },
+    {
+      "id": "queue_metrics_summarize",
+      "name": "summarizeQueues",
+      "exported": true,
+      "description": "Summarize queue health and wait times",
+      "category": "analytics",
+      "luaScript": "queue_metrics.lua"
+    },
+    {
+      "id": "permissions_can_create_tournament",
+      "name": "canCreateTournament",
+      "exported": true,
+      "description": "Check if user can create tournaments",
+      "category": "security",
+      "luaScript": "permissions.lua"
+    },
+    {
+      "id": "init_on_install",
+      "name": "onInstall",
+      "exported": true,
+      "description": "Lifecycle hook for package installation",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "init_on_remove",
+      "name": "onRemove",
+      "exported": true,
+      "description": "Lifecycle hook for package removal",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "assignBucket",
+      "summarizeQueues",
+      "canCreateTournament",
+      "onInstall",
+      "onRemove"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "code_editor",
+  "name": "Code Editor",
+  "version": "1.0.0",
+  "description": "Code editor components for JSON, Lua, and theme editing",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "editors",
+  "minLevel": 5,
+  "primary": false,
+  "dependencies": {},
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "CodeEditor",
+      "JsonEditor",
+      "LuaEditor",
+      "ThemeEditor"
+    ],
+    "scripts": [
+      "json",
+      "lua",
+      "theme"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua",
+      "tests/editor.test.lua",
+      "tests/theme.test.lua",
+      "tests/json.test.lua",
+      "tests/lua.test.lua",
+      "tests/init.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/editor.cases.json"
+      }
+    ]
+  }
+}
