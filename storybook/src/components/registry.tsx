@@ -1,89 +1,89 @@
 /**
  * Component Registry
- * Maps Lua component type names to React components
+ * Maps JSON component type names to React components
  */
 
 import React, { type ComponentType, type ReactNode } from 'react'
 
-export interface LuaComponentProps {
+export interface ComponentProps {
   className?: string
   children?: ReactNode
   [key: string]: unknown
 }
 
-type AnyComponent = ComponentType<LuaComponentProps>
+type AnyComponent = ComponentType<ComponentProps>
 
 /**
  * Basic UI Components
  * These mirror the components available in the main app's fakemui library
  */
 
-export const Box: React.FC<LuaComponentProps> = ({ className, children, ...props }) => (
+export const Box: React.FC<ComponentProps> = ({ className, children, ...props }) => (
   <div className={className} {...props}>{children}</div>
 )
 
-export const Stack: React.FC<LuaComponentProps> = ({ className = 'flex flex-col gap-4', children }) => (
+export const Stack: React.FC<ComponentProps> = ({ className = 'flex flex-col gap-4', children }) => (
   <div className={className}>{children}</div>
 )
 
-export const Flex: React.FC<LuaComponentProps> = ({ className = 'flex gap-4', children }) => (
+export const Flex: React.FC<ComponentProps> = ({ className = 'flex gap-4', children }) => (
   <div className={className}>{children}</div>
 )
 
-export const Grid: React.FC<LuaComponentProps> = ({ className = 'grid grid-cols-2 gap-4', children }) => (
+export const Grid: React.FC<ComponentProps> = ({ className = 'grid grid-cols-2 gap-4', children }) => (
   <div className={className}>{children}</div>
 )
 
-export const Container: React.FC<LuaComponentProps> = ({ className = 'max-w-7xl mx-auto px-4', children }) => (
+export const Container: React.FC<ComponentProps> = ({ className = 'max-w-7xl mx-auto px-4', children }) => (
   <div className={className}>{children}</div>
 )
 
-export const Card: React.FC<LuaComponentProps> = ({ className = 'rounded-lg border shadow-sm bg-canvas', children }) => (
+export const Card: React.FC<ComponentProps> = ({ className = 'rounded-lg border shadow-sm bg-canvas', children }) => (
   <div className={className}>{children}</div>
 )
 
-export const CardHeader: React.FC<LuaComponentProps> = ({ className = 'p-6 pb-2', children }) => (
+export const CardHeader: React.FC<ComponentProps> = ({ className = 'p-6 pb-2', children }) => (
   <div className={className}>{children}</div>
 )
 
-export const CardContent: React.FC<LuaComponentProps> = ({ className = 'p-6 pt-0', children }) => (
+export const CardContent: React.FC<ComponentProps> = ({ className = 'p-6 pt-0', children }) => (
   <div className={className}>{children}</div>
 )
 
-export const CardActions: React.FC<LuaComponentProps> = ({ className = 'p-6 pt-0 flex gap-2', children }) => (
+export const CardActions: React.FC<ComponentProps> = ({ className = 'p-6 pt-0 flex gap-2', children }) => (
   <div className={className}>{children}</div>
 )
 
-export const CardDescription: React.FC<LuaComponentProps> = ({ className = 'text-sm text-muted-foreground', children }) => (
+export const CardDescription: React.FC<ComponentProps> = ({ className = 'text-sm text-muted-foreground', children }) => (
   <p className={className}>{children}</p>
 )
 
 // ScrollArea - scrollable container
-export const ScrollArea: React.FC<LuaComponentProps & { maxHeight?: string | number }> = ({ 
-  className = 'overflow-auto', 
+export const ScrollArea: React.FC<ComponentProps & { maxHeight?: string | number }> = ({
+  className = 'overflow-auto',
   maxHeight,
-  children 
+  children
 }) => (
   <div className={className} style={{ maxHeight: maxHeight || 'auto' }}>{children}</div>
 )
 
 // ComponentRef - placeholder for dynamic component references
-export const ComponentRef: React.FC<LuaComponentProps & { refId?: string; component?: string }> = ({ 
+export const ComponentRef: React.FC<ComponentProps & { refId?: string; component?: string }> = ({
   refId,
   component,
   className = 'p-2 border border-dashed rounded bg-muted/30',
-  children 
+  children
 }) => (
   <div className={className}>
     {children || <span className="text-xs text-muted-foreground">Component: {component || refId || 'unknown'}</span>}
   </div>
 )
 
-export const Paper: React.FC<LuaComponentProps> = ({ className = 'rounded border p-4 bg-canvas', children }) => (
+export const Paper: React.FC<ComponentProps> = ({ className = 'rounded border p-4 bg-canvas', children }) => (
   <div className={className}>{children}</div>
 )
 
-interface TypographyProps extends LuaComponentProps {
+interface TypographyProps extends ComponentProps {
   variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body1' | 'body2' | 'caption' | 'overline'
   text?: string
 }
@@ -121,7 +121,7 @@ export const Typography: React.FC<TypographyProps> = ({
   }
 }
 
-interface ButtonProps extends LuaComponentProps {
+interface ButtonProps extends ComponentProps {
   variant?: 'contained' | 'outlined' | 'text'
   color?: 'primary' | 'secondary' | 'error'
   size?: 'small' | 'medium' | 'large'
@@ -159,7 +159,7 @@ export const Button: React.FC<ButtonProps> = ({
   )
 }
 
-interface IconProps extends LuaComponentProps {
+interface IconProps extends ComponentProps {
   name?: string
   size?: 'small' | 'medium' | 'large'
 }
@@ -185,11 +185,11 @@ export const Icon: React.FC<IconProps> = ({ name = 'default', size = 'medium', c
   return <span className={`${sizeClasses[size]} ${className}`}>{iconMap[name] || `[${name}]`}</span>
 }
 
-export const Divider: React.FC<LuaComponentProps> = ({ className = 'border-t my-4' }) => (
+export const Divider: React.FC<ComponentProps> = ({ className = 'border-t my-4' }) => (
   <hr className={className} />
 )
 
-export const Avatar: React.FC<LuaComponentProps & { src?: string; alt?: string }> = ({ 
+export const Avatar: React.FC<ComponentProps & { src?: string; alt?: string }> = ({ 
   src, 
   alt = 'Avatar',
   className = 'w-10 h-10 rounded-full bg-muted flex items-center justify-center'
@@ -197,7 +197,7 @@ export const Avatar: React.FC<LuaComponentProps & { src?: string; alt?: string }
   src ? <img src={src} alt={alt} className={className} /> : <div className={className}>{alt[0]}</div>
 )
 
-interface TabsProps extends LuaComponentProps {
+interface TabsProps extends ComponentProps {
   value?: string
   items?: Array<{ value: string; label: string; content?: ReactNode }>
 }
@@ -229,7 +229,7 @@ export const Tabs: React.FC<TabsProps> = ({ items = [], className = '' }) => {
   )
 }
 
-export const Tab: React.FC<LuaComponentProps & { label?: string; value?: string }> = ({ 
+export const Tab: React.FC<ComponentProps & { label?: string; value?: string }> = ({ 
   label, 
   children,
   className = 'py-2 px-4'
@@ -237,7 +237,7 @@ export const Tab: React.FC<LuaComponentProps & { label?: string; value?: string 
   <div className={className}>{label || children}</div>
 )
 
-export const Alert: React.FC<LuaComponentProps & { severity?: 'info' | 'success' | 'warning' | 'error' }> = ({
+export const Alert: React.FC<ComponentProps & { severity?: 'info' | 'success' | 'warning' | 'error' }> = ({
   severity = 'info',
   className = '',
   children,
@@ -252,7 +252,7 @@ export const Alert: React.FC<LuaComponentProps & { severity?: 'info' | 'success'
 }
 
 // Progress bar component
-interface ProgressProps extends LuaComponentProps {
+interface ProgressProps extends ComponentProps {
   value?: number
   max?: number
   variant?: 'determinate' | 'indeterminate'
@@ -285,7 +285,7 @@ export const Progress: React.FC<ProgressProps> = ({
 }
 
 // CircularProgress - spinning loader
-interface CircularProgressProps extends LuaComponentProps {
+interface CircularProgressProps extends ComponentProps {
   size?: 'small' | 'medium' | 'large' | number
   color?: 'primary' | 'secondary' | 'inherit'
 }
@@ -307,7 +307,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
 }
 
 // Skeleton - loading placeholder
-interface SkeletonProps extends LuaComponentProps {
+interface SkeletonProps extends ComponentProps {
   variant?: 'text' | 'circular' | 'rectangular' | 'rounded'
   width?: string | number
   height?: string | number
@@ -341,7 +341,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   )
 }
 
-export const Badge: React.FC<LuaComponentProps & { color?: string }> = ({
+export const Badge: React.FC<ComponentProps & { color?: string }> = ({
   color: _color = 'default',
   className = '',
   children,
@@ -351,7 +351,7 @@ export const Badge: React.FC<LuaComponentProps & { color?: string }> = ({
   </span>
 )
 
-export const Chip: React.FC<LuaComponentProps & { label?: string }> = ({
+export const Chip: React.FC<ComponentProps & { label?: string }> = ({
   label,
   className = 'inline-flex items-center px-3 py-1 rounded-full text-sm bg-muted',
   children,
@@ -360,7 +360,7 @@ export const Chip: React.FC<LuaComponentProps & { label?: string }> = ({
 )
 
 // Placeholder components for complex Lua package components
-export const Level4Header: React.FC<LuaComponentProps & { username?: string; nerdMode?: boolean }> = ({
+export const Level4Header: React.FC<ComponentProps & { username?: string; nerdMode?: boolean }> = ({
   username = 'User',
   nerdMode = false,
 }) => (
@@ -376,7 +376,7 @@ export const Level4Header: React.FC<LuaComponentProps & { username?: string; ner
   </header>
 )
 
-export const IntroSection: React.FC<LuaComponentProps & { 
+export const IntroSection: React.FC<ComponentProps & { 
   eyebrow?: string
   title?: string
   description?: string 
@@ -388,20 +388,20 @@ export const IntroSection: React.FC<LuaComponentProps & {
   </section>
 )
 
-export const AppHeader: React.FC<LuaComponentProps> = ({ children }) => (
+export const AppHeader: React.FC<ComponentProps> = ({ children }) => (
   <header className="border-b p-4 bg-canvas">{children}</header>
 )
 
-export const AppFooter: React.FC<LuaComponentProps> = ({ children }) => (
+export const AppFooter: React.FC<ComponentProps> = ({ children }) => (
   <footer className="border-t p-4 bg-canvas mt-auto">{children}</footer>
 )
 
-export const Sidebar: React.FC<LuaComponentProps> = ({ children, className = 'w-64 border-r p-4 bg-canvas' }) => (
+export const Sidebar: React.FC<ComponentProps> = ({ children, className = 'w-64 border-r p-4 bg-canvas' }) => (
   <aside className={className}>{children}</aside>
 )
 
 // Dialog components
-interface DialogProps extends LuaComponentProps {
+interface DialogProps extends ComponentProps {
   open?: boolean
   onClose?: () => void
   maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
@@ -430,20 +430,20 @@ export const Dialog: React.FC<DialogProps> = ({
   )
 }
 
-export const DialogTitle: React.FC<LuaComponentProps> = ({ children, className = 'px-6 py-4 border-b font-semibold text-lg flex items-center gap-2' }) => (
+export const DialogTitle: React.FC<ComponentProps> = ({ children, className = 'px-6 py-4 border-b font-semibold text-lg flex items-center gap-2' }) => (
   <div className={className}>{children}</div>
 )
 
-export const DialogContent: React.FC<LuaComponentProps> = ({ children, className = 'px-6 py-4' }) => (
+export const DialogContent: React.FC<ComponentProps> = ({ children, className = 'px-6 py-4' }) => (
   <div className={className}>{children}</div>
 )
 
-export const DialogActions: React.FC<LuaComponentProps> = ({ children, className = 'px-6 py-4 border-t flex justify-end gap-2' }) => (
+export const DialogActions: React.FC<ComponentProps> = ({ children, className = 'px-6 py-4 border-t flex justify-end gap-2' }) => (
   <div className={className}>{children}</div>
 )
 
 // Form inputs
-interface TextFieldProps extends LuaComponentProps {
+interface TextFieldProps extends ComponentProps {
   label?: string
   placeholder?: string
   type?: string
@@ -469,7 +469,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   </div>
 )
 
-interface SelectProps extends LuaComponentProps {
+interface SelectProps extends ComponentProps {
   label?: string
   options?: Array<{ value: string | number; label: string }> | Record<string, unknown>
 }
@@ -492,7 +492,7 @@ export const Select: React.FC<SelectProps> = ({ label, options, className = '', 
 }
 
 // Label - standalone label component
-export const Label: React.FC<LuaComponentProps & { htmlFor?: string }> = ({ 
+export const Label: React.FC<ComponentProps & { htmlFor?: string }> = ({ 
   htmlFor, 
   children, 
   className = 'block text-sm font-medium mb-1' 
@@ -501,7 +501,7 @@ export const Label: React.FC<LuaComponentProps & { htmlFor?: string }> = ({
 )
 
 // Textarea - multiline text input
-interface TextareaProps extends LuaComponentProps {
+interface TextareaProps extends ComponentProps {
   label?: string
   placeholder?: string
   rows?: number
@@ -526,7 +526,7 @@ export const Textarea: React.FC<TextareaProps> = ({
 )
 
 // Switch - toggle switch input
-interface SwitchProps extends LuaComponentProps {
+interface SwitchProps extends ComponentProps {
   checked?: boolean
   onChange?: (checked: boolean) => void
   disabled?: boolean
@@ -557,7 +557,7 @@ export const Switch: React.FC<SwitchProps> = ({
 }
 
 // FormField - wrapper for form inputs with label and error
-interface FormFieldProps extends LuaComponentProps {
+interface FormFieldProps extends ComponentProps {
   label?: string
   error?: string
   required?: boolean
@@ -586,7 +586,7 @@ export const FormField: React.FC<FormFieldProps> = ({
 )
 
 // ConditionalRender - renders children based on condition (always renders in Storybook for preview)
-interface ConditionalRenderProps extends LuaComponentProps {
+interface ConditionalRenderProps extends ComponentProps {
   condition?: boolean
   when?: string
   fallback?: React.ReactNode
@@ -600,7 +600,7 @@ export const ConditionalRender: React.FC<ConditionalRenderProps> = ({
 )
 
 // Image - image component
-interface ImageProps extends LuaComponentProps {
+interface ImageProps extends ComponentProps {
   src?: string
   alt?: string
   width?: string | number
@@ -634,7 +634,7 @@ export const Image: React.FC<ImageProps> = ({
 )
 
 // Iframe - embedded frame
-interface IframeProps extends LuaComponentProps {
+interface IframeProps extends ComponentProps {
   src?: string
   title?: string
   width?: string | number
@@ -667,20 +667,20 @@ export const Iframe: React.FC<IframeProps> = ({
 )
 
 // Navigation
-export const AppBar: React.FC<LuaComponentProps> = ({ children, className = 'bg-canvas border-b' }) => (
+export const AppBar: React.FC<ComponentProps> = ({ children, className = 'bg-canvas border-b' }) => (
   <header className={className}>{children}</header>
 )
 
-export const Toolbar: React.FC<LuaComponentProps> = ({ children, className = 'flex items-center gap-4 px-4 py-2' }) => (
+export const Toolbar: React.FC<ComponentProps> = ({ children, className = 'flex items-center gap-4 px-4 py-2' }) => (
   <div className={className}>{children}</div>
 )
 
-export const Link: React.FC<LuaComponentProps & { href?: string }> = ({ href = '#', children, className = 'text-accent hover:underline' }) => (
+export const Link: React.FC<ComponentProps & { href?: string }> = ({ href = '#', children, className = 'text-accent hover:underline' }) => (
   <a href={href} className={className}>{children}</a>
 )
 
 // IconButton - clickable icon with button behavior
-interface IconButtonProps extends LuaComponentProps {
+interface IconButtonProps extends ComponentProps {
   onClick?: () => void
   disabled?: boolean
   size?: 'small' | 'medium' | 'large'
@@ -711,7 +711,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
 }
 
 // Menu - dropdown menu container
-interface MenuProps extends LuaComponentProps {
+interface MenuProps extends ComponentProps {
   open?: boolean
   anchorEl?: unknown
   onClose?: () => void
@@ -727,7 +727,7 @@ export const Menu: React.FC<MenuProps> = ({ children, className = '' }) => {
 }
 
 // MenuItem - individual menu item
-interface MenuItemProps extends LuaComponentProps {
+interface MenuItemProps extends ComponentProps {
   onClick?: () => void
   disabled?: boolean
   selected?: boolean
@@ -749,11 +749,11 @@ export const MenuItem: React.FC<MenuItemProps> = ({
 )
 
 // Lists
-export const List: React.FC<LuaComponentProps> = ({ children, className = 'flex flex-col' }) => (
+export const List: React.FC<ComponentProps> = ({ children, className = 'flex flex-col' }) => (
   <ul className={className}>{children}</ul>
 )
 
-export const ListItem: React.FC<LuaComponentProps & { button?: boolean; selected?: boolean }> = ({ 
+export const ListItem: React.FC<ComponentProps & { button?: boolean; selected?: boolean }> = ({ 
   button = false, 
   selected = false,
   children, 
@@ -765,12 +765,12 @@ export const ListItem: React.FC<LuaComponentProps & { button?: boolean; selected
 )
 
 // ListItemIcon - icon container in list items
-export const ListItemIcon: React.FC<LuaComponentProps> = ({ children, className = 'flex-shrink-0 w-6 h-6 flex items-center justify-center' }) => (
+export const ListItemIcon: React.FC<ComponentProps> = ({ children, className = 'flex-shrink-0 w-6 h-6 flex items-center justify-center' }) => (
   <span className={className}>{children}</span>
 )
 
 // ListItemText - text container in list items
-interface ListItemTextProps extends LuaComponentProps {
+interface ListItemTextProps extends ComponentProps {
   primary?: string
   secondary?: string
 }
@@ -784,7 +784,7 @@ export const ListItemText: React.FC<ListItemTextProps> = ({ primary, secondary, 
 )
 
 // ListItemButton - clickable list item
-export const ListItemButton: React.FC<LuaComponentProps & { selected?: boolean; onClick?: () => void }> = ({ 
+export const ListItemButton: React.FC<ComponentProps & { selected?: boolean; onClick?: () => void }> = ({ 
   selected = false,
   onClick,
   children, 
@@ -799,7 +799,7 @@ export const ListItemButton: React.FC<LuaComponentProps & { selected?: boolean; 
 )
 
 // Collapse - collapsible container
-interface CollapseProps extends LuaComponentProps {
+interface CollapseProps extends ComponentProps {
   in?: boolean
   open?: boolean
 }
@@ -815,7 +815,7 @@ export const Collapse: React.FC<CollapseProps> = ({
 }
 
 // Breadcrumbs - navigation breadcrumb trail
-interface BreadcrumbsProps extends LuaComponentProps {
+interface BreadcrumbsProps extends ComponentProps {
   separator?: React.ReactNode
 }
 
@@ -838,7 +838,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 }
 
 // Data display
-interface TableProps extends LuaComponentProps {
+interface TableProps extends ComponentProps {
   columns?: Array<{ field: string; headerName: string; width?: number; flex?: number }>
   rows?: Array<Record<string, unknown>>
 }
@@ -870,7 +870,7 @@ export const Table: React.FC<TableProps> = ({ columns = [], rows = [], className
   </div>
 )
 
-export const Pagination: React.FC<LuaComponentProps & { count?: number; page?: number }> = ({ 
+export const Pagination: React.FC<ComponentProps & { count?: number; page?: number }> = ({ 
   count = 1, 
   page = 1,
   className = 'flex items-center gap-2'
@@ -885,573 +885,7 @@ export const Pagination: React.FC<LuaComponentProps & { count?: number; page?: n
 /**
  * Helper to push a JS object/array as a Lua table
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function pushTable(lua: any, L: any, to_luastring: any, data: unknown): void {
-  if (Array.isArray(data)) {
-    lua.lua_createtable(L, data.length, 0)
-    data.forEach((item, i) => {
-      if (typeof item === 'number') {
-        lua.lua_pushnumber(L, item)
-      } else if (typeof item === 'string') {
-        lua.lua_pushstring(L, to_luastring(item))
-      } else if (typeof item === 'boolean') {
-        lua.lua_pushboolean(L, item ? 1 : 0)
-      } else if (typeof item === 'object' && item !== null) {
-        pushTable(lua, L, to_luastring, item)
-      } else {
-        lua.lua_pushnil(L)
-      }
-      lua.lua_rawseti(L, -2, i + 1)
-    })
-  } else if (typeof data === 'object' && data !== null) {
-    const entries = Object.entries(data as Record<string, unknown>)
-    lua.lua_createtable(L, 0, entries.length)
-    for (const [key, val] of entries) {
-      lua.lua_pushstring(L, to_luastring(key))
-      if (typeof val === 'number') {
-        lua.lua_pushnumber(L, val)
-      } else if (typeof val === 'string') {
-        lua.lua_pushstring(L, to_luastring(val))
-      } else if (typeof val === 'boolean') {
-        lua.lua_pushboolean(L, val ? 1 : 0)
-      } else if (typeof val === 'object' && val !== null) {
-        pushTable(lua, L, to_luastring, val)
-      } else {
-        lua.lua_pushnil(L)
-      }
-      lua.lua_rawset(L, -3)
-    }
-  } else {
-    lua.lua_createtable(L, 0, 0)
-  }
-}
-
-/**
- * Convert Lua table at stack index to JS object
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function tableToJs(lua: any, L: any, to_jsstring: any, index: number): unknown {
-  const result: Record<string, unknown> = {}
-  const arrayPart: unknown[] = []
-  let isArray = true
-  let maxIdx = 0
-  
-  lua.lua_pushnil(L)
-  while (lua.lua_next(L, index < 0 ? index - 1 : index) !== 0) {
-    const keyType = lua.lua_type(L, -2)
-    const valType = lua.lua_type(L, -1)
-    
-    let value: unknown
-    if (valType === lua.LUA_TSTRING) {
-      value = to_jsstring(lua.lua_tostring(L, -1))
-    } else if (valType === lua.LUA_TNUMBER) {
-      value = lua.lua_tonumber(L, -1)
-    } else if (valType === lua.LUA_TBOOLEAN) {
-      value = lua.lua_toboolean(L, -1) !== 0
-    } else if (valType === lua.LUA_TTABLE) {
-      value = tableToJs(lua, L, to_jsstring, -1)
-    } else if (valType === lua.LUA_TNIL) {
-      value = null
-    } else {
-      value = `[${valType}]`
-    }
-    
-    if (keyType === lua.LUA_TNUMBER) {
-      const idx = lua.lua_tonumber(L, -2)
-      if (Number.isInteger(idx) && idx > 0) {
-        arrayPart[idx - 1] = value
-        maxIdx = Math.max(maxIdx, idx)
-      } else {
-        isArray = false
-        result[String(idx)] = value
-      }
-    } else if (keyType === lua.LUA_TSTRING) {
-      isArray = false
-      result[to_jsstring(lua.lua_tostring(L, -2))] = value
-    }
-    
-    lua.lua_pop(L, 1)
-  }
-  
-  if (isArray && maxIdx === arrayPart.length && maxIdx > 0) {
-    return arrayPart
-  }
-  
-  // Merge array part
-  arrayPart.forEach((v, i) => { result[String(i + 1)] = v })
-  return result
-}
-
-/**
- * Parse Lua annotations to extract parameter info
- */
-interface LuaParam {
-  name: string
-  type: string
-  description: string
-}
-
-interface LuaFunctionInfo {
-  params: LuaParam[]
-  returnType?: string
-  returnDesc?: string
-}
-
-function parseLuaAnnotations(code: string): LuaFunctionInfo {
-  const params: LuaParam[] = []
-  let returnType: string | undefined
-  let returnDesc: string | undefined
-  
-  // Match ---@param name type description
-  const paramRegex = /---@param\s+(\w+)\s+(\w+)\s*(.*)/g
-  let match
-  while ((match = paramRegex.exec(code)) !== null) {
-    params.push({
-      name: match[1],
-      type: match[2],
-      description: match[3].trim()
-    })
-  }
-  
-  // Match ---@return type description
-  const returnMatch = code.match(/---@return\s+(\w+)\s*(.*)/)
-  if (returnMatch) {
-    returnType = returnMatch[1]
-    returnDesc = returnMatch[2].trim()
-  }
-  
-  // If no annotations, try to parse function signature
-  if (params.length === 0) {
-    const funcMatch = code.match(/(?:local\s+)?function\s+\w*\s*\(([^)]*)\)/)
-    if (funcMatch && funcMatch[1]) {
-      const argNames = funcMatch[1].split(',').map(a => a.trim()).filter(Boolean)
-      for (const name of argNames) {
-        params.push({ name, type: 'any', description: '' })
-      }
-    }
-  }
-  
-  return { params, returnType, returnDesc }
-}
-
-function getDefaultValue(type: string): string {
-  switch (type) {
-    case 'number': return '0'
-    case 'string': return ''
-    case 'boolean': return 'false'
-    case 'table': return '{}'
-    default: return ''
-  }
-}
-
-/**
- * LuaScriptViewer - Shows Lua utility scripts with code and execution
- */
-export const LuaScriptViewer: React.FC<LuaComponentProps & {
-  scriptFile?: string
-  scriptName?: string
-  description?: string
-  category?: string
-  packageId?: string
-}> = ({ scriptFile, scriptName, description, category, packageId }) => {
-  const [code, setCode] = React.useState<string | null>(null)
-  const [funcInfo, setFuncInfo] = React.useState<LuaFunctionInfo | null>(null)
-  const [inputs, setInputs] = React.useState<Record<string, string>>({})
-  const [result, setResult] = React.useState<string | null>(null)
-  const [error, setError] = React.useState<string | null>(null)
-  const [loading, setLoading] = React.useState(true)
-
-  React.useEffect(() => {
-    async function loadScript() {
-      if (!scriptFile) return
-      
-      // Try to find the package from the current URL or context
-      const pkgId = packageId || window.location.hash.match(/packageId=([^&]+)/)?.[1] || 
-                    window.location.pathname.split('/').find(p => p.includes('_')) ||
-                    'irc_webchat' // Fallback
-      
-      try {
-        const response = await fetch(`/packages/${pkgId}/seed/scripts/${scriptFile}`)
-        if (response.ok) {
-          const luaCode = await response.text()
-          setCode(luaCode)
-          
-          // Parse annotations and set up default inputs
-          const info = parseLuaAnnotations(luaCode)
-          setFuncInfo(info)
-          
-          const defaultInputs: Record<string, string> = {}
-          for (const param of info.params) {
-            // Smart defaults based on param name/type
-            if (param.name.includes('timestamp') || param.name.includes('time')) {
-              defaultInputs[param.name] = String(Date.now())
-            } else if (param.type === 'boolean') {
-              defaultInputs[param.name] = 'true'
-            } else {
-              defaultInputs[param.name] = getDefaultValue(param.type)
-            }
-          }
-          setInputs(defaultInputs)
-        } else {
-          setError(`Failed to load: ${response.statusText}`)
-        }
-      } catch (err) {
-        setError(String(err))
-      }
-      setLoading(false)
-    }
-    loadScript()
-  }, [scriptFile, packageId])
-
-  const updateInput = (name: string, value: string) => {
-    setInputs(prev => ({ ...prev, [name]: value }))
-  }
-
-  const runScript = async () => {
-    if (!code || !funcInfo) return
-    setError(null)
-    setResult(null)
-    
-    try {
-      // Dynamically import fengari
-      const fengari = await import('fengari-web')
-      const { lua, lauxlib, lualib, to_luastring, to_jsstring } = fengari
-      
-      const L = lauxlib.luaL_newstate()
-      lualib.luaL_openlibs(L)
-      
-      // Load the script
-      const loadResult = lauxlib.luaL_loadstring(L, to_luastring(code))
-      if (loadResult !== lua.LUA_OK) {
-        setError(`Load error: ${to_jsstring(lua.lua_tostring(L, -1))}`)
-        lua.lua_close(L)
-        return
-      }
-      
-      // Execute to get the function
-      const execResult = lua.lua_pcall(L, 0, 1, 0)
-      if (execResult !== lua.LUA_OK) {
-        setError(`Exec error: ${to_jsstring(lua.lua_tostring(L, -1))}`)
-        lua.lua_close(L)
-        return
-      }
-      
-      // Check return type
-      const returnType = lua.lua_type(L, -1)
-      
-      if (returnType === lua.LUA_TFUNCTION) {
-        // Push all parameters in order
-        for (const param of funcInfo.params) {
-          const value = inputs[param.name] || ''
-          
-          if (param.type === 'number') {
-            lua.lua_pushnumber(L, parseFloat(value) || 0)
-          } else if (param.type === 'boolean') {
-            lua.lua_pushboolean(L, value === 'true' || value === '1' ? 1 : 0)
-          } else if (param.type === 'table') {
-            try {
-              const tableData = JSON.parse(value || '{}')
-              pushTable(lua, L, to_luastring, tableData)
-            } catch {
-              lua.lua_createtable(L, 0, 0)
-            }
-          } else {
-            lua.lua_pushstring(L, to_luastring(value))
-          }
-        }
-        
-        const callResult = lua.lua_pcall(L, funcInfo.params.length, 1, 0)
-        if (callResult !== lua.LUA_OK) {
-          setError(`Call error: ${to_jsstring(lua.lua_tostring(L, -1))}`)
-          lua.lua_close(L)
-          return
-        }
-        
-        // Get result
-        const resultType = lua.lua_type(L, -1)
-        if (resultType === lua.LUA_TSTRING) {
-          setResult(to_jsstring(lua.lua_tostring(L, -1)))
-        } else if (resultType === lua.LUA_TNUMBER) {
-          setResult(String(lua.lua_tonumber(L, -1)))
-        } else if (resultType === lua.LUA_TBOOLEAN) {
-          setResult(lua.lua_toboolean(L, -1) ? 'true' : 'false')
-        } else if (resultType === lua.LUA_TTABLE) {
-          setResult(JSON.stringify(tableToJs(lua, L, to_jsstring, -1), null, 2))
-        } else if (resultType === lua.LUA_TNIL) {
-          setResult('nil')
-        } else {
-          const typeNames = ['nil', 'boolean', 'lightuserdata', 'number', 'string', 'table', 'function', 'userdata', 'thread']
-          setResult(`[${typeNames[resultType] || 'unknown'}]`)
-        }
-      } else if (returnType === lua.LUA_TTABLE) {
-        // Module table - look for exported function
-        setResult('Module returned (select a specific function)')
-      } else {
-        const typeNames = ['nil', 'boolean', 'lightuserdata', 'number', 'string', 'table', 'function', 'userdata', 'thread']
-        setResult(`Script returned: ${typeNames[returnType] || 'unknown'}`)
-      }
-      
-      lua.lua_close(L)
-    } catch (err) {
-      setError(String(err))
-    }
-  }
-
-  if (loading) {
-    return <div className="p-4">Loading script...</div>
-  }
-
-  return (
-    <div className="p-6 space-y-4">
-      {/* Header */}
-      <div className="border-b pb-4">
-        <h2 className="text-xl font-semibold flex items-center gap-2">
-          📜 {scriptName || scriptFile}
-        </h2>
-        <p className="text-muted-foreground">{description}</p>
-        {category && <span className="text-xs bg-muted px-2 py-1 rounded">Category: {category}</span>}
-      </div>
-      
-      {/* Code viewer */}
-      <div className="border rounded-lg overflow-hidden">
-        <div className="bg-muted px-4 py-2 text-sm font-medium border-b">Lua Code</div>
-        <pre className="p-4 bg-[#1e1e1e] text-[#d4d4d4] overflow-x-auto text-sm font-mono max-h-64 overflow-y-auto">
-          {code || 'No code loaded'}
-        </pre>
-      </div>
-      
-      {/* Test runner with dynamic inputs */}
-      <div className="border rounded-lg p-4 space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="font-medium">Test Execution</div>
-          {funcInfo?.returnType && (
-            <span className="text-xs text-muted-foreground">
-              Returns: <code className="bg-muted px-1 rounded">{funcInfo.returnType}</code>
-              {funcInfo.returnDesc && ` - ${funcInfo.returnDesc}`}
-            </span>
-          )}
-        </div>
-        
-        {/* Dynamic parameter inputs */}
-        {funcInfo && funcInfo.params.length > 0 ? (
-          <div className="space-y-3">
-            {funcInfo.params.map(param => (
-              <div key={param.name} className="space-y-1">
-                <label className="flex items-center gap-2 text-sm">
-                  <span className="font-medium">{param.name}</span>
-                  <code className="text-xs bg-muted px-1 rounded text-muted-foreground">{param.type}</code>
-                  {param.description && (
-                    <span className="text-muted-foreground">— {param.description}</span>
-                  )}
-                </label>
-                {param.type === 'boolean' ? (
-                  <select
-                    value={inputs[param.name] || 'false'}
-                    onChange={e => updateInput(param.name, e.target.value)}
-                    className="w-full px-3 py-2 border rounded text-sm"
-                  >
-                    <option value="true">true</option>
-                    <option value="false">false</option>
-                  </select>
-                ) : param.type === 'table' ? (
-                  <textarea
-                    value={inputs[param.name] || '{}'}
-                    onChange={e => updateInput(param.name, e.target.value)}
-                    className="w-full px-3 py-2 border rounded text-sm font-mono"
-                    rows={3}
-                    placeholder='{"key": "value"}'
-                  />
-                ) : (
-                  <input 
-                    type={param.type === 'number' ? 'number' : 'text'}
-                    value={inputs[param.name] || ''}
-                    onChange={e => updateInput(param.name, e.target.value)}
-                    className="w-full px-3 py-2 border rounded text-sm"
-                    placeholder={`Enter ${param.name}...`}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">No parameters detected</p>
-        )}
-        
-        <button 
-          onClick={runScript}
-          className="w-full px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 flex items-center justify-center gap-2"
-        >
-          ▶ Run Script
-        </button>
-        
-        {error && (
-          <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded text-sm">
-            {error}
-          </div>
-        )}
-        
-        {result && (
-          <div className="p-3 bg-green-50 border border-green-200 rounded">
-            <span className="text-sm text-muted-foreground">Result: </span>
-            <pre className="font-mono font-medium whitespace-pre-wrap">{result}</pre>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
-/**
- * IRCWebchat - Classic IRC-style chat interface
- */
-interface IRCMessage {
-  id: string
-  user: string
-  text: string
-  timestamp: number
-  type: 'message' | 'join' | 'leave' | 'system'
-}
-
-export const IRCWebchat: React.FC<LuaComponentProps & {
-  channelName?: string
-}> = ({ channelName = 'general' }) => {
-  const [messages, setMessages] = React.useState<IRCMessage[]>([
-    { id: '1', user: 'system', text: `Welcome to #${channelName}!`, timestamp: Date.now() - 60000, type: 'system' },
-    { id: '2', user: 'alice', text: 'Hey everyone! 👋', timestamp: Date.now() - 45000, type: 'message' },
-    { id: '3', user: 'bob', text: 'Hi Alice! How are you?', timestamp: Date.now() - 30000, type: 'message' },
-    { id: '4', user: 'charlie', text: 'Just joined the channel', timestamp: Date.now() - 15000, type: 'join' },
-    { id: '5', user: 'alice', text: 'Welcome Charlie!', timestamp: Date.now() - 5000, type: 'message' },
-  ])
-  const [inputValue, setInputValue] = React.useState('')
-  const [users] = React.useState(['alice', 'bob', 'charlie', 'demo_user'])
-  const messagesEndRef = React.useRef<HTMLDivElement>(null)
-
-  const formatTime = (timestamp: number) => {
-    const date = new Date(timestamp)
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  }
-
-  const handleSend = () => {
-    if (!inputValue.trim()) return
-    
-    // Handle commands
-    if (inputValue.startsWith('/')) {
-      const [cmd, ...args] = inputValue.slice(1).split(' ')
-      if (cmd === 'me') {
-        setMessages(prev => [...prev, {
-          id: Date.now().toString(),
-          user: 'demo_user',
-          text: `* demo_user ${args.join(' ')}`,
-          timestamp: Date.now(),
-          type: 'message'
-        }])
-      } else if (cmd === 'clear') {
-        setMessages([{ id: Date.now().toString(), user: 'system', text: 'Chat cleared', timestamp: Date.now(), type: 'system' }])
-      } else if (cmd === 'help') {
-        setMessages(prev => [...prev, {
-          id: Date.now().toString(),
-          user: 'system',
-          text: 'Commands: /me <action>, /clear, /help, /users',
-          timestamp: Date.now(),
-          type: 'system'
-        }])
-      } else if (cmd === 'users') {
-        setMessages(prev => [...prev, {
-          id: Date.now().toString(),
-          user: 'system',
-          text: `Users in #${channelName}: ${users.join(', ')}`,
-          timestamp: Date.now(),
-          type: 'system'
-        }])
-      }
-    } else {
-      setMessages(prev => [...prev, {
-        id: Date.now().toString(),
-        user: 'demo_user',
-        text: inputValue,
-        timestamp: Date.now(),
-        type: 'message'
-      }])
-    }
-    setInputValue('')
-  }
-
-  React.useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
-
-  return (
-    <div className="flex h-[600px] border rounded-lg overflow-hidden bg-canvas">
-      {/* Main chat area */}
-      <div className="flex-1 flex flex-col">
-        {/* Channel header */}
-        <div className="px-4 py-3 border-b bg-muted/50 flex items-center gap-2">
-          <span className="text-lg font-semibold">#{channelName}</span>
-          <span className="text-sm text-muted-foreground">|</span>
-          <span className="text-sm text-muted-foreground">{users.length} users online</span>
-        </div>
-        
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-1 font-mono text-sm bg-[#1a1a2e]">
-          {messages.map(msg => (
-            <div key={msg.id} className={`flex gap-2 ${msg.type === 'system' ? 'text-yellow-400' : msg.type === 'join' ? 'text-green-400' : 'text-gray-200'}`}>
-              <span className="text-gray-500 shrink-0">[{formatTime(msg.timestamp)}]</span>
-              {msg.type === 'system' ? (
-                <span className="text-yellow-400">*** {msg.text}</span>
-              ) : msg.type === 'join' ? (
-                <span className="text-green-400">→ {msg.user} has joined #{channelName}</span>
-              ) : msg.type === 'leave' ? (
-                <span className="text-red-400">← {msg.user} has left #{channelName}</span>
-              ) : (
-                <>
-                  <span className="text-cyan-400 font-bold">&lt;{msg.user}&gt;</span>
-                  <span>{msg.text}</span>
-                </>
-              )}
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-        
-        {/* Input */}
-        <div className="p-3 border-t bg-muted/30">
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={e => setInputValue(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSend()}
-              placeholder="Type a message... (try /help for commands)"
-              className="flex-1 px-3 py-2 rounded border bg-background text-sm font-mono"
-            />
-            <button 
-              onClick={handleSend}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
-            >
-              Send
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      {/* Users sidebar */}
-      <div className="w-48 border-l bg-muted/20">
-        <div className="px-3 py-2 border-b text-sm font-semibold">Users ({users.length})</div>
-        <div className="p-2 space-y-1">
-          {users.map(user => (
-            <div key={user} className="flex items-center gap-2 px-2 py-1 text-sm rounded hover:bg-muted/50">
-              <span className="w-2 h-2 rounded-full bg-green-500"></span>
-              <span className={user === 'demo_user' ? 'font-semibold' : ''}>{user}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/**
- * Component Registry - maps Lua type names to React components
+ * Component Registry - maps JSON type names to React components
  */
 export const componentRegistry: Record<string, AnyComponent> = {
   // Layout
@@ -1543,7 +977,6 @@ export const componentRegistry: Record<string, AnyComponent> = {
   IRCWebchat,
   
   // Script viewer
-  LuaScriptViewer,
 }
 
 /**

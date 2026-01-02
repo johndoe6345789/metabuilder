@@ -16,9 +16,11 @@ const config: StorybookConfig = {
     options: {},
   },
   staticDirs: [
-    // Serve Lua packages from root
+    // Serve JSON packages from root
     { from: '../../packages', to: '/packages' },
-    // Serve public folder (contains storybook.config.json)
+    // Serve schemas for validation
+    { from: '../../schemas', to: '/schemas' },
+    // Serve public folder
     { from: '../public', to: '/' },
   ],
   async viteFinal(config) {
