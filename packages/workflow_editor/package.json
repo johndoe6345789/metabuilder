@@ -1,0 +1,46 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "workflow_editor",
+  "name": "Workflow Editor",
+  "version": "1.0.0",
+  "description": "Workflow editor and execution monitoring components",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "editors",
+  "minLevel": 5,
+  "primary": true,
+  "dependencies": {},
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "WorkflowEditor",
+      "WorkflowRunCard",
+      "WorkflowRunStatus"
+    ],
+    "scripts": [
+      "editor",
+      "status",
+      "run"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/status.test.lua",
+      "tests/editor.test.lua",
+      "tests/run.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/status.cases.json"
+      },
+      {
+        "parameters": "tests/editor.cases.json"
+      },
+      {
+        "parameters": "tests/run.cases.json"
+      }
+    ]
+  }
+}

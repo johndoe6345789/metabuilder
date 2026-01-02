@@ -1,0 +1,222 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "data_table",
+  "description": "Advanced data table components with rich features",
+  "components": [
+    {
+      "id": "data_grid",
+      "name": "DataGrid",
+      "description": "Advanced data table with sorting, filtering, pagination, and export",
+      "props": [
+        {
+          "name": "columns",
+          "type": "array",
+          "required": true,
+          "description": "Column definitions"
+        },
+        {
+          "name": "data",
+          "type": "array",
+          "required": true,
+          "description": "Data rows"
+        },
+        {
+          "name": "sortable",
+          "type": "boolean",
+          "default": true
+        },
+        {
+          "name": "filterable",
+          "type": "boolean",
+          "default": true
+        },
+        {
+          "name": "pagination",
+          "type": "boolean",
+          "default": true
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "default": 10
+        },
+        {
+          "name": "selection",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "exportable",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "state": [
+        {
+          "name": "sortColumn",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "sortDirection",
+          "type": "string",
+          "default": "asc"
+        },
+        {
+          "name": "filters",
+          "type": "object",
+          "default": {}
+        },
+        {
+          "name": "currentPage",
+          "type": "number",
+          "default": 1
+        },
+        {
+          "name": "selectedRows",
+          "type": "array",
+          "default": []
+        }
+      ],
+      "handlers": {
+        "init": "init.initialize",
+        "sort": "sorting.sortByColumn",
+        "filter": "filtering.applyFilters",
+        "paginate": "pagination.changePage",
+        "export": "export.exportData",
+        "select": "selection.toggleRow"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "data-grid-container space-y-4",
+          "children": [
+            {
+              "type": "conditional",
+              "condition": "{{filterable || exportable}}",
+              "then": {
+                "type": "Box",
+                "className": "flex justify-between items-center",
+                "children": [
+                  {
+                    "type": "conditional",
+                    "condition": "{{filterable}}",
+                    "then": {
+                      "type": "Input",
+                      "type": "search",
+                      "placeholder": "Search...",
+                      "onChange": "filter"
+                    }
+                  },
+                  {
+                    "type": "conditional",
+                    "condition": "{{exportable}}",
+                    "then": {
+                      "type": "Button",
+                      "variant": "outline",
+                      "onClick": "export",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "Download",
+                          "size": 16
+                        },
+                        "Export"
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Table",
+              "className": "data-table",
+              "children": [
+                {
+                  "type": "TableHead",
+                  "children": [
+                    {
+                      "type": "TableRow",
+                      "children": {
+                        "type": "loop",
+                        "items": "{{columns}}",
+                        "iterator": "column",
+                        "key": "{{column.id}}",
+                        "template": {
+                          "type": "TableCell",
+                          "className": "{{sortable ? 'cursor-pointer' : ''}}",
+                          "onClick": "{{sortable ? sort : null}}",
+                          "children": [
+                            "{{column.label}}",
+                            {
+                              "type": "conditional",
+                              "condition": "{{sortable && sortColumn === column.id}}",
+                              "then": {
+                                "type": "Icon",
+                                "name": "{{sortDirection === 'asc' ? 'ArrowUp' : 'ArrowDown'}}",
+                                "size": 14
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "TableBody",
+                  "children": {
+                    "type": "loop",
+                    "items": "{{data}}",
+                    "iterator": "row",
+                    "key": "{{row.id}}",
+                    "template": {
+                      "type": "TableRow",
+                      "className": "{{selectedRows.includes(row.id) ? 'selected' : ''}}",
+                      "children": {
+                        "type": "loop",
+                        "items": "{{columns}}",
+                        "iterator": "column",
+                        "key": "{{column.id}}",
+                        "template": {
+                          "type": "TableCell",
+                          "children": "{{row[column.id]}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{pagination}}",
+              "then": {
+                "type": "Box",
+                "className": "flex justify-between items-center",
+                "children": [
+                  {
+                    "type": "Text",
+                    "variant": "caption",
+                    "children": "Page {{currentPage}}"
+                  },
+                  {
+                    "type": "Pagination",
+                    "count": "{{Math.ceil(data.length / pageSize)}}",
+                    "page": "{{currentPage}}",
+                    "onChange": "paginate"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["DataGrid"]
+  }
+}

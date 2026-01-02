@@ -1,0 +1,147 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "data_table",
+  "description": "Data table operations for sorting, filtering, pagination, and export",
+  "functions": [
+    {
+      "id": "init_initialize",
+      "name": "initialize",
+      "exported": true,
+      "description": "Initialize data table",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "sorting_sort_column",
+      "name": "sortByColumn",
+      "exported": true,
+      "description": "Sort table by column",
+      "category": "sorting",
+      "luaScript": "sorting.lua"
+    },
+    {
+      "id": "sorting_toggle_direction",
+      "name": "toggleSortDirection",
+      "exported": true,
+      "description": "Toggle sort direction",
+      "category": "sorting",
+      "luaScript": "sorting.lua"
+    },
+    {
+      "id": "filtering_apply",
+      "name": "applyFilters",
+      "exported": true,
+      "description": "Apply filters to data",
+      "category": "filtering",
+      "luaScript": "filtering.lua"
+    },
+    {
+      "id": "filtering_search",
+      "name": "searchData",
+      "exported": true,
+      "description": "Search across all columns",
+      "category": "filtering",
+      "luaScript": "filtering.lua"
+    },
+    {
+      "id": "filtering_filter_column",
+      "name": "filterByColumn",
+      "exported": true,
+      "description": "Filter by specific column",
+      "category": "filtering",
+      "luaScript": "filtering.lua"
+    },
+    {
+      "id": "pagination_change_page",
+      "name": "changePage",
+      "exported": true,
+      "description": "Navigate to page",
+      "category": "pagination",
+      "luaScript": "pagination.lua"
+    },
+    {
+      "id": "pagination_next",
+      "name": "nextPage",
+      "exported": true,
+      "description": "Go to next page",
+      "category": "pagination",
+      "luaScript": "pagination.lua"
+    },
+    {
+      "id": "pagination_previous",
+      "name": "previousPage",
+      "exported": true,
+      "description": "Go to previous page",
+      "category": "pagination",
+      "luaScript": "pagination.lua"
+    },
+    {
+      "id": "selection_toggle_row",
+      "name": "toggleRow",
+      "exported": true,
+      "description": "Toggle row selection",
+      "category": "selection",
+      "luaScript": "selection.lua"
+    },
+    {
+      "id": "selection_select_all",
+      "name": "selectAll",
+      "exported": true,
+      "description": "Select all rows",
+      "category": "selection",
+      "luaScript": "selection.lua"
+    },
+    {
+      "id": "selection_clear",
+      "name": "clearSelection",
+      "exported": true,
+      "description": "Clear all selections",
+      "category": "selection",
+      "luaScript": "selection.lua"
+    },
+    {
+      "id": "export_csv",
+      "name": "exportToCSV",
+      "exported": true,
+      "description": "Export data to CSV",
+      "category": "export",
+      "luaScript": "export.lua"
+    },
+    {
+      "id": "export_json",
+      "name": "exportToJSON",
+      "exported": true,
+      "description": "Export data to JSON",
+      "category": "export",
+      "luaScript": "export.lua"
+    },
+    {
+      "id": "export_data",
+      "name": "exportData",
+      "exported": true,
+      "description": "Export data in specified format",
+      "category": "export",
+      "luaScript": "export.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "initialize",
+      "sortByColumn",
+      "toggleSortDirection",
+      "applyFilters",
+      "searchData",
+      "filterByColumn",
+      "changePage",
+      "nextPage",
+      "previousPage",
+      "toggleRow",
+      "selectAll",
+      "clearSelection",
+      "exportToCSV",
+      "exportToJSON",
+      "exportData"
+    ]
+  }
+}

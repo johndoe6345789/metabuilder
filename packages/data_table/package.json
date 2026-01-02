@@ -1,0 +1,64 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "data_table",
+  "name": "Data Table",
+  "version": "1.0.0",
+  "description": "Advanced data table components with sorting, filtering, and pagination",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 1,
+  "primary": false,
+  "dependencies": {},
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "DataGrid",
+      "DataTable"
+    ],
+    "scripts": [
+      "init",
+      "sorting",
+      "filtering",
+      "pagination",
+      "selection",
+      "export"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua",
+      "tests/filtering.test.lua",
+      "tests/sorting.test.lua",
+      "tests/pagination.test.lua",
+      "tests/selection.test.lua",
+      "tests/export.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/metadata.cases.json"
+      },
+      {
+        "parameters": "tests/components.cases.json"
+      },
+      {
+        "parameters": "tests/filtering.cases.json"
+      },
+      {
+        "parameters": "tests/sorting.cases.json"
+      },
+      {
+        "parameters": "tests/pagination.cases.json"
+      },
+      {
+        "parameters": "tests/selection.cases.json"
+      },
+      {
+        "parameters": "tests/export.cases.json"
+      }
+    ]
+  }
+}
