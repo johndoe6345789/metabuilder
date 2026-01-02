@@ -1,0 +1,56 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_level5",
+  "name": "Level 5 - God Panel",
+  "version": "1.0.0",
+  "description": "God panel for tenant management, cross-tenant operations, and elevated privileges",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 5,
+  "primary": true,
+  "dependencies": {
+    "ui_permissions": "*",
+    "ui_header": "*",
+    "ui_intro": "*",
+    "schema_editor": "*",
+    "workflow_editor": "*"
+  },
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "pages": [
+      "level5"
+    ],
+    "components": [
+      "Level5Layout",
+      "TenantsPanel",
+      "GodsPanel",
+      "TransferPanel"
+    ],
+    "scripts": [
+      "layout",
+      "tenants",
+      "transfer"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua",
+      "tests/transfer.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/metadata.cases.json"
+      },
+      {
+        "parameters": "tests/components.cases.json"
+      },
+      {
+        "parameters": "tests/transfer.cases.json"
+      }
+    ]
+  }
+}

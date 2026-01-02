@@ -1,0 +1,44 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "stats_grid",
+  "name": "Stats Grid",
+  "version": "1.0.0",
+  "description": "Configurable statistics grid display for dashboards and monitoring",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 2,
+  "primary": false,
+  "dependencies": {
+    "dashboard": "*"
+  },
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "StatsGrid",
+      "StatCard",
+      "StatCardSmall",
+      "StatCardLarge"
+    ],
+    "scripts": [
+      "stats",
+      "formatters"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/stats.test.lua",
+      "tests/formatters.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/stats.cases.json"
+      },
+      {
+        "parameters": "tests/formatters.cases.json"
+      }
+    ]
+  }
+}

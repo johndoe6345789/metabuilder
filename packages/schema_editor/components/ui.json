@@ -1,0 +1,1118 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "schema_editor",
+  "description": "Schema editor components for managing database tables, fields, and relations",
+  "components": [
+    {
+      "id": "schema_editor",
+      "name": "SchemaEditor",
+      "description": "Main schema editor with table list and editor panel for database schema management",
+      "props": [
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether the editor is in readonly mode"
+        },
+        {
+          "name": "schema",
+          "type": "object",
+          "required": false,
+          "description": "Initial schema object with name, version, tables"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "schema-editor",
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 3, "borderBottom": 1, "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "Flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "sx": { "mb": 2 },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h5",
+                      "fontWeight": "bold",
+                      "children": "Schema Editor"
+                    },
+                    {
+                      "type": "Chip",
+                      "label": "v{{state.schema.version}}",
+                      "color": "info",
+                      "size": "small",
+                      "variant": "outlined"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{state.isDirty}}",
+                      "then": {
+                        "type": "Chip",
+                        "label": "Unsaved Changes",
+                        "color": "warning",
+                        "size": "small"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "TextField",
+                  "label": "Schema Name",
+                  "value": "{{state.schema.name}}",
+                  "onChange": "updateSchemaName",
+                  "disabled": "{{props.readonly}}",
+                  "size": "small",
+                  "sx": { "minWidth": 250 }
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "container": true,
+              "sx": { "minHeight": 500 },
+              "children": [
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 4,
+                  "lg": 3,
+                  "sx": { "borderRight": 1, "borderColor": "divider" },
+                  "children": [
+                    {
+                      "type": "Box",
+                      "sx": { "p": 2, "borderBottom": 1, "borderColor": "divider", "backgroundColor": "action.hover" },
+                      "children": [
+                        {
+                          "type": "Flex",
+                          "justifyContent": "space-between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "Text",
+                              "variant": "subtitle1",
+                              "fontWeight": "bold",
+                              "children": "Tables"
+                            },
+                            {
+                              "type": "IconButton",
+                              "icon": "Add",
+                              "size": "small",
+                              "color": "primary",
+                              "onClick": "addTable",
+                              "disabled": "{{props.readonly}}",
+                              "title": "Add Table"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "List",
+                      "dense": true,
+                      "sx": { "overflowY": "auto", "maxHeight": 400 },
+                      "children": [
+                        {
+                          "type": "repeat",
+                          "items": "{{state.schema.tables}}",
+                          "template": {
+                            "type": "ListItem",
+                            "button": true,
+                            "selected": "{{state.selectedTable === item.name}}",
+                            "onClick": "selectTable",
+                            "divider": true,
+                            "children": [
+                              {
+                                "type": "ListItemIcon",
+                                "children": [
+                                  { "type": "Icon", "name": "TableChart" }
+                                ]
+                              },
+                              {
+                                "type": "ListItemText",
+                                "primary": "{{item.name}}",
+                                "secondary": "{{item.columns.length}} columns"
+                              },
+                              {
+                                "type": "IconButton",
+                                "icon": "Delete",
+                                "size": "small",
+                                "color": "error",
+                                "onClick": "deleteTable",
+                                "disabled": "{{props.readonly}}",
+                                "edge": "end"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 8,
+                  "lg": 9,
+                  "children": [
+                    {
+                      "type": "conditional",
+                      "condition": "{{!state.selectedTable}}",
+                      "then": {
+                        "type": "Box",
+                        "sx": { "display": "flex", "alignItems": "center", "justifyContent": "center", "height": "100%", "p": 4 },
+                        "children": [
+                          {
+                            "type": "Text",
+                            "variant": "body1",
+                            "color": "text.secondary",
+                            "children": "Select a table to edit or create a new one"
+                          }
+                        ]
+                      },
+                      "else": {
+                        "type": "Box",
+                        "sx": { "p": 2 },
+                        "children": [
+                          {
+                            "type": "ComponentRef",
+                            "ref": "table_editor",
+                            "bindTable": "{{state.selectedTableData}}",
+                            "bindReadonly": "{{props.readonly}}",
+                            "bindOnSave": "saveTable",
+                            "bindOnCancel": "cancelTableEdit"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 2, "borderTop": 1, "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "Flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "sx": { "mb": 2 },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "subtitle1",
+                      "fontWeight": "bold",
+                      "children": "Relations"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "outlined",
+                      "size": "small",
+                      "startIcon": "Add",
+                      "onClick": "addRelation",
+                      "disabled": "{{props.readonly}}",
+                      "children": "Add Relation"
+                    }
+                  ]
+                },
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "spacing": 2,
+                  "sx": { "flexWrap": "wrap" },
+                  "children": [
+                    {
+                      "type": "repeat",
+                      "items": "{{state.schema.relations}}",
+                      "template": {
+                        "type": "Chip",
+                        "label": "{{item.sourceTable}} → {{item.targetTable}}",
+                        "variant": "outlined",
+                        "color": "{{item.type === 'many-to-many' ? 'secondary' : 'primary'}}",
+                        "onDelete": "{{props.readonly ? null : 'deleteRelation'}}",
+                        "size": "small"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 2, "borderTop": 1, "borderColor": "divider", "display": "flex", "justifyContent": "space-between", "alignItems": "center" },
+              "children": [
+                {
+                  "type": "Box",
+                  "sx": { "display": "flex", "gap": 1, "alignItems": "center" },
+                  "children": [
+                    {
+                      "type": "conditional",
+                      "condition": "{{state.validation.errors.length > 0}}",
+                      "then": {
+                        "type": "Chip",
+                        "label": "{{state.validation.errors.length}} errors",
+                        "color": "error",
+                        "size": "small"
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{state.validation.warnings.length > 0}}",
+                      "then": {
+                        "type": "Chip",
+                        "label": "{{state.validation.warnings.length}} warnings",
+                        "color": "warning",
+                        "size": "small"
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{state.validation.valid}}",
+                      "then": {
+                        "type": "Chip",
+                        "label": "Valid",
+                        "color": "success",
+                        "size": "small"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Box",
+                  "sx": { "display": "flex", "gap": 2 },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "variant": "outlined",
+                      "color": "secondary",
+                      "onClick": "handleCancel",
+                      "disabled": "{{!state.isDirty}}",
+                      "children": "Cancel"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "color": "primary",
+                      "onClick": "handleSave",
+                      "disabled": "{{!state.isDirty || !state.validation.valid || props.readonly}}",
+                      "children": "Save"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "init": "schema.initialize",
+        "updateSchemaName": "schema.updateName",
+        "addTable": "tables.create",
+        "selectTable": "tables.select",
+        "deleteTable": "tables.delete",
+        "saveTable": "tables.save",
+        "cancelTableEdit": "tables.cancelEdit",
+        "addRelation": "relations.create",
+        "deleteRelation": "relations.delete",
+        "handleSave": "schema.save",
+        "handleCancel": "schema.cancel"
+      }
+    },
+    {
+      "id": "table_editor",
+      "name": "TableEditor",
+      "description": "Editor for a single database table/model with field list and configuration",
+      "props": [
+        {
+          "name": "table",
+          "type": "object",
+          "required": true,
+          "description": "Table definition object"
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether the editor is in readonly mode"
+        },
+        {
+          "name": "onSave",
+          "type": "function",
+          "required": false,
+          "description": "Callback when table is saved"
+        },
+        {
+          "name": "onCancel",
+          "type": "function",
+          "required": false,
+          "description": "Callback when editing is cancelled"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "table-editor",
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 2, "borderBottom": 1, "borderColor": "divider", "backgroundColor": "action.hover" },
+              "children": [
+                {
+                  "type": "Grid",
+                  "container": true,
+                  "spacing": 2,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "sm": 6,
+                      "md": 4,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "label": "Table Name",
+                          "value": "{{state.table.name}}",
+                          "onChange": "updateTableName",
+                          "disabled": "{{props.readonly}}",
+                          "size": "small",
+                          "fullWidth": true,
+                          "required": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "sm": 6,
+                      "md": 4,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "label": "Schema",
+                          "value": "{{state.table.schema || 'public'}}",
+                          "onChange": "updateTableSchema",
+                          "disabled": "{{props.readonly}}",
+                          "size": "small",
+                          "fullWidth": true,
+                          "placeholder": "public"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "md": 4,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "label": "Description",
+                          "value": "{{state.table.comment}}",
+                          "onChange": "updateTableComment",
+                          "disabled": "{{props.readonly}}",
+                          "size": "small",
+                          "fullWidth": true,
+                          "placeholder": "Table description..."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 2 },
+              "children": [
+                {
+                  "type": "Flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "sx": { "mb": 2 },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "subtitle1",
+                      "fontWeight": "bold",
+                      "children": "Columns"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "outlined",
+                      "size": "small",
+                      "startIcon": "Add",
+                      "onClick": "addColumn",
+                      "disabled": "{{props.readonly}}",
+                      "children": "Add Column"
+                    }
+                  ]
+                },
+                {
+                  "type": "Stack",
+                  "spacing": 1,
+                  "children": [
+                    {
+                      "type": "repeat",
+                      "items": "{{state.table.columns}}",
+                      "template": {
+                        "type": "Card",
+                        "variant": "outlined",
+                        "sx": { "p": 1, "backgroundColor": "{{item.primaryKey ? 'action.selected' : 'background.paper'}}" },
+                        "children": [
+                          {
+                            "type": "Flex",
+                            "alignItems": "center",
+                            "gap": 2,
+                            "children": [
+                              {
+                                "type": "IconButton",
+                                "icon": "DragIndicator",
+                                "size": "small",
+                                "disabled": "{{props.readonly}}",
+                                "sx": { "cursor": "grab" }
+                              },
+                              {
+                                "type": "Text",
+                                "variant": "body2",
+                                "fontWeight": "{{item.primaryKey ? 'bold' : 'normal'}}",
+                                "sx": { "minWidth": 120 },
+                                "children": "{{item.name}}"
+                              },
+                              {
+                                "type": "Chip",
+                                "label": "{{item.type}}",
+                                "size": "small",
+                                "variant": "outlined",
+                                "color": "info"
+                              },
+                              {
+                                "type": "conditional",
+                                "condition": "{{item.primaryKey}}",
+                                "then": {
+                                  "type": "Chip",
+                                  "label": "PK",
+                                  "size": "small",
+                                  "color": "primary"
+                                }
+                              },
+                              {
+                                "type": "conditional",
+                                "condition": "{{item.nullable}}",
+                                "then": {
+                                  "type": "Chip",
+                                  "label": "NULL",
+                                  "size": "small",
+                                  "variant": "outlined"
+                                }
+                              },
+                              {
+                                "type": "conditional",
+                                "condition": "{{item.unique}}",
+                                "then": {
+                                  "type": "Chip",
+                                  "label": "UQ",
+                                  "size": "small",
+                                  "color": "secondary"
+                                }
+                              },
+                              {
+                                "type": "conditional",
+                                "condition": "{{item.references}}",
+                                "then": {
+                                  "type": "Chip",
+                                  "label": "FK → {{item.references.table}}",
+                                  "size": "small",
+                                  "color": "warning"
+                                }
+                              },
+                              {
+                                "type": "Box",
+                                "sx": { "flexGrow": 1 }
+                              },
+                              {
+                                "type": "IconButton",
+                                "icon": "Edit",
+                                "size": "small",
+                                "onClick": "editColumn",
+                                "disabled": "{{props.readonly}}"
+                              },
+                              {
+                                "type": "IconButton",
+                                "icon": "Delete",
+                                "size": "small",
+                                "color": "error",
+                                "onClick": "deleteColumn",
+                                "disabled": "{{props.readonly || item.primaryKey}}"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 2, "borderTop": 1, "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "Flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "sx": { "mb": 2 },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "subtitle1",
+                      "fontWeight": "bold",
+                      "children": "Indexes"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "outlined",
+                      "size": "small",
+                      "startIcon": "Add",
+                      "onClick": "addIndex",
+                      "disabled": "{{props.readonly}}",
+                      "children": "Add Index"
+                    }
+                  ]
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{state.table.indexes.length === 0}}",
+                  "then": {
+                    "type": "Text",
+                    "variant": "body2",
+                    "color": "text.secondary",
+                    "children": "No indexes defined"
+                  },
+                  "else": {
+                    "type": "Stack",
+                    "direction": "row",
+                    "spacing": 1,
+                    "sx": { "flexWrap": "wrap" },
+                    "children": [
+                      {
+                        "type": "repeat",
+                        "items": "{{state.table.indexes}}",
+                        "template": {
+                          "type": "Chip",
+                          "label": "{{item.name}} ({{item.columns.join(', ')}})",
+                          "variant": "{{item.unique ? 'filled' : 'outlined'}}",
+                          "color": "{{item.unique ? 'primary' : 'default'}}",
+                          "size": "small",
+                          "onDelete": "{{props.readonly ? null : 'deleteIndex'}}"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Dialog",
+              "open": "{{state.editingColumn !== null}}",
+              "onClose": "closeFieldEditor",
+              "maxWidth": "md",
+              "fullWidth": true,
+              "children": [
+                {
+                  "type": "ComponentRef",
+                  "ref": "field_editor",
+                  "bindField": "{{state.editingColumn}}",
+                  "bindReadonly": "{{props.readonly}}",
+                  "bindOnSave": "saveColumn",
+                  "bindOnCancel": "closeFieldEditor"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "init": "tables.initEditor",
+        "updateTableName": "tables.updateName",
+        "updateTableSchema": "tables.updateSchema",
+        "updateTableComment": "tables.updateComment",
+        "addColumn": "fields.create",
+        "editColumn": "fields.edit",
+        "deleteColumn": "fields.delete",
+        "saveColumn": "fields.save",
+        "closeFieldEditor": "fields.closeEditor",
+        "addIndex": "tables.addIndex",
+        "deleteIndex": "tables.deleteIndex"
+      }
+    },
+    {
+      "id": "field_editor",
+      "name": "FieldEditor",
+      "description": "Editor for a single column/field with type, validation, and constraint configuration",
+      "props": [
+        {
+          "name": "field",
+          "type": "object",
+          "required": false,
+          "description": "Field definition object (null for new field)"
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether the editor is in readonly mode"
+        },
+        {
+          "name": "onSave",
+          "type": "function",
+          "required": false,
+          "description": "Callback when field is saved"
+        },
+        {
+          "name": "onCancel",
+          "type": "function",
+          "required": false,
+          "description": "Callback when editing is cancelled"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "field-editor",
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 2, "borderBottom": 1, "borderColor": "divider", "backgroundColor": "primary.main", "color": "primary.contrastText" },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h6",
+                  "children": "{{state.isNew ? 'New Column' : 'Edit Column'}}"
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "subtitle2",
+                  "fontWeight": "bold",
+                  "color": "text.secondary",
+                  "sx": { "mb": 2 },
+                  "children": "BASIC INFORMATION"
+                },
+                {
+                  "type": "Grid",
+                  "container": true,
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "sm": 6,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "label": "Column Name",
+                          "value": "{{state.field.name}}",
+                          "onChange": "updateFieldName",
+                          "disabled": "{{props.readonly}}",
+                          "fullWidth": true,
+                          "required": true,
+                          "helperText": "Use snake_case for column names"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "sm": 6,
+                      "children": [
+                        {
+                          "type": "Select",
+                          "label": "Data Type",
+                          "value": "{{state.field.type}}",
+                          "onChange": "updateFieldType",
+                          "disabled": "{{props.readonly}}",
+                          "fullWidth": true,
+                          "required": true,
+                          "options": [
+                            { "value": "string", "label": "String (VARCHAR)" },
+                            { "value": "text", "label": "Text (TEXT)" },
+                            { "value": "integer", "label": "Integer (INT)" },
+                            { "value": "float", "label": "Float (DECIMAL)" },
+                            { "value": "boolean", "label": "Boolean (BOOL)" },
+                            { "value": "date", "label": "Date (DATE)" },
+                            { "value": "datetime", "label": "DateTime (TIMESTAMP)" },
+                            { "value": "json", "label": "JSON (JSONB)" }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "children": [
+                        {
+                          "type": "TextField",
+                          "label": "Description",
+                          "value": "{{state.field.comment}}",
+                          "onChange": "updateFieldComment",
+                          "disabled": "{{props.readonly}}",
+                          "fullWidth": true,
+                          "multiline": true,
+                          "rows": 2,
+                          "placeholder": "Describe this column..."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 3, "borderTop": 1, "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "subtitle2",
+                  "fontWeight": "bold",
+                  "color": "text.secondary",
+                  "sx": { "mb": 2 },
+                  "children": "CONSTRAINTS"
+                },
+                {
+                  "type": "Grid",
+                  "container": true,
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "sm": 3,
+                      "children": [
+                        {
+                          "type": "Flex",
+                          "alignItems": "center",
+                          "gap": 1,
+                          "children": [
+                            {
+                              "type": "Switch",
+                              "checked": "{{state.field.primaryKey}}",
+                              "onChange": "togglePrimaryKey",
+                              "disabled": "{{props.readonly}}",
+                              "color": "primary"
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "body2",
+                              "children": "Primary Key"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "sm": 3,
+                      "children": [
+                        {
+                          "type": "Flex",
+                          "alignItems": "center",
+                          "gap": 1,
+                          "children": [
+                            {
+                              "type": "Switch",
+                              "checked": "{{state.field.unique}}",
+                              "onChange": "toggleUnique",
+                              "disabled": "{{props.readonly}}",
+                              "color": "secondary"
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "body2",
+                              "children": "Unique"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "sm": 3,
+                      "children": [
+                        {
+                          "type": "Flex",
+                          "alignItems": "center",
+                          "gap": 1,
+                          "children": [
+                            {
+                              "type": "Switch",
+                              "checked": "{{state.field.nullable}}",
+                              "onChange": "toggleNullable",
+                              "disabled": "{{props.readonly || state.field.primaryKey}}"
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "body2",
+                              "children": "Nullable"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "sm": 3,
+                      "children": [
+                        {
+                          "type": "Flex",
+                          "alignItems": "center",
+                          "gap": 1,
+                          "children": [
+                            {
+                              "type": "Switch",
+                              "checked": "{{state.field.autoIncrement}}",
+                              "onChange": "toggleAutoIncrement",
+                              "disabled": "{{props.readonly || state.field.type !== 'integer'}}",
+                              "color": "info"
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "body2",
+                              "children": "Auto Increment"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 3, "borderTop": 1, "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "subtitle2",
+                  "fontWeight": "bold",
+                  "color": "text.secondary",
+                  "sx": { "mb": 2 },
+                  "children": "DEFAULT VALUE"
+                },
+                {
+                  "type": "TextField",
+                  "label": "Default Value",
+                  "value": "{{state.field.default}}",
+                  "onChange": "updateDefault",
+                  "disabled": "{{props.readonly || state.field.autoIncrement}}",
+                  "fullWidth": true,
+                  "placeholder": "Leave empty for no default",
+                  "helperText": "Use NOW() for timestamps, NULL for null values"
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 3, "borderTop": 1, "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "Flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "sx": { "mb": 2 },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "subtitle2",
+                      "fontWeight": "bold",
+                      "color": "text.secondary",
+                      "children": "FOREIGN KEY REFERENCE"
+                    },
+                    {
+                      "type": "Switch",
+                      "checked": "{{state.field.references !== null}}",
+                      "onChange": "toggleForeignKey",
+                      "disabled": "{{props.readonly}}",
+                      "size": "small"
+                    }
+                  ]
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{state.field.references !== null}}",
+                  "then": {
+                    "type": "Grid",
+                    "container": true,
+                    "spacing": 2,
+                    "children": [
+                      {
+                        "type": "Grid",
+                        "item": true,
+                        "xs": 12,
+                        "sm": 6,
+                        "children": [
+                          {
+                            "type": "Select",
+                            "label": "Referenced Table",
+                            "value": "{{state.field.references.table}}",
+                            "onChange": "updateRefTable",
+                            "disabled": "{{props.readonly}}",
+                            "fullWidth": true,
+                            "options": "{{state.availableTables}}"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Grid",
+                        "item": true,
+                        "xs": 12,
+                        "sm": 6,
+                        "children": [
+                          {
+                            "type": "Select",
+                            "label": "Referenced Column",
+                            "value": "{{state.field.references.column}}",
+                            "onChange": "updateRefColumn",
+                            "disabled": "{{props.readonly}}",
+                            "fullWidth": true,
+                            "options": "{{state.availableColumns}}"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Grid",
+                        "item": true,
+                        "xs": 12,
+                        "sm": 6,
+                        "children": [
+                          {
+                            "type": "Select",
+                            "label": "On Delete",
+                            "value": "{{state.field.references.onDelete}}",
+                            "onChange": "updateOnDelete",
+                            "disabled": "{{props.readonly}}",
+                            "fullWidth": true,
+                            "options": [
+                              { "value": "CASCADE", "label": "CASCADE" },
+                              { "value": "SET NULL", "label": "SET NULL" },
+                              { "value": "RESTRICT", "label": "RESTRICT" },
+                              { "value": "NO ACTION", "label": "NO ACTION" },
+                              { "value": "SET DEFAULT", "label": "SET DEFAULT" }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Grid",
+                        "item": true,
+                        "xs": 12,
+                        "sm": 6,
+                        "children": [
+                          {
+                            "type": "Select",
+                            "label": "On Update",
+                            "value": "{{state.field.references.onUpdate}}",
+                            "onChange": "updateOnUpdate",
+                            "disabled": "{{props.readonly}}",
+                            "fullWidth": true,
+                            "options": [
+                              { "value": "CASCADE", "label": "CASCADE" },
+                              { "value": "SET NULL", "label": "SET NULL" },
+                              { "value": "RESTRICT", "label": "RESTRICT" },
+                              { "value": "NO ACTION", "label": "NO ACTION" },
+                              { "value": "SET DEFAULT", "label": "SET DEFAULT" }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 2, "borderTop": 1, "borderColor": "divider", "display": "flex", "justifyContent": "flex-end", "gap": 2 },
+              "children": [
+                {
+                  "type": "Button",
+                  "variant": "outlined",
+                  "color": "secondary",
+                  "onClick": "handleCancel",
+                  "children": "Cancel"
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "color": "primary",
+                  "onClick": "handleSave",
+                  "disabled": "{{!state.field.name || !state.field.type || props.readonly}}",
+                  "children": "Save"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "init": "fields.initEditor",
+        "updateFieldName": "fields.updateName",
+        "updateFieldType": "fields.updateType",
+        "updateFieldComment": "fields.updateComment",
+        "togglePrimaryKey": "fields.togglePrimaryKey",
+        "toggleUnique": "fields.toggleUnique",
+        "toggleNullable": "fields.toggleNullable",
+        "toggleAutoIncrement": "fields.toggleAutoIncrement",
+        "updateDefault": "fields.updateDefault",
+        "toggleForeignKey": "fields.toggleForeignKey",
+        "updateRefTable": "fields.updateRefTable",
+        "updateRefColumn": "fields.updateRefColumn",
+        "updateOnDelete": "fields.updateOnDelete",
+        "updateOnUpdate": "fields.updateOnUpdate",
+        "handleSave": "fields.save",
+        "handleCancel": "fields.cancel"
+      }
+    }
+  ],
+  "exports": {
+    "components": ["SchemaEditor", "TableEditor", "FieldEditor"]
+  }
+}

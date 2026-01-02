@@ -1,0 +1,42 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_header",
+  "name": "App Header",
+  "version": "1.0.0",
+  "description": "Shared navigation header with user avatar, actions, and landing page nav variant",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 1,
+  "primary": false,
+  "dependencies": {
+    "ui_permissions": "*"
+  },
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "AppHeader",
+      "LandingNav"
+    ],
+    "scripts": [
+      "header",
+      "render"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/metadata.cases.json"
+      },
+      {
+        "parameters": "tests/components.cases.json"
+      }
+    ]
+  }
+}

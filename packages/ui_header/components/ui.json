@@ -1,0 +1,488 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_header",
+  "description": "Header navigation components including app header and landing navigation",
+  "components": [
+    {
+      "id": "landing_nav",
+      "name": "LandingNav",
+      "description": "Landing page navigation bar with brand, links, and responsive mobile menu",
+      "props": [
+        {
+          "name": "menuOpen",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether mobile menu is open"
+        },
+        {
+          "name": "onNavigate",
+          "type": "function",
+          "required": false,
+          "description": "Navigation callback handler"
+        },
+        {
+          "name": "toggleMenu",
+          "type": "function",
+          "required": false,
+          "description": "Toggle mobile menu callback"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "component": "nav",
+          "className": "landing-nav",
+          "sx": {
+            "borderBottom": 1,
+            "borderColor": "divider",
+            "bgcolor": "rgba(var(--color-card-rgb), 0.5)",
+            "backdropFilter": "blur(8px)",
+            "position": "sticky",
+            "top": 0,
+            "zIndex": 50
+          },
+          "children": [
+            {
+              "type": "Container",
+              "maxWidth": "lg",
+              "className": "landing-nav-container",
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "className": "landing-nav-content",
+                  "sx": { "height": 64 },
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "alignItems": "center",
+                      "spacing": 1.5,
+                      "className": "landing-nav-brand",
+                      "children": [
+                        {
+                          "type": "Box",
+                          "className": "landing-nav-logo",
+                          "sx": {
+                            "width": 32,
+                            "height": 32,
+                            "borderRadius": 2,
+                            "background": "linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)"
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "variant": "h6",
+                          "children": "MetaBuilder",
+                          "sx": { "fontWeight": 700, "fontSize": "1.25rem" }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "alignItems": "center",
+                      "spacing": 2,
+                      "className": "landing-nav-links",
+                      "sx": { "display": { "xs": "none", "md": "flex" } },
+                      "children": [
+                        {
+                          "type": "Link",
+                          "href": "#features",
+                          "children": "Features",
+                          "className": "nav-link",
+                          "sx": {
+                            "color": "text.secondary",
+                            "fontSize": "0.875rem",
+                            "textDecoration": "none",
+                            "transition": "color 0.2s",
+                            "&:hover": { "color": "text.primary" }
+                          }
+                        },
+                        {
+                          "type": "Link",
+                          "href": "#about",
+                          "children": "About",
+                          "className": "nav-link",
+                          "sx": {
+                            "color": "text.secondary",
+                            "fontSize": "0.875rem",
+                            "textDecoration": "none",
+                            "transition": "color 0.2s",
+                            "&:hover": { "color": "text.primary" }
+                          }
+                        },
+                        {
+                          "type": "Link",
+                          "href": "#contact",
+                          "children": "Contact",
+                          "className": "nav-link",
+                          "sx": {
+                            "color": "text.secondary",
+                            "fontSize": "0.875rem",
+                            "textDecoration": "none",
+                            "transition": "color 0.2s",
+                            "&:hover": { "color": "text.primary" }
+                          }
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "size": "small",
+                          "children": "Sign In",
+                          "onClick": "{{onNavigate(2)}}",
+                          "sx": { "ml": 1 }
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "size": "small",
+                          "children": "Admin",
+                          "onClick": "{{onNavigate(4)}}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "IconButton",
+                      "aria-label": "Toggle menu",
+                      "onClick": "{{toggleMenu}}",
+                      "className": "landing-nav-mobile-toggle",
+                      "sx": {
+                        "display": { "xs": "flex", "md": "none" },
+                        "p": 1,
+                        "borderRadius": 2
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "{{menuOpen ? 'Close' : 'Menu'}}",
+                          "size": 24
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{menuOpen}}",
+              "then": {
+                "type": "Box",
+                "className": "landing-nav-mobile-menu",
+                "sx": {
+                  "display": { "xs": "block", "md": "none" },
+                  "borderTop": 1,
+                  "borderColor": "divider",
+                  "bgcolor": "background.paper",
+                  "px": 2,
+                  "py": 2
+                },
+                "children": [
+                  {
+                    "type": "Stack",
+                    "spacing": 2,
+                    "className": "landing-nav-mobile-links",
+                    "children": [
+                      {
+                        "type": "Link",
+                        "href": "#features",
+                        "children": "Features",
+                        "sx": {
+                          "display": "block",
+                          "color": "text.secondary",
+                          "fontSize": "0.875rem",
+                          "textDecoration": "none",
+                          "&:hover": { "color": "text.primary" }
+                        }
+                      },
+                      {
+                        "type": "Link",
+                        "href": "#about",
+                        "children": "About",
+                        "sx": {
+                          "display": "block",
+                          "color": "text.secondary",
+                          "fontSize": "0.875rem",
+                          "textDecoration": "none",
+                          "&:hover": { "color": "text.primary" }
+                        }
+                      },
+                      {
+                        "type": "Link",
+                        "href": "#contact",
+                        "children": "Contact",
+                        "sx": {
+                          "display": "block",
+                          "color": "text.secondary",
+                          "fontSize": "0.875rem",
+                          "textDecoration": "none",
+                          "&:hover": { "color": "text.primary" }
+                        }
+                      },
+                      {
+                        "type": "Button",
+                        "variant": "outlined",
+                        "fullWidth": true,
+                        "size": "small",
+                        "children": "Sign In",
+                        "onClick": "{{onNavigate(2)}}"
+                      },
+                      {
+                        "type": "Button",
+                        "variant": "contained",
+                        "fullWidth": true,
+                        "size": "small",
+                        "children": "Admin",
+                        "onClick": "{{onNavigate(4)}}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "app_header",
+      "name": "AppHeader",
+      "description": "Application header with navigation, theme toggle, notifications, and user menu",
+      "props": [
+        {
+          "name": "user",
+          "type": "object",
+          "required": false,
+          "description": "Current user object with avatarUrl and username"
+        },
+        {
+          "name": "toggleTheme",
+          "type": "function",
+          "required": false,
+          "description": "Theme toggle callback"
+        },
+        {
+          "name": "openNotifications",
+          "type": "function",
+          "required": false,
+          "description": "Open notifications panel callback"
+        },
+        {
+          "name": "navigate",
+          "type": "function",
+          "required": false,
+          "description": "Navigation callback"
+        },
+        {
+          "name": "logout",
+          "type": "function",
+          "required": false,
+          "description": "Logout callback"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "AppBar",
+          "position": "sticky",
+          "color": "default",
+          "elevation": 1,
+          "className": "app-header",
+          "children": [
+            {
+              "type": "Toolbar",
+              "className": "app-header-toolbar",
+              "children": [
+                {
+                  "type": "Flex",
+                  "className": "flex items-center gap-2",
+                  "children": [
+                    {
+                      "type": "Link",
+                      "href": "/",
+                      "className": "flex items-center gap-2 no-underline",
+                      "children": [
+                        {
+                          "type": "Box",
+                          "component": "img",
+                          "src": "/logo.svg",
+                          "alt": "MetaBuilder Logo",
+                          "className": "header-logo",
+                          "sx": { "height": 32, "width": "auto" }
+                        },
+                        {
+                          "type": "Text",
+                          "variant": "h6",
+                          "children": "MetaBuilder",
+                          "className": "font-bold text-foreground"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Box",
+                  "className": "header-nav-section",
+                  "sx": { "flexGrow": 1, "display": "flex", "justifyContent": "center" },
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 1,
+                      "className": "header-nav-links",
+                      "children": [
+                        {
+                          "type": "Button",
+                          "variant": "text",
+                          "href": "/",
+                          "children": "Home",
+                          "className": "nav-link"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "text",
+                          "href": "/features",
+                          "children": "Features",
+                          "className": "nav-link"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "text",
+                          "href": "/docs",
+                          "children": "Docs",
+                          "className": "nav-link"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "text",
+                          "href": "/packages",
+                          "children": "Packages",
+                          "className": "nav-link"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Flex",
+                  "className": "flex items-center gap-2",
+                  "children": [
+                    {
+                      "type": "IconButton",
+                      "aria-label": "Toggle theme",
+                      "onClick": "{{toggleTheme}}",
+                      "size": "small",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "Brightness4"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "IconButton",
+                      "aria-label": "Notifications",
+                      "onClick": "{{openNotifications}}",
+                      "size": "small",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "Notifications"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Box",
+                  "className": "header-user-section",
+                  "children": [
+                    {
+                      "type": "conditional",
+                      "condition": "{{user}}",
+                      "then": {
+                        "type": "Menu",
+                        "trigger": {
+                          "type": "IconButton",
+                          "aria-label": "User menu",
+                          "size": "small",
+                          "className": "user-avatar-button",
+                          "children": [
+                            {
+                              "type": "Avatar",
+                              "src": "{{user.avatarUrl}}",
+                              "alt": "{{user.username}}",
+                              "sx": { "width": 32, "height": 32 }
+                            }
+                          ]
+                        },
+                        "anchorOrigin": { "vertical": "bottom", "horizontal": "right" },
+                        "transformOrigin": { "vertical": "top", "horizontal": "right" },
+                        "children": [
+                          {
+                            "type": "MenuItem",
+                            "onClick": "{{navigate}}",
+                            "href": "/profile",
+                            "children": [
+                              { "type": "Icon", "name": "Person", "className": "menu-item-icon" },
+                              { "type": "Text", "children": "Profile" }
+                            ]
+                          },
+                          {
+                            "type": "MenuItem",
+                            "onClick": "{{navigate}}",
+                            "href": "/settings",
+                            "children": [
+                              { "type": "Icon", "name": "Settings", "className": "menu-item-icon" },
+                              { "type": "Text", "children": "Settings" }
+                            ]
+                          },
+                          { "type": "Divider" },
+                          {
+                            "type": "MenuItem",
+                            "onClick": "{{logout}}",
+                            "children": [
+                              { "type": "Icon", "name": "Logout", "className": "menu-item-icon" },
+                              { "type": "Text", "children": "Logout" }
+                            ]
+                          }
+                        ]
+                      },
+                      "else": {
+                        "type": "Stack",
+                        "direction": "row",
+                        "spacing": 1,
+                        "className": "auth-buttons",
+                        "children": [
+                          {
+                            "type": "Button",
+                            "variant": "text",
+                            "href": "/login",
+                            "children": "Login"
+                          },
+                          {
+                            "type": "Button",
+                            "variant": "contained",
+                            "color": "primary",
+                            "href": "/register",
+                            "children": "Sign Up"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

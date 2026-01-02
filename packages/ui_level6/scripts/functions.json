@@ -1,0 +1,120 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "ui_level6",
+  "description": "Supergod panel functions for tenant management, ownership transfer, and system administration",
+  "functions": [
+    {
+      "id": "layout_supergod_sidebar",
+      "name": "supergod_sidebar",
+      "exported": true,
+      "description": "Render supergod sidebar navigation",
+      "category": "layout",
+      "luaScript": "layout/supergod_sidebar.lua"
+    },
+    {
+      "id": "layout_supergod_toolbar",
+      "name": "supergod_toolbar",
+      "exported": true,
+      "description": "Render supergod toolbar",
+      "category": "layout",
+      "luaScript": "layout/supergod_toolbar.lua"
+    },
+    {
+      "id": "layout_supergod_content",
+      "name": "supergod_content",
+      "exported": true,
+      "description": "Render supergod content area",
+      "category": "layout",
+      "luaScript": "layout/supergod_content.lua"
+    },
+    {
+      "id": "tenants_list",
+      "name": "tenant_list",
+      "exported": true,
+      "description": "Render tenant list component",
+      "category": "tenants",
+      "luaScript": "tenants/tenant_list.lua"
+    },
+    {
+      "id": "tenants_card",
+      "name": "tenant_card",
+      "exported": true,
+      "description": "Render tenant card component",
+      "category": "tenants",
+      "luaScript": "tenants/tenant_card.lua"
+    },
+    {
+      "id": "tenants_create_form",
+      "name": "create_tenant_form",
+      "exported": true,
+      "description": "Render create tenant form",
+      "category": "tenants",
+      "luaScript": "tenants/create_tenant_form.lua"
+    },
+    {
+      "id": "transfer_form",
+      "name": "transfer_form",
+      "exported": true,
+      "description": "Render ownership transfer form",
+      "category": "transfer",
+      "luaScript": "transfer/transfer_form.lua"
+    },
+    {
+      "id": "transfer_history",
+      "name": "transfer_history",
+      "exported": true,
+      "description": "Render transfer history table",
+      "category": "transfer",
+      "luaScript": "transfer/transfer_history.lua"
+    },
+    {
+      "id": "system_stats",
+      "name": "system_stats",
+      "exported": true,
+      "description": "Render system statistics",
+      "category": "system",
+      "luaScript": "system/system_stats.lua"
+    },
+    {
+      "id": "system_health",
+      "name": "system_health",
+      "exported": true,
+      "description": "Render system health status",
+      "category": "system",
+      "luaScript": "system/system_health.lua"
+    },
+    {
+      "id": "system_logs",
+      "name": "system_logs",
+      "exported": true,
+      "description": "Render system log viewer",
+      "category": "system",
+      "luaScript": "system/system_logs.lua"
+    },
+    {
+      "id": "system_maintenance_mode",
+      "name": "maintenance_mode",
+      "exported": true,
+      "description": "Render maintenance mode toggle",
+      "category": "system",
+      "luaScript": "system/maintenance_mode.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "supergod_sidebar",
+      "supergod_toolbar",
+      "supergod_content",
+      "tenant_list",
+      "tenant_card",
+      "create_tenant_form",
+      "transfer_form",
+      "transfer_history",
+      "system_stats",
+      "system_health",
+      "system_logs",
+      "maintenance_mode"
+    ]
+  }
+}

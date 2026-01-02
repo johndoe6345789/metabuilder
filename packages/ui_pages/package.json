@@ -1,0 +1,57 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_pages",
+  "name": "UI Pages Bundle",
+  "version": "2.0.0",
+  "description": "Meta-package that bundles all UI page packages for multi-level navigation",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 1,
+  "primary": false,
+  "dependencies": {
+    "ui_permissions": "*",
+    "ui_header": "*",
+    "ui_footer": "*",
+    "ui_intro": "*",
+    "ui_login": "*",
+    "ui_home": "*",
+    "ui_level2": "*",
+    "ui_level3": "*",
+    "ui_level4": "*",
+    "ui_level5": "*",
+    "ui_level6": "*"
+  },
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "PageLayout",
+      "NavigationBar",
+      "AppFooter"
+    ],
+    "scripts": [
+      "pages",
+      "types"
+    ],
+    "pages": [
+      "level1",
+      "login"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/metadata.cases.json"
+      },
+      {
+        "parameters": "tests/components.cases.json"
+      }
+    ]
+  }
+}

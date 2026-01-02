@@ -1,0 +1,38 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "quick_guide",
+  "name": "Quick Guide",
+  "version": "1.0.0",
+  "description": "Quick guide builder with steps and media management",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 2,
+  "primary": true,
+  "dependencies": {},
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "StepsEditor",
+      "MediaPane",
+      "QuickGuideBuilder"
+    ],
+    "scripts": [
+      "init",
+      "steps",
+      "media"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/metadata.cases.json"
+      }
+    ]
+  }
+}

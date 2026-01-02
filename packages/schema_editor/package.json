@@ -1,0 +1,52 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "schema_editor",
+  "name": "Schema Editor",
+  "version": "1.0.0",
+  "description": "Database schema editor components for managing tables, fields, and relations",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "editors",
+  "minLevel": 5,
+  "primary": true,
+  "dependencies": {
+    "form_builder": "*"
+  },
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "SchemaEditor",
+      "TableEditor",
+      "FieldEditor"
+    ],
+    "scripts": [
+      "fields",
+      "tables",
+      "relations"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua",
+      "tests/field_definitions.test.lua",
+      "tests/table_operations.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/metadata.cases.json"
+      },
+      {
+        "parameters": "tests/components.cases.json"
+      },
+      {
+        "parameters": "tests/field_definitions.cases.json"
+      },
+      {
+        "parameters": "tests/table_operations.cases.json"
+      }
+    ]
+  }
+}

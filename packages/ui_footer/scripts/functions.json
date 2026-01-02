@@ -1,0 +1,48 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "ui_footer",
+  "description": "Footer rendering and lifecycle management functions",
+  "functions": [
+    {
+      "id": "footer_init",
+      "name": "onInstall",
+      "exported": true,
+      "description": "Package lifecycle installation hook",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "footer_render",
+      "name": "render",
+      "exported": true,
+      "description": "Render footer component with props",
+      "category": "ui",
+      "luaScript": "render.lua"
+    },
+    {
+      "id": "footer_render_simple",
+      "name": "renderSimple",
+      "exported": true,
+      "description": "Render simple footer variant",
+      "category": "ui",
+      "luaScript": "render.lua"
+    },
+    {
+      "id": "footer_get_links",
+      "name": "getFooterLinks",
+      "exported": true,
+      "description": "Get footer navigation links configuration",
+      "category": "data",
+      "luaScript": "render.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "onInstall",
+      "render",
+      "renderSimple",
+      "getFooterLinks"
+    ]
+  }
+}

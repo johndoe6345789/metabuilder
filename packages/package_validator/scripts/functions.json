@@ -1,0 +1,241 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "package_validator",
+  "description": "Package validation functions for validating JSON-based packages",
+  "functions": [
+    {
+      "id": "validate_package",
+      "name": "validatePackage",
+      "exported": true,
+      "description": "Validates a complete package including metadata, components, scripts, and structure",
+      "category": "validation",
+      "luaScript": "validate_package.lua",
+      "parameters": [
+        {
+          "name": "packagePath",
+          "type": "string",
+          "required": true,
+          "description": "Path to the package directory"
+        },
+        {
+          "name": "options",
+          "type": "object",
+          "required": false,
+          "description": "Validation options (skipStructure, skipLua, skipStyles)"
+        }
+      ],
+      "returns": {
+        "type": "ValidationResult",
+        "description": "Validation results with errors and warnings"
+      }
+    },
+    {
+      "id": "validate_metadata",
+      "name": "validateMetadata",
+      "exported": true,
+      "description": "Validates package metadata.json structure and required fields",
+      "category": "validation",
+      "luaScript": "validate_metadata.lua",
+      "parameters": [
+        {
+          "name": "metadata",
+          "type": "object",
+          "required": true,
+          "description": "Parsed metadata object to validate"
+        }
+      ],
+      "returns": {
+        "type": "array",
+        "description": "Tuple of [valid: boolean, errors: string[]]"
+      }
+    },
+    {
+      "id": "validate_scripts",
+      "name": "validateScripts",
+      "exported": true,
+      "description": "Validates Lua scripts structure and exports",
+      "category": "validation",
+      "luaScript": "validate_scripts_structure.lua",
+      "parameters": [
+        {
+          "name": "packagePath",
+          "type": "string",
+          "required": true,
+          "description": "Path to the package directory"
+        },
+        {
+          "name": "metadata",
+          "type": "object",
+          "required": true,
+          "description": "Package metadata with exports"
+        }
+      ],
+      "returns": {
+        "type": "array",
+        "description": "Tuple of [errors: string[], warnings: string[]]"
+      }
+    },
+    {
+      "id": "validate_types",
+      "name": "validateTypes",
+      "exported": true,
+      "description": "Validates type definitions in types.json",
+      "category": "validation",
+      "luaScript": "types.lua",
+      "parameters": [
+        {
+          "name": "types",
+          "type": "array",
+          "required": true,
+          "description": "Array of type definitions to validate"
+        }
+      ],
+      "returns": {
+        "type": "array",
+        "description": "Tuple of [valid: boolean, errors: string[]]"
+      }
+    },
+    {
+      "id": "validate_components",
+      "name": "validateComponents",
+      "exported": true,
+      "description": "Validates component definitions in components.json",
+      "category": "validation",
+      "luaScript": "validate_components.lua",
+      "parameters": [
+        {
+          "name": "components",
+          "type": "array",
+          "required": true,
+          "description": "Array of component definitions to validate"
+        }
+      ],
+      "returns": {
+        "type": "array",
+        "description": "Tuple of [valid: boolean, errors: string[]]"
+      }
+    },
+    {
+      "id": "validate_tests",
+      "name": "validateTests",
+      "exported": true,
+      "description": "Validates test file structure and coverage",
+      "category": "validation",
+      "luaScript": "validate_test_structure.lua",
+      "parameters": [
+        {
+          "name": "packagePath",
+          "type": "string",
+          "required": true,
+          "description": "Path to the package directory"
+        }
+      ],
+      "returns": {
+        "type": "object",
+        "description": "Test validation results"
+      }
+    },
+    {
+      "id": "validate_storybook",
+      "name": "validateStorybook",
+      "exported": true,
+      "description": "Validates storybook configuration and stories",
+      "category": "validation",
+      "luaScript": "validate_structure.lua",
+      "parameters": [
+        {
+          "name": "packagePath",
+          "type": "string",
+          "required": true,
+          "description": "Path to the package directory"
+        }
+      ],
+      "returns": {
+        "type": "object",
+        "description": "Storybook validation results"
+      }
+    },
+    {
+      "id": "validate_styles",
+      "name": "validateStyles",
+      "exported": true,
+      "description": "Validates styles.json structure",
+      "category": "validation",
+      "luaScript": "validate_styles.lua",
+      "parameters": [
+        {
+          "name": "packagePath",
+          "type": "string",
+          "required": true,
+          "description": "Path to the package directory"
+        }
+      ],
+      "returns": {
+        "type": "object",
+        "description": "Style validation results with success status and messages"
+      }
+    },
+    {
+      "id": "format_results",
+      "name": "formatResults",
+      "exported": true,
+      "description": "Formats validation results for display",
+      "category": "output",
+      "luaScript": "format_results.lua",
+      "parameters": [
+        {
+          "name": "results",
+          "type": "ValidationResult",
+          "required": true,
+          "description": "Validation results to format"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "required": false,
+          "default": "human",
+          "description": "Output format: 'human' or 'json'"
+        }
+      ],
+      "returns": {
+        "type": "string",
+        "description": "Formatted output string"
+      }
+    },
+    {
+      "id": "check_lua_quality",
+      "name": "checkLuaQuality",
+      "exported": true,
+      "description": "Checks Lua code quality and best practices",
+      "category": "validation",
+      "luaScript": "check_lua_quality.lua",
+      "parameters": [
+        {
+          "name": "luaCode",
+          "type": "string",
+          "required": true,
+          "description": "Lua source code to check"
+        }
+      ],
+      "returns": {
+        "type": "object",
+        "description": "Quality check results with suggestions"
+      }
+    }
+  ],
+  "exports": {
+    "functions": [
+      "validatePackage",
+      "validateMetadata",
+      "validateScripts",
+      "validateTypes",
+      "validateComponents",
+      "validateTests",
+      "validateStorybook",
+      "validateStyles",
+      "formatResults",
+      "checkLuaQuality"
+    ]
+  }
+}

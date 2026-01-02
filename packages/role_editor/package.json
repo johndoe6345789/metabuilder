@@ -1,0 +1,42 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "role_editor",
+  "name": "Role Editor",
+  "version": "1.0.0",
+  "description": "User role management and permission configuration UI",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 3,
+  "primary": true,
+  "dependencies": {
+    "ui_permissions": "*"
+  },
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "RoleEditor",
+      "RoleCard"
+    ],
+    "scripts": [
+      "role",
+      "config"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/role.test.lua",
+      "tests/config.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/role.cases.json"
+      },
+      {
+        "parameters": "tests/config.cases.json"
+      }
+    ]
+  }
+}

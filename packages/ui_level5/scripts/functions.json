@@ -1,0 +1,111 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "ui_level5",
+  "description": "Level 5 God Panel functions for layout, tenant management, and data transfer",
+  "functions": [
+    {
+      "id": "layout_render",
+      "name": "render",
+      "exported": true,
+      "description": "Render the main Level 5 layout",
+      "category": "ui",
+      "luaScript": "layout.lua"
+    },
+    {
+      "id": "layout_navigator",
+      "name": "navigator",
+      "exported": true,
+      "description": "Render navigation tabs component",
+      "category": "ui",
+      "luaScript": "layout.lua"
+    },
+    {
+      "id": "layout_supergod_sidebar",
+      "name": "supergodSidebar",
+      "exported": true,
+      "description": "Render supergod sidebar component",
+      "category": "layout",
+      "luaScript": "layout/supergod_sidebar.lua"
+    },
+    {
+      "id": "layout_supergod_toolbar",
+      "name": "supergodToolbar",
+      "exported": true,
+      "description": "Render supergod toolbar component",
+      "category": "layout",
+      "luaScript": "layout/supergod_toolbar.lua"
+    },
+    {
+      "id": "layout_supergod_content",
+      "name": "supergodContent",
+      "exported": true,
+      "description": "Render supergod main content area",
+      "category": "layout",
+      "luaScript": "layout/supergod_content.lua"
+    },
+    {
+      "id": "tenants_render",
+      "name": "renderTenants",
+      "exported": true,
+      "description": "Render tenants management panel",
+      "category": "ui",
+      "luaScript": "tenants/render.lua"
+    },
+    {
+      "id": "tenants_create",
+      "name": "createTenant",
+      "exported": true,
+      "description": "Create a new tenant",
+      "category": "actions",
+      "luaScript": "tenants/create_tenant.lua"
+    },
+    {
+      "id": "tenants_delete",
+      "name": "deleteTenant",
+      "exported": true,
+      "description": "Delete an existing tenant",
+      "category": "actions",
+      "luaScript": "tenants/delete_tenant.lua"
+    },
+    {
+      "id": "transfer_initiate",
+      "name": "initiateTransfer",
+      "exported": true,
+      "description": "Initiate data transfer between tenants",
+      "category": "actions",
+      "luaScript": "transfer/initiate_transfer.lua"
+    },
+    {
+      "id": "transfer_confirm",
+      "name": "confirmTransfer",
+      "exported": true,
+      "description": "Confirm and execute pending transfer",
+      "category": "actions",
+      "luaScript": "transfer/confirm_transfer.lua"
+    },
+    {
+      "id": "transfer_assign_god",
+      "name": "assignGod",
+      "exported": true,
+      "description": "Assign god-level permissions to a user",
+      "category": "actions",
+      "luaScript": "transfer/assign_god.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "render",
+      "navigator",
+      "supergodSidebar",
+      "supergodToolbar",
+      "supergodContent",
+      "renderTenants",
+      "createTenant",
+      "deleteTenant",
+      "initiateTransfer",
+      "confirmTransfer",
+      "assignGod"
+    ]
+  }
+}

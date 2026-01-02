@@ -1,0 +1,93 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "ui_level4",
+  "description": "Level 4 Admin Panel layout, schema, and workflow management functions",
+  "functions": [
+    {
+      "id": "layout_init",
+      "name": "initLayout",
+      "exported": true,
+      "description": "Initialize Level 4 layout module",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "layout_render",
+      "name": "render",
+      "exported": true,
+      "description": "Render main Level 4 application builder layout",
+      "category": "layout",
+      "luaScript": "layout/render.lua"
+    },
+    {
+      "id": "layout_tabs",
+      "name": "tabs",
+      "exported": true,
+      "description": "Render tabbed interface for Schemas, Workflows, and Lua Scripts",
+      "category": "layout",
+      "luaScript": "layout/tabs.lua"
+    },
+    {
+      "id": "layout_god_sidebar",
+      "name": "godSidebar",
+      "exported": true,
+      "description": "Render God panel sidebar with dark theme",
+      "category": "layout",
+      "luaScript": "layout/god_sidebar.lua"
+    },
+    {
+      "id": "layout_god_toolbar",
+      "name": "godToolbar",
+      "exported": true,
+      "description": "Render God panel toolbar with system status",
+      "category": "layout",
+      "luaScript": "layout/god_toolbar.lua"
+    },
+    {
+      "id": "layout_god_content",
+      "name": "godContent",
+      "exported": true,
+      "description": "Render God panel main content area",
+      "category": "layout",
+      "luaScript": "layout/god_content.lua"
+    },
+    {
+      "id": "schemas_render",
+      "name": "renderSchemas",
+      "exported": true,
+      "description": "Render schemas tab content",
+      "category": "ui",
+      "luaScript": "schemas.lua"
+    },
+    {
+      "id": "workflows_render",
+      "name": "renderWorkflows",
+      "exported": true,
+      "description": "Render workflows tab with workflow cards",
+      "category": "ui",
+      "luaScript": "workflows.lua"
+    },
+    {
+      "id": "workflows_add",
+      "name": "addWorkflow",
+      "exported": true,
+      "description": "Open add workflow dialog",
+      "category": "actions",
+      "luaScript": "workflows.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "initLayout",
+      "render",
+      "tabs",
+      "godSidebar",
+      "godToolbar",
+      "godContent",
+      "renderSchemas",
+      "renderWorkflows",
+      "addWorkflow"
+    ]
+  }
+}

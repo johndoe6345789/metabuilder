@@ -1,0 +1,182 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Schema Editor Components",
+  "description": "Database schema editor for managing tables, fields, and relations",
+  "stories": [
+    {
+      "name": "SchemaEditor",
+      "render": "schema",
+      "description": "Main schema editor with table list and detail panel",
+      "args": {
+        "schema": {
+          "name": "demo_schema",
+          "version": "1.0.0",
+          "tables": [
+            {
+              "name": "users",
+              "columns": [
+                { "name": "id", "type": "integer", "primaryKey": true, "autoIncrement": true },
+                { "name": "email", "type": "string", "unique": true },
+                { "name": "name", "type": "string", "nullable": true },
+                { "name": "created_at", "type": "datetime", "default": "NOW()" }
+              ]
+            },
+            {
+              "name": "posts",
+              "columns": [
+                { "name": "id", "type": "integer", "primaryKey": true, "autoIncrement": true },
+                { "name": "user_id", "type": "integer", "references": { "table": "users", "column": "id" } },
+                { "name": "title", "type": "string" },
+                { "name": "content", "type": "text", "nullable": true }
+              ]
+            }
+          ],
+          "relations": [
+            { "sourceTable": "posts", "targetTable": "users", "type": "many-to-one" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "TableEditor",
+      "render": "table",
+      "description": "Single table editor with column management",
+      "args": {
+        "table": {
+          "name": "products",
+          "schema": "public",
+          "comment": "Product catalog",
+          "columns": [
+            { "name": "id", "type": "integer", "primaryKey": true, "autoIncrement": true },
+            { "name": "sku", "type": "string", "unique": true },
+            { "name": "name", "type": "string" },
+            { "name": "price", "type": "float" },
+            { "name": "category_id", "type": "integer", "references": { "table": "categories", "column": "id" } }
+          ],
+          "indexes": [
+            { "name": "idx_sku", "columns": ["sku"], "unique": true },
+            { "name": "idx_category", "columns": ["category_id"], "unique": false }
+          ]
+        }
+      }
+    },
+    {
+      "name": "FieldEditor",
+      "render": "field",
+      "description": "Field/column editor with constraints and foreign key configuration",
+      "args": {
+        "field": {
+          "name": "user_id",
+          "type": "integer",
+          "nullable": false,
+          "unique": false,
+          "primaryKey": false,
+          "autoIncrement": false,
+          "references": {
+            "table": "users",
+            "column": "id",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE"
+          }
+        }
+      }
+    },
+    {
+      "name": "EmptySchema",
+      "render": "schema",
+      "description": "Empty schema editor for creating new schemas",
+      "args": {
+        "schema": {
+          "name": "",
+          "version": "1.0.0",
+          "tables": [],
+          "relations": []
+        }
+      }
+    },
+    {
+      "name": "ReadonlyMode",
+      "render": "schema",
+      "description": "Schema editor in readonly mode",
+      "args": {
+        "readonly": true,
+        "schema": {
+          "name": "production_schema",
+          "version": "2.1.0",
+          "tables": [
+            {
+              "name": "orders",
+              "columns": [
+                { "name": "id", "type": "integer", "primaryKey": true },
+                { "name": "total", "type": "float" },
+                { "name": "status", "type": "string" }
+              ]
+            }
+          ],
+          "relations": []
+        }
+      }
+    }
+  ],
+  "renders": {
+    "schema": {
+      "description": "Main schema editor component",
+      "featured": true
+    },
+    "table": {
+      "description": "Table editor for single table management"
+    },
+    "field": {
+      "description": "Field editor for column configuration"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-admin",
+      "username": "admin",
+      "level": 5,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "God User",
+      "description": "Full schema editing access",
+      "context": {
+        "user": {
+          "username": "god_user",
+          "level": 5
+        }
+      }
+    },
+    {
+      "name": "Supergod User",
+      "description": "System administrator access",
+      "context": {
+        "user": {
+          "username": "supergod",
+          "level": 6
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["schema", "table", "field"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

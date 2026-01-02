@@ -1,0 +1,135 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Level 3 - Moderator Panel",
+  "description": "Moderator panel components for content moderation and user management",
+  "stories": [
+    {
+      "name": "ModeratorLayout",
+      "render": "layout",
+      "description": "Complete moderator panel with header, stats, and tabs",
+      "type": "function"
+    },
+    {
+      "name": "UserManagement",
+      "render": "users",
+      "description": "User management table with moderation actions",
+      "type": "function",
+      "args": {
+        "users": [
+          { "username": "john_doe", "email": "john@example.com", "level": 1, "status": "Active" },
+          { "username": "jane_smith", "email": "jane@example.com", "level": 2, "status": "Active" },
+          { "username": "spam_user", "email": "spam@bad.com", "level": 1, "status": "Suspended" }
+        ]
+      }
+    },
+    {
+      "name": "ContentModeration",
+      "render": "moderation",
+      "description": "Content moderation queue with flagged items",
+      "type": "function",
+      "args": {
+        "items": [
+          { "id": "1", "title": "Inappropriate comment on post #1234", "reportedAt": "2 hours ago" },
+          { "id": "2", "title": "Spam content detected", "reportedAt": "5 hours ago" }
+        ]
+      }
+    },
+    {
+      "name": "StatsGrid",
+      "render": "stats",
+      "description": "Statistics grid showing users, comments, and flagged counts",
+      "type": "function",
+      "args": {
+        "users": 128,
+        "comments": 1024,
+        "flagged": 12
+      }
+    },
+    {
+      "name": "ReportsPanel",
+      "render": "reports",
+      "description": "User reports panel",
+      "type": "function",
+      "args": {
+        "reports": []
+      }
+    }
+  ],
+  "renders": {
+    "layout": {
+      "description": "Full moderator panel layout",
+      "featured": true
+    },
+    "users": {
+      "description": "User management table"
+    },
+    "moderation": {
+      "description": "Content moderation queue"
+    },
+    "stats": {
+      "description": "Statistics grid"
+    },
+    "reports": {
+      "description": "Reports panel"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "mod-user",
+      "username": "moderator",
+      "level": 3,
+      "email": "mod@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Moderator",
+      "description": "Standard moderator with level 3 access",
+      "context": {
+        "user": {
+          "username": "moderator",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Admin with level 4 access viewing moderator panel",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    },
+    {
+      "name": "Supergod",
+      "description": "Supergod with level 6 access",
+      "context": {
+        "user": {
+          "username": "supergod",
+          "level": 6
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["layout", "users", "moderation", "stats", "reports"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

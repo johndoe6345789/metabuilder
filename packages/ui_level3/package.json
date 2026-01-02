@@ -1,0 +1,54 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_level3",
+  "name": "Level 3 - Moderator Panel",
+  "version": "1.0.0",
+  "description": "Moderator panel for content moderation, user management, and report handling",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 3,
+  "primary": true,
+  "dependencies": {
+    "ui_permissions": "*",
+    "ui_header": "*",
+    "ui_intro": "*"
+  },
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "Level3Layout",
+      "UsersPanel",
+      "ModerationQueue",
+      "ReportsPanel"
+    ],
+    "scripts": [
+      "layout",
+      "users",
+      "moderation"
+    ],
+    "pages": [
+      "level3"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua",
+      "tests/moderation.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/metadata.cases.json"
+      },
+      {
+        "parameters": "tests/components.cases.json"
+      },
+      {
+        "parameters": "tests/moderation.cases.json"
+      }
+    ]
+  }
+}

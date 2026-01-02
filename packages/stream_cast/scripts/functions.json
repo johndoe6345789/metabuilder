@@ -1,0 +1,120 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "stream_cast",
+  "description": "Stream Cast functions for player control, scene management, and scheduling",
+  "functions": [
+    {
+      "id": "stream_init",
+      "name": "init",
+      "exported": true,
+      "description": "Initialize the stream cast module",
+      "category": "core",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "player_render",
+      "name": "renderPlayer",
+      "exported": true,
+      "description": "Render video player component",
+      "category": "player",
+      "luaScript": "player.lua"
+    },
+    {
+      "id": "player_render_controls",
+      "name": "renderPlayerControls",
+      "exported": true,
+      "description": "Render player control buttons",
+      "category": "player",
+      "luaScript": "render_player_controls.lua"
+    },
+    {
+      "id": "player_render_status",
+      "name": "renderStatus",
+      "exported": true,
+      "description": "Render player status bar",
+      "category": "player",
+      "luaScript": "render_status.lua"
+    },
+    {
+      "id": "scene_render",
+      "name": "renderScene",
+      "exported": true,
+      "description": "Render scene preview component",
+      "category": "scenes",
+      "luaScript": "render_scene.lua"
+    },
+    {
+      "id": "scene_render_list",
+      "name": "renderSceneList",
+      "exported": true,
+      "description": "Render list of available scenes",
+      "category": "scenes",
+      "luaScript": "render_scene_list.lua"
+    },
+    {
+      "id": "scene_switch",
+      "name": "switchScene",
+      "exported": true,
+      "description": "Switch to a different stream scene",
+      "category": "scenes",
+      "luaScript": "switch_scene.lua"
+    },
+    {
+      "id": "scene_create",
+      "name": "createScene",
+      "exported": true,
+      "description": "Create a new stream scene",
+      "category": "scenes",
+      "luaScript": "create_scene.lua"
+    },
+    {
+      "id": "schedule_render_item",
+      "name": "renderScheduleItem",
+      "exported": true,
+      "description": "Render a single schedule item",
+      "category": "schedule",
+      "luaScript": "render_schedule_item.lua"
+    },
+    {
+      "id": "schedule_render_list",
+      "name": "renderScheduleList",
+      "exported": true,
+      "description": "Render schedule list",
+      "category": "schedule",
+      "luaScript": "render_schedule_list.lua"
+    },
+    {
+      "id": "schedule_create",
+      "name": "scheduleStream",
+      "exported": true,
+      "description": "Schedule a new stream",
+      "category": "schedule",
+      "luaScript": "schedule_stream.lua"
+    },
+    {
+      "id": "schedule_cancel",
+      "name": "cancelStream",
+      "exported": true,
+      "description": "Cancel a scheduled stream",
+      "category": "schedule",
+      "luaScript": "cancel_stream.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "init",
+      "renderPlayer",
+      "renderPlayerControls",
+      "renderStatus",
+      "renderScene",
+      "renderSceneList",
+      "switchScene",
+      "createScene",
+      "renderScheduleItem",
+      "renderScheduleList",
+      "scheduleStream",
+      "cancelStream"
+    ]
+  }
+}

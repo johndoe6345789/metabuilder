@@ -1,0 +1,39 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_footer",
+  "name": "App Footer",
+  "version": "1.0.0",
+  "description": "Shared footer with copyright and links, includes simple and full variants",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 1,
+  "primary": false,
+  "dependencies": {},
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "AppFooter",
+      "AppFooterSimple"
+    ],
+    "scripts": [
+      "footer"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/metadata.cases.json"
+      },
+      {
+        "parameters": "tests/components.cases.json"
+      }
+    ]
+  }
+}

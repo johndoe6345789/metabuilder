@@ -1,0 +1,66 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "ui_login",
+  "description": "Login and registration validation and action handlers",
+  "functions": [
+    {
+      "id": "validate_login",
+      "name": "validateLogin",
+      "exported": true,
+      "description": "Validate login form credentials",
+      "category": "validation",
+      "luaScript": "validate/login.lua"
+    },
+    {
+      "id": "validate_register",
+      "name": "validateRegister",
+      "exported": true,
+      "description": "Validate registration form data",
+      "category": "validation",
+      "luaScript": "validate/register.lua"
+    },
+    {
+      "id": "handle_login",
+      "name": "handleLogin",
+      "exported": true,
+      "description": "Process login form submission",
+      "category": "actions",
+      "luaScript": "actions/handle_login.lua"
+    },
+    {
+      "id": "handle_register",
+      "name": "handleRegister",
+      "exported": true,
+      "description": "Process registration form submission",
+      "category": "actions",
+      "luaScript": "actions/handle_register.lua"
+    },
+    {
+      "id": "on_install",
+      "name": "onInstall",
+      "exported": true,
+      "description": "Package installation lifecycle hook",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "on_uninstall",
+      "name": "onUninstall",
+      "exported": true,
+      "description": "Package uninstallation lifecycle hook",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "validateLogin",
+      "validateRegister",
+      "handleLogin",
+      "handleRegister",
+      "onInstall",
+      "onUninstall"
+    ]
+  }
+}

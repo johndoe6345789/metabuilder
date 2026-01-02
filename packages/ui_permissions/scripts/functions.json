@@ -1,0 +1,65 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "ui_permissions",
+  "description": "Permission checking and level management functions for 6-level permission system",
+  "functions": [
+    {
+      "id": "permissions_get_level",
+      "name": "getLevel",
+      "exported": true,
+      "description": "Get the permission level for a user based on their role",
+      "category": "security",
+      "luaScript": "check/get_level.lua"
+    },
+    {
+      "id": "permissions_can_access",
+      "name": "canAccess",
+      "exported": true,
+      "description": "Check if user has required permission level to access a resource",
+      "category": "security",
+      "luaScript": "check/can_access.lua"
+    },
+    {
+      "id": "permissions_is_moderator_or_above",
+      "name": "isModeratorOrAbove",
+      "exported": true,
+      "description": "Check if user is moderator level (3) or higher",
+      "category": "security",
+      "luaScript": "check/is_moderator_or_above.lua"
+    },
+    {
+      "id": "permissions_is_admin_or_above",
+      "name": "isAdminOrAbove",
+      "exported": true,
+      "description": "Check if user is admin level (4) or higher",
+      "category": "security",
+      "luaScript": "check/is_admin_or_above.lua"
+    },
+    {
+      "id": "permissions_init",
+      "name": "init",
+      "exported": false,
+      "description": "Package lifecycle initialization",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "permissions_levels",
+      "name": "levels",
+      "exported": true,
+      "description": "Permission level constants (PUBLIC=1, USER=2, MODERATOR=3, ADMIN=4, GOD=5, SUPERGOD=6)",
+      "category": "constants",
+      "luaScript": "levels.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "getLevel",
+      "canAccess",
+      "isModeratorOrAbove",
+      "isAdminOrAbove",
+      "levels"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "ui_header",
+  "description": "Header rendering and lifecycle functions",
+  "functions": [
+    {
+      "id": "header_init",
+      "name": "onInstall",
+      "exported": true,
+      "description": "Package lifecycle install handler",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "render_logo",
+      "name": "renderLogo",
+      "exported": true,
+      "description": "Render header logo section",
+      "category": "render",
+      "luaScript": "render/logo.lua"
+    },
+    {
+      "id": "render_user",
+      "name": "renderUser",
+      "exported": true,
+      "description": "Render header user section with avatar or auth buttons",
+      "category": "render",
+      "luaScript": "render/user.lua"
+    },
+    {
+      "id": "render_actions",
+      "name": "renderActions",
+      "exported": true,
+      "description": "Render header action buttons",
+      "category": "render",
+      "luaScript": "render/actions.lua"
+    },
+    {
+      "id": "render_init",
+      "name": "render",
+      "exported": true,
+      "description": "Main render module combining logo, user, and actions",
+      "category": "render",
+      "luaScript": "render/init.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "onInstall",
+      "renderLogo",
+      "renderUser",
+      "renderActions",
+      "render"
+    ]
+  }
+}

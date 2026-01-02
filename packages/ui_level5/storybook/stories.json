@@ -1,0 +1,148 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Level 5 - God Panel",
+  "description": "God panel components for tenant management and cross-tenant operations",
+  "stories": [
+    {
+      "name": "GodPanel",
+      "render": "layout",
+      "description": "Complete Level 5 God Panel layout",
+      "type": "function",
+      "args": {
+        "username": "god@metabuilder.dev",
+        "nerdMode": false
+      }
+    },
+    {
+      "name": "TenantsPanel",
+      "render": "tenants",
+      "description": "Tenant management panel with table view",
+      "args": {
+        "tenants": [
+          { "name": "Acme Corp", "slug": "acme", "users": 42, "status": "Active" },
+          { "name": "Beta Inc", "slug": "beta", "users": 18, "status": "Active" },
+          { "name": "Test Tenant", "slug": "test", "users": 3, "status": "Inactive" }
+        ]
+      }
+    },
+    {
+      "name": "GodsPanel",
+      "render": "gods",
+      "description": "Panel showing users with god-level privileges",
+      "args": {
+        "godUsers": [
+          { "email": "admin@metabuilder.dev", "username": "admin", "level": 5, "levelName": "God" },
+          { "email": "system@metabuilder.dev", "username": "system", "level": 6, "levelName": "Supergod" }
+        ]
+      }
+    },
+    {
+      "name": "TransferPanel",
+      "render": "transfer",
+      "description": "Data transfer interface between tenants",
+      "args": {
+        "tenantOptions": [
+          { "value": "acme", "label": "Acme Corp" },
+          { "value": "beta", "label": "Beta Inc" },
+          { "value": "test", "label": "Test Tenant" }
+        ],
+        "sourceTenant": "",
+        "targetTenant": ""
+      }
+    },
+    {
+      "name": "SupergodSidebar",
+      "render": "supergod_sidebar",
+      "description": "Supergod sidebar navigation",
+      "args": {
+        "items": [
+          { "id": "tenants", "label": "Tenants", "icon": "Business" },
+          { "id": "gods", "label": "God Users", "icon": "SupervisorAccount" },
+          { "id": "transfer", "label": "Transfer", "icon": "SwapHoriz" }
+        ]
+      }
+    },
+    {
+      "name": "SupergodToolbar",
+      "render": "supergod_toolbar",
+      "description": "Supergod toolbar with actions",
+      "args": {
+        "actions": [
+          { "id": "refresh", "label": "Refresh", "icon": "Refresh" },
+          { "id": "settings", "label": "Settings", "icon": "Settings" }
+        ]
+      }
+    }
+  ],
+  "renders": {
+    "layout": {
+      "description": "Full God Panel layout with navigation",
+      "featured": true
+    },
+    "tenants": {
+      "description": "Tenant management view"
+    },
+    "gods": {
+      "description": "God users list view"
+    },
+    "transfer": {
+      "description": "Cross-tenant transfer interface"
+    },
+    "supergod_sidebar": {
+      "description": "Sidebar navigation component"
+    },
+    "supergod_toolbar": {
+      "description": "Toolbar actions component"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "god-user",
+      "username": "god_user",
+      "level": 5,
+      "email": "god@example.com"
+    },
+    "tenant": {
+      "id": "system-tenant",
+      "name": "System"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "God User",
+      "description": "Level 5 - Can manage tenants and transfers",
+      "context": {
+        "user": {
+          "username": "god",
+          "level": 5
+        }
+      }
+    },
+    {
+      "name": "Supergod User",
+      "description": "Level 6 - Full system access including god assignment",
+      "context": {
+        "user": {
+          "username": "supergod",
+          "level": 6
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["layout", "tenants", "gods", "transfer", "supergod_sidebar", "supergod_toolbar"],
+    "ignoredScripts": ["tests", "types", "init"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "dark",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#0f172a" },
+        { "name": "level5-gradient", "value": "linear-gradient(to bottom right, #581c87, #0f172a, #312e81)" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_auth",
+  "name": "Auth UI",
+  "version": "1.0.0",
+  "description": "Access denied, auth gate, and loading states",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 2,
+  "primary": false,
+  "dependencies": {
+    "ui_permissions": "*"
+  },
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "AccessDenied",
+      "AuthGate",
+      "PageLoader"
+    ],
+    "scripts": [
+      "denied",
+      "gate"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua",
+      "tests/gate.check.test.lua",
+      "tests/gate.wrap.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/metadata.cases.json"
+      },
+      {
+        "parameters": "tests/components.cases.json"
+      },
+      {
+        "parameters": "tests/gate.cases.json"
+      }
+    ]
+  }
+}

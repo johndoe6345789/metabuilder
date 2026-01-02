@@ -1,0 +1,489 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_intro",
+  "description": "Intro section components with eyebrow, title, description, and CTA buttons",
+  "components": [
+    {
+      "id": "intro_section",
+      "name": "IntroSection",
+      "description": "Centered intro section with eyebrow, title, description, and CTA buttons",
+      "props": [
+        {
+          "name": "eyebrow",
+          "type": "string",
+          "required": false,
+          "description": "Small text above title (e.g., 'Level 2')"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": "Main title text"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Description paragraph"
+        },
+        {
+          "name": "primaryCtaText",
+          "type": "string",
+          "required": false,
+          "description": "Primary CTA button text"
+        },
+        {
+          "name": "primaryCtaHref",
+          "type": "string",
+          "required": false,
+          "description": "Primary CTA button link"
+        },
+        {
+          "name": "secondaryCtaText",
+          "type": "string",
+          "required": false,
+          "description": "Secondary CTA button text"
+        },
+        {
+          "name": "secondaryCtaHref",
+          "type": "string",
+          "required": false,
+          "description": "Secondary CTA button link"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "component": "section",
+          "className": "intro-section",
+          "sx": {
+            "py": 8,
+            "minHeight": "60vh",
+            "display": "flex",
+            "alignItems": "center"
+          },
+          "children": [
+            {
+              "type": "Container",
+              "maxWidth": "lg",
+              "className": "intro-container",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 4,
+                  "alignItems": "center",
+                  "className": "intro-content",
+                  "sx": { "textAlign": "center" },
+                  "children": [
+                    {
+                      "type": "conditional",
+                      "condition": "{{eyebrow}}",
+                      "then": {
+                        "type": "Text",
+                        "variant": "overline",
+                        "className": "intro-eyebrow",
+                        "sx": {
+                          "color": "primary.main",
+                          "fontWeight": 600,
+                          "letterSpacing": 2
+                        },
+                        "children": "{{eyebrow}}"
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "h1",
+                      "className": "intro-title",
+                      "sx": {
+                        "fontWeight": 700,
+                        "fontSize": { "xs": "2.5rem", "md": "3.5rem", "lg": "4rem" },
+                        "lineHeight": 1.2,
+                        "maxWidth": "900px"
+                      },
+                      "children": "{{title}}"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{description}}",
+                      "then": {
+                        "type": "Text",
+                        "variant": "body1",
+                        "className": "intro-description",
+                        "sx": {
+                          "color": "text.secondary",
+                          "fontSize": { "xs": "1rem", "md": "1.25rem" },
+                          "maxWidth": "700px",
+                          "lineHeight": 1.6
+                        },
+                        "children": "{{description}}"
+                      }
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 2,
+                      "justifyContent": "center",
+                      "className": "intro-cta-group",
+                      "sx": { "flexWrap": "wrap", "mt": 2 },
+                      "children": [
+                        {
+                          "type": "conditional",
+                          "condition": "{{primaryCtaText}}",
+                          "then": {
+                            "type": "Button",
+                            "variant": "contained",
+                            "color": "primary",
+                            "size": "large",
+                            "href": "{{primaryCtaHref}}",
+                            "className": "intro-cta-primary",
+                            "sx": { "px": 4, "py": 1.5, "fontSize": "1rem", "fontWeight": 600 },
+                            "children": "{{primaryCtaText}}"
+                          }
+                        },
+                        {
+                          "type": "conditional",
+                          "condition": "{{secondaryCtaText}}",
+                          "then": {
+                            "type": "Button",
+                            "variant": "outlined",
+                            "color": "primary",
+                            "size": "large",
+                            "href": "{{secondaryCtaHref}}",
+                            "className": "intro-cta-secondary",
+                            "sx": { "px": 4, "py": 1.5, "fontSize": "1rem", "fontWeight": 600 },
+                            "children": "{{secondaryCtaText}}"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "intro_section_left",
+      "name": "IntroSectionLeft",
+      "description": "Left-aligned intro section with media on the right",
+      "props": [
+        {
+          "name": "eyebrow",
+          "type": "string",
+          "required": false,
+          "description": "Small text above title"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": "Main title text"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Description paragraph"
+        },
+        {
+          "name": "primaryCtaText",
+          "type": "string",
+          "required": false,
+          "description": "Primary CTA button text"
+        },
+        {
+          "name": "primaryCtaHref",
+          "type": "string",
+          "required": false,
+          "description": "Primary CTA button link"
+        },
+        {
+          "name": "secondaryCtaText",
+          "type": "string",
+          "required": false,
+          "description": "Secondary CTA button text"
+        },
+        {
+          "name": "secondaryCtaHref",
+          "type": "string",
+          "required": false,
+          "description": "Secondary CTA button link"
+        },
+        {
+          "name": "mediaUrl",
+          "type": "string",
+          "required": false,
+          "description": "URL of the media image"
+        },
+        {
+          "name": "mediaAlt",
+          "type": "string",
+          "required": false,
+          "description": "Alt text for the media image"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "component": "section",
+          "className": "intro-section intro-section--left",
+          "sx": {
+            "py": 8,
+            "minHeight": "60vh",
+            "display": "flex",
+            "alignItems": "center"
+          },
+          "children": [
+            {
+              "type": "Container",
+              "maxWidth": "lg",
+              "className": "intro-container",
+              "children": [
+                {
+                  "type": "Grid",
+                  "container": true,
+                  "spacing": 6,
+                  "alignItems": "center",
+                  "className": "intro-grid",
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "md": 6,
+                      "className": "intro-content-col",
+                      "children": [
+                        {
+                          "type": "Stack",
+                          "spacing": 3,
+                          "className": "intro-content",
+                          "sx": { "textAlign": "left" },
+                          "children": [
+                            {
+                              "type": "conditional",
+                              "condition": "{{eyebrow}}",
+                              "then": {
+                                "type": "Text",
+                                "variant": "overline",
+                                "className": "intro-eyebrow",
+                                "sx": { "color": "primary.main", "fontWeight": 600, "letterSpacing": 2 },
+                                "children": "{{eyebrow}}"
+                              }
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "h2",
+                              "className": "intro-title",
+                              "sx": {
+                                "fontWeight": 700,
+                                "fontSize": { "xs": "2rem", "md": "2.75rem" },
+                                "lineHeight": 1.2
+                              },
+                              "children": "{{title}}"
+                            },
+                            {
+                              "type": "conditional",
+                              "condition": "{{description}}",
+                              "then": {
+                                "type": "Text",
+                                "variant": "body1",
+                                "className": "intro-description",
+                                "sx": { "color": "text.secondary", "fontSize": "1.125rem", "lineHeight": 1.6 },
+                                "children": "{{description}}"
+                              }
+                            },
+                            {
+                              "type": "Stack",
+                              "direction": "row",
+                              "spacing": 2,
+                              "className": "intro-cta-group",
+                              "sx": { "flexWrap": "wrap", "mt": 1 },
+                              "children": [
+                                {
+                                  "type": "conditional",
+                                  "condition": "{{primaryCtaText}}",
+                                  "then": {
+                                    "type": "Button",
+                                    "variant": "contained",
+                                    "color": "primary",
+                                    "size": "large",
+                                    "href": "{{primaryCtaHref}}",
+                                    "className": "intro-cta-primary",
+                                    "children": "{{primaryCtaText}}"
+                                  }
+                                },
+                                {
+                                  "type": "conditional",
+                                  "condition": "{{secondaryCtaText}}",
+                                  "then": {
+                                    "type": "Button",
+                                    "variant": "outlined",
+                                    "color": "primary",
+                                    "size": "large",
+                                    "href": "{{secondaryCtaHref}}",
+                                    "className": "intro-cta-secondary",
+                                    "children": "{{secondaryCtaText}}"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 12,
+                      "md": 6,
+                      "className": "intro-media-col",
+                      "children": [
+                        {
+                          "type": "conditional",
+                          "condition": "{{mediaUrl}}",
+                          "then": {
+                            "type": "Box",
+                            "className": "intro-media",
+                            "sx": { "borderRadius": 2, "overflow": "hidden", "bgcolor": "grey.100" },
+                            "children": [
+                              {
+                                "type": "Box",
+                                "component": "img",
+                                "src": "{{mediaUrl}}",
+                                "alt": "{{mediaAlt}}",
+                                "className": "intro-image",
+                                "sx": { "width": "100%", "height": "auto", "display": "block" }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "intro_section_compact",
+      "name": "IntroSectionCompact",
+      "description": "Compact intro section with inline CTA button",
+      "props": [
+        {
+          "name": "eyebrow",
+          "type": "string",
+          "required": false,
+          "description": "Small text above title"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": "Main title text"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Description paragraph"
+        },
+        {
+          "name": "primaryCtaText",
+          "type": "string",
+          "required": false,
+          "description": "Primary CTA button text"
+        },
+        {
+          "name": "primaryCtaHref",
+          "type": "string",
+          "required": false,
+          "description": "Primary CTA button link"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "component": "section",
+          "className": "intro-section intro-section--compact",
+          "sx": { "py": 4, "borderBottom": 1, "borderColor": "divider" },
+          "children": [
+            {
+              "type": "Container",
+              "maxWidth": "lg",
+              "className": "intro-container",
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": { "xs": "column", "md": "row" },
+                  "spacing": 3,
+                  "alignItems": { "xs": "flex-start", "md": "center" },
+                  "justifyContent": "space-between",
+                  "className": "intro-content",
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "spacing": 1,
+                      "className": "intro-text",
+                      "children": [
+                        {
+                          "type": "conditional",
+                          "condition": "{{eyebrow}}",
+                          "then": {
+                            "type": "Text",
+                            "variant": "overline",
+                            "className": "intro-eyebrow",
+                            "sx": { "color": "primary.main", "fontWeight": 600 },
+                            "children": "{{eyebrow}}"
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "variant": "h4",
+                          "className": "intro-title",
+                          "sx": { "fontWeight": 600 },
+                          "children": "{{title}}"
+                        },
+                        {
+                          "type": "conditional",
+                          "condition": "{{description}}",
+                          "then": {
+                            "type": "Text",
+                            "variant": "body2",
+                            "className": "intro-description",
+                            "sx": { "color": "text.secondary" },
+                            "children": "{{description}}"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{primaryCtaText}}",
+                      "then": {
+                        "type": "Button",
+                        "variant": "contained",
+                        "color": "primary",
+                        "href": "{{primaryCtaHref}}",
+                        "className": "intro-cta-primary",
+                        "children": "{{primaryCtaText}}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

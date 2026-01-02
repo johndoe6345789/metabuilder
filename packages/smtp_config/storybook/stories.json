@@ -1,0 +1,143 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "SMTP Configuration Components",
+  "description": "SMTP server configuration editor and connection testing",
+  "stories": [
+    {
+      "name": "SMTPConfigEditor",
+      "render": "smtp_editor",
+      "description": "SMTP configuration form with server, authentication, and sender settings",
+      "args": {
+        "config": {
+          "host": "smtp.example.com",
+          "port": 587,
+          "encryption": "tls",
+          "authMethod": "plain",
+          "username": "user@example.com",
+          "password": "",
+          "fromEmail": "noreply@example.com",
+          "fromName": "My Application",
+          "replyTo": "",
+          "timeout": 30,
+          "maxRetries": 3,
+          "verifyTls": true
+        },
+        "readonly": false
+      }
+    },
+    {
+      "name": "SMTPConfigEditor_Readonly",
+      "render": "smtp_editor",
+      "description": "SMTP configuration form in read-only mode",
+      "args": {
+        "config": {
+          "host": "smtp.gmail.com",
+          "port": 465,
+          "encryption": "ssl",
+          "authMethod": "oauth2",
+          "username": "myapp@gmail.com",
+          "password": "********",
+          "fromEmail": "myapp@gmail.com",
+          "fromName": "My Gmail App",
+          "replyTo": "support@example.com",
+          "timeout": 30,
+          "maxRetries": 3,
+          "verifyTls": true
+        },
+        "readonly": true
+      }
+    },
+    {
+      "name": "SMTPTestPanel",
+      "render": "smtp_test",
+      "description": "SMTP connection testing panel",
+      "args": {
+        "config": {
+          "host": "smtp.example.com",
+          "port": 587,
+          "encryption": "tls",
+          "username": "user@example.com"
+        }
+      }
+    },
+    {
+      "name": "SMTPTestPanel_WithResults",
+      "render": "smtp_test_results",
+      "description": "SMTP test panel showing successful connection results",
+      "args": {
+        "testResult": {
+          "success": true,
+          "message": "Connection successful",
+          "duration": 245,
+          "details": {
+            "connected": true,
+            "authenticated": true,
+            "tlsEnabled": true,
+            "serverResponse": "220 smtp.example.com ESMTP ready"
+          }
+        }
+      }
+    }
+  ],
+  "renders": {
+    "smtp_editor": {
+      "description": "SMTP configuration editor form",
+      "featured": true
+    },
+    "smtp_test": {
+      "description": "SMTP connection test panel"
+    },
+    "smtp_test_results": {
+      "description": "SMTP test panel with results displayed"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "admin-user",
+      "username": "admin",
+      "level": 5,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "God Admin",
+      "description": "Full access to SMTP configuration",
+      "context": {
+        "user": {
+          "username": "god_admin",
+          "level": 5
+        }
+      }
+    },
+    {
+      "name": "Supergod",
+      "description": "System-level access",
+      "context": {
+        "user": {
+          "username": "supergod",
+          "level": 6
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["smtp_editor", "smtp_test", "smtp_test_results"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

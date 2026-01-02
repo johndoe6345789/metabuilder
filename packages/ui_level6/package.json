@@ -1,0 +1,57 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_level6",
+  "name": "Level 6 - Supergod Panel",
+  "version": "1.0.0",
+  "description": "Supergod panel for tenant management and system administration",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 6,
+  "primary": true,
+  "dependencies": {
+    "ui_permissions": "*",
+    "ui_header": "*",
+    "ui_intro": "*"
+  },
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "pages": [
+      "level6"
+    ],
+    "components": [
+      "SupergodSidebar",
+      "SupergodToolbar",
+      "SupergodContent",
+      "TenantList",
+      "TenantCard",
+      "CreateTenantForm",
+      "TransferForm",
+      "TransferHistory",
+      "SystemStats",
+      "SystemHealth",
+      "SystemLogs",
+      "MaintenanceMode"
+    ],
+    "scripts": [
+      "layout",
+      "tenants",
+      "transfer",
+      "system"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua",
+      "tests/transfer.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/transfer.cases.json"
+      }
+    ]
+  }
+}

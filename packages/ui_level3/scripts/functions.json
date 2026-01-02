@@ -1,0 +1,102 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "ui_level3",
+  "description": "Moderator panel functions for layout, user management, and content moderation",
+  "functions": [
+    {
+      "id": "layout_render",
+      "name": "render",
+      "exported": true,
+      "description": "Render the main moderator panel layout",
+      "category": "layout",
+      "luaScript": "layout/render.lua"
+    },
+    {
+      "id": "layout_stats",
+      "name": "stats",
+      "exported": true,
+      "description": "Generate statistics grid for dashboard",
+      "category": "layout",
+      "luaScript": "layout/stats.lua"
+    },
+    {
+      "id": "layout_tabs",
+      "name": "tabs",
+      "exported": true,
+      "description": "Create tabbed navigation interface",
+      "category": "layout",
+      "luaScript": "layout/tabs.lua"
+    },
+    {
+      "id": "layout_admin_sidebar",
+      "name": "adminSidebar",
+      "exported": true,
+      "description": "Generate admin sidebar component",
+      "category": "layout",
+      "luaScript": "layout/admin_sidebar.lua"
+    },
+    {
+      "id": "layout_admin_toolbar",
+      "name": "adminToolbar",
+      "exported": true,
+      "description": "Generate admin toolbar component",
+      "category": "layout",
+      "luaScript": "layout/admin_toolbar.lua"
+    },
+    {
+      "id": "layout_admin_content",
+      "name": "adminContent",
+      "exported": true,
+      "description": "Generate admin content area",
+      "category": "layout",
+      "luaScript": "layout/admin_content.lua"
+    },
+    {
+      "id": "users_render",
+      "name": "renderUsers",
+      "exported": true,
+      "description": "Render users table with actions",
+      "category": "users",
+      "luaScript": "users.lua"
+    },
+    {
+      "id": "moderation_delete_user",
+      "name": "deleteUser",
+      "exported": true,
+      "description": "Delete a user account",
+      "category": "moderation",
+      "luaScript": "moderation/delete_user.lua"
+    },
+    {
+      "id": "moderation_edit_user",
+      "name": "editUser",
+      "exported": true,
+      "description": "Edit user account details",
+      "category": "moderation",
+      "luaScript": "moderation/edit_user.lua"
+    },
+    {
+      "id": "moderation_ban_user",
+      "name": "banUser",
+      "exported": true,
+      "description": "Ban a user with reason",
+      "category": "moderation",
+      "luaScript": "moderation/ban_user.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "render",
+      "stats",
+      "tabs",
+      "adminSidebar",
+      "adminToolbar",
+      "adminContent",
+      "renderUsers",
+      "deleteUser",
+      "editUser",
+      "banUser"
+    ]
+  }
+}
