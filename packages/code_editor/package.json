@@ -12,7 +12,7 @@
   "primary": false,
   "dependencies": {},
   "devDependencies": {
-    "lua_test": "*"
+    "testing": "*"
   },
   "exports": {
     "components": [
@@ -28,19 +28,8 @@
     ]
   },
   "tests": {
-    "scripts": [
-      "tests/metadata.test.lua",
-      "tests/components.test.lua",
-      "tests/editor.test.lua",
-      "tests/theme.test.lua",
-      "tests/json.test.lua",
-      "tests/lua.test.lua",
-      "tests/init.test.lua"
-    ],
-    "parameterized": [
-      {
-        "parameters": "tests/editor.cases.json"
-      }
+    "suites": [
+      "tests/metadata.test.json"
     ]
   }
 }

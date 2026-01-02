@@ -14,7 +14,7 @@
     "ui_permissions": "*"
   },
   "devDependencies": {
-    "lua_test": "*"
+    "testing": "*"
   },
   "exports": {
     "components": [
@@ -27,17 +27,8 @@
     ]
   },
   "tests": {
-    "scripts": [
-      "tests/role.test.lua",
-      "tests/config.test.lua"
-    ],
-    "parameterized": [
-      {
-        "parameters": "tests/role.cases.json"
-      },
-      {
-        "parameters": "tests/config.cases.json"
-      }
+    "suites": [
+      "tests/metadata.test.json"
     ]
   }
 }

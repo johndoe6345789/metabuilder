@@ -12,29 +12,46 @@
   "primary": true,
   "dependencies": {},
   "devDependencies": {
-    "lua_test": "*"
+    "testing": "*"
   },
   "externalDependencies": {
     "fs": {
       "description": "File system operations for reading package files",
       "required": true,
-      "functions": ["readFile", "existsSync", "readdir", "statSync"]
+      "functions": [
+        "readFile",
+        "existsSync",
+        "readdir",
+        "statSync"
+      ]
     },
     "path": {
       "description": "Path manipulation utilities",
       "required": true,
-      "functions": ["join", "resolve", "basename", "dirname", "extname"]
+      "functions": [
+        "join",
+        "resolve",
+        "basename",
+        "dirname",
+        "extname"
+      ]
     },
     "JSON": {
       "description": "JSON parsing and validation",
       "required": true,
-      "functions": ["parse", "stringify"]
+      "functions": [
+        "parse",
+        "stringify"
+      ]
     },
     "ajv": {
       "description": "JSON Schema validator (Another JSON Schema Validator)",
       "required": false,
       "version": "^8.0.0",
-      "functions": ["compile", "validate"]
+      "functions": [
+        "compile",
+        "validate"
+      ]
     }
   },
   "exports": {
@@ -59,11 +76,14 @@
     ]
   },
   "runtime": {
-    "scripts": ["scripts/validator.lua"],
+    "scripts": [
+      "scripts/validator.lua"
+    ],
     "main": "scripts/init.lua"
   },
   "tests": {
-    "scripts": ["tests/validator.test.lua"],
-    "parameterized": []
+    "suites": [
+      "tests/metadata.test.json"
+    ]
   }
 }

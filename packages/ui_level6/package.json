@@ -16,7 +16,7 @@
     "ui_intro": "*"
   },
   "devDependencies": {
-    "lua_test": "*"
+    "testing": "*"
   },
   "exports": {
     "pages": [
@@ -44,15 +44,8 @@
     ]
   },
   "tests": {
-    "scripts": [
-      "tests/metadata.test.lua",
-      "tests/components.test.lua",
-      "tests/transfer.test.lua"
-    ],
-    "parameterized": [
-      {
-        "parameters": "tests/transfer.cases.json"
-      }
+    "suites": [
+      "tests/metadata.test.json"
     ]
   }
 }

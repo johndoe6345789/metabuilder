@@ -1,9 +1,9 @@
 {
   "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
-  "packageId": "lua_test",
-  "name": "Lua Test",
-  "version": "1.0.0",
-  "description": "Unit testing framework for Lua scripts in MetaBuilder packages",
+  "packageId": "testing",
+  "name": "Testing Framework",
+  "version": "2.0.0",
+  "description": "JSON-based testing framework for MetaBuilder packages with parameterized tests, mocks, and assertions",
   "author": "MetaBuilder",
   "license": "MIT",
   "category": "tools",
@@ -12,11 +12,12 @@
   "icon": "static_content/icon.svg",
   "keywords": [
     "testing",
-    "lua",
+    "json",
     "unit-test",
     "framework",
     "assertions",
-    "mocks"
+    "mocks",
+    "parameterized"
   ],
   "dependencies": {},
   "devDependencies": {},

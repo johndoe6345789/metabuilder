@@ -14,7 +14,7 @@
     "shared": "*"
   },
   "devDependencies": {
-    "lua_test": "*"
+    "testing": "*"
   },
   "exports": {
     "components": [
@@ -37,17 +37,8 @@
     ]
   },
   "tests": {
-    "scripts": [
-      "tests/colors.test.lua",
-      "tests/export.test.lua"
-    ],
-    "parameterized": [
-      {
-        "parameters": "tests/colors.cases.json"
-      },
-      {
-        "parameters": "tests/export.cases.json"
-      }
+    "suites": [
+      "tests/metadata.test.json"
     ]
   },
   "icon": "static_content/icon.svg"

@@ -12,7 +12,7 @@
   "primary": false,
   "dependencies": {},
   "devDependencies": {
-    "lua_test": "*"
+    "testing": "*"
   },
   "exports": {
     "components": [

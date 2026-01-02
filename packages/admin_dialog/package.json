@@ -12,7 +12,7 @@
   "primary": false,
   "dependencies": {},
   "devDependencies": {
-    "lua_test": "*"
+    "testing": "*"
   },
   "exports": {
     "components": [
@@ -25,9 +25,8 @@
     ]
   },
   "tests": {
-    "scripts": [
-      "tests/metadata.test.lua",
-      "tests/components.test.lua"
+    "suites": [
+      "tests/metadata.test.json"
     ]
   }
 }

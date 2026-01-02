@@ -15,7 +15,7 @@
     "form_builder": "*"
   },
   "devDependencies": {
-    "lua_test": "*"
+    "testing": "*"
   },
   "exports": {
     "components": [
@@ -33,17 +33,8 @@
     ]
   },
   "tests": {
-    "scripts": [
-      "tests/metadata.test.lua",
-      "tests/components.test.lua"
-    ],
-    "parameterized": [
-      {
-        "parameters": "tests/metadata.cases.json"
-      },
-      {
-        "parameters": "tests/components.cases.json"
-      }
+    "suites": [
+      "tests/metadata.test.json"
     ]
   }
 }

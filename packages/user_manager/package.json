@@ -15,7 +15,7 @@
     "data_table": "*"
   },
   "devDependencies": {
-    "lua_test": "*"
+    "testing": "*"
   },
   "exports": {
     "components": [
@@ -29,13 +29,8 @@
     ]
   },
   "tests": {
-    "scripts": [
-      "tests/actions.test.lua"
-    ],
-    "parameterized": [
-      {
-        "parameters": "tests/actions.cases.json"
-      }
+    "suites": [
+      "tests/metadata.test.json"
     ]
   }
 }
