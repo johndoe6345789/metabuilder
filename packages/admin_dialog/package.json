@@ -1,0 +1,32 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "admin_dialog",
+  "name": "Admin Dialogs",
+  "version": "1.0.0",
+  "description": "Administrative dialogs for confirm, delete, and multi-action workflows",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 4,
+  "primary": false,
+  "dependencies": {},
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "AdminConfirmDialog",
+      "AdminDeleteDialog",
+      "AdminActionDialog"
+    ],
+    "scripts": [
+      "dialog"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ]
+  }
+}
