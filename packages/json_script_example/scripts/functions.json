@@ -1,0 +1,136 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "json_script_example",
+  "description": "Complete demonstration of JSON script specification with expressions, statements, operators, and control flow",
+  "constants": [
+    {
+      "id": "max_value",
+      "name": "MAX_VALUE",
+      "value": 100,
+      "type": "number",
+      "exported": true,
+      "description": "Maximum allowed value for calculations"
+    },
+    {
+      "id": "app_name",
+      "name": "APP_NAME",
+      "value": "JSON Script Demo",
+      "type": "string",
+      "exported": true,
+      "description": "Application display name"
+    },
+    {
+      "id": "config",
+      "name": "DEFAULT_CONFIG",
+      "type": "object",
+      "value": {
+        "debug": true,
+        "timeout": 5000,
+        "maxRetries": 3
+      },
+      "exported": true,
+      "description": "Default application configuration"
+    }
+  ],
+  "functions": [
+    {
+      "id": "all_expressions_demo",
+      "name": "all_expressions",
+      "exported": true,
+      "description": "Demonstrates all JSON script expression types including binary, logical, unary, conditional, and template literals",
+      "category": "demo",
+      "params": [
+        {
+          "name": "a",
+          "type": "number",
+          "description": "First number for arithmetic and comparison operations"
+        },
+        {
+          "name": "b",
+          "type": "number",
+          "description": "Second number for arithmetic and comparison operations"
+        }
+      ],
+      "returnType": "ExpressionsDemoResult",
+      "luaScript": "expressions.lua"
+    },
+    {
+      "id": "all_statements_demo",
+      "name": "all_statements",
+      "exported": true,
+      "description": "Demonstrates all statement types including declarations, loops, conditionals, and error handling",
+      "category": "demo",
+      "params": [
+        {
+          "name": "items",
+          "type": "array",
+          "description": "Array of numbers to process and calculate statistics on"
+        }
+      ],
+      "returnType": "StatementsDemoResult",
+      "luaScript": "statements.lua"
+    },
+    {
+      "id": "all_operators_demo",
+      "name": "all_operators",
+      "exported": true,
+      "description": "Demonstrates all supported operators: arithmetic, comparison, logical, and unary",
+      "category": "demo",
+      "params": [
+        {
+          "name": "x",
+          "type": "number",
+          "description": "First operand"
+        },
+        {
+          "name": "y",
+          "type": "number",
+          "description": "Second operand"
+        }
+      ],
+      "returnType": "OperatorsDemoResult",
+      "luaScript": "operators.lua"
+    },
+    {
+      "id": "control_flow_demo",
+      "name": "control_flow",
+      "exported": true,
+      "description": "Demonstrates control flow patterns with nested if/else for classification",
+      "category": "demo",
+      "params": [
+        {
+          "name": "value",
+          "type": "number",
+          "description": "Number to classify"
+        }
+      ],
+      "returnType": "Classification",
+      "luaScript": "control_flow.lua"
+    },
+    {
+      "id": "data_structures_demo",
+      "name": "data_structures",
+      "exported": true,
+      "description": "Demonstrates working with objects and arrays including nested structures and member access",
+      "category": "demo",
+      "params": [],
+      "returnType": "DataStructuresResult",
+      "luaScript": "data_structures.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "all_expressions",
+      "all_statements",
+      "all_operators",
+      "control_flow",
+      "data_structures"
+    ],
+    "constants": [
+      "MAX_VALUE",
+      "APP_NAME",
+      "DEFAULT_CONFIG"
+    ]
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "forum_forge",
+  "description": "Forum Forge script functions for thread management, permissions, ranking, and moderation",
+  "functions": [
+    {
+      "id": "forum_init",
+      "name": "init",
+      "exported": true,
+      "description": "Initialize Forum Forge package",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "forum_on_install",
+      "name": "onInstall",
+      "exported": true,
+      "description": "Package installation hook",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "forum_on_uninstall",
+      "name": "onUninstall",
+      "exported": true,
+      "description": "Package uninstallation hook",
+      "category": "lifecycle",
+      "luaScript": "init.lua"
+    },
+    {
+      "id": "forum_can_post",
+      "name": "canPost",
+      "exported": true,
+      "description": "Check if user has permission to post in forum",
+      "category": "permissions",
+      "luaScript": "permissions.lua"
+    },
+    {
+      "id": "forum_can_moderate",
+      "name": "canModerate",
+      "exported": true,
+      "description": "Check if user has permission to moderate forum",
+      "category": "permissions",
+      "luaScript": "permissions.lua"
+    },
+    {
+      "id": "forum_rank_thread",
+      "name": "rankThread",
+      "exported": true,
+      "description": "Calculate thread ranking score based on recency and engagement",
+      "category": "ranking",
+      "luaScript": "thread_rank.lua"
+    },
+    {
+      "id": "forum_flag_post",
+      "name": "flagPost",
+      "exported": true,
+      "description": "Flag a post for moderation review",
+      "category": "moderation",
+      "luaScript": "moderation.lua"
+    },
+    {
+      "id": "forum_create_thread",
+      "name": "createThread",
+      "exported": true,
+      "description": "Create a new forum thread",
+      "category": "threads",
+      "luaScript": "threads.lua"
+    },
+    {
+      "id": "forum_view_categories",
+      "name": "viewCategories",
+      "exported": true,
+      "description": "Retrieve and render forum categories",
+      "category": "categories",
+      "luaScript": "categories.lua"
+    },
+    {
+      "id": "forum_thread_list",
+      "name": "threadList",
+      "exported": true,
+      "description": "Retrieve and render thread list",
+      "category": "threads",
+      "luaScript": "threads.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "init",
+      "onInstall",
+      "onUninstall",
+      "canPost",
+      "canModerate",
+      "rankThread",
+      "flagPost",
+      "createThread",
+      "viewCategories",
+      "threadList"
+    ]
+  }
+}

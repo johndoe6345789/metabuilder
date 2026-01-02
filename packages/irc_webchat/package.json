@@ -1,0 +1,61 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "irc_webchat",
+  "name": "IRC Webchat",
+  "version": "1.0.0",
+  "description": "Classic IRC-style webchat with channels, commands, online users, and real-time messaging. Perfect for community chat rooms.",
+  "author": "MetaBuilder Team",
+  "license": "MIT",
+  "category": "social",
+  "icon": "💬",
+  "minLevel": 2,
+  "primary": true,
+  "tags": [
+    "chat",
+    "irc",
+    "messaging",
+    "realtime"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "IRCWebchat",
+      "ChannelList",
+      "MessageList",
+      "UserList",
+      "MessageInput"
+    ],
+    "scripts": [
+      "send_message",
+      "handle_command",
+      "format_time",
+      "user_join",
+      "user_leave"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/metadata.cases.json"
+      },
+      {
+        "parameters": "tests/components.cases.json"
+      }
+    ]
+  },
+  "schema": {
+    "entities": [
+      "IRCChannel",
+      "IRCMessage",
+      "IRCMembership"
+    ],
+    "path": "schema/entities.yaml"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "forum_forge",
+  "name": "Forum Forge",
+  "version": "1.0.0",
+  "description": "Modern forum starter with categories, threads, and moderation lanes",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "social",
+  "minLevel": 2,
+  "primary": true,
+  "icon": "static_content/icon.svg",
+  "keywords": ["forum", "discussion", "threads", "moderation", "community"],
+  "dependencies": {
+    "ui_permissions": "^1.0.0",
+    "data_table": "^1.0.0",
+    "form_builder": "^1.0.0"
+  },
+  "devDependencies": {
+    "lua_test": "^1.0.0"
+  },
+  "exports": {
+    "components": [
+      "ForumRoot",
+      "CategoryList",
+      "ThreadList",
+      "ThreadCard",
+      "StatCard"
+    ],
+    "scripts": [
+      "create_thread",
+      "view_categories",
+      "thread_list",
+      "init",
+      "permissions",
+      "thread_rank",
+      "moderation"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/metadata.test.lua",
+      "tests/components.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/metadata.cases.json"
+      },
+      {
+        "parameters": "tests/components.cases.json"
+      }
+    ]
+  },
+  "schema": {
+    "entities": [
+      "ForumCategory",
+      "ForumThread",
+      "ForumPost"
+    ],
+    "path": "schema/entities.yaml"
+  }
+}
