@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- House icon -->
+  <path d="M12 32 L32 14 L52 32 L52 50 L38 50 L38 38 L26 38 L26 50 L12 50 Z" fill="none"/>
+  <rect x="28" y="42" width="8" height="8" fill="currentColor"/>
+</svg>

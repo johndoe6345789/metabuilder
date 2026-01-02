@@ -7,6 +7,7 @@
   "author": "MetaBuilder",
   "license": "MIT",
   "category": "ui",
+  "icon": "static_content/icon.svg",
   "minLevel": 1,
   "primary": false,
   "dependencies": {},

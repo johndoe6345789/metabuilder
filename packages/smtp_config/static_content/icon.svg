@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Email envelope with settings -->
+  <path d="M12 20 L12 44 L52 44 L52 20 Z" fill="none"/>
+  <path d="M12 20 L32 34 L52 20" fill="none"/>
+  <circle cx="42" cy="32" r="8" fill="white" stroke-width="2"/>
+  <circle cx="42" cy="32" r="3" fill="none"/>
+  <path d="M38 28 L38 26 M46 28 L46 26 M46 36 L46 38 M38 36 L38 38 M42 28 L42 26 M42 36 L42 38" stroke-width="1"/>
+</svg>

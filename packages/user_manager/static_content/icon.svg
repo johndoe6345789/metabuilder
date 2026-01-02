@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Multiple users icon -->
+  <circle cx="24" cy="22" r="8" fill="none"/>
+  <path d="M12 46 C12 38 16 34 24 34 C32 34 36 38 36 46" fill="none"/>
+  <circle cx="42" cy="20" r="6" fill="none" opacity="0.6"/>
+  <path d="M48 40 C48 34 46 31 42 31 C38 31 36 34 36 40" fill="none" opacity="0.6"/>
+</svg>

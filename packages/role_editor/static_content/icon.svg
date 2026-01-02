@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Badge with star -->
+  <circle cx="32" cy="28" r="14" fill="none"/>
+  <path d="M32 8 L32 16 M18 14 L23 21 M14 28 L22 28 M18 42 L23 35 M46 14 L41 21 M50 28 L42 28 M46 42 L41 35" stroke-width="1.5"/>
+  <path d="M32 22 L33.5 26.5 L38 26.5 L34.5 29.5 L36 34 L32 31 L28 34 L29.5 29.5 L26 26.5 L30.5 26.5 Z" fill="currentColor"/>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Dashboard grid layout -->
+  <rect x="12" y="12" width="40" height="40" rx="2" fill="none"/>
+  <path d="M12 28 L52 28 M32 12 L32 52 M12 40 L52 40" stroke-width="1.5"/>
+  <circle cx="22" cy="20" r="3" fill="currentColor"/>
+  <rect x="36" y="17" width="10" height="6" rx="1" fill="currentColor"/>
+  <path d="M18 34 L26 38 L26 46 M38 36 L42 42 L42 46 M46 40 L46 46" stroke-width="2"/>
+</svg>

@@ -7,6 +7,7 @@
   "author": "MetaBuilder",
   "license": "MIT",
   "category": "demo",
+  "icon": "static_content/icon.svg",
   "minLevel": 3,
   "primary": true,
   "tags": [

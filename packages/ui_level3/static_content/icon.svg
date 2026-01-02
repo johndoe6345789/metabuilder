@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Level 3 badge - Moderator level -->
+  <circle cx="32" cy="32" r="18" fill="none" stroke-width="2.5"/>
+  <text x="32" y="40" font-size="24" font-weight="bold" fill="currentColor" text-anchor="middle" font-family="Arial, sans-serif">3</text>
+  <path d="M32 14 L35 22 L43 22 L37 28 L39 36 L32 31 L25 36 L27 28 L21 22 L29 22 Z" fill="none" opacity="0.6"/>
+</svg>
