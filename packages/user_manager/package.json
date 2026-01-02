@@ -1,0 +1,40 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "user_manager",
+  "name": "User Manager",
+  "version": "1.0.0",
+  "description": "User management components and actions",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "managers",
+  "minLevel": 4,
+  "primary": true,
+  "dependencies": {
+    "ui_permissions": "*",
+    "data_table": "*"
+  },
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "UserManagement",
+      "UserList",
+      "UserActions"
+    ],
+    "scripts": [
+      "list",
+      "actions"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/actions.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/actions.cases.json"
+      }
+    ]
+  }
+}

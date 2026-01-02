@@ -1,0 +1,40 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "dashboard",
+  "name": "Dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard layouts, stat cards, and widgets",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 2,
+  "primary": true,
+  "dependencies": {
+    "data_table": "*",
+    "ui_permissions": "*"
+  },
+  "devDependencies": {
+    "lua_test": "*"
+  },
+  "exports": {
+    "components": [
+      "StatCard",
+      "DashboardGrid",
+      "Widget"
+    ],
+    "scripts": [
+      "stats",
+      "layout"
+    ]
+  },
+  "tests": {
+    "scripts": [
+      "tests/stats.test.lua"
+    ],
+    "parameterized": [
+      {
+        "parameters": "tests/stats.cases.json"
+      }
+    ]
+  }
+}

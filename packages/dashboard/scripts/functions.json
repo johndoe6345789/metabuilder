@@ -1,0 +1,75 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
+  "schemaVersion": "2.2.0",
+  "package": "dashboard",
+  "description": "Dashboard statistics and layout management functions",
+  "functions": [
+    {
+      "id": "stats_calculate",
+      "name": "calculateStats",
+      "exported": true,
+      "description": "Calculate dashboard statistics",
+      "category": "analytics",
+      "luaScript": "stats.lua"
+    },
+    {
+      "id": "stats_format",
+      "name": "formatStats",
+      "exported": true,
+      "description": "Format statistics for display",
+      "category": "analytics",
+      "luaScript": "stats.lua"
+    },
+    {
+      "id": "stats_get_trend",
+      "name": "getTrend",
+      "exported": true,
+      "description": "Calculate trend direction and percentage",
+      "category": "analytics",
+      "luaScript": "stats.lua"
+    },
+    {
+      "id": "layout_init",
+      "name": "initLayout",
+      "exported": true,
+      "description": "Initialize dashboard layout",
+      "category": "layout",
+      "luaScript": "layout.lua"
+    },
+    {
+      "id": "layout_add_widget",
+      "name": "addWidget",
+      "exported": true,
+      "description": "Add widget to dashboard",
+      "category": "layout",
+      "luaScript": "layout.lua"
+    },
+    {
+      "id": "layout_remove_widget",
+      "name": "removeWidget",
+      "exported": true,
+      "description": "Remove widget from dashboard",
+      "category": "layout",
+      "luaScript": "layout.lua"
+    },
+    {
+      "id": "layout_save",
+      "name": "saveLayout",
+      "exported": true,
+      "description": "Save dashboard layout configuration",
+      "category": "layout",
+      "luaScript": "layout.lua"
+    }
+  ],
+  "exports": {
+    "functions": [
+      "calculateStats",
+      "formatStats",
+      "getTrend",
+      "initLayout",
+      "addWidget",
+      "removeWidget",
+      "saveLayout"
+    ]
+  }
+}

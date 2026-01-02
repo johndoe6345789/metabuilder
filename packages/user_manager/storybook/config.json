@@ -1,0 +1,99 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "User Manager",
+  "description": "User management components for viewing, editing, and managing users",
+  "stories": [
+    {
+      "name": "UserManagement",
+      "render": "list",
+      "description": "Complete user management interface with search and filtering",
+      "args": {
+        "initialUsers": 50
+      }
+    },
+    {
+      "name": "UserList",
+      "render": "list",
+      "description": "User data table with sortable columns",
+      "type": "component"
+    },
+    {
+      "name": "UserActions",
+      "render": "actions",
+      "description": "Action buttons for individual users",
+      "type": "component"
+    }
+  ],
+  "renders": {
+    "list": {
+      "description": "Main user management interface",
+      "featured": true
+    },
+    "actions": {
+      "description": "User action buttons and menu"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "admin-user",
+      "username": "admin",
+      "level": 5,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    },
+    "nerdMode": false
+  },
+  "contextVariants": [
+    {
+      "name": "Super Admin (Level 5)",
+      "description": "Full access to all user management features",
+      "context": {
+        "user": {
+          "username": "super_admin",
+          "level": 5
+        }
+      }
+    },
+    {
+      "name": "Admin (Level 4)",
+      "description": "Can manage users but not change levels",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    },
+    {
+      "name": "Moderator (Level 3)",
+      "description": "Limited user management access",
+      "context": {
+        "user": {
+          "username": "moderator",
+          "level": 3
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["list", "actions"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#ffffff" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    },
+    "docs": {
+      "description": "User management interface for administrators"
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Dashboard Components",
+  "description": "Dashboard layouts and stat cards",
+  "stories": [
+    {
+      "name": "StatsCard",
+      "render": "stats",
+      "description": "Single stat card with trend indicator",
+      "args": {
+        "label": "Total Users",
+        "value": "1,234",
+        "icon": "People",
+        "trend": {
+          "direction": "up",
+          "percentage": 12.5
+        }
+      }
+    },
+    {
+      "name": "DashboardLayout",
+      "render": "layout",
+      "description": "Complete dashboard with multiple widgets",
+      "type": "function"
+    }
+  ],
+  "renders": {
+    "stats": {
+      "description": "Single stat card with trend indicator",
+      "featured": true
+    },
+    "layout": {
+      "description": "Full dashboard layout with widgets"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 2,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Standard User",
+      "description": "Can view dashboard",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Can view and configure dashboard",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 3
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["stats", "layout"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}
