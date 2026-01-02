@@ -18,7 +18,7 @@
       "name": "Configure Dashboard Widgets",
       "description": "Configure dashboard widgets",
       "resource": "dashboard",
-      "action": "configure",
+      "action": "manage",
       "scope": "global",
       "minLevel": 3
     },
@@ -36,9 +36,9 @@
     {
       "id": "dashboard",
       "name": "Dashboard",
-      "type": "ui",
+      "type": "component",
       "description": "Dashboard resources",
-      "actions": ["read", "configure", "create"]
+      "actions": ["read", "manage", "create"]
     }
   ]
 }

@@ -18,7 +18,7 @@
       "name": "List Users",
       "description": "List all users",
       "resource": "users",
-      "action": "list",
+      "action": "read",
       "scope": "global",
       "minLevel": 4
     },
@@ -54,7 +54,7 @@
       "name": "Change User Levels",
       "description": "Change user access levels",
       "resource": "users",
-      "action": "update_level",
+      "action": "admin",
       "scope": "global",
       "minLevel": 5
     },
@@ -63,7 +63,7 @@
       "name": "Manage User Permissions",
       "description": "Manage user permissions and roles",
       "resource": "users",
-      "action": "manage_permissions",
+      "action": "manage",
       "scope": "global",
       "minLevel": 5
     },
@@ -72,7 +72,7 @@
       "name": "Ban Users",
       "description": "Ban or suspend users",
       "resource": "users",
-      "action": "ban",
+      "action": "manage",
       "scope": "global",
       "minLevel": 4
     },
@@ -81,7 +81,7 @@
       "name": "Activate Users",
       "description": "Activate user accounts",
       "resource": "users",
-      "action": "activate",
+      "action": "update",
       "scope": "global",
       "minLevel": 4
     },
@@ -90,7 +90,7 @@
       "name": "Deactivate Users",
       "description": "Deactivate user accounts",
       "resource": "users",
-      "action": "deactivate",
+      "action": "update",
       "scope": "global",
       "minLevel": 4
     }
@@ -101,7 +101,7 @@
       "name": "Users",
       "type": "entity",
       "description": "User management resources",
-      "actions": ["create", "read", "update", "delete", "list", "ban", "activate", "deactivate", "update_level", "manage_permissions"]
+      "actions": ["create", "read", "update", "delete", "manage", "admin"]
     }
   ]
 }

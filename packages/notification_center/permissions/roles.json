@@ -1,0 +1,44 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "notification_center",
+  "description": "Notification center access permissions",
+  "permissions": [
+    {
+      "id": "notification_center.view",
+      "name": "View Notifications",
+      "description": "View notification list and summaries",
+      "resource": "notification_center",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "notification_center.dismiss",
+      "name": "Dismiss Notifications",
+      "description": "Dismiss individual notifications",
+      "resource": "notification_center",
+      "action": "update",
+      "scope": "user",
+      "minLevel": 1
+    },
+    {
+      "id": "notification_center.clear",
+      "name": "Clear Notifications",
+      "description": "Clear all notifications",
+      "resource": "notification_center",
+      "action": "delete",
+      "scope": "user",
+      "minLevel": 1
+    }
+  ],
+  "resources": [
+    {
+      "id": "notification_center",
+      "name": "Notification Center",
+      "type": "component",
+      "description": "Notification center UI components",
+      "actions": ["read", "update", "delete"]
+    }
+  ]
+}
