@@ -237,7 +237,7 @@ packages/{packageId}/
 ├── components/
 │   └── ui.json           # Declarative JSON components
 ├── styles/
-│   └── styles.scss       # Optional styles
+│   └── tokens.json       # Design tokens (colors, spacing, shadows, etc.)
 └── static/
     └── assets/           # Images, fonts, etc.
 ```
