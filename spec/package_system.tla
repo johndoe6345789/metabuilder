@@ -331,8 +331,8 @@ DetectConflicts ==
     packageConflicts' = {[
         packageId |-> pkg,
         sources |-> {s \in PackageSources: 
-            \E entry \in sourceIndex: entry[1] = s /\ entry[2].packageId = pkg},
-        versions |-> {entry[2].version: entry \in sourceIndex | entry[2].packageId = pkg},
+            \E entry \in sourceIndex: entry[1] = s /\ (entry[2]).packageId = pkg},
+        versions |-> {(e[2]).version : e \in sourceIndex, (e[2]).packageId = pkg},
         resolvedTo |-> <<>>
     ]: pkg \in packagesInMultipleSources}
     /\ UNCHANGED <<userLevels, userTenants, sourceConfigs, sourceIndex, 
