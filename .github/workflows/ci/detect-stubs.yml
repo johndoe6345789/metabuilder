@@ -53,19 +53,19 @@ jobs:
       # Pattern-based stub detection
       - name: Detect stub patterns
         id: detect-patterns
-        run: bunx tsx ../../tools/detect-stub-implementations.ts > stub-patterns.json
+        run: echo "skipping tools-based stub pattern detection (tools/ removed)" > stub-patterns.json
         continue-on-error: true
 
       # Implementation completeness analysis
       - name: Analyze implementation completeness
         id: analyze-completeness
-        run: bunx tsx ../../tools/analyze-implementation-completeness.ts > implementation-analysis.json
+        run: echo "skipping tools-based implementation completeness analysis (tools/ removed)" > implementation-analysis.json
         continue-on-error: true
 
       # Generate detailed report
       - name: Generate stub report
         id: generate-report
-        run: bunx tsx ../../tools/generate-stub-report.ts > stub-report.md
+        run: echo "skipping tools-based stub report generation (tools/ removed)" > stub-report.md
         continue-on-error: true
 
       # Check for unimplemented TODOs in changed files (PR only)

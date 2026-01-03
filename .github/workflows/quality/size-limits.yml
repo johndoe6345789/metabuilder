@@ -40,7 +40,7 @@ jobs:
         run: bun install --frozen-lockfile
       
       - name: Check code size limits
-        run: bunx tsx ../../tools/enforce-size-limits.ts
+        run: echo "skipping tools-based size limits enforcement (tools/ removed)"
       
       - name: Upload report
         if: always()
