@@ -203,7 +203,7 @@ jobs:
               response += `   - Declarative over imperative\n`;
               response += `   - Database-driven configuration\n`;
               response += `   - Generic renderers vs hardcoded components\n`;
-              response += `4. **Test your changes:** \`bun run lint && bun run test:e2e\`\n`;
+              response += `4. **Test your changes:** \`npm run lint && npm run test:e2e\`\n`;
               response += `5. **Create a PR** - The automated workflows will review it\n\n`;
             }
             
@@ -230,11 +230,11 @@ jobs:
               response += `### 🧪 Testing with Copilot\n\n`;
               response += `\`\`\`bash\n`;
               response += `# Run E2E tests\n`;
-              response += `bun run test:e2e\n\n`;
+              response += `npm run test:e2e\n\n`;
               response += `# Run with UI\n`;
-              response += `bun run test:e2e:ui\n\n`;
+              response += `npm run test:e2e:ui\n\n`;
               response += `# Run linter\n`;
-              response += `bun run lint\n`;
+              response += `npm run lint\n`;
               response += `\`\`\`\n\n`;
               response += `Use Copilot in your IDE to:\n`;
               response += `- Generate test cases based on user stories\n`;

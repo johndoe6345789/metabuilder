@@ -1,4 +1,7 @@
 {
+  "name": "@metabuilder/config",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
     "generate:package": "npx ts-node scripts/generate-package.ts",
     "extract:preview": "cd frontends/nextjs && npm run extract:preview",

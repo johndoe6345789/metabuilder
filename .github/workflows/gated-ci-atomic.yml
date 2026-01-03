@@ -62,21 +62,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Generate Prisma Client
-        run: bun run db:generate
+        run: npm run db:generate
         env:
           DATABASE_URL: file:./dev.db
 
       - name: Validate Prisma Schema
-        run: bunx prisma validate --schema=../../prisma/schema.prisma
+        run: npx prisma validate --schema=../../prisma/schema.prisma
         env:
           DATABASE_URL: file:./dev.db
       
@@ -106,21 +106,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Generate Prisma Client
-        run: bun run db:generate
+        run: npm run db:generate
         env:
           DATABASE_URL: file:./dev.db
 
       - name: Run TypeScript type check
-        run: bun run typecheck
+        run: npm run typecheck
       
       - name: Run atomic TypeScript strict checker
         run: |
@@ -155,21 +155,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Generate Prisma Client
-        run: bun run db:generate
+        run: npm run db:generate
         env:
           DATABASE_URL: file:./dev.db
 
       - name: Run ESLint
-        run: bun run lint
+        run: npm run lint
       
       - name: Run atomic lint tools
         run: |
@@ -209,13 +209,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Run atomic security scanner
         run: |
@@ -226,7 +226,7 @@ jobs:
 
       - name: Run dependency audit
         run: |
-          bun audit --json > ../../gate-artifacts/gate-1/audit-results.json 2>&1 || true
+          npm audit --json > ../../gate-artifacts/gate-1/audit-results.json 2>&1 || true
           echo "Security audit completed"
         continue-on-error: true
       
@@ -262,13 +262,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Run atomic file size checker
         run: |
@@ -303,13 +303,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Run atomic code complexity checker
         run: |
@@ -344,13 +344,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Run atomic stub detector
         run: |
@@ -456,21 +456,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Generate Prisma Client
-        run: bun run db:generate
+        run: npm run db:generate
         env:
           DATABASE_URL: file:./dev.db
 
       - name: Run unit tests
-        run: bun run test:unit
+        run: npm run test:unit
         env:
           DATABASE_URL: file:./dev.db
 
@@ -521,24 +521,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Generate Prisma Client
-        run: bun run db:generate
+        run: npm run db:generate
         env:
           DATABASE_URL: file:./dev.db
 
       - name: Install Playwright Browsers
-        run: bunx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
-        run: bun run test:e2e
+        run: npm run test:e2e
         env:
           DATABASE_URL: file:./dev.db
 
@@ -576,24 +576,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Generate Prisma Client
-        run: bun run db:generate
+        run: npm run db:generate
         env:
           DATABASE_URL: file:./dev.db
 
       - name: Install Playwright Browsers
-        run: bunx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Run DBAL daemon suite
-        run: bun run test:e2e:dbal-daemon
+        run: npm run test:e2e:dbal-daemon
         env:
           DATABASE_URL: file:./dev.db
 
@@ -698,22 +698,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Generate Prisma Client
-        run: bun run db:generate
+        run: npm run db:generate
         env:
           DATABASE_URL: file:./dev.db
 
       - name: Build
         id: build-step
-        run: bun run build
+        run: npm run build
         env:
           DATABASE_URL: file:./dev.db
 
@@ -760,16 +760,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Generate Prisma Client
-        run: bun run db:generate
+        run: npm run db:generate
         env:
           DATABASE_URL: file:./dev.db
 
