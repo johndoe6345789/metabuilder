@@ -170,7 +170,7 @@ jobs:
             
             comment += `2. **Database Phase**\n`;
             comment += `   - [ ] Update \`prisma/schema.prisma\`\n`;
-            comment += `   - [ ] Run \`bun run db:generate\`\n`;
+            comment += `   - [ ] Run \`npm run db:generate\`\n`;
             comment += `   - [ ] Create or update seed data\n`;
             comment += `   - [ ] Test database operations\n\n`;
             
@@ -182,7 +182,7 @@ jobs:
             comment += `   - [ ] Ensure components are <150 LOC\n\n`;
             
             comment += `4. **Testing Phase**\n`;
-            comment += `   - [ ] Run \`bun run lint\` and fix issues\n`;
+            comment += `   - [ ] Run \`npm run lint\` and fix issues\n`;
             comment += `   - [ ] Add E2E tests in \`e2e/\` directory\n`;
             comment += `   - [ ] Test at all permission levels\n`;
             comment += `   - [ ] Verify multi-tenant isolation\n`;

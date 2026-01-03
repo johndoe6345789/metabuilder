@@ -63,21 +63,21 @@ jobs:
             echo "environment=staging" >> $GITHUB_OUTPUT
           fi
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Generate Prisma Client
-        run: bun run db:generate
+        run: npm run db:generate
         env:
           DATABASE_URL: file:./dev.db
 
       - name: Validate database schema
-        run: bunx prisma validate --schema=../../prisma/schema.prisma
+        run: npx prisma validate --schema=../../prisma/schema.prisma
         env:
           DATABASE_URL: file:./dev.db
 
@@ -115,12 +115,12 @@ jobs:
             }
 
       - name: Security audit
-        run: bun audit --audit-level=moderate
+        run: npm audit --audit-level=moderate
         continue-on-error: true
 
       - name: Check package size
         run: |
-          bun run build
+          npm run build
           SIZE=$(du -sm .next/ | cut -f1)
           echo "Build size: ${SIZE}MB"
           
@@ -149,21 +149,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Generate Prisma Client
-        run: bun run db:generate
+        run: npm run db:generate
         env:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
 
       - name: Build for staging
-        run: bun run build
+        run: npm run build
         env:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
           NEXT_PUBLIC_ENV: staging
@@ -285,21 +285,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
 
       - name: Install dependencies
-        run: bun install
+        run: npm install
 
       - name: Generate Prisma Client
-        run: bun run db:generate
+        run: npm run db:generate
         env:
           DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
 
       - name: Build for production
-        run: bun run build
+        run: npm run build
         env:
           DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
           NEXT_PUBLIC_ENV: production
@@ -317,7 +317,7 @@ jobs:
         run: |
           echo "🗄️ Running database migrations..."
           echo "Note: Implement actual migration commands"
-          echo "bunx prisma migrate deploy"
+          echo "npx prisma migrate deploy"
         env:
           DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
 
