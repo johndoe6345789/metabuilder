@@ -27,28 +27,16 @@ export type JsonObject = { [key: string]: JsonValue }
 export type JsonArray = JsonValue[]
 
 /**
- * Represents Lua interop values
- * Use this for Lua-to-JS conversions
+ * Represents script interop values
+ * Use this for script-to-JS conversions
  */
-export type LuaValue =
+export type ScriptValue =
   | string
   | number
   | boolean
   | null
-  | LuaTable
-  | LuaFunction
-
-/**
- * Lua table representation in JavaScript
- */
-export interface LuaTable {
-  [key: string | number]: LuaValue
-}
-
-/**
- * Lua function representation
- */
-export type LuaFunction = (...args: JsonValue[]) => JsonValue
+  | JsonObject
+  | JsonArray
 
 /**
  * Generic property bag for metadata and dynamic properties

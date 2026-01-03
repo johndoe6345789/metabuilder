@@ -99,3 +99,4 @@ vite.config.ts.bak*
 .cache/
 dist-old/
 .vscode/claudesync.json
+/package-lock.json
