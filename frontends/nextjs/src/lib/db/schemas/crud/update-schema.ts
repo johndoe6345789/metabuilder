@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import type { ModelSchema } from '../../types/schema-types'
+import type { ModelSchema } from '@/lib/schema-types'
 
 /**
  * Update a schema by name

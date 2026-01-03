@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import type { Tenant } from '../../types/level-types'
+import type { Tenant } from '@/lib/level-types'
 
 /**
  * Update an existing tenant

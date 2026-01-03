@@ -1,7 +1,7 @@
 import type { JsonValue } from '@/types/utility-types'
 
 import { getAdapter } from '../../core/dbal-client'
-import type { Tenant } from '../../types/level-types'
+import type { Tenant } from '@/lib/level-types'
 
 /**
  * Get all tenants from database

@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import type { PageConfig, UserRole } from '../../types/level-types'
+import type { PageConfig, UserRole } from '@/lib/level-types'
 
 type DBALPageRecord = {
   id: string
