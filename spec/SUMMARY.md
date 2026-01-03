@@ -204,9 +204,9 @@ These specifications align with MetaBuilder's architecture:
 
 | Specification | Architecture Docs |
 |---------------|-------------------|
-| `workflow_system.tla` | `docs/todo/improvements/20-FUTURE-FEATURES-TODO.md` (Workflow Features) |
-| `collaboration.tla` | `docs/todo/improvements/20-FUTURE-FEATURES-TODO.md` (Collaboration Features) |
-| `integrations.tla` | `docs/todo/improvements/20-FUTURE-FEATURES-TODO.md` (Integration Ecosystem) |
+| `workflow_system.tla` | `storybook/JSON_PACKAGES.md` (Workflow Features & JSON packages) |
+| `collaboration.tla` | `storybook/JSON_PACKAGES.md` (Collaboration Features & JSON packages) |
+| `integrations.tla` | `storybook/JSON_PACKAGES.md` (Integration Ecosystem & JSON packages) |
 | All specs | `docs/architecture/security-docs/5-level-system.md` (Permissions) |
 | All specs | `docs/architecture/data/data-driven-architecture.md` (Multi-tenancy) |
 

@@ -12,8 +12,8 @@
  *                                                                          *
  * Aligned with:                                                           *
  *   - schemas/package-schemas/*.json                                      *
- *   - docs/packages/package-sources.md                                    *
- *   - packages/*/package.json structure                                   *
+ *   - storybook/JSON_PACKAGES.md (JSON package format and discovery)      *
+ *   - packages/*/package.json or packages/*/seed/metadata.json            *
  ***************************************************************************)
 
 EXTENDS Naturals, Sequences, FiniteSets, TLC
@@ -112,7 +112,9 @@ PackageIndexEntry == [
     minLevel: PermissionLevel,
     category: PackageCategory,
     source: PackageSources,
-    dependencies: SUBSET Packages
+    dependencies: SUBSET Packages,
+    format: {"json"},                \* Package format (JSON-based packages)
+    manifestPath: STRING              \* Path to package manifest (package.json or seed metadata)
 ]
 
 \* Full package entry in registry
@@ -125,13 +127,16 @@ PackageEntry == [
     source: PackageSources,
     state: PackageState,
     dependencies: SUBSET Packages,
+    \* For JSON-based packages the manifest contains exports and metadata
+    manifestPath: STRING,
     exports: [
         components: SUBSET STRING,
         scripts: SUBSET STRING,
         types: SUBSET STRING
     ],
     validated: BOOLEAN,
-    installedAt: Nat \cup {0}
+    installedAt: Nat \cup {0},
+    format: {"json"}
 ]
 
 \* Pending operation

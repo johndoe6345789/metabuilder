@@ -45,6 +45,7 @@ SPECS=(
     "workflow_system.tla"
     "collaboration.tla"
     "integrations.tla"
+    "package_system.tla"
 )
 
 FAILED=0

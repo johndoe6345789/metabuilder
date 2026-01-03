@@ -365,9 +365,9 @@ ExecuteWorkflow(user, workflow) ==
 ```
 
 ## Architecture Alignment
-
+ `storybook/JSON_PACKAGES.md` → JSON package format and discovery
 This specification aligns with the MetaBuilder architecture documentation:
-
+ `storybook/JSON_PACKAGES.md` → JSON package format and discovery
 - `docs/architecture/security-docs/5-level-system.md` → Permission model (extended to 6 levels)
 - `schemas/package-schemas/` → **16+ JSON schemas defining package structure**
 - `docs/packages/package-sources.md` → **Multi-source package loading architecture**

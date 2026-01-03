@@ -2,7 +2,7 @@
 
 A **data-driven, multi-tenant platform** where 95% of functionality lives in JSON/Lua, not TypeScript. Build enterprise applications declaratively with a 6-level permission system.
 
-> 📋 **Ready to populate the kanban?** See [KANBAN_READY.md](KANBAN_READY.md) for a quick guide to populate the GitHub project board with 775 TODO items.
+> 📋 Project kanban population guide moved; search the repository for `populate-kanban` tools.
 
 ---
 
@@ -99,7 +99,7 @@ npm run extract:quick
 npm run extract:auto
 ```
 
-**📖 [Quick Start Guide](./tools/refactoring/QUICK_START.md)** | **📚 [Full Documentation](./tools/refactoring/AUTO_CODE_EXTRACTOR_3000.md)**
+**📖 Quick start**: see repository `tools/` or search for `extract:*` scripts in `config/package.json` for refactoring utilities.
 
 ---
 
@@ -484,13 +484,11 @@ Self-contained feature modules with seed data, components, and Lua scripts.
 ```
 packages/{name}/
 ├── seed/
-│   ├── metadata.json      # Package info
-│   ├── components.json    # Component definitions
-│   ├── workflows.ts       # Workflow definitions
-│   ├── schemas.ts         # Data schemas
-│   └── scripts/           # Lua scripts
-│       ├── initialize.lua
-│       └── helpers.lua
+│   ├── metadata.json      # Package metadata (JSON)
+│   ├── components.json    # Component definitions (JSON)
+│   ├── workflows.json     # Workflow definitions (JSON)
+│   ├── schemas.json       # Data schemas (JSON)
+│   └── static_content/    # Assets (images, templates)
 ├── src/                   # React components (optional)
 │   ├── components/
 │   ├── lib/
@@ -500,6 +498,10 @@ packages/{name}/
 ```
 
 ### Package Metadata
+
+Package metadata and seeds are stored as JSON under `seed/` and should include `name`, `version`, `metabuilder` metadata and component/workflow listings.
+
+Example (seed/metadata.json):
 
 ```json
 {
@@ -530,7 +532,7 @@ packages/{name}/
 | `nav_menu` | Navigation menus |
 | `notification_center` | Notifications |
 | `social_hub` | Social features |
-| `spark-tools` | Development tools |
+<!-- `spark-tools` removed from list (not present in packages/) -->
 | `stream_cast` | Streaming features |
 
 ### Creating a Package
@@ -1157,7 +1159,7 @@ DEBUG=metabuilder:* npm run dev
 | Package seeds | `packages/*/seed/` |
 | DBAL TypeScript | `dbal/development/src/` |
 | DBAL C++ | `dbal/production/src/` |
-| E2E tests | `frontends/nextjs/e2e/` |
+| E2E tests | `e2e/` |
 | Shared config | `config/` |
 | Analysis tools | `tools/analysis/` |
 | Security tools | `tools/security/` |
