@@ -161,6 +161,7 @@ CORE_PACKAGES=(
     "package_manager"
     "ui_header"
     "ui_footer"
+    "ui_home"
     "ui_auth"
     "ui_login"
     "dashboard"

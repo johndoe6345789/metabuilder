@@ -27,6 +27,13 @@ packages:
     required: true
     description: "Application footer"
 
+  - packageId: ui_home
+    version: "1.0.0"
+    enabled: true
+    priority: 2
+    required: true
+    description: "Home/landing page with hero, features, about, and contact sections"
+
   - packageId: ui_auth
     version: "1.0.0"
     enabled: true
@@ -149,7 +156,7 @@ bootstrap_order:
 
     - phase: 2
       name: "Base UI"
-      packages: ["ui_header", "ui_footer", "ui_auth", "ui_login"]
+      packages: ["ui_header", "ui_footer", "ui_home", "ui_auth", "ui_login"]
 
     - phase: 3
       name: "Essential Features"

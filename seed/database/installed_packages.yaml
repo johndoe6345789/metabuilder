@@ -41,6 +41,18 @@ records:
         "systemPackage": true
       }
 
+  - packageId: ui_home
+    tenantId: null
+    installedAt: 0
+    version: "1.0.0"
+    enabled: true
+    config: |
+      {
+        "systemPackage": true,
+        "defaultRoute": "/",
+        "publicAccess": true
+      }
+
   - packageId: ui_auth
     tenantId: null
     installedAt: 0

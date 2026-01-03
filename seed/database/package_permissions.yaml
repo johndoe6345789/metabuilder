@@ -69,6 +69,16 @@ records:
     granted: true
     createdAt: 0
 
+  - id: perm_ui_home_public_read
+    packageId: ui_home
+    tenantId: null
+    userId: null
+    role: public
+    permission: read
+    resource: null
+    granted: true
+    createdAt: 0
+
   # Dashboard - User+
   - id: perm_dashboard_user_read
     packageId: dashboard
