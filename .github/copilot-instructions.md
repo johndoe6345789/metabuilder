@@ -2,7 +2,7 @@
 
 ## Architecture Overview
 
-MetaBuilder is a **data-driven, multi-tenant platform** with 95% functionality in JSON/Lua, not TypeScript. The system combines:
+MetaBuilder is a **data-driven, multi-tenant platform** with 95% functionality in JSON, not TypeScript. The system combines:
 
 - **6-Level Permission System**: Public → User → Moderator → Admin → God → Supergod access hierarchies
 - **DBAL (Database Abstraction Layer)**: TypeScript SDK + C++ daemon, language-agnostic via YAML contracts
@@ -30,7 +30,7 @@ Follow `.github/prompts/0-kickstart.md` as the current workflow source of truth.
 ### 1. API-First DBAL Development
 When adding features to DBAL:
 1. **Define in YAML first**: `api/schema/entities/*.yaml` and `api/schema/operations/*.yaml`
-2. **Generate types**: `python tools/codegen/gen_types.py` (creates TS and C++ types)
+2. **Generate types**: Run type generation scripts (creates TS and C++ types)
 3. **Implement adapters**: TypeScript (`ts/src/adapters/`) for speed, C++ (`cpp/src/adapters/`) for security
 4. **Add conformance tests**: `common/contracts/*_tests.yaml` (runs on both implementations to guarantee parity)
 5. Never add fields/operations directly in code without updating YAML source of truth
@@ -59,7 +59,7 @@ packages/{name}/
 ├── seed/
 │   ├── metadata.json      # Package info, exports, dependencies, minLevel
 │   ├── components.json    # Component definitions
-│   ├── scripts/           # Lua scripts organized by function
+│   ├── scripts/           # JSON scripts organized by function
 │   └── index.ts           # Exports packageSeed object
 ├── src/                   # Optional React components
 └── static_content/        # Assets (images, etc.)
@@ -94,16 +94,8 @@ const users = await prisma.user.findMany()
 ```
 See: `src/lib/database.ts` (1200+ LOC utility wrapper)
 
-### 5. Lua Sandbox Execution
-Lua scripts run in isolated sandbox without access to `os`, `io`, `require`:
-```typescript
-// Sandbox context provided in script
-function validateEmail(email)
-  -- No file I/O, no system access, no external requires
-  return string.match(email, "^[^@]+@[^@]+$") ~= nil
-end
-```
-Always test scripts with `DeclarativeComponentRenderer.executeLuaScript()`
+### 5. Script Execution
+Scripts are defined in JSON format and executed in a controlled environment with limited access to system resources.
 
 ## Code Conventions
 
@@ -174,7 +166,7 @@ Material-UI with SASS; theme in `src/theme/mui-theme.ts` with light/dark mode su
 1. Define database schema changes first (Prisma)
 2. Add seed data to `src/seed-data/` or package `/seed/`
 3. Use generic renderers (`RenderComponent`) not hardcoded JSX
-4. Add Lua scripts in `src/lib/lua-snippets.ts` or package `/seed/scripts/`
+4. Add JSON scripts in package `/seed/scripts/` as needed
 5. Keep one lambda per file and split as needed
 6. Add parameterized tests in `.test.ts` files with matching names
 
@@ -215,14 +207,13 @@ If fixing a DBAL bug:
 2. Reproduce in TypeScript implementation first (faster feedback loop)
 3. Apply fix to both TS and C++ adapters
 4. Add/update conformance test in `common/contracts/`
-5. Verify both implementations pass test: `python tools/conformance/run_all.py`
+5. Verify both implementations pass conformance tests
 
 ## Common Mistakes
 
 ❌ **Hardcoding values in TSX** → Move to database or YAML config
 ❌ **Forgetting tenantId filter** → Breaks multi-tenancy
 ❌ **Adding fields without Prisma generate** → Type errors in DB helper
-❌ **Plain JS loops over Fengari tables** → Use Lua, not TS, for Lua data
 ❌ **Multiple lambdas per file** → Split into single-lambda files and wrap with a class only when needed
 ❌ **New function without test** → `npm run test:check-functions` will fail
 ❌ **Missing TODO for unfinished behavior** → Leave a TODO comment where functionality is pending
@@ -241,7 +232,7 @@ If fixing a DBAL bug:
 1. Is this hardcoded value better in database?
 2. Could a generic component render this instead of custom TSX?
 3. Does this query filter by tenantId?
-4. Could Lua handle this without code changes?
+4. Could JSON configuration handle this without code changes?
 5. Is this one lambda per file (and test file name matches)?
 6. Does this function have a parameterized test?
 7. Is this DBAL change reflected in YAML schema first?
