@@ -1,0 +1,80 @@
+# MetaBuilder CLI Dockerfile
+# C++ CLI tool with DBAL client, Lua runtime, and package management
+# Build: docker build -f deployment/docker/Dockerfile.cli -t metabuilder-cli .
+# Run: docker run -it --rm metabuilder-cli package list
+
+FROM ubuntu:22.04 AS builder
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    ninja-build \
+    python3 \
+    python3-pip \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Conan 2
+RUN pip3 install --no-cache-dir conan
+
+# Set up Conan profile
+RUN conan profile detect --force
+
+WORKDIR /build
+
+# Copy CLI source
+COPY frontends/cli/ ./cli/
+
+# Install dependencies with Conan
+WORKDIR /build/cli
+RUN conan install . \
+    --output-folder build \
+    --build missing \
+    --settings=build_type=Release
+
+# Build CLI
+RUN cmake -S . -B build \
+    -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake
+
+RUN cmake --build build --config Release
+
+# Runtime stage - minimal image
+FROM ubuntu:22.04
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    libcurl4 \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app user
+RUN useradd -m -s /bin/bash metabuilder
+
+WORKDIR /app
+
+# Copy built binary
+COPY --from=builder /build/cli/build/bin/metabuilder-cli /usr/local/bin/metabuilder-cli
+
+# Make it executable
+RUN chmod +x /usr/local/bin/metabuilder-cli
+
+# Copy packages directory for package operations
+COPY packages/ /app/packages/
+
+# Set ownership
+RUN chown -R metabuilder:metabuilder /app
+
+USER metabuilder
+
+# Environment variables
+ENV METABUILDER_BASE_URL=http://metabuilder-app:3000
+ENV METABUILDER_PACKAGES=/app/packages
+ENV DBAL_API_URL=http://dbal-daemon:8080
+
+# Default command shows help
+ENTRYPOINT ["metabuilder-cli"]
+CMD ["--help"]
