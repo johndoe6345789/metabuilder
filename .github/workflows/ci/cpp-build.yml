@@ -5,13 +5,11 @@ on:
     branches: [ main, develop ]
     paths:
       - 'dbal/production/**'
-      - 'dbal/shared/tools/cpp-build-assistant.cjs'
       - '.github/workflows/cpp-build.yml'
   pull_request:
     branches: [ main, develop ]
     paths:
       - 'dbal/production/**'
-      - 'dbal/shared/tools/cpp-build-assistant.cjs'
       - '.github/workflows/cpp-build.yml'
   workflow_dispatch:
 
