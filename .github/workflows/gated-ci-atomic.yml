@@ -76,7 +76,7 @@ jobs:
           DATABASE_URL: file:./dev.db
 
       - name: Validate Prisma Schema
-        run: bunx prisma validate
+        run: bunx prisma validate --schema=../../prisma/schema.prisma
         env:
           DATABASE_URL: file:./dev.db
       

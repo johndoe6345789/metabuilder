@@ -76,10 +76,16 @@ This spins up:
 ```bash
 # Clone and install
 git clone <repo>
-cd metabuilder/frontends/nextjs
-npm install
+cd metabuilder
 
-# Set up database
+# Option 1: Run from root (recommended for quick setup)
+npm install
+npm run db:generate
+npm run db:push
+
+# Option 2: Run from frontends/nextjs
+cd frontends/nextjs
+npm install
 npm run db:generate
 npm run db:push
 
@@ -87,8 +93,12 @@ npm run db:push
 cd ../../deployment
 ./scripts/bootstrap-system.sh
 
-# Start development
-cd ../frontends/nextjs
+# Start development (from root)
+cd ..
+npm run dev
+
+# Or from frontends/nextjs
+cd frontends/nextjs
 npm run dev
 ```
 
@@ -492,11 +502,16 @@ const result = await adapter.list('InstalledPackage', {
 ### Database Commands
 
 ```bash
-# Development
+# Development (can be run from root or frontends/nextjs)
 npm run db:generate   # Generate Prisma client
 npm run db:push       # Apply schema changes
 npm run db:migrate    # Create migration
-npm run db:studio     # Open database UI
+
+# From root directory
+npm run db:generate   # Delegates to frontends/nextjs
+
+# From frontends/nextjs directory
+npm run db:generate   # Uses --schema=../../prisma/schema.prisma
 
 # Production (via Docker)
 docker exec -it metabuilder-postgres-prod psql -U metabuilder
