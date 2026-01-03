@@ -1,29 +1,13 @@
 {
   "scripts": {
     "generate:package": "npx ts-node scripts/generate-package.ts",
-    "todos:scan": "python3 docs/todo/scans/scan-project-todos.py",
-    "todos:preview": "python3 tools/project-management/populate-kanban.py --dry-run --limit 10",
-    "todos:export": "python3 tools/project-management/populate-kanban.py --output todos.json",
-    "todos:export-critical": "python3 tools/project-management/populate-kanban.py --output todos-critical.json --filter-priority critical",
-    "todos:export-filtered": "python3 tools/project-management/populate-kanban.py --output todos-filtered.json --exclude-checklist",
-    "todos:test": "python3 tools/project-management/test_populate_kanban.py",
-    "todos:create": "python3 tools/project-management/populate-kanban.py --create",
-    "todos:help": "python3 tools/project-management/populate-kanban.py --help",
-    "todos:check": "python3 tools/project-management/check-new-todos.py",
-    "todos:baseline": "python3 tools/project-management/check-new-todos.py --save-baseline",
     "extract:preview": "cd frontends/nextjs && npm run extract:preview",
     "extract:quick": "cd frontends/nextjs && npm run extract:quick",
     "extract:auto": "cd frontends/nextjs && npm run extract:auto",
     "extract:all": "cd frontends/nextjs && npm run extract:all",
     "extract:help": "cd frontends/nextjs && npm run extract:help",
-    "schema:scan": "npx ts-node tools/codegen/schema-cli.ts scan",
-    "schema:list": "npx ts-node tools/codegen/schema-cli.ts list",
-    "schema:approve": "npx ts-node tools/codegen/schema-cli.ts approve",
-    "schema:generate": "npx ts-node tools/codegen/schema-cli.ts generate",
-    "schema:status": "npx ts-node tools/codegen/schema-cli.ts status",
-    "schema:preview": "npx ts-node tools/codegen/schema-cli.ts preview",
-    "db:generate": "npx prisma generate",
-    "db:migrate": "npx prisma migrate dev"
+    "db:generate": "npx prisma generate --schema=../prisma/schema.prisma",
+    "db:migrate": "npx prisma migrate dev --schema=../prisma/schema.prisma"
   },
   "devDependencies": {
     "@prisma/client": "^7.2.0",
