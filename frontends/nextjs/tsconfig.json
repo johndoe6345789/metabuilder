@@ -65,6 +65,8 @@
   "exclude": [
     "node_modules",
     "../../dbal",
-    "../../fakemui"
+    "../../fakemui",
+    "src/lib/dbal/**/*",
+    "src/tests/package-integration.test.ts"
   ]
 }
