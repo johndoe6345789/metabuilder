@@ -31,7 +31,7 @@ services:
   dbal-daemon:
     build:
       context: ../dbal/production
-      dockerfile: Dockerfile
+      dockerfile: build-config/Dockerfile
       args:
         BUILD_TYPE: Debug
     container_name: metabuilder-dbal-dev

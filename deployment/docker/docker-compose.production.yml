@@ -32,7 +32,7 @@ services:
   dbal-daemon:
     build:
       context: ../dbal/production
-      dockerfile: Dockerfile
+      dockerfile: build-config/Dockerfile
       args:
         BUILD_TYPE: Release
     container_name: metabuilder-dbal-prod
@@ -145,7 +145,7 @@ services:
   # Media Processing Daemon (Job Queue, Radio, TV, Retro Gaming)
   media-daemon:
     build:
-      context: ../../services/media_daemon
+      context: ../services/media_daemon
       dockerfile: Dockerfile
     container_name: metabuilder-media-prod
     environment:
