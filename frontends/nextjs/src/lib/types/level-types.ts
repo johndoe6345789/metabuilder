@@ -49,7 +49,7 @@ export interface PageConfig {
   description?: string
   icon?: string
   component?: string
-  componentTree: string
+  componentTree: string | any[] // Can be JSON string or parsed array
   level: number
   requiresAuth: boolean
   requiredRole?: string
@@ -104,7 +104,6 @@ export interface PowerTransferRequest {
   expiresAt?: number
 }
 
-// SMTPConfig type
 export interface SMTPConfig {
   id: string
   tenantId?: string

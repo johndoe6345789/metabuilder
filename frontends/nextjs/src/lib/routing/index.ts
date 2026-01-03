@@ -8,11 +8,25 @@ export const errorResponse = (message: string, status: number = 500) =>
   new Response(JSON.stringify({ error: message }), { status })
 export const successResponse = (data: any, status: number = 200) => 
   new Response(JSON.stringify(data), { status })
-export const executeDbalOperation = async () => ({})
-export const executePackageAction = async () => ({})
-export const getSessionUser = async () => null
-export const parseRestfulRequest = () => ({})
-export const validatePackageRoute = () => true
+export const executeDbalOperation = async (operation: string, entity?: string, data?: any) => ({})
+export const executePackageAction = async (packageId: string, action: string, data?: any, context?: any, request?: any) => ({
+  package: packageId,
+  allowed: true
+})
+export const getSessionUser = async (request?: any) => null
+export const parseRestfulRequest = (request: any, params?: any) => ({
+  route: '',
+  operation: 'read',
+  dbalOp: 'list'
+})
+export const validatePackageRoute = (packageId: string, user?: any, requiredLevel?: number) => ({
+  allowed: true,
+  reason: null
+})
+export const validateTenantAccess = (tenantId: string, userId?: string, requiredLevel?: number) => ({
+  allowed: true,
+  reason: null
+})
 export const STATUS = {
   OK: 200,
   CREATED: 201,

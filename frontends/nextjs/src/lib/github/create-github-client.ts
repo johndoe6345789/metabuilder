@@ -2,8 +2,8 @@
 export const createGitHubClient = (token?: string) => ({
   rest: {
     actions: {
-      listWorkflowRuns: async () => ({ data: { workflow_runs: [] } }),
-      downloadWorkflowRunLogs: async () => ({ data: '' }),
+      listWorkflowRuns: async (params: any) => ({ data: { workflow_runs: [] } }),
+      downloadWorkflowRunLogs: async (params: any) => ({ data: '' }),
     }
   }
 })

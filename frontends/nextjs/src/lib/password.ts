@@ -4,11 +4,12 @@
  */
 
 export interface SMTPConfig {
+  id: string
   host: string
   port: number
   secure: boolean
-  auth: {
-    user: string
-    pass: string
-  }
+  username: string
+  password: string
+  fromEmail: string
+  fromName: string
 }

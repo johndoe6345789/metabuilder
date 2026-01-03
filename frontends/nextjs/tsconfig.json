@@ -67,6 +67,8 @@
     "../../dbal",
     "../../fakemui",
     "src/lib/dbal/**/*",
-    "src/tests/package-integration.test.ts"
+    "src/tests/package-integration.test.ts",
+    "**/*.spec.ts",
+    "**/*.test.ts"
   ]
 }

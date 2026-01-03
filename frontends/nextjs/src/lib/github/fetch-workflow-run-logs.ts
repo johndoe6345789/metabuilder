@@ -1,5 +1,5 @@
 // TODO: Implement workflow run logs fetching
-export const fetchWorkflowRunLogs = async (client: any, owner: string, repo: string, runId: number) => ({
+export const fetchWorkflowRunLogs = async (client: any) => ({
   jobs: [],
   logsText: '',
   truncated: false
