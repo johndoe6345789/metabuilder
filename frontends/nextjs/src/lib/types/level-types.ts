@@ -68,6 +68,9 @@ export interface Workflow {
   isActive: boolean
   createdAt: number
   updatedAt?: number
+  nodes?: any // Additional field used in some places
+  edges?: any // Additional field used in some places
+  enabled?: boolean // Alternative to isActive in some places
 }
 
 export interface LuaScript {
