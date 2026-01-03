@@ -20,6 +20,7 @@ export async function getSchemas(): Promise<ModelSchema[]> {
   const adapter = getAdapter()
   const result = (await adapter.list('ModelSchema')) as { data: DBALModelSchemaRecord[] }
   return result.data.map(s => ({
+    id: s.id || `schema-${s.name}`,
     name: s.name,
     label: s.label || undefined,
     labelPlural: s.labelPlural || undefined,

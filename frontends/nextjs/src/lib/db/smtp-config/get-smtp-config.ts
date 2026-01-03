@@ -13,6 +13,7 @@ export async function getSMTPConfig(): Promise<SMTPConfig | null> {
   if (!config) return null
 
   return {
+    id: config.id || 'default',
     host: config.host,
     port: config.port,
     secure: config.secure,
@@ -20,5 +21,7 @@ export async function getSMTPConfig(): Promise<SMTPConfig | null> {
     password: config.password,
     fromEmail: config.fromEmail,
     fromName: config.fromName,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   }
 }

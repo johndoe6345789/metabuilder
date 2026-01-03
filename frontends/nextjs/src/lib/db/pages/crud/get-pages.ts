@@ -38,5 +38,7 @@ export async function getPages(): Promise<PageConfig[]> {
     componentTree: JSON.parse(p.componentTree) as PageConfig['componentTree'],
     requiresAuth: p.requiresAuth,
     requiredRole: p.requiredRole ? toUserRole(p.requiredRole) : undefined,
+    sortOrder: Number(p.sortOrder || 0),
+    isPublished: Boolean(p.isPublished !== false),
   }))
 }

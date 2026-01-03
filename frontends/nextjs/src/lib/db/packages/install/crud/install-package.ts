@@ -1,5 +1,5 @@
 import { getAdapter } from '../../../core/dbal-client'
-import type { InstalledPackage } from '../../packages/package-types'
+import type { InstalledPackage } from '../package-types'
 
 /**
  * Install a package (creates record if not exists)

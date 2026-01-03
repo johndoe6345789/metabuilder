@@ -8,4 +8,15 @@ export interface Session {
   expiresAt: number
   createdAt: number
   updatedAt?: number
+  lastActivity?: number
+}
+
+export interface UpdateSessionInput {
+  expiresAt?: number
+  lastActivity?: number
+}
+
+export interface ListSessionsOptions {
+  userId?: string
+  limit?: number
 }
