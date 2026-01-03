@@ -15,9 +15,9 @@
         "test": "vitest",
         "test:run": "vitest run",
         "test:watch": "vitest",
-        "db:generate": "prisma generate",
-        "db:push": "prisma db push",
-        "db:migrate": "prisma migrate deploy"
+        "db:generate": "prisma generate --schema=../../prisma/schema.prisma",
+        "db:push": "prisma db push --schema=../../prisma/schema.prisma",
+        "db:migrate": "prisma migrate deploy --schema=../../prisma/schema.prisma"
     },
     "dependencies": {
         "@monaco-editor/react": "^4.7.0",
@@ -47,10 +47,5 @@
         "typescript": "~5.9.3",
         "typescript-eslint": "^8.50.1",
         "vitest": "^4.0.16"
-    },
-    "workspaces": {
-        "packages": [
-            "packages/*"
-        ]
     }
 }

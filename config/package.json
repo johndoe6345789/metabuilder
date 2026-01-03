@@ -22,8 +22,8 @@
     "schema:generate": "npx ts-node tools/codegen/schema-cli.ts generate",
     "schema:status": "npx ts-node tools/codegen/schema-cli.ts status",
     "schema:preview": "npx ts-node tools/codegen/schema-cli.ts preview",
-    "db:generate": "npx prisma generate",
-    "db:migrate": "npx prisma migrate dev"
+    "db:generate": "npx prisma generate --schema=../prisma/schema.prisma",
+    "db:migrate": "npx prisma migrate dev --schema=../prisma/schema.prisma"
   },
   "devDependencies": {
     "@prisma/client": "^7.2.0",
