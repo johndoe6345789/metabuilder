@@ -15,7 +15,7 @@ export const executeDbalOperation = async (operation: string, entity?: string, d
   error: null,
   meta: {}
 })
-export const executePackageAction = async (packageId: string, action: string, data?: any, context?: any, request?: any) => ({
+export const executePackageAction = async (packageId: string, action: string, context?: any) => ({
   package: packageId,
   allowed: true,
   success: true,
@@ -23,20 +23,29 @@ export const executePackageAction = async (packageId: string, action: string, da
   error: null
 })
 export const getSessionUser = async (request?: any) => null
-export const parseRestfulRequest = (request: any, params?: any) => ({
-  route: '',
-  operation: 'read',
-  dbalOp: 'list',
-  tenant: '',
-  package: '',
-  entity: '',
-  action: '',
-  id: ''
+export const parseRestfulRequest = async (request: any, params?: any) => ({
+  route: {
+    tenant: params?.tenant || '',
+    package: params?.package || '',
+    entity: params?.entity || '',
+    action: params?.action || '',
+    id: params?.id || ''
+  },
+  operation: (params?.action === 'create' ? 'create' : params?.action === 'delete' ? 'delete' : params?.action === 'update' ? 'update' : 'read') as 'read' | 'create' | 'update' | 'delete',
+  dbalOp: 'list' as const,
+  tenant: params?.tenant || '',
+  package: params?.package || '',
+  entity: params?.entity || '',
+  action: params?.action || '',
+  id: params?.id || ''
 })
-export const validatePackageRoute = (packageId: string, user?: any, requiredLevel?: number) => ({
+export const validatePackageRoute = (packageId: string, entity?: string, user?: any) => ({
   allowed: true,
   reason: null,
-  package: packageId
+  package: {
+    id: packageId,
+    minLevel: 1
+  }
 })
 export const validateTenantAccess = (tenantId: string, userId?: string, requiredLevel?: number) => ({
   allowed: true,
