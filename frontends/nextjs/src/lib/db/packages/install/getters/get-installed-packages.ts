@@ -1,5 +1,5 @@
 import { getAdapter } from '../../../core/dbal-client'
-import type { InstalledPackage } from '../../packages/package-types'
+import type { InstalledPackage } from '../../package-types'
 
 type DBALInstalledPackageRecord = {
   packageId: string
@@ -17,6 +17,7 @@ export async function getInstalledPackages(): Promise<InstalledPackage[]> {
     data: DBALInstalledPackageRecord[]
   }
   return result.data.map(p => ({
+    id: (p as any).id || p.packageId,
     packageId: p.packageId,
     installedAt: Number(p.installedAt),
     version: p.version,

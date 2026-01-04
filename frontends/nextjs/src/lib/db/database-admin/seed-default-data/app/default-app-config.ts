@@ -1,4 +1,4 @@
-import type { AppConfiguration } from '../../../types/level-types'
+import type { AppConfiguration } from '@/lib/level-types'
 
 export const buildDefaultAppConfig = (): AppConfiguration => ({
   id: 'app_001',

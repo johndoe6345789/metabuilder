@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import type { PageConfig, UserRole } from '../../types/level-types'
+import type { PageConfig, UserRole } from '@/lib/level-types'
 
 type DBALPageRecord = {
   id: string
@@ -38,5 +38,7 @@ export async function getPages(): Promise<PageConfig[]> {
     componentTree: JSON.parse(p.componentTree) as PageConfig['componentTree'],
     requiresAuth: p.requiresAuth,
     requiredRole: p.requiredRole ? toUserRole(p.requiredRole) : undefined,
+    sortOrder: Number((p as any).sortOrder || 0),
+    isPublished: Boolean((p as any).isPublished !== false),
   }))
 }

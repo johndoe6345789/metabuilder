@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { PageConfig } from '../../types/level-types'
+import type { PageConfig } from '@/lib/level-types'
 
 const mockList = vi.fn()
 const mockDelete = vi.fn()

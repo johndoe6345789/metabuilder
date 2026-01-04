@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { Comment } from '../../types/level-types'
+import type { Comment } from '@/lib/level-types'
 
 const mockCreate = vi.fn()
 const mockAdapter = { create: mockCreate }

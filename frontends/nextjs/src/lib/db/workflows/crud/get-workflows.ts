@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import type { Workflow } from '../../types/level-types'
+import type { Workflow } from '@/lib/level-types'
 
 type DBALWorkflowRecord = {
   id: string
@@ -23,5 +23,9 @@ export async function getWorkflows(): Promise<Workflow[]> {
     nodes: JSON.parse(w.nodes),
     edges: JSON.parse(w.edges),
     enabled: w.enabled,
+    trigger: (w as any).trigger || '',
+    actions: (w as any).actions || '[]',
+    isActive: w.enabled,
+    createdAt: (w as any).createdAt || Date.now(),
   }))
 }

@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import type { Workflow } from '../../types/level-types'
+import type { Workflow } from '@/lib/level-types'
 
 type DBALWorkflowRecord = {
   id: string

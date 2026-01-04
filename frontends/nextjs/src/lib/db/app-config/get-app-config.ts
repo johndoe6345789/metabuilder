@@ -1,4 +1,4 @@
-import type { AppConfiguration } from '../../types/level-types'
+import type { AppConfiguration } from '@/lib/level-types'
 import { getAdapter } from '../core/dbal-client'
 
 export async function getAppConfig(): Promise<AppConfiguration | null> {

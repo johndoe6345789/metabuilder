@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import type { PageConfig } from '../../types/level-types'
+import type { PageConfig } from '@/lib/level-types'
 
 /**
  * Set all pages (replaces existing)

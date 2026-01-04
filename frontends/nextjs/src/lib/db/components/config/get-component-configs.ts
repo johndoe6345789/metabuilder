@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import type { ComponentConfig } from '../types'
+import type { ComponentConfig } from './types'
 
 type DBALComponentConfigRecord = {
   id: string
