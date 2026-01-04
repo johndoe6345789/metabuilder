@@ -1,2 +1,2 @@
 // TODO: Implement component tree generation
-export const generateComponentTree = () => []
+export const generateComponentTree = (component?: any) => []

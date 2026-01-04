@@ -9,21 +9,41 @@ export const errorResponse = (message: string, status: number = 500) =>
   NextResponse.json({ error: message }, { status })
 export const successResponse = (data: any, status: number = 200) => 
   NextResponse.json(data, { status })
-export const executeDbalOperation = async (operation: string, entity?: string, data?: any) => ({
+export const executeDbalOperation = async (operation: string, context?: any) => ({
   success: true,
   data: null,
   error: null,
   meta: {}
 })
-export const executePackageAction = async (packageId: string, action: string, context?: any) => ({
-  package: packageId,
+export const executePackageAction = async (packageName: string, entity: string, action: string, id: string | null, context?: any) => ({
+  package: packageName,
   allowed: true,
   success: true,
   data: null,
   error: null
 })
 export const getSessionUser = async (request?: any) => null
-export const parseRestfulRequest = async (request: any, params?: any) => ({
+export type ParsedRequest = {
+  route: {
+    tenant: string
+    package: string
+    entity: string
+    action: string
+    id: string
+  }
+  operation: 'read' | 'create' | 'update' | 'delete' | 'action'
+  dbalOp: 'list'
+  tenant: string
+  package: string
+  entity: string
+  action: string
+  id: string
+} | {
+  error: string
+  status: number
+}
+
+export const parseRestfulRequest = async (request: any, params?: any): Promise<ParsedRequest> => ({
   route: {
     tenant: params?.tenant || '',
     package: params?.package || '',
@@ -31,7 +51,7 @@ export const parseRestfulRequest = async (request: any, params?: any) => ({
     action: params?.action || '',
     id: params?.id || ''
   },
-  operation: (params?.action === 'create' ? 'create' : params?.action === 'delete' ? 'delete' : params?.action === 'update' ? 'update' : 'read') as 'read' | 'create' | 'update' | 'delete',
+  operation: (params?.action === 'create' ? 'create' : params?.action === 'delete' ? 'delete' : params?.action === 'update' ? 'update' : params?.action ? 'action' : 'read') as 'read' | 'create' | 'update' | 'delete' | 'action',
   dbalOp: 'list' as const,
   tenant: params?.tenant || '',
   package: params?.package || '',

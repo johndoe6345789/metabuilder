@@ -11,4 +11,5 @@ export interface UIPageData {
   title: string
   components: any[]
   layout?: string
+  actions?: Record<string, LuaActionHandler>
 }

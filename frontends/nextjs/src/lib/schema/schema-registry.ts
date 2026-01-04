@@ -6,6 +6,6 @@ export const loadSchemaRegistry = (path?: string) => ({
 export const saveSchemaRegistry = (data: any, path?: string) => true
 export const getPendingMigrations = (registry: any) => []
 export const generatePrismaFragment = (schema: any, options?: any) => ''
-export const approveMigration = (id: string, approvedBy?: string) => {}
-export const rejectMigration = (id: string, rejectedBy?: string) => {}
+export const approveMigration = (id: string, registry?: any) => true
+export const rejectMigration = (id: string, registry?: any) => true
 export type SchemaRegistry = { packages: Record<string, any> }
