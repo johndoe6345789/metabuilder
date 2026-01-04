@@ -3,7 +3,7 @@
  * Retrieves component hierarchy from database
  */
 
-import { prisma } from '../prisma'
+import { prisma } from '../../prisma'
 import type { ComponentNode } from './types'
 
 /**

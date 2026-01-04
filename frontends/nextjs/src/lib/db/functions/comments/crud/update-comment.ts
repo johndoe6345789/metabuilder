@@ -3,8 +3,8 @@
  * Updates an existing comment
  */
 
-import type { Comment } from '../../../types/level-types'
-import { prisma } from '../prisma'
+import type { Comment } from '@/lib/level-types'
+import { prisma } from '../../prisma'
 
 type CommentUpdateData = {
   content?: string

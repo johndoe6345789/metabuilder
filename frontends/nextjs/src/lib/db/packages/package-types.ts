@@ -14,4 +14,5 @@ export interface InstalledPackage {
   packageId: string
   version: string
   installedAt: number
+  enabled?: boolean
 }

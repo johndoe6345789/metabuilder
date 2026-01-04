@@ -3,7 +3,7 @@
  * Retrieves component configurations from database
  */
 
-import { prisma } from '../prisma'
+import { prisma } from '../../prisma'
 import type { ComponentConfig } from './types'
 
 /**

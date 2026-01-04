@@ -3,8 +3,8 @@
  * Adds a new comment to database
  */
 
-import type { Comment } from '../../../types/level-types'
-import { prisma } from '../prisma'
+import type { Comment } from '@/lib/level-types'
+import { prisma } from '../../prisma'
 
 /**
  * Add a new comment

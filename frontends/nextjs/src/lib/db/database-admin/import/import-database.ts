@@ -4,7 +4,7 @@ import { setComponentConfigs, setComponentHierarchy } from '../../components'
 import { setLuaScripts } from '../../lua-scripts'
 import { setPages } from '../../pages'
 import { setSchemas } from '../../schemas'
-import type { DatabaseSchema } from '../../types'
+import type { DatabaseSchema } from '../types'
 import { setUsers } from '../../users'
 import { setWorkflows } from '../../workflows'
 

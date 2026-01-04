@@ -3,7 +3,7 @@
  * Adds a new component node to hierarchy
  */
 
-import { prisma } from '../prisma'
+import { prisma } from '../../prisma'
 import type { ComponentNode } from './types'
 
 /**
