@@ -19,7 +19,7 @@ export async function getTenants(): Promise<Tenant[]> {
   return rows.map(t => ({
     id: t.id,
     name: t.name,
-    slug: t.slug || t.id,
+    slug: (t as any).slug || t.id,
     ownerId: t.ownerId,
     createdAt: Number(t.createdAt),
     homepageConfig: t.homepageConfig

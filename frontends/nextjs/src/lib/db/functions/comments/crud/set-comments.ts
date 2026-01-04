@@ -4,7 +4,7 @@
  */
 
 import type { Comment } from '../../../types/level-types'
-import { prisma } from '../../prisma'
+import { prisma } from '../prisma'
 
 /**
  * Set all comments (replaces existing)

@@ -3,7 +3,7 @@
  * Updates an existing component node
  */
 
-import { prisma } from '../../prisma'
+import { prisma } from '../prisma'
 import type { ComponentNode } from './types'
 
 /**

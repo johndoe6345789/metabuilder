@@ -23,9 +23,9 @@ export async function getWorkflows(): Promise<Workflow[]> {
     nodes: JSON.parse(w.nodes),
     edges: JSON.parse(w.edges),
     enabled: w.enabled,
-    trigger: w.trigger || '',
-    actions: w.actions || '[]',
+    trigger: (w as any).trigger || '',
+    actions: (w as any).actions || '[]',
     isActive: w.enabled,
-    createdAt: w.createdAt || Date.now(),
+    createdAt: (w as any).createdAt || Date.now(),
   }))
 }

@@ -4,7 +4,7 @@
  */
 
 import type { AppConfiguration } from '../../../types/level-types'
-import { prisma } from '../../prisma'
+import { prisma } from '../prisma'
 
 /**
  * Set the application configuration

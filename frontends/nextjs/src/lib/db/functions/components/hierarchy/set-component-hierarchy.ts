@@ -3,7 +3,7 @@
  * Replaces all component hierarchy in database
  */
 
-import { prisma } from '../../prisma'
+import { prisma } from '../prisma'
 import type { ComponentNode } from './types'
 
 /**

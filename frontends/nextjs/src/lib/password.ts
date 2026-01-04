@@ -12,4 +12,6 @@ export interface SMTPConfig {
   password: string
   fromEmail: string
   fromName: string
+  createdAt?: number
+  updatedAt?: number
 }
