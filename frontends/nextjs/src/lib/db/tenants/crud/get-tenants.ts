@@ -12,6 +12,7 @@ export async function getTenants(): Promise<Tenant[]> {
   const rows = result.data as Array<{
     id: string
     name: string
+    slug: string
     ownerId: string
     createdAt: number | string | bigint
     homepageConfig?: JsonValue | string | null
@@ -19,6 +20,7 @@ export async function getTenants(): Promise<Tenant[]> {
   return rows.map(t => ({
     id: t.id,
     name: t.name,
+    slug: t.slug,
     ownerId: t.ownerId,
     createdAt: Number(t.createdAt),
     homepageConfig: t.homepageConfig

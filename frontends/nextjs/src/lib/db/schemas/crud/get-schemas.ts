@@ -2,6 +2,7 @@ import { getAdapter } from '../../core/dbal-client'
 import type { ModelSchema } from '@/lib/types/schema-types'
 
 type DBALModelSchemaRecord = {
+  id: string
   name: string
   label?: string | null
   labelPlural?: string | null
@@ -20,6 +21,7 @@ export async function getSchemas(): Promise<ModelSchema[]> {
   const adapter = getAdapter()
   const result = (await adapter.list('ModelSchema')) as { data: DBALModelSchemaRecord[] }
   return result.data.map(s => ({
+    id: s.id,
     name: s.name,
     label: s.label || undefined,
     labelPlural: s.labelPlural || undefined,
