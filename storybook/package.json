@@ -19,15 +19,15 @@
   "devDependencies": {
     "@storybook/addon-essentials": "^8.6.15",
     "@storybook/addon-interactions": "^8.6.15",
-    "@storybook/react": "^8.6.15",
+    "@storybook/react": "^10.1.11",
     "@storybook/react-vite": "^8.6.15",
     "@storybook/test": "^8.6.15",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.5.2",
     "sass": "^1.97.1",
-    "storybook": "^8.6.15",
+    "storybook": "^10.1.11",
     "typescript": "^5.9.3",
-    "vite": "^6.3.5"
+    "vite": "^7.3.0"
   }
 }
