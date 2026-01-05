@@ -3,7 +3,7 @@
  * Retrieves all comments from database
  */
 
-import type { Comment } from '../../../types/level-types'
+import type { Comment } from '@/lib/types/level-types'
 import { prisma } from '../../prisma'
 
 /**
