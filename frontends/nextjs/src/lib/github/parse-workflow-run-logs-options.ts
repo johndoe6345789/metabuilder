@@ -10,9 +10,9 @@ export interface WorkflowRunLogsOptions {
   jobLimit?: number
 }
 
-export function parseWorkflowRunLogsOptions(search: string): WorkflowRunLogsOptions {
+export function parseWorkflowRunLogsOptions(search: string | URLSearchParams): WorkflowRunLogsOptions {
   // TODO: Implement option parsing
-  const params = new URLSearchParams(search)
+  const params = typeof search === 'string' ? new URLSearchParams(search) : search
   return {
     tailLines: params.get('tailLines') ? parseInt(params.get('tailLines')!) : undefined,
     failedOnly: params.get('failedOnly') === 'true',
