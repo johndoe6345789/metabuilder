@@ -1,4 +1,4 @@
-import type { AdapterCapabilities } from '../adapter'
+import type { AdapterCapabilities } from '../../adapter'
 import type { PrismaContext } from '../types'
 
 export function buildCapabilities(context: PrismaContext): AdapterCapabilities {

@@ -1,5 +1,5 @@
 import { createHash } from 'crypto'
-import type { UploadOptions, BlobMetadata } from '../blob-storage'
+import type { UploadOptions, BlobMetadata } from '../../blob-storage'
 import type { BlobData } from './store'
 
 export const generateEtag = (data: Buffer): string => `"${createHash('md5').update(data).digest('hex')}"`

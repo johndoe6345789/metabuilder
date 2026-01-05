@@ -1,5 +1,5 @@
 import type { PrismaContext } from '../types'
-import { DBALError } from '../../../../core/foundation/errors'
+import { DBALError } from '../../../core/foundation/errors'
 
 type PrismaModelDelegate = {
   findMany: (...args: unknown[]) => Promise<unknown[]>
