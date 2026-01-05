@@ -30,3 +30,16 @@ export {
   getPackageScripts,
   getPackagesByCategory,
 } from './functions'
+
+// Package glue singleton (stub)
+export const packageGlue = {
+  getPackage,
+  getPackageComponents,
+  getPackageScripts,
+  getPackagesByCategory,
+  checkDependencies,
+}
+
+export function getPackageGlue() {
+  return packageGlue
+}
