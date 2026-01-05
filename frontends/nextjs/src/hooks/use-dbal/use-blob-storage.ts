@@ -21,7 +21,7 @@ export function useBlobStorage() {
         await dbal.blobUpload(key, data, metadata)
         // toast.success(`Uploaded: ${key}`)
       } catch (err) {
-        const errorInfo = dbal.handleError(err)
+        const _errorInfo = dbal.handleError(err)
         // toast.error(`Upload Error: ${errorInfo.message}`)
         throw err
       }
@@ -37,7 +37,7 @@ export function useBlobStorage() {
       try {
         return await dbal.blobDownload(key)
       } catch (err) {
-        const errorInfo = dbal.handleError(err)
+        const _errorInfo = dbal.handleError(err)
         // toast.error(`Download Error: ${errorInfo.message}`)
         throw err
       }
@@ -54,7 +54,7 @@ export function useBlobStorage() {
         await dbal.blobDelete(key)
         // toast.success(`Deleted: ${key}`)
       } catch (err) {
-        const errorInfo = dbal.handleError(err)
+        const _errorInfo = dbal.handleError(err)
         // toast.error(`Delete Error: ${errorInfo.message}`)
         throw err
       }
@@ -70,7 +70,7 @@ export function useBlobStorage() {
       try {
         return await dbal.blobList(prefix)
       } catch (err) {
-        const errorInfo = dbal.handleError(err)
+        const _errorInfo = dbal.handleError(err)
         // toast.error(`List Error: ${errorInfo.message}`)
         throw err
       }
@@ -86,7 +86,7 @@ export function useBlobStorage() {
       try {
         return await dbal.blobGetMetadata(key)
       } catch (err) {
-        const errorInfo = dbal.handleError(err)
+        const _errorInfo = dbal.handleError(err)
         // toast.error(`Get Metadata Error: ${errorInfo.message}`)
         throw err
       }

@@ -19,7 +19,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
       try {
         await dbal.kvSet(key, value, ttl, tenantId, userId)
       } catch (err) {
-        const errorInfo = dbal.handleError(err)
+        const _errorInfo = dbal.handleError(err)
         // toast.error(`KV Set Error: ${errorInfo.message}`)
         throw err
       }
@@ -35,7 +35,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
       try {
         return await dbal.kvGet<T>(key, tenantId, userId)
       } catch (err) {
-        const errorInfo = dbal.handleError(err)
+        const _errorInfo = dbal.handleError(err)
         // toast.error(`KV Get Error: ${errorInfo.message}`)
         throw err
       }
@@ -51,7 +51,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
       try {
         return await dbal.kvDelete(key, tenantId, userId)
       } catch (err) {
-        const errorInfo = dbal.handleError(err)
+        const _errorInfo = dbal.handleError(err)
         // toast.error(`KV Delete Error: ${errorInfo.message}`)
         throw err
       }
@@ -67,7 +67,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
       try {
         await dbal.kvListAdd(key, items, tenantId, userId)
       } catch (err) {
-        const errorInfo = dbal.handleError(err)
+        const _errorInfo = dbal.handleError(err)
         // toast.error(`KV List Add Error: ${errorInfo.message}`)
         throw err
       }
@@ -83,7 +83,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
       try {
         return await dbal.kvListGet(key, tenantId, userId, start, end)
       } catch (err) {
-        const errorInfo = dbal.handleError(err)
+        const _errorInfo = dbal.handleError(err)
         // toast.error(`KV List Get Error: ${errorInfo.message}`)
         throw err
       }
