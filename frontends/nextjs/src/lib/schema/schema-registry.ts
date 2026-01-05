@@ -6,6 +6,7 @@ import type { ModelSchema } from '../types/schema-types'
 
 export class SchemaRegistry {
   private schemas: Map<string, ModelSchema> = new Map()
+  packages: Record<string, unknown> = {}
 
   register(schema: ModelSchema): void {
     this.schemas.set(schema.name, schema)
@@ -22,29 +23,37 @@ export class SchemaRegistry {
 
 export const schemaRegistry = new SchemaRegistry()
 
-export async function loadSchemaRegistry(): Promise<SchemaRegistry> {
+export function loadSchemaRegistry(path?: string): SchemaRegistry {
   // TODO: Implement schema registry loading
   return schemaRegistry
 }
 
-export async function saveSchemaRegistry(registry: SchemaRegistry): Promise<void> {
+export function saveSchemaRegistry(registry: SchemaRegistry, path?: string): void {
   // TODO: Implement schema registry saving
 }
 
-export async function getPendingMigrations(): Promise<unknown[]> {
+export interface PendingMigration {
+  id: string
+  packageId: string
+  status: string
+  queuedAt: string
+  entities: Array<{ name: string }>
+}
+
+export function getPendingMigrations(registry: SchemaRegistry): PendingMigration[] {
   // TODO: Implement pending migrations retrieval
   return []
 }
 
-export async function generatePrismaFragment(schema: ModelSchema): Promise<string> {
+export function generatePrismaFragment(schema: ModelSchema, path?: string): string {
   // TODO: Implement Prisma fragment generation
   return ''
 }
 
-export async function approveMigration(migrationId: string): Promise<void> {
+export function approveMigration(registry: SchemaRegistry, migrationId: string): void {
   // TODO: Implement migration approval
 }
 
-export async function rejectMigration(migrationId: string): Promise<void> {
+export function rejectMigration(registry: SchemaRegistry, migrationId: string): void {
   // TODO: Implement migration rejection
 }
