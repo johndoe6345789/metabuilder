@@ -35,7 +35,7 @@ export async function GET() {
       pendingMigrations: pending.length,
       migrations: pending.map(m => ({
         id: m.id,
-        packageId: m.packageId,
+        packageId: m.b_packageId,
         status: m.status,
         queuedAt: m.queuedAt,
         entities: m.entities.map(e => e.name),

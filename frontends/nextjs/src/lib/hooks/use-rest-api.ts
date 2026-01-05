@@ -12,7 +12,7 @@
  */
 
 import { useState, useCallback } from 'react'
-import { useTenant, useTenantOptional } from '@/app/[tenant]/[package]/tenant-context'
+import { useTenantOptional } from '@/app/[tenant]/[package]/tenant-context'
 
 interface ApiResponse<T> {
   success: boolean

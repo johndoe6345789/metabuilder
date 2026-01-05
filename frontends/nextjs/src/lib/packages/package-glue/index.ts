@@ -22,22 +22,30 @@ export {
 } from './config'
 
 // Functions
-export type { DependencyCheckResult } from './functions'
+export type { DependencyCheckResult } from './functions/check-dependencies'
 export {
   checkDependencies,
   getPackage,
   getPackageComponents,
   getPackageScripts,
   getPackagesByCategory,
-} from './functions'
+} from './functions/index'
+
+import {
+  checkDependencies as checkDepsImpl,
+  getPackage as getPackageImpl,
+  getPackageComponents as getPackageComponentsImpl,
+  getPackageScripts as getPackageScriptsImpl,
+  getPackagesByCategory as getPackagesByCategoryImpl,
+} from './functions/index'
 
 // Package glue singleton (stub)
 export const packageGlue = {
-  getPackage,
-  getPackageComponents,
-  getPackageScripts,
-  getPackagesByCategory,
-  checkDependencies,
+  getPackage: getPackageImpl,
+  getPackageComponents: getPackageComponentsImpl,
+  getPackageScripts: getPackageScriptsImpl,
+  getPackagesByCategory: getPackagesByCategoryImpl,
+  checkDependencies: checkDepsImpl,
 }
 
 export function getPackageGlue() {

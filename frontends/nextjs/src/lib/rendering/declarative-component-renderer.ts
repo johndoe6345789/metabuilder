@@ -7,7 +7,9 @@
  * register their component metadata at startup.
  */
 
-type ComponentDef = any
+import type { JsonValue, JsonObject } from '@/types/utility-types'
+
+type ComponentDef = JsonObject
 
 const PACKAGE_COMPONENT_REGISTRY: Record<string, Record<string, ComponentDef>> = {}
 
@@ -16,24 +18,27 @@ const PACKAGE_COMPONENT_REGISTRY: Record<string, Record<string, ComponentDef>> =
  * The `packageContent` object is expected to include `metadata.packageId`
  * and a `components` array (or object) with component definitions.
  */
-export function loadPackageComponents(packageContent: any): void {
-  if (!packageContent) return
+export function loadPackageComponents(packageContent: JsonValue): void {
+  if (!packageContent || typeof packageContent !== 'object') return
 
-  const packageId = packageContent?.metadata?.packageId || packageContent?.package || packageContent?.packageId
-  if (!packageId) return
+  const pkg = packageContent as JsonObject
+  const packageId = pkg?.metadata?.['packageId'] || pkg?.['package'] || pkg?.['packageId']
+  if (!packageId || typeof packageId !== 'string') return
 
-  const compsArray: any[] =
-    Array.isArray(packageContent.components) && packageContent.components.length
-      ? packageContent.components
-      : Array.isArray(packageContent.ui?.components)
-      ? packageContent.ui.components
+  const compsArray: JsonValue[] =
+    Array.isArray(pkg.components) && pkg.components.length
+      ? pkg.components
+      : Array.isArray((pkg.ui as JsonObject)?.components)
+      ? ((pkg.ui as JsonObject).components as JsonValue[])
       : []
 
   const compMap: Record<string, ComponentDef> = {}
 
   for (const c of compsArray) {
-    if (!c || !c.id) continue
-    compMap[c.id] = c
+    if (!c || typeof c !== 'object' || Array.isArray(c)) continue
+    const comp = c as JsonObject
+    if (!comp.id || typeof comp.id !== 'string') continue
+    compMap[comp.id] = comp
   }
 
   PACKAGE_COMPONENT_REGISTRY[packageId] = {

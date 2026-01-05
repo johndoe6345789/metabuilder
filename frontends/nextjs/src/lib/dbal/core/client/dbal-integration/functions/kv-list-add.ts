@@ -1,4 +1,4 @@
-import { DBALClient, type DBALConfig } from '@/dbal'
+import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
 import type { JsonValue } from '@/types/utility-types'
 
 export async function kvListAdd(

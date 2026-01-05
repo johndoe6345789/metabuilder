@@ -1,4 +1,4 @@
-import { DBALClient, type DBALConfig } from '@/dbal'
+import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
 
 export async function list(options?: { prefix?: string }): Promise<{ items: { key: string }[] }> {
   const items: { key: string }[] = []

@@ -1,3 +1,5 @@
+import type { JsonValue } from '@/types/utility-types'
+
 export interface JSONPackageMetadata {
   packageId: string
   name: string
@@ -18,7 +20,7 @@ export interface JSONPackageMetadata {
   storybook?: {
     featured?: boolean
     excludeFromDiscovery?: boolean
-    stories?: any[]
+    stories?: JsonValue[]
   }
 }
 
@@ -30,12 +32,12 @@ export interface JSONComponent {
     name: string
     type: string
     required?: boolean
-    default?: any
+    default?: JsonValue
     description?: string
   }>
   render?: {
     type: string
-    template?: any
+    template?: JsonValue
   }
 }
 

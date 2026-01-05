@@ -7,7 +7,7 @@
 
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { isReservedPath, RESERVED_PATHS } from '@/lib/routing/route-parser'
+import { isReservedPath } from '@/lib/routing/route-parser'
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl

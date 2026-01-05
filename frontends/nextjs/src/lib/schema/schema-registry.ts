@@ -9,7 +9,7 @@ export class SchemaRegistry {
   packages: Record<string, unknown> = {}
 
   register(b_schema: ModelSchema): void {
-    this.schemas.set(schema.name, schema)
+    this.schemas.set(b_schema.name, b_schema)
   }
 
   get(name: string): ModelSchema | undefined {
@@ -23,12 +23,12 @@ export class SchemaRegistry {
 
 export const schemaRegistry = new SchemaRegistry()
 
-export function loadSchemaRegistry(path?: string): SchemaRegistry {
+export function loadSchemaRegistry(_path?: string): SchemaRegistry {
   // TODO: Implement schema registry loading
   return schemaRegistry
 }
 
-export function saveSchemaRegistry(b_registry: SchemaRegistry, path?: string): void {
+export function saveSchemaRegistry(_b_registry: SchemaRegistry, _path?: string): void {
   // TODO: Implement schema registry saving
 }
 
@@ -40,20 +40,20 @@ export interface PendingMigration {
   entities: Array<{ name: string }>
 }
 
-export function getPendingMigrations(b_registry: SchemaRegistry): PendingMigration[] {
+export function getPendingMigrations(_b_registry: SchemaRegistry): PendingMigration[] {
   // TODO: Implement pending migrations retrieval
   return []
 }
 
-export function generatePrismaFragment(b_schema: ModelSchema, path?: string): string {
+export function generatePrismaFragment(_b_schema: ModelSchema, _path?: string): string {
   // TODO: Implement Prisma fragment generation
   return ''
 }
 
-export function approveMigration(b_registry: SchemaRegistry, b_migrationId: string): void {
+export function approveMigration(_b_registry: SchemaRegistry, _b_migrationId: string): void {
   // TODO: Implement migration approval
 }
 
-export function rejectMigration(b_registry: SchemaRegistry, b_migrationId: string): void {
+export function rejectMigration(_b_registry: SchemaRegistry, _b_migrationId: string): void {
   // TODO: Implement migration rejection
 }

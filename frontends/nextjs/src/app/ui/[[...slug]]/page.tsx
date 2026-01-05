@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { UIPageRenderer } from '@/components/ui-page-renderer/UIPageRenderer'
-import { loadPageFromDB } from '@/lib/ui-pages/load-page-from-db'
+import { loadPageFromDb } from '@/lib/ui-pages/load-page-from-db'
 import { loadPageFromLuaPackages } from '@/lib/ui-pages/load-page-from-lua-packages'
 
 interface PageProps {
@@ -28,7 +28,7 @@ export default async function DynamicUIPage({ params }: PageProps) {
   const path = '/' + slug.join('/')
 
   // Prefer Lua package-based UI pages, fallback to database-backed pages
-  const pageData = (await loadPageFromLuaPackages(path)) ?? (await loadPageFromDB(path))
+  const pageData = (await loadPageFromLuaPackages(path)) ?? (await loadPageFromDb(path))
 
   if (!pageData) {
     notFound()
@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const slug = resolvedParams.slug || []
   const path = '/' + slug.join('/')
 
-  const pageData = (await loadPageFromLuaPackages(path)) ?? (await loadPageFromDB(path))
+  const pageData = (await loadPageFromLuaPackages(path)) ?? (await loadPageFromDb(path))
 
   if (!pageData) {
     return {

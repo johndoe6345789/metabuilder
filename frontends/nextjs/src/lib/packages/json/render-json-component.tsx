@@ -6,11 +6,12 @@
 
 import React from 'react'
 import type { JSONComponent } from './types'
+import type { JsonValue } from '@/types/utility-types'
 
 export interface RenderContext {
-  props: Record<string, any>
-  state: Record<string, any>
-  [key: string]: any
+  props: Record<string, JsonValue>
+  state: Record<string, JsonValue>
+  [key: string]: JsonValue
 }
 
 /**
@@ -18,8 +19,8 @@ export interface RenderContext {
  */
 export function renderJSONComponent(
   component: JSONComponent,
-  props: Record<string, any> = {},
-  ComponentRegistry: Record<string, React.ComponentType<any>> = {}
+  props: Record<string, JsonValue> = {},
+  ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>> = {}
 ): React.ReactElement {
   if (!component.render) {
     return (
@@ -50,47 +51,58 @@ export function renderJSONComponent(
  * Render a template node to React
  */
 function renderTemplate(
-  node: any,
+  node: JsonValue,
   context: RenderContext,
-  ComponentRegistry: Record<string, React.ComponentType<any>>
+  ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>>
 ): React.ReactElement {
   if (!node || typeof node !== 'object') {
     return <>{String(node)}</>
   }
 
+  // Array case - should not happen at this level but handle gracefully
+  if (Array.isArray(node)) {
+    return <>{node.map(String).join(', ')}</>
+  }
+
+  // Now TypeScript knows it's a JsonObject (non-array object)
+  const nodeObj = node as Record<string, JsonValue>
+
   // Handle conditional rendering
-  if (node.type === 'conditional') {
-    const condition = evaluateExpression(node.condition, context)
-    if (condition && node.then) {
-      return renderTemplate(node.then, context, ComponentRegistry)
-    } else if (!condition && node.else) {
-      return renderTemplate(node.else, context, ComponentRegistry)
+  if (nodeObj.type === 'conditional') {
+    const condition = evaluateExpression(nodeObj.condition, context)
+    if (condition && nodeObj.then) {
+      return renderTemplate(nodeObj.then, context, ComponentRegistry)
+    } else if (!condition && nodeObj.else) {
+      return renderTemplate(nodeObj.else, context, ComponentRegistry)
     }
     return <></>
   }
 
   // Handle component references from registry
-  if (node.type === 'component' || ComponentRegistry[node.type]) {
-    const Component = ComponentRegistry[node.type]
+  const nodeType = nodeObj.type
+  if (typeof nodeType === 'string' && (nodeType === 'component' || ComponentRegistry[nodeType])) {
+    const Component = ComponentRegistry[nodeType]
     if (Component) {
-      const componentProps: Record<string, any> = {}
+      const componentProps: Record<string, JsonValue> = {}
 
       // Process props
-      if (node.props) {
-        for (const [key, value] of Object.entries(node.props)) {
+      const props = nodeObj.props
+      if (props && typeof props === 'object' && !Array.isArray(props)) {
+        for (const [key, value] of Object.entries(props)) {
           componentProps[key] = evaluateExpression(value, context)
         }
       }
 
       // Process children
       let children: React.ReactNode = null
-      if (node.children) {
-        if (typeof node.children === 'string') {
-          children = evaluateExpression(node.children, context)
-        } else if (Array.isArray(node.children)) {
-          children = node.children.map((child: any, index: number) => {
+      const nodeChildren = nodeObj.children
+      if (nodeChildren) {
+        if (typeof nodeChildren === 'string') {
+          children = evaluateExpression(nodeChildren, context) as React.ReactNode
+        } else if (Array.isArray(nodeChildren)) {
+          children = nodeChildren.map((child: JsonValue, index: number) => {
             if (typeof child === 'string') {
-              return evaluateExpression(child, context)
+              return evaluateExpression(child, context) as React.ReactNode
             }
             return (
               <React.Fragment key={index}>
@@ -99,49 +111,50 @@ function renderTemplate(
             )
           })
         } else {
-          children = renderTemplate(node.children, context, ComponentRegistry)
+          children = renderTemplate(nodeChildren, context, ComponentRegistry)
         }
       }
 
-      return <Component {...componentProps}>{children}</Component>
+      return <Component {...(componentProps as Record<string, unknown>)}>{children}</Component>
     }
   }
 
   // Map JSON element types to HTML elements
-  const ElementType = getElementType(node.type)
+  const ElementType = getElementType(typeof nodeType === 'string' ? nodeType : 'div')
 
   // Build props
-  const elementProps: Record<string, any> = {}
+  const elementProps: Record<string, JsonValue> = {}
 
-  if (node.className) {
-    elementProps.className = node.className
+  if (nodeObj.className) {
+    elementProps.className = nodeObj.className
   }
 
-  if (node.style) {
-    elementProps.style = node.style
+  if (nodeObj.style) {
+    elementProps.style = nodeObj.style
   }
 
-  if (node.href) {
-    elementProps.href = evaluateExpression(node.href, context)
+  if (nodeObj.href) {
+    elementProps.href = evaluateExpression(nodeObj.href, context)
   }
 
-  if (node.src) {
-    elementProps.src = evaluateExpression(node.src, context)
+  if (nodeObj.src) {
+    elementProps.src = evaluateExpression(nodeObj.src, context)
   }
 
-  if (node.alt) {
-    elementProps.alt = evaluateExpression(node.alt, context)
+  if (nodeObj.alt) {
+    elementProps.alt = evaluateExpression(nodeObj.alt, context)
   }
 
   // Render children
   let children: React.ReactNode = null
-  if (node.children) {
-    if (typeof node.children === 'string') {
-      children = evaluateExpression(node.children, context)
-    } else if (Array.isArray(node.children)) {
-      children = node.children.map((child: any, index: number) => {
+  const nodeChildren = nodeObj.children
+  if (nodeChildren) {
+    if (typeof nodeChildren === 'string') {
+      children = evaluateExpression(nodeChildren, context) as React.ReactNode
+    } else if (Array.isArray(nodeChildren)) {
+      children = nodeChildren.map((child: JsonValue, index: number) => {
         if (typeof child === 'string') {
-          return evaluateExpression(child, context)
+          return evaluateExpression(child, context) as React.ReactNode
         }
         return (
           <React.Fragment key={index}>
@@ -150,7 +163,7 @@ function renderTemplate(
         )
       })
     } else {
-      children = renderTemplate(node.children, context, ComponentRegistry)
+      children = renderTemplate(nodeChildren, context, ComponentRegistry)
     }
   }
 
@@ -182,7 +195,7 @@ function getElementType(type: string): string {
 /**
  * Evaluate template expressions like {{variable}}
  */
-function evaluateExpression(expr: any, context: RenderContext): any {
+function evaluateExpression(expr: JsonValue, context: RenderContext): JsonValue {
   if (typeof expr !== 'string') {
     return expr
   }
@@ -205,10 +218,10 @@ function evaluateExpression(expr: any, context: RenderContext): any {
 /**
  * Evaluate simple expressions (no arbitrary code execution)
  */
-function evaluateSimpleExpression(expr: string, context: RenderContext): any {
+function evaluateSimpleExpression(expr: string, context: RenderContext): JsonValue {
   // Handle property access like "props.title"
   const parts = expr.split('.')
-  let value: any = context
+  let value: JsonValue = context
 
   for (const part of parts) {
     // Handle ternary operator

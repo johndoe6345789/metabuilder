@@ -1,9 +1,14 @@
-import { DBALClient, type DBALConfig } from '@/dbal'
+import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
 import type { JsonValue } from '@/types/utility-types'
 import type { TenantContext } from '@/dbal/core/foundation/tenant-context'
 
+interface StoreContext {
+  getKey: (key: string, context: TenantContext) => string
+  store: Map<string, { value: JsonValue; expiry?: number }>
+}
+
 export async function set(
-  this: any,
+  this: StoreContext,
   key: string,
   value: JsonValue,
   context: TenantContext,
