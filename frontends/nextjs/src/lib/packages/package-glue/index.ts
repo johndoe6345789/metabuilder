@@ -22,14 +22,14 @@ export {
 } from './config'
 
 // Functions
-export type { DependencyCheckResult } from './functions'
+export type { DependencyCheckResult } from './functions/check-dependencies'
 export {
   checkDependencies,
   getPackage,
   getPackageComponents,
   getPackageScripts,
   getPackagesByCategory,
-} from './functions'
+} from './functions/index'
 
 // Package glue singleton (stub)
 export const packageGlue = {

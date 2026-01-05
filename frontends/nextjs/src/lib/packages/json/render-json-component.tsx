@@ -6,11 +6,12 @@
 
 import React from 'react'
 import type { JSONComponent } from './types'
+import type { JsonValue } from '@/types/utility-types'
 
 export interface RenderContext {
-  props: Record<string, any>
-  state: Record<string, any>
-  [key: string]: any
+  props: Record<string, JsonValue>
+  state: Record<string, JsonValue>
+  [key: string]: JsonValue
 }
 
 /**
@@ -18,8 +19,8 @@ export interface RenderContext {
  */
 export function renderJSONComponent(
   component: JSONComponent,
-  props: Record<string, any> = {},
-  ComponentRegistry: Record<string, React.ComponentType<any>> = {}
+  props: Record<string, JsonValue> = {},
+  ComponentRegistry: Record<string, React.ComponentType<Record<string, JsonValue>>> = {}
 ): React.ReactElement {
   if (!component.render) {
     return (
@@ -50,9 +51,9 @@ export function renderJSONComponent(
  * Render a template node to React
  */
 function renderTemplate(
-  node: any,
+  node: JsonValue,
   context: RenderContext,
-  ComponentRegistry: Record<string, React.ComponentType<any>>
+  ComponentRegistry: Record<string, React.ComponentType<Record<string, JsonValue>>>
 ): React.ReactElement {
   if (!node || typeof node !== 'object') {
     return <>{String(node)}</>
@@ -73,7 +74,7 @@ function renderTemplate(
   if (node.type === 'component' || ComponentRegistry[node.type]) {
     const Component = ComponentRegistry[node.type]
     if (Component) {
-      const componentProps: Record<string, any> = {}
+      const componentProps: Record<string, JsonValue> = {}
 
       // Process props
       if (node.props) {
@@ -88,7 +89,7 @@ function renderTemplate(
         if (typeof node.children === 'string') {
           children = evaluateExpression(node.children, context)
         } else if (Array.isArray(node.children)) {
-          children = node.children.map((child: any, index: number) => {
+          children = node.children.map((child: JsonValue, index: number) => {
             if (typeof child === 'string') {
               return evaluateExpression(child, context)
             }
@@ -111,7 +112,7 @@ function renderTemplate(
   const ElementType = getElementType(node.type)
 
   // Build props
-  const elementProps: Record<string, any> = {}
+  const elementProps: Record<string, JsonValue> = {}
 
   if (node.className) {
     elementProps.className = node.className
@@ -139,7 +140,7 @@ function renderTemplate(
     if (typeof node.children === 'string') {
       children = evaluateExpression(node.children, context)
     } else if (Array.isArray(node.children)) {
-      children = node.children.map((child: any, index: number) => {
+      children = node.children.map((child: JsonValue, index: number) => {
         if (typeof child === 'string') {
           return evaluateExpression(child, context)
         }
@@ -182,7 +183,7 @@ function getElementType(type: string): string {
 /**
  * Evaluate template expressions like {{variable}}
  */
-function evaluateExpression(expr: any, context: RenderContext): any {
+function evaluateExpression(expr: JsonValue, context: RenderContext): JsonValue {
   if (typeof expr !== 'string') {
     return expr
   }
@@ -205,10 +206,10 @@ function evaluateExpression(expr: any, context: RenderContext): any {
 /**
  * Evaluate simple expressions (no arbitrary code execution)
  */
-function evaluateSimpleExpression(expr: string, context: RenderContext): any {
+function evaluateSimpleExpression(expr: string, context: RenderContext): JsonValue {
   // Handle property access like "props.title"
   const parts = expr.split('.')
-  let value: any = context
+  let value: JsonValue = context
 
   for (const part of parts) {
     // Handle ternary operator

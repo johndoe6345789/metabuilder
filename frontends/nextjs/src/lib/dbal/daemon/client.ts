@@ -27,7 +27,7 @@ export async function callDaemon<T = unknown>(request: DaemonRpcRequest): Promis
   let body: { success?: boolean; message?: string; data?: T }
   try {
     body = (await response.json()) as typeof body
-  } catch (error) {
+  } catch (_error) {
     throw new Error('Failed to parse response from DBAL daemon')
   }
 

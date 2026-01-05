@@ -11,7 +11,7 @@ export interface ParsedRoute {
 
 export const RESERVED_PATHS = ['api', 'admin', 'auth', '_next', 'static']
 
-export function parseRoute(b_url: string): ParsedRoute {
+export function parseRoute(_b_url: string): ParsedRoute {
   // TODO: Implement route parsing
   return { b_params: {} }
 }
@@ -21,12 +21,12 @@ export function getPrefixedEntity(entity: string, prefix?: string): string {
   return prefix ? `${prefix}_${entity}` : entity
 }
 
-export function getTableName(entity: string, tenantId?: string): string {
+export function getTableName(entity: string, _tenantId?: string): string {
   // TODO: Implement table name resolution
   return entity.toLowerCase()
 }
 
 export function isReservedPath(b_path: string): boolean {
   // TODO: Implement reserved path checking
-  return RESERVED_PATHS.includes(path.split('/')[1] || path)
+  return RESERVED_PATHS.includes(b_path.split('/')[1] || b_path)
 }
