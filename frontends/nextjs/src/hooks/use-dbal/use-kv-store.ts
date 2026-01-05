@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { toast } from 'sonner'
+// import { toast } from 'sonner'
 
-import { dbal } from '@/lib/dbal-integration'
+import { dbal } from '@/lib/dbal/core/client'
 
 import { useDBAL } from './use-dbal'
 
@@ -20,7 +20,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
         await dbal.kvSet(key, value, ttl, tenantId, userId)
       } catch (err) {
         const errorInfo = dbal.handleError(err)
-        toast.error(`KV Set Error: ${errorInfo.message}`)
+        // toast.error(`KV Set Error: ${errorInfo.message}`)
         throw err
       }
     },
@@ -36,7 +36,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
         return await dbal.kvGet<T>(key, tenantId, userId)
       } catch (err) {
         const errorInfo = dbal.handleError(err)
-        toast.error(`KV Get Error: ${errorInfo.message}`)
+        // toast.error(`KV Get Error: ${errorInfo.message}`)
         throw err
       }
     },
@@ -52,7 +52,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
         return await dbal.kvDelete(key, tenantId, userId)
       } catch (err) {
         const errorInfo = dbal.handleError(err)
-        toast.error(`KV Delete Error: ${errorInfo.message}`)
+        // toast.error(`KV Delete Error: ${errorInfo.message}`)
         throw err
       }
     },
@@ -68,7 +68,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
         await dbal.kvListAdd(key, items, tenantId, userId)
       } catch (err) {
         const errorInfo = dbal.handleError(err)
-        toast.error(`KV List Add Error: ${errorInfo.message}`)
+        // toast.error(`KV List Add Error: ${errorInfo.message}`)
         throw err
       }
     },
@@ -84,7 +84,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
         return await dbal.kvListGet(key, tenantId, userId, start, end)
       } catch (err) {
         const errorInfo = dbal.handleError(err)
-        toast.error(`KV List Get Error: ${errorInfo.message}`)
+        // toast.error(`KV List Get Error: ${errorInfo.message}`)
         throw err
       }
     },

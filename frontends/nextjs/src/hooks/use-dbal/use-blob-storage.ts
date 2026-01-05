@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
-import { toast } from 'sonner'
+// toast will be used when implementing error notifications
+// import { toast } from 'sonner'
 
-import { dbal } from '@/lib/dbal-integration'
+import { dbal } from '@/lib/dbal/core/client'
 
 import { useDBAL } from './use-dbal'
 
@@ -18,10 +19,10 @@ export function useBlobStorage() {
       }
       try {
         await dbal.blobUpload(key, data, metadata)
-        toast.success(`Uploaded: ${key}`)
+        // toast.success(`Uploaded: ${key}`)
       } catch (err) {
         const errorInfo = dbal.handleError(err)
-        toast.error(`Upload Error: ${errorInfo.message}`)
+        // toast.error(`Upload Error: ${errorInfo.message}`)
         throw err
       }
     },
@@ -37,7 +38,7 @@ export function useBlobStorage() {
         return await dbal.blobDownload(key)
       } catch (err) {
         const errorInfo = dbal.handleError(err)
-        toast.error(`Download Error: ${errorInfo.message}`)
+        // toast.error(`Download Error: ${errorInfo.message}`)
         throw err
       }
     },
@@ -51,10 +52,10 @@ export function useBlobStorage() {
       }
       try {
         await dbal.blobDelete(key)
-        toast.success(`Deleted: ${key}`)
+        // toast.success(`Deleted: ${key}`)
       } catch (err) {
         const errorInfo = dbal.handleError(err)
-        toast.error(`Delete Error: ${errorInfo.message}`)
+        // toast.error(`Delete Error: ${errorInfo.message}`)
         throw err
       }
     },
@@ -70,7 +71,7 @@ export function useBlobStorage() {
         return await dbal.blobList(prefix)
       } catch (err) {
         const errorInfo = dbal.handleError(err)
-        toast.error(`List Error: ${errorInfo.message}`)
+        // toast.error(`List Error: ${errorInfo.message}`)
         throw err
       }
     },
@@ -86,7 +87,7 @@ export function useBlobStorage() {
         return await dbal.blobGetMetadata(key)
       } catch (err) {
         const errorInfo = dbal.handleError(err)
-        toast.error(`Get Metadata Error: ${errorInfo.message}`)
+        // toast.error(`Get Metadata Error: ${errorInfo.message}`)
         throw err
       }
     },
