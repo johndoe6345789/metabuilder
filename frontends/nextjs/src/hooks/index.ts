@@ -1,5 +1,5 @@
 export type { AuthState, AuthUser, UseAuthReturn } from './auth/auth-types'
-export { useIsMobile } from './use-mobile'
+export { useMobile } from './use-mobile'
 export { useAuth } from './useAuth'
 export { useAutoRefresh } from './useAutoRefresh'
 export type { EditorFile } from './useCodeEditor'

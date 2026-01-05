@@ -1,6 +1,10 @@
 import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
 
-export function getClient(): DBALClient {
+interface DBALClientState {
+  client?: _DBALClient
+}
+
+export function getClient(this: DBALClientState): _DBALClient {
   if (!this.client) {
     throw new Error('DBAL not initialized. Call initialize() first.')
   }

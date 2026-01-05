@@ -38,6 +38,10 @@ export interface PageConfig {
   description?: string | null
   icon?: string | null
   component?: string | null
+  componentTree?: unknown // JSON: full component tree
+  level?: number
+  requiresAuth?: boolean
+  requiredRole?: string | null
   luaScript?: string | null
   accessLevel?: number | null
   createdAt?: number | bigint
@@ -57,12 +61,16 @@ export interface Comment {
 
 export interface Workflow {
   id: string
-  name: string
   tenantId?: string | null
-  definition: string
-  status: string
-  createdAt: number | bigint
+  name: string
+  description?: string | null
+  nodes?: unknown // JSON: WorkflowNode[]
+  edges?: unknown // JSON: WorkflowEdge[]
+  enabled?: boolean
+  version?: number
+  createdAt?: number | bigint
   updatedAt?: number | bigint | null
+  createdBy?: string | null
 }
 
 export interface AppConfiguration {
