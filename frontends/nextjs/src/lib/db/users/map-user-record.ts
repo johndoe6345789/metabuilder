@@ -1,4 +1,4 @@
-import type { User } from '../../types/level-types'
+import type { User } from '@/lib/types/level-types'
 
 /**
  * Normalize raw DB records into the shared User shape.

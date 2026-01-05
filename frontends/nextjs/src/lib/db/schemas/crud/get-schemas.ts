@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import type { ModelSchema } from '../../types/schema-types'
+import type { ModelSchema } from '@/lib/types/schema-types'
 
 type DBALModelSchemaRecord = {
   name: string

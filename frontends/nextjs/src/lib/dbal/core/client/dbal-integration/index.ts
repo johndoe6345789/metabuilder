@@ -32,3 +32,19 @@ export { listGet } from './functions/list-get'
 export { reset } from './functions/reset'
 export { set } from './functions/set'
 export { upload } from './functions/upload'
+
+// Create a namespace object for backward compatibility
+export const dbal = {
+  initialize,
+  get,
+  set,
+  listAdd,
+  listGet,
+  getBlobStorage,
+  getKVStore,
+  getTenantContext,
+  getTenantManager,
+}
+
+// Type alias for backward compatibility
+export type DBALIntegration = typeof dbal

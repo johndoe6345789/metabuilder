@@ -1,6 +1,6 @@
 import { getAdapter } from '../../core/dbal-client'
 import { mapSessionRecord } from '../map-session-record'
-import type { ListSessionsOptions, Session } from './types'
+import type { ListSessionsOptions, Session } from '../types'
 
 export async function listSessions(options?: ListSessionsOptions): Promise<Session[]> {
   const adapter = getAdapter()

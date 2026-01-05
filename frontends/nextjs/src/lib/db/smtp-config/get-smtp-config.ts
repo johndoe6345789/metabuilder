@@ -1,4 +1,4 @@
-import type { SMTPConfig } from '../../password'
+import type { SMTPConfig } from '../password'
 import { getAdapter } from '../core/dbal-client'
 
 type DBALSMTPConfig = SMTPConfig

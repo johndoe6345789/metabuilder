@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import type { Workflow } from '../../types/level-types'
+import type { Workflow } from '@/lib/types/level-types'
 
 /**
  * Update a workflow by ID

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { Workflow } from '../../types/level-types'
+import type { Workflow } from '@/lib/types/level-types'
 
 const mockUpdate = vi.fn()
 const mockAdapter = { update: mockUpdate }

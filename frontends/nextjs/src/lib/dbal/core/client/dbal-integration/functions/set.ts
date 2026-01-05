@@ -1,7 +1,9 @@
 import { DBALClient, type DBALConfig } from '@/dbal'
 import type { JsonValue } from '@/types/utility-types'
+import type { TenantContext } from '@/dbal/core/foundation/tenant-context'
 
 export async function set(
+  this: any,
   key: string,
   value: JsonValue,
   context: TenantContext,
