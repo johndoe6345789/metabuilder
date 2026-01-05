@@ -5,8 +5,8 @@ import type { JsonValue } from '@/types/utility-types'
 // The original `this` context is lost, so this function may not work correctly
 export async function kvGet<T = JsonValue>(
   key: string,
-  tenantId = 'default',
-  userId = 'system'
+  _tenantId = 'default',
+  _userId = 'system'
 ): Promise<T | null> {
   // Original code referenced this.kvStore and this.tenantManager which don't exist here
   // TODO: Review and fix this extraction

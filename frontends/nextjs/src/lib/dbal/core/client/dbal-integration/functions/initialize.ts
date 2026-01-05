@@ -1,11 +1,19 @@
-import { DBALClient, type DBALConfig } from '@/dbal'
+import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
 import { InMemoryKVStore } from '@/dbal/core/kv'
 import { MemoryStorage } from '@/dbal/blob/providers/memory-storage'
+
+interface DBALIntegrationState {
+  initialized?: boolean
+  tenantManager?: unknown
+  kvStore?: InMemoryKVStore
+  blobStorage?: MemoryStorage
+  client?: _DBALClient
+}
 
 /**
  * Initialize the DBAL client with configuration
  */
-export async function initialize(this: any, config?: Partial<DBALConfig>): Promise<void> {
+export async function initialize(this: DBALIntegrationState, config?: Partial<_DBALConfig>): Promise<void> {
   if (this.initialized) {
     console.warn('DBAL already initialized')
     return
@@ -22,16 +30,15 @@ export async function initialize(this: any, config?: Partial<DBALConfig>): Promi
     this.blobStorage = new MemoryStorage()
 
     // Initialize DBAL client
-    const dbalConfig: DBALConfig = {
+    const dbalConfig: _DBALConfig = {
       mode: 'development',
       adapter: config?.adapter || 'prisma',
       ...config,
-    }
+    } as _DBALConfig
 
-    this.client = new DBALClient(dbalConfig)
+    this.client = new _DBALClient(dbalConfig)
 
     this.initialized = true
-    console.log('DBAL Integration initialized successfully')
   } catch (error) {
     console.error('Failed to initialize DBAL:', error)
     throw error

@@ -1,10 +1,14 @@
-import { DBALClient, type DBALConfig } from '@/dbal'
+import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
 import type { TenantContext } from '@/dbal/core/foundation/tenant-context'
 
+interface TenantStore {
+  tenants: Map<string, unknown>
+}
+
 export async function getTenantContext(
-  this: any,
+  this: TenantStore,
   tenantId: string,
-  userId: string
+  _userId: string
 ): Promise<TenantContext | null> {
   if (!this.tenants.has(tenantId)) {
     return null

@@ -1,4 +1,4 @@
-import { DBALClient, type DBALConfig } from '@/dbal'
+import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
 
 // Note: This was extracted from a class static method
 // The original `this` context is lost, so this function may not work correctly

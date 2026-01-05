@@ -1,4 +1,4 @@
-import { DBALClient, type DBALConfig } from '@/dbal'
+import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
 
 export async function blobList(prefix?: string): Promise<string[]> {
   if (!this.blobStorage) throw new Error('DBAL not initialized')
