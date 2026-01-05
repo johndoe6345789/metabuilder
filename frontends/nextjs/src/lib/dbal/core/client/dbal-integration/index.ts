@@ -33,17 +33,28 @@ export { reset } from './functions/reset'
 export { set } from './functions/set'
 export { upload } from './functions/upload'
 
+// Import for use in the namespace object
+import { initialize as initializeImpl } from './functions/initialize'
+import { get as getImpl } from './functions/get'
+import { set as setImpl } from './functions/set'
+import { listAdd as listAddImpl } from './functions/list-add'
+import { listGet as listGetImpl } from './functions/list-get'
+import { getBlobStorage as getBlobStorageImpl } from './functions/get-blob-storage'
+import { getKVStore as getKVStoreImpl } from './functions/get-k-v-store'
+import { getTenantContext as getTenantContextImpl } from './functions/get-tenant-context'
+import { getTenantManager as getTenantManagerImpl } from './functions/get-tenant-manager'
+
 // Create a namespace object for backward compatibility
 export const dbal = {
-  initialize,
-  get,
-  set,
-  listAdd,
-  listGet,
-  getBlobStorage,
-  getKVStore,
-  getTenantContext,
-  getTenantManager,
+  initialize: initializeImpl,
+  get: getImpl,
+  set: setImpl,
+  listAdd: listAddImpl,
+  listGet: listGetImpl,
+  getBlobStorage: getBlobStorageImpl,
+  getKVStore: getKVStoreImpl,
+  getTenantContext: getTenantContextImpl,
+  getTenantManager: getTenantManagerImpl,
 }
 
 // Type alias for backward compatibility
