@@ -2,11 +2,10 @@
  * Create GitHub client (stub)
  */
 
-export interface GitHubClient {
-  // Add methods as needed
-}
+// Using Record<string, unknown> for now since this is a stub
+export type GitHubClient = Record<string, unknown>
 
-export function createGitHubClient(token?: string): GitHubClient {
+export function createGitHubClient(_token?: string): GitHubClient {
   // TODO: Implement GitHub client creation
   return {}
 }

@@ -8,20 +8,20 @@ export interface RouteValidationResult {
 }
 
 export async function validatePackageRoute(
-  tenant: string,
-  packageId: string,
+  b_tenant: string,
+  b_packageId: string,
   userId?: string
 ): Promise<RouteValidationResult> {
   // TODO: Implement route validation
   return { valid: true }
 }
 
-export async function canBePrimaryPackage(packageId: string): Promise<boolean> {
+export async function canBePrimaryPackage(b_packageId: string): Promise<boolean> {
   // TODO: Implement primary package check
   return true
 }
 
-export async function loadPackageMetadata(packageId: string): Promise<unknown> {
+export async function loadPackageMetadata(b_packageId: string): Promise<unknown> {
   // TODO: Implement package metadata loading
   return null
 }

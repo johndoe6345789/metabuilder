@@ -8,7 +8,7 @@ export class SchemaRegistry {
   private schemas: Map<string, ModelSchema> = new Map()
   packages: Record<string, unknown> = {}
 
-  register(schema: ModelSchema): void {
+  register(b_schema: ModelSchema): void {
     this.schemas.set(schema.name, schema)
   }
 
@@ -28,32 +28,32 @@ export function loadSchemaRegistry(path?: string): SchemaRegistry {
   return schemaRegistry
 }
 
-export function saveSchemaRegistry(registry: SchemaRegistry, path?: string): void {
+export function saveSchemaRegistry(b_registry: SchemaRegistry, path?: string): void {
   // TODO: Implement schema registry saving
 }
 
 export interface PendingMigration {
   id: string
-  packageId: string
+  b_packageId: string
   status: string
   queuedAt: string
   entities: Array<{ name: string }>
 }
 
-export function getPendingMigrations(registry: SchemaRegistry): PendingMigration[] {
+export function getPendingMigrations(b_registry: SchemaRegistry): PendingMigration[] {
   // TODO: Implement pending migrations retrieval
   return []
 }
 
-export function generatePrismaFragment(schema: ModelSchema, path?: string): string {
+export function generatePrismaFragment(b_schema: ModelSchema, path?: string): string {
   // TODO: Implement Prisma fragment generation
   return ''
 }
 
-export function approveMigration(registry: SchemaRegistry, migrationId: string): void {
+export function approveMigration(b_registry: SchemaRegistry, b_migrationId: string): void {
   // TODO: Implement migration approval
 }
 
-export function rejectMigration(registry: SchemaRegistry, migrationId: string): void {
+export function rejectMigration(b_registry: SchemaRegistry, b_migrationId: string): void {
   // TODO: Implement migration rejection
 }
