@@ -11,6 +11,7 @@ export async function updateCssCategory(categoryName: string, updates: CssCatego
     throw new Error(`CssCategory not found: ${categoryName}`)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await adapter.update('CssCategory', (existing as any).id, {
     name: updates.name,
     classes: JSON.stringify(updates.classes),

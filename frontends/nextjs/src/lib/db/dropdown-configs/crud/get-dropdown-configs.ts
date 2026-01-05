@@ -7,6 +7,7 @@ import type { DropdownConfig } from '../types'
 export async function getDropdownConfigs(): Promise<DropdownConfig[]> {
   const adapter = getAdapter()
   const result = await adapter.list('DropdownConfig')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (result.data as any[]).map(c => ({
     id: c.id,
     name: c.name,

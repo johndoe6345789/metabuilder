@@ -9,6 +9,7 @@ export async function setSchemas(schemas: ModelSchema[]): Promise<void> {
 
   // Delete existing schemas
   const existing = await adapter.list('ModelSchema')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   for (const s of existing.data as any[]) {
     await adapter.delete('ModelSchema', s.name)
   }

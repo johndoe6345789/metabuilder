@@ -54,7 +54,7 @@ async function handleRequest(
   const { route, operation, dbalOp } = context
 
   // 2. Get current user session (may be null for public routes)
-  const { user, error: sessionError } = await getSessionUser()
+  const { user } = await getSessionUser()
   
   // 3. Validate package exists and user has required level
   const packageResult = validatePackageRoute(route.package, route.entity, user)

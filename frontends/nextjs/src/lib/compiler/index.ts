@@ -12,7 +12,7 @@ export interface CompileResult {
   map?: string
 }
 
-export async function compile(source: string, options?: CompileOptions): Promise<CompileResult> {
+export async function compile(source: string, _options?: CompileOptions): Promise<CompileResult> {
   // TODO: Implement compilation
   return { code: source }
 }

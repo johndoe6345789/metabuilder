@@ -8,18 +8,21 @@ import type { DBALAdapter, ListOptions, ListResult } from '../types'
 // Simple Prisma-based adapter implementation
 class PrismaAdapter implements DBALAdapter {
   async create(entity: string, data: Record<string, unknown>): Promise<unknown> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const model = (prisma as  any)[entity.toLowerCase()]
     if (!model) throw new Error(`Unknown entity: ${entity}`)
     return await model.create({ data })
   }
 
   async get(entity: string, id: string | number): Promise<unknown> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const model = (prisma as any)[entity.toLowerCase()]
     if (!model) throw new Error(`Unknown entity: ${entity}`)
     return await model.findUnique({ where: { id } })
   }
 
   async list(entity: string, options?: ListOptions): Promise<ListResult> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const model = (prisma as any)[entity.toLowerCase()]
     if (!model) throw new Error(`Unknown entity: ${entity}`)
     
@@ -44,6 +47,7 @@ class PrismaAdapter implements DBALAdapter {
   }
 
   async update(entity: string, id: string | number, data: Record<string, unknown>): Promise<unknown> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const model = (prisma as any)[entity.toLowerCase()]
     if (!model) throw new Error(`Unknown entity: ${entity}`)
     return await model.update({ where: { id }, data })
@@ -56,6 +60,7 @@ class PrismaAdapter implements DBALAdapter {
     createData: Record<string, unknown>,
     updateData: Record<string, unknown>
   ): Promise<unknown> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const model = (prisma as any)[entity.toLowerCase()]
     if (!model) throw new Error(`Unknown entity: ${entity}`)
     return await model.upsert({
@@ -66,12 +71,14 @@ class PrismaAdapter implements DBALAdapter {
   }
 
   async delete(entity: string, id: string | number): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const model = (prisma as any)[entity.toLowerCase()]
     if (!model) throw new Error(`Unknown entity: ${entity}`)
     await model.delete({ where: { id } })
   }
 
   async createMany(entity: string, data: Record<string, unknown>[]): Promise<unknown[]> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const model = (prisma as any)[entity.toLowerCase()]
     if (!model) throw new Error(`Unknown entity: ${entity}`)
     await model.createMany({ data })
@@ -79,6 +86,7 @@ class PrismaAdapter implements DBALAdapter {
   }
 
   async updateMany(entity: string, ids: (string | number)[], data: Record<string, unknown>): Promise<unknown[]> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const model = (prisma as any)[entity.toLowerCase()]
     if (!model) throw new Error(`Unknown entity: ${entity}`)
     
@@ -89,6 +97,7 @@ class PrismaAdapter implements DBALAdapter {
   }
 
   async deleteMany(entity: string, ids: (string | number)[]): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const model = (prisma as any)[entity.toLowerCase()]
     if (!model) throw new Error(`Unknown entity: ${entity}`)
     await model.deleteMany({ where: { id: { in: ids } } })
@@ -99,6 +108,7 @@ class PrismaAdapter implements DBALAdapter {
   }
 
   async count(entity: string, filter?: Record<string, unknown>): Promise<number> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const model = (prisma as any)[entity.toLowerCase()]
     if (!model) throw new Error(`Unknown entity: ${entity}`)
     return await model.count({ where: filter || {} })

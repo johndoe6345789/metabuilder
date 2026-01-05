@@ -33,6 +33,7 @@ describe('addWorkflow', () => {
   ])('should add $name', async ({ workflow }) => {
     mockCreate.mockResolvedValue(undefined)
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await addWorkflow(workflow as any)
 
     expect(mockCreate).toHaveBeenCalledWith(

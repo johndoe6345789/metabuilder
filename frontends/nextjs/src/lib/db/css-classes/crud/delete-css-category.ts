@@ -9,5 +9,6 @@ export async function deleteCssCategory(categoryName: string): Promise<void> {
   if (!existing) {
     return
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await adapter.delete('CssCategory', (existing as any).id)
 }

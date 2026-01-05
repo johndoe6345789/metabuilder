@@ -5,6 +5,8 @@
  * Shows the package dashboard/home component.
  */
 
+// notFound will be used when package loading is implemented
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { notFound } from 'next/navigation'
 
 interface PackagePageProps {

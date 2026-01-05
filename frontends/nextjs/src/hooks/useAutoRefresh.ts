@@ -7,6 +7,6 @@ export interface AutoRefreshOptions {
   enabled?: boolean
 }
 
-export function useAutoRefresh(callback: () => void, options?: AutoRefreshOptions): void {
+export function useAutoRefresh(_callback: () => void, _options?: AutoRefreshOptions): void {
   // TODO: Implement auto refresh
 }

@@ -4,5 +4,5 @@
 
 export async function initializeDBAL(): Promise<void> {
   // Stub: DBAL initialization handled by getAdapter
-  console.log('DBAL initialized (Prisma adapter)')
+  // DBAL initialized (Prisma adapter)
 }
