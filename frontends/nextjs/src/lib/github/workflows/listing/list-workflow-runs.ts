@@ -11,10 +11,10 @@ export interface WorkflowRun {
 }
 
 export async function listWorkflowRuns(
-  owner: string,
-  repo: string,
-  search?: string,
-  workflowId?: string
+  _owner: string,
+  _repo: string,
+  _search?: string,
+  _workflowId?: string
 ): Promise<WorkflowRun[]> {
   // TODO: Implement workflow runs listing
   return []

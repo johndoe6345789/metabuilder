@@ -1,4 +1,4 @@
-import { DBALError } from '../../../../core/foundation/errors'
+import { DBALError } from '../../../core/foundation/errors'
 import type { TenantContext } from '../../core/foundation/tenant-context'
 import type { TenantAwareDeps } from './context'
 

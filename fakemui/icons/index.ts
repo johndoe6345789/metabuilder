@@ -347,7 +347,7 @@ export { ContentPaste } from './ContentPaste'
 // Component Icon Map & Form Controls
 export { Article } from './Article'
 export { Checkbox } from './Checkbox'
-export { CheckBox } from './CheckBox'
+export { Checkbox as CheckBox } from './Checkbox'
 export { CheckBoxOutlineBlank } from './CheckBoxOutlineBlank'
 export { IndeterminateCheckBox } from './IndeterminateCheckBox'
 export { RadioButtonChecked } from './RadioButtonChecked'

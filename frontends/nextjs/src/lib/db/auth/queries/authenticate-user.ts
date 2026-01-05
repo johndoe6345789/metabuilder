@@ -1,6 +1,6 @@
 import { getAdapter } from '../../core/dbal-client'
 import { verifyPassword } from '../../password/verify-password'
-import type { User } from '../../types/level-types'
+import type { User } from '@/lib/types/level-types'
 import { getUserFirstLoginFlag } from '../../users/getters/get-user-first-login-flag'
 import { mapUserRecord } from '../../users/map-user-record'
 

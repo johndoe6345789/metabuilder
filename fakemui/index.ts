@@ -144,10 +144,11 @@ export {
   LinearProgress,
   Skeleton,
   Snackbar,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
+  // Dialog components removed - not yet implemented
+  // Dialog,
+  // DialogTitle,
+  // DialogContent,
+  // DialogActions,
 } from './fakemui/feedback'
 
 // Navigation

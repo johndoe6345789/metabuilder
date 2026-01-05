@@ -1,5 +1,5 @@
-import { DBALError } from '../../../../core/foundation/errors'
-import type { DownloadOptions } from '../blob-storage'
+import { DBALError } from '../../../core/foundation/errors'
+import type { DownloadOptions } from '../../blob-storage'
 import type { MemoryStore } from './store'
 import { getBlobOrThrow, normalizeKey } from './utils'
 

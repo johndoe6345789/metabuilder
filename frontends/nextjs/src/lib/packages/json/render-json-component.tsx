@@ -5,7 +5,7 @@
  */
 
 import React from 'react'
-import type { JSONComponent } from './load-json-package'
+import type { JSONComponent } from './types'
 
 export interface RenderContext {
   props: Record<string, any>

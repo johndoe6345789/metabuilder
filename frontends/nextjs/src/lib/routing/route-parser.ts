@@ -6,14 +6,14 @@ export interface ParsedRoute {
   tenant?: string
   package?: string
   path?: string
-  params: Record<string, string>
+  b_params: Record<string, string>
 }
 
 export const RESERVED_PATHS = ['api', 'admin', 'auth', '_next', 'static']
 
-export function parseRoute(url: string): ParsedRoute {
+export function parseRoute(b_url: string): ParsedRoute {
   // TODO: Implement route parsing
-  return { params: {} }
+  return { b_params: {} }
 }
 
 export function getPrefixedEntity(entity: string, prefix?: string): string {
@@ -26,7 +26,7 @@ export function getTableName(entity: string, tenantId?: string): string {
   return entity.toLowerCase()
 }
 
-export function isReservedPath(path: string): boolean {
+export function isReservedPath(b_path: string): boolean {
   // TODO: Implement reserved path checking
   return RESERVED_PATHS.includes(path.split('/')[1] || path)
 }

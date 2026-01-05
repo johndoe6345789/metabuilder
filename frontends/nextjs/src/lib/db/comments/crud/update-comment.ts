@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import type { Comment } from '../../types/level-types'
+import type { Comment } from '@/lib/types/level-types'
 
 /**
  * Update a comment by ID

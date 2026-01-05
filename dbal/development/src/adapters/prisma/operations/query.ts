@@ -1,4 +1,4 @@
-import type { ListOptions, ListResult } from '../../core/foundation/types'
+import type { ListOptions, ListResult } from '../../../core/foundation/types'
 import type { PrismaContext } from '../types'
 import { handlePrismaError, buildWhereClause, buildOrderBy, getModel, withTimeout } from './utils'
 

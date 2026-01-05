@@ -36,10 +36,10 @@ export async function fetchWorkflowRunLogs(
   options?: { tailLines?: number; failedOnly?: boolean }
 ): Promise<WorkflowRunLogs | null>
 export async function fetchWorkflowRunLogs(
-  ownerOrOptions: string | FetchWorkflowRunLogsOptions,
-  repo?: string,
-  runId?: number,
-  options?: { tailLines?: number; failedOnly?: boolean }
+  _ownerOrOptions: string | FetchWorkflowRunLogsOptions,
+  _repo?: string,
+  _runId?: number,
+  _options?: { tailLines?: number; failedOnly?: boolean }
 ): Promise<WorkflowRunLogs | null> {
   // TODO: Implement log fetching
   return null

@@ -1,4 +1,4 @@
-import { DBALError } from '../../../../core/foundation/errors'
+import { DBALError } from '../../../core/foundation/errors'
 import type { BlobData, MemoryStore } from './store'
 
 export const normalizeKey = (key: string): string => key.replace(/^\/+/, '').trim()

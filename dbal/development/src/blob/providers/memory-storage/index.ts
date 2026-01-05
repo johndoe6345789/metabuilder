@@ -5,7 +5,7 @@ import type {
   UploadOptions,
   DownloadOptions,
   BlobListOptions,
-} from '../blob-storage'
+} from '../../blob-storage'
 import { createStore } from './store'
 import { uploadBuffer, uploadFromStream } from './uploads'
 import { downloadBuffer, downloadStream } from './downloads'

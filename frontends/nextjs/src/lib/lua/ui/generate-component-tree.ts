@@ -8,7 +8,7 @@ export interface ComponentTree {
   children?: ComponentTree[]
 }
 
-export function generateComponentTree(luaScript: string): ComponentTree {
+export function generateComponentTree(_luaScript: string): ComponentTree {
   // TODO: Implement Lua component tree generation
   return { type: 'div' }
 }
