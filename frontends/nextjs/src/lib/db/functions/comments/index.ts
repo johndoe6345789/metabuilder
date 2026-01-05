@@ -3,8 +3,8 @@
  * Exports all comment functions
  */
 
-export { addComment } from './add-comment'
-export { deleteComment } from './delete-comment'
-export { getComments } from './get-comments'
-export { setComments } from './set-comments'
-export { updateComment } from './update-comment'
+export { addComment } from './crud/add-comment'
+export { deleteComment } from './crud/delete-comment'
+export { getComments } from './crud/get-comments'
+export { setComments } from './crud/set-comments'
+export { updateComment } from './crud/update-comment'

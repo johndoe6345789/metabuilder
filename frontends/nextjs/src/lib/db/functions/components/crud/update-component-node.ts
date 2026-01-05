@@ -3,8 +3,8 @@
  * Updates an existing component node
  */
 
-import { prisma } from '../../prisma'
-import type { ComponentNode } from './types'
+import { prisma } from '@/lib/config/prisma'
+import type { ComponentNode } from '../hierarchy/types'
 
 /**
  * Update a component node

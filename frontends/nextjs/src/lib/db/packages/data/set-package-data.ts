@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import { type PackageSeedData } from '../../packages/core/package-types'
+import { type PackageSeedData } from '@/lib/package-types'
 
 /**
  * Set package data (upsert)
