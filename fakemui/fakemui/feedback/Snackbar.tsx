@@ -76,12 +76,13 @@ export const Snackbar: React.FC<SnackbarProps> = ({
 
   // Exit animation
   useEffect(() => {
-    if (!open && !exiting) return
+    if (!open && !exiting) return undefined
     if (!open) {
       setExiting(true)
       const timer = setTimeout(() => setExiting(false), transitionDuration)
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [open, exiting, transitionDuration])
 
   if (!open && !exiting) return null
