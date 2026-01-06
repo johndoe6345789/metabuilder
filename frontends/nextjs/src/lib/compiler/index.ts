@@ -16,3 +16,7 @@ export async function compile(source: string, _options?: CompileOptions): Promis
   // TODO: Implement compilation
   return { code: source }
 }
+
+export async function loadAndInjectStyles(_packageId: string): Promise<void> {
+  // TODO: Implement style loading and injection
+}
