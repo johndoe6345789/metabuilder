@@ -29,12 +29,13 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
-      // Strict type checking rules (as warnings for gradual adoption)
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': ['warn', { 
+      // Strict type checking rules (as errors for stricter enforcement)
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { 
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
       }],
+      '@typescript-eslint/strict-boolean-expressions': 'warn',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-misused-promises': 'warn',
       // Code quality rules

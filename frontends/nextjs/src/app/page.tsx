@@ -32,8 +32,23 @@ export default async function RootPage() {
   if (godPanelRoutes.data.length > 0) {
     const route = godPanelRoutes.data[0]
 
-    // TODO: Check user permission level >= route.level
-    // TODO: Check auth if route.requiresAuth
+    // TODO: Implement proper session/user context for permission checks
+    // For now, we'll allow access to public routes and skip auth checks
+    // Full implementation requires:
+    // 1. Session middleware to get current user from cookies
+    // 2. User permission level check: user.level >= route.level
+    // 3. Auth requirement: if (route.requiresAuth && !user) redirect('/login')
+    
+    // Permission level check (when user context is available)
+    // const user = await getCurrentUser() // TODO: Implement getCurrentUser
+    // if (user && user.level < route.level) {
+    //   return <div>Access Denied: Insufficient permissions</div>
+    // }
+    
+    // Auth requirement check
+    // if (route.requiresAuth && !user) {
+    //   redirect('/login')
+    // }
 
     // If route has full component tree, render it directly
     if (route.componentTree) {
