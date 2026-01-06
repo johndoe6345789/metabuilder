@@ -57,7 +57,7 @@ async function handleRequest(
   const { user } = await getSessionUser()
   
   // 3. Validate package exists and user has required level
-  const packageResult = validatePackageRoute(route.package, route.entity, user)
+  const packageResult = await validatePackageRoute(route.package, route.entity, user)
   if (!packageResult.allowed) {
     const status = !user ? STATUS.UNAUTHORIZED : STATUS.FORBIDDEN
     return errorResponse(packageResult.reason || 'Access denied', status)

@@ -20,39 +20,84 @@ export const STATUS = {
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   ERROR: 500,
+  INTERNAL_ERROR: 500,
 }
 
 export function successResponse(data: unknown, status = STATUS.OK) {
-  return Response.json(data, { status })
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  })
 }
 
 export function errorResponse(message: string, status = STATUS.ERROR) {
-  return Response.json({ error: message }, { status })
+  return new Response(JSON.stringify({ error: message }), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  })
 }
 
-export async function getSessionUser(_req: Request): Promise<unknown> {
+export interface SessionUser {
+  user: unknown | null
+}
+
+export async function getSessionUser(_req?: Request): Promise<SessionUser> {
   // TODO: Implement session user retrieval
-  return null
+  return { user: null }
 }
 
-export async function parseRestfulRequest(_req: Request): Promise<unknown> {
+export interface RestfulContext {
+  route: {
+    tenant: string
+    package: string
+    entity: string
+    id?: string
+    action?: string
+  }
+  operation: string
+  dbalOp: unknown
+}
+
+export async function parseRestfulRequest(
+  _req: Request,
+  _params: { slug: string[] }
+): Promise<RestfulContext | { error: string; status: number }> {
   // TODO: Implement RESTful request parsing
-  return {}
+  return { error: 'Not implemented', status: 500 }
 }
 
-export async function executeDbalOperation(_op: unknown): Promise<unknown> {
+export async function executeDbalOperation(
+  _op: unknown,
+  _context?: unknown
+): Promise<{ success: boolean; data?: unknown; error?: string; meta?: unknown }> {
   // TODO: Implement DBAL operation execution
-  throw new Error('Not implemented')
+  return { success: false, error: 'Not implemented' }
 }
 
-export async function executePackageAction(_action: unknown): Promise<unknown> {
+export async function executePackageAction(
+  _packageId: unknown,
+  _entity: unknown,
+  _action: unknown,
+  _id: unknown,
+  _context?: unknown
+): Promise<{ success: boolean; data?: unknown; error?: string }> {
   // TODO: Implement package action execution
-  throw new Error('Not implemented')
+  return { success: false, error: 'Not implemented' }
 }
 
-export function validateTenantAccess(_tenant: unknown, _user: unknown): boolean {
+export interface TenantValidationResult {
+  allowed: boolean
+  reason?: string
+  tenant?: unknown
+}
+
+export async function validateTenantAccess(
+  _user: unknown,
+  _tenant: unknown,
+  _minLevel: unknown
+): Promise<TenantValidationResult> {
   // TODO: Implement tenant access validation
-  return false
+  return { allowed: false, reason: 'Not implemented' }
 }
 
 // Re-export auth functions
