@@ -1,6 +1,8 @@
 /**
- * useGitHubFetcher hook (stub)
+ * useGitHubFetcher hook
  */
+
+import { useState, useEffect, useCallback } from 'react'
 
 export interface WorkflowRun {
   id: number
@@ -11,11 +13,33 @@ export interface WorkflowRun {
 }
 
 export function useGitHubFetcher() {
-  // TODO: Implement useGitHubFetcher
+  const [runs, setRuns] = useState<WorkflowRun[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+
+  const refetch = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const { listWorkflowRuns } = await import('@/lib/github/workflows/listing/list-workflow-runs')
+      const workflowRuns = await listWorkflowRuns()
+      setRuns(workflowRuns)
+    } catch (err) {
+      setError(err as Error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    refetch()
+  }, [refetch])
+
   return {
-    runs: [] as WorkflowRun[],
-    loading: false,
-    error: null as Error | null,
-    refetch: () => {},
+    runs,
+    loading,
+    error,
+    refetch,
   }
+}
 }
