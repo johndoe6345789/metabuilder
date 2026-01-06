@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getAdapter } from '@/lib/db/core/dbal-client'
 import { loadJSONPackage } from '@/lib/packages/json/functions/load-json-package'
 import { renderJSONComponent } from '@/lib/packages/json/render-json-component'
+import type { JSONComponent } from '@/lib/packages/json/types'
 
 /**
  * Root page handler with routing priority:
@@ -52,7 +53,7 @@ export default async function RootPage() {
 
     // If route has full component tree, render it directly
     if (route.componentTree !== null && route.componentTree !== undefined && route.componentTree.length > 0) {
-      const componentDef = JSON.parse(route.componentTree)
+      const componentDef = JSON.parse(route.componentTree) as unknown as JSONComponent
       return renderJSONComponent(componentDef, {}, {})
     }
 

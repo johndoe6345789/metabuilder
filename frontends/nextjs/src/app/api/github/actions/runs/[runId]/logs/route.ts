@@ -37,7 +37,7 @@ export const GET = async (request: NextRequest, { params }: RouteParams) => {
       jobLimit,
     })
 
-    if (!result) {
+    if (result === null || result === undefined) {
       return NextResponse.json({ error: 'Failed to fetch workflow logs' }, { status: 500 })
     }
 

@@ -4,7 +4,7 @@ import { ThemeContext } from './theme-context'
 
 export function useTheme() {
   const context = useContext(ThemeContext)
-  if (!context) {
+  if (context === null || context === undefined) {
     throw new Error('useTheme must be used within Providers')
   }
   return context

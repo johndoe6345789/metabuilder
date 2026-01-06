@@ -42,7 +42,7 @@ export const authenticateUser = async (
     where: { username },
   })
 
-  if (!userRecord) {
+  if (userRecord === null || userRecord === undefined) {
     return { success: false, user: null, error: 'user_not_found' }
   }
 

@@ -24,8 +24,8 @@ export async function setComments(comments: Comment[]): Promise<void> {
       userId: comment.userId,
       content: comment.content,
       createdAt: BigInt(comment.createdAt),
-      updatedAt: comment.updatedAt ? BigInt(comment.updatedAt) : null,
-      parentId: comment.parentId,
+      updatedAt: comment.updatedAt !== null && comment.updatedAt !== undefined ? BigInt(comment.updatedAt) : null,
+      parentId: comment.parentId ?? null,
     })
   }
 }

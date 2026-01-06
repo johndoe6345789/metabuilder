@@ -36,7 +36,7 @@ describe('getAppConfig', () => {
 
     const result = await getAppConfig()
 
-    if (expected) {
+    if (expected !== null && expected !== undefined) {
       expect(result).toMatchObject(expected)
     } else {
       expect(result).toBeNull()

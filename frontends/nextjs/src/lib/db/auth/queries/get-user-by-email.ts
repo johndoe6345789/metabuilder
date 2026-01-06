@@ -15,11 +15,11 @@ export const getUserByEmail = async (
   const record = await adapter.findFirst('User', {
     where: {
       email,
-      ...(options?.tenantId ? { tenantId: options.tenantId } : {}),
+      ...(options?.tenantId !== null && options?.tenantId !== undefined ? { tenantId: options.tenantId } : {}),
     },
   })
 
-  if (!record) {
+  if (record === null || record === undefined) {
     return null
   }
 

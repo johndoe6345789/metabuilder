@@ -17,7 +17,7 @@ export function compile(source: string, _options?: CompileOptions): CompileResul
   return { code: source }
 }
 
-export function loadAndInjectStyles(_packageId: string): string {
+export function loadAndInjectStyles(_packageId: string): Promise<string> {
   // TODO: Implement style loading and injection
-  return ''
+  return Promise.resolve('')
 }

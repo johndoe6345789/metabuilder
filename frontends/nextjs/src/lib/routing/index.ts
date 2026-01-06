@@ -65,9 +65,9 @@ export function parseRestfulRequest(
 export function executeDbalOperation(
   _op: unknown,
   _context?: unknown
-): { success: boolean; data?: unknown; error?: string; meta?: unknown } {
+): Promise<{ success: boolean; data?: unknown; error?: string; meta?: unknown }> {
   // TODO: Implement DBAL operation execution
-  return { success: false, error: 'Not implemented' }
+  return Promise.resolve({ success: false, error: 'Not implemented' })
 }
 
 export function executePackageAction(
@@ -76,9 +76,9 @@ export function executePackageAction(
   _action: unknown,
   _id: unknown,
   _context?: unknown
-): { success: boolean; data?: unknown; error?: string } {
+): Promise<{ success: boolean; data?: unknown; error?: string }> {
   // TODO: Implement package action execution
-  return { success: false, error: 'Not implemented' }
+  return Promise.resolve({ success: false, error: 'Not implemented' })
 }
 
 export interface TenantValidationResult {
@@ -91,9 +91,9 @@ export function validateTenantAccess(
   _user: unknown,
   _tenant: unknown,
   _minLevel: unknown
-): TenantValidationResult {
+): Promise<TenantValidationResult> {
   // TODO: Implement tenant access validation
-  return { allowed: false, reason: 'Not implemented' }
+  return Promise.resolve({ allowed: false, reason: 'Not implemented' })
 }
 
 // Re-export auth functions
