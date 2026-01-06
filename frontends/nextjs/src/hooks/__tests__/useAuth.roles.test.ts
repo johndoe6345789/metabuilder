@@ -15,7 +15,7 @@ const waitFor = async (callback: () => boolean | void, timeout = 1000) => {
       const result = callback()
       if (result === false) continue
       return
-    } catch (e) {
+    } catch {
       await new Promise(resolve => setTimeout(resolve, 50))
     }
   }

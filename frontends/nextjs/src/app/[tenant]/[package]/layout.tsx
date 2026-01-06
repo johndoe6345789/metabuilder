@@ -25,20 +25,24 @@ interface TenantLayoutProps {
 /**
  * Load package dependencies recursively (1 level deep for now)
  */
-function getPackageDependencies(packageId: string): { id: string; name?: string }[] {
-  const metadata = loadPackageMetadata(packageId)
+async function getPackageDependencies(packageId: string): Promise<{ id: string; name?: string }[]> {
+  const metadata = await loadPackageMetadata(packageId) as { dependencies?: string[]; name?: string; minLevel?: number } | null
   if (!metadata?.dependencies) {
     return []
   }
   
-  return metadata.dependencies.map(depId => {
-    const depMetadata = loadPackageMetadata(depId)
-    return {
-      id: depId,
-      name: depMetadata?.name,
-      minLevel: depMetadata?.minLevel,
-    }
-  })
+  const deps = await Promise.all(
+    metadata.dependencies.map(async depId => {
+      const depMetadata = await loadPackageMetadata(depId) as { name?: string; minLevel?: number } | null
+      return {
+        id: depId,
+        name: depMetadata?.name,
+        minLevel: depMetadata?.minLevel,
+      }
+    })
+  )
+  
+  return deps
 }
 
 export default async function TenantLayout({
@@ -62,7 +66,7 @@ export default async function TenantLayout({
   }
 
   // Load dependencies that this page can also use
-  const additionalPackages = getPackageDependencies(pkg)
+  const additionalPackages = await getPackageDependencies(pkg)
 
   // TODO: Validate tenant exists against database
   // const tenantData = await getTenant(tenant)

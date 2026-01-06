@@ -102,7 +102,7 @@ class PrismaAdapter implements DBALAdapter {
     try {
       await model.delete({ where: { id } })
       return true
-    } catch (error) {
+    } catch {
       return false
     }
   }

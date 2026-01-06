@@ -18,8 +18,8 @@ export function useLevelRouting(): LevelRouting {
       return level >= 0
     },
     redirectToLevel: (level: number) => {
-      // TODO: Implement redirect logic
-      console.log(`Redirecting to level ${level}`)
+      // TODO: Implement redirect logic (suppress console warning for now)
+      void level
     },
   }
 }

@@ -127,7 +127,7 @@ async function handleRequest(
 
     // Build response with metadata
     const responseData = result.meta 
-      ? { data: result.data, ...result.meta }
+      ? { data: result.data, ...(result.meta as Record<string, unknown>) }
       : result.data
 
     // Map operation to appropriate status code
