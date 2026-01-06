@@ -9,8 +9,8 @@ export interface LoginCredentials {
   password: string
 }
 
-export async function login(_identifier: string, _password: string): Promise<User> {
+export function login(_identifier: string, _password: string): Promise<User> {
   // TODO: Implement login
   // For now, throw an error to indicate not implemented
-  throw new Error('Login not implemented')
+  return Promise.reject(new Error('Login not implemented'))
 }

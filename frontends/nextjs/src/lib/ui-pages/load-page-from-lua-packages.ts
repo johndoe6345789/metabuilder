@@ -4,7 +4,7 @@
 
 import type { PageConfig } from '../types/level-types'
 
-export function loadPageFromLuaPackages(_b_path: string): PageConfig | null {
+export function loadPageFromLuaPackages(_b_path: string): Promise<PageConfig | null> {
   // TODO: Implement page loading from Lua packages
-  return null
+  return Promise.resolve(null)
 }

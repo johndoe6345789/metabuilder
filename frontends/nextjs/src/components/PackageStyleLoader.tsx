@@ -40,7 +40,7 @@ export function PackageStyleLoader({ packages }: PackageStyleLoaderProps) {
     }
 
     if (packages.length > 0) {
-      loadStyles()
+      void loadStyles()
     }
   }, [packages])
 
