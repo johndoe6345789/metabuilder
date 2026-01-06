@@ -13,5 +13,13 @@ export async function getTenantContext(
   if (!this.tenants.has(tenantId)) {
     return null
   }
-  return { tenantId, canRead: true, canWrite: true, canDelete: true }
+  return {
+    tenantId,
+    canRead: (_resource: string) => true,
+    canWrite: (_resource: string) => true,
+    canDelete: (_resource: string) => true,
+    canUploadBlob: (_sizeBytes: number) => true,
+    canCreateRecord: () => true,
+    canAddToList: (_additionalItems: number) => true,
+  }
 }
