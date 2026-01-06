@@ -26,6 +26,6 @@ export async function getComments(): Promise<Comment[]> {
     content: c.content,
     createdAt: Number(c.createdAt),
     updatedAt: (c.updatedAt !== null && c.updatedAt !== undefined) ? Number(c.updatedAt) : undefined,
-    parentId: (c.parentId !== null && c.parentId !== undefined) ? c.parentId : undefined,
+    parentId: (c.parentId !== null && c.parentId !== undefined && c.parentId !== '') ? c.parentId : undefined,
   }))
 }

@@ -44,18 +44,21 @@ export interface ComponentConfig {
   }
 }
 
+import type { User, Workflow, LuaScript, PageConfig, AppConfiguration, Comment } from '../../types/level-types'
+import type { ModelSchema } from '../../types/schema-types'
+
 /**
  * Full database schema type
  */
 export interface DatabaseSchema {
-  users: import('../../types/level-types').User[]
+  users: User[]
   credentials: Record<string, string>
-  workflows: import('../../types/level-types').Workflow[]
-  luaScripts: import('../../types/level-types').LuaScript[]
-  pages: import('../../types/level-types').PageConfig[]
-  schemas: import('../../types/schema-types').ModelSchema[]
-  appConfig: import('../../types/level-types').AppConfiguration
-  comments: import('../../types/level-types').Comment[]
+  workflows: Workflow[]
+  luaScripts: LuaScript[]
+  pages: PageConfig[]
+  schemas: ModelSchema[]
+  appConfig: AppConfiguration
+  comments: Comment[]
   componentHierarchy: Record<string, ComponentNode>
   componentConfigs: Record<string, ComponentConfig>
   godCredentialsExpiry: number
