@@ -28,8 +28,12 @@ export function middleware(request: NextRequest) {
 
     // Add tenant info to headers for downstream use
     const response = NextResponse.next()
-    response.headers.set('x-tenant-id', tenant)
-    response.headers.set('x-package-id', pkg)
+    if (tenant) {
+      response.headers.set('x-tenant-id', tenant)
+    }
+    if (pkg) {
+      response.headers.set('x-package-id', pkg)
+    }
     
     return response
   }

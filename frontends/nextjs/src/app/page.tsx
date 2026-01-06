@@ -30,7 +30,7 @@ export default async function RootPage() {
   }> }
 
   if (godPanelRoutes.data.length > 0) {
-    const route = godPanelRoutes.data[0]
+    const route = godPanelRoutes.data[0]!  // Safe: length check ensures element exists
 
     // TODO: Implement proper session/user context for permission checks
     // For now, we'll allow access to public routes and skip auth checks

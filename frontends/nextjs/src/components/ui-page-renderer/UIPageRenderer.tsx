@@ -23,7 +23,7 @@ export function UIPageRenderer({ pageData }: UIPageRendererProps) {
 
   // Provide action handlers via context
   return (
-    <UIPageActionsContext.Provider value={pageData.actions}>
+    <UIPageActionsContext.Provider value={pageData.actions || {}}>
       {elements}
     </UIPageActionsContext.Provider>
   )

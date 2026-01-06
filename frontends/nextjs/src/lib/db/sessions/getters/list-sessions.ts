@@ -8,7 +8,8 @@ export async function listSessions(options?: ListSessionsOptions): Promise<Sessi
     ? await adapter.list('Session', { filter: { userId: options.userId } })
     : await adapter.list('Session')
 
-  const sessions = result.data.map(mapSessionRecord)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sessions = (result.data as any[]).map(mapSessionRecord)
 
   if (options?.includeExpired) {
     return sessions
