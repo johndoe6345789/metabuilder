@@ -40,23 +40,23 @@ interface RequestOptions {
 function buildQueryString(options: RequestOptions): string {
   const params = new URLSearchParams()
 
-  if (options.take) params.set('take', options.take.toString())
-  if (options.skip) params.set('skip', options.skip.toString())
+  if (options.take !== null && options.take !== undefined) params.set('take', options.take.toString())
+  if (options.skip !== null && options.skip !== undefined) params.set('skip', options.skip.toString())
 
-  if (options.where) {
+  if (options.where !== null && options.where !== undefined) {
     for (const [key, value] of Object.entries(options.where)) {
       params.set(`where.${key}`, String(value))
     }
   }
 
-  if (options.orderBy) {
+  if (options.orderBy !== null && options.orderBy !== undefined) {
     for (const [key, value] of Object.entries(options.orderBy)) {
       params.set(`orderBy.${key}`, value)
     }
   }
 
   const query = params.toString()
-  return query ? `?${query}` : ''
+  return query.length > 0 ? `?${query}` : ''
 }
 
 /**

@@ -99,7 +99,10 @@ describe('useAuth session flows', () => {
   it('authenticates on login', async () => {
     const { result, unmount } = renderHook(() => useAuth())
 
-    mockLogin.mockResolvedValue(createUser())
+    mockLogin.mockResolvedValue({
+      success: true,
+      user: createUser(),
+    })
 
     await waitForIdle(result)
     await act(async () => {
@@ -120,7 +123,10 @@ describe('useAuth session flows', () => {
   it('clears user on logout', async () => {
     const { result, unmount } = renderHook(() => useAuth())
 
-    mockLogin.mockResolvedValue(createUser())
+    mockLogin.mockResolvedValue({
+      success: true,
+      user: createUser(),
+    })
 
     await waitForIdle(result)
     await act(async () => {
@@ -140,13 +146,14 @@ describe('useAuth session flows', () => {
   it('registers and authenticates', async () => {
     const { result, unmount } = renderHook(() => useAuth())
 
-    mockRegister.mockResolvedValue(
-      createUser({
+    mockRegister.mockResolvedValue({
+      success: true,
+      user: createUser({
         id: 'user_2',
         username: 'newbie',
         email: 'newbie@example.com',
-      })
-    )
+      }),
+    })
 
     await waitForIdle(result)
     await act(async () => {
@@ -168,7 +175,10 @@ describe('useAuth session flows', () => {
     const first = renderHook(() => useAuth())
     const second = renderHook(() => useAuth())
 
-    mockLogin.mockResolvedValue(createUser({ email: 'sync@example.com', username: 'sync' }))
+    mockLogin.mockResolvedValue({
+      success: true,
+      user: createUser({ email: 'sync@example.com', username: 'sync' }),
+    })
 
     await waitForIdle(first.result)
     await waitForIdle(second.result)
