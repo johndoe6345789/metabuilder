@@ -4,14 +4,44 @@ import { NextResponse } from 'next/server'
  * Routing utilities (stub)
  */
 
-export function parseRoute(_b_path: string): Record<string, string> {
-  // TODO: Implement route parsing
-  return {}
+export function parseRoute(path: string): Record<string, string> {
+  const params: Record<string, string> = {}
+  
+  // Extract query parameters from path
+  const [pathname = '', queryString] = path.split('?')
+  
+  if (queryString !== undefined && queryString.length > 0) {
+    const searchParams = new URLSearchParams(queryString)
+    searchParams.forEach((value, key) => {
+      params[key] = value
+    })
+  }
+  
+  // Extract path segments
+  const segments = pathname.split('/').filter(s => s.length > 0)
+  segments.forEach((segment, index) => {
+    params[`segment${index}`] = segment
+  })
+  
+  return params
 }
 
-export function buildRoute(template: string, _b_params: Record<string, string>): string {
-  // TODO: Implement route building
-  return template
+export function buildRoute(template: string, params: Record<string, string>): string {
+  let route = template
+  
+  // Replace named parameters in the template
+  Object.entries(params).forEach(([key, value]) => {
+    const placeholder = `{${key}}`
+    const colonPlaceholder = `:${key}`
+    
+    if (route.includes(placeholder)) {
+      route = route.replace(placeholder, value)
+    } else if (route.includes(colonPlaceholder)) {
+      route = route.replace(colonPlaceholder, value)
+    }
+  })
+  
+  return route
 }
 
 export const STATUS = {
