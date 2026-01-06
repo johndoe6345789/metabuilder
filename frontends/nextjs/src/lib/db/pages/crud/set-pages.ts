@@ -9,8 +9,7 @@ export async function setPages(pages: PageConfig[]): Promise<void> {
 
   // Delete existing pages
   const existing = await adapter.list('PageConfig')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  for (const p of existing.data as any[]) {
+  for (const p of existing.data as Array<{ id: string | number }>) {
     await adapter.delete('PageConfig', p.id)
   }
 

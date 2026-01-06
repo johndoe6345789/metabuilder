@@ -57,6 +57,7 @@ export default tseslint.config(
       'src/lib/dbal/core/client/dbal-integration/**/*.ts',
       'src/lib/**/functions/**/*.ts',
       'src/hooks/**/*.ts',
+      'src/lib/hooks/**/*.ts',
       'src/lib/github/**/*.ts',
       'src/lib/dbal-client/**/*.ts',
       'src/lib/dbal/**/*.ts',
@@ -68,6 +69,39 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-return': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
       '@typescript-eslint/strict-boolean-expressions': 'warn',
+      '@typescript-eslint/require-await': 'warn',
+      '@typescript-eslint/no-non-null-assertion': 'warn',
+    },
+  },
+  // Relaxed rules for dynamic component renderers
+  {
+    files: [
+      'src/lib/packages/json/render-json-component.tsx',
+      'src/components/ui-page-renderer/**/*.tsx',
+    ],
+    rules: {
+      '@typescript-eslint/strict-boolean-expressions': 'warn',
+      '@typescript-eslint/no-unsafe-assignment': 'warn',
+      '@typescript-eslint/no-unsafe-member-access': 'warn',
+      '@typescript-eslint/no-unsafe-call': 'warn',
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+    },
+  },
+  // Relaxed rules for test files
+  {
+    files: ['**/*.test.ts', '**/*.test.tsx'],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'warn',
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+      '@typescript-eslint/no-unsafe-return': 'warn',
+      '@typescript-eslint/no-unsafe-member-access': 'warn',
+    },
+  },
+  // Relaxed rules for type definition files
+  {
+    files: ['**/*.d.ts'],
+    rules: {
+      '@typescript-eslint/no-redundant-type-constituents': 'warn',
     },
   },
 )

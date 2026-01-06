@@ -9,8 +9,9 @@ export async function deleteSessionByToken(token: string): Promise<boolean> {
   const result = (await adapter.list('Session', { filter: { token } })) as {
     data: DBALSessionRecord[]
   }
-  if (!result.data.length) return false
-  const session = result.data[0]!  // Safe: checked length > 0
+  if (result.data.length === 0) return false
+  const session = result.data[0]
+  if (session === null || session === undefined) return false
   await adapter.delete('Session', session.id)
   return true
 }

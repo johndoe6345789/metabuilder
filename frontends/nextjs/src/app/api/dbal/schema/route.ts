@@ -58,8 +58,8 @@ export function GET() {
  */
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const { action, id } = body as { action: string; id?: string }
+    const body = await request.json() as { action: string; id?: string }
+    const { action, id } = body
     
     const registryPath = getRegistryPath()
     const registry = loadSchemaRegistry(registryPath)
@@ -182,7 +182,7 @@ function handleApprove(registry: SchemaRegistry, registryPath: string, id?: stri
 }
 
 function handleReject(registry: SchemaRegistry, registryPath: string, id?: string) {
-  if (!id) {
+  if (id === null || id === undefined || id === '') {
     return NextResponse.json(
       { status: 'error', error: 'Migration ID required' },
       { status: 400 }

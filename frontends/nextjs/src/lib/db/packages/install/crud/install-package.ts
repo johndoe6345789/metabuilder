@@ -9,7 +9,7 @@ export async function installPackage(packageData: InstalledPackage): Promise<voi
   const existing = await adapter.findFirst('InstalledPackage', {
     where: { packageId: packageData.packageId },
   })
-  if (!existing) {
+  if (existing === null || existing === undefined) {
     await adapter.create('InstalledPackage', {
       packageId: packageData.packageId,
       installedAt: BigInt(packageData.installedAt),

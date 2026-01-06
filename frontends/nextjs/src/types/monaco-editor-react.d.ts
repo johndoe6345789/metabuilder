@@ -30,5 +30,5 @@ declare module '@monaco-editor/react' {
   export default Editor
 
   export function useMonaco(): Monaco | null
-  export function loader(): Promise<Monaco | never>
+  export function loader(): Promise<Monaco>
 }

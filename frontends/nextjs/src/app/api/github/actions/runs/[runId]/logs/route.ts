@@ -48,7 +48,7 @@ export const GET = async (request: NextRequest, { params }: RouteParams) => {
     })
   } catch (error) {
     const status =
-      typeof error === 'object' && error && 'status' in error
+      typeof error === 'object' && error !== null && 'status' in error
         ? Number((error as { status?: number }).status)
         : 500
     const message = error instanceof Error ? error.message : 'Unknown error'

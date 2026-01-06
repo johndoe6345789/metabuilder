@@ -8,8 +8,7 @@ export async function setTenants(tenants: Tenant[]): Promise<void> {
   const adapter = getAdapter()
   // Delete all existing
   const existing = await adapter.list('Tenant')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  for (const item of existing.data as any[]) {
+  for (const item of existing.data as Array<{ id: string | number }>) {
     await adapter.delete('Tenant', item.id)
   }
   // Create new ones
@@ -19,7 +18,7 @@ export async function setTenants(tenants: Tenant[]): Promise<void> {
       name: tenant.name,
       ownerId: tenant.ownerId,
       createdAt: BigInt(tenant.createdAt),
-      homepageConfig: tenant.homepageConfig ? JSON.stringify(tenant.homepageConfig) : null,
+      homepageConfig: tenant.homepageConfig !== null && tenant.homepageConfig !== undefined ? JSON.stringify(tenant.homepageConfig) : null,
     })
   }
 }
