@@ -1,4 +1,4 @@
-import type { CssCategory } from '../../../core/types'
+import type { CssCategory } from '../../../css-classes/types'
 import { buildAdvancedCssCategories } from './categories/advanced'
 import { buildBaseCssCategories } from './categories/base'
 import { buildExperimentalCssCategories } from './categories/experimental'

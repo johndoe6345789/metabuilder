@@ -2,7 +2,7 @@ export interface CssCategory {
   id?: string
   name: string
   description?: string | null
-  classes?: CssClass[] | string
+  classes?: CssClass[] | string[] | string
 }
 
 export interface CssClass {
