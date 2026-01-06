@@ -43,6 +43,18 @@ import { getBlobStorage as getBlobStorageImpl } from './functions/get-blob-stora
 import { getKVStore as getKVStoreImpl } from './functions/get-k-v-store'
 import { getTenantContext as getTenantContextImpl } from './functions/get-tenant-context'
 import { getTenantManager as getTenantManagerImpl } from './functions/get-tenant-manager'
+import { handleError as handleErrorImpl } from './functions/handle-error'
+import { isInitialized as isInitializedImpl } from './functions/is-initialized'
+import { kvSet as kvSetImpl } from './functions/kv-set'
+import { kvGet as kvGetImpl } from './functions/kv-get'
+import { kvDelete as kvDeleteImpl } from './functions/kv-delete'
+import { kvListAdd as kvListAddImpl } from './functions/kv-list-add'
+import { kvListGet as kvListGetImpl } from './functions/kv-list-get'
+import { blobUpload as blobUploadImpl } from './functions/blob-upload'
+import { blobDownload as blobDownloadImpl } from './functions/blob-download'
+import { blobDelete as blobDeleteImpl } from './functions/blob-delete'
+import { blobList as blobListImpl } from './functions/blob-list'
+import { blobGetMetadata as blobGetMetadataImpl } from './functions/blob-get-metadata'
 
 // Create a namespace object for backward compatibility
 export const dbal = {
@@ -55,6 +67,18 @@ export const dbal = {
   getKVStore: getKVStoreImpl,
   getTenantContext: getTenantContextImpl,
   getTenantManager: getTenantManagerImpl,
+  handleError: handleErrorImpl,
+  isInitialized: isInitializedImpl,
+  kvSet: kvSetImpl,
+  kvGet: kvGetImpl,
+  kvDelete: kvDeleteImpl,
+  kvListAdd: kvListAddImpl,
+  kvListGet: kvListGetImpl,
+  blobUpload: blobUploadImpl,
+  blobDownload: blobDownloadImpl,
+  blobDelete: blobDeleteImpl,
+  blobList: blobListImpl,
+  blobGetMetadata: blobGetMetadataImpl,
 }
 
 // Type alias for backward compatibility

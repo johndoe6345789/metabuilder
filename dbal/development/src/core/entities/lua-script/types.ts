@@ -10,6 +10,8 @@ export interface CreateLuaScriptInput {
   isActive?: boolean;
   isSandboxed?: boolean;
   timeoutMs?: number;
+  allowedGlobals?: string[];
+  createdBy?: string;
 }
 
 export interface UpdateLuaScriptInput {
@@ -19,6 +21,8 @@ export interface UpdateLuaScriptInput {
   isActive?: boolean;
   isSandboxed?: boolean;
   timeoutMs?: number;
+  allowedGlobals?: string[];
+  createdBy?: string;
 }
 
 export interface LuaScript {
@@ -26,9 +30,11 @@ export interface LuaScript {
   name: string;
   code: string;
   description?: string;
-  isActive: boolean;
+  isActive?: boolean;
   isSandboxed: boolean;
   timeoutMs: number;
+  allowedGlobals?: string[];
+  createdBy?: string;
   createdAt: Date;
   updatedAt: Date;
 }

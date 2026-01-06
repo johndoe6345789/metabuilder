@@ -7,7 +7,7 @@ export interface PaginationRenderItemParams {
   disabled: boolean
 }
 
-export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, 'color'> {
+export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, 'color' | 'onChange'> {
   count?: number
   page?: number
   onChange?: (page: number) => void

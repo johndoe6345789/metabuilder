@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react'
 
-export interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   children?: React.ReactNode
   value?: any
   onChange?: (event: React.SyntheticEvent, value: any) => void

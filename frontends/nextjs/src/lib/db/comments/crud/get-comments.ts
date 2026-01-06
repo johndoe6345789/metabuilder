@@ -4,6 +4,8 @@ import type { Comment } from '@/lib/types/level-types'
 type DBALCommentRecord = {
   id: string
   userId: string
+  entityType: string
+  entityId: string
   content: string
   createdAt: number | string | Date
   updatedAt?: number | string | Date | null
@@ -19,6 +21,8 @@ export async function getComments(): Promise<Comment[]> {
   return result.data.map(c => ({
     id: c.id,
     userId: c.userId,
+    entityType: c.entityType,
+    entityId: c.entityId,
     content: c.content,
     createdAt: Number(c.createdAt),
     updatedAt: c.updatedAt ? Number(c.updatedAt) : undefined,

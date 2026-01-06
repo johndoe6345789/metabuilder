@@ -1,6 +1,6 @@
 import React from 'react'
 
-export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'color'> {
+export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'color' | 'content'> {
   children?: React.ReactNode
   content?: React.ReactNode
   dot?: boolean

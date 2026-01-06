@@ -10,6 +10,8 @@ export interface CreateWorkflowInput {
   isActive?: boolean;
   trigger?: string;
   triggerConfig?: any;
+  steps?: any[];
+  createdBy?: string;
 }
 
 export interface UpdateWorkflowInput {
@@ -19,6 +21,8 @@ export interface UpdateWorkflowInput {
   isActive?: boolean;
   trigger?: string;
   triggerConfig?: any;
+  steps?: any[];
+  createdBy?: string;
 }
 
 export interface Workflow {
@@ -26,9 +30,11 @@ export interface Workflow {
   name: string;
   description?: string;
   definition?: any;
-  isActive: boolean;
+  isActive?: boolean;
   trigger?: string;
   triggerConfig?: any;
+  steps?: any[];
+  createdBy?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -50,4 +56,23 @@ export interface Result<T> {
     code: string;
     message: string;
   };
+}
+
+export interface ListOptions {
+  filter?: Record<string, any>;
+  sort?: Record<string, 'asc' | 'desc'>;
+  page?: number;
+  limit?: number;
+  skip?: number;
+  take?: number;
+  where?: Record<string, any>;
+  orderBy?: Record<string, 'asc' | 'desc'>;
+}
+
+export interface ListResult<T> {
+  items?: T[];
+  data?: T[];
+  total: number;
+  skip?: number;
+  take?: number;
 }

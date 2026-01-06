@@ -16,9 +16,20 @@ export async function listBlobs(
       MaxKeys: options.maxKeys || 1000,
     })
 
-    const response = await context.s3Client.send(command)
+    const response = await context.s3Client.send(command) as {
+      Contents?: Array<{
+        Key?: string
+        Size?: number
+        ETag?: string
+        LastModified?: Date
+      }>
+      NextContinuationToken?: string
+      IsTruncated?: boolean
+    }
 
-    const items: BlobMetadata[] = (response.Contents || []).map(obj => ({
+    const contents = response.Contents
+
+    const items: BlobMetadata[] = (contents || []).map(obj => ({
       key: obj.Key || '',
       size: obj.Size || 0,
       contentType: 'application/octet-stream',

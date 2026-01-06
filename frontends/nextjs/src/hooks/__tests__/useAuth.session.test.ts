@@ -1,4 +1,4 @@
-import { act, renderHook, waitFor } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { useAuth } from '@/hooks/useAuth'
@@ -7,6 +7,21 @@ import { login as loginRequest } from '@/lib/auth/api/login'
 import { logout as logoutRequest } from '@/lib/auth/api/logout'
 import { register as registerRequest } from '@/lib/auth/api/register'
 import type { User } from '@/lib/level-types'
+
+// Simple waitFor implementation
+const waitFor = async (callback: () => boolean | void, timeout = 1000) => {
+  const start = Date.now()
+  while (Date.now() - start < timeout) {
+    try {
+      const result = callback()
+      if (result === false) continue
+      return
+    } catch {
+      await new Promise(resolve => setTimeout(resolve, 50))
+    }
+  }
+  throw new Error('waitFor timed out')
+}
 
 vi.mock('@/lib/auth/api/fetch-session', () => ({
   fetchSession: vi.fn(),

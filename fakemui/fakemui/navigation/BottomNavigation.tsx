@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react'
 
-export interface BottomNavigationProps extends React.HTMLAttributes<HTMLElement> {
+export interface BottomNavigationProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
   children?: React.ReactNode
   value?: any
   onChange?: (event: React.SyntheticEvent, value: any) => void

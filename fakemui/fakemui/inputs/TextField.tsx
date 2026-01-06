@@ -33,7 +33,7 @@ export const TextField = forwardRef<HTMLInputElement | HTMLSelectElement, TextFi
             id={id}
             error={error}
             className="select--full-width"
-            {...(props as React.SelectHTMLAttributes<HTMLSelectElement>)}
+            {...(props as unknown as React.SelectHTMLAttributes<HTMLSelectElement>)}
           >
             {children}
           </Select>

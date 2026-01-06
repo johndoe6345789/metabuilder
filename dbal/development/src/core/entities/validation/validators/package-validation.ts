@@ -2,7 +2,7 @@
  * @file package-validation.ts
  * @description Package validation functions
  */
-import { isValidSemver } from '../../validation/is-valid-semver'
+import { isValidSemver } from '../../../validation/is-valid-semver'
 
 const PACKAGE_ID_REGEX = /^[a-z0-9_]+$/
 
