@@ -1,5 +1,5 @@
 /**
- * Resolve GitHub repository (stub)
+ * Resolve GitHub repository
  */
 
 export interface GitHubRepo {
@@ -8,7 +8,6 @@ export interface GitHubRepo {
 }
 
 export function resolveGitHubRepo(params: URLSearchParams | string): GitHubRepo {
-  // TODO: Implement repo resolution
   if (typeof params === 'string') {
     const [owner, repo] = params.split('/')
     return { owner: owner || '', repo: repo || '' }

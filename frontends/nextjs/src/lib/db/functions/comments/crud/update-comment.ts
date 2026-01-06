@@ -22,7 +22,9 @@ export const updateComment = async (
 ): Promise<void> => {
   const data: CommentUpdateData = {}
   if (updates.content !== undefined) data.content = updates.content
-  if (updates.updatedAt !== undefined) data.updatedAt = BigInt(updates.updatedAt)
+  if (updates.updatedAt !== undefined && updates.updatedAt !== null) {
+    data.updatedAt = BigInt(updates.updatedAt)
+  }
 
   await prisma.comment.update({
     where: { id: commentId },

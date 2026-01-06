@@ -36,7 +36,15 @@ export function renderJSONComponent(
   }
 
   try {
-    return renderTemplate(component.render.template, context, ComponentRegistry)
+    const template = component.render.template
+    if (!template) {
+      return (
+        <div style={{ padding: '1rem', border: '1px solid yellow', borderRadius: '0.25rem' }}>
+          <strong>Warning:</strong> Component {component.name} has no template
+        </div>
+      )
+    }
+    return renderTemplate(template, context, ComponentRegistry)
   } catch (error) {
     return (
       <div style={{ padding: '1rem', border: '1px solid red', borderRadius: '0.25rem' }}>
@@ -69,7 +77,11 @@ function renderTemplate(
 
   // Handle conditional rendering
   if (nodeObj.type === 'conditional') {
-    const condition = evaluateExpression(nodeObj.condition, context)
+    const conditionValue = nodeObj.condition
+    if (!conditionValue) {
+      return <></>
+    }
+    const condition = evaluateExpression(conditionValue, context)
     if (condition && nodeObj.then) {
       return renderTemplate(nodeObj.then, context, ComponentRegistry)
     } else if (!condition && nodeObj.else) {
@@ -89,7 +101,10 @@ function renderTemplate(
       const props = nodeObj.props
       if (props && typeof props === 'object' && !Array.isArray(props)) {
         for (const [key, value] of Object.entries(props)) {
-          componentProps[key] = evaluateExpression(value, context)
+          const evaluated = evaluateExpression(value, context)
+          if (evaluated !== undefined) {
+            componentProps[key] = evaluated
+          }
         }
       }
 
@@ -134,15 +149,24 @@ function renderTemplate(
   }
 
   if (nodeObj.href) {
-    elementProps.href = evaluateExpression(nodeObj.href, context)
+    const href = evaluateExpression(nodeObj.href, context)
+    if (href !== undefined) {
+      elementProps.href = href
+    }
   }
 
   if (nodeObj.src) {
-    elementProps.src = evaluateExpression(nodeObj.src, context)
+    const src = evaluateExpression(nodeObj.src, context)
+    if (src !== undefined) {
+      elementProps.src = src
+    }
   }
 
   if (nodeObj.alt) {
-    elementProps.alt = evaluateExpression(nodeObj.alt, context)
+    const alt = evaluateExpression(nodeObj.alt, context)
+    if (alt !== undefined) {
+      elementProps.alt = alt
+    }
   }
 
   // Render children
@@ -195,14 +219,14 @@ function getElementType(type: string): string {
 /**
  * Evaluate template expressions like {{variable}}
  */
-function evaluateExpression(expr: JsonValue, context: RenderContext): JsonValue {
+function evaluateExpression(expr: JsonValue, context: RenderContext): JsonValue | undefined {
   if (typeof expr !== 'string') {
     return expr
   }
 
   // Check if it's a template expression
   const templateMatch = expr.match(/^\{\{(.+)\}\}$/)
-  if (templateMatch) {
+  if (templateMatch?.[1]) {
     const expression = templateMatch[1].trim()
     try {
       return evaluateSimpleExpression(expression, context)
@@ -218,16 +242,22 @@ function evaluateExpression(expr: JsonValue, context: RenderContext): JsonValue 
 /**
  * Evaluate simple expressions (no arbitrary code execution)
  */
-function evaluateSimpleExpression(expr: string, context: RenderContext): JsonValue {
+function evaluateSimpleExpression(expr: string, context: RenderContext): JsonValue | undefined {
   // Handle property access like "props.title"
   const parts = expr.split('.')
-  let value: JsonValue = context
+  let value: JsonValue | undefined = context
 
   for (const part of parts) {
     // Handle ternary operator
     if (part.includes('?')) {
       const [condition, branches] = part.split('?')
+      if (!condition || !branches) {
+        return value
+      }
       const [trueBranch, falseBranch] = branches.split(':')
+      if (!trueBranch || !falseBranch) {
+        return value
+      }
       const conditionValue = evaluateSimpleExpression(condition.trim(), context)
       return conditionValue
         ? evaluateSimpleExpression(trueBranch.trim(), context)
@@ -237,13 +267,15 @@ function evaluateSimpleExpression(expr: string, context: RenderContext): JsonVal
     // Handle negation
     if (part.startsWith('!')) {
       const innerPart = part.substring(1)
-      value = value?.[innerPart]
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        value = (value as Record<string, JsonValue>)[innerPart]
+      }
       return !value
     }
 
     // Handle array access or simple property
-    if (value && typeof value === 'object') {
-      value = value[part]
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      value = (value as Record<string, JsonValue>)[part]
     } else {
       return undefined
     }

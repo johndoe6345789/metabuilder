@@ -12,7 +12,7 @@ import { validateId } from '../validation/validate-id'
 export const deleteUser = async (store: InMemoryStore, id: string): Promise<Result<boolean>> => {
   const idErrors = validateId(id)
   if (idErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] ?? 'Invalid ID' } }
   }
 
   const user = store.users.get(id)

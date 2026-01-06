@@ -16,7 +16,7 @@ export const extendSession = async (
 ): Promise<Result<Session>> => {
   const idErrors = validateId(id)
   if (idErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] || 'Invalid ID' } }
   }
 
   if (additionalSeconds <= 0) {

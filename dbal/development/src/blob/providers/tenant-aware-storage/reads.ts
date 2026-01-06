@@ -7,7 +7,7 @@ export const downloadBuffer = async (deps: TenantAwareDeps, key: string): Promis
   const context = await resolveTenantContext(deps)
   ensurePermission(context, 'read')
 
-  const scopedKey = scopeKey(key, context.namespace)
+  const scopedKey = scopeKey(key, context.namespace ?? '')
   return deps.baseStorage.download(scopedKey)
 }
 
@@ -19,7 +19,7 @@ export const downloadStream = async (
   const context = await resolveTenantContext(deps)
   ensurePermission(context, 'read')
 
-  const scopedKey = scopeKey(key, context.namespace)
+  const scopedKey = scopeKey(key, context.namespace ?? '')
   return deps.baseStorage.downloadStream(scopedKey, options)
 }
 
@@ -32,7 +32,7 @@ export const listBlobs = async (
 
   const scopedOptions: BlobListOptions = {
     ...options,
-    prefix: options.prefix ? scopeKey(options.prefix, context.namespace) : context.namespace,
+    prefix: options.prefix ? scopeKey(options.prefix, context.namespace ?? '') : context.namespace ?? '',
   }
 
   const result = await deps.baseStorage.list(scopedOptions)
@@ -41,7 +41,7 @@ export const listBlobs = async (
     ...result,
     items: result.items.map(item => ({
       ...item,
-      key: unscopeKey(item.key, context.namespace),
+      key: unscopeKey(item.key, context.namespace ?? ''),
     })),
   }
 }
@@ -50,7 +50,7 @@ export const getMetadata = async (deps: TenantAwareDeps, key: string): Promise<B
   const context = await resolveTenantContext(deps)
   ensurePermission(context, 'read')
 
-  const scopedKey = scopeKey(key, context.namespace)
+  const scopedKey = scopeKey(key, context.namespace ?? '')
   const metadata = await deps.baseStorage.getMetadata(scopedKey)
 
   return {
@@ -67,6 +67,6 @@ export const generatePresignedUrl = async (
   const context = await resolveTenantContext(deps)
   ensurePermission(context, 'read')
 
-  const scopedKey = scopeKey(key, context.namespace)
+  const scopedKey = scopeKey(key, context.namespace ?? '')
   return deps.baseStorage.generatePresignedUrl(scopedKey, expiresIn)
 }

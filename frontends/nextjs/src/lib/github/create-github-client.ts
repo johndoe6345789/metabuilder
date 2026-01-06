@@ -1,11 +1,19 @@
 /**
- * Create GitHub client (stub)
+ * Create GitHub client using Octokit
  */
 
-// Using Record<string, unknown> for now since this is a stub
-export type GitHubClient = Record<string, unknown>
+import { Octokit } from 'octokit'
 
-export function createGitHubClient(_token?: string): GitHubClient {
-  // TODO: Implement GitHub client creation
-  return {}
+export type GitHubClient = Octokit
+
+export function createGitHubClient(token?: string): GitHubClient {
+  const authToken = token || process.env.GITHUB_TOKEN
+  
+  if (!authToken) {
+    throw new Error('GitHub token is required. Provide a token parameter or set GITHUB_TOKEN environment variable.')
+  }
+
+  return new Octokit({
+    auth: authToken,
+  })
 }

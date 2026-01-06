@@ -26,18 +26,19 @@ export async function createS3Context(config: BlobStorageConfig): Promise<S3Cont
     }
 
     const { S3Client } = s3Module
+    const s3Client = new S3Client({
+      region: s3Config.region,
+      credentials: s3Config.accessKeyId && s3Config.secretAccessKey ? {
+        accessKeyId: s3Config.accessKeyId,
+        secretAccessKey: s3Config.secretAccessKey,
+      } : undefined,
+      endpoint: s3Config.endpoint,
+      forcePathStyle: s3Config.forcePathStyle,
+    })
 
     return {
       bucket,
-      s3Client: new S3Client({
-        region: s3Config.region,
-        credentials: s3Config.accessKeyId && s3Config.secretAccessKey ? {
-          accessKeyId: s3Config.accessKeyId,
-          secretAccessKey: s3Config.secretAccessKey,
-        } : undefined,
-        endpoint: s3Config.endpoint,
-        forcePathStyle: s3Config.forcePathStyle,
-      })
+      s3Client: s3Client as S3ClientLike,
     }
   } catch (error) {
     throw new Error('AWS SDK @aws-sdk/client-s3 not installed. Install with: npm install @aws-sdk/client-s3')

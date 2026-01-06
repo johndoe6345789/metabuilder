@@ -130,6 +130,8 @@ export function DataGrid({
     if (currentSortModel.length === 0) return rows
     
     const sort = currentSortModel[0]
+    if (!sort) return rows
+    
     return [...rows].sort((a, b) => {
       const aVal = a[sort.field]
       const bVal = b[sort.field]

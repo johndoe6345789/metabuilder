@@ -19,8 +19,8 @@ export async function setValue(
   const existing = state.data.get(scoped)
   const sizeDelta = existing ? sizeBytes - existing.sizeBytes : sizeBytes
 
-  if (sizeDelta > 0 && context.quota.maxDataSizeBytes) {
-    if (context.quota.currentDataSizeBytes + sizeDelta > context.quota.maxDataSizeBytes) {
+  if (sizeDelta > 0 && context.quota?.maxDataSizeBytes) {
+    if ((context.quota.currentDataSizeBytes ?? 0) + sizeDelta > context.quota.maxDataSizeBytes) {
       throw DBALError.forbidden('Quota exceeded: maximum data size reached')
     }
   }
@@ -42,10 +42,10 @@ export async function setValue(
 
   state.data.set(scoped, entry)
 
-  if (sizeDelta > 0) {
+  if (sizeDelta > 0 && context.quota) {
     context.quota.currentDataSizeBytes += sizeDelta
   }
-  if (!existing) {
+  if (!existing && context.quota) {
     context.quota.currentRecords++
   }
 }
@@ -65,8 +65,10 @@ export async function deleteValue(
   if (!existing) return false
 
   state.data.delete(scoped)
-  context.quota.currentDataSizeBytes -= existing.sizeBytes
-  context.quota.currentRecords--
+  if (context.quota) {
+    context.quota.currentDataSizeBytes -= existing.sizeBytes
+    context.quota.currentRecords--
+  }
   return true
 }
 

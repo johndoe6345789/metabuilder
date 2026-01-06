@@ -30,6 +30,7 @@ export function NoSsr({ children, defer = false, fallback = null }: NoSsrProps) 
       }
     } else {
       setMounted(true)
+      return undefined
     }
   }, [defer])
 

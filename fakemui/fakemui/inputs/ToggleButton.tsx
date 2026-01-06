@@ -81,7 +81,7 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
 
 ToggleButton.displayName = 'ToggleButton'
 
-export interface ToggleButtonGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export interface ToggleButtonGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   children?: React.ReactNode
   /** Current selected value(s) */
   value?: string | string[] | null

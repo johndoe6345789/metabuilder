@@ -17,7 +17,7 @@ export const updatePage = async (
 ): Promise<Result<PageView>> => {
   const idErrors = validateId(id)
   if (idErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] ?? 'Invalid ID' } }
   }
 
   const page = store.pages.get(id)
@@ -27,7 +27,7 @@ export const updatePage = async (
 
   const validationErrors = validatePageUpdate(input)
   if (validationErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] ?? 'Validation failed' } }
   }
 
   if (input.slug && input.slug !== page.slug) {

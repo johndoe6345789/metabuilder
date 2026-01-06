@@ -18,7 +18,7 @@ export const uploadBuffer = async (
     throw DBALError.rateLimitExceeded()
   }
 
-  const scopedKey = scopeKey(key, context.namespace)
+  const scopedKey = scopeKey(key, context.namespace ?? '')
   const metadata = await deps.baseStorage.upload(scopedKey, data, options)
   await auditUpload(deps, data.length)
 
@@ -42,7 +42,7 @@ export const uploadStream = async (
     throw DBALError.rateLimitExceeded()
   }
 
-  const scopedKey = scopeKey(key, context.namespace)
+  const scopedKey = scopeKey(key, context.namespace ?? '')
   const metadata = await deps.baseStorage.uploadStream(scopedKey, stream, size, options)
   await auditUpload(deps, size)
 

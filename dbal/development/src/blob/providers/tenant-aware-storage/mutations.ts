@@ -9,7 +9,7 @@ export const deleteBlob = async (deps: TenantAwareDeps, key: string): Promise<bo
   const context = await resolveTenantContext(deps)
   ensurePermission(context, 'delete')
 
-  const scopedKey = scopeKey(key, context.namespace)
+  const scopedKey = scopeKey(key, context.namespace ?? '')
 
   try {
     const metadata = await deps.baseStorage.getMetadata(scopedKey)
@@ -29,7 +29,7 @@ export const exists = async (deps: TenantAwareDeps, key: string): Promise<boolea
   const context = await resolveTenantContext(deps)
   ensurePermission(context, 'read')
 
-  const scopedKey = scopeKey(key, context.namespace)
+  const scopedKey = scopeKey(key, context.namespace ?? '')
   return deps.baseStorage.exists(scopedKey)
 }
 
@@ -42,14 +42,14 @@ export const copyBlob = async (
   ensurePermission(context, 'read')
   ensurePermission(context, 'write')
 
-  const sourceScoped = scopeKey(sourceKey, context.namespace)
+  const sourceScoped = scopeKey(sourceKey, context.namespace ?? '')
   const sourceMetadata = await deps.baseStorage.getMetadata(sourceScoped)
 
   if (!context.canUploadBlob(sourceMetadata.size)) {
     throw DBALError.rateLimitExceeded()
   }
 
-  const destScoped = scopeKey(destKey, context.namespace)
+  const destScoped = scopeKey(destKey, context.namespace ?? '')
   const metadata = await deps.baseStorage.copy(sourceScoped, destScoped)
 
   await auditCopy(deps, sourceMetadata.size)
@@ -62,6 +62,9 @@ export const copyBlob = async (
 
 export const getStats = async (deps: TenantAwareDeps) => {
   const context = await resolveTenantContext(deps)
+  if (!context.quota) {
+    return { count: 0, totalSize: 0 }
+  }
   return {
     count: context.quota.currentBlobCount,
     totalSize: context.quota.currentBlobStorageBytes,

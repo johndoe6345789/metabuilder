@@ -17,7 +17,7 @@ export const updateSession = async (
 ): Promise<Result<Session>> => {
   const idErrors = validateId(id)
   if (idErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] ?? 'Invalid ID' } }
   }
 
   const session = store.sessions.get(id)
@@ -27,7 +27,7 @@ export const updateSession = async (
 
   const validationErrors = validateSessionUpdate(input)
   if (validationErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] ?? 'Validation failed' } }
   }
 
   if (input.userId !== undefined) {

@@ -1,5 +1,5 @@
 /**
- * Parse workflow run logs options (stub)
+ * Parse workflow run logs options
  */
 
 export interface WorkflowRunLogsOptions {
@@ -11,7 +11,6 @@ export interface WorkflowRunLogsOptions {
 }
 
 export function parseWorkflowRunLogsOptions(search: string | URLSearchParams): WorkflowRunLogsOptions {
-  // TODO: Implement option parsing
   const params = typeof search === 'string' ? new URLSearchParams(search) : search
   return {
     tailLines: params.get('tailLines') ? parseInt(params.get('tailLines')!) : undefined,

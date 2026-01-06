@@ -17,7 +17,7 @@ export const updateWorkflow = async (
 ): Promise<Result<Workflow>> => {
   const idErrors = validateId(id)
   if (idErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] || 'Invalid ID' } }
   }
 
   const workflow = store.workflows.get(id)
@@ -27,7 +27,7 @@ export const updateWorkflow = async (
 
   const validationErrors = validateWorkflowUpdate(input)
   if (validationErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] || 'Validation failed' } }
   }
 
   if (input.name && input.name !== workflow.name) {
