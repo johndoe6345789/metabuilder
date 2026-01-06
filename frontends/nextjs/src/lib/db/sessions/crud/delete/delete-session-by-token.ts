@@ -11,7 +11,7 @@ export async function deleteSessionByToken(token: string): Promise<boolean> {
   }
   if (result.data.length === 0) return false
   const session = result.data[0]
-  if (session === null || session === undefined) return false
+  if (session === undefined) return false
   await adapter.delete('Session', session.id)
   return true
 }

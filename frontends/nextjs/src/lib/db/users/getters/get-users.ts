@@ -11,6 +11,6 @@ export type GetUsersOptions = { tenantId: string } | { scope: 'all' }
 export async function getUsers(options: GetUsersOptions): Promise<User[]> {
   const adapter = getAdapter()
   const listOptions = 'tenantId' in options ? { filter: { tenantId: options.tenantId } } : undefined
-  const result = listOptions !== null && listOptions !== undefined ? await adapter.list('User', listOptions) : await adapter.list('User')
+  const result = listOptions !== undefined ? await adapter.list('User', listOptions) : await adapter.list('User')
   return (result.data as Record<string, unknown>[]).map(user => mapUserRecord(user))
 }

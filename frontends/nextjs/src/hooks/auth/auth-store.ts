@@ -18,7 +18,7 @@ export class AuthStore {
     isLoading: false,
   }
 
-  private listeners = new Set<() => void>()
+  private readonly listeners = new Set<() => void>()
   private sessionCheckPromise: Promise<void> | null = null
 
   getState(): AuthState {
@@ -34,7 +34,7 @@ export class AuthStore {
 
   private setState(newState: AuthState): void {
     this.state = newState
-    this.listeners.forEach(listener => listener())
+    this.listeners.forEach(listener => { listener(); })
   }
 
   async ensureSessionChecked(): Promise<void> {

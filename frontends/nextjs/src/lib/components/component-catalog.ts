@@ -13,7 +13,7 @@ export interface ComponentCatalogEntry {
  * TODO: Implement full component catalog functionality
  */
 export class ComponentCatalog {
-  private components = new Map<string, ComponentCatalogEntry>()
+  private readonly components = new Map<string, ComponentCatalogEntry>()
 
   register(name: string, entry: ComponentCatalogEntry): void {
     this.components.set(name, entry)

@@ -4,7 +4,7 @@ import type { ListSessionsOptions, Session } from '../types'
 
 export async function listSessions(options?: ListSessionsOptions): Promise<Session[]> {
   const adapter = getAdapter()
-  const result = options?.userId !== null && options?.userId !== undefined
+  const result = options?.userId !== undefined
     ? await adapter.list('Session', { filter: { userId: options.userId } })
     : await adapter.list('Session')
 
