@@ -30,7 +30,7 @@ export default async function RootPage() {
   }> }
 
   if (godPanelRoutes.data.length > 0) {
-    const route = godPanelRoutes.data[0]!  // Safe: length check ensures element exists
+    const route = godPanelRoutes.data[0] as typeof godPanelRoutes.data[number]  // Safe: length check ensures element exists
 
     // TODO: Implement proper session/user context for permission checks
     // For now, we'll allow access to public routes and skip auth checks
@@ -51,13 +51,13 @@ export default async function RootPage() {
     // }
 
     // If route has full component tree, render it directly
-    if (route.componentTree) {
+    if (route.componentTree !== null && route.componentTree !== undefined && route.componentTree.length > 0) {
       const componentDef = JSON.parse(route.componentTree)
       return renderJSONComponent(componentDef, {}, {})
     }
 
     // Otherwise use the package + component reference
-    if (route.packageId && route.component) {
+    if (route.packageId !== undefined && route.packageId !== null && route.component !== undefined && route.component !== null) {
       const pkg = await loadJSONPackage(`/home/rewrich/Documents/GitHub/metabuilder/packages/${route.packageId}`)
       const component = pkg?.components?.find(c => c.id === route.component || c.name === route.component)
 

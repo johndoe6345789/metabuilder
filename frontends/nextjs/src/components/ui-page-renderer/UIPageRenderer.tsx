@@ -16,7 +16,7 @@ interface UIPageRendererProps {
  */
 export function UIPageRenderer({ pageData }: UIPageRendererProps) {
   // Convert JSON layout to LuaUIComponent structure
-  const layout = pageData.layout as unknown as LuaUIComponent
+  const layout = pageData.layout as LuaUIComponent
 
   // Create React elements from component tree
   const elements = generateComponentTree(layout)

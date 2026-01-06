@@ -26,7 +26,7 @@ export class SchemaRegistry {
 export const schemaRegistry = new SchemaRegistry()
 
 export function loadSchemaRegistry(path?: string): SchemaRegistry {
-  const schemaPath = path || join(process.cwd(), 'schemas', 'registry.json')
+  const schemaPath = path ?? join(process.cwd(), 'schemas', 'registry.json')
   
   if (!existsSync(schemaPath)) {
     return schemaRegistry
@@ -34,14 +34,18 @@ export function loadSchemaRegistry(path?: string): SchemaRegistry {
 
   try {
     const data = readFileSync(schemaPath, 'utf-8')
-    const { schemas, packages } = JSON.parse(data)
+    const parsed: unknown = JSON.parse(data)
     
-    if (Array.isArray(schemas)) {
-      schemas.forEach((schema: ModelSchema) => schemaRegistry.register(schema))
-    }
-    
-    if (packages) {
-      schemaRegistry.packages = packages
+    if (parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      const { schemas, packages } = parsed as { schemas?: unknown; packages?: unknown }
+      
+      if (Array.isArray(schemas)) {
+        schemas.forEach((schema: ModelSchema) => schemaRegistry.register(schema))
+      }
+      
+      if (packages !== null && packages !== undefined && typeof packages === 'object') {
+        schemaRegistry.packages = packages as Record<string, unknown>
+      }
     }
   } catch (error) {
     console.warn(`Failed to load schema registry from ${schemaPath}:`, error instanceof Error ? error.message : String(error))
@@ -51,7 +55,7 @@ export function loadSchemaRegistry(path?: string): SchemaRegistry {
 }
 
 export function saveSchemaRegistry(registry: SchemaRegistry, path?: string): void {
-  const schemaPath = path || join(process.cwd(), 'schemas', 'registry.json')
+  const schemaPath = path ?? join(process.cwd(), 'schemas', 'registry.json')
   
   try {
     const data = {

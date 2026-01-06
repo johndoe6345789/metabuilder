@@ -17,7 +17,7 @@ export interface ListWorkflowRunsOptions {
   perPage?: number
 }
 
-export async function listWorkflowRuns(_options: ListWorkflowRunsOptions): Promise<WorkflowRun[]> {
+export function listWorkflowRuns(_options: ListWorkflowRunsOptions): WorkflowRun[] {
   // TODO: Implement workflow runs listing
   return []
 }

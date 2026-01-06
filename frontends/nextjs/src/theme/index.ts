@@ -25,9 +25,9 @@ export type ThemeVars = Record<ThemeVarKey, string>
  */
 export const applyTheme = (
   theme: Record<string, string>,
-  element: HTMLElement = typeof document !== 'undefined' ? document.documentElement : null!
+  element: HTMLElement | null = typeof document !== 'undefined' ? document.documentElement : null
 ): void => {
-  if (!element) return
+  if (element === null) return
   Object.entries(theme).forEach(([key, value]) => {
     element.style.setProperty(key, value)
   })
@@ -57,7 +57,7 @@ export const themeToCSS = (
  */
 export const cssVar = (varName: string, fallback?: string): string => {
   const name = varName.startsWith('--') ? varName : `--${varName}`
-  return fallback ? `var(${name}, ${fallback})` : `var(${name})`
+  return fallback !== undefined && fallback.length > 0 ? `var(${name}, ${fallback})` : `var(${name})`
 }
 
 /**

@@ -61,7 +61,7 @@ export function useDBAL() {
     },
     list: async (entity: string, params?: Record<string, unknown>) => {
       const queryString = params ? `?${new URLSearchParams(params as Record<string, string>).toString()}` : ''
-      return request('GET', `${entity}${queryString}`) as Promise<unknown[] | null>
+      return request('GET', `${entity}${queryString}`)
     },
     create: async (entity: string, data: unknown) => {
       return request('POST', entity, data)

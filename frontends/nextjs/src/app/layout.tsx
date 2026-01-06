@@ -69,7 +69,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <PackageStyleLoader packages={PACKAGES_WITH_STYLES} />
 
         {/* Render a simple header/footer when package metadata is available */}
-        {headerName ? (
+        {headerName !== undefined && headerName !== null && headerName.length > 0 ? (
           <header className="app-header">{headerName}</header>
         ) : null}
 
@@ -77,7 +77,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {children}
         </Providers>
 
-        {footerName ? (
+        {footerName !== undefined && footerName !== null && footerName.length > 0 ? (
           <footer className="app-footer">{footerName}</footer>
         ) : null}
       </body>

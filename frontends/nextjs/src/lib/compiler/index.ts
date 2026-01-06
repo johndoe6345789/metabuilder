@@ -12,12 +12,12 @@ export interface CompileResult {
   map?: string
 }
 
-export async function compile(source: string, _options?: CompileOptions): Promise<CompileResult> {
+export function compile(source: string, _options?: CompileOptions): CompileResult {
   // TODO: Implement compilation
   return { code: source }
 }
 
-export async function loadAndInjectStyles(_packageId: string): Promise<string> {
+export function loadAndInjectStyles(_packageId: string): string {
   // TODO: Implement style loading and injection
   return ''
 }

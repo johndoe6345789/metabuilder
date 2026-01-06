@@ -46,7 +46,7 @@ async function handleRequest(
   const resolvedParams = await params
   
   // 1. Parse the route
-  const context = await parseRestfulRequest(request, resolvedParams)
+  const context = parseRestfulRequest(request, resolvedParams)
   if ('error' in context) {
     return errorResponse(context.error, context.status)
   }
@@ -54,13 +54,13 @@ async function handleRequest(
   const { route, operation, dbalOp } = context
 
   // 2. Get current user session (may be null for public routes)
-  const { user } = await getSessionUser()
+  const { user } = getSessionUser()
   
   // 3. Validate package exists and user has required level
-  const packageResult = await validatePackageRoute(route.package, route.entity, user)
-  if (!packageResult.allowed) {
-    const status = !user ? STATUS.UNAUTHORIZED : STATUS.FORBIDDEN
-    return errorResponse(packageResult.reason || 'Access denied', status)
+  const packageResult = validatePackageRoute(route.package, route.entity, user)
+  if (packageResult.allowed === false) {
+    const status = user === null ? STATUS.UNAUTHORIZED : STATUS.FORBIDDEN
+    return errorResponse(packageResult.reason ?? 'Access denied', status)
   }
 
   // 4. Validate tenant access

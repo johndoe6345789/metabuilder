@@ -11,7 +11,7 @@ export interface UIPageData {
   actions?: Record<string, LuaActionHandler>
 }
 
-export async function loadPageFromDb(_path: string, _tenantId?: string): Promise<PageConfig | null> {
+export function loadPageFromDb(_path: string, _tenantId?: string): PageConfig | null {
   // TODO: Implement page loading from database
   return null
 }

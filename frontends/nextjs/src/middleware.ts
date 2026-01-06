@@ -14,7 +14,7 @@ export function middleware(request: NextRequest) {
 
   // Skip reserved paths
   const firstSegment = pathname.split('/')[1]
-  if (!firstSegment || isReservedPath(firstSegment)) {
+  if (firstSegment === undefined || firstSegment.length === 0 || isReservedPath(firstSegment)) {
     return NextResponse.next()
   }
 
@@ -28,10 +28,10 @@ export function middleware(request: NextRequest) {
 
     // Add tenant info to headers for downstream use
     const response = NextResponse.next()
-    if (tenant) {
+    if (tenant !== undefined && tenant.length > 0) {
       response.headers.set('x-tenant-id', tenant)
     }
-    if (pkg) {
+    if (pkg !== undefined && pkg.length > 0) {
       response.headers.set('x-package-id', pkg)
     }
     

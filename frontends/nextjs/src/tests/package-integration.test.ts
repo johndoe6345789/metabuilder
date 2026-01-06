@@ -70,7 +70,7 @@ describe('Package System Integration', () => {
       visited.add(pkgId)
 
       const pkg = packages.find(p => p.packageId === pkgId)
-      if (!pkg) return visited
+      if (pkg === null || pkg === undefined) return visited
 
       pkg.dependencies.forEach((depId: string) => {
         getDependencies(depId, new Set(visited))

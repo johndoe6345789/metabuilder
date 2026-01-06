@@ -50,12 +50,12 @@ const nextConfig: NextConfig = {
   turbopack: {},
   
   // Redirects for old routes (if needed)
-  async redirects() {
+  redirects() {
     return []
   },
   
   // Headers for security and CORS
-  async headers() {
+  headers() {
     return [
       {
         source: '/api/:path*',

@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 
 import { PERMISSION_LEVELS } from '@/app/levels/levels-data'
 
-export async function GET(_request: NextRequest) {
+export function GET(_request: NextRequest) {
   return NextResponse.json({
     status: 'ok',
     levelCount: Object.keys(PERMISSION_LEVELS).length,
