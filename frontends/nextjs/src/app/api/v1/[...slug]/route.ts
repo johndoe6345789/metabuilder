@@ -125,10 +125,10 @@ async function handleRequest(
     if (!result.success) {
       // Map common errors to appropriate status codes
       const errorMsg = result.error ?? 'Operation failed'
-      if (errorMsg !== null && errorMsg !== undefined && errorMsg.includes('not found')) {
+      if (errorMsg?.includes('not found') === true) {
         return errorResponse(errorMsg, STATUS.NOT_FOUND)
       }
-      if (errorMsg !== null && errorMsg !== undefined && errorMsg.includes('required')) {
+      if (errorMsg?.includes('required') === true) {
         return errorResponse(errorMsg, STATUS.BAD_REQUEST)
       }
       return errorResponse(errorMsg, STATUS.INTERNAL_ERROR)

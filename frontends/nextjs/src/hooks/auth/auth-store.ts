@@ -38,11 +38,9 @@ export class AuthStore {
   }
 
   async ensureSessionChecked(): Promise<void> {
-    if (this.sessionCheckPromise === null) {
-      this.sessionCheckPromise = this.refresh().finally(() => {
-        this.sessionCheckPromise = null
-      })
-    }
+    this.sessionCheckPromise ??= this.refresh().finally(() => {
+      this.sessionCheckPromise = null
+    })
     return this.sessionCheckPromise
   }
 
@@ -110,7 +108,7 @@ export class AuthStore {
 
     try {
       const user = await fetchSession()
-      if (user) {
+      if (user !== null && user !== undefined) {
         this.setState({
           user: mapUserToAuthUser(user),
           isAuthenticated: true,
