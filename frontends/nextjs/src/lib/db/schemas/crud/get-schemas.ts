@@ -26,10 +26,10 @@ export async function getSchemas(): Promise<ModelSchema[]> {
     label: s.label ?? undefined,
     labelPlural: s.labelPlural ?? undefined,
     icon: s.icon ?? undefined,
-    fields: JSON.parse(s.fields) as ModelSchema['fields'],
-    listDisplay: (s.listDisplay !== null && s.listDisplay !== undefined) ? JSON.parse(s.listDisplay) as string[] : undefined,
-    listFilter: (s.listFilter !== null && s.listFilter !== undefined) ? JSON.parse(s.listFilter) as string[] : undefined,
-    searchFields: (s.searchFields !== null && s.searchFields !== undefined) ? JSON.parse(s.searchFields) as string[] : undefined,
-    ordering: (s.ordering !== null && s.ordering !== undefined) ? JSON.parse(s.ordering) as string[] : undefined,
+    fields: s.fields,
+    listDisplay: s.listDisplay ?? undefined,
+    listFilter: s.listFilter ?? undefined,
+    searchFields: s.searchFields ?? undefined,
+    ordering: s.ordering ?? undefined,
   }))
 }

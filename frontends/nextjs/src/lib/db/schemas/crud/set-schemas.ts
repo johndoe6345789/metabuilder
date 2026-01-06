@@ -20,11 +20,11 @@ export async function setSchemas(schemas: ModelSchema[]): Promise<void> {
       label: schema.label,
       labelPlural: schema.labelPlural,
       icon: schema.icon,
-      fields: JSON.stringify(schema.fields),
-      listDisplay: (schema.listDisplay !== null && schema.listDisplay !== undefined) ? JSON.stringify(schema.listDisplay) : null,
-      listFilter: (schema.listFilter !== null && schema.listFilter !== undefined) ? JSON.stringify(schema.listFilter) : null,
-      searchFields: (schema.searchFields !== null && schema.searchFields !== undefined) ? JSON.stringify(schema.searchFields) : null,
-      ordering: (schema.ordering !== null && schema.ordering !== undefined) ? JSON.stringify(schema.ordering) : null,
+      fields: schema.fields,
+      listDisplay: schema.listDisplay ?? null,
+      listFilter: schema.listFilter ?? null,
+      searchFields: schema.searchFields ?? null,
+      ordering: schema.ordering ?? null,
     })
   }
 }
