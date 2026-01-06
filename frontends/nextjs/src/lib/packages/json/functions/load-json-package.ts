@@ -5,16 +5,16 @@ import type { JSONComponent, JSONPackage, JSONPackageMetadata, JSONPermission } 
 export async function loadJSONPackage(packagePath: string): Promise<JSONPackage> {
   const metadataPath = join(packagePath, 'package.json')
   const metadataContent = await readFile(metadataPath, 'utf-8')
-  const metadata: JSONPackageMetadata = JSON.parse(metadataContent)
+  const metadata = JSON.parse(metadataContent) as JSONPackageMetadata
 
   let components: JSONComponent[] | undefined
   let hasComponents = false
   try {
     const componentsPath = join(packagePath, 'components', 'ui.json')
     const componentsContent = await readFile(componentsPath, 'utf-8')
-    const componentsData = JSON.parse(componentsContent)
-    components = componentsData.components || []
-    hasComponents = (components?.length ?? 0) > 0
+    const componentsData = JSON.parse(componentsContent) as { components?: JSONComponent[] }
+    components = componentsData.components ?? []
+    hasComponents = (components !== null && components !== undefined && Array.isArray(components)) ? components.length > 0 : false
   } catch {
     // Components file doesn't exist
   }
@@ -24,9 +24,9 @@ export async function loadJSONPackage(packagePath: string): Promise<JSONPackage>
   try {
     const permissionsPath = join(packagePath, 'permissions', 'roles.json')
     const permissionsContent = await readFile(permissionsPath, 'utf-8')
-    const permissionsData = JSON.parse(permissionsContent)
-    permissions = permissionsData.permissions || []
-    hasPermissions = (permissions?.length ?? 0) > 0
+    const permissionsData = JSON.parse(permissionsContent) as { permissions?: JSONPermission[] }
+    permissions = permissionsData.permissions ?? []
+    hasPermissions = (permissions !== null && permissions !== undefined && Array.isArray(permissions)) ? permissions.length > 0 : false
   } catch {
     // Permissions file doesn't exist
   }
