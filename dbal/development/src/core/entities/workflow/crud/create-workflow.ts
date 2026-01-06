@@ -4,7 +4,7 @@
  */
 import type { CreateWorkflowInput, Result, Workflow } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
-import { validateWorkflowCreate } from '../../validation/validate-workflow-create'
+import { validateWorkflowCreate } from '../validation/validate-workflow-create'
 
 /**
  * Create a new workflow in the store

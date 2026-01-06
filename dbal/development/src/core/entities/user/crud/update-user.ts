@@ -5,7 +5,7 @@
 import type { Result, UpdateUserInput, User } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
 import { validateId } from '../validation/validate-id'
-import { validateUserUpdate } from '../../validation/validate-user-update'
+import { validateUserUpdate } from '../validation/validate-user-update'
 
 /**
  * Update an existing user

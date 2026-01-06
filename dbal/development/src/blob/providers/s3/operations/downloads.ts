@@ -17,11 +17,16 @@ export async function downloadBuffer(
       Range: buildRangeHeader(options),
     })
 
-    const response = await context.s3Client.send(command)
+    const response = await context.s3Client.send(command) as {
+      Body?: AsyncIterable<Uint8Array>
+    }
 
     const chunks: Uint8Array[] = []
-    for await (const chunk of response.Body as any) {
-      chunks.push(chunk)
+    const body = response.Body
+    if (body) {
+      for await (const chunk of body) {
+        chunks.push(chunk)
+      }
     }
 
     return Buffer.concat(chunks)

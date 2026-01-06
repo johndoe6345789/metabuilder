@@ -56,7 +56,7 @@ export const createMessageRouter = (state: BridgeState): MessageRouter => ({
       state.pendingRequests.delete(response.id)
 
       if (response.error) {
-        const error = new DBALError(response.error.message, response.error.code, response.error.details)
+        const error = new DBALError(response.error.code, response.error.message, response.error.details)
         pending.reject(error)
       } else {
         pending.resolve(response.result)

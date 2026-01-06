@@ -4,7 +4,7 @@
  */
 import type { ListOptions, Result, Session } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
-import { cleanExpiredSessions } from './clean-expired'
+import { cleanExpiredSessions } from '../lifecycle/clean-expired'
 
 /**
  * List sessions with filtering and pagination

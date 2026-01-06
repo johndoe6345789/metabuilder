@@ -4,7 +4,7 @@
  */
 import type { CreateUserInput, Result, User } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
-import { validateUserCreate } from '../../validation/validate-user-create'
+import { validateUserCreate } from '../validation/validate-user-create'
 
 /**
  * Create a new user in the store

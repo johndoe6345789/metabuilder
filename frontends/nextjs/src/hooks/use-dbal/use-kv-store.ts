@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 // import { toast } from 'sonner'
 
 import { dbal } from '@/lib/dbal/core/client'
+import type { JsonValue } from '@/types/utility-types'
 
 import { useDBAL } from './use-dbal'
 
@@ -17,7 +18,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
         throw new Error('DBAL not ready')
       }
       try {
-        await dbal.kvSet(key, value, ttl, tenantId, userId)
+        await dbal.kvSet(key, value as JsonValue, ttl, tenantId, userId)
       } catch (err) {
         const _errorInfo = dbal.handleError(err)
         // toast.error(`KV Set Error: ${errorInfo.message}`)
@@ -65,7 +66,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
         throw new Error('DBAL not ready')
       }
       try {
-        await dbal.kvListAdd(key, items, tenantId, userId)
+        await dbal.kvListAdd(key, items as JsonValue[], tenantId, userId)
       } catch (err) {
         const _errorInfo = dbal.handleError(err)
         // toast.error(`KV List Add Error: ${errorInfo.message}`)
@@ -81,7 +82,7 @@ export function useKVStore(tenantId: string = 'default', userId: string = 'syste
         throw new Error('DBAL not ready')
       }
       try {
-        return await dbal.kvListGet(key, tenantId, userId, start, end)
+        return (await dbal.kvListGet(key, tenantId, userId, start, end)) as T[]
       } catch (err) {
         const _errorInfo = dbal.handleError(err)
         // toast.error(`KV List Get Error: ${errorInfo.message}`)

@@ -3,10 +3,10 @@ import { NextResponse } from 'next/server'
 
 import { readJson } from '@/lib/api/read-json'
 import { setPackageData } from '@/lib/db/packages/set-package-data'
-import type { JsonValue } from '@/types/utility-types'
+import type { PackageSeedData } from '@/lib/package-types'
 
 type PackageDataPayload = {
-  data?: Record<string, JsonValue[]>
+  data?: PackageSeedData
 }
 
 interface RouteParams {
