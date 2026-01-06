@@ -19,22 +19,22 @@ const PACKAGE_COMPONENT_REGISTRY: Record<string, Record<string, ComponentDef>> =
  * and a `components` array (or object) with component definitions.
  */
 export function loadPackageComponents(packageContent: JsonValue): void {
-  if (packageContent === null || packageContent === undefined || typeof packageContent !== 'object') return
+  if (typeof packageContent !== 'object' || packageContent === null) return
 
   const pkg = packageContent as JsonObject
-  const metadata = pkg?.metadata
+  const metadata = pkg.metadata
   const packageId =
     (metadata !== null && metadata !== undefined && typeof metadata === 'object' && !Array.isArray(metadata)
       ? (metadata as JsonObject)['packageId']
       : undefined) ?? 
-    pkg?.['package'] ?? 
-    pkg?.['packageId']
+    pkg['package'] ?? 
+    pkg['packageId']
   if (packageId === null || packageId === undefined || typeof packageId !== 'string') return
 
   const compsArray: JsonValue[] =
     Array.isArray(pkg.components) && pkg.components.length > 0
       ? pkg.components
-      : Array.isArray((pkg.ui as JsonObject)?.components)
+      : Array.isArray((pkg.ui as JsonObject | undefined)?.components)
       ? ((pkg.ui as JsonObject).components as JsonValue[])
       : []
 
