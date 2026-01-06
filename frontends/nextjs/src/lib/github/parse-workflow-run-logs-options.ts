@@ -12,11 +12,13 @@ export interface WorkflowRunLogsOptions {
 
 export function parseWorkflowRunLogsOptions(search: string | URLSearchParams): WorkflowRunLogsOptions {
   const params = typeof search === 'string' ? new URLSearchParams(search) : search
+  const tailLinesParam = params.get('tailLines')
+  const jobLimitParam = params.get('jobLimit')
   return {
-    tailLines: params.get('tailLines') ? parseInt(params.get('tailLines')!) : undefined,
+    tailLines: tailLinesParam !== null ? parseInt(tailLinesParam) : undefined,
     failedOnly: params.get('failedOnly') === 'true',
     runName: params.get('runName') || undefined,
     includeLogs: params.get('includeLogs') === 'true',
-    jobLimit: params.get('jobLimit') ? parseInt(params.get('jobLimit')!) : undefined,
+    jobLimit: jobLimitParam !== null ? parseInt(jobLimitParam) : undefined,
   }
 }
