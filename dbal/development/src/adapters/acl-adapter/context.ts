@@ -3,6 +3,8 @@ import type { ACLAdapterOptions, ACLContext, ACLRule, User } from './types'
 import { logAudit } from '../acl/audit-logger'
 import { defaultACLRules } from '../acl/default-rules'
 
+export type { ACLContext } from './types'
+
 export const createContext = (
   baseAdapter: DBALAdapter,
   user: User,

@@ -12,6 +12,8 @@ interface RouteParams {
   }
 }
 
+export const dynamic = 'force-dynamic'
+
 export const GET = async (request: NextRequest, { params }: RouteParams) => {
   const runId = Number(params.runId)
   if (!Number.isFinite(runId) || runId <= 0) {

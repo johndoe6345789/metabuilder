@@ -6,9 +6,13 @@ export function createPrismaContext(
   options?: PrismaAdapterOptions
 ): PrismaContext {
   const inferredDialect = options?.dialect ?? inferDialectFromUrl(databaseUrl)
-  const prisma = new PrismaClient({
-    datasources: databaseUrl ? { db: { url: databaseUrl } } : undefined,
-  })
+  const prisma = new PrismaClient(
+    databaseUrl
+      ? {
+          datasources: { db: { url: databaseUrl } },
+        } as any
+      : undefined
+  )
 
   return {
     prisma,

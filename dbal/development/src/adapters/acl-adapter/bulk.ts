@@ -25,11 +25,12 @@ export const findByField = (context: ACLContext) => async (entity: string, field
 
 export const upsert = (context: ACLContext) => async (
   entity: string,
-  filter: Record<string, unknown>,
+  uniqueField: string,
+  uniqueValue: unknown,
   createData: Record<string, unknown>,
   updateData: Record<string, unknown>,
 ) => {
-  return withAudit(context, entity, 'upsert', () => context.baseAdapter.upsert(entity, filter, createData, updateData))
+  return withAudit(context, entity, 'upsert', () => context.baseAdapter.upsert(entity, uniqueField, uniqueValue, createData, updateData))
 }
 
 export const updateByField = (context: ACLContext) => async (

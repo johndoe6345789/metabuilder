@@ -2,8 +2,8 @@
  * @file clean-expired.ts
  * @description Clean expired sessions operation
  */
-import type { Result } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
+import type { Result } from '../types'
+import type { InMemoryStore } from '../store/in-memory-store'
 
 /**
  * Clean up expired sessions

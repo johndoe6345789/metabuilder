@@ -80,7 +80,7 @@ export function SpeedDial({
   )
 }
 
-export interface SpeedDialActionProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SpeedDialActionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onClick'> {
   icon?: React.ReactNode
   tooltipTitle?: string
   tooltipOpen?: boolean

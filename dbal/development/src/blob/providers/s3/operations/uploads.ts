@@ -19,7 +19,9 @@ export async function uploadBuffer(
       Metadata: options.metadata,
     })
 
-    const response = await context.s3Client.send(command)
+    const response = await context.s3Client.send(command) as {
+      ETag?: string
+    }
 
     return {
       key,
