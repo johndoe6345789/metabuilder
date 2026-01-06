@@ -30,10 +30,25 @@ export default async function RootPage() {
   }> }
 
   if (godPanelRoutes.data.length > 0) {
-    const route = godPanelRoutes.data[0]
+    const route = godPanelRoutes.data[0]!  // Safe: length check ensures element exists
 
-    // TODO: Check user permission level >= route.level
-    // TODO: Check auth if route.requiresAuth
+    // TODO: Implement proper session/user context for permission checks
+    // For now, we'll allow access to public routes and skip auth checks
+    // Full implementation requires:
+    // 1. Session middleware to get current user from cookies
+    // 2. User permission level check: user.level >= route.level
+    // 3. Auth requirement: if (route.requiresAuth && !user) redirect('/login')
+    
+    // Permission level check (when user context is available)
+    // const user = await getCurrentUser() // TODO: Implement getCurrentUser
+    // if (user && user.level < route.level) {
+    //   return <div>Access Denied: Insufficient permissions</div>
+    // }
+    
+    // Auth requirement check
+    // if (route.requiresAuth && !user) {
+    //   redirect('/login')
+    // }
 
     // If route has full component tree, render it directly
     if (route.componentTree) {
@@ -44,7 +59,7 @@ export default async function RootPage() {
     // Otherwise use the package + component reference
     if (route.packageId && route.component) {
       const pkg = await loadJSONPackage(`/home/rewrich/Documents/GitHub/metabuilder/packages/${route.packageId}`)
-      const component = pkg?.components.find(c => c.id === route.component || c.name === route.component)
+      const component = pkg?.components?.find(c => c.id === route.component || c.name === route.component)
 
       if (component) {
         return renderJSONComponent(component, {}, {})
@@ -79,7 +94,9 @@ export default async function RootPage() {
         c.name === 'Home'
       ) || pkg.components[0]
 
-      return renderJSONComponent(pageComponent, {}, {})
+      if (pageComponent) {
+        return renderJSONComponent(pageComponent, {}, {})
+      }
     }
   }
 

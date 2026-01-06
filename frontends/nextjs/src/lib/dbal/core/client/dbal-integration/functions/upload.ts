@@ -1,6 +1,7 @@
 import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
 
-export async function upload(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function upload(this: any,
   key: string,
   data: Buffer,
   metadata?: Record<string, string>

@@ -1,7 +1,8 @@
 import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
 import type { JsonValue } from '@/types/utility-types'
 
-export async function kvListGet(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function kvListGet(this: any,
   key: string,
   tenantId = 'default',
   userId = 'system',
