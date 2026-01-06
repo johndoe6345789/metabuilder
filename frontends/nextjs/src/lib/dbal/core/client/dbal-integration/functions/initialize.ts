@@ -1,6 +1,7 @@
 import { DBALClient as _DBALClient, type DBALConfig as _DBALConfig } from '@/dbal'
 import { InMemoryKVStore } from '@/dbal/core/kv'
 import { MemoryStorage } from '@/dbal/blob/providers/memory-storage'
+import { setInitialized } from './is-initialized'
 
 interface DBALIntegrationState {
   initialized?: boolean
@@ -10,24 +11,26 @@ interface DBALIntegrationState {
   client?: _DBALClient
 }
 
+const state: DBALIntegrationState = {}
+
 /**
  * Initialize the DBAL client with configuration
  */
-export async function initialize(this: DBALIntegrationState, config?: Partial<_DBALConfig>): Promise<void> {
-  if (this.initialized) {
+export async function initialize(config?: Partial<_DBALConfig>): Promise<void> {
+  if (state.initialized) {
     console.warn('DBAL already initialized')
     return
   }
 
   try {
     // Initialize tenant manager (stub for now)
-    this.tenantManager = { tenants: new Map() }
+    state.tenantManager = { tenants: new Map() }
     
     // Initialize KV store
-    this.kvStore = new InMemoryKVStore()
+    state.kvStore = new InMemoryKVStore()
 
     // Initialize blob storage
-    this.blobStorage = new MemoryStorage()
+    state.blobStorage = new MemoryStorage()
 
     // Initialize DBAL client
     const dbalConfig: _DBALConfig = {
@@ -36,9 +39,10 @@ export async function initialize(this: DBALIntegrationState, config?: Partial<_D
       ...config,
     } as _DBALConfig
 
-    this.client = new _DBALClient(dbalConfig)
+    state.client = new _DBALClient(dbalConfig)
 
-    this.initialized = true
+    state.initialized = true
+    setInitialized(true)
   } catch (error) {
     console.error('Failed to initialize DBAL:', error)
     throw error

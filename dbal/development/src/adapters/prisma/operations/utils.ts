@@ -12,11 +12,12 @@ type PrismaModelDelegate = {
   delete: (...args: unknown[]) => Promise<unknown>
   deleteMany: (...args: unknown[]) => Promise<{ count: number }>
   upsert: (...args: unknown[]) => Promise<unknown>
+  count: (...args: unknown[]) => Promise<number>
 }
 
 export function getModel(context: PrismaContext, entity: string): PrismaModelDelegate {
   const modelName = entity.charAt(0).toLowerCase() + entity.slice(1)
-  const model = (context.prisma as Record<string, PrismaModelDelegate>)[modelName]
+  const model = (context.prisma as unknown as Record<string, PrismaModelDelegate>)[modelName]
 
   if (!model) {
     throw DBALError.notFound(`Entity ${entity} not found`)

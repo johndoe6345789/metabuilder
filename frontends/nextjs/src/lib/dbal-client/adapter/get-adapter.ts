@@ -21,6 +21,20 @@ class PrismaAdapter implements DBALAdapter {
     return await model.findUnique({ where: { id } })
   }
 
+  async read(entity: string, id: string | number): Promise<unknown> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const model = (prisma as any)[entity.toLowerCase()]
+    if (!model) throw new Error(`Unknown entity: ${entity}`)
+    return await model.findUnique({ where: { id } })
+  }
+
+  async findFirst(entity: string, options: { where: Record<string, unknown> }): Promise<unknown> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const model = (prisma as any)[entity.toLowerCase()]
+    if (!model) throw new Error(`Unknown entity: ${entity}`)
+    return await model.findFirst({ where: options.where })
+  }
+
   async list(entity: string, options?: ListOptions): Promise<ListResult> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const model = (prisma as any)[entity.toLowerCase()]
@@ -55,26 +69,42 @@ class PrismaAdapter implements DBALAdapter {
 
   async upsert(
     entity: string,
-    uniqueField: string,
-    uniqueValue: unknown,
-    createData: Record<string, unknown>,
-    updateData: Record<string, unknown>
+    uniqueFieldOrOptions: string | { where: Record<string, unknown>; update: Record<string, unknown>; create: Record<string, unknown> },
+    uniqueValue?: unknown,
+    createData?: Record<string, unknown>,
+    updateData?: Record<string, unknown>
   ): Promise<unknown> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const model = (prisma as any)[entity.toLowerCase()]
     if (!model) throw new Error(`Unknown entity: ${entity}`)
+    
+    // Handle options object form
+    if (typeof uniqueFieldOrOptions === 'object') {
+      return await model.upsert({
+        where: uniqueFieldOrOptions.where,
+        create: uniqueFieldOrOptions.create,
+        update: uniqueFieldOrOptions.update,
+      })
+    }
+    
+    // Handle 5-parameter form
     return await model.upsert({
-      where: { [uniqueField]: uniqueValue },
-      create: createData,
-      update: updateData,
+      where: { [uniqueFieldOrOptions]: uniqueValue },
+      create: createData!,
+      update: updateData!,
     })
   }
 
-  async delete(entity: string, id: string | number): Promise<void> {
+  async delete(entity: string, id: string | number): Promise<boolean> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const model = (prisma as any)[entity.toLowerCase()]
     if (!model) throw new Error(`Unknown entity: ${entity}`)
-    await model.delete({ where: { id } })
+    try {
+      await model.delete({ where: { id } })
+      return true
+    } catch {
+      return false
+    }
   }
 
   async createMany(entity: string, data: Record<string, unknown>[]): Promise<unknown[]> {

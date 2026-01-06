@@ -12,7 +12,7 @@ export interface ComponentConfig {
 
 export interface ComponentNode {
   id: string
-  name: string
+  name?: string
   type: string
   parentId?: string
   childIds?: string[]

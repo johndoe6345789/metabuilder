@@ -1,5 +1,5 @@
 import { getAdapter } from '../../core/dbal-client'
-import { mapSessionRecord } from '../map-session-record'
+import { mapSessionRecord, type SessionRecord } from '../map-session-record'
 import type { Session, UpdateSessionInput } from '../types'
 
 export async function updateSession(
@@ -12,5 +12,5 @@ export async function updateSession(
     ...(input.expiresAt !== undefined ? { expiresAt: BigInt(input.expiresAt) } : {}),
     ...(input.lastActivity !== undefined ? { lastActivity: BigInt(input.lastActivity) } : {}),
   })
-  return mapSessionRecord(record)
+  return mapSessionRecord(record as SessionRecord)
 }

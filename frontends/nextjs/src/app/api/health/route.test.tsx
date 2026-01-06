@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest'
+import { NextRequest } from 'next/server'
 
 import { GET } from './route'
 
 describe('GET /api/health', () => {
   it('returns OK status and permission level count', async () => {
-    const response = await GET(new Request('http://example.com/api/health'))
+    const response = await GET(new NextRequest('http://example.com/api/health'))
     const payload = await response.json()
 
     expect(payload.status).toBe('ok')

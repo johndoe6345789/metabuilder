@@ -28,10 +28,16 @@ export default async function DynamicUIPage({ params }: PageProps) {
   const path = '/' + slug.join('/')
 
   // Prefer Lua package-based UI pages, fallback to database-backed pages
-  const pageData = (await loadPageFromLuaPackages(path)) ?? (await loadPageFromDb(path))
+  const rawPageData = (await loadPageFromLuaPackages(path)) ?? (await loadPageFromDb(path))
 
-  if (!pageData) {
+  if (!rawPageData) {
     notFound()
+  }
+
+  // Transform PageConfig to UIPageData
+  const pageData = {
+    layout: rawPageData,
+    actions: {},
   }
 
   // Check authentication if required

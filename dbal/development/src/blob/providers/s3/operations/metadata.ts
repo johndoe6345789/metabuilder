@@ -14,7 +14,13 @@ export async function getMetadata(
       Key: key,
     })
 
-    const response = await context.s3Client.send(command)
+    const response = await context.s3Client.send(command) as {
+      ContentLength?: number
+      ContentType?: string
+      ETag?: string
+      LastModified?: Date
+      Metadata?: Record<string, string>
+    }
 
     return {
       key,
