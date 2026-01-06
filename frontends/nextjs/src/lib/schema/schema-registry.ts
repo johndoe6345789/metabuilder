@@ -44,7 +44,7 @@ export function loadSchemaRegistry(path?: string): SchemaRegistry {
       schemaRegistry.packages = packages
     }
   } catch (error) {
-    console.warn('Failed to load schema registry:', error)
+    console.warn(`Failed to load schema registry from ${schemaPath}:`, error instanceof Error ? error.message : String(error))
   }
 
   return schemaRegistry
@@ -60,7 +60,7 @@ export function saveSchemaRegistry(registry: SchemaRegistry, path?: string): voi
     }
     writeFileSync(schemaPath, JSON.stringify(data, null, 2))
   } catch (error) {
-    console.error('Failed to save schema registry:', error)
+    console.error(`Failed to save schema registry to ${schemaPath}:`, error instanceof Error ? error.message : String(error))
   }
 }
 

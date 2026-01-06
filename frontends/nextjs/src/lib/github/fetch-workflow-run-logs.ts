@@ -49,10 +49,13 @@ export async function fetchWorkflowRunLogs(
   // Parse arguments
   let opts: FetchWorkflowRunLogsOptions
   if (typeof ownerOrOptions === 'string') {
+    if (!repo || !runId) {
+      throw new Error('repo and runId are required when using positional arguments')
+    }
     opts = {
       owner: ownerOrOptions,
-      repo: repo!,
-      runId: runId!,
+      repo,
+      runId,
       tailLines: options?.tailLines,
       failedOnly: options?.failedOnly,
     }

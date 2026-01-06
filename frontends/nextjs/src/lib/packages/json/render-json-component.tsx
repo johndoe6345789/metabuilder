@@ -277,7 +277,7 @@ function evaluateSimpleExpression(expr: string, context: RenderContext): JsonVal
     if (value && typeof value === 'object' && !Array.isArray(value)) {
       value = (value as Record<string, JsonValue>)[part]
     } else {
-      return value
+      return undefined
     }
   }
 
