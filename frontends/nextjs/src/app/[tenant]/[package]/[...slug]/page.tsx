@@ -36,9 +36,9 @@ export default async function EntityPage({ params }: EntityPageProps) {
   
   if (id === 'new') {
     viewType = 'create'
-  } else if (id && action === 'edit') {
+  } else if (id !== null && id !== undefined && action === 'edit') {
     viewType = 'edit'
-  } else if (id) {
+  } else if (id !== null && id !== undefined) {
     viewType = 'detail'
   }
 
@@ -49,7 +49,7 @@ export default async function EntityPage({ params }: EntityPageProps) {
           <a href={`/${tenant}/${pkg}`}>{pkg}</a>
           {' / '}
           <span>{entity}</span>
-          {id && id !== 'new' && (
+          {(id !== null && id !== undefined) && id !== 'new' && (
             <>
               {' / '}
               <span>{id}</span>
@@ -69,12 +69,12 @@ export default async function EntityPage({ params }: EntityPageProps) {
           />
         )}
         
-        {viewType === 'detail' && (
+        {viewType === 'detail' && id !== null && id !== undefined && (
           <EntityDetailView 
             tenant={tenant} 
             pkg={pkg} 
             entity={entity} 
-            id={id!}
+            id={id}
           />
         )}
         
@@ -86,12 +86,12 @@ export default async function EntityPage({ params }: EntityPageProps) {
           />
         )}
         
-        {viewType === 'edit' && (
+        {viewType === 'edit' && id !== null && id !== undefined && (
           <EntityEditView 
             tenant={tenant} 
             pkg={pkg} 
             entity={entity} 
-            id={id!}
+            id={id}
           />
         )}
       </main>
@@ -202,13 +202,13 @@ function EntityEditView({ tenant, pkg, entity, id }: {
 
 export async function generateMetadata({ params }: EntityPageProps) {
   const { tenant, package: pkg, slug } = await params
-  const entity = slug?.[0] || 'unknown'
+  const entity = slug?.[0] ?? 'unknown'
   const id = slug?.[1]
   
   let title = `${entity} - ${pkg}`
   if (id === 'new') {
     title = `New ${entity} - ${pkg}`
-  } else if (id) {
+  } else if (id !== null && id !== undefined) {
     title = `${entity} #${id} - ${pkg}`
   }
   

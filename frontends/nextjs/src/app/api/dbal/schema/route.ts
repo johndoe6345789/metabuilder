@@ -23,7 +23,7 @@ const getPrismaOutputPath = () => path.join(process.cwd(), '..', '..', '..', 'pr
  * Note: This endpoint is for admin/system use.
  * For tenant-scoped data, use /api/v1/{tenant}/{package}/{entity}
  */
-export async function GET() {
+export function GET() {
   try {
     const registryPath = getRegistryPath()
     const registry = loadSchemaRegistry(registryPath)
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
   }
 }
 
-async function handleScan(registry: SchemaRegistry, registryPath: string) {
+function handleScan(registry: SchemaRegistry, registryPath: string) {
   // TODO: Import scanAllPackages when schema-scanner is implemented
   // const { scanAllPackages } = await import('@/lib/schema/schema-scanner')
   // const result = await scanAllPackages(registry)
@@ -113,7 +113,7 @@ function handleGenerate(registry: SchemaRegistry) {
   const fragment = generatePrismaFragment(registry)
   const prismaOutputPath = getPrismaOutputPath()
   
-  if (!fragment.trim()) {
+  if (fragment.trim().length === 0) {
     return NextResponse.json({
       status: 'ok',
       action: 'generate',
@@ -135,7 +135,7 @@ function handleGenerate(registry: SchemaRegistry) {
 }
 
 function handleApprove(registry: SchemaRegistry, registryPath: string, id?: string) {
-  if (!id) {
+  if (id === null || id === undefined) {
     return NextResponse.json(
       { status: 'error', error: 'Migration ID required' },
       { status: 400 }

@@ -6,9 +6,8 @@ import { getAdapter } from '../core/dbal-client'
 export async function getGodCredentialsExpiry(): Promise<number> {
   const adapter = getAdapter()
   const result = await adapter.list('SystemConfig')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const config = (result.data as any[]).find((c: any) => c.key === 'godCredentialsExpiry')
-  return config?.value ? Number(config.value) : 0
+  const config = (result.data as Array<{ key: string; value?: string }>).find((c) => c.key === 'godCredentialsExpiry')
+  return (config?.value !== null && config?.value !== undefined) ? Number(config.value) : 0
 }
 
 /**
@@ -31,11 +30,10 @@ export async function setGodCredentialsExpiry(timestamp: number): Promise<void> 
 export async function getFirstLoginFlags(): Promise<Record<string, boolean>> {
   const adapter = getAdapter()
   const result = await adapter.list('User')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const users = result.data as any[]
+  const users = result.data as Array<{ id?: string; firstLogin?: boolean }>
   const flags: Record<string, boolean> = {}
   for (const user of users) {
-    if (user.id && user.firstLogin !== undefined) {
+    if (user.id !== null && user.id !== undefined && user.firstLogin !== undefined) {
       flags[user.id] = Boolean(user.firstLogin)
     }
   }
@@ -56,9 +54,8 @@ export async function setFirstLoginFlag(userId: string, flag: boolean): Promise<
 export async function getGodCredentialsExpiryDuration(): Promise<number> {
   const adapter = getAdapter()
   const result = await adapter.list('SystemConfig')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const config = (result.data as any[]).find((c: any) => c.key === 'godCredentialsExpiryDuration')
-  return config?.value ? Number(config.value) : 300000 // Default 5 minutes
+  const config = (result.data as Array<{ key: string; value?: string }>).find((c) => c.key === 'godCredentialsExpiryDuration')
+  return (config?.value !== null && config?.value !== undefined) ? Number(config.value) : 300000 // Default 5 minutes
 }
 
 /**

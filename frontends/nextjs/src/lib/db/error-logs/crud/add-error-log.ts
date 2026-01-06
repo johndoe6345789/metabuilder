@@ -13,15 +13,15 @@ export async function addErrorLog(log: Omit<ErrorLog, 'id'>): Promise<string> {
     timestamp: BigInt(log.timestamp),
     level: log.level,
     message: log.message,
-    stack: log.stack || null,
-    context: log.context || null,
-    userId: log.userId || null,
-    username: log.username || null,
-    tenantId: log.tenantId || null,
-    source: log.source || null,
+    stack: log.stack ?? null,
+    context: log.context ?? null,
+    userId: log.userId ?? null,
+    username: log.username ?? null,
+    tenantId: log.tenantId ?? null,
+    source: log.source ?? null,
     resolved: log.resolved,
-    resolvedAt: log.resolvedAt ? BigInt(log.resolvedAt) : null,
-    resolvedBy: log.resolvedBy || null,
+    resolvedAt: log.resolvedAt !== null && log.resolvedAt !== undefined ? BigInt(log.resolvedAt) : null,
+    resolvedBy: log.resolvedBy ?? null,
   })
 
   return id
