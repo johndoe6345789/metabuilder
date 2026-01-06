@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getAdapter } from '@/lib/db/core/dbal-client'
 import { loadJSONPackage } from '@/lib/packages/json/functions/load-json-package'

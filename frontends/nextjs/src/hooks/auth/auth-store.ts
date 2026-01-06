@@ -51,9 +51,18 @@ export class AuthStore {
     })
 
     try {
-      const user = await loginRequest(identifier, password)
+      const result = await loginRequest(identifier, password)
+      
+      if (!result.success || result.user === null) {
+        this.setState({
+          ...this.state,
+          isLoading: false,
+        })
+        throw new Error(result.error ?? 'Login failed')
+      }
+      
       this.setState({
-        user: mapUserToAuthUser(user),
+        user: mapUserToAuthUser(result.user),
         isAuthenticated: true,
         isLoading: false,
       })
@@ -73,9 +82,18 @@ export class AuthStore {
     })
 
     try {
-      const user = await registerRequest(username, email, password)
+      const result = await registerRequest(username, email, password)
+      
+      if (!result.success || result.user === null) {
+        this.setState({
+          ...this.state,
+          isLoading: false,
+        })
+        throw new Error(result.error ?? 'Registration failed')
+      }
+      
       this.setState({
-        user: mapUserToAuthUser(user),
+        user: mapUserToAuthUser(result.user),
         isAuthenticated: true,
         isLoading: false,
       })

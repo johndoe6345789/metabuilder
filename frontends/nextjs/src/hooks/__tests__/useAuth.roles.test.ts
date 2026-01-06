@@ -87,7 +87,10 @@ describe('useAuth role mapping', () => {
   ])('applies level for role "$role"', async ({ role, expectedLevel }) => {
     const { result, unmount } = renderHook(() => useAuth())
 
-    mockLogin.mockResolvedValue(createUser({ role }))
+    mockLogin.mockResolvedValue({
+      success: true,
+      user: createUser({ role }),
+    })
 
     await waitForIdle(result)
     await act(async () => {

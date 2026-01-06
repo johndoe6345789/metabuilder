@@ -1,5 +1,6 @@
 import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
-import { DBALError, DBALErrorCode } from '@/dbal/core/foundation/errors'
+import type { DBALErrorCode } from '@/dbal/core/foundation/errors';
+import { DBALError } from '@/dbal/core/foundation/errors'
 
 export function handleError(error: unknown): { message: string; code?: DBALErrorCode } {
   if (error instanceof DBALError) {

@@ -18,7 +18,7 @@
  *   - Entity must be declared in package schema
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import type { NextRequest, NextResponse } from 'next/server'
 
 import {
   errorResponse,

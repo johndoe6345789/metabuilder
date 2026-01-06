@@ -18,7 +18,7 @@ export const mapUserToAuthUser = (user: User): AuthUser => {
     username: user.username,
     role: user.role as AuthUser['role'],
     level: getRoleLevel(user.role),
-    tenantId: (user.tenantId !== null && user.tenantId.length > 0) ? user.tenantId : undefined,
+    tenantId: (user.tenantId !== null && user.tenantId !== undefined && user.tenantId.length > 0) ? user.tenantId : undefined,
     profilePicture: user.profilePicture ?? undefined,
     bio: user.bio ?? undefined,
     isInstanceOwner: user.isInstanceOwner,
