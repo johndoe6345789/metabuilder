@@ -69,7 +69,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     )
     const siblingsEnd = Math.min(
       Math.max(page + siblingCount, boundaryCount + siblingCount * 2 + 2),
-      endPages.length > 0 ? endPages[0] - 2 : count - 1
+      endPages.length > 0 && endPages[0] !== undefined ? endPages[0] - 2 : count - 1
     )
 
     const itemList = [

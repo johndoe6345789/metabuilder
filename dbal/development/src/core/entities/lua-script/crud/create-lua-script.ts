@@ -26,7 +26,7 @@ export const createLuaScript = async (
   })
 
   if (validationErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] ?? 'Validation failed' } }
   }
 
   if (store.luaScriptNames.has(input.name)) {
@@ -39,7 +39,7 @@ export const createLuaScript = async (
     description: input.description,
     code: input.code,
     isSandboxed,
-    allowedGlobals: [...input.allowedGlobals],
+    allowedGlobals: [...(input.allowedGlobals ?? [])],
     timeoutMs,
     createdBy: input.createdBy,
     createdAt: new Date(),

@@ -88,8 +88,10 @@ export async function clear(
     }
   }
 
-  context.quota.currentDataSizeBytes = 0
-  context.quota.currentRecords = 0
+  if (context.quota) {
+    context.quota.currentDataSizeBytes = 0
+    context.quota.currentRecords = 0
+  }
 
   return removed
 }

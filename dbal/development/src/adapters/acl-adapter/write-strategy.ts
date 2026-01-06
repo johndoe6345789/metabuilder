@@ -35,7 +35,13 @@ export const createWriteStrategy = (context: ACLContext) => {
     return withAudit(context, entity, 'upsert', () => {
       // Extract first key from filter as uniqueField
       const uniqueField = Object.keys(filter)[0]
+      if (!uniqueField) {
+        throw new Error('Filter must have at least one key')
+      }
       const uniqueValue = filter[uniqueField]
+      if (typeof uniqueValue !== 'string') {
+        throw new Error('Unique value must be a string')
+      }
       return context.baseAdapter.upsert(entity, uniqueField, uniqueValue, createData, updateData)
     })
   }

@@ -20,7 +20,7 @@ export const createSession = async (
   })
 
   if (validationErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] ?? 'Validation failed' } }
   }
 
   if (!store.users.has(input.userId)) {

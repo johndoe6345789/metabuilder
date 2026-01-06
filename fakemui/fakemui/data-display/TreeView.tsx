@@ -125,9 +125,9 @@ function TreeItem({
     <li className={styles.treeItem}>
       <div
         className={clsx(styles.treeItemContent, {
-          [styles.selected]: isSelected,
-          [styles.disabled]: node.disabled,
-          [styles.dense]: dense,
+          [styles.selected as string]: isSelected,
+          [styles.disabled as string]: node.disabled,
+          [styles.dense as string]: dense,
         })}
         style={{ paddingLeft: `${level * 20 + 8}px` }}
         onClick={handleSelect}

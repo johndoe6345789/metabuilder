@@ -171,6 +171,9 @@ export function TimePicker({
     }
 
     const [hours, minutes] = timeStr.split(':').map(Number)
+    if (hours === undefined || minutes === undefined) {
+      return
+    }
     const newDate = new Date()
     newDate.setHours(hours, minutes, 0, 0)
     

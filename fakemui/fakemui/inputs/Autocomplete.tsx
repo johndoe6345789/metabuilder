@@ -93,7 +93,10 @@ export function Autocomplete<T = any>({
       setHighlightedIndex((prev) => Math.max(prev - 1, 0))
     } else if (e.key === 'Enter' && highlightedIndex >= 0) {
       e.preventDefault()
-      handleOptionClick(filteredOptions[highlightedIndex])
+      const selectedOption = filteredOptions[highlightedIndex]
+      if (selectedOption !== undefined) {
+        handleOptionClick(selectedOption)
+      }
     } else if (e.key === 'Escape') {
       setOpen(false)
     }

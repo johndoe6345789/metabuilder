@@ -17,7 +17,7 @@ export const updateLuaScript = async (
 ): Promise<Result<LuaScript>> => {
   const idErrors = validateId(id)
   if (idErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] ?? 'Invalid ID' } }
   }
 
   const script = store.luaScripts.get(id)
@@ -27,7 +27,7 @@ export const updateLuaScript = async (
 
   const validationErrors = validateLuaScriptUpdate(input)
   if (validationErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] ?? 'Validation failed' } }
   }
 
   if (input.name !== undefined && input.name !== script.name) {

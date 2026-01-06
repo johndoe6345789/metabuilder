@@ -51,8 +51,8 @@ export interface PageConfig {
 export interface Comment {
   id: string
   userId: string
-  entityType: string
-  entityId: string
+  entityType: string | null
+  entityId: string | null
   content: string
   createdAt: number | bigint
   updatedAt?: number | bigint | null

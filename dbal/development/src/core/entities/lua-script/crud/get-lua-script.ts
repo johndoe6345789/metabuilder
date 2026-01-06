@@ -12,7 +12,7 @@ import { validateId } from '../../../validation/entities/validate-id'
 export const getLuaScript = async (store: InMemoryStore, id: string): Promise<Result<LuaScript>> => {
   const idErrors = validateId(id)
   if (idErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] ?? 'Invalid ID' } }
   }
 
   const script = store.luaScripts.get(id)

@@ -22,7 +22,13 @@ export function loadPackageComponents(packageContent: JsonValue): void {
   if (!packageContent || typeof packageContent !== 'object') return
 
   const pkg = packageContent as JsonObject
-  const packageId = pkg?.metadata?.['packageId'] || pkg?.['package'] || pkg?.['packageId']
+  const metadata = pkg?.metadata
+  const packageId =
+    (metadata && typeof metadata === 'object' && !Array.isArray(metadata)
+      ? (metadata as JsonObject)['packageId']
+      : undefined) ||
+    pkg?.['package'] ||
+    pkg?.['packageId']
   if (!packageId || typeof packageId !== 'string') return
 
   const compsArray: JsonValue[] =

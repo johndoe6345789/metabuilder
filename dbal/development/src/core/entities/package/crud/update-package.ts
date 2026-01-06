@@ -17,7 +17,7 @@ export const updatePackage = async (
 ): Promise<Result<Package>> => {
   const idErrors = validateId(id)
   if (idErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] ?? 'Invalid ID' } }
   }
 
   const pkg = store.packages.get(id)
@@ -27,7 +27,7 @@ export const updatePackage = async (
 
   const validationErrors = validatePackageUpdate(input)
   if (validationErrors.length > 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] } }
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] ?? 'Validation failed' } }
   }
 
   const nextName = input.name ?? pkg.name

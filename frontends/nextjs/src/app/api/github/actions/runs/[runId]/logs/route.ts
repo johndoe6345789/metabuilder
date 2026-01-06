@@ -27,7 +27,7 @@ export const GET = async (request: NextRequest, { params }: RouteParams) => {
     )
     const client = createGitHubClient()
 
-    const { jobs, logsText, truncated } = await fetchWorkflowRunLogs({
+    const result = await fetchWorkflowRunLogs({
       client,
       owner,
       repo,
@@ -37,10 +37,14 @@ export const GET = async (request: NextRequest, { params }: RouteParams) => {
       jobLimit,
     })
 
+    if (!result) {
+      return NextResponse.json({ error: 'Failed to fetch workflow logs' }, { status: 500 })
+    }
+
     return NextResponse.json({
-      jobs,
-      logsText,
-      truncated,
+      jobs: result.jobs,
+      logsText: result.logsText,
+      truncated: result.truncated,
     })
   } catch (error) {
     const status =

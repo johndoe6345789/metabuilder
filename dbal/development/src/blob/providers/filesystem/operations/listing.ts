@@ -20,7 +20,7 @@ export async function listBlobs(
     return {
       items: items.slice(0, maxKeys),
       isTruncated: items.length > maxKeys,
-      nextToken: items.length > maxKeys ? items[maxKeys].key : undefined,
+      nextToken: items.length > maxKeys && items[maxKeys] ? items[maxKeys].key : undefined,
     }
   } catch (error) {
     const fsError = error as Error
