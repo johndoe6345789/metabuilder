@@ -10,11 +10,11 @@ export async function getUserById(
   options?: { tenantId?: string }
 ): Promise<User | null> {
   const adapter = getAdapter()
-  const record = options?.tenantId
+  const record = options?.tenantId !== null && options?.tenantId !== undefined
     ? await adapter.findFirst('User', { where: { id: userId, tenantId: options.tenantId } })
     : await adapter.read('User', userId)
 
-  if (!record) return null
+  if (record === null || record === undefined) return null
 
   return mapUserRecord(record as Record<string, unknown>)
 }

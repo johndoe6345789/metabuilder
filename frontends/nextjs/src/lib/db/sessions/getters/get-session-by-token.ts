@@ -6,7 +6,7 @@ import type { Session } from '../types'
 export async function getSessionByToken(token: string): Promise<Session | null> {
   const adapter = getAdapter()
   const result = await adapter.list('Session', { filter: { token } })
-  if (!result.data.length) return null
+  if (result.data.length === 0) return null
 
   const session = mapSessionRecord(result.data[0] as SessionRecord)
   if (session.expiresAt <= Date.now()) {

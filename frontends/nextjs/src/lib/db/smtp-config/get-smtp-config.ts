@@ -10,7 +10,7 @@ export async function getSMTPConfig(): Promise<SMTPConfig | null> {
   const adapter = getAdapter()
   const result = (await adapter.list('SMTPConfig')) as { data: DBALSMTPConfig[] }
   const config = result.data[0]
-  if (!config) return null
+  if (config === null || config === undefined) return null
 
   return {
     host: config.host,

@@ -19,7 +19,7 @@ export async function setTenants(tenants: Tenant[]): Promise<void> {
       name: tenant.name,
       ownerId: tenant.ownerId,
       createdAt: BigInt(tenant.createdAt),
-      homepageConfig: tenant.homepageConfig ? JSON.stringify(tenant.homepageConfig) : null,
+      homepageConfig: tenant.homepageConfig !== null && tenant.homepageConfig !== undefined ? JSON.stringify(tenant.homepageConfig) : null,
     })
   }
 }
