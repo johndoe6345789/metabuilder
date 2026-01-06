@@ -28,7 +28,7 @@ const knownIcons = [
 
 describe('getComponentIcon', () => {
   it.each(knownIcons)('returns an icon for %s', iconName => {
-    expect(getComponentIcon(iconName, { sx: { fontSize: 20 } })).not.toBeNull()
+    expect(getComponentIcon(iconName, { style: { fontSize: 20 } })).not.toBeNull()
   })
 
   it('returns null for unknown icons', () => {
