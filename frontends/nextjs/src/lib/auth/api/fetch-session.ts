@@ -2,14 +2,9 @@
  * Fetch current session (stub)
  */
 
-export interface Session {
-  id: string
-  userId: string
-  token: string
-  expiresAt: number
-}
+import type { User } from '@/lib/types/level-types'
 
-export async function fetchSession(): Promise<Session | null> {
+export async function fetchSession(): Promise<User | null> {
   // TODO: Implement session fetching
   return null
 }

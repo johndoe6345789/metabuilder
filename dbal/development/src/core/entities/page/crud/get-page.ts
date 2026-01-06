@@ -2,9 +2,9 @@
  * @file get-page.ts
  * @description Get page operations
  */
-import type { PageView, Result } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
-import { validateId } from '../../validation/validate-id'
+import type { PageView, Result } from '../types'
+import type { InMemoryStore } from '../store/in-memory-store'
+import { validateId } from '../validation/validate-id'
 
 /**
  * Get a page by ID

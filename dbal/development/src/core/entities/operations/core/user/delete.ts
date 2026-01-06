@@ -1,5 +1,5 @@
-import type { DBALAdapter } from '../../../../adapters/adapter'
-import { DBALError } from '../../../../foundation/errors'
+import type { DBALAdapter } from '../../../../../adapters/adapter'
+import { DBALError } from '../../../../../core/foundation/errors'
 import { assertValidUserId } from './validation'
 
 export const deleteUser = async (adapter: DBALAdapter, id: string): Promise<boolean> => {

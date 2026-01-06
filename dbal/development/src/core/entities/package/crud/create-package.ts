@@ -2,9 +2,9 @@
  * @file create-package.ts
  * @description Create package operation
  */
-import type { CreatePackageInput, Package, Result } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
-import { validatePackageCreate } from '../../validation/validate-package-create'
+import type { CreatePackageInput, Package, Result } from '../types'
+import type { InMemoryStore } from '../store/in-memory-store'
+import { validatePackageCreate } from '../validation/validate-package-create'
 
 /**
  * Create a new package in the store

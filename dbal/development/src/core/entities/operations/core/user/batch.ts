@@ -1,7 +1,7 @@
-import type { DBALAdapter } from '../../../../adapters/adapter'
-import type { User } from '../../../../foundation/types'
-import { DBALError } from '../../../../foundation/errors'
-import { validateUserCreate, validateUserUpdate } from '../../../../foundation/validation'
+import type { DBALAdapter } from '../../../../../adapters/adapter'
+import type { User } from '../../../../../core/foundation/types'
+import { DBALError } from '../../../../../core/foundation/errors'
+import { validateUserCreate, validateUserUpdate } from '../../../../../core/foundation/validation'
 
 export const createManyUsers = async (
   adapter: DBALAdapter,

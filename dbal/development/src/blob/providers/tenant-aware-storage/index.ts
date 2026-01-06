@@ -1,5 +1,5 @@
-import type { BlobListOptions, BlobListResult, BlobMetadata, BlobStorage, DownloadOptions, UploadOptions } from '../blob-storage'
-import type { TenantManager } from '../../core/foundation/tenant-context'
+import type { BlobListOptions, BlobListResult, BlobMetadata, BlobStorage, DownloadOptions, UploadOptions } from '../../blob-storage'
+import type { TenantManager } from '../../../core/foundation/tenant-context'
 import type { TenantAwareDeps } from './context'
 import { deleteBlob, exists, copyBlob, getStats } from './mutations'
 import { downloadBuffer, downloadStream, generatePresignedUrl, getMetadata, listBlobs } from './reads'

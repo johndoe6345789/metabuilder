@@ -10,3 +10,5 @@ export const levelsData = {
   god: 5,
   supergod: 6,
 }
+
+export const PERMISSION_LEVELS = levelsData

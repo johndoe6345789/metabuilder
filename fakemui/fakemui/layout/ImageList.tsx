@@ -34,7 +34,7 @@ export const ImageListItem: React.FC<ImageListItemProps> = ({
   </div>
 )
 
-export interface ImageListItemBarProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ImageListItemBarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   title?: React.ReactNode
   subtitle?: React.ReactNode
   actionIcon?: React.ReactNode

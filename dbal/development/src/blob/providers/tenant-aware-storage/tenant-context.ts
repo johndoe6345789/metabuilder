@@ -1,5 +1,5 @@
 import { DBALError } from '../../../core/foundation/errors'
-import type { TenantContext } from '../../core/foundation/tenant-context'
+import type { TenantContext } from '../../../core/foundation/tenant-context'
 import type { TenantAwareDeps } from './context'
 
 export const resolveTenantContext = async ({ tenantManager, tenantId, userId }: TenantAwareDeps): Promise<TenantContext> => {

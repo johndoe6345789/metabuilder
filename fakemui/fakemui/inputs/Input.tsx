@@ -5,7 +5,7 @@ import React, { forwardRef, useId } from 'react'
  */
 export type InputSize = 'sm' | 'md' | 'lg'
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   /** Input size */
   size?: InputSize
   /** @deprecated Use size="sm" instead */

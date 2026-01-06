@@ -1,4 +1,4 @@
-import type { DBALAdapter } from '../../../../adapters/adapter'
+import type { DBALAdapter } from '../../../../../adapters/adapter'
 import type { Package } from '../../../../foundation/types'
 import { DBALError } from '../../../../foundation/errors'
 import { validatePackageCreate, validatePackageUpdate } from '../../../../foundation/validation'

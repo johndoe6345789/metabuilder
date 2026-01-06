@@ -75,9 +75,17 @@ export interface Workflow {
 
 export interface AppConfiguration {
   id: string
-  key: string
-  value: string
-  description?: string | null
-  createdAt?: number | bigint
-  updatedAt?: number | bigint | null
+  name: string
+  schemas: unknown // JSON
+  workflows: unknown // JSON
+  luaScripts: unknown // JSON
+  pages: unknown // JSON
+  theme: unknown // JSON
+}
+
+export interface DropdownConfig {
+  id: string
+  name: string
+  label: string
+  options: string // JSON: Array<{value, label}>
 }

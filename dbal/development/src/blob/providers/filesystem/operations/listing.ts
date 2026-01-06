@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs'
 import path from 'path'
 import type { BlobListOptions, BlobListResult, BlobMetadata } from '../../../blob-storage'
-import { DBALError } from '../../../core/foundation/errors'
+import { DBALError } from '../../../../core/foundation/errors'
 import type { FilesystemContext } from '../context'
 import { buildFullPath } from '../paths'
 import { readMetadata } from './metadata'

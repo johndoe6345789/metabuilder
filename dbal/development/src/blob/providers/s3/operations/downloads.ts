@@ -1,5 +1,5 @@
 import type { DownloadOptions } from '../../../blob-storage'
-import { DBALError } from '../../../core/foundation/errors'
+import { DBALError } from '../../../../core/foundation/errors'
 import { buildRangeHeader } from '../range'
 import type { S3Context } from '../client'
 

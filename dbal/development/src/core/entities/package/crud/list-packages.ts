@@ -2,8 +2,8 @@
  * @file list-packages.ts
  * @description List packages with filtering and pagination
  */
-import type { ListOptions, Package, Result } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
+import type { ListOptions, Package, Result } from '../types'
+import type { InMemoryStore } from '../store/in-memory-store'
 
 /**
  * List packages with filtering and pagination

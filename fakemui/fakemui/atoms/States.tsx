@@ -1,7 +1,7 @@
 import React from 'react'
 import { Spinner } from '../feedback/Spinner'
 
-export interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   children?: React.ReactNode
   icon?: React.ReactNode
   title?: React.ReactNode

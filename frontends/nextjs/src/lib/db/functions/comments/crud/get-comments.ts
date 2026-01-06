@@ -15,6 +15,8 @@ export const getComments = async (): Promise<Comment[]> => {
   return comments.map(c => ({
     id: c.id,
     userId: c.userId,
+    entityType: c.entityType,
+    entityId: c.entityId,
     content: c.content,
     createdAt: Number(c.createdAt),
     updatedAt: c.updatedAt ? Number(c.updatedAt) : undefined,

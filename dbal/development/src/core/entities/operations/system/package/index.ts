@@ -1,4 +1,4 @@
-import type { DBALAdapter } from '../../../../adapters/adapter'
+import type { DBALAdapter } from '../../../../../adapters/adapter'
 import type { Package, ListOptions, ListResult } from '../../../../foundation/types'
 import { createManyPackages, deleteManyPackages, updateManyPackages } from './batch'
 import { createPackage, deletePackage, updatePackage } from './mutations'

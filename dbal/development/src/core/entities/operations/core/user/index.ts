@@ -1,6 +1,6 @@
 // TODO: Implement user operations
-// import type { DBALAdapter } from '../../../../adapters/adapter'
-// import type { User, ListOptions, ListResult } from '../../../../foundation/types'
+// import type { DBALAdapter } from '../../../../../adapters/adapter'
+// import type { User, ListOptions, ListResult } from '../../../../../core/foundation/types'
 // import { createUser } from './create'
 // import { deleteUser } from './delete'
 // import { updateUser } from './update'

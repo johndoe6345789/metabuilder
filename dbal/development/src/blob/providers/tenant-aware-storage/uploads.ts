@@ -3,7 +3,7 @@ import { auditUpload } from './audit-hooks'
 import type { TenantAwareDeps } from './context'
 import { scopeKey } from './context'
 import { ensurePermission, resolveTenantContext } from './tenant-context'
-import type { UploadOptions, BlobMetadata } from '../blob-storage'
+import type { UploadOptions, BlobMetadata } from '../../blob-storage'
 
 export const uploadBuffer = async (
   deps: TenantAwareDeps,

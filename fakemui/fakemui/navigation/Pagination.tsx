@@ -7,7 +7,7 @@ export interface PaginationRenderItemParams {
   disabled: boolean
 }
 
-export interface PaginationProps extends React.HTMLAttributes<HTMLElement> {
+export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, 'color'> {
   count?: number
   page?: number
   onChange?: (page: number) => void
@@ -135,7 +135,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   )
 }
 
-export interface PaginationItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement | HTMLSpanElement> {
+export interface PaginationItemProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement | HTMLSpanElement>, 'color' | 'type'> {
   type?: 'page' | 'first' | 'last' | 'next' | 'previous' | 'ellipsis'
   page?: number | null
   selected?: boolean

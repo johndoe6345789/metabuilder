@@ -2,8 +2,8 @@
  * @file list-workflows.ts
  * @description List workflows with filtering and pagination
  */
-import type { ListOptions, Result, Workflow } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
+import type { ListOptions, Result, Workflow } from '../types'
+import type { InMemoryStore } from '../store/in-memory-store'
 
 /**
  * List workflows with filtering and pagination

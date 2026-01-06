@@ -2,9 +2,9 @@
  * @file delete-user.ts
  * @description Delete user operation
  */
-import type { Result } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
-import { validateId } from '../../validation/validate-id'
+import type { Result } from '../types'
+import type { InMemoryStore } from '../store/in-memory-store'
+import { validateId } from '../validation/validate-id'
 
 /**
  * Delete a user by ID

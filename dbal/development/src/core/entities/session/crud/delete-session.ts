@@ -2,9 +2,9 @@
  * @file delete-session.ts
  * @description Delete session operation
  */
-import type { Result } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
-import { validateId } from '../../validation/validate-id'
+import type { Result } from '../types'
+import type { InMemoryStore } from '../store/in-memory-store'
+import { validateId } from '../validation/validate-id'
 
 /**
  * Delete a session by ID

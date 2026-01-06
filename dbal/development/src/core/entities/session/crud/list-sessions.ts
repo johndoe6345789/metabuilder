@@ -2,8 +2,8 @@
  * @file list-sessions.ts
  * @description List sessions with filtering and pagination
  */
-import type { ListOptions, Result, Session } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
+import type { ListOptions, Result, Session } from '../types'
+import type { InMemoryStore } from '../store/in-memory-store'
 import { cleanExpiredSessions } from './clean-expired'
 
 /**
