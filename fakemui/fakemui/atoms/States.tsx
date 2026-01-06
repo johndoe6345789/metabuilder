@@ -36,3 +36,10 @@ export const ErrorState: React.FC<ErrorStateProps> = ({ children, className = ''
     {children}
   </div>
 )
+
+// Namespace object for backward compatibility
+export const States = {
+  Empty: EmptyState,
+  Loading: LoadingState,
+  Error: ErrorState,
+}
