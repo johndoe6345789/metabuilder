@@ -1,6 +1,9 @@
 /**
- * Compiler utilities (stub)
+ * Compiler utilities
  */
+
+import { promises as fs } from 'fs'
+import path from 'path'
 
 export interface CompileOptions {
   minify?: boolean
@@ -17,7 +20,13 @@ export function compile(source: string, _options?: CompileOptions): CompileResul
   return { code: source }
 }
 
-export function loadAndInjectStyles(_packageId: string): Promise<string> {
-  // TODO: Implement style loading and injection
-  return Promise.resolve('')
+export async function loadAndInjectStyles(packageId: string): Promise<string> {
+  try {
+    const packagePath = path.join(process.cwd(), 'packages', packageId, 'static_content', 'styles.css')
+    const css = await fs.readFile(packagePath, 'utf-8')
+    return css
+  } catch {
+    // If no styles file, return empty
+    return ''
+  }
 }

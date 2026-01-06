@@ -49,7 +49,6 @@ export function parseRoute(url: string): ParsedRoute {
 }
 
 export function getPrefixedEntity(entity: string, prefix?: string): string {
-  // TODO: Implement entity prefixing
   return prefix !== undefined && prefix.length > 0 ? `${prefix}_${entity}` : entity
 }
 

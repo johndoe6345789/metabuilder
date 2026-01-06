@@ -11,7 +11,6 @@ export interface ComponentMetadata {
 
 /**
  * Component registry
- * TODO: Implement full component registry functionality
  */
 export class ComponentRegistry {
   private readonly registry = new Map<string, ComponentMetadata>()

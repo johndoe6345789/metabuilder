@@ -92,17 +92,17 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-argument': 'error',
       
       // Code Style and Best Practices
-      '@typescript-eslint/prefer-nullish-coalescing': 'warn',
-      '@typescript-eslint/prefer-optional-chain': 'warn',
-      '@typescript-eslint/no-redundant-type-constituents': 'warn',
-      '@typescript-eslint/consistent-type-imports': ['warn', {
+      '@typescript-eslint/prefer-nullish-coalescing': 'error',
+      '@typescript-eslint/prefer-optional-chain': 'error',
+      '@typescript-eslint/no-redundant-type-constituents': 'error',
+      '@typescript-eslint/consistent-type-imports': ['error', {
         prefer: 'type-imports',
         fixStyle: 'separate-type-imports'
       }],
-      '@typescript-eslint/no-unnecessary-condition': 'warn',
-      '@typescript-eslint/prefer-readonly': 'warn',
+      '@typescript-eslint/no-unnecessary-condition': 'error',
+      '@typescript-eslint/prefer-readonly': 'error',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
-      '@typescript-eslint/no-confusing-void-expression': 'warn',
+      '@typescript-eslint/no-confusing-void-expression': 'error',
       
       // JavaScript Best Practices
       'no-console': ['warn', { allow: ['warn', 'error'] }],

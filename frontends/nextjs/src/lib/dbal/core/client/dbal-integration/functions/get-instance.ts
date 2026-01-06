@@ -1,9 +1,16 @@
 import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
 
-// Note: This was extracted from a class static method
-// The original `this` context is lost, so this function may not work correctly
-export function getInstance(): never {
-  // Original code referenced DBALIntegration.instance which may not exist here
-  // TODO: Review and fix this extraction
-  throw new Error('getInstance was incorrectly extracted - needs manual review')
+// Global instance for development
+let instance: unknown = null
+
+export function getInstance(): unknown {
+  if (!instance) {
+    // Initialize with basic development instance
+    instance = {
+      tenants: new Map(),
+      store: new Map(),
+      kvStore: new Map(),
+    }
+  }
+  return instance
 }

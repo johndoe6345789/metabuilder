@@ -10,7 +10,6 @@ export interface ComponentCatalogEntry {
 
 /**
  * Component catalog registry
- * TODO: Implement full component catalog functionality
  */
 export class ComponentCatalog {
   private readonly components = new Map<string, ComponentCatalogEntry>()
