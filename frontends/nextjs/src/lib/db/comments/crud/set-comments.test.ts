@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { Comment } from '@/lib/types/level-types'
 
 const mockList = vi.fn()
 const mockDelete = vi.fn()

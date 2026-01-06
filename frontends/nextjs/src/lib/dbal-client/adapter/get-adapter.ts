@@ -87,11 +87,18 @@ class PrismaAdapter implements DBALAdapter {
       })
     }
     
-    // Handle 5-parameter form
+    // Handle 5-parameter form - validate data is present
+    if (createData === null || createData === undefined) {
+      throw new Error('createData is required for upsert')
+    }
+    if (updateData === null || updateData === undefined) {
+      throw new Error('updateData is required for upsert')
+    }
+
     return await model.upsert({
       where: { [uniqueFieldOrOptions]: uniqueValue },
-      create: createData!,
-      update: updateData!,
+      create: createData,
+      update: updateData,
     })
   }
 

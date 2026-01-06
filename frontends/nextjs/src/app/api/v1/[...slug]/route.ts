@@ -90,26 +90,35 @@ async function handleRequest(
     }
 
     // Handle custom actions separately
-    if (operation === 'action' && route.action) {
+    if (operation === 'action' && route.action !== null && route.action !== undefined) {
+      if (tenantResult.tenant === null || tenantResult.tenant === undefined) {
+        return errorResponse('Tenant not found', STATUS.NOT_FOUND)
+      }
+
       const actionResult = await executePackageAction(
         route.package,
         route.entity,
         route.action,
-        route.id || null,
-        { user, tenant: tenantResult.tenant!, body }
+        route.id ?? null,
+        { user, tenant: tenantResult.tenant, body }
       )
       
-      if (!actionResult.success) {
-        return errorResponse(actionResult.error || 'Action failed', STATUS.BAD_REQUEST)
+      if (actionResult.success === false) {
+        return errorResponse(actionResult.error ?? 'Action failed', STATUS.BAD_REQUEST)
       }
       
       return successResponse(actionResult.data, STATUS.OK)
     }
 
+    // Ensure tenant is available for CRUD operations
+    if (tenantResult.tenant === null || tenantResult.tenant === undefined) {
+      return errorResponse('Tenant not found', STATUS.NOT_FOUND)
+    }
+
     // Execute standard CRUD operation
     const result = await executeDbalOperation(dbalOp, {
       user,
-      tenant: tenantResult.tenant!,
+      tenant: tenantResult.tenant,
       body,
     })
 

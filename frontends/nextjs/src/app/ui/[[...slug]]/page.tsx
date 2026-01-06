@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
  * Optional: Generate static params for known pages
  * This enables static generation at build time
  */
-export async function generateStaticParams() {
+export function generateStaticParams() {
   // TODO: Query database for all active pages
   // For now, return empty array (all pages will be dynamic)
   return []
