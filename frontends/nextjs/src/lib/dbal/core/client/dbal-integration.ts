@@ -10,4 +10,4 @@
  * DbalIntegrationUtils.createTenant(...)
  */
 
-export * from './dbal-integration'
+export * from './dbal-integration/index'

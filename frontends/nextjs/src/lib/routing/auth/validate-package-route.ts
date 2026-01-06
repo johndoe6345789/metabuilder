@@ -3,17 +3,22 @@
  */
 
 export interface RouteValidationResult {
-  valid: boolean
+  allowed: boolean
   error?: string
+  reason?: string
+  package?: {
+    name?: string
+    minLevel?: number
+  }
 }
 
 export async function validatePackageRoute(
-  _b_tenant: string,
-  _b_packageId: string,
-  _userId?: string
+  _b_package: string,
+  _b_entity: string,
+  _userId?: unknown
 ): Promise<RouteValidationResult> {
   // TODO: Implement route validation
-  return { valid: true }
+  return { allowed: true }
 }
 
 export async function canBePrimaryPackage(_b_packageId: string): Promise<boolean> {

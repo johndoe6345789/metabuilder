@@ -1,4 +1,4 @@
-import type { CssCategory } from '../../../../core/types'
+import type { CssCategory } from '../../../../css-classes/types'
 import { buildSizingClasses, buildSpacingClasses } from '../build-css-classes'
 
 export const buildBaseCssCategories = (): CssCategory[] => [

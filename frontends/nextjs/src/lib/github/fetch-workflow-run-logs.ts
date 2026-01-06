@@ -22,6 +22,9 @@ export interface FetchWorkflowRunLogsOptions {
   owner: string
   repo: string
   runId: number
+  runName?: string
+  includeLogs?: boolean
+  jobLimit?: number
   tailLines?: number
   failedOnly?: boolean
 }

@@ -45,15 +45,17 @@ export function getPendingMigrations(_b_registry: SchemaRegistry): PendingMigrat
   return []
 }
 
-export function generatePrismaFragment(_b_schema: ModelSchema, _path?: string): string {
+export function generatePrismaFragment(_b_registry: SchemaRegistry, _path?: string): string {
   // TODO: Implement Prisma fragment generation
   return ''
 }
 
-export function approveMigration(_b_registry: SchemaRegistry, _b_migrationId: string): void {
+export function approveMigration(_b_migrationId: string, _b_registry: SchemaRegistry): boolean {
   // TODO: Implement migration approval
+  return false
 }
 
-export function rejectMigration(_b_registry: SchemaRegistry, _b_migrationId: string): void {
+export function rejectMigration(_b_migrationId: string, _b_registry: SchemaRegistry): boolean {
   // TODO: Implement migration rejection
+  return false
 }
