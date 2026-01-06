@@ -10,6 +10,6 @@ export async function getCssClasses(): Promise<CssCategory[]> {
   const rows = result.data as Array<{ name: string; classes: string | string[] }>
   return rows.map(c => ({
     name: c.name,
-    classes: typeof c.classes === 'string' ? JSON.parse(c.classes) : c.classes,
+    classes: typeof c.classes === 'string' ? (JSON.parse(c.classes) as string[]) : c.classes,
   }))
 }

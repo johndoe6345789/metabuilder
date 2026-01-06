@@ -18,7 +18,7 @@ interface RouteParams {
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const body = await readJson<PackageDataPayload>(request)
-    if (!body?.data || Array.isArray(body.data)) {
+    if (body?.data === null || body?.data === undefined || Array.isArray(body.data)) {
       return NextResponse.json({ error: 'Package data is required' }, { status: 400 })
     }
 

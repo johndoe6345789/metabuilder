@@ -23,8 +23,15 @@ describe('setComments', () => {
     mockDelete.mockResolvedValue(undefined)
     mockCreate.mockResolvedValue(undefined)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await setComments([{ id: 'new', userId: 'u1', content: 'Hi', createdAt: 1000 }] as any)
+    const testComment: Comment = { 
+      id: 'new', 
+      userId: 'u1', 
+      entityType: 'test',
+      entityId: 'test1',
+      content: 'Hi', 
+      createdAt: 1000 
+    }
+    await setComments([testComment])
 
     expect(mockDelete).toHaveBeenCalledTimes(1)
     expect(mockCreate).toHaveBeenCalledTimes(1)

@@ -18,11 +18,11 @@ export async function getComponentConfigs(): Promise<Record<string, ComponentCon
     configs[config.id] = {
       id: config.id,
       componentId: config.componentId,
-      props: JSON.parse(config.props),
-      styles: JSON.parse(config.styles),
-      events: JSON.parse(config.events),
-      conditionalRendering: config.conditionalRendering
-        ? JSON.parse(config.conditionalRendering)
+      props: JSON.parse(config.props) as Record<string, unknown>,
+      styles: JSON.parse(config.styles) as Record<string, unknown>,
+      events: JSON.parse(config.events) as Record<string, unknown>,
+      conditionalRendering: config.conditionalRendering !== null && config.conditionalRendering !== undefined
+        ? (JSON.parse(config.conditionalRendering) as Record<string, unknown>)
         : undefined,
     }
   }

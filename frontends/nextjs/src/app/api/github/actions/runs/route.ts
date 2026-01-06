@@ -11,7 +11,7 @@ export const GET = async (request: NextRequest) => {
     const perPageParam = request.nextUrl.searchParams.get('perPage')
     let perPage = 20
 
-    if (perPageParam) {
+    if (perPageParam !== null && perPageParam !== undefined && perPageParam.length > 0) {
       const parsed = Number(perPageParam)
       if (!Number.isNaN(parsed)) {
         perPage = Math.max(1, Math.min(100, Math.floor(parsed)))

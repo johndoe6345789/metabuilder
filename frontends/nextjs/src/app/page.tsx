@@ -52,7 +52,7 @@ export default async function RootPage() {
 
     // If route has full component tree, render it directly
     if (route.componentTree !== null && route.componentTree !== undefined && route.componentTree.length > 0) {
-      const componentDef = JSON.parse(route.componentTree)
+      const componentDef = JSON.parse(route.componentTree) as Record<string, unknown>
       return renderJSONComponent(componentDef, {}, {})
     }
 

@@ -47,8 +47,8 @@ describe('addErrorLog', () => {
     expect(mockCreate).toHaveBeenCalledWith(
       'ErrorLog',
       expect.objectContaining({
-        id: expect.stringContaining('error_'),
-        timestamp: expect.any(BigInt),
+        id: expect.stringContaining('error_') as string,
+        timestamp: expect.any(BigInt) as bigint,
         level: log.level,
         message: log.message,
         resolved: false,
