@@ -17,7 +17,7 @@ const alpha = (color: string, opacity: number): string => {
   // Handle rgb/rgba colors
   if (color.startsWith('rgb')) {
     const match = color.match(/\d+/g)
-    if (match && match.length >= 3) {
+    if (match !== null && match.length >= 3) {
       return `rgba(${match[0]}, ${match[1]}, ${match[2]}, ${opacity})`
     }
   }

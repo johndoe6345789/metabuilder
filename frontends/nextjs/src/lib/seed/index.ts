@@ -5,6 +5,6 @@
 
 // Export seed functionality from database-admin
 // This is a placeholder - actual implementation in db/database-admin
-export const seedDefaultData = async () => {
+export const seedDefaultData = () => {
   console.warn('seedDefaultData: Not yet implemented')
 }

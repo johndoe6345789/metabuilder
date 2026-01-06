@@ -95,7 +95,7 @@ export async function fetchWorkflowRunLogs(
       }))
 
     let logsText = ''
-    let truncated = false
+    const truncated = false
 
     if (includeLogs) {
       // Download logs for the workflow run

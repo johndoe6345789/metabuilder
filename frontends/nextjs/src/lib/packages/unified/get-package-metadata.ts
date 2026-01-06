@@ -4,7 +4,7 @@ export async function getPackageMetadata(
   packageId: string
 ): Promise<{ name: string; description: string; version: string } | null> {
   const pkg = await loadPackage(packageId)
-  if (!pkg) return null
+  if (pkg === null) return null
 
   return {
     name: pkg.name,

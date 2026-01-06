@@ -18,7 +18,7 @@ export function parseRoute(_b_url: string): ParsedRoute {
 
 export function getPrefixedEntity(entity: string, prefix?: string): string {
   // TODO: Implement entity prefixing
-  return prefix ? `${prefix}_${entity}` : entity
+  return prefix !== undefined && prefix.length > 0 ? `${prefix}_${entity}` : entity
 }
 
 export function getTableName(entity: string, _tenantId?: string): string {
@@ -28,5 +28,6 @@ export function getTableName(entity: string, _tenantId?: string): string {
 
 export function isReservedPath(b_path: string): boolean {
   // TODO: Implement reserved path checking
-  return RESERVED_PATHS.includes(b_path.split('/')[1] || b_path)
+  const segment = b_path.split('/')[1]
+  return RESERVED_PATHS.includes(segment ?? b_path)
 }

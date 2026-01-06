@@ -34,10 +34,10 @@ export function errorResponse(message: string, status = STATUS.ERROR) {
 }
 
 export interface SessionUser {
-  user: unknown | null
+  user: Record<string, unknown> | null
 }
 
-export async function getSessionUser(_req?: Request): Promise<SessionUser> {
+export function getSessionUser(_req?: Request): SessionUser {
   // TODO: Implement session user retrieval
   return { user: null }
 }
@@ -54,29 +54,29 @@ export interface RestfulContext {
   dbalOp: unknown
 }
 
-export async function parseRestfulRequest(
+export function parseRestfulRequest(
   _req: Request,
   _params: { slug: string[] }
-): Promise<RestfulContext | { error: string; status: number }> {
+): RestfulContext | { error: string; status: number } {
   // TODO: Implement RESTful request parsing
   return { error: 'Not implemented', status: 500 }
 }
 
-export async function executeDbalOperation(
+export function executeDbalOperation(
   _op: unknown,
   _context?: unknown
-): Promise<{ success: boolean; data?: unknown; error?: string; meta?: unknown }> {
+): { success: boolean; data?: unknown; error?: string; meta?: unknown } {
   // TODO: Implement DBAL operation execution
   return { success: false, error: 'Not implemented' }
 }
 
-export async function executePackageAction(
+export function executePackageAction(
   _packageId: unknown,
   _entity: unknown,
   _action: unknown,
   _id: unknown,
   _context?: unknown
-): Promise<{ success: boolean; data?: unknown; error?: string }> {
+): { success: boolean; data?: unknown; error?: string } {
   // TODO: Implement package action execution
   return { success: false, error: 'Not implemented' }
 }
@@ -87,11 +87,11 @@ export interface TenantValidationResult {
   tenant?: unknown
 }
 
-export async function validateTenantAccess(
+export function validateTenantAccess(
   _user: unknown,
   _tenant: unknown,
   _minLevel: unknown
-): Promise<TenantValidationResult> {
+): TenantValidationResult {
   // TODO: Implement tenant access validation
   return { allowed: false, reason: 'Not implemented' }
 }

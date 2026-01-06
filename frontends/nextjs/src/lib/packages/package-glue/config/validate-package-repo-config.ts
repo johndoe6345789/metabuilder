@@ -3,13 +3,13 @@ import type { PackageRepoConfig } from './types'
 export function validatePackageRepoConfig(config: PackageRepoConfig): string[] {
   const errors: string[] = []
 
-  if (!config.sources || config.sources.length === 0) {
+  if (config.sources.length === 0) {
     errors.push('At least one package source is required')
   }
 
   const ids = new Set<string>()
   for (const source of config.sources) {
-    if (!source.id) {
+    if (source.id.length === 0) {
       errors.push('Source ID is required')
     }
     if (ids.has(source.id)) {
@@ -17,7 +17,7 @@ export function validatePackageRepoConfig(config: PackageRepoConfig): string[] {
     }
     ids.add(source.id)
 
-    if (!source.url) {
+    if (source.url.length === 0) {
       errors.push(`Source ${source.id}: URL is required`)
     }
 
