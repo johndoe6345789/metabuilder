@@ -7,7 +7,7 @@ import { readFileSync, writeFileSync, existsSync } from 'fs'
 import { join } from 'path'
 
 export class SchemaRegistry {
-  private schemas: Map<string, ModelSchema> = new Map()
+  private readonly schemas: Map<string, ModelSchema> = new Map()
   packages: Record<string, unknown> = {}
 
   register(schema: ModelSchema): void {
@@ -40,7 +40,7 @@ export function loadSchemaRegistry(path?: string): SchemaRegistry {
       const { schemas, packages } = parsed as { schemas?: unknown; packages?: unknown }
       
       if (Array.isArray(schemas)) {
-        schemas.forEach((schema: ModelSchema) => schemaRegistry.register(schema))
+        schemas.forEach((schema: ModelSchema) => { schemaRegistry.register(schema); })
       }
       
       if (packages !== null && packages !== undefined && typeof packages === 'object') {

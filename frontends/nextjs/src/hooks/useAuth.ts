@@ -11,7 +11,7 @@ export function useAuth(): UseAuthReturn {
   const [state, setState] = useState<AuthState>(authStore.getState())
 
   useEffect(() => {
-    const unsubscribe = authStore.subscribe(() => setState({ ...authStore.getState() }))
+    const unsubscribe = authStore.subscribe(() => { setState({ ...authStore.getState() }); })
     void authStore.ensureSessionChecked()
     return unsubscribe
   }, [])
