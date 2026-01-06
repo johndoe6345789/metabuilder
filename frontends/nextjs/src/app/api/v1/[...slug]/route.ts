@@ -67,11 +67,11 @@ async function handleRequest(
   const tenantResult = await validateTenantAccess(
     user,
     route.tenant,
-    packageResult.package?.minLevel || 1
+    packageResult.package?.minLevel ?? 1
   )
-  if (!tenantResult.allowed) {
-    const status = !user ? STATUS.UNAUTHORIZED : STATUS.FORBIDDEN
-    return errorResponse(tenantResult.reason || 'Access denied', status)
+  if (tenantResult.allowed === false) {
+    const status = user === null ? STATUS.UNAUTHORIZED : STATUS.FORBIDDEN
+    return errorResponse(tenantResult.reason ?? 'Access denied', status)
   }
 
   // 5. Execute the DBAL operation

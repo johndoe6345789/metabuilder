@@ -24,7 +24,7 @@ interface PageProps {
  */
 export default async function DynamicUIPage({ params }: PageProps) {
   const resolvedParams = await params
-  const slug = resolvedParams.slug || []
+  const slug = resolvedParams.slug ?? []
   const path = '/' + slug.join('/')
 
   // Prefer Lua package-based UI pages, fallback to database-backed pages
@@ -51,7 +51,7 @@ export default async function DynamicUIPage({ params }: PageProps) {
  */
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await params
-  const slug = resolvedParams.slug || []
+  const slug = resolvedParams.slug ?? []
   const path = '/' + slug.join('/')
 
   const pageData = (await loadPageFromLuaPackages(path)) ?? (await loadPageFromDb(path))

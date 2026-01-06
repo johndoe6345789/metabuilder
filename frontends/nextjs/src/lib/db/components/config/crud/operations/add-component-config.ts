@@ -9,7 +9,7 @@ export async function addComponentConfig(config: ComponentConfig): Promise<void>
     props: JSON.stringify(config.props),
     styles: JSON.stringify(config.styles),
     events: JSON.stringify(config.events),
-    conditionalRendering: config.conditionalRendering
+    conditionalRendering: config.conditionalRendering !== null && config.conditionalRendering !== undefined
       ? JSON.stringify(config.conditionalRendering)
       : null,
   })
