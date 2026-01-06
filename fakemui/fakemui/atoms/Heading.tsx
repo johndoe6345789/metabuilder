@@ -20,7 +20,7 @@ export const Heading: React.FC<HeadingProps> = ({
   ...props
 }) => {
   const headingLevel = variant ? parseInt(variant.slice(1)) : level
-  const Tag = `h${headingLevel}` as keyof JSX.IntrinsicElements
+  const Tag = `h${headingLevel}` as React.ElementType
   
   return (
     <Tag className={`heading heading--level-${headingLevel} ${className}`} {...props}>

@@ -2,18 +2,15 @@
  * Login API (stub)
  */
 
+import type { User } from '@/lib/types/level-types'
+
 export interface LoginCredentials {
   username: string
   password: string
 }
 
-export interface LoginResponse {
-  success: boolean
-  token?: string
-  error?: string
-}
-
-export async function login(_credentials: LoginCredentials): Promise<LoginResponse> {
+export async function login(_identifier: string, _password: string): Promise<User> {
   // TODO: Implement login
-  return { success: false, error: 'Not implemented' }
+  // For now, throw an error to indicate not implemented
+  throw new Error('Login not implemented')
 }
