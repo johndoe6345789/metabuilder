@@ -13,6 +13,7 @@ export async function getErrorLogs(options?: {
   const adapter = getAdapter()
   const result = await adapter.list('ErrorLog')
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let logs = (result.data as any[]).map(log => ({
     id: log.id,
     timestamp: Number(log.timestamp),

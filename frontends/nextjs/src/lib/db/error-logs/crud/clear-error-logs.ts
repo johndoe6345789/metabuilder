@@ -1,4 +1,3 @@
-import { getAdapter } from '../../core/dbal-client'
 import { deleteErrorLog } from './delete-error-log'
 import { getErrorLogs } from './get-error-logs'
 

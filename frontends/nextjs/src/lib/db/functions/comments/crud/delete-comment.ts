@@ -3,7 +3,7 @@
  * Deletes a comment from database
  */
 
-import { prisma } from '../../prisma'
+import { prisma } from '@/lib/config/prisma'
 
 /**
  * Delete a comment

@@ -16,12 +16,14 @@ interface PackageStyleLoaderProps {
 export function PackageStyleLoader({ packages }: PackageStyleLoaderProps) {
   useEffect(() => {
     async function loadStyles() {
+      // eslint-disable-next-line no-console
       console.log(`📦 Loading styles for ${packages.length} packages...`)
 
       const results = await Promise.all(
         packages.map(async (packageId) => {
           try {
             const css = await loadAndInjectStyles(packageId)
+            // eslint-disable-next-line no-console
             console.log(`✓ ${packageId} (${css.length} bytes)`)
             return { packageId, success: true, size: css.length }
           } catch (error) {
@@ -33,6 +35,7 @@ export function PackageStyleLoader({ packages }: PackageStyleLoaderProps) {
 
       const successful = results.filter(r => r.success)
       const totalSize = successful.reduce((sum, r) => sum + r.size, 0)
+      // eslint-disable-next-line no-console
       console.log(`✅ ${successful.length}/${packages.length} packages loaded (${(totalSize / 1024).toFixed(1)}KB)`)
     }
 

@@ -8,6 +8,7 @@ export async function setSMTPConfig(config: SMTPConfig): Promise<void> {
   const adapter = getAdapter()
   // Delete all existing
   const existing = await adapter.list('SMTPConfig')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   for (const item of existing.data as any[]) {
     await adapter.delete('SMTPConfig', item.id)
   }

@@ -8,6 +8,7 @@ export async function setTenants(tenants: Tenant[]): Promise<void> {
   const adapter = getAdapter()
   // Delete all existing
   const existing = await adapter.list('Tenant')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   for (const item of existing.data as any[]) {
     await adapter.delete('Tenant', item.id)
   }

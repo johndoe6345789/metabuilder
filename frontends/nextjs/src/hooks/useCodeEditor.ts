@@ -13,8 +13,8 @@ export function useCodeEditor() {
   return {
     files: [] as EditorFile[],
     currentFile: null as EditorFile | null,
-    openFile: (file: EditorFile) => {},
-    saveFile: (file: EditorFile) => {},
-    closeFile: (path: string) => {},
+    openFile: (_file: EditorFile) => {},
+    saveFile: (_file: EditorFile) => {},
+    closeFile: (_path: string) => {},
   }
 }

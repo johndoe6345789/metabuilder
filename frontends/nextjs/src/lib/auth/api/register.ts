@@ -14,7 +14,7 @@ export interface RegisterResponse {
   error?: string
 }
 
-export async function register(data: RegisterData): Promise<RegisterResponse> {
+export async function register(_data: RegisterData): Promise<RegisterResponse> {
   // TODO: Implement registration
   return { success: false, error: 'Not implemented' }
 }

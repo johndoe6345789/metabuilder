@@ -9,7 +9,7 @@ export interface FileNode {
   children?: FileNode[]
 }
 
-export function useFileTree(rootPath?: string) {
+export function useFileTree(_rootPath?: string) {
   // TODO: Implement useFileTree
   return {
     tree: null as FileNode | null,

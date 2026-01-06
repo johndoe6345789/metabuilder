@@ -13,7 +13,7 @@ export interface LoginResponse {
   error?: string
 }
 
-export async function login(credentials: LoginCredentials): Promise<LoginResponse> {
+export async function login(_credentials: LoginCredentials): Promise<LoginResponse> {
   // TODO: Implement login
   return { success: false, error: 'Not implemented' }
 }

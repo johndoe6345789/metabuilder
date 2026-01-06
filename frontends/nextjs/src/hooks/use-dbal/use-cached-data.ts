@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { dbal } from '@/lib/dbal-integration'
+import { dbal } from '@/lib/dbal/core/client'
 
 import { useKVStore } from './use-kv-store'
 

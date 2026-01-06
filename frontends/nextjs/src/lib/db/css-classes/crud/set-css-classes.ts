@@ -8,6 +8,7 @@ export async function setCssClasses(classes: CssCategory[]): Promise<void> {
   const adapter = getAdapter()
   // Delete all existing
   const existing = await adapter.list('CssCategory')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   for (const item of existing.data as any[]) {
     if (item?.id) {
       await adapter.delete('CssCategory', item.id)

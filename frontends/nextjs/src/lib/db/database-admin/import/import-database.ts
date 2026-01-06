@@ -24,7 +24,7 @@ export async function importDatabase(jsonData: string): Promise<void> {
     if (data.comments) await setComments(data.comments)
     if (data.componentHierarchy) await setComponentHierarchy(data.componentHierarchy)
     if (data.componentConfigs) await setComponentConfigs(data.componentConfigs)
-  } catch (error) {
+  } catch {
     throw new Error('Failed to import database: Invalid JSON')
   }
 }

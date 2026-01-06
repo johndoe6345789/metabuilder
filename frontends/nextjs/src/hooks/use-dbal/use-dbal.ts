@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { dbal } from '@/lib/dbal-integration'
+import { dbal } from '@/lib/dbal/core/client'
 
 /**
  * Hook to ensure DBAL is initialized

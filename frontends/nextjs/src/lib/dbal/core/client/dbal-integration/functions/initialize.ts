@@ -1,4 +1,4 @@
-import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
+import { DBALClient as _DBALClient, type DBALConfig as _DBALConfig } from '@/dbal'
 import { InMemoryKVStore } from '@/dbal/core/kv'
 import { MemoryStorage } from '@/dbal/blob/providers/memory-storage'
 

@@ -23,6 +23,7 @@ describe('setComments', () => {
     mockDelete.mockResolvedValue(undefined)
     mockCreate.mockResolvedValue(undefined)
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await setComments([{ id: 'new', userId: 'u1', content: 'Hi', createdAt: 1000 }] as any)
 
     expect(mockDelete).toHaveBeenCalledTimes(1)

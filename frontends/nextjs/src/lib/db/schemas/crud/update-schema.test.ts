@@ -20,6 +20,7 @@ describe('updateSchema', () => {
   ])('should update $name', async ({ name, updates }) => {
     mockUpdate.mockResolvedValue(undefined)
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await updateSchema(name, updates as any)
 
     expect(mockUpdate).toHaveBeenCalledWith('ModelSchema', name, expect.any(Object))

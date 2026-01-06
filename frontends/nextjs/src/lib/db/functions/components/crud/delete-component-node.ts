@@ -3,7 +3,7 @@
  * Deletes a component node from hierarchy
  */
 
-import { prisma } from '../../prisma'
+import { prisma } from '@/lib/config/prisma'
 
 /**
  * Delete a component node

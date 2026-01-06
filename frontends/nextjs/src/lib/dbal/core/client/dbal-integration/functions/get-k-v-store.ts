@@ -1,6 +1,7 @@
 import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
 import type { KVStore } from '@/dbal/core/kv/types'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getKVStore(this: any): KVStore {
   if (!this.kvStore) {
     throw new Error('DBAL not initialized. Call initialize() first.')

@@ -2,12 +2,12 @@
  * useKV hook (stub)
  */
 
-export function useKV(namespace?: string) {
+export function useKV(_namespace?: string) {
   // TODO: Implement useKV
   return {
-    get: async (key: string) => null,
-    set: async (key: string, value: unknown) => {},
-    delete: async (key: string) => {},
-    list: async (prefix?: string) => [],
+    get: async (_key: string) => null,
+    set: async (_key: string, _value: unknown) => {},
+    delete: async (_key: string) => {},
+    list: async (_prefix?: string) => [],
   }
 }

@@ -28,6 +28,7 @@ describe('updatePage', () => {
   ])('should update $name', async ({ pageId, updates }) => {
     mockUpdate.mockResolvedValue(undefined)
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await updatePage(pageId, updates as any)
 
     expect(mockUpdate).toHaveBeenCalledWith('PageConfig', pageId, expect.any(Object))
