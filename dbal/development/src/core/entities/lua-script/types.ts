@@ -8,6 +8,8 @@ export interface CreateLuaScriptInput {
   code: string;
   description?: string;
   isActive?: boolean;
+  isSandboxed?: boolean;
+  timeoutMs?: number;
 }
 
 export interface UpdateLuaScriptInput {
@@ -15,6 +17,8 @@ export interface UpdateLuaScriptInput {
   code?: string;
   description?: string;
   isActive?: boolean;
+  isSandboxed?: boolean;
+  timeoutMs?: number;
 }
 
 export interface LuaScript {

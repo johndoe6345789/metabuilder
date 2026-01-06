@@ -1,9 +1,5 @@
-/**
- * @file validate-package-update.ts
- * @description Package update validation (stub)
- */
-
-export const validatePackageUpdate = (input: any): string[] => {
-  // Stub validation that always returns empty errors
-  return [];
-};
+export function validatePackageUpdate(input: any): string[] {
+  const errors: string[] = [];
+  // TODO: Add validation logic
+  return errors;
+}

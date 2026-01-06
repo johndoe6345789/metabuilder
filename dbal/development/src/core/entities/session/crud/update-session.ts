@@ -5,7 +5,7 @@
 import type { Result, Session, UpdateSessionInput } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
 import { validateId } from '../validation/validate-id'
-import { validateSessionUpdate } from '../../validation/validate-session-update'
+import { validateSessionUpdate } from '../validation/validate-session-update'
 
 /**
  * Update an existing session

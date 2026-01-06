@@ -1,4 +1,4 @@
-import type { TenantManager } from '../../core/foundation/tenant-context'
+import type { TenantManager } from '../../../core/foundation/tenant-context'
 import type { BlobStorage } from '../../blob-storage'
 
 export interface TenantAwareDeps {

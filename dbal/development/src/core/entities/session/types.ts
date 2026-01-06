@@ -5,11 +5,13 @@
 
 export interface CreateSessionInput {
   userId: string;
+  token: string;
   expiresAt?: Date;
 }
 
 export interface UpdateSessionInput {
   userId?: string;
+  token?: string;
   expiresAt?: Date;
 }
 

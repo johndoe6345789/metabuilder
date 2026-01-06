@@ -8,6 +8,8 @@ export interface CreateWorkflowInput {
   description?: string;
   definition?: any;
   isActive?: boolean;
+  trigger?: string;
+  triggerConfig?: any;
 }
 
 export interface UpdateWorkflowInput {
@@ -15,6 +17,8 @@ export interface UpdateWorkflowInput {
   description?: string;
   definition?: any;
   isActive?: boolean;
+  trigger?: string;
+  triggerConfig?: any;
 }
 
 export interface Workflow {
@@ -23,6 +27,8 @@ export interface Workflow {
   description?: string;
   definition?: any;
   isActive: boolean;
+  trigger?: string;
+  triggerConfig?: any;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -4,7 +4,7 @@
  */
 import type { CreatePageInput, PageView, Result } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
-import { validatePageCreate } from '../../validation/validate-page-create'
+import { validatePageCreate } from '../validation/validate-page-create'
 
 /**
  * Create a new page in the store

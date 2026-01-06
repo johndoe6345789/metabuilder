@@ -4,7 +4,7 @@
  */
 import type { CreateSessionInput, Result, Session } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
-import { validateSessionCreate } from '../../validation/validate-session-create'
+import { validateSessionCreate } from '../validation/validate-session-create'
 
 /**
  * Create a new session in the store
