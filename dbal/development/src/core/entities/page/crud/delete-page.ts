@@ -2,7 +2,7 @@
  * @file delete-page.ts
  * @description Delete page operation
  */
-import type { Result } from '../../types'
+import type { Result } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
 import { validateId } from '../validation/validate-id'
 

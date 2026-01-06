@@ -2,7 +2,7 @@
  * @file list-lua-scripts.ts
  * @description List Lua scripts with filtering and pagination
  */
-import type { ListOptions, LuaScript, Result } from '../../types'
+import type { ListOptions, LuaScript, Result } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
 
 /**

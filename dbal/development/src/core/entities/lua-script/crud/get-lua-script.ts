@@ -2,7 +2,7 @@
  * @file get-lua-script.ts
  * @description Get Lua script by ID operation
  */
-import type { LuaScript, Result } from '../../types'
+import type { LuaScript, Result } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
 import { validateId } from '../../../validation/entities/validate-id'
 

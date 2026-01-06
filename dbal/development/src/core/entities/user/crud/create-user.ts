@@ -2,7 +2,7 @@
  * @file create-user.ts
  * @description Create user operation
  */
-import type { CreateUserInput, Result, User } from '../../types'
+import type { CreateUserInput, Result, User } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
 import { validateUserCreate } from '../../validation/validate-user-create'
 

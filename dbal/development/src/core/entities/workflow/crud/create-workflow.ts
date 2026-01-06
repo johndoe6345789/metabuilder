@@ -2,7 +2,7 @@
  * @file create-workflow.ts
  * @description Create workflow operation
  */
-import type { CreateWorkflowInput, Result, Workflow } from '../../types'
+import type { CreateWorkflowInput, Result, Workflow } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
 import { validateWorkflowCreate } from '../../validation/validate-workflow-create'
 

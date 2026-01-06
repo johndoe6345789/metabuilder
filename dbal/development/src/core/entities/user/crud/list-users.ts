@@ -2,7 +2,7 @@
  * @file list-users.ts
  * @description List users with filtering and pagination
  */
-import type { ListOptions, Result, User } from '../../types'
+import type { ListOptions, Result, User } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
 
 /**

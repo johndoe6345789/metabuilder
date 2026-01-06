@@ -2,7 +2,7 @@
  * @file create-lua-script.ts
  * @description Create Lua script operation
  */
-import type { CreateLuaScriptInput, LuaScript, Result } from '../../types'
+import type { CreateLuaScriptInput, LuaScript, Result } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
 import { validateLuaScriptCreate } from '../../../validation/entities/lua-script/validate-lua-script-create'
 

@@ -2,7 +2,7 @@
  * @file get-package.ts
  * @description Get package operations
  */
-import type { Package, Result } from '../../types'
+import type { Package, Result } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
 import { validateId } from '../validation/validate-id'
 

@@ -1,4 +1,4 @@
-import type { DownloadOptions, BlobMetadata, BlobListOptions, BlobListResult } from '../blob-storage'
+import type { DownloadOptions, BlobMetadata, BlobListOptions, BlobListResult } from '../../blob-storage'
 import type { TenantAwareDeps } from './context'
 import { scopeKey, unscopeKey } from './context'
 import { ensurePermission, resolveTenantContext } from './tenant-context'

@@ -2,7 +2,7 @@
  * @file list-pages.ts
  * @description List pages with filtering and pagination
  */
-import type { ListOptions, PageView, Result } from '../../types'
+import type { ListOptions, PageView, Result } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
 
 /**

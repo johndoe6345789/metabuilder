@@ -5,5 +5,6 @@
 
 export interface InMemoryStore {
   workflows: Map<string, any>;
+  workflowNames: Map<string, string>;
   generateId(entityType: string): string;
 }

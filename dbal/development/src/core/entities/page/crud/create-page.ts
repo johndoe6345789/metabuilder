@@ -2,7 +2,7 @@
  * @file create-page.ts
  * @description Create page operation
  */
-import type { CreatePageInput, PageView, Result } from '../../types'
+import type { CreatePageInput, PageView, Result } from '../types'
 import type { InMemoryStore } from '../store/in-memory-store'
 import { validatePageCreate } from '../../validation/validate-page-create'
 

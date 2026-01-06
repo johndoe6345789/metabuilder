@@ -5,5 +5,6 @@
 
 export interface InMemoryStore {
   luaScripts: Map<string, any>;
+  luaScriptNames: Map<string, string>;
   generateId(entityType: string): string;
 }
