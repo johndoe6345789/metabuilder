@@ -7,11 +7,10 @@ import type { DropdownConfig } from '../types'
 export async function getDropdownConfigs(): Promise<DropdownConfig[]> {
   const adapter = getAdapter()
   const result = await adapter.list('DropdownConfig')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (result.data as any[]).map(c => ({
+  return (result.data as Array<{ id: string | number; name: string; label: string; options: string | string[] }>).map(c => ({
     id: c.id,
     name: c.name,
     label: c.label,
-    options: typeof c.options === 'string' ? JSON.parse(c.options) : c.options,
+    options: typeof c.options === 'string' ? JSON.parse(c.options) as string[] : c.options,
   }))
 }

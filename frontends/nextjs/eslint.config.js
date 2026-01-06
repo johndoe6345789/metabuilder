@@ -58,12 +58,16 @@ export default tseslint.config(
       'src/lib/**/functions/**/*.ts',
       'src/hooks/**/*.ts',
       'src/lib/github/**/*.ts',
+      'src/lib/dbal-client/**/*.ts',
+      'src/lib/dbal/**/*.ts',
     ],
     rules: {
       '@typescript-eslint/no-unsafe-assignment': 'warn',
       '@typescript-eslint/no-unsafe-member-access': 'warn',
       '@typescript-eslint/no-unsafe-call': 'warn',
       '@typescript-eslint/no-unsafe-return': 'warn',
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+      '@typescript-eslint/strict-boolean-expressions': 'warn',
     },
   },
 )

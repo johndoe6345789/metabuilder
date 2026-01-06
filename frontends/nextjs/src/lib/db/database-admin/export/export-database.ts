@@ -18,7 +18,7 @@ export async function exportDatabase(): Promise<string> {
     luaScripts: await getLuaScripts(),
     pages: await getPages(),
     schemas: await getSchemas(),
-    appConfig: (await getAppConfig()) || undefined,
+    appConfig: (await getAppConfig()) ?? undefined,
     comments: await getComments(),
     componentHierarchy: await getComponentHierarchy(),
     componentConfigs: await getComponentConfigs(),

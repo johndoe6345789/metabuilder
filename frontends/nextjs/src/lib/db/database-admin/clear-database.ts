@@ -39,8 +39,8 @@ export async function clearDatabase(): Promise<void> {
     try {
       const result = (await adapter.list(entityType)) as { data: DBALDeleteCandidate[] }
       for (const item of result.data) {
-        const id = item.id || item.packageId || item.name || item.key || item.username
-        if (id) {
+        const id = item.id ?? item.packageId ?? item.name ?? item.key ?? item.username
+        if (id !== null && id !== undefined) {
           await adapter.delete(entityType, id)
         }
       }

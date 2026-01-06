@@ -8,8 +8,7 @@ export async function setDropdownConfigs(configs: DropdownConfig[]): Promise<voi
   const adapter = getAdapter()
   // Delete all existing
   const existing = await adapter.list('DropdownConfig')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  for (const item of existing.data as any[]) {
+  for (const item of existing.data as Array<{ id: string | number }>) {
     await adapter.delete('DropdownConfig', item.id)
   }
   // Create new ones

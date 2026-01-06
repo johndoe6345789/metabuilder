@@ -15,15 +15,15 @@ export async function importDatabase(jsonData: string): Promise<void> {
   try {
     const data = JSON.parse(jsonData) as Partial<DatabaseSchema>
 
-    if (data.users) await setUsers(data.users)
-    if (data.workflows) await setWorkflows(data.workflows)
-    if (data.luaScripts) await setLuaScripts(data.luaScripts)
-    if (data.pages) await setPages(data.pages)
-    if (data.schemas) await setSchemas(data.schemas)
-    if (data.appConfig) await setAppConfig(data.appConfig)
-    if (data.comments) await setComments(data.comments)
-    if (data.componentHierarchy) await setComponentHierarchy(data.componentHierarchy)
-    if (data.componentConfigs) await setComponentConfigs(data.componentConfigs)
+    if (data.users !== null && data.users !== undefined) await setUsers(data.users)
+    if (data.workflows !== null && data.workflows !== undefined) await setWorkflows(data.workflows)
+    if (data.luaScripts !== null && data.luaScripts !== undefined) await setLuaScripts(data.luaScripts)
+    if (data.pages !== null && data.pages !== undefined) await setPages(data.pages)
+    if (data.schemas !== null && data.schemas !== undefined) await setSchemas(data.schemas)
+    if (data.appConfig !== null && data.appConfig !== undefined) await setAppConfig(data.appConfig)
+    if (data.comments !== null && data.comments !== undefined) await setComments(data.comments)
+    if (data.componentHierarchy !== null && data.componentHierarchy !== undefined) await setComponentHierarchy(data.componentHierarchy)
+    if (data.componentConfigs !== null && data.componentConfigs !== undefined) await setComponentConfigs(data.componentConfigs)
   } catch {
     throw new Error('Failed to import database: Invalid JSON')
   }
