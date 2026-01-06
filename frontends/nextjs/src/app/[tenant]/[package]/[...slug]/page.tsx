@@ -23,11 +23,11 @@ interface EntityPageProps {
 export default async function EntityPage({ params }: EntityPageProps) {
   const { tenant, package: pkg, slug } = await params
 
-  if (!tenant || !pkg || !slug || slug.length === 0) {
+  if (tenant.length === 0 || pkg.length === 0 || slug.length === 0) {
     notFound()
   }
 
-  const entity = slug[0]!  // Safe: checked slug.length > 0
+  const entity = slug[0] as string  // Safe: checked slug.length > 0
   const id = slug[1]
   const action = slug[2]
 

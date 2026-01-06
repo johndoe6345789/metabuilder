@@ -27,7 +27,7 @@ interface TenantLayoutProps {
  */
 async function getPackageDependencies(packageId: string): Promise<{ id: string; name?: string }[]> {
   const metadata = await loadPackageMetadata(packageId) as { dependencies?: string[]; name?: string; minLevel?: number } | null
-  if (!metadata?.dependencies) {
+  if (metadata === null || metadata.dependencies === undefined || metadata.dependencies.length === 0) {
     return []
   }
   
@@ -54,7 +54,7 @@ export default async function TenantLayout({
 
   // Load primary package metadata
   const packageMetadata = loadPackageMetadata(pkg)
-  if (!packageMetadata) {
+  if (packageMetadata === null || packageMetadata === undefined) {
     // Package doesn't exist
     notFound()
   }

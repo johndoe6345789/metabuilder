@@ -8,7 +8,7 @@ export interface JSONPackage {
   metadata: unknown
 }
 
-export async function loadJSONPackage(_packageId: string): Promise<JSONPackage | null> {
+export function loadJSONPackage(_packageId: string): JSONPackage | null {
   // TODO: Implement JSON package loading
   return null
 }
