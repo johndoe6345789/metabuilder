@@ -23,15 +23,16 @@ export default async function RootPage() {
       isPublished: true,
     },
   }) as { data: Array<{
-    packageId: string
-    component: string
-    componentTree: string
+    packageId?: string | null
+    component?: string | null
+    componentTree?: string | null
     level: number
     requiresAuth: boolean
   }> }
 
   if (godPanelRoutes.data.length > 0) {
-    const route = godPanelRoutes.data[0] as typeof godPanelRoutes.data[number]  // Safe: length check ensures element exists
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const route = godPanelRoutes.data[0]!  // Safe: length check ensures element exists
 
     // TODO: Implement proper session/user context for permission checks
     // For now, we'll allow access to public routes and skip auth checks
@@ -58,9 +59,10 @@ export default async function RootPage() {
     }
 
     // Otherwise use the package + component reference
-    if (route.packageId !== undefined && route.packageId !== null && route.component !== undefined && route.component !== null) {
+    if (route.packageId !== null && route.packageId !== undefined &&
+        route.component !== null && route.component !== undefined) {
       const pkg = await loadJSONPackage(`/home/rewrich/Documents/GitHub/metabuilder/packages/${route.packageId}`)
-      const component = pkg?.components?.find(c => c.id === route.component || c.name === route.component)
+      const component = pkg.components?.find(c => c.id === route.component || c.name === route.component)
 
       if (component !== null && component !== undefined) {
         return renderJSONComponent(component, {}, {})
@@ -73,7 +75,7 @@ export default async function RootPage() {
     filter: {
       enabled: true,
     },
-  }) as { data: Array<{ packageId: string; config: string }> }
+  }) as { data: Array<{ packageId: string; config?: string | null }> }
 
   const homePackageRecord = installedPackages.data.find((pkg) => {
     try {
@@ -88,7 +90,7 @@ export default async function RootPage() {
     const packageId = homePackageRecord.packageId
     const pkg = await loadJSONPackage(`/home/rewrich/Documents/GitHub/metabuilder/packages/${packageId}`)
 
-    if ((pkg?.components !== null && pkg?.components !== undefined) && pkg.components.length > 0) {
+    if (pkg.components !== null && pkg.components !== undefined && pkg.components.length > 0) {
       const pageComponent = pkg.components.find(c =>
         c.id === 'home_page' ||
         c.name === 'HomePage' ||
