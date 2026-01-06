@@ -82,7 +82,7 @@ async function handleRequest(
       try {
         const text = await request.text()
         if (text !== null && text !== undefined && text !== '') {
-          body = JSON.parse(text)
+          body = JSON.parse(text) as Record<string, unknown>
         }
       } catch {
         return errorResponse('Invalid JSON body', STATUS.BAD_REQUEST)

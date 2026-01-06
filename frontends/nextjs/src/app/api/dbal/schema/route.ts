@@ -58,8 +58,8 @@ export function GET() {
  */
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const { action, id } = body as { action: string; id?: string }
+    const body = await request.json() as { action: string; id?: string }
+    const { action, id } = body
     
     const registryPath = getRegistryPath()
     const registry = loadSchemaRegistry(registryPath)

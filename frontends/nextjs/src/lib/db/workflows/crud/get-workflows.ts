@@ -19,9 +19,9 @@ export async function getWorkflows(): Promise<Workflow[]> {
   return result.data.map(w => ({
     id: w.id,
     name: w.name,
-    description: w.description || undefined,
-    nodes: JSON.parse(w.nodes),
-    edges: JSON.parse(w.edges),
+    description: w.description !== null && w.description !== undefined && w.description !== '' ? w.description : undefined,
+    nodes: JSON.parse(w.nodes) as Workflow['nodes'],
+    edges: JSON.parse(w.edges) as Workflow['edges'],
     enabled: w.enabled,
   }))
 }

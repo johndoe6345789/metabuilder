@@ -25,8 +25,8 @@ export async function getTenants(): Promise<Tenant[]> {
     createdAt: Number(t.createdAt),
     homepageConfig: t.homepageConfig !== null && t.homepageConfig !== undefined
       ? typeof t.homepageConfig === 'string'
-        ? JSON.parse(t.homepageConfig)
-        : t.homepageConfig
+        ? t.homepageConfig
+        : JSON.stringify(t.homepageConfig)
       : undefined,
   }))
 }

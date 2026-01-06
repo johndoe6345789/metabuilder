@@ -14,7 +14,7 @@ export async function GET() {
     const indexPath = join(process.cwd(), '..', '..', '..', 'packages', 'index.json')
     
     const indexContent = await readFile(indexPath, 'utf-8')
-    const indexData = JSON.parse(indexContent)
+    const indexData = JSON.parse(indexContent) as Record<string, unknown>
 
     return NextResponse.json(indexData, {
       headers: {
