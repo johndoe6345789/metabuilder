@@ -1,5 +1,5 @@
 import { getAdapter } from '../../../../core/dbal-client'
-import type { ComponentConfig } from '../types'
+import type { ComponentConfig } from '../../../types'
 
 export async function addComponentConfig(config: ComponentConfig): Promise<void> {
   const adapter = getAdapter()

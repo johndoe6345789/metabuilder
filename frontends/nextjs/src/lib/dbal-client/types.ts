@@ -16,26 +16,31 @@ export interface ListResult<T = unknown> {
   hasMore: boolean
 }
 
+export type UpsertOptions = { where: Record<string, unknown>; update: Record<string, unknown>; create: Record<string, unknown> }
+
 export interface DBALAdapter {
   // Create operations
   create(entity: string, data: Record<string, unknown>): Promise<unknown>
   
   // Read operations
   get(entity: string, id: string | number): Promise<unknown>
+  read(entity: string, id: string | number): Promise<unknown>
+  findFirst(entity: string, options: { where: Record<string, unknown> }): Promise<unknown>
   list(entity: string, options?: ListOptions): Promise<ListResult>
   
   // Update operations
   update(entity: string, id: string | number, data: Record<string, unknown>): Promise<unknown>
+  // Upsert has two signatures: 5-param form or options object form
   upsert(
     entity: string,
-    uniqueField: string,
-    uniqueValue: unknown,
-    createData: Record<string, unknown>,
-    updateData: Record<string, unknown>
+    uniqueFieldOrOptions: string | UpsertOptions,
+    uniqueValue?: unknown,
+    createData?: Record<string, unknown>,
+    updateData?: Record<string, unknown>
   ): Promise<unknown>
   
   // Delete operations
-  delete(entity: string, id: string | number): Promise<void>
+  delete(entity: string, id: string | number): Promise<boolean>
   
   // Batch operations
   createMany(entity: string, data: Record<string, unknown>[]): Promise<unknown[]>

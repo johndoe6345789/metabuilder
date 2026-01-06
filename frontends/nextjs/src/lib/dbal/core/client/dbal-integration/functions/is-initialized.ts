@@ -1,5 +1,10 @@
-import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
+let initialized = false
 
 export function isInitialized(): boolean {
-  return this.initialized
+  // TODO: Implement proper initialization state tracking
+  return initialized
+}
+
+export function setInitialized(value: boolean): void {
+  initialized = value
 }

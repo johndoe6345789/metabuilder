@@ -4,7 +4,14 @@
 
 import type { PageConfig } from '../types/level-types'
 
-export async function loadPageFromDb(_b_path: string, _tenantId?: string): Promise<PageConfig | null> {
+export type LuaActionHandler = (action: string, data: Record<string, unknown>) => void | Promise<void>
+
+export interface UIPageData {
+  layout: unknown
+  actions?: Record<string, LuaActionHandler>
+}
+
+export async function loadPageFromDb(_path: string, _tenantId?: string): Promise<PageConfig | null> {
   // TODO: Implement page loading from database
   return null
 }
