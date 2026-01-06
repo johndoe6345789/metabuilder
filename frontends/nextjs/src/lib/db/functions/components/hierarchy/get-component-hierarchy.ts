@@ -17,8 +17,8 @@ export const getComponentHierarchy = async (): Promise<Record<string, ComponentN
     result[node.id] = {
       id: node.id,
       type: node.type,
-      parentId: node.parentId || undefined,
-      childIds: JSON.parse(node.childIds),
+      parentId: node.parentId !== null && node.parentId !== '' ? node.parentId : undefined,
+      childIds: JSON.parse(node.childIds) as string[],
       order: node.order,
       pageId: node.pageId,
     }
