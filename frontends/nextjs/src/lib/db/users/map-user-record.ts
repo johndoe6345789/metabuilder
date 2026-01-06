@@ -9,10 +9,10 @@ export function mapUserRecord(record: Record<string, unknown>): User {
     username: String(record.username),
     email: String(record.email),
     role: record.role as User['role'],
-    profilePicture: record.profilePicture ? String(record.profilePicture) : undefined,
-    bio: record.bio ? String(record.bio) : undefined,
+    profilePicture: (record.profilePicture !== null && record.profilePicture !== undefined) ? String(record.profilePicture) : undefined,
+    bio: (record.bio !== null && record.bio !== undefined) ? String(record.bio) : undefined,
     createdAt: Number(record.createdAt),
-    tenantId: record.tenantId ? String(record.tenantId) : undefined,
+    tenantId: (record.tenantId !== null && record.tenantId !== undefined) ? String(record.tenantId) : undefined,
     isInstanceOwner: Boolean(record.isInstanceOwner),
   }
 }

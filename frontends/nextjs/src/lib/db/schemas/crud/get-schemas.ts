@@ -23,13 +23,13 @@ export async function getSchemas(): Promise<ModelSchema[]> {
   return result.data.map(s => ({
     id: s.id,
     name: s.name,
-    label: s.label || undefined,
-    labelPlural: s.labelPlural || undefined,
-    icon: s.icon || undefined,
-    fields: JSON.parse(s.fields),
-    listDisplay: s.listDisplay ? JSON.parse(s.listDisplay) : undefined,
-    listFilter: s.listFilter ? JSON.parse(s.listFilter) : undefined,
-    searchFields: s.searchFields ? JSON.parse(s.searchFields) : undefined,
-    ordering: s.ordering ? JSON.parse(s.ordering) : undefined,
+    label: s.label ?? undefined,
+    labelPlural: s.labelPlural ?? undefined,
+    icon: s.icon ?? undefined,
+    fields: s.fields,
+    listDisplay: s.listDisplay ?? undefined,
+    listFilter: s.listFilter ?? undefined,
+    searchFields: s.searchFields ?? undefined,
+    ordering: s.ordering ?? undefined,
   }))
 }

@@ -84,10 +84,10 @@ export function TenantProvider({
     getTableName: (entity: string) => getTableName(packageId, entity),
     
     buildApiUrl: (entity: string, id?: string, action?: string, pkg?: string) => {
-      const targetPkg = pkg || packageId
+      const targetPkg = pkg ?? packageId
       let url = `/api/v1/${tenant}/${targetPkg}/${entity}`
-      if (id) url += `/${id}`
-      if (action) url += `/${action}`
+      if (id !== null && id !== undefined) url += `/${id}`
+      if (action !== null && action !== undefined) url += `/${action}`
       return url
     },
     
@@ -110,7 +110,7 @@ export function TenantProvider({
 export function useTenant(): TenantContextValue {
   const context = useContext(TenantContext)
   
-  if (!context) {
+  if (context === null || context === undefined) {
     throw new Error('useTenant must be used within a TenantProvider')
   }
   

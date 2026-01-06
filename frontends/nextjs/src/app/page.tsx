@@ -76,25 +76,25 @@ export default async function RootPage() {
 
   const homePackageRecord = installedPackages.data.find((pkg) => {
     try {
-      const config = JSON.parse(pkg.config || '{}')
+      const config = JSON.parse(pkg.config ?? '{}') as { defaultRoute?: string }
       return config.defaultRoute === '/'
     } catch {
       return false
     }
   })
 
-  if (homePackageRecord) {
+  if (homePackageRecord !== null && homePackageRecord !== undefined) {
     const packageId = homePackageRecord.packageId
     const pkg = await loadJSONPackage(`/home/rewrich/Documents/GitHub/metabuilder/packages/${packageId}`)
 
-    if (pkg?.components && pkg.components.length > 0) {
+    if ((pkg?.components !== null && pkg?.components !== undefined) && pkg.components.length > 0) {
       const pageComponent = pkg.components.find(c =>
         c.id === 'home_page' ||
         c.name === 'HomePage' ||
         c.name === 'Home'
-      ) || pkg.components[0]
+      ) ?? pkg.components[0]
 
-      if (pageComponent) {
+      if (pageComponent !== null && pageComponent !== undefined) {
         return renderJSONComponent(pageComponent, {}, {})
       }
     }

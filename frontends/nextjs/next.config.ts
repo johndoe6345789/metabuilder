@@ -78,12 +78,14 @@ const nextConfig: NextConfig = {
   
   // Environment variables exposed to browser
   env: {
-    NEXT_PUBLIC_DBAL_API_URL: process.env.DBAL_API_URL || 'http://localhost:8080',
-    NEXT_PUBLIC_DBAL_WS_URL: process.env.DBAL_WS_URL || 'ws://localhost:50051',
-    NEXT_PUBLIC_DBAL_API_KEY: process.env.DBAL_API_KEY || '',
+    NEXT_PUBLIC_DBAL_API_URL: process.env.DBAL_API_URL ?? 'http://localhost:8080',
+    NEXT_PUBLIC_DBAL_WS_URL: process.env.DBAL_WS_URL ?? 'ws://localhost:50051',
+    NEXT_PUBLIC_DBAL_API_KEY: process.env.DBAL_API_KEY ?? '',
   },
   webpack(config, { isServer }) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     config.resolve.alias = {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       ...config.resolve.alias,
       '@/dbal': path.resolve(__dirname, '../../dbal/development/src'),
       '@dbal-ui': path.resolve(__dirname, '../../dbal/shared/ui'),
@@ -92,7 +94,9 @@ const nextConfig: NextConfig = {
 
     // Ignore optional AWS SDK and Node.js modules on client side
     if (!isServer) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       config.resolve.fallback = {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         ...config.resolve.fallback,
         '@aws-sdk/client-s3': false,
         fs: false,
@@ -106,6 +110,7 @@ const nextConfig: NextConfig = {
       }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return config
   },
 }

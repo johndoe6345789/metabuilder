@@ -6,13 +6,12 @@ import type { CssCategory } from '../types'
  */
 export async function updateCssCategory(categoryName: string, updates: CssCategory): Promise<void> {
   const adapter = getAdapter()
-  const existing = await adapter.findFirst('CssCategory', { where: { name: categoryName } })
-  if (!existing) {
+  const existing = await adapter.findFirst('CssCategory', { where: { name: categoryName } }) as { id: string | number } | null
+  if (existing === null || existing === undefined) {
     throw new Error(`CssCategory not found: ${categoryName}`)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await adapter.update('CssCategory', (existing as any).id, {
+  await adapter.update('CssCategory', existing.id, {
     name: updates.name,
     classes: JSON.stringify(updates.classes),
   })
