@@ -17,7 +17,7 @@ export default async function RootPage() {
 
   // PRIORITY 1: Check god panel routes (PageConfig)
   const godPanelRoutes = await adapter.list('PageConfig', {
-    filters: {
+    filter: {
       path: '/',
       isPublished: true,
     },
@@ -54,7 +54,7 @@ export default async function RootPage() {
 
   // PRIORITY 2: Check package default routes (InstalledPackage.config.defaultRoute)
   const installedPackages = await adapter.list('InstalledPackage', {
-    filters: {
+    filter: {
       enabled: true,
     },
   }) as { data: Array<{ packageId: string; config: string }> }

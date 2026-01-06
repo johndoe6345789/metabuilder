@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server'
+
 /**
  * Routing utilities (stub)
  */
@@ -24,17 +26,11 @@ export const STATUS = {
 }
 
 export function successResponse(data: unknown, status = STATUS.OK) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  })
+  return NextResponse.json(data, { status })
 }
 
 export function errorResponse(message: string, status = STATUS.ERROR) {
-  return new Response(JSON.stringify({ error: message }), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  })
+  return NextResponse.json({ error: message }, { status })
 }
 
 export interface SessionUser {
