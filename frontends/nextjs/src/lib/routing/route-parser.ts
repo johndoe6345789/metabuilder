@@ -30,9 +30,9 @@ export function parseRoute(url: string): ParsedRoute {
   
   // Try to extract tenant/package/path from segments
   // Pattern: /{tenant}/{package}/...rest
-  if (segments.length >= 1) {
+  if (segments.length >= 1 && segments[0] !== undefined) {
     const firstSegment = segments[0]
-    if (firstSegment !== undefined && !isReservedPath(firstSegment)) {
+    if (!isReservedPath(firstSegment)) {
       result.tenant = firstSegment
     }
   }
@@ -66,8 +66,9 @@ export function getTableName(entity: string, tenantId?: string): string {
 }
 
 export function isReservedPath(path: string): boolean {
-  // Get the first segment of the path
-  const segment = path.startsWith('/') ? path.split('/')[1] : path.split('/')[0]
+  // Normalize path to get the first segment
+  const normalizedPath = path.startsWith('/') ? path.slice(1) : path
+  const segment = normalizedPath.split('/')[0]
   
   // Check if the segment matches any reserved paths
   return segment !== undefined && RESERVED_PATHS.includes(segment)

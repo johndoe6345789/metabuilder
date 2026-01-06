@@ -78,14 +78,11 @@ export async function getSessionUser(_req?: Request): Promise<SessionUser> {
     }
     
     // Convert User to Record<string, unknown> for compatibility
+    // Use spread operator for maintainability
     return { 
       user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
+        ...user,
         tenantId: user.tenantId ?? null,
-        createdAt: user.createdAt,
         profilePicture: user.profilePicture ?? null,
         bio: user.bio ?? null,
         isInstanceOwner: user.isInstanceOwner ?? false,
