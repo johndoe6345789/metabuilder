@@ -13,31 +13,46 @@ export async function getErrorLogs(options?: {
   const adapter = getAdapter()
   const result = await adapter.list('ErrorLog')
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let logs = (result.data as any[]).map(log => ({
+  type ErrorLogRecord = {
+    id: string
+    timestamp: bigint | number
+    level: string
+    message: string
+    stack?: string | null
+    context?: string | null
+    userId?: string | null
+    username?: string | null
+    tenantId?: string | null
+    source?: string | null
+    resolved: boolean
+    resolvedAt?: bigint | number | null
+    resolvedBy?: string | null
+  }
+
+  let logs = (result.data as ErrorLogRecord[]).map(log => ({
     id: log.id,
     timestamp: Number(log.timestamp),
     level: log.level as 'error' | 'warning' | 'info',
     message: log.message,
-    stack: log.stack || undefined,
-    context: log.context || undefined,
-    userId: log.userId || undefined,
-    username: log.username || undefined,
-    tenantId: log.tenantId || undefined,
-    source: log.source || undefined,
+    stack: log.stack ?? undefined,
+    context: log.context ?? undefined,
+    userId: log.userId ?? undefined,
+    username: log.username ?? undefined,
+    tenantId: log.tenantId ?? undefined,
+    source: log.source ?? undefined,
     resolved: log.resolved,
-    resolvedAt: log.resolvedAt ? Number(log.resolvedAt) : undefined,
-    resolvedBy: log.resolvedBy || undefined,
+    resolvedAt: (log.resolvedAt !== null && log.resolvedAt !== undefined) ? Number(log.resolvedAt) : undefined,
+    resolvedBy: log.resolvedBy ?? undefined,
   }))
 
   // Apply filters
-  if (options?.level) {
+  if (options?.level !== null && options?.level !== undefined) {
     logs = logs.filter(log => log.level === options.level)
   }
   if (options?.resolved !== undefined) {
     logs = logs.filter(log => log.resolved === options.resolved)
   }
-  if (options?.tenantId) {
+  if (options?.tenantId !== null && options?.tenantId !== undefined) {
     logs = logs.filter(log => log.tenantId === options.tenantId)
   }
 
@@ -45,7 +60,7 @@ export async function getErrorLogs(options?: {
   logs.sort((a, b) => b.timestamp - a.timestamp)
 
   // Apply limit
-  if (options?.limit && options.limit > 0) {
+  if ((options?.limit !== null && options?.limit !== undefined) && options.limit > 0) {
     logs = logs.slice(0, options.limit)
   }
 

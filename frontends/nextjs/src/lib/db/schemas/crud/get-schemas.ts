@@ -23,13 +23,13 @@ export async function getSchemas(): Promise<ModelSchema[]> {
   return result.data.map(s => ({
     id: s.id,
     name: s.name,
-    label: s.label || undefined,
-    labelPlural: s.labelPlural || undefined,
-    icon: s.icon || undefined,
-    fields: JSON.parse(s.fields),
-    listDisplay: s.listDisplay ? JSON.parse(s.listDisplay) : undefined,
-    listFilter: s.listFilter ? JSON.parse(s.listFilter) : undefined,
-    searchFields: s.searchFields ? JSON.parse(s.searchFields) : undefined,
-    ordering: s.ordering ? JSON.parse(s.ordering) : undefined,
+    label: s.label ?? undefined,
+    labelPlural: s.labelPlural ?? undefined,
+    icon: s.icon ?? undefined,
+    fields: JSON.parse(s.fields) as ModelSchema['fields'],
+    listDisplay: (s.listDisplay !== null && s.listDisplay !== undefined) ? JSON.parse(s.listDisplay) as string[] : undefined,
+    listFilter: (s.listFilter !== null && s.listFilter !== undefined) ? JSON.parse(s.listFilter) as string[] : undefined,
+    searchFields: (s.searchFields !== null && s.searchFields !== undefined) ? JSON.parse(s.searchFields) as string[] : undefined,
+    ordering: (s.ordering !== null && s.ordering !== undefined) ? JSON.parse(s.ordering) as string[] : undefined,
   }))
 }
