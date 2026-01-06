@@ -182,7 +182,7 @@ function handleApprove(registry: SchemaRegistry, registryPath: string, id?: stri
 }
 
 function handleReject(registry: SchemaRegistry, registryPath: string, id?: string) {
-  if (!id) {
+  if (id === null || id === undefined || id === '') {
     return NextResponse.json(
       { status: 'error', error: 'Migration ID required' },
       { status: 400 }

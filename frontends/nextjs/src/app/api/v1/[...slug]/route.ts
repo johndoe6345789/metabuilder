@@ -81,7 +81,7 @@ async function handleRequest(
     if (['POST', 'PUT', 'PATCH'].includes(request.method)) {
       try {
         const text = await request.text()
-        if (text) {
+        if (text !== null && text !== undefined && text !== '') {
           body = JSON.parse(text)
         }
       } catch {
@@ -124,18 +124,18 @@ async function handleRequest(
 
     if (!result.success) {
       // Map common errors to appropriate status codes
-      const errorMsg = result.error || 'Operation failed'
-      if (errorMsg.includes('not found')) {
+      const errorMsg = result.error ?? 'Operation failed'
+      if (errorMsg !== null && errorMsg !== undefined && errorMsg.includes('not found')) {
         return errorResponse(errorMsg, STATUS.NOT_FOUND)
       }
-      if (errorMsg.includes('required')) {
+      if (errorMsg !== null && errorMsg !== undefined && errorMsg.includes('required')) {
         return errorResponse(errorMsg, STATUS.BAD_REQUEST)
       }
       return errorResponse(errorMsg, STATUS.INTERNAL_ERROR)
     }
 
     // Build response with metadata
-    const responseData = result.meta 
+    const responseData = result.meta !== null && result.meta !== undefined
       ? { data: result.data, ...(result.meta as Record<string, unknown>) }
       : result.data
 
