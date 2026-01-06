@@ -10,7 +10,7 @@ export interface RegisterData {
   password: string
 }
 
-export function register(_username: string, _email: string, _password: string): never {
+export async function register(_username: string, _email: string, _password: string): Promise<User> {
   // TODO: Implement registration
   throw new Error('Registration not implemented')
 }

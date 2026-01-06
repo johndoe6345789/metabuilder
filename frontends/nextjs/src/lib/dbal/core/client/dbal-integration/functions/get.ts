@@ -7,11 +7,11 @@ interface StoreContext {
   store: Map<string, { value: JsonValue; expiry?: number }>
 }
 
-export async function get(this: StoreContext, key: string, context: TenantContext): Promise<JsonValue | null> {
+export function get(this: StoreContext, key: string, context: TenantContext): JsonValue | null {
   const fullKey = this.getKey(key, context)
   const item = this.store.get(fullKey)
-  if (!item) return null
-  if (item.expiry && Date.now() > item.expiry) {
+  if (item === null || item === undefined) return null
+  if (item.expiry !== undefined && Date.now() > item.expiry) {
     this.store.delete(fullKey)
     return null
   }
