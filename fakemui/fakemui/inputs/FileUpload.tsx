@@ -27,6 +27,7 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(
       label,
       helperText,
       error,
+      value,
       onChange,
       onRemove,
       disabled,

@@ -3,7 +3,7 @@ import React from 'react'
 export type AlertSeverity = 'error' | 'warning' | 'info' | 'success'
 export type AlertVariant = 'standard' | 'filled' | 'outlined'
 
-export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   children?: React.ReactNode
   title?: React.ReactNode
   severity?: AlertSeverity

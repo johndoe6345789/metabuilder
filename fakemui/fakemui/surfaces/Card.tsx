@@ -12,7 +12,7 @@ export const Card: React.FC<CardProps> = ({ children, clickable, raised, classNa
   </div>
 )
 
-export interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   title?: React.ReactNode
   subheader?: React.ReactNode
   action?: React.ReactNode

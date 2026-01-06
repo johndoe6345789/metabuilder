@@ -4,7 +4,7 @@ import { FormHelperText } from './FormHelperText'
 import { Input, InputProps } from './Input'
 import { Select } from './Select'
 
-export interface TextFieldProps extends Omit<InputProps, 'size'> {
+export interface TextFieldProps extends Omit<InputProps, 'size' | 'label' | 'helperText'> {
   label?: React.ReactNode
   helperText?: React.ReactNode
   error?: boolean
