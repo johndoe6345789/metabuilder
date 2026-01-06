@@ -59,7 +59,7 @@ export default async function RootPage() {
     // Otherwise use the package + component reference
     if (route.packageId && route.component) {
       const pkg = await loadJSONPackage(`/home/rewrich/Documents/GitHub/metabuilder/packages/${route.packageId}`)
-      const component = pkg?.components.find(c => c.id === route.component || c.name === route.component)
+      const component = pkg?.components?.find(c => c.id === route.component || c.name === route.component)
 
       if (component) {
         return renderJSONComponent(component, {}, {})
@@ -94,7 +94,9 @@ export default async function RootPage() {
         c.name === 'Home'
       ) || pkg.components[0]
 
-      return renderJSONComponent(pageComponent, {}, {})
+      if (pageComponent) {
+        return renderJSONComponent(pageComponent, {}, {})
+      }
     }
   }
 

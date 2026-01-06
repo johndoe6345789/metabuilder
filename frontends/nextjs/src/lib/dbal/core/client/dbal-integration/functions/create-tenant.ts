@@ -6,6 +6,7 @@ interface TenantLimits {
   maxApiCalls?: number
 }
 
-export async function createTenant(id: string, limits?: TenantLimits): Promise<void> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function createTenant(this: any, id: string, limits?: TenantLimits): Promise<void> {
   this.tenants.set(id, { limits: limits || {} })
 }
