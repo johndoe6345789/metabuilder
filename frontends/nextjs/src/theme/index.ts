@@ -5,6 +5,8 @@
  * Themes are exported as objects containing CSS variable definitions.
  */
 
+import type { lightTheme } from './light-theme'
+
 export { colors } from './colors'
 export { darkTheme, type DarkThemeVars } from './dark-theme'
 export { fonts } from './fonts'
@@ -13,7 +15,7 @@ export { lightTheme, type LightThemeVars } from './light-theme'
 export { typography } from './typography'
 
 /** Theme variable keys - union of all CSS custom property names */
-export type ThemeVarKey = keyof typeof import('./light-theme').lightTheme
+export type ThemeVarKey = keyof typeof lightTheme
 
 /** Theme object type */
 export type ThemeVars = Record<ThemeVarKey, string>

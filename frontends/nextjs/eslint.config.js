@@ -6,14 +6,32 @@ import tseslint from 'typescript-eslint'
  * MetaBuilder ESLint Configuration
  * 
  * Strict type-checking and code quality rules for the MetaBuilder platform.
- * Uses TypeScript ESLint for type-aware linting.
+ * Uses TypeScript ESLint for type-aware linting with progressive strictness.
  * 
- * Rule Categories:
- * 1. Base rules: TypeScript type-checking and code quality
- * 2. Stub file relaxations: Placeholder implementations (warnings only)
- * 3. Dynamic renderer relaxations: JSON component system (inherently dynamic)
- * 4. Test file relaxations: Test code patterns
- * 5. Type definition relaxations: Declaration files
+ * **Philosophy:**
+ * - Production code: Strict type safety to prevent bugs
+ * - Stub/Integration code: Warnings to track technical debt without blocking development
+ * - Dynamic systems: Relaxed rules for inherently dynamic JSON component rendering
+ * - Test code: Flexibility for mocking patterns and test-specific assertions
+ * 
+ * **Rule Categories:**
+ * 1. Base rules: TypeScript type-checking and code quality (ERRORS)
+ * 2. Stub file relaxations: Placeholder implementations (WARNINGS)
+ * 3. Dynamic renderer relaxations: JSON component system (WARNINGS)
+ * 4. Test file relaxations: Test code patterns (WARNINGS)
+ * 5. Type definition relaxations: Declaration files (WARNINGS)
+ * 
+ * **Key Strict Rules:**
+ * - `strict-boolean-expressions`: Require explicit null/undefined checks
+ * - `no-unsafe-*`: Prevent unsafe `any` type operations
+ * - `require-await`: Ensure async functions actually await something
+ * - `no-floating-promises`: Always handle promises properly
+ * - `no-non-null-assertion`: Avoid dangerous ! assertions
+ * 
+ * **Maintenance:**
+ * - Run `npm run lint` to check all files
+ * - Run `npm run lint:fix` to auto-fix simple issues
+ * - Use TODO comments in stub files until proper implementation
  */
 export default tseslint.config(
   { ignores: ['dist', 'node_modules', 'packages/*/dist', 'packages/*/node_modules', '.next/**', 'coverage/**', 'next-env.d.ts'] },
