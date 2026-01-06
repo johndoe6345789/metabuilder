@@ -99,6 +99,10 @@ export default tseslint.config(
         prefer: 'type-imports',
         fixStyle: 'separate-type-imports'
       }],
+      '@typescript-eslint/no-unnecessary-condition': 'warn',
+      '@typescript-eslint/prefer-readonly': 'warn',
+      '@typescript-eslint/switch-exhaustiveness-check': 'error',
+      '@typescript-eslint/no-confusing-void-expression': 'warn',
       
       // JavaScript Best Practices
       'no-console': ['warn', { allow: ['warn', 'error'] }],

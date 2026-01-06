@@ -19,7 +19,7 @@ export const setComments = async (comments: Comment[]): Promise<void> => {
         userId: comment.userId,
         content: comment.content,
         createdAt: BigInt(comment.createdAt),
-        updatedAt: comment.updatedAt ? BigInt(comment.updatedAt) : null,
+        updatedAt: comment.updatedAt !== null && comment.updatedAt !== undefined ? BigInt(comment.updatedAt) : null,
         parentId: comment.parentId,
       },
     })

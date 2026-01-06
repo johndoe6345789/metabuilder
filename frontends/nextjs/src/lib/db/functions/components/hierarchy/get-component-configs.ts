@@ -5,6 +5,7 @@
 
 import { prisma } from '@/lib/config/prisma'
 import type { ComponentConfig } from './types'
+import type { JsonValue } from '@/types/utility-types'
 
 /**
  * Get all component configs
@@ -17,11 +18,11 @@ export const getComponentConfigs = async (): Promise<Record<string, ComponentCon
     result[config.id] = {
       id: config.id,
       componentId: config.componentId,
-      props: JSON.parse(config.props),
-      styles: JSON.parse(config.styles),
-      events: JSON.parse(config.events),
-      conditionalRendering: config.conditionalRendering
-        ? JSON.parse(config.conditionalRendering)
+      props: JSON.parse(config.props) as Record<string, JsonValue>,
+      styles: JSON.parse(config.styles) as Record<string, JsonValue>,
+      events: JSON.parse(config.events) as Record<string, string>,
+      conditionalRendering: config.conditionalRendering !== null && config.conditionalRendering !== ''
+        ? JSON.parse(config.conditionalRendering) as { condition: string; luaScriptId?: string }
         : undefined,
     }
   }

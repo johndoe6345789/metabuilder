@@ -4,7 +4,7 @@ import { DEVELOPMENT_PACKAGE_REPO_CONFIG } from './development-config'
 import { PRODUCTION_PACKAGE_REPO_CONFIG } from './production-config'
 
 export function getPackageRepoConfig(): PackageRepoConfig {
-  const env = process.env.NODE_ENV?.length !== undefined && process.env.NODE_ENV.length > 0 ? process.env.NODE_ENV : 'development'
+  const env = process.env.NODE_ENV !== undefined && process.env.NODE_ENV.length > 0 ? process.env.NODE_ENV : 'development'
   const enableRemote = process.env.NEXT_PUBLIC_ENABLE_REMOTE_PACKAGES === 'true'
 
   let config: PackageRepoConfig
@@ -14,6 +14,7 @@ export function getPackageRepoConfig(): PackageRepoConfig {
       config = { ...PRODUCTION_PACKAGE_REPO_CONFIG }
       break
     case 'development':
+    case 'test':
       config = { ...DEVELOPMENT_PACKAGE_REPO_CONFIG }
       break
     default:
