@@ -14,7 +14,7 @@ export async function loadJSONPackage(packagePath: string): Promise<JSONPackage>
     const componentsContent = await readFile(componentsPath, 'utf-8')
     const componentsData = JSON.parse(componentsContent) as { components?: JSONComponent[] }
     components = componentsData.components ?? []
-    hasComponents = (components !== null && components !== undefined && Array.isArray(components)) ? components.length > 0 : false
+    hasComponents = Array.isArray(components) && components.length > 0
   } catch {
     // Components file doesn't exist
   }
@@ -26,7 +26,7 @@ export async function loadJSONPackage(packagePath: string): Promise<JSONPackage>
     const permissionsContent = await readFile(permissionsPath, 'utf-8')
     const permissionsData = JSON.parse(permissionsContent) as { permissions?: JSONPermission[] }
     permissions = permissionsData.permissions ?? []
-    hasPermissions = (permissions !== null && permissions !== undefined && Array.isArray(permissions)) ? permissions.length > 0 : false
+    hasPermissions = Array.isArray(permissions) && permissions.length > 0
   } catch {
     // Permissions file doesn't exist
   }

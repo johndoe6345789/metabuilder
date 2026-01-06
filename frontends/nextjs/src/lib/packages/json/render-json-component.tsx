@@ -22,7 +22,7 @@ export function renderJSONComponent(
   props: Record<string, JsonValue> = {},
   ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>> = {}
 ): React.ReactElement {
-  if (component.render === null || component.render === undefined) {
+  if (component.render === undefined) {
     return (
       <div style={{ padding: '1rem', border: '1px solid red', borderRadius: '0.25rem' }}>
         <strong>Error:</strong> Component {component.name} has no render definition
@@ -37,7 +37,7 @@ export function renderJSONComponent(
 
   try {
     const template = component.render.template
-    if (template === null || template === undefined) {
+    if (template === undefined) {
       return (
         <div style={{ padding: '1rem', border: '1px solid yellow', borderRadius: '0.25rem' }}>
           <strong>Warning:</strong> Component {component.name} has no template

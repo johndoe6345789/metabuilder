@@ -10,7 +10,7 @@ export async function getUserById(
   options?: { tenantId?: string }
 ): Promise<User | null> {
   const adapter = getAdapter()
-  const record = options?.tenantId !== null && options?.tenantId !== undefined
+  const record = options?.tenantId !== undefined
     ? await adapter.findFirst('User', { where: { id: userId, tenantId: options.tenantId } })
     : await adapter.read('User', userId)
 

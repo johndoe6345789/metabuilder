@@ -24,7 +24,7 @@ export async function loadPackage(packageId: string): Promise<UnifiedPackage | n
   }
 
   const legacyEntry = PACKAGE_CATALOG[packageId]
-  if (legacyEntry !== null && legacyEntry !== undefined) {
+  if (legacyEntry !== undefined) {
     const data = legacyEntry()
     return {
       packageId: data.manifest.id,
