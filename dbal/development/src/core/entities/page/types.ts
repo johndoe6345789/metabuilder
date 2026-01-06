@@ -12,6 +12,27 @@ export interface CreatePageInput {
   isActive?: boolean;
 }
 
+export interface UpdatePageInput {
+  slug?: string;
+  title?: string;
+  description?: string;
+  level?: string;
+  layout?: string;
+  isActive?: boolean;
+}
+
+export interface Page {
+  id: string;
+  slug: string;
+  title: string;
+  description?: string;
+  level?: string;
+  layout?: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface PageView {
   id: string;
   slug: string;

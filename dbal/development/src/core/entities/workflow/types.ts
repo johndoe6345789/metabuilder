@@ -10,6 +10,23 @@ export interface CreateWorkflowInput {
   isActive?: boolean;
 }
 
+export interface UpdateWorkflowInput {
+  name?: string;
+  description?: string;
+  definition?: any;
+  isActive?: boolean;
+}
+
+export interface Workflow {
+  id: string;
+  name: string;
+  description?: string;
+  definition?: any;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface WorkflowView {
   id: string;
   name: string;

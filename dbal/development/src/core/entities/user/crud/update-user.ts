@@ -3,8 +3,8 @@
  * @description Update user operation
  */
 import type { Result, UpdateUserInput, User } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
-import { validateId } from '../../validation/validate-id'
+import type { InMemoryStore } from '../store/in-memory-store'
+import { validateId } from '../validation/validate-id'
 import { validateUserUpdate } from '../../validation/validate-user-update'
 
 /**

@@ -3,7 +3,7 @@
  * @description Delete Lua script operation
  */
 import type { Result } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
+import type { InMemoryStore } from '../store/in-memory-store'
 import { validateId } from '../../../validation/entities/validate-id'
 
 /**

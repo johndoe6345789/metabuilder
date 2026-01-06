@@ -3,7 +3,7 @@
  * @description List pages with filtering and pagination
  */
 import type { ListOptions, PageView, Result } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
+import type { InMemoryStore } from '../store/in-memory-store'
 
 /**
  * List pages with filtering and pagination

@@ -1,6 +1,6 @@
-import { DBALError } from '../../../../foundation/errors'
-import type { User } from '../../../../foundation/types'
-import { validateId, validateUserCreate, validateUserUpdate } from '../../../../foundation/validation'
+import { DBALError } from '../../../../../core/foundation/errors'
+import type { User } from '../../../../../core/foundation/types'
+import { validateId, validateUserCreate, validateUserUpdate } from '../../../../../core/foundation/validation'
 
 export const assertValidUserId = (id: string): void => {
   const validationErrors = validateId(id)

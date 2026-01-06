@@ -10,6 +10,22 @@ export interface CreateUserInput {
   isActive?: boolean;
 }
 
+export interface UpdateUserInput {
+  username?: string;
+  email?: string;
+  password?: string;
+  isActive?: boolean;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface UserView {
   id: string;
   username: string;

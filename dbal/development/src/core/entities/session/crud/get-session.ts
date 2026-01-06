@@ -3,8 +3,8 @@
  * @description Get session operations
  */
 import type { Result, Session } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
-import { validateId } from '../../validation/validate-id'
+import type { InMemoryStore } from '../store/in-memory-store'
+import { validateId } from '../validation/validate-id'
 
 /**
  * Get a session by ID

@@ -3,7 +3,7 @@
  * @description List users with filtering and pagination
  */
 import type { ListOptions, Result, User } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
+import type { InMemoryStore } from '../store/in-memory-store'
 
 /**
  * List users with filtering and pagination

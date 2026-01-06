@@ -1,7 +1,7 @@
-import type { DBALAdapter } from '../../../../adapters/adapter'
-import type { User, ListOptions, ListResult } from '../../../../foundation/types'
-import { DBALError } from '../../../../foundation/errors'
-import { validateId } from '../../../../foundation/validation'
+import type { DBALAdapter } from '../../../../../adapters/adapter'
+import type { User, ListOptions, ListResult } from '../../../../../core/foundation/types'
+import { DBALError } from '../../../../../core/foundation/errors'
+import { validateId } from '../../../../../core/foundation/validation'
 
 export const readUser = async (adapter: DBALAdapter, id: string): Promise<User | null> => {
   const validationErrors = validateId(id)

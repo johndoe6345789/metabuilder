@@ -3,8 +3,8 @@
  * @description Update package operation
  */
 import type { Package, Result, UpdatePackageInput } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
-import { validateId } from '../../validation/validate-id'
+import type { InMemoryStore } from '../store/in-memory-store'
+import { validateId } from '../validation/validate-id'
 import { validatePackageUpdate } from '../../validation/validate-package-update'
 
 /**

@@ -1,6 +1,6 @@
-import type { DBALAdapter } from '../../../../adapters/adapter'
-import { DBALError } from '../../../../foundation/errors'
-import type { User } from '../../../../foundation/types'
+import type { DBALAdapter } from '../../../../../adapters/adapter'
+import { DBALError } from '../../../../../core/foundation/errors'
+import type { User } from '../../../../../core/foundation/types'
 import { assertValidUserCreate } from './validation'
 
 export const createUser = async (

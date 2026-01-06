@@ -3,8 +3,8 @@
  * @description Update workflow operation
  */
 import type { Result, UpdateWorkflowInput, Workflow } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
-import { validateId } from '../../validation/validate-id'
+import type { InMemoryStore } from '../store/in-memory-store'
+import { validateId } from '../validation/validate-id'
 import { validateWorkflowUpdate } from '../../validation/validate-workflow-update'
 
 /**

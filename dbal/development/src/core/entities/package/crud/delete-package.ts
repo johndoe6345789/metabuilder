@@ -3,8 +3,8 @@
  * @description Delete package operation
  */
 import type { Result } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
-import { validateId } from '../../validation/validate-id'
+import type { InMemoryStore } from '../store/in-memory-store'
+import { validateId } from '../validation/validate-id'
 
 /**
  * Delete a package by ID

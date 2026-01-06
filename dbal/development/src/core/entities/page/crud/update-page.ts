@@ -3,8 +3,8 @@
  * @description Update page operation
  */
 import type { PageView, Result, UpdatePageInput } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
-import { validateId } from '../../validation/validate-id'
+import type { InMemoryStore } from '../store/in-memory-store'
+import { validateId } from '../validation/validate-id'
 import { validatePageUpdate } from '../../validation/validate-page-update'
 
 /**

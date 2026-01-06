@@ -10,6 +10,25 @@ export interface CreateLuaScriptInput {
   isActive?: boolean;
 }
 
+export interface UpdateLuaScriptInput {
+  name?: string;
+  code?: string;
+  description?: string;
+  isActive?: boolean;
+}
+
+export interface LuaScript {
+  id: string;
+  name: string;
+  code: string;
+  description?: string;
+  isActive: boolean;
+  isSandboxed: boolean;
+  timeoutMs: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface LuaScriptView {
   id: string;
   name: string;

@@ -11,6 +11,13 @@ export interface CreatePackageInput {
   isPublished?: boolean;
 }
 
+export interface UpdatePackageInput {
+  name?: string;
+  version?: string;
+  description?: string;
+  isPublished?: boolean;
+}
+
 export interface Package {
   id: string;
   packageId: string;

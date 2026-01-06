@@ -8,6 +8,11 @@ export interface CreateSessionInput {
   expiresAt?: Date;
 }
 
+export interface UpdateSessionInput {
+  userId?: string;
+  expiresAt?: Date;
+}
+
 export interface Session {
   id: string;
   token: string;

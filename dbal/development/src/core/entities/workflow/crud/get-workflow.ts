@@ -3,8 +3,8 @@
  * @description Get workflow operation
  */
 import type { Result, Workflow } from '../../types'
-import type { InMemoryStore } from '../../store/in-memory-store'
-import { validateId } from '../../validation/validate-id'
+import type { InMemoryStore } from '../store/in-memory-store'
+import { validateId } from '../validation/validate-id'
 
 /**
  * Get a workflow by ID
