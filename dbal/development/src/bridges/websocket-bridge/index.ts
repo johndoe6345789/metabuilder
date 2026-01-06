@@ -1,5 +1,5 @@
 import type { DBALAdapter, AdapterCapabilities } from '../../adapters/adapter'
-import type { ListOptions, ListResult } from '../../core/types'
+import type { ListOptions, ListResult } from '../../core/foundation/types'
 import { createConnectionManager } from './connection-manager'
 import { createMessageRouter } from './message-router'
 import { createOperations } from './operations'
@@ -47,10 +47,13 @@ export class WebSocketBridge implements DBALAdapter {
 
   upsert(
     entity: string,
-    filter: Record<string, unknown>,
+    uniqueField: string,
+    uniqueValue: unknown,
     createData: Record<string, unknown>,
     updateData: Record<string, unknown>,
   ): Promise<unknown> {
+    // Convert the new signature to the old one for compatibility
+    const filter = { [uniqueField]: uniqueValue }
     return this.operations.upsert(entity, filter, createData, updateData)
   }
 

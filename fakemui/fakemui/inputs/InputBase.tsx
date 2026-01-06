@@ -46,7 +46,7 @@ export const ButtonBase = forwardRef<HTMLElement, ButtonBaseProps>(function Butt
   )
 })
 
-export interface InputBaseProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
+export interface InputBaseProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue' | 'onFocus' | 'onBlur'> {
   disabled?: boolean
   error?: boolean
   fullWidth?: boolean

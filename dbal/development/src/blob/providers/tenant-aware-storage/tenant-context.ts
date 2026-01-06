@@ -3,7 +3,11 @@ import type { TenantContext } from '../../../core/foundation/tenant-context'
 import type { TenantAwareDeps } from './context'
 
 export const resolveTenantContext = async ({ tenantManager, tenantId, userId }: TenantAwareDeps): Promise<TenantContext> => {
-  return tenantManager.getTenantContext(tenantId, userId)
+  const hasAccess = await tenantManager.validateTenantAccess(tenantId, userId)
+  if (!hasAccess) {
+    throw DBALError.forbidden(`User ${userId} does not have access to tenant ${tenantId}`)
+  }
+  return tenantManager.getTenantContext(tenantId)
 }
 
 export const ensurePermission = (context: TenantContext, action: 'read' | 'write' | 'delete'): void => {

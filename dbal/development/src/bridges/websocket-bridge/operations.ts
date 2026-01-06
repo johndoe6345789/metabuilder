@@ -1,5 +1,5 @@
 import type { AdapterCapabilities } from '../../adapters/adapter'
-import type { ListOptions, ListResult } from '../../core/types'
+import type { ListOptions, ListResult } from '../../core/foundation/types'
 import type { ConnectionManager } from './connection-manager'
 import type { BridgeState } from './state'
 import { rpcCall } from './rpc'

@@ -33,3 +33,10 @@ export interface TenantContext {
   canCreateRecord(): boolean
   canAddToList(additionalItems: number): boolean
 }
+
+export interface TenantManager {
+  getTenantContext(tenantId: string): Promise<TenantContext>
+  updateQuota(tenantId: string, quota: Partial<TenantQuota>): Promise<void>
+  validateTenantAccess(tenantId: string, userId: string): Promise<boolean>
+  updateBlobUsage(tenantId: string, sizeDelta: number): Promise<void>
+}
