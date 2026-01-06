@@ -54,3 +54,7 @@ export function validateTenantAccess(_tenant: unknown, _user: unknown): boolean 
   // TODO: Implement tenant access validation
   return false
 }
+
+// Re-export auth functions
+export { validatePackageRoute, canBePrimaryPackage, loadPackageMetadata } from './auth/validate-package-route'
+export type { RouteValidationResult } from './auth/validate-package-route'
