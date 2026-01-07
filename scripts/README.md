@@ -4,98 +4,7 @@ This directory contains utility scripts for the MetaBuilder project.
 
 ## Scripts
 
-### Package Metadata Management
-
-#### `generate-package-metadata.js`
-
-**Purpose:** Automatically generates `seed/metadata.json` files for all packages that don't have them.
-
-**Features:**
-- 🔍 Scans all packages in `/packages/` directory
-- 📁 Creates `seed/` directories where missing
-- 🤖 Generates metadata with intelligent defaults:
-  - Converts package_id to "Package Name" format
-  - Auto-categorizes based on package name patterns (ui, editor, management, etc.)
-  - Sets standard fields (version 0.1.0, author, etc.)
-- ⏭️ Skips packages that already have metadata
-- 📊 Reports detailed progress and summary
-
-**Usage:**
-```bash
-node scripts/generate-package-metadata.js
-```
-
-**Example output:**
-```
-🔍 Scanning packages directory...
-📦 Found 51 packages
-
-⏭️  admin_dialog: metadata.json already exists
-📁 arcade_lobby: created seed/ directory
-✅ arcade_lobby: created metadata.json
-...
-
-============================================================
-📊 Summary:
-   ✅ Created: 43
-   ⏭️  Skipped: 8
-   ❌ Errors: 0
-   📦 Total: 51
-============================================================
-```
-
-**Related Documentation:**
-- [MVP Package Metadata Migration](../docs/MVP_PACKAGE_METADATA_MIGRATION.md)
-- [Package Metadata Schema](../schemas/package-schemas/metadata_schema.json)
-
----
-
-#### `validate-package-metadata.js`
-
-**Purpose:** Validates all package metadata files against schema requirements.
-
-**Features:**
-- ✅ Validates required fields (packageId, name, version, description)
-- 🔤 Checks packageId format (snake_case/kebab-case)
-- 📋 Validates version format (semver)
-- 🔍 Ensures packageId matches directory name
-- 🎯 Verifies correct field types
-- 🛡️ Validates JSON syntax
-
-**Usage:**
-```bash
-node scripts/validate-package-metadata.js
-```
-
-**Example output:**
-```
-🔍 Validating package metadata files...
-
-✅ admin_dialog: Valid
-✅ arcade_lobby: Valid
-✅ dashboard: Valid
-...
-
-============================================================
-📊 Validation Summary:
-   ✅ Valid: 51
-   ❌ Invalid: 0
-   🚫 Missing: 0
-   📦 Total: 51
-============================================================
-
-✅ All metadata files are valid!
-```
-
-**Related Documentation:**
-- [MVP Package Metadata Migration](../docs/MVP_PACKAGE_METADATA_MIGRATION.md)
-- [Package Metadata Schema](../schemas/package-schemas/metadata_schema.json)
-
----
-
-### GitHub Issue Management
-
-#### `triage-duplicate-issues.sh`
+### `triage-duplicate-issues.sh`
 
 **Purpose:** Automatically finds and closes duplicate GitHub issues while keeping the most recent one open.
 
@@ -154,9 +63,7 @@ export SEARCH_TITLE="Your custom issue title"
 
 ---
 
-### Testing Scripts
-
-#### `test-triage-logic.sh`
+### `test-triage-logic.sh`
 
 **Purpose:** Comprehensive test suite for the triage script logic.
 
@@ -192,9 +99,7 @@ Test 1: Multiple duplicate issues (should close all except most recent)
 
 ---
 
-### Other Utilities
-
-#### `generate_mod.py`
+### `generate_mod.py`
 
 **Purpose:** Python script for generating module files.
 
