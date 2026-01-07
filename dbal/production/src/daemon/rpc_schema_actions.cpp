@@ -19,30 +19,30 @@ namespace {
 /**
  * @brief Load schema registry from JSON file
  */
-Json::Value load_registry(const std::string& path) {
-    Json::Value registry;
+::Json::Value load_registry(const std::string& path) {
+    ::Json::Value registry;
     
     if (!fs::exists(path)) {
         registry["version"] = "1.0.0";
-        registry["packages"] = Json::Value(Json::objectValue);
-        registry["migrationQueue"] = Json::Value(Json::arrayValue);
+        registry["packages"] = ::Json::Value(::Json::objectValue);
+        registry["migrationQueue"] = ::Json::Value(::Json::arrayValue);
         return registry;
     }
     
     std::ifstream file(path);
     if (!file.is_open()) {
         registry["version"] = "1.0.0";
-        registry["packages"] = Json::Value(Json::objectValue);
-        registry["migrationQueue"] = Json::Value(Json::arrayValue);
+        registry["packages"] = ::Json::Value(::Json::objectValue);
+        registry["migrationQueue"] = ::Json::Value(::Json::arrayValue);
         return registry;
     }
     
-    Json::CharReaderBuilder reader;
+    ::Json::CharReaderBuilder reader;
     JSONCPP_STRING errs;
-    if (!Json::parseFromStream(reader, file, &registry, &errs)) {
+    if (!::Json::parseFromStream(reader, file, &registry, &errs)) {
         registry["version"] = "1.0.0";
-        registry["packages"] = Json::Value(Json::objectValue);
-        registry["migrationQueue"] = Json::Value(Json::arrayValue);
+        registry["packages"] = ::Json::Value(::Json::objectValue);
+        registry["migrationQueue"] = ::Json::Value(::Json::arrayValue);
     }
     
     return registry;
@@ -51,15 +51,15 @@ Json::Value load_registry(const std::string& path) {
 /**
  * @brief Save schema registry to JSON file
  */
-bool save_registry(const Json::Value& registry, const std::string& path) {
+bool save_registry(const ::Json::Value& registry, const std::string& path) {
     std::ofstream file(path);
     if (!file.is_open()) {
         return false;
     }
     
-    Json::StreamWriterBuilder writer;
+    ::Json::StreamWriterBuilder writer;
     writer["indentation"] = "  ";
-    std::unique_ptr<Json::StreamWriter> stream_writer(writer.newStreamWriter());
+    std::unique_ptr<::Json::StreamWriter> stream_writer(writer.newStreamWriter());
     stream_writer->write(registry, &file);
     return true;
 }
@@ -122,8 +122,8 @@ std::string get_table_name(const std::string& packageId, const std::string& enti
 /**
  * @brief Get pending migrations from registry
  */
-Json::Value get_pending_migrations(const Json::Value& registry) {
-    Json::Value pending(Json::arrayValue);
+::Json::Value get_pending_migrations(const ::Json::Value& registry) {
+    ::Json::Value pending(::Json::arrayValue);
     
     const auto& queue = registry["migrationQueue"];
     for (const auto& migration : queue) {
@@ -138,8 +138,8 @@ Json::Value get_pending_migrations(const Json::Value& registry) {
 /**
  * @brief Get approved migrations from registry
  */
-Json::Value get_approved_migrations(const Json::Value& registry) {
-    Json::Value approved(Json::arrayValue);
+::Json::Value get_approved_migrations(const ::Json::Value& registry) {
+    ::Json::Value approved(::Json::arrayValue);
     
     const auto& queue = registry["migrationQueue"];
     for (const auto& migration : queue) {
@@ -168,7 +168,7 @@ std::string yaml_type_to_prisma(const std::string& yaml_type) {
 /**
  * @brief Generate Prisma model for an entity
  */
-std::string entity_to_prisma(const Json::Value& entity, const std::string& packageId) {
+std::string entity_to_prisma(const ::Json::Value& entity, const std::string& packageId) {
     const std::string name = entity["name"].asString();
     const std::string prefixed = get_prefixed_name(packageId, name);
     const std::string table = get_table_name(packageId, name);
@@ -218,7 +218,7 @@ void handle_schema_list(const std::string& registry_path,
         auto registry = load_registry(registry_path);
         auto pending = get_pending_migrations(registry);
         
-        Json::Value response;
+        ::Json::Value response;
         response["status"] = "ok";
         response["pendingCount"] = pending.size();
         response["migrations"] = pending;
@@ -239,7 +239,7 @@ void handle_schema_scan(const std::string& registry_path,
         
         int scanned = 0;
         int queued = 0;
-        Json::Value errors(Json::arrayValue);
+        ::Json::Value errors(::Json::arrayValue);
         
         if (!fs::exists(packages_path)) {
             send_error("Packages directory not found: " + packages_path, 404);
@@ -263,7 +263,7 @@ void handle_schema_scan(const std::string& registry_path,
         
         save_registry(registry, registry_path);
         
-        Json::Value response;
+        ::Json::Value response;
         response["status"] = "ok";
         response["action"] = "scan";
         response["packagesScanned"] = scanned;
@@ -307,7 +307,7 @@ void handle_schema_approve(const std::string& registry_path,
         
         save_registry(registry, registry_path);
         
-        Json::Value response;
+        ::Json::Value response;
         response["status"] = "ok";
         response["action"] = "approve";
         response["approved"] = approved_count;
@@ -344,7 +344,7 @@ void handle_schema_reject(const std::string& registry_path,
         
         save_registry(registry, registry_path);
         
-        Json::Value response;
+        ::Json::Value response;
         response["status"] = "ok";
         response["action"] = "reject";
         response["id"] = id;
@@ -365,7 +365,7 @@ void handle_schema_generate(const std::string& registry_path,
         auto approved = get_approved_migrations(registry);
         
         if (approved.empty()) {
-            Json::Value response;
+            ::Json::Value response;
             response["status"] = "ok";
             response["action"] = "generate";
             response["generated"] = false;
@@ -398,7 +398,7 @@ void handle_schema_generate(const std::string& registry_path,
         out << oss.str();
         out.close();
         
-        Json::Value response;
+        ::Json::Value response;
         response["status"] = "ok";
         response["action"] = "generate";
         response["generated"] = true;

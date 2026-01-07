@@ -9,7 +9,7 @@ namespace rpc {
 
 void handle_user_list(Client& client,
                       const std::string& tenantId,
-                      const Json::Value& options,
+                      const ::Json::Value& options,
                       ResponseSender send_success,
                       ErrorSender send_error) {
     if (tenantId.empty()) {
@@ -57,7 +57,7 @@ void handle_user_read(Client& client,
 
 void handle_user_create(Client& client,
                         const std::string& tenantId,
-                        const Json::Value& payload,
+                        const ::Json::Value& payload,
                         ResponseSender send_success,
                         ErrorSender send_error) {
     if (tenantId.empty()) {
@@ -92,7 +92,7 @@ void handle_user_create(Client& client,
 void handle_user_update(Client& client,
                         const std::string& tenantId,
                         const std::string& id,
-                        const Json::Value& payload,
+                        const ::Json::Value& payload,
                         ResponseSender send_success,
                         ErrorSender send_error) {
     if (tenantId.empty()) {
@@ -177,7 +177,7 @@ void handle_user_delete(Client& client,
         return;
     }
 
-    Json::Value body;
+    ::Json::Value body;
     body["deleted"] = result.value();
     send_success(body);
 }

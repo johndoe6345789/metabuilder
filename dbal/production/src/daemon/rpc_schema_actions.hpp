@@ -9,7 +9,7 @@ namespace dbal {
 namespace daemon {
 namespace rpc {
 
-using ResponseSender = std::function<void(const Json::Value&)>;
+using ResponseSender = std::function<void(const ::Json::Value&)>;
 using ErrorSender = std::function<void(const std::string&, int)>;
 
 /**

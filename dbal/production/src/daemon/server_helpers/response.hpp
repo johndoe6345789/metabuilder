@@ -8,7 +8,7 @@
 namespace dbal {
 namespace daemon {
 
-drogon::HttpResponsePtr build_json_response(const Json::Value& body);
+drogon::HttpResponsePtr build_json_response(const ::Json::Value& body);
 
 } // namespace daemon
 } // namespace dbal

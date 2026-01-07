@@ -1,7 +1,6 @@
 import { setAppConfig } from '../../app-config'
 import { setComments } from '../../comments'
 import { setComponentConfigs, setComponentHierarchy } from '../../components'
-import { setLuaScripts } from '../../lua-scripts'
 import { setPages } from '../../pages'
 import { setSchemas } from '../../schemas'
 import type { DatabaseSchema } from '../../types'
@@ -17,7 +16,6 @@ export async function importDatabase(jsonData: string): Promise<void> {
 
     if (data.users !== undefined) await setUsers(data.users)
     if (data.workflows !== undefined) await setWorkflows(data.workflows)
-    if (data.luaScripts !== undefined) await setLuaScripts(data.luaScripts)
     if (data.pages !== undefined) await setPages(data.pages)
     if (data.schemas !== undefined) await setSchemas(data.schemas)
     if (data.appConfig !== undefined) await setAppConfig(data.appConfig)

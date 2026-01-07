@@ -25,7 +25,7 @@ void Server::registerRoutes() {
 
     auto health_handler = [](const drogon::HttpRequestPtr&,
                              std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
-        Json::Value body;
+        ::Json::Value body;
         body["status"] = "healthy";
         body["service"] = "dbal";
         callback(build_json_response(body));
@@ -33,7 +33,7 @@ void Server::registerRoutes() {
 
     auto version_handler = [](const drogon::HttpRequestPtr&,
                               std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
-        Json::Value body;
+        ::Json::Value body;
         body["version"] = "1.0.0";
         body["service"] = "DBAL Daemon";
         callback(build_json_response(body));
@@ -41,7 +41,7 @@ void Server::registerRoutes() {
 
     auto status_handler = [server_address](const drogon::HttpRequestPtr& request,
                                            std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
-        Json::Value body;
+        ::Json::Value body;
         body["status"] = "running";
         body["address"] = server_address;
         body["real_ip"] = resolve_real_ip(request);
@@ -52,7 +52,7 @@ void Server::registerRoutes() {
     auto rpc_handler = [this](const drogon::HttpRequestPtr& request,
                               std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
         auto send_error = [&callback](const std::string& message, int status = 400) {
-            Json::Value body;
+            ::Json::Value body;
             body["success"] = false;
             body["message"] = message;
             auto response = drogon::HttpResponse::newHttpJsonResponse(body);
@@ -61,10 +61,10 @@ void Server::registerRoutes() {
         };
 
         std::istringstream stream(request->getBody());
-        Json::CharReaderBuilder reader_builder;
-        Json::Value rpc_request;
+        ::Json::CharReaderBuilder reader_builder;
+        ::Json::Value rpc_request;
         JSONCPP_STRING errs;
-        if (!Json::parseFromStream(reader_builder, stream, &rpc_request, &errs)) {
+        if (!::Json::parseFromStream(reader_builder, stream, &rpc_request, &errs)) {
             send_error("Invalid JSON payload: " + std::string(errs), 400);
             return;
         }
@@ -87,12 +87,12 @@ void Server::registerRoutes() {
         std::transform(action.begin(), action.end(), action.begin(),
                        [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
 
-        const auto payload = rpc_request.get("payload", Json::Value(Json::objectValue));
-        const auto options_value = rpc_request.get("options", Json::Value(Json::objectValue));
+        const auto payload = rpc_request.get("payload", ::Json::Value(::Json::objectValue));
+        const auto options_value = rpc_request.get("options", ::Json::Value(::Json::objectValue));
         const std::string tenantId = rpc_request.get("tenantId", payload.get("tenantId", "")).asString();
 
-        auto send_success = [&callback](const Json::Value& data) {
-            Json::Value body;
+        auto send_success = [&callback](const ::Json::Value& data) {
+            ::Json::Value body;
             body["success"] = true;
             body["data"] = data;
             callback(build_json_response(body));
@@ -161,12 +161,12 @@ void Server::registerRoutes() {
         const std::string packages_path = env_packages ? env_packages : "/app/packages";
         const std::string output_path = env_output ? env_output : "/app/prisma/generated-from-packages.prisma";
         
-        auto send_success = [&callback](const Json::Value& data) {
+        auto send_success = [&callback](const ::Json::Value& data) {
             callback(build_json_response(data));
         };
         
         auto send_error = [&callback](const std::string& message, int status) {
-            Json::Value body;
+            ::Json::Value body;
             body["success"] = false;
             body["error"] = message;
             auto response = drogon::HttpResponse::newHttpJsonResponse(body);
@@ -182,10 +182,10 @@ void Server::registerRoutes() {
         
         // Handle POST - actions
         std::istringstream stream(request->getBody());
-        Json::CharReaderBuilder reader_builder;
-        Json::Value body;
+        ::Json::CharReaderBuilder reader_builder;
+        ::Json::Value body;
         JSONCPP_STRING errs;
-        if (!Json::parseFromStream(reader_builder, stream, &body, &errs)) {
+        if (!::Json::parseFromStream(reader_builder, stream, &body, &errs)) {
             send_error("Invalid JSON payload", 400);
             return;
         }
@@ -224,15 +224,15 @@ void Server::registerRoutes() {
                                   const std::string& tenant,
                                   const std::string& package,
                                   const std::string& entity) {
-        auto send_success = [&callback](const Json::Value& data) {
-            Json::Value body;
+        auto send_success = [&callback](const ::Json::Value& data) {
+            ::Json::Value body;
             body["success"] = true;
             body["data"] = data;
             callback(build_json_response(body));
         };
         
         auto send_error = [&callback](const std::string& message, int status) {
-            Json::Value body;
+            ::Json::Value body;
             body["success"] = false;
             body["error"] = message;
             auto response = drogon::HttpResponse::newHttpJsonResponse(body);
@@ -263,12 +263,12 @@ void Server::registerRoutes() {
         }
         
         // Parse body for POST/PUT/PATCH
-        Json::Value body(Json::objectValue);
+        ::Json::Value body(::Json::objectValue);
         if (method == "POST" || method == "PUT" || method == "PATCH") {
             std::istringstream stream(request->getBody());
-            Json::CharReaderBuilder reader;
+            ::Json::CharReaderBuilder reader;
             JSONCPP_STRING errs;
-            Json::parseFromStream(reader, stream, &body, &errs);
+            ::Json::parseFromStream(reader, stream, &body, &errs);
         }
         
         // Parse query parameters
@@ -287,15 +287,15 @@ void Server::registerRoutes() {
                                           const std::string& package,
                                           const std::string& entity,
                                           const std::string& id) {
-        auto send_success = [&callback](const Json::Value& data) {
-            Json::Value body;
+        auto send_success = [&callback](const ::Json::Value& data) {
+            ::Json::Value body;
             body["success"] = true;
             body["data"] = data;
             callback(build_json_response(body));
         };
         
         auto send_error = [&callback](const std::string& message, int status) {
-            Json::Value body;
+            ::Json::Value body;
             body["success"] = false;
             body["error"] = message;
             auto response = drogon::HttpResponse::newHttpJsonResponse(body);
@@ -321,12 +321,12 @@ void Server::registerRoutes() {
             default: method = "UNKNOWN"; break;
         }
         
-        Json::Value body(Json::objectValue);
+        ::Json::Value body(::Json::objectValue);
         if (method == "POST" || method == "PUT" || method == "PATCH") {
             std::istringstream stream(request->getBody());
-            Json::CharReaderBuilder reader;
+            ::Json::CharReaderBuilder reader;
             JSONCPP_STRING errs;
-            Json::parseFromStream(reader, stream, &body, &errs);
+            ::Json::parseFromStream(reader, stream, &body, &errs);
         }
         
         std::map<std::string, std::string> query;
@@ -345,15 +345,15 @@ void Server::registerRoutes() {
                                               const std::string& entity,
                                               const std::string& id,
                                               const std::string& action) {
-        auto send_success = [&callback](const Json::Value& data) {
-            Json::Value body;
+        auto send_success = [&callback](const ::Json::Value& data) {
+            ::Json::Value body;
             body["success"] = true;
             body["data"] = data;
             callback(build_json_response(body));
         };
         
         auto send_error = [&callback](const std::string& message, int status) {
-            Json::Value body;
+            ::Json::Value body;
             body["success"] = false;
             body["error"] = message;
             auto response = drogon::HttpResponse::newHttpJsonResponse(body);
@@ -379,12 +379,12 @@ void Server::registerRoutes() {
             default: method = "UNKNOWN"; break;
         }
         
-        Json::Value body(Json::objectValue);
+        ::Json::Value body(::Json::objectValue);
         if (method == "POST" || method == "PUT" || method == "PATCH") {
             std::istringstream stream(request->getBody());
-            Json::CharReaderBuilder reader;
+            ::Json::CharReaderBuilder reader;
             JSONCPP_STRING errs;
-            Json::parseFromStream(reader, stream, &body, &errs);
+            ::Json::parseFromStream(reader, stream, &body, &errs);
         }
         
         std::map<std::string, std::string> query;

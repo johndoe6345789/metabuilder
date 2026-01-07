@@ -66,7 +66,7 @@ std::string toPascalCase(const std::string& snake_case);
  */
 std::string toLower(const std::string& str);
 
-using ResponseSender = std::function<void(const Json::Value&)>;
+using ResponseSender = std::function<void(const ::Json::Value&)>;
 using ErrorSender = std::function<void(const std::string&, int)>;
 
 /**
@@ -83,7 +83,7 @@ void handleRestfulRequest(
     Client& client,
     const RouteInfo& route,
     const std::string& method,
-    const Json::Value& body,
+    const ::Json::Value& body,
     const std::map<std::string, std::string>& query,
     ResponseSender send_success,
     ErrorSender send_error

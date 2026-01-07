@@ -149,7 +149,7 @@ void handleRestfulRequest(
     Client& client,
     const RouteInfo& route,
     const std::string& method,
-    const Json::Value& body,
+    const ::Json::Value& body,
     const std::map<std::string, std::string>& query,
     ResponseSender send_success,
     ErrorSender send_error
@@ -211,9 +211,9 @@ void handleRestfulRequest(
     }
 
     if (operation == "list") {
-        Json::Value options(Json::objectValue);
-        Json::Value filter(Json::objectValue);
-        Json::Value sort(Json::objectValue);
+        ::Json::Value options(::Json::objectValue);
+        ::Json::Value filter(::Json::objectValue);
+        ::Json::Value sort(::Json::objectValue);
 
         bool limit_set = false;
         bool page_set = false;
