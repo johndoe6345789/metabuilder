@@ -1,6 +1,6 @@
 /**
  * @file get_package.hpp
- * @brief Get package by ID or name+version key operations
+ * @brief Get package by ID or packageId operations
  */
 #ifndef DBAL_GET_PACKAGE_HPP
 #define DBAL_GET_PACKAGE_HPP
@@ -16,7 +16,7 @@ namespace package {
 /**
  * Get a package by ID
  */
-inline Result<Package> get(InMemoryStore& store, const std::string& id) {
+inline Result<InstalledPackage> get(InMemoryStore& store, const std::string& id) {
     if (id.empty()) {
         return Error::validationError("Package ID cannot be empty");
     }
@@ -26,13 +26,13 @@ inline Result<Package> get(InMemoryStore& store, const std::string& id) {
         return Error::notFound("Package not found: " + id);
     }
 
-    return Result<Package>(it->second);
+    return Result<InstalledPackage>(it->second);
 }
 
 /**
- * Get a package by name+version key (name@version)
+ * Get a package by packageId key
  */
-inline Result<Package> getByPackageId(InMemoryStore& store, const std::string& package_key) {
+inline Result<InstalledPackage> getByPackageId(InMemoryStore& store, const std::string& package_key) {
     if (package_key.empty()) {
         return Error::validationError("Package key cannot be empty");
     }
