@@ -7,8 +7,6 @@ export { validateComponentHierarchyCreate } from './entities/component/validate-
 export { validateComponentHierarchyUpdate } from './entities/component/validate-component-hierarchy-update'
 export { validateWorkflowCreate } from './entities/workflow/validate-workflow-create'
 export { validateWorkflowUpdate } from './entities/workflow/validate-workflow-update'
-export { validateLuaScriptCreate } from './entities/lua-script/validate-lua-script-create'
-export { validateLuaScriptUpdate } from './entities/lua-script/validate-lua-script-update'
 export { validatePackageCreate } from './entities/package/validate-package-create'
 export { validatePackageUpdate } from './entities/package/validate-package-update'
 export { validateSessionCreate } from './entities/session/validate-session-create'

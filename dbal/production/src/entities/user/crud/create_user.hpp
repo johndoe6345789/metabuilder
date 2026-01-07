@@ -18,9 +18,6 @@ namespace user {
  * Create a new user in the store
  */
 inline Result<User> create(InMemoryStore& store, const CreateUserInput& input) {
-    if (input.tenant_id.empty()) {
-        return Error::validationError("Tenant ID is required");
-    }
     if (!validation::isValidUsername(input.username)) {
         return Error::validationError("Invalid username format (alphanumeric, underscore, hyphen only)");
     }
@@ -30,22 +27,26 @@ inline Result<User> create(InMemoryStore& store, const CreateUserInput& input) {
     
     // Check for duplicates
     for (const auto& [id, user] : store.users) {
-        if (user.tenant_id == input.tenant_id && user.username == input.username) {
+        if (user.tenantId == input.tenantId && user.username == input.username) {
             return Error::conflict("Username already exists: " + input.username);
         }
-        if (user.tenant_id == input.tenant_id && user.email == input.email) {
+        if (user.tenantId == input.tenantId && user.email == input.email) {
             return Error::conflict("Email already exists: " + input.email);
         }
     }
     
     User user;
     user.id = store.generateId("user", ++store.user_counter);
-    user.tenant_id = input.tenant_id;
     user.username = input.username;
     user.email = input.email;
     user.role = input.role;
-    user.created_at = std::chrono::system_clock::now();
-    user.updated_at = user.created_at;
+    user.profilePicture = input.profilePicture;
+    user.bio = input.bio;
+    user.createdAt = input.createdAt.value_or(std::chrono::system_clock::now());
+    user.tenantId = input.tenantId;
+    user.isInstanceOwner = input.isInstanceOwner.value_or(false);
+    user.passwordChangeTimestamp = input.passwordChangeTimestamp;
+    user.firstLogin = input.firstLogin.value_or(false);
     
     store.users[user.id] = user;
     return Result<User>(user);

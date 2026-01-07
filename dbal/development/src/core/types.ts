@@ -34,7 +34,6 @@ export type {
   Credential,
   Session,
   Workflow,
-  LuaScript,
   PageConfig,
   ComponentNode,
   ComponentConfig,

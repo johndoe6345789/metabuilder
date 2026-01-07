@@ -3,7 +3,6 @@ import type { DBALConfig } from '../../runtime/config'
 import { createAdapter } from './adapter-factory'
 import {
   createComponentNodeOperations,
-  createLuaScriptOperations,
   createInstalledPackageOperations,
   createPackageDataOperations,
   createPageConfigOperations,
@@ -19,7 +18,6 @@ export const buildEntityOperations = (adapter: DBALAdapter, tenantId?: string) =
   pageConfigs: createPageConfigOperations(adapter, tenantId),
   componentNodes: createComponentNodeOperations(adapter, tenantId),
   workflows: createWorkflowOperations(adapter, tenantId),
-  luaScripts: createLuaScriptOperations(adapter, tenantId),
   installedPackages: createInstalledPackageOperations(adapter, tenantId),
   packageData: createPackageDataOperations(adapter),
   sessions: createSessionOperations(adapter, tenantId),

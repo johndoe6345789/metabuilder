@@ -11,8 +11,6 @@ export interface InMemoryStore {
   sessionTokens: Map<string, string>
   workflows: Map<string, unknown>
   workflowNames: Map<string, string>
-  luaScripts: Map<string, unknown>
-  luaScriptNames: Map<string, string>
   installedPackages: Map<string, unknown>
   packageData: Map<string, unknown>
   pageConfigs: Map<string, unknown>
@@ -36,8 +34,6 @@ export const createInMemoryStore = (): InMemoryStore => ({
   sessionTokens: new Map(),
   workflows: new Map(),
   workflowNames: new Map(),
-  luaScripts: new Map(),
-  luaScriptNames: new Map(),
   installedPackages: new Map(),
   packageData: new Map(),
   pageConfigs: new Map(),

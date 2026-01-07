@@ -14,32 +14,32 @@ using ResponseSender = std::function<void(const Json::Value&)>;
 using ErrorSender = std::function<void(const std::string&, int)>;
 
 void handle_user_list(Client& client,
-                      const std::string& tenant_id,
+                      const std::string& tenantId,
                       const Json::Value& options,
                       ResponseSender send_success,
                       ErrorSender send_error);
 
 void handle_user_read(Client& client,
-                      const std::string& tenant_id,
+                      const std::string& tenantId,
                       const std::string& id,
                       ResponseSender send_success,
                       ErrorSender send_error);
 
 void handle_user_create(Client& client,
-                        const std::string& tenant_id,
+                        const std::string& tenantId,
                         const Json::Value& payload,
                         ResponseSender send_success,
                         ErrorSender send_error);
 
 void handle_user_update(Client& client,
-                        const std::string& tenant_id,
+                        const std::string& tenantId,
                         const std::string& id,
                         const Json::Value& payload,
                         ResponseSender send_success,
                         ErrorSender send_error);
 
 void handle_user_delete(Client& client,
-                        const std::string& tenant_id,
+                        const std::string& tenantId,
                         const std::string& id,
                         ResponseSender send_success,
                         ErrorSender send_error);

@@ -46,7 +46,7 @@ public:
 
         // TODO: Integrate libpq (Postgres) or mysqlclient (MySQL) to open real sockets.
         connected_ = true;
-        last_activity_ = std::chrono::steady_clock::now();
+        lastActivity_ = std::chrono::steady_clock::now();
         return connected_;
     }
 
@@ -64,18 +64,18 @@ public:
     }
 
     void touch() {
-        last_activity_ = std::chrono::steady_clock::now();
+        lastActivity_ = std::chrono::steady_clock::now();
     }
 
     std::chrono::steady_clock::time_point lastActivity() const {
-        return last_activity_;
+        return lastActivity_;
     }
 
 private:
     SqlConnectionConfig config_;
     mutable std::mutex mu_;
     bool connected_;
-    std::chrono::steady_clock::time_point last_activity_;
+    std::chrono::steady_clock::time_point lastActivity_;
 };
 
 class SqlPool {

@@ -1,11 +1,6 @@
-export interface InstalledPackage {
-  packageId: string
-  tenantId?: string | null
-  installedAt: bigint
-  version: string
-  enabled: boolean
-  config?: string | null
-}
+import type { InstalledPackage as GeneratedInstalledPackage } from '../types.generated'
+
+export type InstalledPackage = GeneratedInstalledPackage
 
 export interface CreatePackageInput {
   packageId: string

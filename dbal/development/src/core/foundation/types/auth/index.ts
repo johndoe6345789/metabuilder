@@ -1,18 +1,7 @@
-export interface Credential {
-  username: string
-  passwordHash: string
-}
+import type { Credential as GeneratedCredential, Session as GeneratedSession } from '../types.generated'
 
-export interface Session {
-  id: string
-  userId: string
-  token: string
-  expiresAt: bigint
-  createdAt: bigint
-  lastActivity: bigint
-  ipAddress?: string | null
-  userAgent?: string | null
-}
+export type Credential = GeneratedCredential
+export type Session = GeneratedSession
 
 export interface CreateSessionInput {
   id?: string

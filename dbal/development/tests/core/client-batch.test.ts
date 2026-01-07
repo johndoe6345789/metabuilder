@@ -42,14 +42,14 @@ const packageBatch = [
     version: '1.0.0',
     enabled: false,
     installedAt: BigInt(1700000000000),
-    config: JSON.stringify({ entry: 'index.lua' }),
+    config: JSON.stringify({ entry: 'index.js' }),
   },
   {
     packageId: 'chat',
     version: '2.1.0',
     enabled: true,
     installedAt: BigInt(1700000005000),
-    config: JSON.stringify({ entry: 'chat.lua' }),
+    config: JSON.stringify({ entry: 'chat.js' }),
   },
 ]
 

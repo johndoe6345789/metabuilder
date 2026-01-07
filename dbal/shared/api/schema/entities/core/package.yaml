@@ -1,68 +1,39 @@
-entity: Package
+entity: InstalledPackage
 version: "1.0"
-description: "Installable package definitions (forum, chat, etc.)"
+description: "Installed package metadata"
 
 fields:
-  id:
-    type: uuid
-    primary: true
-    generated: true
-    
-  name:
+  packageId:
     type: string
+    primary: true
+    description: "Package identifier"
+
+  tenantId:
+    type: uuid
+    optional: true
+    nullable: true
+
+  installedAt:
+    type: bigint
     required: true
-    unique: true
-    max_length: 255
-    
+
   version:
     type: string
     required: true
-    pattern: "^\\d+\\.\\d+\\.\\d+$"
     description: "Semantic version"
-    
-  description:
-    type: text
-    optional: true
-    
-  author:
-    type: string
-    required: true
-    max_length: 255
-    
-  manifest:
-    type: json
-    required: true
-    description: "Package manifest with dependencies"
-    
-  is_installed:
+
+  enabled:
     type: boolean
     required: true
-    default: false
-    
-  installed_at:
-    type: datetime
+
+  config:
+    type: string
     optional: true
-    
-  installed_by:
-    type: uuid
-    optional: true
-    foreign_key:
-      entity: User
-      field: id
-      
-  created_at:
-    type: datetime
-    generated: true
-    immutable: true
-    
-  updated_at:
-    type: datetime
-    auto_update: true
+    nullable: true
+    description: "JSON package configuration"
 
 indexes:
-  - fields: [name, version]
-    unique: true
-  - fields: [is_installed]
+  - fields: [tenantId]
 
 acl:
   create:

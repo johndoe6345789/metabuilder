@@ -12,31 +12,31 @@ namespace entities {
 namespace component {
 
 inline Result<std::vector<ComponentNode>> getChildren(InMemoryStore& store,
-                                                          const std::string& parent_id,
+                                                          const std::string& parentId,
                                                           const std::optional<std::string>& type_filter = std::nullopt,
                                                           int limit = 0) {
-    if (parent_id.empty()) {
-        return Error::validationError("parent_id is required");
+    if (parentId.empty()) {
+        return Error::validationError("parentId is required");
     }
 
-    auto parent_it = store.components.find(parent_id);
+    auto parent_it = store.components.find(parentId);
     if (parent_it == store.components.end()) {
-        return Error::notFound("Component not found: " + parent_id);
+        return Error::notFound("Component not found: " + parentId);
     }
 
-    auto children_it = store.components_by_parent.find(parent_id);
+    auto children_it = store.components_by_parent.find(parentId);
     if (children_it == store.components_by_parent.end()) {
         return Result<std::vector<ComponentNode>>(std::vector<ComponentNode>());
     }
 
-    std::vector<std::string> child_ids = children_it->second;
-    std::sort(child_ids.begin(), child_ids.end(), [&](const std::string& a, const std::string& b) {
+    std::vector<std::string> childIds = children_it->second;
+    std::sort(childIds.begin(), childIds.end(), [&](const std::string& a, const std::string& b) {
         return store.components.at(a).order < store.components.at(b).order;
     });
 
     std::vector<ComponentNode> children;
-    children.reserve(child_ids.size());
-    for (const auto& child_id : child_ids) {
+    children.reserve(childIds.size());
+    for (const auto& child_id : childIds) {
         const auto& component = store.components.at(child_id);
         if (type_filter.has_value() && component.type != type_filter.value()) {
             continue;

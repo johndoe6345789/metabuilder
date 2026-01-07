@@ -27,7 +27,7 @@ inline Result<Session> get(InMemoryStore& store, const std::string& id) {
     }
 
     auto now = std::chrono::system_clock::now();
-    if (it->second.expires_at <= now) {
+    if (it->second.expiresAt <= now) {
         store.session_tokens.erase(it->second.token);
         store.sessions.erase(it);
         return Error::notFound("Session expired: " + id);

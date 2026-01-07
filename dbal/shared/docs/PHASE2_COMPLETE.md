@@ -179,8 +179,6 @@ dbal/
 │       └── compat.md
 │
 ├── backends/                       # Backend schemas
-│   ├── prisma/
-│   │   └── schema.prisma
 │   └── sqlite/
 │       └── schema.sql
 │

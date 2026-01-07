@@ -36,7 +36,7 @@ inline bool containsInsensitive(const std::string& text, const std::string& quer
 
 inline Result<std::vector<ComponentNode>> search(InMemoryStore& store,
                                                      const std::string& query,
-                                                     const std::optional<std::string>& page_id = std::nullopt,
+                                                     const std::optional<std::string>& pageId = std::nullopt,
                                                      int limit = 20) {
     if (query.empty()) {
         return Error::validationError("search query is required");
@@ -45,12 +45,12 @@ inline Result<std::vector<ComponentNode>> search(InMemoryStore& store,
     std::vector<ComponentNode> matches;
     for (const auto& [id, component] : store.components) {
         (void)id;
-        if (page_id.has_value() && component.page_id != page_id.value()) {
+        if (pageId.has_value() && component.pageId != pageId.value()) {
             continue;
         }
         bool matchesQuery = containsInsensitive(component.type, query);
         if (!matchesQuery) {
-            matchesQuery = containsInsensitive(component.child_ids, query);
+            matchesQuery = containsInsensitive(component.childIds, query);
         }
         if (matchesQuery) {
             matches.push_back(component);

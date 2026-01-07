@@ -185,6 +185,6 @@ const renderModel = (model) => {
 }
 
 const schema = [header, models.map(renderModel).join('\n\n')].join('\n\n')
-const outputPath = path.resolve(__dirname, '../../backends/prisma/schema.prisma')
+const outputPath = path.resolve(__dirname, '../../../../prisma/schema.prisma')
 fs.writeFileSync(outputPath, schema + '\n', 'utf8')
 console.log(`Prisma schema written to ${outputPath}`)

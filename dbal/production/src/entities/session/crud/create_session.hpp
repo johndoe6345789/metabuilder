@@ -17,15 +17,15 @@ namespace session {
  * Create a new session in the store
  */
 inline Result<Session> create(InMemoryStore& store, const CreateSessionInput& input) {
-    if (input.user_id.empty()) {
-        return Error::validationError("user_id is required");
+    if (input.userId.empty()) {
+        return Error::validationError("userId is required");
     }
     if (input.token.empty()) {
         return Error::validationError("token is required");
     }
 
-    if (store.users.find(input.user_id) == store.users.end()) {
-        return Error::validationError("User not found: " + input.user_id);
+    if (store.users.find(input.userId) == store.users.end()) {
+        return Error::validationError("User not found: " + input.userId);
     }
     if (store.session_tokens.find(input.token) != store.session_tokens.end()) {
         return Error::conflict("Session token already exists: " + input.token);
@@ -33,11 +33,13 @@ inline Result<Session> create(InMemoryStore& store, const CreateSessionInput& in
 
     Session session;
     session.id = store.generateId("session", ++store.session_counter);
-    session.user_id = input.user_id;
+    session.userId = input.userId;
     session.token = input.token;
-    session.expires_at = input.expires_at;
-    session.created_at = std::chrono::system_clock::now();
-    session.last_activity = session.created_at;
+    session.expiresAt = input.expiresAt;
+    session.createdAt = input.createdAt.value_or(std::chrono::system_clock::now());
+    session.lastActivity = input.lastActivity.value_or(session.createdAt);
+    session.ip_address = input.ip_address;
+    session.user_agent = input.user_agent;
 
     store.sessions[session.id] = session;
     store.session_tokens[session.token] = session.id;

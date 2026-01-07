@@ -34,24 +34,24 @@ inline Result<PageConfig> create(InMemoryStore& store, const CreatePageInput& in
     
     PageConfig page;
     page.id = store.generateId("page", ++store.page_counter);
-    page.tenant_id = input.tenant_id;
-    page.package_id = input.package_id;
+    page.tenantId = input.tenantId;
+    page.packageId = input.packageId;
     page.path = input.path;
     page.title = input.title;
     page.description = input.description;
     page.icon = input.icon;
     page.component = input.component;
-    page.component_tree = input.component_tree;
+    page.componentTree = input.componentTree;
     page.level = input.level;
-    page.requires_auth = input.requires_auth;
-    page.required_role = input.required_role;
-    page.parent_path = input.parent_path;
-    page.sort_order = input.sort_order;
-    page.is_published = input.is_published;
+    page.requiresAuth = input.requiresAuth;
+    page.requiredRole = input.requiredRole;
+    page.parentPath = input.parentPath;
+    page.sortOrder = input.sortOrder;
+    page.isPublished = input.isPublished;
     page.params = input.params;
     page.meta = input.meta;
-    page.created_at = std::chrono::system_clock::now();
-    page.updated_at = page.created_at;
+    page.createdAt = std::chrono::system_clock::now();
+    page.updatedAt = page.createdAt;
     
     store.pages[page.id] = page;
     store.page_paths[page.path] = page.id;

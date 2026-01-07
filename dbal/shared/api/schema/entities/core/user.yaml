@@ -8,7 +8,7 @@ fields:
     primary: true
     generated: true
     description: "Unique user identifier"
-    
+
   username:
     type: string
     required: true
@@ -17,31 +17,57 @@ fields:
     max_length: 50
     pattern: "^[a-zA-Z0-9_-]+$"
     description: "Unique username for login"
-    
+
   email:
     type: email
     required: true
     unique: true
     max_length: 255
     description: "User email address"
-    
+
   role:
     type: enum
     required: true
-    values: [user, admin, god, supergod]
+    values: [public, user, moderator, admin, god, supergod]
     default: user
     description: "User role defining access level"
-    
-  created_at:
-    type: datetime
+
+  profilePicture:
+    type: string
+    optional: true
+    nullable: true
+    description: "Profile avatar URL"
+
+  bio:
+    type: text
+    optional: true
+    nullable: true
+    description: "Short user bio"
+
+  createdAt:
+    type: bigint
     generated: true
-    immutable: true
     description: "Account creation timestamp"
-    
-  updated_at:
-    type: datetime
-    auto_update: true
-    description: "Last update timestamp"
+
+  tenantId:
+    type: uuid
+    optional: true
+    nullable: true
+
+  isInstanceOwner:
+    type: boolean
+    required: true
+    default: false
+
+  passwordChangeTimestamp:
+    type: bigint
+    optional: true
+    nullable: true
+
+  firstLogin:
+    type: boolean
+    required: true
+    default: false
 
 indexes:
   - fields: [username]
@@ -49,6 +75,7 @@ indexes:
   - fields: [email]
     unique: true
   - fields: [role]
+  - fields: [tenantId]
 
 acl:
   create:

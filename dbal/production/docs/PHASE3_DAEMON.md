@@ -181,7 +181,7 @@ performance:
   ],
   "auth": {
     "token": "session_token_here",
-    "user_id": "user_123"
+    "userId": "user_123"
   }
 }
 ```

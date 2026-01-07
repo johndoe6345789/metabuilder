@@ -1,6 +1,7 @@
 # Prisma Database Configuration
 
 This directory contains the Prisma database schema and migrations.
+The schema is generated from DBAL and should not be edited manually.
 
 ## 📋 Files
 
@@ -12,6 +13,7 @@ This directory contains the Prisma database schema and migrations.
 ### Generate Prisma Client
 
 ```bash
+npm --prefix dbal/development run codegen:prisma
 npm run db:generate
 ```
 
@@ -37,48 +39,16 @@ Opens Prisma Studio for visual database management.
 
 Key entities defined in `schema.prisma`:
 
-- **User** - System users with permission levels
-- **Tenant** - Multi-tenant support
-- **Package** - Feature packages
-- **Schema** - Dynamic data schemas
-- **Data** - JSON data storage
-- **LuaScript** - Business logic scripts
-- **Audit** - Activity logging
-
-### User Levels
-
-```prisma
-enum PermissionLevel {
-  GUEST     // Level 1 (read-only)
-  USER      // Level 2
-  ADMIN     // Level 3
-  GOD       // Level 4
-  SUPERGOD  // Level 5 (system admin)
-}
-```
-
-### Sample Table
-
-```prisma
-model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  password     String   // SHA-512 hash
-  level        PermissionLevel
-  tenantId     String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  
-  tenant       Tenant   @relation(fields: [tenantId], references: [id])
-}
-```
-
-## 🔒 Security
-
-- All passwords stored as SHA-512 hashes
-- Multi-tenant data isolation
-- Permission-based access control
-- Type-safe database queries
+- **User** - Core user identity
+- **Credential** - Authentication hashes
+- **Session** - Active sessions
+- **PageConfig** - Routes and page metadata
+- **ComponentNode** - Component tree nodes
+- **ComponentConfig** - Component configuration payloads
+- **Workflow** - Automation workflows
+- **LuaScript** - Script definitions
+- **InstalledPackage** - Installed package metadata
+- **PackageData** - Package data payloads
 
 ## 📚 Migrations
 

@@ -68,14 +68,6 @@ inline Result<int> batchDelete(InMemoryStore& store, const std::vector<std::stri
     return Result<int>(deleted);
 }
 
-inline std::optional<UserRole> roleFromString(const std::string& value) {
-    if (value == "user") return UserRole::User;
-    if (value == "admin") return UserRole::Admin;
-    if (value == "god") return UserRole::God;
-    if (value == "supergod") return UserRole::SuperGod;
-    return std::nullopt;
-}
-
 inline Result<int> updateMany(InMemoryStore& store,
                               const std::map<std::string, std::string>& filter,
                               const UpdateUserInput& updates) {
@@ -83,19 +75,16 @@ inline Result<int> updateMany(InMemoryStore& store,
         return Error::validationError("filter is required for bulk updates");
     }
 
-    std::optional<UserRole> role_filter;
+    std::optional<std::string> role_filter;
     if (filter.find("role") != filter.end()) {
-        role_filter = roleFromString(filter.at("role"));
-        if (!role_filter.has_value()) {
-            return Error::validationError("invalid role filter");
-        }
+        role_filter = filter.at("role");
     }
 
     std::optional<std::string> tenant_filter;
     if (filter.find("tenantId") != filter.end()) {
         tenant_filter = filter.at("tenantId");
-    } else if (filter.find("tenant_id") != filter.end()) {
-        tenant_filter = filter.at("tenant_id");
+    } else if (filter.find("tenantId") != filter.end()) {
+        tenant_filter = filter.at("tenantId");
     }
 
     std::optional<std::string> username_filter;
@@ -106,7 +95,7 @@ inline Result<int> updateMany(InMemoryStore& store,
     std::vector<std::string> targets;
     for (const auto& [id, user] : store.users) {
         bool matches = true;
-        if (tenant_filter.has_value() && user.tenant_id != tenant_filter.value()) {
+        if (tenant_filter.has_value() && user.tenantId != tenant_filter.value()) {
             matches = false;
         }
         if (role_filter.has_value() && user.role != role_filter.value()) {
@@ -136,19 +125,16 @@ inline Result<int> deleteMany(InMemoryStore& store, const std::map<std::string, 
         return Error::validationError("filter is required for bulk deletes");
     }
 
-    std::optional<UserRole> role_filter;
+    std::optional<std::string> role_filter;
     if (filter.find("role") != filter.end()) {
-        role_filter = roleFromString(filter.at("role"));
-        if (!role_filter.has_value()) {
-            return Error::validationError("invalid role filter");
-        }
+        role_filter = filter.at("role");
     }
 
     std::optional<std::string> tenant_filter;
     if (filter.find("tenantId") != filter.end()) {
         tenant_filter = filter.at("tenantId");
-    } else if (filter.find("tenant_id") != filter.end()) {
-        tenant_filter = filter.at("tenant_id");
+    } else if (filter.find("tenantId") != filter.end()) {
+        tenant_filter = filter.at("tenantId");
     }
 
     std::optional<std::string> username_filter;
@@ -159,7 +145,7 @@ inline Result<int> deleteMany(InMemoryStore& store, const std::map<std::string, 
     std::vector<std::string> targets;
     for (const auto& [id, user] : store.users) {
         bool matches = true;
-        if (tenant_filter.has_value() && user.tenant_id != tenant_filter.value()) {
+        if (tenant_filter.has_value() && user.tenantId != tenant_filter.value()) {
             matches = false;
         }
         if (role_filter.has_value() && user.role != role_filter.value()) {

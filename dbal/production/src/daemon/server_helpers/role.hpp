@@ -8,8 +8,7 @@
 namespace dbal {
 namespace daemon {
 
-UserRole normalize_role(const std::string& role);
-std::string role_to_string(UserRole role);
+std::string normalize_role(const std::string& role);
 
 } // namespace daemon
 } // namespace dbal

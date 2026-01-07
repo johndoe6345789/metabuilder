@@ -36,12 +36,12 @@ inline Result<InstalledPackage> update(InMemoryStore& store, const std::string& 
 
     package.version = next_version;
 
-    if (input.tenant_id.has_value()) {
-        package.tenant_id = input.tenant_id.value();
+    if (input.tenantId.has_value()) {
+        package.tenantId = input.tenantId.value();
     }
 
-    if (input.installed_at.has_value()) {
-        package.installed_at = input.installed_at.value();
+    if (input.installedAt.has_value()) {
+        package.installedAt = input.installedAt.value();
     }
 
     if (input.enabled.has_value()) {
@@ -51,8 +51,6 @@ inline Result<InstalledPackage> update(InMemoryStore& store, const std::string& 
     if (input.config.has_value()) {
         package.config = input.config.value();
     }
-
-    package.updated_at = std::chrono::system_clock::now();
 
     return Result<InstalledPackage>(package);
 }

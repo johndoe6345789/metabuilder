@@ -58,19 +58,21 @@ public:
         }
         ConnectionGuard guard(pool_, conn);
 
-        if (input.tenant_id.empty()) {
-            return Error::validationError("Tenant ID is required");
-        }
-
-        const std::string sql = "INSERT INTO users (tenant_id, username, email, role) "
+        const std::string sql = "INSERT INTO users (tenantId, username, email, role, profilePicture, bio, isInstanceOwner, passwordChangeTimestamp, firstLogin) "
                                 "VALUES (" + placeholder(1) + ", " + placeholder(2) + ", " + placeholder(3) +
-                                ", " + placeholder(4) + ") "
+                                ", " + placeholder(4) + ", " + placeholder(5) + ", " + placeholder(6) +
+                                ", " + placeholder(7) + ", " + placeholder(8) + ", " + placeholder(9) + ") "
                                 "RETURNING " + userFields();
         const std::vector<SqlParam> params = {
-            {"tenant_id", input.tenant_id},
+            {"tenantId", input.tenantId.value_or("")},
             {"username", input.username},
             {"email", input.email},
-            {"role", userRoleToString(input.role)}
+            {"role", input.role},
+            {"profilePicture", input.profilePicture.value_or("")},
+            {"bio", input.bio.value_or("")},
+            {"isInstanceOwner", input.isInstanceOwner.value_or(false) ? "1" : "0"},
+            {"passwordChangeTimestamp", input.passwordChangeTimestamp.has_value() ? timestampToString(input.passwordChangeTimestamp.value()) : ""},
+            {"firstLogin", input.firstLogin.value_or(false) ? "1" : "0"},
         };
 
         try {
@@ -129,7 +131,31 @@ public:
         }
         if (input.role) {
             setFragments.push_back("role = " + placeholder(paramIndex++));
-            params.push_back({"role", userRoleToString(*input.role)});
+            params.push_back({"role", *input.role});
+        }
+        if (input.profilePicture) {
+            setFragments.push_back("profilePicture = " + placeholder(paramIndex++));
+            params.push_back({"profilePicture", *input.profilePicture});
+        }
+        if (input.bio) {
+            setFragments.push_back("bio = " + placeholder(paramIndex++));
+            params.push_back({"bio", *input.bio});
+        }
+        if (input.tenantId) {
+            setFragments.push_back("tenantId = " + placeholder(paramIndex++));
+            params.push_back({"tenantId", *input.tenantId});
+        }
+        if (input.isInstanceOwner) {
+            setFragments.push_back("isInstanceOwner = " + placeholder(paramIndex++));
+            params.push_back({"isInstanceOwner", *input.isInstanceOwner ? "1" : "0"});
+        }
+        if (input.passwordChangeTimestamp) {
+            setFragments.push_back("passwordChangeTimestamp = " + placeholder(paramIndex++));
+            params.push_back({"passwordChangeTimestamp", timestampToString(*input.passwordChangeTimestamp)});
+        }
+        if (input.firstLogin) {
+            setFragments.push_back("firstLogin = " + placeholder(paramIndex++));
+            params.push_back({"firstLogin", *input.firstLogin ? "1" : "0"});
         }
 
         if (setFragments.empty()) {
@@ -188,16 +214,16 @@ public:
         int param_index = 1;
         auto tenant_filter = options.filter.find("tenantId");
         if (tenant_filter == options.filter.end()) {
-            tenant_filter = options.filter.find("tenant_id");
+            tenant_filter = options.filter.find("tenantId");
         }
         if (tenant_filter != options.filter.end()) {
-            where_clause = " WHERE tenant_id = " + placeholder(param_index++);
-            params.push_back({"tenant_id", tenant_filter->second});
+            where_clause = " WHERE tenantId = " + placeholder(param_index++);
+            params.push_back({"tenantId", tenant_filter->second});
         }
 
         const std::string sql = "SELECT " + userFields() +
                                 " FROM users" + where_clause +
-                                " ORDER BY created_at DESC LIMIT " + placeholder(param_index++) +
+                                " ORDER BY createdAt DESC LIMIT " + placeholder(param_index++) +
                                 " OFFSET " + placeholder(param_index++);
         params.push_back({"limit", std::to_string(limit)});
         params.push_back({"offset", std::to_string(offset)});
@@ -420,12 +446,16 @@ protected:
     static User mapRowToUser(const SqlRow& row) {
         User user;
         user.id = columnValue(row, "id");
-        user.tenant_id = columnValue(row, "tenant_id");
+        user.tenantId = emptyToNull(columnValue(row, "tenantId"));
         user.username = columnValue(row, "username");
         user.email = columnValue(row, "email");
-        user.role = parseUserRole(columnValue(row, "role"));
-        user.created_at = parseTimestamp(columnValue(row, "created_at"));
-        user.updated_at = parseTimestamp(columnValue(row, "updated_at"));
+        user.role = columnValue(row, "role");
+        user.profilePicture = emptyToNull(columnValue(row, "profilePicture"));
+        user.bio = emptyToNull(columnValue(row, "bio"));
+        user.createdAt = parseTimestamp(columnValue(row, "createdAt"));
+        user.isInstanceOwner = columnValue(row, "isInstanceOwner") == "1";
+        user.passwordChangeTimestamp = parseOptionalTimestamp(columnValue(row, "passwordChangeTimestamp"));
+        user.firstLogin = columnValue(row, "firstLogin") == "1";
         return user;
     }
 
@@ -446,26 +476,23 @@ protected:
         }
     }
 
-    static UserRole parseUserRole(const std::string& value) {
-        auto lower = value;
-        std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
-        if (lower == "admin") return UserRole::Admin;
-        if (lower == "god") return UserRole::God;
-        if (lower == "supergod") return UserRole::SuperGod;
-        return UserRole::User;
+    static std::optional<Timestamp> parseOptionalTimestamp(const std::string& value) {
+        if (value.empty()) {
+            return std::nullopt;
+        }
+        return parseTimestamp(value);
     }
 
-    static std::string userRoleToString(UserRole role) {
-        switch (role) {
-            case UserRole::Admin:
-                return "admin";
-            case UserRole::God:
-                return "god";
-            case UserRole::SuperGod:
-                return "supergod";
-            default:
-                return "user";
+    static std::string timestampToString(const Timestamp& value) {
+        const auto seconds = std::chrono::duration_cast<std::chrono::seconds>(value.time_since_epoch()).count();
+        return std::to_string(seconds);
+    }
+
+    static std::optional<std::string> emptyToNull(const std::string& value) {
+        if (value.empty()) {
+            return std::nullopt;
         }
+        return value;
     }
 
     static std::string joinFragments(const std::vector<std::string>& fragments, const std::string& separator) {
@@ -480,7 +507,7 @@ protected:
     }
 
     static std::string userFields() {
-        return "id, tenant_id, username, email, role, created_at, updated_at";
+        return "id, tenantId, username, email, role, profilePicture, bio, createdAt, isInstanceOwner, passwordChangeTimestamp, firstLogin";
     }
 
     std::string placeholder(size_t index) const {

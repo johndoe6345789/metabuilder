@@ -4,7 +4,6 @@
 #include "dbal/errors.hpp"
 #include "../../../store/in_memory_store.hpp"
 #include "../helpers.hpp"
-#include <chrono>
 #include <optional>
 #include <vector>
 
@@ -31,7 +30,7 @@ inline Result<bool> reorder(InMemoryStore& store, const std::vector<ComponentOrd
             return Error::notFound("Component not found: " + update.id);
         }
 
-        const auto& current_parent = it->second.parent_id;
+        const auto& current_parent = it->second.parentId;
         if (!parent_scope.has_value()) {
             parent_scope = current_parent;
         } else if (parent_scope.value() != current_parent) {
@@ -39,12 +38,10 @@ inline Result<bool> reorder(InMemoryStore& store, const std::vector<ComponentOrd
         }
     }
 
-    const auto now = std::chrono::system_clock::now();
     for (const auto& update : updates) {
         auto it = store.components.find(update.id);
         if (it != store.components.end()) {
             it->second.order = update.order;
-            it->second.updated_at = now;
         }
     }
 

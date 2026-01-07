@@ -63,22 +63,22 @@ inline Result<Workflow> update(InMemoryStore& store, const std::string& id, cons
         workflow.version = input.version.value();
     }
 
-    if (input.created_by.has_value()) {
-        workflow.created_by = input.created_by.value();
+    if (input.createdBy.has_value()) {
+        workflow.createdBy = input.createdBy.value();
     }
 
-    if (input.created_at.has_value()) {
-        workflow.created_at = input.created_at.value();
+    if (input.createdAt.has_value()) {
+        workflow.createdAt = input.createdAt.value();
     }
 
-    if (input.updated_at.has_value()) {
-        workflow.updated_at = input.updated_at.value();
+    if (input.updatedAt.has_value()) {
+        workflow.updatedAt = input.updatedAt.value();
     } else {
-        workflow.updated_at = std::chrono::system_clock::now();
+        workflow.updatedAt = std::chrono::system_clock::now();
     }
 
-    if (input.tenant_id.has_value()) {
-        workflow.tenant_id = input.tenant_id.value();
+    if (input.tenantId.has_value()) {
+        workflow.tenantId = input.tenantId.value();
     }
 
     return Result<Workflow>(workflow);

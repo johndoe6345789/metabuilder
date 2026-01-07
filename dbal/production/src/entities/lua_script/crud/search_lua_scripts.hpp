@@ -36,7 +36,7 @@ inline bool containsInsensitive(const std::string& text, const std::string& quer
 
 inline Result<std::vector<LuaScript>> search(InMemoryStore& store,
                                              const std::string& query,
-                                             const std::optional<std::string>& created_by = std::nullopt,
+                                             const std::optional<std::string>& createdBy = std::nullopt,
                                              int limit = 20) {
     if (query.empty()) {
         return Error::validationError("search query is required");
@@ -45,7 +45,7 @@ inline Result<std::vector<LuaScript>> search(InMemoryStore& store,
     std::vector<LuaScript> matches;
     for (const auto& [id, script] : store.lua_scripts) {
         (void)id;
-        if (created_by.has_value() && script.created_by != created_by.value()) {
+        if (createdBy.has_value() && (!script.createdBy.has_value() || script.createdBy.value() != createdBy.value())) {
             continue;
         }
         if (containsInsensitive(script.name, query) || containsInsensitive(script.code, query)) {

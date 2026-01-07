@@ -1,4 +1,3 @@
-#include "server_helpers/role.hpp"
 #include "server_helpers/serialization.hpp"
 
 #include <chrono>
@@ -14,12 +13,23 @@ long long timestamp_to_epoch_ms(const Timestamp& timestamp) {
 Json::Value user_to_json(const User& user) {
     Json::Value value(Json::objectValue);
     value["id"] = user.id;
-    value["tenantId"] = user.tenant_id;
+    value["tenantId"] = user.tenantId.value_or("");
     value["username"] = user.username;
     value["email"] = user.email;
-    value["role"] = role_to_string(user.role);
-    value["createdAt"] = static_cast<Json::Int64>(timestamp_to_epoch_ms(user.created_at));
-    value["updatedAt"] = static_cast<Json::Int64>(timestamp_to_epoch_ms(user.updated_at));
+    value["role"] = user.role;
+    value["createdAt"] = static_cast<Json::Int64>(timestamp_to_epoch_ms(user.createdAt));
+    if (user.profilePicture.has_value()) {
+        value["profilePicture"] = user.profilePicture.value();
+    }
+    if (user.bio.has_value()) {
+        value["bio"] = user.bio.value();
+    }
+    value["isInstanceOwner"] = user.isInstanceOwner;
+    if (user.passwordChangeTimestamp.has_value()) {
+        value["passwordChangeTimestamp"] =
+            static_cast<Json::Int64>(timestamp_to_epoch_ms(user.passwordChangeTimestamp.value()));
+    }
+    value["firstLogin"] = user.firstLogin;
     return value;
 }
 

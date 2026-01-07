@@ -27,16 +27,16 @@ inline Result<Workflow> create(InMemoryStore& store, const CreateWorkflowInput& 
 
     Workflow workflow;
     workflow.id = store.generateId("workflow", ++store.workflow_counter);
-    workflow.tenant_id = input.tenant_id;
+    workflow.tenantId = input.tenantId;
     workflow.name = input.name;
     workflow.description = input.description;
     workflow.nodes = input.nodes;
     workflow.edges = input.edges;
     workflow.enabled = input.enabled;
     workflow.version = input.version;
-    workflow.created_at = input.created_at.value_or(std::chrono::system_clock::now());
-    workflow.updated_at = input.updated_at.value_or(workflow.created_at);
-    workflow.created_by = input.created_by;
+    workflow.createdAt = input.createdAt.value_or(std::chrono::system_clock::now());
+    workflow.updatedAt = input.updatedAt.value_or(workflow.createdAt);
+    workflow.createdBy = input.createdBy;
 
     store.workflows[workflow.id] = workflow;
     store.workflow_names[workflow.name] = workflow.id;

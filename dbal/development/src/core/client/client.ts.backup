@@ -15,7 +15,6 @@ import {
   createPageOperations,
   createComponentOperations,
   createWorkflowOperations,
-  createLuaScriptOperations,
   createPackageOperations,
   createSessionOperations,
 } from '../entities'
@@ -437,88 +436,6 @@ export class DBALClient {
       },
       list: async (options?: ListOptions): Promise<ListResult<Workflow>> => {
         return this.adapter.list('Workflow', options) as Promise<ListResult<Workflow>>
-      },
-    }
-  }
-
-  get luaScripts() {
-    return {
-      create: async (data: Omit<LuaScript, 'id' | 'createdAt' | 'updatedAt'>): Promise<LuaScript> => {
-        const validationErrors = validateLuaScriptCreate(data)
-        if (validationErrors.length > 0) {
-          throw DBALError.validationError(
-            'Invalid Lua script data',
-            validationErrors.map(error => ({ field: 'luaScript', error }))
-          )
-        }
-
-        try {
-          return this.adapter.create('LuaScript', data) as Promise<LuaScript>
-        } catch (error) {
-          if (error instanceof DBALError && error.code === 409) {
-            throw DBALError.conflict(`Lua script with name '${data.name}' already exists`)
-          }
-          throw error
-        }
-      },
-      read: async (id: string): Promise<LuaScript | null> => {
-        const validationErrors = validateId(id)
-        if (validationErrors.length > 0) {
-          throw DBALError.validationError(
-            'Invalid Lua script ID',
-            validationErrors.map(error => ({ field: 'id', error }))
-          )
-        }
-
-        const result = await this.adapter.read('LuaScript', id) as LuaScript | null
-        if (!result) {
-          throw DBALError.notFound(`Lua script not found: ${id}`)
-        }
-        return result
-      },
-      update: async (id: string, data: Partial<LuaScript>): Promise<LuaScript> => {
-        const idErrors = validateId(id)
-        if (idErrors.length > 0) {
-          throw DBALError.validationError(
-            'Invalid Lua script ID',
-            idErrors.map(error => ({ field: 'id', error }))
-          )
-        }
-
-        const validationErrors = validateLuaScriptUpdate(data)
-        if (validationErrors.length > 0) {
-          throw DBALError.validationError(
-            'Invalid Lua script update data',
-            validationErrors.map(error => ({ field: 'luaScript', error }))
-          )
-        }
-
-        try {
-          return this.adapter.update('LuaScript', id, data) as Promise<LuaScript>
-        } catch (error) {
-          if (error instanceof DBALError && error.code === 409) {
-            throw DBALError.conflict('Lua script name already exists')
-          }
-          throw error
-        }
-      },
-      delete: async (id: string): Promise<boolean> => {
-        const validationErrors = validateId(id)
-        if (validationErrors.length > 0) {
-          throw DBALError.validationError(
-            'Invalid Lua script ID',
-            validationErrors.map(error => ({ field: 'id', error }))
-          )
-        }
-
-        const result = await this.adapter.delete('LuaScript', id)
-        if (!result) {
-          throw DBALError.notFound(`Lua script not found: ${id}`)
-        }
-        return result
-      },
-      list: async (options?: ListOptions): Promise<ListResult<LuaScript>> => {
-        return this.adapter.list('LuaScript', options) as Promise<ListResult<LuaScript>>
       },
     }
   }

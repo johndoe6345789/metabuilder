@@ -14,8 +14,8 @@ namespace validation {
 /**
  * Validate package ID (1-255 characters)
  */
-inline bool isValidPackageId(const std::string& package_id) {
-    return !package_id.empty() && package_id.length() <= 255;
+inline bool isValidPackageId(const std::string& packageId) {
+    return !packageId.empty() && packageId.length() <= 255;
 }
 
 /**
@@ -29,8 +29,8 @@ inline bool isValidSemver(const std::string& version) {
 /**
  * Generate package key for uniqueness
  */
-inline std::string packageKey(const std::string& package_id) {
-    return package_id;
+inline std::string packageKey(const std::string& packageId) {
+    return packageId;
 }
 
 } // namespace validation

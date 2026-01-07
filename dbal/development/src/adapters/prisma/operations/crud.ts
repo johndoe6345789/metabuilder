@@ -1,5 +1,5 @@
 import type { PrismaContext } from '../types'
-import { handlePrismaError, getModel, withTimeout, isNotFoundError } from './utils'
+import { handlePrismaError, getModel, getPrimaryKeyField, withTimeout, isNotFoundError } from './utils'
 
 export async function createRecord(
   context: PrismaContext,
@@ -21,9 +21,10 @@ export async function readRecord(
 ): Promise<unknown | null> {
   try {
     const model = getModel(context, entity)
+    const idField = getPrimaryKeyField(entity)
     return await withTimeout(
       context,
-      model.findUnique({ where: { id } as never })
+      model.findUnique({ where: { [idField]: id } as never })
     )
   } catch (error) {
     throw handlePrismaError(error, 'read', entity)
@@ -38,10 +39,11 @@ export async function updateRecord(
 ): Promise<unknown> {
   try {
     const model = getModel(context, entity)
+    const idField = getPrimaryKeyField(entity)
     return await withTimeout(
       context,
       model.update({
-        where: { id } as never,
+        where: { [idField]: id } as never,
         data: data as never
       })
     )
@@ -57,9 +59,10 @@ export async function deleteRecord(
 ): Promise<boolean> {
   try {
     const model = getModel(context, entity)
+    const idField = getPrimaryKeyField(entity)
     await withTimeout(
       context,
-      model.delete({ where: { id } as never })
+      model.delete({ where: { [idField]: id } as never })
     )
     return true
   } catch (error) {

@@ -64,7 +64,7 @@ export DATABASE_URL="mysql://user:pass@db:3306/metabuilder"
 npx prisma generate
 ```
 
-With `config.adapter = 'prisma'`, DBAL sends every request through `PrismaAdapter`, and Prisma handles dialect differences, migrations, and connection pooling defined in `prisma/schema.prisma` and `prisma/migrations/`. That keeps DBAL focused on validation, ACLs, and audit logging while it can still drive PostgreSQL, MySQL, or any other Prisma-supported store.
+With `config.adapter = 'prisma'`, DBAL sends every request through `PrismaAdapter`, and Prisma handles dialect differences, migrations, and connection pooling defined in `prisma/schema.prisma` (generated from DBAL) and `prisma/migrations/`. That keeps DBAL focused on validation, ACLs, and audit logging while it can still drive PostgreSQL, MySQL, or any other Prisma-supported store.
 
 The C++ daemon still resides in Phase 3—the current implementation is backed by the in-memory store described in `dbal/production/docs/PHASE3_DAEMON.md`, so Postgres/MySQL adapters for the daemon are still future work.
 

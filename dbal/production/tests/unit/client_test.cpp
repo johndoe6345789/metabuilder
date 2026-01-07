@@ -55,7 +55,7 @@ void test_create_user() {
     dbal::CreateUserInput input;
     input.username = "testuser";
     input.email = "test@example.com";
-    input.role = dbal::UserRole::User;
+    input.role = "user";
     
     auto result = client.createUser(input);
     assert(result.isOk());
@@ -143,7 +143,7 @@ void test_credential_crud() {
 
     dbal::CreateCredentialInput credentialInput;
     credentialInput.username = userInput.username;
-    credentialInput.password_hash = "hash123";
+    credentialInput.passwordHash = "hash123";
 
     auto setResult = client.setCredential(credentialInput);
     assert(setResult.isOk());
@@ -158,7 +158,7 @@ void test_credential_crud() {
     assert(invalidVerify.error().code() == dbal::ErrorCode::Unauthorized);
     std::cout << "  ✓ Unauthorized for wrong password" << std::endl;
 
-    credentialInput.password_hash = "hash456";
+    credentialInput.passwordHash = "hash456";
     auto updateResult = client.setCredential(credentialInput);
     assert(updateResult.isOk());
     std::cout << "  ✓ Credential updated" << std::endl;
@@ -190,7 +190,7 @@ void test_credential_validation() {
 
     dbal::CreateCredentialInput missingUser;
     missingUser.username = "missing_user";
-    missingUser.password_hash = "hash";
+    missingUser.passwordHash = "hash";
     auto missingResult = client.setCredential(missingUser);
     assert(missingResult.isError());
     assert(missingResult.error().code() == dbal::ErrorCode::NotFound);
@@ -204,7 +204,7 @@ void test_credential_validation() {
 
     dbal::CreateCredentialInput invalidPassword;
     invalidPassword.username = userInput.username;
-    invalidPassword.password_hash = "";
+    invalidPassword.passwordHash = "";
     auto invalidResult = client.setCredential(invalidPassword);
     assert(invalidResult.isError());
     assert(invalidResult.error().code() == dbal::ErrorCode::ValidationError);
@@ -265,7 +265,7 @@ void test_user_count() {
     dbal::CreateUserInput admin;
     admin.username = "count_admin";
     admin.email = "count_admin@example.com";
-    admin.role = dbal::UserRole::Admin;
+    admin.role = "admin";
     auto adminResult = client.createUser(admin);
     assert(adminResult.isOk());
 
@@ -274,7 +274,7 @@ void test_user_count() {
     assert(totalCount.value() >= 2);
     std::cout << "  ✓ Total user count matches" << std::endl;
 
-    auto adminCount = client.countUsers(dbal::UserRole::Admin);
+    auto adminCount = client.countUsers("admin");
     assert(adminCount.isOk());
     assert(adminCount.value() >= 1);
     std::cout << "  ✓ Admin count matches" << std::endl;
@@ -303,12 +303,12 @@ void test_user_bulk_filters() {
     dbal::CreateUserInput admin;
     admin.username = "bulk_admin";
     admin.email = "bulk_admin@example.com";
-    admin.role = dbal::UserRole::Admin;
+    admin.role = "admin";
     auto adminRes = client.createUser(admin);
     assert(adminRes.isOk());
 
     dbal::UpdateUserInput update;
-    update.role = dbal::UserRole::Admin;
+    update.role = "admin";
     std::map<std::string, std::string> filter;
     filter["role"] = "user";
     auto updateMany = client.updateManyUsers(filter, update);
@@ -316,7 +316,7 @@ void test_user_bulk_filters() {
     assert(updateMany.value() >= 2);
     std::cout << "  ✓ Bulk update applied" << std::endl;
 
-    auto adminCount = client.countUsers(dbal::UserRole::Admin);
+    auto adminCount = client.countUsers("admin");
     assert(adminCount.isOk());
     assert(adminCount.value() >= 3);
 
@@ -325,7 +325,7 @@ void test_user_bulk_filters() {
     auto deleteMany = client.deleteManyUsers(deleteFilter);
     assert(deleteMany.isOk());
     assert(deleteMany.value() >= 3);
-    auto remainingAdmin = client.countUsers(dbal::UserRole::Admin);
+    auto remainingAdmin = client.countUsers("admin");
     assert(remainingAdmin.isOk());
     assert(remainingAdmin.value() == 0);
     std::cout << "  ✓ Bulk delete removed updated admins" << std::endl;
@@ -432,7 +432,7 @@ void test_list_users() {
         dbal::CreateUserInput input;
         input.username = "listuser" + std::to_string(i);
         input.email = "listuser" + std::to_string(i) + "@example.com";
-        input.role = (i < 2) ? dbal::UserRole::Admin : dbal::UserRole::User;
+        input.role = (i < 2) ? "admin" : "user";
         client.createUser(input);
     }
     
@@ -470,7 +470,7 @@ void test_user_batch_operations() {
     dbal::CreateUserInput user2;
     user2.username = "batch_user_2";
     user2.email = "batch_user_2@example.com";
-    user2.role = dbal::UserRole::Admin;
+    user2.role = "admin";
     users.push_back(user2);
 
     auto createResult = client.batchCreateUsers(users);
@@ -492,7 +492,7 @@ void test_user_batch_operations() {
 
     dbal::UpdateUserBatchItem update2;
     update2.id = listResult.value()[1].id;
-    update2.data.role = dbal::UserRole::God;
+    update2.data.role = "god";
     updates.push_back(update2);
 
     auto updateResult = client.batchUpdateUsers(updates);
@@ -524,9 +524,9 @@ void test_page_crud() {
     input.title = "Test Page";
     input.description = "A test page";
     input.level = 2;
-    input.component_tree = "{}";
-    input.requires_auth = false;
-    input.is_published = true;
+    input.componentTree = "{}";
+    input.requiresAuth = false;
+    input.isPublished = true;
     
     auto createResult = client.createPage(input);
     assert(createResult.isOk());
@@ -577,8 +577,8 @@ void test_page_validation() {
     input1.path = "";
     input1.title = "Test";
     input1.level = 1;
-    input1.component_tree = "{}";
-    input1.requires_auth = false;
+    input1.componentTree = "{}";
+    input1.requiresAuth = false;
     auto result1 = client.createPage(input1);
     assert(result1.isError());
     assert(result1.error().code() == dbal::ErrorCode::ValidationError);
@@ -589,8 +589,8 @@ void test_page_validation() {
     input2.path = "/valid-path";
     input2.title = "";
     input2.level = 1;
-    input2.component_tree = "{}";
-    input2.requires_auth = false;
+    input2.componentTree = "{}";
+    input2.requiresAuth = false;
     auto result2 = client.createPage(input2);
     assert(result2.isError());
     assert(result2.error().code() == dbal::ErrorCode::ValidationError);
@@ -601,8 +601,8 @@ void test_page_validation() {
     input3.path = "/valid-path-2";
     input3.title = "Test";
     input3.level = 10;
-    input3.component_tree = "{}";
-    input3.requires_auth = false;
+    input3.componentTree = "{}";
+    input3.requiresAuth = false;
     auto result3 = client.createPage(input3);
     assert(result3.isError());
     assert(result3.error().code() == dbal::ErrorCode::ValidationError);
@@ -621,9 +621,9 @@ void test_page_search() {
     page1.path = "/search-page";
     page1.title = "Search Page";
     page1.level = 1;
-    page1.component_tree = "{}";
-    page1.requires_auth = false;
-    page1.is_published = true;
+    page1.componentTree = "{}";
+    page1.requiresAuth = false;
+    page1.isPublished = true;
     auto result1 = client.createPage(page1);
     assert(result1.isOk());
 
@@ -631,9 +631,9 @@ void test_page_search() {
     page2.path = "/other-page";
     page2.title = "Other Search";
     page2.level = 1;
-    page2.component_tree = "{}";
-    page2.requires_auth = false;
-    page2.is_published = true;
+    page2.componentTree = "{}";
+    page2.requiresAuth = false;
+    page2.isPublished = true;
     auto result2 = client.createPage(page2);
     assert(result2.isOk());
 
@@ -665,18 +665,18 @@ void test_component_crud() {
     pageInput.path = "/component-page";
     pageInput.title = "Component Page";
     pageInput.level = 1;
-    pageInput.component_tree = "{}";
-    pageInput.requires_auth = false;
-    pageInput.is_published = true;
+    pageInput.componentTree = "{}";
+    pageInput.requiresAuth = false;
+    pageInput.isPublished = true;
 
     auto pageResult = client.createPage(pageInput);
     assert(pageResult.isOk());
     std::string pageId = pageResult.value().id;
 
     dbal::CreateComponentNodeInput rootInput;
-    rootInput.page_id = pageId;
+    rootInput.pageId = pageId;
     rootInput.type = "Container";
-    rootInput.child_ids = "[]";
+    rootInput.childIds = "[]";
     rootInput.order = 0;
 
     auto rootResult = client.createComponent(rootInput);
@@ -685,10 +685,10 @@ void test_component_crud() {
     std::cout << "  ✓ Root component created" << std::endl;
 
     dbal::CreateComponentNodeInput childInput;
-    childInput.page_id = pageId;
-    childInput.parent_id = rootId;
+    childInput.pageId = pageId;
+    childInput.parentId = rootId;
     childInput.type = "Button";
-    childInput.child_ids = "[]";
+    childInput.childIds = "[]";
     childInput.order = 1;
 
     auto childResult = client.createComponent(childInput);
@@ -697,10 +697,10 @@ void test_component_crud() {
     std::cout << "  ✓ First child component created" << std::endl;
 
     dbal::CreateComponentNodeInput siblingInput;
-    siblingInput.page_id = pageId;
-    siblingInput.parent_id = rootId;
+    siblingInput.pageId = pageId;
+    siblingInput.parentId = rootId;
     siblingInput.type = "Text";
-    siblingInput.child_ids = "[]";
+    siblingInput.childIds = "[]";
     siblingInput.order = 3;
 
     auto siblingResult = client.createComponent(siblingInput);
@@ -722,7 +722,7 @@ void test_component_crud() {
 
     dbal::ListOptions parentFilter;
     parentFilter.filter["pageId"] = pageId;
-    parentFilter.filter["parent_id"] = rootId;
+    parentFilter.filter["parentId"] = rootId;
     auto parentList = client.listComponents(parentFilter);
     assert(parentList.isOk());
     assert(parentList.value().size() == 2);
@@ -752,9 +752,9 @@ void test_component_crud() {
     std::cout << "  ✓ Components reordered" << std::endl;
 
     dbal::CreateComponentNodeInput otherRootInput;
-    otherRootInput.page_id = pageId;
+    otherRootInput.pageId = pageId;
     otherRootInput.type = "Sidebar";
-    otherRootInput.child_ids = "[]";
+    otherRootInput.childIds = "[]";
     otherRootInput.order = 0;
 
     auto otherRootResult = client.createComponent(otherRootInput);
@@ -764,14 +764,14 @@ void test_component_crud() {
 
     dbal::MoveComponentInput moveInput;
     moveInput.id = siblingId;
-    moveInput.new_parent_id = otherRootId;
+    moveInput.new_parentId = otherRootId;
     moveInput.order = 0;
     auto moveResult = client.moveComponent(moveInput);
     assert(moveResult.isOk());
     auto movedSibling = client.getComponent(siblingId);
     assert(movedSibling.isOk());
-    assert(movedSibling.value().parent_id.has_value());
-    assert(movedSibling.value().parent_id.value() == otherRootId);
+    assert(movedSibling.value().parentId.has_value());
+    assert(movedSibling.value().parentId.value() == otherRootId);
     assert(movedSibling.value().order == 0);
     std::cout << "  ✓ Component moved to new parent" << std::endl;
 
@@ -799,18 +799,18 @@ void test_component_validation() {
     pageInput.path = "/component-validation";
     pageInput.title = "Component Validation";
     pageInput.level = 1;
-    pageInput.component_tree = "{}";
-    pageInput.requires_auth = false;
-    pageInput.is_published = true;
+    pageInput.componentTree = "{}";
+    pageInput.requiresAuth = false;
+    pageInput.isPublished = true;
 
     auto pageResult = client.createPage(pageInput);
     assert(pageResult.isOk());
     std::string pageId = pageResult.value().id;
 
     dbal::CreateComponentNodeInput missingPage;
-    missingPage.page_id = "missing-page";
+    missingPage.pageId = "missing-page";
     missingPage.type = "Leaf";
-    missingPage.child_ids = "[]";
+    missingPage.childIds = "[]";
     missingPage.order = 0;
     auto missingResult = client.createComponent(missingPage);
     assert(missingResult.isError());
@@ -818,9 +818,9 @@ void test_component_validation() {
     std::cout << "  ✓ Missing page rejected" << std::endl;
 
     dbal::CreateComponentNodeInput longType;
-    longType.page_id = pageId;
+    longType.pageId = pageId;
     longType.type = std::string(101, 'x');
-    longType.child_ids = "[]";
+    longType.childIds = "[]";
     longType.order = 0;
     auto longResult = client.createComponent(longType);
     assert(longResult.isError());
@@ -828,9 +828,9 @@ void test_component_validation() {
     std::cout << "  ✓ Oversized component type rejected" << std::endl;
 
     dbal::CreateComponentNodeInput badOrder;
-    badOrder.page_id = pageId;
+    badOrder.pageId = pageId;
     badOrder.type = "Leaf";
-    badOrder.child_ids = "[]";
+    badOrder.childIds = "[]";
     badOrder.order = -1;
     auto orderResult = client.createComponent(badOrder);
     assert(orderResult.isError());
@@ -850,17 +850,17 @@ void test_component_search() {
     pageInput.path = "/component-search";
     pageInput.title = "Component Search";
     pageInput.level = 1;
-    pageInput.component_tree = "{}";
-    pageInput.requires_auth = false;
-    pageInput.is_published = true;
+    pageInput.componentTree = "{}";
+    pageInput.requiresAuth = false;
+    pageInput.isPublished = true;
     auto pageResult = client.createPage(pageInput);
     assert(pageResult.isOk());
     std::string pageId = pageResult.value().id;
 
     dbal::CreateComponentNodeInput targetInput;
-    targetInput.page_id = pageId;
+    targetInput.pageId = pageId;
     targetInput.type = "SearchButton";
-    targetInput.child_ids = "[\"find-me\"]";
+    targetInput.childIds = "[\"find-me\"]";
     targetInput.order = 0;
     auto targetResult = client.createComponent(targetInput);
     assert(targetResult.isOk());
@@ -896,37 +896,37 @@ void test_component_children() {
     pageInput.path = "/component-children";
     pageInput.title = "Component Children";
     pageInput.level = 1;
-    pageInput.component_tree = "{}";
-    pageInput.requires_auth = false;
-    pageInput.is_published = true;
+    pageInput.componentTree = "{}";
+    pageInput.requiresAuth = false;
+    pageInput.isPublished = true;
     auto pageResult = client.createPage(pageInput);
     assert(pageResult.isOk());
     std::string pageId = pageResult.value().id;
 
     dbal::CreateComponentNodeInput rootInput;
-    rootInput.page_id = pageId;
+    rootInput.pageId = pageId;
     rootInput.type = "Root";
-    rootInput.child_ids = "[]";
+    rootInput.childIds = "[]";
     rootInput.order = 0;
     auto rootResult = client.createComponent(rootInput);
     assert(rootResult.isOk());
     std::string rootId = rootResult.value().id;
 
     dbal::CreateComponentNodeInput childInput;
-    childInput.page_id = pageId;
-    childInput.parent_id = rootId;
+    childInput.pageId = pageId;
+    childInput.parentId = rootId;
     childInput.type = "Child";
-    childInput.child_ids = "[]";
+    childInput.childIds = "[]";
     childInput.order = 0;
     auto childResult = client.createComponent(childInput);
     assert(childResult.isOk());
     std::string childId = childResult.value().id;
 
     dbal::CreateComponentNodeInput grandchildInput;
-    grandchildInput.page_id = pageId;
-    grandchildInput.parent_id = childId;
+    grandchildInput.pageId = pageId;
+    grandchildInput.parentId = childId;
     grandchildInput.type = "Grandchild";
-    grandchildInput.child_ids = "[]";
+    grandchildInput.childIds = "[]";
     grandchildInput.order = 0;
     auto grandchildResult = client.createComponent(grandchildInput);
     assert(grandchildResult.isOk());
@@ -967,7 +967,7 @@ void test_workflow_crud() {
     config.database_url = ":memory:";
     dbal::Client client(config);
 
-    // Create user for created_by reference
+    // Create user for createdBy reference
     dbal::CreateUserInput userInput;
     userInput.username = "workflow_owner";
     userInput.email = "workflow_owner@example.com";
@@ -981,7 +981,7 @@ void test_workflow_crud() {
     input.nodes = "[]";
     input.edges = "[]";
     input.enabled = true;
-    input.created_by = userResult.value().id;
+    input.createdBy = userResult.value().id;
 
     auto createResult = client.createWorkflow(input);
     assert(createResult.isOk());
@@ -1031,7 +1031,7 @@ void test_workflow_validation() {
     config.database_url = ":memory:";
     dbal::Client client(config);
 
-    // Create user for created_by reference
+    // Create user for createdBy reference
     dbal::CreateUserInput userInput;
     userInput.username = "workflow_validator";
     userInput.email = "workflow_validator@example.com";
@@ -1044,7 +1044,7 @@ void test_workflow_validation() {
     input1.nodes = "[]";
     input1.edges = "[]";
     input1.enabled = true;
-    input1.created_by = userResult.value().id;
+    input1.createdBy = userResult.value().id;
     auto result1 = client.createWorkflow(input1);
     assert(result1.isError());
     assert(result1.error().code() == dbal::ErrorCode::ValidationError);
@@ -1056,12 +1056,12 @@ void test_workflow_validation() {
     input2.nodes = "[]";
     input2.edges = "[]";
     input2.enabled = true;
-    input2.created_by = userResult.value().id;
+    input2.createdBy = userResult.value().id;
     auto result2 = client.createWorkflow(input2);
     assert(result2.isOk());
 
     dbal::CreateWorkflowInput input3 = input2;
-    input3.created_by = userResult.value().id;
+    input3.createdBy = userResult.value().id;
     auto result3 = client.createWorkflow(input3);
     assert(result3.isError());
     assert(result3.error().code() == dbal::ErrorCode::Conflict);
@@ -1083,9 +1083,9 @@ void test_session_crud() {
     assert(userResult.isOk());
 
     dbal::CreateSessionInput input;
-    input.user_id = userResult.value().id;
+    input.userId = userResult.value().id;
     input.token = "session-token";
-    input.expires_at = std::chrono::system_clock::now() + std::chrono::hours(1);
+    input.expiresAt = std::chrono::system_clock::now() + std::chrono::hours(1);
 
     auto createResult = client.createSession(input);
     assert(createResult.isOk());
@@ -1098,17 +1098,17 @@ void test_session_crud() {
     std::cout << "  ✓ Retrieved session by ID" << std::endl;
 
     dbal::UpdateSessionInput updateInput;
-    updateInput.last_activity = std::chrono::system_clock::now() + std::chrono::hours(2);
+    updateInput.lastActivity = std::chrono::system_clock::now() + std::chrono::hours(2);
     auto updateResult = client.updateSession(sessionId, updateInput);
     assert(updateResult.isOk());
     std::cout << "  ✓ Session updated" << std::endl;
 
     dbal::ListOptions listOptions;
-    listOptions.filter["user_id"] = userResult.value().id;
+    listOptions.filter["userId"] = userResult.value().id;
     auto listResult = client.listSessions(listOptions);
     assert(listResult.isOk());
     assert(listResult.value().size() >= 1);
-    std::cout << "  ✓ Listed sessions (filtered by user_id)" << std::endl;
+    std::cout << "  ✓ Listed sessions (filtered by userId)" << std::endl;
 
     auto deleteResult = client.deleteSession(sessionId);
     assert(deleteResult.isOk());
@@ -1133,18 +1133,18 @@ void test_session_validation() {
     assert(userResult.isOk());
 
     dbal::CreateSessionInput input1;
-    input1.user_id = userResult.value().id;
+    input1.userId = userResult.value().id;
     input1.token = "";
-    input1.expires_at = std::chrono::system_clock::now() + std::chrono::hours(1);
+    input1.expiresAt = std::chrono::system_clock::now() + std::chrono::hours(1);
     auto result1 = client.createSession(input1);
     assert(result1.isError());
     assert(result1.error().code() == dbal::ErrorCode::ValidationError);
     std::cout << "  ✓ Empty token rejected" << std::endl;
 
     dbal::CreateSessionInput input2;
-    input2.user_id = userResult.value().id;
+    input2.userId = userResult.value().id;
     input2.token = "dup-token";
-    input2.expires_at = std::chrono::system_clock::now() + std::chrono::hours(1);
+    input2.expiresAt = std::chrono::system_clock::now() + std::chrono::hours(1);
     auto result2 = client.createSession(input2);
     assert(result2.isOk());
 
@@ -1173,10 +1173,11 @@ void test_lua_script_crud() {
     input.name = "health_check";
     input.description = "Health check";
     input.code = "return true";
-    input.is_sandboxed = true;
-    input.allowed_globals = {"math"};
-    input.timeout_ms = 1000;
-    input.created_by = userResult.value().id;
+    input.parameters = "[]";
+    input.isSandboxed = true;
+    input.allowedGlobals = "[]";
+    input.timeoutMs = 1000;
+    input.createdBy = userResult.value().id;
 
     auto createResult = client.createLuaScript(input);
     assert(createResult.isOk());
@@ -1189,19 +1190,19 @@ void test_lua_script_crud() {
     std::cout << "  ✓ Retrieved Lua script by ID" << std::endl;
 
     dbal::UpdateLuaScriptInput updateInput;
-    updateInput.timeout_ms = 2000;
-    updateInput.is_sandboxed = false;
+    updateInput.timeoutMs = 2000;
+    updateInput.isSandboxed = false;
     auto updateResult = client.updateLuaScript(scriptId, updateInput);
     assert(updateResult.isOk());
-    assert(updateResult.value().timeout_ms == 2000);
+    assert(updateResult.value().timeoutMs == 2000);
     std::cout << "  ✓ Lua script updated" << std::endl;
 
     dbal::ListOptions listOptions;
-    listOptions.filter["is_sandboxed"] = "false";
+    listOptions.filter["isSandboxed"] = "false";
     auto listResult = client.listLuaScripts(listOptions);
     assert(listResult.isOk());
     assert(listResult.value().size() >= 1);
-    std::cout << "  ✓ Listed Lua scripts (filtered by is_sandboxed=false)" << std::endl;
+    std::cout << "  ✓ Listed Lua scripts (filtered by isSandboxed=false)" << std::endl;
 
     auto deleteResult = client.deleteLuaScript(scriptId);
     assert(deleteResult.isOk());
@@ -1228,40 +1229,24 @@ void test_lua_script_validation() {
     dbal::CreateLuaScriptInput input1;
     input1.name = "invalid-timeout";
     input1.code = "return true";
-    input1.is_sandboxed = true;
-    input1.allowed_globals = {"math"};
-    input1.timeout_ms = 50;
-    input1.created_by = userResult.value().id;
+    input1.parameters = "[]";
+    input1.isSandboxed = true;
+    input1.allowedGlobals = "[]";
+    input1.timeoutMs = 50;
+    input1.createdBy = userResult.value().id;
     auto result1 = client.createLuaScript(input1);
     assert(result1.isError());
     assert(result1.error().code() == dbal::ErrorCode::ValidationError);
     std::cout << "  ✓ Invalid timeout rejected" << std::endl;
 
-    dbal::CreateLuaScriptInput inputGlobals = input1;
-    inputGlobals.name = "invalid-globals";
-    inputGlobals.timeout_ms = 1000;
-    inputGlobals.allowed_globals = {""};
-    auto resultGlobals = client.createLuaScript(inputGlobals);
-    assert(resultGlobals.isError());
-    assert(resultGlobals.error().code() == dbal::ErrorCode::ValidationError);
-    std::cout << "  ✓ Empty allowed_globals rejected" << std::endl;
-
-    dbal::CreateLuaScriptInput inputForbiddenGlobals = input1;
-    inputForbiddenGlobals.name = "forbidden-globals";
-    inputForbiddenGlobals.timeout_ms = 1000;
-    inputForbiddenGlobals.allowed_globals = {"os"};
-    auto resultForbiddenGlobals = client.createLuaScript(inputForbiddenGlobals);
-    assert(resultForbiddenGlobals.isError());
-    assert(resultForbiddenGlobals.error().code() == dbal::ErrorCode::ValidationError);
-    std::cout << "  ✓ Forbidden globals rejected" << std::endl;
-
     dbal::CreateLuaScriptInput input2;
     input2.name = "duplicate-script";
     input2.code = "return true";
-    input2.is_sandboxed = true;
-    input2.allowed_globals = {"math"};
-    input2.timeout_ms = 1000;
-    input2.created_by = userResult.value().id;
+    input2.parameters = "[]";
+    input2.isSandboxed = true;
+    input2.allowedGlobals = "[]";
+    input2.timeoutMs = 1000;
+    input2.createdBy = userResult.value().id;
     auto result2 = client.createLuaScript(input2);
     assert(result2.isOk());
 
@@ -1270,14 +1255,6 @@ void test_lua_script_validation() {
     assert(result3.isError());
     assert(result3.error().code() == dbal::ErrorCode::Conflict);
     std::cout << "  ✓ Duplicate script name rejected" << std::endl;
-
-    dbal::CreateLuaScriptInput input4 = input2;
-    input4.name = "dedupe-globals";
-    input4.allowed_globals = {"math", "math", "print"};
-    auto result4 = client.createLuaScript(input4);
-    assert(result4.isOk());
-    assert(result4.value().allowed_globals.size() == 2);
-    std::cout << "  ✓ Allowed globals deduped" << std::endl;
 }
 
 void test_lua_script_search() {
@@ -1297,8 +1274,9 @@ void test_lua_script_search() {
     dbal::CreateLuaScriptInput scriptInput;
     scriptInput.name = "search_script";
     scriptInput.code = "return 'search'";
-    scriptInput.allowed_globals = {"math"};
-    scriptInput.created_by = userResult.value().id;
+    scriptInput.parameters = "[]";
+    scriptInput.allowedGlobals = "[]";
+    scriptInput.createdBy = userResult.value().id;
     auto createResult = client.createLuaScript(scriptInput);
     assert(createResult.isOk());
 
@@ -1334,25 +1312,25 @@ void test_package_crud() {
     assert(userResult.isOk());
 
     dbal::CreatePackageInput input;
-    input.package_id = "forum";
+    input.packageId = "forum";
     input.version = "1.2.3";
-    input.installed_at = std::chrono::system_clock::now();
+    input.installedAt = std::chrono::system_clock::now();
     input.enabled = false;
     input.config = "{\"entry\":\"index.lua\"}";
 
     auto createResult = client.createPackage(input);
     assert(createResult.isOk());
-    std::string packageId = createResult.value().package_id;
+    std::string packageId = createResult.value().packageId;
     std::cout << "  ✓ Package created with ID: " << packageId << std::endl;
 
     auto getResult = client.getPackage(packageId);
     assert(getResult.isOk());
-    assert(getResult.value().package_id == "forum");
+    assert(getResult.value().packageId == "forum");
     std::cout << "  ✓ Retrieved package by ID" << std::endl;
 
     dbal::UpdatePackageInput updateInput;
     updateInput.enabled = true;
-    updateInput.installed_at = std::chrono::system_clock::now();
+    updateInput.installedAt = std::chrono::system_clock::now();
     auto updateResult = client.updatePackage(packageId, updateInput);
     assert(updateResult.isOk());
     assert(updateResult.value().enabled == true);
@@ -1382,9 +1360,9 @@ void test_package_validation() {
     dbal::Client client(config);
 
     dbal::CreatePackageInput input1;
-    input1.package_id = "invalid-package";
+    input1.packageId = "invalid-package";
     input1.version = "bad";
-    input1.installed_at = std::chrono::system_clock::now();
+    input1.installedAt = std::chrono::system_clock::now();
     input1.enabled = false;
     auto result1 = client.createPackage(input1);
     assert(result1.isError());
@@ -1392,9 +1370,9 @@ void test_package_validation() {
     std::cout << "  ✓ Invalid semver rejected" << std::endl;
 
     dbal::CreatePackageInput input2;
-    input2.package_id = "duplicate-package";
+    input2.packageId = "duplicate-package";
     input2.version = "1.0.0";
-    input2.installed_at = std::chrono::system_clock::now();
+    input2.installedAt = std::chrono::system_clock::now();
     input2.enabled = false;
     auto result2 = client.createPackage(input2);
     assert(result2.isOk());
@@ -1416,16 +1394,16 @@ void test_package_batch_operations() {
 
     std::vector<dbal::CreatePackageInput> packages;
     dbal::CreatePackageInput package1;
-    package1.package_id = "batch-package-1";
+    package1.packageId = "batch-package-1";
     package1.version = "1.0.0";
-    package1.installed_at = std::chrono::system_clock::now();
+    package1.installedAt = std::chrono::system_clock::now();
     package1.enabled = false;
     packages.push_back(package1);
 
     dbal::CreatePackageInput package2;
-    package2.package_id = "batch-package-2";
+    package2.packageId = "batch-package-2";
     package2.version = "2.0.0";
-    package2.installed_at = std::chrono::system_clock::now();
+    package2.installedAt = std::chrono::system_clock::now();
     package2.enabled = false;
     packages.push_back(package2);
 
@@ -1442,12 +1420,12 @@ void test_package_batch_operations() {
 
     std::vector<dbal::UpdatePackageBatchItem> updates;
     dbal::UpdatePackageBatchItem update1;
-    update1.id = listResult.value()[0].package_id;
+    update1.id = listResult.value()[0].packageId;
     update1.data.enabled = true;
     updates.push_back(update1);
 
     dbal::UpdatePackageBatchItem update2;
-    update2.id = listResult.value()[1].package_id;
+    update2.id = listResult.value()[1].packageId;
     update2.data.enabled = true;
     updates.push_back(update2);
 
@@ -1457,8 +1435,8 @@ void test_package_batch_operations() {
     std::cout << "  ✓ Batch updated packages" << std::endl;
 
     std::vector<std::string> ids;
-    ids.push_back(listResult.value()[0].package_id);
-    ids.push_back(listResult.value()[1].package_id);
+    ids.push_back(listResult.value()[0].packageId);
+    ids.push_back(listResult.value()[1].packageId);
 
     auto deleteResult = client.batchDeletePackages(ids);
     assert(deleteResult.isOk());

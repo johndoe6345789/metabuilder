@@ -34,7 +34,7 @@ inline Result<User> update(InMemoryStore& store, const std::string& id, const Up
             return Error::validationError("Invalid username format");
         }
         for (const auto& [uid, u] : store.users) {
-            if (uid != id && u.tenant_id == user.tenant_id && u.username == input.username.value()) {
+            if (uid != id && u.tenantId == user.tenantId && u.username == input.username.value()) {
                 return Error::conflict("Username already exists: " + input.username.value());
             }
         }
@@ -46,7 +46,7 @@ inline Result<User> update(InMemoryStore& store, const std::string& id, const Up
             return Error::validationError("Invalid email format");
         }
         for (const auto& [uid, u] : store.users) {
-            if (uid != id && u.tenant_id == user.tenant_id && u.email == input.email.value()) {
+            if (uid != id && u.tenantId == user.tenantId && u.email == input.email.value()) {
                 return Error::conflict("Email already exists: " + input.email.value());
             }
         }
@@ -56,8 +56,31 @@ inline Result<User> update(InMemoryStore& store, const std::string& id, const Up
     if (input.role.has_value()) {
         user.role = input.role.value();
     }
-    
-    user.updated_at = std::chrono::system_clock::now();
+
+    if (input.profilePicture.has_value()) {
+        user.profilePicture = input.profilePicture.value();
+    }
+
+    if (input.bio.has_value()) {
+        user.bio = input.bio.value();
+    }
+
+    if (input.tenantId.has_value()) {
+        user.tenantId = input.tenantId.value();
+    }
+
+    if (input.isInstanceOwner.has_value()) {
+        user.isInstanceOwner = input.isInstanceOwner.value();
+    }
+
+    if (input.passwordChangeTimestamp.has_value()) {
+        user.passwordChangeTimestamp = input.passwordChangeTimestamp.value();
+    }
+
+    if (input.firstLogin.has_value()) {
+        user.firstLogin = input.firstLogin.value();
+    }
+
     return Result<User>(user);
 }
 

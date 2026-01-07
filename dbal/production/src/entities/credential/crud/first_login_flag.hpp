@@ -3,8 +3,6 @@
 
 #include "dbal/errors.hpp"
 #include "../../../store/in_memory_store.hpp"
-#include "../helpers.hpp"
-#include <chrono>
 
 namespace dbal {
 namespace entities {
@@ -15,14 +13,13 @@ inline Result<bool> setFirstLogin(InMemoryStore& store, const std::string& usern
         return Error::validationError("username is required");
     }
 
-    auto* credential = helpers::getCredential(store, username);
-    if (!credential) {
-        return Error::notFound("Credential not found: " + username);
+    for (auto& [id, user] : store.users) {
+        if (user.username == username) {
+            user.firstLogin = flag;
+            return Result<bool>(true);
+        }
     }
-
-    credential->first_login = flag;
-    credential->updated_at = std::chrono::system_clock::now();
-    return Result<bool>(true);
+    return Error::notFound("User not found: " + username);
 }
 
 inline Result<bool> getFirstLogin(InMemoryStore& store, const std::string& username) {
@@ -30,12 +27,12 @@ inline Result<bool> getFirstLogin(InMemoryStore& store, const std::string& usern
         return Error::validationError("username is required");
     }
 
-    auto* credential = helpers::getCredential(store, username);
-    if (!credential) {
-        return Error::notFound("Credential not found: " + username);
+    for (const auto& [id, user] : store.users) {
+        if (user.username == username) {
+            return Result<bool>(user.firstLogin);
+        }
     }
-
-    return Result<bool>(credential->first_login);
+    return Error::notFound("User not found: " + username);
 }
 
 } // namespace credential

@@ -66,13 +66,6 @@ export class DBALClient {
   }
 
   /**
-   * Lua script entity operations
-   */
-  get luaScripts() {
-    return this.operations.luaScripts
-  }
-
-  /**
    * InstalledPackage entity operations
    */
   get installedPackages() {

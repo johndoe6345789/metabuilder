@@ -28,8 +28,6 @@ export { validateComponentHierarchyCreate } from '../../foundation/validation'
 export { validateComponentHierarchyUpdate } from '../../foundation/validation'
 export { validateWorkflowCreate } from '../../foundation/validation'
 export { validateWorkflowUpdate } from '../../foundation/validation'
-export { validateLuaScriptCreate } from '../../foundation/validation'
-export { validateLuaScriptUpdate } from '../../foundation/validation'
 export { validatePackageCreate } from '../../foundation/validation'
 export { validatePackageUpdate } from '../../foundation/validation'
 export { validateId } from '../../foundation/validation'
@@ -38,5 +36,4 @@ export { validateId } from '../../foundation/validation'
 export { validateEmail, validateUsername } from './validators/user-validation';
 export { validateSlug } from './validators/page-validation';
 export { validateWorkflowType } from './validators/workflow-validation';
-export { validateLuaSyntax } from './validators/lua-script-validation';
 export { validatePackageId, validateVersion } from './validators/package-validation';

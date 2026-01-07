@@ -28,14 +28,14 @@ inline Result<Session> update(InMemoryStore& store, const std::string& id, const
 
     Session& session = it->second;
 
-    if (input.user_id.has_value()) {
-        if (input.user_id.value().empty()) {
-            return Error::validationError("user_id is required");
+    if (input.userId.has_value()) {
+        if (input.userId.value().empty()) {
+            return Error::validationError("userId is required");
         }
-        if (store.users.find(input.user_id.value()) == store.users.end()) {
-            return Error::validationError("User not found: " + input.user_id.value());
+        if (store.users.find(input.userId.value()) == store.users.end()) {
+            return Error::validationError("User not found: " + input.userId.value());
         }
-        session.user_id = input.user_id.value();
+        session.userId = input.userId.value();
     }
 
     if (input.token.has_value()) {
@@ -51,12 +51,20 @@ inline Result<Session> update(InMemoryStore& store, const std::string& id, const
         session.token = input.token.value();
     }
 
-    if (input.expires_at.has_value()) {
-        session.expires_at = input.expires_at.value();
+    if (input.expiresAt.has_value()) {
+        session.expiresAt = input.expiresAt.value();
     }
 
-    if (input.last_activity.has_value()) {
-        session.last_activity = input.last_activity.value();
+    if (input.lastActivity.has_value()) {
+        session.lastActivity = input.lastActivity.value();
+    }
+
+    if (input.ip_address.has_value()) {
+        session.ip_address = input.ip_address.value();
+    }
+
+    if (input.user_agent.has_value()) {
+        session.user_agent = input.user_agent.value();
     }
 
     return Result<Session>(session);

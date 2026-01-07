@@ -14,17 +14,17 @@ namespace component {
 namespace detail {
 
 inline std::vector<std::string> collectChildren(const InMemoryStore& store,
-                                                 const std::optional<std::string>& parent_id,
-                                                 const std::string& page_id) {
+                                                 const std::optional<std::string>& parentId,
+                                                 const std::string& pageId) {
     std::vector<std::string> ids;
-    if (parent_id.has_value()) {
-        auto it = store.components_by_parent.find(parent_id.value());
+    if (parentId.has_value()) {
+        auto it = store.components_by_parent.find(parentId.value());
         if (it != store.components_by_parent.end()) {
             ids = it->second;
         }
     } else {
         for (const auto& [id, component] : store.components) {
-            if (component.page_id == page_id && !component.parent_id.has_value()) {
+            if (component.pageId == pageId && !component.parentId.has_value()) {
                 ids.push_back(id);
             }
         }
@@ -38,29 +38,29 @@ inline std::vector<std::string> collectChildren(const InMemoryStore& store,
 }
 
 inline void buildTree(const InMemoryStore& store,
-                      const std::string& page_id,
-                      const std::optional<std::string>& parent_id,
+                      const std::string& pageId,
+                      const std::optional<std::string>& parentId,
                       std::vector<ComponentNode>& out) {
-    auto children = collectChildren(store, parent_id, page_id);
+    auto children = collectChildren(store, parentId, pageId);
     for (const auto& child_id : children) {
         const auto& component = store.components.at(child_id);
         out.push_back(component);
-        buildTree(store, page_id, child_id, out);
+        buildTree(store, pageId, child_id, out);
     }
 }
 
 } // namespace detail
 
-inline Result<std::vector<ComponentNode>> getTree(InMemoryStore& store, const std::string& page_id) {
-    if (page_id.empty()) {
+inline Result<std::vector<ComponentNode>> getTree(InMemoryStore& store, const std::string& pageId) {
+    if (pageId.empty()) {
         return Error::validationError("pageId is required");
     }
-    if (store.pages.find(page_id) == store.pages.end()) {
-        return Error::notFound("Page not found: " + page_id);
+    if (store.pages.find(pageId) == store.pages.end()) {
+        return Error::notFound("Page not found: " + pageId);
     }
 
     std::vector<ComponentNode> tree;
-    detail::buildTree(store, page_id, std::nullopt, tree);
+    detail::buildTree(store, pageId, std::nullopt, tree);
     return Result<std::vector<ComponentNode>>(tree);
 }
 

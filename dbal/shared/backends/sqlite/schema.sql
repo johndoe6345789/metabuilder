@@ -79,22 +79,6 @@ CREATE TABLE workflows (
 CREATE INDEX idx_workflows_trigger ON workflows(trigger);
 CREATE INDEX idx_workflows_is_active ON workflows(is_active);
 
-CREATE TABLE lua_scripts (
-    id TEXT PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
-    description TEXT,
-    code TEXT NOT NULL,
-    is_sandboxed INTEGER NOT NULL DEFAULT 1,
-    allowed_globals TEXT NOT NULL,
-    timeout_ms INTEGER NOT NULL DEFAULT 5000,
-    created_by TEXT NOT NULL,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (created_by) REFERENCES users(id)
-);
-
-CREATE INDEX idx_lua_scripts_is_sandboxed ON lua_scripts(is_sandboxed);
-
 CREATE TABLE packages (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -147,12 +131,6 @@ CREATE TRIGGER update_workflows_timestamp
 AFTER UPDATE ON workflows
 BEGIN
     UPDATE workflows SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
-END;
-
-CREATE TRIGGER update_lua_scripts_timestamp 
-AFTER UPDATE ON lua_scripts
-BEGIN
-    UPDATE lua_scripts SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
 END;
 
 CREATE TRIGGER update_packages_timestamp 

@@ -166,7 +166,7 @@ dbal::Client client(config);
 auto result = client.createUser({
     .username = "john",
     .email = "john@example.com",
-    .role = dbal::UserRole::User
+    .role = "user"
 });
 if (result.isOk()) {
     std::cout << "Created user: " << result.value().id << std::endl;

@@ -1,45 +1,38 @@
 #ifndef DBAL_TYPES_HPP
 #define DBAL_TYPES_HPP
 
+#include "types.generated.hpp"
+
+#include <optional>
 #include <string>
 #include <vector>
 #include <map>
-#include <optional>
-#include <chrono>
 
 namespace dbal {
 
-using Timestamp = std::chrono::system_clock::time_point;
-using Json = std::map<std::string, std::string>;
-
-enum class UserRole {
-    User,
-    Admin,
-    God,
-    SuperGod
-};
-
-struct User {
-    std::string id;
-    std::string tenant_id;
-    std::string username;
-    std::string email;
-    UserRole role;
-    Timestamp created_at;
-    Timestamp updated_at;
-};
-
 struct CreateUserInput {
-    std::string tenant_id;
     std::string username;
     std::string email;
-    UserRole role = UserRole::User;
+    std::string role;
+    std::optional<std::string> profilePicture;
+    std::optional<std::string> bio;
+    std::optional<Timestamp> createdAt;
+    std::optional<std::string> tenantId;
+    std::optional<bool> isInstanceOwner;
+    std::optional<Timestamp> passwordChangeTimestamp;
+    std::optional<bool> firstLogin;
 };
 
 struct UpdateUserInput {
     std::optional<std::string> username;
     std::optional<std::string> email;
-    std::optional<UserRole> role;
+    std::optional<std::string> role;
+    std::optional<std::string> profilePicture;
+    std::optional<std::string> bio;
+    std::optional<std::string> tenantId;
+    std::optional<bool> isInstanceOwner;
+    std::optional<Timestamp> passwordChangeTimestamp;
+    std::optional<bool> firstLogin;
 };
 
 struct UpdateUserBatchItem {
@@ -47,109 +40,65 @@ struct UpdateUserBatchItem {
     UpdateUserInput data;
 };
 
-struct Credential {
-    std::string id;
-    std::string username;
-    std::string password_hash;
-    bool first_login;
-    Timestamp created_at;
-    Timestamp updated_at;
-};
-
 struct CreateCredentialInput {
     std::string username;
-    std::string password_hash;
-    bool first_login = true;
+    std::string passwordHash;
 };
 
 struct UpdateCredentialInput {
-    std::optional<std::string> password_hash;
-    std::optional<bool> first_login;
-};
-
-struct PageConfig {
-    std::string id;
-    std::optional<std::string> tenant_id;
-    std::optional<std::string> package_id;
-    std::string path;
-    std::string title;
-    std::optional<std::string> description;
-    std::optional<std::string> icon;
-    std::optional<std::string> component;
-    std::string component_tree;
-    int level;
-    bool requires_auth;
-    std::optional<std::string> required_role;
-    std::optional<std::string> parent_path;
-    int sort_order = 0;
-    bool is_published = true;
-    std::optional<std::string> params;
-    std::optional<std::string> meta;
-    Timestamp created_at;
-    Timestamp updated_at;
+    std::optional<std::string> passwordHash;
 };
 
 struct CreatePageInput {
-    std::optional<std::string> tenant_id;
-    std::optional<std::string> package_id;
+    std::optional<std::string> tenantId;
+    std::optional<std::string> packageId;
     std::string path;
     std::string title;
     std::optional<std::string> description;
     std::optional<std::string> icon;
     std::optional<std::string> component;
-    std::string component_tree;
+    std::string componentTree;
     int level;
-    bool requires_auth;
-    std::optional<std::string> required_role;
-    std::optional<std::string> parent_path;
-    int sort_order = 0;
-    bool is_published = true;
+    bool requiresAuth;
+    std::optional<std::string> requiredRole;
+    std::optional<std::string> parentPath;
+    int sortOrder = 0;
+    bool isPublished = true;
     std::optional<std::string> params;
     std::optional<std::string> meta;
 };
 
 struct UpdatePageInput {
-    std::optional<std::string> tenant_id;
-    std::optional<std::string> package_id;
+    std::optional<std::string> tenantId;
+    std::optional<std::string> packageId;
     std::optional<std::string> path;
     std::optional<std::string> title;
     std::optional<std::string> description;
     std::optional<std::string> icon;
     std::optional<std::string> component;
-    std::optional<std::string> component_tree;
+    std::optional<std::string> componentTree;
     std::optional<int> level;
-    std::optional<bool> requires_auth;
-    std::optional<std::string> required_role;
-    std::optional<std::string> parent_path;
-    std::optional<int> sort_order;
-    std::optional<bool> is_published;
+    std::optional<bool> requiresAuth;
+    std::optional<std::string> requiredRole;
+    std::optional<std::string> parentPath;
+    std::optional<int> sortOrder;
+    std::optional<bool> isPublished;
     std::optional<std::string> params;
     std::optional<std::string> meta;
 };
 
-struct ComponentNode {
-    std::string id;
-    std::string page_id;
-    std::optional<std::string> parent_id;
-    std::string type;
-    std::string child_ids;
-    int order = 0;
-    Timestamp created_at;
-    Timestamp updated_at;
-};
-
 struct CreateComponentNodeInput {
-    std::string page_id;
-    std::optional<std::string> parent_id;
+    std::string pageId;
+    std::optional<std::string> parentId;
     std::string type;
-    std::string child_ids;
+    std::string childIds;
     int order = 0;
 };
 
 struct UpdateComponentNodeInput {
-    std::optional<std::string> parent_id;
+    std::optional<std::string> parentId;
     std::optional<std::string> type;
-    std::optional<std::string> child_ids;
+    std::optional<std::string> childIds;
     std::optional<int> order;
 };
 
@@ -160,128 +109,99 @@ struct ComponentOrderUpdate {
 
 struct MoveComponentInput {
     std::string id;
-    std::string new_parent_id;
+    std::string newParentId;
     int order = 0;
 };
 
-struct Workflow {
-    std::string id;
-    std::optional<std::string> tenant_id;
-    std::string name;
-    std::optional<std::string> description;
-    std::string nodes;
-    std::string edges;
-    bool enabled;
-    int version = 1;
-    std::optional<Timestamp> created_at;
-    std::optional<Timestamp> updated_at;
-    std::optional<std::string> created_by;
-};
-
 struct CreateWorkflowInput {
-    std::optional<std::string> tenant_id;
+    std::optional<std::string> tenantId;
     std::string name;
     std::optional<std::string> description;
     std::string nodes;
     std::string edges;
     bool enabled;
     int version = 1;
-    std::optional<Timestamp> created_at;
-    std::optional<Timestamp> updated_at;
-    std::optional<std::string> created_by;
+    std::optional<Timestamp> createdAt;
+    std::optional<Timestamp> updatedAt;
+    std::optional<std::string> createdBy;
 };
 
 struct UpdateWorkflowInput {
-    std::optional<std::string> tenant_id;
+    std::optional<std::string> tenantId;
     std::optional<std::string> name;
     std::optional<std::string> description;
     std::optional<std::string> nodes;
     std::optional<std::string> edges;
     std::optional<bool> enabled;
     std::optional<int> version;
-    std::optional<Timestamp> created_at;
-    std::optional<Timestamp> updated_at;
-    std::optional<std::string> created_by;
-};
-
-struct Session {
-    std::string id;
-    std::string user_id;
-    std::string token;
-    Timestamp expires_at;
-    Timestamp created_at;
-    Timestamp last_activity;
+    std::optional<Timestamp> createdAt;
+    std::optional<Timestamp> updatedAt;
+    std::optional<std::string> createdBy;
 };
 
 struct CreateSessionInput {
-    std::string user_id;
+    std::string userId;
     std::string token;
-    Timestamp expires_at;
+    Timestamp expiresAt;
+    std::optional<Timestamp> createdAt;
+    std::optional<Timestamp> lastActivity;
+    std::optional<std::string> ipAddress;
+    std::optional<std::string> userAgent;
 };
 
 struct UpdateSessionInput {
-    std::optional<std::string> user_id;
+    std::optional<std::string> userId;
     std::optional<std::string> token;
-    std::optional<Timestamp> expires_at;
-    std::optional<Timestamp> last_activity;
-};
-
-struct LuaScript {
-    std::string id;
-    std::string name;
-    std::optional<std::string> description;
-    std::string code;
-    bool is_sandboxed;
-    std::vector<std::string> allowed_globals;
-    int timeout_ms;
-    std::string created_by;
-    Timestamp created_at;
-    Timestamp updated_at;
+    std::optional<Timestamp> expiresAt;
+    std::optional<Timestamp> lastActivity;
+    std::optional<std::string> ipAddress;
+    std::optional<std::string> userAgent;
 };
 
 struct CreateLuaScriptInput {
+    std::optional<std::string> tenantId;
     std::string name;
     std::optional<std::string> description;
     std::string code;
-    bool is_sandboxed = true;
-    std::vector<std::string> allowed_globals;
-    int timeout_ms = 5000;
-    std::string created_by;
+    std::string parameters;
+    std::optional<std::string> returnType;
+    bool isSandboxed = true;
+    std::string allowedGlobals;
+    int timeoutMs = 5000;
+    int version = 1;
+    std::optional<Timestamp> createdAt;
+    std::optional<Timestamp> updatedAt;
+    std::optional<std::string> createdBy;
 };
 
 struct UpdateLuaScriptInput {
+    std::optional<std::string> tenantId;
     std::optional<std::string> name;
     std::optional<std::string> description;
     std::optional<std::string> code;
-    std::optional<bool> is_sandboxed;
-    std::optional<std::vector<std::string>> allowed_globals;
-    std::optional<int> timeout_ms;
-    std::optional<std::string> created_by;
-};
-
-struct InstalledPackage {
-    std::string package_id;
-    std::optional<std::string> tenant_id;
-    Timestamp installed_at;
-    std::string version;
-    bool enabled;
-    std::optional<std::string> config;
-    Timestamp created_at;
-    Timestamp updated_at;
+    std::optional<std::string> parameters;
+    std::optional<std::string> returnType;
+    std::optional<bool> isSandboxed;
+    std::optional<std::string> allowedGlobals;
+    std::optional<int> timeoutMs;
+    std::optional<int> version;
+    std::optional<Timestamp> createdAt;
+    std::optional<Timestamp> updatedAt;
+    std::optional<std::string> createdBy;
 };
 
 struct CreatePackageInput {
-    std::string package_id;
-    std::optional<std::string> tenant_id;
-    Timestamp installed_at;
+    std::string packageId;
+    std::optional<std::string> tenantId;
+    std::optional<Timestamp> installedAt;
     std::string version;
     bool enabled;
     std::optional<std::string> config;
 };
 
 struct UpdatePackageInput {
-    std::optional<std::string> tenant_id;
-    std::optional<Timestamp> installed_at;
+    std::optional<std::string> tenantId;
+    std::optional<Timestamp> installedAt;
     std::optional<std::string> version;
     std::optional<bool> enabled;
     std::optional<std::string> config;
@@ -305,9 +225,9 @@ struct ListResult {
     int total;
     int page;
     int limit;
-    bool has_more;
+    bool hasMore;
 };
 
-}
+}  // namespace dbal
 
-#endif
+#endif  // DBAL_TYPES_HPP

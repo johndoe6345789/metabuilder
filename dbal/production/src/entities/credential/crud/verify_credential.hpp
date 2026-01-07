@@ -15,7 +15,7 @@ inline Result<bool> verify(InMemoryStore& store, const std::string& username, co
     }
 
     auto* credential = helpers::getCredential(store, username);
-    if (!credential || credential->password_hash != password) {
+    if (!credential || credential->passwordHash != password) {
         return Error::unauthorized("Invalid credentials");
     }
 

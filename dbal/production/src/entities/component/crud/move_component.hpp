@@ -4,7 +4,6 @@
 #include "dbal/errors.hpp"
 #include "../../../store/in_memory_store.hpp"
 #include "../helpers.hpp"
-#include <chrono>
 
 namespace dbal {
 namespace entities {
@@ -24,7 +23,7 @@ inline Result<ComponentNode> move(InMemoryStore& store, const MoveComponentInput
     }
 
     ComponentNode& component = it->second;
-    const std::string& new_parent = input.new_parent_id;
+    const std::string& new_parent = input.newParentId;
     if (new_parent == component.id) {
         return Error::validationError("Component cannot be its own parent");
     }
@@ -34,7 +33,7 @@ inline Result<ComponentNode> move(InMemoryStore& store, const MoveComponentInput
         if (parent_it == store.components.end()) {
             return Error::notFound("Parent component not found: " + new_parent);
         }
-        if (parent_it->second.page_id != component.page_id) {
+        if (parent_it->second.pageId != component.pageId) {
             return Error::validationError("New parent must belong to the same page");
         }
         if (helpers::hasDescendant(store, component.id, new_parent)) {
@@ -42,19 +41,18 @@ inline Result<ComponentNode> move(InMemoryStore& store, const MoveComponentInput
         }
     }
 
-    if (component.parent_id.has_value()) {
-        helpers::removeComponentFromParent(store, component.parent_id.value(), component.id);
+    if (component.parentId.has_value()) {
+        helpers::removeComponentFromParent(store, component.parentId.value(), component.id);
     }
 
     if (!new_parent.empty()) {
         helpers::addComponentToParent(store, new_parent, component.id);
-        component.parent_id = new_parent;
+        component.parentId = new_parent;
     } else {
-        component.parent_id = std::nullopt;
+        component.parentId = std::nullopt;
     }
 
     component.order = input.order;
-    component.updated_at = std::chrono::system_clock::now();
     return Result<ComponentNode>(component);
 }
 

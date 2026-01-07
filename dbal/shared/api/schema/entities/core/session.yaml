@@ -7,45 +7,50 @@ fields:
     type: uuid
     primary: true
     generated: true
-    
-  user_id:
+
+  userId:
     type: uuid
     required: true
     foreign_key:
       entity: User
       field: id
       on_delete: cascade
-      
+
   token:
     type: string
     required: true
     unique: true
     sensitive: true
     description: "Session token"
-    
-  expires_at:
-    type: datetime
+
+  expiresAt:
+    type: bigint
     required: true
     description: "Session expiration time"
-    
-  created_at:
-    type: datetime
+
+  createdAt:
+    type: bigint
     generated: true
-    immutable: true
-    
-  last_activity:
-    type: datetime
-    auto_update: true
+
+  lastActivity:
+    type: bigint
+    required: true
+
+  ipAddress:
+    type: string
+    optional: true
+    nullable: true
+
+  userAgent:
+    type: string
+    optional: true
+    nullable: true
 
 indexes:
   - fields: [token]
     unique: true
-  - fields: [user_id]
-  - fields: [expires_at]
-
-ttl:
-  field: expires_at
-  auto_delete: true
+  - fields: [userId]
+  - fields: [expiresAt]
 
 acl:
   create:

@@ -7,7 +7,6 @@
 
 #include <string>
 #include <unordered_set>
-#include <vector>
 
 namespace dbal {
 namespace validation {
@@ -29,8 +28,8 @@ inline bool isValidLuaScriptCode(const std::string& code) {
 /**
  * Validate Lua script timeout (100-30000 ms)
  */
-inline bool isValidLuaTimeout(int timeout_ms) {
-    return timeout_ms >= 100 && timeout_ms <= 30000;
+inline bool isValidLuaTimeout(int timeoutMs) {
+    return timeoutMs >= 100 && timeoutMs <= 30000;
 }
 
 /**
@@ -48,32 +47,12 @@ inline bool isAllowedLuaGlobal(const std::string& name) {
 /**
  * Validate allowed globals list for Lua scripts
  */
-inline bool validateLuaAllowedGlobals(const std::vector<std::string>& globals, std::string& error) {
-    for (const auto& entry : globals) {
-        if (entry.empty()) {
-            error = "allowed_globals must contain non-empty strings";
-            return false;
-        }
-        if (!isAllowedLuaGlobal(entry)) {
-            error = "allowed_globals contains forbidden global: " + entry;
-            return false;
-        }
+inline bool validateLuaAllowedGlobals(const std::string& globals, std::string& error) {
+    if (globals.empty()) {
+        error = "allowedGlobals must be a JSON string";
+        return false;
     }
     return true;
-}
-
-/**
- * Dedupe allowed globals while preserving order
- */
-inline std::vector<std::string> dedupeLuaAllowedGlobals(const std::vector<std::string>& globals) {
-    std::vector<std::string> unique;
-    std::unordered_set<std::string> seen;
-    for (const auto& entry : globals) {
-        if (seen.insert(entry).second) {
-            unique.push_back(entry);
-        }
-    }
-    return unique;
 }
 
 } // namespace validation

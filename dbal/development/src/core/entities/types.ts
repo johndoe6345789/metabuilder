@@ -7,7 +7,6 @@ export type {
   User,
   Session,
   Workflow,
-  LuaScript,
   PageConfig,
   ComponentNode,
   InstalledPackage,

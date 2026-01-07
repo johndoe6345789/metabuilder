@@ -105,18 +105,18 @@ std::string to_pascal_case(const std::string& snake_case) {
 /**
  * @brief Get prefixed entity name
  */
-std::string get_prefixed_name(const std::string& package_id, const std::string& entity_name) {
-    return "Pkg_" + to_pascal_case(package_id) + "_" + entity_name;
+std::string get_prefixed_name(const std::string& packageId, const std::string& entity_name) {
+    return "Pkg_" + to_pascal_case(packageId) + "_" + entity_name;
 }
 
 /**
  * @brief Get table name for entity
  */
-std::string get_table_name(const std::string& package_id, const std::string& entity_name) {
+std::string get_table_name(const std::string& packageId, const std::string& entity_name) {
     std::string lower_entity = entity_name;
     std::transform(lower_entity.begin(), lower_entity.end(), lower_entity.begin(),
                    [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
-    return package_id + "_" + lower_entity;
+    return packageId + "_" + lower_entity;
 }
 
 /**
@@ -168,10 +168,10 @@ std::string yaml_type_to_prisma(const std::string& yaml_type) {
 /**
  * @brief Generate Prisma model for an entity
  */
-std::string entity_to_prisma(const Json::Value& entity, const std::string& package_id) {
+std::string entity_to_prisma(const Json::Value& entity, const std::string& packageId) {
     const std::string name = entity["name"].asString();
-    const std::string prefixed = get_prefixed_name(package_id, name);
-    const std::string table = get_table_name(package_id, name);
+    const std::string prefixed = get_prefixed_name(packageId, name);
+    const std::string table = get_table_name(packageId, name);
     
     std::ostringstream oss;
     oss << "model " << prefixed << " {\n";

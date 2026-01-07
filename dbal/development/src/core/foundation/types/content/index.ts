@@ -1,24 +1,6 @@
-export interface PageConfig {
-  id: string
-  tenantId?: string | null
-  packageId?: string | null
-  path: string
-  title: string
-  description?: string | null
-  icon?: string | null
-  component?: string | null
-  componentTree: string
-  level: number
-  requiresAuth: boolean
-  requiredRole?: string | null
-  parentPath?: string | null
-  sortOrder: number
-  isPublished: boolean
-  params?: string | null
-  meta?: string | null
-  createdAt?: bigint | null
-  updatedAt?: bigint | null
-}
+import type { PageConfig as GeneratedPageConfig, ComponentNode as GeneratedComponentNode } from '../types.generated'
+
+export type PageConfig = GeneratedPageConfig
 
 export interface CreatePageInput {
   id?: string
@@ -63,14 +45,7 @@ export interface UpdatePageInput {
   updatedAt?: bigint | null
 }
 
-export interface ComponentNode {
-  id: string
-  type: string
-  parentId?: string | null
-  childIds: string
-  order: number
-  pageId: string
-}
+export type ComponentNode = GeneratedComponentNode
 
 export interface CreateComponentNodeInput {
   id?: string

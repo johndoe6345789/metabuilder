@@ -11,36 +11,45 @@ import sys
 
 YAML_TO_TS_TYPE_MAP = {
     'uuid': 'string',
+    'cuid': 'string',
     'string': 'string',
     'text': 'string',
     'email': 'string',
     'integer': 'number',
     'boolean': 'boolean',
     'datetime': 'Date',
+    'bigint': 'bigint',
     'json': 'Record<string, unknown>',
     'enum': 'string',
 }
 
 YAML_TO_CPP_TYPE_MAP = {
     'uuid': 'std::string',
+    'cuid': 'std::string',
     'string': 'std::string',
     'text': 'std::string',
     'email': 'std::string',
     'integer': 'int',
     'boolean': 'bool',
     'datetime': 'Timestamp',
+    'bigint': 'Timestamp',
     'json': 'Json',
     'enum': 'std::string',
 }
 
 
 def load_entity_schemas(schema_dir: Path) -> Dict[str, Any]:
-    """Load all entity YAML files"""
+    """Load all entity YAML files (including nested, multi-doc schemas)."""
     entities = {}
-    for yaml_file in (schema_dir / 'entities').glob('*.yaml'):
+    for yaml_file in (schema_dir / 'entities').rglob('*.yaml'):
         with open(yaml_file) as f:
-            entity_data = yaml.safe_load(f)
-            entities[entity_data['entity']] = entity_data
+            for entity_data in yaml.safe_load_all(f):
+                if not entity_data:
+                    continue
+                entity_name = entity_data.get('entity')
+                if not entity_name:
+                    continue
+                entities[entity_name] = entity_data
     return entities
 
 
@@ -51,6 +60,8 @@ def generate_typescript_interface(entity_name: str, entity_data: Dict[str, Any])
     for field_name, field_data in entity_data['fields'].items():
         field_type = YAML_TO_TS_TYPE_MAP.get(field_data['type'], 'unknown')
         optional = '?' if field_data.get('optional', False) else ''
+        if field_data.get('nullable', False):
+            field_type = f"{field_type} | null"
         
         if field_data['type'] == 'enum':
             enum_values = ' | '.join(f"'{v}'" for v in field_data['values'])
@@ -81,7 +92,7 @@ def generate_cpp_struct(entity_name: str, entity_data: Dict[str, Any]) -> str:
     for field_name, field_data in entity_data['fields'].items():
         field_type = YAML_TO_CPP_TYPE_MAP.get(field_data['type'], 'std::string')
         
-        if field_data.get('optional', False):
+        if field_data.get('optional', False) or field_data.get('nullable', False):
             field_type = f"std::optional<{field_type}>"
             
         lines.append(f"    {field_type} {field_name};")
@@ -101,6 +112,7 @@ def generate_cpp_types(entities: Dict[str, Any], output_file: Path):
         "#include <optional>",
         "#include <chrono>",
         "#include <map>",
+        "#include <cstdint>",
         "",
         "namespace dbal {",
         "",
@@ -125,8 +137,8 @@ def generate_cpp_types(entities: Dict[str, Any], output_file: Path):
 
 def main():
     """Main entry point"""
-    root_dir = Path(__file__).parent.parent.parent
-    schema_dir = root_dir / 'api' / 'schema'
+    dbal_root = Path(__file__).resolve().parents[3]
+    schema_dir = dbal_root / 'shared' / 'api' / 'schema'
     
     if not schema_dir.exists():
         print(f"Error: Schema directory not found: {schema_dir}", file=sys.stderr)
@@ -136,11 +148,11 @@ def main():
     entities = load_entity_schemas(schema_dir)
     print(f"Loaded {len(entities)} entities")
     
-    ts_output = root_dir / 'ts' / 'src' / 'core' / 'types.generated.ts'
+    ts_output = dbal_root / 'development' / 'src' / 'core' / 'foundation' / 'types' / 'types.generated.ts'
     ts_output.parent.mkdir(parents=True, exist_ok=True)
     generate_typescript_types(entities, ts_output)
     
-    cpp_output = root_dir / 'cpp' / 'include' / 'dbal' / 'types.generated.hpp'
+    cpp_output = dbal_root / 'production' / 'include' / 'dbal' / 'core' / 'types.generated.hpp'
     cpp_output.parent.mkdir(parents=True, exist_ok=True)
     generate_cpp_types(entities, cpp_output)
     

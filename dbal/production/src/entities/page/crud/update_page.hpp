@@ -59,18 +59,18 @@ inline Result<PageConfig> update(InMemoryStore& store, const std::string& id, co
         }
         page.level = input.level.value();
     }
-    if (input.component_tree.has_value()) page.component_tree = input.component_tree.value();
-    if (input.requires_auth.has_value()) page.requires_auth = input.requires_auth.value();
-    if (input.required_role.has_value()) page.required_role = input.required_role.value();
-    if (input.parent_path.has_value()) page.parent_path = input.parent_path.value();
-    if (input.sort_order.has_value()) page.sort_order = input.sort_order.value();
-    if (input.is_published.has_value()) page.is_published = input.is_published.value();
+    if (input.componentTree.has_value()) page.componentTree = input.componentTree.value();
+    if (input.requiresAuth.has_value()) page.requiresAuth = input.requiresAuth.value();
+    if (input.requiredRole.has_value()) page.requiredRole = input.requiredRole.value();
+    if (input.parentPath.has_value()) page.parentPath = input.parentPath.value();
+    if (input.sortOrder.has_value()) page.sortOrder = input.sortOrder.value();
+    if (input.isPublished.has_value()) page.isPublished = input.isPublished.value();
     if (input.params.has_value()) page.params = input.params.value();
     if (input.meta.has_value()) page.meta = input.meta.value();
-    if (input.package_id.has_value()) page.package_id = input.package_id.value();
-    if (input.tenant_id.has_value()) page.tenant_id = input.tenant_id.value();
+    if (input.packageId.has_value()) page.packageId = input.packageId.value();
+    if (input.tenantId.has_value()) page.tenantId = input.tenantId.value();
     
-    page.updated_at = std::chrono::system_clock::now();
+    page.updatedAt = std::chrono::system_clock::now();
     return Result<PageConfig>(page);
 }
 

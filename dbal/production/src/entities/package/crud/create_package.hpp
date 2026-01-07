@@ -18,29 +18,27 @@ namespace package {
  * Create a new package in the store
  */
 inline Result<InstalledPackage> create(InMemoryStore& store, const CreatePackageInput& input) {
-    if (!validation::isValidPackageId(input.package_id)) {
+    if (!validation::isValidPackageId(input.packageId)) {
         return Error::validationError("Package ID must be 1-255 characters");
     }
     if (!validation::isValidSemver(input.version)) {
         return Error::validationError("Version must be valid semver");
     }
-    std::string key = validation::packageKey(input.package_id);
+    std::string key = validation::packageKey(input.packageId);
     if (store.package_keys.find(key) != store.package_keys.end()) {
         return Error::conflict("Package ID already exists: " + key);
     }
 
     InstalledPackage pkg;
-    pkg.package_id = input.package_id;
-    pkg.tenant_id = input.tenant_id;
-    pkg.installed_at = input.installed_at;
+    pkg.packageId = input.packageId;
+    pkg.tenantId = input.tenantId;
+    pkg.installedAt = input.installedAt.value_or(std::chrono::system_clock::now());
     pkg.version = input.version;
     pkg.enabled = input.enabled;
     pkg.config = input.config;
-    pkg.created_at = std::chrono::system_clock::now();
-    pkg.updated_at = pkg.created_at;
 
-    store.packages[pkg.package_id] = pkg;
-    store.package_keys[key] = pkg.package_id;
+    store.packages[pkg.packageId] = pkg;
+    store.package_keys[key] = pkg.packageId;
 
     return Result<InstalledPackage>(pkg);
 }

@@ -23,7 +23,7 @@ inline Result<int> cleanExpired(InMemoryStore& store) {
     std::vector<std::string> expired_ids;
 
     for (const auto& [id, session] : store.sessions) {
-        if (session.expires_at <= now) {
+        if (session.expiresAt <= now) {
             expired_ids.push_back(id);
         }
     }

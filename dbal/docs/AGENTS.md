@@ -140,9 +140,9 @@ vim api/schema/entities/user.yaml
 # 2. Regenerate types
 python tools/codegen/gen_types.py
 
-# 3. Create migration (if using Prisma)
-cd backends/prisma
-npx prisma migrate dev --name add_avatar_url
+# 3. Regenerate Prisma schema + create migration (if using Prisma)
+node ../../shared/tools/codegen/gen_prisma_schema.js
+npx prisma migrate dev --schema ../../prisma/schema.prisma --name add_avatar_url
 
 # 4. Update adapters to handle new field
 # Both ts/src/adapters/prisma/mapping.ts and C++ version

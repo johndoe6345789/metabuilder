@@ -129,20 +129,24 @@ A complete, production-ready DBAL system that works entirely within GitHub Spark
 
 ```
 dbal/shared/api/schema/
-├── entities/               # 8 entity definitions
+├── entities/               # 7 entity definitions
 │   ├── user.yaml
 │   ├── credential.yaml
 │   ├── session.yaml
 │   ├── page_view.yaml
 │   ├── component_hierarchy.yaml
 │   ├── workflow.yaml
-│   ├── lua_script.yaml
 │   └── package.yaml
-├── operations/             # 4 operation definitions
-│   ├── user.ops.yaml
-│   ├── credential.ops.yaml
-│   ├── page_view.ops.yaml
-│   └── component_hierarchy.ops.yaml
+├── operations/
+│   ├── access/
+│   │   ├── component_node.ops.yaml
+│   │   ├── credential.ops.yaml
+│   │   └── page_config.ops.yaml
+│   └── entities/
+│       ├── package.ops.yaml
+│       ├── session.ops.yaml
+│       ├── user.ops.yaml
+│       └── workflow.ops.yaml
 ├── errors.yaml            # Standardized error codes
 └── capabilities.yaml      # Backend feature matrix
 ```
@@ -182,9 +186,10 @@ dbal/production/
 ### Backend Schemas
 
 ```
-dbal/backends/
-├── prisma/
-│   └── schema.prisma      # Simplified DBAL dev schema (TODO: generate from DBAL API schema)
+prisma/
+└── schema.prisma          # Generated from DBAL schema
+
+dbal/shared/backends/
 └── sqlite/
     └── schema.sql         # Full SQLite schema with triggers
 ```
@@ -195,6 +200,7 @@ dbal/backends/
 dbal/shared/tools/
 ├── codegen/
 │   └── gen_types.py       # Generate TS/C++ types from YAML
+│   └── gen_prisma_schema.js # Generate Prisma schema from DBAL
 └── conformance/
     └── run_all.py         # Run conformance tests
 

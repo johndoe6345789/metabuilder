@@ -28,14 +28,14 @@ inline Result<std::vector<Workflow>> list(InMemoryStore& store, const ListOption
             if (workflow.enabled != filter_enabled) matches = false;
         }
 
-        if (options.filter.find("tenant_id") != options.filter.end()) {
-            if (!workflow.tenant_id.has_value() || workflow.tenant_id.value() != options.filter.at("tenant_id")) {
+        if (options.filter.find("tenantId") != options.filter.end()) {
+            if (!workflow.tenantId.has_value() || workflow.tenantId.value() != options.filter.at("tenantId")) {
                 matches = false;
             }
         }
 
-        if (options.filter.find("created_by") != options.filter.end()) {
-            if (!workflow.created_by.has_value() || workflow.created_by.value() != options.filter.at("created_by")) {
+        if (options.filter.find("createdBy") != options.filter.end()) {
+            if (!workflow.createdBy.has_value() || workflow.createdBy.value() != options.filter.at("createdBy")) {
                 matches = false;
             }
         }
@@ -49,10 +49,10 @@ inline Result<std::vector<Workflow>> list(InMemoryStore& store, const ListOption
         std::sort(workflows.begin(), workflows.end(), [](const Workflow& a, const Workflow& b) {
             return a.name < b.name;
         });
-    } else if (options.sort.find("created_at") != options.sort.end()) {
+    } else if (options.sort.find("createdAt") != options.sort.end()) {
         std::sort(workflows.begin(), workflows.end(), [](const Workflow& a, const Workflow& b) {
-            return a.created_at.value_or(std::chrono::system_clock::time_point()) <
-                b.created_at.value_or(std::chrono::system_clock::time_point());
+            return a.createdAt.value_or(std::chrono::system_clock::time_point()) <
+                b.createdAt.value_or(std::chrono::system_clock::time_point());
         });
     }
 

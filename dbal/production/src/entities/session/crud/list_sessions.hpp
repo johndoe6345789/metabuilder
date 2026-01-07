@@ -26,8 +26,8 @@ inline Result<std::vector<Session>> list(InMemoryStore& store, const ListOptions
     for (const auto& [id, session] : store.sessions) {
         bool matches = true;
 
-        if (options.filter.find("user_id") != options.filter.end()) {
-            if (session.user_id != options.filter.at("user_id")) matches = false;
+        if (options.filter.find("userId") != options.filter.end()) {
+            if (session.userId != options.filter.at("userId")) matches = false;
         }
 
         if (options.filter.find("token") != options.filter.end()) {
@@ -39,13 +39,13 @@ inline Result<std::vector<Session>> list(InMemoryStore& store, const ListOptions
         }
     }
 
-    if (options.sort.find("created_at") != options.sort.end()) {
+    if (options.sort.find("createdAt") != options.sort.end()) {
         std::sort(sessions.begin(), sessions.end(), [](const Session& a, const Session& b) {
-            return a.created_at < b.created_at;
+            return a.createdAt < b.createdAt;
         });
-    } else if (options.sort.find("expires_at") != options.sort.end()) {
+    } else if (options.sort.find("expiresAt") != options.sort.end()) {
         std::sort(sessions.begin(), sessions.end(), [](const Session& a, const Session& b) {
-            return a.expires_at < b.expires_at;
+            return a.expiresAt < b.expiresAt;
         });
     }
 

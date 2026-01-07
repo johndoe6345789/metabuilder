@@ -8,7 +8,7 @@ namespace dbal {
 namespace entities {
 namespace user {
 
-inline Result<int> count(InMemoryStore& store, const std::optional<UserRole>& role = std::nullopt) {
+inline Result<int> count(InMemoryStore& store, const std::optional<std::string>& role = std::nullopt) {
     int total = 0;
     for (const auto& [id, user] : store.users) {
         (void)id;

@@ -24,7 +24,7 @@ inline Result<std::vector<User>> list(InMemoryStore& store, const ListOptions& o
     const auto tenant_filter = [&options]() -> std::optional<std::string> {
         auto it = options.filter.find("tenantId");
         if (it != options.filter.end()) return it->second;
-        it = options.filter.find("tenant_id");
+        it = options.filter.find("tenantId");
         if (it != options.filter.end()) return it->second;
         return std::nullopt;
     }();
@@ -32,14 +32,13 @@ inline Result<std::vector<User>> list(InMemoryStore& store, const ListOptions& o
     for (const auto& [id, user] : store.users) {
         bool matches = true;
         
-        if (tenant_filter.has_value() && user.tenant_id != tenant_filter.value()) {
+        if (tenant_filter.has_value() && user.tenantId != tenant_filter.value()) {
             matches = false;
         }
 
         if (options.filter.find("role") != options.filter.end()) {
-            std::string role_str = options.filter.at("role");
-            if (role_str == "admin" && user.role != UserRole::Admin) matches = false;
-            if (role_str == "user" && user.role != UserRole::User) matches = false;
+            const std::string& role_str = options.filter.at("role");
+            if (user.role != role_str) matches = false;
         }
         
         if (matches) {

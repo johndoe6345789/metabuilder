@@ -39,14 +39,14 @@ public:
     Result<int> batchDeleteUsers(const std::vector<std::string>& ids);
 
     Result<std::vector<User>> searchUsers(const std::string& query, int limit = 20);
-    Result<int> countUsers(const std::optional<UserRole>& role = std::nullopt);
+    Result<int> countUsers(const std::optional<std::string>& role = std::nullopt);
     Result<int> updateManyUsers(const std::map<std::string, std::string>& filter,
                                 const UpdateUserInput& updates);
     Result<int> deleteManyUsers(const std::map<std::string, std::string>& filter);
 
     Result<bool> setCredential(const CreateCredentialInput& input);
     Result<bool> verifyCredential(const std::string& username, const std::string& password);
-    Result<bool> setCredentialFirstLoginFlag(const std::string& username, bool first_login);
+    Result<bool> setCredentialFirstLoginFlag(const std::string& username, bool firstLogin);
     Result<bool> getCredentialFirstLoginFlag(const std::string& username);
     Result<bool> deleteCredential(const std::string& username);
 
@@ -63,14 +63,14 @@ public:
     Result<ComponentNode> updateComponent(const std::string& id, const UpdateComponentNodeInput& input);
     Result<bool> deleteComponent(const std::string& id);
     Result<std::vector<ComponentNode>> listComponents(const ListOptions& options);
-    Result<std::vector<ComponentNode>> getComponentTree(const std::string& page_id);
+    Result<std::vector<ComponentNode>> getComponentTree(const std::string& pageId);
     Result<bool> reorderComponents(const std::vector<ComponentOrderUpdate>& updates);
     Result<ComponentNode> moveComponent(const MoveComponentInput& input);
     Result<std::vector<ComponentNode>> searchComponents(const std::string& query,
-                                                             const std::optional<std::string>& page_id = std::nullopt,
+                                                             const std::optional<std::string>& pageId = std::nullopt,
                                                              int limit = 20);
-    Result<std::vector<ComponentNode>> getComponentChildren(const std::string& parent_id,
-                                                                 const std::optional<std::string>& component_type = std::nullopt,
+    Result<std::vector<ComponentNode>> getComponentChildren(const std::string& parentId,
+                                                                 const std::optional<std::string>& componentType = std::nullopt,
                                                                  int limit = 0);
 
     Result<Workflow> createWorkflow(const CreateWorkflowInput& input);
@@ -91,7 +91,7 @@ public:
     Result<bool> deleteLuaScript(const std::string& id);
     Result<std::vector<LuaScript>> listLuaScripts(const ListOptions& options);
     Result<std::vector<LuaScript>> searchLuaScripts(const std::string& query,
-                                                    const std::optional<std::string>& created_by = std::nullopt,
+                                                    const std::optional<std::string>& createdBy = std::nullopt,
                                                     int limit = 20);
 
     Result<InstalledPackage> createPackage(const CreatePackageInput& input);

@@ -89,7 +89,7 @@ void Server::registerRoutes() {
 
         const auto payload = rpc_request.get("payload", Json::Value(Json::objectValue));
         const auto options_value = rpc_request.get("options", Json::Value(Json::objectValue));
-        const std::string tenant_id = rpc_request.get("tenantId", payload.get("tenantId", "")).asString();
+        const std::string tenantId = rpc_request.get("tenantId", payload.get("tenantId", "")).asString();
 
         auto send_success = [&callback](const Json::Value& data) {
             Json::Value body;
@@ -108,7 +108,7 @@ void Server::registerRoutes() {
         }
 
         if (action == "list") {
-            rpc::handle_user_list(*dbal_client_, tenant_id, options_value, send_success, send_error);
+            rpc::handle_user_list(*dbal_client_, tenantId, options_value, send_success, send_error);
             return;
         }
 
@@ -119,22 +119,22 @@ void Server::registerRoutes() {
         }
 
         if (action == "get" || action == "read") {
-            rpc::handle_user_read(*dbal_client_, tenant_id, id, send_success, send_error);
+            rpc::handle_user_read(*dbal_client_, tenantId, id, send_success, send_error);
             return;
         }
 
         if (action == "create") {
-            rpc::handle_user_create(*dbal_client_, tenant_id, payload, send_success, send_error);
+            rpc::handle_user_create(*dbal_client_, tenantId, payload, send_success, send_error);
             return;
         }
 
         if (action == "update") {
-            rpc::handle_user_update(*dbal_client_, tenant_id, id, payload, send_success, send_error);
+            rpc::handle_user_update(*dbal_client_, tenantId, id, payload, send_success, send_error);
             return;
         }
 
         if (action == "delete" || action == "remove") {
-            rpc::handle_user_delete(*dbal_client_, tenant_id, id, send_success, send_error);
+            rpc::handle_user_delete(*dbal_client_, tenantId, id, send_success, send_error);
             return;
         }
 

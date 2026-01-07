@@ -1,15 +1,15 @@
 operations:
   create:
-    description: "Add component to page hierarchy"
+    description: "Create a new component node"
     input:
-      required: [page_id, type, order, child_ids]
-      optional: [parent_id]
+      required: [pageId, type, childIds, order]
+      optional: [parentId]
     output: ComponentNode
     acl_required: ["component:create"]
     errors:
-      - NOT_FOUND: "Page or parent component not found"
-      - VALIDATION_ERROR: "Invalid component type"
-      
+      - VALIDATION_ERROR: "Invalid component input"
+      - NOT_FOUND: "Parent component not found"
+
   read:
     description: "Get component by ID"
     input:
@@ -18,53 +18,35 @@ operations:
     acl_required: ["component:read"]
     errors:
       - NOT_FOUND: "Component not found"
-      
+
   update:
     description: "Update component"
     input:
       required: [id]
-      optional: [parent_id, type, order, child_ids]
+      optional: [pageId, parentId, type, childIds, order]
     output: ComponentNode
     acl_required: ["component:update"]
     errors:
       - NOT_FOUND: "Component not found"
-      
+      - VALIDATION_ERROR: "Invalid component update"
+
   delete:
-    description: "Delete component and its children"
+    description: "Delete component"
     input:
       required: [id]
     output: boolean
     acl_required: ["component:delete"]
-    cascade: true
     errors:
       - NOT_FOUND: "Component not found"
-      
-  get_tree:
-    description: "Get full component tree for a page"
+
+  list:
+    description: "List components with filtering and pagination"
     input:
-      required: [page_id]
+      optional: [pageId, parentId, type, page, limit, sort]
     output: ComponentNode[]
     acl_required: ["component:read"]
-    hierarchical: true
+    pagination: true
+    max_limit: 200
+    default_limit: 50
     errors:
-      - NOT_FOUND: "Page not found"
-      
-  reorder:
-    description: "Reorder components within same parent"
-    input:
-      required: [components]
-    output: boolean
-    acl_required: ["component:update"]
-    batch: true
-    errors:
-      - VALIDATION_ERROR: "Invalid order array"
-      
-  move:
-    description: "Move component to new parent"
-    input:
-      required: [id, new_parent_id, order]
-    output: ComponentNode
-    acl_required: ["component:update"]
-    errors:
-      - NOT_FOUND: "Component or parent not found"
-      - VALIDATION_ERROR: "Cannot move to descendant"
+      - VALIDATION_ERROR: "Invalid pagination parameters"

@@ -1,20 +1,19 @@
 operations:
   create:
-    description: "Create a new package definition"
+    description: "Install a package"
     input:
-      required: [name, version, author, manifest]
-      optional: [description, is_installed, installed_at, installed_by]
-    output: Package
+      required: [packageId, version, enabled]
+      optional: [tenantId, installedAt, config]
+    output: InstalledPackage
     acl_required: ["package:create"]
     validation:
       - semver_format: "Version must be valid semver"
-      - name_version_unique: "Package name+version must be unique"
     errors:
-      - CONFLICT: "Package with name and version already exists"
+      - CONFLICT: "Package already installed"
       - VALIDATION_ERROR: "Invalid package input"
 
   create_many:
-    description: "Bulk create package definitions"
+    description: "Bulk install packages"
     input:
       required: [items]
       optional: []
@@ -22,32 +21,30 @@ operations:
     acl_required: ["package:create"]
     validation:
       - semver_format: "Version must be valid semver"
-      - name_version_unique: "Package name+version must be unique"
     errors:
-      - CONFLICT: "Package with name and version already exists"
+      - CONFLICT: "Package already installed"
       - VALIDATION_ERROR: "Invalid package input"
-      
+
   read:
-    description: "Get package by ID"
+    description: "Get installed package by packageId"
     input:
-      required: [id]
-    output: Package
+      required: [packageId]
+    output: InstalledPackage
     acl_required: ["package:read"]
     errors:
       - NOT_FOUND: "Package not found"
-      
+
   update:
-    description: "Update package"
+    description: "Update installed package"
     input:
-      required: [id]
-      optional: [name, version, description, author, manifest, is_installed, installed_at, installed_by]
-    output: Package
+      required: [packageId]
+      optional: [tenantId, installedAt, version, enabled, config]
+    output: InstalledPackage
     acl_required: ["package:update"]
     validation:
       - semver_format: "Version must be valid semver"
     errors:
       - NOT_FOUND: "Package not found"
-      - CONFLICT: "Package name+version already exists"
       - VALIDATION_ERROR: "Invalid package update"
 
   update_many:
@@ -60,30 +57,30 @@ operations:
       - semver_format: "Version must be valid semver"
     errors:
       - VALIDATION_ERROR: "Invalid package update"
-      
+
   delete:
-    description: "Delete package"
+    description: "Uninstall package"
     input:
-      required: [id]
+      required: [packageId]
     output: boolean
     acl_required: ["package:delete"]
     errors:
       - NOT_FOUND: "Package not found"
 
   delete_many:
-    description: "Bulk delete packages matching a filter"
+    description: "Bulk uninstall packages matching a filter"
     input:
       required: [filter]
     output: integer
     acl_required: ["package:delete"]
     errors:
       - VALIDATION_ERROR: "Invalid delete filter"
-      
+
   list:
-    description: "List packages with filtering and pagination"
+    description: "List installed packages with filtering and pagination"
     input:
-      optional: [name, version, author, is_installed, page, limit, sort]
-    output: Package[]
+      optional: [packageId, version, tenantId, enabled, page, limit, sort]
+    output: InstalledPackage[]
     acl_required: ["package:read"]
     pagination: true
     max_limit: 100

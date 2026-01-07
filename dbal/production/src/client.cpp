@@ -54,7 +54,7 @@ Result<std::vector<User>> Client::searchUsers(const std::string& query, int limi
     return entities::user::search(getStore(), query, limit);
 }
 
-Result<int> Client::countUsers(const std::optional<UserRole>& role) {
+Result<int> Client::countUsers(const std::optional<std::string>& role) {
     return entities::user::count(getStore(), role);
 }
 
@@ -135,8 +135,8 @@ Result<std::vector<ComponentNode>> Client::listComponents(const ListOptions& opt
     return entities::component::list(getStore(), options);
 }
 
-Result<std::vector<ComponentNode>> Client::getComponentTree(const std::string& page_id) {
-    return entities::component::getTree(getStore(), page_id);
+Result<std::vector<ComponentNode>> Client::getComponentTree(const std::string& pageId) {
+    return entities::component::getTree(getStore(), pageId);
 }
 
 Result<bool> Client::reorderComponents(const std::vector<ComponentOrderUpdate>& updates) {
@@ -148,15 +148,15 @@ Result<ComponentNode> Client::moveComponent(const MoveComponentInput& input) {
 }
 
 Result<std::vector<ComponentNode>> Client::searchComponents(const std::string& query,
-                                                                 const std::optional<std::string>& page_id,
-                                                                 int limit) {
-    return entities::component::search(getStore(), query, page_id, limit);
+                                                            const std::optional<std::string>& pageId,
+                                                            int limit) {
+    return entities::component::search(getStore(), query, pageId, limit);
 }
 
-Result<std::vector<ComponentNode>> Client::getComponentChildren(const std::string& parent_id,
-                                                                     const std::optional<std::string>& component_type,
-                                                                     int limit) {
-    return entities::component::getChildren(getStore(), parent_id, component_type, limit);
+Result<std::vector<ComponentNode>> Client::getComponentChildren(const std::string& parentId,
+                                                                const std::optional<std::string>& componentType,
+                                                                int limit) {
+    return entities::component::getChildren(getStore(), parentId, componentType, limit);
 }
 
 Result<Workflow> Client::createWorkflow(const CreateWorkflowInput& input) {
@@ -220,9 +220,9 @@ Result<std::vector<LuaScript>> Client::listLuaScripts(const ListOptions& options
 }
 
 Result<std::vector<LuaScript>> Client::searchLuaScripts(const std::string& query,
-                                                        const std::optional<std::string>& created_by,
+                                                        const std::optional<std::string>& createdBy,
                                                         int limit) {
-    return entities::lua_script::search(getStore(), query, created_by, limit);
+    return entities::lua_script::search(getStore(), query, createdBy, limit);
 }
 
 Result<InstalledPackage> Client::createPackage(const CreatePackageInput& input) {

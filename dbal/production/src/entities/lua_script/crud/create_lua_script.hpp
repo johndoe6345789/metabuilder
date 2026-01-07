@@ -24,14 +24,11 @@ inline Result<LuaScript> create(InMemoryStore& store, const CreateLuaScriptInput
     if (!validation::isValidLuaScriptCode(input.code)) {
         return Error::validationError("Lua script code must be a non-empty string");
     }
-    if (!validation::isValidLuaTimeout(input.timeout_ms)) {
+    if (!validation::isValidLuaTimeout(input.timeoutMs)) {
         return Error::validationError("Timeout must be between 100 and 30000 ms");
     }
-    if (input.created_by.empty()) {
-        return Error::validationError("created_by is required");
-    }
     std::string globals_error;
-    if (!validation::validateLuaAllowedGlobals(input.allowed_globals, globals_error)) {
+    if (!validation::validateLuaAllowedGlobals(input.allowedGlobals, globals_error)) {
         return Error::validationError(globals_error);
     }
 
@@ -41,15 +38,19 @@ inline Result<LuaScript> create(InMemoryStore& store, const CreateLuaScriptInput
 
     LuaScript script;
     script.id = store.generateId("lua", ++store.lua_script_counter);
+    script.tenantId = input.tenantId;
     script.name = input.name;
     script.description = input.description;
     script.code = input.code;
-    script.is_sandboxed = input.is_sandboxed;
-    script.allowed_globals = validation::dedupeLuaAllowedGlobals(input.allowed_globals);
-    script.timeout_ms = input.timeout_ms;
-    script.created_by = input.created_by;
-    script.created_at = std::chrono::system_clock::now();
-    script.updated_at = script.created_at;
+    script.parameters = input.parameters;
+    script.returnType = input.returnType;
+    script.isSandboxed = input.isSandboxed;
+    script.allowedGlobals = input.allowedGlobals;
+    script.timeoutMs = input.timeoutMs;
+    script.version = input.version;
+    script.createdAt = input.createdAt.value_or(std::chrono::system_clock::now());
+    script.updatedAt = input.updatedAt.value_or(script.createdAt);
+    script.createdBy = input.createdBy;
 
     store.lua_scripts[script.id] = script;
     store.lua_script_names[script.name] = script.id;

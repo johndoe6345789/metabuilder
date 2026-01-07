@@ -5,7 +5,6 @@
 #include "../../../store/in_memory_store.hpp"
 #include "dbal/errors.hpp"
 #include "../helpers.hpp"
-#include <chrono>
 
 namespace dbal {
 namespace entities {
@@ -37,14 +36,14 @@ inline Result<ComponentNode> update(InMemoryStore& store, const std::string& id,
         component.order = input.order.value();
     }
 
-    if (input.child_ids.has_value()) {
-        component.child_ids = input.child_ids.value();
+    if (input.childIds.has_value()) {
+        component.childIds = input.childIds.value();
     }
 
-    if (input.parent_id.has_value()) {
-        const std::string& new_parent = input.parent_id.value();
+    if (input.parentId.has_value()) {
+        const std::string& new_parent = input.parentId.value();
         if (new_parent.empty()) {
-            return Error::validationError("parent_id cannot be empty");
+            return Error::validationError("parentId cannot be empty");
         }
         if (new_parent == id) {
             return Error::validationError("Component cannot be its own parent");
@@ -54,21 +53,20 @@ inline Result<ComponentNode> update(InMemoryStore& store, const std::string& id,
         if (parent_it == store.components.end()) {
             return Error::notFound("Parent component not found: " + new_parent);
         }
-        if (parent_it->second.page_id != component.page_id) {
+        if (parent_it->second.pageId != component.pageId) {
             return Error::validationError("Parent component must belong to the same page");
         }
         if (helpers::hasDescendant(store, id, new_parent)) {
             return Error::validationError("Cannot move component under its descendant");
         }
 
-        if (component.parent_id.has_value()) {
-            helpers::removeComponentFromParent(store, component.parent_id.value(), id);
+        if (component.parentId.has_value()) {
+            helpers::removeComponentFromParent(store, component.parentId.value(), id);
         }
-        component.parent_id = new_parent;
+        component.parentId = new_parent;
         helpers::addComponentToParent(store, new_parent, id);
     }
 
-    component.updated_at = std::chrono::system_clock::now();
     return Result<ComponentNode>(component);
 }
 

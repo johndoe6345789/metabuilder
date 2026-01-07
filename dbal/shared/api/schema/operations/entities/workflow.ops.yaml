@@ -1,18 +1,30 @@
 operations:
   create:
-    description: "Create new workflow"
+    description: "Create a new workflow"
     input:
-      required: [name, trigger, trigger_config, steps, created_by]
-      optional: [description, is_active]
+      required: [name, nodes, edges, enabled]
+      optional: [tenantId, description, version, createdAt, updatedAt, createdBy]
     output: Workflow
     acl_required: ["workflow:create"]
     validation:
       - name_unique: "Workflow name must be unique"
-      - trigger_valid: "Trigger must be manual, schedule, event, webhook"
     errors:
-      - CONFLICT: "Workflow with this name already exists"
-      - VALIDATION_ERROR: "Invalid input data"
-      
+      - CONFLICT: "Workflow name already exists"
+      - VALIDATION_ERROR: "Invalid workflow input"
+
+  create_many:
+    description: "Bulk create workflows"
+    input:
+      required: [items]
+      optional: []
+    output: integer
+    acl_required: ["workflow:create"]
+    validation:
+      - name_unique: "Workflow name must be unique"
+    errors:
+      - CONFLICT: "Workflow name already exists"
+      - VALIDATION_ERROR: "Invalid workflow input"
+
   read:
     description: "Get workflow by ID"
     input:
@@ -21,21 +33,28 @@ operations:
     acl_required: ["workflow:read"]
     errors:
       - NOT_FOUND: "Workflow not found"
-      
+
   update:
     description: "Update workflow"
     input:
       required: [id]
-      optional: [name, description, trigger, trigger_config, steps, is_active]
+      optional: [tenantId, name, description, nodes, edges, enabled, version, createdAt, updatedAt, createdBy]
     output: Workflow
     acl_required: ["workflow:update"]
-    validation:
-      - trigger_valid: "Trigger must be manual, schedule, event, webhook"
     errors:
       - NOT_FOUND: "Workflow not found"
-      - CONFLICT: "Workflow name already in use"
-      - VALIDATION_ERROR: "Invalid input data"
-      
+      - CONFLICT: "Workflow name already exists"
+      - VALIDATION_ERROR: "Invalid workflow update"
+
+  update_many:
+    description: "Bulk update workflows matching a filter"
+    input:
+      required: [filter, data]
+    output: integer
+    acl_required: ["workflow:update"]
+    errors:
+      - VALIDATION_ERROR: "Invalid update payload"
+
   delete:
     description: "Delete workflow"
     input:
@@ -44,11 +63,20 @@ operations:
     acl_required: ["workflow:delete"]
     errors:
       - NOT_FOUND: "Workflow not found"
-      
+
+  delete_many:
+    description: "Bulk delete workflows matching a filter"
+    input:
+      required: [filter]
+    output: integer
+    acl_required: ["workflow:delete"]
+    errors:
+      - VALIDATION_ERROR: "Invalid delete filter"
+
   list:
     description: "List workflows with filtering and pagination"
     input:
-      optional: [trigger, is_active, created_by, page, limit, sort]
+      optional: [tenantId, enabled, page, limit, sort]
     output: Workflow[]
     acl_required: ["workflow:read"]
     pagination: true

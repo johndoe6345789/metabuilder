@@ -8,17 +8,17 @@ namespace daemon {
 namespace rpc {
 
 void handle_user_list(Client& client,
-                      const std::string& tenant_id,
+                      const std::string& tenantId,
                       const Json::Value& options,
                       ResponseSender send_success,
                       ErrorSender send_error) {
-    if (tenant_id.empty()) {
+    if (tenantId.empty()) {
         send_error("Tenant ID is required", 400);
         return;
     }
 
     auto list_options = list_options_from_json(options);
-    list_options.filter["tenantId"] = tenant_id;
+    list_options.filter["tenantId"] = tenantId;
     auto result = client.listUsers(list_options);
     if (!result.isOk()) {
         const auto& error = result.error();
@@ -29,11 +29,11 @@ void handle_user_list(Client& client,
 }
 
 void handle_user_read(Client& client,
-                      const std::string& tenant_id,
+                      const std::string& tenantId,
                       const std::string& id,
                       ResponseSender send_success,
                       ErrorSender send_error) {
-    if (tenant_id.empty()) {
+    if (tenantId.empty()) {
         send_error("Tenant ID is required", 400);
         return;
     }
@@ -48,7 +48,7 @@ void handle_user_read(Client& client,
         return;
     }
     const auto& user = result.value();
-    if (user.tenant_id != tenant_id) {
+    if (user.tenantId != tenantId) {
         send_error("User not found", 404);
         return;
     }
@@ -56,11 +56,11 @@ void handle_user_read(Client& client,
 }
 
 void handle_user_create(Client& client,
-                        const std::string& tenant_id,
+                        const std::string& tenantId,
                         const Json::Value& payload,
                         ResponseSender send_success,
                         ErrorSender send_error) {
-    if (tenant_id.empty()) {
+    if (tenantId.empty()) {
         send_error("Tenant ID is required", 400);
         return;
     }
@@ -72,7 +72,7 @@ void handle_user_create(Client& client,
     }
 
     CreateUserInput input;
-    input.tenant_id = tenant_id;
+    input.tenantId = tenantId;
     input.username = username;
     input.email = email;
     if (payload.isMember("role") && payload["role"].isString()) {
@@ -90,12 +90,12 @@ void handle_user_create(Client& client,
 }
 
 void handle_user_update(Client& client,
-                        const std::string& tenant_id,
+                        const std::string& tenantId,
                         const std::string& id,
                         const Json::Value& payload,
                         ResponseSender send_success,
                         ErrorSender send_error) {
-    if (tenant_id.empty()) {
+    if (tenantId.empty()) {
         send_error("Tenant ID is required", 400);
         return;
     }
@@ -110,7 +110,7 @@ void handle_user_update(Client& client,
         send_error(error.what(), static_cast<int>(error.code()));
         return;
     }
-    if (existing.value().tenant_id != tenant_id) {
+    if (existing.value().tenantId != tenantId) {
         send_error("User not found", 404);
         return;
     }
@@ -146,11 +146,11 @@ void handle_user_update(Client& client,
 }
 
 void handle_user_delete(Client& client,
-                        const std::string& tenant_id,
+                        const std::string& tenantId,
                         const std::string& id,
                         ResponseSender send_success,
                         ErrorSender send_error) {
-    if (tenant_id.empty()) {
+    if (tenantId.empty()) {
         send_error("Tenant ID is required", 400);
         return;
     }
@@ -165,7 +165,7 @@ void handle_user_delete(Client& client,
         send_error(error.what(), static_cast<int>(error.code()));
         return;
     }
-    if (existing.value().tenant_id != tenant_id) {
+    if (existing.value().tenantId != tenantId) {
         send_error("User not found", 404);
         return;
     }

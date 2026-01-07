@@ -23,9 +23,9 @@ inline Result<std::vector<PageConfig>> list(InMemoryStore& store, const ListOpti
     for (const auto& [id, page] : store.pages) {
         bool matches = true;
         
-        if (options.filter.find("is_published") != options.filter.end()) {
-            bool filter_published = options.filter.at("is_published") == "true";
-            if (page.is_published != filter_published) matches = false;
+        if (options.filter.find("isPublished") != options.filter.end()) {
+            bool filter_published = options.filter.at("isPublished") == "true";
+            if (page.isPublished != filter_published) matches = false;
         }
         
         if (options.filter.find("level") != options.filter.end()) {
@@ -40,9 +40,9 @@ inline Result<std::vector<PageConfig>> list(InMemoryStore& store, const ListOpti
         std::sort(pages.begin(), pages.end(), [](const PageConfig& a, const PageConfig& b) {
             return a.title < b.title;
         });
-    } else if (options.sort.find("created_at") != options.sort.end()) {
+    } else if (options.sort.find("createdAt") != options.sort.end()) {
         std::sort(pages.begin(), pages.end(), [](const PageConfig& a, const PageConfig& b) {
-            return a.created_at < b.created_at;
+            return a.createdAt < b.createdAt;
         });
     }
     

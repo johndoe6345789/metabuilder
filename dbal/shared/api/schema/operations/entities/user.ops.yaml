@@ -3,7 +3,7 @@ operations:
     description: "Create a new user account"
     input:
       required: [username, email, role]
-      optional: []
+      optional: [profilePicture, bio, tenantId, isInstanceOwner, passwordChangeTimestamp, firstLogin]
     output: User
     acl_required: ["user:create"]
     validation:
@@ -28,7 +28,7 @@ operations:
     errors:
       - CONFLICT: "Username or email already exists"
       - VALIDATION_ERROR: "Invalid user input"
-      
+
   read:
     description: "Get user by ID"
     input:
@@ -39,12 +39,12 @@ operations:
     errors:
       - NOT_FOUND: "User not found"
       - FORBIDDEN: "Cannot access other user's data"
-      
+
   update:
     description: "Update user details"
     input:
       required: [id]
-      optional: [username, email, role]
+      optional: [username, email, role, profilePicture, bio, tenantId, isInstanceOwner, passwordChangeTimestamp, firstLogin]
     output: User
     acl_required: ["user:update"]
     row_level_check: "id = $user.id OR $user.role IN ('admin', 'god', 'supergod')"
@@ -65,7 +65,7 @@ operations:
       - no_role_escalation: "Cannot elevate roles in bulk updates"
     errors:
       - VALIDATION_ERROR: "Invalid update payload"
-      
+
   delete:
     description: "Delete user account"
     input:
@@ -85,11 +85,11 @@ operations:
     acl_required: ["user:delete"]
     errors:
       - VALIDATION_ERROR: "Invalid delete filter"
-      
+
   list:
     description: "List users with filtering and pagination"
     input:
-      optional: [role, search, page, limit, sort]
+      optional: [tenantId, role, username, email, page, limit, sort]
     output: User[]
     acl_required: ["user:read"]
     pagination: true
@@ -97,21 +97,3 @@ operations:
     default_limit: 20
     errors:
       - VALIDATION_ERROR: "Invalid pagination parameters"
-      
-  search:
-    description: "Search users by username or email"
-    input:
-      required: [query]
-      optional: [limit]
-    output: User[]
-    acl_required: ["user:read"]
-    full_text_search: true
-    errors: []
-      
-  count:
-    description: "Count users with optional filter"
-    input:
-      optional: [role]
-    output: integer
-    acl_required: ["user:read"]
-    errors: []

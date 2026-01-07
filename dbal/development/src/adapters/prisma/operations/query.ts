@@ -1,6 +1,6 @@
 import type { ListOptions, ListResult } from '../../../core/foundation/types'
 import type { PrismaContext } from '../types'
-import { handlePrismaError, buildWhereClause, buildOrderBy, getModel, withTimeout } from './utils'
+import { handlePrismaError, buildWhereClause, buildOrderBy, getModel, getPrimaryKeyField, withTimeout } from './utils'
 
 export async function listRecords(
   context: PrismaContext,
@@ -69,9 +69,16 @@ export async function findByField(
 ): Promise<unknown | null> {
   try {
     const model = getModel(context, entity)
+    const idField = getPrimaryKeyField(entity)
+    if (field === idField) {
+      return await withTimeout(
+        context,
+        model.findUnique({ where: { [field]: value } as never })
+      )
+    }
     return await withTimeout(
       context,
-      model.findUnique({ where: { [field]: value } as never })
+      model.findFirst({ where: { [field]: value } as never })
     )
   } catch (error) {
     throw handlePrismaError(error, 'findByField', entity)

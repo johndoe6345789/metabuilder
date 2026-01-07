@@ -54,33 +54,54 @@ inline Result<LuaScript> update(InMemoryStore& store, const std::string& id, con
         script.code = input.code.value();
     }
 
-    if (input.is_sandboxed.has_value()) {
-        script.is_sandboxed = input.is_sandboxed.value();
+    if (input.parameters.has_value()) {
+        script.parameters = input.parameters.value();
     }
 
-    if (input.allowed_globals.has_value()) {
+    if (input.returnType.has_value()) {
+        script.returnType = input.returnType.value();
+    }
+
+    if (input.isSandboxed.has_value()) {
+        script.isSandboxed = input.isSandboxed.value();
+    }
+
+    if (input.allowedGlobals.has_value()) {
         std::string globals_error;
-        if (!validation::validateLuaAllowedGlobals(input.allowed_globals.value(), globals_error)) {
+        if (!validation::validateLuaAllowedGlobals(input.allowedGlobals.value(), globals_error)) {
             return Error::validationError(globals_error);
         }
-        script.allowed_globals = validation::dedupeLuaAllowedGlobals(input.allowed_globals.value());
+        script.allowedGlobals = input.allowedGlobals.value();
     }
 
-    if (input.timeout_ms.has_value()) {
-        if (!validation::isValidLuaTimeout(input.timeout_ms.value())) {
+    if (input.timeoutMs.has_value()) {
+        if (!validation::isValidLuaTimeout(input.timeoutMs.value())) {
             return Error::validationError("Timeout must be between 100 and 30000 ms");
         }
-        script.timeout_ms = input.timeout_ms.value();
+        script.timeoutMs = input.timeoutMs.value();
     }
 
-    if (input.created_by.has_value()) {
-        if (input.created_by.value().empty()) {
-            return Error::validationError("created_by is required");
-        }
-        script.created_by = input.created_by.value();
+    if (input.version.has_value()) {
+        script.version = input.version.value();
     }
 
-    script.updated_at = std::chrono::system_clock::now();
+    if (input.createdAt.has_value()) {
+        script.createdAt = input.createdAt.value();
+    }
+
+    if (input.updatedAt.has_value()) {
+        script.updatedAt = input.updatedAt.value();
+    } else {
+        script.updatedAt = std::chrono::system_clock::now();
+    }
+
+    if (input.createdBy.has_value()) {
+        script.createdBy = input.createdBy.value();
+    }
+
+    if (input.tenantId.has_value()) {
+        script.tenantId = input.tenantId.value();
+    }
 
     return Result<LuaScript>(script);
 }

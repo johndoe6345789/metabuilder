@@ -13,7 +13,7 @@ This document maps the capabilities declared in `api/schema/capabilities.yaml` t
 | `aggregations` | Prisma, SQLite, MongoDB | ✅ | Prisma adapter supports `aggregate` queries; SQL adapters can run `COUNT/SUM`. |
 | `relations` | Prisma, SQLite | ✅ | Prisma adapter handles relations via `include`, while SQL adapters map foreign keys consistently once SQL statements cover them. |
 | `migrations` | Prisma (automatic) | ✅ | `prisma migrate` workflows run ahead of TS/C++ builds; refer to `prisma/migrations` and `package.json` scripts. |
-| `schema_introspection` | Prisma, SQLite | ✅ | DBAL API schemas are the long-term source of truth; Prisma schemas are currently maintained separately (see `prisma/schema.prisma`) and should be generated from DBAL in a future pass. |
+| `schema_introspection` | Prisma, SQLite | ✅ | Prisma schema is generated from DBAL (`prisma/schema.prisma`), keeping DBAL as the source of truth. |
 | `connection_pooling` | Prisma + cpr HTTP client | ✅ | Prisma client manages pools for TypeScript; C++ `SqlPool` plus `RequestsClient` ensures safe reuse of HTTP/SQL connections. |
 | `read_replicas` | Prisma (optional) | ⚠️ | Prisma supports multiple datasources; DBAL proxies to the configured `DATABASE_URL` and allows future replica awareness through `NativePrismaAdapter`. |
 

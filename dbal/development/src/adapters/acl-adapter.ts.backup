@@ -48,11 +48,6 @@ const defaultACLRules: ACLRule[] = [
     operations: ['create', 'read', 'update', 'delete', 'list']
   },
   {
-    entity: 'LuaScript',
-    roles: ['god', 'supergod'],
-    operations: ['create', 'read', 'update', 'delete', 'list']
-  },
-  {
     entity: 'Package',
     roles: ['admin', 'god', 'supergod'],
     operations: ['read', 'list']

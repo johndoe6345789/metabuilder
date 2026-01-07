@@ -2,7 +2,8 @@ operations:
   create:
     description: "Create a new session"
     input:
-      required: [user_id, token, expires_at]
+      required: [userId, token, expiresAt]
+      optional: [createdAt, lastActivity, ipAddress, userAgent]
     output: Session
     acl_required: ["session:write"]
     system_only: true
@@ -12,7 +13,7 @@ operations:
     errors:
       - VALIDATION_ERROR: "Invalid session input"
       - CONFLICT: "Session token already exists"
-      
+
   read:
     description: "Get session by ID"
     input:
@@ -22,12 +23,12 @@ operations:
     system_only: true
     errors:
       - NOT_FOUND: "Session not found"
-      
+
   update:
     description: "Update session expiration or activity timestamp"
     input:
       required: [id]
-      optional: [user_id, token, expires_at, last_activity]
+      optional: [userId, token, expiresAt, lastActivity, ipAddress, userAgent]
     output: Session
     acl_required: ["session:write"]
     system_only: true
@@ -38,7 +39,7 @@ operations:
       - NOT_FOUND: "Session not found"
       - VALIDATION_ERROR: "Invalid session update"
       - CONFLICT: "Session token already exists"
-      
+
   delete:
     description: "Delete session by ID"
     input:
@@ -50,11 +51,11 @@ operations:
       audit: true
     errors:
       - NOT_FOUND: "Session not found"
-      
+
   list:
     description: "List sessions with filtering and pagination"
     input:
-      optional: [user_id, token, page, limit, sort]
+      optional: [userId, token, page, limit, sort]
     output: Session[]
     acl_required: ["session:read"]
     system_only: true

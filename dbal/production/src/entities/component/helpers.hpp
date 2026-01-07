@@ -10,12 +10,12 @@ namespace entities {
 namespace component {
 namespace helpers {
 
-inline void addComponentToPage(InMemoryStore& store, const std::string& page_id, const std::string& component_id) {
-    store.components_by_page[page_id].push_back(component_id);
+inline void addComponentToPage(InMemoryStore& store, const std::string& pageId, const std::string& component_id) {
+    store.components_by_page[pageId].push_back(component_id);
 }
 
-inline void removeComponentFromPage(InMemoryStore& store, const std::string& page_id, const std::string& component_id) {
-    auto it = store.components_by_page.find(page_id);
+inline void removeComponentFromPage(InMemoryStore& store, const std::string& pageId, const std::string& component_id) {
+    auto it = store.components_by_page.find(pageId);
     if (it == store.components_by_page.end()) {
         return;
     }
@@ -26,12 +26,12 @@ inline void removeComponentFromPage(InMemoryStore& store, const std::string& pag
     }
 }
 
-inline void addComponentToParent(InMemoryStore& store, const std::string& parent_id, const std::string& component_id) {
-    store.components_by_parent[parent_id].push_back(component_id);
+inline void addComponentToParent(InMemoryStore& store, const std::string& parentId, const std::string& component_id) {
+    store.components_by_parent[parentId].push_back(component_id);
 }
 
-inline void removeComponentFromParent(InMemoryStore& store, const std::string& parent_id, const std::string& component_id) {
-    auto it = store.components_by_parent.find(parent_id);
+inline void removeComponentFromParent(InMemoryStore& store, const std::string& parentId, const std::string& component_id) {
+    auto it = store.components_by_parent.find(parentId);
     if (it == store.components_by_parent.end()) {
         return;
     }
@@ -74,10 +74,10 @@ inline void cascadeDeleteComponent(InMemoryStore& store, const std::string& comp
     }
 
     const auto& component = comp_it->second;
-    if (component.parent_id.has_value()) {
-        removeComponentFromParent(store, component.parent_id.value(), component_id);
+    if (component.parentId.has_value()) {
+        removeComponentFromParent(store, component.parentId.value(), component_id);
     }
-    removeComponentFromPage(store, component.page_id, component_id);
+    removeComponentFromPage(store, component.pageId, component_id);
     store.components.erase(comp_it);
 }
 

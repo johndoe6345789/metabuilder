@@ -20,8 +20,6 @@ export { validateComponentHierarchyCreate } from './validation/validate-componen
 export { validateComponentHierarchyUpdate } from './validation/validate-component-hierarchy-update'
 export { validateWorkflowCreate } from './validation/validate-workflow-create'
 export { validateWorkflowUpdate } from './validation/validate-workflow-update'
-export { validateLuaScriptCreate } from './validation/validate-lua-script-create'
-export { validateLuaScriptUpdate } from './validation/validate-lua-script-update'
 export { validatePackageCreate } from './validation/validate-package-create'
 export { validatePackageUpdate } from './validation/validate-package-update'
 export { validateId } from './validation/validate-id'

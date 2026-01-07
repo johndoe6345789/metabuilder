@@ -79,7 +79,6 @@ export interface AppConfiguration {
   name: string
   schemas: string
   workflows: string
-  luaScripts: string
   pages: string
   theme: string
 }
@@ -89,7 +88,6 @@ export interface CreateAppConfigurationInput {
   name: string
   schemas: string
   workflows: string
-  luaScripts: string
   pages: string
   theme: string
 }
@@ -98,7 +96,6 @@ export interface UpdateAppConfigurationInput {
   name?: string
   schemas?: string
   workflows?: string
-  luaScripts?: string
   pages?: string
   theme?: string
 }

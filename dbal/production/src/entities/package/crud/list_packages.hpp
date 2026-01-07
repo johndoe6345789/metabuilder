@@ -23,16 +23,16 @@ inline Result<std::vector<InstalledPackage>> list(InMemoryStore& store, const Li
     for (const auto& [id, package] : store.packages) {
         bool matches = true;
 
-        if (options.filter.find("package_id") != options.filter.end()) {
-            if (package.package_id != options.filter.at("package_id")) matches = false;
+        if (options.filter.find("packageId") != options.filter.end()) {
+            if (package.packageId != options.filter.at("packageId")) matches = false;
         }
 
         if (options.filter.find("version") != options.filter.end()) {
             if (package.version != options.filter.at("version")) matches = false;
         }
 
-        if (options.filter.find("tenant_id") != options.filter.end()) {
-            if (!package.tenant_id.has_value() || package.tenant_id.value() != options.filter.at("tenant_id")) {
+        if (options.filter.find("tenantId") != options.filter.end()) {
+            if (!package.tenantId.has_value() || package.tenantId.value() != options.filter.at("tenantId")) {
                 matches = false;
             }
         }
@@ -47,13 +47,13 @@ inline Result<std::vector<InstalledPackage>> list(InMemoryStore& store, const Li
         }
     }
 
-    if (options.sort.find("package_id") != options.sort.end()) {
+    if (options.sort.find("packageId") != options.sort.end()) {
         std::sort(packages.begin(), packages.end(), [](const InstalledPackage& a, const InstalledPackage& b) {
-            return a.package_id < b.package_id;
+            return a.packageId < b.packageId;
         });
-    } else if (options.sort.find("created_at") != options.sort.end()) {
+    } else if (options.sort.find("installedAt") != options.sort.end()) {
         std::sort(packages.begin(), packages.end(), [](const InstalledPackage& a, const InstalledPackage& b) {
-            return a.created_at < b.created_at;
+            return a.installedAt < b.installedAt;
         });
     }
 

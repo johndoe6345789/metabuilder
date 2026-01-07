@@ -23,13 +23,15 @@ inline Result<std::vector<LuaScript>> list(InMemoryStore& store, const ListOptio
     for (const auto& [id, script] : store.lua_scripts) {
         bool matches = true;
 
-        if (options.filter.find("created_by") != options.filter.end()) {
-            if (script.created_by != options.filter.at("created_by")) matches = false;
+        if (options.filter.find("createdBy") != options.filter.end()) {
+            if (!script.createdBy.has_value() || script.createdBy.value() != options.filter.at("createdBy")) {
+                matches = false;
+            }
         }
 
-        if (options.filter.find("is_sandboxed") != options.filter.end()) {
-            bool filter_sandboxed = options.filter.at("is_sandboxed") == "true";
-            if (script.is_sandboxed != filter_sandboxed) matches = false;
+        if (options.filter.find("isSandboxed") != options.filter.end()) {
+            bool filter_sandboxed = options.filter.at("isSandboxed") == "true";
+            if (script.isSandboxed != filter_sandboxed) matches = false;
         }
 
         if (matches) {
@@ -41,9 +43,10 @@ inline Result<std::vector<LuaScript>> list(InMemoryStore& store, const ListOptio
         std::sort(scripts.begin(), scripts.end(), [](const LuaScript& a, const LuaScript& b) {
             return a.name < b.name;
         });
-    } else if (options.sort.find("created_at") != options.sort.end()) {
+    } else if (options.sort.find("createdAt") != options.sort.end()) {
         std::sort(scripts.begin(), scripts.end(), [](const LuaScript& a, const LuaScript& b) {
-            return a.created_at < b.created_at;
+            return a.createdAt.value_or(std::chrono::system_clock::time_point()) <
+                b.createdAt.value_or(std::chrono::system_clock::time_point());
         });
     }
 

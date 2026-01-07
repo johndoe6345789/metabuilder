@@ -21,12 +21,12 @@ inline Result<std::vector<ComponentNode>> list(InMemoryStore& store, const ListO
 
     for (const auto& [id, component] : store.components) {
         (void)id;
-        if (!page_filter.empty() && component.page_id != page_filter) {
+        if (!page_filter.empty() && component.pageId != page_filter) {
             continue;
         }
-        if (options.filter.find("parent_id") != options.filter.end()) {
-            const std::string& parent_filter = options.filter.at("parent_id");
-            if (!component.parent_id.has_value() || component.parent_id.value() != parent_filter) {
+        if (options.filter.find("parentId") != options.filter.end()) {
+            const std::string& parent_filter = options.filter.at("parentId");
+            if (!component.parentId.has_value() || component.parentId.value() != parent_filter) {
                 continue;
             }
         }
@@ -40,14 +40,14 @@ inline Result<std::vector<ComponentNode>> list(InMemoryStore& store, const ListO
     }
 
     std::sort(components.begin(), components.end(), [](const ComponentNode& a, const ComponentNode& b) {
-        if (a.page_id != b.page_id) {
-            return a.page_id < b.page_id;
+        if (a.pageId != b.pageId) {
+            return a.pageId < b.pageId;
         }
-        if (a.parent_id.has_value() != b.parent_id.has_value()) {
-            return a.parent_id.has_value() < b.parent_id.has_value();
+        if (a.parentId.has_value() != b.parentId.has_value()) {
+            return a.parentId.has_value() < b.parentId.has_value();
         }
-        if (a.parent_id != b.parent_id) {
-            return a.parent_id < b.parent_id;
+        if (a.parentId != b.parentId) {
+            return a.parentId < b.parentId;
         }
         if (a.order != b.order) {
             return a.order < b.order;

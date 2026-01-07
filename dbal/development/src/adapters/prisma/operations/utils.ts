@@ -15,6 +15,12 @@ type PrismaModelDelegate = {
   count: (...args: unknown[]) => Promise<number>
 }
 
+const PRIMARY_KEY_FIELDS: Record<string, string> = {
+  Credential: 'username',
+  InstalledPackage: 'packageId',
+  PackageData: 'packageId',
+}
+
 export function getModel(context: PrismaContext, entity: string): PrismaModelDelegate {
   const modelName = entity.charAt(0).toLowerCase() + entity.slice(1)
   const model = (context.prisma as unknown as Record<string, PrismaModelDelegate>)[modelName]
@@ -24,6 +30,10 @@ export function getModel(context: PrismaContext, entity: string): PrismaModelDel
   }
 
   return model
+}
+
+export function getPrimaryKeyField(entity: string): string {
+  return PRIMARY_KEY_FIELDS[entity] ?? 'id'
 }
 
 export function buildWhereClause(filter: Record<string, unknown>): Record<string, unknown> {

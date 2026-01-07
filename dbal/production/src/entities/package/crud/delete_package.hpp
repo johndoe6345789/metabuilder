@@ -27,7 +27,7 @@ inline Result<bool> remove(InMemoryStore& store, const std::string& id) {
         return Error::notFound("Package not found: " + id);
     }
 
-    store.package_keys.erase(validation::packageKey(it->second.package_id));
+    store.package_keys.erase(validation::packageKey(it->second.packageId));
     store.packages.erase(it);
 
     return Result<bool>(true);
