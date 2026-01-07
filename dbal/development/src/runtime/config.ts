@@ -1,6 +1,6 @@
 export interface DBALConfig {
   mode: 'development' | 'production'
-  adapter: 'prisma' | 'sqlite' | 'mongodb' | 'postgres' | 'mysql'
+  adapter: 'prisma' | 'sqlite' | 'mongodb' | 'postgres' | 'mysql' | 'memory'
   tenantId?: string
   endpoint?: string
   auth?: {
@@ -24,7 +24,7 @@ export interface DBALConfig {
 export interface User {
   id: string
   username: string
-  role: 'user' | 'admin' | 'god' | 'supergod'
+  role: 'public' | 'user' | 'moderator' | 'admin' | 'god' | 'supergod'
 }
 
 export interface Session {

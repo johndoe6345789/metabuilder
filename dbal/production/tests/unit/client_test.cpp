@@ -520,15 +520,17 @@ void test_page_crud() {
     
     // Create page
     dbal::CreatePageInput input;
-    input.slug = "test-page";
+    input.path = "/test-page";
     input.title = "Test Page";
     input.description = "A test page";
     input.level = 2;
-    input.is_active = true;
+    input.component_tree = "{}";
+    input.requires_auth = false;
+    input.is_published = true;
     
     auto createResult = client.createPage(input);
     assert(createResult.isOk());
-    assert(createResult.value().slug == "test-page");
+    assert(createResult.value().path == "/test-page");
     std::string pageId = createResult.value().id;
     std::cout << "  ✓ Page created with ID: " << pageId << std::endl;
     
@@ -538,11 +540,11 @@ void test_page_crud() {
     assert(getResult.value().title == "Test Page");
     std::cout << "  ✓ Retrieved page by ID" << std::endl;
     
-    // Get by slug
-    auto getBySlugResult = client.getPageByPath("test-page");
+    // Get by path
+    auto getBySlugResult = client.getPageByPath("/test-page");
     assert(getBySlugResult.isOk());
     assert(getBySlugResult.value().id == pageId);
-    std::cout << "  ✓ Retrieved page by slug" << std::endl;
+    std::cout << "  ✓ Retrieved page by path" << std::endl;
     
     // Update page
     dbal::UpdatePageInput updateInput;
@@ -570,21 +572,25 @@ void test_page_validation() {
     config.database_url = ":memory:";
     dbal::Client client(config);
     
-    // Invalid slug (uppercase)
+    // Invalid path (empty)
     dbal::CreatePageInput input1;
-    input1.slug = "Invalid-Slug";
+    input1.path = "";
     input1.title = "Test";
     input1.level = 1;
+    input1.component_tree = "{}";
+    input1.requires_auth = false;
     auto result1 = client.createPage(input1);
     assert(result1.isError());
     assert(result1.error().code() == dbal::ErrorCode::ValidationError);
-    std::cout << "  ✓ Uppercase slug rejected" << std::endl;
+    std::cout << "  ✓ Empty path rejected" << std::endl;
     
     // Empty title
     dbal::CreatePageInput input2;
-    input2.slug = "valid-slug";
+    input2.path = "/valid-path";
     input2.title = "";
     input2.level = 1;
+    input2.component_tree = "{}";
+    input2.requires_auth = false;
     auto result2 = client.createPage(input2);
     assert(result2.isError());
     assert(result2.error().code() == dbal::ErrorCode::ValidationError);
@@ -592,9 +598,11 @@ void test_page_validation() {
     
     // Invalid level
     dbal::CreatePageInput input3;
-    input3.slug = "valid-slug";
+    input3.path = "/valid-path-2";
     input3.title = "Test";
     input3.level = 10;
+    input3.component_tree = "{}";
+    input3.requires_auth = false;
     auto result3 = client.createPage(input3);
     assert(result3.isError());
     assert(result3.error().code() == dbal::ErrorCode::ValidationError);
@@ -610,20 +618,22 @@ void test_page_search() {
     dbal::Client client(config);
 
     dbal::CreatePageInput page1;
-    page1.slug = "search-page";
+    page1.path = "/search-page";
     page1.title = "Search Page";
     page1.level = 1;
-    page1.layout = {{"row", "one"}};
-    page1.is_active = true;
+    page1.component_tree = "{}";
+    page1.requires_auth = false;
+    page1.is_published = true;
     auto result1 = client.createPage(page1);
     assert(result1.isOk());
 
     dbal::CreatePageInput page2;
-    page2.slug = "other-page";
+    page2.path = "/other-page";
     page2.title = "Other Search";
     page2.level = 1;
-    page2.layout = {{"row", "two"}};
-    page2.is_active = true;
+    page2.component_tree = "{}";
+    page2.requires_auth = false;
+    page2.is_published = true;
     auto result2 = client.createPage(page2);
     assert(result2.isOk());
 
@@ -652,11 +662,12 @@ void test_component_crud() {
     dbal::Client client(config);
 
     dbal::CreatePageInput pageInput;
-    pageInput.slug = "component-page";
+    pageInput.path = "/component-page";
     pageInput.title = "Component Page";
     pageInput.level = 1;
-    pageInput.layout = {{"region", "root"}};
-    pageInput.is_active = true;
+    pageInput.component_tree = "{}";
+    pageInput.requires_auth = false;
+    pageInput.is_published = true;
 
     auto pageResult = client.createPage(pageInput);
     assert(pageResult.isOk());
@@ -664,9 +675,9 @@ void test_component_crud() {
 
     dbal::CreateComponentNodeInput rootInput;
     rootInput.page_id = pageId;
-    rootInput.component_type = "Container";
+    rootInput.type = "Container";
+    rootInput.child_ids = "[]";
     rootInput.order = 0;
-    rootInput.props = {{"role", "root"}};
 
     auto rootResult = client.createComponent(rootInput);
     assert(rootResult.isOk());
@@ -676,9 +687,9 @@ void test_component_crud() {
     dbal::CreateComponentNodeInput childInput;
     childInput.page_id = pageId;
     childInput.parent_id = rootId;
-    childInput.component_type = "Button";
+    childInput.type = "Button";
+    childInput.child_ids = "[]";
     childInput.order = 1;
-    childInput.props = {{"label", "Click"}};
 
     auto childResult = client.createComponent(childInput);
     assert(childResult.isOk());
@@ -688,9 +699,9 @@ void test_component_crud() {
     dbal::CreateComponentNodeInput siblingInput;
     siblingInput.page_id = pageId;
     siblingInput.parent_id = rootId;
-    siblingInput.component_type = "Text";
+    siblingInput.type = "Text";
+    siblingInput.child_ids = "[]";
     siblingInput.order = 3;
-    siblingInput.props = {{"content", "sidebar"}};
 
     auto siblingResult = client.createComponent(siblingInput);
     assert(siblingResult.isOk());
@@ -719,12 +730,12 @@ void test_component_crud() {
 
     dbal::ListOptions typeFilter;
     typeFilter.filter["pageId"] = pageId;
-    typeFilter.filter["component_type"] = "Text";
+    typeFilter.filter["type"] = "Text";
     auto typeList = client.listComponents(typeFilter);
     assert(typeList.isOk());
     assert(!typeList.value().empty());
     for (const auto& entry : typeList.value()) {
-        assert(entry.component_type == "Text");
+        assert(entry.type == "Text");
     }
     std::cout << "  ✓ Component type filter works" << std::endl;
 
@@ -742,9 +753,9 @@ void test_component_crud() {
 
     dbal::CreateComponentNodeInput otherRootInput;
     otherRootInput.page_id = pageId;
-    otherRootInput.component_type = "Sidebar";
+    otherRootInput.type = "Sidebar";
+    otherRootInput.child_ids = "[]";
     otherRootInput.order = 0;
-    otherRootInput.props = {{"region", "secondary"}};
 
     auto otherRootResult = client.createComponent(otherRootInput);
     assert(otherRootResult.isOk());
@@ -785,11 +796,12 @@ void test_component_validation() {
     dbal::Client client(config);
 
     dbal::CreatePageInput pageInput;
-    pageInput.slug = "component-validation";
+    pageInput.path = "/component-validation";
     pageInput.title = "Component Validation";
     pageInput.level = 1;
-    pageInput.layout = {{"mode", "validate"}};
-    pageInput.is_active = true;
+    pageInput.component_tree = "{}";
+    pageInput.requires_auth = false;
+    pageInput.is_published = true;
 
     auto pageResult = client.createPage(pageInput);
     assert(pageResult.isOk());
@@ -797,9 +809,9 @@ void test_component_validation() {
 
     dbal::CreateComponentNodeInput missingPage;
     missingPage.page_id = "missing-page";
-    missingPage.component_type = "Leaf";
+    missingPage.type = "Leaf";
+    missingPage.child_ids = "[]";
     missingPage.order = 0;
-    missingPage.props = {{"key", "value"}};
     auto missingResult = client.createComponent(missingPage);
     assert(missingResult.isError());
     assert(missingResult.error().code() == dbal::ErrorCode::NotFound);
@@ -807,9 +819,9 @@ void test_component_validation() {
 
     dbal::CreateComponentNodeInput longType;
     longType.page_id = pageId;
-    longType.component_type = std::string(101, 'x');
+    longType.type = std::string(101, 'x');
+    longType.child_ids = "[]";
     longType.order = 0;
-    longType.props = {{"key", "value"}};
     auto longResult = client.createComponent(longType);
     assert(longResult.isError());
     assert(longResult.error().code() == dbal::ErrorCode::ValidationError);
@@ -817,9 +829,9 @@ void test_component_validation() {
 
     dbal::CreateComponentNodeInput badOrder;
     badOrder.page_id = pageId;
-    badOrder.component_type = "Leaf";
+    badOrder.type = "Leaf";
+    badOrder.child_ids = "[]";
     badOrder.order = -1;
-    badOrder.props = {{"key", "value"}};
     auto orderResult = client.createComponent(badOrder);
     assert(orderResult.isError());
     assert(orderResult.error().code() == dbal::ErrorCode::ValidationError);
@@ -835,20 +847,21 @@ void test_component_search() {
     dbal::Client client(config);
 
     dbal::CreatePageInput pageInput;
-    pageInput.slug = "component-search";
+    pageInput.path = "/component-search";
     pageInput.title = "Component Search";
     pageInput.level = 1;
-    pageInput.layout = {{"row", "search"}};
-    pageInput.is_active = true;
+    pageInput.component_tree = "{}";
+    pageInput.requires_auth = false;
+    pageInput.is_published = true;
     auto pageResult = client.createPage(pageInput);
     assert(pageResult.isOk());
     std::string pageId = pageResult.value().id;
 
     dbal::CreateComponentNodeInput targetInput;
     targetInput.page_id = pageId;
-    targetInput.component_type = "SearchButton";
+    targetInput.type = "SearchButton";
+    targetInput.child_ids = "[\"find-me\"]";
     targetInput.order = 0;
-    targetInput.props = {{"payload", "find-me"}};
     auto targetResult = client.createComponent(targetInput);
     assert(targetResult.isOk());
     std::string targetId = targetResult.value().id;
@@ -880,20 +893,21 @@ void test_component_children() {
     dbal::Client client(config);
 
     dbal::CreatePageInput pageInput;
-    pageInput.slug = "component-children";
+    pageInput.path = "/component-children";
     pageInput.title = "Component Children";
     pageInput.level = 1;
-    pageInput.layout = {{"tree", "root"}};
-    pageInput.is_active = true;
+    pageInput.component_tree = "{}";
+    pageInput.requires_auth = false;
+    pageInput.is_published = true;
     auto pageResult = client.createPage(pageInput);
     assert(pageResult.isOk());
     std::string pageId = pageResult.value().id;
 
     dbal::CreateComponentNodeInput rootInput;
     rootInput.page_id = pageId;
-    rootInput.component_type = "Root";
+    rootInput.type = "Root";
+    rootInput.child_ids = "[]";
     rootInput.order = 0;
-    rootInput.props = {{"depth", "0"}};
     auto rootResult = client.createComponent(rootInput);
     assert(rootResult.isOk());
     std::string rootId = rootResult.value().id;
@@ -901,9 +915,9 @@ void test_component_children() {
     dbal::CreateComponentNodeInput childInput;
     childInput.page_id = pageId;
     childInput.parent_id = rootId;
-    childInput.component_type = "Child";
+    childInput.type = "Child";
+    childInput.child_ids = "[]";
     childInput.order = 0;
-    childInput.props = {{"depth", "1"}};
     auto childResult = client.createComponent(childInput);
     assert(childResult.isOk());
     std::string childId = childResult.value().id;
@@ -911,9 +925,9 @@ void test_component_children() {
     dbal::CreateComponentNodeInput grandchildInput;
     grandchildInput.page_id = pageId;
     grandchildInput.parent_id = childId;
-    grandchildInput.component_type = "Grandchild";
+    grandchildInput.type = "Grandchild";
+    grandchildInput.child_ids = "[]";
     grandchildInput.order = 0;
-    grandchildInput.props = {{"depth", "2"}};
     auto grandchildResult = client.createComponent(grandchildInput);
     assert(grandchildResult.isOk());
 
@@ -936,7 +950,7 @@ void test_component_children() {
     auto childChildren = client.getComponentChildren(childId);
     assert(childChildren.isOk());
     assert(childChildren.value().size() == 1);
-    assert(childChildren.value()[0].component_type == "Grandchild");
+    assert(childChildren.value()[0].type == "Grandchild");
     std::cout << "  ✓ Retrieved grandchildren for child" << std::endl;
 
     auto missing = client.getComponentChildren("nonexistent");
@@ -964,10 +978,9 @@ void test_workflow_crud() {
     dbal::CreateWorkflowInput input;
     input.name = "workflow-crud";
     input.description = "Test workflow";
-    input.trigger = "schedule";
-    input.trigger_config = {{"cron", "0 0 * * *"}};
-    input.steps = {{"step1", "noop"}};
-    input.is_active = true;
+    input.nodes = "[]";
+    input.edges = "[]";
+    input.enabled = true;
     input.created_by = userResult.value().id;
 
     auto createResult = client.createWorkflow(input);
@@ -985,20 +998,20 @@ void test_workflow_crud() {
     // Update workflow
     dbal::UpdateWorkflowInput updateInput;
     updateInput.name = "workflow-crud-updated";
-    updateInput.is_active = false;
+    updateInput.enabled = false;
     auto updateResult = client.updateWorkflow(workflowId, updateInput);
     assert(updateResult.isOk());
     assert(updateResult.value().name == "workflow-crud-updated");
-    assert(updateResult.value().is_active == false);
+    assert(updateResult.value().enabled == false);
     std::cout << "  ✓ Workflow updated" << std::endl;
 
     // List workflows
     dbal::ListOptions listOptions;
-    listOptions.filter["is_active"] = "false";
+    listOptions.filter["enabled"] = "false";
     auto listResult = client.listWorkflows(listOptions);
     assert(listResult.isOk());
     assert(listResult.value().size() >= 1);
-    std::cout << "  ✓ Listed workflows (filtered by is_active=false)" << std::endl;
+    std::cout << "  ✓ Listed workflows (filtered by enabled=false)" << std::endl;
 
     // Delete workflow
     auto deleteResult = client.deleteWorkflow(workflowId);
@@ -1025,45 +1038,33 @@ void test_workflow_validation() {
     auto userResult = client.createUser(userInput);
     assert(userResult.isOk());
 
-    // Invalid trigger
+    // Empty name
     dbal::CreateWorkflowInput input1;
-    input1.name = "invalid-trigger";
-    input1.trigger = "invalid";
-    input1.trigger_config = {{"cron", "* * * * *"}};
-    input1.steps = {{"step1", "noop"}};
+    input1.name = "";
+    input1.nodes = "[]";
+    input1.edges = "[]";
+    input1.enabled = true;
     input1.created_by = userResult.value().id;
     auto result1 = client.createWorkflow(input1);
     assert(result1.isError());
     assert(result1.error().code() == dbal::ErrorCode::ValidationError);
-    std::cout << "  ✓ Invalid trigger rejected" << std::endl;
-
-    // Empty name
-    dbal::CreateWorkflowInput input2;
-    input2.name = "";
-    input2.trigger = "manual";
-    input2.trigger_config = {{"mode", "test"}};
-    input2.steps = {{"step1", "noop"}};
-    input2.created_by = userResult.value().id;
-    auto result2 = client.createWorkflow(input2);
-    assert(result2.isError());
-    assert(result2.error().code() == dbal::ErrorCode::ValidationError);
     std::cout << "  ✓ Empty name rejected" << std::endl;
 
     // Duplicate name
-    dbal::CreateWorkflowInput input3;
-    input3.name = "workflow-duplicate";
-    input3.trigger = "manual";
-    input3.trigger_config = {{"mode", "test"}};
-    input3.steps = {{"step1", "noop"}};
+    dbal::CreateWorkflowInput input2;
+    input2.name = "workflow-duplicate";
+    input2.nodes = "[]";
+    input2.edges = "[]";
+    input2.enabled = true;
+    input2.created_by = userResult.value().id;
+    auto result2 = client.createWorkflow(input2);
+    assert(result2.isOk());
+
+    dbal::CreateWorkflowInput input3 = input2;
     input3.created_by = userResult.value().id;
     auto result3 = client.createWorkflow(input3);
-    assert(result3.isOk());
-
-    dbal::CreateWorkflowInput input4 = input3;
-    input4.created_by = userResult.value().id;
-    auto result4 = client.createWorkflow(input4);
-    assert(result4.isError());
-    assert(result4.error().code() == dbal::ErrorCode::Conflict);
+    assert(result3.isError());
+    assert(result3.error().code() == dbal::ErrorCode::Conflict);
     std::cout << "  ✓ Duplicate workflow name rejected" << std::endl;
 }
 
@@ -1333,38 +1334,36 @@ void test_package_crud() {
     assert(userResult.isOk());
 
     dbal::CreatePackageInput input;
-    input.name = "forum";
+    input.package_id = "forum";
     input.version = "1.2.3";
-    input.description = "Forum package";
-    input.author = "MetaBuilder";
-    input.manifest = {{"entry", "index.lua"}};
-    input.is_installed = false;
+    input.installed_at = std::chrono::system_clock::now();
+    input.enabled = false;
+    input.config = "{\"entry\":\"index.lua\"}";
 
     auto createResult = client.createPackage(input);
     assert(createResult.isOk());
-    std::string packageId = createResult.value().id;
+    std::string packageId = createResult.value().package_id;
     std::cout << "  ✓ Package created with ID: " << packageId << std::endl;
 
     auto getResult = client.getPackage(packageId);
     assert(getResult.isOk());
-    assert(getResult.value().name == "forum");
+    assert(getResult.value().package_id == "forum");
     std::cout << "  ✓ Retrieved package by ID" << std::endl;
 
     dbal::UpdatePackageInput updateInput;
-    updateInput.is_installed = true;
-    updateInput.installed_by = userResult.value().id;
+    updateInput.enabled = true;
     updateInput.installed_at = std::chrono::system_clock::now();
     auto updateResult = client.updatePackage(packageId, updateInput);
     assert(updateResult.isOk());
-    assert(updateResult.value().is_installed == true);
+    assert(updateResult.value().enabled == true);
     std::cout << "  ✓ Package updated" << std::endl;
 
     dbal::ListOptions listOptions;
-    listOptions.filter["is_installed"] = "true";
+    listOptions.filter["enabled"] = "true";
     auto listResult = client.listPackages(listOptions);
     assert(listResult.isOk());
     assert(listResult.value().size() >= 1);
-    std::cout << "  ✓ Listed packages (filtered by is_installed=true)" << std::endl;
+    std::cout << "  ✓ Listed packages (filtered by enabled=true)" << std::endl;
 
     auto deleteResult = client.deletePackage(packageId);
     assert(deleteResult.isOk());
@@ -1383,20 +1382,20 @@ void test_package_validation() {
     dbal::Client client(config);
 
     dbal::CreatePackageInput input1;
-    input1.name = "invalid-package";
+    input1.package_id = "invalid-package";
     input1.version = "bad";
-    input1.author = "MetaBuilder";
-    input1.manifest = {{"entry", "index.lua"}};
+    input1.installed_at = std::chrono::system_clock::now();
+    input1.enabled = false;
     auto result1 = client.createPackage(input1);
     assert(result1.isError());
     assert(result1.error().code() == dbal::ErrorCode::ValidationError);
     std::cout << "  ✓ Invalid semver rejected" << std::endl;
 
     dbal::CreatePackageInput input2;
-    input2.name = "duplicate-package";
+    input2.package_id = "duplicate-package";
     input2.version = "1.0.0";
-    input2.author = "MetaBuilder";
-    input2.manifest = {{"entry", "index.lua"}};
+    input2.installed_at = std::chrono::system_clock::now();
+    input2.enabled = false;
     auto result2 = client.createPackage(input2);
     assert(result2.isOk());
 
@@ -1404,7 +1403,7 @@ void test_package_validation() {
     auto result3 = client.createPackage(input3);
     assert(result3.isError());
     assert(result3.error().code() == dbal::ErrorCode::Conflict);
-    std::cout << "  ✓ Duplicate package version rejected" << std::endl;
+    std::cout << "  ✓ Duplicate package ID rejected" << std::endl;
 }
 
 void test_package_batch_operations() {
@@ -1417,17 +1416,17 @@ void test_package_batch_operations() {
 
     std::vector<dbal::CreatePackageInput> packages;
     dbal::CreatePackageInput package1;
-    package1.name = "batch-package-1";
+    package1.package_id = "batch-package-1";
     package1.version = "1.0.0";
-    package1.author = "MetaBuilder";
-    package1.manifest = {{"entry", "index.lua"}};
+    package1.installed_at = std::chrono::system_clock::now();
+    package1.enabled = false;
     packages.push_back(package1);
 
     dbal::CreatePackageInput package2;
-    package2.name = "batch-package-2";
+    package2.package_id = "batch-package-2";
     package2.version = "2.0.0";
-    package2.author = "MetaBuilder";
-    package2.manifest = {{"entry", "chat.lua"}};
+    package2.installed_at = std::chrono::system_clock::now();
+    package2.enabled = false;
     packages.push_back(package2);
 
     auto createResult = client.batchCreatePackages(packages);
@@ -1443,13 +1442,13 @@ void test_package_batch_operations() {
 
     std::vector<dbal::UpdatePackageBatchItem> updates;
     dbal::UpdatePackageBatchItem update1;
-    update1.id = listResult.value()[0].id;
-    update1.data.is_installed = true;
+    update1.id = listResult.value()[0].package_id;
+    update1.data.enabled = true;
     updates.push_back(update1);
 
     dbal::UpdatePackageBatchItem update2;
-    update2.id = listResult.value()[1].id;
-    update2.data.is_installed = true;
+    update2.id = listResult.value()[1].package_id;
+    update2.data.enabled = true;
     updates.push_back(update2);
 
     auto updateResult = client.batchUpdatePackages(updates);
@@ -1458,8 +1457,8 @@ void test_package_batch_operations() {
     std::cout << "  ✓ Batch updated packages" << std::endl;
 
     std::vector<std::string> ids;
-    ids.push_back(listResult.value()[0].id);
-    ids.push_back(listResult.value()[1].id);
+    ids.push_back(listResult.value()[0].package_id);
+    ids.push_back(listResult.value()[1].package_id);
 
     auto deleteResult = client.batchDeletePackages(ids);
     assert(deleteResult.isOk());

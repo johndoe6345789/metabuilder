@@ -6,7 +6,7 @@ export const validateClientConfig = (config: DBALConfig): DBALConfig => {
     throw DBALError.validationError('Adapter type must be specified', [])
   }
 
-  if (config.mode !== 'production' && !config.database?.url) {
+  if (config.mode !== 'production' && config.adapter !== 'memory' && !config.database?.url) {
     throw DBALError.validationError('Database URL must be specified for non-production mode', [])
   }
 

@@ -7,6 +7,7 @@ import type { DBALConfig } from '../../runtime/config'
 import type { DBALAdapter } from '../../adapters/adapter'
 import { DBALError } from '../foundation/errors'
 import { PrismaAdapter, PostgresAdapter, MySQLAdapter } from '../../adapters/prisma'
+import { MemoryAdapter } from '../../adapters/memory'
 import { ACLAdapter } from '../../adapters/acl-adapter'
 import { WebSocketBridge } from '../../bridges/websocket-bridge'
 
@@ -27,6 +28,9 @@ export const createAdapter = (config: DBALConfig): DBALAdapter => {
             queryTimeout: config.performance?.queryTimeout
           }
         )
+        break
+      case 'memory':
+        baseAdapter = new MemoryAdapter()
         break
       case 'postgres':
         baseAdapter = new PostgresAdapter(

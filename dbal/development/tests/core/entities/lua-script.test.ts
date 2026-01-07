@@ -9,7 +9,8 @@ describe('lua script in-memory operations', () => {
 
     const userResult = await createUser(store, {
       username: 'lua_owner',
-      email: 'lua_owner@example.com'
+      email: 'lua_owner@example.com',
+      role: 'user'
     })
 
     expect(userResult.success).toBe(true)
@@ -55,7 +56,8 @@ describe('lua script in-memory operations', () => {
 
     const userResult = await createUser(store, {
       username: 'lua_owner',
-      email: 'lua_owner@example.com'
+      email: 'lua_owner@example.com',
+      role: 'user'
     })
 
     expect(userResult.success).toBe(true)

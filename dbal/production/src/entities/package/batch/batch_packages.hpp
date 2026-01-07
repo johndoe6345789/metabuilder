@@ -32,13 +32,13 @@ inline Result<int> batchCreate(InMemoryStore& store, const std::vector<CreatePac
             for (const auto& id : created_ids) {
                 auto it = store.packages.find(id);
                 if (it != store.packages.end()) {
-                    store.package_keys.erase(validation::packageKey(it->second.name, it->second.version));
+                    store.package_keys.erase(validation::packageKey(it->second.package_id));
                     store.packages.erase(it);
                 }
             }
             return result.error();
         }
-        created_ids.push_back(result.value().id);
+        created_ids.push_back(result.value().package_id);
     }
 
     return Result<int>(static_cast<int>(created_ids.size()));

@@ -166,34 +166,41 @@ struct MoveComponentInput {
 
 struct Workflow {
     std::string id;
+    std::optional<std::string> tenant_id;
     std::string name;
     std::optional<std::string> description;
-    std::string trigger;
-    Json trigger_config;
-    Json steps;
-    bool is_active;
-    std::string created_by;
-    Timestamp created_at;
-    Timestamp updated_at;
+    std::string nodes;
+    std::string edges;
+    bool enabled;
+    int version = 1;
+    std::optional<Timestamp> created_at;
+    std::optional<Timestamp> updated_at;
+    std::optional<std::string> created_by;
 };
 
 struct CreateWorkflowInput {
+    std::optional<std::string> tenant_id;
     std::string name;
     std::optional<std::string> description;
-    std::string trigger;
-    Json trigger_config;
-    Json steps;
-    bool is_active = true;
-    std::string created_by;
+    std::string nodes;
+    std::string edges;
+    bool enabled;
+    int version = 1;
+    std::optional<Timestamp> created_at;
+    std::optional<Timestamp> updated_at;
+    std::optional<std::string> created_by;
 };
 
 struct UpdateWorkflowInput {
+    std::optional<std::string> tenant_id;
     std::optional<std::string> name;
     std::optional<std::string> description;
-    std::optional<std::string> trigger;
-    std::optional<Json> trigger_config;
-    std::optional<Json> steps;
-    std::optional<bool> is_active;
+    std::optional<std::string> nodes;
+    std::optional<std::string> edges;
+    std::optional<bool> enabled;
+    std::optional<int> version;
+    std::optional<Timestamp> created_at;
+    std::optional<Timestamp> updated_at;
     std::optional<std::string> created_by;
 };
 

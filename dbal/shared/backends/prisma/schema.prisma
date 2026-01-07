@@ -1,6 +1,3 @@
-// NOTE: This schema is a simplified dev snapshot for DBAL.
-// It is currently out of sync with the app's Prisma schema in `prisma/schema.prisma`.
-// TODO: Generate Prisma schemas from DBAL API schemas to keep them aligned.
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
@@ -11,49 +8,52 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  username  String   @unique
-  email     String   @unique
-  role      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  workflows     Workflow[]
-  luaScripts    LuaScript[]
-  installedPackages InstalledPackage[]
+  id                      String  @id
+  username                String  @unique
+  email                   String  @unique
+  role                    String
+  profilePicture          String?
+  bio                     String?
+  createdAt               BigInt
+  tenantId                String?
+  isInstanceOwner         Boolean @default(false)
+  passwordChangeTimestamp BigInt?
+  firstLogin              Boolean @default(false)
+
+  @@index([tenantId])
+  @@index([role])
 }
 
 model Credential {
-  id           String   @id @default(uuid())
-  username     String   @unique
+  username     String @id
   passwordHash String
-  firstLogin   Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
 }
 
 model Session {
-  id           String   @id @default(uuid())
+  id           String  @id
   userId       String
-  token        String   @unique
-  expiresAt    DateTime
-  createdAt    DateTime @default(now())
-  lastActivity DateTime @updatedAt
-  
+  token        String  @unique
+  expiresAt    BigInt
+  createdAt    BigInt
+  lastActivity BigInt
+  ipAddress    String?
+  userAgent    String?
+
   @@index([userId])
   @@index([expiresAt])
+  @@index([token])
 }
 
 model PageConfig {
-  id            String   @id @default(uuid())
+  id            String   @id
   tenantId      String?
   packageId     String?
-  path          String   @unique
+  path          String   // Route pattern: /media/jobs, /forum/:id
   title         String
   description   String?
   icon          String?
   component     String?
-  componentTree String
+  componentTree String   // JSON: full component tree
   level         Int
   requiresAuth  Boolean
   requiredRole  String?
@@ -62,76 +62,88 @@ model PageConfig {
   isPublished   Boolean  @default(true)
   params        String?
   meta          String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     BigInt?
+  updatedAt     BigInt?
 
-  components ComponentNode[]
-
+  @@unique([tenantId, path])
+  @@index([tenantId])
+  @@index([packageId])
   @@index([level])
-  @@index([isPublished])
+  @@index([parentPath])
 }
 
 model ComponentNode {
-  id        String   @id @default(uuid())
-  pageId    String
-  parentId  String?
-  type      String
-  childIds  String
-  order     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  page     PageConfig      @relation(fields: [pageId], references: [id], onDelete: Cascade)
-  parent   ComponentNode?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
-  children ComponentNode[] @relation("ParentChild")
+  id       String @id
+  type     String
+  parentId String?
+  childIds String // JSON: string[]
+  order    Int
+  pageId   String
 
   @@index([pageId])
   @@index([parentId])
-  @@index([pageId, order])
+}
+
+model ComponentConfig {
+  id                   String @id
+  componentId          String
+  props                String // JSON
+  styles               String // JSON
+  events               String // JSON
+  conditionalRendering String?
+
+  @@index([componentId])
 }
 
 model Workflow {
-  id            String   @id @default(uuid())
-  name          String   @unique
-  description   String?
-  trigger       String
-  triggerConfig String
-  steps         String
-  isActive      Boolean  @default(true)
-  createdBy     String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
-  creator User @relation(fields: [createdBy], references: [id])
-  
-  @@index([trigger])
-  @@index([isActive])
+  id          String  @id
+  tenantId    String?
+  name        String
+  description String?
+  nodes       String  // JSON: WorkflowNode[]
+  edges       String  // JSON: WorkflowEdge[]
+  enabled     Boolean
+  version     Int     @default(1)
+  createdAt   BigInt?
+  updatedAt   BigInt?
+  createdBy   String?
+
+  @@index([tenantId])
+  @@index([enabled])
 }
 
 model LuaScript {
-  id             String   @id @default(uuid())
-  name           String   @unique
+  id             String  @id
+  tenantId       String?
+  name           String
   description    String?
   code           String
-  isSandboxed    Boolean  @default(true)
-  allowedGlobals String
-  timeoutMs      Int      @default(5000)
-  createdBy      String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  
-  creator User @relation(fields: [createdBy], references: [id])
-  
-  @@index([isSandboxed])
+  parameters     String  // JSON: Array<{name, type}>
+  returnType     String?
+  isSandboxed    Boolean @default(true)
+  allowedGlobals String  @default("[]")
+  timeoutMs      Int     @default(5000)
+  version        Int     @default(1)
+  createdAt      BigInt?
+  updatedAt      BigInt?
+  createdBy      String?
+
+  @@index([tenantId])
+  @@index([name])
 }
 
 model InstalledPackage {
-  packageId   String   @id
+  packageId   String  @id
   tenantId    String?
-  installedAt DateTime
+  installedAt BigInt
   version     String
   enabled     Boolean
   config      String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+
+  @@index([tenantId])
+}
+
+model PackageData {
+  packageId String @id
+  data      String // JSON
 }

@@ -21,28 +21,22 @@ inline Result<Workflow> create(InMemoryStore& store, const CreateWorkflowInput& 
     if (!validation::isValidWorkflowName(input.name)) {
         return Error::validationError("Workflow name must be 1-255 characters");
     }
-    if (!validation::isValidWorkflowTrigger(input.trigger)) {
-        return Error::validationError("Trigger must be one of manual, schedule, event, webhook");
-    }
-    if (input.created_by.empty()) {
-        return Error::validationError("created_by is required");
-    }
-
     if (store.workflow_names.find(input.name) != store.workflow_names.end()) {
         return Error::conflict("Workflow name already exists: " + input.name);
     }
 
     Workflow workflow;
     workflow.id = store.generateId("workflow", ++store.workflow_counter);
+    workflow.tenant_id = input.tenant_id;
     workflow.name = input.name;
     workflow.description = input.description;
-    workflow.trigger = input.trigger;
-    workflow.trigger_config = input.trigger_config;
-    workflow.steps = input.steps;
-    workflow.is_active = input.is_active;
+    workflow.nodes = input.nodes;
+    workflow.edges = input.edges;
+    workflow.enabled = input.enabled;
+    workflow.version = input.version;
+    workflow.created_at = input.created_at.value_or(std::chrono::system_clock::now());
+    workflow.updated_at = input.updated_at.value_or(workflow.created_at);
     workflow.created_by = input.created_by;
-    workflow.created_at = std::chrono::system_clock::now();
-    workflow.updated_at = workflow.created_at;
 
     store.workflows[workflow.id] = workflow;
     store.workflow_names[workflow.name] = workflow.id;

@@ -23,17 +23,21 @@ inline Result<std::vector<Workflow>> list(InMemoryStore& store, const ListOption
     for (const auto& [id, workflow] : store.workflows) {
         bool matches = true;
 
-        if (options.filter.find("is_active") != options.filter.end()) {
-            bool filter_active = options.filter.at("is_active") == "true";
-            if (workflow.is_active != filter_active) matches = false;
+        if (options.filter.find("enabled") != options.filter.end()) {
+            bool filter_enabled = options.filter.at("enabled") == "true";
+            if (workflow.enabled != filter_enabled) matches = false;
         }
 
-        if (options.filter.find("trigger") != options.filter.end()) {
-            if (workflow.trigger != options.filter.at("trigger")) matches = false;
+        if (options.filter.find("tenant_id") != options.filter.end()) {
+            if (!workflow.tenant_id.has_value() || workflow.tenant_id.value() != options.filter.at("tenant_id")) {
+                matches = false;
+            }
         }
 
         if (options.filter.find("created_by") != options.filter.end()) {
-            if (workflow.created_by != options.filter.at("created_by")) matches = false;
+            if (!workflow.created_by.has_value() || workflow.created_by.value() != options.filter.at("created_by")) {
+                matches = false;
+            }
         }
 
         if (matches) {
@@ -47,7 +51,8 @@ inline Result<std::vector<Workflow>> list(InMemoryStore& store, const ListOption
         });
     } else if (options.sort.find("created_at") != options.sort.end()) {
         std::sort(workflows.begin(), workflows.end(), [](const Workflow& a, const Workflow& b) {
-            return a.created_at < b.created_at;
+            return a.created_at.value_or(std::chrono::system_clock::time_point()) <
+                b.created_at.value_or(std::chrono::system_clock::time_point());
         });
     }
 

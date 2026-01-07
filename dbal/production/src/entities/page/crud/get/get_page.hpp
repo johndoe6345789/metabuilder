@@ -1,6 +1,6 @@
 /**
  * @file get_page.hpp
- * @brief Get page by ID or slug operations
+ * @brief Get page by ID operations
  */
 #ifndef DBAL_GET_PAGE_HPP
 #define DBAL_GET_PAGE_HPP

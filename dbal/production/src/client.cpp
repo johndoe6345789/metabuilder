@@ -225,15 +225,15 @@ Result<std::vector<LuaScript>> Client::searchLuaScripts(const std::string& query
     return entities::lua_script::search(getStore(), query, created_by, limit);
 }
 
-Result<Package> Client::createPackage(const CreatePackageInput& input) {
+Result<InstalledPackage> Client::createPackage(const CreatePackageInput& input) {
     return entities::package::create(getStore(), input);
 }
 
-Result<Package> Client::getPackage(const std::string& id) {
+Result<InstalledPackage> Client::getPackage(const std::string& id) {
     return entities::package::get(getStore(), id);
 }
 
-Result<Package> Client::updatePackage(const std::string& id, const UpdatePackageInput& input) {
+Result<InstalledPackage> Client::updatePackage(const std::string& id, const UpdatePackageInput& input) {
     return entities::package::update(getStore(), id, input);
 }
 
@@ -241,7 +241,7 @@ Result<bool> Client::deletePackage(const std::string& id) {
     return entities::package::remove(getStore(), id);
 }
 
-Result<std::vector<Package>> Client::listPackages(const ListOptions& options) {
+Result<std::vector<InstalledPackage>> Client::listPackages(const ListOptions& options) {
     return entities::package::list(getStore(), options);
 }
 

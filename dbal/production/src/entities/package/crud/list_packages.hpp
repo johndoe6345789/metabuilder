@@ -17,27 +17,29 @@ namespace package {
 /**
  * List packages with filtering and pagination
  */
-inline Result<std::vector<Package>> list(InMemoryStore& store, const ListOptions& options) {
-    std::vector<Package> packages;
+inline Result<std::vector<InstalledPackage>> list(InMemoryStore& store, const ListOptions& options) {
+    std::vector<InstalledPackage> packages;
 
     for (const auto& [id, package] : store.packages) {
         bool matches = true;
 
-        if (options.filter.find("name") != options.filter.end()) {
-            if (package.name != options.filter.at("name")) matches = false;
+        if (options.filter.find("package_id") != options.filter.end()) {
+            if (package.package_id != options.filter.at("package_id")) matches = false;
         }
 
         if (options.filter.find("version") != options.filter.end()) {
             if (package.version != options.filter.at("version")) matches = false;
         }
 
-        if (options.filter.find("author") != options.filter.end()) {
-            if (package.author != options.filter.at("author")) matches = false;
+        if (options.filter.find("tenant_id") != options.filter.end()) {
+            if (!package.tenant_id.has_value() || package.tenant_id.value() != options.filter.at("tenant_id")) {
+                matches = false;
+            }
         }
 
-        if (options.filter.find("is_installed") != options.filter.end()) {
-            bool filter_installed = options.filter.at("is_installed") == "true";
-            if (package.is_installed != filter_installed) matches = false;
+        if (options.filter.find("enabled") != options.filter.end()) {
+            bool filter_enabled = options.filter.at("enabled") == "true";
+            if (package.enabled != filter_enabled) matches = false;
         }
 
         if (matches) {
@@ -45,12 +47,12 @@ inline Result<std::vector<Package>> list(InMemoryStore& store, const ListOptions
         }
     }
 
-    if (options.sort.find("name") != options.sort.end()) {
-        std::sort(packages.begin(), packages.end(), [](const Package& a, const Package& b) {
-            return a.name < b.name;
+    if (options.sort.find("package_id") != options.sort.end()) {
+        std::sort(packages.begin(), packages.end(), [](const InstalledPackage& a, const InstalledPackage& b) {
+            return a.package_id < b.package_id;
         });
     } else if (options.sort.find("created_at") != options.sort.end()) {
-        std::sort(packages.begin(), packages.end(), [](const Package& a, const Package& b) {
+        std::sort(packages.begin(), packages.end(), [](const InstalledPackage& a, const InstalledPackage& b) {
             return a.created_at < b.created_at;
         });
     }
@@ -59,10 +61,10 @@ inline Result<std::vector<Package>> list(InMemoryStore& store, const ListOptions
     int end = std::min(start + options.limit, static_cast<int>(packages.size()));
 
     if (start < static_cast<int>(packages.size())) {
-        return Result<std::vector<Package>>(std::vector<Package>(packages.begin() + start, packages.begin() + end));
+        return Result<std::vector<InstalledPackage>>(std::vector<InstalledPackage>(packages.begin() + start, packages.begin() + end));
     }
 
-    return Result<std::vector<Package>>(std::vector<Package>());
+    return Result<std::vector<InstalledPackage>>(std::vector<InstalledPackage>());
 }
 
 } // namespace package

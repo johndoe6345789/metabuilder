@@ -19,14 +19,6 @@ inline bool isValidWorkflowName(const std::string& name) {
     return !name.empty() && name.length() <= 255;
 }
 
-/**
- * Validate workflow trigger type
- */
-inline bool isValidWorkflowTrigger(const std::string& trigger) {
-    static const std::array<std::string, 4> allowed = {"manual", "schedule", "event", "webhook"};
-    return std::find(allowed.begin(), allowed.end(), trigger) != allowed.end();
-}
-
 } // namespace validation
 } // namespace dbal
 

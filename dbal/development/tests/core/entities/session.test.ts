@@ -8,7 +8,8 @@ describe('session in-memory operations', () => {
     const store = createInMemoryStore()
     const userResult = await createUser(store, {
       username: 'session_owner',
-      email: 'session_owner@example.com'
+      email: 'session_owner@example.com',
+      role: 'user'
     })
 
     expect(userResult.success).toBe(true)
@@ -58,7 +59,8 @@ describe('session in-memory operations', () => {
     const store = createInMemoryStore()
     const userResult = await createUser(store, {
       username: 'session_owner',
-      email: 'session_owner@example.com'
+      email: 'session_owner@example.com',
+      role: 'user'
     })
 
     expect(userResult.success).toBe(true)

@@ -90,15 +90,16 @@ public:
     Result<Workflow> createWorkflow(const CreateWorkflowInput& input) override {
         Workflow workflow;
         workflow.id = "workflow_" + input.name;
+        workflow.tenant_id = input.tenant_id;
         workflow.name = input.name;
         workflow.description = input.description;
-        workflow.trigger = input.trigger;
-        workflow.trigger_config = input.trigger_config;
-        workflow.steps = input.steps;
-        workflow.is_active = input.is_active;
+        workflow.nodes = input.nodes;
+        workflow.edges = input.edges;
+        workflow.enabled = input.enabled;
+        workflow.version = input.version;
         workflow.created_by = input.created_by;
-        workflow.created_at = std::chrono::system_clock::now();
-        workflow.updated_at = workflow.created_at;
+        workflow.created_at = input.created_at.value_or(std::chrono::system_clock::now());
+        workflow.updated_at = input.updated_at.value_or(workflow.created_at);
 
         return Result<Workflow>(workflow);
     }

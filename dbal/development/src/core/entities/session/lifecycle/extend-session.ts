@@ -19,8 +19,8 @@ export const extendSession = async (
     return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] || 'Invalid ID' } }
   }
 
-  if (additionalSeconds <= 0) {
-    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Additional seconds must be positive' } }
+  if (additionalSeconds <= 0 || !Number.isInteger(additionalSeconds)) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Additional seconds must be a positive integer' } }
   }
 
   const session = store.sessions.get(id)

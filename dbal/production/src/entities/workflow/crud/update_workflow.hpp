@@ -47,33 +47,39 @@ inline Result<Workflow> update(InMemoryStore& store, const std::string& id, cons
         workflow.description = input.description.value();
     }
 
-    if (input.trigger.has_value()) {
-        if (!validation::isValidWorkflowTrigger(input.trigger.value())) {
-            return Error::validationError("Trigger must be one of manual, schedule, event, webhook");
-        }
-        workflow.trigger = input.trigger.value();
+    if (input.nodes.has_value()) {
+        workflow.nodes = input.nodes.value();
     }
 
-    if (input.trigger_config.has_value()) {
-        workflow.trigger_config = input.trigger_config.value();
+    if (input.edges.has_value()) {
+        workflow.edges = input.edges.value();
     }
 
-    if (input.steps.has_value()) {
-        workflow.steps = input.steps.value();
+    if (input.enabled.has_value()) {
+        workflow.enabled = input.enabled.value();
     }
 
-    if (input.is_active.has_value()) {
-        workflow.is_active = input.is_active.value();
+    if (input.version.has_value()) {
+        workflow.version = input.version.value();
     }
 
     if (input.created_by.has_value()) {
-        if (input.created_by.value().empty()) {
-            return Error::validationError("created_by is required");
-        }
         workflow.created_by = input.created_by.value();
     }
 
-    workflow.updated_at = std::chrono::system_clock::now();
+    if (input.created_at.has_value()) {
+        workflow.created_at = input.created_at.value();
+    }
+
+    if (input.updated_at.has_value()) {
+        workflow.updated_at = input.updated_at.value();
+    } else {
+        workflow.updated_at = std::chrono::system_clock::now();
+    }
+
+    if (input.tenant_id.has_value()) {
+        workflow.tenant_id = input.tenant_id.value();
+    }
 
     return Result<Workflow>(workflow);
 }

@@ -319,17 +319,17 @@ public:
         return Error::notImplemented("SQL adapter listLuaScripts");
     }
 
-    Result<Package> createPackage(const CreatePackageInput& input) override {
+    Result<InstalledPackage> createPackage(const CreatePackageInput& input) override {
         (void)input;
         return Error::notImplemented("SQL adapter createPackage");
     }
 
-    Result<Package> getPackage(const std::string& id) override {
+    Result<InstalledPackage> getPackage(const std::string& id) override {
         (void)id;
         return Error::notImplemented("SQL adapter getPackage");
     }
 
-    Result<Package> updatePackage(const std::string& id, const UpdatePackageInput& input) override {
+    Result<InstalledPackage> updatePackage(const std::string& id, const UpdatePackageInput& input) override {
         (void)id;
         (void)input;
         return Error::notImplemented("SQL adapter updatePackage");
@@ -340,7 +340,7 @@ public:
         return Error::notImplemented("SQL adapter deletePackage");
     }
 
-    Result<std::vector<Package>> listPackages(const ListOptions& options) override {
+    Result<std::vector<InstalledPackage>> listPackages(const ListOptions& options) override {
         (void)options;
         return Error::notImplemented("SQL adapter listPackages");
     }
