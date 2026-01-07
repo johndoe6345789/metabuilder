@@ -1,0 +1,12 @@
+{
+  "packageId": "stream_cast",
+  "name": "Stream Cast",
+  "version": "0.1.0",
+  "description": "Package stream_cast",
+  "author": "MetaBuilder Team",
+  "category": "utility",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

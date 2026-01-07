@@ -1,0 +1,12 @@
+{
+  "packageId": "dropdown_manager",
+  "name": "Dropdown Manager",
+  "version": "0.1.0",
+  "description": "Package dropdown_manager",
+  "author": "MetaBuilder Team",
+  "category": "management",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

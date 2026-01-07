@@ -1,0 +1,12 @@
+{
+  "packageId": "package_manager",
+  "name": "Package Manager",
+  "version": "0.1.0",
+  "description": "Package package_manager",
+  "author": "MetaBuilder Team",
+  "category": "management",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

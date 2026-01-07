@@ -1,0 +1,12 @@
+{
+  "packageId": "media_center",
+  "name": "Media Center",
+  "version": "0.1.0",
+  "description": "Package media_center",
+  "author": "MetaBuilder Team",
+  "category": "media",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

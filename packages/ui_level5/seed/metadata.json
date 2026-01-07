@@ -1,0 +1,12 @@
+{
+  "packageId": "ui_level5",
+  "name": "Ui Level5",
+  "version": "0.1.0",
+  "description": "Package ui_level5",
+  "author": "MetaBuilder Team",
+  "category": "ui",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

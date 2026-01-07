@@ -1,0 +1,12 @@
+{
+  "packageId": "config_summary",
+  "name": "Config Summary",
+  "version": "0.1.0",
+  "description": "Package config_summary",
+  "author": "MetaBuilder Team",
+  "category": "utility",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

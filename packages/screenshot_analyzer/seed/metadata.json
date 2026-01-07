@@ -1,0 +1,12 @@
+{
+  "packageId": "screenshot_analyzer",
+  "name": "Screenshot Analyzer",
+  "version": "0.1.0",
+  "description": "Package screenshot_analyzer",
+  "author": "MetaBuilder Team",
+  "category": "utility",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

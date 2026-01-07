@@ -1,0 +1,12 @@
+{
+  "packageId": "workflow_editor",
+  "name": "Workflow Editor",
+  "version": "0.1.0",
+  "description": "Package workflow_editor",
+  "author": "MetaBuilder Team",
+  "category": "editor",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

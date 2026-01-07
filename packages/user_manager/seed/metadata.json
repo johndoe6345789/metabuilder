@@ -1,0 +1,12 @@
+{
+  "packageId": "user_manager",
+  "name": "User Manager",
+  "version": "0.1.0",
+  "description": "Package user_manager",
+  "author": "MetaBuilder Team",
+  "category": "management",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

@@ -1,0 +1,12 @@
+{
+  "packageId": "ui_auth",
+  "name": "Ui Auth",
+  "version": "0.1.0",
+  "description": "Package ui_auth",
+  "author": "MetaBuilder Team",
+  "category": "ui",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

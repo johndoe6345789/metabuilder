@@ -1,0 +1,12 @@
+{
+  "packageId": "theme_editor",
+  "name": "Theme Editor",
+  "version": "0.1.0",
+  "description": "Package theme_editor",
+  "author": "MetaBuilder Team",
+  "category": "editor",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

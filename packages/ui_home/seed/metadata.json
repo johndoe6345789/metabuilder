@@ -1,0 +1,12 @@
+{
+  "packageId": "ui_home",
+  "name": "Ui Home",
+  "version": "0.1.0",
+  "description": "Package ui_home",
+  "author": "MetaBuilder Team",
+  "category": "ui",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

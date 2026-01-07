@@ -1,0 +1,12 @@
+{
+  "packageId": "testing",
+  "name": "Testing",
+  "version": "0.1.0",
+  "description": "Package testing",
+  "author": "MetaBuilder Team",
+  "category": "testing",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

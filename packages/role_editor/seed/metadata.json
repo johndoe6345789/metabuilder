@@ -1,0 +1,12 @@
+{
+  "packageId": "role_editor",
+  "name": "Role Editor",
+  "version": "0.1.0",
+  "description": "Package role_editor",
+  "author": "MetaBuilder Team",
+  "category": "editor",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

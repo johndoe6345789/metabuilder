@@ -1,0 +1,12 @@
+{
+  "packageId": "schema_editor",
+  "name": "Schema Editor",
+  "version": "0.1.0",
+  "description": "Package schema_editor",
+  "author": "MetaBuilder Team",
+  "category": "editor",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

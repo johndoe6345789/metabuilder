@@ -1,0 +1,12 @@
+{
+  "packageId": "css_designer",
+  "name": "Css Designer",
+  "version": "0.1.0",
+  "description": "Package css_designer",
+  "author": "MetaBuilder Team",
+  "category": "utility",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

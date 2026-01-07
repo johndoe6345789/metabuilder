@@ -1,0 +1,12 @@
+{
+  "packageId": "irc_webchat",
+  "name": "Irc Webchat",
+  "version": "0.1.0",
+  "description": "Package irc_webchat",
+  "author": "MetaBuilder Team",
+  "category": "media",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

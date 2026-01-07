@@ -1,0 +1,12 @@
+{
+  "packageId": "package_validator",
+  "name": "Package Validator",
+  "version": "0.1.0",
+  "description": "Package package_validator",
+  "author": "MetaBuilder Team",
+  "category": "utility",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

@@ -1,0 +1,12 @@
+{
+  "packageId": "social_hub",
+  "name": "Social Hub",
+  "version": "0.1.0",
+  "description": "Package social_hub",
+  "author": "MetaBuilder Team",
+  "category": "utility",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}
