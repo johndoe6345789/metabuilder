@@ -1,38 +1,39 @@
-export interface Package {
-  id: string
-  tenantId: string
-  name: string
+export interface InstalledPackage {
+  packageId: string
+  tenantId?: string | null
+  installedAt: bigint
   version: string
-  description?: string
-  author: string
-  manifest: Record<string, unknown>
-  isInstalled: boolean
-  installedAt?: Date
-  installedBy?: string
-  createdAt: Date
-  updatedAt: Date
+  enabled: boolean
+  config?: string | null
 }
 
 export interface CreatePackageInput {
-  tenantId?: string
-  name: string
+  packageId: string
+  tenantId?: string | null
+  installedAt: bigint
   version: string
-  description?: string
-  author: string
-  manifest: Record<string, unknown>
-  isInstalled?: boolean
-  installedAt?: Date
-  installedBy?: string
+  enabled: boolean
+  config?: string | null
 }
 
 export interface UpdatePackageInput {
-  tenantId?: string
-  name?: string
+  tenantId?: string | null
+  installedAt?: bigint
   version?: string
-  description?: string
-  author?: string
-  manifest?: Record<string, unknown>
-  isInstalled?: boolean
-  installedAt?: Date
-  installedBy?: string
+  enabled?: boolean
+  config?: string | null
+}
+
+export interface PackageData {
+  packageId: string
+  data: string
+}
+
+export interface CreatePackageDataInput {
+  packageId: string
+  data: string
+}
+
+export interface UpdatePackageDataInput {
+  data?: string
 }

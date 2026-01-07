@@ -1,30 +1,35 @@
 export interface Credential {
-  id: string
   username: string
   passwordHash: string
-  firstLogin: boolean
-  createdAt: Date
-  updatedAt: Date
 }
 
 export interface Session {
   id: string
   userId: string
   token: string
-  expiresAt: Date
-  createdAt: Date
-  lastActivity: Date
+  expiresAt: bigint
+  createdAt: bigint
+  lastActivity: bigint
+  ipAddress?: string | null
+  userAgent?: string | null
 }
 
 export interface CreateSessionInput {
+  id?: string
   userId: string
   token: string
-  expiresAt: Date
+  expiresAt: bigint
+  createdAt?: bigint
+  lastActivity?: bigint
+  ipAddress?: string | null
+  userAgent?: string | null
 }
 
 export interface UpdateSessionInput {
   userId?: string
   token?: string
-  expiresAt?: Date
-  lastActivity?: Date
+  expiresAt?: bigint
+  lastActivity?: bigint
+  ipAddress?: string | null
+  userAgent?: string | null
 }

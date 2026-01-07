@@ -1,44 +1,116 @@
-export interface PageView {
+export interface PageConfig {
   id: string
-  tenantId: string
-  slug: string
+  tenantId?: string | null
+  packageId?: string | null
+  path: string
   title: string
-  description?: string
+  description?: string | null
+  icon?: string | null
+  component?: string | null
+  componentTree: string
   level: number
-  layout: Record<string, unknown>
-  isActive: boolean
-  createdAt: Date
-  updatedAt: Date
+  requiresAuth: boolean
+  requiredRole?: string | null
+  parentPath?: string | null
+  sortOrder: number
+  isPublished: boolean
+  params?: string | null
+  meta?: string | null
+  createdAt?: bigint | null
+  updatedAt?: bigint | null
 }
 
 export interface CreatePageInput {
-  tenantId?: string
-  slug: string
+  id?: string
+  tenantId?: string | null
+  packageId?: string | null
+  path: string
   title: string
-  description?: string
+  description?: string | null
+  icon?: string | null
+  component?: string | null
+  componentTree: string
   level: number
-  layout: Record<string, unknown>
-  isActive?: boolean
+  requiresAuth: boolean
+  requiredRole?: string | null
+  parentPath?: string | null
+  sortOrder?: number
+  isPublished?: boolean
+  params?: string | null
+  meta?: string | null
+  createdAt?: bigint | null
+  updatedAt?: bigint | null
 }
 
 export interface UpdatePageInput {
-  tenantId?: string
-  slug?: string
+  tenantId?: string | null
+  packageId?: string | null
+  path?: string
   title?: string
-  description?: string
+  description?: string | null
+  icon?: string | null
+  component?: string | null
+  componentTree?: string
   level?: number
-  layout?: Record<string, unknown>
-  isActive?: boolean
+  requiresAuth?: boolean
+  requiredRole?: string | null
+  parentPath?: string | null
+  sortOrder?: number
+  isPublished?: boolean
+  params?: string | null
+  meta?: string | null
+  createdAt?: bigint | null
+  updatedAt?: bigint | null
 }
 
-export interface ComponentHierarchy {
+export interface ComponentNode {
   id: string
-  tenantId: string
-  pageId: string
-  parentId?: string
-  componentType: string
+  type: string
+  parentId?: string | null
+  childIds: string
   order: number
-  props: Record<string, unknown>
-  createdAt: Date
-  updatedAt: Date
+  pageId: string
+}
+
+export interface CreateComponentNodeInput {
+  id?: string
+  type: string
+  parentId?: string | null
+  childIds: string
+  order: number
+  pageId: string
+}
+
+export interface UpdateComponentNodeInput {
+  type?: string
+  parentId?: string | null
+  childIds?: string
+  order?: number
+  pageId?: string
+}
+
+export interface ComponentConfig {
+  id: string
+  componentId: string
+  props: string
+  styles: string
+  events: string
+  conditionalRendering?: string | null
+}
+
+export interface CreateComponentConfigInput {
+  id?: string
+  componentId: string
+  props: string
+  styles: string
+  events: string
+  conditionalRendering?: string | null
+}
+
+export interface UpdateComponentConfigInput {
+  componentId?: string
+  props?: string
+  styles?: string
+  events?: string
+  conditionalRendering?: string | null
 }

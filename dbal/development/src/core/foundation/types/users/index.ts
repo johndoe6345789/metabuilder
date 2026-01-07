@@ -1,23 +1,41 @@
+export type UserRole = 'public' | 'user' | 'moderator' | 'admin' | 'god' | 'supergod'
+
 export interface User {
   id: string
-  tenantId: string
   username: string
   email: string
-  role: 'user' | 'admin' | 'god' | 'supergod'
-  createdAt: Date
-  updatedAt: Date
+  role: UserRole
+  profilePicture?: string | null
+  bio?: string | null
+  createdAt: bigint
+  tenantId?: string | null
+  isInstanceOwner: boolean
+  passwordChangeTimestamp?: bigint | null
+  firstLogin: boolean
 }
 
 export interface CreateUserInput {
-  tenantId?: string
+  id?: string
   username: string
   email: string
-  role?: User['role']
+  role: UserRole
+  profilePicture?: string | null
+  bio?: string | null
+  createdAt?: bigint
+  tenantId?: string | null
+  isInstanceOwner?: boolean
+  passwordChangeTimestamp?: bigint | null
+  firstLogin?: boolean
 }
 
 export interface UpdateUserInput {
-  tenantId?: string
   username?: string
   email?: string
-  role?: User['role']
+  role?: UserRole
+  profilePicture?: string | null
+  bio?: string | null
+  tenantId?: string | null
+  isInstanceOwner?: boolean
+  passwordChangeTimestamp?: bigint | null
+  firstLogin?: boolean
 }

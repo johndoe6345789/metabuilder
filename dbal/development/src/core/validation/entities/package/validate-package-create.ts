@@ -1,16 +1,20 @@
-import type { Package } from '../types'
-import { isPlainObject } from '../../predicates/is-plain-object'
-import { isValidDate } from '../../predicates/is-valid-date'
+import type { InstalledPackage } from '../types'
 import { isValidSemver } from '../../predicates/string/is-valid-semver'
-import { isValidUuid } from '../../predicates/is-valid-uuid'
+import { isValidJsonString } from '../../predicates/string/is-valid-json'
 
-export function validatePackageCreate(data: Partial<Package>): string[] {
+export function validatePackageCreate(data: Partial<InstalledPackage>): string[] {
   const errors: string[] = []
 
-  if (!data.name) {
-    errors.push('name is required')
-  } else if (typeof data.name !== 'string' || data.name.length > 255) {
-    errors.push('name must be 1-255 characters')
+  if (!data.packageId) {
+    errors.push('packageId is required')
+  } else if (typeof data.packageId !== 'string' || data.packageId.trim().length === 0) {
+    errors.push('packageId must be a non-empty string')
+  }
+
+  if (data.installedAt === undefined) {
+    errors.push('installedAt is required')
+  } else if (typeof data.installedAt !== 'bigint') {
+    errors.push('installedAt must be a bigint timestamp')
   }
 
   if (!data.version) {
@@ -19,36 +23,20 @@ export function validatePackageCreate(data: Partial<Package>): string[] {
     errors.push('version must be semantic (x.y.z)')
   }
 
-  if (!data.author) {
-    errors.push('author is required')
-  } else if (typeof data.author !== 'string' || data.author.length > 255) {
-    errors.push('author must be 1-255 characters')
+  if (data.enabled === undefined) {
+    errors.push('enabled is required')
+  } else if (typeof data.enabled !== 'boolean') {
+    errors.push('enabled must be a boolean')
   }
 
-  if (data.manifest === undefined) {
-    errors.push('manifest is required')
-  } else if (!isPlainObject(data.manifest)) {
-    errors.push('manifest must be an object')
-  }
-
-  if (data.isInstalled === undefined) {
-    errors.push('isInstalled is required')
-  } else if (typeof data.isInstalled !== 'boolean') {
-    errors.push('isInstalled must be a boolean')
-  }
-
-  if (data.installedAt !== undefined && !isValidDate(data.installedAt)) {
-    errors.push('installedAt must be a valid date')
-  }
-
-  if (data.installedBy !== undefined) {
-    if (typeof data.installedBy !== 'string' || !isValidUuid(data.installedBy)) {
-      errors.push('installedBy must be a valid UUID')
+  if (data.config !== undefined && data.config !== null) {
+    if (typeof data.config !== 'string' || !isValidJsonString(data.config)) {
+      errors.push('config must be a JSON string')
     }
   }
 
-  if (data.description !== undefined && typeof data.description !== 'string') {
-    errors.push('description must be a string')
+  if (data.tenantId !== undefined && data.tenantId !== null && typeof data.tenantId !== 'string') {
+    errors.push('tenantId must be a string')
   }
 
   return errors

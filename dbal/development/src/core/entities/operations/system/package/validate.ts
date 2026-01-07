@@ -1,6 +1,6 @@
-import type { Package } from '../../../../foundation/types'
+import type { InstalledPackage } from '../../../../foundation/types'
 import { validatePackageCreate } from '../../../../foundation/validation'
 
-export const validatePackage = (data: Partial<Package>): string[] => {
+export const validatePackage = (data: Partial<InstalledPackage>): string[] => {
   return validatePackageCreate(data)
 }

@@ -11,7 +11,7 @@ export interface SoftDeletableEntity extends BaseEntity {
 }
 
 export interface TenantScopedEntity extends BaseEntity {
-  tenantId: string
+  tenantId?: string | null
 }
 
 export interface EntityMetadata {

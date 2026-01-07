@@ -1,8 +1,5 @@
 import type { Workflow } from '../types'
-import { isPlainObject } from '../../predicates/is-plain-object'
-import { isValidUuid } from '../../predicates/is-valid-uuid'
-
-const triggerValues = ['manual', 'schedule', 'event', 'webhook'] as const
+import { isValidJsonString } from '../../predicates/string/is-valid-json'
 
 export function validateWorkflowCreate(data: Partial<Workflow>): string[] {
   const errors: string[] = []
@@ -13,34 +10,44 @@ export function validateWorkflowCreate(data: Partial<Workflow>): string[] {
     errors.push('name must be 1-255 characters')
   }
 
-  if (!data.trigger) {
-    errors.push('trigger is required')
-  } else if (!triggerValues.includes(data.trigger)) {
-    errors.push('trigger must be one of manual, schedule, event, webhook')
+  if (!data.nodes) {
+    errors.push('nodes is required')
+  } else if (typeof data.nodes !== 'string' || !isValidJsonString(data.nodes)) {
+    errors.push('nodes must be a JSON string')
   }
 
-  if (data.triggerConfig === undefined) {
-    errors.push('triggerConfig is required')
-  } else if (!isPlainObject(data.triggerConfig)) {
-    errors.push('triggerConfig must be an object')
+  if (!data.edges) {
+    errors.push('edges is required')
+  } else if (typeof data.edges !== 'string' || !isValidJsonString(data.edges)) {
+    errors.push('edges must be a JSON string')
   }
 
-  if (data.steps === undefined) {
-    errors.push('steps is required')
-  } else if (!isPlainObject(data.steps)) {
-    errors.push('steps must be an object')
+  if (data.enabled === undefined) {
+    errors.push('enabled is required')
+  } else if (typeof data.enabled !== 'boolean') {
+    errors.push('enabled must be a boolean')
   }
 
-  if (data.isActive === undefined) {
-    errors.push('isActive is required')
-  } else if (typeof data.isActive !== 'boolean') {
-    errors.push('isActive must be a boolean')
+  if (data.version !== undefined && (!Number.isInteger(data.version) || data.version < 1)) {
+    errors.push('version must be a positive integer')
   }
 
-  if (!data.createdBy) {
-    errors.push('createdBy is required')
-  } else if (!isValidUuid(data.createdBy)) {
-    errors.push('createdBy must be a valid UUID')
+  if (data.createdAt !== undefined && data.createdAt !== null && typeof data.createdAt !== 'bigint') {
+    errors.push('createdAt must be a bigint timestamp')
+  }
+
+  if (data.updatedAt !== undefined && data.updatedAt !== null && typeof data.updatedAt !== 'bigint') {
+    errors.push('updatedAt must be a bigint timestamp')
+  }
+
+  if (data.createdBy !== undefined && data.createdBy !== null) {
+    if (typeof data.createdBy !== 'string' || data.createdBy.trim().length === 0) {
+      errors.push('createdBy must be a non-empty string')
+    }
+  }
+
+  if (data.tenantId !== undefined && data.tenantId !== null && typeof data.tenantId !== 'string') {
+    errors.push('tenantId must be a string')
   }
 
   if (data.description !== undefined && typeof data.description !== 'string') {

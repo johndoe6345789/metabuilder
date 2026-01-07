@@ -1,23 +1,22 @@
 /**
  * @file page-operations.ts
- * @description PageView entity CRUD operations for DBAL client
+ * @description PageConfig entity CRUD operations for DBAL client
  */
 
+import { randomUUID } from 'crypto'
 import type { DBALAdapter } from '../../../../adapters/adapter'
-import type { ListOptions, ListResult, PageView } from '../../../foundation/types'
+import type { CreatePageInput, ListOptions, ListResult, PageConfig, UpdatePageInput } from '../../../foundation/types'
 import { DBALError } from '../../../foundation/errors'
-import { isValidSlug, validateId, validatePageCreate, validatePageUpdate } from '../../../foundation/validation'
+import { validateId, validatePageCreate, validatePageUpdate } from '../../../foundation/validation'
 
-export interface PageOperations {
-  create: (data: PageCreatePayload) => Promise<PageView>
-  read: (id: string) => Promise<PageView | null>
-  readBySlug: (slug: string) => Promise<PageView | null>
-  update: (id: string, data: Partial<PageView>) => Promise<PageView>
+export interface PageConfigOperations {
+  create: (data: CreatePageInput) => Promise<PageConfig>
+  read: (id: string) => Promise<PageConfig | null>
+  readByPath: (path: string) => Promise<PageConfig | null>
+  update: (id: string, data: UpdatePageInput) => Promise<PageConfig>
   delete: (id: string) => Promise<boolean>
-  list: (options?: ListOptions) => Promise<ListResult<PageView>>
+  list: (options?: ListOptions) => Promise<ListResult<PageConfig>>
 }
-
-type PageCreatePayload = Omit<PageView, 'id' | 'createdAt' | 'updatedAt' | 'tenantId'> & { tenantId?: string }
 
 const assertValidId = (id: string) => {
   const errors = validateId(id)
@@ -26,27 +25,27 @@ const assertValidId = (id: string) => {
   }
 }
 
-const assertValidSlug = (slug: string) => {
-  if (!slug || !isValidSlug(slug)) {
-    throw DBALError.validationError('Invalid page slug', [{ field: 'slug', error: 'slug is invalid' }])
+const assertValidPath = (path: string) => {
+  if (!path || typeof path !== 'string' || path.trim().length === 0) {
+    throw DBALError.validationError('Invalid page path', [{ field: 'path', error: 'path is invalid' }])
   }
 }
 
-const assertValidCreate = (data: PageCreatePayload) => {
+const assertValidCreate = (data: CreatePageInput) => {
   const errors = validatePageCreate(data)
   if (errors.length > 0) {
     throw DBALError.validationError('Invalid page data', errors.map(error => ({ field: 'page', error })))
   }
 }
 
-const assertValidUpdate = (data: Partial<PageView>) => {
+const assertValidUpdate = (data: UpdatePageInput) => {
   const errors = validatePageUpdate(data)
   if (errors.length > 0) {
     throw DBALError.validationError('Invalid page update data', errors.map(error => ({ field: 'page', error })))
   }
 }
 
-const resolveTenantId = (configuredTenantId?: string, data?: Partial<PageView>): string | null => {
+const resolveTenantId = (configuredTenantId?: string, data?: Partial<PageConfig>): string | null => {
   if (configuredTenantId && configuredTenantId.length > 0) return configuredTenantId
   const candidate = data?.tenantId
   if (typeof candidate === 'string' && candidate.length > 0) return candidate
@@ -67,21 +66,44 @@ const resolveTenantFilter = (
   return null
 }
 
-export const createPageOperations = (adapter: DBALAdapter, tenantId?: string): PageOperations => ({
+const withPageDefaults = (data: CreatePageInput): PageConfig => {
+  const now = BigInt(Date.now())
+  return {
+    id: data.id ?? randomUUID(),
+    tenantId: data.tenantId ?? null,
+    packageId: data.packageId ?? null,
+    path: data.path,
+    title: data.title,
+    description: data.description ?? null,
+    icon: data.icon ?? null,
+    component: data.component ?? null,
+    componentTree: data.componentTree,
+    level: data.level,
+    requiresAuth: data.requiresAuth,
+    requiredRole: data.requiredRole ?? null,
+    parentPath: data.parentPath ?? null,
+    sortOrder: data.sortOrder ?? 0,
+    isPublished: data.isPublished ?? true,
+    params: data.params ?? null,
+    meta: data.meta ?? null,
+    createdAt: data.createdAt ?? now,
+    updatedAt: data.updatedAt ?? now,
+  }
+}
+
+export const createPageConfigOperations = (adapter: DBALAdapter, tenantId?: string): PageConfigOperations => ({
   create: async data => {
     const resolvedTenantId = resolveTenantId(tenantId, data)
     if (!resolvedTenantId) {
       throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
     }
-    const isActive = data.isActive ?? true
-    const payload = { ...data, tenantId: resolvedTenantId, isActive }
+    const payload = withPageDefaults({ ...data, tenantId: resolvedTenantId })
     assertValidCreate(payload)
     try {
-      return adapter.create('PageView', payload) as Promise<PageView>
+      return adapter.create('PageConfig', payload) as Promise<PageConfig>
     } catch (error) {
       if (error instanceof DBALError && error.code === 409) {
-        const slug = typeof data.slug === 'string' ? data.slug : 'unknown'
-        throw DBALError.conflict(`Page with slug '${slug}' already exists`)
+        throw DBALError.conflict(`Page with path '${data.path}' already exists`)
       }
       throw error
     }
@@ -92,21 +114,21 @@ export const createPageOperations = (adapter: DBALAdapter, tenantId?: string): P
       throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
     }
     assertValidId(id)
-    const result = await adapter.findFirst('PageView', { id, tenantId: resolvedTenantId }) as PageView | null
+    const result = await adapter.findFirst('PageConfig', { id, tenantId: resolvedTenantId }) as PageConfig | null
     if (!result) {
       throw DBALError.notFound(`Page not found: ${id}`)
     }
     return result
   },
-  readBySlug: async slug => {
+  readByPath: async path => {
     const resolvedTenantId = resolveTenantId(tenantId)
     if (!resolvedTenantId) {
       throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
     }
-    assertValidSlug(slug)
-    const result = await adapter.findFirst('PageView', { slug, tenantId: resolvedTenantId }) as PageView | null
+    assertValidPath(path)
+    const result = await adapter.findFirst('PageConfig', { path, tenantId: resolvedTenantId }) as PageConfig | null
     if (!result) {
-      throw DBALError.notFound(`Page not found with slug: ${slug}`)
+      throw DBALError.notFound(`Page not found with path: ${path}`)
     }
     return result
   },
@@ -120,18 +142,15 @@ export const createPageOperations = (adapter: DBALAdapter, tenantId?: string): P
     }
     assertValidId(id)
     assertValidUpdate(data)
-    const existing = await adapter.findFirst('PageView', { id, tenantId: resolvedTenantId }) as PageView | null
+    const existing = await adapter.findFirst('PageConfig', { id, tenantId: resolvedTenantId }) as PageConfig | null
     if (!existing) {
       throw DBALError.notFound(`Page not found: ${id}`)
     }
     try {
-      return adapter.update('PageView', id, data) as Promise<PageView>
+      return adapter.update('PageConfig', id, data) as Promise<PageConfig>
     } catch (error) {
       if (error instanceof DBALError && error.code === 409) {
-        if (typeof data.slug === 'string') {
-          throw DBALError.conflict(`Page with slug '${data.slug}' already exists`)
-        }
-        throw DBALError.conflict('Page slug already exists')
+        throw DBALError.conflict('Page path already exists')
       }
       throw error
     }
@@ -142,11 +161,11 @@ export const createPageOperations = (adapter: DBALAdapter, tenantId?: string): P
       throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
     }
     assertValidId(id)
-    const existing = await adapter.findFirst('PageView', { id, tenantId: resolvedTenantId }) as PageView | null
+    const existing = await adapter.findFirst('PageConfig', { id, tenantId: resolvedTenantId }) as PageConfig | null
     if (!existing) {
       throw DBALError.notFound(`Page not found: ${id}`)
     }
-    const result = await adapter.delete('PageView', id)
+    const result = await adapter.delete('PageConfig', id)
     if (!result) {
       throw DBALError.notFound(`Page not found: ${id}`)
     }
@@ -157,6 +176,8 @@ export const createPageOperations = (adapter: DBALAdapter, tenantId?: string): P
     if (!tenantFilter) {
       throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
     }
-    return adapter.list('PageView', { ...options, filter: tenantFilter }) as Promise<ListResult<PageView>>
+    return adapter.list('PageConfig', { ...options, filter: tenantFilter }) as Promise<ListResult<PageConfig>>
   },
 })
+
+export const createPageOperations = createPageConfigOperations

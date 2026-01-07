@@ -1,71 +1,90 @@
 export interface Workflow {
   id: string
-  tenantId: string
   name: string
   description?: string
-  trigger: 'manual' | 'schedule' | 'event' | 'webhook'
-  triggerConfig: Record<string, unknown>
-  steps: Record<string, unknown>
-  isActive: boolean
-  createdBy: string
-  createdAt: Date
-  updatedAt: Date
+  nodes: string
+  edges: string
+  enabled: boolean
+  version: number
+  createdAt?: bigint | null
+  updatedAt?: bigint | null
+  createdBy?: string | null
+  tenantId?: string | null
 }
 
 export interface CreateWorkflowInput {
-  tenantId?: string
+  id?: string
   name: string
   description?: string
-  trigger: Workflow['trigger']
-  triggerConfig: Record<string, unknown>
-  steps: Record<string, unknown>
-  isActive?: boolean
-  createdBy: string
+  nodes: string
+  edges: string
+  enabled: boolean
+  version?: number
+  createdAt?: bigint | null
+  updatedAt?: bigint | null
+  createdBy?: string | null
+  tenantId?: string | null
 }
 
 export interface UpdateWorkflowInput {
-  tenantId?: string
   name?: string
   description?: string
-  trigger?: Workflow['trigger']
-  triggerConfig?: Record<string, unknown>
-  steps?: Record<string, unknown>
-  isActive?: boolean
-  createdBy?: string
+  nodes?: string
+  edges?: string
+  enabled?: boolean
+  version?: number
+  createdAt?: bigint | null
+  updatedAt?: bigint | null
+  createdBy?: string | null
+  tenantId?: string | null
 }
 
 export interface LuaScript {
   id: string
-  tenantId: string
   name: string
   description?: string
   code: string
+  parameters: string
+  returnType?: string | null
   isSandboxed: boolean
-  allowedGlobals: string[]
+  allowedGlobals: string
   timeoutMs: number
-  createdBy: string
-  createdAt: Date
-  updatedAt: Date
+  version: number
+  createdAt?: bigint | null
+  updatedAt?: bigint | null
+  createdBy?: string | null
+  tenantId?: string | null
 }
 
 export interface CreateLuaScriptInput {
-  tenantId?: string
+  id?: string
   name: string
   description?: string
   code: string
+  parameters: string
+  returnType?: string | null
   isSandboxed?: boolean
-  allowedGlobals: string[]
+  allowedGlobals: string
   timeoutMs?: number
-  createdBy: string
+  version?: number
+  createdAt?: bigint | null
+  updatedAt?: bigint | null
+  createdBy?: string | null
+  tenantId?: string | null
 }
 
 export interface UpdateLuaScriptInput {
-  tenantId?: string
   name?: string
   description?: string
   code?: string
+  parameters?: string
+  returnType?: string | null
   isSandboxed?: boolean
-  allowedGlobals?: string[]
+  allowedGlobals?: string
   timeoutMs?: number
-  createdBy?: string
+  version?: number
+  createdAt?: bigint | null
+  updatedAt?: bigint | null
+  createdBy?: string | null
+  tenantId?: string | null
 }

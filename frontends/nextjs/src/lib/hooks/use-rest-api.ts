@@ -32,6 +32,8 @@ interface RequestOptions {
   orderBy?: Record<string, 'asc' | 'desc'>
   /** Override the package for this request (useful for dependency packages) */
   packageId?: string
+  /** AbortSignal for cancelling the request */
+  signal?: AbortSignal
 }
 
 /**
@@ -104,9 +106,9 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
       setError(null)
 
       try {
-        const { packageId: pkgOverride, ...queryOpts } = options ?? {}
+        const { packageId: pkgOverride, signal, ...queryOpts } = options ?? {}
         const url = buildUrl(entity, undefined, undefined, pkgOverride) + buildQueryString(queryOpts as RequestOptions)
-        const response = await fetch(url)
+        const response = await fetch(url, { signal })
         
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`)
@@ -120,6 +122,10 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
 
         return json.data ?? []
       } catch (err) {
+        // Don't set error state for aborted requests
+        if (err instanceof Error && err.name === 'AbortError') {
+          throw err
+        }
         const message = err instanceof Error ? err.message : 'Unknown error'
         setError(message)
         throw err
@@ -134,13 +140,13 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
    * Read single entity
    */
   const read = useCallback(
-    async (entity: string, id: string): Promise<T | null> => {
+    async (entity: string, id: string, options?: { signal?: AbortSignal }): Promise<T | null> => {
       setLoading(true)
       setError(null)
 
       try {
         const url = buildUrl(entity, id)
-        const response = await fetch(url)
+        const response = await fetch(url, { signal: options?.signal })
         
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`)
@@ -154,6 +160,9 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
 
         return json.data ?? null
       } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') {
+          throw err
+        }
         const message = err instanceof Error ? err.message : 'Unknown error'
         setError(message)
         throw err
@@ -168,7 +177,7 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
    * Create entity
    */
   const create = useCallback(
-    async (entity: string, data: Record<string, unknown>): Promise<T> => {
+    async (entity: string, data: Record<string, unknown>, options?: { signal?: AbortSignal }): Promise<T> => {
       setLoading(true)
       setError(null)
 
@@ -178,6 +187,7 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
+          signal: options?.signal,
         })
         
         if (!response.ok) {
@@ -192,6 +202,9 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
 
         return json.data as T
       } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') {
+          throw err
+        }
         const message = err instanceof Error ? err.message : 'Unknown error'
         setError(message)
         throw err
@@ -206,7 +219,7 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
    * Update entity
    */
   const update = useCallback(
-    async (entity: string, id: string, data: Record<string, unknown>): Promise<T> => {
+    async (entity: string, id: string, data: Record<string, unknown>, options?: { signal?: AbortSignal }): Promise<T> => {
       setLoading(true)
       setError(null)
 
@@ -216,6 +229,7 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
+          signal: options?.signal,
         })
         
         if (!response.ok) {
@@ -230,6 +244,9 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
 
         return json.data as T
       } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') {
+          throw err
+        }
         const message = err instanceof Error ? err.message : 'Unknown error'
         setError(message)
         throw err
@@ -244,13 +261,13 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
    * Delete entity
    */
   const remove = useCallback(
-    async (entity: string, id: string): Promise<void> => {
+    async (entity: string, id: string, options?: { signal?: AbortSignal }): Promise<void> => {
       setLoading(true)
       setError(null)
 
       try {
         const url = buildUrl(entity, id)
-        const response = await fetch(url, { method: 'DELETE' })
+        const response = await fetch(url, { method: 'DELETE', signal: options?.signal })
         
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`)
@@ -262,6 +279,9 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
           throw new Error(json.error ?? 'Request failed')
         }
       } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') {
+          throw err
+        }
         const message = err instanceof Error ? err.message : 'Unknown error'
         setError(message)
         throw err
@@ -280,7 +300,8 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
       entity: string,
       id: string,
       actionName: string,
-      data?: Record<string, unknown>
+      data?: Record<string, unknown>,
+      options?: { signal?: AbortSignal }
     ): Promise<T> => {
       setLoading(true)
       setError(null)
@@ -291,6 +312,7 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: data !== undefined ? JSON.stringify(data) : undefined,
+          signal: options?.signal,
         })
         
         if (!response.ok) {
@@ -305,6 +327,9 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
 
         return json.data as T
       } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') {
+          throw err
+        }
         const message = err instanceof Error ? err.message : 'Unknown error'
         setError(message)
         throw err

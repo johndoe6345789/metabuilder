@@ -16,9 +16,5 @@ export function validateCredentialUpdate(data: Partial<Credential>): string[] {
     }
   }
 
-  if (data.firstLogin !== undefined && typeof data.firstLogin !== 'boolean') {
-    errors.push('firstLogin must be a boolean')
-  }
-
   return errors
 }

@@ -1,38 +1,37 @@
-import type { ComponentHierarchy } from '../types'
-import { isPlainObject } from '../../predicates/is-plain-object'
-import { isValidUuid } from '../../predicates/is-valid-uuid'
+import type { ComponentNode } from '../types'
+import { isValidJsonString } from '../../predicates/string/is-valid-json'
 
-export function validateComponentHierarchyCreate(data: Partial<ComponentHierarchy>): string[] {
+export function validateComponentHierarchyCreate(data: Partial<ComponentNode>): string[] {
   const errors: string[] = []
 
   if (!data.pageId) {
     errors.push('pageId is required')
-  } else if (!isValidUuid(data.pageId)) {
-    errors.push('pageId must be a valid UUID')
+  } else if (typeof data.pageId !== 'string' || data.pageId.trim().length === 0) {
+    errors.push('pageId must be a non-empty string')
   }
 
   if (data.parentId !== undefined) {
-    if (typeof data.parentId !== 'string' || !isValidUuid(data.parentId)) {
-      errors.push('parentId must be a valid UUID')
+    if (data.parentId !== null && (typeof data.parentId !== 'string' || data.parentId.trim().length === 0)) {
+      errors.push('parentId must be a non-empty string')
     }
   }
 
-  if (!data.componentType) {
-    errors.push('componentType is required')
-  } else if (data.componentType.length > 100) {
-    errors.push('componentType must be 1-100 characters')
+  if (!data.type) {
+    errors.push('type is required')
+  } else if (typeof data.type !== 'string' || data.type.length > 100) {
+    errors.push('type must be 1-100 characters')
+  }
+
+  if (!data.childIds) {
+    errors.push('childIds is required')
+  } else if (typeof data.childIds !== 'string' || !isValidJsonString(data.childIds)) {
+    errors.push('childIds must be a JSON string')
   }
 
   if (data.order === undefined) {
     errors.push('order is required')
   } else if (!Number.isInteger(data.order) || data.order < 0) {
     errors.push('order must be a non-negative integer')
-  }
-
-  if (data.props === undefined) {
-    errors.push('props is required')
-  } else if (!isPlainObject(data.props)) {
-    errors.push('props must be an object')
   }
 
   return errors

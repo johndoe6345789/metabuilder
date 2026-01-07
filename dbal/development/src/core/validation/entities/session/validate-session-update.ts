@@ -1,13 +1,10 @@
 import type { Session } from '../types'
-import { isValidDate } from '../../predicates/is-valid-date'
-import { isValidUuid } from '../../predicates/is-valid-uuid'
-
 export function validateSessionUpdate(data: Partial<Session>): string[] {
   const errors: string[] = []
 
   if (data.userId !== undefined) {
-    if (typeof data.userId !== 'string' || !isValidUuid(data.userId)) {
-      errors.push('userId must be a valid UUID')
+    if (typeof data.userId !== 'string' || data.userId.trim().length === 0) {
+      errors.push('userId must be a non-empty string')
     }
   }
 
@@ -17,12 +14,20 @@ export function validateSessionUpdate(data: Partial<Session>): string[] {
     }
   }
 
-  if (data.expiresAt !== undefined && !isValidDate(data.expiresAt)) {
-    errors.push('expiresAt must be a valid date')
+  if (data.expiresAt !== undefined && typeof data.expiresAt !== 'bigint') {
+    errors.push('expiresAt must be a bigint timestamp')
   }
 
-  if (data.lastActivity !== undefined && !isValidDate(data.lastActivity)) {
-    errors.push('lastActivity must be a valid date')
+  if (data.lastActivity !== undefined && typeof data.lastActivity !== 'bigint') {
+    errors.push('lastActivity must be a bigint timestamp')
+  }
+
+  if (data.ipAddress !== undefined && data.ipAddress !== null && typeof data.ipAddress !== 'string') {
+    errors.push('ipAddress must be a string')
+  }
+
+  if (data.userAgent !== undefined && data.userAgent !== null && typeof data.userAgent !== 'string') {
+    errors.push('userAgent must be a string')
   }
 
   return errors

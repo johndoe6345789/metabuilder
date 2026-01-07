@@ -16,11 +16,5 @@ export function validateCredentialCreate(data: Partial<Credential>): string[] {
     errors.push('passwordHash must be a non-empty string')
   }
 
-  if (data.firstLogin === undefined) {
-    errors.push('firstLogin is required')
-  } else if (typeof data.firstLogin !== 'boolean') {
-    errors.push('firstLogin must be a boolean')
-  }
-
   return errors
 }

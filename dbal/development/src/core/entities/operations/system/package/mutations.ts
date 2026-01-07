@@ -1,61 +1,70 @@
 import type { DBALAdapter } from '../../../../../adapters/adapter'
-import type { Package } from '../../../../foundation/types'
+import type { InstalledPackage } from '../../../../foundation/types'
 import { DBALError } from '../../../../foundation/errors'
 import { validatePackageCreate, validatePackageUpdate, validateId } from '../../../../foundation/validation'
 
-export const createPackage = async (
+export const createInstalledPackage = async (
   adapter: DBALAdapter,
-  data: Omit<Package, 'id' | 'createdAt' | 'updatedAt'>,
-): Promise<Package> => {
+  data: InstalledPackage,
+): Promise<InstalledPackage> => {
   const validationErrors = validatePackageCreate(data)
   if (validationErrors.length > 0) {
-    throw DBALError.validationError('Invalid package data', validationErrors.map(error => ({ field: 'package', error })))
+    throw DBALError.validationError(
+      'Invalid installed package data',
+      validationErrors.map(error => ({ field: 'package', error })),
+    )
   }
 
   try {
-    return adapter.create('Package', data) as Promise<Package>
+    return adapter.create('InstalledPackage', data) as Promise<InstalledPackage>
   } catch (error) {
     if (error instanceof DBALError && error.code === 409) {
-      throw DBALError.conflict(`Package ${data.name}@${data.version} already exists`)
+      throw DBALError.conflict(`Installed package ${data.packageId} already exists`)
     }
     throw error
   }
 }
 
-export const updatePackage = async (
+export const updateInstalledPackage = async (
   adapter: DBALAdapter,
-  id: string,
-  data: Partial<Package>,
-): Promise<Package> => {
-  const idErrors = validateId(id)
+  packageId: string,
+  data: Partial<InstalledPackage>,
+): Promise<InstalledPackage> => {
+  const idErrors = validateId(packageId)
   if (idErrors.length > 0) {
-    throw DBALError.validationError('Invalid package ID', idErrors.map(error => ({ field: 'id', error })))
+    throw DBALError.validationError('Invalid package ID', idErrors.map(error => ({ field: 'packageId', error })))
   }
 
   const validationErrors = validatePackageUpdate(data)
   if (validationErrors.length > 0) {
-    throw DBALError.validationError('Invalid package update data', validationErrors.map(error => ({ field: 'package', error })))
+    throw DBALError.validationError(
+      'Invalid installed package update data',
+      validationErrors.map(error => ({ field: 'package', error })),
+    )
   }
 
   try {
-    return adapter.update('Package', id, data) as Promise<Package>
+    return adapter.update('InstalledPackage', packageId, data) as Promise<InstalledPackage>
   } catch (error) {
     if (error instanceof DBALError && error.code === 409) {
-      throw DBALError.conflict('Package name+version already exists')
+      throw DBALError.conflict('Installed package already exists')
     }
     throw error
   }
 }
 
-export const deletePackage = async (adapter: DBALAdapter, id: string): Promise<boolean> => {
-  const validationErrors = validateId(id)
+export const deleteInstalledPackage = async (
+  adapter: DBALAdapter,
+  packageId: string,
+): Promise<boolean> => {
+  const validationErrors = validateId(packageId)
   if (validationErrors.length > 0) {
-    throw DBALError.validationError('Invalid package ID', validationErrors.map(error => ({ field: 'id', error })))
+    throw DBALError.validationError('Invalid package ID', validationErrors.map(error => ({ field: 'packageId', error })))
   }
 
-  const result = await adapter.delete('Package', id)
+  const result = await adapter.delete('InstalledPackage', packageId)
   if (!result) {
-    throw DBALError.notFound(`Package not found: ${id}`)
+    throw DBALError.notFound(`Installed package not found: ${packageId}`)
   }
   return result
 }

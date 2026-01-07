@@ -13,30 +13,27 @@ interface PackageStyleLoaderProps {
   packages: string[]
 }
 
-export function PackageStyleLoader({ packages }: PackageStyleLoaderProps) {
+export function PackageStyleLoader({ packages }: PackageStyleLoaderProps): null {
   useEffect(() => {
-    async function loadStyles() {
-      // eslint-disable-next-line no-console
-      console.log(`📦 Loading styles for ${packages.length} packages...`)
-
+    async function loadStyles(): Promise<void> {
       const results = await Promise.all(
         packages.map(async (packageId) => {
           try {
             const css = await loadAndInjectStyles(packageId)
-            // eslint-disable-next-line no-console
-            console.log(`✓ ${packageId} (${css.length} bytes)`)
             return { packageId, success: true, size: css.length }
-          } catch (error) {
-            console.warn(`✗ ${packageId}:`, error)
+          } catch {
             return { packageId, success: false, size: 0 }
           }
         })
       )
 
-      const successful = results.filter(r => r.success)
-      const totalSize = successful.reduce((sum, r) => sum + r.size, 0)
-      // eslint-disable-next-line no-console
-      console.log(`✅ ${successful.length}/${packages.length} packages loaded (${(totalSize / 1024).toFixed(1)}KB)`)
+      // Log summary in development only
+      if (process.env.NODE_ENV === 'development') {
+        const successful = results.filter(r => r.success)
+        const totalSize = successful.reduce((sum, r) => sum + r.size, 0)
+        // eslint-disable-next-line no-console
+        console.log(`[PackageStyleLoader] ${successful.length}/${packages.length} packages (${(totalSize / 1024).toFixed(1)}KB)`)
+      }
     }
 
     if (packages.length > 0) {

@@ -2,7 +2,7 @@
  * useCodeEditor hook
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 
 export interface EditorFile {
   path: string
@@ -13,6 +13,10 @@ export interface EditorFile {
 export function useCodeEditor() {
   const [files, setFiles] = useState<EditorFile[]>([])
   const [currentFile, setCurrentFile] = useState<EditorFile | null>(null)
+  
+  // Use ref to avoid stale closures in callbacks
+  const currentFileRef = useRef<EditorFile | null>(null)
+  currentFileRef.current = currentFile
 
   const openFile = useCallback((file: EditorFile) => {
     setFiles(prev => {
@@ -29,17 +33,17 @@ export function useCodeEditor() {
 
   const saveFile = useCallback((file: EditorFile) => {
     setFiles(prev => prev.map(f => f.path === file.path ? file : f))
-    if (currentFile?.path === file.path) {
+    if (currentFileRef.current?.path === file.path) {
       setCurrentFile(file)
     }
-  }, [currentFile])
+  }, [])
 
   const closeFile = useCallback((path: string) => {
     setFiles(prev => prev.filter(f => f.path !== path))
-    if (currentFile?.path === path) {
+    if (currentFileRef.current?.path === path) {
       setCurrentFile(null)
     }
-  }, [currentFile])
+  }, [])
 
   return {
     files,
