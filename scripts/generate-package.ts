@@ -166,87 +166,6 @@ function generateMetadata(config: PackageConfig): string {
   return JSON.stringify(metadata, null, 2)
 }
 
-function generateLifecycleScript(config: PackageConfig): string {
-  const script = {
-    $schema: 'https://metabuilder.dev/schemas/json-script.schema.json',
-    schemaVersion: '2.2.0',
-    package: config.packageId,
-    description: `${config.name} lifecycle hooks`,
-    functions: [
-      {
-        id: 'on_install',
-        name: 'onInstall',
-        exported: true,
-        category: 'lifecycle',
-        description: 'Called when the package is installed',
-        params: [
-          {
-            name: 'context',
-            type: 'object',
-            description: 'Installation context'
-          }
-        ],
-        returnType: 'object',
-        body: [
-          {
-            type: 'return',
-            value: {
-              type: 'object_literal',
-              properties: [
-                {
-                  key: 'message',
-                  value: {
-                    type: 'literal',
-                    value: `${config.name} installed successfully`
-                  }
-                },
-                {
-                  key: 'version',
-                  value: {
-                    type: 'member_access',
-                    object: { type: 'identifier', name: 'context' },
-                    property: 'version'
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      },
-      {
-        id: 'on_uninstall',
-        name: 'onUninstall',
-        exported: true,
-        category: 'lifecycle',
-        description: 'Called when the package is uninstalled',
-        returnType: 'object',
-        body: [
-          {
-            type: 'return',
-            value: {
-              type: 'object_literal',
-              properties: [
-                {
-                  key: 'message',
-                  value: {
-                    type: 'literal',
-                    value: `${config.name} removed`
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    ],
-    exports: {
-      functions: ['onInstall', 'onUninstall']
-    }
-  }
-
-  return JSON.stringify(script, null, 2)
-}
-
 function generateMetadataTestJson(config: PackageConfig): string {
   const tests = {
     $schema: 'https://metabuilder.dev/schemas/tests.schema.json',
@@ -492,7 +411,7 @@ function generate(config: PackageConfig): GeneratedFile[] {
   files.push({ path: 'seed/metadata.json', content: generateMetadata(config) })
   files.push({ path: 'seed/components.json', content: generateComponentsJson(config) })
   files.push({ path: 'seed/layout.json', content: generateLayoutJson(config) })
-  files.push({ path: 'seed/scripts/functions.json', content: generateLifecycleScript(config) })
+  // Removed functions.json generation - stick to proper script schema files with implementations
   files.push({ path: 'seed/index.ts', content: generateIndexTs(config) })
 
   // Schema files
