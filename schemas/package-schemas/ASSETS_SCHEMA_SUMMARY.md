@@ -94,7 +94,7 @@ Added comprehensive static assets schema to MetaBuilder, enabling declarative ma
 3. `examples/complete-package/validation/validators.json` - Validation functions
 4. `examples/complete-package/components/ui.json` - UI components
 5. `examples/complete-package/styles/tokens.json` - Design tokens
-6. `examples/complete-package/scripts/functions.json` - Business logic functions
+6. `examples/advanced-features/scripts/automation.json` - Business logic scripts with implementations
 
 ### Documentation
 7. Updated `SCHEMAS_README.md` - Added assets schema section

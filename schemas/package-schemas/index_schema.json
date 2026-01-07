@@ -352,7 +352,7 @@
             "package.json": "metadata",
             "entities/schema.json": "entities",
             "types/index.json": "types",
-            "scripts/functions.json": "script",
+            "scripts/*.json": "script",
             "components/ui.json": "components",
             "validation/validators.json": "validation",
             "styles/tokens.json": "styles",

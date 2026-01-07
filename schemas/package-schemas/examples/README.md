@@ -18,7 +18,7 @@ The simplest valid MetaBuilder package with only required fields.
 **Files included:**
 - `package.json` - Basic metadata
 - `entities/schema.json` - Single User entity
-- `scripts/functions.json` - Simple greeting function
+- `scripts/index.json` - Simple script examples
 
 **Purpose:** Quick start template, understanding minimum requirements
 
@@ -27,7 +27,7 @@ The simplest valid MetaBuilder package with only required fields.
 cd minimal-package
 ../../schema_validator.sh package.json
 ../../schema_validator.sh entities/schema.json
-../../schema_validator.sh scripts/functions.json
+../../schema_validator.sh scripts/index.json
 ```
 
 ## Complete Package

@@ -39,7 +39,7 @@ Test packages with different user contexts:
 
 ## How It Works
 
-1. **JSON script packages** in `/packages/*/seed/scripts/functions.json` define UI component trees
+1. **JSON script packages** in `/packages/*/seed/scripts/` define UI component trees
 2. **Mock data** mirrors the output structure produced by the JSON scripts
 3. **PackageRenderer** (still the runtime entry) converts the component tree to React components
 4. **Component Registry** maps package-defined type names to React implementations
@@ -55,7 +55,7 @@ packages/
         ├── metadata.json      # Package info
         ├── components.json    # Component definitions
         └── scripts/
-            └── functions.json  # JSON script definitions
+            └── [script-name].json  # JSON script definitions (e.g., automation.json)
 ```
 
 ## JSON Script Output

@@ -68,7 +68,7 @@ examples/
 ├── minimal-package/          # Bare minimum example
 │   ├── package.json
 │   ├── entities/schema.json
-│   └── scripts/functions.json
+│   └── scripts/index.json  # Simple script examples
 ├── complete-package/         # Full-featured example
 │   ├── package.json
 │   ├── entities/schema.json
@@ -336,7 +336,7 @@ examples/
 1. `examples/README.md`
 2. `examples/minimal-package/package.json`
 3. `examples/minimal-package/entities/schema.json`
-4. `examples/minimal-package/scripts/functions.json`
+4. `examples/minimal-package/scripts/index.json`
 5. `examples/complete-package/package.json`
 6. `examples/complete-package/entities/schema.json`
 7. `examples/complete-package/types/index.json`
