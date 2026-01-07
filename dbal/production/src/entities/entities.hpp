@@ -11,7 +11,6 @@
 #include "page_operations.hpp"
 #include "workflow_operations.hpp"
 #include "session_operations.hpp"
-#include "lua_script_operations.hpp"
 #include "package_operations.hpp"
 
 #endif

@@ -37,12 +37,6 @@ public:
     virtual Result<bool> deleteSession(const std::string& id) = 0;
     virtual Result<std::vector<Session>> listSessions(const ListOptions& options) = 0;
 
-    virtual Result<LuaScript> createLuaScript(const CreateLuaScriptInput& input) = 0;
-    virtual Result<LuaScript> getLuaScript(const std::string& id) = 0;
-    virtual Result<LuaScript> updateLuaScript(const std::string& id, const UpdateLuaScriptInput& input) = 0;
-    virtual Result<bool> deleteLuaScript(const std::string& id) = 0;
-    virtual Result<std::vector<LuaScript>> listLuaScripts(const ListOptions& options) = 0;
-
     virtual Result<InstalledPackage> createPackage(const CreatePackageInput& input) = 0;
     virtual Result<InstalledPackage> getPackage(const std::string& id) = 0;
     virtual Result<InstalledPackage> updatePackage(const std::string& id, const UpdatePackageInput& input) = 0;

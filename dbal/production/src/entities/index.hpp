@@ -13,7 +13,6 @@
 #include "component/index.hpp"
 #include "workflow/index.hpp"
 #include "session/index.hpp"
-#include "lua_script/index.hpp"
 #include "package/index.hpp"
 #include "credential/index.hpp"
 

@@ -85,15 +85,6 @@ public:
     Result<bool> deleteSession(const std::string& id);
     Result<std::vector<Session>> listSessions(const ListOptions& options);
 
-    Result<LuaScript> createLuaScript(const CreateLuaScriptInput& input);
-    Result<LuaScript> getLuaScript(const std::string& id);
-    Result<LuaScript> updateLuaScript(const std::string& id, const UpdateLuaScriptInput& input);
-    Result<bool> deleteLuaScript(const std::string& id);
-    Result<std::vector<LuaScript>> listLuaScripts(const ListOptions& options);
-    Result<std::vector<LuaScript>> searchLuaScripts(const std::string& query,
-                                                    const std::optional<std::string>& createdBy = std::nullopt,
-                                                    int limit = 20);
-
     Result<InstalledPackage> createPackage(const CreatePackageInput& input);
     Result<InstalledPackage> getPackage(const std::string& id);
     Result<InstalledPackage> updatePackage(const std::string& id, const UpdatePackageInput& input);

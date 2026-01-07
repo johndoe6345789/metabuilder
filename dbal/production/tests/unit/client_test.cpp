@@ -1155,148 +1155,6 @@ void test_session_validation() {
     std::cout << "  ✓ Duplicate token rejected" << std::endl;
 }
 
-void test_lua_script_crud() {
-    std::cout << "Testing Lua script CRUD operations..." << std::endl;
-
-    dbal::ClientConfig config;
-    config.adapter = "sqlite";
-    config.database_url = ":memory:";
-    dbal::Client client(config);
-
-    dbal::CreateUserInput userInput;
-    userInput.username = "lua_owner";
-    userInput.email = "lua_owner@example.com";
-    auto userResult = client.createUser(userInput);
-    assert(userResult.isOk());
-
-    dbal::CreateLuaScriptInput input;
-    input.name = "health_check";
-    input.description = "Health check";
-    input.code = "return true";
-    input.parameters = "[]";
-    input.isSandboxed = true;
-    input.allowedGlobals = "[]";
-    input.timeoutMs = 1000;
-    input.createdBy = userResult.value().id;
-
-    auto createResult = client.createLuaScript(input);
-    assert(createResult.isOk());
-    std::string scriptId = createResult.value().id;
-    std::cout << "  ✓ Lua script created with ID: " << scriptId << std::endl;
-
-    auto getResult = client.getLuaScript(scriptId);
-    assert(getResult.isOk());
-    assert(getResult.value().name == "health_check");
-    std::cout << "  ✓ Retrieved Lua script by ID" << std::endl;
-
-    dbal::UpdateLuaScriptInput updateInput;
-    updateInput.timeoutMs = 2000;
-    updateInput.isSandboxed = false;
-    auto updateResult = client.updateLuaScript(scriptId, updateInput);
-    assert(updateResult.isOk());
-    assert(updateResult.value().timeoutMs == 2000);
-    std::cout << "  ✓ Lua script updated" << std::endl;
-
-    dbal::ListOptions listOptions;
-    listOptions.filter["isSandboxed"] = "false";
-    auto listResult = client.listLuaScripts(listOptions);
-    assert(listResult.isOk());
-    assert(listResult.value().size() >= 1);
-    std::cout << "  ✓ Listed Lua scripts (filtered by isSandboxed=false)" << std::endl;
-
-    auto deleteResult = client.deleteLuaScript(scriptId);
-    assert(deleteResult.isOk());
-
-    auto notFoundResult = client.getLuaScript(scriptId);
-    assert(notFoundResult.isError());
-    std::cout << "  ✓ Lua script deleted" << std::endl;
-}
-
-void test_lua_script_validation() {
-    std::cout << "Testing Lua script validation..." << std::endl;
-
-    dbal::ClientConfig config;
-    config.adapter = "sqlite";
-    config.database_url = ":memory:";
-    dbal::Client client(config);
-
-    dbal::CreateUserInput userInput;
-    userInput.username = "lua_validator";
-    userInput.email = "lua_validator@example.com";
-    auto userResult = client.createUser(userInput);
-    assert(userResult.isOk());
-
-    dbal::CreateLuaScriptInput input1;
-    input1.name = "invalid-timeout";
-    input1.code = "return true";
-    input1.parameters = "[]";
-    input1.isSandboxed = true;
-    input1.allowedGlobals = "[]";
-    input1.timeoutMs = 50;
-    input1.createdBy = userResult.value().id;
-    auto result1 = client.createLuaScript(input1);
-    assert(result1.isError());
-    assert(result1.error().code() == dbal::ErrorCode::ValidationError);
-    std::cout << "  ✓ Invalid timeout rejected" << std::endl;
-
-    dbal::CreateLuaScriptInput input2;
-    input2.name = "duplicate-script";
-    input2.code = "return true";
-    input2.parameters = "[]";
-    input2.isSandboxed = true;
-    input2.allowedGlobals = "[]";
-    input2.timeoutMs = 1000;
-    input2.createdBy = userResult.value().id;
-    auto result2 = client.createLuaScript(input2);
-    assert(result2.isOk());
-
-    dbal::CreateLuaScriptInput input3 = input2;
-    auto result3 = client.createLuaScript(input3);
-    assert(result3.isError());
-    assert(result3.error().code() == dbal::ErrorCode::Conflict);
-    std::cout << "  ✓ Duplicate script name rejected" << std::endl;
-}
-
-void test_lua_script_search() {
-    std::cout << "Testing Lua script search..." << std::endl;
-
-    dbal::ClientConfig config;
-    config.adapter = "sqlite";
-    config.database_url = ":memory:";
-    dbal::Client client(config);
-
-    dbal::CreateUserInput userInput;
-    userInput.username = "lua_search_owner";
-    userInput.email = "lua_search_owner@example.com";
-    auto userResult = client.createUser(userInput);
-    assert(userResult.isOk());
-
-    dbal::CreateLuaScriptInput scriptInput;
-    scriptInput.name = "search_script";
-    scriptInput.code = "return 'search'";
-    scriptInput.parameters = "[]";
-    scriptInput.allowedGlobals = "[]";
-    scriptInput.createdBy = userResult.value().id;
-    auto createResult = client.createLuaScript(scriptInput);
-    assert(createResult.isOk());
-
-    dbal::CreateLuaScriptInput otherInput = scriptInput;
-    otherInput.name = "other_script";
-    otherInput.code = "return 'other'";
-    auto otherResult = client.createLuaScript(otherInput);
-    assert(otherResult.isOk());
-
-    auto searchResult = client.searchLuaScripts("search", userResult.value().id, 10);
-    assert(searchResult.isOk());
-    assert(searchResult.value().size() == 1);
-    std::cout << "  ✓ Script name search works" << std::endl;
-
-    auto codeSearch = client.searchLuaScripts("return 'other'", std::nullopt, 10);
-    assert(codeSearch.isOk());
-    assert(codeSearch.value().size() >= 1);
-    std::cout << "  ✓ Script code search works" << std::endl;
-}
-
 void test_package_crud() {
     std::cout << "Testing package CRUD operations..." << std::endl;
 
@@ -1316,7 +1174,7 @@ void test_package_crud() {
     input.version = "1.2.3";
     input.installedAt = std::chrono::system_clock::now();
     input.enabled = false;
-    input.config = "{\"entry\":\"index.lua\"}";
+    input.config = "{\"entry\":\"index.js\"}";
 
     auto createResult = client.createPackage(input);
     assert(createResult.isOk());
@@ -1498,9 +1356,6 @@ int main() {
         test_workflow_validation();
         test_session_crud();
         test_session_validation();
-        test_lua_script_crud();
-        test_lua_script_validation();
-        test_lua_script_search();
         test_package_crud();
         test_package_validation();
         test_package_batch_operations();
@@ -1508,7 +1363,7 @@ int main() {
         
         std::cout << std::endl;
         std::cout << "==================================================" << std::endl;
-        std::cout << "✅ All 33 test suites passed!" << std::endl;
+        std::cout << "✅ All test suites passed!" << std::endl;
         std::cout << "==================================================" << std::endl;
         return 0;
     } catch (const std::exception& e) {

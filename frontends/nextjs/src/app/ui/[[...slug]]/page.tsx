@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import type { JSONComponent } from '@/lib/packages/json/types'
 import { UIPageRenderer } from '@/components/ui-page-renderer/UIPageRenderer'
 import { loadPageFromDb } from '@/lib/ui-pages/load-page-from-db'
-import { loadPageFromLuaPackages } from '@/lib/ui-pages/load-page-from-lua-packages'
 
 interface PageProps {
   params: Promise<{
@@ -17,33 +17,32 @@ interface PageProps {
  *
  * Flow:
  * 1. JSON seed data → Database (via import-ui-pages.ts)
- * 2. Database → Load page record
- * 3. Lua actions → Execute if present
- * 4. UIPageRenderer → Generate React components
- * 5. User sees rendered page
+ * 2. Database → Load component tree
+ * 3. UIPageRenderer → Generate React components
+ * 4. User sees rendered page
  */
 export default async function DynamicUIPage({ params }: PageProps) {
   const resolvedParams = await params
   const slug = resolvedParams.slug ?? []
   const path = '/' + slug.join('/')
 
-  // Prefer Lua package-based UI pages, fallback to database-backed pages
-  const rawPageData = (await loadPageFromLuaPackages(path)) ?? (await loadPageFromDb(path))
+  const rawPageData = await loadPageFromDb(path)
 
   if (rawPageData === null) {
     notFound()
   }
 
-  // Transform PageConfig to UIPageData
-  const pageData = {
-    layout: rawPageData,
-    actions: {},
+  const componentTree = rawPageData.componentTree
+  if (componentTree === null || componentTree === undefined) {
+    notFound()
   }
 
-  // Check authentication if required
-  // TODO: Add auth check based on pageData.requireAuth and pageData.requiredRole
+  const layout = componentTree as JSONComponent
+  if (typeof layout !== 'object' || Array.isArray(layout)) {
+    notFound()
+  }
 
-  return <UIPageRenderer pageData={pageData} />
+  return <UIPageRenderer layout={layout} actions={{}} />
 }
 
 /**
@@ -54,7 +53,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const slug = resolvedParams.slug ?? []
   const path = '/' + slug.join('/')
 
-  const pageData = (await loadPageFromLuaPackages(path)) ?? (await loadPageFromDb(path))
+  const pageData = await loadPageFromDb(path)
 
   if (pageData === null) {
     return {

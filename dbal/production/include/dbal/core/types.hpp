@@ -158,38 +158,6 @@ struct UpdateSessionInput {
     std::optional<std::string> userAgent;
 };
 
-struct CreateLuaScriptInput {
-    std::optional<std::string> tenantId;
-    std::string name;
-    std::optional<std::string> description;
-    std::string code;
-    std::string parameters;
-    std::optional<std::string> returnType;
-    bool isSandboxed = true;
-    std::string allowedGlobals;
-    int timeoutMs = 5000;
-    int version = 1;
-    std::optional<Timestamp> createdAt;
-    std::optional<Timestamp> updatedAt;
-    std::optional<std::string> createdBy;
-};
-
-struct UpdateLuaScriptInput {
-    std::optional<std::string> tenantId;
-    std::optional<std::string> name;
-    std::optional<std::string> description;
-    std::optional<std::string> code;
-    std::optional<std::string> parameters;
-    std::optional<std::string> returnType;
-    std::optional<bool> isSandboxed;
-    std::optional<std::string> allowedGlobals;
-    std::optional<int> timeoutMs;
-    std::optional<int> version;
-    std::optional<Timestamp> createdAt;
-    std::optional<Timestamp> updatedAt;
-    std::optional<std::string> createdBy;
-};
-
 struct CreatePackageInput {
     std::string packageId;
     std::optional<std::string> tenantId;

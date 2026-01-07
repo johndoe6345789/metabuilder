@@ -28,8 +28,8 @@ export const metadata: Metadata = {
     template: '%s | MetaBuilder',
   },
   description:
-    'A data-driven, multi-tenant application platform where 95% of functionality is defined through JSON and Lua.',
-  keywords: ['metabuilder', 'low-code', 'no-code', 'lua', 'platform', 'multi-tenant'],
+    'A data-driven, multi-tenant platform where every experience is powered by JSON packages.',
+  keywords: ['metabuilder', 'low-code', 'no-code', 'platform', 'multi-tenant'],
   authors: [{ name: 'MetaBuilder Team' }],
   creator: 'MetaBuilder',
   icons: {

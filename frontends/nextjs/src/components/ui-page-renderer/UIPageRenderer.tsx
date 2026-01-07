@@ -2,28 +2,25 @@
 
 import React from 'react'
 
-import { generateComponentTree } from '@/lib/lua/ui/generate-component-tree'
-import type { LuaUIComponent } from '@/lib/lua/ui/types/lua-ui-package'
-import type { LuaActionHandler, UIPageData } from '@/lib/ui-pages/load-page-from-db'
+import { renderJSONComponent } from '@/lib/packages/json/render-json-component'
+import type { JSONComponent } from '@/lib/packages/json/types'
+
+type PageActionHandler = (action: string, data: Record<string, unknown>) => void | Promise<void>
 
 interface UIPageRendererProps {
-  pageData: UIPageData
+  layout: JSONComponent
+  actions?: Record<string, PageActionHandler>
 }
 
 /**
  * Generic TSX renderer for database-loaded UI pages
- * Flow: Database → Lua → This Component → React Elements → User
+ * Flow: Database → JSON component → React Elements → User
  */
-export function UIPageRenderer({ pageData }: UIPageRendererProps) {
-  // Convert JSON layout to LuaUIComponent structure
-  const layout = pageData.layout as LuaUIComponent
+export function UIPageRenderer({ layout, actions = {} }: UIPageRendererProps) {
+  const elements = React.useMemo(() => renderJSONComponent(layout), [layout])
 
-  // Create React elements from component tree
-  const elements = generateComponentTree(layout)
-
-  // Provide action handlers via context
   return (
-    <UIPageActionsContext.Provider value={pageData.actions ?? {}}>
+    <UIPageActionsContext.Provider value={actions}>
       {elements}
     </UIPageActionsContext.Provider>
   )
@@ -33,7 +30,7 @@ export function UIPageRenderer({ pageData }: UIPageRendererProps) {
  * Context for action handlers
  * Components can access these via useUIPageActions hook
  */
-const UIPageActionsContext = React.createContext<Record<string, LuaActionHandler>>({})
+const UIPageActionsContext = React.createContext<Record<string, PageActionHandler>>({})
 
 /**
  * Hook to access page action handlers

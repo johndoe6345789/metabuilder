@@ -199,32 +199,6 @@ Result<std::vector<Session>> Client::listSessions(const ListOptions& options) {
     return entities::session::list(getStore(), options);
 }
 
-Result<LuaScript> Client::createLuaScript(const CreateLuaScriptInput& input) {
-    return entities::lua_script::create(getStore(), input);
-}
-
-Result<LuaScript> Client::getLuaScript(const std::string& id) {
-    return entities::lua_script::get(getStore(), id);
-}
-
-Result<LuaScript> Client::updateLuaScript(const std::string& id, const UpdateLuaScriptInput& input) {
-    return entities::lua_script::update(getStore(), id, input);
-}
-
-Result<bool> Client::deleteLuaScript(const std::string& id) {
-    return entities::lua_script::remove(getStore(), id);
-}
-
-Result<std::vector<LuaScript>> Client::listLuaScripts(const ListOptions& options) {
-    return entities::lua_script::list(getStore(), options);
-}
-
-Result<std::vector<LuaScript>> Client::searchLuaScripts(const std::string& query,
-                                                        const std::optional<std::string>& createdBy,
-                                                        int limit) {
-    return entities::lua_script::search(getStore(), query, createdBy, limit);
-}
-
 Result<InstalledPackage> Client::createPackage(const CreatePackageInput& input) {
     return entities::package::create(getStore(), input);
 }

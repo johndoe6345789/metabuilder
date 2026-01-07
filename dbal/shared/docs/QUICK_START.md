@@ -125,14 +125,13 @@ Check browser console for `[DBAL Audit]` logs.
 Full TypeScript support:
 
 ```typescript
-import type { User, PageConfig, ComponentNode, Workflow, LuaScript, InstalledPackage, Session } from '../../dbal/development/src'
+import type { User, PageConfig, ComponentNode, Workflow, InstalledPackage, Session } from '../../dbal/development/src'
 
 // Type-safe entities
 const user: User = await client.users.create({ ... })
 const page: PageConfig = await client.pageConfigs.create({ ... })
 const component: ComponentNode = await client.componentNodes.create({ ... })
 const workflow: Workflow = await client.workflows.create({ ... })
-const script: LuaScript = await client.luaScripts.create({ ... })
 const pkg: InstalledPackage = await client.installedPackages.create({ ... })
 const session: Session = await client.sessions.create({ ... })
 
@@ -180,28 +179,6 @@ client.workflows.read(id)
 client.workflows.update(id, data)
 client.workflows.delete(id)
 client.workflows.list(options)
-```
-
-### Lua Scripts
-```typescript
-client.luaScripts.create(data)
-client.luaScripts.read(id)
-client.luaScripts.update(id, data)
-client.luaScripts.delete(id)
-client.luaScripts.list(options)
-```
-
-```typescript
-const script = await client.luaScripts.create({
-  name: 'health_check',
-  description: 'Simple health check',
-  code: 'return true',
-  parameters: JSON.stringify([]),
-  isSandboxed: true,
-  allowedGlobals: JSON.stringify(['math']),
-  timeoutMs: 1000,
-  createdBy: '11111111-1111-1111-1111-111111111111',
-})
 ```
 
 ### Packages

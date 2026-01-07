@@ -24,7 +24,6 @@ struct InMemoryStore {
     std::map<std::string, PageConfig> pages;
     std::map<std::string, Workflow> workflows;
     std::map<std::string, Session> sessions;
-    std::map<std::string, LuaScript> lua_scripts;
     std::map<std::string, InstalledPackage> packages;
     std::map<std::string, Credential> credentials;
     
@@ -32,7 +31,6 @@ struct InMemoryStore {
     std::map<std::string, std::string> page_paths;      // path -> id
     std::map<std::string, std::string> workflow_names;  // name -> id
     std::map<std::string, std::string> session_tokens;  // token -> id
-    std::map<std::string, std::string> lua_script_names; // name -> id
     std::map<std::string, std::string> package_keys;    // packageId -> id
     
     // Entity counters for ID generation
@@ -40,7 +38,6 @@ struct InMemoryStore {
     int page_counter = 0;
     int workflow_counter = 0;
     int session_counter = 0;
-    int lua_script_counter = 0;
     int package_counter = 0;
     int credential_counter = 0;
     
@@ -69,8 +66,6 @@ struct InMemoryStore {
         workflow_names.clear();
         sessions.clear();
         session_tokens.clear();
-        lua_scripts.clear();
-        lua_script_names.clear();
         packages.clear();
         package_keys.clear();
         credentials.clear();
@@ -82,7 +77,6 @@ struct InMemoryStore {
         page_counter = 0;
         workflow_counter = 0;
         session_counter = 0;
-        lua_script_counter = 0;
         package_counter = 0;
         credential_counter = 0;
         component_counter = 0;

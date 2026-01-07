@@ -195,63 +195,6 @@
         status: success
         output: true
 
-- name: "LuaScript CRUD operations"
-  description: "Test basic create, read, update, delete operations for LuaScript entity"
-  operations:
-    - action: create
-      entity: User
-      input:
-        username: "lua_owner"
-        email: "lua_owner@example.com"
-        role: "admin"
-      expected:
-        status: success
-
-    - action: create
-      entity: LuaScript
-      input:
-        name: "health_check"
-        description: "Simple health check"
-        code: "return true"
-        isSandboxed: true
-        allowedGlobals: ["math"]
-        timeoutMs: 1000
-        createdBy: "$steps[0].id"
-      expected:
-        status: success
-        output:
-          name: "health_check"
-          isSandboxed: true
-
-    - action: read
-      entity: LuaScript
-      input:
-        id: "$steps[1].id"
-      expected:
-        status: success
-        output:
-          name: "health_check"
-
-    - action: update
-      entity: LuaScript
-      input:
-        id: "$steps[1].id"
-        isSandboxed: false
-        timeoutMs: 2000
-      expected:
-        status: success
-        output:
-          isSandboxed: false
-          timeoutMs: 2000
-
-    - action: delete
-      entity: LuaScript
-      input:
-        id: "$steps[1].id"
-      expected:
-        status: success
-        output: true
-
 - name: "Package CRUD operations"
   description: "Test basic create, read, update, delete operations for Package entity"
   operations:
@@ -272,7 +215,7 @@
         description: "Forum package"
         author: "MetaBuilder"
         manifest:
-          entry: "index.lua"
+          entry: "index.js"
         isInstalled: false
       expected:
         status: success

@@ -5,13 +5,6 @@
 import type { PageConfig } from '../types/level-types'
 import { prisma } from '@/lib/config/prisma'
 
-export type LuaActionHandler = (action: string, data: Record<string, unknown>) => void | Promise<void>
-
-export interface UIPageData {
-  layout: unknown
-  actions?: Record<string, LuaActionHandler>
-}
-
 export async function loadPageFromDb(path: string, tenantId?: string): Promise<PageConfig | null> {
   // Prisma client typing is generated; suppress lint in environments without generated types.
    
