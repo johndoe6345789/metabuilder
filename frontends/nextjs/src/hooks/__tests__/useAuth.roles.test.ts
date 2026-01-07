@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock Prisma client to prevent instantiation errors in test environment
@@ -11,28 +11,6 @@ vi.mock('@/lib/dbal-client/adapter/get-adapter', () => ({
   getAdapter: vi.fn(() => ({})),
 }))
 
-import { useAuth } from '@/hooks/useAuth'
-import { fetchSession } from '@/lib/auth/api/fetch-session'
-import { login as loginRequest } from '@/lib/auth/api/login'
-import { logout as logoutRequest } from '@/lib/auth/api/logout'
-import type { User } from '@/lib/level-types'
-
-
-// Simple waitFor implementation
-const waitFor = async (callback: () => boolean | void, timeout = 1000) => {
-  const start = Date.now()
-  while (Date.now() - start < timeout) {
-    try {
-      const result = callback()
-      if (result === false) continue
-      return
-    } catch {
-      await new Promise(resolve => setTimeout(resolve, 50))
-    }
-  }
-  throw new Error('waitFor timed out')
-}
-
 vi.mock('@/lib/auth/api/fetch-session', () => ({
   fetchSession: vi.fn(),
 }))
@@ -44,6 +22,12 @@ vi.mock('@/lib/auth/api/login', () => ({
 vi.mock('@/lib/auth/api/logout', () => ({
   logout: vi.fn(),
 }))
+
+import { useAuth } from '@/hooks/useAuth'
+import { fetchSession } from '@/lib/auth/api/fetch-session'
+import { login as loginRequest } from '@/lib/auth/api/login'
+import { logout as logoutRequest } from '@/lib/auth/api/logout'
+import type { User } from '@/lib/level-types'
 
 const mockFetchSession = vi.mocked(fetchSession)
 const mockLogin = vi.mocked(loginRequest)
