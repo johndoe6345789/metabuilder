@@ -9,120 +9,105 @@
       "name": "init",
       "exported": true,
       "description": "Initialize the quick guide module",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "steps_generate_id",
       "name": "generateStepId",
       "exported": true,
       "description": "Generate a unique step identifier",
-      "category": "steps",
-      "luaScript": "steps.lua"
+      "category": "steps"
     },
     {
       "id": "steps_create",
       "name": "createStep",
       "exported": true,
       "description": "Create a new empty step with default values",
-      "category": "steps",
-      "luaScript": "steps.lua"
+      "category": "steps"
     },
     {
       "id": "steps_add",
       "name": "addStep",
       "exported": true,
       "description": "Add a new step to the steps array",
-      "category": "steps",
-      "luaScript": "steps.lua"
+      "category": "steps"
     },
     {
       "id": "steps_update",
       "name": "updateStep",
       "exported": true,
       "description": "Update a step in the steps array",
-      "category": "steps",
-      "luaScript": "steps.lua"
+      "category": "steps"
     },
     {
       "id": "steps_remove",
       "name": "removeStep",
       "exported": true,
       "description": "Remove a step from the steps array",
-      "category": "steps",
-      "luaScript": "steps.lua"
+      "category": "steps"
     },
     {
       "id": "steps_reset_ordering",
       "name": "resetOrdering",
       "exported": true,
       "description": "Reset step IDs to sequential order",
-      "category": "steps",
-      "luaScript": "steps.lua"
+      "category": "steps"
     },
     {
       "id": "steps_validate",
       "name": "validateStep",
       "exported": true,
       "description": "Validate a single step",
-      "category": "steps",
-      "luaScript": "steps.lua"
+      "category": "steps"
     },
     {
       "id": "steps_validate_all",
       "name": "validateAllSteps",
       "exported": true,
       "description": "Validate all steps in the array",
-      "category": "steps",
-      "luaScript": "steps.lua"
+      "category": "steps"
     },
     {
       "id": "media_is_valid_url",
       "name": "isValidUrl",
       "exported": true,
       "description": "Validate a URL (basic check)",
-      "category": "media",
-      "luaScript": "media.lua"
+      "category": "media"
     },
     {
       "id": "media_is_image_url",
       "name": "isImageUrl",
       "exported": true,
       "description": "Check if URL points to an image",
-      "category": "media",
-      "luaScript": "media.lua"
+      "category": "media"
     },
     {
       "id": "media_is_video_url",
       "name": "isVideoUrl",
       "exported": true,
       "description": "Check if URL points to a video",
-      "category": "media",
-      "luaScript": "media.lua"
+      "category": "media"
     },
     {
       "id": "media_prepare_state",
       "name": "prepareMediaState",
       "exported": true,
       "description": "Prepare media state from props",
-      "category": "media",
-      "luaScript": "media.lua"
+      "category": "media"
     },
     {
       "id": "media_handle_thumbnail",
       "name": "handleThumbnailChange",
       "exported": true,
       "description": "Handle thumbnail URL change",
-      "category": "media",
-      "luaScript": "media.lua"
+      "category": "media"
     },
     {
       "id": "media_handle_video",
       "name": "handleVideoChange",
       "exported": true,
       "description": "Handle video URL change",
-      "category": "media",
-      "luaScript": "media.lua"
+      "category": "media"
     }
   ],
   "exports": {

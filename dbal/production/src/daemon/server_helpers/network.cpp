@@ -1,4 +1,4 @@
-#include "server_helpers/network.hpp"
+#include "network.hpp"
 
 #include <algorithm>
 

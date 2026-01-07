@@ -122,7 +122,6 @@ export const ecommerceBasicPackage = (): {
       },
     ],
     workflows: [],
-    luaScripts: [],
     componentHierarchy: {},
     componentConfigs: {},
   },

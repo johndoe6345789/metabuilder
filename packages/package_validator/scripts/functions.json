@@ -10,7 +10,6 @@
       "exported": true,
       "description": "Validates a complete package including metadata, components, scripts, and structure",
       "category": "validation",
-      "luaScript": "validate_package.lua",
       "parameters": [
         {
           "name": "packagePath",
@@ -36,7 +35,6 @@
       "exported": true,
       "description": "Validates package metadata.json structure and required fields",
       "category": "validation",
-      "luaScript": "validate_metadata.lua",
       "parameters": [
         {
           "name": "metadata",
@@ -56,7 +54,6 @@
       "exported": true,
       "description": "Validates Lua scripts structure and exports",
       "category": "validation",
-      "luaScript": "validate_scripts_structure.lua",
       "parameters": [
         {
           "name": "packagePath",
@@ -82,7 +79,6 @@
       "exported": true,
       "description": "Validates type definitions in types.json",
       "category": "validation",
-      "luaScript": "types.lua",
       "parameters": [
         {
           "name": "types",
@@ -102,7 +98,6 @@
       "exported": true,
       "description": "Validates component definitions in components.json",
       "category": "validation",
-      "luaScript": "validate_components.lua",
       "parameters": [
         {
           "name": "components",
@@ -122,7 +117,6 @@
       "exported": true,
       "description": "Validates test file structure and coverage",
       "category": "validation",
-      "luaScript": "validate_test_structure.lua",
       "parameters": [
         {
           "name": "packagePath",
@@ -142,7 +136,6 @@
       "exported": true,
       "description": "Validates storybook configuration and stories",
       "category": "validation",
-      "luaScript": "validate_structure.lua",
       "parameters": [
         {
           "name": "packagePath",
@@ -162,7 +155,6 @@
       "exported": true,
       "description": "Validates styles.json structure",
       "category": "validation",
-      "luaScript": "validate_styles.lua",
       "parameters": [
         {
           "name": "packagePath",
@@ -182,7 +174,6 @@
       "exported": true,
       "description": "Formats validation results for display",
       "category": "output",
-      "luaScript": "format_results.lua",
       "parameters": [
         {
           "name": "results",
@@ -209,7 +200,6 @@
       "exported": true,
       "description": "Checks Lua code quality and best practices",
       "category": "validation",
-      "luaScript": "check_lua_quality.lua",
       "parameters": [
         {
           "name": "luaCode",

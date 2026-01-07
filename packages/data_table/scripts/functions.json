@@ -9,120 +9,105 @@
       "name": "initialize",
       "exported": true,
       "description": "Initialize data table",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "sorting_sort_column",
       "name": "sortByColumn",
       "exported": true,
       "description": "Sort table by column",
-      "category": "sorting",
-      "luaScript": "sorting.lua"
+      "category": "sorting"
     },
     {
       "id": "sorting_toggle_direction",
       "name": "toggleSortDirection",
       "exported": true,
       "description": "Toggle sort direction",
-      "category": "sorting",
-      "luaScript": "sorting.lua"
+      "category": "sorting"
     },
     {
       "id": "filtering_apply",
       "name": "applyFilters",
       "exported": true,
       "description": "Apply filters to data",
-      "category": "filtering",
-      "luaScript": "filtering.lua"
+      "category": "filtering"
     },
     {
       "id": "filtering_search",
       "name": "searchData",
       "exported": true,
       "description": "Search across all columns",
-      "category": "filtering",
-      "luaScript": "filtering.lua"
+      "category": "filtering"
     },
     {
       "id": "filtering_filter_column",
       "name": "filterByColumn",
       "exported": true,
       "description": "Filter by specific column",
-      "category": "filtering",
-      "luaScript": "filtering.lua"
+      "category": "filtering"
     },
     {
       "id": "pagination_change_page",
       "name": "changePage",
       "exported": true,
       "description": "Navigate to page",
-      "category": "pagination",
-      "luaScript": "pagination.lua"
+      "category": "pagination"
     },
     {
       "id": "pagination_next",
       "name": "nextPage",
       "exported": true,
       "description": "Go to next page",
-      "category": "pagination",
-      "luaScript": "pagination.lua"
+      "category": "pagination"
     },
     {
       "id": "pagination_previous",
       "name": "previousPage",
       "exported": true,
       "description": "Go to previous page",
-      "category": "pagination",
-      "luaScript": "pagination.lua"
+      "category": "pagination"
     },
     {
       "id": "selection_toggle_row",
       "name": "toggleRow",
       "exported": true,
       "description": "Toggle row selection",
-      "category": "selection",
-      "luaScript": "selection.lua"
+      "category": "selection"
     },
     {
       "id": "selection_select_all",
       "name": "selectAll",
       "exported": true,
       "description": "Select all rows",
-      "category": "selection",
-      "luaScript": "selection.lua"
+      "category": "selection"
     },
     {
       "id": "selection_clear",
       "name": "clearSelection",
       "exported": true,
       "description": "Clear all selections",
-      "category": "selection",
-      "luaScript": "selection.lua"
+      "category": "selection"
     },
     {
       "id": "export_csv",
       "name": "exportToCSV",
       "exported": true,
       "description": "Export data to CSV",
-      "category": "export",
-      "luaScript": "export.lua"
+      "category": "export"
     },
     {
       "id": "export_json",
       "name": "exportToJSON",
       "exported": true,
       "description": "Export data to JSON",
-      "category": "export",
-      "luaScript": "export.lua"
+      "category": "export"
     },
     {
       "id": "export_data",
       "name": "exportData",
       "exported": true,
       "description": "Export data in specified format",
-      "category": "export",
-      "luaScript": "export.lua"
+      "category": "export"
     }
   ],
   "exports": {

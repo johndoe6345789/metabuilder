@@ -455,7 +455,6 @@ REDIS_PASSWORD=changeme_redis_password
 - `PackagePermission` - Package access control
 - `PageConfig` - God panel route definitions
 - `Workflow` - Workflow definitions
-- `LuaScript` - Stored Lua scripts
 
 ### Example: Installed Package
 

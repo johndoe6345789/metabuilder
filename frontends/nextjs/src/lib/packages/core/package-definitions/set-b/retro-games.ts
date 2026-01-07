@@ -106,7 +106,6 @@ export const retroGamesPackage = (): { manifest: PackageManifest; content: Packa
       },
     ],
     workflows: [],
-    luaScripts: [],
     componentHierarchy: {},
     componentConfigs: {},
     seedData: {

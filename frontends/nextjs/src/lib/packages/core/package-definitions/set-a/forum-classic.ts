@@ -143,16 +143,6 @@ export const forumClassicPackage = (): { manifest: PackageManifest; content: Pac
         enabled: true,
       },
     ],
-    luaScripts: [
-      {
-        id: 'lua_forum_thread_count',
-        name: 'Get Thread Count',
-        description: 'Count threads in a category',
-        code: 'function countThreads(categoryId)\n  return 0\nend\nreturn countThreads',
-        parameters: [{ name: 'categoryId', type: 'string' }],
-        returnType: 'number',
-      },
-    ],
     componentHierarchy: {},
     componentConfigs: {},
     seedData: {

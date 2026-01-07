@@ -4,7 +4,7 @@
 
 // Types
 export type {
-  LuaScriptFile,
+  ScriptFile,
   PackageComponent,
   PackageDefinition,
   PackageExamples,

@@ -9,120 +9,105 @@
       "name": "initialize",
       "exported": true,
       "description": "Initialize user list with data loading",
-      "category": "lifecycle",
-      "luaScript": "list.lua"
+      "category": "lifecycle"
     },
     {
       "id": "list_filter_users",
       "name": "filterUsers",
       "exported": true,
       "description": "Filter users based on search query",
-      "category": "data",
-      "luaScript": "list.lua"
+      "category": "data"
     },
     {
       "id": "list_sort_users",
       "name": "sortUsers",
       "exported": true,
       "description": "Sort users by specified column",
-      "category": "data",
-      "luaScript": "list.lua"
+      "category": "data"
     },
     {
       "id": "list_select_user",
       "name": "selectUser",
       "exported": true,
       "description": "Handle user selection",
-      "category": "data",
-      "luaScript": "list.lua"
+      "category": "data"
     },
     {
       "id": "list_refresh_users",
       "name": "refreshUsers",
       "exported": true,
       "description": "Refresh user list from database",
-      "category": "data",
-      "luaScript": "list.lua"
+      "category": "data"
     },
     {
       "id": "actions_view_user",
       "name": "viewUser",
       "exported": true,
       "description": "View detailed user information",
-      "category": "actions",
-      "luaScript": "actions.lua"
+      "category": "actions"
     },
     {
       "id": "actions_edit_user",
       "name": "editUser",
       "exported": true,
       "description": "Edit user profile and settings",
-      "category": "actions",
-      "luaScript": "actions.lua"
+      "category": "actions"
     },
     {
       "id": "actions_create_user",
       "name": "createUser",
       "exported": true,
       "description": "Create a new user account",
-      "category": "actions",
-      "luaScript": "actions.lua"
+      "category": "actions"
     },
     {
       "id": "actions_delete_user",
       "name": "deleteUser",
       "exported": true,
       "description": "Delete a user account",
-      "category": "actions",
-      "luaScript": "actions.lua"
+      "category": "actions"
     },
     {
       "id": "actions_manage_permissions",
       "name": "managePermissions",
       "exported": true,
       "description": "Manage user permissions and roles",
-      "category": "actions",
-      "luaScript": "actions.lua"
+      "category": "actions"
     },
     {
       "id": "actions_ban_user",
       "name": "banUser",
       "exported": true,
       "description": "Ban or suspend a user",
-      "category": "actions",
-      "luaScript": "actions.lua"
+      "category": "actions"
     },
     {
       "id": "actions_activate_user",
       "name": "activateUser",
       "exported": true,
       "description": "Activate a user account",
-      "category": "actions",
-      "luaScript": "actions.lua"
+      "category": "actions"
     },
     {
       "id": "actions_deactivate_user",
       "name": "deactivateUser",
       "exported": true,
       "description": "Deactivate a user account",
-      "category": "actions",
-      "luaScript": "actions.lua"
+      "category": "actions"
     },
     {
       "id": "actions_reset_password",
       "name": "resetPassword",
       "exported": true,
       "description": "Reset user password",
-      "category": "actions",
-      "luaScript": "actions.lua"
+      "category": "actions"
     },
     {
       "id": "actions_send_email",
       "name": "sendEmail",
       "exported": true,
       "description": "Send email to user",
-      "category": "actions",
-      "luaScript": "actions.lua"
+      "category": "actions"
     }
   ],
   "exports": {

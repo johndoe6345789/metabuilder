@@ -9,88 +9,77 @@
       "name": "createStatItems",
       "exported": true,
       "description": "Create stat items from raw data and configuration",
-      "category": "data",
-      "luaScript": "stats/init.lua"
+      "category": "data"
     },
     {
       "id": "stats_get_color_class",
       "name": "getColorClass",
       "exported": true,
       "description": "Get CSS color class for a stat color",
-      "category": "styling",
-      "luaScript": "stats/init.lua"
+      "category": "styling"
     },
     {
       "id": "stats_format_label",
       "name": "formatLabel",
       "exported": true,
       "description": "Format a key into a human-readable label",
-      "category": "formatting",
-      "luaScript": "stats/init.lua"
+      "category": "formatting"
     },
     {
       "id": "stats_format_value",
       "name": "formatValue",
       "exported": true,
       "description": "Format a number value for display (K, M suffixes)",
-      "category": "formatting",
-      "luaScript": "stats/init.lua"
+      "category": "formatting"
     },
     {
       "id": "stats_create_card",
       "name": "createCard",
       "exported": true,
       "description": "Create a single stat card component",
-      "category": "rendering",
-      "luaScript": "stats/card.lua"
+      "category": "rendering"
     },
     {
       "id": "stats_create_grid",
       "name": "createGrid",
       "exported": true,
       "description": "Create a stats grid component from props",
-      "category": "rendering",
-      "luaScript": "stats/grid.lua"
+      "category": "rendering"
     },
     {
       "id": "formatters_format_currency",
       "name": "formatCurrency",
       "exported": true,
       "description": "Format a value as currency",
-      "category": "formatting",
-      "luaScript": "formatters.lua"
+      "category": "formatting"
     },
     {
       "id": "formatters_format_percentage",
       "name": "formatPercentage",
       "exported": true,
       "description": "Format a value as percentage",
-      "category": "formatting",
-      "luaScript": "formatters.lua"
+      "category": "formatting"
     },
     {
       "id": "formatters_format_compact",
       "name": "formatCompact",
       "exported": true,
       "description": "Format a value with compact notation",
-      "category": "formatting",
-      "luaScript": "formatters.lua"
+      "category": "formatting"
     },
     {
       "id": "formatters_format_duration",
       "name": "formatDuration",
       "exported": true,
       "description": "Format a duration value",
-      "category": "formatting",
-      "luaScript": "formatters.lua"
+      "category": "formatting"
     },
     {
       "id": "formatters_format_bytes",
       "name": "formatBytes",
       "exported": true,
       "description": "Format a byte value with appropriate unit",
-      "category": "formatting",
-      "luaScript": "formatters.lua"
+      "category": "formatting"
     }
   ],
   "exports": {

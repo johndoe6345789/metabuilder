@@ -9,64 +9,56 @@
       "name": "renderLayout",
       "exported": true,
       "description": "Render the main Level 2 layout component",
-      "category": "ui",
-      "luaScript": "layout.lua"
+      "category": "ui"
     },
     {
       "id": "layout_tabs",
       "name": "renderTabs",
       "exported": true,
       "description": "Render tabs component with profile, comments, and chat sections",
-      "category": "ui",
-      "luaScript": "layout.lua"
+      "category": "ui"
     },
     {
       "id": "profile_render",
       "name": "renderProfile",
       "exported": true,
       "description": "Render the profile panel",
-      "category": "ui",
-      "luaScript": "profile/render.lua"
+      "category": "ui"
     },
     {
       "id": "profile_save",
       "name": "saveProfile",
       "exported": true,
       "description": "Save user profile changes",
-      "category": "data",
-      "luaScript": "profile/save_profile.lua"
+      "category": "data"
     },
     {
       "id": "comments_render",
       "name": "renderComments",
       "exported": true,
       "description": "Render the comments panel",
-      "category": "ui",
-      "luaScript": "comments/render.lua"
+      "category": "ui"
     },
     {
       "id": "comments_list",
       "name": "listComments",
       "exported": true,
       "description": "List user comments",
-      "category": "data",
-      "luaScript": "comments/list.lua"
+      "category": "data"
     },
     {
       "id": "comments_post",
       "name": "postComment",
       "exported": true,
       "description": "Post a new comment",
-      "category": "data",
-      "luaScript": "comments/post_comment.lua"
+      "category": "data"
     },
     {
       "id": "comments_composer",
       "name": "renderComposer",
       "exported": true,
       "description": "Render the comment composer component",
-      "category": "ui",
-      "luaScript": "comments/composer.lua"
+      "category": "ui"
     }
   ],
   "exports": {

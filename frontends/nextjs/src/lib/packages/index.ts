@@ -20,7 +20,7 @@ export {
 // Package registry utilities
 export type {
   DependencyCheckResult,
-  LuaScriptFile,
+  ScriptFile,
   PackageComponent,
   PackageDefinition,
   PackageExamples,

@@ -1,6 +1,6 @@
 import type { JsonObject, JsonValue } from '@/types/utility-types'
 
-export interface LuaScriptFile {
+export interface ScriptFile {
   name: string
   path: string
   code: string
@@ -34,7 +34,7 @@ export interface PackageDefinition {
   shadowcnComponents?: string[]
   components: PackageComponent[]
   scripts?: string
-  scriptFiles?: LuaScriptFile[]
+  scriptFiles?: ScriptFile[]
   examples?: PackageExamples
 }
 

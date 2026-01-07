@@ -22,7 +22,7 @@ export const getComponentConfigs = async (): Promise<Record<string, ComponentCon
       styles: JSON.parse(config.styles) as Record<string, JsonValue>,
       events: JSON.parse(config.events) as Record<string, string>,
       conditionalRendering: config.conditionalRendering !== null && config.conditionalRendering !== ''
-        ? JSON.parse(config.conditionalRendering) as { condition: string; luaScriptId?: string }
+        ? JSON.parse(config.conditionalRendering) as { condition: string }
         : undefined,
     }
   }

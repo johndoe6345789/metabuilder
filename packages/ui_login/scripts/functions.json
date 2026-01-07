@@ -9,48 +9,42 @@
       "name": "validateLogin",
       "exported": true,
       "description": "Validate login form credentials",
-      "category": "validation",
-      "luaScript": "validate/login.lua"
+      "category": "validation"
     },
     {
       "id": "validate_register",
       "name": "validateRegister",
       "exported": true,
       "description": "Validate registration form data",
-      "category": "validation",
-      "luaScript": "validate/register.lua"
+      "category": "validation"
     },
     {
       "id": "handle_login",
       "name": "handleLogin",
       "exported": true,
       "description": "Process login form submission",
-      "category": "actions",
-      "luaScript": "actions/handle_login.lua"
+      "category": "actions"
     },
     {
       "id": "handle_register",
       "name": "handleRegister",
       "exported": true,
       "description": "Process registration form submission",
-      "category": "actions",
-      "luaScript": "actions/handle_register.lua"
+      "category": "actions"
     },
     {
       "id": "on_install",
       "name": "onInstall",
       "exported": true,
       "description": "Package installation lifecycle hook",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "on_uninstall",
       "name": "onUninstall",
       "exported": true,
       "description": "Package uninstallation lifecycle hook",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     }
   ],
   "exports": {

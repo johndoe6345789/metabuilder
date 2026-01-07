@@ -9,24 +9,21 @@
       "name": "onInstall",
       "exported": true,
       "description": "Package lifecycle handler for installation",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "intro_render",
       "name": "render",
       "exported": true,
       "description": "Renders intro section component",
-      "category": "ui",
-      "luaScript": "render.lua"
+      "category": "ui"
     },
     {
       "id": "intro_validate_props",
       "name": "validateProps",
       "exported": true,
       "description": "Validates intro section props",
-      "category": "validation",
-      "luaScript": "render.lua"
+      "category": "validation"
     }
   ],
   "exports": {

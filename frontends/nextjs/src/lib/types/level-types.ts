@@ -42,7 +42,6 @@ export interface PageConfig {
   level?: number
   requiresAuth?: boolean
   requiredRole?: string | null
-  luaScript?: string | null
   accessLevel?: number | null
   createdAt?: number | bigint
   updatedAt?: number | bigint
@@ -57,21 +56,6 @@ export interface Comment {
   createdAt: number | bigint
   updatedAt?: number | bigint | null
   parentId?: string | null
-}
-
-export interface LuaScript {
-  id: string
-  tenantId?: string | null
-  name: string
-  description?: string | null
-  code: string
-  parameters: string // JSON: Array<{name, type}>
-  returnType?: string | null
-  isSandboxed?: boolean
-  allowedGlobals?: string
-  timeoutMs?: number
-  createdAt?: number | bigint
-  updatedAt?: number | bigint | null
 }
 
 export interface Workflow {
@@ -93,7 +77,6 @@ export interface AppConfiguration {
   name: string
   schemas: unknown // JSON
   workflows: unknown // JSON
-  luaScripts: unknown // JSON
   pages: unknown // JSON
   theme: unknown // JSON
 }

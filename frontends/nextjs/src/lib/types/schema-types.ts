@@ -15,5 +15,5 @@ export interface ModelSchema {
   searchFields?: string | null // JSON: searchable fields
   ordering?: string | null // JSON: default sort order
   validations?: string | null // JSON: validation rules
-  hooks?: string | null // JSON: lifecycle hooks (Lua script refs)
+  hooks?: string | null // JSON: lifecycle hooks (script refs)
 }

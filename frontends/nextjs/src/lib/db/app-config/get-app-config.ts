@@ -10,7 +10,6 @@ export async function getAppConfig(): Promise<AppConfiguration | null> {
     name: string
     schemas: string
     workflows: string
-    luaScripts: string
     pages: string
     theme: string
   }
@@ -19,7 +18,6 @@ export async function getAppConfig(): Promise<AppConfiguration | null> {
     name: config.name,
     schemas: JSON.parse(config.schemas),
     workflows: JSON.parse(config.workflows),
-    luaScripts: JSON.parse(config.luaScripts),
     pages: JSON.parse(config.pages),
     theme: JSON.parse(config.theme),
   }

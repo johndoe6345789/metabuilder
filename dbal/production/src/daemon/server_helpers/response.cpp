@@ -1,4 +1,4 @@
-#include "server_helpers/response.hpp"
+#include "response.hpp"
 
 #include <drogon/drogon.h>
 

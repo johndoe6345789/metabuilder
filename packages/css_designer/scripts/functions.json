@@ -9,104 +9,91 @@
       "name": "init",
       "exported": true,
       "description": "Initialize the CSS designer module",
-      "category": "core",
-      "luaScript": "init.lua"
+      "category": "core"
     },
     {
       "id": "get_default_theme",
       "name": "getDefaultTheme",
       "exported": true,
       "description": "Get default theme configuration with all color, typography, and spacing values",
-      "category": "core",
-      "luaScript": "init.lua"
+      "category": "core"
     },
     {
       "id": "hex_to_rgb",
       "name": "hexToRgb",
       "exported": true,
       "description": "Convert hex color to RGB object",
-      "category": "colors",
-      "luaScript": "colors/color_picker.lua"
+      "category": "colors"
     },
     {
       "id": "rgb_to_hex",
       "name": "rgbToHex",
       "exported": true,
       "description": "Convert RGB object to hex color string",
-      "category": "colors",
-      "luaScript": "colors/color_picker.lua"
+      "category": "colors"
     },
     {
       "id": "hex_to_hsl",
       "name": "hexToHsl",
       "exported": true,
       "description": "Convert hex color to HSL object",
-      "category": "colors",
-      "luaScript": "colors/color_picker.lua"
+      "category": "colors"
     },
     {
       "id": "hsl_to_hex",
       "name": "hslToHex",
       "exported": true,
       "description": "Convert HSL object to hex color string",
-      "category": "colors",
-      "luaScript": "colors/color_picker.lua"
+      "category": "colors"
     },
     {
       "id": "generate_palette",
       "name": "generatePalette",
       "exported": true,
       "description": "Generate color palette from base colors",
-      "category": "colors",
-      "luaScript": "colors/palette.lua"
+      "category": "colors"
     },
     {
       "id": "update_font_settings",
       "name": "updateFontSettings",
       "exported": true,
       "description": "Update typography settings",
-      "category": "fonts",
-      "luaScript": "fonts/font_selector.lua"
+      "category": "fonts"
     },
     {
       "id": "update_spacing",
       "name": "updateSpacing",
       "exported": true,
       "description": "Update spacing configuration",
-      "category": "spacing",
-      "luaScript": "spacing/spacing_editor.lua"
+      "category": "spacing"
     },
     {
       "id": "update_borders",
       "name": "updateBorders",
       "exported": true,
       "description": "Update border styling configuration",
-      "category": "borders",
-      "luaScript": "borders/border_editor.lua"
+      "category": "borders"
     },
     {
       "id": "update_shadows",
       "name": "updateShadows",
       "exported": true,
       "description": "Update shadow styling configuration",
-      "category": "shadows",
-      "luaScript": "shadows/shadow_editor.lua"
+      "category": "shadows"
     },
     {
       "id": "export_to_scss",
       "name": "exportToScss",
       "exported": true,
       "description": "Export theme configuration to SCSS variables",
-      "category": "export",
-      "luaScript": "export/to_scss.lua"
+      "category": "export"
     },
     {
       "id": "export_to_css",
       "name": "exportToCss",
       "exported": true,
       "description": "Export theme configuration to CSS custom properties",
-      "category": "export",
-      "luaScript": "export/to_css.lua"
+      "category": "export"
     }
   ],
   "exports": {

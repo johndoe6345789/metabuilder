@@ -9,88 +9,77 @@
       "name": "getStatistics",
       "exported": true,
       "description": "Retrieve database statistics including record counts for all entities",
-      "category": "statistics",
-      "luaScript": "statistics.lua"
+      "category": "statistics"
     },
     {
       "id": "db_get_entity_count",
       "name": "getEntityCount",
       "exported": true,
       "description": "Get record count for a specific entity",
-      "category": "statistics",
-      "luaScript": "statistics.lua"
+      "category": "statistics"
     },
     {
       "id": "db_export_all",
       "name": "exportDatabase",
       "exported": true,
       "description": "Export all database data to JSON format",
-      "category": "export",
-      "luaScript": "export.lua"
+      "category": "export"
     },
     {
       "id": "db_export_entity",
       "name": "exportEntity",
       "exported": true,
       "description": "Export a specific entity's data to JSON",
-      "category": "export",
-      "luaScript": "export.lua"
+      "category": "export"
     },
     {
       "id": "db_import_all",
       "name": "importDatabase",
       "exported": true,
       "description": "Import database data from JSON format",
-      "category": "import",
-      "luaScript": "import.lua"
+      "category": "import"
     },
     {
       "id": "db_validate_import",
       "name": "validateImportData",
       "exported": true,
       "description": "Validate import data before applying",
-      "category": "import",
-      "luaScript": "import.lua"
+      "category": "import"
     },
     {
       "id": "db_initialize",
       "name": "initializeDatabase",
       "exported": true,
       "description": "Initialize database with default schema and seed data",
-      "category": "operations",
-      "luaScript": "operations.lua"
+      "category": "operations"
     },
     {
       "id": "db_clear",
       "name": "clearDatabase",
       "exported": true,
       "description": "Clear all data from the database",
-      "category": "operations",
-      "luaScript": "operations.lua"
+      "category": "operations"
     },
     {
       "id": "db_vacuum",
       "name": "vacuumDatabase",
       "exported": true,
       "description": "Optimize database by reclaiming unused space",
-      "category": "operations",
-      "luaScript": "operations.lua"
+      "category": "operations"
     },
     {
       "id": "db_get_entities",
       "name": "getEntities",
       "exported": true,
       "description": "Get list of all database entities with metadata",
-      "category": "schema",
-      "luaScript": "schema.lua"
+      "category": "schema"
     },
     {
       "id": "db_get_entity_schema",
       "name": "getEntitySchema",
       "exported": true,
       "description": "Get schema definition for a specific entity",
-      "category": "schema",
-      "luaScript": "schema.lua"
+      "category": "schema"
     }
   ],
   "exports": {

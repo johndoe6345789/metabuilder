@@ -28,7 +28,6 @@ describe('setAppConfig', () => {
       name: 'New App',
       schemas: [],
       workflows: [],
-      luaScripts: [],
       pages: [],
       theme: { colors: {}, fonts: {} },
     })

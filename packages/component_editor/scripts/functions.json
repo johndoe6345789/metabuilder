@@ -9,104 +9,91 @@
       "name": "buildComponentTree",
       "exported": true,
       "description": "Build a component tree from stored configuration",
-      "category": "components",
-      "luaScript": "components.lua"
+      "category": "components"
     },
     {
       "id": "component_tree_save",
       "name": "saveComponentTree",
       "exported": true,
       "description": "Save a component tree configuration",
-      "category": "components",
-      "luaScript": "components.lua"
+      "category": "components"
     },
     {
       "id": "component_add",
       "name": "addComponent",
       "exported": true,
       "description": "Add a component to the tree at specified position",
-      "category": "components",
-      "luaScript": "components.lua"
+      "category": "components"
     },
     {
       "id": "component_remove",
       "name": "removeComponent",
       "exported": true,
       "description": "Remove a component from the tree",
-      "category": "components",
-      "luaScript": "components.lua"
+      "category": "components"
     },
     {
       "id": "component_move",
       "name": "moveComponent",
       "exported": true,
       "description": "Move a component to a new position in the tree",
-      "category": "components",
-      "luaScript": "components.lua"
+      "category": "components"
     },
     {
       "id": "component_reorder",
       "name": "reorderComponents",
       "exported": true,
       "description": "Reorder children of a parent component",
-      "category": "components",
-      "luaScript": "components.lua"
+      "category": "components"
     },
     {
       "id": "component_update_props",
       "name": "updateComponentProps",
       "exported": true,
       "description": "Update props for a specific component",
-      "category": "components",
-      "luaScript": "components.lua"
+      "category": "components"
     },
     {
       "id": "component_validate_tree",
       "name": "validateTree",
       "exported": true,
       "description": "Validate a component tree structure",
-      "category": "components",
-      "luaScript": "components.lua"
+      "category": "components"
     },
     {
       "id": "component_get_catalog",
       "name": "getComponentCatalog",
       "exported": true,
       "description": "Get the catalog of available components",
-      "category": "components",
-      "luaScript": "components.lua"
+      "category": "components"
     },
     {
       "id": "component_find_by_id",
       "name": "findComponentById",
       "exported": true,
       "description": "Find a component in the tree by ID",
-      "category": "components",
-      "luaScript": "components.lua"
+      "category": "components"
     },
     {
       "id": "component_clone",
       "name": "cloneComponent",
       "exported": true,
       "description": "Clone a component with its children",
-      "category": "components",
-      "luaScript": "components.lua"
+      "category": "components"
     },
     {
       "id": "component_export",
       "name": "exportComponentTree",
       "exported": true,
       "description": "Export component tree as JSON",
-      "category": "components",
-      "luaScript": "components.lua"
+      "category": "components"
     },
     {
       "id": "component_import",
       "name": "importComponentTree",
       "exported": true,
       "description": "Import component tree from JSON",
-      "category": "components",
-      "luaScript": "components.lua"
+      "category": "components"
     }
   ],
   "exports": {

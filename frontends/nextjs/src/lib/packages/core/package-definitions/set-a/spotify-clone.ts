@@ -147,7 +147,6 @@ export const spotifyClonePackage = (): { manifest: PackageManifest; content: Pac
       },
     ],
     workflows: [],
-    luaScripts: [],
     componentHierarchy: {},
     componentConfigs: {},
   },

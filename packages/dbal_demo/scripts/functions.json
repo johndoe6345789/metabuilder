@@ -9,160 +9,140 @@
       "name": "init",
       "exported": true,
       "description": "Package initialization",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "get_config",
       "name": "getConfig",
       "exported": true,
       "description": "Get demo configuration",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "kv_set",
       "name": "kvSet",
       "exported": true,
       "description": "Set a key-value pair",
-      "category": "kv_operations",
-      "luaScript": "kv_operations.lua"
+      "category": "kv_operations"
     },
     {
       "id": "kv_get",
       "name": "kvGet",
       "exported": true,
       "description": "Get a value by key",
-      "category": "kv_operations",
-      "luaScript": "kv_operations.lua"
+      "category": "kv_operations"
     },
     {
       "id": "kv_delete",
       "name": "kvDelete",
       "exported": true,
       "description": "Delete a key",
-      "category": "kv_operations",
-      "luaScript": "kv_operations.lua"
+      "category": "kv_operations"
     },
     {
       "id": "kv_list_add",
       "name": "kvListAdd",
       "exported": true,
       "description": "Add items to a list",
-      "category": "kv_operations",
-      "luaScript": "kv_operations.lua"
+      "category": "kv_operations"
     },
     {
       "id": "kv_list_get",
       "name": "kvListGet",
       "exported": true,
       "description": "Get list items",
-      "category": "kv_operations",
-      "luaScript": "kv_operations.lua"
+      "category": "kv_operations"
     },
     {
       "id": "blob_upload",
       "name": "blobUpload",
       "exported": true,
       "description": "Upload a file/blob",
-      "category": "blob_operations",
-      "luaScript": "blob_operations.lua"
+      "category": "blob_operations"
     },
     {
       "id": "blob_download",
       "name": "blobDownload",
       "exported": true,
       "description": "Download a file/blob",
-      "category": "blob_operations",
-      "luaScript": "blob_operations.lua"
+      "category": "blob_operations"
     },
     {
       "id": "blob_delete",
       "name": "blobDelete",
       "exported": true,
       "description": "Delete a file/blob",
-      "category": "blob_operations",
-      "luaScript": "blob_operations.lua"
+      "category": "blob_operations"
     },
     {
       "id": "blob_list",
       "name": "blobList",
       "exported": true,
       "description": "List all files",
-      "category": "blob_operations",
-      "luaScript": "blob_operations.lua"
+      "category": "blob_operations"
     },
     {
       "id": "blob_info",
       "name": "blobInfo",
       "exported": true,
       "description": "Get file info",
-      "category": "blob_operations",
-      "luaScript": "blob_operations.lua"
+      "category": "blob_operations"
     },
     {
       "id": "cache_save",
       "name": "cacheSave",
       "exported": true,
       "description": "Save data to cache",
-      "category": "cache_operations",
-      "luaScript": "cache_operations.lua"
+      "category": "cache_operations"
     },
     {
       "id": "cache_get",
       "name": "cacheGet",
       "exported": true,
       "description": "Get cached data",
-      "category": "cache_operations",
-      "luaScript": "cache_operations.lua"
+      "category": "cache_operations"
     },
     {
       "id": "cache_clear",
       "name": "cacheClear",
       "exported": true,
       "description": "Clear cached data",
-      "category": "cache_operations",
-      "luaScript": "cache_operations.lua"
+      "category": "cache_operations"
     },
     {
       "id": "cache_save_preferences",
       "name": "cacheSavePreferences",
       "exported": true,
       "description": "Save user preferences to cache",
-      "category": "cache_operations",
-      "luaScript": "cache_operations.lua"
+      "category": "cache_operations"
     },
     {
       "id": "cache_get_preferences",
       "name": "cacheGetPreferences",
       "exported": true,
       "description": "Get user preferences from cache",
-      "category": "cache_operations",
-      "luaScript": "cache_operations.lua"
+      "category": "cache_operations"
     },
     {
       "id": "connection_connect",
       "name": "connect",
       "exported": true,
       "description": "Connect to DBAL endpoint",
-      "category": "connection",
-      "luaScript": "connection.lua"
+      "category": "connection"
     },
     {
       "id": "connection_disconnect",
       "name": "disconnect",
       "exported": true,
       "description": "Disconnect from DBAL endpoint",
-      "category": "connection",
-      "luaScript": "connection.lua"
+      "category": "connection"
     },
     {
       "id": "connection_status",
       "name": "connectionStatus",
       "exported": true,
       "description": "Get connection status",
-      "category": "connection",
-      "luaScript": "connection.lua"
+      "category": "connection"
     }
   ],
   "exports": {

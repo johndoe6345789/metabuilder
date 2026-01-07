@@ -9,88 +9,77 @@
       "name": "initialize",
       "exported": true,
       "description": "Initialize access denied component",
-      "category": "lifecycle",
-      "luaScript": "denied.lua"
+      "category": "lifecycle"
     },
     {
       "id": "denied_redirect_to_login",
       "name": "redirectToLogin",
       "exported": true,
       "description": "Redirect user to login page",
-      "category": "navigation",
-      "luaScript": "denied.lua"
+      "category": "navigation"
     },
     {
       "id": "denied_go_back",
       "name": "goBack",
       "exported": true,
       "description": "Navigate back to previous page",
-      "category": "navigation",
-      "luaScript": "denied.lua"
+      "category": "navigation"
     },
     {
       "id": "denied_render",
       "name": "render",
       "exported": true,
       "description": "Render access denied view",
-      "category": "ui",
-      "luaScript": "denied.lua"
+      "category": "ui"
     },
     {
       "id": "gate_initialize",
       "name": "initialize",
       "exported": true,
       "description": "Initialize auth gate",
-      "category": "lifecycle",
-      "luaScript": "gate/init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "gate_check",
       "name": "check",
       "exported": true,
       "description": "Check user access permissions",
-      "category": "security",
-      "luaScript": "gate/check.lua"
+      "category": "security"
     },
     {
       "id": "gate_wrap",
       "name": "wrap",
       "exported": true,
       "description": "Wrap content with authentication gate",
-      "category": "security",
-      "luaScript": "gate/wrap.lua"
+      "category": "security"
     },
     {
       "id": "loader_initialize",
       "name": "initializeLoader",
       "exported": true,
       "description": "Initialize page loader",
-      "category": "lifecycle",
-      "luaScript": "loader.lua"
+      "category": "lifecycle"
     },
     {
       "id": "loader_show",
       "name": "showLoader",
       "exported": true,
       "description": "Show the page loader",
-      "category": "ui",
-      "luaScript": "loader.lua"
+      "category": "ui"
     },
     {
       "id": "loader_hide",
       "name": "hideLoader",
       "exported": true,
       "description": "Hide the page loader",
-      "category": "ui",
-      "luaScript": "loader.lua"
+      "category": "ui"
     },
     {
       "id": "loader_update_text",
       "name": "updateLoaderText",
       "exported": true,
       "description": "Update loader message text",
-      "category": "ui",
-      "luaScript": "loader.lua"
+      "category": "ui"
     }
   ],
   "exports": {

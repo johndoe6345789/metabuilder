@@ -1,5 +1,6 @@
 #include "dbal/client.hpp"
 #include "dbal/errors.hpp"
+#include <algorithm>
 #include <iostream>
 #include <cassert>
 #include <chrono>
@@ -739,7 +740,7 @@ void test_component_crud() {
     }
     std::cout << "  ✓ Component type filter works" << std::endl;
 
-    std::vector<ComponentOrderUpdate> reorderUpdates = {
+    std::vector<dbal::ComponentOrderUpdate> reorderUpdates = {
         {childId, 5},
         {siblingId, 1},
     };
@@ -764,7 +765,7 @@ void test_component_crud() {
 
     dbal::MoveComponentInput moveInput;
     moveInput.id = siblingId;
-    moveInput.new_parentId = otherRootId;
+    moveInput.newParentId = otherRootId;
     moveInput.order = 0;
     auto moveResult = client.moveComponent(moveInput);
     assert(moveResult.isOk());

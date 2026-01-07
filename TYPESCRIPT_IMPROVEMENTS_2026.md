@@ -73,7 +73,7 @@ owner: owner !== null && owner !== undefined && owner !== '' ? owner : ''
 users: import('../../types/level-types').User[]
 
 // After
-import type { User, Workflow, LuaScript, PageConfig, AppConfiguration, Comment } from '../../types/level-types'
+import type { User, Workflow, PageConfig, AppConfiguration, Comment } from '../../types/level-types'
 users: User[]
 ```
 

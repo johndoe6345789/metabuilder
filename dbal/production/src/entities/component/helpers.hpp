@@ -70,7 +70,7 @@ inline void cascadeDeleteComponent(InMemoryStore& store, const std::string& comp
         for (const auto& child_id : children) {
             cascadeDeleteComponent(store, child_id);
         }
-        store.components_by_parent.erase(children_it);
+        store.components_by_parent.erase(component_id);
     }
 
     const auto& component = comp_it->second;

@@ -9,72 +9,63 @@
       "name": "renderPost",
       "exported": true,
       "description": "Render a single social post",
-      "category": "feed",
-      "luaScript": "feed.lua"
+      "category": "feed"
     },
     {
       "id": "feed_render_feed",
       "name": "renderFeed",
       "exported": true,
       "description": "Render a feed of multiple posts",
-      "category": "feed",
-      "luaScript": "feed.lua"
+      "category": "feed"
     },
     {
       "id": "feed_empty_state",
       "name": "emptyState",
       "exported": true,
       "description": "Render empty feed state when no posts exist",
-      "category": "feed",
-      "luaScript": "feed.lua"
+      "category": "feed"
     },
     {
       "id": "composer_render",
       "name": "renderComposer",
       "exported": true,
       "description": "Render the post composer UI",
-      "category": "composer",
-      "luaScript": "composer.lua"
+      "category": "composer"
     },
     {
       "id": "composer_validate",
       "name": "validateContent",
       "exported": true,
       "description": "Validate post content before submission",
-      "category": "composer",
-      "luaScript": "composer.lua"
+      "category": "composer"
     },
     {
       "id": "composer_submit",
       "name": "submitPost",
       "exported": true,
       "description": "Submit a new post to the feed",
-      "category": "composer",
-      "luaScript": "composer.lua"
+      "category": "composer"
     },
     {
       "id": "stats_render_stat",
       "name": "renderStat",
       "exported": true,
       "description": "Render a single statistic card",
-      "category": "stats",
-      "luaScript": "stats.lua"
+      "category": "stats"
     },
     {
       "id": "stats_render_stats",
       "name": "renderStats",
       "exported": true,
       "description": "Render the stats grid with multiple metrics",
-      "category": "stats",
-      "luaScript": "stats.lua"
+      "category": "stats"
     },
     {
       "id": "stats_render_hero",
       "name": "renderHero",
       "exported": true,
       "description": "Render hero section with user statistics",
-      "category": "stats",
-      "luaScript": "stats.lua"
+      "category": "stats"
     }
   ],
   "exports": {

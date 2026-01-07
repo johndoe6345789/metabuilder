@@ -29,7 +29,6 @@ export interface PackageContent {
   schemas: JsonValue[]
   pages: JsonValue[]
   workflows: JsonValue[]
-  luaScripts: JsonValue[]
   componentHierarchy: JsonObject
   componentConfigs: JsonObject
   cssClasses?: JsonValue[]
@@ -41,7 +40,7 @@ export type PackageSeedRecord = JsonObject
 
 export type PackageSeedData = Record<string, PackageSeedRecord[]>
 
-export interface LuaScriptFile {
+export interface ScriptFile {
   name: string
   path: string
   code: string

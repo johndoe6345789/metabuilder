@@ -46,7 +46,6 @@ Key entities defined in `schema.prisma`:
 - **ComponentNode** - Component tree nodes
 - **ComponentConfig** - Component configuration payloads
 - **Workflow** - Automation workflows
-- **LuaScript** - Script definitions
 - **InstalledPackage** - Installed package metadata
 - **PackageData** - Package data payloads
 

@@ -9,40 +9,35 @@
       "name": "onInstall",
       "exported": true,
       "description": "Package installation handler",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "lifecycle_uninstall",
       "name": "onUninstall",
       "exported": true,
       "description": "Package uninstallation handler",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "navigate_to_level2",
       "name": "toLevel2",
       "exported": true,
       "description": "Navigate to Level 2 user area",
-      "category": "navigation",
-      "luaScript": "navigate/to_level2.lua"
+      "category": "navigation"
     },
     {
       "id": "navigate_to_level3",
       "name": "toLevel3",
       "exported": true,
       "description": "Navigate to Level 3 moderator panel",
-      "category": "navigation",
-      "luaScript": "navigate/to_level3.lua"
+      "category": "navigation"
     },
     {
       "id": "navigate_open_docs",
       "name": "openDocs",
       "exported": true,
       "description": "Open documentation",
-      "category": "navigation",
-      "luaScript": "navigate/open_docs.lua"
+      "category": "navigation"
     }
   ],
   "exports": {

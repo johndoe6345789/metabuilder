@@ -9,64 +9,56 @@
       "name": "loadNotifications",
       "exported": true,
       "description": "Load user notifications",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "toast_show",
       "name": "showToast",
       "exported": true,
       "description": "Display toast notification",
-      "category": "ui",
-      "luaScript": "toast.lua"
+      "category": "ui"
     },
     {
       "id": "toast_dismiss",
       "name": "dismiss",
       "exported": true,
       "description": "Dismiss toast notification",
-      "category": "ui",
-      "luaScript": "toast.lua"
+      "category": "ui"
     },
     {
       "id": "list_mark_read",
       "name": "markAsRead",
       "exported": true,
       "description": "Mark notification as read",
-      "category": "actions",
-      "luaScript": "list.lua"
+      "category": "actions"
     },
     {
       "id": "list_dismiss",
       "name": "dismiss",
       "exported": true,
       "description": "Dismiss notification",
-      "category": "actions",
-      "luaScript": "list.lua"
+      "category": "actions"
     },
     {
       "id": "list_mark_all_read",
       "name": "markAllAsRead",
       "exported": true,
       "description": "Mark all notifications as read",
-      "category": "actions",
-      "luaScript": "list.lua"
+      "category": "actions"
     },
     {
       "id": "summary_prepare",
       "name": "prepareSummary",
       "exported": true,
       "description": "Prepare notification summary data",
-      "category": "analytics",
-      "luaScript": "summary.lua"
+      "category": "analytics"
     },
     {
       "id": "summary_count_by_type",
       "name": "countByType",
       "exported": true,
       "description": "Count notifications by type",
-      "category": "analytics",
-      "luaScript": "summary.lua"
+      "category": "analytics"
     }
   ],
   "exports": {

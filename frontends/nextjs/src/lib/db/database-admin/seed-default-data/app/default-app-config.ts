@@ -5,7 +5,6 @@ export const buildDefaultAppConfig = (): AppConfiguration => ({
   name: 'MetaBuilder App',
   schemas: [],
   workflows: [],
-  luaScripts: [],
   pages: [],
   theme: {
     colors: {},

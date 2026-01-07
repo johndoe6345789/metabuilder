@@ -9,88 +9,77 @@
       "name": "onInstall",
       "exported": true,
       "description": "Package lifecycle installation hook",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "sidebar_render",
       "name": "renderSidebar",
       "exported": true,
       "description": "Render sidebar navigation component",
-      "category": "ui",
-      "luaScript": "sidebar.lua"
+      "category": "ui"
     },
     {
       "id": "sidebar_header",
       "name": "renderSidebarHeader",
       "exported": true,
       "description": "Render sidebar header section",
-      "category": "ui",
-      "luaScript": "sidebar.lua"
+      "category": "ui"
     },
     {
       "id": "sidebar_item",
       "name": "renderSidebarItem",
       "exported": true,
       "description": "Render individual sidebar navigation item",
-      "category": "ui",
-      "luaScript": "sidebar.lua"
+      "category": "ui"
     },
     {
       "id": "menu_render",
       "name": "renderMenu",
       "exported": true,
       "description": "Render horizontal navigation menu",
-      "category": "ui",
-      "luaScript": "menu.lua"
+      "category": "ui"
     },
     {
       "id": "menu_can_show",
       "name": "canShowMenuItem",
       "exported": true,
       "description": "Check if user can view menu item based on permissions",
-      "category": "permissions",
-      "luaScript": "menu.lua"
+      "category": "permissions"
     },
     {
       "id": "menu_item",
       "name": "renderMenuItem",
       "exported": true,
       "description": "Render single menu item or dropdown",
-      "category": "ui",
-      "luaScript": "menu.lua"
+      "category": "ui"
     },
     {
       "id": "menu_sub_items",
       "name": "renderSubItems",
       "exported": true,
       "description": "Render dropdown menu sub-items",
-      "category": "ui",
-      "luaScript": "menu.lua"
+      "category": "ui"
     },
     {
       "id": "icons_get",
       "name": "getIcon",
       "exported": true,
       "description": "Get icon name for navigation item",
-      "category": "icons",
-      "luaScript": "icons.lua"
+      "category": "icons"
     },
     {
       "id": "types_nav_link",
       "name": "createNavLink",
       "exported": false,
       "description": "Create NavLink type structure",
-      "category": "types",
-      "luaScript": "types.lua"
+      "category": "types"
     },
     {
       "id": "types_nav_group",
       "name": "createNavGroup",
       "exported": false,
       "description": "Create NavGroup type structure",
-      "category": "types",
-      "luaScript": "types.lua"
+      "category": "types"
     }
   ],
   "exports": {

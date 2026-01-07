@@ -9,72 +9,63 @@
       "name": "renderJsonEditor",
       "exported": true,
       "description": "Render JSON editor component with options",
-      "category": "json",
-      "luaScript": "json.lua"
+      "category": "json"
     },
     {
       "id": "json_validate",
       "name": "validateJson",
       "exported": true,
       "description": "Validate JSON string syntax",
-      "category": "json",
-      "luaScript": "json.lua"
+      "category": "json"
     },
     {
       "id": "json_format",
       "name": "formatJson",
       "exported": true,
       "description": "Format JSON string with indentation",
-      "category": "json",
-      "luaScript": "json.lua"
+      "category": "json"
     },
     {
       "id": "lua_render",
       "name": "renderLuaEditor",
       "exported": true,
       "description": "Render Lua code editor component",
-      "category": "lua",
-      "luaScript": "lua.lua"
+      "category": "lua"
     },
     {
       "id": "lua_validate",
       "name": "validateLua",
       "exported": true,
       "description": "Validate Lua code syntax",
-      "category": "lua",
-      "luaScript": "lua.lua"
+      "category": "lua"
     },
     {
       "id": "lua_run_sandbox",
       "name": "runLuaSandbox",
       "exported": true,
       "description": "Execute Lua code in sandbox environment",
-      "category": "lua",
-      "luaScript": "lua.lua"
+      "category": "lua"
     },
     {
       "id": "theme_render",
       "name": "renderThemeEditor",
       "exported": true,
       "description": "Render theme customization editor",
-      "category": "theme",
-      "luaScript": "theme.lua"
+      "category": "theme"
     },
     {
       "id": "theme_color_picker",
       "name": "renderColorPicker",
       "exported": true,
       "description": "Render color picker component",
-      "category": "theme",
-      "luaScript": "theme.lua"
+      "category": "theme"
     },
     {
       "id": "theme_mode_toggle",
       "name": "renderModeToggle",
       "exported": true,
       "description": "Render light/dark mode toggle",
-      "category": "theme",
-      "luaScript": "theme.lua"
+      "category": "theme"
     }
   ],
   "exports": {

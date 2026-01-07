@@ -9,112 +9,98 @@
       "name": "listFiles",
       "exported": true,
       "description": "List files in a directory",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     },
     {
       "id": "ide_read_file",
       "name": "readFile",
       "exported": true,
       "description": "Read file contents",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     },
     {
       "id": "ide_write_file",
       "name": "writeFile",
       "exported": true,
       "description": "Write file contents",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     },
     {
       "id": "ide_create_file",
       "name": "createFile",
       "exported": true,
       "description": "Create a new file",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     },
     {
       "id": "ide_create_folder",
       "name": "createFolder",
       "exported": true,
       "description": "Create a new folder",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     },
     {
       "id": "ide_delete_item",
       "name": "deleteItem",
       "exported": true,
       "description": "Delete a file or folder",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     },
     {
       "id": "ide_rename_item",
       "name": "renameItem",
       "exported": true,
       "description": "Rename a file or folder",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     },
     {
       "id": "ide_run_script",
       "name": "runScript",
       "exported": true,
       "description": "Execute a script file",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     },
     {
       "id": "ide_run_tests",
       "name": "runTests",
       "exported": true,
       "description": "Run test suite",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     },
     {
       "id": "ide_get_git_status",
       "name": "getGitStatus",
       "exported": true,
       "description": "Get git status for workspace",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     },
     {
       "id": "ide_git_commit",
       "name": "gitCommit",
       "exported": true,
       "description": "Commit changes to git",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     },
     {
       "id": "ide_git_push",
       "name": "gitPush",
       "exported": true,
       "description": "Push commits to remote",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     },
     {
       "id": "ide_git_pull",
       "name": "gitPull",
       "exported": true,
       "description": "Pull from remote",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     },
     {
       "id": "ide_detect_language",
       "name": "detectLanguage",
       "exported": true,
       "description": "Detect file language from extension",
-      "category": "ide",
-      "luaScript": "ide.lua"
+      "category": "ide"
     }
   ],
   "exports": {

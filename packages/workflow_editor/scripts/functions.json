@@ -9,80 +9,70 @@
       "name": "saveWorkflow",
       "exported": true,
       "description": "Save workflow definition",
-      "category": "editor",
-      "luaScript": "editor.lua"
+      "category": "editor"
     },
     {
       "id": "editor_load",
       "name": "loadWorkflow",
       "exported": true,
       "description": "Load workflow definition",
-      "category": "editor",
-      "luaScript": "editor.lua"
+      "category": "editor"
     },
     {
       "id": "editor_add_node",
       "name": "addNode",
       "exported": true,
       "description": "Add node to workflow",
-      "category": "editor",
-      "luaScript": "editor.lua"
+      "category": "editor"
     },
     {
       "id": "editor_delete_node",
       "name": "deleteNode",
       "exported": true,
       "description": "Delete node from workflow",
-      "category": "editor",
-      "luaScript": "editor.lua"
+      "category": "editor"
     },
     {
       "id": "editor_connect_nodes",
       "name": "connectNodes",
       "exported": true,
       "description": "Connect two workflow nodes",
-      "category": "editor",
-      "luaScript": "editor.lua"
+      "category": "editor"
     },
     {
       "id": "run_execute",
       "name": "executeWorkflow",
       "exported": true,
       "description": "Execute workflow",
-      "category": "execution",
-      "luaScript": "run.lua"
+      "category": "execution"
     },
     {
       "id": "run_cancel",
       "name": "cancelWorkflow",
       "exported": true,
       "description": "Cancel running workflow",
-      "category": "execution",
-      "luaScript": "run.lua"
+      "category": "execution"
     },
     {
       "id": "run_retry",
       "name": "retryWorkflow",
       "exported": true,
       "description": "Retry failed workflow",
-      "category": "execution",
-      "luaScript": "run.lua"
+      "category": "execution"
     },
     {
       "id": "status_get",
       "name": "getStatus",
       "exported": true,
       "description": "Get workflow run status",
-      "category": "monitoring",
-      "luaScript": "status.lua"
+      "category": "monitoring"
     },
     {
       "id": "status_list_runs",
       "name": "listRuns",
       "exported": true,
       "description": "List workflow runs",
-      "category": "monitoring",
-      "luaScript": "status.lua"
+      "category": "monitoring"
     }
   ],
   "exports": {

@@ -9,120 +9,105 @@
       "name": "init",
       "exported": true,
       "description": "Package initialization",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "get_config",
       "name": "getConfig",
       "exported": true,
       "description": "Get analyzer configuration",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "capture_prepare",
       "name": "prepareCapture",
       "exported": true,
       "description": "Prepare capture context (page info for capture)",
-      "category": "screenshot",
-      "luaScript": "capture.lua"
+      "category": "screenshot"
     },
     {
       "id": "capture_generate_filename",
       "name": "generateFilename",
       "exported": true,
       "description": "Generate filename for screenshot with timestamp",
-      "category": "screenshot",
-      "luaScript": "capture.lua"
+      "category": "screenshot"
     },
     {
       "id": "capture_validate",
       "name": "validateScreenshot",
       "exported": true,
       "description": "Validate screenshot data",
-      "category": "screenshot",
-      "luaScript": "capture.lua"
+      "category": "screenshot"
     },
     {
       "id": "capture_get_status",
       "name": "getCaptureStatus",
       "exported": true,
       "description": "Get capture status",
-      "category": "screenshot",
-      "luaScript": "capture.lua"
+      "category": "screenshot"
     },
     {
       "id": "analyze_structure",
       "name": "analyzeStructure",
       "exported": true,
       "description": "Analyze page structure (elements, text, HTML)",
-      "category": "analysis",
-      "luaScript": "analyze.lua"
+      "category": "analysis"
     },
     {
       "id": "analyze_detect_page_type",
       "name": "detectPageType",
       "exported": true,
       "description": "Detect page type based on URL and elements",
-      "category": "analysis",
-      "luaScript": "analyze.lua"
+      "category": "analysis"
     },
     {
       "id": "analyze_generate_report",
       "name": "generateReport",
       "exported": true,
       "description": "Generate markdown analysis report",
-      "category": "analysis",
-      "luaScript": "analyze.lua"
+      "category": "analysis"
     },
     {
       "id": "analyze_get_recommendations",
       "name": "getRecommendations",
       "exported": true,
       "description": "Get accessibility and usability recommendations",
-      "category": "analysis",
-      "luaScript": "analyze.lua"
+      "category": "analysis"
     },
     {
       "id": "page_info_get_title",
       "name": "getPageTitle",
       "exported": true,
       "description": "Get page title",
-      "category": "browser",
-      "luaScript": "page_info.lua"
+      "category": "browser"
     },
     {
       "id": "page_info_get_url",
       "name": "getPageUrl",
       "exported": true,
       "description": "Get page URL",
-      "category": "browser",
-      "luaScript": "page_info.lua"
+      "category": "browser"
     },
     {
       "id": "page_info_get_viewport",
       "name": "getViewport",
       "exported": true,
       "description": "Get viewport dimensions",
-      "category": "browser",
-      "luaScript": "page_info.lua"
+      "category": "browser"
     },
     {
       "id": "page_info_get_user_agent",
       "name": "getUserAgent",
       "exported": true,
       "description": "Get user agent string",
-      "category": "browser",
-      "luaScript": "page_info.lua"
+      "category": "browser"
     },
     {
       "id": "page_info_get_all",
       "name": "getAllPageInfo",
       "exported": true,
       "description": "Get all page information",
-      "category": "browser",
-      "luaScript": "page_info.lua"
+      "category": "browser"
     }
   ],
   "exports": {

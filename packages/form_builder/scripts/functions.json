@@ -9,104 +9,91 @@
       "name": "handleChange",
       "exported": true,
       "description": "Handle field value change",
-      "category": "handlers",
-      "luaScript": "fields.lua"
+      "category": "handlers"
     },
     {
       "id": "fields_handle_blur",
       "name": "handleBlur",
       "exported": true,
       "description": "Handle field blur event",
-      "category": "handlers",
-      "luaScript": "fields.lua"
+      "category": "handlers"
     },
     {
       "id": "fields_handle_search",
       "name": "handleSearch",
       "exported": true,
       "description": "Handle search input change",
-      "category": "handlers",
-      "luaScript": "fields.lua"
+      "category": "handlers"
     },
     {
       "id": "fields_clear_search",
       "name": "clearSearch",
       "exported": true,
       "description": "Clear search input",
-      "category": "handlers",
-      "luaScript": "fields.lua"
+      "category": "handlers"
     },
     {
       "id": "fields_toggle_password",
       "name": "togglePasswordVisibility",
       "exported": true,
       "description": "Toggle password visibility",
-      "category": "handlers",
-      "luaScript": "fields.lua"
+      "category": "handlers"
     },
     {
       "id": "validate_field",
       "name": "validateField",
       "exported": true,
       "description": "Validate a single form field",
-      "category": "validation",
-      "luaScript": "validate.lua"
+      "category": "validation"
     },
     {
       "id": "validate_email",
       "name": "validateEmail",
       "exported": true,
       "description": "Validate email address format",
-      "category": "validation",
-      "luaScript": "validate.lua"
+      "category": "validation"
     },
     {
       "id": "validate_password",
       "name": "validatePassword",
       "exported": true,
       "description": "Validate password strength",
-      "category": "validation",
-      "luaScript": "validate.lua"
+      "category": "validation"
     },
     {
       "id": "validate_required",
       "name": "validateRequired",
       "exported": true,
       "description": "Check if required field has value",
-      "category": "validation",
-      "luaScript": "validate.lua"
+      "category": "validation"
     },
     {
       "id": "validate_form",
       "name": "validateForm",
       "exported": true,
       "description": "Validate entire form",
-      "category": "validation",
-      "luaScript": "validate.lua"
+      "category": "validation"
     },
     {
       "id": "contact_form_handle_submit",
       "name": "handleSubmit",
       "exported": true,
       "description": "Handle contact form submission",
-      "category": "forms",
-      "luaScript": "contact_form.lua"
+      "category": "forms"
     },
     {
       "id": "contact_form_validate",
       "name": "validate",
       "exported": true,
       "description": "Validate contact form",
-      "category": "forms",
-      "luaScript": "contact_form.lua"
+      "category": "forms"
     },
     {
       "id": "contact_form_create_state",
       "name": "createInitialState",
       "exported": true,
       "description": "Create initial form state",
-      "category": "forms",
-      "luaScript": "contact_form.lua"
+      "category": "forms"
     }
   ],
   "exports": {

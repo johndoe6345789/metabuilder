@@ -1,4 +1,4 @@
-#include "server_helpers/role.hpp"
+#include "role.hpp"
 
 #include <algorithm>
 #include <cctype>

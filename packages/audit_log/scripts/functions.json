@@ -9,112 +9,98 @@
       "name": "init",
       "exported": true,
       "description": "Package initialization and main entry point",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     },
     {
       "id": "stats_calculate",
       "name": "calculateStats",
       "exported": true,
       "description": "Calculate audit log statistics",
-      "category": "analytics",
-      "luaScript": "stats.lua"
+      "category": "analytics"
     },
     {
       "id": "stats_prepare_display",
       "name": "prepareStatsDisplay",
       "exported": true,
       "description": "Prepare statistics for display",
-      "category": "analytics",
-      "luaScript": "stats.lua"
+      "category": "analytics"
     },
     {
       "id": "filters_apply",
       "name": "applyFilters",
       "exported": true,
       "description": "Apply filters to audit log entries",
-      "category": "data",
-      "luaScript": "filters.lua"
+      "category": "data"
     },
     {
       "id": "filters_by_username",
       "name": "filterByUsername",
       "exported": true,
       "description": "Filter logs by username",
-      "category": "data",
-      "luaScript": "filters/filter_by_username.lua"
+      "category": "data"
     },
     {
       "id": "filters_by_operation",
       "name": "filterByOperation",
       "exported": true,
       "description": "Filter logs by operation type",
-      "category": "data",
-      "luaScript": "filters/filter_by_operation.lua"
+      "category": "data"
     },
     {
       "id": "filters_by_resource",
       "name": "filterByResource",
       "exported": true,
       "description": "Filter logs by resource",
-      "category": "data",
-      "luaScript": "filters/filter_by_resource.lua"
+      "category": "data"
     },
     {
       "id": "filters_by_date_range",
       "name": "filterByDateRange",
       "exported": true,
       "description": "Filter logs by date range",
-      "category": "data",
-      "luaScript": "filters/filter_by_date_range.lua"
+      "category": "data"
     },
     {
       "id": "formatting_format_all",
       "name": "formatAllLogs",
       "exported": true,
       "description": "Format all log entries for display",
-      "category": "ui",
-      "luaScript": "formatting.lua"
+      "category": "ui"
     },
     {
       "id": "formatting_format_entry",
       "name": "formatLogEntry",
       "exported": true,
       "description": "Format a single log entry",
-      "category": "ui",
-      "luaScript": "formatting/format_log_entry.lua"
+      "category": "ui"
     },
     {
       "id": "formatting_format_timestamp",
       "name": "formatTimestamp",
       "exported": true,
       "description": "Format timestamp for display",
-      "category": "ui",
-      "luaScript": "formatting/format_timestamp.lua"
+      "category": "ui"
     },
     {
       "id": "formatting_get_operation_color",
       "name": "getOperationColor",
       "exported": true,
       "description": "Get color for operation type",
-      "category": "ui",
-      "luaScript": "formatting/get_operation_color.lua"
+      "category": "ui"
     },
     {
       "id": "formatting_get_resource_icon",
       "name": "getResourceIcon",
       "exported": true,
       "description": "Get icon for resource type",
-      "category": "ui",
-      "luaScript": "formatting/get_resource_icon.lua"
+      "category": "ui"
     },
     {
       "id": "formatting_get_status_badge",
       "name": "getStatusBadge",
       "exported": true,
       "description": "Get status badge styling",
-      "category": "ui",
-      "luaScript": "formatting/get_status_badge.lua"
+      "category": "ui"
     }
   ],
   "exports": {

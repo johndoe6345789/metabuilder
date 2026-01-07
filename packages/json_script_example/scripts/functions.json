@@ -52,8 +52,7 @@
           "description": "Second number for arithmetic and comparison operations"
         }
       ],
-      "returnType": "ExpressionsDemoResult",
-      "luaScript": "expressions.lua"
+      "returnType": "ExpressionsDemoResult"
     },
     {
       "id": "all_statements_demo",
@@ -68,8 +67,7 @@
           "description": "Array of numbers to process and calculate statistics on"
         }
       ],
-      "returnType": "StatementsDemoResult",
-      "luaScript": "statements.lua"
+      "returnType": "StatementsDemoResult"
     },
     {
       "id": "all_operators_demo",
@@ -89,8 +87,7 @@
           "description": "Second operand"
         }
       ],
-      "returnType": "OperatorsDemoResult",
-      "luaScript": "operators.lua"
+      "returnType": "OperatorsDemoResult"
     },
     {
       "id": "control_flow_demo",
@@ -105,8 +102,7 @@
           "description": "Number to classify"
         }
       ],
-      "returnType": "Classification",
-      "luaScript": "control_flow.lua"
+      "returnType": "Classification"
     },
     {
       "id": "data_structures_demo",
@@ -115,8 +111,7 @@
       "description": "Demonstrates working with objects and arrays including nested structures and member access",
       "category": "demo",
       "params": [],
-      "returnType": "DataStructuresResult",
-      "luaScript": "data_structures.lua"
+      "returnType": "DataStructuresResult"
     }
   ],
   "exports": {

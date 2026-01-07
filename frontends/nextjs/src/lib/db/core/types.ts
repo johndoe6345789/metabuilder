@@ -40,7 +40,6 @@ export interface ComponentConfig {
   events?: Record<string, string>
   conditionalRendering?: {
     condition: string
-    luaScriptId?: string
   }
 }
 

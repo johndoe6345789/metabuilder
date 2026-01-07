@@ -9,168 +9,147 @@
       "name": "defineField",
       "exported": true,
       "description": "Define a schema field with type and options",
-      "category": "fields",
-      "luaScript": "fields.lua"
+      "category": "fields"
     },
     {
       "id": "fields_primary_key",
       "name": "primaryKey",
       "exported": true,
       "description": "Create a primary key field",
-      "category": "fields",
-      "luaScript": "fields.lua"
+      "category": "fields"
     },
     {
       "id": "fields_foreign_key",
       "name": "foreignKey",
       "exported": true,
       "description": "Create a foreign key field reference",
-      "category": "fields",
-      "luaScript": "fields.lua"
+      "category": "fields"
     },
     {
       "id": "fields_init_editor",
       "name": "initFieldEditor",
       "exported": true,
       "description": "Initialize the field editor state",
-      "category": "fields",
-      "luaScript": "fields.lua"
+      "category": "fields"
     },
     {
       "id": "fields_update_name",
       "name": "updateFieldName",
       "exported": true,
       "description": "Update field name",
-      "category": "fields",
-      "luaScript": "fields.lua"
+      "category": "fields"
     },
     {
       "id": "fields_update_type",
       "name": "updateFieldType",
       "exported": true,
       "description": "Update field data type",
-      "category": "fields",
-      "luaScript": "fields.lua"
+      "category": "fields"
     },
     {
       "id": "fields_toggle_constraints",
       "name": "toggleFieldConstraints",
       "exported": true,
       "description": "Toggle field constraints (PK, unique, nullable, auto-increment)",
-      "category": "fields",
-      "luaScript": "fields.lua"
+      "category": "fields"
     },
     {
       "id": "tables_create",
       "name": "createTable",
       "exported": true,
       "description": "Create a new table definition",
-      "category": "tables",
-      "luaScript": "tables.lua"
+      "category": "tables"
     },
     {
       "id": "tables_render",
       "name": "renderTableEditor",
       "exported": true,
       "description": "Render a table editor component",
-      "category": "tables",
-      "luaScript": "tables.lua"
+      "category": "tables"
     },
     {
       "id": "tables_add_field",
       "name": "addTableField",
       "exported": true,
       "description": "Add a field to a table",
-      "category": "tables",
-      "luaScript": "tables.lua"
+      "category": "tables"
     },
     {
       "id": "tables_remove_field",
       "name": "removeTableField",
       "exported": true,
       "description": "Remove a field from a table",
-      "category": "tables",
-      "luaScript": "tables.lua"
+      "category": "tables"
     },
     {
       "id": "tables_init_editor",
       "name": "initTableEditor",
       "exported": true,
       "description": "Initialize table editor state",
-      "category": "tables",
-      "luaScript": "tables.lua"
+      "category": "tables"
     },
     {
       "id": "tables_add_index",
       "name": "addTableIndex",
       "exported": true,
       "description": "Add an index to a table",
-      "category": "tables",
-      "luaScript": "tables.lua"
+      "category": "tables"
     },
     {
       "id": "tables_delete_index",
       "name": "deleteTableIndex",
       "exported": true,
       "description": "Delete an index from a table",
-      "category": "tables",
-      "luaScript": "tables.lua"
+      "category": "tables"
     },
     {
       "id": "relations_define",
       "name": "defineRelation",
       "exported": true,
       "description": "Define a table relationship",
-      "category": "relations",
-      "luaScript": "relations.lua"
+      "category": "relations"
     },
     {
       "id": "relations_has_one",
       "name": "hasOne",
       "exported": true,
       "description": "Create a one-to-one relationship",
-      "category": "relations",
-      "luaScript": "relations.lua"
+      "category": "relations"
     },
     {
       "id": "relations_has_many",
       "name": "hasMany",
       "exported": true,
       "description": "Create a one-to-many relationship",
-      "category": "relations",
-      "luaScript": "relations.lua"
+      "category": "relations"
     },
     {
       "id": "relations_belongs_to_many",
       "name": "belongsToMany",
       "exported": true,
       "description": "Create a many-to-many relationship with pivot table",
-      "category": "relations",
-      "luaScript": "relations.lua"
+      "category": "relations"
     },
     {
       "id": "schema_initialize",
       "name": "initializeSchema",
       "exported": true,
       "description": "Initialize schema editor state",
-      "category": "schema",
-      "luaScript": "init.lua"
+      "category": "schema"
     },
     {
       "id": "schema_save",
       "name": "saveSchema",
       "exported": true,
       "description": "Save schema changes",
-      "category": "schema",
-      "luaScript": "init.lua"
+      "category": "schema"
     },
     {
       "id": "schema_validate",
       "name": "validateSchema",
       "exported": true,
       "description": "Validate schema configuration",
-      "category": "schema",
-      "luaScript": "init.lua"
+      "category": "schema"
     }
   ],
   "exports": {

@@ -58,7 +58,6 @@ export const guestbookRetroPackage = (): {
       },
     ],
     workflows: [],
-    luaScripts: [],
     componentHierarchy: {},
     componentConfigs: {},
     seedData: {

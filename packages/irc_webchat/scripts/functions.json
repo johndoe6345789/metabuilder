@@ -10,7 +10,6 @@
       "exported": true,
       "description": "Send a chat message to a channel",
       "category": "commands",
-      "luaScript": "send_message.lua",
       "parameters": [
         {
           "name": "channelId",
@@ -44,7 +43,6 @@
       "exported": true,
       "description": "Process IRC commands like /help, /users, /clear, /me",
       "category": "commands",
-      "luaScript": "handle_command.lua",
       "parameters": [
         {
           "name": "command",
@@ -78,7 +76,6 @@
       "exported": true,
       "description": "Format timestamps for display in HH:MM AM/PM format",
       "category": "formatting",
-      "luaScript": "format_time.lua",
       "parameters": [
         {
           "name": "timestamp",
@@ -97,7 +94,6 @@
       "exported": true,
       "description": "Handle user joining a channel",
       "category": "events",
-      "luaScript": "user_join.lua",
       "parameters": [
         {
           "name": "channelId",
@@ -126,7 +122,6 @@
       "exported": true,
       "description": "Handle user leaving a channel",
       "category": "events",
-      "luaScript": "user_leave.lua",
       "parameters": [
         {
           "name": "channelId",
@@ -154,8 +149,7 @@
       "name": "init",
       "exported": false,
       "description": "Lifecycle hooks for installation and removal",
-      "category": "lifecycle",
-      "luaScript": "init.lua"
+      "category": "lifecycle"
     }
   ],
   "exports": {

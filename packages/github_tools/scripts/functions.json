@@ -9,128 +9,112 @@
       "name": "initialize",
       "exported": true,
       "description": "Initialize the GitHub Tools package with configuration",
-      "category": "initialization",
-      "luaScript": "init.lua"
+      "category": "initialization"
     },
     {
       "id": "fetch_runs_fetchRuns",
       "name": "fetchRuns",
       "exported": true,
       "description": "Fetch workflow runs from GitHub API",
-      "category": "api",
-      "luaScript": "fetch_runs.lua"
+      "category": "api"
     },
     {
       "id": "fetch_runs_fetchJobs",
       "name": "fetchJobs",
       "exported": true,
       "description": "Fetch jobs for a specific workflow run",
-      "category": "api",
-      "luaScript": "fetch_runs.lua"
+      "category": "api"
     },
     {
       "id": "fetch_runs_fetchLogs",
       "name": "fetchLogs",
       "exported": true,
       "description": "Fetch logs for a specific job",
-      "category": "api",
-      "luaScript": "fetch_runs.lua"
+      "category": "api"
     },
     {
       "id": "analyze_calculateStats",
       "name": "calculateStats",
       "exported": true,
       "description": "Calculate statistics from workflow runs",
-      "category": "analytics",
-      "luaScript": "analyze.lua"
+      "category": "analytics"
     },
     {
       "id": "analyze_getSuccessTrend",
       "name": "getSuccessTrend",
       "exported": true,
       "description": "Get trend data for success rate over time",
-      "category": "analytics",
-      "luaScript": "analyze.lua"
+      "category": "analytics"
     },
     {
       "id": "analyze_getFailureBreakdown",
       "name": "getFailureBreakdown",
       "exported": true,
       "description": "Get failure breakdown by type",
-      "category": "analytics",
-      "luaScript": "analyze.lua"
+      "category": "analytics"
     },
     {
       "id": "filter_filterRuns",
       "name": "filterRuns",
       "exported": true,
       "description": "Apply filters to workflow runs",
-      "category": "filtering",
-      "luaScript": "filter.lua"
+      "category": "filtering"
     },
     {
       "id": "filter_applyFilters",
       "name": "applyFilters",
       "exported": true,
       "description": "Apply filters from form data",
-      "category": "filtering",
-      "luaScript": "filter.lua"
+      "category": "filtering"
     },
     {
       "id": "filter_sortRuns",
       "name": "sortRuns",
       "exported": true,
       "description": "Sort runs by field",
-      "category": "filtering",
-      "luaScript": "filter.lua"
+      "category": "filtering"
     },
     {
       "id": "status_getStatusColor",
       "name": "getStatusColor",
       "exported": true,
       "description": "Get color for run status",
-      "category": "display",
-      "luaScript": "status.lua"
+      "category": "display"
     },
     {
       "id": "status_getStatusIcon",
       "name": "getStatusIcon",
       "exported": true,
       "description": "Get icon name for run status",
-      "category": "display",
-      "luaScript": "status.lua"
+      "category": "display"
     },
     {
       "id": "status_getStatusLabel",
       "name": "getStatusLabel",
       "exported": true,
       "description": "Get human-readable status label",
-      "category": "display",
-      "luaScript": "status.lua"
+      "category": "display"
     },
     {
       "id": "status_renderBadge",
       "name": "renderBadge",
       "exported": true,
       "description": "Render status badge component",
-      "category": "display",
-      "luaScript": "status.lua"
+      "category": "display"
     },
     {
       "id": "status_formatDuration",
       "name": "formatDuration",
       "exported": true,
       "description": "Format duration in human-readable form",
-      "category": "display",
-      "luaScript": "status.lua"
+      "category": "display"
     },
     {
       "id": "status_formatRelativeTime",
       "name": "formatRelativeTime",
       "exported": true,
       "description": "Format timestamp as relative time",
-      "category": "display",
-      "luaScript": "status.lua"
+      "category": "display"
     }
   ],
   "exports": {

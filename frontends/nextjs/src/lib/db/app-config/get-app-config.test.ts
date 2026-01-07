@@ -24,7 +24,6 @@ describe('getAppConfig', () => {
           name: 'Test App',
           schemas: '[]',
           workflows: '[]',
-          luaScripts: '[]',
           pages: '[]',
           theme: '{}',
         },

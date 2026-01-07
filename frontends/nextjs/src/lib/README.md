@@ -30,7 +30,6 @@ Core utilities, database access, authentication, and business logic for MetaBuil
 ### Utilities
 
 - **package-loader.ts** - Package system management
-- **lua-sandbox.ts** - Secure Lua script execution with Fengari
 - **validators.ts** - Input validation schemas
 - **helpers.ts** - Common utility functions
 
@@ -81,27 +80,10 @@ await initializePackageSystem()
 ```
 
 Each package can include:
-- React components
-- Lua scripts
+- React components defined in JSON
 - Seed data
 - Configuration
 - Static assets
-
-## Lua Scripting
-
-Safe, sandboxed Lua execution for business logic:
-
-```typescript
-import { executeLua } from '@/lib/lua-sandbox'
-
-const result = await executeLua(`
-  function add(a, b)
-    return a + b
-  end
-  return add(2, 3)
-`)
-// result = 5
-```
 
 ## Security
 
@@ -114,16 +96,10 @@ const hashed = hashPassword('userPassword')
 // Uses SHA-512 for security
 ```
 
-### Lua Sandbox
+### Application Security Notes
 
-All Lua scripts execute in a restricted environment:
-- Limited standard library access
-- No file system access
-- No network access
-- Memory limits enforced
-- Timeout protection
-
-## Usage Examples
+- All dynamically loaded content is validated through the package system.
+- Database queries and scripts are executed with strict permission labels.
 
 ### Check User Permissions
 
@@ -165,7 +141,6 @@ await initializePackageSystem()
 lib/
 ├── auth.ts                 # Authorization logic
 ├── database.ts             # Prisma wrapper
-├── lua-sandbox.ts          # Lua execution
 ├── package-loader.ts       # Package system
 ├── validators.ts           # Input validation
 ├── helpers.ts              # Utilities
@@ -181,8 +156,7 @@ lib/
 
 1. ✅ Keep business logic in libraries, not components
 2. ✅ Use database for configuration (declarative)
-3. ✅ Sandbox all Lua execution
-4. ✅ Hash all passwords with SHA-512
+3. ✅ Hash all passwords with SHA-512
 5. ✅ Validate all user input
 6. ❌ Don't expose secrets in code
 7. ❌ Don't trust client-side permissions alone

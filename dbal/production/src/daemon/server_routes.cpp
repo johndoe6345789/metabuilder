@@ -56,11 +56,11 @@ void Server::registerRoutes() {
             body["success"] = false;
             body["message"] = message;
             auto response = drogon::HttpResponse::newHttpJsonResponse(body);
-            response->setStatusCode(status);
+            response->setStatusCode(static_cast<drogon::HttpStatusCode>(status));
             callback(response);
         };
 
-        std::istringstream stream(request->getBody());
+        std::istringstream stream(std::string(request->getBody()));
         ::Json::CharReaderBuilder reader_builder;
         ::Json::Value rpc_request;
         JSONCPP_STRING errs;
@@ -181,7 +181,7 @@ void Server::registerRoutes() {
         }
         
         // Handle POST - actions
-        std::istringstream stream(request->getBody());
+        std::istringstream stream(std::string(request->getBody()));
         ::Json::CharReaderBuilder reader_builder;
         ::Json::Value body;
         JSONCPP_STRING errs;
@@ -265,7 +265,7 @@ void Server::registerRoutes() {
         // Parse body for POST/PUT/PATCH
         ::Json::Value body(::Json::objectValue);
         if (method == "POST" || method == "PUT" || method == "PATCH") {
-            std::istringstream stream(request->getBody());
+            std::istringstream stream(std::string(request->getBody()));
             ::Json::CharReaderBuilder reader;
             JSONCPP_STRING errs;
             ::Json::parseFromStream(reader, stream, &body, &errs);
@@ -323,7 +323,7 @@ void Server::registerRoutes() {
         
         ::Json::Value body(::Json::objectValue);
         if (method == "POST" || method == "PUT" || method == "PATCH") {
-            std::istringstream stream(request->getBody());
+            std::istringstream stream(std::string(request->getBody()));
             ::Json::CharReaderBuilder reader;
             JSONCPP_STRING errs;
             ::Json::parseFromStream(reader, stream, &body, &errs);
@@ -381,7 +381,7 @@ void Server::registerRoutes() {
         
         ::Json::Value body(::Json::objectValue);
         if (method == "POST" || method == "PUT" || method == "PATCH") {
-            std::istringstream stream(request->getBody());
+            std::istringstream stream(std::string(request->getBody()));
             ::Json::CharReaderBuilder reader;
             JSONCPP_STRING errs;
             ::Json::parseFromStream(reader, stream, &body, &errs);

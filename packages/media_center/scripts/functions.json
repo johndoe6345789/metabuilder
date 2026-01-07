@@ -9,192 +9,168 @@
       "name": "getMediaStats",
       "exported": true,
       "description": "Get media center dashboard statistics",
-      "category": "analytics",
-      "luaScript": "media_api.lua"
+      "category": "analytics"
     },
     {
       "id": "media_api_fetch_assets",
       "name": "fetchAssets",
       "exported": true,
       "description": "Fetch media assets with filtering",
-      "category": "data",
-      "luaScript": "media_api.lua"
+      "category": "data"
     },
     {
       "id": "job_submit",
       "name": "submitJob",
       "exported": true,
       "description": "Submit a new media processing job",
-      "category": "jobs",
-      "luaScript": "job_helpers.lua"
+      "category": "jobs"
     },
     {
       "id": "job_get_status",
       "name": "getJobStatus",
       "exported": true,
       "description": "Get status of a media job",
-      "category": "jobs",
-      "luaScript": "job_helpers.lua"
+      "category": "jobs"
     },
     {
       "id": "job_cancel",
       "name": "cancelJob",
       "exported": true,
       "description": "Cancel a pending or running job",
-      "category": "jobs",
-      "luaScript": "job_helpers.lua"
+      "category": "jobs"
     },
     {
       "id": "job_list",
       "name": "listJobs",
       "exported": true,
       "description": "List media jobs with optional filters",
-      "category": "jobs",
-      "luaScript": "job_helpers.lua"
+      "category": "jobs"
     },
     {
       "id": "radio_list_channels",
       "name": "listRadioChannels",
       "exported": true,
       "description": "List available radio channels",
-      "category": "radio",
-      "luaScript": "radio_helpers.lua"
+      "category": "radio"
     },
     {
       "id": "radio_create_channel",
       "name": "createRadioChannel",
       "exported": true,
       "description": "Create a new radio channel",
-      "category": "radio",
-      "luaScript": "radio_helpers.lua"
+      "category": "radio"
     },
     {
       "id": "radio_update_channel",
       "name": "updateRadioChannel",
       "exported": true,
       "description": "Update radio channel settings",
-      "category": "radio",
-      "luaScript": "radio_helpers.lua"
+      "category": "radio"
     },
     {
       "id": "radio_get_stream_url",
       "name": "getRadioStreamUrl",
       "exported": true,
       "description": "Get streaming URL for a radio channel",
-      "category": "radio",
-      "luaScript": "radio_helpers.lua"
+      "category": "radio"
     },
     {
       "id": "tv_list_channels",
       "name": "listTvChannels",
       "exported": true,
       "description": "List available TV channels",
-      "category": "tv",
-      "luaScript": "tv_helpers.lua"
+      "category": "tv"
     },
     {
       "id": "tv_create_channel",
       "name": "createTvChannel",
       "exported": true,
       "description": "Create a new TV channel",
-      "category": "tv",
-      "luaScript": "tv_helpers.lua"
+      "category": "tv"
     },
     {
       "id": "tv_update_channel",
       "name": "updateTvChannel",
       "exported": true,
       "description": "Update TV channel settings",
-      "category": "tv",
-      "luaScript": "tv_helpers.lua"
+      "category": "tv"
     },
     {
       "id": "tv_get_schedule",
       "name": "getTvSchedule",
       "exported": true,
       "description": "Get TV channel schedule",
-      "category": "tv",
-      "luaScript": "tv_helpers.lua"
+      "category": "tv"
     },
     {
       "id": "tv_set_schedule",
       "name": "setTvSchedule",
       "exported": true,
       "description": "Set TV channel schedule",
-      "category": "tv",
-      "luaScript": "tv_helpers.lua"
+      "category": "tv"
     },
     {
       "id": "tv_get_epg",
       "name": "getTvEpg",
       "exported": true,
       "description": "Get TV Electronic Program Guide",
-      "category": "tv",
-      "luaScript": "tv_helpers.lua"
+      "category": "tv"
     },
     {
       "id": "doc_convert",
       "name": "convertDocument",
       "exported": true,
       "description": "Convert document to different format",
-      "category": "documents",
-      "luaScript": "document_helpers.lua"
+      "category": "documents"
     },
     {
       "id": "doc_get_supported_formats",
       "name": "getSupportedFormats",
       "exported": true,
       "description": "Get list of supported document formats",
-      "category": "documents",
-      "luaScript": "document_helpers.lua"
+      "category": "documents"
     },
     {
       "id": "retro_list_games",
       "name": "listRetroGames",
       "exported": true,
       "description": "List available retro games",
-      "category": "retro",
-      "luaScript": "retro_helpers.lua"
+      "category": "retro"
     },
     {
       "id": "retro_launch_game",
       "name": "launchRetroGame",
       "exported": true,
       "description": "Launch a retro game session",
-      "category": "retro",
-      "luaScript": "retro_helpers.lua"
+      "category": "retro"
     },
     {
       "id": "retro_save_state",
       "name": "saveGameState",
       "exported": true,
       "description": "Save current game state",
-      "category": "retro",
-      "luaScript": "retro_helpers.lua"
+      "category": "retro"
     },
     {
       "id": "retro_load_state",
       "name": "loadGameState",
       "exported": true,
       "description": "Load a saved game state",
-      "category": "retro",
-      "luaScript": "retro_helpers.lua"
+      "category": "retro"
     },
     {
       "id": "retro_list_cores",
       "name": "listEmulatorCores",
       "exported": true,
       "description": "List available emulator cores",
-      "category": "retro",
-      "luaScript": "retro_helpers.lua"
+      "category": "retro"
     },
     {
       "id": "retro_get_active_sessions",
       "name": "getActiveSessions",
       "exported": true,
       "description": "Get list of active gaming sessions",
-      "category": "retro",
-      "luaScript": "retro_helpers.lua"
+      "category": "retro"
     }
   ],
   "exports": {

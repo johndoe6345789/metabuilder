@@ -64,7 +64,7 @@ Full-featured sections with business logic:
 
 **Builders:** Builder, Canvas, ComponentCatalog, PropertyInspector
 
-**Editors:** SchemaEditor, CodeEditor, LuaEditor, JsonEditor, NerdModeIDE
+**Editors:** SchemaEditor, CodeEditor, JsonEditor, NerdModeIDE
 
 `NerdModeIDE` is a thin wrapper that re-exports the modular implementation under `components/nerd-mode-ide/`.
 
