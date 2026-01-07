@@ -69,7 +69,6 @@ public:
         page.params = input.params;
         page.meta = input.meta;
         page.createdAt = std::chrono::system_clock::now();
-        page.updatedAt = page.createdAt;
         
         return Result<PageConfig>(page);
     }
@@ -103,7 +102,7 @@ public:
         workflow.version = input.version;
         workflow.createdBy = input.createdBy;
         workflow.createdAt = input.createdAt.value_or(std::chrono::system_clock::now());
-        workflow.updatedAt = input.updatedAt.value_or(workflow.createdAt);
+        workflow.updatedAt = input.updatedAt;
 
         return Result<Workflow>(workflow);
     }
@@ -133,8 +132,8 @@ public:
         session.expiresAt = input.expiresAt;
         session.createdAt = input.createdAt.value_or(std::chrono::system_clock::now());
         session.lastActivity = input.lastActivity.value_or(session.createdAt);
-        session.ip_address = input.ip_address;
-        session.user_agent = input.user_agent;
+        session.ipAddress = input.ipAddress;
+        session.userAgent = input.userAgent;
         return Result<Session>(session);
     }
 
@@ -153,42 +152,6 @@ public:
     Result<std::vector<Session>> listSessions(const ListOptions& options) override {
         std::vector<Session> sessions;
         return Result<std::vector<Session>>(sessions);
-    }
-
-    Result<LuaScript> createLuaScript(const CreateLuaScriptInput& input) override {
-        LuaScript script;
-        script.id = "lua_" + input.name;
-        script.tenantId = input.tenantId;
-        script.name = input.name;
-        script.description = input.description;
-        script.code = input.code;
-        script.parameters = input.parameters;
-        script.returnType = input.returnType;
-        script.isSandboxed = input.isSandboxed;
-        script.allowedGlobals = input.allowedGlobals;
-        script.timeoutMs = input.timeoutMs;
-        script.version = input.version;
-        script.createdBy = input.createdBy;
-        script.createdAt = input.createdAt.value_or(std::chrono::system_clock::now());
-        script.updatedAt = input.updatedAt.value_or(script.createdAt);
-        return Result<LuaScript>(script);
-    }
-
-    Result<LuaScript> getLuaScript(const std::string& id) override {
-        return Error::notFound("Lua script not found: " + id);
-    }
-
-    Result<LuaScript> updateLuaScript(const std::string& id, const UpdateLuaScriptInput& input) override {
-        return Error::notFound("Lua script not found: " + id);
-    }
-
-    Result<bool> deleteLuaScript(const std::string& id) override {
-        return Result<bool>(true);
-    }
-
-    Result<std::vector<LuaScript>> listLuaScripts(const ListOptions& options) override {
-        std::vector<LuaScript> scripts;
-        return Result<std::vector<LuaScript>>(scripts);
     }
 
     Result<InstalledPackage> createPackage(const CreatePackageInput& input) override {

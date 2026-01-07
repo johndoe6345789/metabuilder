@@ -59,12 +59,12 @@ inline Result<Session> update(InMemoryStore& store, const std::string& id, const
         session.lastActivity = input.lastActivity.value();
     }
 
-    if (input.ip_address.has_value()) {
-        session.ip_address = input.ip_address.value();
+    if (input.ipAddress.has_value()) {
+        session.ipAddress = input.ipAddress.value();
     }
 
-    if (input.user_agent.has_value()) {
-        session.user_agent = input.user_agent.value();
+    if (input.userAgent.has_value()) {
+        session.userAgent = input.userAgent.value();
     }
 
     return Result<Session>(session);

@@ -11,9 +11,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../../adapters/adapter.hpp"
-#include "../../types.hpp"
-#include "../../errors.hpp"
+#include "dbal/adapters/adapter.hpp"
+#include "dbal/types.hpp"
+#include "dbal/errors.hpp"
 #include "sql_connection.hpp"
 #include "../../runtime/requests_client.hpp"
 
@@ -243,147 +243,106 @@ public:
 
     Result<PageConfig> createPage(const CreatePageInput& input) override {
         (void)input;
-        return Error::notImplemented("SQL adapter createPage");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter createPage");
     }
 
     Result<PageConfig> getPage(const std::string& id) override {
         (void)id;
-        return Error::notImplemented("SQL adapter getPage");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter getPage");
     }
 
     Result<PageConfig> updatePage(const std::string& id, const UpdatePageInput& input) override {
         (void)id;
         (void)input;
-        return Error::notImplemented("SQL adapter updatePage");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter updatePage");
     }
 
     Result<bool> deletePage(const std::string& id) override {
         (void)id;
-        return Error::notImplemented("SQL adapter deletePage");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter deletePage");
     }
 
     Result<std::vector<PageConfig>> listPages(const ListOptions& options) override {
         (void)options;
-        return Error::notImplemented("SQL adapter listPages");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter listPages");
     }
 
     Result<Workflow> createWorkflow(const CreateWorkflowInput& input) override {
         (void)input;
-        return Error::notImplemented("SQL adapter createWorkflow");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter createWorkflow");
     }
 
     Result<Workflow> getWorkflow(const std::string& id) override {
         (void)id;
-        return Error::notImplemented("SQL adapter getWorkflow");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter getWorkflow");
     }
 
     Result<Workflow> updateWorkflow(const std::string& id, const UpdateWorkflowInput& input) override {
         (void)id;
         (void)input;
-        return Error::notImplemented("SQL adapter updateWorkflow");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter updateWorkflow");
     }
 
     Result<bool> deleteWorkflow(const std::string& id) override {
         (void)id;
-        return Error::notImplemented("SQL adapter deleteWorkflow");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter deleteWorkflow");
     }
 
     Result<std::vector<Workflow>> listWorkflows(const ListOptions& options) override {
         (void)options;
-        return Error::notImplemented("SQL adapter listWorkflows");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter listWorkflows");
     }
 
     Result<Session> createSession(const CreateSessionInput& input) override {
         (void)input;
-        return Error::notImplemented("SQL adapter createSession");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter createSession");
     }
 
     Result<Session> getSession(const std::string& id) override {
         (void)id;
-        return Error::notImplemented("SQL adapter getSession");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter getSession");
     }
 
     Result<Session> updateSession(const std::string& id, const UpdateSessionInput& input) override {
         (void)id;
         (void)input;
-        return Error::notImplemented("SQL adapter updateSession");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter updateSession");
     }
 
     Result<bool> deleteSession(const std::string& id) override {
         (void)id;
-        return Error::notImplemented("SQL adapter deleteSession");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter deleteSession");
     }
 
     Result<std::vector<Session>> listSessions(const ListOptions& options) override {
         (void)options;
-        return Error::notImplemented("SQL adapter listSessions");
-    }
-
-    Result<LuaScript> createLuaScript(const CreateLuaScriptInput& input) override {
-        (void)input;
-        return Error::notImplemented("SQL adapter createLuaScript");
-    }
-
-    Result<LuaScript> getLuaScript(const std::string& id) override {
-        (void)id;
-        return Error::notImplemented("SQL adapter getLuaScript");
-    }
-
-    Result<LuaScript> updateLuaScript(const std::string& id, const UpdateLuaScriptInput& input) override {
-        (void)id;
-        (void)input;
-        return Error::notImplemented("SQL adapter updateLuaScript");
-    }
-
-    Result<bool> deleteLuaScript(const std::string& id) override {
-        (void)id;
-        return Error::notImplemented("SQL adapter deleteLuaScript");
-    }
-
-    Result<std::vector<LuaScript>> listLuaScripts(const ListOptions& options) override {
-        (void)options;
-        return Error::notImplemented("SQL adapter listLuaScripts");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter listSessions");
     }
 
     Result<InstalledPackage> createPackage(const CreatePackageInput& input) override {
         (void)input;
-        return Error::notImplemented("SQL adapter createPackage");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter createPackage");
     }
 
     Result<InstalledPackage> getPackage(const std::string& id) override {
         (void)id;
-        return Error::notImplemented("SQL adapter getPackage");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter getPackage");
     }
 
     Result<InstalledPackage> updatePackage(const std::string& id, const UpdatePackageInput& input) override {
         (void)id;
         (void)input;
-        return Error::notImplemented("SQL adapter updatePackage");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter updatePackage");
     }
 
     Result<bool> deletePackage(const std::string& id) override {
         (void)id;
-        return Error::notImplemented("SQL adapter deletePackage");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter deletePackage");
     }
 
     Result<std::vector<InstalledPackage>> listPackages(const ListOptions& options) override {
         (void)options;
-        return Error::notImplemented("SQL adapter listPackages");
-    }
-
-    Result<int> batchCreatePackages(const std::vector<CreatePackageInput>& inputs) override {
-        (void)inputs;
-        return Error::notImplemented("SQL adapter batchCreatePackages");
-    }
-
-    Result<int> batchUpdatePackages(const std::vector<UpdatePackageBatchItem>& updates) override {
-        (void)updates;
-        return Error::notImplemented("SQL adapter batchUpdatePackages");
-    }
-
-    Result<int> batchDeletePackages(const std::vector<std::string>& ids) override {
-        (void)ids;
-        return Error::notImplemented("SQL adapter batchDeletePackages");
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter listPackages");
     }
 
     void close() override {
@@ -523,14 +482,12 @@ protected:
 
 class PostgresAdapter : public SqlAdapter {
 public:
-    explicit PostgresAdapter(const SqlConnectionConfig& config)
-        : SqlAdapter(config, Dialect::Postgres) {}
+    explicit PostgresAdapter(const SqlConnectionConfig& config);
 };
 
 class MySQLAdapter : public SqlAdapter {
 public:
-    explicit MySQLAdapter(const SqlConnectionConfig& config)
-        : SqlAdapter(config, Dialect::MySQL) {}
+    explicit MySQLAdapter(const SqlConnectionConfig& config);
 };
 
 class PrismaAdapter : public SqlAdapter {
@@ -550,7 +507,11 @@ public:
                                  const std::vector<SqlParam>& params) override {
         (void)connection;
         const auto payload = buildPayload(sql, params, "query");
-        const auto response = requestsClient_.post("/api/native-prisma", payload.dump());
+        ::Json::StreamWriterBuilder writer;
+        writer["indentation"] = "";
+        const auto response = requestsClient_.post(
+            "/api/native-prisma",
+            ::Json::writeString(writer, payload));
         if (response.statusCode != 200) {
             throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge request failed"};
         }
@@ -559,8 +520,18 @@ public:
         if (!rowsJson.isNull() && rowsJson.isArray()) {
             for (const auto& entry : rowsJson) {
                 SqlRow row;
-                for (const auto& [key, value] : entry.items()) {
-                    row.columns[key] = value.isString() ? value.get<std::string>() : value.dump();
+                if (entry.isObject()) {
+                    const auto keys = entry.getMemberNames();
+                    for (const auto& key : keys) {
+                        const auto& value = entry[key];
+                        if (value.isString()) {
+                            row.columns[key] = value.asString();
+                        } else {
+                            ::Json::StreamWriterBuilder writer;
+                            writer["indentation"] = "";
+                            row.columns[key] = ::Json::writeString(writer, value);
+                        }
+                    }
                 }
                 rows.push_back(std::move(row));
             }
@@ -573,7 +544,11 @@ public:
                     const std::vector<SqlParam>& params) override {
         (void)connection;
         const auto payload = buildPayload(sql, params, "nonquery");
-        const auto response = requestsClient_.post("/api/native-prisma", payload.dump());
+        ::Json::StreamWriterBuilder writer;
+        writer["indentation"] = "";
+        const auto response = requestsClient_.post(
+            "/api/native-prisma",
+            ::Json::writeString(writer, payload));
         if (response.statusCode != 200) {
             throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge request failed"};
         }
@@ -614,15 +589,15 @@ private:
     }
 
     runtime::RequestsClient requestsClient_;
-    drogon::Json::Value buildPayload(const std::string& sql,
-                                     const std::vector<SqlParam>& params,
-                                     const std::string& type) const {
-        drogon::Json::Value payload;
+    ::Json::Value buildPayload(const std::string& sql,
+                               const std::vector<SqlParam>& params,
+                               const std::string& type) const {
+        ::Json::Value payload;
         payload["sql"] = sql;
         payload["type"] = type;
-        payload["params"] = drogon::Json::Value::array();
+        payload["params"] = ::Json::Value(::Json::arrayValue);
         for (const auto& param : params) {
-            payload["params"].push_back(param.value);
+            payload["params"].append(param.value);
         }
         return payload;
     }

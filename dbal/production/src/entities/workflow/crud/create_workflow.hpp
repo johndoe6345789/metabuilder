@@ -35,7 +35,7 @@ inline Result<Workflow> create(InMemoryStore& store, const CreateWorkflowInput& 
     workflow.enabled = input.enabled;
     workflow.version = input.version;
     workflow.createdAt = input.createdAt.value_or(std::chrono::system_clock::now());
-    workflow.updatedAt = input.updatedAt.value_or(workflow.createdAt);
+    workflow.updatedAt = input.updatedAt;
     workflow.createdBy = input.createdBy;
 
     store.workflows[workflow.id] = workflow;

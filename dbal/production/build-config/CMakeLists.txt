@@ -34,7 +34,7 @@ add_library(dbal_adapters STATIC
     ${DBAL_SRC_DIR}/adapters/sql/mysql_adapter.cpp
 )
 
-target_link_libraries(dbal_adapters PRIVATE cpr::cpr)
+target_link_libraries(dbal_adapters PRIVATE cpr::cpr Drogon::Drogon)
 add_executable(dbal_daemon
     ${DBAL_SRC_DIR}/daemon/main.cpp
     ${DBAL_SRC_DIR}/daemon/server.cpp
@@ -100,5 +100,4 @@ add_test(NAME conformance_tests COMMAND conformance_tests)
 
 install(TARGETS dbal_daemon DESTINATION bin)
 install(DIRECTORY ${DBAL_INCLUDE_DIR}/dbal DESTINATION include)
-
 

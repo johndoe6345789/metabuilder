@@ -2,8 +2,9 @@
 #define DBAL_REQUESTS_CLIENT_HPP
 
 #include <cpr/cpr.h>
-#include <drogon/Json.h>
+#include <json/json.h>
 
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -14,7 +15,7 @@ namespace runtime {
 struct RequestsResponse {
     int statusCode;
     std::string body;
-    drogon::Json::Value json;
+    ::Json::Value json;
     std::unordered_map<std::string, std::string> headers;
 };
 
@@ -71,10 +72,13 @@ public:
         }
 
         if (!response.text.empty()) {
-            try {
-                result.json = drogon::Json::parse(response.text);
-            } catch (...) {
-            }
+            ::Json::CharReaderBuilder builder;
+            std::string errs;
+            std::unique_ptr<::Json::CharReader> reader(builder.newCharReader());
+            reader->parse(response.text.data(),
+                          response.text.data() + response.text.size(),
+                          &result.json,
+                          &errs);
         }
 
         return result;

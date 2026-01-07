@@ -51,7 +51,6 @@ inline Result<PageConfig> create(InMemoryStore& store, const CreatePageInput& in
     page.params = input.params;
     page.meta = input.meta;
     page.createdAt = std::chrono::system_clock::now();
-    page.updatedAt = page.createdAt;
     
     store.pages[page.id] = page;
     store.page_paths[page.path] = page.id;

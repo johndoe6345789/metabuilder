@@ -73,8 +73,6 @@ inline Result<Workflow> update(InMemoryStore& store, const std::string& id, cons
 
     if (input.updatedAt.has_value()) {
         workflow.updatedAt = input.updatedAt.value();
-    } else {
-        workflow.updatedAt = std::chrono::system_clock::now();
     }
 
     if (input.tenantId.has_value()) {

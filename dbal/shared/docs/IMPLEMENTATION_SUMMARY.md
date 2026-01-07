@@ -250,9 +250,8 @@ dbal/shared/common/contracts/
 - Access level enforcement
 - Cascade delete support
 
-### Workflow & LuaScript
-- Workflow automation
-- Sandboxed Lua execution
+### Workflow Automation
+- Workflow orchestration
 - Security scanning
 - Timeout enforcement
 

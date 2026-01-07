@@ -106,25 +106,6 @@ model Workflow {
   @@index([enabled])
 }
 
-model LuaScript {
-  id String @id
-  tenantId String?
-  name String
-  description String?
-  code String
-  parameters String // JSON: Array<{name, type}>
-  returnType String?
-  isSandboxed Boolean @default(true)
-  allowedGlobals String @default("[]")
-  timeoutMs Int @default(5000)
-  version Int @default(1)
-  createdAt BigInt?
-  updatedAt BigInt?
-  createdBy String?
-  @@index([tenantId])
-  @@index([name])
-}
-
 model InstalledPackage {
   packageId String @id
   tenantId String?

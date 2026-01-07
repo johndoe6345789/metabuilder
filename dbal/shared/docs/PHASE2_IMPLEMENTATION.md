@@ -201,7 +201,6 @@ The ACL adapter enforces these rules by default:
 | PageConfig | Read | Read/List | All ops | All ops |
 | ComponentNode | — | — | All ops | All ops |
 | Workflow | — | — | All ops | All ops |
-| LuaScript | — | — | All ops | All ops |
 | InstalledPackage | — | Read/List | All ops | All ops |
 
 ### Row-Level Security

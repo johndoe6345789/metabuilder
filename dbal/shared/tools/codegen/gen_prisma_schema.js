@@ -124,26 +124,6 @@ const models = [
     blockAttributes: ['@@index([tenantId])', '@@index([enabled])'],
   },
   {
-    name: 'LuaScript',
-    fields: [
-      { name: 'id', type: 'String', attributes: ['@id'] },
-      { name: 'tenantId', type: 'String?' },
-      { name: 'name', type: 'String' },
-      { name: 'description', type: 'String?' },
-      { name: 'code', type: 'String' },
-      { name: 'parameters', type: 'String', comment: '// JSON: Array<{name, type}>' },
-      { name: 'returnType', type: 'String?' },
-      { name: 'isSandboxed', type: 'Boolean', attributes: ['@default(true)'] },
-      { name: 'allowedGlobals', type: 'String', attributes: ['@default("[]")'] },
-      { name: 'timeoutMs', type: 'Int', attributes: ['@default(5000)'] },
-      { name: 'version', type: 'Int', attributes: ['@default(1)'] },
-      { name: 'createdAt', type: 'BigInt?' },
-      { name: 'updatedAt', type: 'BigInt?' },
-      { name: 'createdBy', type: 'String?' },
-    ],
-    blockAttributes: ['@@index([tenantId])', '@@index([name])'],
-  },
-  {
     name: 'InstalledPackage',
     fields: [
       { name: 'packageId', type: 'String', attributes: ['@id'] },

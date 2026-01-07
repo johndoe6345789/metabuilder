@@ -47,7 +47,6 @@ export interface ComponentConfig {
 import type {
   AppConfiguration,
   Comment,
-  LuaScript,
   PageConfig,
   PowerTransferRequest,
   Tenant,
@@ -64,7 +63,6 @@ export interface DatabaseSchema {
   users: User[]
   credentials: Record<string, string>
   workflows: Workflow[]
-  luaScripts: LuaScript[]
   pages: PageConfig[]
   schemas: ModelSchema[]
   appConfig: AppConfiguration
@@ -90,7 +88,6 @@ export const DB_KEYS = {
   USERS: 'db_users',
   CREDENTIALS: 'db_credentials',
   WORKFLOWS: 'db_workflows',
-  LUA_SCRIPTS: 'db_lua_scripts',
   PAGES: 'db_pages',
   SCHEMAS: 'db_schemas',
   APP_CONFIG: 'db_app_config',

@@ -1,7 +1,6 @@
 import { getAppConfig } from '../../app-config'
 import { getComments } from '../../comments'
 import { getComponentConfigs, getComponentHierarchy } from '../../components'
-import { getLuaScripts } from '../../lua-scripts'
 import { getPages } from '../../pages'
 import { getSchemas } from '../../schemas'
 import type { DatabaseSchema } from '../../types'
@@ -15,7 +14,6 @@ export async function exportDatabase(): Promise<string> {
   const data: Partial<DatabaseSchema> = {
     users: await getUsers({ scope: 'all' }),
     workflows: await getWorkflows(),
-    luaScripts: await getLuaScripts(),
     pages: await getPages(),
     schemas: await getSchemas(),
     appConfig: (await getAppConfig()) ?? undefined,

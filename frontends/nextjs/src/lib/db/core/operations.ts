@@ -7,7 +7,6 @@ import * as databaseAdmin from '../database-admin'
 import * as dropdownConfigs from '../dropdown-configs'
 import * as errorLogs from '../error-logs'
 import * as godCredentials from '../god-credentials'
-import * as luaScripts from '../lua-scripts'
 import * as packages from '../packages'
 import * as pages from '../pages'
 import { hashPassword } from '../password/hash-password'
@@ -65,13 +64,6 @@ export class Database {
   static addWorkflow = workflows.addWorkflow
   static updateWorkflow = workflows.updateWorkflow
   static deleteWorkflow = workflows.deleteWorkflow
-
-  // Lua Scripts
-  static getLuaScripts = luaScripts.getLuaScripts
-  static setLuaScripts = luaScripts.setLuaScripts
-  static addLuaScript = luaScripts.addLuaScript
-  static updateLuaScript = luaScripts.updateLuaScript
-  static deleteLuaScript = luaScripts.deleteLuaScript
 
   // Pages
   static getPages = pages.getPages

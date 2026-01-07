@@ -70,7 +70,6 @@ inline Result<PageConfig> update(InMemoryStore& store, const std::string& id, co
     if (input.packageId.has_value()) page.packageId = input.packageId.value();
     if (input.tenantId.has_value()) page.tenantId = input.tenantId.value();
     
-    page.updatedAt = std::chrono::system_clock::now();
     return Result<PageConfig>(page);
 }
 

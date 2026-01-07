@@ -4,7 +4,6 @@ const ENTITY_TYPES = [
   'User',
   'Credential',
   'Workflow',
-  'LuaScript',
   'PageConfig',
   'ModelSchema',
   'AppConfiguration',

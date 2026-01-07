@@ -249,7 +249,6 @@ try {
 | PageConfig | R | R | CRUD | CRUD |
 | ComponentNode | — | — | CRUD | CRUD |
 | Workflow | — | — | CRUD | CRUD |
-| LuaScript | — | — | CRUD | CRUD |
 | InstalledPackage | — | R | CRUD | CRUD |
 
 *R=Read, U=Update, C=Create, D=Delete*

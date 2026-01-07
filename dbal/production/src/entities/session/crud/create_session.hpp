@@ -38,8 +38,8 @@ inline Result<Session> create(InMemoryStore& store, const CreateSessionInput& in
     session.expiresAt = input.expiresAt;
     session.createdAt = input.createdAt.value_or(std::chrono::system_clock::now());
     session.lastActivity = input.lastActivity.value_or(session.createdAt);
-    session.ip_address = input.ip_address;
-    session.user_agent = input.user_agent;
+    session.ipAddress = input.ipAddress;
+    session.userAgent = input.userAgent;
 
     store.sessions[session.id] = session;
     store.session_tokens[session.token] = session.id;
