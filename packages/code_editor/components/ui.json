@@ -2,7 +2,7 @@
   "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
   "schemaVersion": "2.0.0",
   "package": "code_editor",
-  "description": "Code editor components for JSON, Lua, and theme editing",
+  "description": "Code editor components for JSON, scripting, and theme editing",
   "components": [
     {
       "id": "code_editor",
@@ -149,15 +149,15 @@
     },
     {
       "id": "lua_editor",
-      "name": "LuaEditor",
-      "description": "Lua code editor with sandbox execution support",
+      "name": "ScriptEditor",
+      "description": "Script editor component with sandbox execution support",
       "props": [
         {
           "name": "value",
           "type": "string",
           "required": false,
           "default": "",
-          "description": "Lua code content"
+          "description": "Script code content"
         },
         {
           "name": "readOnly",
@@ -294,6 +294,6 @@
     }
   ],
   "exports": {
-    "components": ["CodeEditor", "JsonEditor", "LuaEditor", "ThemeEditor"]
+    "components": ["CodeEditor", "JsonEditor", "ScriptEditor", "ThemeEditor"]
   }
 }

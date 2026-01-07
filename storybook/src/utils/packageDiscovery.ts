@@ -188,7 +188,7 @@ function getKnownPackageIds(): string[] {
     'github_tools',
     'irc_webchat',
     'json_script_example',
-    'lua_test',
+    'testing',
     'media_center',
     'nav_menu',
     'notification_center',

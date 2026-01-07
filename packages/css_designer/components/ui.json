@@ -53,8 +53,8 @@
         }
       },
       "scripts": {
-        "onInit": "init.lua",
-        "onSave": "export/to_scss.lua"
+        "onInit": "init.script",
+        "onSave": "export/to_scss.script"
       }
     },
     {
@@ -144,7 +144,7 @@
         }
       },
       "scripts": {
-        "onColorChange": "colors/color_picker.lua"
+        "onColorChange": "colors/color_picker.script"
       }
     },
     {
@@ -243,7 +243,7 @@
         }
       },
       "scripts": {
-        "onFontChange": "fonts/font_selector.lua"
+        "onFontChange": "fonts/font_selector.script"
       }
     },
     {
@@ -305,7 +305,7 @@
         }
       },
       "scripts": {
-        "onSpacingChange": "spacing/spacing_editor.lua"
+        "onSpacingChange": "spacing/spacing_editor.script"
       }
     },
     {
@@ -375,7 +375,7 @@
         }
       },
       "scripts": {
-        "onBorderChange": "borders/border_editor.lua"
+        "onBorderChange": "borders/border_editor.script"
       }
     },
     {
@@ -437,7 +437,7 @@
         }
       },
       "scripts": {
-        "onShadowChange": "shadows/shadow_editor.lua"
+        "onShadowChange": "shadows/shadow_editor.script"
       }
     },
     {

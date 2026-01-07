@@ -294,13 +294,15 @@ Before deploying, verify:
 ### 1. Check Package Installation
 
 ```bash
-# Via CLI
 docker-compose -f deployment/docker/docker-compose.production.yml \
-  run --rm metabuilder-tools \
-  metabuilder-cli package list | grep ui_home
+  exec postgres \
+  psql -U metabuilder metabuilder -c \
+  "SELECT \"packageId\", enabled FROM \"InstalledPackage\" WHERE \"packageId\" = 'ui_home';"
 
 # Expected output:
-# ✓ ui_home (v1.0.0) - Home Page [INSTALLED] [ENABLED]
+#  packageId | enabled
+# -----------+---------
+#  ui_home   | t
 ```
 
 ### 2. Check Database Records
@@ -341,7 +343,10 @@ open http://localhost:3000/
 
 **Check 1**: Package installed?
 ```bash
-metabuilder-cli package list | grep ui_home
+docker-compose -f deployment/docker/docker-compose.production.yml \
+  exec postgres \
+  psql -U metabuilder metabuilder -c \
+  "SELECT \"packageId\", enabled FROM \"InstalledPackage\" WHERE \"packageId\" = 'ui_home';"
 ```
 
 **Check 2**: Database record exists?

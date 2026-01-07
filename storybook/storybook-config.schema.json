@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Storybook Config",
-  "description": "Configuration for auto-discovering and rendering Lua packages in Storybook",
+  "description": "Configuration for auto-discovering and rendering MetaBuilder packages in Storybook",
   "type": "object",
   "properties": {
     "$schema": { "type": "string" },

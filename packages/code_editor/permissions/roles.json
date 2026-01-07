@@ -32,9 +32,9 @@
       "minLevel": 5
     },
     {
-      "id": "editor.lua.execute",
-      "name": "Execute Lua Code",
-      "description": "Execute Lua code in sandbox environment",
+      "id": "editor.script.execute",
+      "name": "Execute Scripts",
+      "description": "Execute scripts in sandbox environment",
       "resource": "code_editor",
       "action": "execute",
       "scope": "global",

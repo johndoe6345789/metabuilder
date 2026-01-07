@@ -220,7 +220,7 @@ The ESLint configuration follows a pragmatic approach with different rule severi
 
 1. **Stub Function Implementations** (~150 TODOs)
    - DBAL integration functions
-   - Page loading from database/Lua
+   - Page loading from database/packages
    - GitHub workflow integration
    - Status: Documented, tracked, will be implemented when features are ready
 

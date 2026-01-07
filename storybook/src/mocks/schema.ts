@@ -1,11 +1,12 @@
 /**
  * JSON Schema types for data-driven mock definitions
- * 
+ *
  * Mock packages are defined in JSON files and automatically loaded.
  * No TypeScript boilerplate needed - just define the component trees in JSON.
  */
 
-import type { LuaUIComponent, LuaPackageMetadata } from '../types/lua-types'
+type PackageComponent = Record<string, unknown>
+type PackageMetadata = Record<string, unknown>
 
 /**
  * A mock render definition in JSON format
@@ -13,7 +14,7 @@ import type { LuaUIComponent, LuaPackageMetadata } from '../types/lua-types'
  */
 export interface JsonMockRender {
   /** The component tree to render */
-  component: LuaUIComponent
+  component: PackageComponent
   /** Optional description shown in Storybook */
   description?: string
 }
@@ -23,10 +24,10 @@ export interface JsonMockRender {
  */
 export interface JsonMockPackage {
   /** Package metadata */
-  metadata: LuaPackageMetadata
-  /** 
+  metadata: PackageMetadata
+  /**
    * Render definitions keyed by script name
-   * e.g., "init.lua", "layout.lua", "render_users"
+   * e.g., "init", "layout", "renderUsers"
    */
   renders: Record<string, JsonMockRender>
 }
@@ -52,12 +53,11 @@ export interface TemplateVariables {
  * Replaces {{variable}} with actual values from context
  */
 export function processTemplates(
-  component: LuaUIComponent,
+  component: PackageComponent,
   variables: TemplateVariables
-): LuaUIComponent {
+): PackageComponent {
   const processValue = (value: unknown): unknown => {
     if (typeof value === 'string') {
-      // Replace {{variable}} patterns
       return value.replace(/\{\{([^}]+)\}\}/g, (_, key) => {
         const keys = key.trim().split('.')
         let result: unknown = variables
@@ -84,5 +84,5 @@ export function processTemplates(
     return value
   }
 
-  return processValue(component) as LuaUIComponent
+  return processValue(component) as PackageComponent
 }

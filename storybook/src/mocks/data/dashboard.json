@@ -12,17 +12,17 @@
     }
   },
   "renders": {
-    "init.lua": {
+    "init.script": {
       "description": "Lifecycle hooks - no visual render",
       "component": {
         "type": "Alert",
         "props": { "severity": "info" },
         "children": [
-          { "type": "Typography", "props": { "variant": "body2", "text": "init.lua contains lifecycle hooks (on_install, on_update) - no visual render" } }
+          { "type": "Typography", "props": { "variant": "body2", "text": "init.script contains lifecycle hooks (on_install, on_update) - no visual render" } }
         ]
       }
     },
-    "stats.lua": {
+    "stats.script": {
       "description": "Statistics grid with metric cards",
       "component": {
         "type": "Grid",
@@ -95,7 +95,7 @@
         ]
       }
     },
-    "layout.lua": {
+    "layout.script": {
       "description": "Standard dashboard layout with header",
       "component": {
         "type": "Box",

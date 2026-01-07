@@ -190,7 +190,7 @@ Added pragmatic overrides for stub directories:
 #### Medium Priority (Database & Packages)
 - [ ] `src/lib/ui-pages/load-page-from-db.ts` - Implement DB page loading
 - [ ] `src/lib/packages/json/load-json-package.ts` - Implement JSON package loading
-- [ ] `src/lib/lua/ui/generate-component-tree.ts` - Implement Lua component generation
+- [ ] `src/lib/ui/generate-component-tree.ts` - Implement package component generation
 - [ ] `src/lib/compiler/index.ts` - Implement compilation logic
 
 #### Low Priority (GitHub & Utilities)

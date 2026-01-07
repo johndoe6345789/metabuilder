@@ -11,17 +11,17 @@
     }
   },
   "renders": {
-    "init.lua": {
+    "init.script": {
       "description": "Lifecycle hooks",
       "component": {
         "type": "Alert",
         "props": { "severity": "info" },
         "children": [
-          { "type": "Typography", "props": { "variant": "body2", "text": "init.lua contains lifecycle hooks - no visual render" } }
+          { "type": "Typography", "props": { "variant": "body2", "text": "init.script contains lifecycle hooks - no visual render" } }
         ]
       }
     },
-    "render_users.lua": {
+    "render_users.script": {
       "description": "User management table",
       "component": {
         "type": "Card",
@@ -60,7 +60,7 @@
         ]
       }
     },
-    "list.lua": {
+    "list.script": {
       "description": "Simple user list",
       "component": {
         "type": "Stack",
@@ -73,7 +73,7 @@
         ]
       }
     },
-    "create_user.lua": {
+    "create_user.script": {
       "description": "Create user form",
       "component": {
         "type": "Card",

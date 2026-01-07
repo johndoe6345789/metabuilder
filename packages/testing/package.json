@@ -34,13 +34,8 @@
     ]
   },
   "tests": {
-    "scripts": [
-      "tests/metadata.test.lua"
-    ],
-    "parameterized": [
-      {
-        "parameters": "tests/metadata.cases.json"
-      }
+    "suites": [
+      "tests/metadata.test.json"
     ]
   }
 }

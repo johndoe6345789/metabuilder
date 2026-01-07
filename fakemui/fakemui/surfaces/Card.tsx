@@ -81,7 +81,7 @@ export const CardMedia: React.FC<CardMediaProps> = ({ image, alt = '', height, c
   />
 )
 
-// Additional Card subcomponents for Lua package compatibility
+// Additional Card subcomponents for scripted package compatibility
 export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
   children?: React.ReactNode
   text?: string
@@ -113,4 +113,3 @@ export const CardFooter: React.FC<CardFooterProps> = ({ children, className = ''
     {children}
   </div>
 )
-

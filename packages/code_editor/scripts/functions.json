@@ -2,7 +2,7 @@
   "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
   "schemaVersion": "2.2.0",
   "package": "code_editor",
-  "description": "Code editor functions for JSON, Lua, and theme editing",
+  "description": "Code editor functions for JSON, scripting, and theme editing",
   "functions": [
     {
       "id": "json_render",
@@ -26,25 +26,25 @@
       "category": "json"
     },
     {
-      "id": "lua_render",
-      "name": "renderLuaEditor",
+      "id": "script_render",
+      "name": "renderScriptEditor",
       "exported": true,
-      "description": "Render Lua code editor component",
-      "category": "lua"
+      "description": "Render script editor component",
+      "category": "script"
     },
     {
-      "id": "lua_validate",
-      "name": "validateLua",
+      "id": "script_validate",
+      "name": "validateScript",
       "exported": true,
-      "description": "Validate Lua code syntax",
-      "category": "lua"
+      "description": "Validate script syntax",
+      "category": "script"
     },
     {
-      "id": "lua_run_sandbox",
-      "name": "runLuaSandbox",
+      "id": "script_run_sandbox",
+      "name": "runScriptSandbox",
       "exported": true,
-      "description": "Execute Lua code in sandbox environment",
-      "category": "lua"
+      "description": "Execute scripts in sandbox environment",
+      "category": "script"
     },
     {
       "id": "theme_render",
@@ -73,9 +73,9 @@
       "renderJsonEditor",
       "validateJson",
       "formatJson",
-      "renderLuaEditor",
-      "validateLua",
-      "runLuaSandbox",
+      "renderScriptEditor",
+      "validateScript",
+      "runScriptSandbox",
       "renderThemeEditor",
       "renderColorPicker",
       "renderModeToggle"

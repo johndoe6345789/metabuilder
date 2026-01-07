@@ -39,7 +39,7 @@
     {
       "name": "Validate Scripts",
       "render": "validate_scripts",
-      "description": "Validate Lua scripts and exports",
+      "description": "Validate script definitions and exports",
       "type": "function",
       "args": {
         "packagePath": "packages/json_script_example"

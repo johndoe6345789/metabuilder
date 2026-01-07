@@ -204,7 +204,7 @@ Changes required:
 - `executePackageAction()` - Execute package-specific actions
 - `validateTenantAccess()` - Validate tenant access permissions
 - `loadPageFromDb()` - Load UI pages from database
-- `loadPageFromLuaPackages()` - Load UI pages from Lua packages
+- `loadPageFromPackages()` - Load UI pages from packages
 
 **Medium Priority:**
 - Component catalog functions (already functional, just marked TODO)
@@ -288,7 +288,7 @@ Changes required:
 
 2. **Implement page loading functions**
    - `loadPageFromDb()` - Database page loading
-   - `loadPageFromLuaPackages()` - Lua package loading
+   - `loadPageFromPackages()` - package loading
 
 3. **Reduce production code warnings**
    - Fix `prefer-nullish-coalescing` in core files

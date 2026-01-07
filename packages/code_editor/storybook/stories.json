@@ -2,7 +2,7 @@
   "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
   "featured": false,
   "title": "Code Editor Components",
-  "description": "Code editor components for JSON, Lua, and theme editing",
+  "description": "Code editor components for JSON, scripting, and theme editing",
   "stories": [
     {
       "name": "JsonEditor",
@@ -15,11 +15,11 @@
       }
     },
     {
-      "name": "LuaEditor",
-      "render": "lua",
-      "description": "Lua code editor with sandbox execution",
+      "name": "ScriptEditor",
+      "render": "script",
+      "description": "Script editor with sandbox execution",
       "args": {
-        "value": "-- Example Lua script\nlocal function greet(name)\n  return \"Hello, \" .. name\nend\n\nreturn greet(\"World\")",
+        "value": "// Example script\nfunction greet(name) {\n  return \"Hello, \" + name;\n}\n\ngreet(\"World\");",
         "readOnly": false,
         "showSnippets": true,
         "showOutput": true
@@ -50,8 +50,8 @@
       "description": "JSON editor with validation and formatting",
       "featured": true
     },
-    "lua": {
-      "description": "Lua code editor with sandbox execution"
+    "script": {
+      "description": "Script editor with sandbox execution"
     },
     "theme": {
       "description": "Theme customization interface"
@@ -92,7 +92,7 @@
     }
   ],
   "scripts": {
-    "renderFunctions": ["json", "lua", "theme"],
+    "renderFunctions": ["json", "script", "theme"],
     "ignoredScripts": ["tests"]
   },
   "parameters": {

@@ -2,7 +2,7 @@
   "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
   "schemaVersion": "2.2.0",
   "package": "dbal_demo",
-  "description": "DBAL Demo Lua functions for key-value store, blob storage, and cache operations",
+  "description": "DBAL Demo script functions for key-value store, blob storage, and cache operations",
   "functions": [
     {
       "id": "init",

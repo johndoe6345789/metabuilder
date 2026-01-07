@@ -45,15 +45,15 @@ export async function initializeMocks(): Promise<void> {
 }
 
 // Re-export utilities
-export { 
-  getMockPackage, 
-  listMockPackages, 
+export {
+  getMockPackage,
+  listMockPackages,
   executeMockRender,
   createDefaultContext,
-} from '../lua-engine'
-
-// Export JSON utilities
-export { getRenderDescriptions, executeJsonMock } from '../json-loader'
+  registerJsonMocks,
+  getRenderDescriptions,
+  executeJsonMock,
+} from '../json-loader'
 
 // Export auto-loader utilities
 export { autoLoadPackage, loadPackageComponents, loadPackageMetadata } from '../auto-loader'

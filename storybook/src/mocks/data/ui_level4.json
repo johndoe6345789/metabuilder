@@ -13,17 +13,17 @@
     }
   },
   "renders": {
-    "init.lua": {
+    "init.script": {
       "description": "Lifecycle hooks",
       "component": {
         "type": "Alert",
         "props": { "severity": "info" },
         "children": [
-          { "type": "Typography", "props": { "variant": "body2", "text": "init.lua contains lifecycle hooks - no visual render" } }
+          { "type": "Typography", "props": { "variant": "body2", "text": "init.script contains lifecycle hooks - no visual render" } }
         ]
       }
     },
-    "layout.lua": {
+    "layout.script": {
       "description": "Main admin panel layout",
       "component": {
         "type": "Box",
@@ -61,7 +61,7 @@
         ]
       }
     },
-    "schemas.lua": {
+    "schemas.script": {
       "description": "Schema editor interface",
       "component": {
         "type": "Stack",
@@ -88,7 +88,7 @@
         ]
       }
     },
-    "workflows.lua": {
+    "workflows.script": {
       "description": "Workflow designer interface",
       "component": {
         "type": "Stack",

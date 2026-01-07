@@ -3,7 +3,7 @@
   "packageId": "ui_level4",
   "name": "Level 4 - Admin Panel",
   "version": "1.0.0",
-  "description": "Admin panel for user and system management with schemas, workflows, and Lua scripts",
+  "description": "Admin panel for user and system management with schemas, workflows, and automated scripts",
   "author": "MetaBuilder",
   "license": "MIT",
   "category": "ui",
@@ -26,7 +26,7 @@
       "Level4Layout",
       "SchemasTab",
       "WorkflowsTab",
-      "LuaScriptsTab",
+      "ScriptsTab",
       "GodSidebar",
       "GodToolbar",
       "GodContent"

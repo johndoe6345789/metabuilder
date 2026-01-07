@@ -374,7 +374,7 @@
                       "variant": "body2",
                       "component": "pre",
                       "sx": { "whiteSpace": "pre-wrap" },
-                      "children": "• Scaffold Next.js app shell\n• Add package metadata + Lua hooks\n• Produce CLI bundle + desktop notes\n• Export a ready-to-ship zip"
+                      "children": "• Scaffold Next.js app shell\n• Add package metadata + automation hooks\n• Produce CLI bundle + desktop notes\n• Export a ready-to-ship zip"
                     }
                   ]
                 }

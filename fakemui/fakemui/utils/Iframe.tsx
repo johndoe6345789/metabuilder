@@ -11,7 +11,7 @@ export interface IframeProps extends React.IframeHTMLAttributes<HTMLIFrameElemen
 
 /**
  * Iframe component for embedded content
- * Used by Lua packages for embedding external content
+ * Used by scripted packages for embedding external content
  */
 export const Iframe: React.FC<IframeProps> = ({
   src,

@@ -143,10 +143,10 @@ log INFO "Seeding InstalledPackage records..."
 # For now, use direct SQL or wait for DBAL CLI implementation
 
 # Placeholder: would call something like:
-# metabuilder-cli seed --file $SEED_DIR/database/installed_packages.yaml
+# TODO: Populate InstalledPackage records via seed scripts/bootstrap-system.sh
 
 log INFO "Seeding PackagePermission records..."
-# metabuilder-cli seed --file $SEED_DIR/database/package_permissions.yaml
+# TODO: Populate PackagePermission records via seed scripts/bootstrap-system.sh
 
 log SUCCESS "Database seeded"
 echo ""
@@ -198,11 +198,6 @@ log INFO "Step 6/7: Verifying installation..."
 
 # Check database connectivity
 psql "${DATABASE_URL}" -c "SELECT COUNT(*) FROM \"InstalledPackage\";" >> "$LOG_FILE" 2>&1 || error_exit "Database verification failed"
-
-# Check DBAL connectivity
-if command -v metabuilder-cli &> /dev/null; then
-    metabuilder-cli package list >> "$LOG_FILE" 2>&1 || log WARN "DBAL verification failed (CLI not available)"
-fi
 
 log SUCCESS "Installation verified"
 echo ""

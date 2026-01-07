@@ -428,7 +428,7 @@
                   "children": [{ "type": "Text", "children": "5" }]
                 },
                 { "type": "Text", "variant": "h6", "children": "God-Tier Builder", "sx": { "fontWeight": 600 } },
-                { "type": "Text", "variant": "body2", "children": "Meta-builder with workflows, schemas, and Lua scripting", "sx": { "color": "text.secondary", "mt": 1 } }
+                { "type": "Text", "variant": "body2", "children": "Meta-builder with workflows, schemas, and automation scripting", "sx": { "color": "text.secondary", "mt": 1 } }
               ]
             },
             {

@@ -22,7 +22,7 @@
       "id": "layout_tabs",
       "name": "tabs",
       "exported": true,
-      "description": "Render tabbed interface for Schemas, Workflows, and Lua Scripts",
+      "description": "Render tabbed interface for Schemas, Workflows, and Scripts",
       "category": "layout"
     },
     {

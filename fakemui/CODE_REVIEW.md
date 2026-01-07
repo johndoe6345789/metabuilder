@@ -297,7 +297,7 @@ color: control.enabled ? Theme.text : Theme.textDisabled
 From [packages/ui_level6/seed/metadata.json](packages/ui_level6/seed/metadata.json#L10):
 ```json
 "dependencies": ["ui_permissions", "ui_header", "ui_intro"],
-"devDependencies": ["lua_test"]
+"devDependencies": ["testing"]
 ```
 
 **Assessment**:

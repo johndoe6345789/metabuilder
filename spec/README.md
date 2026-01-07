@@ -220,7 +220,7 @@ schemas/package-schemas/
 ├── metadata_schema.json    → Package identity, version, minLevel
 ├── entities_schema.json    → Database entities (Prisma-like)
 ├── components_schema.json  → UI component definitions
-├── script_schema.json      → Lua/JSON script logic
+├── script_schema.json      → Script/JSON script logic
 ├── types_schema.json       → Type definitions
 ├── validation_schema.json  → Data validators
 ├── api_schema.json         → REST/GraphQL endpoints
@@ -240,7 +240,7 @@ schemas/package-schemas/
 packages/{name}/
 ├── package.json           # Metadata (validated against metadata_schema.json)
 ├── components/            # UI components
-├── scripts/               # Lua/JSON scripts
+├── scripts/               # Script/JSON scripts
 ├── permissions/           # Permission definitions
 ├── static_content/        # Assets including icon.svg
 ├── styles/                # SCSS/design tokens

@@ -2,7 +2,7 @@
   "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
   "featured": true,
   "title": "Level 4 Admin Panel",
-  "description": "Admin panel components for schemas, workflows, and Lua scripts management",
+  "description": "Admin panel components for schemas, workflows, and script automation management",
   "stories": [
     {
       "name": "AdminPanel",

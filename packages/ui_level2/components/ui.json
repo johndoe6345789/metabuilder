@@ -292,8 +292,8 @@
                       "children": [
                         {
                           "type": "ListItemText",
-                          "primary": "Great article on Lua scripting!",
-                          "secondary": "Posted 2 days ago on 'Getting Started with Lua'"
+                          "primary": "Great article on automation scripting!",
+                          "secondary": "Posted 2 days ago on 'Getting Started with Automation Scripts'"
                         }
                       ]
                     },

@@ -1,6 +1,6 @@
-# MetaBuilder Lua Package Storybook
+# MetaBuilder Package Storybook
 
-A standalone Storybook for previewing Lua packages from MetaBuilder without running the full application.
+A standalone Storybook for previewing MetaBuilder packages powered by JSON scripts without running the full application.
 
 ## Quick Start
 
@@ -19,12 +19,12 @@ Packages are automatically discovered from `packages/index.json` based on `story
 
 ```json
 {
-  "discovery": {
-    "includedCategories": ["ui", "admin", "gaming", "social", "editors"],
-    "excludedPackages": ["shared", "lua_test"],
-    "minLevel": 1,
-    "maxLevel": 6
-  }
+    "discovery": {
+      "includedCategories": ["ui", "admin", "gaming", "social", "editors"],
+      "excludedPackages": ["shared", "testing"],
+      "minLevel": 1,
+      "maxLevel": 6
+    }
 }
 ```
 

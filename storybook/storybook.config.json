@@ -1,6 +1,6 @@
 {
   "$schema": "./storybook-config.schema.json",
-  "description": "Auto-discovery configuration for Lua package Storybook",
+  "description": "Auto-discovery configuration for the MetaBuilder package Storybook",
   "packagesPath": "../packages",
   "packagesIndex": "../packages/index.json",
   
@@ -8,7 +8,7 @@
     "enabled": true,
     "scanManifests": true,
     "includedCategories": ["ui", "admin", "gaming", "social", "editors", "examples"],
-    "excludedPackages": ["shared", "lua_test"],
+    "excludedPackages": ["shared", "testing"],
     "minLevel": 0,
     "maxLevel": 6
   },

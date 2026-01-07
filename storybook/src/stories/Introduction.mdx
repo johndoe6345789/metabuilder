@@ -2,30 +2,30 @@ import { Meta } from '@storybook/blocks'
 
 <Meta title="Introduction" />
 
-# MetaBuilder Lua Package Storybook
+# MetaBuilder Package Storybook
 
-This Storybook renders **Lua packages** from the MetaBuilder platform without running the actual application.
+This Storybook renders **MetaBuilder packages backed by JSON scripts** from the MetaBuilder platform without running the actual application.
 
 ## Quick Start
 
 1. **Explorer** - Use the Auto-Discovered Packages → Explorer to browse all packages interactively
 2. **Component Registry** - See all available components in Components → Registry
-3. **Manual Stories** - Pre-configured stories in Lua Packages → Renderer
+3. **Manual Stories** - Pre-configured stories in JSON package renders
 
 ## Auto-Discovery
 
 The storybook automatically discovers packages using `storybook.config.json`:
 
 ```json
-{
-  "discovery": {
-    "enabled": true,
-    "includedCategories": ["ui", "admin", "gaming", "social", "editors"],
-    "excludedPackages": ["shared", "lua_test"],
-    "minLevel": 1,
-    "maxLevel": 6
+  {
+    "discovery": {
+      "enabled": true,
+      "includedCategories": ["ui", "admin", "gaming", "social", "editors"],
+      "excludedPackages": ["shared", "testing"],
+      "minLevel": 1,
+      "maxLevel": 6
+    }
   }
-}
 ```
 
 ### Context Variants
@@ -39,14 +39,14 @@ Test packages with different user contexts:
 
 ## How It Works
 
-1. **Lua packages** in `/packages/*/seed/scripts/` define UI as component trees
-2. **Mock data** mirrors the output structure of Lua render functions
-3. **LuaPackageRenderer** converts the component tree to React components
-4. **Component Registry** maps Lua type names to React implementations
+1. **JSON script packages** in `/packages/*/seed/scripts/functions.json` define UI component trees
+2. **Mock data** mirrors the output structure produced by the JSON scripts
+3. **PackageRenderer** (still the runtime entry) converts the component tree to React components
+4. **Component Registry** maps package-defined type names to React implementations
 
 ## Package Structure
 
-Each Lua package follows this structure:
+Each JSON script package follows this structure:
 
 ```
 packages/
@@ -55,23 +55,27 @@ packages/
         ├── metadata.json      # Package info
         ├── components.json    # Component definitions
         └── scripts/
-            ├── manifest.json  # Script manifest
-            ├── init.lua       # Initialization
-            └── *.lua          # Render functions
+            └── functions.json  # JSON script definitions
 ```
 
-## Lua Render Output
+## JSON Script Output
 
-Lua render functions return component trees like:
+JSON script functions return component trees like:
 
-```lua
-return {
-  type = "Card",
-  props = { className = "p-4" },
-  children = {
-    { type = "Typography", props = { variant = "h5", text = "Title" } },
-    { type = "Button", props = { children = "Click Me" } }
-  }
+```json
+{
+  "type": "Card",
+  "props": { "className": "p-4" },
+  "children": [
+    {
+      "type": "Typography",
+      "props": { "variant": "h5", "text": "Title" }
+    },
+    {
+      "type": "Button",
+      "props": { "children": "Click Me" }
+    }
+  ]
 }
 ```
 
@@ -85,7 +89,7 @@ return {
 
 ## Available Component Types
 
-The component registry maps these Lua types to React:
+The component registry maps these package types to React:
 
 ### Layout
 - `Box`, `Stack`, `Flex`, `Grid`, `Container`

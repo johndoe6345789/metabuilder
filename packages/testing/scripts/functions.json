@@ -1,8 +1,8 @@
 {
   "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
   "schemaVersion": "2.2.0",
-  "package": "lua_test",
-  "description": "Lua unit testing framework functions including assertions, mocks, and test runner",
+  "package": "testing",
+  "description": "JSON-based testing framework functions including assertions, mocks, and test runner",
   "functions": [
     {
       "id": "framework_load_cases",

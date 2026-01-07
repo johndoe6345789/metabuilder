@@ -77,9 +77,9 @@
   },
   "runtime": {
     "scripts": [
-      "scripts/validator.lua"
+      "scripts/functions.json"
     ],
-    "main": "scripts/init.lua"
+    "main": "scripts/functions.json"
   },
   "tests": {
     "suites": [

@@ -13,7 +13,7 @@ export interface FormFieldProps extends React.HTMLAttributes<HTMLDivElement> {
 
 /**
  * FormField wraps form inputs with label, helper text, and error handling
- * Compatible with Lua package declarative rendering
+ * Compatible with declarative package rendering
  */
 export const FormField: React.FC<FormFieldProps> = ({
   children,

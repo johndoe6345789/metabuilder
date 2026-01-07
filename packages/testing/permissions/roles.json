@@ -1,41 +1,41 @@
 {
   "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
   "schemaVersion": "1.0.0",
-  "package": "lua_test",
-  "description": "Lua test framework access permissions",
+  "package": "testing",
+  "description": "JSON test framework access permissions",
   "permissions": [
     {
-      "id": "lua.test.run",
-      "name": "Run Lua Tests",
-      "description": "Execute Lua test suites",
-      "resource": "lua_test",
+      "id": "testing.run",
+      "name": "Run Tests",
+      "description": "Execute JSON-based test suites",
+      "resource": "testing",
       "action": "execute",
       "scope": "global",
       "minLevel": 3
     },
     {
-      "id": "lua.test.view",
+      "id": "testing.view",
       "name": "View Test Results",
-      "description": "View test results and reports",
-      "resource": "lua_test",
+      "description": "View execution results and reports",
+      "resource": "testing",
       "action": "read",
       "scope": "global",
       "minLevel": 3
     },
     {
-      "id": "lua.test.configure",
+      "id": "testing.configure",
       "name": "Configure Test Runner",
-      "description": "Configure test runner settings and filters",
-      "resource": "lua_test",
+      "description": "Adjust test runner settings and filters",
+      "resource": "testing",
       "action": "manage",
       "scope": "global",
       "minLevel": 4
     },
     {
-      "id": "lua.test.debug",
+      "id": "testing.debug",
       "name": "Debug Tests",
-      "description": "Access detailed debug output and error traces",
-      "resource": "lua_test",
+      "description": "Access detailed execution traces",
+      "resource": "testing",
       "action": "execute",
       "scope": "global",
       "minLevel": 4
@@ -43,11 +43,15 @@
   ],
   "resources": [
     {
-      "id": "lua_test",
-      "name": "Lua Test Framework",
+      "id": "testing",
+      "name": "JSON Test Framework",
       "type": "function",
-      "description": "Lua unit testing framework resources",
-      "actions": ["read", "execute", "manage"]
+      "description": "Resources for JSON test execution",
+      "actions": [
+        "read",
+        "execute",
+        "manage"
+      ]
     }
   ]
 }

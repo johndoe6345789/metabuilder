@@ -4,7 +4,7 @@ import * as Components from '../components/registry'
 
 /**
  * Component Registry showcases all available components
- * that can be used in Lua packages.
+ * that can be used in MetaBuilder packages.
  */
 const meta: Meta = {
   title: 'Components/Registry',

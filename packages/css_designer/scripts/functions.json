@@ -2,7 +2,7 @@
   "$schema": "https://metabuilder.dev/schemas/json-script.schema.json",
   "schemaVersion": "2.2.0",
   "package": "css_designer",
-  "description": "CSS Designer Lua functions for color manipulation, styling, and export",
+  "description": "CSS Designer script functions for color manipulation, styling, and export",
   "functions": [
     {
       "id": "init",

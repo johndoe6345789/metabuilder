@@ -1,13 +1,13 @@
 {
   "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
   "featured": false,
-  "title": "Lua Test Framework",
-  "description": "Unit testing framework components for Lua scripts",
+  "title": "Script Test Framework",
+  "description": "Unit testing framework components for script suites",
   "stories": [
     {
       "name": "TestRunner",
       "render": "framework",
-      "description": "Interactive test runner for executing Lua test suites",
+      "description": "Interactive test runner for executing script suites",
       "args": {
         "packageId": "dashboard",
         "autoRun": false,

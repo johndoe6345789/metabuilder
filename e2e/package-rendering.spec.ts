@@ -1,12 +1,12 @@
 /**
- * E2E Tests for Lua Package Rendering
+ * E2E Tests for Package Rendering
  * 
- * Verifies that Lua packages render correctly in the browser.
- * Tests the full pipeline: JSON → Lua → React → DOM
+ * Verifies that packages render correctly in the browser.
+ * Tests the full pipeline: JSON → React → DOM
  */
 import { expect, test } from '@playwright/test'
 
-test.describe('Lua Package Rendering', () => {
+test.describe('Package Rendering', () => {
   test.describe('Homepage (level1)', () => {
     test('should render homepage with fakemui components', async ({ page }) => {
       await page.goto('/')

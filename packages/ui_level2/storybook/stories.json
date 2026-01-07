@@ -27,9 +27,9 @@
         "comments": [
           {
             "id": "1",
-            "text": "Great article on Lua scripting!",
+            "text": "Great article on automation scripting!",
             "timestamp": "2 days ago",
-            "topic": "Getting Started with Lua"
+            "topic": "Getting Started with Automation Scripts"
           },
           {
             "id": "2",

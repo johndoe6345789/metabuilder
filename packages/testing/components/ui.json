@@ -1,13 +1,13 @@
 {
   "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
   "schemaVersion": "2.0.0",
-  "package": "lua_test",
-  "description": "Lua testing framework UI components for test execution and results display",
+  "package": "testing",
+  "description": "JSON testing framework UI components for test execution and results display",
   "components": [
     {
       "id": "test_runner",
       "name": "TestRunner",
-      "description": "Interactive test runner component for executing Lua tests",
+      "description": "Interactive test runner component for executing script tests",
       "props": [
         {
           "name": "packageId",

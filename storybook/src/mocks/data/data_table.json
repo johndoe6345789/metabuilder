@@ -12,17 +12,17 @@
     }
   },
   "renders": {
-    "init.lua": {
+    "init.script": {
       "description": "Lifecycle hooks",
       "component": {
         "type": "Alert",
         "props": { "severity": "info" },
         "children": [
-          { "type": "Typography", "props": { "text": "init.lua - lifecycle hooks" } }
+          { "type": "Typography", "props": { "text": "init.script - lifecycle hooks" } }
         ]
       }
     },
-    "render_table.lua": {
+    "render_table.script": {
       "description": "Data table with pagination",
       "component": {
         "type": "Card",

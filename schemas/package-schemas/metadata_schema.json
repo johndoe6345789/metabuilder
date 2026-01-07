@@ -216,8 +216,14 @@
           "type": "object",
           "description": "Script executor paths",
           "properties": {
-            "lua": { "type": "string" },
-            "javascript": { "type": "string" }
+            "jsonScript": {
+              "type": "string",
+              "description": "Path to the JSON script entry point"
+            },
+            "javascript": {
+              "type": "string",
+              "description": "Path to a JavaScript shim or helper"
+            }
           }
         },
         "description": {

@@ -209,7 +209,7 @@ High priority TODOs still to implement:
 
 #### UI Page Loaders (2 TODOs)
 - `lib/ui-pages/load-page-from-db.ts`: Database page loading
-- `lib/ui-pages/load-page-from-lua-packages.ts`: Lua package loading
+- `lib/ui-pages/load-page-from-packages.ts`: package loading
 
 #### Component System (3 TODOs)
 - `lib/components/component-registry.ts`: Full registry functionality
@@ -274,7 +274,7 @@ High priority TODOs still to implement:
 ### Short Term (Next PR)
 1. **Implement routing functions**: Route parsing, validation, building
 2. **Fix remaining production code warnings**: ~57 warnings in non-stub files
-3. **Implement UI page loaders**: Database and Lua package loading
+3. **Implement UI page loaders**: Database and package loading
 4. **Add component registry**: Full functionality for component system
 
 ### Long Term

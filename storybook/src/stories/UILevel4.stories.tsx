@@ -63,7 +63,7 @@ const ConfigSummary: React.FC<{
         <span style={{ fontWeight: 500 }}>{nodes}</span>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <span style={{ color: 'var(--color-muted-foreground)' }}>Lua Scripts:</span>
+        <span style={{ color: 'var(--color-muted-foreground)' }}>Scripts:</span>
         <span style={{ fontWeight: 500 }}>{scripts}</span>
       </div>
     </div>
@@ -382,7 +382,7 @@ const BuilderWorkspace: React.FC = () => (
       Application Builder
     </h2>
     <p className="text builder-subtitle" style={{ color: 'var(--color-muted-foreground)', marginBottom: '2rem' }}>
-      Design your application declaratively. Define schemas, create workflows, and write Lua scripts.
+      Design your application declaratively. Define schemas, create workflows, and write scripts.
     </p>
 
     <div style={{ marginBottom: '1.5rem' }}>
@@ -435,7 +435,7 @@ const BuilderWorkspace: React.FC = () => (
             gap: '0.5rem'
           }}
         >
-          💻 Lua Scripts
+          💻 Scripts
           <TabBadge count={12} />
         </button>
       </div>
@@ -552,7 +552,7 @@ export const TabsDemo: Story = {
             gap: '0.5rem'
           }}
         >
-          💻 Lua Scripts
+          💻 Scripts
           <TabBadge count={12} />
         </button>
       </div>

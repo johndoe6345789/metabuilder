@@ -1187,12 +1187,12 @@ import { createClient, RedisClientType } from 'redis'
 
 /**
  * Fort Knox Quota Manager
- * Atomic quota operations using Redis Lua scripts
+* Atomic quota operations using Redis scripts
  */
 class AtomicQuotaManager {
   private redis: RedisClientType
   
-  // Lua script for atomic quota check-and-reserve
+ // Redis script for atomic quota check-and-reserve
   // Returns: 1 = success, 0 = quota exceeded, -1 = error
   private static readonly RESERVE_QUOTA_SCRIPT = `
     local key = KEYS[1]
@@ -1244,7 +1244,7 @@ class AtomicQuotaManager {
   private releaseScriptSha: string | null = null
   
   async initialize(): Promise<void> {
-    // Pre-load Lua scripts for efficiency
+    // Pre-load Redis scripts for efficiency
     this.reserveScriptSha = await this.redis.scriptLoad(
       AtomicQuotaManager.RESERVE_QUOTA_SCRIPT
     )

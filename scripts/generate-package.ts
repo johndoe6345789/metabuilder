@@ -145,14 +145,13 @@ function generateMetadata(config: PackageConfig): string {
     category: config.category,
     primary: config.primary,
     dependencies: config.dependencies,
-    devDependencies: ['lua_test'],
+    devDependencies: ['testing'],
     exports: {
       components: config.components,
-      scripts: ['init']
+      scripts: ['lifecycle']
     },
     tests: {
-      scripts: ['tests/metadata.test.lua', 'tests/components.test.lua'],
-      cases: ['tests/metadata.cases.json', 'tests/components.cases.json']
+      scripts: ['tests/metadata.test.json']
     },
     minLevel: config.minLevel,
     ...(config.withSchema && config.entities.length > 0 ? {
@@ -167,60 +166,163 @@ function generateMetadata(config: PackageConfig): string {
   return JSON.stringify(metadata, null, 2)
 }
 
-function generateInitLua(config: PackageConfig): string {
-  return `--- ${config.name} initialization
---- @module init
-
-local M = {}
-
----@class InstallContext
----@field version string
-
----@class InstallResult
----@field message string
----@field version string
-
----Called when package is installed
----@param context InstallContext
----@return InstallResult
-function M.on_install(context)
-  return {
-    message = "${config.name} installed successfully",
-    version = context.version
+function generateLifecycleScript(config: PackageConfig): string {
+  const script = {
+    $schema: 'https://metabuilder.dev/schemas/json-script.schema.json',
+    schemaVersion: '2.2.0',
+    package: config.packageId,
+    description: `${config.name} lifecycle hooks`,
+    functions: [
+      {
+        id: 'on_install',
+        name: 'onInstall',
+        exported: true,
+        category: 'lifecycle',
+        description: 'Called when the package is installed',
+        params: [
+          {
+            name: 'context',
+            type: 'object',
+            description: 'Installation context'
+          }
+        ],
+        returnType: 'object',
+        body: [
+          {
+            type: 'return',
+            value: {
+              type: 'object_literal',
+              properties: [
+                {
+                  key: 'message',
+                  value: {
+                    type: 'literal',
+                    value: `${config.name} installed successfully`
+                  }
+                },
+                {
+                  key: 'version',
+                  value: {
+                    type: 'member_access',
+                    object: { type: 'identifier', name: 'context' },
+                    property: 'version'
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        id: 'on_uninstall',
+        name: 'onUninstall',
+        exported: true,
+        category: 'lifecycle',
+        description: 'Called when the package is uninstalled',
+        returnType: 'object',
+        body: [
+          {
+            type: 'return',
+            value: {
+              type: 'object_literal',
+              properties: [
+                {
+                  key: 'message',
+                  value: {
+                    type: 'literal',
+                    value: `${config.name} removed`
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    exports: {
+      functions: ['onInstall', 'onUninstall']
+    }
   }
-end
 
----Called when package is uninstalled
----@return table
-function M.on_uninstall()
-  return { message = "${config.name} removed" }
-end
-
-return M
-`
+  return JSON.stringify(script, null, 2)
 }
 
-function generateTestLua(testName: string, config: PackageConfig): string {
-  return `-- ${testName} tests for ${config.packageId}
+function generateMetadataTestJson(config: PackageConfig): string {
+  const tests = {
+    $schema: 'https://metabuilder.dev/schemas/tests.schema.json',
+    schemaVersion: '2.0.0',
+    package: config.packageId,
+    description: `Metadata validation tests for ${config.name}`,
+    testSuites: [
+      {
+        id: 'metadata_validation',
+        name: `${config.name} Metadata`,
+        description: 'Verify package metadata integrity',
+        tests: [
+          {
+            id: 'package-id',
+            name: 'packageId matches',
+            act: {
+              type: 'function_call',
+              target: 'getPackageMetadata',
+              input: config.packageId
+            },
+            assert: {
+              expectations: [
+                {
+                  type: 'equals',
+                  actual: 'result.packageId',
+                  expected: config.packageId,
+                  description: 'packageId comes from directory name'
+                }
+              ]
+            }
+          },
+          {
+            id: 'icon-exists',
+            name: 'Icon exists',
+            act: {
+              type: 'function_call',
+              target: 'checkFileExists',
+              input: `${config.packageId}/static_content/icon.svg`
+            },
+            assert: {
+              expectations: [
+                {
+                  type: 'truthy',
+                  actual: 'result',
+                  description: 'Icon file is present'
+                }
+              ]
+            }
+          },
+          {
+            id: 'metadata-schema',
+            name: 'package.json validates',
+            act: {
+              type: 'function_call',
+              target: 'validateAgainstSchema',
+              input: {
+                file: `${config.packageId}/package.json`,
+                schema: 'https://metabuilder.dev/schemas/package-metadata.schema.json'
+              }
+            },
+            assert: {
+              expectations: [
+                {
+                  type: 'truthy',
+                  actual: 'result.valid',
+                  description: 'package.json conforms to metadata schema'
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
 
-describe("${config.name} - ${testName}", function()
-  it("should pass basic validation", function()
-    expect(true).toBe(true)
-  end)
-
-  it("should have required fields", function()
-    -- TODO: Add specific tests
-    expect(true).toBe(true)
-  end)
-end)
-`
-}
-
-function generateTestCases(): string {
-  return JSON.stringify([
-    { name: 'valid_input', input: {}, expected: { valid: true } },
-    { name: 'invalid_input', input: { invalid: true }, expected: { valid: false } }
-  ], null, 2)
+  return JSON.stringify(tests, null, 2)
 }
 
 function generateSchemaYaml(config: PackageConfig): string {
@@ -263,83 +365,6 @@ function generateSchemaYaml(config: PackageConfig): string {
     lines.push('')
   }
 
-  return lines.join('\n')
-}
-
-function generateDbOperations(config: PackageConfig): string {
-  const lines = [
-    `-- Database operations for ${config.name}`,
-    '-- Auto-generated by package template generator',
-    '',
-    'local M = {}',
-    ''
-  ]
-
-  for (const entity of config.entities) {
-    const entityLower = entity.toLowerCase()
-    
-    lines.push(`-- ${entity} operations`)
-    lines.push('')
-    lines.push(`---List all ${entity} records`)
-    lines.push('---@param ctx DBALContext')
-    lines.push('---@return table[]')
-    lines.push(`function M.list_${entityLower}(ctx)`)
-    lines.push('  -- List operation template - customize query as needed')
-    lines.push(`  local result = ctx.db:query("SELECT * FROM ${entityLower} WHERE tenantId = ?", {ctx.tenantId})`)
-    lines.push('  return result or {}')
-    lines.push('end')
-    lines.push('')
-    lines.push(`---Get a single ${entity} by ID`)
-    lines.push('---@param ctx DBALContext')
-    lines.push('---@param id string')
-    lines.push('---@return table|nil')
-    lines.push(`function M.get_${entityLower}(ctx, id)`)
-    lines.push('  -- Get operation template - customize query as needed')
-    lines.push(`  local result = ctx.db:queryOne("SELECT * FROM ${entityLower} WHERE id = ? AND tenantId = ?", {id, ctx.tenantId})`)
-    lines.push('  return result')
-    lines.push('end')
-    lines.push('')
-    lines.push(`---Create a new ${entity}`)
-    lines.push('---@param ctx DBALContext')
-    lines.push('---@param data table')
-    lines.push('---@return table')
-    lines.push(`function M.create_${entityLower}(ctx, data)`)
-    lines.push('  -- Create operation template - customize fields as needed')
-    lines.push('  data.id = data.id or ctx.generateId()')
-    lines.push('  data.tenantId = ctx.tenantId')
-    lines.push('  data.createdAt = os.time()')
-    lines.push('  data.updatedAt = os.time()')
-    lines.push(`  ctx.db:insert("${entityLower}", data)`)
-    lines.push('  return data')
-    lines.push('end')
-    lines.push('')
-    lines.push(`---Update an existing ${entity}`)
-    lines.push('---@param ctx DBALContext')
-    lines.push('---@param id string')
-    lines.push('---@param data table')
-    lines.push('---@return table|nil')
-    lines.push(`function M.update_${entityLower}(ctx, id, data)`)
-    lines.push('  -- Update operation template - customize fields as needed')
-    lines.push('  data.updatedAt = os.time()')
-    lines.push(`  local success = ctx.db:update("${entityLower}", id, data, {tenantId = ctx.tenantId})`)
-    lines.push('  if success then')
-    lines.push(`    return M.get_${entityLower}(ctx, id)`)
-    lines.push('  end')
-    lines.push('  return nil')
-    lines.push('end')
-    lines.push('')
-    lines.push(`---Delete a ${entity}`)
-    lines.push('---@param ctx DBALContext')
-    lines.push('---@param id string')
-    lines.push('---@return boolean')
-    lines.push(`function M.delete_${entityLower}(ctx, id)`)
-    lines.push('  -- Delete operation template - customize as needed')
-    lines.push(`  return ctx.db:delete("${entityLower}", id, {tenantId = ctx.tenantId})`)
-    lines.push('end')
-    lines.push('')
-  }
-
-  lines.push('return M')
   return lines.join('\n')
 }
 
@@ -467,21 +492,17 @@ function generate(config: PackageConfig): GeneratedFile[] {
   files.push({ path: 'seed/metadata.json', content: generateMetadata(config) })
   files.push({ path: 'seed/components.json', content: generateComponentsJson(config) })
   files.push({ path: 'seed/layout.json', content: generateLayoutJson(config) })
-  files.push({ path: 'seed/scripts/init.lua', content: generateInitLua(config) })
+  files.push({ path: 'seed/scripts/functions.json', content: generateLifecycleScript(config) })
   files.push({ path: 'seed/index.ts', content: generateIndexTs(config) })
 
   // Schema files
   if (config.withSchema && config.entities.length > 0) {
     files.push({ path: 'seed/schema/entities.yaml', content: generateSchemaYaml(config) })
-    files.push({ path: 'seed/scripts/db/operations.lua', content: generateDbOperations(config) })
   }
 
   // Test files
   if (config.withTests) {
-    files.push({ path: 'seed/scripts/tests/metadata.test.lua', content: generateTestLua('metadata', config) })
-    files.push({ path: 'seed/scripts/tests/components.test.lua', content: generateTestLua('components', config) })
-    files.push({ path: 'seed/scripts/tests/metadata.cases.json', content: generateTestCases() })
-    files.push({ path: 'seed/scripts/tests/components.cases.json', content: generateTestCases() })
+    files.push({ path: 'seed/tests/metadata.test.json', content: generateMetadataTestJson(config) })
   }
 
   // Static content

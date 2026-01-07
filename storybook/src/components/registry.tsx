@@ -359,7 +359,7 @@ export const Chip: React.FC<ComponentProps & { label?: string }> = ({
   <span className={className}>{label || children}</span>
 )
 
-// Placeholder components for complex Lua package components
+// Placeholder components for complex script package components
 export const Level4Header: React.FC<ComponentProps & { username?: string; nerdMode?: boolean }> = ({
   username = 'User',
   nerdMode = false,
@@ -883,7 +883,7 @@ export const Pagination: React.FC<ComponentProps & { count?: number; page?: numb
 )
 
 /**
- * Helper to push a JS object/array as a Lua table
+ * Helper to push a JS object/array as a package table
  */
  * Component Registry - maps JSON type names to React components
  */
@@ -968,7 +968,7 @@ export const componentRegistry: Record<string, AnyComponent> = {
   DialogContent,
   DialogActions,
   
-  // App-specific (from Lua packages)
+  // App-specific (from packages)
   Level4Header,
   IntroSection,
   AppHeader,
@@ -980,7 +980,7 @@ export const componentRegistry: Record<string, AnyComponent> = {
 }
 
 /**
- * Get a component by its Lua type name
+ * Get a component by its package type name
  */
 export function getComponent(typeName: string): AnyComponent | undefined {
   return componentRegistry[typeName]

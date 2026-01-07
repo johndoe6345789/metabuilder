@@ -20,7 +20,7 @@
           "type": "boolean",
           "required": false,
           "default": false,
-          "description": "Whether nerd mode (schema/Lua) is enabled"
+          "description": "Whether nerd mode (schema/scripts) is enabled"
         }
       ],
       "render": {
@@ -129,7 +129,7 @@
                   "props": {
                     "eyebrow": "Level 4",
                     "title": "Application Builder",
-                    "description": "{{nerdMode ? 'Design declaratively with schemas and Lua scripts.' : 'Build visually with forms and drag-and-drop.'}}"
+                    "description": "{{nerdMode ? 'Design declaratively with schemas and automation scripts.' : 'Build visually with forms and drag-and-drop.'}}"
                   }
                 },
                 "{{children}}"
@@ -142,7 +142,7 @@
     {
       "id": "level4_tabs",
       "name": "Level4Tabs",
-      "description": "Tabbed interface for Schemas, Workflows, and Lua Scripts",
+      "description": "Tabbed interface for Schemas, Workflows, and Scripts",
       "props": [
         {
           "name": "defaultTab",
@@ -157,32 +157,32 @@
           "className": "tabs-container",
           "defaultValue": "{{defaultTab}}",
           "children": [
-            {
-              "type": "TabsList",
-              "children": [
                 {
-                  "type": "TabsTrigger",
-                  "props": {
-                    "value": "schemas",
-                    "text": "Schemas"
-                  }
+                  "type": "TabsList",
+                  "children": [
+                    {
+                      "type": "TabsTrigger",
+                      "props": {
+                        "value": "schemas",
+                        "text": "Schemas"
+                      }
+                    },
+                    {
+                      "type": "TabsTrigger",
+                      "props": {
+                        "value": "workflows",
+                        "text": "Workflows"
+                      }
+                    },
+                    {
+                      "type": "TabsTrigger",
+                      "props": {
+                        "value": "scripts",
+                        "text": "Scripts"
+                      }
+                    }
+                  ]
                 },
-                {
-                  "type": "TabsTrigger",
-                  "props": {
-                    "value": "workflows",
-                    "text": "Workflows"
-                  }
-                },
-                {
-                  "type": "TabsTrigger",
-                  "props": {
-                    "value": "lua",
-                    "text": "Lua Scripts"
-                  }
-                }
-              ]
-            },
             {
               "type": "TabsContent",
               "value": "schemas",
@@ -203,10 +203,10 @@
             },
             {
               "type": "TabsContent",
-              "value": "lua",
+              "value": "scripts",
               "children": [
                 {
-                  "type": "LuaScriptsTab"
+                  "type": "ScriptsTab"
                 }
               ]
             }

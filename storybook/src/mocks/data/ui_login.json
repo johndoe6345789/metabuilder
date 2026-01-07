@@ -11,7 +11,7 @@
     }
   },
   "renders": {
-    "login_form.lua": {
+    "login_form.script": {
       "description": "Login form",
       "component": {
         "type": "Box",
@@ -44,7 +44,7 @@
         }]
       }
     },
-    "register_form.lua": {
+    "register_form.script": {
       "description": "Registration form",
       "component": {
         "type": "Box",

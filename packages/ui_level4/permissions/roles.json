@@ -68,10 +68,10 @@
       "minLevel": 4
     },
     {
-      "id": "level4.lua.edit",
-      "name": "Edit Lua Scripts",
-      "description": "Create and modify Lua scripts",
-      "resource": "level4.lua",
+      "id": "level4.scripts.edit",
+      "name": "Edit Scripts",
+      "description": "Create and modify automation scripts",
+      "resource": "level4.scripts",
       "action": "update",
       "scope": "global",
       "minLevel": 4
@@ -114,10 +114,10 @@
       "actions": ["read", "update", "execute"]
     },
     {
-      "id": "level4.lua",
-      "name": "Lua Scripts",
+      "id": "level4.scripts",
+      "name": "Scripts",
       "type": "function",
-      "description": "Lua script definitions",
+      "description": "Automation script definitions",
       "actions": ["read", "update", "execute"]
     }
   ]

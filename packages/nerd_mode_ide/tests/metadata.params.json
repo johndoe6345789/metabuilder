@@ -9,7 +9,7 @@
       { "path": "/index.ts", "language": "typescript" },
       { "path": "/styles.css", "language": "css" },
       { "path": "/data.json", "language": "json" },
-      { "path": "/script.lua", "language": "lua" },
+      { "path": "/script.script", "language": "script" },
       { "path": "/README.md", "language": "markdown" }
     ],
     "gitOperations": [

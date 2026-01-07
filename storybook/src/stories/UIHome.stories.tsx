@@ -35,7 +35,7 @@ const HeroSection: React.FC = () => (
   <div className="hero-section">
     <HeroTitle>Welcome to MetaBuilder</HeroTitle>
     <HeroSubtitle>
-      Build dynamic applications with abstract styling systems, Lua scripting, and component composition
+      Build dynamic applications with abstract styling systems, automation scripting, and component composition
     </HeroSubtitle>
   </div>
 )
