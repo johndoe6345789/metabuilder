@@ -28,6 +28,7 @@ const baseConfig = {
   mode: 'development' as const,
   adapter: 'prisma' as const,
   database: { url: 'file:memory' },
+  tenantId: 'tenant-123',
 }
 
 const luaScriptInput = {
@@ -43,6 +44,7 @@ const luaScriptInput = {
 const luaScriptRecord = {
   ...luaScriptInput,
   id: '22222222-2222-2222-2222-222222222222',
+  tenantId: baseConfig.tenantId,
   createdAt: new Date('2024-01-01T00:00:00.000Z'),
   updatedAt: new Date('2024-01-02T00:00:00.000Z'),
 }
@@ -62,7 +64,10 @@ describe('DBALClient luaScripts', () => {
     const client = new DBALClient(baseConfig)
     const result = await client.luaScripts.create(luaScriptInput)
 
-    expect(mockAdapter.create).toHaveBeenCalledWith('LuaScript', luaScriptInput)
+    expect(mockAdapter.create).toHaveBeenCalledWith('LuaScript', {
+      ...luaScriptInput,
+      tenantId: baseConfig.tenantId,
+    })
     expect(result).toEqual(luaScriptRecord)
   })
 
@@ -89,7 +94,7 @@ describe('DBALClient luaScripts', () => {
   })
 
   it('throws not found when reading missing lua scripts', async () => {
-    mockAdapter.read.mockResolvedValue(null)
+    mockAdapter.findFirst.mockResolvedValue(null)
 
     const client = new DBALClient(baseConfig)
 
@@ -100,6 +105,7 @@ describe('DBALClient luaScripts', () => {
 
   it('updates, deletes, and lists lua scripts', async () => {
     const updatedRecord = { ...luaScriptRecord, timeoutMs: 2000 }
+    mockAdapter.findFirst.mockResolvedValue(luaScriptRecord)
     mockAdapter.update.mockResolvedValue(updatedRecord)
     mockAdapter.delete.mockResolvedValue(true)
     mockAdapter.list.mockResolvedValue({
@@ -120,6 +126,8 @@ describe('DBALClient luaScripts', () => {
 
     const listResult = await client.luaScripts.list()
     expect(listResult.data).toEqual([luaScriptRecord])
-    expect(mockAdapter.list).toHaveBeenCalledWith('LuaScript', undefined)
+    expect(mockAdapter.list).toHaveBeenCalledWith('LuaScript', {
+      filter: { tenantId: baseConfig.tenantId },
+    })
   })
 })

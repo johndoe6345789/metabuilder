@@ -16,10 +16,10 @@ export function parseWorkflowRunLogsOptions(search: string | URLSearchParams): W
   const jobLimitParam = params.get('jobLimit')
   const runNameParam = params.get('runName')
   return {
-    tailLines: tailLinesParam !== null ? parseInt(tailLinesParam) : undefined,
+    tailLines: tailLinesParam !== null ? parseInt(tailLinesParam, 10) : undefined,
     failedOnly: params.get('failedOnly') === 'true',
     runName: runNameParam !== null && runNameParam !== '' ? runNameParam : undefined,
     includeLogs: params.get('includeLogs') === 'true',
-    jobLimit: jobLimitParam !== null ? parseInt(jobLimitParam) : undefined,
+    jobLimit: jobLimitParam !== null ? parseInt(jobLimitParam, 10) : undefined,
   }
 }

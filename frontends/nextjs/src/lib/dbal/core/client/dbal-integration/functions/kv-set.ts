@@ -2,7 +2,7 @@ import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dba
 import type { JsonValue } from '@/types/utility-types'
 
 // KV Store operations
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export async function kvSet(this: any,
   key: string,
   value: JsonValue,

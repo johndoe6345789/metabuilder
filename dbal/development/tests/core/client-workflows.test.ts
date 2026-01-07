@@ -28,6 +28,7 @@ const baseConfig = {
   mode: 'development' as const,
   adapter: 'prisma' as const,
   database: { url: 'file:memory' },
+  tenantId: 'tenant-123',
 }
 
 const workflowInput = {
@@ -43,6 +44,7 @@ const workflowInput = {
 const workflowRecord = {
   ...workflowInput,
   id: '22222222-2222-2222-2222-222222222222',
+  tenantId: baseConfig.tenantId,
   createdAt: new Date('2024-01-01T00:00:00.000Z'),
   updatedAt: new Date('2024-01-02T00:00:00.000Z'),
 }
@@ -62,7 +64,10 @@ describe('DBALClient workflows', () => {
     const client = new DBALClient(baseConfig)
     const result = await client.workflows.create(workflowInput)
 
-    expect(mockAdapter.create).toHaveBeenCalledWith('Workflow', workflowInput)
+    expect(mockAdapter.create).toHaveBeenCalledWith('Workflow', {
+      ...workflowInput,
+      tenantId: baseConfig.tenantId,
+    })
     expect(result).toEqual(workflowRecord)
   })
 
@@ -89,7 +94,7 @@ describe('DBALClient workflows', () => {
   })
 
   it('throws not found when reading missing workflows', async () => {
-    mockAdapter.read.mockResolvedValue(null)
+    mockAdapter.findFirst.mockResolvedValue(null)
 
     const client = new DBALClient(baseConfig)
 
@@ -100,6 +105,7 @@ describe('DBALClient workflows', () => {
 
   it('updates, deletes, and lists workflows', async () => {
     const updatedRecord = { ...workflowRecord, name: 'updated-name' }
+    mockAdapter.findFirst.mockResolvedValue(workflowRecord)
     mockAdapter.update.mockResolvedValue(updatedRecord)
     mockAdapter.delete.mockResolvedValue(true)
     mockAdapter.list.mockResolvedValue({
@@ -120,6 +126,8 @@ describe('DBALClient workflows', () => {
 
     const listResult = await client.workflows.list()
     expect(listResult.data).toEqual([workflowRecord])
-    expect(mockAdapter.list).toHaveBeenCalledWith('Workflow', undefined)
+    expect(mockAdapter.list).toHaveBeenCalledWith('Workflow', {
+      filter: { tenantId: baseConfig.tenantId },
+    })
   })
 })

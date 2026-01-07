@@ -13,15 +13,17 @@ export interface UIPageData {
 }
 
 export async function loadPageFromDb(path: string, tenantId?: string): Promise<PageConfig | null> {
+  // Prisma client typing is generated; suppress lint in environments without generated types.
+   
   const page = await prisma.pageConfig.findFirst({
     where: {
       path,
-      tenantId: tenantId || null,
+      tenantId: tenantId ?? null,
       isPublished: true,
     },
-  })
+  }) as PageConfig | null
 
-  if (!page) {
+  if (page === null) {
     return null
   }
 
@@ -39,7 +41,7 @@ export async function loadPageFromDb(path: string, tenantId?: string): Promise<P
     requiresAuth: page.requiresAuth,
     requiredRole: page.requiredRole,
     accessLevel: page.level,
-    createdAt: page.createdAt ? Number(page.createdAt) : undefined,
-    updatedAt: page.updatedAt ? Number(page.updatedAt) : undefined,
+    createdAt: page.createdAt !== undefined ? Number(page.createdAt) : undefined,
+    updatedAt: page.updatedAt !== undefined ? Number(page.updatedAt) : undefined,
   }
 }

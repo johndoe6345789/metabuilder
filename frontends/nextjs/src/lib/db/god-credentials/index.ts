@@ -7,7 +7,7 @@ export async function getGodCredentialsExpiry(): Promise<number> {
   const adapter = getAdapter()
   const result = await adapter.list('SystemConfig')
   const config = (result.data as Array<{ key: string; value?: string }>).find((c) => c.key === 'godCredentialsExpiry')
-  return (config?.value !== null && config?.value !== undefined) ? Number(config.value) : 0
+  return config?.value !== undefined ? Number(config.value) : 0
 }
 
 /**
@@ -33,7 +33,7 @@ export async function getFirstLoginFlags(): Promise<Record<string, boolean>> {
   const users = result.data as Array<{ id?: string; firstLogin?: boolean }>
   const flags: Record<string, boolean> = {}
   for (const user of users) {
-    if (user.id !== null && user.id !== undefined && user.firstLogin !== undefined) {
+    if (user.id !== undefined && user.firstLogin !== undefined) {
       flags[user.id] = Boolean(user.firstLogin)
     }
   }
@@ -55,7 +55,7 @@ export async function getGodCredentialsExpiryDuration(): Promise<number> {
   const adapter = getAdapter()
   const result = await adapter.list('SystemConfig')
   const config = (result.data as Array<{ key: string; value?: string }>).find((c) => c.key === 'godCredentialsExpiryDuration')
-  return (config?.value !== null && config?.value !== undefined) ? Number(config.value) : 300000 // Default 5 minutes
+  return config?.value !== undefined ? Number(config.value) : 300000 // Default 5 minutes
 }
 
 /**

@@ -20,7 +20,7 @@ export class DBALClient {
   constructor(config: DBALConfig) {
     this.config = normalizeClientConfig(validateClientConfig(config))
     this.adapter = buildAdapter(this.config)
-    this.operations = buildEntityOperations(this.adapter)
+    this.operations = buildEntityOperations(this.adapter, this.config.tenantId)
   }
 
   /**

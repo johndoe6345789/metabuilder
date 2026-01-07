@@ -20,7 +20,7 @@ export async function addErrorLog(log: Omit<ErrorLog, 'id'>): Promise<string> {
     tenantId: log.tenantId ?? null,
     source: log.source ?? null,
     resolved: log.resolved,
-    resolvedAt: log.resolvedAt !== null && log.resolvedAt !== undefined ? BigInt(log.resolvedAt) : null,
+    resolvedAt: log.resolvedAt !== undefined ? BigInt(log.resolvedAt) : null,
     resolvedBy: log.resolvedBy ?? null,
   })
 

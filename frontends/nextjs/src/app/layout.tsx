@@ -52,8 +52,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const headerPkg = await loadPackage('ui_header')
   const footerPkg = await loadPackage('ui_footer')
 
-  const headerName = headerPkg?.name ?? null
-  const footerName = footerPkg?.name ?? null
+  const headerName = headerPkg?.name
+  const footerName = footerPkg?.name
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -69,7 +69,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <PackageStyleLoader packages={PACKAGES_WITH_STYLES} />
 
         {/* Render a simple header/footer when package metadata is available */}
-        {headerName !== undefined && headerName !== null && headerName.length > 0 ? (
+        {headerName !== undefined && headerName.length > 0 ? (
           <header className="app-header">{headerName}</header>
         ) : null}
 
@@ -77,7 +77,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {children}
         </Providers>
 
-        {footerName !== undefined && footerName !== null && footerName.length > 0 ? (
+        {footerName !== undefined && footerName.length > 0 ? (
           <footer className="app-footer">{footerName}</footer>
         ) : null}
       </body>

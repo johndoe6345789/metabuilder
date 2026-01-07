@@ -51,5 +51,5 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
 
 export function getComponentIcon(iconName: string, props?: IconProps): ReactElement | null {
   const Icon = iconMap[iconName]
-  return Icon !== null && Icon !== undefined ? <Icon {...props} /> : null
+  return Icon !== undefined ? <Icon {...props} /> : null
 }

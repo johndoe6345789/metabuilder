@@ -1,5 +1,1 @@
-export function validatePackageCreate(input: any): string[] {
-  const errors: string[] = [];
-  // TODO: Add validation logic
-  return errors;
-}
+export { validatePackageCreate } from '../../../validation/entities/package/validate-package-create'

@@ -8,10 +8,17 @@ namespace daemon {
 namespace rpc {
 
 void handle_user_list(Client& client,
+                      const std::string& tenant_id,
                       const Json::Value& options,
                       ResponseSender send_success,
                       ErrorSender send_error) {
+    if (tenant_id.empty()) {
+        send_error("Tenant ID is required", 400);
+        return;
+    }
+
     auto list_options = list_options_from_json(options);
+    list_options.filter["tenantId"] = tenant_id;
     auto result = client.listUsers(list_options);
     if (!result.isOk()) {
         const auto& error = result.error();
@@ -22,9 +29,14 @@ void handle_user_list(Client& client,
 }
 
 void handle_user_read(Client& client,
+                      const std::string& tenant_id,
                       const std::string& id,
                       ResponseSender send_success,
                       ErrorSender send_error) {
+    if (tenant_id.empty()) {
+        send_error("Tenant ID is required", 400);
+        return;
+    }
     if (id.empty()) {
         send_error("ID is required for read operations", 400);
         return;
@@ -35,13 +47,23 @@ void handle_user_read(Client& client,
         send_error(error.what(), static_cast<int>(error.code()));
         return;
     }
-    send_success(user_to_json(result.value()));
+    const auto& user = result.value();
+    if (user.tenant_id != tenant_id) {
+        send_error("User not found", 404);
+        return;
+    }
+    send_success(user_to_json(user));
 }
 
 void handle_user_create(Client& client,
+                        const std::string& tenant_id,
                         const Json::Value& payload,
                         ResponseSender send_success,
                         ErrorSender send_error) {
+    if (tenant_id.empty()) {
+        send_error("Tenant ID is required", 400);
+        return;
+    }
     const auto username = payload.get("username", "").asString();
     const auto email = payload.get("email", "").asString();
     if (username.empty() || email.empty()) {
@@ -50,6 +72,7 @@ void handle_user_create(Client& client,
     }
 
     CreateUserInput input;
+    input.tenant_id = tenant_id;
     input.username = username;
     input.email = email;
     if (payload.isMember("role") && payload["role"].isString()) {
@@ -67,12 +90,28 @@ void handle_user_create(Client& client,
 }
 
 void handle_user_update(Client& client,
+                        const std::string& tenant_id,
                         const std::string& id,
                         const Json::Value& payload,
                         ResponseSender send_success,
                         ErrorSender send_error) {
+    if (tenant_id.empty()) {
+        send_error("Tenant ID is required", 400);
+        return;
+    }
     if (id.empty()) {
         send_error("ID is required for updates", 400);
+        return;
+    }
+
+    auto existing = client.getUser(id);
+    if (!existing.isOk()) {
+        const auto& error = existing.error();
+        send_error(error.what(), static_cast<int>(error.code()));
+        return;
+    }
+    if (existing.value().tenant_id != tenant_id) {
+        send_error("User not found", 404);
         return;
     }
 
@@ -107,11 +146,27 @@ void handle_user_update(Client& client,
 }
 
 void handle_user_delete(Client& client,
+                        const std::string& tenant_id,
                         const std::string& id,
                         ResponseSender send_success,
                         ErrorSender send_error) {
+    if (tenant_id.empty()) {
+        send_error("Tenant ID is required", 400);
+        return;
+    }
     if (id.empty()) {
         send_error("ID is required for delete operations", 400);
+        return;
+    }
+
+    auto existing = client.getUser(id);
+    if (!existing.isOk()) {
+        const auto& error = existing.error();
+        send_error(error.what(), static_cast<int>(error.code()));
+        return;
+    }
+    if (existing.value().tenant_id != tenant_id) {
+        send_error("User not found", 404);
         return;
     }
 

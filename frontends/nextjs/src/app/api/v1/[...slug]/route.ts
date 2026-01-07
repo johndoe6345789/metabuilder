@@ -81,7 +81,7 @@ async function handleRequest(
     if (['POST', 'PUT', 'PATCH'].includes(request.method)) {
       try {
         const text = await request.text()
-        if (text !== null && text !== undefined && text !== '') {
+        if (text.length > 0) {
           body = JSON.parse(text) as Record<string, unknown>
         }
       } catch {
@@ -90,7 +90,7 @@ async function handleRequest(
     }
 
     // Handle custom actions separately
-    if (operation === 'action' && route.action !== null && route.action !== undefined) {
+    if (operation === 'action' && route.action !== undefined) {
       if (tenantResult.tenant === null || tenantResult.tenant === undefined) {
         return errorResponse('Tenant not found', STATUS.NOT_FOUND)
       }
@@ -99,11 +99,14 @@ async function handleRequest(
         route.package,
         route.entity,
         route.action,
-        route.id ?? null,
+        route.id,
         { user, tenant: tenantResult.tenant, body }
       )
       
       if (actionResult.success === false) {
+        if (actionResult.code === 'NOT_FOUND') {
+          return errorResponse(actionResult.error ?? 'Action not found', STATUS.NOT_FOUND)
+        }
         return errorResponse(actionResult.error ?? 'Action failed', STATUS.BAD_REQUEST)
       }
       
@@ -113,6 +116,26 @@ async function handleRequest(
     // Ensure tenant is available for CRUD operations
     if (tenantResult.tenant === null || tenantResult.tenant === undefined) {
       return errorResponse('Tenant not found', STATUS.NOT_FOUND)
+    }
+
+    // Custom REST overrides take priority for standard operations.
+    if (['list', 'read', 'create', 'update', 'delete'].includes(operation)) {
+      const overrideResult = await executePackageAction(
+        route.package,
+        route.entity,
+        operation,
+        route.id,
+        { user, tenant: tenantResult.tenant, body },
+        { allowFallback: true }
+      )
+
+      if (overrideResult.success) {
+        return successResponse(overrideResult.data, STATUS.OK)
+      }
+
+      if (overrideResult.code === 'INVALID_CONFIG') {
+        return errorResponse(overrideResult.error ?? 'Invalid package config', STATUS.BAD_REQUEST)
+      }
     }
 
     // Execute standard CRUD operation
@@ -125,10 +148,10 @@ async function handleRequest(
     if (!result.success) {
       // Map common errors to appropriate status codes
       const errorMsg = result.error ?? 'Operation failed'
-      if (errorMsg?.includes('not found') === true) {
+      if (errorMsg.includes('not found')) {
         return errorResponse(errorMsg, STATUS.NOT_FOUND)
       }
-      if (errorMsg?.includes('required') === true) {
+      if (errorMsg.includes('required')) {
         return errorResponse(errorMsg, STATUS.BAD_REQUEST)
       }
       return errorResponse(errorMsg, STATUS.INTERNAL_ERROR)
@@ -149,11 +172,9 @@ async function handleRequest(
         return successResponse(responseData, STATUS.OK)
     }
   } catch (error) {
-    console.error('DBAL operation failed:', error)
-    return errorResponse(
-      error instanceof Error ? error.message : 'Operation failed',
-      STATUS.INTERNAL_ERROR
-    )
+    const { logger, apiError } = await import('@/lib/logging')
+    logger.error('DBAL operation failed', error)
+    return errorResponse(apiError(error), STATUS.INTERNAL_ERROR)
   }
 }
 

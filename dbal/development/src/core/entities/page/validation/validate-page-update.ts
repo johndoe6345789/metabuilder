@@ -1,5 +1,1 @@
-export function validatePageUpdate(input: any): string[] {
-  const errors: string[] = [];
-  // TODO: Add validation logic
-  return errors;
-}
+export { validatePageUpdate } from '../../../validation/entities/page/validate-page-update'

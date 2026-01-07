@@ -1,7 +1,9 @@
+#include <algorithm>
+#include <cctype>
+#include <regex>
+#include <set>
 #include <string>
 #include <vector>
-#include <set>
-#include <regex>
 
 namespace dbal {
 namespace daemon {
@@ -14,21 +16,26 @@ public:
             "DROP TABLE",
             "DROP DATABASE",
             "TRUNCATE",
-            "DELETE FROM.*WHERE 1=1",
             "'; --",
             "UNION SELECT",
             "../",
-            "/etc/passwd",
-            "eval(",
-            "exec(",
-            "system(",
-            "__import__"
+            "/ETC/PASSWD",
+            "EVAL(",
+            "EXEC(",
+            "SYSTEM(",
+            "__IMPORT__"
         };
     }
     
     bool isSafe(const std::string& query) const {
         std::string upper_query = query;
-        std::transform(upper_query.begin(), upper_query.end(), upper_query.begin(), ::toupper);
+        std::transform(upper_query.begin(), upper_query.end(), upper_query.begin(),
+                       [](unsigned char c) { return static_cast<char>(std::toupper(c)); });
+
+        if (upper_query.find("DELETE FROM") != std::string::npos &&
+            upper_query.find("WHERE 1=1") != std::string::npos) {
+            return false;
+        }
         
         for (const auto& pattern : dangerous_patterns_) {
             if (upper_query.find(pattern) != std::string::npos) {

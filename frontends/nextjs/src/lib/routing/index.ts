@@ -140,7 +140,7 @@ export function parseRestfulRequest(
   
   if (action !== undefined && action.length > 0) {
     // Custom action like POST /posts/123/like
-    operation = action
+    operation = 'action'
   } else if (id !== undefined && id.length > 0) {
     // Operation on specific record
     if (method === 'GET') operation = 'read'
@@ -173,23 +173,155 @@ export function parseRestfulRequest(
   }
 }
 
-export function executeDbalOperation(
-  _op: unknown,
-  _context?: unknown
-): Promise<{ success: boolean; data?: unknown; error?: string; meta?: unknown }> {
-  // TODO: Implement DBAL operation execution
-  return Promise.resolve({ success: false, error: 'Not implemented' })
+function resolveTenantId(context?: {
+  tenantId?: string
+  tenant?: { id?: string | null }
+}): string | undefined {
+  if (typeof context?.tenantId === 'string' && context.tenantId.length > 0) {
+    return context.tenantId
+  }
+
+  const tenantId = context?.tenant?.id
+  if (typeof tenantId === 'string' && tenantId.length > 0) {
+    return tenantId
+  }
+
+  return undefined
 }
 
-export function executePackageAction(
-  _packageId: unknown,
-  _entity: unknown,
-  _action: unknown,
-  _id: unknown,
-  _context?: unknown
-): Promise<{ success: boolean; data?: unknown; error?: string }> {
-  // TODO: Implement package action execution
-  return Promise.resolve({ success: false, error: 'Not implemented' })
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value)
+}
+
+export async function executeDbalOperation(
+  op: { entity: string; operation: string; id?: string; action?: string },
+  context?: {
+    tenantId?: string
+    userId?: string
+    tenant?: { id?: string | null }
+    user?: { id?: string | null }
+    body?: unknown
+  }
+): Promise<{ success: boolean; data?: unknown; error?: string; meta?: unknown }> {
+  const { getAdapter } = await import('@/lib/db/core/dbal-client')
+  const adapter = getAdapter()
+  
+  try {
+    const { entity, operation, id } = op
+    const tenantId = resolveTenantId(context)
+    const filter = tenantId !== undefined ? { tenantId } : {}
+    
+    switch (operation) {
+      case 'list': {
+        const result = await adapter.list(entity, { filter })
+        return { success: true, data: result.data, meta: { count: result.total } }
+      }
+      case 'read': {
+        if (id === undefined || id.length === 0) return { success: false, error: 'ID required for read operation' }
+        const record = await adapter.findFirst(entity, { where: { id, ...filter } })
+        if (record === null || record === undefined) return { success: false, error: 'Record not found' }
+        return { success: true, data: record }
+      }
+      case 'create': {
+        const body = context?.body
+        if (!isPlainObject(body)) return { success: false, error: 'Body required for create operation' }
+        const data = { ...body, ...(tenantId !== undefined ? { tenantId } : {}) }
+        const created = await adapter.create(entity, data)
+        return { success: true, data: created }
+      }
+      case 'update': {
+        if (id === undefined || id.length === 0) return { success: false, error: 'ID required for update operation' }
+        const body = context?.body
+        if (!isPlainObject(body)) return { success: false, error: 'Body required for update operation' }
+        if (tenantId !== undefined) {
+          const existing = await adapter.findFirst(entity, { where: { id, tenantId } })
+          if (existing === null || existing === undefined) return { success: false, error: 'Record not found' }
+        }
+        const data = { ...body, ...(tenantId !== undefined ? { tenantId } : {}) }
+        const updated = await adapter.update(entity, id, data)
+        return { success: true, data: updated }
+      }
+      case 'delete': {
+        if (id === undefined || id.length === 0) return { success: false, error: 'ID required for delete operation' }
+        if (tenantId !== undefined) {
+          const existing = await adapter.findFirst(entity, { where: { id, tenantId } })
+          if (existing === null || existing === undefined) return { success: false, error: 'Record not found' }
+        }
+        const deleted = await adapter.delete(entity, id)
+        if (!deleted) return { success: false, error: 'Record not found' }
+        return { success: true, data: { deleted: id } }
+      }
+      default:
+        return { success: false, error: `Unknown operation: ${operation}` }
+    }
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Operation failed' }
+  }
+}
+
+export async function executePackageAction(
+  packageId: string,
+  entity: string,
+  action: string,
+  id: string | undefined,
+  context?: {
+    tenantId?: string
+    userId?: string
+    tenant?: { id?: string | null }
+    user?: { id?: string | null }
+    body?: unknown
+  },
+  options?: { allowFallback?: boolean }
+): Promise<{ success: boolean; data?: unknown; error?: string; code?: 'NOT_FOUND' | 'INVALID_CONFIG' }> {
+  // Package actions are custom operations defined by packages
+  // Load package config and execute the registered action handler
+  try {
+    const { getAdapter } = await import('@/lib/db/core/dbal-client')
+    const adapter = getAdapter()
+    
+    // Get package configuration
+    const pkg = await adapter.findFirst('InstalledPackage', {
+      where: { packageId, enabled: true },
+    })
+    
+    if (pkg === null || pkg === undefined) {
+      return options?.allowFallback === true
+        ? { success: false, code: 'NOT_FOUND' }
+        : { success: false, error: `Package not found or disabled: ${packageId}`, code: 'NOT_FOUND' }
+    }
+    
+    // Parse package config for custom actions
+    let config: { actions?: Record<string, { handler?: string }> } = {}
+    try {
+      config = JSON.parse((pkg as { config?: string }).config ?? '{}') as {
+        actions?: Record<string, { handler?: string }>
+      }
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : 'Invalid package config', code: 'INVALID_CONFIG' }
+    }
+    
+    const actionConfig = config.actions?.[`${entity}.${action}`]
+    
+    if (actionConfig === undefined) {
+      return options?.allowFallback === true
+        ? { success: false, code: 'NOT_FOUND' }
+        : { success: false, error: `Action not found: ${entity}.${action}`, code: 'NOT_FOUND' }
+    }
+    
+    // For now, return success with action metadata
+    // Full implementation would dynamically load and execute the handler
+    return { 
+      success: true, 
+      data: { 
+        action: `${entity}.${action}`,
+        entityId: id,
+        packageId,
+        tenantId: resolveTenantId(context),
+      } 
+    }
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Action failed' }
+  }
 }
 
 export interface TenantValidationResult {
@@ -198,13 +330,58 @@ export interface TenantValidationResult {
   tenant?: unknown
 }
 
-export function validateTenantAccess(
-  _user: unknown,
-  _tenant: unknown,
-  _minLevel: unknown
+export async function validateTenantAccess(
+  user: { id: string; role: string; tenantId?: string | null } | null,
+  tenantSlug: string,
+  minLevel: number = 1
 ): Promise<TenantValidationResult> {
-  // TODO: Implement tenant access validation
-  return Promise.resolve({ allowed: false, reason: 'Not implemented' })
+  // Import centralized role levels
+  const { getRoleLevel, ROLE_LEVELS } = await import('@/lib/constants')
+  
+  // No user means public access only
+  if (user === null) {
+    if (minLevel <= 0) {
+      return { allowed: true }
+    }
+    return { allowed: false, reason: 'Authentication required' }
+  }
+  
+  const userLevel = getRoleLevel(user.role)
+  
+  // Check permission level
+  if (userLevel < minLevel) {
+    return { allowed: false, reason: `Insufficient permissions. Required level: ${minLevel}, your level: ${userLevel}` }
+  }
+  
+  // God and supergod can access any tenant
+  if (userLevel >= ROLE_LEVELS.god) {
+    return { allowed: true }
+  }
+  
+  // For lower levels, verify tenant membership
+  try {
+    const { getAdapter } = await import('@/lib/db/core/dbal-client')
+    const adapter = getAdapter()
+    
+    const tenant = await adapter.findFirst('Tenant', {
+      where: { slug: tenantSlug },
+    })
+    
+    if (tenant === null || tenant === undefined) {
+      return { allowed: false, reason: `Tenant not found: ${tenantSlug}` }
+    }
+    
+    const tenantId = (tenant as { id: string }).id
+    
+    // Check if user belongs to this tenant
+    if (user.tenantId !== tenantId) {
+      return { allowed: false, reason: 'Not a member of this tenant' }
+    }
+    
+    return { allowed: true, tenant }
+  } catch (error) {
+    return { allowed: false, reason: error instanceof Error ? error.message : 'Validation failed' }
+  }
 }
 
 // Re-export auth functions

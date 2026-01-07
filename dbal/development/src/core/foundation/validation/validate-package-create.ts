@@ -1,3 +1,1 @@
-export const validatePackageCreate = (data: any) => {
-  return [];
-};
+export { validatePackageCreate } from '../../validation/entities/package/validate-package-create'

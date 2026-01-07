@@ -1,3 +1,1 @@
-export const validatePageCreate = (data: any) => {
-  return [];
-};
+export { validatePageCreate } from '../../validation/entities/page/validate-page-create'

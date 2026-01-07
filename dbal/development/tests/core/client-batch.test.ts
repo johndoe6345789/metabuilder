@@ -28,6 +28,7 @@ const baseConfig = {
   mode: 'development' as const,
   adapter: 'prisma' as const,
   database: { url: 'file:memory' },
+  tenantId: 'tenant-123',
 }
 
 const userBatch = [
@@ -67,7 +68,10 @@ describe('DBALClient batch operations', () => {
     const client = new DBALClient(baseConfig)
     const result = await client.users.createMany(userBatch)
 
-    expect(mockAdapter.createMany).toHaveBeenCalledWith('User', userBatch)
+    expect(mockAdapter.createMany).toHaveBeenCalledWith('User', [
+      { ...userBatch[0], tenantId: baseConfig.tenantId },
+      { ...userBatch[1], tenantId: baseConfig.tenantId },
+    ])
     expect(result).toBe(2)
   })
 
@@ -87,7 +91,11 @@ describe('DBALClient batch operations', () => {
     const client = new DBALClient(baseConfig)
     const result = await client.users.updateMany({ role: 'user' }, { role: 'admin' })
 
-    expect(mockAdapter.updateMany).toHaveBeenCalledWith('User', { role: 'user' }, { role: 'admin' })
+    expect(mockAdapter.updateMany).toHaveBeenCalledWith(
+      'User',
+      { role: 'user', tenantId: baseConfig.tenantId },
+      { role: 'admin' }
+    )
     expect(result).toBe(1)
   })
 
@@ -105,7 +113,7 @@ describe('DBALClient batch operations', () => {
     const client = new DBALClient(baseConfig)
     const result = await client.users.deleteMany({ role: 'user' })
 
-    expect(mockAdapter.deleteMany).toHaveBeenCalledWith('User', { role: 'user' })
+    expect(mockAdapter.deleteMany).toHaveBeenCalledWith('User', { role: 'user', tenantId: baseConfig.tenantId })
     expect(result).toBe(2)
   })
 
@@ -115,7 +123,10 @@ describe('DBALClient batch operations', () => {
     const client = new DBALClient(baseConfig)
     const result = await client.packages.createMany(packageBatch)
 
-    expect(mockAdapter.createMany).toHaveBeenCalledWith('Package', packageBatch)
+    expect(mockAdapter.createMany).toHaveBeenCalledWith('Package', [
+      { ...packageBatch[0], tenantId: baseConfig.tenantId },
+      { ...packageBatch[1], tenantId: baseConfig.tenantId },
+    ])
     expect(result).toBe(2)
   })
 
@@ -125,7 +136,11 @@ describe('DBALClient batch operations', () => {
     const client = new DBALClient(baseConfig)
     const result = await client.packages.updateMany({ isInstalled: false }, { isInstalled: true })
 
-    expect(mockAdapter.updateMany).toHaveBeenCalledWith('Package', { isInstalled: false }, { isInstalled: true })
+    expect(mockAdapter.updateMany).toHaveBeenCalledWith(
+      'Package',
+      { isInstalled: false, tenantId: baseConfig.tenantId },
+      { isInstalled: true }
+    )
     expect(result).toBe(3)
   })
 
@@ -135,7 +150,7 @@ describe('DBALClient batch operations', () => {
     const client = new DBALClient(baseConfig)
     const result = await client.packages.deleteMany({ name: 'forum' })
 
-    expect(mockAdapter.deleteMany).toHaveBeenCalledWith('Package', { name: 'forum' })
+    expect(mockAdapter.deleteMany).toHaveBeenCalledWith('Package', { name: 'forum', tenantId: baseConfig.tenantId })
     expect(result).toBe(1)
   })
 })

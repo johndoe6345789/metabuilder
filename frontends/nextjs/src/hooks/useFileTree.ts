@@ -34,8 +34,11 @@ export function useFileTree(rootPath = '.') {
         node.children = await Promise.all(
           entries.map(entry => buildTree(path.join(dirPath, entry), entry))
         )
-      } catch {
-        // Ignore errors reading subdirectories
+      } catch (err) {
+        // Log subdirectory read errors in development for debugging
+        if (process.env.NODE_ENV === 'development') {
+          console.warn(`Failed to read directory ${fullPath}:`, err)
+        }
       }
     }
 
@@ -56,7 +59,7 @@ export function useFileTree(rootPath = '.') {
   }, [buildTree, rootPath])
 
   useEffect(() => {
-    refresh()
+    void refresh()
   }, [refresh])
 
   return {

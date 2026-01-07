@@ -89,6 +89,7 @@ void Server::registerRoutes() {
 
         const auto payload = rpc_request.get("payload", Json::Value(Json::objectValue));
         const auto options_value = rpc_request.get("options", Json::Value(Json::objectValue));
+        const std::string tenant_id = rpc_request.get("tenantId", payload.get("tenantId", "")).asString();
 
         auto send_success = [&callback](const Json::Value& data) {
             Json::Value body;
@@ -107,7 +108,7 @@ void Server::registerRoutes() {
         }
 
         if (action == "list") {
-            rpc::handle_user_list(*dbal_client_, options_value, send_success, send_error);
+            rpc::handle_user_list(*dbal_client_, tenant_id, options_value, send_success, send_error);
             return;
         }
 
@@ -118,22 +119,22 @@ void Server::registerRoutes() {
         }
 
         if (action == "get" || action == "read") {
-            rpc::handle_user_read(*dbal_client_, id, send_success, send_error);
+            rpc::handle_user_read(*dbal_client_, tenant_id, id, send_success, send_error);
             return;
         }
 
         if (action == "create") {
-            rpc::handle_user_create(*dbal_client_, payload, send_success, send_error);
+            rpc::handle_user_create(*dbal_client_, tenant_id, payload, send_success, send_error);
             return;
         }
 
         if (action == "update") {
-            rpc::handle_user_update(*dbal_client_, id, payload, send_success, send_error);
+            rpc::handle_user_update(*dbal_client_, tenant_id, id, payload, send_success, send_error);
             return;
         }
 
         if (action == "delete" || action == "remove") {
-            rpc::handle_user_delete(*dbal_client_, id, send_success, send_error);
+            rpc::handle_user_delete(*dbal_client_, tenant_id, id, send_success, send_error);
             return;
         }
 
@@ -218,11 +219,11 @@ void Server::registerRoutes() {
 
     // RESTful multi-tenant routes: /{tenant}/{package}/{entity}[/{id}[/{action}]]
     // This is a catch-all handler for the RESTful pattern
-    auto restful_handler = [](const drogon::HttpRequestPtr& request,
-                              std::function<void(const drogon::HttpResponsePtr&)>&& callback,
-                              const std::string& tenant,
-                              const std::string& package,
-                              const std::string& entity) {
+    auto restful_handler = [this](const drogon::HttpRequestPtr& request,
+                                  std::function<void(const drogon::HttpResponsePtr&)>&& callback,
+                                  const std::string& tenant,
+                                  const std::string& package,
+                                  const std::string& entity) {
         auto send_success = [&callback](const Json::Value& data) {
             Json::Value body;
             body["success"] = true;
@@ -238,6 +239,11 @@ void Server::registerRoutes() {
             response->setStatusCode(static_cast<drogon::HttpStatusCode>(status));
             callback(response);
         };
+
+        if (!ensureClient()) {
+            send_error("DBAL client is unavailable", 503);
+            return;
+        }
         
         // Build full path for parsing
         std::string full_path = "/" + tenant + "/" + package + "/" + entity;
@@ -271,16 +277,16 @@ void Server::registerRoutes() {
             query[param.first] = param.second;
         }
         
-        rpc::handleRestfulRequest(route, method, body, query, send_success, send_error);
+        rpc::handleRestfulRequest(*dbal_client_, route, method, body, query, send_success, send_error);
     };
     
     // Handler with ID
-    auto restful_handler_with_id = [](const drogon::HttpRequestPtr& request,
-                                      std::function<void(const drogon::HttpResponsePtr&)>&& callback,
-                                      const std::string& tenant,
-                                      const std::string& package,
-                                      const std::string& entity,
-                                      const std::string& id) {
+    auto restful_handler_with_id = [this](const drogon::HttpRequestPtr& request,
+                                          std::function<void(const drogon::HttpResponsePtr&)>&& callback,
+                                          const std::string& tenant,
+                                          const std::string& package,
+                                          const std::string& entity,
+                                          const std::string& id) {
         auto send_success = [&callback](const Json::Value& data) {
             Json::Value body;
             body["success"] = true;
@@ -296,6 +302,11 @@ void Server::registerRoutes() {
             response->setStatusCode(static_cast<drogon::HttpStatusCode>(status));
             callback(response);
         };
+
+        if (!ensureClient()) {
+            send_error("DBAL client is unavailable", 503);
+            return;
+        }
         
         std::string full_path = "/" + tenant + "/" + package + "/" + entity + "/" + id;
         auto route = rpc::parseRoute(full_path);
@@ -323,17 +334,17 @@ void Server::registerRoutes() {
             query[param.first] = param.second;
         }
         
-        rpc::handleRestfulRequest(route, method, body, query, send_success, send_error);
+        rpc::handleRestfulRequest(*dbal_client_, route, method, body, query, send_success, send_error);
     };
     
     // Handler with ID and action
-    auto restful_handler_with_action = [](const drogon::HttpRequestPtr& request,
-                                          std::function<void(const drogon::HttpResponsePtr&)>&& callback,
-                                          const std::string& tenant,
-                                          const std::string& package,
-                                          const std::string& entity,
-                                          const std::string& id,
-                                          const std::string& action) {
+    auto restful_handler_with_action = [this](const drogon::HttpRequestPtr& request,
+                                              std::function<void(const drogon::HttpResponsePtr&)>&& callback,
+                                              const std::string& tenant,
+                                              const std::string& package,
+                                              const std::string& entity,
+                                              const std::string& id,
+                                              const std::string& action) {
         auto send_success = [&callback](const Json::Value& data) {
             Json::Value body;
             body["success"] = true;
@@ -349,6 +360,11 @@ void Server::registerRoutes() {
             response->setStatusCode(static_cast<drogon::HttpStatusCode>(status));
             callback(response);
         };
+
+        if (!ensureClient()) {
+            send_error("DBAL client is unavailable", 503);
+            return;
+        }
         
         std::string full_path = "/" + tenant + "/" + package + "/" + entity + "/" + id + "/" + action;
         auto route = rpc::parseRoute(full_path);
@@ -376,7 +392,7 @@ void Server::registerRoutes() {
             query[param.first] = param.second;
         }
         
-        rpc::handleRestfulRequest(route, method, body, query, send_success, send_error);
+        rpc::handleRestfulRequest(*dbal_client_, route, method, body, query, send_success, send_error);
     };
     
     // Register RESTful routes with path parameters

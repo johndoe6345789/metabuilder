@@ -12,14 +12,25 @@ type DBALModelSchemaRecord = {
   listFilter?: string | null
   searchFields?: string | null
   ordering?: string | null
+  tenantId?: string | null
+}
+
+export interface GetSchemasOptions {
+  /** Filter by tenant ID for multi-tenancy */
+  tenantId?: string
 }
 
 /**
- * Get all schemas
+ * Get all schemas, optionally filtered by tenant
  */
-export async function getSchemas(): Promise<ModelSchema[]> {
+export async function getSchemas(options?: GetSchemasOptions): Promise<ModelSchema[]> {
   const adapter = getAdapter()
-  const result = (await adapter.list('ModelSchema')) as { data: DBALModelSchemaRecord[] }
+  const listOptions = options?.tenantId !== undefined
+    ? { filter: { tenantId: options.tenantId } }
+    : undefined
+  const result = listOptions !== undefined
+    ? (await adapter.list('ModelSchema', listOptions)) as { data: DBALModelSchemaRecord[] }
+    : (await adapter.list('ModelSchema')) as { data: DBALModelSchemaRecord[] }
   return result.data.map(s => ({
     id: s.id,
     name: s.name,

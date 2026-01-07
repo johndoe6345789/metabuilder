@@ -1,5 +1,1 @@
-export function validatePageCreate(input: any): string[] {
-  const errors: string[] = [];
-  // TODO: Add validation logic
-  return errors;
-}
+export { validatePageCreate } from '../../../validation/entities/page/validate-page-create'

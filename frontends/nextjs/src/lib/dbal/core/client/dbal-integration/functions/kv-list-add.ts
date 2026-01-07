@@ -1,7 +1,7 @@
 import type { DBALClient as _DBALClient, DBALConfig as _DBALConfig } from '@/dbal'
 import type { JsonValue } from '@/types/utility-types'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export async function kvListAdd(this: any,
   key: string,
   items: JsonValue[],

@@ -46,13 +46,13 @@ export async function getErrorLogs(options?: {
   }))
 
   // Apply filters
-  if (options?.level !== null && options?.level !== undefined) {
+  if (options?.level !== undefined) {
     logs = logs.filter(log => log.level === options.level)
   }
   if (options?.resolved !== undefined) {
     logs = logs.filter(log => log.resolved === options.resolved)
   }
-  if (options?.tenantId !== null && options?.tenantId !== undefined) {
+  if (options?.tenantId !== undefined) {
     logs = logs.filter(log => log.tenantId === options.tenantId)
   }
 
@@ -60,7 +60,7 @@ export async function getErrorLogs(options?: {
   logs.sort((a, b) => b.timestamp - a.timestamp)
 
   // Apply limit
-  if ((options?.limit !== null && options?.limit !== undefined) && options.limit > 0) {
+  if (options?.limit !== undefined && options.limit > 0) {
     logs = logs.slice(0, options.limit)
   }
 

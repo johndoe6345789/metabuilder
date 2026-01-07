@@ -1,6 +1,7 @@
 export interface DBALConfig {
   mode: 'development' | 'production'
   adapter: 'prisma' | 'sqlite' | 'mongodb' | 'postgres' | 'mysql'
+  tenantId?: string
   endpoint?: string
   auth?: {
     user: User

@@ -23,7 +23,7 @@ describe('setSchemas', () => {
     mockDelete.mockResolvedValue(undefined)
     mockCreate.mockResolvedValue(undefined)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     await setSchemas([{ name: 'New', fields: [] }] as any)
 
     expect(mockDelete).toHaveBeenCalledTimes(1)

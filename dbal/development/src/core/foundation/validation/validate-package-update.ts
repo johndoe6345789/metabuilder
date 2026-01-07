@@ -1,3 +1,1 @@
-export const validatePackageUpdate = (data: any) => {
-  return [];
-};
+export { validatePackageUpdate } from '../../validation/entities/package/validate-package-update'

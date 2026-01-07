@@ -1,3 +1,1 @@
-export const validateSessionCreate = (data: any) => {
-  return [];
-};
+export { validateSessionCreate } from '../../validation/entities/session/validate-session-create'

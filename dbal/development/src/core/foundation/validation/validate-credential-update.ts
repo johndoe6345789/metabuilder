@@ -1,3 +1,1 @@
-export const validateCredentialUpdate = (data: any) => {
-  return [];
-};
+export { validateCredentialUpdate } from '../../validation/entities/credential/validate-credential-update'

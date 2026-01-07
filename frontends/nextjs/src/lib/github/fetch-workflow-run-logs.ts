@@ -82,7 +82,7 @@ export async function fetchWorkflowRunLogs(
       owner,
       repo: repoName,
       run_id: workflowRunId,
-      per_page: jobLimit || 100,
+      per_page: jobLimit ?? 100,
     })
 
     const jobs = jobsData.jobs
@@ -91,7 +91,7 @@ export async function fetchWorkflowRunLogs(
         id: job.id,
         name: job.name,
         status: job.status,
-        conclusion: job.conclusion || undefined,
+        conclusion: job.conclusion ?? undefined,
       }))
 
     let logsText = ''

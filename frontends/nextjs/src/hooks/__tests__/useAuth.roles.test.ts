@@ -1,11 +1,22 @@
 import { act, renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+// Mock Prisma client to prevent instantiation errors in test environment
+vi.mock('@/lib/config/prisma', () => ({
+  prisma: {},
+}))
+
+// Mock the DBAL adapter to prevent Prisma dependency
+vi.mock('@/lib/dbal-client/adapter/get-adapter', () => ({
+  getAdapter: vi.fn(() => ({})),
+}))
+
 import { useAuth } from '@/hooks/useAuth'
 import { fetchSession } from '@/lib/auth/api/fetch-session'
 import { login as loginRequest } from '@/lib/auth/api/login'
 import { logout as logoutRequest } from '@/lib/auth/api/logout'
 import type { User } from '@/lib/level-types'
+
 
 // Simple waitFor implementation
 const waitFor = async (callback: () => boolean | void, timeout = 1000) => {
@@ -79,10 +90,10 @@ describe('useAuth role mapping', () => {
   })
 
   it.each([
-    { role: 'public', expectedLevel: 1 },
-    { role: 'user', expectedLevel: 2 },
-    { role: 'admin', expectedLevel: 4 },
-    { role: 'supergod', expectedLevel: 6 },
+    { role: 'public', expectedLevel: 0 },
+    { role: 'user', expectedLevel: 1 },
+    { role: 'admin', expectedLevel: 3 },
+    { role: 'supergod', expectedLevel: 5 },
     { role: 'unknown', expectedLevel: 0 },
   ])('applies level for role "$role"', async ({ role, expectedLevel }) => {
     const { result, unmount } = renderHook(() => useAuth())
@@ -112,7 +123,7 @@ describe('useAuth role mapping', () => {
     })
     await waitForIdle(result)
 
-    expect(result.current.user?.level).toBe(3)
+    expect(result.current.user?.level).toBe(2)
 
     unmount()
   })

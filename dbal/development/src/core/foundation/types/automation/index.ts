@@ -1,5 +1,6 @@
 export interface Workflow {
   id: string
+  tenantId: string
   name: string
   description?: string
   trigger: 'manual' | 'schedule' | 'event' | 'webhook'
@@ -12,6 +13,7 @@ export interface Workflow {
 }
 
 export interface CreateWorkflowInput {
+  tenantId?: string
   name: string
   description?: string
   trigger: Workflow['trigger']
@@ -22,6 +24,7 @@ export interface CreateWorkflowInput {
 }
 
 export interface UpdateWorkflowInput {
+  tenantId?: string
   name?: string
   description?: string
   trigger?: Workflow['trigger']
@@ -33,6 +36,7 @@ export interface UpdateWorkflowInput {
 
 export interface LuaScript {
   id: string
+  tenantId: string
   name: string
   description?: string
   code: string
@@ -45,6 +49,7 @@ export interface LuaScript {
 }
 
 export interface CreateLuaScriptInput {
+  tenantId?: string
   name: string
   description?: string
   code: string
@@ -55,6 +60,7 @@ export interface CreateLuaScriptInput {
 }
 
 export interface UpdateLuaScriptInput {
+  tenantId?: string
   name?: string
   description?: string
   code?: string

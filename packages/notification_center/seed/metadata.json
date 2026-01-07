@@ -1,8 +1,8 @@
 {
-  "packageId": "'$pkg'",
-  "name": "'$(echo $pkg | sed 's/_/ /g' | awk '{for(i=1;i<=NF;i++)sub(/./,toupper(substr($i,1,1)),$i)}1')'",
+  "packageId": "notification_center",
+  "name": "Notification Center",
   "version": "0.1.0",
-  "description": "Package '$pkg'",
+  "description": "Package notification_center",
   "author": "MetaBuilder Team",
   "category": "ui",
   "exports": {

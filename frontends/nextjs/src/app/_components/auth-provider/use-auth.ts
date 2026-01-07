@@ -19,6 +19,38 @@ export interface AuthState {
   isAuthenticated: boolean
 }
 
+const toAuthUser = (value: Record<string, unknown>): AuthUser | null => {
+  const id = value.id
+  const username = value.username
+  const email = value.email
+  const role = value.role
+  const level = value.level
+
+  if (
+    typeof id !== 'string' ||
+    typeof username !== 'string' ||
+    typeof email !== 'string' ||
+    typeof role !== 'string'
+  ) {
+    return null
+  }
+
+  let resolvedLevel = 0
+  if (typeof level === 'number') {
+    resolvedLevel = level
+  } else if (typeof level === 'bigint') {
+    resolvedLevel = Number(level)
+  }
+
+  return {
+    id,
+    username,
+    email,
+    role,
+    level: resolvedLevel,
+  }
+}
+
 export function useAuth(): AuthState {
   const [state, setState] = useState<AuthState>({
     user: null,
@@ -30,16 +62,18 @@ export function useAuth(): AuthState {
     const loadUser = async () => {
       try {
         const sessionUser = await getSessionUser()
-        if (sessionUser.user) {
-          const user = sessionUser.user as any // Type assertion for now
+        if (sessionUser.user !== null) {
+          const user = toAuthUser(sessionUser.user)
+          if (user === null) {
+            setState({
+              user: null,
+              isLoading: false,
+              isAuthenticated: false,
+            })
+            return
+          }
           setState({
-            user: {
-              id: user.id,
-              username: user.username,
-              email: user.email,
-              role: user.role,
-              level: user.level || 0,
-            },
+            user,
             isLoading: false,
             isAuthenticated: true,
           })
@@ -50,8 +84,11 @@ export function useAuth(): AuthState {
             isAuthenticated: false,
           })
         }
-      } catch (error) {
-        console.error('Error loading user:', error)
+      } catch {
+        // Error loading user - log in development only
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error loading user')
+        }
         setState({
           user: null,
           isLoading: false,
@@ -60,7 +97,7 @@ export function useAuth(): AuthState {
       }
     }
 
-    loadUser()
+    void loadUser()
   }, [])
 
   return state

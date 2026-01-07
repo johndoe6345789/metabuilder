@@ -41,9 +41,9 @@ export function loadPackageComponents(packageContent: JsonValue): void {
   const compMap: Record<string, ComponentDef> = {}
 
   for (const c of compsArray) {
-    if (c === null || c === undefined || typeof c !== 'object' || Array.isArray(c)) continue
+    if (c === null || typeof c !== 'object' || Array.isArray(c)) continue
     const comp = c as JsonObject
-    if (comp.id === null || comp.id === undefined || typeof comp.id !== 'string') continue
+    if (typeof comp.id !== 'string') continue
     compMap[comp.id] = comp
   }
 

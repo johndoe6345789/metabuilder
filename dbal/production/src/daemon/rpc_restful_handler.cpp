@@ -1,8 +1,26 @@
 #include "rpc_restful_handler.hpp"
+#include "rpc_user_actions.hpp"
 
 #include <algorithm>
 #include <cctype>
+#include <exception>
 #include <sstream>
+
+namespace {
+bool parse_int(const std::string& value, int& out) {
+    try {
+        size_t idx = 0;
+        int parsed = std::stoi(value, &idx);
+        if (idx != value.size()) {
+            return false;
+        }
+        out = parsed;
+        return true;
+    } catch (const std::exception&) {
+        return false;
+    }
+}
+} // namespace
 
 namespace dbal {
 namespace daemon {
@@ -128,6 +146,7 @@ RouteInfo parseRoute(const std::string& path) {
 }
 
 void handleRestfulRequest(
+    Client& client,
     const RouteInfo& route,
     const std::string& method,
     const Json::Value& body,
@@ -140,124 +159,147 @@ void handleRestfulRequest(
         return;
     }
     
-    const std::string prefixed_entity = route.getPrefixedEntity();
-    
-    // Build response with route info
-    Json::Value response;
-    response["tenant"] = route.tenant;
-    response["package"] = route.package;
-    response["entity"] = route.entity;
-    response["prefixedEntity"] = prefixed_entity;
-    response["tableName"] = route.getTableName();
-    
+    std::string normalized_entity = toLower(route.entity);
+    if (normalized_entity == "users") {
+        normalized_entity = "user";
+    }
+
     // Determine operation based on HTTP method and path
     std::string operation;
     
     if (method == "GET") {
         if (route.id.empty()) {
             operation = "list";
-        } else if (!route.action.empty()) {
-            operation = route.action;  // Custom read action
         } else {
             operation = "read";
         }
     } else if (method == "POST") {
-        if (route.id.empty()) {
-            operation = "create";
-        } else if (!route.action.empty()) {
-            operation = route.action;  // Custom action on resource
-        } else {
-            operation = "create";
+        if (!route.action.empty()) {
+            send_error("Custom actions are not supported yet", 404);
+            return;
         }
+        if (!route.id.empty()) {
+            send_error("POST with a resource ID is not supported; use PUT/PATCH", 400);
+            return;
+        }
+        operation = "create";
     } else if (method == "PUT" || method == "PATCH") {
+        if (route.id.empty()) {
+            send_error("ID is required for update operations", 400);
+            return;
+        }
         operation = "update";
     } else if (method == "DELETE") {
+        if (route.id.empty()) {
+            send_error("ID is required for delete operations", 400);
+            return;
+        }
         operation = "delete";
     } else {
         send_error("Unsupported HTTP method: " + method, 405);
         return;
     }
-    
-    response["operation"] = operation;
-    if (!route.id.empty()) {
-        response["id"] = route.id;
-    }
+
     if (!route.action.empty()) {
-        response["action"] = route.action;
+        send_error("Custom actions are not supported yet", 404);
+        return;
     }
-    
-    // Add query params
-    if (!query.empty()) {
-        Json::Value query_json(Json::objectValue);
-        for (const auto& [key, value] : query) {
-            query_json[key] = value;
-        }
-        response["query"] = query_json;
+
+    if (normalized_entity != "user") {
+        send_error("Unsupported entity: " + route.entity, 400);
+        return;
     }
-    
-    // Add body if present
-    if (!body.empty()) {
-        response["body"] = body;
-    }
-    
-    // Build the DBAL operation structure
-    Json::Value dbal_op;
-    dbal_op["entity"] = prefixed_entity;
-    dbal_op["operation"] = operation;
-    dbal_op["tenantId"] = route.tenant;
-    
-    if (!route.id.empty()) {
-        dbal_op["id"] = route.id;
-    }
-    
-    // Parse query params for list operations
+
     if (operation == "list") {
         Json::Value options(Json::objectValue);
-        
+        Json::Value filter(Json::objectValue);
+        Json::Value sort(Json::objectValue);
+
+        bool limit_set = false;
+        bool page_set = false;
+        bool offset_set = false;
+        int limit_value = 0;
+        int page_value = 0;
+        int offset_value = 0;
+
         for (const auto& [key, value] : query) {
-            if (key == "take" || key == "limit") {
-                options["take"] = std::stoi(value);
+            if (key == "limit" || key == "take") {
+                if (!parse_int(value, limit_value) || limit_value <= 0) {
+                    send_error("limit must be a positive integer", 400);
+                    return;
+                }
+                limit_set = true;
+            } else if (key == "page") {
+                if (!parse_int(value, page_value) || page_value <= 0) {
+                    send_error("page must be a positive integer", 400);
+                    return;
+                }
+                page_set = true;
             } else if (key == "skip" || key == "offset") {
-                options["skip"] = std::stoi(value);
+                if (!parse_int(value, offset_value) || offset_value < 0) {
+                    send_error("offset must be a non-negative integer", 400);
+                    return;
+                }
+                offset_set = true;
+            } else if (key.rfind("filter.", 0) == 0) {
+                filter[key.substr(7)] = value;
             } else if (key.rfind("where.", 0) == 0) {
-                // where.field=value
-                if (!options.isMember("where")) {
-                    options["where"] = Json::Value(Json::objectValue);
-                }
-                options["where"][key.substr(6)] = value;
+                filter[key.substr(6)] = value;
+            } else if (key.rfind("sort.", 0) == 0) {
+                sort[key.substr(5)] = value;
             } else if (key.rfind("orderBy.", 0) == 0) {
-                // orderBy.field=asc|desc
-                if (!options.isMember("orderBy")) {
-                    options["orderBy"] = Json::Value(Json::objectValue);
-                }
-                options["orderBy"][key.substr(8)] = value;
+                sort[key.substr(8)] = value;
             }
         }
-        
-        // Always filter by tenant
-        if (!options.isMember("where")) {
-            options["where"] = Json::Value(Json::objectValue);
+
+        if (offset_set && !page_set) {
+            int effective_limit = limit_set ? limit_value : 20;
+            if (effective_limit <= 0) {
+                send_error("limit must be a positive integer", 400);
+                return;
+            }
+            page_value = (offset_value / effective_limit) + 1;
+            page_set = true;
         }
-        options["where"]["tenantId"] = route.tenant;
-        
-        dbal_op["options"] = options;
+
+        if (limit_set) {
+            options["limit"] = limit_value;
+        }
+        if (page_set) {
+            options["page"] = page_value;
+        }
+        if (!filter.empty()) {
+            options["filter"] = filter;
+        }
+        if (!sort.empty()) {
+            options["sort"] = sort;
+        }
+
+        rpc::handle_user_list(client, route.tenant, options, send_success, send_error);
+        return;
     }
-    
-    // For create/update, include body as payload
-    if (operation == "create" || operation == "update") {
-        Json::Value payload = body;
-        payload["tenantId"] = route.tenant;  // Enforce tenant
-        dbal_op["payload"] = payload;
+
+    if (operation == "read") {
+        rpc::handle_user_read(client, route.tenant, route.id, send_success, send_error);
+        return;
     }
-    
-    response["dbalOperation"] = dbal_op;
-    
-    // TODO: Actually execute the DBAL operation
-    // For now, return the parsed operation structure
-    response["status"] = "parsed";
-    response["note"] = "DBAL execution pending - this shows how the route was parsed";
-    
-    send_success(response);
+
+    if (operation == "create") {
+        rpc::handle_user_create(client, route.tenant, body, send_success, send_error);
+        return;
+    }
+
+    if (operation == "update") {
+        rpc::handle_user_update(client, route.tenant, route.id, body, send_success, send_error);
+        return;
+    }
+
+    if (operation == "delete") {
+        rpc::handle_user_delete(client, route.tenant, route.id, send_success, send_error);
+        return;
+    }
+
+    send_error("Unsupported operation: " + operation, 400);
 }
 
 } // namespace rpc

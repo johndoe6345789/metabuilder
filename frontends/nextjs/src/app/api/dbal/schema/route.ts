@@ -11,6 +11,9 @@ import {
   rejectMigration,
   type SchemaRegistry,
 } from '@/lib/schema/schema-registry'
+import { scanAllPackages } from '@/lib/schema/schema-scanner'
+import { getSessionUser, STATUS } from '@/lib/routing'
+import { getRoleLevel, ROLE_LEVELS } from '@/lib/constants'
 
 // Use consistent path resolution
 const getRegistryPath = () => path.join(process.cwd(), '..', '..', '..', 'prisma', 'schema-registry.json')
@@ -20,10 +23,30 @@ const getPrismaOutputPath = () => path.join(process.cwd(), '..', '..', '..', 'pr
  * GET /api/dbal/schema
  * Returns the current schema registry status
  * 
- * Note: This endpoint is for admin/system use.
+ * Note: This endpoint is for admin/system use. Requires god level access.
  * For tenant-scoped data, use /api/v1/{tenant}/{package}/{entity}
  */
-export function GET() {
+export async function GET(request: Request) {
+  // Require god level for schema registry access
+  const session = await getSessionUser(request)
+  
+  if (session.user === null) {
+    return NextResponse.json(
+      { status: 'error', error: 'Authentication required' },
+      { status: STATUS.UNAUTHORIZED }
+    )
+  }
+  
+  const userRole = (session.user as { role?: string }).role ?? 'public'
+  const userLevel = getRoleLevel(userRole)
+  
+  if (userLevel < ROLE_LEVELS.god) {
+    return NextResponse.json(
+      { status: 'error', error: 'God level access required' },
+      { status: STATUS.FORBIDDEN }
+    )
+  }
+  
   try {
     const registryPath = getRegistryPath()
     const registry = loadSchemaRegistry(registryPath)
@@ -53,10 +76,30 @@ export function GET() {
 
 /**
  * POST /api/dbal/schema
- * Schema management operations
+ * Schema management operations. Requires god level access.
  * Body: { action: 'scan' | 'generate' | 'approve' | 'reject', id?: string }
  */
 export async function POST(request: Request) {
+  // Require god level for schema operations
+  const session = await getSessionUser(request)
+  
+  if (session.user === null) {
+    return NextResponse.json(
+      { status: 'error', error: 'Authentication required' },
+      { status: STATUS.UNAUTHORIZED }
+    )
+  }
+  
+  const userRole = (session.user as { role?: string }).role ?? 'public'
+  const userLevel = getRoleLevel(userRole)
+  
+  if (userLevel < ROLE_LEVELS.god) {
+    return NextResponse.json(
+      { status: 'error', error: 'God level access required' },
+      { status: STATUS.FORBIDDEN }
+    )
+  }
+  
   try {
     const body = await request.json() as { action: string; id?: string }
     const { action, id } = body
@@ -86,18 +129,14 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Schema operation failed:', error)
     return NextResponse.json(
-      { status: 'error', error: String(error) },
+      { status: 'error', error: 'Schema operation failed' },
       { status: 500 }
     )
   }
 }
 
 function handleScan(registry: SchemaRegistry, registryPath: string) {
-  // TODO: Import scanAllPackages when schema-scanner is implemented
-  // const { scanAllPackages } = await import('@/lib/schema/schema-scanner')
-  // const result = await scanAllPackages(registry)
-  
-  const result = { scanned: 0, queued: 0, errors: [] as string[] }
+  const result = scanAllPackages(registry)
   saveSchemaRegistry(registry, registryPath)
   
   return NextResponse.json({
@@ -135,7 +174,7 @@ function handleGenerate(registry: SchemaRegistry) {
 }
 
 function handleApprove(registry: SchemaRegistry, registryPath: string, id?: string) {
-  if (id === null || id === undefined) {
+  if (id === undefined) {
     return NextResponse.json(
       { status: 'error', error: 'Migration ID required' },
       { status: 400 }
@@ -182,7 +221,7 @@ function handleApprove(registry: SchemaRegistry, registryPath: string, id?: stri
 }
 
 function handleReject(registry: SchemaRegistry, registryPath: string, id?: string) {
-  if (id === null || id === undefined || id === '') {
+  if (id === undefined || id.length === 0) {
     return NextResponse.json(
       { status: 'error', error: 'Migration ID required' },
       { status: 400 }

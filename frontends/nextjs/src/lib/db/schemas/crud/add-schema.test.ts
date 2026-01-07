@@ -32,7 +32,7 @@ describe('addSchema', () => {
   ])('should add $name', async ({ schema }) => {
     mockCreate.mockResolvedValue(undefined)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     await addSchema(schema as any)
 
     expect(mockCreate).toHaveBeenCalledWith(

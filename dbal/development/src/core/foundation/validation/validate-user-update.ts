@@ -1,3 +1,1 @@
-export const validateUserUpdate = (data: any) => {
-  return [];
-};
+export { validateUserUpdate } from '../../validation/entities/user/validate-user-update'

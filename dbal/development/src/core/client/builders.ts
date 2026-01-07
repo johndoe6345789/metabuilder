@@ -13,12 +13,12 @@ import {
 
 export const buildAdapter = (config: DBALConfig): DBALAdapter => createAdapter(config)
 
-export const buildEntityOperations = (adapter: DBALAdapter) => ({
-  users: createUserOperations(adapter),
-  pages: createPageOperations(adapter),
-  components: createComponentOperations(adapter),
-  workflows: createWorkflowOperations(adapter),
-  luaScripts: createLuaScriptOperations(adapter),
-  packages: createPackageOperations(adapter),
-  sessions: createSessionOperations(adapter)
+export const buildEntityOperations = (adapter: DBALAdapter, tenantId?: string) => ({
+  users: createUserOperations(adapter, tenantId),
+  pages: createPageOperations(adapter, tenantId),
+  components: createComponentOperations(adapter, tenantId),
+  workflows: createWorkflowOperations(adapter, tenantId),
+  luaScripts: createLuaScriptOperations(adapter, tenantId),
+  packages: createPackageOperations(adapter, tenantId),
+  sessions: createSessionOperations(adapter, tenantId)
 })

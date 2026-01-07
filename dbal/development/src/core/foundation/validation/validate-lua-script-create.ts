@@ -1,3 +1,1 @@
-export const validateLuaScriptCreate = (data: any) => {
-  return [];
-};
+export { validateLuaScriptCreate } from '../../validation/entities/lua-script/validate-lua-script-create'

@@ -5,6 +5,8 @@ import { prisma } from '../../config/prisma'
  */
 export async function initializeDatabase(): Promise<void> {
   try {
+    // Prisma client typing is generated; suppress lint in environments without generated types.
+     
     await prisma.$connect()
     // Database initialized successfully
   } catch (error) {

@@ -63,7 +63,7 @@ function renderTemplate(
   context: RenderContext,
   ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>>
 ): React.ReactElement {
-  if (node === null || node === undefined || typeof node !== 'object') {
+  if (node === null || typeof node !== 'object') {
     return <>{String(node)}</>
   }
 
@@ -228,7 +228,7 @@ function evaluateExpression(expr: JsonValue, context: RenderContext): JsonValue 
   // Check if it's a template expression
   const templateMatch = expr.match(/^\{\{(.+)\}\}$/)
   const matchedExpression = templateMatch?.[1]
-  if (matchedExpression !== null && matchedExpression !== undefined && matchedExpression.length > 0) {
+  if (matchedExpression !== undefined && matchedExpression.length > 0) {
     const expression = matchedExpression.trim()
     try {
       return evaluateSimpleExpression(expression, context)
@@ -253,13 +253,11 @@ function evaluateSimpleExpression(expr: string, context: RenderContext): JsonVal
     // Handle ternary operator
     if (part.includes('?')) {
       const [condition, branches] = part.split('?')
-      if ((condition === null || condition === undefined || condition.length === 0) || 
-          (branches === null || branches === undefined || branches.length === 0)) {
+      if (condition.length === 0 || branches === undefined || branches.length === 0) {
         return value
       }
       const [trueBranch, falseBranch] = branches.split(':')
-      if ((trueBranch === null || trueBranch === undefined || trueBranch.length === 0) || 
-          (falseBranch === null || falseBranch === undefined || falseBranch.length === 0)) {
+      if (trueBranch.length === 0 || falseBranch === undefined || falseBranch.length === 0) {
         return value
       }
       const conditionValue = evaluateSimpleExpression(condition.trim(), context)

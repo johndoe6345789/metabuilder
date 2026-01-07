@@ -18,6 +18,9 @@ namespace user {
  * Create a new user in the store
  */
 inline Result<User> create(InMemoryStore& store, const CreateUserInput& input) {
+    if (input.tenant_id.empty()) {
+        return Error::validationError("Tenant ID is required");
+    }
     if (!validation::isValidUsername(input.username)) {
         return Error::validationError("Invalid username format (alphanumeric, underscore, hyphen only)");
     }
@@ -27,16 +30,17 @@ inline Result<User> create(InMemoryStore& store, const CreateUserInput& input) {
     
     // Check for duplicates
     for (const auto& [id, user] : store.users) {
-        if (user.username == input.username) {
+        if (user.tenant_id == input.tenant_id && user.username == input.username) {
             return Error::conflict("Username already exists: " + input.username);
         }
-        if (user.email == input.email) {
+        if (user.tenant_id == input.tenant_id && user.email == input.email) {
             return Error::conflict("Email already exists: " + input.email);
         }
     }
     
     User user;
     user.id = store.generateId("user", ++store.user_counter);
+    user.tenant_id = input.tenant_id;
     user.username = input.username;
     user.email = input.email;
     user.role = input.role;

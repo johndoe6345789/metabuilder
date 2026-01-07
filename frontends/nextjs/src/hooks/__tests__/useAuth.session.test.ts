@@ -113,7 +113,7 @@ describe('useAuth session flows', () => {
       id: 'user_1',
       email: 'alice@example.com',
       username: 'alice',
-      level: 2,
+      level: 1,
     })
     expect(result.current.isAuthenticated).toBe(true)
 
@@ -164,7 +164,7 @@ describe('useAuth session flows', () => {
       id: 'user_2',
       email: 'newbie@example.com',
       username: 'newbie',
-      level: 2,
+      level: 1,
     })
     expect(result.current.isAuthenticated).toBe(true)
 

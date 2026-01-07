@@ -1,5 +1,7 @@
 /**
  * @file is-valid-email.ts
- * @description Email validation (stub)
+ * @description Email validation
  */
-export const isValidEmail = (email: string): boolean => true;
+import { isValidEmail as isValidEmailPredicate } from '../../validation/predicates/string/is-valid-email'
+
+export const isValidEmail = (email: string): boolean => isValidEmailPredicate(email)

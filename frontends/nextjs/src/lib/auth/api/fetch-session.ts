@@ -21,14 +21,14 @@ export async function fetchSession(): Promise<User | null> {
     const cookieStore = await cookies()
     const sessionToken = cookieStore.get('session_token')?.value
 
-    if (sessionToken === undefined || sessionToken === null || sessionToken.length === 0) {
+    if (sessionToken === undefined || sessionToken.length === 0) {
       return null
     }
 
     // Get session from token
     const session = await getSessionByToken(sessionToken)
     
-    if (session === null || session === undefined) {
+    if (session === null) {
       return null
     }
 

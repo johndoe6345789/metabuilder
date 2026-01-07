@@ -1,9 +1,8 @@
 /**
  * @file is-valid-username.ts
- * @description Validate username format (stub)
+ * @description Validate username format
  */
 
-export const isValidUsername = (username: string): boolean => {
-  // Stub validation - always returns true
-  return true;
-};
+import { isValidUsername as isValidUsernamePredicate } from './predicates/string/is-valid-username'
+
+export const isValidUsername = (username: string): boolean => isValidUsernamePredicate(username)

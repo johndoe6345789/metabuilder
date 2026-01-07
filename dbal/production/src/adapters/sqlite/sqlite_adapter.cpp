@@ -18,6 +18,7 @@ public:
         // Stub implementation
         User user;
         user.id = "user_" + input.username;
+        user.tenant_id = input.tenant_id;
         user.username = input.username;
         user.email = input.email;
         user.role = input.role;

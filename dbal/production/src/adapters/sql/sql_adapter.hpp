@@ -58,10 +58,16 @@ public:
         }
         ConnectionGuard guard(pool_, conn);
 
-        const std::string sql = "INSERT INTO users (username, email, role) "
-                                "VALUES (" + placeholder(1) + ", " + placeholder(2) + ", " + placeholder(3) + ") "
+        if (input.tenant_id.empty()) {
+            return Error::validationError("Tenant ID is required");
+        }
+
+        const std::string sql = "INSERT INTO users (tenant_id, username, email, role) "
+                                "VALUES (" + placeholder(1) + ", " + placeholder(2) + ", " + placeholder(3) +
+                                ", " + placeholder(4) + ") "
                                 "RETURNING " + userFields();
         const std::vector<SqlParam> params = {
+            {"tenant_id", input.tenant_id},
             {"username", input.username},
             {"email", input.email},
             {"role", userRoleToString(input.role)}
@@ -175,13 +181,26 @@ public:
 
         const int limit = options.limit > 0 ? options.limit : 50;
         const int offset = options.page > 1 ? (options.page - 1) * limit : 0;
+
+        std::string where_clause;
+        std::vector<SqlParam> params;
+        params.reserve(3);
+        int param_index = 1;
+        auto tenant_filter = options.filter.find("tenantId");
+        if (tenant_filter == options.filter.end()) {
+            tenant_filter = options.filter.find("tenant_id");
+        }
+        if (tenant_filter != options.filter.end()) {
+            where_clause = " WHERE tenant_id = " + placeholder(param_index++);
+            params.push_back({"tenant_id", tenant_filter->second});
+        }
+
         const std::string sql = "SELECT " + userFields() +
-                                " FROM users ORDER BY created_at DESC LIMIT " + placeholder(1) +
-                                " OFFSET " + placeholder(2);
-        const std::vector<SqlParam> params = {
-            {"limit", std::to_string(limit)},
-            {"offset", std::to_string(offset)}
-        };
+                                " FROM users" + where_clause +
+                                " ORDER BY created_at DESC LIMIT " + placeholder(param_index++) +
+                                " OFFSET " + placeholder(param_index++);
+        params.push_back({"limit", std::to_string(limit)});
+        params.push_back({"offset", std::to_string(offset)});
 
         try {
             const auto rows = executeQuery(conn, sql, params);
@@ -401,6 +420,7 @@ protected:
     static User mapRowToUser(const SqlRow& row) {
         User user;
         user.id = columnValue(row, "id");
+        user.tenant_id = columnValue(row, "tenant_id");
         user.username = columnValue(row, "username");
         user.email = columnValue(row, "email");
         user.role = parseUserRole(columnValue(row, "role"));
@@ -460,7 +480,7 @@ protected:
     }
 
     static std::string userFields() {
-        return "id, username, email, role, created_at, updated_at";
+        return "id, tenant_id, username, email, role, created_at, updated_at";
     }
 
     std::string placeholder(size_t index) const {

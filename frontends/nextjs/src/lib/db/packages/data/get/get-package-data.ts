@@ -9,6 +9,6 @@ export async function getPackageData(packageId: string): Promise<PackageSeedData
   const pkg = (await adapter.findFirst('PackageData', {
     where: { packageId },
   })) as { data: string } | null
-  if (pkg === null || pkg === undefined) return {}
+  if (pkg === null) return {}
   return JSON.parse(pkg.data) as PackageSeedData
 }

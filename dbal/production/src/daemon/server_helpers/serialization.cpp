@@ -14,6 +14,7 @@ long long timestamp_to_epoch_ms(const Timestamp& timestamp) {
 Json::Value user_to_json(const User& user) {
     Json::Value value(Json::objectValue);
     value["id"] = user.id;
+    value["tenantId"] = user.tenant_id;
     value["username"] = user.username;
     value["email"] = user.email;
     value["role"] = role_to_string(user.role);

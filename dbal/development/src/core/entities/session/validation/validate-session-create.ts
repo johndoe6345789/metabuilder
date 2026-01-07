@@ -1,5 +1,1 @@
-export function validateSessionCreate(input: any): string[] {
-  const errors: string[] = [];
-  // TODO: Add validation logic
-  return errors;
-}
+export { validateSessionCreate } from '../../../validation/entities/session/validate-session-create'

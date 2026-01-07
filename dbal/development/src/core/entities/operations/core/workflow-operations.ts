@@ -1,23 +1,142 @@
 /**
  * @file workflow-operations.ts
- * @description Workflow entity CRUD operations for DBAL client (stub)
- * NOTE: Workflow operations not yet implemented
+ * @description Workflow entity CRUD operations for DBAL client
  */
 
-export const createWorkflowOperations = (adapter: any) => ({
-  create: async (data: any) => {
-    throw new Error('Workflow operations not yet implemented');
+import type { DBALAdapter } from '../../../../adapters/adapter'
+import { DBALError } from '../../../foundation/errors'
+import type { ListOptions, ListResult, Workflow } from '../../../foundation/types'
+import { validateId, validateWorkflowCreate, validateWorkflowUpdate } from '../../../foundation/validation'
+
+export interface WorkflowOperations {
+  create: (data: WorkflowCreatePayload) => Promise<Workflow>
+  read: (id: string) => Promise<Workflow | null>
+  update: (id: string, data: Partial<Workflow>) => Promise<Workflow>
+  delete: (id: string) => Promise<boolean>
+  list: (options?: ListOptions) => Promise<ListResult<Workflow>>
+}
+
+type WorkflowCreatePayload = Omit<Workflow, 'id' | 'createdAt' | 'updatedAt' | 'tenantId'> & { tenantId?: string }
+
+const assertValidId = (id: string) => {
+  const errors = validateId(id)
+  if (errors.length > 0) {
+    throw DBALError.validationError('Invalid workflow ID', errors.map(error => ({ field: 'id', error })))
+  }
+}
+
+const assertValidCreate = (data: WorkflowCreatePayload) => {
+  const errors = validateWorkflowCreate(data)
+  if (errors.length > 0) {
+    throw DBALError.validationError('Invalid workflow data', errors.map(error => ({ field: 'workflow', error })))
+  }
+}
+
+const assertValidUpdate = (data: Partial<Workflow>) => {
+  const errors = validateWorkflowUpdate(data)
+  if (errors.length > 0) {
+    throw DBALError.validationError('Invalid workflow update data', errors.map(error => ({ field: 'workflow', error })))
+  }
+}
+
+const resolveTenantId = (configuredTenantId?: string, data?: Partial<Workflow>): string | null => {
+  if (configuredTenantId && configuredTenantId.length > 0) return configuredTenantId
+  const tenantId = data?.tenantId
+  if (typeof tenantId === 'string' && tenantId.length > 0) return tenantId
+  return null
+}
+
+const resolveTenantFilter = (
+  configuredTenantId: string | undefined,
+  filter?: Record<string, unknown>,
+): Record<string, unknown> | null => {
+  if (configuredTenantId && configuredTenantId.length > 0) {
+    return { ...(filter ?? {}), tenantId: configuredTenantId }
+  }
+  const candidate = filter?.tenantId ?? filter?.tenant_id
+  if (typeof candidate === 'string' && candidate.length > 0) {
+    return { ...(filter ?? {}), tenantId: candidate }
+  }
+  return null
+}
+
+export const createWorkflowOperations = (adapter: DBALAdapter, tenantId?: string): WorkflowOperations => ({
+  create: async data => {
+    const resolvedTenantId = resolveTenantId(tenantId, data)
+    if (!resolvedTenantId) {
+      throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
+    }
+    assertValidCreate(data)
+    const payload = { ...data, tenantId: resolvedTenantId }
+    try {
+      return adapter.create('Workflow', payload) as Promise<Workflow>
+    } catch (error) {
+      if (error instanceof DBALError && error.code === 409) {
+        const name = typeof data.name === 'string' ? data.name : 'unknown'
+        throw DBALError.conflict(`Workflow with name '${name}' already exists`)
+      }
+      throw error
+    }
   },
-  read: async (id: string) => {
-    throw new Error('Workflow operations not yet implemented');
+  read: async id => {
+    const resolvedTenantId = resolveTenantId(tenantId)
+    if (!resolvedTenantId) {
+      throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
+    }
+    assertValidId(id)
+    const result = await adapter.findFirst('Workflow', { id, tenantId: resolvedTenantId }) as Workflow | null
+    if (!result) {
+      throw DBALError.notFound(`Workflow not found: ${id}`)
+    }
+    return result
   },
-  update: async (id: string, data: any) => {
-    throw new Error('Workflow operations not yet implemented');
+  update: async (id, data) => {
+    if (data.tenantId !== undefined) {
+      throw DBALError.validationError('Tenant ID cannot be updated', [{ field: 'tenantId', error: 'tenantId is immutable' }])
+    }
+    const resolvedTenantId = resolveTenantId(tenantId)
+    if (!resolvedTenantId) {
+      throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
+    }
+    assertValidId(id)
+    assertValidUpdate(data)
+    const existing = await adapter.findFirst('Workflow', { id, tenantId: resolvedTenantId }) as Workflow | null
+    if (!existing) {
+      throw DBALError.notFound(`Workflow not found: ${id}`)
+    }
+    try {
+      return adapter.update('Workflow', id, data) as Promise<Workflow>
+    } catch (error) {
+      if (error instanceof DBALError && error.code === 409) {
+        if (typeof data.name === 'string') {
+          throw DBALError.conflict(`Workflow with name '${data.name}' already exists`)
+        }
+        throw DBALError.conflict('Workflow name already exists')
+      }
+      throw error
+    }
   },
-  delete: async (id: string) => {
-    throw new Error('Workflow operations not yet implemented');
+  delete: async id => {
+    const resolvedTenantId = resolveTenantId(tenantId)
+    if (!resolvedTenantId) {
+      throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
+    }
+    assertValidId(id)
+    const existing = await adapter.findFirst('Workflow', { id, tenantId: resolvedTenantId }) as Workflow | null
+    if (!existing) {
+      throw DBALError.notFound(`Workflow not found: ${id}`)
+    }
+    const result = await adapter.delete('Workflow', id)
+    if (!result) {
+      throw DBALError.notFound(`Workflow not found: ${id}`)
+    }
+    return result
   },
-  list: async (options?: any) => {
-    throw new Error('Workflow operations not yet implemented');
+  list: options => {
+    const tenantFilter = resolveTenantFilter(tenantId, options?.filter)
+    if (!tenantFilter) {
+      throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
+    }
+    return adapter.list('Workflow', { ...options, filter: tenantFilter }) as Promise<ListResult<Workflow>>
   },
 })

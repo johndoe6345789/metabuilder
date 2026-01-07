@@ -1,5 +1,6 @@
 export interface PageView {
   id: string
+  tenantId: string
   slug: string
   title: string
   description?: string
@@ -11,6 +12,7 @@ export interface PageView {
 }
 
 export interface CreatePageInput {
+  tenantId?: string
   slug: string
   title: string
   description?: string
@@ -20,6 +22,7 @@ export interface CreatePageInput {
 }
 
 export interface UpdatePageInput {
+  tenantId?: string
   slug?: string
   title?: string
   description?: string
@@ -30,6 +33,7 @@ export interface UpdatePageInput {
 
 export interface ComponentHierarchy {
   id: string
+  tenantId: string
   pageId: string
   parentId?: string
   componentType: string

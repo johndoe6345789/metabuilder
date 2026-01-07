@@ -1,15 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock the get-dbal module to prevent server-only imports
-vi.mock('@/lib/dbal/database-dbal/core/get-dbal.server', () => ({
+vi.mock('@/lib/database-dbal/core/get-dbal.server', () => ({
   getDBAL: vi.fn(),
 }))
 
 const mockDbalUpdate = vi.fn()
 
-vi.mock('@/lib/dbal/database-dbal/users/dbal-update-user.server', () => ({
+vi.mock('@/lib/database-dbal/users/dbal-update-user.server', () => ({
   dbalUpdateUser: (id: string, payload: Record<string, unknown>) => mockDbalUpdate(id, payload),
 }))
+
 
 import { transferSuperGodPower } from './transfer-super-god-power'
 

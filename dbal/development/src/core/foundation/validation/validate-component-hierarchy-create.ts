@@ -1,3 +1,1 @@
-export const validateComponentHierarchyCreate = (data: any) => {
-  return [];
-};
+export { validateComponentHierarchyCreate } from '../../validation/entities/component/validate-component-hierarchy-create'

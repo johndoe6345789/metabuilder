@@ -1,3 +1,1 @@
-export const validateWorkflowUpdate = (data: any) => {
-  return [];
-};
+export { validateWorkflowUpdate } from '../../validation/entities/workflow/validate-workflow-update'

@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { join } from 'path'
 import { getAdapter } from '@/lib/db/core/dbal-client'
 import { loadJSONPackage } from '@/lib/packages/json/functions/load-json-package'
 import { renderJSONComponent } from '@/lib/packages/json/render-json-component'
+import { getPackagesDir } from '@/lib/packages/unified/get-packages-dir'
 import type { JSONComponent } from '@/lib/packages/json/types'
 
 /**
@@ -54,18 +56,38 @@ export default async function RootPage() {
 
     // If route has full component tree, render it directly
     if (route.componentTree !== null && route.componentTree !== undefined && route.componentTree.length > 0) {
-      const componentDef = JSON.parse(route.componentTree) as unknown as JSONComponent
-      return renderJSONComponent(componentDef, {}, {})
+      try {
+        const parsed = JSON.parse(route.componentTree) as Record<string, unknown>
+        // Validate required fields for JSONComponent
+        if (typeof parsed.id === 'string' && typeof parsed.name === 'string') {
+          const componentDef: JSONComponent = {
+            id: parsed.id,
+            name: parsed.name,
+            description: typeof parsed.description === 'string' ? parsed.description : undefined,
+            props: Array.isArray(parsed.props) ? parsed.props as JSONComponent['props'] : undefined,
+            render: typeof parsed.render === 'object' && parsed.render !== null 
+              ? parsed.render as JSONComponent['render'] 
+              : undefined,
+          }
+          return renderJSONComponent(componentDef, {}, {})
+        }
+      } catch {
+        // Invalid JSON in componentTree, fall through to package reference
+      }
     }
 
     // Otherwise use the package + component reference
     if (route.packageId !== null && route.packageId !== undefined &&
         route.component !== null && route.component !== undefined) {
-      const pkg = await loadJSONPackage(`/home/rewrich/Documents/GitHub/metabuilder/packages/${route.packageId}`)
-      const component = pkg.components?.find(c => c.id === route.component || c.name === route.component)
+      try {
+        const pkg = await loadJSONPackage(join(getPackagesDir(), route.packageId))
+        const component = pkg.components?.find(c => c.id === route.component || c.name === route.component)
 
-      if (component !== null && component !== undefined) {
-        return renderJSONComponent(component, {}, {})
+        if (component !== undefined) {
+          return renderJSONComponent(component, {}, {})
+        }
+      } catch {
+        // Package doesn't exist or can't be loaded, fall through
       }
     }
   }
@@ -86,20 +108,24 @@ export default async function RootPage() {
     }
   })
 
-  if (homePackageRecord !== null && homePackageRecord !== undefined) {
+  if (homePackageRecord !== undefined) {
     const packageId = homePackageRecord.packageId
-    const pkg = await loadJSONPackage(`/home/rewrich/Documents/GitHub/metabuilder/packages/${packageId}`)
+    try {
+      const pkg = await loadJSONPackage(join(getPackagesDir(), packageId))
 
-    if (pkg.components !== null && pkg.components !== undefined && pkg.components.length > 0) {
-      const pageComponent = pkg.components.find(c =>
-        c.id === 'home_page' ||
-        c.name === 'HomePage' ||
-        c.name === 'Home'
-      ) ?? pkg.components[0]
+      if (pkg.components !== undefined && pkg.components.length > 0) {
+        const pageComponent = pkg.components.find(c =>
+          c.id === 'home_page' ||
+          c.name === 'HomePage' ||
+          c.name === 'Home'
+        ) ?? pkg.components[0]
 
-      if (pageComponent !== null && pageComponent !== undefined) {
-        return renderJSONComponent(pageComponent, {}, {})
+        if (pageComponent !== undefined) {
+          return renderJSONComponent(pageComponent, {}, {})
+        }
       }
+    } catch {
+      // Package doesn't exist or can't be loaded
     }
   }
 

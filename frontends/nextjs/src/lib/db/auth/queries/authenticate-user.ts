@@ -31,7 +31,12 @@ export const authenticateUser = async (
     return { success: false, user: null, error: 'invalid_credentials' }
   }
 
-  const credential = credResult.data[0] as { username: string; passwordHash: string }
+  const firstCredential = credResult.data[0]
+  if (firstCredential === null || firstCredential === undefined) {
+    return { success: false, user: null, error: 'invalid_credentials' }
+  }
+  
+  const credential = firstCredential as { username: string; passwordHash: string }
   const passwordValid = await verifyPassword(password, credential.passwordHash)
 
   if (!passwordValid) {

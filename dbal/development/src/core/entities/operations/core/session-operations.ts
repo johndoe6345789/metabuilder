@@ -1,53 +1,142 @@
 /**
  * @file session-operations.ts
  * @description Session entity CRUD operations for DBAL client
- * NOTE: Session operations not yet implemented - stubbed for build
- *
- * Single-responsibility module following the small-function-file pattern.
  */
 
-// TODO: Implement session operations
-// import type { DBALAdapter } from '../../adapters/adapter'
-// import type { Session, ListOptions, ListResult } from '../types'
-// import { DBALError } from '../errors'
-// import { validateSessionCreate, validateSessionUpdate, validateId } from '../validation'
+import type { DBALAdapter } from '../../../../adapters/adapter'
+import { DBALError } from '../../../foundation/errors'
+import type { ListOptions, ListResult, Session } from '../../../foundation/types'
+import { validateId, validateSessionCreate, validateSessionUpdate } from '../../../foundation/validation'
 
 /**
  * Create session operations object for the DBAL client
  */
-export const createSessionOperations = (adapter: any) => ({
+export interface SessionOperations {
+  create: (data: Omit<Session, 'id' | 'createdAt' | 'lastActivity'>) => Promise<Session>
+  read: (id: string) => Promise<Session | null>
+  update: (id: string, data: Partial<Session>) => Promise<Session>
+  delete: (id: string) => Promise<boolean>
+  list: (options?: ListOptions) => Promise<ListResult<Session>>
+}
+
+const assertValidId = (id: string) => {
+  const errors = validateId(id)
+  if (errors.length > 0) {
+    throw DBALError.validationError('Invalid session ID', errors.map(error => ({ field: 'id', error })))
+  }
+}
+
+const assertValidCreate = (data: Omit<Session, 'id' | 'createdAt' | 'lastActivity'>) => {
+  const errors = validateSessionCreate(data)
+  if (errors.length > 0) {
+    throw DBALError.validationError('Invalid session data', errors.map(error => ({ field: 'session', error })))
+  }
+}
+
+const assertValidUpdate = (data: Partial<Session>) => {
+  const errors = validateSessionUpdate(data)
+  if (errors.length > 0) {
+    throw DBALError.validationError('Invalid session update data', errors.map(error => ({ field: 'session', error })))
+  }
+}
+
+const resolveTenantId = (configuredTenantId?: string): string | null => {
+  if (configuredTenantId && configuredTenantId.length > 0) return configuredTenantId
+  return null
+}
+
+const assertUserInTenant = async (adapter: DBALAdapter, userId: string, tenantId: string) => {
+  const user = await adapter.findFirst('User', { id: userId, tenantId }) as { id?: string } | null
+  if (!user) {
+    throw DBALError.notFound(`User not found: ${userId}`)
+  }
+}
+
+export const createSessionOperations = (adapter: DBALAdapter, tenantId?: string): SessionOperations => ({
   /**
    * Create a new session
    */
-  create: async (data: any): Promise<any> => {
-    throw new Error('Session operations not yet implemented');
+  create: async (data): Promise<Session> => {
+    const resolvedTenantId = resolveTenantId(tenantId)
+    if (!resolvedTenantId) {
+      throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
+    }
+    assertValidCreate(data)
+    await assertUserInTenant(adapter, data.userId, resolvedTenantId)
+    return adapter.create('Session', data) as Promise<Session>
   },
 
   /**
    * Read a session by ID
    */
-  read: async (id: string): Promise<any | null> => {
-    throw new Error('Session operations not yet implemented');
+  read: async (id: string): Promise<Session | null> => {
+    const resolvedTenantId = resolveTenantId(tenantId)
+    if (!resolvedTenantId) {
+      throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
+    }
+    assertValidId(id)
+    const result = await adapter.read('Session', id) as Session | null
+    if (!result) {
+      throw DBALError.notFound(`Session not found: ${id}`)
+    }
+    await assertUserInTenant(adapter, result.userId, resolvedTenantId)
+    return result
   },
 
   /**
    * Update an existing session
    */
-  update: async (id: string, data: any): Promise<any> => {
-    throw new Error('Session operations not yet implemented');
+  update: async (id: string, data: Partial<Session>): Promise<Session> => {
+    const resolvedTenantId = resolveTenantId(tenantId)
+    if (!resolvedTenantId) {
+      throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
+    }
+    assertValidId(id)
+    assertValidUpdate(data)
+    const existing = await adapter.read('Session', id) as Session | null
+    if (!existing) {
+      throw DBALError.notFound(`Session not found: ${id}`)
+    }
+    await assertUserInTenant(adapter, existing.userId, resolvedTenantId)
+    return adapter.update('Session', id, data) as Promise<Session>
   },
 
   /**
    * Delete a session by ID
    */
   delete: async (id: string): Promise<boolean> => {
-    throw new Error('Session operations not yet implemented');
+    const resolvedTenantId = resolveTenantId(tenantId)
+    if (!resolvedTenantId) {
+      throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
+    }
+    assertValidId(id)
+    const existing = await adapter.read('Session', id) as Session | null
+    if (!existing) {
+      throw DBALError.notFound(`Session not found: ${id}`)
+    }
+    await assertUserInTenant(adapter, existing.userId, resolvedTenantId)
+    const result = await adapter.delete('Session', id)
+    if (!result) {
+      throw DBALError.notFound(`Session not found: ${id}`)
+    }
+    return result
   },
 
   /**
    * List sessions with filtering and pagination
    */
-  list: async (options?: any): Promise<any> => {
-    throw new Error('Session operations not yet implemented');
+  list: async (options?: ListOptions): Promise<ListResult<Session>> => {
+    const resolvedTenantId = resolveTenantId(tenantId)
+    if (!resolvedTenantId) {
+      throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
+    }
+    const userId = options?.filter?.userId
+    if (typeof userId !== 'string' || userId.length === 0) {
+      throw DBALError.validationError('userId filter is required for session listing', [
+        { field: 'filter.userId', error: 'userId is required' },
+      ])
+    }
+    await assertUserInTenant(adapter, userId, resolvedTenantId)
+    return adapter.list('Session', options) as Promise<ListResult<Session>>
   },
 })

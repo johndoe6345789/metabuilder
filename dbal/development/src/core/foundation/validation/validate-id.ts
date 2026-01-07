@@ -1,3 +1,1 @@
-export const validateId = (id: any) => {
-  return [];
-};
+export { validateId } from '../../validation/entities/validate-id'

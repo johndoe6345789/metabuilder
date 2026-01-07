@@ -21,6 +21,7 @@ enum class UserRole {
 
 struct User {
     std::string id;
+    std::string tenant_id;
     std::string username;
     std::string email;
     UserRole role;
@@ -29,6 +30,7 @@ struct User {
 };
 
 struct CreateUserInput {
+    std::string tenant_id;
     std::string username;
     std::string email;
     UserRole role = UserRole::User;

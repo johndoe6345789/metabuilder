@@ -9,6 +9,7 @@ type DBALPageRecord = {
   componentTree: string
   requiresAuth: boolean
   requiredRole?: string | null
+  tenantId?: string | null
 }
 
 const USER_ROLES = new Set<UserRole>([
@@ -24,12 +25,22 @@ function toUserRole(role: string): UserRole {
   return USER_ROLES.has(role as UserRole) ? (role as UserRole) : 'user'
 }
 
+export interface GetPagesOptions {
+  /** Filter by tenant ID for multi-tenancy */
+  tenantId?: string
+}
+
 /**
- * Get all pages
+ * Get all pages, optionally filtered by tenant
  */
-export async function getPages(): Promise<PageConfig[]> {
+export async function getPages(options?: GetPagesOptions): Promise<PageConfig[]> {
   const adapter = getAdapter()
-  const result = (await adapter.list('PageConfig')) as { data: DBALPageRecord[] }
+  const listOptions = options?.tenantId !== undefined
+    ? { filter: { tenantId: options.tenantId } }
+    : undefined
+  const result = listOptions !== undefined
+    ? (await adapter.list('PageConfig', listOptions)) as { data: DBALPageRecord[] }
+    : (await adapter.list('PageConfig')) as { data: DBALPageRecord[] }
   return result.data.map(p => ({
     id: p.id,
     path: p.path,

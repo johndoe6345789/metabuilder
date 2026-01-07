@@ -22,7 +22,7 @@ export async function setComponentConfigs(configs: Record<string, ComponentConfi
       props: JSON.stringify(config.props),
       styles: JSON.stringify(config.styles),
       events: JSON.stringify(config.events),
-      conditionalRendering: config.conditionalRendering !== null && config.conditionalRendering !== undefined
+      conditionalRendering: config.conditionalRendering !== undefined
         ? JSON.stringify(config.conditionalRendering)
         : null,
     })

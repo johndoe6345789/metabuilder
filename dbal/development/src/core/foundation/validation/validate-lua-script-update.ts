@@ -1,3 +1,1 @@
-export const validateLuaScriptUpdate = (data: any) => {
-  return [];
-};
+export { validateLuaScriptUpdate } from '../../validation/entities/lua-script/validate-lua-script-update'

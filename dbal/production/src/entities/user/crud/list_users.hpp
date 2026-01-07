@@ -9,6 +9,7 @@
 #include "dbal/errors.hpp"
 #include "../../../store/in_memory_store.hpp"
 #include <algorithm>
+#include <optional>
 
 namespace dbal {
 namespace entities {
@@ -20,9 +21,21 @@ namespace user {
 inline Result<std::vector<User>> list(InMemoryStore& store, const ListOptions& options) {
     std::vector<User> users;
     
+    const auto tenant_filter = [&options]() -> std::optional<std::string> {
+        auto it = options.filter.find("tenantId");
+        if (it != options.filter.end()) return it->second;
+        it = options.filter.find("tenant_id");
+        if (it != options.filter.end()) return it->second;
+        return std::nullopt;
+    }();
+
     for (const auto& [id, user] : store.users) {
         bool matches = true;
         
+        if (tenant_filter.has_value() && user.tenant_id != tenant_filter.value()) {
+            matches = false;
+        }
+
         if (options.filter.find("role") != options.filter.end()) {
             std::string role_str = options.filter.at("role");
             if (role_str == "admin" && user.role != UserRole::Admin) matches = false;

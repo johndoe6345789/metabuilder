@@ -7,7 +7,7 @@ import type { CssCategory } from '../types'
 export async function updateCssCategory(categoryName: string, updates: CssCategory): Promise<void> {
   const adapter = getAdapter()
   const existing = await adapter.findFirst('CssCategory', { where: { name: categoryName } }) as { id: string | number } | null
-  if (existing === null || existing === undefined) {
+  if (existing === null) {
     throw new Error(`CssCategory not found: ${categoryName}`)
   }
 

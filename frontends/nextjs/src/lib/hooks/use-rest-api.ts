@@ -40,16 +40,16 @@ interface RequestOptions {
 function buildQueryString(options: RequestOptions): string {
   const params = new URLSearchParams()
 
-  if (options.take !== null && options.take !== undefined) params.set('take', options.take.toString())
-  if (options.skip !== null && options.skip !== undefined) params.set('skip', options.skip.toString())
+  if (options.take !== undefined) params.set('take', String(options.take))
+  if (options.skip !== undefined) params.set('skip', String(options.skip))
 
-  if (options.where !== null && options.where !== undefined) {
+  if (options.where !== undefined) {
     for (const [key, value] of Object.entries(options.where)) {
       params.set(`where.${key}`, String(value))
     }
   }
 
-  if (options.orderBy !== null && options.orderBy !== undefined) {
+  if (options.orderBy !== undefined) {
     for (const [key, value] of Object.entries(options.orderBy)) {
       params.set(`orderBy.${key}`, value)
     }
@@ -68,8 +68,8 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
 
   // Try to get tenant from context, fall back to options
   const tenantContext = useTenantOptional()
-  const tenant = options?.tenant || tenantContext?.tenant
-  const defaultPackageId = options?.packageId || tenantContext?.packageId
+  const tenant = options?.tenant ?? tenantContext?.tenant
+  const defaultPackageId = options?.packageId ?? tenantContext?.packageId
 
   /**
    * Build the base URL for API calls
@@ -83,7 +83,7 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
       if (!tenant) {
         throw new Error('Tenant is required')
       }
-      const pkg = pkgOverride || defaultPackageId
+      const pkg = pkgOverride ?? defaultPackageId
       if (!pkg) {
         throw new Error('Package is required')
       }
@@ -104,16 +104,21 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
       setError(null)
 
       try {
-        const { packageId: pkgOverride, ...queryOpts } = options || {}
-        const url = buildUrl(entity, undefined, undefined, pkgOverride) + buildQueryString(queryOpts)
+        const { packageId: pkgOverride, ...queryOpts } = options ?? {}
+        const url = buildUrl(entity, undefined, undefined, pkgOverride) + buildQueryString(queryOpts as RequestOptions)
         const response = await fetch(url)
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        
         const json: ApiResponse<T[]> = await response.json()
 
         if (!json.success) {
-          throw new Error(json.error || 'Request failed')
+          throw new Error(json.error ?? 'Request failed')
         }
 
-        return json.data || []
+        return json.data ?? []
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Unknown error'
         setError(message)
@@ -136,13 +141,18 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
       try {
         const url = buildUrl(entity, id)
         const response = await fetch(url)
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        
         const json: ApiResponse<T> = await response.json()
 
         if (!json.success) {
-          throw new Error(json.error || 'Request failed')
+          throw new Error(json.error ?? 'Request failed')
         }
 
-        return json.data || null
+        return json.data ?? null
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Unknown error'
         setError(message)
@@ -169,13 +179,18 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
         })
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        
         const json: ApiResponse<T> = await response.json()
 
         if (!json.success) {
-          throw new Error(json.error || 'Request failed')
+          throw new Error(json.error ?? 'Request failed')
         }
 
-        return json.data!
+        return json.data as T
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Unknown error'
         setError(message)
@@ -202,13 +217,18 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
         })
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        
         const json: ApiResponse<T> = await response.json()
 
         if (!json.success) {
-          throw new Error(json.error || 'Request failed')
+          throw new Error(json.error ?? 'Request failed')
         }
 
-        return json.data!
+        return json.data as T
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Unknown error'
         setError(message)
@@ -231,10 +251,15 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
       try {
         const url = buildUrl(entity, id)
         const response = await fetch(url, { method: 'DELETE' })
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        
         const json: ApiResponse<void> = await response.json()
 
         if (!json.success) {
-          throw new Error(json.error || 'Request failed')
+          throw new Error(json.error ?? 'Request failed')
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Unknown error'
@@ -265,15 +290,20 @@ export function useRestApi<T = unknown>(options?: UseRestApiOptions) {
         const response = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: data ? JSON.stringify(data) : undefined,
+          body: data !== undefined ? JSON.stringify(data) : undefined,
         })
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        
         const json: ApiResponse<T> = await response.json()
 
         if (!json.success) {
-          throw new Error(json.error || 'Request failed')
+          throw new Error(json.error ?? 'Request failed')
         }
 
-        return json.data!
+        return json.data as T
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Unknown error'
         setError(message)

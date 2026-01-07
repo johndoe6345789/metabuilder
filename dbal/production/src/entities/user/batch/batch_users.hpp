@@ -91,6 +91,13 @@ inline Result<int> updateMany(InMemoryStore& store,
         }
     }
 
+    std::optional<std::string> tenant_filter;
+    if (filter.find("tenantId") != filter.end()) {
+        tenant_filter = filter.at("tenantId");
+    } else if (filter.find("tenant_id") != filter.end()) {
+        tenant_filter = filter.at("tenant_id");
+    }
+
     std::optional<std::string> username_filter;
     if (filter.find("username") != filter.end()) {
         username_filter = filter.at("username");
@@ -99,6 +106,9 @@ inline Result<int> updateMany(InMemoryStore& store,
     std::vector<std::string> targets;
     for (const auto& [id, user] : store.users) {
         bool matches = true;
+        if (tenant_filter.has_value() && user.tenant_id != tenant_filter.value()) {
+            matches = false;
+        }
         if (role_filter.has_value() && user.role != role_filter.value()) {
             matches = false;
         }
@@ -134,6 +144,13 @@ inline Result<int> deleteMany(InMemoryStore& store, const std::map<std::string, 
         }
     }
 
+    std::optional<std::string> tenant_filter;
+    if (filter.find("tenantId") != filter.end()) {
+        tenant_filter = filter.at("tenantId");
+    } else if (filter.find("tenant_id") != filter.end()) {
+        tenant_filter = filter.at("tenant_id");
+    }
+
     std::optional<std::string> username_filter;
     if (filter.find("username") != filter.end()) {
         username_filter = filter.at("username");
@@ -142,6 +159,9 @@ inline Result<int> deleteMany(InMemoryStore& store, const std::map<std::string, 
     std::vector<std::string> targets;
     for (const auto& [id, user] : store.users) {
         bool matches = true;
+        if (tenant_filter.has_value() && user.tenant_id != tenant_filter.value()) {
+            matches = false;
+        }
         if (role_filter.has_value() && user.role != role_filter.value()) {
             matches = false;
         }

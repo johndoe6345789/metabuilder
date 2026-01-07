@@ -15,7 +15,7 @@ export const getUserByUsername = async (
   const record = await adapter.findFirst('User', {
     where: {
       username,
-      ...(options?.tenantId !== null && options?.tenantId !== undefined ? { tenantId: options.tenantId } : {}),
+      ...(options?.tenantId !== undefined ? { tenantId: options.tenantId } : {}),
     },
   })
 

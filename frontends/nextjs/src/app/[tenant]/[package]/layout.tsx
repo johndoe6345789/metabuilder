@@ -10,6 +10,7 @@
 
 import { notFound } from 'next/navigation'
 
+import { getAdapter } from '@/lib/db/core/dbal-client'
 import { canBePrimaryPackage, loadPackageMetadata } from '@/lib/routing/auth/validate-package-route'
 
 import { TenantProvider } from './tenant-context'
@@ -45,6 +46,47 @@ async function getPackageDependencies(packageId: string): Promise<{ id: string; 
   return deps
 }
 
+/**
+ * Validate tenant exists in database
+ */
+async function validateTenant(tenantSlug: string): Promise<{ id: string; name: string } | null> {
+  try {
+    const adapter = getAdapter()
+    const tenant = await adapter.findFirst('Tenant', {
+      where: { slug: tenantSlug },
+    })
+    
+    if (tenant === null || tenant === undefined) {
+      return null
+    }
+    
+    const record = tenant as { id?: string; name?: string }
+    if (typeof record.id !== 'string' || typeof record.name !== 'string') {
+      return null
+    }
+    
+    return { id: record.id, name: record.name }
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Check if package is installed for tenant
+ */
+async function isPackageInstalled(tenantId: string, packageId: string): Promise<boolean> {
+  try {
+    const adapter = getAdapter()
+    const installed = await adapter.findFirst('InstalledPackage', {
+      where: { packageId, tenantId, enabled: true },
+    })
+    
+    return installed !== null && installed !== undefined
+  } catch {
+    return false
+  }
+}
+
 export default async function TenantLayout({
   children,
   params,
@@ -53,7 +95,7 @@ export default async function TenantLayout({
   const { tenant, package: pkg } = resolvedParams
 
   // Load primary package metadata
-  const packageMetadata = loadPackageMetadata(pkg)
+  const packageMetadata = await loadPackageMetadata(pkg)
   if (packageMetadata === null || packageMetadata === undefined) {
     // Package doesn't exist
     notFound()
@@ -65,20 +107,20 @@ export default async function TenantLayout({
     notFound()
   }
 
+  // Validate tenant exists
+  const tenantData = await validateTenant(tenant)
+  if (tenantData === null) {
+    notFound()
+  }
+
+  // Validate package is installed for this tenant
+  const packageInstalled = await isPackageInstalled(tenantData.id, pkg)
+  if (!packageInstalled) {
+    notFound()
+  }
+
   // Load dependencies that this page can also use
   const additionalPackages = await getPackageDependencies(pkg)
-
-  // TODO: Validate tenant exists against database
-  // const tenantData = await getTenant(tenant)
-  // if (!tenantData) {
-  //   notFound()
-  // }
-
-  // TODO: Validate package is installed for this tenant
-  // const packageInstalled = await isPackageInstalled(tenant, pkg)
-  // if (!packageInstalled) {
-  //   notFound()
-  // }
 
   return (
     <TenantProvider 

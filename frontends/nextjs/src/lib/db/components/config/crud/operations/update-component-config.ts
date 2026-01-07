@@ -12,9 +12,7 @@ export async function updateComponentConfig(
   if (updates.styles !== undefined) data.styles = JSON.stringify(updates.styles)
   if (updates.events !== undefined) data.events = JSON.stringify(updates.events)
   if (updates.conditionalRendering !== undefined) {
-    data.conditionalRendering = updates.conditionalRendering !== null && updates.conditionalRendering !== undefined
-      ? JSON.stringify(updates.conditionalRendering)
-      : null
+    data.conditionalRendering = JSON.stringify(updates.conditionalRendering)
   }
   await adapter.update('ComponentConfig', configId, data)
 }

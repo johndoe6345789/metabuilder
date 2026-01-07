@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "dbal/core/client.hpp"
+
 namespace dbal {
 namespace daemon {
 namespace rpc {
@@ -78,6 +80,7 @@ using ErrorSender = std::function<void(const std::string&, int)>;
  * @param send_error Error callback
  */
 void handleRestfulRequest(
+    Client& client,
     const RouteInfo& route,
     const std::string& method,
     const Json::Value& body,

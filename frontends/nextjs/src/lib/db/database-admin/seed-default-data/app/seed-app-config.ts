@@ -4,7 +4,7 @@ import { buildDefaultAppConfig } from './default-app-config'
 export const seedAppConfig = async () => {
   const appConfig = await getAppConfig()
 
-  if (appConfig === null || appConfig === undefined) {
+  if (appConfig === null) {
     await setAppConfig(buildDefaultAppConfig())
   }
 }

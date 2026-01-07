@@ -4,14 +4,35 @@ import { NextResponse } from 'next/server'
 import { createGitHubClient } from '@/lib/github/create-github-client'
 import { resolveGitHubRepo } from '@/lib/github/resolve-github-repo'
 import { listWorkflowRuns } from '@/lib/github/workflows/listing/list-workflow-runs'
+import { getSessionUser, STATUS } from '@/lib/routing'
+import { getRoleLevel } from '@/lib/constants'
 
 export const GET = async (request: NextRequest) => {
   try {
+    // Require authentication - GitHub data should not be public
+    const session = await getSessionUser(request)
+    
+    if (session.user === null) {
+      return NextResponse.json(
+        { error: 'Authentication required', requiresAuth: true },
+        { status: STATUS.UNAUTHORIZED }
+      )
+    }
+    
+    // Require at least user level (1)
+    const userRole = (session.user as { role?: string }).role ?? 'public'
+    if (getRoleLevel(userRole) < 1) {
+      return NextResponse.json(
+        { error: 'User access required', requiresAuth: false },
+        { status: STATUS.FORBIDDEN }
+      )
+    }
+
     const { owner, repo } = resolveGitHubRepo(request.nextUrl.searchParams)
     const perPageParam = request.nextUrl.searchParams.get('perPage')
     let perPage = 20
 
-    if (perPageParam !== null && perPageParam !== undefined && perPageParam.length > 0) {
+    if (perPageParam !== null && perPageParam.length > 0) {
       const parsed = Number(perPageParam)
       if (!Number.isNaN(parsed)) {
         perPage = Math.max(1, Math.min(100, Math.floor(parsed)))

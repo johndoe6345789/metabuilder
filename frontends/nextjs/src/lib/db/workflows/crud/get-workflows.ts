@@ -8,14 +8,25 @@ type DBALWorkflowRecord = {
   nodes: string
   edges: string
   enabled: boolean
+  tenantId?: string | null
+}
+
+export interface GetWorkflowsOptions {
+  /** Filter by tenant ID for multi-tenancy */
+  tenantId?: string
 }
 
 /**
- * Get all workflows
+ * Get all workflows, optionally filtered by tenant
  */
-export async function getWorkflows(): Promise<Workflow[]> {
+export async function getWorkflows(options?: GetWorkflowsOptions): Promise<Workflow[]> {
   const adapter = getAdapter()
-  const result = (await adapter.list('Workflow')) as { data: DBALWorkflowRecord[] }
+  const listOptions = options?.tenantId !== undefined
+    ? { filter: { tenantId: options.tenantId } }
+    : undefined
+  const result = listOptions !== undefined
+    ? (await adapter.list('Workflow', listOptions)) as { data: DBALWorkflowRecord[] }
+    : (await adapter.list('Workflow')) as { data: DBALWorkflowRecord[] }
   return result.data.map(w => ({
     id: w.id,
     name: w.name,

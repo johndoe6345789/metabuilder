@@ -1,9 +1,8 @@
 /**
  * @file is-valid-slug.ts
- * @description Validate slug format (stub)
+ * @description Validate slug format
  */
 
-export const isValidSlug = (slug: string): boolean => {
-  // Stub validation - always returns true
-  return true;
-};
+import { isValidSlug as isValidSlugPredicate } from './predicates/string/is-valid-slug'
+
+export const isValidSlug = (slug: string): boolean => isValidSlugPredicate(slug)

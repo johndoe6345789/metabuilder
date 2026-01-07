@@ -32,7 +32,7 @@ export function useGitHubFetcher() {
   }, [])
 
   useEffect(() => {
-    refetch()
+    void refetch()
   }, [refetch])
 
   return {
@@ -41,5 +41,4 @@ export function useGitHubFetcher() {
     error,
     refetch,
   }
-}
 }

@@ -1,4 +1,4 @@
-const DEFAULT_DAEMON_URL = process.env.DBAL_DAEMON_URL || 'http://localhost:8080/api/dbal'
+const DEFAULT_DAEMON_URL = process.env.DBAL_DAEMON_URL ?? 'http://localhost:8080/api/dbal'
 
 export type DaemonEntity = 'User'
 export type DaemonAction = 'list' | 'get' | 'read' | 'create' | 'update' | 'delete'
@@ -14,7 +14,7 @@ export async function callDaemon<T = unknown>(request: DaemonRpcRequest): Promis
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   }
-  if (process.env.DBAL_API_KEY) {
+  if (process.env.DBAL_API_KEY !== undefined) {
     headers['x-dbal-api-key'] = process.env.DBAL_API_KEY
   }
 
@@ -32,12 +32,12 @@ export async function callDaemon<T = unknown>(request: DaemonRpcRequest): Promis
   }
 
   if (!response.ok) {
-    throw new Error(body?.message || 'DBAL daemon request failed')
+    throw new Error(body.message ?? 'DBAL daemon request failed')
   }
 
-  if (body?.success === false) {
-    throw new Error(body.message || 'DBAL daemon reported failure')
+  if (body.success === false) {
+    throw new Error(body.message ?? 'DBAL daemon reported failure')
   }
 
-  return body?.data as T
+  return body.data as T
 }

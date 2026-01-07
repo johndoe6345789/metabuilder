@@ -10,14 +10,25 @@ type DBALCommentRecord = {
   createdAt: number | string | Date
   updatedAt?: number | string | Date | null
   parentId?: string | null
+  tenantId?: string | null
+}
+
+export interface GetCommentsOptions {
+  /** Filter by tenant ID for multi-tenancy */
+  tenantId?: string
 }
 
 /**
- * Get all comments from database
+ * Get all comments from database, optionally filtered by tenant
  */
-export async function getComments(): Promise<Comment[]> {
+export async function getComments(options?: GetCommentsOptions): Promise<Comment[]> {
   const adapter = getAdapter()
-  const result = (await adapter.list('Comment')) as { data: DBALCommentRecord[] }
+  const listOptions = options?.tenantId !== undefined
+    ? { filter: { tenantId: options.tenantId } }
+    : undefined
+  const result = listOptions !== undefined
+    ? (await adapter.list('Comment', listOptions)) as { data: DBALCommentRecord[] }
+    : (await adapter.list('Comment')) as { data: DBALCommentRecord[] }
   return result.data.map(c => ({
     id: c.id,
     userId: c.userId,

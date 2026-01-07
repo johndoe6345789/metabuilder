@@ -34,7 +34,7 @@ inline Result<User> update(InMemoryStore& store, const std::string& id, const Up
             return Error::validationError("Invalid username format");
         }
         for (const auto& [uid, u] : store.users) {
-            if (uid != id && u.username == input.username.value()) {
+            if (uid != id && u.tenant_id == user.tenant_id && u.username == input.username.value()) {
                 return Error::conflict("Username already exists: " + input.username.value());
             }
         }
@@ -46,7 +46,7 @@ inline Result<User> update(InMemoryStore& store, const std::string& id, const Up
             return Error::validationError("Invalid email format");
         }
         for (const auto& [uid, u] : store.users) {
-            if (uid != id && u.email == input.email.value()) {
+            if (uid != id && u.tenant_id == user.tenant_id && u.email == input.email.value()) {
                 return Error::conflict("Email already exists: " + input.email.value());
             }
         }

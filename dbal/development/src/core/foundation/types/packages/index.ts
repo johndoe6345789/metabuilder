@@ -1,5 +1,6 @@
 export interface Package {
   id: string
+  tenantId: string
   name: string
   version: string
   description?: string
@@ -13,6 +14,7 @@ export interface Package {
 }
 
 export interface CreatePackageInput {
+  tenantId?: string
   name: string
   version: string
   description?: string
@@ -24,6 +26,7 @@ export interface CreatePackageInput {
 }
 
 export interface UpdatePackageInput {
+  tenantId?: string
   name?: string
   version?: string
   description?: string

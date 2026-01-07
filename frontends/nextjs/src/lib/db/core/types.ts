@@ -44,8 +44,18 @@ export interface ComponentConfig {
   }
 }
 
-import type { User, Workflow, LuaScript, PageConfig, AppConfiguration, Comment } from '../../types/level-types'
+import type {
+  AppConfiguration,
+  Comment,
+  LuaScript,
+  PageConfig,
+  PowerTransferRequest,
+  Tenant,
+  User,
+  Workflow,
+} from '../../types/level-types'
 import type { ModelSchema } from '../../types/schema-types'
+import type { SMTPConfig } from '../password'
 
 /**
  * Full database schema type
@@ -67,9 +77,9 @@ export interface DatabaseSchema {
   godCredentialsExpiryDuration: number
   cssClasses: CssCategory[]
   dropdownConfigs: DropdownConfig[]
-  tenants: import('../../types/level-types').Tenant[]
-  powerTransferRequests: import('../../types/level-types').PowerTransferRequest[]
-  smtpConfig: import('../password').SMTPConfig
+  tenants: Tenant[]
+  powerTransferRequests: PowerTransferRequest[]
+  smtpConfig: SMTPConfig
   passwordResetTokens: Record<string, string>
 }
 

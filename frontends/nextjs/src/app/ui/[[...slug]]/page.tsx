@@ -30,7 +30,7 @@ export default async function DynamicUIPage({ params }: PageProps) {
   // Prefer Lua package-based UI pages, fallback to database-backed pages
   const rawPageData = (await loadPageFromLuaPackages(path)) ?? (await loadPageFromDb(path))
 
-  if (rawPageData === null || rawPageData === undefined) {
+  if (rawPageData === null) {
     notFound()
   }
 
@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const pageData = (await loadPageFromLuaPackages(path)) ?? (await loadPageFromDb(path))
 
-  if (pageData === null || pageData === undefined) {
+  if (pageData === null) {
     return {
       title: 'Page Not Found',
     }
