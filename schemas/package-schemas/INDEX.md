@@ -90,6 +90,7 @@ import type { PackageMetadata, Entity } from '@metabuilder/schema-types';
 | Metadata | [metadata_schema.json](metadata_schema.json) | Package info | Root |
 | Entities | [entities_schema.json](entities_schema.json) | Database schema | 2.0.0 |
 | Types | [types_schema.json](types_schema.json) | Type definitions | 2.0.0 |
+| Functions | [functions_schema.json](functions_schema.json) | Function declarations | 2.0.0 |
 | Script | [script_schema.json](script_schema.json) | JSON scripting | 2.2.0 |
 | Components | [components_schema.json](components_schema.json) | UI components | 2.0.0 |
 | Validation | [validation_schema.json](validation_schema.json) | Validators | 2.0.0 |
@@ -240,6 +241,7 @@ schemas/package-schemas/
 └── 📋 Schemas/
     ├── metadata_schema.json
     ├── entities_schema.json
+    ├── functions_schema.json
     ├── script_schema.json
     └── [12 more schemas...]
 ```

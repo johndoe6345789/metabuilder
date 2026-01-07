@@ -1,0 +1,296 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/functions.schema.json",
+  "title": "Function Declarations",
+  "description": "Function metadata and signatures for package exports (not full implementations)",
+  "type": "object",
+  "required": ["schemaVersion", "package", "functions"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Functions schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "2.0.0",
+      "examples": ["2.0.0"]
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier",
+      "pattern": "^[a-z][a-z0-9_-]*$",
+      "examples": ["dashboard", "form_builder", "data_table"]
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the functions in this file",
+      "examples": ["Dashboard statistics and layout management functions"]
+    },
+    "functions": {
+      "type": "array",
+      "description": "Function declarations",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/simpleFunctionDeclaration"
+          },
+          {
+            "$ref": "#/definitions/detailedFunctionDeclaration"
+          }
+        ]
+      },
+      "minItems": 1
+    },
+    "exports": {
+      "type": "object",
+      "description": "Exported function names",
+      "properties": {
+        "functions": {
+          "type": "array",
+          "description": "List of function names to export",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "constants": {
+          "type": "array",
+          "description": "List of constant names to export",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  },
+  "definitions": {
+    "simpleFunctionDeclaration": {
+      "type": "object",
+      "description": "Simple function metadata (most common format)",
+      "required": ["id", "name", "description"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique function identifier (snake_case)",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "examples": ["stats_calculate", "layout_init", "fields_handle_change"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Function name (camelCase)",
+          "pattern": "^[a-z][a-zA-Z0-9]*$",
+          "examples": ["calculateStats", "initLayout", "handleChange"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable function description",
+          "minLength": 5,
+          "examples": [
+            "Calculate dashboard statistics",
+            "Initialize dashboard layout",
+            "Handle field value change"
+          ]
+        },
+        "exported": {
+          "type": "boolean",
+          "description": "Whether this function is exported from the package",
+          "default": false
+        },
+        "category": {
+          "type": "string",
+          "description": "Function category for organization",
+          "examples": [
+            "analytics",
+            "layout",
+            "handlers",
+            "validation",
+            "forms",
+            "api",
+            "data",
+            "ui",
+            "core"
+          ]
+        },
+        "deprecated": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "description": "Version when deprecated"
+                },
+                "reason": {
+                  "type": "string",
+                  "description": "Deprecation reason"
+                },
+                "alternative": {
+                  "type": "string",
+                  "description": "Recommended alternative function"
+                }
+              }
+            }
+          ],
+          "description": "Function deprecation status"
+        },
+        "tags": {
+          "type": "array",
+          "description": "Tags for categorization and discovery",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true,
+          "examples": [["async", "experimental", "internal"]]
+        }
+      },
+      "additionalProperties": false
+    },
+    "detailedFunctionDeclaration": {
+      "type": "object",
+      "description": "Detailed function metadata with parameters and implementation",
+      "required": ["id", "name", "description"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique function identifier",
+          "examples": ["handleConfirm", "handleCancel", "validate"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Function name",
+          "examples": ["handleConfirm", "handleCancel", "validate"]
+        },
+        "namespace": {
+          "type": "string",
+          "description": "Function namespace for organization",
+          "examples": ["confirm", "alert", "form"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable function description",
+          "minLength": 5
+        },
+        "parameters": {
+          "type": "array",
+          "description": "Function parameters",
+          "items": {
+            "$ref": "#/definitions/parameter"
+          }
+        },
+        "returns": {
+          "$ref": "#/definitions/returnType",
+          "description": "Function return type"
+        },
+        "implementation": {
+          "type": "string",
+          "description": "JavaScript function implementation (as string)",
+          "examples": [
+            "function(event) { this.setState({ open: false }); }",
+            "async function(data) { return await api.save(data); }"
+          ]
+        },
+        "exported": {
+          "type": "boolean",
+          "description": "Whether this function is exported",
+          "default": false
+        },
+        "async": {
+          "type": "boolean",
+          "description": "Whether this is an async function",
+          "default": false
+        },
+        "deprecated": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string"
+                },
+                "reason": {
+                  "type": "string"
+                },
+                "alternative": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "parameter": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Parameter name",
+          "examples": ["event", "data", "options", "callback"]
+        },
+        "type": {
+          "type": "string",
+          "description": "Parameter type",
+          "examples": [
+            "string",
+            "number",
+            "boolean",
+            "object",
+            "array",
+            "function",
+            "Promise<void>",
+            "Array<string>",
+            "Record<string, any>"
+          ]
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether parameter is required",
+          "default": true
+        },
+        "description": {
+          "type": "string",
+          "description": "Parameter description"
+        },
+        "default": {
+          "description": "Default value if not provided"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Return type",
+          "examples": [
+            "void",
+            "string",
+            "number",
+            "boolean",
+            "object",
+            "array",
+            "Promise<void>",
+            "Promise<boolean>",
+            "Array<string>"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of return value"
+        }
+      }
+    }
+  }
+}

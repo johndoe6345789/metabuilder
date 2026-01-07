@@ -9,10 +9,11 @@ Complete JSON Schema collection for MetaBuilder packages, providing declarative 
 1. **metadata_schema.json** - Package metadata and configuration
 2. **entities_schema.json** - Database entity definitions
 3. **types_schema.json** - TypeScript-style type definitions
-4. **script_schema.json** - JSON-based scripting language
-5. **components_schema.json** - UI component definitions
-6. **validation_schema.json** - Validation function definitions
-7. **styles_schema.json** - Design tokens and styles
+4. **script_schema.json** - JSON-based scripting language (full implementations)
+5. **functions_schema.json** - Function declarations and signatures (metadata only)
+6. **components_schema.json** - UI component definitions
+7. **validation_schema.json** - Validation function definitions
+8. **styles_schema.json** - Design tokens and styles
 
 ### New Schemas (Added)
 
@@ -39,7 +40,8 @@ my-package/
 ├── types/
 │   └── index.json           # types_schema.json
 ├── scripts/
-│   └── functions.json       # script_schema.json
+│   ├── functions.json       # functions_schema.json (declarations)
+│   └── implementation.json  # script_schema.json (full code)
 ├── components/
 │   └── ui.json              # components_schema.json
 ├── validation/
@@ -146,7 +148,76 @@ my-package/
 }
 ```
 
-### 4. Script Schema
+### 4. Functions Schema vs Script Schema
+
+MetaBuilder provides two schemas for working with functions:
+
+#### **functions_schema.json** (Function Declarations)
+**Purpose**: Declare function metadata and signatures without implementations
+
+**Use When**:
+- Defining exported functions from your package
+- Documenting function APIs and contracts
+- Creating type-safe function registries
+- Most package `scripts/functions.json` files use this
+
+**Key Features**:
+- Two formats supported:
+  - **Simple**: `id`, `name`, `description`, `exported`, `category`
+  - **Detailed**: Adds `namespace`, `parameters`, `returns`, `implementation`
+- No `body` field required
+- Lighter weight and easier to maintain
+- Focus on contract/interface, not implementation
+
+**Example** (Simple Format):
+```json
+{
+  "$schema": "https://metabuilder.dev/schemas/functions.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "dashboard",
+  "functions": [
+    {
+      "id": "stats_calculate",
+      "name": "calculateStats",
+      "exported": true,
+      "description": "Calculate dashboard statistics",
+      "category": "analytics"
+    }
+  ],
+  "exports": {
+    "functions": ["calculateStats"]
+  }
+}
+```
+
+#### **script_schema.json** (Full Implementations)
+**Purpose**: Complete JSON-based script implementations with full control flow
+
+**Use When**:
+- Implementing complex business logic in JSON
+- Creating executable scripts without JavaScript
+- Need full AST-like control structures (if/else, loops, etc.)
+- Sandboxed script execution required
+
+**Key Features**:
+- Full function `body` with statements (required)
+- Control flow: if/else, switch, loops, try/catch
+- Expression types: literals, operators, function calls
+- Variable declarations and assignments
+- Complete scripting language in JSON
+
+**Key Differences**:
+
+| Feature | functions_schema.json | script_schema.json |
+|---------|----------------------|-------------------|
+| **Purpose** | Function declarations | Full implementations |
+| **Body Required** | ❌ No | ✅ Yes |
+| **Complexity** | Minimal | High |
+| **Use Case** | API contracts | Executable code |
+| **Typical File** | `scripts/functions.json` | `scripts/implementation.json` |
+| **Current Usage** | 49 packages | Rare (specialized) |
+
+### 5. Script Schema
 **Purpose**: JSON-based scripting with full language features
 
 **Key Features**:
@@ -179,7 +250,7 @@ my-package/
 }
 ```
 
-### 5. Components Schema
+### 6. Components Schema
 **Purpose**: Declarative UI component definitions
 
 **Key Features**:
