@@ -411,7 +411,8 @@ function generate(config: PackageConfig): GeneratedFile[] {
   files.push({ path: 'seed/metadata.json', content: generateMetadata(config) })
   files.push({ path: 'seed/components.json', content: generateComponentsJson(config) })
   files.push({ path: 'seed/layout.json', content: generateLayoutJson(config) })
-  // Removed functions.json generation - stick to proper script schema files with implementations
+  // Note: functions.json removed - script_schema.json requires full implementations with function bodies,
+  // not just metadata declarations. Use properly named script files (e.g., automation.json, lifecycle.json)
   files.push({ path: 'seed/index.ts', content: generateIndexTs(config) })
 
   // Schema files

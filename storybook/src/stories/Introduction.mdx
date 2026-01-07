@@ -55,7 +55,9 @@ packages/
         ├── metadata.json      # Package info
         ├── components.json    # Component definitions
         └── scripts/
-            └── [script-name].json  # JSON script definitions (e.g., automation.json)
+            └── [script-name].json  # JSON script definitions following script_schema.json
+                                     # Must include full function implementations with bodies,
+                                     # not just metadata declarations (e.g., automation.json)
 ```
 
 ## JSON Script Output

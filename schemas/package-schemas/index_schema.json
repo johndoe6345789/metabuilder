@@ -346,7 +346,7 @@
           "description": "Package structure template mapping paths to schemas",
           "additionalProperties": {
             "type": "string",
-            "description": "Schema name for this location"
+            "description": "Schema name for this location. Note: scripts/*.json must follow script_schema.json with full function implementations (body), not just metadata declarations."
           },
           "default": {
             "package.json": "metadata",
