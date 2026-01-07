@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { DBALClient } from '../../src/core/client'
-import { DBALError, DBALErrorCode } from '../../src/core/errors'
+import { DBALError, DBALErrorCode } from '../../src/core/foundation/errors'
 
 const mockAdapter = vi.hoisted(() => ({
   create: vi.fn(),
@@ -36,17 +36,19 @@ const luaScriptInput = {
   description: 'Simple health check',
   code: 'return true',
   isSandboxed: true,
-  allowedGlobals: ['math'],
+  parameters: '[]',
+  allowedGlobals: '["math"]',
   timeoutMs: 1000,
-  createdBy: '11111111-1111-1111-1111-111111111111',
+  createdBy: 'user-1',
 }
 
 const luaScriptRecord = {
   ...luaScriptInput,
   id: '22222222-2222-2222-2222-222222222222',
   tenantId: baseConfig.tenantId,
-  createdAt: new Date('2024-01-01T00:00:00.000Z'),
-  updatedAt: new Date('2024-01-02T00:00:00.000Z'),
+  version: 1,
+  createdAt: BigInt(1704067200000),
+  updatedAt: BigInt(1704153600000),
 }
 
 beforeEach(() => {
@@ -64,10 +66,16 @@ describe('DBALClient luaScripts', () => {
     const client = new DBALClient(baseConfig)
     const result = await client.luaScripts.create(luaScriptInput)
 
-    expect(mockAdapter.create).toHaveBeenCalledWith('LuaScript', {
+    const payload = mockAdapter.create.mock.calls[0][1]
+    expect(mockAdapter.create).toHaveBeenCalledWith('LuaScript', expect.any(Object))
+    expect(payload).toMatchObject({
       ...luaScriptInput,
       tenantId: baseConfig.tenantId,
+      version: 1,
     })
+    expect(typeof payload.id).toBe('string')
+    expect(typeof payload.createdAt).toBe('bigint')
+    expect(typeof payload.updatedAt).toBe('bigint')
     expect(result).toEqual(luaScriptRecord)
   })
 

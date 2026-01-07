@@ -184,7 +184,7 @@ dbal/production/
 ```
 dbal/backends/
 ├── prisma/
-│   └── schema.prisma      # Full Prisma schema
+│   └── schema.prisma      # Simplified DBAL dev schema (TODO: generate from DBAL API schema)
 └── sqlite/
     └── schema.sql         # Full SQLite schema with triggers
 ```
@@ -238,7 +238,7 @@ dbal/shared/common/contracts/
 - Never exposed in queries
 - Audit logging required
 
-### PageView & ComponentHierarchy
+### PageConfig & ComponentNode
 - Hierarchical component trees
 - JSON layout storage
 - Access level enforcement
@@ -250,7 +250,7 @@ dbal/shared/common/contracts/
 - Security scanning
 - Timeout enforcement
 
-### Package
+### InstalledPackage
 - Multi-tenant package system
 - Version management
 - Installation tracking
@@ -268,13 +268,13 @@ dbal/shared/common/contracts/
 - Never logs passwords
 - Audit trail required
 
-### Page Operations
+### PageConfig Operations
 - CRUD operations
-- Get by slug
+- Get by path
 - List by level
 - Public read access
 
-### Component Operations
+### ComponentNode Operations
 - CRUD operations
 - Get tree (hierarchical)
 - Reorder components

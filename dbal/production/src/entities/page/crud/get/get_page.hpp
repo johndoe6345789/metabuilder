@@ -16,7 +16,7 @@ namespace page {
 /**
  * Get a page by ID
  */
-inline Result<PageView> get(InMemoryStore& store, const std::string& id) {
+inline Result<PageConfig> get(InMemoryStore& store, const std::string& id) {
     if (id.empty()) {
         return Error::validationError("Page ID cannot be empty");
     }
@@ -26,7 +26,7 @@ inline Result<PageView> get(InMemoryStore& store, const std::string& id) {
         return Error::notFound("Page not found: " + id);
     }
     
-    return Result<PageView>(it->second);
+    return Result<PageConfig>(it->second);
 }
 
 } // namespace page

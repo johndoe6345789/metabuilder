@@ -14,7 +14,7 @@ describe('session in-memory operations', () => {
     expect(userResult.success).toBe(true)
     if (!userResult.success) return
 
-    const expiresAt = new Date(Date.now() + 60_000)
+    const expiresAt = BigInt(Date.now() + 60_000)
     const createResult = await createSession(store, {
       userId: userResult.data.id,
       token: 'token-1',
@@ -67,7 +67,7 @@ describe('session in-memory operations', () => {
     const expired = await createSession(store, {
       userId: userResult.data.id,
       token: 'token-expired',
-      expiresAt: new Date(Date.now() - 1000)
+      expiresAt: BigInt(Date.now() - 1000)
     })
 
     expect(expired.success).toBe(true)

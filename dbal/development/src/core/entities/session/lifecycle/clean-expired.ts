@@ -10,7 +10,7 @@ import type { InMemoryStore } from '../store/in-memory-store'
  * @returns Number of sessions removed
  */
 export const cleanExpiredSessions = async (store: InMemoryStore): Promise<Result<number>> => {
-  const now = new Date()
+  const now = BigInt(Date.now())
   const expiredIds: string[] = []
 
   for (const [id, session] of store.sessions) {

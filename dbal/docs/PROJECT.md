@@ -86,7 +86,7 @@ dbal/
 │
 ├── backends/                    # Backend-specific assets
 │   ├── prisma/
-│   │   └── schema.prisma       # Prisma schema
+│   │   └── schema.prisma       # Simplified DBAL dev schema (TODO: generate from DBAL API schema)
 │   └── sqlite/
 │       └── schema.sql          # SQLite schema
 │

@@ -20,6 +20,10 @@ export const updateLuaScript = async (
     return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] ?? 'Invalid ID' } }
   }
 
+  if (input.tenantId !== undefined) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'tenantId is immutable' } }
+  }
+
   const script = store.luaScripts.get(id)
   if (!script) {
     return { success: false, error: { code: 'NOT_FOUND', message: `Lua script not found: ${id}` } }
@@ -47,23 +51,35 @@ export const updateLuaScript = async (
     script.code = input.code
   }
 
+  if (input.parameters !== undefined) {
+    script.parameters = input.parameters
+  }
+
+  if (input.returnType !== undefined) {
+    script.returnType = input.returnType ?? null
+  }
+
   if (input.isSandboxed !== undefined) {
     script.isSandboxed = input.isSandboxed
   }
 
   if (input.allowedGlobals !== undefined) {
-    script.allowedGlobals = [...input.allowedGlobals]
+    script.allowedGlobals = input.allowedGlobals
   }
 
   if (input.timeoutMs !== undefined) {
     script.timeoutMs = input.timeoutMs
   }
 
-  if (input.createdBy !== undefined) {
-    script.createdBy = input.createdBy
+  if (input.version !== undefined) {
+    script.version = input.version
   }
 
-  script.updatedAt = new Date()
+  if (input.createdBy !== undefined) {
+    script.createdBy = input.createdBy ?? null
+  }
+
+  script.updatedAt = input.updatedAt ?? BigInt(Date.now())
 
   return { success: true, data: script }
 }

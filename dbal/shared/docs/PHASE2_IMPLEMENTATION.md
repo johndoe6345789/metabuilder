@@ -141,19 +141,19 @@ await client.users.delete(user.id)
 ### Page Management
 
 ```typescript
-const page = await client.pages.create({
-  slug: 'home',
+const page = await client.pageConfigs.create({
+  path: '/home',
   title: 'Home Page',
   description: 'Welcome page',
   level: 1,
-  layout: { sections: [] },
-  isActive: true
+  requiresAuth: false,
+  componentTree: JSON.stringify({ type: 'Box', children: [] }),
 })
 
-const pageBySlug = await client.pages.readBySlug('home')
+const pageByPath = await client.pageConfigs.readByPath('/home')
 
-const allPages = await client.pages.list({
-  filter: { isActive: true, level: 1 },
+const allPages = await client.pageConfigs.list({
+  filter: { isPublished: true, level: 1 },
   sort: { createdAt: 'desc' }
 })
 ```
@@ -161,14 +161,14 @@ const allPages = await client.pages.list({
 ### Component Hierarchy
 
 ```typescript
-const component = await client.components.create({
+const component = await client.componentNodes.create({
   pageId: 'page_123',
-  componentType: 'Button',
+  type: 'Button',
+  childIds: JSON.stringify([]),
   order: 0,
-  props: { label: 'Click Me', variant: 'primary' }
 })
 
-const tree = await client.components.getTree('page_123')
+const tree = await client.componentNodes.getTree('page_123')
 ```
 
 ### Production Mode (with Remote Daemon)
@@ -198,11 +198,11 @@ The ACL adapter enforces these rules by default:
 | Entity | User | Admin | God | SuperGod |
 |--------|------|-------|-----|----------|
 | User | Read/Update (own) | All ops | All ops | All ops |
-| PageView | Read | Read/List | All ops | All ops |
-| ComponentHierarchy | — | — | All ops | All ops |
+| PageConfig | Read | Read/List | All ops | All ops |
+| ComponentNode | — | — | All ops | All ops |
 | Workflow | — | — | All ops | All ops |
 | LuaScript | — | — | All ops | All ops |
-| Package | — | Read/List | All ops | All ops |
+| InstalledPackage | — | Read/List | All ops | All ops |
 
 ### Row-Level Security
 

@@ -28,10 +28,11 @@ export const extendSession = async (
     return { success: false, error: { code: 'NOT_FOUND', message: `Session not found: ${id}` } }
   }
 
-  if (session.expiresAt < new Date()) {
+  const now = BigInt(Date.now())
+  if (session.expiresAt < now) {
     return { success: false, error: { code: 'VALIDATION_ERROR', message: 'Cannot extend expired session' } }
   }
 
-  session.expiresAt = new Date(session.expiresAt.getTime() + additionalSeconds * 1000)
+  session.expiresAt = session.expiresAt + BigInt(additionalSeconds) * 1000n
   return { success: true, data: session }
 }

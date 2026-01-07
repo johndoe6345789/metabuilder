@@ -1,17 +1,33 @@
+import { randomUUID } from 'crypto'
 import type { DBALAdapter } from '../../../../../adapters/adapter'
-import type { User } from '../../../../../core/foundation/types'
+import type { CreateUserInput, UpdateUserInput, User } from '../../../../../core/foundation/types'
 import { DBALError } from '../../../../../core/foundation/errors'
 import { validateUserCreate, validateUserUpdate } from '../../../../../core/foundation/validation'
 
 export const createManyUsers = async (
   adapter: DBALAdapter,
-  data: Array<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>,
+  data: CreateUserInput[],
 ): Promise<number> => {
   if (!data || data.length === 0) {
     return 0
   }
 
-  const validationErrors = data.flatMap((item, index) =>
+  const now = BigInt(Date.now())
+  const payload: User[] = data.map(item => ({
+    id: item.id ?? randomUUID(),
+    username: item.username,
+    email: item.email,
+    role: item.role,
+    profilePicture: item.profilePicture ?? null,
+    bio: item.bio ?? null,
+    createdAt: item.createdAt ?? now,
+    tenantId: item.tenantId ?? null,
+    isInstanceOwner: item.isInstanceOwner ?? false,
+    passwordChangeTimestamp: item.passwordChangeTimestamp ?? null,
+    firstLogin: item.firstLogin ?? false,
+  }))
+
+  const validationErrors = payload.flatMap((item, index) =>
     validateUserCreate(item).map(error => ({ field: `users[${index}]`, error })),
   )
   if (validationErrors.length > 0) {
@@ -19,7 +35,7 @@ export const createManyUsers = async (
   }
 
   try {
-    return adapter.createMany('User', data as Record<string, unknown>[])
+    return adapter.createMany('User', payload as Record<string, unknown>[])
   } catch (error) {
     if (error instanceof DBALError && error.code === 409) {
       throw DBALError.conflict('Username or email already exists')
@@ -31,7 +47,7 @@ export const createManyUsers = async (
 export const updateManyUsers = async (
   adapter: DBALAdapter,
   filter: Record<string, unknown>,
-  data: Partial<User>,
+  data: UpdateUserInput,
 ): Promise<number> => {
   if (!filter || Object.keys(filter).length === 0) {
     throw DBALError.validationError('Bulk update requires a filter', [

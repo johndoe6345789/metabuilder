@@ -1,5 +1,5 @@
 import { DBALError } from '../../../../../core/foundation/errors'
-import type { User } from '../../../../../core/foundation/types'
+import type { CreateUserInput, UpdateUserInput, User } from '../../../../../core/foundation/types'
 import { validateId, validateUserCreate, validateUserUpdate } from '../../../../../core/foundation/validation'
 
 export const assertValidUserId = (id: string): void => {
@@ -9,14 +9,14 @@ export const assertValidUserId = (id: string): void => {
   }
 }
 
-export const assertValidUserCreate = (data: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): void => {
+export const assertValidUserCreate = (data: CreateUserInput | User): void => {
   const validationErrors = validateUserCreate(data)
   if (validationErrors.length > 0) {
     throw DBALError.validationError('Invalid user data', validationErrors.map(error => ({ field: 'user', error })))
   }
 }
 
-export const assertValidUserUpdate = (data: Partial<User>): void => {
+export const assertValidUserUpdate = (data: UpdateUserInput): void => {
   const validationErrors = validateUserUpdate(data)
   if (validationErrors.length > 0) {
     throw DBALError.validationError('Invalid user update data', validationErrors.map(error => ({ field: 'user', error })))

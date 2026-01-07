@@ -67,60 +67,90 @@ struct UpdateCredentialInput {
     std::optional<bool> first_login;
 };
 
-struct PageView {
+struct PageConfig {
     std::string id;
-    std::string slug;
+    std::optional<std::string> tenant_id;
+    std::optional<std::string> package_id;
+    std::string path;
     std::string title;
     std::optional<std::string> description;
+    std::optional<std::string> icon;
+    std::optional<std::string> component;
+    std::string component_tree;
     int level;
-    Json layout;
-    bool is_active;
+    bool requires_auth;
+    std::optional<std::string> required_role;
+    std::optional<std::string> parent_path;
+    int sort_order = 0;
+    bool is_published = true;
+    std::optional<std::string> params;
+    std::optional<std::string> meta;
     Timestamp created_at;
     Timestamp updated_at;
 };
 
 struct CreatePageInput {
-    std::string slug;
+    std::optional<std::string> tenant_id;
+    std::optional<std::string> package_id;
+    std::string path;
     std::string title;
     std::optional<std::string> description;
+    std::optional<std::string> icon;
+    std::optional<std::string> component;
+    std::string component_tree;
     int level;
-    Json layout;
-    bool is_active = true;
+    bool requires_auth;
+    std::optional<std::string> required_role;
+    std::optional<std::string> parent_path;
+    int sort_order = 0;
+    bool is_published = true;
+    std::optional<std::string> params;
+    std::optional<std::string> meta;
 };
 
 struct UpdatePageInput {
-    std::optional<std::string> slug;
+    std::optional<std::string> tenant_id;
+    std::optional<std::string> package_id;
+    std::optional<std::string> path;
     std::optional<std::string> title;
     std::optional<std::string> description;
+    std::optional<std::string> icon;
+    std::optional<std::string> component;
+    std::optional<std::string> component_tree;
     std::optional<int> level;
-    std::optional<Json> layout;
-    std::optional<bool> is_active;
+    std::optional<bool> requires_auth;
+    std::optional<std::string> required_role;
+    std::optional<std::string> parent_path;
+    std::optional<int> sort_order;
+    std::optional<bool> is_published;
+    std::optional<std::string> params;
+    std::optional<std::string> meta;
 };
 
-struct ComponentHierarchy {
+struct ComponentNode {
     std::string id;
     std::string page_id;
     std::optional<std::string> parent_id;
-    std::string component_type;
+    std::string type;
+    std::string child_ids;
     int order = 0;
-    Json props;
     Timestamp created_at;
     Timestamp updated_at;
 };
 
-struct CreateComponentHierarchyInput {
+struct CreateComponentNodeInput {
     std::string page_id;
     std::optional<std::string> parent_id;
-    std::string component_type;
+    std::string type;
+    std::string child_ids;
     int order = 0;
-    Json props;
 };
 
-struct UpdateComponentHierarchyInput {
+struct UpdateComponentNodeInput {
     std::optional<std::string> parent_id;
-    std::optional<std::string> component_type;
+    std::optional<std::string> type;
+    std::optional<std::string> child_ids;
     std::optional<int> order;
-    std::optional<Json> props;
 };
 
 struct ComponentOrderUpdate {
@@ -222,40 +252,32 @@ struct UpdateLuaScriptInput {
     std::optional<std::string> created_by;
 };
 
-struct Package {
-    std::string id;
-    std::string name;
+struct InstalledPackage {
+    std::string package_id;
+    std::optional<std::string> tenant_id;
+    Timestamp installed_at;
     std::string version;
-    std::optional<std::string> description;
-    std::string author;
-    Json manifest;
-    bool is_installed;
-    std::optional<Timestamp> installed_at;
-    std::optional<std::string> installed_by;
+    bool enabled;
+    std::optional<std::string> config;
     Timestamp created_at;
     Timestamp updated_at;
 };
 
 struct CreatePackageInput {
-    std::string name;
+    std::string package_id;
+    std::optional<std::string> tenant_id;
+    Timestamp installed_at;
     std::string version;
-    std::optional<std::string> description;
-    std::string author;
-    Json manifest;
-    bool is_installed = false;
-    std::optional<Timestamp> installed_at;
-    std::optional<std::string> installed_by;
+    bool enabled;
+    std::optional<std::string> config;
 };
 
 struct UpdatePackageInput {
-    std::optional<std::string> name;
-    std::optional<std::string> version;
-    std::optional<std::string> description;
-    std::optional<std::string> author;
-    std::optional<Json> manifest;
-    std::optional<bool> is_installed;
+    std::optional<std::string> tenant_id;
     std::optional<Timestamp> installed_at;
-    std::optional<std::string> installed_by;
+    std::optional<std::string> version;
+    std::optional<bool> enabled;
+    std::optional<std::string> config;
 };
 
 struct UpdatePackageBatchItem {

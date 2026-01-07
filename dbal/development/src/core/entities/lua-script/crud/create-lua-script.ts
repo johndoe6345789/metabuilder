@@ -13,17 +13,25 @@ export const createLuaScript = async (
   store: InMemoryStore,
   input: CreateLuaScriptInput
 ): Promise<Result<LuaScript>> => {
-  const isSandboxed = input.isSandboxed ?? true
-  const timeoutMs = input.timeoutMs ?? 5000
-  const validationErrors = validateLuaScriptCreate({
+  const now = BigInt(Date.now())
+  const script: LuaScript = {
+    id: input.id ?? store.generateId('lua'),
+    tenantId: input.tenantId ?? null,
     name: input.name,
     description: input.description,
     code: input.code,
-    isSandboxed,
+    parameters: input.parameters,
+    returnType: input.returnType ?? null,
+    isSandboxed: input.isSandboxed ?? true,
     allowedGlobals: input.allowedGlobals,
-    timeoutMs,
-    createdBy: input.createdBy
-  })
+    timeoutMs: input.timeoutMs ?? 5000,
+    version: input.version ?? 1,
+    createdAt: input.createdAt ?? now,
+    updatedAt: input.updatedAt ?? now,
+    createdBy: input.createdBy ?? null
+  }
+
+  const validationErrors = validateLuaScriptCreate(script)
 
   if (validationErrors.length > 0) {
     return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] ?? 'Validation failed' } }
@@ -31,19 +39,6 @@ export const createLuaScript = async (
 
   if (store.luaScriptNames.has(input.name)) {
     return { success: false, error: { code: 'CONFLICT', message: 'Lua script name already exists' } }
-  }
-
-  const script: LuaScript = {
-    id: store.generateId('lua'),
-    name: input.name,
-    description: input.description,
-    code: input.code,
-    isSandboxed,
-    allowedGlobals: [...(input.allowedGlobals ?? [])],
-    timeoutMs,
-    createdBy: input.createdBy,
-    createdAt: new Date(),
-    updatedAt: new Date()
   }
 
   store.luaScripts.set(script.id, script)

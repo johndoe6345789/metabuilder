@@ -3,25 +3,25 @@ import { validatePackageCreate } from '../../../src/core/validation/validate-pac
 
 describe('validatePackageCreate', () => {
   const base = {
-    name: 'forum',
+    packageId: 'pkg-forum',
+    installedAt: BigInt(1704067200000),
     version: '1.0.0',
-    author: 'MetaBuilder',
-    manifest: { dependencies: [] },
-    isInstalled: false,
+    enabled: true,
+    config: '{"dependencies":[]}',
   }
 
   it.each([
     { data: base, expected: [] },
-    { data: { ...base, installedAt: '2024-01-01T00:00:00Z' }, expected: [] },
+    { data: { ...base, config: null }, expected: [] },
   ])('returns $expected for valid case', ({ data, expected }) => {
     expect(validatePackageCreate(data)).toEqual(expected)
   })
 
   it.each([
     { data: { ...base, version: '1.0' }, message: 'version must be semantic (x.y.z)' },
-    { data: { ...base, manifest: [] }, message: 'manifest must be an object' },
-    { data: { ...base, isInstalled: 'no' as unknown as boolean }, message: 'isInstalled must be a boolean' },
-    { data: { ...base, installedBy: 'invalid' }, message: 'installedBy must be a valid UUID' },
+    { data: { ...base, installedAt: '2024-01-01T00:00:00Z' }, message: 'installedAt must be a bigint timestamp' },
+    { data: { ...base, enabled: 'no' as unknown as boolean }, message: 'enabled must be a boolean' },
+    { data: { ...base, config: 'not-json' }, message: 'config must be a JSON string' },
   ])('rejects invalid case', ({ data, message }) => {
     expect(validatePackageCreate(data)).toContain(message)
   })

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { DBALClient } from '../../src/core/client'
-import { DBALErrorCode } from '../../src/core/errors'
+import { DBALErrorCode } from '../../src/core/foundation/errors'
 
 const mockAdapter = vi.hoisted(() => ({
   create: vi.fn(),
@@ -38,18 +38,18 @@ const userBatch = [
 
 const packageBatch = [
   {
-    name: 'forum',
+    packageId: 'forum',
     version: '1.0.0',
-    author: 'MetaBuilder',
-    manifest: { entry: 'index.lua' },
-    isInstalled: false,
+    enabled: false,
+    installedAt: BigInt(1700000000000),
+    config: JSON.stringify({ entry: 'index.lua' }),
   },
   {
-    name: 'chat',
+    packageId: 'chat',
     version: '2.1.0',
-    author: 'MetaBuilder',
-    manifest: { entry: 'chat.lua' },
-    isInstalled: true,
+    enabled: true,
+    installedAt: BigInt(1700000005000),
+    config: JSON.stringify({ entry: 'chat.lua' }),
   },
 ]
 
@@ -68,10 +68,13 @@ describe('DBALClient batch operations', () => {
     const client = new DBALClient(baseConfig)
     const result = await client.users.createMany(userBatch)
 
-    expect(mockAdapter.createMany).toHaveBeenCalledWith('User', [
-      { ...userBatch[0], tenantId: baseConfig.tenantId },
-      { ...userBatch[1], tenantId: baseConfig.tenantId },
-    ])
+    const payload = mockAdapter.createMany.mock.calls[0]?.[1] as Record<string, unknown>[]
+    expect(mockAdapter.createMany).toHaveBeenCalledWith('User', expect.any(Array))
+    expect(payload).toHaveLength(2)
+    expect(payload[0]).toMatchObject({ ...userBatch[0], tenantId: baseConfig.tenantId })
+    expect(payload[1]).toMatchObject({ ...userBatch[1], tenantId: baseConfig.tenantId })
+    expect(typeof payload[0].id).toBe('string')
+    expect(typeof payload[0].createdAt).toBe('bigint')
     expect(result).toBe(2)
   })
 
@@ -121,9 +124,9 @@ describe('DBALClient batch operations', () => {
     mockAdapter.createMany.mockResolvedValue(2)
 
     const client = new DBALClient(baseConfig)
-    const result = await client.packages.createMany(packageBatch)
+    const result = await client.installedPackages.createMany(packageBatch)
 
-    expect(mockAdapter.createMany).toHaveBeenCalledWith('Package', [
+    expect(mockAdapter.createMany).toHaveBeenCalledWith('InstalledPackage', [
       { ...packageBatch[0], tenantId: baseConfig.tenantId },
       { ...packageBatch[1], tenantId: baseConfig.tenantId },
     ])
@@ -134,12 +137,12 @@ describe('DBALClient batch operations', () => {
     mockAdapter.updateMany.mockResolvedValue(3)
 
     const client = new DBALClient(baseConfig)
-    const result = await client.packages.updateMany({ isInstalled: false }, { isInstalled: true })
+    const result = await client.installedPackages.updateMany({ enabled: false }, { enabled: true })
 
     expect(mockAdapter.updateMany).toHaveBeenCalledWith(
-      'Package',
-      { isInstalled: false, tenantId: baseConfig.tenantId },
-      { isInstalled: true }
+      'InstalledPackage',
+      { enabled: false, tenantId: baseConfig.tenantId },
+      { enabled: true }
     )
     expect(result).toBe(3)
   })
@@ -148,9 +151,9 @@ describe('DBALClient batch operations', () => {
     mockAdapter.deleteMany.mockResolvedValue(1)
 
     const client = new DBALClient(baseConfig)
-    const result = await client.packages.deleteMany({ name: 'forum' })
+    const result = await client.installedPackages.deleteMany({ packageId: 'forum' })
 
-    expect(mockAdapter.deleteMany).toHaveBeenCalledWith('Package', { name: 'forum', tenantId: baseConfig.tenantId })
+    expect(mockAdapter.deleteMany).toHaveBeenCalledWith('InstalledPackage', { packageId: 'forum', tenantId: baseConfig.tenantId })
     expect(result).toBe(1)
   })
 })

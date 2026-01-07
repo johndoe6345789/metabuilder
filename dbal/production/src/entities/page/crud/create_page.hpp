@@ -17,36 +17,46 @@ namespace page {
 /**
  * Create a new page in the store
  */
-inline Result<PageView> create(InMemoryStore& store, const CreatePageInput& input) {
-    if (!validation::isValidSlug(input.slug)) {
-        return Error::validationError("Invalid slug format (lowercase, alphanumeric, hyphens only)");
+inline Result<PageConfig> create(InMemoryStore& store, const CreatePageInput& input) {
+    if (!validation::isValidPath(input.path)) {
+        return Error::validationError("Invalid path format");
     }
-    if (input.title.empty() || input.title.length() > 200) {
-        return Error::validationError("Title must be between 1 and 200 characters");
+    if (input.title.empty() || input.title.length() > 255) {
+        return Error::validationError("Title must be between 1 and 255 characters");
     }
-    if (input.level < 0 || input.level > 5) {
-        return Error::validationError("Level must be between 0 and 5");
-    }
-    
-    if (store.page_slugs.find(input.slug) != store.page_slugs.end()) {
-        return Error::conflict("Page with slug already exists: " + input.slug);
+    if (input.level < 1 || input.level > 6) {
+        return Error::validationError("Level must be between 1 and 6");
     }
     
-    PageView page;
+    if (store.page_paths.find(input.path) != store.page_paths.end()) {
+        return Error::conflict("Page with path already exists: " + input.path);
+    }
+    
+    PageConfig page;
     page.id = store.generateId("page", ++store.page_counter);
-    page.slug = input.slug;
+    page.tenant_id = input.tenant_id;
+    page.package_id = input.package_id;
+    page.path = input.path;
     page.title = input.title;
     page.description = input.description;
+    page.icon = input.icon;
+    page.component = input.component;
+    page.component_tree = input.component_tree;
     page.level = input.level;
-    page.layout = input.layout;
-    page.is_active = input.is_active;
+    page.requires_auth = input.requires_auth;
+    page.required_role = input.required_role;
+    page.parent_path = input.parent_path;
+    page.sort_order = input.sort_order;
+    page.is_published = input.is_published;
+    page.params = input.params;
+    page.meta = input.meta;
     page.created_at = std::chrono::system_clock::now();
     page.updated_at = page.created_at;
     
     store.pages[page.id] = page;
-    store.page_slugs[page.slug] = page.id;
+    store.page_paths[page.path] = page.id;
     
-    return Result<PageView>(page);
+    return Result<PageConfig>(page);
 }
 
 } // namespace page

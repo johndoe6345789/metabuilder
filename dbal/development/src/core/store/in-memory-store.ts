@@ -4,20 +4,20 @@
  */
 
 export interface InMemoryStore {
-  users: Map<string, any>
+  users: Map<string, unknown>
   usersByEmail: Map<string, string>
   usersByUsername: Map<string, string>
-  sessions: Map<string, any>
+  sessions: Map<string, unknown>
   sessionTokens: Map<string, string>
-  workflows: Map<string, any>
+  workflows: Map<string, unknown>
   workflowNames: Map<string, string>
-  luaScripts: Map<string, any>
+  luaScripts: Map<string, unknown>
   luaScriptNames: Map<string, string>
-  packages: Map<string, any>
-  packageIds: Map<string, string>
-  packageKeys: Map<string, string>
-  pages: Map<string, any>
-  pageSlugs: Map<string, string>
+  installedPackages: Map<string, unknown>
+  packageData: Map<string, unknown>
+  pageConfigs: Map<string, unknown>
+  pagePaths: Map<string, string>
+  componentNodes: Map<string, unknown>
   generateId: (entityType: string) => string
 }
 
@@ -38,10 +38,10 @@ export const createInMemoryStore = (): InMemoryStore => ({
   workflowNames: new Map(),
   luaScripts: new Map(),
   luaScriptNames: new Map(),
-  packages: new Map(),
-  packageIds: new Map(),
-  packageKeys: new Map(),
-  pages: new Map(),
-  pageSlugs: new Map(),
+  installedPackages: new Map(),
+  packageData: new Map(),
+  pageConfigs: new Map(),
+  pagePaths: new Map(),
+  componentNodes: new Map(),
   generateId: () => generateUuid(),
 })

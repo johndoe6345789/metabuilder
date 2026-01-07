@@ -1,0 +1,111 @@
+entity: PageConfig
+version: "1.0"
+description: "Page configuration and layout definition"
+
+fields:
+  id:
+    type: uuid
+    primary: true
+    generated: true
+
+  tenant_id:
+    type: uuid
+    optional: true
+    
+  package_id:
+    type: string
+    optional: true
+    description: "Package that defined this route"
+
+  path:
+    type: string
+    required: true
+    unique: true
+    max_length: 255
+    description: "URL path for this page"
+    
+  title:
+    type: string
+    required: true
+    max_length: 255
+    description: "Page title"
+    
+  description:
+    type: text
+    optional: true
+    description: "Page description"
+
+  icon:
+    type: string
+    optional: true
+
+  component:
+    type: string
+    optional: true
+    
+  level:
+    type: integer
+    required: true
+    min: 1
+    max: 6
+    description: "Access level required (1=public, 6=supergod)"
+    
+  component_tree:
+    type: json
+    required: true
+    description: "Page layout configuration"
+
+  requires_auth:
+    type: boolean
+    required: true
+
+  required_role:
+    type: string
+    optional: true
+
+  parent_path:
+    type: string
+    optional: true
+
+  sort_order:
+    type: integer
+    required: true
+    default: 0
+    
+  is_published:
+    type: boolean
+    required: true
+    default: true
+
+  params:
+    type: json
+    optional: true
+
+  meta:
+    type: json
+    optional: true
+    
+  created_at:
+    type: datetime
+    generated: true
+    immutable: true
+    
+  updated_at:
+    type: datetime
+    auto_update: true
+
+indexes:
+  - fields: [path]
+    unique: true
+  - fields: [level]
+  - fields: [is_published]
+
+acl:
+  create:
+    role: [god, supergod]
+  read:
+    public: true
+  update:
+    role: [god, supergod]
+  delete:
+    role: [god, supergod]

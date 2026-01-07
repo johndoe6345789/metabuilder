@@ -20,7 +20,7 @@ export const getSession = async (store: InMemoryStore, id: string): Promise<Resu
     return { success: false, error: { code: 'NOT_FOUND', message: `Session not found: ${id}` } }
   }
 
-  if (session.expiresAt <= new Date()) {
+  if (session.expiresAt <= BigInt(Date.now())) {
     store.sessionTokens.delete(session.token)
     store.sessions.delete(id)
     return { success: false, error: { code: 'NOT_FOUND', message: `Session expired: ${id}` } }

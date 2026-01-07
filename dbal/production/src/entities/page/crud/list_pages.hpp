@@ -17,15 +17,15 @@ namespace page {
 /**
  * List pages with filtering and pagination
  */
-inline Result<std::vector<PageView>> list(InMemoryStore& store, const ListOptions& options) {
-    std::vector<PageView> pages;
+inline Result<std::vector<PageConfig>> list(InMemoryStore& store, const ListOptions& options) {
+    std::vector<PageConfig> pages;
     
     for (const auto& [id, page] : store.pages) {
         bool matches = true;
         
-        if (options.filter.find("is_active") != options.filter.end()) {
-            bool filter_active = options.filter.at("is_active") == "true";
-            if (page.is_active != filter_active) matches = false;
+        if (options.filter.find("is_published") != options.filter.end()) {
+            bool filter_published = options.filter.at("is_published") == "true";
+            if (page.is_published != filter_published) matches = false;
         }
         
         if (options.filter.find("level") != options.filter.end()) {
@@ -37,11 +37,11 @@ inline Result<std::vector<PageView>> list(InMemoryStore& store, const ListOption
     }
     
     if (options.sort.find("title") != options.sort.end()) {
-        std::sort(pages.begin(), pages.end(), [](const PageView& a, const PageView& b) {
+        std::sort(pages.begin(), pages.end(), [](const PageConfig& a, const PageConfig& b) {
             return a.title < b.title;
         });
     } else if (options.sort.find("created_at") != options.sort.end()) {
-        std::sort(pages.begin(), pages.end(), [](const PageView& a, const PageView& b) {
+        std::sort(pages.begin(), pages.end(), [](const PageConfig& a, const PageConfig& b) {
             return a.created_at < b.created_at;
         });
     }
@@ -50,10 +50,10 @@ inline Result<std::vector<PageView>> list(InMemoryStore& store, const ListOption
     int end = std::min(start + options.limit, static_cast<int>(pages.size()));
     
     if (start < static_cast<int>(pages.size())) {
-        return Result<std::vector<PageView>>(std::vector<PageView>(pages.begin() + start, pages.begin() + end));
+        return Result<std::vector<PageConfig>>(std::vector<PageConfig>(pages.begin() + start, pages.begin() + end));
     }
     
-    return Result<std::vector<PageView>>(std::vector<PageView>());
+    return Result<std::vector<PageConfig>>(std::vector<PageConfig>());
 }
 
 } // namespace page

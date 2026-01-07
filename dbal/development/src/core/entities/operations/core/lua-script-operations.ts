@@ -3,20 +3,19 @@
  * @description LuaScript entity CRUD operations for DBAL client
  */
 
+import { randomUUID } from 'crypto'
 import type { DBALAdapter } from '../../../../adapters/adapter'
 import { DBALError } from '../../../foundation/errors'
-import type { ListOptions, ListResult, LuaScript } from '../../../foundation/types'
+import type { CreateLuaScriptInput, ListOptions, ListResult, LuaScript, UpdateLuaScriptInput } from '../../../foundation/types'
 import { validateId, validateLuaScriptCreate, validateLuaScriptUpdate } from '../../../foundation/validation'
 
 export interface LuaScriptOperations {
-  create: (data: LuaScriptCreatePayload) => Promise<LuaScript>
+  create: (data: CreateLuaScriptInput) => Promise<LuaScript>
   read: (id: string) => Promise<LuaScript | null>
-  update: (id: string, data: Partial<LuaScript>) => Promise<LuaScript>
+  update: (id: string, data: UpdateLuaScriptInput) => Promise<LuaScript>
   delete: (id: string) => Promise<boolean>
   list: (options?: ListOptions) => Promise<ListResult<LuaScript>>
 }
-
-type LuaScriptCreatePayload = Omit<LuaScript, 'id' | 'createdAt' | 'updatedAt' | 'tenantId'> & { tenantId?: string }
 
 const assertValidId = (id: string) => {
   const errors = validateId(id)
@@ -25,14 +24,14 @@ const assertValidId = (id: string) => {
   }
 }
 
-const assertValidCreate = (data: LuaScriptCreatePayload) => {
+const assertValidCreate = (data: CreateLuaScriptInput | LuaScript) => {
   const errors = validateLuaScriptCreate(data)
   if (errors.length > 0) {
     throw DBALError.validationError('Invalid Lua script data', errors.map(error => ({ field: 'luaScript', error })))
   }
 }
 
-const assertValidUpdate = (data: Partial<LuaScript>) => {
+const assertValidUpdate = (data: UpdateLuaScriptInput) => {
   const errors = validateLuaScriptUpdate(data)
   if (errors.length > 0) {
     throw DBALError.validationError('Invalid Lua script update data', errors.map(error => ({ field: 'luaScript', error })))
@@ -60,14 +59,34 @@ const resolveTenantFilter = (
   return null
 }
 
+const withLuaScriptDefaults = (data: CreateLuaScriptInput): LuaScript => {
+  const now = BigInt(Date.now())
+  return {
+    id: data.id ?? randomUUID(),
+    tenantId: data.tenantId ?? null,
+    name: data.name,
+    description: data.description,
+    code: data.code,
+    parameters: data.parameters,
+    returnType: data.returnType ?? null,
+    isSandboxed: data.isSandboxed ?? true,
+    allowedGlobals: data.allowedGlobals,
+    timeoutMs: data.timeoutMs ?? 5000,
+    version: data.version ?? 1,
+    createdAt: data.createdAt ?? now,
+    updatedAt: data.updatedAt ?? now,
+    createdBy: data.createdBy ?? null,
+  }
+}
+
 export const createLuaScriptOperations = (adapter: DBALAdapter, tenantId?: string): LuaScriptOperations => ({
   create: async data => {
     const resolvedTenantId = resolveTenantId(tenantId, data)
     if (!resolvedTenantId) {
       throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
     }
-    assertValidCreate(data)
-    const payload = { ...data, tenantId: resolvedTenantId }
+    const payload = withLuaScriptDefaults({ ...data, tenantId: resolvedTenantId })
+    assertValidCreate(payload)
     try {
       return adapter.create('LuaScript', payload) as Promise<LuaScript>
     } catch (error) {

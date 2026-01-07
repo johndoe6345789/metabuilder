@@ -14,11 +14,12 @@ export * as pkg from './package';
 
 // Legacy factory exports (for backward compatibility)
 export { createUserOperations } from './operations/core/user-operations';
-export { createPageOperations } from './operations/system/page-operations';
-export { createComponentOperations } from './operations/system/component-operations';
+export { createPageOperations, createPageConfigOperations } from './operations/system/page-operations';
+export { createComponentOperations, createComponentNodeOperations } from './operations/system/component-operations';
 export { createWorkflowOperations } from './operations/core/workflow-operations';
 export { createLuaScriptOperations } from './operations/core/lua-script-operations';
-export { createPackageOperations } from './operations/system/package-operations';
+export { createPackageOperations, createInstalledPackageOperations } from './operations/system/package-operations';
+export { createPackageDataOperations } from './operations/system/package-data-operations';
 export { createSessionOperations } from './operations/core/session-operations';
 
 // Validation utilities

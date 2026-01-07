@@ -2,10 +2,11 @@ import type { DBALAdapter } from '../../adapters/adapter'
 import type { DBALConfig } from '../../runtime/config'
 import { createAdapter } from './adapter-factory'
 import {
-  createComponentOperations,
+  createComponentNodeOperations,
   createLuaScriptOperations,
-  createPackageOperations,
-  createPageOperations,
+  createInstalledPackageOperations,
+  createPackageDataOperations,
+  createPageConfigOperations,
   createSessionOperations,
   createUserOperations,
   createWorkflowOperations
@@ -15,10 +16,11 @@ export const buildAdapter = (config: DBALConfig): DBALAdapter => createAdapter(c
 
 export const buildEntityOperations = (adapter: DBALAdapter, tenantId?: string) => ({
   users: createUserOperations(adapter, tenantId),
-  pages: createPageOperations(adapter, tenantId),
-  components: createComponentOperations(adapter, tenantId),
+  pageConfigs: createPageConfigOperations(adapter, tenantId),
+  componentNodes: createComponentNodeOperations(adapter, tenantId),
   workflows: createWorkflowOperations(adapter, tenantId),
   luaScripts: createLuaScriptOperations(adapter, tenantId),
-  packages: createPackageOperations(adapter, tenantId),
-  sessions: createSessionOperations(adapter, tenantId)
+  installedPackages: createInstalledPackageOperations(adapter, tenantId),
+  packageData: createPackageDataOperations(adapter),
+  sessions: createSessionOperations(adapter, tenantId),
 })

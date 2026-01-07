@@ -14,11 +14,22 @@ export const createUser = async (
   input: CreateUserInput
 ): Promise<Result<User>> => {
   const role = input.role ?? 'user'
-  const validationErrors = validateUserCreate({
-    username: input.username,
+  const createdAt = input.createdAt ?? BigInt(Date.now())
+  const user: User = {
+    id: input.id ?? store.generateId('user'),
     email: input.email,
-    role
-  })
+    username: input.username,
+    role,
+    profilePicture: input.profilePicture ?? null,
+    bio: input.bio ?? null,
+    createdAt,
+    tenantId: input.tenantId ?? null,
+    isInstanceOwner: input.isInstanceOwner ?? false,
+    passwordChangeTimestamp: input.passwordChangeTimestamp ?? null,
+    firstLogin: input.firstLogin ?? false
+  }
+
+  const validationErrors = validateUserCreate(user)
 
   if (validationErrors.length > 0) {
     return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] ?? 'Validation failed' } }
@@ -29,15 +40,6 @@ export const createUser = async (
   }
   if (store.usersByUsername.has(input.username)) {
     return { success: false, error: { code: 'CONFLICT', message: 'Username already exists' } }
-  }
-
-  const user: User = {
-    id: store.generateId('user'),
-    email: input.email,
-    username: input.username,
-    role,
-    createdAt: new Date(),
-    updatedAt: new Date()
   }
 
   store.users.set(user.id, user)

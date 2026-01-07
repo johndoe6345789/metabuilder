@@ -1,78 +1,13 @@
 /**
  * @file types.ts
- * @description Type definitions for Lua script operations (stub)
+ * @description Type definitions for Lua script operations
  */
 
-export interface CreateLuaScriptInput {
-  name: string;
-  code: string;
-  description?: string;
-  isActive?: boolean;
-  isSandboxed?: boolean;
-  timeoutMs?: number;
-  allowedGlobals?: string[];
-  createdBy?: string;
-}
-
-export interface UpdateLuaScriptInput {
-  name?: string;
-  code?: string;
-  description?: string;
-  isActive?: boolean;
-  isSandboxed?: boolean;
-  timeoutMs?: number;
-  allowedGlobals?: string[];
-  createdBy?: string;
-}
-
-export interface LuaScript {
-  id: string;
-  name: string;
-  code: string;
-  description?: string;
-  isActive?: boolean;
-  isSandboxed: boolean;
-  timeoutMs: number;
-  allowedGlobals?: string[];
-  createdBy?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface LuaScriptView {
-  id: string;
-  name: string;
-  code: string;
-  description?: string;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface Result<T> {
-  success: boolean;
-  data?: T;
-  error?: {
-    code: string;
-    message: string;
-  };
-}
-
-export interface ListOptions {
-  filter?: Record<string, any>;
-  sort?: Record<string, 'asc' | 'desc'>;
-  page?: number;
-  limit?: number;
-  skip?: number;
-  take?: number;
-  where?: Record<string, any>;
-  orderBy?: Record<string, 'asc' | 'desc'>;
-}
-
-export interface ListResult<T> {
-  items?: T[];
-  data?: T[];
-  total: number;
-  skip?: number;
-  take?: number;
-}
+export type {
+  CreateLuaScriptInput,
+  UpdateLuaScriptInput,
+  LuaScript,
+  ListOptions,
+  ListResult,
+  Result
+} from '../../foundation/types'

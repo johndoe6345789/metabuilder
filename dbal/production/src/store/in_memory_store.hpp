@@ -21,19 +21,19 @@ namespace dbal {
 struct InMemoryStore {
     // Entity collections
     std::map<std::string, User> users;
-    std::map<std::string, PageView> pages;
+    std::map<std::string, PageConfig> pages;
     std::map<std::string, Workflow> workflows;
     std::map<std::string, Session> sessions;
     std::map<std::string, LuaScript> lua_scripts;
-    std::map<std::string, Package> packages;
+    std::map<std::string, InstalledPackage> packages;
     std::map<std::string, Credential> credentials;
     
     // Secondary indexes (unique field -> id mappings)
-    std::map<std::string, std::string> page_slugs;      // slug -> id
+    std::map<std::string, std::string> page_paths;      // path -> id
     std::map<std::string, std::string> workflow_names;  // name -> id
     std::map<std::string, std::string> session_tokens;  // token -> id
     std::map<std::string, std::string> lua_script_names; // name -> id
-    std::map<std::string, std::string> package_keys;    // name@version -> id
+    std::map<std::string, std::string> package_keys;    // packageId -> id
     
     // Entity counters for ID generation
     int user_counter = 0;
@@ -44,7 +44,7 @@ struct InMemoryStore {
     int package_counter = 0;
     int credential_counter = 0;
     
-    std::map<std::string, ComponentHierarchy> components;
+    std::map<std::string, ComponentNode> components;
     std::map<std::string, std::vector<std::string>> components_by_page;
     std::map<std::string, std::vector<std::string>> components_by_parent;
     int component_counter = 0;
@@ -64,7 +64,7 @@ struct InMemoryStore {
     void clear() {
         users.clear();
         pages.clear();
-        page_slugs.clear();
+        page_paths.clear();
         workflows.clear();
         workflow_names.clear();
         sessions.clear();

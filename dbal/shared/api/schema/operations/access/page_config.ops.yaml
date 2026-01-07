@@ -1,0 +1,65 @@
+operations:
+  create:
+    description: "Create new page"
+    input:
+      required: [path, title, level, component_tree, requires_auth]
+      optional: [description, icon, component, required_role, parent_path, sort_order, is_published, params, meta, package_id]
+    output: PageConfig
+    acl_required: ["page:create"]
+    validation:
+      - path_unique: "Page path must be unique"
+      - level_valid: "Level must be 1-6"
+    errors:
+      - CONFLICT: "Page with this path already exists"
+      - VALIDATION_ERROR: "Invalid input"
+      
+  read:
+    description: "Get page by ID or path"
+    input:
+      optional: [id, path]
+    output: PageConfig
+    acl_required: []
+    public: true
+    errors:
+      - NOT_FOUND: "Page not found"
+      - VALIDATION_ERROR: "Must provide id or path"
+      
+  update:
+    description: "Update page"
+    input:
+      required: [id]
+      optional: [path, title, description, icon, component, component_tree, level, requires_auth, required_role, parent_path, sort_order, is_published, params, meta, package_id]
+    output: PageConfig
+    acl_required: ["page:update"]
+    errors:
+      - NOT_FOUND: "Page not found"
+      - CONFLICT: "Path already in use"
+      
+  delete:
+    description: "Delete page"
+    input:
+      required: [id]
+    output: boolean
+    acl_required: ["page:delete"]
+    cascade: true
+    errors:
+      - NOT_FOUND: "Page not found"
+      
+  list:
+    description: "List pages with filtering"
+    input:
+      optional: [level, is_published, page, limit, sort]
+    output: PageConfig[]
+    acl_required: []
+    public: true
+    pagination: true
+    errors: []
+      
+  get_by_level:
+    description: "Get all pages for a specific level"
+    input:
+      required: [level]
+    output: PageConfig[]
+    acl_required: []
+    public: true
+    errors: []

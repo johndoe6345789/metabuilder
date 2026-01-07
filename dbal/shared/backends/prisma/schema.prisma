@@ -1,3 +1,6 @@
+// NOTE: This schema is a simplified dev snapshot for DBAL.
+// It is currently out of sync with the app's Prisma schema in `prisma/schema.prisma`.
+// TODO: Generate Prisma schemas from DBAL API schemas to keep them aligned.
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
@@ -17,7 +20,7 @@ model User {
   
   workflows     Workflow[]
   luaScripts    LuaScript[]
-  installedPackages Package[]
+  installedPackages InstalledPackage[]
 }
 
 model Credential {
@@ -41,37 +44,47 @@ model Session {
   @@index([expiresAt])
 }
 
-model PageView {
-  id          String   @id @default(uuid())
-  slug        String   @unique
-  title       String
-  description String?
-  level       Int
-  layout      String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  components ComponentHierarchy[]
-  
-  @@index([level])
-  @@index([isActive])
-}
-
-model ComponentHierarchy {
+model PageConfig {
   id            String   @id @default(uuid())
-  pageId        String
-  parentId      String?
-  componentType String
-  order         Int      @default(0)
-  props         String
+  tenantId      String?
+  packageId     String?
+  path          String   @unique
+  title         String
+  description   String?
+  icon          String?
+  component     String?
+  componentTree String
+  level         Int
+  requiresAuth  Boolean
+  requiredRole  String?
+  parentPath    String?
+  sortOrder     Int      @default(0)
+  isPublished   Boolean  @default(true)
+  params        String?
+  meta          String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  
-  page   PageView               @relation(fields: [pageId], references: [id], onDelete: Cascade)
-  parent ComponentHierarchy?    @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
-  children ComponentHierarchy[] @relation("ParentChild")
-  
+
+  components ComponentNode[]
+
+  @@index([level])
+  @@index([isPublished])
+}
+
+model ComponentNode {
+  id        String   @id @default(uuid())
+  pageId    String
+  parentId  String?
+  type      String
+  childIds  String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  page     PageConfig      @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  parent   ComponentNode?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
+  children ComponentNode[] @relation("ParentChild")
+
   @@index([pageId])
   @@index([parentId])
   @@index([pageId, order])
@@ -112,21 +125,13 @@ model LuaScript {
   @@index([isSandboxed])
 }
 
-model Package {
-  id          String    @id @default(uuid())
-  name        String
+model InstalledPackage {
+  packageId   String   @id
+  tenantId    String?
+  installedAt DateTime
   version     String
-  description String?
-  author      String
-  manifest    String
-  isInstalled Boolean   @default(false)
-  installedAt DateTime?
-  installedBy String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  
-  installer User? @relation(fields: [installedBy], references: [id])
-  
-  @@unique([name, version])
-  @@index([isInstalled])
+  enabled     Boolean
+  config      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

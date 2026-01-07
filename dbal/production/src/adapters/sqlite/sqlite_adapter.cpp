@@ -45,26 +45,36 @@ public:
         return Result<std::vector<User>>(users);
     }
     
-    Result<PageView> createPage(const CreatePageInput& input) override {
-        PageView page;
-        page.id = "page_" + input.slug;
-        page.slug = input.slug;
+    Result<PageConfig> createPage(const CreatePageInput& input) override {
+        PageConfig page;
+        page.id = "page_" + input.path;
+        page.tenant_id = input.tenant_id;
+        page.package_id = input.package_id;
+        page.path = input.path;
         page.title = input.title;
         page.description = input.description;
+        page.icon = input.icon;
+        page.component = input.component;
+        page.component_tree = input.component_tree;
         page.level = input.level;
-        page.layout = input.layout;
-        page.is_active = input.is_active;
+        page.requires_auth = input.requires_auth;
+        page.required_role = input.required_role;
+        page.parent_path = input.parent_path;
+        page.sort_order = input.sort_order;
+        page.is_published = input.is_published;
+        page.params = input.params;
+        page.meta = input.meta;
         page.created_at = std::chrono::system_clock::now();
         page.updated_at = page.created_at;
         
-        return Result<PageView>(page);
+        return Result<PageConfig>(page);
     }
     
-    Result<PageView> getPage(const std::string& id) override {
+    Result<PageConfig> getPage(const std::string& id) override {
         return Error::notFound("Page not found: " + id);
     }
     
-    Result<PageView> updatePage(const std::string& id, const UpdatePageInput& input) override {
+    Result<PageConfig> updatePage(const std::string& id, const UpdatePageInput& input) override {
         return Error::notFound("Page not found: " + id);
     }
     
@@ -72,9 +82,9 @@ public:
         return Result<bool>(true);
     }
     
-    Result<std::vector<PageView>> listPages(const ListOptions& options) override {
-        std::vector<PageView> pages;
-        return Result<std::vector<PageView>>(pages);
+    Result<std::vector<PageConfig>> listPages(const ListOptions& options) override {
+        std::vector<PageConfig> pages;
+        return Result<std::vector<PageConfig>>(pages);
     }
 
     Result<Workflow> createWorkflow(const CreateWorkflowInput& input) override {
@@ -170,27 +180,24 @@ public:
         return Result<std::vector<LuaScript>>(scripts);
     }
 
-    Result<Package> createPackage(const CreatePackageInput& input) override {
-        Package package;
-        package.id = "package_" + input.name;
-        package.name = input.name;
-        package.version = input.version;
-        package.description = input.description;
-        package.author = input.author;
-        package.manifest = input.manifest;
-        package.is_installed = input.is_installed;
+    Result<InstalledPackage> createPackage(const CreatePackageInput& input) override {
+        InstalledPackage package;
+        package.package_id = input.package_id;
+        package.tenant_id = input.tenant_id;
         package.installed_at = input.installed_at;
-        package.installed_by = input.installed_by;
+        package.version = input.version;
+        package.enabled = input.enabled;
+        package.config = input.config;
         package.created_at = std::chrono::system_clock::now();
         package.updated_at = package.created_at;
-        return Result<Package>(package);
+        return Result<InstalledPackage>(package);
     }
 
-    Result<Package> getPackage(const std::string& id) override {
+    Result<InstalledPackage> getPackage(const std::string& id) override {
         return Error::notFound("Package not found: " + id);
     }
 
-    Result<Package> updatePackage(const std::string& id, const UpdatePackageInput& input) override {
+    Result<InstalledPackage> updatePackage(const std::string& id, const UpdatePackageInput& input) override {
         return Error::notFound("Package not found: " + id);
     }
 
@@ -198,9 +205,9 @@ public:
         return Result<bool>(true);
     }
 
-    Result<std::vector<Package>> listPackages(const ListOptions& options) override {
-        std::vector<Package> packages;
-        return Result<std::vector<Package>>(packages);
+    Result<std::vector<InstalledPackage>> listPackages(const ListOptions& options) override {
+        std::vector<InstalledPackage> packages;
+        return Result<std::vector<InstalledPackage>>(packages);
     }
     
     void close() override {

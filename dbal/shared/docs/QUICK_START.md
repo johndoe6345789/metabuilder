@@ -125,15 +125,15 @@ Check browser console for `[DBAL Audit]` logs.
 Full TypeScript support:
 
 ```typescript
-import type { User, PageView, ComponentHierarchy, Workflow, LuaScript, Package, Session } from '../../dbal/development/src'
+import type { User, PageConfig, ComponentNode, Workflow, LuaScript, InstalledPackage, Session } from '../../dbal/development/src'
 
 // Type-safe entities
 const user: User = await client.users.create({ ... })
-const page: PageView = await client.pages.create({ ... })
-const component: ComponentHierarchy = await client.components.create({ ... })
+const page: PageConfig = await client.pageConfigs.create({ ... })
+const component: ComponentNode = await client.componentNodes.create({ ... })
 const workflow: Workflow = await client.workflows.create({ ... })
 const script: LuaScript = await client.luaScripts.create({ ... })
-const pkg: Package = await client.packages.create({ ... })
+const pkg: InstalledPackage = await client.installedPackages.create({ ... })
 const session: Session = await client.sessions.create({ ... })
 
 // Type-safe list results
@@ -156,21 +156,21 @@ client.users.list(options)
 
 ### Pages
 ```typescript
-client.pages.create(data)
-client.pages.read(id)
-client.pages.readBySlug(slug)  // Special: find by slug
-client.pages.update(id, data)
-client.pages.delete(id)
-client.pages.list(options)
+client.pageConfigs.create(data)
+client.pageConfigs.read(id)
+client.pageConfigs.readByPath(path)  // Special: find by path
+client.pageConfigs.update(id, data)
+client.pageConfigs.delete(id)
+client.pageConfigs.list(options)
 ```
 
 ### Components
 ```typescript
-client.components.create(data)
-client.components.read(id)
-client.components.update(id, data)
-client.components.delete(id)
-client.components.getTree(pageId)  // Special: get all components for a page
+client.componentNodes.create(data)
+client.componentNodes.read(id)
+client.componentNodes.update(id, data)
+client.componentNodes.delete(id)
+client.componentNodes.getTree(pageId)  // Special: get all components for a page
 ```
 
 ### Workflows
@@ -196,8 +196,9 @@ const script = await client.luaScripts.create({
   name: 'health_check',
   description: 'Simple health check',
   code: 'return true',
+  parameters: JSON.stringify([]),
   isSandboxed: true,
-  allowedGlobals: ['math'],
+  allowedGlobals: JSON.stringify(['math']),
   timeoutMs: 1000,
   createdBy: '11111111-1111-1111-1111-111111111111',
 })
@@ -205,11 +206,11 @@ const script = await client.luaScripts.create({
 
 ### Packages
 ```typescript
-client.packages.create(data)
-client.packages.read(id)
-client.packages.update(id, data)
-client.packages.delete(id)
-client.packages.list(options)
+client.installedPackages.create(data)
+client.installedPackages.read(packageId)
+client.installedPackages.update(packageId, data)
+client.installedPackages.delete(packageId)
+client.installedPackages.list(options)
 ```
 
 ### Sessions (system-only)

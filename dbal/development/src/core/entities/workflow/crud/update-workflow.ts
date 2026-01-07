@@ -20,6 +20,10 @@ export const updateWorkflow = async (
     return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] || 'Invalid ID' } }
   }
 
+  if (input.tenantId !== undefined) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'tenantId is immutable' } }
+  }
+
   const workflow = store.workflows.get(id)
   if (!workflow) {
     return { success: false, error: { code: 'NOT_FOUND', message: `Workflow not found: ${id}` } }
@@ -43,27 +47,27 @@ export const updateWorkflow = async (
     workflow.description = input.description
   }
 
-  if (input.trigger !== undefined) {
-    workflow.trigger = input.trigger
+  if (input.nodes !== undefined) {
+    workflow.nodes = input.nodes
   }
 
-  if (input.triggerConfig !== undefined) {
-    workflow.triggerConfig = input.triggerConfig
+  if (input.edges !== undefined) {
+    workflow.edges = input.edges
   }
 
-  if (input.steps !== undefined) {
-    workflow.steps = input.steps
+  if (input.enabled !== undefined) {
+    workflow.enabled = input.enabled
   }
 
-  if (input.isActive !== undefined) {
-    workflow.isActive = input.isActive
+  if (input.version !== undefined) {
+    workflow.version = input.version
   }
 
   if (input.createdBy !== undefined) {
-    workflow.createdBy = input.createdBy
+    workflow.createdBy = input.createdBy ?? null
   }
 
-  workflow.updatedAt = new Date()
+  workflow.updatedAt = input.updatedAt ?? BigInt(Date.now())
 
   return { success: true, data: workflow }
 }

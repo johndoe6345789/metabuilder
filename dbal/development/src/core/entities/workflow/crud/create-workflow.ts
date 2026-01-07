@@ -13,16 +13,22 @@ export const createWorkflow = async (
   store: InMemoryStore,
   input: CreateWorkflowInput
 ): Promise<Result<Workflow>> => {
-  const isActive = input.isActive ?? true
-  const validationErrors = validateWorkflowCreate({
+  const now = BigInt(Date.now())
+  const workflow: Workflow = {
+    id: input.id ?? store.generateId('workflow'),
+    tenantId: input.tenantId ?? null,
     name: input.name,
     description: input.description,
-    trigger: input.trigger,
-    triggerConfig: input.triggerConfig,
-    steps: input.steps,
-    isActive,
-    createdBy: input.createdBy
-  })
+    nodes: input.nodes,
+    edges: input.edges,
+    enabled: input.enabled ?? true,
+    version: input.version ?? 1,
+    createdAt: input.createdAt ?? now,
+    updatedAt: input.updatedAt ?? now,
+    createdBy: input.createdBy ?? null
+  }
+
+  const validationErrors = validateWorkflowCreate(workflow)
 
   if (validationErrors.length > 0) {
     return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] ?? 'Validation failed' } }
@@ -30,19 +36,6 @@ export const createWorkflow = async (
 
   if (store.workflowNames.has(input.name)) {
     return { success: false, error: { code: 'CONFLICT', message: 'Workflow name already exists' } }
-  }
-
-  const workflow: Workflow = {
-    id: store.generateId('workflow'),
-    name: input.name,
-    description: input.description,
-    trigger: input.trigger,
-    triggerConfig: input.triggerConfig,
-    steps: input.steps,
-    isActive,
-    createdBy: input.createdBy,
-    createdAt: new Date(),
-    updatedAt: new Date()
   }
 
   store.workflows.set(workflow.id, workflow)

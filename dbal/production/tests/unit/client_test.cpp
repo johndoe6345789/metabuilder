@@ -539,7 +539,7 @@ void test_page_crud() {
     std::cout << "  ✓ Retrieved page by ID" << std::endl;
     
     // Get by slug
-    auto getBySlugResult = client.getPageBySlug("test-page");
+    auto getBySlugResult = client.getPageByPath("test-page");
     assert(getBySlugResult.isOk());
     assert(getBySlugResult.value().id == pageId);
     std::cout << "  ✓ Retrieved page by slug" << std::endl;
@@ -662,7 +662,7 @@ void test_component_crud() {
     assert(pageResult.isOk());
     std::string pageId = pageResult.value().id;
 
-    dbal::CreateComponentHierarchyInput rootInput;
+    dbal::CreateComponentNodeInput rootInput;
     rootInput.page_id = pageId;
     rootInput.component_type = "Container";
     rootInput.order = 0;
@@ -673,7 +673,7 @@ void test_component_crud() {
     std::string rootId = rootResult.value().id;
     std::cout << "  ✓ Root component created" << std::endl;
 
-    dbal::CreateComponentHierarchyInput childInput;
+    dbal::CreateComponentNodeInput childInput;
     childInput.page_id = pageId;
     childInput.parent_id = rootId;
     childInput.component_type = "Button";
@@ -685,7 +685,7 @@ void test_component_crud() {
     std::string childId = childResult.value().id;
     std::cout << "  ✓ First child component created" << std::endl;
 
-    dbal::CreateComponentHierarchyInput siblingInput;
+    dbal::CreateComponentNodeInput siblingInput;
     siblingInput.page_id = pageId;
     siblingInput.parent_id = rootId;
     siblingInput.component_type = "Text";
@@ -697,7 +697,7 @@ void test_component_crud() {
     std::string siblingId = siblingResult.value().id;
     std::cout << "  ✓ Second child component created" << std::endl;
 
-    dbal::UpdateComponentHierarchyInput updateInput;
+    dbal::UpdateComponentNodeInput updateInput;
     updateInput.order = 2;
     auto updateResult = client.updateComponent(childId, updateInput);
     assert(updateResult.isOk());
@@ -740,7 +740,7 @@ void test_component_crud() {
     assert(siblingAfter.isOk() && siblingAfter.value().order == 1);
     std::cout << "  ✓ Components reordered" << std::endl;
 
-    dbal::CreateComponentHierarchyInput otherRootInput;
+    dbal::CreateComponentNodeInput otherRootInput;
     otherRootInput.page_id = pageId;
     otherRootInput.component_type = "Sidebar";
     otherRootInput.order = 0;
@@ -795,7 +795,7 @@ void test_component_validation() {
     assert(pageResult.isOk());
     std::string pageId = pageResult.value().id;
 
-    dbal::CreateComponentHierarchyInput missingPage;
+    dbal::CreateComponentNodeInput missingPage;
     missingPage.page_id = "missing-page";
     missingPage.component_type = "Leaf";
     missingPage.order = 0;
@@ -805,7 +805,7 @@ void test_component_validation() {
     assert(missingResult.error().code() == dbal::ErrorCode::NotFound);
     std::cout << "  ✓ Missing page rejected" << std::endl;
 
-    dbal::CreateComponentHierarchyInput longType;
+    dbal::CreateComponentNodeInput longType;
     longType.page_id = pageId;
     longType.component_type = std::string(101, 'x');
     longType.order = 0;
@@ -815,7 +815,7 @@ void test_component_validation() {
     assert(longResult.error().code() == dbal::ErrorCode::ValidationError);
     std::cout << "  ✓ Oversized component type rejected" << std::endl;
 
-    dbal::CreateComponentHierarchyInput badOrder;
+    dbal::CreateComponentNodeInput badOrder;
     badOrder.page_id = pageId;
     badOrder.component_type = "Leaf";
     badOrder.order = -1;
@@ -844,7 +844,7 @@ void test_component_search() {
     assert(pageResult.isOk());
     std::string pageId = pageResult.value().id;
 
-    dbal::CreateComponentHierarchyInput targetInput;
+    dbal::CreateComponentNodeInput targetInput;
     targetInput.page_id = pageId;
     targetInput.component_type = "SearchButton";
     targetInput.order = 0;
@@ -856,7 +856,7 @@ void test_component_search() {
     auto typeSearch = client.searchComponents("searchbutton", pageId);
     assert(typeSearch.isOk());
     assert(!typeSearch.value().empty());
-    bool foundType = std::any_of(typeSearch.value().begin(), typeSearch.value().end(), [&](const dbal::ComponentHierarchy& entry) {
+    bool foundType = std::any_of(typeSearch.value().begin(), typeSearch.value().end(), [&](const dbal::ComponentNode& entry) {
         return entry.id == targetId;
     });
     assert(foundType);
@@ -864,7 +864,7 @@ void test_component_search() {
 
     auto propSearch = client.searchComponents("find-me", pageId);
     assert(propSearch.isOk());
-    bool foundProp = std::any_of(propSearch.value().begin(), propSearch.value().end(), [&](const dbal::ComponentHierarchy& entry) {
+    bool foundProp = std::any_of(propSearch.value().begin(), propSearch.value().end(), [&](const dbal::ComponentNode& entry) {
         return entry.id == targetId;
     });
     assert(foundProp);
@@ -889,7 +889,7 @@ void test_component_children() {
     assert(pageResult.isOk());
     std::string pageId = pageResult.value().id;
 
-    dbal::CreateComponentHierarchyInput rootInput;
+    dbal::CreateComponentNodeInput rootInput;
     rootInput.page_id = pageId;
     rootInput.component_type = "Root";
     rootInput.order = 0;
@@ -898,7 +898,7 @@ void test_component_children() {
     assert(rootResult.isOk());
     std::string rootId = rootResult.value().id;
 
-    dbal::CreateComponentHierarchyInput childInput;
+    dbal::CreateComponentNodeInput childInput;
     childInput.page_id = pageId;
     childInput.parent_id = rootId;
     childInput.component_type = "Child";
@@ -908,7 +908,7 @@ void test_component_children() {
     assert(childResult.isOk());
     std::string childId = childResult.value().id;
 
-    dbal::CreateComponentHierarchyInput grandchildInput;
+    dbal::CreateComponentNodeInput grandchildInput;
     grandchildInput.page_id = pageId;
     grandchildInput.parent_id = childId;
     grandchildInput.component_type = "Grandchild";

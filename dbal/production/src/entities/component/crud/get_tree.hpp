@@ -40,7 +40,7 @@ inline std::vector<std::string> collectChildren(const InMemoryStore& store,
 inline void buildTree(const InMemoryStore& store,
                       const std::string& page_id,
                       const std::optional<std::string>& parent_id,
-                      std::vector<ComponentHierarchy>& out) {
+                      std::vector<ComponentNode>& out) {
     auto children = collectChildren(store, parent_id, page_id);
     for (const auto& child_id : children) {
         const auto& component = store.components.at(child_id);
@@ -51,7 +51,7 @@ inline void buildTree(const InMemoryStore& store,
 
 } // namespace detail
 
-inline Result<std::vector<ComponentHierarchy>> getTree(InMemoryStore& store, const std::string& page_id) {
+inline Result<std::vector<ComponentNode>> getTree(InMemoryStore& store, const std::string& page_id) {
     if (page_id.empty()) {
         return Error::validationError("pageId is required");
     }
@@ -59,9 +59,9 @@ inline Result<std::vector<ComponentHierarchy>> getTree(InMemoryStore& store, con
         return Error::notFound("Page not found: " + page_id);
     }
 
-    std::vector<ComponentHierarchy> tree;
+    std::vector<ComponentNode> tree;
     detail::buildTree(store, page_id, std::nullopt, tree);
-    return Result<std::vector<ComponentHierarchy>>(tree);
+    return Result<std::vector<ComponentNode>>(tree);
 }
 
 } // namespace component

@@ -16,14 +16,29 @@ export const listUsers = async (
 
   let users = Array.from(store.users.values())
 
-  if (filter.role !== undefined) {
-    users = users.filter((user) => user.role === filter.role)
+  if (filter && Object.keys(filter).length > 0) {
+    users = users.filter((user) =>
+      Object.entries(filter).every(([key, value]) => (user as Record<string, unknown>)[key] === value)
+    )
   }
 
-  if (sort.username) {
-    users.sort((a, b) =>
-      sort.username === 'asc' ? a.username.localeCompare(b.username) : b.username.localeCompare(a.username)
-    )
+  const sortKey = Object.keys(sort)[0]
+  if (sortKey) {
+    const direction = sort[sortKey]
+    users.sort((a, b) => {
+      const left = (a as Record<string, unknown>)[sortKey]
+      const right = (b as Record<string, unknown>)[sortKey]
+      if (typeof left === 'string' && typeof right === 'string') {
+        return direction === 'asc' ? left.localeCompare(right) : right.localeCompare(left)
+      }
+      if (typeof left === 'bigint' && typeof right === 'bigint') {
+        return direction === 'asc' ? Number(left - right) : Number(right - left)
+      }
+      if (typeof left === 'number' && typeof right === 'number') {
+        return direction === 'asc' ? left - right : right - left
+      }
+      return 0
+    })
   }
 
   const start = (page - 1) * limit

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { DBALClient } from '../../src/core/client'
-import { DBALError, DBALErrorCode } from '../../src/core/errors'
+import { DBALError, DBALErrorCode } from '../../src/core/foundation/errors'
 
 const mockAdapter = vi.hoisted(() => ({
   create: vi.fn(),
@@ -34,19 +34,19 @@ const baseConfig = {
 const workflowInput = {
   name: 'daily-sync',
   description: 'Sync at midnight',
-  trigger: 'schedule' as const,
-  triggerConfig: { cron: '0 0 * * *' },
-  steps: { steps: [{ id: 'step-1', action: 'noop' }] },
-  isActive: true,
-  createdBy: '11111111-1111-1111-1111-111111111111',
+  nodes: JSON.stringify([{ id: 'node-1', type: 'noop' }]),
+  edges: JSON.stringify([]),
+  enabled: true,
+  createdBy: 'user-1',
 }
 
 const workflowRecord = {
   ...workflowInput,
   id: '22222222-2222-2222-2222-222222222222',
   tenantId: baseConfig.tenantId,
-  createdAt: new Date('2024-01-01T00:00:00.000Z'),
-  updatedAt: new Date('2024-01-02T00:00:00.000Z'),
+  version: 1,
+  createdAt: BigInt(1704067200000),
+  updatedAt: BigInt(1704153600000),
 }
 
 beforeEach(() => {
@@ -64,10 +64,17 @@ describe('DBALClient workflows', () => {
     const client = new DBALClient(baseConfig)
     const result = await client.workflows.create(workflowInput)
 
-    expect(mockAdapter.create).toHaveBeenCalledWith('Workflow', {
+    const payload = mockAdapter.create.mock.calls[0][1]
+    expect(mockAdapter.create).toHaveBeenCalledWith('Workflow', expect.any(Object))
+    expect(payload).toMatchObject({
       ...workflowInput,
       tenantId: baseConfig.tenantId,
+      enabled: true,
+      version: 1,
     })
+    expect(typeof payload.id).toBe('string')
+    expect(typeof payload.createdAt).toBe('bigint')
+    expect(typeof payload.updatedAt).toBe('bigint')
     expect(result).toEqual(workflowRecord)
   })
 

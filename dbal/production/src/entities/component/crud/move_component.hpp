@@ -10,7 +10,7 @@ namespace dbal {
 namespace entities {
 namespace component {
 
-inline Result<ComponentHierarchy> move(InMemoryStore& store, const MoveComponentInput& input) {
+inline Result<ComponentNode> move(InMemoryStore& store, const MoveComponentInput& input) {
     if (input.id.empty()) {
         return Error::validationError("Component ID is required");
     }
@@ -23,7 +23,7 @@ inline Result<ComponentHierarchy> move(InMemoryStore& store, const MoveComponent
         return Error::notFound("Component not found: " + input.id);
     }
 
-    ComponentHierarchy& component = it->second;
+    ComponentNode& component = it->second;
     const std::string& new_parent = input.new_parent_id;
     if (new_parent == component.id) {
         return Error::validationError("Component cannot be its own parent");
@@ -55,7 +55,7 @@ inline Result<ComponentHierarchy> move(InMemoryStore& store, const MoveComponent
 
     component.order = input.order;
     component.updated_at = std::chrono::system_clock::now();
-    return Result<ComponentHierarchy>(component);
+    return Result<ComponentNode>(component);
 }
 
 } // namespace component

@@ -1,12 +1,12 @@
 import type { DBALAdapter } from '../../../../../adapters/adapter'
 import { DBALError } from '../../../../../core/foundation/errors'
-import type { User } from '../../../../../core/foundation/types'
+import type { UpdateUserInput, User } from '../../../../../core/foundation/types'
 import { assertValidUserId, assertValidUserUpdate } from './validation'
 
 export const updateUser = async (
   adapter: DBALAdapter,
   id: string,
-  data: Partial<User>,
+  data: UpdateUserInput,
 ): Promise<User> => {
   assertValidUserId(id)
   assertValidUserUpdate(data)

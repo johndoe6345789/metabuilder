@@ -7,7 +7,7 @@
 
 #include "crud/create_page.hpp"
 #include "crud/get/get_page.hpp"
-#include "crud/get/get_page_by_slug.hpp"
+#include "crud/get/get_page_by_path.hpp"
 #include "crud/update_page.hpp"
 #include "crud/delete_page.hpp"
 #include "crud/list_pages.hpp"

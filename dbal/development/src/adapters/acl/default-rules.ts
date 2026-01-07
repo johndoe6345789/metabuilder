@@ -18,17 +18,17 @@ export const defaultACLRules: ACLRule[] = [
     operations: ['create', 'read', 'update', 'delete', 'list']
   },
   {
-    entity: 'PageView',
+    entity: 'PageConfig',
     roles: ['user', 'admin', 'god', 'supergod'],
     operations: ['read', 'list']
   },
   {
-    entity: 'PageView',
+    entity: 'PageConfig',
     roles: ['god', 'supergod'],
     operations: ['create', 'update', 'delete']
   },
   {
-    entity: 'ComponentHierarchy',
+    entity: 'ComponentNode',
     roles: ['god', 'supergod'],
     operations: ['create', 'read', 'update', 'delete', 'list']
   },
@@ -43,13 +43,18 @@ export const defaultACLRules: ACLRule[] = [
     operations: ['create', 'read', 'update', 'delete', 'list']
   },
   {
-    entity: 'Package',
+    entity: 'InstalledPackage',
     roles: ['admin', 'god', 'supergod'],
     operations: ['read', 'list']
   },
   {
-    entity: 'Package',
+    entity: 'InstalledPackage',
     roles: ['god', 'supergod'],
     operations: ['create', 'update', 'delete']
+  },
+  {
+    entity: 'PackageData',
+    roles: ['admin', 'god', 'supergod'],
+    operations: ['create', 'read', 'update', 'delete', 'list']
   },
 ]

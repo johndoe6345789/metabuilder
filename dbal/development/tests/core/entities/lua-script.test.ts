@@ -19,7 +19,8 @@ describe('lua script in-memory operations', () => {
       name: 'health_check',
       description: 'Health check',
       code: 'return true',
-      allowedGlobals: ['math'],
+      parameters: '[]',
+      allowedGlobals: '["math"]',
       timeoutMs: 1000,
       createdBy: userResult.data.id
     })
@@ -63,7 +64,8 @@ describe('lua script in-memory operations', () => {
     const first = await createLuaScript(store, {
       name: 'dupe',
       code: 'return true',
-      allowedGlobals: ['math'],
+      parameters: '[]',
+      allowedGlobals: '["math"]',
       timeoutMs: 1000,
       createdBy: userResult.data.id
     })
@@ -73,7 +75,8 @@ describe('lua script in-memory operations', () => {
     const second = await createLuaScript(store, {
       name: 'dupe',
       code: 'return true',
-      allowedGlobals: ['math'],
+      parameters: '[]',
+      allowedGlobals: '["math"]',
       timeoutMs: 1000,
       createdBy: userResult.data.id
     })

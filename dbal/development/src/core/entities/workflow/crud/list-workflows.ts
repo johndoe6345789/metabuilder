@@ -16,26 +16,32 @@ export const listWorkflows = async (
 
   let workflows = Array.from(store.workflows.values())
 
-  if (filter.isActive !== undefined) {
-    workflows = workflows.filter((workflow) => workflow.isActive === filter.isActive)
-  }
-
-  if (filter.trigger !== undefined) {
-    workflows = workflows.filter((workflow) => workflow.trigger === filter.trigger)
-  }
-
-  if (filter.createdBy !== undefined) {
-    workflows = workflows.filter((workflow) => workflow.createdBy === filter.createdBy)
-  }
-
-  if (sort.name) {
-    workflows.sort((a, b) =>
-      sort.name === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+  if (filter && Object.keys(filter).length > 0) {
+    workflows = workflows.filter((workflow) =>
+      Object.entries(filter).every(([key, value]) => (workflow as Record<string, unknown>)[key] === value)
     )
-  } else if (sort.createdAt) {
-    workflows.sort((a, b) =>
-      sort.createdAt === 'asc' ? a.createdAt.getTime() - b.createdAt.getTime() : b.createdAt.getTime() - a.createdAt.getTime()
-    )
+  }
+
+  const sortKey = Object.keys(sort)[0]
+  if (sortKey) {
+    const direction = sort[sortKey]
+    workflows.sort((a, b) => {
+      const left = (a as Record<string, unknown>)[sortKey]
+      const right = (b as Record<string, unknown>)[sortKey]
+      if (typeof left === 'string' && typeof right === 'string') {
+        return direction === 'asc' ? left.localeCompare(right) : right.localeCompare(left)
+      }
+      if (typeof left === 'bigint' && typeof right === 'bigint') {
+        return direction === 'asc' ? Number(left - right) : Number(right - left)
+      }
+      if (typeof left === 'number' && typeof right === 'number') {
+        return direction === 'asc' ? left - right : right - left
+      }
+      if (typeof left === 'boolean' && typeof right === 'boolean') {
+        return direction === 'asc' ? Number(left) - Number(right) : Number(right) - Number(left)
+      }
+      return 0
+    })
   }
 
   const start = (page - 1) * limit

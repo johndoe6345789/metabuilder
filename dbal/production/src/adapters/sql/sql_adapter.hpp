@@ -215,17 +215,17 @@ public:
         }
     }
 
-    Result<PageView> createPage(const CreatePageInput& input) override {
+    Result<PageConfig> createPage(const CreatePageInput& input) override {
         (void)input;
         return Error::notImplemented("SQL adapter createPage");
     }
 
-    Result<PageView> getPage(const std::string& id) override {
+    Result<PageConfig> getPage(const std::string& id) override {
         (void)id;
         return Error::notImplemented("SQL adapter getPage");
     }
 
-    Result<PageView> updatePage(const std::string& id, const UpdatePageInput& input) override {
+    Result<PageConfig> updatePage(const std::string& id, const UpdatePageInput& input) override {
         (void)id;
         (void)input;
         return Error::notImplemented("SQL adapter updatePage");
@@ -236,7 +236,7 @@ public:
         return Error::notImplemented("SQL adapter deletePage");
     }
 
-    Result<std::vector<PageView>> listPages(const ListOptions& options) override {
+    Result<std::vector<PageConfig>> listPages(const ListOptions& options) override {
         (void)options;
         return Error::notImplemented("SQL adapter listPages");
     }

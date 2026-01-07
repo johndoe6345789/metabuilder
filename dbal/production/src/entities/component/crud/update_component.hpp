@@ -11,7 +11,7 @@ namespace dbal {
 namespace entities {
 namespace component {
 
-inline Result<ComponentHierarchy> update(InMemoryStore& store, const std::string& id, const UpdateComponentHierarchyInput& input) {
+inline Result<ComponentNode> update(InMemoryStore& store, const std::string& id, const UpdateComponentNodeInput& input) {
     if (id.empty()) {
         return Error::validationError("Component ID cannot be empty");
     }
@@ -21,13 +21,13 @@ inline Result<ComponentHierarchy> update(InMemoryStore& store, const std::string
         return Error::notFound("Component not found: " + id);
     }
 
-    ComponentHierarchy& component = it->second;
+    ComponentNode& component = it->second;
 
-    if (input.component_type.has_value()) {
-        if (!validation::isValidComponentType(input.component_type.value())) {
-            return Error::validationError("component_type must be 1-100 characters");
+    if (input.type.has_value()) {
+        if (!validation::isValidComponentType(input.type.value())) {
+            return Error::validationError("type must be 1-100 characters");
         }
-        component.component_type = input.component_type.value();
+        component.type = input.type.value();
     }
 
     if (input.order.has_value()) {
@@ -37,8 +37,8 @@ inline Result<ComponentHierarchy> update(InMemoryStore& store, const std::string
         component.order = input.order.value();
     }
 
-    if (input.props.has_value()) {
-        component.props = input.props.value();
+    if (input.child_ids.has_value()) {
+        component.child_ids = input.child_ids.value();
     }
 
     if (input.parent_id.has_value()) {
@@ -69,7 +69,7 @@ inline Result<ComponentHierarchy> update(InMemoryStore& store, const std::string
     }
 
     component.updated_at = std::chrono::system_clock::now();
-    return Result<ComponentHierarchy>(component);
+    return Result<ComponentNode>(component);
 }
 
 } // namespace component

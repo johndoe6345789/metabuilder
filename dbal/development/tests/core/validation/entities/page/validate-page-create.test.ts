@@ -7,26 +7,31 @@ describe('validatePageCreate', () => {
   it.each([
     {
       data: {},
-      expected: ['Slug is required', 'Title is required', 'Level is required', 'Layout is required', 'isActive is required'],
+      expected: ['path is required', 'Title is required', 'componentTree is required', 'level is required', 'requiresAuth is required'],
       description: 'missing required fields',
     },
     {
-      data: { slug: 'Bad_Slug', title: 'Valid title', level: 1 },
-      expected: ['Invalid slug format (lowercase alphanumeric, hyphen, slash, 1-255 chars)'],
-      description: 'invalid slug format',
+      data: { path: '', title: 'Valid title', componentTree: '[]', level: 1, requiresAuth: true },
+      expected: ['path must be 1-255 characters'],
+      description: 'invalid path',
     },
     {
-      data: { slug: 'valid-slug', title: tooLongTitle, level: 1 },
+      data: { path: '/home', title: tooLongTitle, componentTree: '[]', level: 1, requiresAuth: true },
       expected: ['Invalid title (must be 1-255 characters)'],
       description: 'title too long',
     },
     {
-      data: { slug: 'valid-slug', title: 'Valid title', level: 6 },
-      expected: ['Invalid level (must be 1-5)'],
+      data: { path: '/home', title: 'Valid title', componentTree: 'not-json', level: 1, requiresAuth: true },
+      expected: ['componentTree must be a JSON string'],
+      description: 'invalid componentTree',
+    },
+    {
+      data: { path: '/home', title: 'Valid title', componentTree: '[]', level: 7, requiresAuth: true },
+      expected: ['level must be between 1 and 6'],
       description: 'invalid level',
     },
     {
-      data: { slug: 'valid-slug', title: 'Valid title', level: 1, layout: {}, isActive: true },
+      data: { path: '/home', title: 'Valid title', componentTree: '[]', level: 1, requiresAuth: true },
       expected: [],
       description: 'valid payload',
     },

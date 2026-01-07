@@ -87,19 +87,19 @@ Result<bool> Client::deleteCredential(const std::string& username) {
     return entities::credential::remove(getStore(), username);
 }
 
-Result<PageView> Client::createPage(const CreatePageInput& input) {
+Result<PageConfig> Client::createPage(const CreatePageInput& input) {
     return entities::page::create(getStore(), input);
 }
 
-Result<PageView> Client::getPage(const std::string& id) {
+Result<PageConfig> Client::getPage(const std::string& id) {
     return entities::page::get(getStore(), id);
 }
 
-Result<PageView> Client::getPageBySlug(const std::string& slug) {
-    return entities::page::getBySlug(getStore(), slug);
+Result<PageConfig> Client::getPageByPath(const std::string& path) {
+    return entities::page::getByPath(getStore(), path);
 }
 
-Result<PageView> Client::updatePage(const std::string& id, const UpdatePageInput& input) {
+Result<PageConfig> Client::updatePage(const std::string& id, const UpdatePageInput& input) {
     return entities::page::update(getStore(), id, input);
 }
 
@@ -107,23 +107,23 @@ Result<bool> Client::deletePage(const std::string& id) {
     return entities::page::remove(getStore(), id);
 }
 
-Result<std::vector<PageView>> Client::listPages(const ListOptions& options) {
+Result<std::vector<PageConfig>> Client::listPages(const ListOptions& options) {
     return entities::page::list(getStore(), options);
 }
 
-Result<std::vector<PageView>> Client::searchPages(const std::string& query, int limit) {
+Result<std::vector<PageConfig>> Client::searchPages(const std::string& query, int limit) {
     return entities::page::search(getStore(), query, limit);
 }
 
-Result<ComponentHierarchy> Client::createComponent(const CreateComponentHierarchyInput& input) {
+Result<ComponentNode> Client::createComponent(const CreateComponentNodeInput& input) {
     return entities::component::create(getStore(), input);
 }
 
-Result<ComponentHierarchy> Client::getComponent(const std::string& id) {
+Result<ComponentNode> Client::getComponent(const std::string& id) {
     return entities::component::get(getStore(), id);
 }
 
-Result<ComponentHierarchy> Client::updateComponent(const std::string& id, const UpdateComponentHierarchyInput& input) {
+Result<ComponentNode> Client::updateComponent(const std::string& id, const UpdateComponentNodeInput& input) {
     return entities::component::update(getStore(), id, input);
 }
 
@@ -131,11 +131,11 @@ Result<bool> Client::deleteComponent(const std::string& id) {
     return entities::component::remove(getStore(), id);
 }
 
-Result<std::vector<ComponentHierarchy>> Client::listComponents(const ListOptions& options) {
+Result<std::vector<ComponentNode>> Client::listComponents(const ListOptions& options) {
     return entities::component::list(getStore(), options);
 }
 
-Result<std::vector<ComponentHierarchy>> Client::getComponentTree(const std::string& page_id) {
+Result<std::vector<ComponentNode>> Client::getComponentTree(const std::string& page_id) {
     return entities::component::getTree(getStore(), page_id);
 }
 
@@ -143,17 +143,17 @@ Result<bool> Client::reorderComponents(const std::vector<ComponentOrderUpdate>& 
     return entities::component::reorder(getStore(), updates);
 }
 
-Result<ComponentHierarchy> Client::moveComponent(const MoveComponentInput& input) {
+Result<ComponentNode> Client::moveComponent(const MoveComponentInput& input) {
     return entities::component::move(getStore(), input);
 }
 
-Result<std::vector<ComponentHierarchy>> Client::searchComponents(const std::string& query,
+Result<std::vector<ComponentNode>> Client::searchComponents(const std::string& query,
                                                                  const std::optional<std::string>& page_id,
                                                                  int limit) {
     return entities::component::search(getStore(), query, page_id, limit);
 }
 
-Result<std::vector<ComponentHierarchy>> Client::getComponentChildren(const std::string& parent_id,
+Result<std::vector<ComponentNode>> Client::getComponentChildren(const std::string& parent_id,
                                                                      const std::optional<std::string>& component_type,
                                                                      int limit) {
     return entities::component::getChildren(getStore(), parent_id, component_type, limit);

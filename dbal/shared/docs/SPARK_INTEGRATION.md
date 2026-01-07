@@ -362,11 +362,11 @@ rules:
     role: [admin, god, supergod]
     operations: [create, read, update, delete]
     
-  - entity: PageView
+  - entity: PageConfig
     role: [god, supergod]
     operations: [create, update, delete]
     
-  - entity: PageView
+  - entity: PageConfig
     role: [user, admin]
     operations: [read]
     row_level_filter: "level <= $user.level"

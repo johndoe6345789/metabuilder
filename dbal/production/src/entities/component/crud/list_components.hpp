@@ -10,8 +10,8 @@ namespace dbal {
 namespace entities {
 namespace component {
 
-inline Result<std::vector<ComponentHierarchy>> list(InMemoryStore& store, const ListOptions& options) {
-    std::vector<ComponentHierarchy> components;
+inline Result<std::vector<ComponentNode>> list(InMemoryStore& store, const ListOptions& options) {
+    std::vector<ComponentNode> components;
     std::string page_filter;
 
     auto filter_it = options.filter.find("pageId");
@@ -30,16 +30,16 @@ inline Result<std::vector<ComponentHierarchy>> list(InMemoryStore& store, const 
                 continue;
             }
         }
-        if (options.filter.find("component_type") != options.filter.end()) {
-            const std::string& type_filter = options.filter.at("component_type");
-            if (component.component_type != type_filter) {
+        if (options.filter.find("type") != options.filter.end()) {
+            const std::string& type_filter = options.filter.at("type");
+            if (component.type != type_filter) {
                 continue;
             }
         }
         components.push_back(component);
     }
 
-    std::sort(components.begin(), components.end(), [](const ComponentHierarchy& a, const ComponentHierarchy& b) {
+    std::sort(components.begin(), components.end(), [](const ComponentNode& a, const ComponentNode& b) {
         if (a.page_id != b.page_id) {
             return a.page_id < b.page_id;
         }
@@ -62,16 +62,16 @@ inline Result<std::vector<ComponentHierarchy>> list(InMemoryStore& store, const 
     }
 
     if (limit == 0 || components.empty()) {
-        return Result<std::vector<ComponentHierarchy>>(std::vector<ComponentHierarchy>());
+        return Result<std::vector<ComponentNode>>(std::vector<ComponentNode>());
     }
 
     int start = (page - 1) * limit;
     if (start >= static_cast<int>(components.size())) {
-        return Result<std::vector<ComponentHierarchy>>(std::vector<ComponentHierarchy>());
+        return Result<std::vector<ComponentNode>>(std::vector<ComponentNode>());
     }
 
     int end = std::min(start + limit, static_cast<int>(components.size()));
-    return Result<std::vector<ComponentHierarchy>>(std::vector<ComponentHierarchy>(components.begin() + start,
+    return Result<std::vector<ComponentNode>>(std::vector<ComponentNode>(components.begin() + start,
                                                                                        components.begin() + end));
 }
 

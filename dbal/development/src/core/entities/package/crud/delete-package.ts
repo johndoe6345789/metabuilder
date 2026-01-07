@@ -15,13 +15,12 @@ export const deletePackage = async (store: InMemoryStore, id: string): Promise<R
     return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] ?? 'Invalid ID' } }
   }
 
-  const pkg = store.packages.get(id)
+  const pkg = store.installedPackages.get(id)
   if (!pkg) {
     return { success: false, error: { code: 'NOT_FOUND', message: `Package not found: ${id}` } }
   }
 
-  store.packages.delete(id)
-  store.packageKeys.delete(`${pkg.name}@${pkg.version}`)
+  store.installedPackages.delete(id)
 
   return { success: true, data: true }
 }

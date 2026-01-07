@@ -31,17 +31,31 @@ export class DBALClient {
   }
 
   /**
-   * Page entity operations
+   * PageConfig entity operations
    */
-  get pages() {
-    return this.operations.pages
+  get pageConfigs() {
+    return this.operations.pageConfigs
   }
 
   /**
-   * Component hierarchy entity operations
+   * Deprecated: use pageConfigs
+   */
+  get pages() {
+    return this.operations.pageConfigs
+  }
+
+  /**
+   * ComponentNode entity operations
+   */
+  get componentNodes() {
+    return this.operations.componentNodes
+  }
+
+  /**
+   * Deprecated: use componentNodes
    */
   get components() {
-    return this.operations.components
+    return this.operations.componentNodes
   }
 
   /**
@@ -59,10 +73,24 @@ export class DBALClient {
   }
 
   /**
-   * Package entity operations
+   * InstalledPackage entity operations
+   */
+  get installedPackages() {
+    return this.operations.installedPackages
+  }
+
+  /**
+   * Deprecated: use installedPackages
    */
   get packages() {
-    return this.operations.packages
+    return this.operations.installedPackages
+  }
+
+  /**
+   * PackageData entity operations
+   */
+  get packageData() {
+    return this.operations.packageData
   }
 
   /**

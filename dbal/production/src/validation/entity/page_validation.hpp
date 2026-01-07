@@ -1,6 +1,6 @@
 /**
  * @file page_validation.hpp
- * @brief Validation functions for PageView entity
+ * @brief Validation functions for PageConfig entity
  */
 #ifndef DBAL_PAGE_VALIDATION_HPP
 #define DBAL_PAGE_VALIDATION_HPP
@@ -12,12 +12,11 @@ namespace dbal {
 namespace validation {
 
 /**
- * Validate slug format (lowercase alphanumeric with hyphens)
+ * Validate path format (non-empty, max length 255)
  */
-inline bool isValidSlug(const std::string& slug) {
-    if (slug.empty() || slug.length() > 100) return false;
-    static const std::regex slug_pattern(R"([a-z0-9-]+)");
-    return std::regex_match(slug, slug_pattern);
+inline bool isValidPath(const std::string& path) {
+    if (path.empty() || path.length() > 255) return false;
+    return true;
 }
 
 } // namespace validation

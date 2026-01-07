@@ -1,0 +1,67 @@
+entity: ComponentNode
+version: "1.0"
+description: "Component tree structure for pages"
+
+fields:
+  id:
+    type: uuid
+    primary: true
+    generated: true
+    
+  page_id:
+    type: uuid
+    required: true
+    foreign_key:
+      entity: PageConfig
+      field: id
+      on_delete: cascade
+      
+  parent_id:
+    type: uuid
+    optional: true
+    foreign_key:
+      entity: ComponentNode
+      field: id
+      on_delete: cascade
+    description: "Parent component (null for root)"
+    
+  type:
+    type: string
+    required: true
+    max_length: 100
+    description: "Component type identifier"
+    
+  child_ids:
+    type: json
+    required: true
+    description: "Child component IDs"
+
+  order:
+    type: integer
+    required: true
+    default: 0
+    description: "Display order among siblings"
+    
+  created_at:
+    type: datetime
+    generated: true
+    immutable: true
+    
+  updated_at:
+    type: datetime
+    auto_update: true
+
+indexes:
+  - fields: [page_id]
+  - fields: [parent_id]
+  - fields: [page_id, order]
+
+acl:
+  create:
+    role: [god, supergod]
+  read:
+    role: [admin, god, supergod]
+  update:
+    role: [god, supergod]
+  delete:
+    role: [god, supergod]

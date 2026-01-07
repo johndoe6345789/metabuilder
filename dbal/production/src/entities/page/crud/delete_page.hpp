@@ -26,7 +26,7 @@ inline Result<bool> remove(InMemoryStore& store, const std::string& id) {
         return Error::notFound("Page not found: " + id);
     }
     
-    store.page_slugs.erase(it->second.slug);
+    store.page_paths.erase(it->second.path);
     store.pages.erase(it);
     
     return Result<bool>(true);

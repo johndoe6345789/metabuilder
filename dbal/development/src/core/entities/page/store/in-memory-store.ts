@@ -4,7 +4,7 @@
  */
 
 export interface InMemoryStore {
-  pages: Map<string, any>;
-  pageSlugs: Map<string, string>;
+  pageConfigs: Map<string, any>;
+  pagePaths: Map<string, string>;
   generateId(entityType: string): string;
 }

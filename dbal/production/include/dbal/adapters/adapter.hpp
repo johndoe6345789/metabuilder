@@ -19,11 +19,11 @@ public:
     virtual Result<bool> deleteUser(const std::string& id) = 0;
     virtual Result<std::vector<User>> listUsers(const ListOptions& options) = 0;
     
-    virtual Result<PageView> createPage(const CreatePageInput& input) = 0;
-    virtual Result<PageView> getPage(const std::string& id) = 0;
-    virtual Result<PageView> updatePage(const std::string& id, const UpdatePageInput& input) = 0;
+    virtual Result<PageConfig> createPage(const CreatePageInput& input) = 0;
+    virtual Result<PageConfig> getPage(const std::string& id) = 0;
+    virtual Result<PageConfig> updatePage(const std::string& id, const UpdatePageInput& input) = 0;
     virtual Result<bool> deletePage(const std::string& id) = 0;
-    virtual Result<std::vector<PageView>> listPages(const ListOptions& options) = 0;
+    virtual Result<std::vector<PageConfig>> listPages(const ListOptions& options) = 0;
 
     virtual Result<Workflow> createWorkflow(const CreateWorkflowInput& input) = 0;
     virtual Result<Workflow> getWorkflow(const std::string& id) = 0;
@@ -43,11 +43,11 @@ public:
     virtual Result<bool> deleteLuaScript(const std::string& id) = 0;
     virtual Result<std::vector<LuaScript>> listLuaScripts(const ListOptions& options) = 0;
 
-    virtual Result<Package> createPackage(const CreatePackageInput& input) = 0;
-    virtual Result<Package> getPackage(const std::string& id) = 0;
-    virtual Result<Package> updatePackage(const std::string& id, const UpdatePackageInput& input) = 0;
+    virtual Result<InstalledPackage> createPackage(const CreatePackageInput& input) = 0;
+    virtual Result<InstalledPackage> getPackage(const std::string& id) = 0;
+    virtual Result<InstalledPackage> updatePackage(const std::string& id, const UpdatePackageInput& input) = 0;
     virtual Result<bool> deletePackage(const std::string& id) = 0;
-    virtual Result<std::vector<Package>> listPackages(const ListOptions& options) = 0;
+    virtual Result<std::vector<InstalledPackage>> listPackages(const ListOptions& options) = 0;
     
     virtual void close() = 0;
 };

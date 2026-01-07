@@ -20,6 +20,10 @@ export const updateUser = async (
     return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] ?? 'Invalid ID' } }
   }
 
+  if (input.tenantId !== undefined) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: 'tenantId is immutable' } }
+  }
+
   const user = store.users.get(id)
   if (!user) {
     return { success: false, error: { code: 'NOT_FOUND', message: `User not found: ${id}` } }
@@ -52,7 +56,25 @@ export const updateUser = async (
     user.role = input.role
   }
 
-  user.updatedAt = new Date()
+  if (input.profilePicture !== undefined) {
+    user.profilePicture = input.profilePicture ?? null
+  }
+
+  if (input.bio !== undefined) {
+    user.bio = input.bio ?? null
+  }
+
+  if (input.isInstanceOwner !== undefined) {
+    user.isInstanceOwner = input.isInstanceOwner
+  }
+
+  if (input.passwordChangeTimestamp !== undefined) {
+    user.passwordChangeTimestamp = input.passwordChangeTimestamp ?? null
+  }
+
+  if (input.firstLogin !== undefined) {
+    user.firstLogin = input.firstLogin
+  }
 
   return { success: true, data: user }
 }

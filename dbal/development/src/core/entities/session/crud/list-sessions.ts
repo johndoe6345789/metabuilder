@@ -19,22 +19,26 @@ export const listSessions = async (
 
   let sessions = Array.from(store.sessions.values())
 
-  if (filter.userId !== undefined) {
-    sessions = sessions.filter((session) => session.userId === filter.userId)
+  if (filter && Object.keys(filter).length > 0) {
+    sessions = sessions.filter((session) =>
+      Object.entries(filter).every(([key, value]) => (session as Record<string, unknown>)[key] === value)
+    )
   }
 
-  if (filter.token !== undefined) {
-    sessions = sessions.filter((session) => session.token === filter.token)
-  }
-
-  if (sort.createdAt) {
-    sessions.sort((a, b) =>
-      sort.createdAt === 'asc' ? a.createdAt.getTime() - b.createdAt.getTime() : b.createdAt.getTime() - a.createdAt.getTime()
-    )
-  } else if (sort.expiresAt) {
-    sessions.sort((a, b) =>
-      sort.expiresAt === 'asc' ? a.expiresAt.getTime() - b.expiresAt.getTime() : b.expiresAt.getTime() - a.expiresAt.getTime()
-    )
+  const sortKey = Object.keys(sort)[0]
+  if (sortKey) {
+    const direction = sort[sortKey]
+    sessions.sort((a, b) => {
+      const left = (a as Record<string, unknown>)[sortKey]
+      const right = (b as Record<string, unknown>)[sortKey]
+      if (typeof left === 'bigint' && typeof right === 'bigint') {
+        return direction === 'asc' ? Number(left - right) : Number(right - left)
+      }
+      if (typeof left === 'string' && typeof right === 'string') {
+        return direction === 'asc' ? left.localeCompare(right) : right.localeCompare(left)
+      }
+      return 0
+    })
   }
 
   const start = (page - 1) * limit

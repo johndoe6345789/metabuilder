@@ -10,7 +10,7 @@ export interface InstalledPackage {
 export interface CreatePackageInput {
   packageId: string
   tenantId?: string | null
-  installedAt: bigint
+  installedAt?: bigint
   version: string
   enabled: boolean
   config?: string | null

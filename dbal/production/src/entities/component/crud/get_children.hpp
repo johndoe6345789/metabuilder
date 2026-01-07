@@ -11,7 +11,7 @@ namespace dbal {
 namespace entities {
 namespace component {
 
-inline Result<std::vector<ComponentHierarchy>> getChildren(InMemoryStore& store,
+inline Result<std::vector<ComponentNode>> getChildren(InMemoryStore& store,
                                                           const std::string& parent_id,
                                                           const std::optional<std::string>& type_filter = std::nullopt,
                                                           int limit = 0) {
@@ -26,7 +26,7 @@ inline Result<std::vector<ComponentHierarchy>> getChildren(InMemoryStore& store,
 
     auto children_it = store.components_by_parent.find(parent_id);
     if (children_it == store.components_by_parent.end()) {
-        return Result<std::vector<ComponentHierarchy>>(std::vector<ComponentHierarchy>());
+        return Result<std::vector<ComponentNode>>(std::vector<ComponentNode>());
     }
 
     std::vector<std::string> child_ids = children_it->second;
@@ -34,11 +34,11 @@ inline Result<std::vector<ComponentHierarchy>> getChildren(InMemoryStore& store,
         return store.components.at(a).order < store.components.at(b).order;
     });
 
-    std::vector<ComponentHierarchy> children;
+    std::vector<ComponentNode> children;
     children.reserve(child_ids.size());
     for (const auto& child_id : child_ids) {
         const auto& component = store.components.at(child_id);
-        if (type_filter.has_value() && component.component_type != type_filter.value()) {
+        if (type_filter.has_value() && component.type != type_filter.value()) {
             continue;
         }
         children.push_back(component);
@@ -47,7 +47,7 @@ inline Result<std::vector<ComponentHierarchy>> getChildren(InMemoryStore& store,
         }
     }
 
-    return Result<std::vector<ComponentHierarchy>>(children);
+    return Result<std::vector<ComponentNode>>(children);
 }
 
 } // namespace component

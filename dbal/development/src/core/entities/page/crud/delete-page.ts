@@ -15,13 +15,13 @@ export const deletePage = async (store: InMemoryStore, id: string): Promise<Resu
     return { success: false, error: { code: 'VALIDATION_ERROR', message: idErrors[0] ?? 'Invalid ID' } }
   }
 
-  const page = store.pages.get(id)
+  const page = store.pageConfigs.get(id)
   if (!page) {
     return { success: false, error: { code: 'NOT_FOUND', message: `Page not found: ${id}` } }
   }
 
-  store.pages.delete(id)
-  store.pageSlugs.delete(page.slug)
+  store.pageConfigs.delete(id)
+  store.pagePaths.delete(`${page.tenantId ?? 'global'}:${page.path}`)
 
   return { success: true, data: true }
 }

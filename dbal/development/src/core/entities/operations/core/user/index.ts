@@ -1,5 +1,5 @@
 import type { DBALAdapter } from '../../../../../adapters/adapter'
-import type { ListOptions, ListResult, User } from '../../../../../core/foundation/types'
+import type { CreateUserInput, ListOptions, ListResult, UpdateUserInput, User } from '../../../../../core/foundation/types'
 import { DBALError } from '../../../../../core/foundation/errors'
 import { createManyUsers, deleteManyUsers, updateManyUsers } from './batch'
 import { createUser } from './create'
@@ -8,17 +8,15 @@ import { listUsers, readUser } from './reads'
 import { updateUser } from './update'
 
 export interface UserOperations {
-  create: (data: UserCreatePayload) => Promise<User>
+  create: (data: CreateUserInput) => Promise<User>
   read: (id: string) => Promise<User | null>
-  update: (id: string, data: Partial<User>) => Promise<User>
+  update: (id: string, data: UpdateUserInput) => Promise<User>
   delete: (id: string) => Promise<boolean>
   list: (options?: ListOptions) => Promise<ListResult<User>>
-  createMany: (data: UserCreatePayload[]) => Promise<number>
-  updateMany: (filter: Record<string, unknown>, data: Partial<User>) => Promise<number>
+  createMany: (data: CreateUserInput[]) => Promise<number>
+  updateMany: (filter: Record<string, unknown>, data: UpdateUserInput) => Promise<number>
   deleteMany: (filter: Record<string, unknown>) => Promise<number>
 }
-
-type UserCreatePayload = Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'tenantId'> & { tenantId?: string }
 
 const resolveTenantId = (configuredTenantId?: string, data?: Partial<User>): string | null => {
   if (configuredTenantId && configuredTenantId.length > 0) return configuredTenantId

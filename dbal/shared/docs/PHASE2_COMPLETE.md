@@ -221,13 +221,13 @@ try {
   })
 
   // Update page
-  await client.pages.update(pageId, {
+  await client.pageConfigs.update(pageId, {
     title: 'New Title',
-    isActive: true
+    isPublished: true
   })
 
   // Get component tree
-  const tree = await client.components.getTree(pageId)
+  const tree = await client.componentNodes.getTree(pageId)
 
 } catch (error) {
   if (error instanceof DBALError) {
@@ -248,11 +248,11 @@ try {
 |--------|:----:|:-----:|:---:|:--------:|
 | User (own) | RU | RU | CRUD | CRUD |
 | User (others) | — | CRUD | CRUD | CRUD |
-| PageView | R | R | CRUD | CRUD |
-| ComponentHierarchy | — | — | CRUD | CRUD |
+| PageConfig | R | R | CRUD | CRUD |
+| ComponentNode | — | — | CRUD | CRUD |
 | Workflow | — | — | CRUD | CRUD |
 | LuaScript | — | — | CRUD | CRUD |
-| Package | — | R | CRUD | CRUD |
+| InstalledPackage | — | R | CRUD | CRUD |
 
 *R=Read, U=Update, C=Create, D=Delete*
 

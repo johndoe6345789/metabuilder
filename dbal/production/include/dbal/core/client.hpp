@@ -50,26 +50,26 @@ public:
     Result<bool> getCredentialFirstLoginFlag(const std::string& username);
     Result<bool> deleteCredential(const std::string& username);
 
-    Result<PageView> createPage(const CreatePageInput& input);
-    Result<PageView> getPage(const std::string& id);
-    Result<PageView> getPageBySlug(const std::string& slug);
-    Result<PageView> updatePage(const std::string& id, const UpdatePageInput& input);
+    Result<PageConfig> createPage(const CreatePageInput& input);
+    Result<PageConfig> getPage(const std::string& id);
+    Result<PageConfig> getPageByPath(const std::string& path);
+    Result<PageConfig> updatePage(const std::string& id, const UpdatePageInput& input);
     Result<bool> deletePage(const std::string& id);
-    Result<std::vector<PageView>> listPages(const ListOptions& options);
-    Result<std::vector<PageView>> searchPages(const std::string& query, int limit = 20);
+    Result<std::vector<PageConfig>> listPages(const ListOptions& options);
+    Result<std::vector<PageConfig>> searchPages(const std::string& query, int limit = 20);
 
-    Result<ComponentHierarchy> createComponent(const CreateComponentHierarchyInput& input);
-    Result<ComponentHierarchy> getComponent(const std::string& id);
-    Result<ComponentHierarchy> updateComponent(const std::string& id, const UpdateComponentHierarchyInput& input);
+    Result<ComponentNode> createComponent(const CreateComponentNodeInput& input);
+    Result<ComponentNode> getComponent(const std::string& id);
+    Result<ComponentNode> updateComponent(const std::string& id, const UpdateComponentNodeInput& input);
     Result<bool> deleteComponent(const std::string& id);
-    Result<std::vector<ComponentHierarchy>> listComponents(const ListOptions& options);
-    Result<std::vector<ComponentHierarchy>> getComponentTree(const std::string& page_id);
+    Result<std::vector<ComponentNode>> listComponents(const ListOptions& options);
+    Result<std::vector<ComponentNode>> getComponentTree(const std::string& page_id);
     Result<bool> reorderComponents(const std::vector<ComponentOrderUpdate>& updates);
-    Result<ComponentHierarchy> moveComponent(const MoveComponentInput& input);
-    Result<std::vector<ComponentHierarchy>> searchComponents(const std::string& query,
+    Result<ComponentNode> moveComponent(const MoveComponentInput& input);
+    Result<std::vector<ComponentNode>> searchComponents(const std::string& query,
                                                              const std::optional<std::string>& page_id = std::nullopt,
                                                              int limit = 20);
-    Result<std::vector<ComponentHierarchy>> getComponentChildren(const std::string& parent_id,
+    Result<std::vector<ComponentNode>> getComponentChildren(const std::string& parent_id,
                                                                  const std::optional<std::string>& component_type = std::nullopt,
                                                                  int limit = 0);
 
@@ -94,11 +94,11 @@ public:
                                                     const std::optional<std::string>& created_by = std::nullopt,
                                                     int limit = 20);
 
-    Result<Package> createPackage(const CreatePackageInput& input);
-    Result<Package> getPackage(const std::string& id);
-    Result<Package> updatePackage(const std::string& id, const UpdatePackageInput& input);
+    Result<InstalledPackage> createPackage(const CreatePackageInput& input);
+    Result<InstalledPackage> getPackage(const std::string& id);
+    Result<InstalledPackage> updatePackage(const std::string& id, const UpdatePackageInput& input);
     Result<bool> deletePackage(const std::string& id);
-    Result<std::vector<Package>> listPackages(const ListOptions& options);
+    Result<std::vector<InstalledPackage>> listPackages(const ListOptions& options);
     Result<int> batchCreatePackages(const std::vector<CreatePackageInput>& inputs);
     Result<int> batchUpdatePackages(const std::vector<UpdatePackageBatchItem>& updates);
     Result<int> batchDeletePackages(const std::vector<std::string>& ids);

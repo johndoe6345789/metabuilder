@@ -45,34 +45,35 @@
   description: "Test creating pages and component hierarchies"
   operations:
     - action: create
-      entity: PageView
+      entity: PageConfig
       input:
-        slug: "/test-page"
+        path: "/test-page"
         title: "Test Page"
         level: 1
-        layout: {}
-        isActive: true
+        componentTree: "{}"
+        requiresAuth: false
+        isPublished: true
       expected:
         status: success
         
     - action: create
-      entity: ComponentHierarchy
+      entity: ComponentNode
       input:
         pageId: "$prev.id"
-        componentType: "Container"
+        type: "Container"
+        childIds: "[]"
         order: 0
-        props: {}
       expected:
         status: success
         
     - action: getTree
-      entity: ComponentHierarchy
+      entity: ComponentNode
       input:
         pageId: "$steps[0].id"
       expected:
         status: success
         output:
-          - componentType: "Container"
+          - type: "Container"
 
 - name: "Error handling"
   description: "Test proper error responses"

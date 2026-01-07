@@ -34,7 +34,7 @@ inline bool containsInsensitive(const std::string& text, const std::string& quer
 
 } // namespace
 
-inline Result<std::vector<ComponentHierarchy>> search(InMemoryStore& store,
+inline Result<std::vector<ComponentNode>> search(InMemoryStore& store,
                                                      const std::string& query,
                                                      const std::optional<std::string>& page_id = std::nullopt,
                                                      int limit = 20) {
@@ -42,29 +42,24 @@ inline Result<std::vector<ComponentHierarchy>> search(InMemoryStore& store,
         return Error::validationError("search query is required");
     }
 
-    std::vector<ComponentHierarchy> matches;
+    std::vector<ComponentNode> matches;
     for (const auto& [id, component] : store.components) {
         (void)id;
         if (page_id.has_value() && component.page_id != page_id.value()) {
             continue;
         }
-        bool matchesQuery = containsInsensitive(component.component_type, query);
+        bool matchesQuery = containsInsensitive(component.type, query);
         if (!matchesQuery) {
-            for (const auto& [key, value] : component.props) {
-                if (containsInsensitive(key, query) || containsInsensitive(value, query)) {
-                    matchesQuery = true;
-                    break;
-                }
-            }
+            matchesQuery = containsInsensitive(component.child_ids, query);
         }
         if (matchesQuery) {
             matches.push_back(component);
         }
     }
 
-    std::sort(matches.begin(), matches.end(), [](const ComponentHierarchy& a, const ComponentHierarchy& b) {
-        if (a.component_type != b.component_type) {
-            return a.component_type < b.component_type;
+    std::sort(matches.begin(), matches.end(), [](const ComponentNode& a, const ComponentNode& b) {
+        if (a.type != b.type) {
+            return a.type < b.type;
         }
         return a.order < b.order;
     });
@@ -73,7 +68,7 @@ inline Result<std::vector<ComponentHierarchy>> search(InMemoryStore& store,
         matches.resize(limit);
     }
 
-    return Result<std::vector<ComponentHierarchy>>(matches);
+    return Result<std::vector<ComponentNode>>(matches);
 }
 
 } // namespace component

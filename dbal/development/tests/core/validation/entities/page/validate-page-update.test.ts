@@ -5,20 +5,21 @@ describe('validatePageUpdate', () => {
   it.each([
     { data: {}, expected: [], description: 'no updates' },
     {
-      data: { slug: 'Bad_Slug' },
-      expected: ['Invalid slug format (lowercase alphanumeric, hyphen, slash, 1-255 chars)'],
-      description: 'invalid slug',
+      data: { path: '' },
+      expected: ['path must be 1-255 characters'],
+      description: 'invalid path',
     },
     {
       data: { title: '' },
       expected: ['Invalid title (must be 1-255 characters)'],
       description: 'invalid title',
     },
-    { data: { level: 6 }, expected: ['Invalid level (must be 1-5)'], description: 'invalid level' },
-    { data: { layout: [] }, expected: ['Layout must be an object'], description: 'invalid layout' },
-    { data: { isActive: 'yes' as unknown as boolean }, expected: ['isActive must be a boolean'], description: 'invalid active' },
+    { data: { componentTree: 'not-json' }, expected: ['componentTree must be a JSON string'], description: 'invalid componentTree' },
+    { data: { level: 7 }, expected: ['level must be between 1 and 6'], description: 'invalid level' },
+    { data: { requiresAuth: 'yes' as unknown as boolean }, expected: ['requiresAuth must be a boolean'], description: 'invalid requiresAuth' },
+    { data: { isPublished: 'yes' as unknown as boolean }, expected: ['isPublished must be a boolean'], description: 'invalid isPublished' },
     {
-      data: { slug: 'valid-slug', title: 'Valid title', level: 2 },
+      data: { path: '/home', title: 'Valid title', componentTree: '[]', level: 2, requiresAuth: true },
       expected: [],
       description: 'valid updates',
     },

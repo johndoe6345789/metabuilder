@@ -6,9 +6,10 @@ describe('validateLuaScriptCreate', () => {
     name: 'daily-cleanup',
     code: 'return true',
     isSandboxed: true,
-    allowedGlobals: ['math'],
+    parameters: '[]',
+    allowedGlobals: '["math"]',
     timeoutMs: 5000,
-    createdBy: '550e8400-e29b-41d4-a716-446655440000',
+    createdBy: 'user-1',
   }
 
   it.each([
@@ -18,11 +19,13 @@ describe('validateLuaScriptCreate', () => {
   })
 
   it.each([
-    { data: { ...base, allowedGlobals: 'math' as unknown as string[] }, message: 'allowedGlobals must be an array of strings' },
-    { data: { ...base, allowedGlobals: [''] }, message: 'allowedGlobals must contain non-empty strings' },
-    { data: { ...base, allowedGlobals: ['os'] }, message: 'allowedGlobals contains forbidden globals: os' },
+    { data: { ...base, parameters: 'not-json' }, message: 'parameters must be a JSON string' },
+    { data: { ...base, allowedGlobals: 'math' }, message: 'allowedGlobals must be a JSON string' },
+    { data: { ...base, allowedGlobals: '{"foo":"bar"}' }, message: 'allowedGlobals must be a JSON array' },
+    { data: { ...base, allowedGlobals: '[""]' }, message: 'allowedGlobals must contain non-empty strings' },
+    { data: { ...base, allowedGlobals: '["os"]' }, message: 'allowedGlobals contains forbidden globals: os' },
     { data: { ...base, timeoutMs: 50 }, message: 'timeoutMs must be an integer between 100 and 30000' },
-    { data: { ...base, createdBy: 'invalid' }, message: 'createdBy must be a valid UUID' },
+    { data: { ...base, createdBy: '' }, message: 'createdBy must be a non-empty string' },
   ])('rejects invalid case', ({ data, message }) => {
     expect(validateLuaScriptCreate(data)).toContain(message)
   })

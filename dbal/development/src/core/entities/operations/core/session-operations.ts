@@ -3,18 +3,19 @@
  * @description Session entity CRUD operations for DBAL client
  */
 
+import { randomUUID } from 'crypto'
 import type { DBALAdapter } from '../../../../adapters/adapter'
 import { DBALError } from '../../../foundation/errors'
-import type { ListOptions, ListResult, Session } from '../../../foundation/types'
+import type { CreateSessionInput, ListOptions, ListResult, Session, UpdateSessionInput } from '../../../foundation/types'
 import { validateId, validateSessionCreate, validateSessionUpdate } from '../../../foundation/validation'
 
 /**
  * Create session operations object for the DBAL client
  */
 export interface SessionOperations {
-  create: (data: Omit<Session, 'id' | 'createdAt' | 'lastActivity'>) => Promise<Session>
+  create: (data: CreateSessionInput) => Promise<Session>
   read: (id: string) => Promise<Session | null>
-  update: (id: string, data: Partial<Session>) => Promise<Session>
+  update: (id: string, data: UpdateSessionInput) => Promise<Session>
   delete: (id: string) => Promise<boolean>
   list: (options?: ListOptions) => Promise<ListResult<Session>>
 }
@@ -26,14 +27,14 @@ const assertValidId = (id: string) => {
   }
 }
 
-const assertValidCreate = (data: Omit<Session, 'id' | 'createdAt' | 'lastActivity'>) => {
+const assertValidCreate = (data: CreateSessionInput | Session) => {
   const errors = validateSessionCreate(data)
   if (errors.length > 0) {
     throw DBALError.validationError('Invalid session data', errors.map(error => ({ field: 'session', error })))
   }
 }
 
-const assertValidUpdate = (data: Partial<Session>) => {
+const assertValidUpdate = (data: UpdateSessionInput) => {
   const errors = validateSessionUpdate(data)
   if (errors.length > 0) {
     throw DBALError.validationError('Invalid session update data', errors.map(error => ({ field: 'session', error })))
@@ -61,9 +62,20 @@ export const createSessionOperations = (adapter: DBALAdapter, tenantId?: string)
     if (!resolvedTenantId) {
       throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
     }
-    assertValidCreate(data)
-    await assertUserInTenant(adapter, data.userId, resolvedTenantId)
-    return adapter.create('Session', data) as Promise<Session>
+    const now = BigInt(Date.now())
+    const payload: Session = {
+      id: data.id ?? randomUUID(),
+      userId: data.userId,
+      token: data.token,
+      expiresAt: data.expiresAt,
+      createdAt: data.createdAt ?? now,
+      lastActivity: data.lastActivity ?? now,
+      ipAddress: data.ipAddress ?? null,
+      userAgent: data.userAgent ?? null,
+    }
+    assertValidCreate(payload)
+    await assertUserInTenant(adapter, payload.userId, resolvedTenantId)
+    return adapter.create('Session', payload) as Promise<Session>
   },
 
   /**
@@ -86,7 +98,7 @@ export const createSessionOperations = (adapter: DBALAdapter, tenantId?: string)
   /**
    * Update an existing session
    */
-  update: async (id: string, data: Partial<Session>): Promise<Session> => {
+  update: async (id: string, data: UpdateSessionInput): Promise<Session> => {
     const resolvedTenantId = resolveTenantId(tenantId)
     if (!resolvedTenantId) {
       throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])

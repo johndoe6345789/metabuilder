@@ -4,8 +4,7 @@
  */
 
 export interface InMemoryStore {
-  packages: Map<string, any>;
-  packageIds: Map<string, string>;
-  packageKeys: Map<string, string>;
+  installedPackages: Map<string, any>;
+  packageData: Map<string, any>;
   generateId(entityType: string): string;
 }

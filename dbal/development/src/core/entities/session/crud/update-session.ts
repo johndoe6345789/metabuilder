@@ -54,5 +54,13 @@ export const updateSession = async (
     session.lastActivity = input.lastActivity
   }
 
+  if (input.ipAddress !== undefined) {
+    session.ipAddress = input.ipAddress ?? null
+  }
+
+  if (input.userAgent !== undefined) {
+    session.userAgent = input.userAgent ?? null
+  }
+
   return { success: true, data: session }
 }

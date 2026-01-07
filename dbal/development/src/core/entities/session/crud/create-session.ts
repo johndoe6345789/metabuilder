@@ -13,11 +13,19 @@ export const createSession = async (
   store: InMemoryStore,
   input: CreateSessionInput
 ): Promise<Result<Session>> => {
-  const validationErrors = validateSessionCreate({
+  const createdAt = input.createdAt ?? BigInt(Date.now())
+  const session: Session = {
+    id: input.id ?? store.generateId('session'),
     userId: input.userId,
     token: input.token,
-    expiresAt: input.expiresAt
-  })
+    expiresAt: input.expiresAt,
+    createdAt,
+    lastActivity: input.lastActivity ?? createdAt,
+    ipAddress: input.ipAddress ?? null,
+    userAgent: input.userAgent ?? null
+  }
+
+  const validationErrors = validateSessionCreate(session)
 
   if (validationErrors.length > 0) {
     return { success: false, error: { code: 'VALIDATION_ERROR', message: validationErrors[0] ?? 'Validation failed' } }
@@ -29,16 +37,6 @@ export const createSession = async (
 
   if (store.sessionTokens.has(input.token)) {
     return { success: false, error: { code: 'CONFLICT', message: 'Session token already exists' } }
-  }
-
-  const now = new Date()
-  const session: Session = {
-    id: store.generateId('session'),
-    userId: input.userId,
-    token: input.token,
-    expiresAt: input.expiresAt,
-    createdAt: now,
-    lastActivity: now
   }
 
   store.sessions.set(session.id, session)

@@ -3,10 +3,10 @@ import { validateComponentHierarchyCreate } from '../../../src/core/validation/v
 
 describe('validateComponentHierarchyCreate', () => {
   const base = {
-    pageId: '550e8400-e29b-41d4-a716-446655440000',
-    componentType: 'Hero',
+    pageId: 'page-1',
+    type: 'Hero',
     order: 0,
-    props: { title: 'Hello' },
+    childIds: '[]',
   }
 
   it.each([
@@ -17,10 +17,10 @@ describe('validateComponentHierarchyCreate', () => {
   })
 
   it.each([
-    { data: { ...base, pageId: 'not-a-uuid' }, message: 'pageId must be a valid UUID' },
-    { data: { ...base, componentType: 'a'.repeat(101) }, message: 'componentType must be 1-100 characters' },
+    { data: { ...base, pageId: ' ' }, message: 'pageId must be a non-empty string' },
+    { data: { ...base, type: 'a'.repeat(101) }, message: 'type must be 1-100 characters' },
+    { data: { ...base, childIds: 'not-json' }, message: 'childIds must be a JSON string' },
     { data: { ...base, order: -1 }, message: 'order must be a non-negative integer' },
-    { data: { ...base, props: [] }, message: 'props must be an object' },
   ])('rejects invalid case', ({ data, message }) => {
     expect(validateComponentHierarchyCreate(data)).toContain(message)
   })

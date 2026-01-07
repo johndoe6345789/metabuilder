@@ -3,20 +3,19 @@
  * @description Workflow entity CRUD operations for DBAL client
  */
 
+import { randomUUID } from 'crypto'
 import type { DBALAdapter } from '../../../../adapters/adapter'
 import { DBALError } from '../../../foundation/errors'
-import type { ListOptions, ListResult, Workflow } from '../../../foundation/types'
+import type { CreateWorkflowInput, ListOptions, ListResult, UpdateWorkflowInput, Workflow } from '../../../foundation/types'
 import { validateId, validateWorkflowCreate, validateWorkflowUpdate } from '../../../foundation/validation'
 
 export interface WorkflowOperations {
-  create: (data: WorkflowCreatePayload) => Promise<Workflow>
+  create: (data: CreateWorkflowInput) => Promise<Workflow>
   read: (id: string) => Promise<Workflow | null>
-  update: (id: string, data: Partial<Workflow>) => Promise<Workflow>
+  update: (id: string, data: UpdateWorkflowInput) => Promise<Workflow>
   delete: (id: string) => Promise<boolean>
   list: (options?: ListOptions) => Promise<ListResult<Workflow>>
 }
-
-type WorkflowCreatePayload = Omit<Workflow, 'id' | 'createdAt' | 'updatedAt' | 'tenantId'> & { tenantId?: string }
 
 const assertValidId = (id: string) => {
   const errors = validateId(id)
@@ -25,14 +24,14 @@ const assertValidId = (id: string) => {
   }
 }
 
-const assertValidCreate = (data: WorkflowCreatePayload) => {
+const assertValidCreate = (data: CreateWorkflowInput | Workflow) => {
   const errors = validateWorkflowCreate(data)
   if (errors.length > 0) {
     throw DBALError.validationError('Invalid workflow data', errors.map(error => ({ field: 'workflow', error })))
   }
 }
 
-const assertValidUpdate = (data: Partial<Workflow>) => {
+const assertValidUpdate = (data: UpdateWorkflowInput) => {
   const errors = validateWorkflowUpdate(data)
   if (errors.length > 0) {
     throw DBALError.validationError('Invalid workflow update data', errors.map(error => ({ field: 'workflow', error })))
@@ -60,14 +59,31 @@ const resolveTenantFilter = (
   return null
 }
 
+const withWorkflowDefaults = (data: CreateWorkflowInput): Workflow => {
+  const now = BigInt(Date.now())
+  return {
+    id: data.id ?? randomUUID(),
+    tenantId: data.tenantId ?? null,
+    name: data.name,
+    description: data.description,
+    nodes: data.nodes,
+    edges: data.edges,
+    enabled: data.enabled,
+    version: data.version ?? 1,
+    createdAt: data.createdAt ?? now,
+    updatedAt: data.updatedAt ?? now,
+    createdBy: data.createdBy ?? null,
+  }
+}
+
 export const createWorkflowOperations = (adapter: DBALAdapter, tenantId?: string): WorkflowOperations => ({
   create: async data => {
     const resolvedTenantId = resolveTenantId(tenantId, data)
     if (!resolvedTenantId) {
       throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
     }
-    assertValidCreate(data)
-    const payload = { ...data, tenantId: resolvedTenantId }
+    const payload = withWorkflowDefaults({ ...data, tenantId: resolvedTenantId })
+    assertValidCreate(payload)
     try {
       return adapter.create('Workflow', payload) as Promise<Workflow>
     } catch (error) {

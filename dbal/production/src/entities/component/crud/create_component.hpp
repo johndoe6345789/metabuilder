@@ -11,12 +11,12 @@ namespace dbal {
 namespace entities {
 namespace component {
 
-inline Result<ComponentHierarchy> create(InMemoryStore& store, const CreateComponentHierarchyInput& input) {
+inline Result<ComponentNode> create(InMemoryStore& store, const CreateComponentNodeInput& input) {
     if (input.page_id.empty()) {
         return Error::validationError("page_id is required");
     }
-    if (!validation::isValidComponentType(input.component_type)) {
-        return Error::validationError("component_type must be 1-100 characters");
+    if (!validation::isValidComponentType(input.type)) {
+        return Error::validationError("type must be 1-100 characters");
     }
     if (!validation::isValidComponentOrder(input.order)) {
         return Error::validationError("order must be a non-negative integer");
@@ -38,13 +38,13 @@ inline Result<ComponentHierarchy> create(InMemoryStore& store, const CreateCompo
     }
 
     const auto now = std::chrono::system_clock::now();
-    ComponentHierarchy component;
+    ComponentNode component;
     component.id = store.generateId("component", ++store.component_counter);
     component.page_id = input.page_id;
     component.parent_id = input.parent_id;
-    component.component_type = input.component_type;
+    component.type = input.type;
+    component.child_ids = input.child_ids;
     component.order = input.order;
-    component.props = input.props;
     component.created_at = now;
     component.updated_at = now;
 
@@ -54,7 +54,7 @@ inline Result<ComponentHierarchy> create(InMemoryStore& store, const CreateCompo
         helpers::addComponentToParent(store, component.parent_id.value(), component.id);
     }
 
-    return Result<ComponentHierarchy>(component);
+    return Result<ComponentNode>(component);
 }
 
 } // namespace component

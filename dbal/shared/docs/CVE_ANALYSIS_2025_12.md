@@ -868,7 +868,7 @@ class FortKnoxACLAdapter implements DBALAdapter {
     const SENSITIVE_FIELDS: Record<string, string[]> = {
       User: ['role', 'level', 'permissions', 'passwordHash', 'tenantId'],
       Session: ['token', 'userId'],
-      Package: ['isCore', 'trustLevel'],
+      InstalledPackage: ['config', 'tenantId'],
     }
     return new Set(SENSITIVE_FIELDS[entity] || [])
   }
@@ -964,19 +964,23 @@ class FieldGuard {
       }).strict(),
     },
     
-    PageView: {
+    PageConfig: {
       create: z.object({
-        title: z.string().min(1).max(200),
-        slug: z.string().min(1).max(200).regex(/^[a-z0-9-]+$/),
-        content: z.any(),  // JSON content
-        isPublished: z.boolean().default(false),
+        path: z.string().min(1).max(255),
+        title: z.string().min(1).max(255),
+        componentTree: z.string().min(2),  // JSON string
+        level: z.number().int().min(1).max(6),
+        requiresAuth: z.boolean(),
+        isPublished: z.boolean().default(true),
       }).strict(),
       
       update: z.object({
-        title: z.string().min(1).max(200).optional(),
-        content: z.any().optional(),
+        path: z.string().min(1).max(255).optional(),
+        title: z.string().min(1).max(255).optional(),
+        componentTree: z.string().min(2).optional(),
+        level: z.number().int().min(1).max(6).optional(),
+        requiresAuth: z.boolean().optional(),
         isPublished: z.boolean().optional(),
-        // slug typically shouldn't be changed after creation
       }).strict(),
     },
     

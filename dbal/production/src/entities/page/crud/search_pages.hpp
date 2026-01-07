@@ -30,28 +30,28 @@ inline bool containsInsensitive(const std::string& text, const std::string& quer
 
 } // namespace
 
-inline Result<std::vector<PageView>> search(InMemoryStore& store, const std::string& query, int limit = 20) {
+inline Result<std::vector<PageConfig>> search(InMemoryStore& store, const std::string& query, int limit = 20) {
     if (query.empty()) {
         return Error::validationError("search query is required");
     }
 
-    std::vector<PageView> matches;
+    std::vector<PageConfig> matches;
     for (const auto& [id, page] : store.pages) {
         (void)id;
-        if (containsInsensitive(page.slug, query) || containsInsensitive(page.title, query)) {
+        if (containsInsensitive(page.path, query) || containsInsensitive(page.title, query)) {
             matches.push_back(page);
         }
     }
 
-    std::sort(matches.begin(), matches.end(), [](const PageView& a, const PageView& b) {
-        return a.slug < b.slug;
+    std::sort(matches.begin(), matches.end(), [](const PageConfig& a, const PageConfig& b) {
+        return a.path < b.path;
     });
 
     if (limit > 0 && static_cast<int>(matches.size()) > limit) {
         matches.resize(limit);
     }
 
-    return Result<std::vector<PageView>>(matches);
+    return Result<std::vector<PageConfig>>(matches);
 }
 
 } // namespace page

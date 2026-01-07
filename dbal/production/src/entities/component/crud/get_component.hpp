@@ -8,7 +8,7 @@ namespace dbal {
 namespace entities {
 namespace component {
 
-inline Result<ComponentHierarchy> get(InMemoryStore& store, const std::string& id) {
+inline Result<ComponentNode> get(InMemoryStore& store, const std::string& id) {
     if (id.empty()) {
         return Error::validationError("Component ID cannot be empty");
     }
@@ -18,7 +18,7 @@ inline Result<ComponentHierarchy> get(InMemoryStore& store, const std::string& i
         return Error::notFound("Component not found: " + id);
     }
 
-    return Result<ComponentHierarchy>(it->second);
+    return Result<ComponentNode>(it->second);
 }
 
 } // namespace component

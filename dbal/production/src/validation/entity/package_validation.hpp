@@ -12,10 +12,10 @@ namespace dbal {
 namespace validation {
 
 /**
- * Validate package name (1-255 characters)
+ * Validate package ID (1-255 characters)
  */
-inline bool isValidPackageName(const std::string& name) {
-    return !name.empty() && name.length() <= 255;
+inline bool isValidPackageId(const std::string& package_id) {
+    return !package_id.empty() && package_id.length() <= 255;
 }
 
 /**
@@ -27,10 +27,10 @@ inline bool isValidSemver(const std::string& version) {
 }
 
 /**
- * Generate package key from name and version
+ * Generate package key for uniqueness
  */
-inline std::string packageKey(const std::string& name, const std::string& version) {
-    return name + "@" + version;
+inline std::string packageKey(const std::string& package_id) {
+    return package_id;
 }
 
 } // namespace validation
