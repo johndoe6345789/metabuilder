@@ -179,20 +179,19 @@ docker-compose -f deployment/docker/docker-compose.monitoring.yml up -d
 docker-compose -f deployment/docker/docker-compose.development.yml up
 ```
 
-### 4. CLI & Tools Container
+### 4. Admin Tools Container
 
-**Dockerfiles**:
-- [`Dockerfile.cli`](docker/Dockerfile.cli) - Standalone CLI
-- [`Dockerfile.tools`](docker/Dockerfile.tools) - Admin tools + CLI
+**Dockerfile**:
+- [`Dockerfile.tools`](docker/Dockerfile.tools) - Admin toolkit with Node.js, migrations, and scripts
 
 **Usage**:
 ```bash
 # Build tools container
 docker build -f deployment/docker/Dockerfile.tools -t metabuilder-tools .
 
-# Run CLI command
+# Run administrative script (bootstrap, backup, etc.)
 docker run --rm --network metabuilder_metabuilder-network \
-  metabuilder-tools metabuilder-cli package list
+  metabuilder-tools /app/scripts/bootstrap-system.sh
 
 # Interactive shell
 docker run -it --rm --network metabuilder_metabuilder-network \
@@ -629,7 +628,6 @@ docker network inspect metabuilder_metabuilder-network
 - [Seed System](../seed/README.md) - Bootstrap and package installation
 - [DBAL Documentation](../dbal/README.md) - Database abstraction layer
 - [Package System](../README.md#package-system) - Package architecture
-- [CLI Documentation](../frontends/cli/README.md) - Command-line interface
 
 ---
 

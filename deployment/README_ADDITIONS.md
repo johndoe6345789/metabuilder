@@ -4,10 +4,9 @@
 
 ## New Services & Features
 
-### 1. CLI & Admin Tools Container
+### 1. Admin Tools Container
 
-**Dockerfiles**:
-- [`docker/Dockerfile.cli`](docker/Dockerfile.cli) - Standalone MetaBuilder CLI
+**Dockerfile**:
 - [`docker/Dockerfile.tools`](docker/Dockerfile.tools) - Complete admin toolkit
 
 **Build & Run**:
@@ -15,9 +14,9 @@
 # Build tools container
 docker build -f deployment/docker/Dockerfile.tools -t metabuilder-tools .
 
-# Run CLI commands
+# Run admin script (bootstrap, backup, etc.)
 docker run --rm --network metabuilder_metabuilder-network \
-  metabuilder-tools metabuilder-cli package list
+  metabuilder-tools /app/scripts/bootstrap-system.sh
 
 # Interactive admin shell
 docker run -it --rm --network metabuilder_metabuilder-network \
@@ -25,11 +24,10 @@ docker run -it --rm --network metabuilder_metabuilder-network \
 ```
 
 **Included Tools**:
-- MetaBuilder CLI (C++ binary)
 - Node.js tools and Prisma client
 - Database migration scripts
 - Bootstrap and seed scripts
-- PostgreSQL client tools
+- PostgreSQL client utilities
 
 ### 2. System Bootstrap
 
@@ -143,7 +141,6 @@ deployment/
 │   ├── docker-compose.monitoring.yml  # NEW: Monitoring stack
 │   ├── Dockerfile.app                 # App dockerfile (original)
 │   ├── Dockerfile.app.dev             # Dev app dockerfile (original)
-│   ├── Dockerfile.cli                 # NEW: CLI-only container
 │   └── Dockerfile.tools               # NEW: Admin tools container
 │
 ├── config/
@@ -340,7 +337,6 @@ docker-compose -f deployment/docker/docker-compose.production.yml exec postgres 
 - [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) - Complete deployment guide
 - [Main README.md](README.md) - Original deployment documentation
 - [Seed README](../seed/README.md) - Bootstrap system documentation
-- [CLI Documentation](../frontends/cli/README.md) - CLI tool usage
 
 ---
 

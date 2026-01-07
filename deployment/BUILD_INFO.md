@@ -13,7 +13,6 @@ All services are compiled automatically when you run `docker-compose up --build`
 | **Next.js App** | TypeScript | Node.js | ~2-5 min | Optimized JS bundle |
 | **DBAL Daemon** | C++17 | Conan + CMake + Ninja | ~5-10 min | `dbal_daemon` binary |
 | **Media Daemon** | C++17 | Conan + CMake + Ninja | ~8-15 min | `media_daemon` binary |
-| **CLI** | C++17 | Conan + CMake + Ninja | ~5-10 min | `metabuilder-cli` binary |
 | **Tools Container** | Multi | Node.js + C++ | ~15-20 min | Full toolkit |
 
 **Total First Build**: ~25-40 minutes (cached layers make subsequent builds much faster)
@@ -73,10 +72,9 @@ COPY --from=builder /build/build/dbal_daemon /app/dbal_daemon
 **What Gets Compiled**:
 - C++17 source code
 - Dependencies via Conan:
-  - PostgreSQL client library
-  - HTTP server (Boost.Beast or similar)
-  - JSON parser
-  - Lua interpreter
+- PostgreSQL client library
+- HTTP server (Boost.Beast or similar)
+- JSON parser
 - Links into single optimized binary
 
 **Output**: `dbal_daemon` (~5-10 MB binary)
@@ -133,68 +131,32 @@ COPY --from=builder /app/build/media_daemon /usr/local/bin/
 
 ---
 
-### 4. CLI ✅
-
-**Dockerfile**: [`docker/Dockerfile.cli`](docker/Dockerfile.cli)
-
-**Build Steps**:
-```dockerfile
-# Stage 1: Builder
-FROM ubuntu:22.04 AS builder
-
-# Install build tools
-RUN apt-get install build-essential cmake ninja-build
-RUN pip3 install conan && conan profile detect
-
-# Build CLI
-WORKDIR /build/cli
-RUN conan install . --output-folder build --build missing
-RUN cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
-RUN cmake --build build --config Release
-
-# Stage 2: Runtime
-FROM ubuntu:22.04
-COPY --from=builder /build/cli/build/bin/metabuilder-cli /usr/local/bin/
-```
-
-**What Gets Compiled**:
-- C++17 CLI application
-- Dependencies via Conan:
-  - cpr (HTTP client)
-  - lua (Lua 5.4 interpreter)
-  - sol2 (C++/Lua binding)
-  - nlohmann_json (JSON)
-
-**Output**: `metabuilder-cli` binary
-
----
-
-### 5. Tools Container ✅
+### 4. Tools Container ✅
 
 **Dockerfile**: [`docker/Dockerfile.tools`](docker/Dockerfile.tools)
 
-**Multi-stage Build**:
+**Build Steps**:
 ```dockerfile
 # Stage 1: Node.js + Prisma
 FROM node:20-alpine AS node-builder
 RUN npm ci && npx prisma generate
 
-# Stage 2: CLI builder (same as above)
-FROM ubuntu:22.04 AS cli-builder
-# ... compile CLI ...
-
-# Stage 3: Combined runtime
+# Stage 2: Combined runtime
 FROM node:20-alpine
 COPY --from=node-builder /build/frontends/nextjs /app/nextjs
-COPY --from=cli-builder /build/cli/build/bin/metabuilder-cli /usr/local/bin/
+COPY --from=node-builder /build/prisma /app/prisma
+COPY seed/ /app/seed/
+COPY deployment/scripts/ /app/scripts/
+COPY packages/ /app/packages/
 ```
 
-**What Gets Compiled/Bundled**:
+**What Gets Bundled**:
 - Prisma client (TypeScript → Node.js bindings)
-- MetaBuilder CLI (C++)
-- All npm dependencies
+- Seed data + bootstrap scripts
+- Package assets for admin tooling
+- Node.js/Next.js tooling
 
-**Output**: Complete admin toolkit with both Node.js and C++ tools
+**Output**: Complete admin toolkit with Node.js tools and migration helpers
 
 ---
 
@@ -210,7 +172,6 @@ All C++ projects use Conan for dependency management:
 boost/1.82.0
 libpq/15.3
 nlohmann_json/3.11.2
-lua/5.4.6
 
 [generators]
 CMakeDeps

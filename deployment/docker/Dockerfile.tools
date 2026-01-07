@@ -1,5 +1,5 @@
 # MetaBuilder Tools/Admin Container
-# Includes CLI, migrations, seed scripts, and administrative tools
+# Includes migrations, seed scripts, and administrative tools
 # Build: docker build -f deployment/docker/Dockerfile.tools -t metabuilder-tools .
 # Run: docker run -it --rm --network metabuilder_network metabuilder-tools
 
@@ -7,7 +7,7 @@ FROM node:20-alpine AS node-builder
 
 WORKDIR /build
 
-# Copy frontend for migration tools
+# Install Node dependencies for Next.js
 COPY frontends/nextjs/package*.json ./frontends/nextjs/
 RUN cd frontends/nextjs && npm ci
 
@@ -17,32 +17,6 @@ COPY prisma/ ./prisma/
 # Build Prisma client
 RUN cd frontends/nextjs && npx prisma generate
 
-# === CLI Builder ===
-FROM ubuntu:22.04 AS cli-builder
-
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    cmake \
-    ninja-build \
-    python3 \
-    python3-pip \
-    git \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN pip3 install --no-cache-dir conan
-RUN conan profile detect --force
-
-WORKDIR /build
-
-COPY frontends/cli/ ./cli/
-
-WORKDIR /build/cli
-RUN conan install . --output-folder build --build missing --settings=build_type=Release
-RUN cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake
-RUN cmake --build build --config Release
-
-# === Final Tools Image ===
 FROM node:20-alpine
 
 # Install additional tools
@@ -59,13 +33,9 @@ RUN adduser -D -s /bin/bash metabuilder
 
 WORKDIR /app
 
-# Copy Node.js tools and Prisma
+# Copy Node.js tools and Prisma artifacts
 COPY --from=node-builder /build/frontends/nextjs /app/nextjs
 COPY --from=node-builder /build/prisma /app/prisma
-
-# Copy CLI binary
-COPY --from=cli-builder /build/cli/build/bin/metabuilder-cli /usr/local/bin/metabuilder-cli
-RUN chmod +x /usr/local/bin/metabuilder-cli
 
 # Copy seed data and scripts
 COPY seed/ /app/seed/

@@ -10,19 +10,12 @@ Complete deployment infrastructure for MetaBuilder with 19 configuration files a
 
 ### 1. Docker Containers
 
-**CLI Container** ([`docker/Dockerfile.cli`](docker/Dockerfile.cli))
-- Standalone MetaBuilder CLI (C++ binary)
-- Lua runtime for package scripts
-- HTTP client for API communication
-- Minimal Ubuntu 22.04 runtime
-
 **Tools Container** ([`docker/Dockerfile.tools`](docker/Dockerfile.tools))
-- MetaBuilder CLI
 - Node.js + Prisma client
 - Database migration tools
 - Bootstrap and seed scripts
 - PostgreSQL client utilities
-- Combined Node.js and C++ tooling
+- Combined admin tooling with migration helpers
 
 ### 2. Deployment Stacks
 
@@ -186,8 +179,7 @@ Tools container includes:
 
 | File | Purpose | Base Image |
 |------|---------|------------|
-| `Dockerfile.cli` | CLI-only container | ubuntu:22.04 |
-| `Dockerfile.tools` | Admin tools + CLI | node:20-alpine |
+| `Dockerfile.tools` | Admin tools & migration toolkit | node:20-alpine |
 | `Dockerfile.app` | Production app (existing) | node:20-alpine |
 | `Dockerfile.app.dev` | Development app (existing) | node:20 |
 
@@ -465,9 +457,9 @@ docker-compose -f deployment/docker/docker-compose.production.yml restart [servi
 # Shell access
 docker-compose -f deployment/docker/docker-compose.production.yml exec [service] sh
 
-# Run CLI command
+# Run admin script (bootstrap, backup, etc.)
 docker-compose -f deployment/docker/docker-compose.production.yml \
-  run --rm metabuilder-tools metabuilder-cli [command]
+  run --rm metabuilder-tools /app/scripts/your-script.sh
 ```
 
 ### Maintenance
@@ -526,7 +518,6 @@ docker-compose -f deployment/docker/docker-compose.production.yml ps
 - [Complete Deployment Guide](DEPLOYMENT_GUIDE.md)
 - [Original README](README.md)
 - [Seed System](../seed/README.md)
-- [CLI Documentation](../frontends/cli/README.md)
 - [DBAL Documentation](../dbal/README.md)
 - [Main Project README](../README.md)
 
