@@ -17,39 +17,32 @@ namespace package {
 /**
  * Create a new package in the store
  */
-inline Result<Package> create(InMemoryStore& store, const CreatePackageInput& input) {
-    if (!validation::isValidPackageName(input.name)) {
-        return Error::validationError("Package name must be 1-255 characters");
+inline Result<InstalledPackage> create(InMemoryStore& store, const CreatePackageInput& input) {
+    if (!validation::isValidPackageId(input.package_id)) {
+        return Error::validationError("Package ID must be 1-255 characters");
     }
     if (!validation::isValidSemver(input.version)) {
         return Error::validationError("Version must be valid semver");
     }
-    if (input.author.empty()) {
-        return Error::validationError("author is required");
-    }
-
-    std::string key = validation::packageKey(input.name, input.version);
+    std::string key = validation::packageKey(input.package_id);
     if (store.package_keys.find(key) != store.package_keys.end()) {
-        return Error::conflict("Package name+version already exists: " + key);
+        return Error::conflict("Package ID already exists: " + key);
     }
 
-    Package pkg;
-    pkg.id = store.generateId("package", ++store.package_counter);
-    pkg.name = input.name;
-    pkg.version = input.version;
-    pkg.description = input.description;
-    pkg.author = input.author;
-    pkg.manifest = input.manifest;
-    pkg.is_installed = input.is_installed;
+    InstalledPackage pkg;
+    pkg.package_id = input.package_id;
+    pkg.tenant_id = input.tenant_id;
     pkg.installed_at = input.installed_at;
-    pkg.installed_by = input.installed_by;
+    pkg.version = input.version;
+    pkg.enabled = input.enabled;
+    pkg.config = input.config;
     pkg.created_at = std::chrono::system_clock::now();
     pkg.updated_at = pkg.created_at;
 
-    store.packages[pkg.id] = pkg;
-    store.package_keys[key] = pkg.id;
+    store.packages[pkg.package_id] = pkg;
+    store.package_keys[key] = pkg.package_id;
 
-    return Result<Package>(pkg);
+    return Result<InstalledPackage>(pkg);
 }
 
 } // namespace package
