@@ -225,15 +225,20 @@ function evaluateExpression(expr: JsonValue, context: RenderContext): JsonValue 
     return expr
   }
 
-  // Check if it's a template expression
-  const templateMatch = expr.match(/^\{\{(.+)\}\}$/)
+  // Length limit to prevent ReDoS attacks
+  if (expr.length > 1000) {
+    return expr
+  }
+
+  // Check if it's a template expression using non-greedy match
+  const templateMatch = expr.match(/^\{\{(.+?)\}\}$/)
   const matchedExpression = templateMatch?.[1]
   if (matchedExpression !== undefined && matchedExpression.length > 0) {
     const expression = matchedExpression.trim()
     try {
       return evaluateSimpleExpression(expression, context)
-    } catch (error) {
-      console.warn(`Failed to evaluate expression: ${expression}`, error)
+    } catch {
+      // Silently return original expression on evaluation failure
       return expr
     }
   }

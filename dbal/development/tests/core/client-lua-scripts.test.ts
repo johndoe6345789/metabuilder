@@ -20,7 +20,7 @@ const mockAdapter = vi.hoisted(() => ({
   close: vi.fn(),
 }))
 
-vi.mock('../../src/adapters/prisma-adapter', () => ({
+vi.mock('../../src/adapters/prisma', () => ({
   PrismaAdapter: vi.fn(() => mockAdapter),
 }))
 

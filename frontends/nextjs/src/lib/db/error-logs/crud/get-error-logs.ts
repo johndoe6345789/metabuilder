@@ -2,7 +2,8 @@ import { getAdapter } from '../../core/dbal-client'
 import type { ErrorLog } from '../types'
 
 /**
- * Get all error logs from database
+ * Get error logs from database with database-level filtering.
+ * Uses DBAL filter to avoid fetching entire table.
  */
 export async function getErrorLogs(options?: {
   limit?: number
@@ -11,7 +12,24 @@ export async function getErrorLogs(options?: {
   tenantId?: string
 }): Promise<ErrorLog[]> {
   const adapter = getAdapter()
-  const result = await adapter.list('ErrorLog')
+  
+  // Build filter object for database-level filtering
+  const filter: Record<string, unknown> = {}
+  if (options?.level !== undefined) {
+    filter.level = options.level
+  }
+  if (options?.resolved !== undefined) {
+    filter.resolved = options.resolved
+  }
+  if (options?.tenantId !== undefined) {
+    filter.tenantId = options.tenantId
+  }
+  
+  const result = await adapter.list('ErrorLog', {
+    filter: Object.keys(filter).length > 0 ? filter : undefined,
+    orderBy: { timestamp: 'desc' },
+    take: options?.limit,
+  })
 
   type ErrorLogRecord = {
     id: string
@@ -29,7 +47,7 @@ export async function getErrorLogs(options?: {
     resolvedBy?: string | null
   }
 
-  let logs = (result.data as ErrorLogRecord[]).map(log => ({
+  const logs = (result.data as ErrorLogRecord[]).map(log => ({
     id: log.id,
     timestamp: Number(log.timestamp),
     level: log.level as 'error' | 'warning' | 'info',
@@ -44,25 +62,6 @@ export async function getErrorLogs(options?: {
     resolvedAt: (log.resolvedAt !== null && log.resolvedAt !== undefined) ? Number(log.resolvedAt) : undefined,
     resolvedBy: log.resolvedBy ?? undefined,
   }))
-
-  // Apply filters
-  if (options?.level !== undefined) {
-    logs = logs.filter(log => log.level === options.level)
-  }
-  if (options?.resolved !== undefined) {
-    logs = logs.filter(log => log.resolved === options.resolved)
-  }
-  if (options?.tenantId !== undefined) {
-    logs = logs.filter(log => log.tenantId === options.tenantId)
-  }
-
-  // Sort by timestamp descending (newest first)
-  logs.sort((a, b) => b.timestamp - a.timestamp)
-
-  // Apply limit
-  if (options?.limit !== undefined && options.limit > 0) {
-    logs = logs.slice(0, options.limit)
-  }
 
   return logs
 }

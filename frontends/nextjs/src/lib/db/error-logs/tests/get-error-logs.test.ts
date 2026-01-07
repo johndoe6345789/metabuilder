@@ -19,7 +19,7 @@ describe('getErrorLogs', () => {
       name: 'empty array when no logs',
       dbData: [],
       options: undefined,
-      expectedLength: 0,
+      expectedFilter: undefined,
     },
     {
       name: 'all error logs',
@@ -41,7 +41,7 @@ describe('getErrorLogs', () => {
         },
       ],
       options: undefined,
-      expectedLength: 1,
+      expectedFilter: undefined,
     },
     {
       name: 'filtered by level',
@@ -61,24 +61,9 @@ describe('getErrorLogs', () => {
           resolvedAt: null,
           resolvedBy: null,
         },
-        {
-          id: 'warning_1',
-          timestamp: BigInt(Date.now()),
-          level: 'warning',
-          message: 'Test warning',
-          stack: null,
-          context: null,
-          userId: null,
-          username: null,
-          tenantId: 'tenant_1',
-          source: null,
-          resolved: false,
-          resolvedAt: null,
-          resolvedBy: null,
-        },
       ],
       options: { level: 'error' },
-      expectedLength: 1,
+      expectedFilter: { level: 'error' },
     },
     {
       name: 'filtered by tenantId',
@@ -98,32 +83,22 @@ describe('getErrorLogs', () => {
           resolvedAt: null,
           resolvedBy: null,
         },
-        {
-          id: 'error_2',
-          timestamp: BigInt(Date.now()),
-          level: 'error',
-          message: 'Tenant 2 error',
-          stack: null,
-          context: null,
-          userId: null,
-          username: null,
-          tenantId: 'tenant_2',
-          source: null,
-          resolved: false,
-          resolvedAt: null,
-          resolvedBy: null,
-        },
       ],
       options: { tenantId: 'tenant_1' },
-      expectedLength: 1,
+      expectedFilter: { tenantId: 'tenant_1' },
     },
-  ])('should return $name', async ({ dbData, options, expectedLength }) => {
+  ])('should return $name', async ({ dbData, options, expectedFilter }) => {
     mockList.mockResolvedValue({ data: dbData })
 
     const result = await getErrorLogs(options)
 
-    expect(mockList).toHaveBeenCalledWith('ErrorLog')
-    expect(result).toHaveLength(expectedLength)
+    // Verify list was called with correct options
+    expect(mockList).toHaveBeenCalledWith('ErrorLog', {
+      filter: expectedFilter,
+      orderBy: { timestamp: 'desc' },
+      take: options?.limit,
+    })
+    expect(result).toHaveLength(dbData.length)
 
     if (options?.tenantId !== null && options?.tenantId !== undefined && result.length > 0) {
       expect(result.every(log => log.tenantId === options.tenantId)).toBe(true)

@@ -1,12 +1,14 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-import { PERMISSION_LEVELS } from '@/app/levels/levels-data'
-
+/**
+ * GET /api/health
+ * Basic health check endpoint for monitoring.
+ * Does not expose internal system details.
+ */
 export function GET(_request: NextRequest) {
   return NextResponse.json({
     status: 'ok',
-    levelCount: Object.keys(PERMISSION_LEVELS).length,
     timestamp: new Date().toISOString(),
   })
 }

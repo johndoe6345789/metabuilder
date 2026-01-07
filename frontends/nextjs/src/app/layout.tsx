@@ -48,12 +48,20 @@ export const viewport: Viewport = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  // Load header/footer packages using unified loader
-  const headerPkg = await loadPackage('ui_header')
-  const footerPkg = await loadPackage('ui_footer')
-
-  const headerName = headerPkg?.name
-  const footerName = footerPkg?.name
+  // Load header/footer packages using unified loader with error handling
+  let headerName: string | undefined
+  let footerName: string | undefined
+  
+  try {
+    const [headerPkg, footerPkg] = await Promise.all([
+      loadPackage('ui_header').catch(() => null),
+      loadPackage('ui_footer').catch(() => null),
+    ])
+    headerName = headerPkg?.name
+    footerName = footerPkg?.name
+  } catch {
+    // Silently handle package loading failures - layout still renders
+  }
 
   return (
     <html lang="en" suppressHydrationWarning>

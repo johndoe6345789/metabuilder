@@ -14,10 +14,17 @@ import {
 import { scanAllPackages } from '@/lib/schema/schema-scanner'
 import { getSessionUser, STATUS } from '@/lib/routing'
 import { getRoleLevel, ROLE_LEVELS } from '@/lib/constants'
+import { z } from '@/lib/validation'
 
 // Use consistent path resolution
 const getRegistryPath = () => path.join(process.cwd(), '..', '..', '..', 'prisma', 'schema-registry.json')
 const getPrismaOutputPath = () => path.join(process.cwd(), '..', '..', '..', 'prisma', 'generated-from-packages.prisma')
+
+// Schema operation request validation
+const SchemaActionSchema = z.object({
+  action: z.enum(['scan', 'generate', 'approve', 'reject']),
+  id: z.string().min(1).max(128).optional(),
+})
 
 /**
  * GET /api/dbal/schema
@@ -101,8 +108,18 @@ export async function POST(request: Request) {
   }
   
   try {
-    const body = await request.json() as { action: string; id?: string }
-    const { action, id } = body
+    const rawBody: unknown = await request.json()
+    
+    // Validate request body against schema
+    const parseResult = SchemaActionSchema.safeParse(rawBody)
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { status: 'error', error: 'Invalid request body', details: parseResult.error.issues },
+        { status: 400 }
+      )
+    }
+    
+    const { action, id } = parseResult.data
     
     const registryPath = getRegistryPath()
     const registry = loadSchemaRegistry(registryPath)
@@ -119,12 +136,6 @@ export async function POST(request: Request) {
       
       case 'reject':
         return handleReject(registry, registryPath, id)
-      
-      default:
-        return NextResponse.json(
-          { status: 'error', error: `Unknown action: ${action}` },
-          { status: 400 }
-        )
     }
   } catch (error) {
     console.error('Schema operation failed:', error)

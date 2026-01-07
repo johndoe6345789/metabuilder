@@ -25,6 +25,7 @@ interface TenantLayoutProps {
 
 /**
  * Load package dependencies recursively (1 level deep for now)
+ * Handles individual dependency failures gracefully.
  */
 async function getPackageDependencies(packageId: string): Promise<{ id: string; name?: string }[]> {
   const metadata = await loadPackageMetadata(packageId) as { dependencies?: string[]; name?: string; minLevel?: number } | null
@@ -34,11 +35,16 @@ async function getPackageDependencies(packageId: string): Promise<{ id: string; 
   
   const deps = await Promise.all(
     metadata.dependencies.map(async depId => {
-      const depMetadata = await loadPackageMetadata(depId) as { name?: string; minLevel?: number } | null
-      return {
-        id: depId,
-        name: depMetadata?.name,
-        minLevel: depMetadata?.minLevel,
+      try {
+        const depMetadata = await loadPackageMetadata(depId) as { name?: string; minLevel?: number } | null
+        return {
+          id: depId,
+          name: depMetadata?.name,
+          minLevel: depMetadata?.minLevel,
+        }
+      } catch {
+        // Return minimal info if dependency metadata fails to load
+        return { id: depId }
       }
     })
   )

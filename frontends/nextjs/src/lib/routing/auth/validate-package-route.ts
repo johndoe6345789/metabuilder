@@ -15,11 +15,36 @@ export interface RouteValidationResult {
   }
 }
 
+/**
+ * Validate packageId to prevent path traversal attacks.
+ * Returns true if the packageId is safe to use in file paths.
+ */
+function isValidPackageId(packageId: string): boolean {
+  // Must match pattern: starts with letter, contains only lowercase letters, numbers, underscores
+  if (!/^[a-z][a-z0-9_]*$/.test(packageId)) {
+    return false
+  }
+  // Extra safety: reject any path-like characters
+  if (packageId.includes('..') || packageId.includes('/') || packageId.includes('\\')) {
+    return false
+  }
+  // Length limit to prevent buffer issues
+  if (packageId.length > 64) {
+    return false
+  }
+  return true
+}
+
 export function validatePackageRoute(
   packageId: string,
   entity: string,
   _user?: unknown
 ): RouteValidationResult {
+  // Validate packageId before any file operations
+  if (!isValidPackageId(packageId)) {
+    return { allowed: false, error: 'Invalid package ID format', reason: 'Invalid package ID' }
+  }
+  
   const metadata = loadPackageMetadataSync(packageId)
 
   if (metadata === null) {
@@ -87,11 +112,25 @@ function normalizeSchemaEntities(schema: unknown): string[] {
 }
 
 function getPackageJsonPath(packageId: string): string {
-  return path.join(process.cwd(), 'packages', packageId, 'package.json')
+  // Path is safe because packageId is validated by isValidPackageId before use
+  const packagesBase = path.resolve(process.cwd(), 'packages')
+  const resolved = path.resolve(packagesBase, packageId, 'package.json')
+  // Double-check the resolved path is within packages directory
+  if (!resolved.startsWith(packagesBase + path.sep)) {
+    throw new Error('Invalid package path')
+  }
+  return resolved
 }
 
 function getSeedMetadataPath(packageId: string): string {
-  return path.join(process.cwd(), 'packages', packageId, 'seed', 'metadata.json')
+  // Path is safe because packageId is validated by isValidPackageId before use
+  const packagesBase = path.resolve(process.cwd(), 'packages')
+  const resolved = path.resolve(packagesBase, packageId, 'seed', 'metadata.json')
+  // Double-check the resolved path is within packages directory
+  if (!resolved.startsWith(packagesBase + path.sep)) {
+    throw new Error('Invalid package path')
+  }
+  return resolved
 }
 
 async function readPackageJson(packageId: string): Promise<unknown> {
