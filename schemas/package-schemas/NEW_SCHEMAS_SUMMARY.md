@@ -278,7 +278,7 @@ e-commerce-package/
 ├── config/
 │   └── settings.json              # config_schema.json (STRIPE_KEY, feature flags)
 ├── scripts/
-│   └── functions.json             # script_schema.json
+│   └── [script-name].json         # script_schema.json (e.g., automation.json)
 ├── components/
 │   └── ui.json                    # components_schema.json
 ├── validation/

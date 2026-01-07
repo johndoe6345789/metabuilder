@@ -39,7 +39,7 @@ my-package/
 ├── types/
 │   └── index.json           # types_schema.json
 ├── scripts/
-│   └── functions.json       # script_schema.json
+│   └── [script-name].json   # script_schema.json (e.g., automation.json)
 ├── components/
 │   └── ui.json              # components_schema.json
 ├── validation/

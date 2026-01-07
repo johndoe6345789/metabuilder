@@ -21,7 +21,7 @@ packages/
     styles/
       index.json          # Style definitions (schema: styles_schema.json)
     scripts/
-      functions.json      # Script definitions (schema: script_schema.json)
+      [script-name].json  # Script definitions (schema: script_schema.json, e.g., automation.json)
     types/
       index.json          # Type definitions (schema: types_schema.json)
 ```
