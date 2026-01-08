@@ -12,6 +12,8 @@
 
 MetaBuilder is an ultra-generic, data-driven multi-tenant platform where **everything flows through the database**. No hardcoded routes, no component imports, no assumptions—the entire application structure lives in the database, rendered by a generic JSON-to-React engine.
 
+This vision evolved from our original Spark-based admin panel generator (see [Project History](#project-history)) into a more scalable, enterprise-ready platform with enhanced multi-tenancy, security, and flexibility.
+
 ### Core Philosophy
 
 ```
@@ -22,23 +24,157 @@ Browser URL → Database Query → JSON Component → Generic Renderer → React
 
 ---
 
+## Project History
+
+### Evolution from Spark-Based Version
+
+MetaBuilder began as a Django-style admin panel generator built on GitHub's Spark framework. The original version (preserved in `/old` directory) demonstrated the core concept of declarative, data-driven application building but was limited in scope and scalability.
+
+#### Original Version (Spark-Based) - Pre-2026
+
+**Architecture:**
+- **Framework:** GitHub Spark + Vite + React 19
+- **UI Library:** Radix UI components with Tailwind CSS
+- **Storage:** KV (Key-Value) storage via Spark
+- **Scripting:** Lua integration (Fengari) for custom logic
+- **Permission System:** 4 levels (Public, User, Admin, God)
+- **Scope:** Single-tenant admin panel generator
+
+**Key Features:**
+- Declarative schema definition via JSON
+- Auto-generated CRUD interfaces
+- Visual component hierarchy editor with drag-and-drop
+- Monaco code editor for Lua scripts
+- Page routing configuration
+- Database export/import
+
+**Limitations:**
+- No multi-tenancy support
+- Limited scalability (KV storage)
+- Single deployment architecture
+- No package system
+- No production-grade database support
+- Limited permission granularity
+
+#### Current Version (Next.js-Based) - 2026+
+
+**Architecture:**
+- **Framework:** Next.js 16 + React 19 + App Router
+- **UI Library:** Material-UI (MUI) with SCSS modules
+- **Database:** PostgreSQL (production) / SQLite (development) via Prisma ORM
+- **DBAL:** Dual implementation (TypeScript for dev, C++ daemon for production)
+- **Scripting:** JSON-based scripts with controlled execution
+- **Permission System:** 6 levels (Public → User → Moderator → Admin → God → Supergod)
+- **Scope:** Multi-tenant enterprise platform
+
+**Major Enhancements:**
+- ✨ **Multi-tenancy:** Complete tenant isolation with per-tenant data
+- ✨ **Package System:** 52 built-in packages with dynamic loading
+- ✨ **DBAL:** Language-agnostic database abstraction with credential isolation
+- ✨ **Production-Ready:** PostgreSQL, Redis caching, C++ services
+- ✨ **Enhanced Security:** 6-level permissions, row-level security, C++ credential isolation
+- ✨ **Scalability:** Docker deployment, Kubernetes support, multi-instance ready
+- ✨ **Testing:** Comprehensive test suite (464 tests, 100% pass rate)
+- ✨ **Type Safety:** Full TypeScript with Prisma ORM
+
+### Migration Path
+
+#### What Was Preserved
+- ✅ Core philosophy of data-driven architecture
+- ✅ Declarative component definitions (enhanced to JSON)
+- ✅ Generic rendering system (JSON-to-React)
+- ✅ Visual configuration capabilities
+- ✅ Schema-driven CRUD generation
+- ✅ Permission-based access control (expanded)
+
+#### What Was Reimplemented
+- 🔄 **Storage:** KV → PostgreSQL/SQLite with Prisma
+- 🔄 **UI Library:** Radix + Tailwind → Material-UI + SCSS
+- 🔄 **Scripting:** Lua → JSON-based scripts
+- 🔄 **Framework:** Vite/Spark → Next.js App Router
+- 🔄 **Architecture:** Single-tenant → Multi-tenant
+- 🔄 **Permissions:** 4 levels → 6 levels
+
+#### What Was Added
+- ➕ Multi-tenant support with complete isolation
+- ➕ Package system with 52 built-in packages
+- ➕ DBAL (TypeScript + C++ dual implementation)
+- ➕ Production deployment infrastructure (Docker, Nginx, Redis)
+- ➕ C++ media processing daemon
+- ➕ Comprehensive test suite (unit, integration, E2E)
+- ➕ Static site generation with ISR
+- ➕ Session management with expiry tracking
+- ➕ Remote package loading capability
+
+### Architecture Comparison
+
+| Aspect | Old (Spark) | New (Next.js) |
+|--------|-------------|---------------|
+| **Framework** | Vite + Spark | Next.js 16 App Router |
+| **UI Components** | Radix UI | Material-UI (MUI) |
+| **Styling** | Tailwind CSS | SCSS Modules + MUI sx prop |
+| **Database** | KV Storage | PostgreSQL/SQLite + Prisma |
+| **Scripting** | Lua (Fengari) | JSON Scripts |
+| **Permissions** | 4 levels | 6 levels |
+| **Tenancy** | Single | Multi-tenant |
+| **Package System** | None | 52 packages + dynamic loading |
+| **Deployment** | Single process | Docker + microservices |
+| **Testing** | Limited | 464 tests (100% pass) |
+| **Type Safety** | TypeScript | TypeScript + Prisma |
+| **Production Ready** | Dev only | Production + C++ services |
+
+### Why We Migrated
+
+#### Scalability Needs
+The KV storage approach limited our ability to:
+- Handle complex queries and relationships
+- Scale to thousands of users
+- Support multi-tenancy efficiently
+- Provide ACID guarantees
+
+#### Enterprise Requirements
+Production deployments required:
+- Robust database with transactions
+- Credential isolation (C++ DBAL)
+- Multi-tenant data isolation
+- Professional deployment options
+- Comprehensive testing
+
+#### Ecosystem Maturity
+- PostgreSQL provides battle-tested reliability
+- Prisma ORM offers excellent type safety
+- Next.js App Router enables optimal performance
+- Material-UI provides comprehensive component library
+
+### Legacy Code Location
+
+The original Spark-based version is preserved in `/old` directory for reference:
+- Documentation: `/old/*.md`
+- Source code: `/old/src/`
+- Configuration: `/old/package.json`, `/old/tsconfig.json`
+
+**Note:** The old version is maintained for historical reference only and is not actively developed.
+
+---
+
 ## Table of Contents
 
-1. [Current Status](#current-status)
-2. [Technology Stack](#technology-stack)
-3. [System Architecture](#system-architecture)
-4. [MVP Milestone ✨](#mvp-milestone-)
-5. [Release History](#release-history)
-6. [Roadmap Phases](#roadmap-phases)
-7. [Feature Status Matrix](#feature-status-matrix)
-8. [Package Ecosystem](#package-ecosystem)
-9. [Post-MVP Priorities](#post-mvp-priorities)
-10. [Testing Strategy & Best Practices](#testing-strategy--best-practices)
-11. [Development Best Practices](#development-best-practices)
-12. [Known Issues & Technical Debt](#known-issues--technical-debt)
-13. [Long-Term Vision](#long-term-vision)
-14. [Success Metrics](#success-metrics)
-15. [Contributing](#contributing)
+1. [Project History](#project-history)
+2. [Current Status](#current-status)
+3. [Technology Stack](#technology-stack)
+4. [System Architecture](#system-architecture)
+5. [MVP Milestone ✨](#mvp-milestone-)
+6. [Release History](#release-history)
+7. [Roadmap Phases](#roadmap-phases)
+8. [Feature Status Matrix](#feature-status-matrix)
+9. [Package Ecosystem](#package-ecosystem)
+10. [Post-MVP Priorities](#post-mvp-priorities)
+11. [Testing Strategy & Best Practices](#testing-strategy--best-practices)
+12. [Development Best Practices](#development-best-practices)
+13. [Known Issues & Technical Debt](#known-issues--technical-debt)
+14. [Long-Term Vision](#long-term-vision)
+15. [Success Metrics](#success-metrics)
+16. [Contributing](#contributing)
 
 ---
 
@@ -1933,6 +2069,35 @@ None - All configuration remains backward compatible
 - 🔮 1000+ active deployments
 - 🔮 Active users: >50,000
 - 🔮 Enterprise customers: >25
+
+### Features Inspired by Original Spark Version
+
+The following features from our original Spark-based version are being considered for future implementation in the Next.js platform:
+
+#### High Priority (Q3-Q4 2026)
+- 🎯 **Visual Component Hierarchy Editor** - Drag-and-drop component organization (originally in Level 4 God panel)
+- 🎯 **Monaco Code Editor Integration** - In-browser code editing with syntax highlighting
+- 🎯 **Database Export/Import** - Complete system backup and restoration
+- 🎯 **Live Schema Editing** - Real-time schema modifications through UI
+
+#### Medium Priority (2027)
+- 🔮 **Component Catalog Browser** - Searchable library of available components
+- 🔮 **Visual Workflow Builder** - Node-based workflow design interface
+- 🔮 **Template Library** - Pre-built page and component templates
+- 🔮 **Live Preview Mode** - See changes in real-time while editing
+
+#### Low Priority (2028+)
+- 🔮 **Alternative Scripting Support** - Consider Lua or other scripting languages as alternatives to JSON scripts
+- 🔮 **Component Version Control** - Track component changes over time
+- 🔮 **Collaborative Editing** - Multiple users editing simultaneously
+
+#### Features Not Planned for Migration
+Some features from the original version are intentionally not being migrated:
+- ❌ **KV Storage** - Replaced by PostgreSQL for better scalability and reliability
+- ❌ **Radix UI** - Replaced by Material-UI for comprehensive enterprise components
+- ❌ **Tailwind CSS** - Replaced by SCSS modules for better component isolation
+- ❌ **4-Level Permission System** - Enhanced to 6-level system with more granular control
+- ❌ **Single-Tenant Architecture** - Completely redesigned for multi-tenancy
 
 ### Strategic Goals
 
