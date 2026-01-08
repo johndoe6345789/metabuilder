@@ -33,10 +33,12 @@ Browser URL → Database Query → JSON Component → Generic Renderer → React
 7. [Feature Status Matrix](#feature-status-matrix)
 8. [Package Ecosystem](#package-ecosystem)
 9. [Post-MVP Priorities](#post-mvp-priorities)
-10. [Known Issues & Technical Debt](#known-issues--technical-debt)
-11. [Long-Term Vision](#long-term-vision)
-12. [Success Metrics](#success-metrics)
-13. [Contributing](#contributing)
+10. [Testing Strategy & Best Practices](#testing-strategy--best-practices)
+11. [Development Best Practices](#development-best-practices)
+12. [Known Issues & Technical Debt](#known-issues--technical-debt)
+13. [Long-Term Vision](#long-term-vision)
+14. [Success Metrics](#success-metrics)
+15. [Contributing](#contributing)
 
 ---
 
@@ -832,6 +834,407 @@ All criteria met ✅
 - ❌ Cancelled - No longer planned
 
 ---
+
+
+## Testing Strategy & Best Practices
+
+MetaBuilder follows a comprehensive testing strategy to ensure code quality, reliability, and maintainability.
+
+### Testing Philosophy
+
+We emphasize **Test-Driven Development (TDD)** as a core practice:
+
+1. **Write tests first** - Design APIs through tests
+2. **Fast feedback** - Tests provide immediate confidence
+3. **High coverage** - Target >80% code coverage
+4. **Maintainable tests** - Tests are as important as production code
+5. **Realistic scenarios** - Tests reflect real-world usage
+
+### Testing Pyramid
+
+```
+              /\
+             /  \
+            /E2E \       Few, Slow, Expensive
+           /------\      Critical user flows
+          /        \
+         /Integration\   More, Medium Speed
+        /------------\   Components working together
+       /              \
+      /   Unit Tests   \  Many, Fast, Cheap
+     /------------------\ Individual functions
+```
+
+### Test Coverage
+
+| Component | Unit Tests | Integration Tests | E2E Tests |
+|-----------|-----------|-------------------|-----------|
+| **Utilities** | >90% | - | - |
+| **Database Layer** | >85% | >70% | - |
+| **API Routes** | >80% | >75% | Critical paths |
+| **React Components** | >75% | - | - |
+| **User Flows** | - | - | All critical paths |
+| **Overall** | >80% | >70% | 100% critical |
+
+### Test-Driven Development (TDD)
+
+**Red-Green-Refactor Cycle:**
+
+```
+1. 🔴 RED: Write a failing test
+   ↓
+2. 🟢 GREEN: Write minimal code to pass
+   ↓
+3. 🔵 REFACTOR: Improve code while keeping tests green
+   ↓
+4. ♻️  REPEAT: Move to next feature
+```
+
+**Example TDD Workflow:**
+```typescript
+// Step 1: RED - Write failing test
+describe('validatePassword', () => {
+  it.each([
+    { password: 'short', expected: { valid: false, error: 'Too short' } },
+    { password: 'validpass123', expected: { valid: true, error: null } },
+  ])('should validate "$password"', ({ password, expected }) => {
+    expect(validatePassword(password)).toEqual(expected)
+  })
+})
+
+// Step 2: GREEN - Implement to pass tests
+export function validatePassword(password: string) {
+  if (password.length < 8) {
+    return { valid: false, error: 'Too short' }
+  }
+  return { valid: true, error: null }
+}
+
+// Step 3: REFACTOR - Improve while keeping tests green
+```
+
+### Testing Tools
+
+| Tool | Purpose | Usage |
+|------|---------|-------|
+| **Vitest** | Unit & integration testing | `npm test` |
+| **Playwright** | E2E browser testing | `npx playwright test` |
+| **Testing Library** | React component testing | Integrated with Vitest |
+| **Prisma** | Database testing | Test database utilities |
+
+### Unit Testing Best Practices
+
+**✅ Use Parameterized Tests:**
+```typescript
+it.each([
+  { input: 'hello', expected: 'HELLO' },
+  { input: 'world', expected: 'WORLD' },
+])('should uppercase $input', ({ input, expected }) => {
+  expect(uppercase(input)).toBe(expected)
+})
+```
+
+**✅ Follow AAA Pattern:**
+```typescript
+it('should calculate total', () => {
+  // ARRANGE
+  const items = [{ price: 10 }, { price: 20 }]
+  // ACT
+  const total = calculateTotal(items)
+  // ASSERT
+  expect(total).toBe(30)
+})
+```
+
+**✅ Mock External Dependencies:**
+```typescript
+vi.mock('@/lib/database', () => ({
+  Database: {
+    getUser: vi.fn().mockResolvedValue({ id: '1', name: 'Test' })
+  }
+}))
+```
+
+### E2E Testing with Playwright
+
+**Configuration:** `e2e/playwright.config.ts`
+
+**Key Features:**
+- Cross-browser testing (Chromium, Firefox, WebKit)
+- Auto-waiting for elements
+- Screenshots and videos on failure
+- Trace viewer for debugging
+- Page Object Model support
+
+**Example E2E Test:**
+```typescript
+import { test, expect } from '@playwright/test'
+
+test('should login successfully', async ({ page }) => {
+  await page.goto('/login')
+  await page.fill('input[name="email"]', 'admin@example.com')
+  await page.fill('input[name="password"]', 'password123')
+  await page.click('button[type="submit"]')
+  
+  await expect(page).toHaveURL(/\/dashboard/)
+  await expect(page.locator('text=Welcome')).toBeVisible()
+})
+```
+
+### Running Tests
+
+```bash
+# Unit tests
+npm test                    # Run all unit tests
+npm run test:watch          # Watch mode
+npm run test:coverage       # With coverage report
+
+# E2E tests
+npx playwright test         # Run all E2E tests
+npx playwright test --ui    # Interactive UI mode
+npx playwright test --debug # Debug mode
+npx playwright show-report  # View HTML report
+
+# CI
+npm run test:ci             # All tests for CI
+```
+
+### Test Maintenance
+
+**Keep Tests Fast:**
+- Unit tests: <1s each
+- Integration tests: <5s each
+- E2E tests: <30s each
+
+**Keep Tests Isolated:**
+- Each test is independent
+- Use beforeEach/afterEach for setup/cleanup
+- Don't rely on test execution order
+
+**Keep Tests Readable:**
+- Descriptive test names
+- Clear arrange-act-assert sections
+- Meaningful variable names
+- Document complex scenarios
+
+### CI/CD Integration
+
+Tests run automatically on:
+- Every push to main/develop branches
+- Every pull request
+- Pre-deployment checks
+
+**GitHub Actions:**
+- Unit tests with coverage reporting
+- E2E tests across multiple browsers
+- Automatic artifact upload on failure
+- Retry failed tests (2x in CI)
+
+### Comprehensive Testing Guide
+
+For detailed testing documentation, examples, and best practices, see:
+**[docs/TESTING_GUIDE.md](docs/TESTING_GUIDE.md)**
+
+This comprehensive guide includes:
+- Complete TDD workflows with examples
+- Advanced Playwright patterns (POM, fixtures)
+- Integration testing strategies
+- Troubleshooting common issues
+- CI/CD configuration examples
+
+---
+
+## Development Best Practices
+
+### Core Principles
+
+1. **One Lambda Per File** - Functions in separate files, classes only as containers
+2. **Write Tests First (TDD)** - Red-Green-Refactor cycle
+3. **TypeScript Strict Mode** - No `any` types, explicit types everywhere
+4. **Follow DRY** - Don't Repeat Yourself, extract common logic
+5. **Pure Functions** - Make functions pure when possible
+
+### Code Quality
+
+**✅ Good Practices:**
+```typescript
+// Explicit types
+function getUser(id: string): Promise<User> {
+  return Database.getUser(id)
+}
+
+// Pure function
+function calculateTotal(items: Item[]): number {
+  return items.reduce((sum, item) => sum + item.price, 0)
+}
+
+// One function per file
+// src/lib/users/get-user-by-id.ts
+export async function getUserById(id: string): Promise<User> {
+  return Database.getUser(id)
+}
+```
+
+**❌ Bad Practices:**
+```typescript
+// Using 'any'
+function getUser(id: any): Promise<any> {
+  return Database.getUser(id)
+}
+
+// Multiple unrelated functions
+export function getUserById(id) { ... }
+export function formatUserName(user) { ... }
+export function validateEmail(email) { ... }
+```
+
+### Development Workflow
+
+```
+1. Planning → Review requirements, check docs
+2. Design → Data models, API contracts, interfaces
+3. TDD → Write tests, implement, refactor
+4. Integration → Run tests, lint, type check
+5. Review → Self-review, create PR, address feedback
+6. Deploy → Staging → E2E tests → Production
+```
+
+### Git Workflow
+
+```bash
+# Feature branch
+git checkout -b feature/user-auth
+
+# Commit frequently
+git commit -m "feat: add login form"
+git commit -m "test: add validation tests"
+
+# Push and create PR
+git push origin feature/user-auth
+```
+
+### Code Review Checklist
+
+**Before PR:**
+- [ ] All tests pass
+- [ ] Lint and type check pass
+- [ ] New code has tests (>80% coverage)
+- [ ] Self-reviewed changes
+- [ ] Documentation updated
+
+**Reviewer checks:**
+- [ ] Code follows conventions
+- [ ] No security vulnerabilities
+- [ ] Performance considered
+- [ ] Accessible (a11y)
+- [ ] Mobile responsive
+
+### Security Best Practices
+
+**✅ Input Validation:**
+```typescript
+import { z } from 'zod'
+
+const userSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+})
+
+export function createUser(input: unknown) {
+  const validated = userSchema.parse(input)
+  return Database.createUser(validated)
+}
+```
+
+**✅ SQL Injection Prevention:**
+```typescript
+// Use Prisma's parameterized queries
+const users = await prisma.user.findMany({
+  where: { email: userEmail },
+})
+```
+
+**✅ XSS Prevention:**
+```typescript
+// React automatically escapes
+<div>{user.name}</div>
+
+// Sanitize HTML when needed
+import DOMPurify from 'dompurify'
+<div dangerouslySetInnerHTML={{ 
+  __html: DOMPurify.sanitize(user.bio) 
+}} />
+```
+
+### Performance Best Practices
+
+**✅ Database Queries:**
+```typescript
+// Query only needed fields
+const users = await Database.getUsers({
+  select: ['id', 'name', 'email'],
+  where: { active: true },
+  limit: 10,
+})
+```
+
+**✅ React Performance:**
+```typescript
+import { useMemo, useCallback } from 'react'
+
+function UserList({ users, onSelect }) {
+  const sortedUsers = useMemo(
+    () => users.sort((a, b) => a.name.localeCompare(b.name)),
+    [users]
+  )
+  
+  const handleSelect = useCallback(
+    (userId) => onSelect(userId),
+    [onSelect]
+  )
+  
+  return <List items={sortedUsers} onSelect={handleSelect} />
+}
+```
+
+### Accessibility (a11y)
+
+```typescript
+// ✅ Accessible components
+<button
+  type="button"
+  aria-label="Delete user"
+  onClick={handleDelete}
+>
+  <DeleteIcon aria-hidden="true" />
+  Delete
+</button>
+
+<form onSubmit={handleSubmit}>
+  <label htmlFor="email">Email</label>
+  <input
+    id="email"
+    type="email"
+    required
+    aria-required="true"
+    aria-describedby="email-error"
+  />
+  <span id="email-error" role="alert">
+    {emailError}
+  </span>
+</form>
+```
+
+### Development Tools
+
+| Tool | Purpose | Command |
+|------|---------|---------|
+| **ESLint** | Code linting | `npm run lint:fix` |
+| **Prettier** | Code formatting | `npm run format` |
+| **TypeScript** | Type checking | `npm run typecheck` |
+| **Prisma** | Database ORM | `npm run db:generate` |
+| **Vitest** | Unit testing | `npm test` |
+| **Playwright** | E2E testing | `npx playwright test` |
 
 ## Known Issues & Technical Debt
 
