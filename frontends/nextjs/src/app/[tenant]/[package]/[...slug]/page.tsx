@@ -11,6 +11,8 @@
  */
 
 import { notFound } from 'next/navigation'
+import { loadEntitySchema } from '@/lib/entities/load-entity-schema'
+import { fetchEntityList, fetchEntity } from '@/lib/entities/api-client'
 
 interface EntityPageProps {
   params: Promise<{
@@ -31,6 +33,9 @@ export default async function EntityPage({ params }: EntityPageProps) {
   const id = slug[1]
   const action = slug[2]
 
+  // Load entity schema
+  const schema = await loadEntitySchema(pkg, entity)
+  
   // Determine what view to render
   let viewType: 'list' | 'detail' | 'create' | 'edit' = 'list'
   
@@ -57,7 +62,8 @@ export default async function EntityPage({ params }: EntityPageProps) {
           )}
         </nav>
         
-        <h1>{entity}</h1>
+        <h1>{schema?.displayName ?? entity}</h1>
+        {schema?.description && <p>{schema.description}</p>}
       </header>
 
       <main className="entity-content">
@@ -65,7 +71,8 @@ export default async function EntityPage({ params }: EntityPageProps) {
           <EntityListView 
             tenant={tenant} 
             pkg={pkg} 
-            entity={entity} 
+            entity={entity}
+            schema={schema}
           />
         )}
         
@@ -75,6 +82,7 @@ export default async function EntityPage({ params }: EntityPageProps) {
             pkg={pkg} 
             entity={entity} 
             id={id}
+            schema={schema}
           />
         )}
         
@@ -82,7 +90,8 @@ export default async function EntityPage({ params }: EntityPageProps) {
           <EntityCreateView 
             tenant={tenant} 
             pkg={pkg} 
-            entity={entity} 
+            entity={entity}
+            schema={schema}
           />
         )}
         
@@ -92,6 +101,7 @@ export default async function EntityPage({ params }: EntityPageProps) {
             pkg={pkg} 
             entity={entity} 
             id={id}
+            schema={schema}
           />
         )}
       </main>
@@ -99,107 +109,294 @@ export default async function EntityPage({ params }: EntityPageProps) {
   )
 }
 
-// Placeholder components - these would be replaced with actual implementations
-// that use RenderComponent with package-defined schemas
+// Entity view components using schema-driven rendering
 
-function EntityListView({ tenant, pkg, entity }: { 
+import type { EntitySchema } from '@/lib/entities/load-entity-schema'
+
+function EntityListView({ tenant, pkg, entity, schema }: { 
   tenant: string
   pkg: string
-  entity: string 
+  entity: string
+  schema: EntitySchema | null
 }) {
   const apiUrl = `/api/v1/${tenant}/${pkg}/${entity}`
   
+  // Fetch entity list
+  const response = fetchEntityList(tenant, pkg, entity)
+  
   return (
     <div className="entity-list">
-      <div className="list-header">
+      <div className="list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h2>{entity} List</h2>
-        <a href={`/${tenant}/${pkg}/${entity}/new`} className="btn-create">
+        <a 
+          href={`/${tenant}/${pkg}/${entity}/new`} 
+          style={{
+            padding: '0.5rem 1rem',
+            backgroundColor: '#1976d2',
+            color: 'white',
+            textDecoration: 'none',
+            borderRadius: '4px',
+          }}
+        >
           + New {entity}
         </a>
       </div>
       
-      <p>API: <code>{apiUrl}</code></p>
+      <p style={{ fontSize: '0.875rem', color: '#666', marginBottom: '1rem' }}>
+        API: <code>{apiUrl}</code>
+      </p>
       
-      {/* TODO: Fetch and render list using RenderComponent */}
-      <div className="placeholder">
-        Entity list will be rendered here using package schema
-      </div>
+      {response.error ? (
+        <div style={{ padding: '1rem', backgroundColor: '#ffebee', borderRadius: '4px', color: '#c62828' }}>
+          Error loading data: {response.error}
+        </div>
+      ) : (
+        <div style={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead style={{ backgroundColor: '#f5f5f5' }}>
+              <tr>
+                {schema?.fields.map(field => (
+                  <th key={field.name} style={{ padding: '0.75rem', textAlign: 'left', borderBottom: '2px solid #e0e0e0' }}>
+                    {field.name}
+                  </th>
+                ))}
+                <th style={{ padding: '0.75rem', textAlign: 'left', borderBottom: '2px solid #e0e0e0' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {response.data && response.data.length > 0 ? (
+                (response.data as Record<string, unknown>[]).map((item, idx) => (
+                  <tr key={idx} style={{ borderBottom: '1px solid #e0e0e0' }}>
+                    {schema?.fields.map(field => (
+                      <td key={field.name} style={{ padding: '0.75rem' }}>
+                        {String(item[field.name] ?? '-')}
+                      </td>
+                    ))}
+                    <td style={{ padding: '0.75rem' }}>
+                      <a 
+                        href={`/${tenant}/${pkg}/${entity}/${item[schema?.primaryKey ?? 'id']}`}
+                        style={{ color: '#1976d2', textDecoration: 'none' }}
+                      >
+                        View
+                      </a>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={(schema?.fields.length ?? 0) + 1} style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
+                    No {entity} found. Create one to get started.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   )
 }
 
-function EntityDetailView({ tenant, pkg, entity, id }: { 
+function EntityDetailView({ tenant, pkg, entity, id, schema }: { 
   tenant: string
   pkg: string
   entity: string
   id: string
+  schema: EntitySchema | null
 }) {
   const apiUrl = `/api/v1/${tenant}/${pkg}/${entity}/${id}`
   
+  // Fetch entity data
+  const response = fetchEntity(tenant, pkg, entity, id)
+  
   return (
     <div className="entity-detail">
-      <div className="detail-header">
+      <div className="detail-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h2>{entity} #{id}</h2>
         <div className="actions">
-          <a href={`/${tenant}/${pkg}/${entity}/${id}/edit`} className="btn-edit">
+          <a 
+            href={`/${tenant}/${pkg}/${entity}/${id}/edit`}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: '#1976d2',
+              color: 'white',
+              textDecoration: 'none',
+              borderRadius: '4px',
+            }}
+          >
             Edit
           </a>
         </div>
       </div>
       
-      <p>API: <code>{apiUrl}</code></p>
+      <p style={{ fontSize: '0.875rem', color: '#666', marginBottom: '1rem' }}>
+        API: <code>{apiUrl}</code>
+      </p>
       
-      {/* TODO: Fetch and render detail using RenderComponent */}
-      <div className="placeholder">
-        Entity detail will be rendered here using package schema
-      </div>
+      {response.error ? (
+        <div style={{ padding: '1rem', backgroundColor: '#ffebee', borderRadius: '4px', color: '#c62828' }}>
+          Error loading data: {response.error}
+        </div>
+      ) : (
+        <div style={{ border: '1px solid #e0e0e0', borderRadius: '4px', padding: '1.5rem' }}>
+          {schema?.fields.map(field => (
+            <div key={field.name} style={{ marginBottom: '1rem' }}>
+              <strong style={{ display: 'block', marginBottom: '0.25rem', color: '#424242' }}>
+                {field.name}:
+              </strong>
+              <div style={{ color: '#616161' }}>
+                {String((response.data as Record<string, unknown>)?.[field.name] ?? '-')}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
 
-function EntityCreateView({ tenant, pkg, entity }: { 
+function EntityCreateView({ tenant, pkg, entity, schema }: { 
   tenant: string
   pkg: string
   entity: string
+  schema: EntitySchema | null
 }) {
   const apiUrl = `/api/v1/${tenant}/${pkg}/${entity}`
   
   return (
     <div className="entity-create">
-      <h2>Create {entity}</h2>
+      <h2 style={{ marginBottom: '1rem' }}>Create {entity}</h2>
       
-      <p>API: <code>POST {apiUrl}</code></p>
+      <p style={{ fontSize: '0.875rem', color: '#666', marginBottom: '1rem' }}>
+        API: <code>POST {apiUrl}</code>
+      </p>
       
-      {/* TODO: Render create form using RenderComponent */}
-      <div className="placeholder">
-        Entity create form will be rendered here using package schema
+      {/* TODO: Implement form with RenderComponent or form library */}
+      <div style={{ border: '1px solid #e0e0e0', borderRadius: '4px', padding: '1.5rem' }}>
+        <p style={{ color: '#666', marginBottom: '1rem' }}>
+          Form fields based on schema:
+        </p>
+        {schema?.fields.map(field => (
+          <div key={field.name} style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.25rem', fontWeight: '500' }}>
+              {field.name}
+              {field.required && <span style={{ color: '#d32f2f' }}>*</span>}
+            </label>
+            <input
+              type="text"
+              placeholder={field.description || `Enter ${field.name}`}
+              style={{
+                width: '100%',
+                padding: '0.5rem',
+                border: '1px solid #e0e0e0',
+                borderRadius: '4px',
+              }}
+            />
+          </div>
+        ))}
+        <button
+          type="button"
+          style={{
+            padding: '0.5rem 1.5rem',
+            backgroundColor: '#1976d2',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+        >
+          Create {entity}
+        </button>
       </div>
     </div>
   )
 }
 
-function EntityEditView({ tenant, pkg, entity, id }: { 
+function EntityEditView({ tenant, pkg, entity, id, schema }: { 
   tenant: string
   pkg: string
   entity: string
   id: string
+  schema: EntitySchema | null
 }) {
   const apiUrl = `/api/v1/${tenant}/${pkg}/${entity}/${id}`
   
+  // Fetch entity data
+  const response = fetchEntity(tenant, pkg, entity, id)
+  
   return (
     <div className="entity-edit">
-      <h2>Edit {entity} #{id}</h2>
+      <h2 style={{ marginBottom: '1rem' }}>Edit {entity} #{id}</h2>
       
-      <p>API: <code>PUT {apiUrl}</code></p>
+      <p style={{ fontSize: '0.875rem', color: '#666', marginBottom: '1rem' }}>
+        API: <code>PUT {apiUrl}</code>
+      </p>
       
-      {/* TODO: Fetch and render edit form using RenderComponent */}
-      <div className="placeholder">
-        Entity edit form will be rendered here using package schema
-      </div>
+      {response.error ? (
+        <div style={{ padding: '1rem', backgroundColor: '#ffebee', borderRadius: '4px', color: '#c62828' }}>
+          Error loading data: {response.error}
+        </div>
+      ) : (
+        <div style={{ border: '1px solid #e0e0e0', borderRadius: '4px', padding: '1.5rem' }}>
+          <p style={{ color: '#666', marginBottom: '1rem' }}>
+            Form fields based on schema with current values:
+          </p>
+          {schema?.fields.map(field => {
+            const value = (response.data as Record<string, unknown>)?.[field.name]
+            return (
+              <div key={field.name} style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.25rem', fontWeight: '500' }}>
+                  {field.name}
+                  {field.required && <span style={{ color: '#d32f2f' }}>*</span>}
+                </label>
+                <input
+                  type="text"
+                  defaultValue={String(value ?? '')}
+                  placeholder={field.description || `Enter ${field.name}`}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem',
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '4px',
+                  }}
+                />
+              </div>
+            )
+          })}
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              type="button"
+              style={{
+                padding: '0.5rem 1.5rem',
+                backgroundColor: '#1976d2',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
+              Save Changes
+            </button>
+            <a
+              href={`/${tenant}/${pkg}/${entity}/${id}`}
+              style={{
+                padding: '0.5rem 1.5rem',
+                backgroundColor: '#f5f5f5',
+                color: '#424242',
+                textDecoration: 'none',
+                border: '1px solid #e0e0e0',
+                borderRadius: '4px',
+                display: 'inline-block',
+              }}
+            >
+              Cancel
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
-
 export async function generateMetadata({ params }: EntityPageProps) {
   const { tenant, package: pkg, slug } = await params
   const entity = slug[0] ?? 'unknown'

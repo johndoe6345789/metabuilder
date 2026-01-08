@@ -1,11 +1,13 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { join } from 'path'
 import { getAdapter } from '@/lib/db/core/dbal-client'
 import { loadJSONPackage } from '@/lib/packages/json/functions/load-json-package'
 import { renderJSONComponent } from '@/lib/packages/json/render-json-component'
 import { getPackagesDir } from '@/lib/packages/unified/get-packages-dir'
 import type { JSONComponent } from '@/lib/packages/json/types'
+import { getCurrentUser } from '@/lib/auth/get-current-user'
+import { AccessDenied } from '@/components/AccessDenied'
 
 /**
  * Root page handler with routing priority:
@@ -36,23 +38,18 @@ export default async function RootPage() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const route = godPanelRoutes.data[0]!  // Safe: length check ensures element exists
 
-    // TODO: Implement proper session/user context for permission checks
-    // For now, we'll allow access to public routes and skip auth checks
-    // Full implementation requires:
-    // 1. Session middleware to get current user from cookies
-    // 2. User permission level check: user.level >= route.level
-    // 3. Auth requirement: if (route.requiresAuth && !user) redirect('/login')
+    // Get current user for permission checks
+    const user = await getCurrentUser()
     
-    // Permission level check (when user context is available)
-    // const user = await getCurrentUser() // TODO: Implement getCurrentUser
-    // if (user && user.level < route.level) {
-    //   return <div>Access Denied: Insufficient permissions</div>
-    // }
+    // Auth requirement check - redirect to login if required
+    if (route.requiresAuth && !user) {
+      redirect('/ui/login')
+    }
     
-    // Auth requirement check
-    // if (route.requiresAuth && !user) {
-    //   redirect('/login')
-    // }
+    // Permission level check - show access denied if insufficient
+    if (user && user.level < route.level) {
+      return <AccessDenied requiredLevel={route.level} userLevel={user.level} />
+    }
 
     // If route has full component tree, render it directly
     if (route.componentTree !== null && route.componentTree !== undefined && route.componentTree.length > 0) {
