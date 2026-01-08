@@ -51,8 +51,8 @@ export interface Session {
 }
 ```
 
-### 4. Updated CI/CD Workflows
-Both `gated-ci.yml` and `gated-ci-atomic.yml` now:
+### 4. Updated CI/CD Workflow
+The `gated-ci.yml` workflow now:
 1. Install root dependencies
 2. Install DBAL dependencies
 3. **Run DBAL codegen** ← NEW STEP
@@ -107,17 +107,16 @@ While fixing Gate 1.2, also implemented comprehensive container image support:
 
 ## Files Changed
 
-### Core Fixes (8 files, +682 lines)
+### Core Fixes (7 files, +682 lines)
 1. `dbal/shared/tools/codegen/generate-types.ts` - Fixed multi-document parsing, added index signatures
-2. `.github/workflows/gated-ci-atomic.yml` - Added DBAL codegen step
-3. `.github/workflows/gated-ci.yml` - Added DBAL codegen step
+2. `.github/workflows/gated-ci.yml` - Added DBAL codegen step
 
-### Container Support (5 files)
-4. `frontends/nextjs/Dockerfile` - Production-ready multi-stage build
-5. `.github/workflows/container-build.yml` - Automated image publishing
-6. `docker-compose.ghcr.yml` - Easy deployment
-7. `.dockerignore` - Optimized builds
-8. `docs/CONTAINER_IMAGES.md` - Usage documentation
+### Container Support (4 files)
+3. `frontends/nextjs/Dockerfile` - Production-ready multi-stage build
+4. `.github/workflows/container-build.yml` - Automated image publishing
+5. `docker-compose.ghcr.yml` - Easy deployment
+6. `.dockerignore` - Optimized builds
+7. `docs/CONTAINER_IMAGES.md` - Usage documentation
 
 ## Verification
 
