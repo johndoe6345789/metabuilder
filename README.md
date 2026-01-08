@@ -564,14 +564,26 @@ docker run -p 5432:5432 -e POSTGRES_PASSWORD=dev postgres:16
 ### Testing
 
 ```bash
-# From frontends/nextjs/
-npm run test:unit              # Vitest unit tests
+# Unit Tests (from frontends/nextjs/)
+npm run test:unit              # Vitest unit tests (watch mode)
 npm run test:unit -- --run     # Run once (no watch)
-npm run test:e2e               # Playwright E2E tests
+
+# E2E Tests (from root)
+npm install                    # Install dependencies
+npx playwright install chromium # Install browser (first time only)
+npm run db:generate            # Generate Prisma client (REQUIRED before E2E tests)
+npm run test:e2e               # Run Playwright E2E tests
+npm run test:e2e:ui            # Run with Playwright UI
+npm run test:e2e:headed        # Run with visible browser
+npm run test:e2e:debug         # Debug mode
+
+# Other
 npm run lint                   # ESLint
 npm run typecheck              # TypeScript validation
 npm run build                  # Production build
 ```
+
+> **Note**: E2E tests require Prisma client to be generated first. The playwright config will automatically run `npm run db:generate` before starting the dev server, but you can run it manually if needed.
 
 ---
 
