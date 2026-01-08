@@ -5,9 +5,11 @@
  * Shows the package dashboard/home component.
  */
 
-// notFound will be used when package loading is implemented
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { notFound } from 'next/navigation'
+import { join } from 'path'
+import { loadJSONPackage } from '@/lib/packages/json/functions/load-json-package'
+import { renderJSONComponent } from '@/lib/packages/json/render-json-component'
+import { getPackagesDir } from '@/lib/packages/unified/get-packages-dir'
 
 interface PackagePageProps {
   params: Promise<{
@@ -19,53 +21,46 @@ interface PackagePageProps {
 export default async function PackagePage({ params }: PackagePageProps) {
   const { tenant, package: pkg } = await params
 
-  // TODO: Load package component dynamically
-  // const packageData = await loadPackage(pkg)
-  // if (!packageData?.homeComponent) {
-  //   notFound()
-  // }
+  // Load package from filesystem
+  try {
+    const packageData = await loadJSONPackage(join(getPackagesDir(), pkg))
+    
+    // Find home component: prioritize 'home_page', then 'HomePage', then 'Home', then first component
+    const homeComponent = packageData.components?.find(c => 
+      c.id === 'home_page' || 
+      c.name === 'HomePage' ||
+      c.name === 'Home'
+    ) ?? packageData.components?.[0]
 
-  return (
-    <div className="package-page">
-      <header className="package-header">
-        <h1>
-          <span className="tenant-name">{tenant}</span>
-          {' / '}
-          <span className="package-name">{pkg}</span>
-        </h1>
-      </header>
-      
-      <main className="package-content">
-        {/* Package home component will be rendered here */}
-        <div className="placeholder">
-          <p>Package: <strong>{pkg}</strong></p>
-          <p>Tenant: <strong>{tenant}</strong></p>
-          <p>
-            This page will render the package&apos;s home component.
-          </p>
-          
-          <h2>API Endpoints</h2>
-          <code>
-            <pre>{`
-GET    /api/v1/${tenant}/${pkg}/{entity}         # List
-GET    /api/v1/${tenant}/${pkg}/{entity}/{id}    # Read
-POST   /api/v1/${tenant}/${pkg}/{entity}         # Create
-PUT    /api/v1/${tenant}/${pkg}/{entity}/{id}    # Update
-DELETE /api/v1/${tenant}/${pkg}/{entity}/{id}    # Delete
-POST   /api/v1/${tenant}/${pkg}/{entity}/{id}/{action}  # Custom
-            `.trim()}</pre>
-          </code>
-        </div>
-      </main>
-    </div>
-  )
+    if (!homeComponent) {
+      // Package exists but has no components
+      notFound()
+    }
+
+    // Render the home component with tenant and package context
+    return renderJSONComponent(homeComponent, { tenant, package: pkg }, {})
+  } catch (error) {
+    // Package doesn't exist or can't be loaded
+    console.error(`Failed to load package ${pkg}:`, error)
+    notFound()
+  }
 }
 
 export async function generateMetadata({ params }: PackagePageProps) {
   const { tenant, package: pkg } = await params
   
-  return {
-    title: `${pkg} - ${tenant} | MetaBuilder`,
-    description: `${pkg} package for tenant ${tenant}`,
+  // Try to load package metadata
+  try {
+    const packageData = await loadJSONPackage(join(getPackagesDir(), pkg))
+    return {
+      title: `${packageData.metadata.name} - ${tenant} | MetaBuilder`,
+      description: packageData.metadata.description || `${packageData.metadata.name} package for tenant ${tenant}`,
+    }
+  } catch {
+    // Fallback if package can't be loaded
+    return {
+      title: `${pkg} - ${tenant} | MetaBuilder`,
+      description: `${pkg} package for tenant ${tenant}`,
+    }
   }
 }
