@@ -10,5 +10,5 @@ import { prisma } from '@/lib/config/prisma'
  * @param commentId - ID of comment to delete
  */
 export const deleteComment = async (commentId: string): Promise<void> => {
-  await prisma.comment.delete({ where: { id: commentId } })
+  await (prisma as any).comment.delete({ where: { id: commentId } })
 }

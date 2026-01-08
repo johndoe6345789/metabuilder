@@ -147,7 +147,7 @@ async function handleRequest(
 
     // Execute standard CRUD operation
     const result = await executeDbalOperation(dbalOp, {
-      user,
+      user: user ?? undefined,
       tenant: tenantResult.tenant,
       body,
     })

@@ -25,14 +25,22 @@ const assertValidId = (id: string) => {
 }
 
 const assertValidCreate = (data: CreateWorkflowInput | Workflow) => {
-  const errors = validateWorkflowCreate(data)
+  const normalized = {
+    ...data,
+    description: data.description ?? undefined,
+  }
+  const errors = validateWorkflowCreate(normalized as Partial<Workflow>)
   if (errors.length > 0) {
     throw DBALError.validationError('Invalid workflow data', errors.map(error => ({ field: 'workflow', error })))
   }
 }
 
 const assertValidUpdate = (data: UpdateWorkflowInput) => {
-  const errors = validateWorkflowUpdate(data)
+  const normalized = {
+    ...data,
+    description: data.description ?? undefined,
+  }
+  const errors = validateWorkflowUpdate(normalized as Partial<Workflow>)
   if (errors.length > 0) {
     throw DBALError.validationError('Invalid workflow update data', errors.map(error => ({ field: 'workflow', error })))
   }
@@ -65,7 +73,7 @@ const withWorkflowDefaults = (data: CreateWorkflowInput): Workflow => {
     id: data.id ?? randomUUID(),
     tenantId: data.tenantId ?? null,
     name: data.name,
-    description: data.description ?? null,
+    description: data.description ?? undefined,
     nodes: data.nodes,
     edges: data.edges,
     enabled: data.enabled,
@@ -78,7 +86,11 @@ const withWorkflowDefaults = (data: CreateWorkflowInput): Workflow => {
 
 export const createWorkflowOperations = (adapter: DBALAdapter, tenantId?: string): WorkflowOperations => ({
   create: async data => {
-    const resolvedTenantId = resolveTenantId(tenantId, data)
+    const normalized = {
+      ...data,
+      description: data.description ?? undefined,
+    }
+    const resolvedTenantId = resolveTenantId(tenantId, normalized as Partial<Workflow>)
     if (!resolvedTenantId) {
       throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
     }

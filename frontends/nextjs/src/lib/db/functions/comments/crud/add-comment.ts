@@ -11,7 +11,7 @@ import { prisma } from '@/lib/config/prisma'
  * @param comment - Comment to add
  */
 export const addComment = async (comment: Comment): Promise<void> => {
-  await prisma.comment.create({
+  await (prisma as any).comment.create({
     data: {
       id: comment.id,
       userId: comment.userId,

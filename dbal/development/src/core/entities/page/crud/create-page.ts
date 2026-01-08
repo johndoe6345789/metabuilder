@@ -46,8 +46,8 @@ export const createPage = async (
     return { success: false, error: { code: 'CONFLICT', message: 'Path already exists' } }
   }
 
-  store.pageConfigs.set(payload.id, payload)
-  store.pagePaths.set(pathKey, payload.id)
+  store.pageConfigs.set(payload.id!, payload)
+  store.pagePaths.set(pathKey, payload.id!)
 
   return { success: true, data: payload }
 }

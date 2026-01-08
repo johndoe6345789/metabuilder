@@ -18,7 +18,7 @@ export const createWorkflow = async (
     id: input.id ?? store.generateId('workflow'),
     tenantId: input.tenantId ?? null,
     name: input.name,
-    description: input.description,
+    description: input.description ?? undefined,
     nodes: input.nodes,
     edges: input.edges,
     enabled: input.enabled ?? true,
@@ -38,8 +38,8 @@ export const createWorkflow = async (
     return { success: false, error: { code: 'CONFLICT', message: 'Workflow name already exists' } }
   }
 
-  store.workflows.set(workflow.id, workflow)
-  store.workflowNames.set(workflow.name, workflow.id)
+  store.workflows.set(workflow.id!, workflow)
+  store.workflowNames.set(workflow.name, workflow.id!)
 
   return { success: true, data: workflow }
 }

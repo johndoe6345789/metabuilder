@@ -26,7 +26,7 @@ export const updateComment = async (
     data.updatedAt = BigInt(updates.updatedAt)
   }
 
-  await prisma.comment.update({
+  await (prisma as any).comment.update({
     where: { id: commentId },
     data,
   })
