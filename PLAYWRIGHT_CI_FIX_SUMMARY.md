@@ -6,11 +6,10 @@
 ## Investigation Results
 
 ### The Blocker
-The CI workflows defined in:
+The CI workflow defined in:
 - `.github/workflows/gated-ci.yml`
-- `.github/workflows/gated-ci-atomic.yml`
 
-Were **failing** because they execute test commands from the `frontends/nextjs` working directory:
+Was **failing** because it executes test commands from the `frontends/nextjs` working directory:
 
 ```yaml
 defaults:

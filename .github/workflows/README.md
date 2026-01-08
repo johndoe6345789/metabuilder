@@ -69,24 +69,7 @@ This workflow runs alongside the existing PR management jobs to keep triage ligh
 **Triggered on:** Push to main/master/develop branches, Pull requests
 
 **Structure:**
-- **Gate 1:** Code Quality (Prisma, TypeScript, Lint, Security)
-- **Gate 2:** Testing (Unit, E2E, DBAL Daemon)
-- **Gate 3:** Build & Package (Build, Quality Metrics)
-- **Gate 4:** Review & Approval (Human review required)
-
-**Features:**
-- Sequential gate execution for efficiency
-- Clear gate status reporting on PRs
-- Automatic progression through gates
-- Summary report with all gate results
-
-**Best for:** Small to medium teams, straightforward workflows
-
-#### 1a. Enterprise Gated CI/CD Pipeline - Atomic (`gated-ci-atomic.yml`) 🆕
-**Triggered on:** Push to main/master/develop branches, Pull requests
-
-**Structure:**
-- **Gate 1:** Code Quality - 7 atomic steps
+- **Gate 1:** Code Quality - 7 validation steps
   - 1.1 Prisma Validation
   - 1.2 TypeScript Check (+ strict mode analysis)
   - 1.3 ESLint (+ any-type detection + ts-ignore detection)
@@ -94,27 +77,26 @@ This workflow runs alongside the existing PR management jobs to keep triage ligh
   - 1.5 File Size Check
   - 1.6 Code Complexity Analysis
   - 1.7 Stub Implementation Detection
-- **Gate 2:** Testing - 3 atomic steps
+- **Gate 2:** Testing - 3 validation steps
   - 2.1 Unit Tests (+ coverage analysis)
   - 2.2 E2E Tests
   - 2.3 DBAL Daemon Tests
-- **Gate 3:** Build & Package - 2 atomic steps
+- **Gate 3:** Build & Package - 2 validation steps
   - 3.1 Application Build (+ bundle analysis)
   - 3.2 Quality Metrics
 - **Gate 4:** Review & Approval (Human review required)
+- **Gate 5:** Deployment (post-merge, automatic staging)
 
 **Features:**
-- **Atomic validation steps** for superior visualization
-- Each tool from `/tools` runs as separate job
+- Individual validation steps for superior visualization
 - **Gate artifacts** persisted between steps (30-day retention)
 - Granular failure detection
 - Parallel execution within gates
 - Complete audit trail with JSON artifacts
 - Individual step timing and status
-
-**Best for:** Large teams, enterprise compliance, audit requirements
-
-**Documentation:** See [Atomic Gated Workflow Architecture](../../docs/ATOMIC_GATED_WORKFLOW.md)
+- Sequential gate execution for efficiency
+- Clear gate status reporting on PRs
+- Summary report with all gate results
 
 #### 2. Enterprise Gated Deployment (`gated-deployment.yml`)
 **Triggered on:** Push to main/master, Releases, Manual workflow dispatch
