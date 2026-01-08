@@ -12,25 +12,75 @@ export interface ApiResponse<T = unknown> {
   status: number
 }
 
+export interface ListQueryParams {
+  page?: number
+  limit?: number
+  filter?: Record<string, unknown>
+  sort?: string
+}
+
+/**
+ * Build query string from parameters
+ */
+function buildQueryString(params: ListQueryParams): string {
+  const searchParams = new URLSearchParams()
+  
+  if (params.page !== undefined) {
+    searchParams.append('page', params.page.toString())
+  }
+  if (params.limit !== undefined) {
+    searchParams.append('limit', params.limit.toString())
+  }
+  if (params.filter !== undefined) {
+    searchParams.append('filter', JSON.stringify(params.filter))
+  }
+  if (params.sort !== undefined) {
+    searchParams.append('sort', params.sort)
+  }
+  
+  const queryString = searchParams.toString()
+  return queryString ? `?${queryString}` : ''
+}
+
 /**
  * Fetch entity list from API
  * 
  * @param tenant - Tenant identifier
  * @param pkg - Package identifier
  * @param entity - Entity name
+ * @param params - Query parameters for filtering, sorting, pagination
  * @returns API response with entity list
  */
-export function fetchEntityList(
+export async function fetchEntityList(
   tenant: string,
   pkg: string,
-  entity: string
-): ApiResponse<unknown[]> {
+  entity: string,
+  params: ListQueryParams = {}
+): Promise<ApiResponse<unknown[]>> {
   try {
-    // TODO: Implement actual API call
-    // For now, return empty list as placeholder
+    const queryString = buildQueryString(params)
+    const url = `/api/v1/${tenant}/${pkg}/${entity}${queryString}`
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store',
+    })
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+      return {
+        error: errorData.error ?? `HTTP ${response.status}`,
+        status: response.status,
+      }
+    }
+    
+    const data = await response.json()
     return {
-      data: [],
-      status: 200,
+      data: Array.isArray(data) ? data : (data.data ?? []),
+      status: response.status,
     }
   } catch (error) {
     console.error(`Failed to fetch entity list for ${tenant}/${pkg}/${entity}:`, error)
@@ -50,18 +100,35 @@ export function fetchEntityList(
  * @param id - Entity ID
  * @returns API response with entity data
  */
-export function fetchEntity(
+export async function fetchEntity(
   tenant: string,
   pkg: string,
   entity: string,
   id: string
-): ApiResponse {
+): Promise<ApiResponse> {
   try {
-    // TODO: Implement actual API call
-    // For now, return placeholder data
+    const url = `/api/v1/${tenant}/${pkg}/${entity}/${id}`
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store',
+    })
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+      return {
+        error: errorData.error ?? `HTTP ${response.status}`,
+        status: response.status,
+      }
+    }
+    
+    const data = await response.json()
     return {
-      data: { id },
-      status: 200,
+      data,
+      status: response.status,
     }
   } catch (error) {
     console.error(`Failed to fetch entity ${tenant}/${pkg}/${entity}/${id}:`, error)
@@ -81,18 +148,36 @@ export function fetchEntity(
  * @param data - Entity data to create
  * @returns API response with created entity
  */
-export function createEntity(
+export async function createEntity(
   tenant: string,
   pkg: string,
   entity: string,
   data: Record<string, unknown>
-): ApiResponse {
+): Promise<ApiResponse> {
   try {
-    // TODO: Implement actual API call
-    // For now, return placeholder response
+    const url = `/api/v1/${tenant}/${pkg}/${entity}`
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+      cache: 'no-store',
+    })
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+      return {
+        error: errorData.error ?? `HTTP ${response.status}`,
+        status: response.status,
+      }
+    }
+    
+    const responseData = await response.json()
     return {
-      data: { id: 'new-id', ...data },
-      status: 201,
+      data: responseData,
+      status: response.status,
     }
   } catch (error) {
     console.error(`Failed to create entity ${tenant}/${pkg}/${entity}:`, error)
@@ -113,19 +198,37 @@ export function createEntity(
  * @param data - Entity data to update
  * @returns API response with updated entity
  */
-export function updateEntity(
+export async function updateEntity(
   tenant: string,
   pkg: string,
   entity: string,
   id: string,
   data: Record<string, unknown>
-): ApiResponse {
+): Promise<ApiResponse> {
   try {
-    // TODO: Implement actual API call
-    // For now, return placeholder response
+    const url = `/api/v1/${tenant}/${pkg}/${entity}/${id}`
+    
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+      cache: 'no-store',
+    })
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+      return {
+        error: errorData.error ?? `HTTP ${response.status}`,
+        status: response.status,
+      }
+    }
+    
+    const responseData = await response.json()
     return {
-      data: { id, ...data },
-      status: 200,
+      data: responseData,
+      status: response.status,
     }
   } catch (error) {
     console.error(`Failed to update entity ${tenant}/${pkg}/${entity}/${id}:`, error)
@@ -145,17 +248,33 @@ export function updateEntity(
  * @param id - Entity ID
  * @returns API response
  */
-export function deleteEntity(
+export async function deleteEntity(
   tenant: string,
   pkg: string,
   entity: string,
   id: string
-): ApiResponse {
+): Promise<ApiResponse> {
   try {
-    // TODO: Implement actual API call
-    // For now, return success response
+    const url = `/api/v1/${tenant}/${pkg}/${entity}/${id}`
+    
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store',
+    })
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+      return {
+        error: errorData.error ?? `HTTP ${response.status}`,
+        status: response.status,
+      }
+    }
+    
     return {
-      status: 204,
+      status: response.status,
     }
   } catch (error) {
     console.error(`Failed to delete entity ${tenant}/${pkg}/${entity}/${id}:`, error)
