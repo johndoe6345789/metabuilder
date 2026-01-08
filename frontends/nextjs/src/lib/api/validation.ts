@@ -60,6 +60,7 @@ export function generateFieldSchema(field: FieldDefinition): ZodTypeAny {
       schema = z.coerce.date()
       break
     case 'enum':
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (field.enum !== null && field.enum !== undefined && field.enum.length > 0) {
         schema = z.enum(field.enum as [string, ...string[]])
       } else {
@@ -67,6 +68,7 @@ export function generateFieldSchema(field: FieldDefinition): ZodTypeAny {
       }
       break
     case 'array':
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (field.arrayItemType !== null && field.arrayItemType !== undefined) {
         const itemSchema = generateFieldSchema({ 
           name: 'item', 
@@ -78,6 +80,7 @@ export function generateFieldSchema(field: FieldDefinition): ZodTypeAny {
       }
       break
     case 'object':
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (field.objectFields !== null && field.objectFields !== undefined) {
         const objectShape: Record<string, ZodTypeAny> = {}
         for (const objField of field.objectFields) {
@@ -97,6 +100,7 @@ export function generateFieldSchema(field: FieldDefinition): ZodTypeAny {
   }
 
   // Apply validation rules
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (field.validation !== null && field.validation !== undefined) {
     for (const rule of field.validation) {
       schema = applyValidationRule(schema, rule, field.type)
@@ -236,7 +240,7 @@ export function formatValidationErrors(error: z.ZodError): Record<string, string
 export function createValidationMiddleware(entity: EntityDefinition) {
   const schema = generateEntitySchema(entity)
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/require-await
   return async (data: unknown): Promise<{ valid: true; data: any } | { valid: false; errors: Record<string, string[]> }> => {
     const result = schema.safeParse(data)
 

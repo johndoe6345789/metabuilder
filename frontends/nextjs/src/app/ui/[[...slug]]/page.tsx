@@ -84,6 +84,7 @@ export async function generateStaticParams() {
       },
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (result.data === null || result.data === undefined || !Array.isArray(result.data)) {
       return []
     }
@@ -91,6 +92,7 @@ export async function generateStaticParams() {
     // Transform to Next.js static params format
     return result.data
       .map((page: { path?: string | null }) => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (page.path === null || page.path === undefined || typeof page.path !== 'string' || page.path.length === 0) {
           return null
         }

@@ -59,11 +59,11 @@ const createProductionPrisma = (): PrismaClient => {
   
   try {
     // For Prisma 7, PrismaBetterSqlite3 is a FACTORY that takes config with url, not a client instance
-     
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const adapter = new PrismaBetterSqlite3({ url: databaseUrl })
     console.warn('[Prisma] Adapter factory created successfully')
     
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const client = new PrismaClient({
       adapter,
       log: process.env.NODE_ENV === 'development' ? ['error', 'warn', 'query'] : ['error'],

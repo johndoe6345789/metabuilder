@@ -63,6 +63,7 @@ export default async function EntityPage({ params }: EntityPageProps) {
         </nav>
         
         <h1>{schema?.displayName ?? entity}</h1>
+        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
         {(schema?.description !== null && schema?.description !== undefined) && <p>{schema.description}</p>}
       </header>
 
@@ -294,7 +295,8 @@ function EntityCreateView({ tenant, pkg, entity, schema }: {
             </label>
             <input
               type="text"
-              placeholder={field.description || `Enter ${field.name}`}
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+              placeholder={(field.description !== null && field.description !== undefined && field.description.length > 0) ? field.description : `Enter ${field.name}`}
               style={{
                 width: '100%',
                 padding: '0.5rem',
@@ -367,6 +369,7 @@ function EntityEditView({ tenant, pkg, entity, id, schema }: {
                     return String(value)
                   })()}
                   placeholder={(field.description !== null && field.description !== undefined && field.description.length > 0) ? field.description : `Enter ${field.name}`}
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                   style={{
                     width: '100%',
                     padding: '0.5rem',

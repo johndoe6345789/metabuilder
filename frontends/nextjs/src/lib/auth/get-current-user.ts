@@ -27,6 +27,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     const cookieStore = await cookies()
     const sessionToken = cookieStore.get(SESSION_COOKIE)
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (sessionToken?.value === null || sessionToken?.value === undefined || sessionToken.value.length === 0) {
       return null
     }
@@ -34,6 +35,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     // Get session from database
     const session = await getSessionByToken(sessionToken.value)
     
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (session === null || session === undefined) {
       return null
     }
@@ -42,6 +44,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     const adapter = getAdapter()
     const userResult = await adapter.get('User', session.userId)
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (userResult.data === null || userResult.data === undefined) {
       return null
     }

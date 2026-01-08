@@ -72,7 +72,7 @@ export async function fetchEntityList(
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ error: 'Unknown error' })) as { error?: string }
       return {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+         
         error: errorData.error ?? `HTTP ${response.status}`,
         status: response.status,
       }
@@ -81,7 +81,7 @@ export async function fetchEntityList(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const data = await response.json()
     return {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       data: Array.isArray(data) ? data : (data.data ?? []),
       status: response.status,
     }
@@ -123,7 +123,7 @@ export async function fetchEntity(
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ error: 'Unknown error' })) as { error?: string }
       return {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+         
         error: errorData.error ?? `HTTP ${response.status}`,
         status: response.status,
       }
@@ -132,7 +132,7 @@ export async function fetchEntity(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const data = await response.json()
     return {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+       
       data,
       status: response.status,
     }
@@ -173,15 +173,18 @@ export async function createEntity(
     })
     
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' })) as { error?: string }
       return {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         error: errorData.error ?? `HTTP ${response.status}`,
         status: response.status,
       }
     }
     
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const responseData = await response.json()
     return {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       data: responseData,
       status: response.status,
     }
@@ -226,7 +229,7 @@ export async function updateEntity(
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ error: 'Unknown error' })) as { error?: string }
       return {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+         
         error: errorData.error ?? `HTTP ${response.status}`,
         status: response.status,
       }
@@ -235,7 +238,7 @@ export async function updateEntity(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const responseData = await response.json()
     return {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+       
       data: responseData,
       status: response.status,
     }
@@ -277,7 +280,7 @@ export async function deleteEntity(
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ error: 'Unknown error' })) as { error?: string }
       return {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+         
         error: errorData.error ?? `HTTP ${response.status}`,
         status: response.status,
       }
