@@ -49,8 +49,13 @@ export default defineConfig({
   // Run your local dev server before starting the tests
   webServer: {
     command: 'npm --prefix frontends/nextjs run db:generate && npm --prefix frontends/nextjs run dev',
-    url: 'http://localhost:3000',
+    url: 'http://localhost:3000/api/health',
     reuseExistingServer: !process.env.CI,
     timeout: 300 * 1000,
+    stdout: 'pipe',
+    stderr: 'pipe',
+    env: {
+      DATABASE_URL: 'file:../../prisma/prisma/dev.db',
+    },
   },
 });
