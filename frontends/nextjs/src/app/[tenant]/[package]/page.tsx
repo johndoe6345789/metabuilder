@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: PackagePageProps) {
     const packageData = await loadJSONPackage(join(getPackagesDir(), pkg))
     return {
       title: `${packageData.metadata.name} - ${tenant} | MetaBuilder`,
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unnecessary-condition
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       description: (packageData.metadata.description !== null && packageData.metadata.description !== undefined && packageData.metadata.description.length > 0) 
         ? packageData.metadata.description 
         : `${packageData.metadata.name} package for tenant ${tenant}`,

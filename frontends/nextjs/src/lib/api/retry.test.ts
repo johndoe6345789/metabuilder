@@ -20,7 +20,7 @@ describe('retry utilities', () => {
       { statusCode: 503, shouldRetry: true, description: 'service unavailable (retryable)' },
       { statusCode: 429, shouldRetry: true, description: 'rate limited (retryable)' },
     ])('should handle $description correctly', async ({ statusCode, shouldRetry }) => {
-      const mockFetch = vi.fn(async () => {
+      const mockFetch = vi.fn(async () => { // eslint-disable-line @typescript-eslint/require-await
         return new Response(JSON.stringify({ test: 'data' }), {
           status: shouldRetry ? (mockFetch.mock.calls.length === 0 ? statusCode : 200) : statusCode,
         })
@@ -47,7 +47,7 @@ describe('retry utilities', () => {
     })
 
     it('should retry up to maxRetries times', async () => {
-      const mockFetch = vi.fn(async () => {
+      const mockFetch = vi.fn(async () => { // eslint-disable-line @typescript-eslint/require-await
         return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 })
       })
 
@@ -63,7 +63,7 @@ describe('retry utilities', () => {
     })
 
     it('should use exponential backoff', async () => {
-      const mockFetch = vi.fn(async () => {
+      const mockFetch = vi.fn(async () => { // eslint-disable-line @typescript-eslint/require-await
         return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 })
       })
 
@@ -88,7 +88,7 @@ describe('retry utilities', () => {
 
     it('should handle network errors with retries', async () => {
       let callCount = 0
-      const mockFetch = vi.fn(async () => {
+      const mockFetch = vi.fn(async () => { // eslint-disable-line @typescript-eslint/require-await
         callCount++
         if (callCount < 3) {
           throw new Error('Network error')
@@ -108,7 +108,7 @@ describe('retry utilities', () => {
     })
 
     it('should throw error after max retries exceeded', async () => {
-      const mockFetch = vi.fn(async () => {
+      const mockFetch = vi.fn(async () => { // eslint-disable-line @typescript-eslint/require-await
         throw new Error('Network error')
       })
 
@@ -122,7 +122,7 @@ describe('retry utilities', () => {
     })
 
     it('should respect maxDelayMs', async () => {
-      const mockFetch = vi.fn(async () => {
+      const mockFetch = vi.fn(async () => { // eslint-disable-line @typescript-eslint/require-await
         return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 })
       })
 
@@ -145,7 +145,7 @@ describe('retry utilities', () => {
   describe('retry', () => {
     it('should retry async function on failure', async () => {
       let callCount = 0
-      const mockFn = vi.fn(async () => {
+      const mockFn = vi.fn(async () => // eslint-disable-line @typescript-eslint/require-await { // eslint-disable-line @typescript-eslint/require-await
         callCount++
         if (callCount < 2) {
           throw new Error('Temporary error')
@@ -164,7 +164,7 @@ describe('retry utilities', () => {
     })
 
     it('should return result on first success', async () => {
-      const mockFn = vi.fn(async () => 'success')
+      const mockFn = vi.fn(async () => // eslint-disable-line @typescript-eslint/require-await 'success')
 
       const result = await retry(mockFn, { maxRetries: 3, initialDelayMs: 10 })
       
@@ -173,7 +173,7 @@ describe('retry utilities', () => {
     })
 
     it('should throw after max retries', async () => {
-      const mockFn = vi.fn(async () => {
+      const mockFn = vi.fn(async () => // eslint-disable-line @typescript-eslint/require-await { // eslint-disable-line @typescript-eslint/require-await
         throw new Error('Persistent error')
       })
 
@@ -187,7 +187,7 @@ describe('retry utilities', () => {
 
     it('should use exponential backoff', async () => {
       let callCount = 0
-      const mockFn = vi.fn(async () => {
+      const mockFn = vi.fn(async () => // eslint-disable-line @typescript-eslint/require-await { // eslint-disable-line @typescript-eslint/require-await
         callCount++
         if (callCount < 4) {
           throw new Error('Temporary error')

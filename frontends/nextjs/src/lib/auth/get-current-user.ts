@@ -44,7 +44,8 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     const adapter = getAdapter()
     const userResult = await adapter.get('User', session.userId)
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+     
     if (userResult.data === null || userResult.data === undefined) {
       return null
     }

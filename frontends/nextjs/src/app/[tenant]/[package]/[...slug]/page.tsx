@@ -174,6 +174,7 @@ function EntityListView({ tenant, pkg, entity, schema }: {
                           const value = item[field.name]
                           if (value === null || value === undefined) return '-'
                           if (typeof value === 'object') return JSON.stringify(value)
+                          // eslint-disable-next-line @typescript-eslint/no-base-to-string
                           return String(value)
                         })()}
                       </td>
@@ -255,6 +256,7 @@ function EntityDetailView({ tenant, pkg, entity, id, schema }: {
                   const value = (response.data as Record<string, unknown>)[field.name]
                   if (value === null || value === undefined) return '-'
                   if (typeof value === 'object') return JSON.stringify(value)
+                  // eslint-disable-next-line @typescript-eslint/no-base-to-string
                   return String(value)
                 })()}
               </div>
@@ -366,10 +368,11 @@ function EntityEditView({ tenant, pkg, entity, id, schema }: {
                   defaultValue={(() => {
                     if (value === null || value === undefined) return ''
                     if (typeof value === 'object') return JSON.stringify(value)
+                    // eslint-disable-next-line @typescript-eslint/no-base-to-string
                     return String(value)
                   })()}
-                  placeholder={(field.description !== null && field.description !== undefined && field.description.length > 0) ? field.description : `Enter ${field.name}`}
                   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                  placeholder={(field.description !== null && field.description !== undefined && field.description.length > 0) ? field.description : `Enter ${field.name}`}
                   style={{
                     width: '100%',
                     padding: '0.5rem',

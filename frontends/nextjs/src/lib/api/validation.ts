@@ -224,6 +224,7 @@ export function formatValidationErrors(error: z.ZodError): Record<string, string
 
   for (const issue of error.issues) {
     const path = issue.path.join('.')
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unnecessary-condition
     if (formatted[path] === null || formatted[path] === undefined) {
       formatted[path] = []
     }
