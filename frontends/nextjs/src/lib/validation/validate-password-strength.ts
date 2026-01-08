@@ -74,7 +74,7 @@ export function validatePasswordStrength(password: unknown): PasswordStrengthRes
   }
 
   // Check for special character
-  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+  if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
     errors.push('Password must contain at least one special character')
   } else {
     score += 15
@@ -87,7 +87,7 @@ export function validatePasswordStrength(password: unknown): PasswordStrengthRes
     /[A-Z]/.test(password),
     /[a-z]/.test(password),
     /\d/.test(password),
-    /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+    /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password),
   ].filter(Boolean).length
   
   score += types * 3

@@ -2,25 +2,8 @@ import '@/main.scss'
 
 import type { Metadata, Viewport } from 'next'
 
-import { PackageStyleLoader } from '@/components/PackageStyleLoader'
 import { Providers } from './providers'
 import { loadPackage } from '@/lib/packages/unified'
-
-// List of packages to load styles from
-const PACKAGES_WITH_STYLES = [
-  'shared',
-  'ui_home',
-  'ui_header',
-  'ui_footer',
-  'ui_level2',
-  'ui_level3',
-  'ui_level4',
-  'ui_level5',
-  'ui_level6',
-  'admin_panel',
-  'code_editor',
-  'css_designer',
-]
 
 export const metadata: Metadata = {
   title: {

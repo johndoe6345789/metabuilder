@@ -37,7 +37,7 @@ export interface SortCondition {
  * Format: field:operator:value or field:value (defaults to eq)
  */
 export function parseFilterString(filterStr: string): FilterCondition[] {
-  if (!filterStr.trim()) {
+  if (filterStr.trim().length === 0) {
     return []
   }
 
@@ -171,7 +171,7 @@ export function buildPrismaWhere(conditions: FilterCondition[]): Record<string, 
  * Format: field or -field (- prefix for desc) or field1,-field2
  */
 export function parseSortString(sortStr: string): SortCondition[] {
-  if (!sortStr.trim()) {
+  if (sortStr.trim().length === 0) {
     return []
   }
 

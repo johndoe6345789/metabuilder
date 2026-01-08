@@ -4,11 +4,11 @@ import { ItemsPerPageSelector } from './ItemsPerPageSelector'
 
 describe('ItemsPerPageSelector', () => {
   it.each([
-    { value: 10, expectedValue: 10 },
-    { value: 20, expectedValue: 20 },
-    { value: 50, expectedValue: 50 },
-    { value: 100, expectedValue: 100 },
-  ])('should display selected value $value', ({ value, expectedValue }) => {
+    { value: 10 },
+    { value: 20 },
+    { value: 50 },
+    { value: 100 },
+  ])('should display selected value $value', ({ value }) => {
     const onChange = vi.fn()
 
     const { container } = render(
@@ -34,10 +34,7 @@ describe('ItemsPerPageSelector', () => {
     )
 
     const select = container.querySelector('select')
-    expect(select).toBeDefined()
-    
-    // Simulate changing the select value
-    if (select) {
+    expect(select !== null).toBe(true)
       // Create a proper change event with a select element
       Object.defineProperty(select, 'value', {
         writable: true,

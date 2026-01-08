@@ -116,7 +116,7 @@ export function calculateCursorPaginationMetadata<T extends { id: string }>(
   return {
     limit,
     hasNextPage: hasMore,
-    hasPreviousPage: !!startCursor,
+    hasPreviousPage: (startCursor !== null && startCursor !== undefined),
     startCursor,
     endCursor,
   }

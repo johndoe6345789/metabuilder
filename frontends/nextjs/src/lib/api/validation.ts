@@ -5,7 +5,7 @@
  * and validate request/response data
  */
 
-import { z, ZodSchema, ZodType, ZodTypeAny } from 'zod'
+import { z, type ZodTypeAny } from 'zod'
 
 export type FieldType = 
   | 'string' 
@@ -60,14 +60,14 @@ export function generateFieldSchema(field: FieldDefinition): ZodTypeAny {
       schema = z.coerce.date()
       break
     case 'enum':
-      if (field.enum && field.enum.length > 0) {
+      if (field.enum !== null && field.enum !== undefined && field.enum.length > 0) {
         schema = z.enum(field.enum as [string, ...string[]])
       } else {
         schema = z.string()
       }
       break
     case 'array':
-      if (field.arrayItemType) {
+      if (field.arrayItemType !== null && field.arrayItemType !== undefined) {
         const itemSchema = generateFieldSchema({ 
           name: 'item', 
           type: field.arrayItemType 
@@ -78,7 +78,7 @@ export function generateFieldSchema(field: FieldDefinition): ZodTypeAny {
       }
       break
     case 'object':
-      if (field.objectFields) {
+      if (field.objectFields !== null && field.objectFields !== undefined) {
         const objectShape: Record<string, ZodTypeAny> = {}
         for (const objField of field.objectFields) {
           objectShape[objField.name] = generateFieldSchema(objField)
@@ -97,16 +97,16 @@ export function generateFieldSchema(field: FieldDefinition): ZodTypeAny {
   }
 
   // Apply validation rules
-  if (field.validation) {
+  if (field.validation !== null && field.validation !== undefined) {
     for (const rule of field.validation) {
       schema = applyValidationRule(schema, rule, field.type)
     }
   }
 
   // Handle required/optional
-  if (!field.required) {
+  if (field.required !== true) {
     schema = schema.optional()
-    if (field.default !== undefined) {
+    if (field.default !== undefined && field.default !== null) {
       schema = schema.default(field.default)
     }
   }
@@ -135,6 +135,7 @@ function applyValidationRule(
         return (schema as z.ZodNumber).min(rule.value, rule.message)
       }
       if (fieldType === 'array' && typeof rule.value === 'number') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return (schema as z.ZodArray<any>).min(rule.value, rule.message)
       }
       return schema
@@ -147,6 +148,7 @@ function applyValidationRule(
         return (schema as z.ZodNumber).max(rule.value, rule.message)
       }
       if (fieldType === 'array' && typeof rule.value === 'number') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return (schema as z.ZodArray<any>).max(rule.value, rule.message)
       }
       return schema
@@ -182,6 +184,7 @@ function applyValidationRule(
 /**
  * Generate Zod schema for an entity
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function generateEntitySchema(entity: EntityDefinition): z.ZodObject<any> {
   const shape: Record<string, ZodTypeAny> = {}
 
@@ -217,9 +220,10 @@ export function formatValidationErrors(error: z.ZodError): Record<string, string
 
   for (const issue of error.issues) {
     const path = issue.path.join('.')
-    if (!formatted[path]) {
+    if (formatted[path] === null || formatted[path] === undefined) {
       formatted[path] = []
     }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     formatted[path].push(issue.message)
   }
 
@@ -232,6 +236,7 @@ export function formatValidationErrors(error: z.ZodError): Record<string, string
 export function createValidationMiddleware(entity: EntityDefinition) {
   const schema = generateEntitySchema(entity)
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return async (data: unknown): Promise<{ valid: true; data: any } | { valid: false; errors: Record<string, string[]> }> => {
     const result = schema.safeParse(data)
 

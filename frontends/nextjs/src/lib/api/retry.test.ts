@@ -20,11 +20,9 @@ describe('retry utilities', () => {
       { statusCode: 503, shouldRetry: true, description: 'service unavailable (retryable)' },
       { statusCode: 429, shouldRetry: true, description: 'rate limited (retryable)' },
     ])('should handle $description correctly', async ({ statusCode, shouldRetry }) => {
-      let callCount = 0
       const mockFetch = vi.fn(async () => {
-        callCount++
         return new Response(JSON.stringify({ test: 'data' }), {
-          status: callCount === 1 && shouldRetry ? statusCode : (callCount === 1 ? statusCode : 200),
+          status: shouldRetry ? (mockFetch.mock.calls.length === 0 ? statusCode : 200) : statusCode,
         })
       })
 
@@ -49,9 +47,7 @@ describe('retry utilities', () => {
     })
 
     it('should retry up to maxRetries times', async () => {
-      let callCount = 0
       const mockFetch = vi.fn(async () => {
-        callCount++
         return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 })
       })
 
@@ -67,11 +63,7 @@ describe('retry utilities', () => {
     })
 
     it('should use exponential backoff', async () => {
-      const delays: number[] = []
-      let callCount = 0
-      
       const mockFetch = vi.fn(async () => {
-        callCount++
         return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 })
       })
 
@@ -123,16 +115,14 @@ describe('retry utilities', () => {
       const promise = retryFetch(mockFetch, { maxRetries: 2, initialDelayMs: 10 })
       
       // Fast-forward through all retry delays
-      vi.advanceTimersByTimeAsync(500)
+      await vi.advanceTimersByTimeAsync(500)
       
       await expect(promise).rejects.toThrow('Network error')
       expect(mockFetch).toHaveBeenCalledTimes(3) // initial + 2 retries
     })
 
     it('should respect maxDelayMs', async () => {
-      let callCount = 0
       const mockFetch = vi.fn(async () => {
-        callCount++
         return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 })
       })
 
@@ -189,7 +179,7 @@ describe('retry utilities', () => {
 
       const promise = retry(mockFn, { maxRetries: 2, initialDelayMs: 10 })
       
-      vi.advanceTimersByTimeAsync(500)
+      await vi.advanceTimersByTimeAsync(500)
       
       await expect(promise).rejects.toThrow('Persistent error')
       expect(mockFn).toHaveBeenCalledTimes(3)

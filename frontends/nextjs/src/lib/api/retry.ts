@@ -49,7 +49,7 @@ function isRetryable(statusCode: number, retryableStatusCodes: number[]): boolea
  * @param options - Retry options
  * @returns Promise that resolves with the response or rejects after all retries
  */
-export async function retryFetch<T>(
+export async function retryFetch(
   fn: () => Promise<Response>,
   options: RetryOptions = {}
 ): Promise<Response> {
