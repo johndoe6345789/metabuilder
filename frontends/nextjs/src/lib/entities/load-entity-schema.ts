@@ -46,19 +46,19 @@ export async function loadEntitySchema(
     const packageMetadata = pkg.metadata as Record<string, unknown>
     const entities = packageMetadata.entities as Record<string, unknown>[] | undefined
     
-    if (!entities || !Array.isArray(entities)) {
+    if (entities === undefined || !Array.isArray(entities)) {
       return null
     }
 
     const entity = entities.find(e => e.name === entityName)
     
-    if (!entity) {
+    if (entity === undefined) {
       return null
     }
 
     return {
       name: entity.name as string,
-      fields: (entity.fields as EntityField[]) || [],
+      fields: (entity.fields as EntityField[] | undefined) ?? [],
       primaryKey: entity.primaryKey as string | undefined,
       displayName: entity.displayName as string | undefined,
       description: entity.description as string | undefined,

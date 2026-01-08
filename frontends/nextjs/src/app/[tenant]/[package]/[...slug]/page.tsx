@@ -113,7 +113,7 @@ export default async function EntityPage({ params }: EntityPageProps) {
 
 import type { EntitySchema } from '@/lib/entities/load-entity-schema'
 
-async function EntityListView({ tenant, pkg, entity, schema }: { 
+function EntityListView({ tenant, pkg, entity, schema }: { 
   tenant: string
   pkg: string
   entity: string
@@ -122,7 +122,7 @@ async function EntityListView({ tenant, pkg, entity, schema }: {
   const apiUrl = `/api/v1/${tenant}/${pkg}/${entity}`
   
   // Fetch entity list
-  const response = await fetchEntityList(tenant, pkg, entity)
+  const response = fetchEntityList(tenant, pkg, entity)
   
   return (
     <div className="entity-list">
@@ -197,7 +197,7 @@ async function EntityListView({ tenant, pkg, entity, schema }: {
   )
 }
 
-async function EntityDetailView({ tenant, pkg, entity, id, schema }: { 
+function EntityDetailView({ tenant, pkg, entity, id, schema }: { 
   tenant: string
   pkg: string
   entity: string
@@ -207,7 +207,7 @@ async function EntityDetailView({ tenant, pkg, entity, id, schema }: {
   const apiUrl = `/api/v1/${tenant}/${pkg}/${entity}/${id}`
   
   // Fetch entity data
-  const response = await fetchEntity(tenant, pkg, entity, id)
+  const response = fetchEntity(tenant, pkg, entity, id)
   
   return (
     <div className="entity-detail">
@@ -312,7 +312,7 @@ function EntityCreateView({ tenant, pkg, entity, schema }: {
   )
 }
 
-async function EntityEditView({ tenant, pkg, entity, id, schema }: { 
+function EntityEditView({ tenant, pkg, entity, id, schema }: { 
   tenant: string
   pkg: string
   entity: string
@@ -322,7 +322,7 @@ async function EntityEditView({ tenant, pkg, entity, id, schema }: {
   const apiUrl = `/api/v1/${tenant}/${pkg}/${entity}/${id}`
   
   // Fetch entity data
-  const response = await fetchEntity(tenant, pkg, entity, id)
+  const response = fetchEntity(tenant, pkg, entity, id)
   
   return (
     <div className="entity-edit">

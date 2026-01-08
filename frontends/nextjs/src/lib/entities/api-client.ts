@@ -20,11 +20,11 @@ export interface ApiResponse<T = unknown> {
  * @param entity - Entity name
  * @returns API response with entity list
  */
-export async function fetchEntityList(
+export function fetchEntityList(
   tenant: string,
   pkg: string,
   entity: string
-): Promise<ApiResponse<unknown[]>> {
+): ApiResponse<unknown[]> {
   try {
     // TODO: Implement actual API call
     // For now, return empty list as placeholder
@@ -50,12 +50,12 @@ export async function fetchEntityList(
  * @param id - Entity ID
  * @returns API response with entity data
  */
-export async function fetchEntity(
+export function fetchEntity(
   tenant: string,
   pkg: string,
   entity: string,
   id: string
-): Promise<ApiResponse> {
+): ApiResponse {
   try {
     // TODO: Implement actual API call
     // For now, return placeholder data
@@ -81,12 +81,12 @@ export async function fetchEntity(
  * @param data - Entity data to create
  * @returns API response with created entity
  */
-export async function createEntity(
+export function createEntity(
   tenant: string,
   pkg: string,
   entity: string,
   data: Record<string, unknown>
-): Promise<ApiResponse> {
+): ApiResponse {
   try {
     // TODO: Implement actual API call
     // For now, return placeholder response
@@ -113,13 +113,13 @@ export async function createEntity(
  * @param data - Entity data to update
  * @returns API response with updated entity
  */
-export async function updateEntity(
+export function updateEntity(
   tenant: string,
   pkg: string,
   entity: string,
   id: string,
   data: Record<string, unknown>
-): Promise<ApiResponse> {
+): ApiResponse {
   try {
     // TODO: Implement actual API call
     // For now, return placeholder response
@@ -145,12 +145,12 @@ export async function updateEntity(
  * @param id - Entity ID
  * @returns API response
  */
-export async function deleteEntity(
+export function deleteEntity(
   tenant: string,
   pkg: string,
   entity: string,
   id: string
-): Promise<ApiResponse> {
+): ApiResponse {
   try {
     // TODO: Implement actual API call
     // For now, return success response
