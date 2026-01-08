@@ -11,28 +11,24 @@ export function createPrismaContext(
   
   let prisma: PrismaClient
   
-  // For SQLite, we need to use the driver adapter
-  if (inferredDialect === 'sqlite') {
-    const dbPath = databaseUrl?.replace('file:', '') || '../../prisma/prisma/dev.db'
+  // For SQLite (or when dialect cannot be inferred), we need to use the driver adapter
+  if (inferredDialect === 'sqlite' || !databaseUrl || inferredDialect === undefined) {
+    const dbPath = databaseUrl?.replace('file:', '').replace('sqlite://', '') || '../../prisma/prisma/dev.db'
     const db = new Database(dbPath)
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const adapter = new PrismaBetterSqlite3(db)
     prisma = new PrismaClient({ adapter } as any)
   } else {
-    // For other databases, use the URL directly
-    prisma = new PrismaClient(
-      databaseUrl
-        ? {
-            datasources: { db: { url: databaseUrl } },
-          } as any
-        : undefined
-    )
+    // For PostgreSQL/MySQL with explicit connection strings
+    // Note: Prisma 7 removed datasources config, so this may not work
+    // Consider using adapters for all database types
+    throw new Error(`Prisma 7 requires adapters. Unsupported database dialect: ${inferredDialect}. Please use SQLite or implement adapters for other databases.`)
   }
 
   return {
     prisma,
     queryTimeout: options?.queryTimeout ?? 30000,
-    dialect: inferredDialect ?? 'generic'
+    dialect: inferredDialect ?? 'sqlite'
   }
 }
 
