@@ -26,7 +26,7 @@ export function ItemsPerPageSelector({
   label = 'Items per page',
 }: ItemsPerPageSelectorProps) {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+     
     onChange(Number(event.target.value))
   }
 

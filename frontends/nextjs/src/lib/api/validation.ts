@@ -223,7 +223,7 @@ export function formatValidationErrors(error: z.ZodError): Record<string, string
     if (formatted[path] === null || formatted[path] === undefined) {
       formatted[path] = []
     }
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+     
     formatted[path].push(issue.message)
   }
 

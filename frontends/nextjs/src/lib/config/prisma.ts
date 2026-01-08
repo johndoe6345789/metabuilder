@@ -36,9 +36,9 @@ const createMockPrisma = (): PrismaClient => {
 
 const createIntegrationPrisma = (): PrismaClient => {
   // For integration tests, use in-memory database via adapter factory
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+   
   const adapter = new PrismaBetterSqlite3({ url: ':memory:' })
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   return new PrismaClient({ adapter })
 }
 
@@ -59,7 +59,7 @@ const createProductionPrisma = (): PrismaClient => {
   
   try {
     // For Prisma 7, PrismaBetterSqlite3 is a FACTORY that takes config with url, not a client instance
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+     
     const adapter = new PrismaBetterSqlite3({ url: databaseUrl })
     console.warn('[Prisma] Adapter factory created successfully')
     

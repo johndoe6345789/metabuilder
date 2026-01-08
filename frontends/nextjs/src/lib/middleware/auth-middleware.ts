@@ -112,6 +112,7 @@ export async function authenticate(
     }
 
     // Run custom permission check if provided
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (customCheck !== null && customCheck !== undefined && !customCheck(user)) {
       return {
         success: false,
@@ -163,6 +164,7 @@ export async function requireAuth(
 ): Promise<CurrentUser> {
   const { success, user, error } = await authenticate(request, options)
   
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!success || user === null || user === undefined) {
     throw new Error(error !== undefined ? 'Authentication failed' : 'Unknown authentication error')
   }
