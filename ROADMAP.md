@@ -550,30 +550,218 @@ All criteria met ✅
 - ✅ Zero breaking changes
 - ✅ Documentation complete
 
-### 🔄 Phase 2: Backend Integration (In Planning)
-**Timeline:** Q1 2026  
-**Goal:** Connect frontend to real backend APIs
+### 🔄 Phase 2: Backend Integration (In Progress)
+**Timeline:** Q1 2026 (January - March)  
+**Goal:** Connect frontend to real backend APIs  
+**Status:** 🚀 Implementation Started
 
-**Priority: HIGH**
+**Priority: HIGH** ⭐
 
-- [ ] Implement actual API endpoints for entities
-  - [ ] GET /api/v1/{tenant}/{package}/{entity}
-  - [ ] GET /api/v1/{tenant}/{package}/{entity}/{id}
-  - [ ] POST /api/v1/{tenant}/{package}/{entity}
-  - [ ] PUT /api/v1/{tenant}/{package}/{entity}/{id}
-  - [ ] DELETE /api/v1/{tenant}/{package}/{entity}/{id}
-- [ ] Connect api-client.ts to real endpoints
-- [ ] Add request/response validation
-- [ ] Implement pagination for list endpoints
-- [ ] Add filtering and sorting support
-- [ ] Error handling and user feedback
-- [ ] API authentication middleware
-- [ ] Rate limiting
+#### Implementation Tasks
+
+##### 2.1 API Endpoint Implementation
+**Target:** Week 1-2 of Q1 2026
+
+- [ ] **GET /api/v1/{tenant}/{package}/{entity}** - List entities
+  - [ ] Implement route handler in `/app/api/v1/[tenant]/[package]/[entity]/route.ts`
+  - [ ] Add pagination support (`page`, `limit` query params)
+  - [ ] Add filtering support (`filter` query param with JSON)
+  - [ ] Add sorting support (`sort` query param)
+  - [ ] Implement tenant isolation checks
+  - [ ] Add response time logging
+  - [ ] Write unit tests (10+ test cases)
+  - [ ] Write integration tests
+  
+- [ ] **GET /api/v1/{tenant}/{package}/{entity}/{id}** - Get single entity
+  - [ ] Implement route handler in `/app/api/v1/[tenant]/[package]/[entity]/[id]/route.ts`
+  - [ ] Validate entity ID format
+  - [ ] Return 404 for non-existent entities
+  - [ ] Implement tenant isolation checks
+  - [ ] Write unit tests (8+ test cases)
+  - [ ] Write integration tests
+  
+- [ ] **POST /api/v1/{tenant}/{package}/{entity}** - Create entity
+  - [ ] Implement route handler with POST method
+  - [ ] Add Zod schema validation
+  - [ ] Validate required fields from entity schema
+  - [ ] Return created entity with 201 status
+  - [ ] Handle validation errors with 400 status
+  - [ ] Implement tenant isolation
+  - [ ] Write unit tests (12+ test cases)
+  - [ ] Write integration tests
+  
+- [ ] **PUT /api/v1/{tenant}/{package}/{entity}/{id}** - Update entity
+  - [ ] Implement route handler with PUT method
+  - [ ] Add Zod schema validation
+  - [ ] Support partial updates
+  - [ ] Return 404 for non-existent entities
+  - [ ] Return updated entity with 200 status
+  - [ ] Implement tenant isolation
+  - [ ] Write unit tests (12+ test cases)
+  - [ ] Write integration tests
+  
+- [ ] **DELETE /api/v1/{tenant}/{package}/{entity}/{id}** - Delete entity
+  - [ ] Implement route handler with DELETE method
+  - [ ] Return 404 for non-existent entities
+  - [ ] Return 204 status on success
+  - [ ] Implement soft delete if schema supports it
+  - [ ] Implement tenant isolation
+  - [ ] Write unit tests (8+ test cases)
+  - [ ] Write integration tests
+
+##### 2.2 API Client Integration
+**Target:** Week 2-3 of Q1 2026
+
+- [ ] **Update `api-client.ts`** - Remove placeholder implementations
+  - [ ] Replace `listEntities()` with actual fetch calls
+  - [ ] Replace `getEntity()` with actual fetch calls
+  - [ ] Replace `createEntity()` with actual fetch calls
+  - [ ] Replace `updateEntity()` with actual fetch calls
+  - [ ] Replace `deleteEntity()` with actual fetch calls
+  - [ ] Add proper error handling (network errors, API errors)
+  - [ ] Add retry logic for transient failures
+  - [ ] Add request timeout handling
+  - [ ] Write unit tests with mock fetch (20+ test cases)
+
+##### 2.3 Request/Response Validation
+**Target:** Week 3 of Q1 2026
+
+- [ ] **Zod Schema Generation**
+  - [ ] Create utility to generate Zod schemas from entity definitions
+  - [ ] Support all field types (string, number, boolean, date, enum, relation)
+  - [ ] Support validation rules (required, min, max, pattern, custom)
+  - [ ] Support nested objects and arrays
+  - [ ] Write tests for schema generation (15+ test cases)
+
+- [ ] **Validation Middleware**
+  - [ ] Create validation middleware for API routes
+  - [ ] Validate request body against entity schema
+  - [ ] Return detailed validation errors
+  - [ ] Support custom validation messages
+  - [ ] Write tests for validation middleware (10+ test cases)
+
+##### 2.4 Pagination Implementation
+**Target:** Week 3-4 of Q1 2026
+
+- [ ] **Pagination Utilities**
+  - [ ] Create pagination helper functions
+  - [ ] Support cursor-based pagination
+  - [ ] Support offset-based pagination
+  - [ ] Calculate total pages and items
+  - [ ] Return pagination metadata in responses
+  - [ ] Write tests for pagination (12+ test cases)
+
+- [ ] **Frontend Pagination Components**
+  - [ ] Create pagination UI component
+  - [ ] Add page navigation controls
+  - [ ] Add items-per-page selector
+  - [ ] Update list views to use pagination
+  - [ ] Write E2E tests for pagination
+
+##### 2.5 Filtering and Sorting
+**Target:** Week 4 of Q1 2026
+
+- [ ] **Filter Implementation**
+  - [ ] Support equality filters (`field=value`)
+  - [ ] Support comparison filters (`field_gt=value`, `field_lt=value`)
+  - [ ] Support array filters (`field_in=value1,value2`)
+  - [ ] Support text search filters (`field_contains=text`)
+  - [ ] Support nested field filters (`relation.field=value`)
+  - [ ] Write tests for filtering (15+ test cases)
+
+- [ ] **Sort Implementation**
+  - [ ] Support single field sorting (`sort=field`)
+  - [ ] Support multi-field sorting (`sort=field1,-field2`)
+  - [ ] Support ascending/descending (`-` prefix for desc)
+  - [ ] Support nested field sorting
+  - [ ] Write tests for sorting (10+ test cases)
+
+##### 2.6 Authentication Middleware
+**Target:** Week 5 of Q1 2026
+
+- [ ] **API Authentication**
+  - [ ] Create auth middleware for API routes
+  - [ ] Validate session tokens from cookies
+  - [ ] Check user permission levels
+  - [ ] Return 401 for unauthenticated requests
+  - [ ] Return 403 for insufficient permissions
+  - [ ] Add auth bypass for public endpoints
+  - [ ] Write tests for auth middleware (15+ test cases)
+
+##### 2.7 Rate Limiting
+**Target:** Week 5-6 of Q1 2026
+
+- [ ] **Rate Limiter Implementation**
+  - [ ] Install `@upstash/ratelimit` or similar
+  - [ ] Configure rate limits per endpoint
+  - [ ] Configure rate limits per user/tenant
+  - [ ] Return 429 status when rate limit exceeded
+  - [ ] Add rate limit headers to responses
+  - [ ] Write tests for rate limiting (8+ test cases)
+
+##### 2.8 Error Handling
+**Target:** Ongoing throughout implementation
+
+- [ ] **Standardized Error Responses**
+  - [ ] Create error response format (code, message, details)
+  - [ ] Handle validation errors (400)
+  - [ ] Handle authentication errors (401)
+  - [ ] Handle authorization errors (403)
+  - [ ] Handle not found errors (404)
+  - [ ] Handle rate limit errors (429)
+  - [ ] Handle server errors (500)
+  - [ ] Log all errors to error tracking service
+  - [ ] Write tests for error handling (20+ test cases)
+
+#### Testing Requirements
+
+**Unit Tests:** Target 150+ new tests
+- API route handlers: 50 tests
+- API client functions: 20 tests
+- Validation utilities: 25 tests
+- Pagination utilities: 12 tests
+- Filtering utilities: 15 tests
+- Sorting utilities: 10 tests
+- Auth middleware: 15 tests
+- Rate limiting: 8 tests
+- Error handling: 20 tests
+
+**Integration Tests:** Target 30+ new tests
+- Full CRUD flows: 15 tests
+- Multi-tenant isolation: 5 tests
+- Permission-based access: 10 tests
+
+**E2E Tests:** Target 15+ new tests
+- Complete CRUD user flows: 8 tests
+- Authentication flows: 3 tests
+- Permission-based UI changes: 4 tests
+
+#### Performance Benchmarks
+
+| Endpoint | Target Response Time | Target Throughput |
+|----------|---------------------|-------------------|
+| GET (list) | <100ms (p50), <200ms (p95) | >1000 req/s |
+| GET (single) | <50ms (p50), <100ms (p95) | >2000 req/s |
+| POST (create) | <150ms (p50), <300ms (p95) | >500 req/s |
+| PUT (update) | <150ms (p50), <300ms (p95) | >500 req/s |
+| DELETE | <100ms (p50), <200ms (p95) | >1000 req/s |
+
+#### Documentation Requirements
+
+- [ ] OpenAPI/Swagger specification for all endpoints
+- [ ] API authentication guide
+- [ ] Rate limiting documentation
+- [ ] Error response format documentation
+- [ ] Pagination documentation
+- [ ] Filtering and sorting guide
+- [ ] Example API requests for all endpoints
 
 **Success Metrics:**
-- [ ] All CRUD operations functional
-- [ ] API tests passing
-- [ ] Performance benchmarks met (<200ms avg response)
+- [ ] All CRUD operations functional (100% coverage)
+- [ ] API tests passing (>95% pass rate)
+- [ ] Performance benchmarks met (<200ms avg response p95)
+- [ ] Zero security vulnerabilities in API layer
+- [ ] API documentation complete (OpenAPI spec)
 
 ### 🔮 Phase 3: Enhanced CRUD (Planned)
 **Timeline:** Q1-Q2 2026  
@@ -855,15 +1043,280 @@ We emphasize **Test-Driven Development (TDD)** as a core practice:
 ```
               /\
              /  \
-            /E2E \       Few, Slow, Expensive
+            /E2E \       Few, Slow, Expensive (15-30 tests)
            /------\      Critical user flows
           /        \
-         /Integration\   More, Medium Speed
+         /Integration\   More, Medium Speed (50-100 tests)
         /------------\   Components working together
        /              \
-      /   Unit Tests   \  Many, Fast, Cheap
+      /   Unit Tests   \  Many, Fast, Cheap (200-500 tests)
      /------------------\ Individual functions
 ```
+
+### Target Test Distribution
+
+| Test Type | Current | Target | Coverage Focus |
+|-----------|---------|--------|----------------|
+| **Unit Tests** | 220 | 500+ | Individual functions, utilities |
+| **Integration Tests** | 30 | 100+ | API endpoints, database operations |
+| **E2E Tests** | 8 | 30+ | Critical user journeys |
+| **Total** | 258 | 630+ | Overall system |
+
+### Critical Test Scenarios
+
+#### Unit Test Scenarios (Priority Order)
+
+**API Layer (High Priority)**
+1. **CRUD Operations** (50 tests)
+   - List entities with pagination
+   - List entities with filters
+   - List entities with sorting
+   - Get single entity by ID
+   - Get non-existent entity (404)
+   - Create entity with valid data
+   - Create entity with invalid data (validation)
+   - Update entity with valid data
+   - Update entity with partial data
+   - Update non-existent entity (404)
+   - Delete entity by ID
+   - Delete non-existent entity (404)
+
+2. **Authentication & Authorization** (30 tests)
+   - Valid session token
+   - Invalid session token (401)
+   - Expired session token (401)
+   - Missing session token (401)
+   - Insufficient permissions (403)
+   - Permission level checks (0-5)
+   - Tenant isolation validation
+   - Cross-tenant access prevention
+
+3. **Validation** (40 tests)
+   - Required field validation
+   - Type validation (string, number, boolean, date)
+   - Min/max length validation
+   - Min/max value validation
+   - Pattern/regex validation
+   - Enum validation
+   - Nested object validation
+   - Array validation
+   - Custom validation rules
+
+4. **Pagination** (20 tests)
+   - Offset-based pagination
+   - Cursor-based pagination
+   - Page size limits
+   - Total count calculation
+   - Empty result sets
+   - Single page results
+   - Multiple page results
+   - Invalid pagination params
+
+5. **Filtering** (30 tests)
+   - Equality filters
+   - Comparison filters (gt, gte, lt, lte)
+   - Array filters (in, notIn)
+   - Text search filters (contains, startsWith, endsWith)
+   - Boolean filters
+   - Null/undefined filters
+   - Date range filters
+   - Nested field filters
+   - Multiple filter combinations
+
+6. **Sorting** (15 tests)
+   - Single field ascending
+   - Single field descending
+   - Multiple field sorting
+   - Nested field sorting
+   - Invalid sort fields
+   - Case-insensitive sorting
+
+7. **Rate Limiting** (15 tests)
+   - Within rate limit
+   - Exceeding rate limit (429)
+   - Rate limit headers
+   - Different rate limits per endpoint
+   - Different rate limits per user
+   - Rate limit reset
+
+**Utility Functions (Medium Priority)**
+8. **Schema Generation** (20 tests)
+   - Generate Zod schema from entity definition
+   - All field type support
+   - Validation rule support
+   - Nested object schema
+   - Array schema
+   - Optional/required fields
+
+9. **Database Helpers** (30 tests)
+   - Query building
+   - Transaction management
+   - Error handling
+   - Tenant filtering
+   - Soft delete support
+
+10. **Component Rendering** (20 tests)
+    - JSON to React conversion
+    - Component props mapping
+    - Nested component rendering
+    - Error component rendering
+
+#### Integration Test Scenarios (Priority Order)
+
+**API Integration (High Priority)**
+1. **Complete CRUD Flow** (15 tests)
+   - Create → Read → Update → Delete flow
+   - List empty collection
+   - List with data
+   - Pagination through large datasets
+   - Filter and sort combinations
+
+2. **Multi-Tenant Isolation** (10 tests)
+   - Create entity in tenant A
+   - List entities in tenant A (only shows A's data)
+   - List entities in tenant B (only shows B's data)
+   - Attempt cross-tenant access (blocked)
+   - Tenant-specific filtering
+
+3. **Permission-Based Access** (15 tests)
+   - Public user (level 0) access
+   - Authenticated user (level 1) access
+   - Moderator (level 2) access
+   - Admin (level 3) access
+   - God (level 4) access
+   - Supergod (level 5) access
+   - Permission escalation prevention
+
+4. **Authentication Flows** (10 tests)
+   - Login → Create session → Make authenticated request
+   - Logout → Session invalidated → Request fails
+   - Session expiry → Request fails
+   - Session refresh → Continued access
+
+5. **Error Scenarios** (10 tests)
+   - Network timeout handling
+   - Database connection failure
+   - Invalid JSON in request
+   - Large payload handling
+   - Concurrent request handling
+
+**Database Integration (Medium Priority)**
+6. **Transaction Management** (10 tests)
+   - Successful transaction commit
+   - Transaction rollback on error
+   - Nested transaction support
+   - Concurrent transaction isolation
+
+7. **Data Integrity** (10 tests)
+   - Foreign key constraints
+   - Unique constraints
+   - Not-null constraints
+   - Check constraints
+   - Cascade delete behavior
+
+#### E2E Test Scenarios (Priority Order)
+
+**Critical User Flows (High Priority)**
+1. **Authentication Journey** (4 tests)
+   - Landing page → Sign in → Dashboard
+   - Landing page → Register → Verify email → Dashboard
+   - Dashboard → Logout → Landing page
+   - Forgot password → Reset → Login
+
+2. **CRUD Operations Journey** (8 tests)
+   - Navigate to entity list → View list
+   - Click "Create" → Fill form → Submit → View detail page
+   - Detail page → Click "Edit" → Update form → Submit → View updated detail
+   - Detail page → Click "Delete" → Confirm → Return to list
+   - List page → Use pagination → Navigate pages
+   - List page → Apply filters → See filtered results
+   - List page → Apply sorting → See sorted results
+   - List page → Search → See search results
+
+3. **Permission-Based UI** (6 tests)
+   - Login as public user → See public pages only
+   - Login as user → See user pages
+   - Login as admin → See admin pages
+   - Login as god → See god panel
+   - Attempt to access higher-level page → See access denied
+   - Permission level indicator in UI
+
+4. **Package Rendering** (4 tests)
+   - Navigate to package home page → See rendered components
+   - Navigate to package sub-route → See rendered components
+   - Navigate to non-existent package → See 404
+   - Navigate to disabled package → See access denied
+
+5. **Form Validation** (4 tests)
+   - Submit empty required field → See validation error
+   - Submit invalid format → See format error
+   - Submit valid data → Success message
+   - Server-side validation error → Display error to user
+
+6. **Multi-Tenant Scenarios** (2 tests)
+   - Login to tenant A → See tenant A data
+   - Login to tenant B → See tenant B data (different)
+
+7. **Error Handling** (2 tests)
+   - Network error during operation → User-friendly error message
+   - Server error (500) → Error page with retry option
+
+### Test Performance Targets
+
+| Test Type | Target Execution Time | Parallelization |
+|-----------|----------------------|-----------------|
+| Unit test (single) | <100ms | Yes (max CPU cores) |
+| Unit test suite | <30s | Yes |
+| Integration test (single) | <1s | Yes (database per test) |
+| Integration test suite | <2 minutes | Yes |
+| E2E test (single) | <30s | Yes (browser per test) |
+| E2E test suite | <10 minutes | Yes |
+| Full test suite (CI) | <15 minutes | Yes |
+
+### Test Data Management
+
+**Unit Tests**
+- Use mocked data (no database)
+- Use factories for test data generation
+- Keep test data minimal and focused
+
+**Integration Tests**
+- Use test database (separate from dev/prod)
+- Reset database between tests
+- Use database transactions (rollback after test)
+- Use seed data for common scenarios
+
+**E2E Tests**
+- Use separate test environment
+- Use isolated test accounts
+- Clean up test data after suite
+- Use realistic but anonymized data
+
+### Test Maintenance Best Practices
+
+1. **Keep Tests Fast**
+   - Mock external services
+   - Use in-memory databases where possible
+   - Parallelize test execution
+   - Skip slow tests in watch mode
+
+2. **Keep Tests Isolated**
+   - Each test is independent
+   - No shared state between tests
+   - Clean up after each test
+   - Don't rely on execution order
+
+3. **Keep Tests Readable**
+   - Descriptive test names
+   - Clear arrange-act-assert sections
+   - Meaningful variable names
+   - Document complex scenarios
+
+4. **Keep Tests Maintainable**
+   - Use test utilities and helpers
+   - Avoid test code duplication
+   - Update tests when requirements change
+   - Remove obsolete tests
 
 ### Test Coverage
 
