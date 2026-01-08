@@ -1,0 +1,290 @@
+{
+  "description": "Example schema configurations for the Admin Panel Generator",
+  "examples": [
+    {
+      "name": "Simple Blog",
+      "description": "Basic blog with posts and authors",
+      "schema": {
+        "apps": [
+          {
+            "name": "blog",
+            "label": "Blog",
+            "models": [
+              {
+                "name": "post",
+                "label": "Post",
+                "labelPlural": "Posts",
+                "listDisplay": ["title", "author", "status", "publishedAt"],
+                "fields": [
+                  {
+                    "name": "id",
+                    "type": "string",
+                    "required": true,
+                    "unique": true,
+                    "editable": false
+                  },
+                  {
+                    "name": "title",
+                    "type": "string",
+                    "label": "Title",
+                    "required": true,
+                    "validation": {
+                      "minLength": 3,
+                      "maxLength": 200
+                    }
+                  },
+                  {
+                    "name": "content",
+                    "type": "text",
+                    "label": "Content",
+                    "required": true
+                  },
+                  {
+                    "name": "author",
+                    "type": "relation",
+                    "label": "Author",
+                    "required": true,
+                    "relatedModel": "author"
+                  },
+                  {
+                    "name": "status",
+                    "type": "select",
+                    "label": "Status",
+                    "required": true,
+                    "default": "draft",
+                    "choices": [
+                      { "value": "draft", "label": "Draft" },
+                      { "value": "published", "label": "Published" }
+                    ]
+                  },
+                  {
+                    "name": "publishedAt",
+                    "type": "datetime",
+                    "label": "Published At"
+                  }
+                ]
+              },
+              {
+                "name": "author",
+                "label": "Author",
+                "labelPlural": "Authors",
+                "listDisplay": ["name", "email"],
+                "fields": [
+                  {
+                    "name": "id",
+                    "type": "string",
+                    "required": true,
+                    "unique": true,
+                    "editable": false
+                  },
+                  {
+                    "name": "name",
+                    "type": "string",
+                    "label": "Name",
+                    "required": true
+                  },
+                  {
+                    "name": "email",
+                    "type": "email",
+                    "label": "Email",
+                    "required": true,
+                    "unique": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Task Manager",
+      "description": "Task management system with projects and tasks",
+      "schema": {
+        "apps": [
+          {
+            "name": "tasks",
+            "label": "Task Manager",
+            "models": [
+              {
+                "name": "project",
+                "label": "Project",
+                "labelPlural": "Projects",
+                "listDisplay": ["name", "status", "dueDate"],
+                "fields": [
+                  {
+                    "name": "id",
+                    "type": "string",
+                    "required": true,
+                    "editable": false
+                  },
+                  {
+                    "name": "name",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "name": "description",
+                    "type": "text"
+                  },
+                  {
+                    "name": "status",
+                    "type": "select",
+                    "default": "planning",
+                    "choices": [
+                      { "value": "planning", "label": "Planning" },
+                      { "value": "active", "label": "Active" },
+                      { "value": "completed", "label": "Completed" }
+                    ]
+                  },
+                  {
+                    "name": "dueDate",
+                    "type": "date"
+                  }
+                ]
+              },
+              {
+                "name": "task",
+                "label": "Task",
+                "labelPlural": "Tasks",
+                "listDisplay": ["title", "project", "priority", "completed"],
+                "fields": [
+                  {
+                    "name": "id",
+                    "type": "string",
+                    "required": true,
+                    "editable": false
+                  },
+                  {
+                    "name": "title",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "name": "description",
+                    "type": "text"
+                  },
+                  {
+                    "name": "project",
+                    "type": "relation",
+                    "required": true,
+                    "relatedModel": "project"
+                  },
+                  {
+                    "name": "priority",
+                    "type": "select",
+                    "default": "medium",
+                    "choices": [
+                      { "value": "low", "label": "Low" },
+                      { "value": "medium", "label": "Medium" },
+                      { "value": "high", "label": "High" }
+                    ]
+                  },
+                  {
+                    "name": "completed",
+                    "type": "boolean",
+                    "default": false
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "E-Commerce",
+      "description": [
+        "Product catalog with categories and inventory",
+        "Includes price and stock management"
+      ],
+      "schema": {
+        "apps": [
+          {
+            "name": "store",
+            "label": "Store",
+            "models": [
+              {
+                "name": "category",
+                "label": "Category",
+                "labelPlural": "Categories",
+                "fields": [
+                  {
+                    "name": "id",
+                    "type": "string",
+                    "required": true,
+                    "editable": false
+                  },
+                  {
+                    "name": "name",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "name": "description",
+                    "type": "text"
+                  }
+                ]
+              },
+              {
+                "name": "product",
+                "label": "Product",
+                "labelPlural": "Products",
+                "listDisplay": ["name", "category", "price", "stock", "available"],
+                "fields": [
+                  {
+                    "name": "id",
+                    "type": "string",
+                    "required": true,
+                    "editable": false
+                  },
+                  {
+                    "name": "name",
+                    "type": "string",
+                    "required": true,
+                    "validation": {
+                      "minLength": 3
+                    }
+                  },
+                  {
+                    "name": "description",
+                    "type": "text"
+                  },
+                  {
+                    "name": "category",
+                    "type": "relation",
+                    "required": true,
+                    "relatedModel": "category"
+                  },
+                  {
+                    "name": "price",
+                    "type": "number",
+                    "required": true,
+                    "validation": {
+                      "min": 0
+                    },
+                    "helpText": "Price in USD"
+                  },
+                  {
+                    "name": "stock",
+                    "type": "number",
+                    "required": true,
+                    "default": 0,
+                    "validation": {
+                      "min": 0
+                    }
+                  },
+                  {
+                    "name": "available",
+                    "type": "boolean",
+                    "default": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

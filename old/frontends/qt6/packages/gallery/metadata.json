@@ -1,7 +1,0 @@
-{
-  "packageId": "gallery",
-  "name": "Gallery",
-  "version": "1.0.0",
-  "description": "Media grid with lightbox, filters, and curated collections.",
-  "dependencies": ["frontpage"]
-}

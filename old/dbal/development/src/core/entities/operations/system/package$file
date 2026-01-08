@@ -1,4 +1,0 @@
-// TODO: Implement package operations
-export const stub = () => {
-  throw new Error('Package operations not yet implemented');
-};

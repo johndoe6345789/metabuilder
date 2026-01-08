@@ -1,9 +1,0 @@
-# Ignore log files
-logs/*.log
-logs/*.json
-
-# Ignore cache
-.cache/
-
-# Keep directory structure
-!logs/.gitkeep

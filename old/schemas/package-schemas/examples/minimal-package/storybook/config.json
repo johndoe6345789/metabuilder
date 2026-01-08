@@ -1,9 +1,0 @@
-{
-  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
-  "stories": [
-    {
-      "name": "MainView",
-      "render": "main"
-    }
-  ]
-}
