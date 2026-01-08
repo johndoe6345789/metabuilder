@@ -48,14 +48,32 @@ const createIntegrationPrisma = (): PrismaClient => {
 const createProductionPrisma = (): PrismaClient => {
   // Use the database file from env or default location
   const databaseUrl = process.env.DATABASE_URL || 'file:../../prisma/prisma/dev.db'
+  console.log('[Prisma] Creating production Prisma client')
+  console.log('[Prisma] DATABASE_URL:', process.env.DATABASE_URL)
+  console.log('[Prisma] Using database URL:', databaseUrl)
+  
   const dbPath = databaseUrl.replace('file:', '')
-  const db = new Database(dbPath)
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const adapter = new PrismaBetterSqlite3(db)
-  return new PrismaClient({
-    adapter,
-    log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
-  })
+  console.log('[Prisma] Resolved database path:', dbPath)
+  
+  try {
+    const db = new Database(dbPath)
+    console.log('[Prisma] Database connection opened successfully')
+    
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const adapter = new PrismaBetterSqlite3(db)
+    console.log('[Prisma] Adapter created successfully')
+    
+    const client = new PrismaClient({
+      adapter,
+      log: process.env.NODE_ENV === 'development' ? ['error', 'warn', 'query'] : ['error'],
+    })
+    console.log('[Prisma] PrismaClient created successfully')
+    
+    return client
+  } catch (error) {
+    console.error('[Prisma] Error creating Prisma client:', error)
+    throw error
+  }
 }
 
 export const prisma =

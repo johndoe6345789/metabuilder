@@ -7,17 +7,34 @@ export function createPrismaContext(
   databaseUrl?: string,
   options?: PrismaAdapterOptions
 ): PrismaContext {
+  console.log('[DBAL Prisma] Creating Prisma context')
+  console.log('[DBAL Prisma] Database URL:', databaseUrl)
+  console.log('[DBAL Prisma] Options:', options)
+  
   const inferredDialect = options?.dialect ?? inferDialectFromUrl(databaseUrl)
+  console.log('[DBAL Prisma] Inferred dialect:', inferredDialect)
   
   let prisma: PrismaClient
   
   // For SQLite (or when dialect cannot be inferred), we need to use the driver adapter
   if (inferredDialect === 'sqlite' || !databaseUrl || inferredDialect === undefined) {
     const dbPath = databaseUrl?.replace('file:', '').replace('sqlite://', '') || '../../prisma/prisma/dev.db'
-    const db = new Database(dbPath)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const adapter = new PrismaBetterSqlite3(db)
-    prisma = new PrismaClient({ adapter } as any)
+    console.log('[DBAL Prisma] Using SQLite with path:', dbPath)
+    
+    try {
+      const db = new Database(dbPath)
+      console.log('[DBAL Prisma] Database opened successfully')
+      
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      const adapter = new PrismaBetterSqlite3(db)
+      console.log('[DBAL Prisma] Adapter created successfully')
+      
+      prisma = new PrismaClient({ adapter } as any)
+      console.log('[DBAL Prisma] PrismaClient created successfully')
+    } catch (error) {
+      console.error('[DBAL Prisma] Error creating Prisma client:', error)
+      throw error
+    }
   } else {
     // For PostgreSQL/MySQL with explicit connection strings
     // Note: Prisma 7 removed datasources config, so this may not work
