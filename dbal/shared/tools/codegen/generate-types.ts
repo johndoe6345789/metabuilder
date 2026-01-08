@@ -133,8 +133,8 @@ function generateAllTypes(): string {
       const content = fs.readFileSync(file, 'utf-8')
       
       // Check if file contains multiple documents (separated by ---)
-      // Match document separator at start of line
-      if (/\n---\s*\n/.test(content)) {
+      // Match document separator: --- on its own line
+      if (/(?:^|\n)---\s*(?:\n|$)/.test(content)) {
         // Parse all documents in the file
         const docs = yaml.parseAllDocuments(content)
         for (const doc of docs) {

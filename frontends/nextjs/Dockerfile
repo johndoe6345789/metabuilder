@@ -12,7 +12,7 @@ RUN apk add --no-cache libc6-compat
 COPY package*.json ./
 COPY frontends/nextjs/package*.json ./frontends/nextjs/
 COPY dbal/development/package*.json ./dbal/development/
-COPY config/package*.json ./config/ 2>/dev/null || true
+COPY config/package*.json ./config/
 
 # Install dependencies
 RUN npm ci
@@ -64,7 +64,7 @@ COPY --from=builder /app/frontends/nextjs/public ./public
 COPY --from=builder /app/frontends/nextjs/.next/standalone ./
 COPY --from=builder /app/frontends/nextjs/.next/static ./.next/static
 
-# Copy Prisma schema and generated client
+# Copy Prisma schema and generated client from workspace root
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
