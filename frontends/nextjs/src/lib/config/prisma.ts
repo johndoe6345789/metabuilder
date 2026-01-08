@@ -42,7 +42,7 @@ const createIntegrationPrisma = (): PrismaClient => {
 
 const createProductionPrisma = (): PrismaClient => {
   // CRITICAL: Validate DATABASE_URL is set and properly formatted
-  const databaseUrl = process.env.DATABASE_URL || 'file:/home/runner/work/metabuilder/metabuilder/prisma/prisma/dev.db'
+  const databaseUrl = process.env.DATABASE_URL || 'file:../../prisma/prisma/dev.db'
   
   console.log('[Prisma] Creating production Prisma client')
   console.log('[Prisma] DATABASE_URL from env:', process.env.DATABASE_URL)

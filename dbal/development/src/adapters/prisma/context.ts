@@ -17,8 +17,8 @@ export function createPrismaContext(
   
   // For SQLite (or when dialect cannot be inferred), we need to use the driver adapter
   if (inferredDialect === 'sqlite' || !databaseUrl || inferredDialect === undefined) {
-    // Use absolute path as fallback to avoid path resolution issues
-    const fallbackUrl = 'file:/home/runner/work/metabuilder/metabuilder/prisma/prisma/dev.db'
+    // Use relative path as fallback
+    const fallbackUrl = 'file:../../prisma/prisma/dev.db'
     const finalUrl = databaseUrl || fallbackUrl
     
     // Ensure URL has file: prefix for SQLite
