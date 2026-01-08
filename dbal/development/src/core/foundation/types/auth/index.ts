@@ -4,6 +4,7 @@ export type Credential = GeneratedCredential
 export type Session = GeneratedSession
 
 export interface CreateSessionInput {
+  [key: string]: unknown
   id?: string
   userId: string
   token: string
@@ -15,6 +16,7 @@ export interface CreateSessionInput {
 }
 
 export interface UpdateSessionInput {
+  [key: string]: unknown
   userId?: string
   token?: string
   expiresAt?: bigint

@@ -3,9 +3,11 @@ import type { Workflow as GeneratedWorkflow } from '../types.generated'
 export type Workflow = GeneratedWorkflow
 
 export interface CreateWorkflowInput {
+  [key: string]: unknown
   id?: string
+  tenantId?: string | null
   name: string
-  description?: string
+  description?: string | null
   nodes: string
   edges: string
   enabled: boolean
@@ -13,12 +15,13 @@ export interface CreateWorkflowInput {
   createdAt?: bigint | null
   updatedAt?: bigint | null
   createdBy?: string | null
-  tenantId?: string | null
 }
 
 export interface UpdateWorkflowInput {
+  [key: string]: unknown
+  tenantId?: string | null
   name?: string
-  description?: string
+  description?: string | null
   nodes?: string
   edges?: string
   enabled?: boolean
@@ -26,5 +29,4 @@ export interface UpdateWorkflowInput {
   createdAt?: bigint | null
   updatedAt?: bigint | null
   createdBy?: string | null
-  tenantId?: string | null
 }

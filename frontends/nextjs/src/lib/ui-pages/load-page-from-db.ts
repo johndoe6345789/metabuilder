@@ -29,7 +29,7 @@ export async function loadPageFromDb(path: string, tenantId?: string): Promise<P
     description: page.description,
     icon: page.icon,
     component: page.component,
-    componentTree: JSON.parse(page.componentTree),
+    componentTree: JSON.parse(String(page.componentTree)),
     level: page.level,
     requiresAuth: page.requiresAuth,
     requiredRole: page.requiredRole,

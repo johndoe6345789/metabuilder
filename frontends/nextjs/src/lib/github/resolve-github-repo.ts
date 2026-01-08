@@ -11,15 +11,15 @@ export function resolveGitHubRepo(params: URLSearchParams | string): GitHubRepo 
   if (typeof params === 'string') {
     const [owner, repo] = params.split('/')
     return { 
-      owner: owner !== '' ? owner : '', 
-      repo: repo !== undefined && repo !== '' ? repo : '' 
+      owner: owner ?? '', 
+      repo: repo ?? '' 
     }
   }
   
   const ownerParam = params.get('owner')
   const repoParam = params.get('repo')
   return {
-    owner: ownerParam !== null && ownerParam !== '' ? ownerParam : '',
-    repo: repoParam !== null && repoParam !== '' ? repoParam : '',
+    owner: ownerParam ?? '',
+    repo: repoParam ?? '',
   }
 }
