@@ -36,17 +36,21 @@ const createMockPrisma = (): PrismaClient => {
 
 const createIntegrationPrisma = (): PrismaClient => {
   // For integration tests, use in-memory database via adapter factory
+   
   const adapter = new PrismaBetterSqlite3({ url: ':memory:' })
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   return new PrismaClient({ adapter })
 }
 
 const createProductionPrisma = (): PrismaClient => {
   // CRITICAL: Validate DATABASE_URL is set and properly formatted
-  const databaseUrl = process.env.DATABASE_URL || 'file:../../prisma/prisma/dev.db'
+  const databaseUrl = (process.env.DATABASE_URL !== null && process.env.DATABASE_URL !== undefined && process.env.DATABASE_URL.length > 0) 
+    ? process.env.DATABASE_URL 
+    : 'file:../../prisma/prisma/dev.db'
   
-  console.log('[Prisma] Creating production Prisma client')
-  console.log('[Prisma] DATABASE_URL from env:', process.env.DATABASE_URL)
-  console.log('[Prisma] Using database URL:', databaseUrl)
+  console.warn('[Prisma] Creating production Prisma client')
+  console.warn('[Prisma] DATABASE_URL from env:', process.env.DATABASE_URL)
+  console.warn('[Prisma] Using database URL:', databaseUrl)
   
   // Validate URL format for SQLite
   if (!databaseUrl.startsWith('file:')) {
@@ -55,14 +59,16 @@ const createProductionPrisma = (): PrismaClient => {
   
   try {
     // For Prisma 7, PrismaBetterSqlite3 is a FACTORY that takes config with url, not a client instance
+     
     const adapter = new PrismaBetterSqlite3({ url: databaseUrl })
-    console.log('[Prisma] Adapter factory created successfully')
+    console.warn('[Prisma] Adapter factory created successfully')
     
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const client = new PrismaClient({
       adapter,
       log: process.env.NODE_ENV === 'development' ? ['error', 'warn', 'query'] : ['error'],
     })
-    console.log('[Prisma] PrismaClient created successfully')
+    console.warn('[Prisma] PrismaClient created successfully')
     
     return client
   } catch (error) {
@@ -71,12 +77,15 @@ const createProductionPrisma = (): PrismaClient => {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const prisma =
   globalForPrisma.prisma ??
   (isTestEnv
     ? (isIntegrationTest ? createIntegrationPrisma() : createMockPrisma())
     : createProductionPrisma())
 
+ 
 if (process.env.NODE_ENV !== 'production' && (!isTestEnv || isIntegrationTest)) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   globalForPrisma.prisma = prisma
 }

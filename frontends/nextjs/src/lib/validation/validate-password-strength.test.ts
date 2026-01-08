@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validatePasswordStrength, PasswordStrengthResult } from './validate-password-strength'
+import { validatePasswordStrength } from './validate-password-strength'
 
 /**
  * TDD Example: Password Strength Validation

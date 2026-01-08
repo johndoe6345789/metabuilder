@@ -62,7 +62,7 @@ describe('auth-middleware', () => {
         expect(result.success).toBe(false)
         expect(result.error).toBeDefined()
         
-        if (result.error) {
+        if (result.error !== null && result.error !== undefined) {
           expect(result.error.status).toBe(expectedStatus)
           const body = await result.error.json()
           expect(body.error).toBe('Unauthorized')
@@ -99,7 +99,7 @@ describe('auth-middleware', () => {
           expect(result.success).toBe(false)
           expect(result.error).toBeDefined()
           
-          if (result.error) {
+          if (result.error !== null && result.error !== undefined) {
             expect(result.error.status).toBe(403)
             const body = await result.error.json()
             expect(body.error).toBe('Forbidden')
@@ -134,7 +134,7 @@ describe('auth-middleware', () => {
         expect(result.success).toBe(false)
         expect(result.error).toBeDefined()
         
-        if (result.error) {
+        if (result.error !== null && result.error !== undefined) {
           expect(result.error.status).toBe(403)
           const body = await result.error.json()
           expect(body.error).toBe('Forbidden')
@@ -152,7 +152,7 @@ describe('auth-middleware', () => {
         expect(result.success).toBe(false)
         expect(result.error).toBeDefined()
         
-        if (result.error) {
+        if (result.error !== null && result.error !== undefined) {
           expect(result.error.status).toBe(500)
           const body = await result.error.json()
           expect(body.error).toBe('Internal Server Error')

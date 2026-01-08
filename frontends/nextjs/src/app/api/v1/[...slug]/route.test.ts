@@ -47,7 +47,7 @@ describe('API Route /api/v1/[...slug]', () => {
       { method: 'PUT', handler: 'PUT' },
       { method: 'PATCH', handler: 'PATCH' },
       { method: 'DELETE', handler: 'DELETE' },
-    ])('should export $method method handler', async ({ method, handler }) => {
+    ])('should export $method method handler', async ({ handler }) => {
       const module = await import('./route')
       expect(module[handler as keyof typeof module]).toBeDefined()
     })

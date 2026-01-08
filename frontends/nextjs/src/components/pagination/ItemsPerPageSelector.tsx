@@ -25,7 +25,8 @@ export function ItemsPerPageSelector({
   disabled = false,
   label = 'Items per page',
 }: ItemsPerPageSelectorProps) {
-  const handleChange = (event: any) => {
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+     
     onChange(Number(event.target.value))
   }
 

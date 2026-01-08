@@ -53,7 +53,7 @@ describe('getCurrentUser', () => {
     },
   ])('should return null when $scenario', async ({ sessionToken, expected }) => {
     mockCookies.mockResolvedValue({
-      get: vi.fn().mockReturnValue(sessionToken ? { value: sessionToken } : undefined),
+      get: vi.fn().mockReturnValue((sessionToken !== null && sessionToken !== undefined && sessionToken.length > 0) ? { value: sessionToken } : undefined),
     } as never)
 
     const result = await getCurrentUser()

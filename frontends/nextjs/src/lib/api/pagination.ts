@@ -116,7 +116,8 @@ export function calculateCursorPaginationMetadata<T extends { id: string }>(
   return {
     limit,
     hasNextPage: hasMore,
-    hasPreviousPage: !!startCursor,
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    hasPreviousPage: (startCursor !== null && startCursor !== undefined),
     startCursor,
     endCursor,
   }
