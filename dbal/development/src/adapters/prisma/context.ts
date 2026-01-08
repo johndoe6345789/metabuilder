@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
-import Database from 'better-sqlite3'
 import { PrismaAdapterDialect, type PrismaAdapterOptions, type PrismaContext } from './types'
 
 export function createPrismaContext(
@@ -8,7 +7,7 @@ export function createPrismaContext(
   options?: PrismaAdapterOptions
 ): PrismaContext {
   console.log('[DBAL Prisma] Creating Prisma context')
-  console.log('[DBAL Prisma] Database URL:', databaseUrl)
+  console.log('[DBAL Prisma] Database URL parameter:', databaseUrl)
   console.log('[DBAL Prisma] Options:', options)
   
   const inferredDialect = options?.dialect ?? inferDialectFromUrl(databaseUrl)
@@ -18,16 +17,19 @@ export function createPrismaContext(
   
   // For SQLite (or when dialect cannot be inferred), we need to use the driver adapter
   if (inferredDialect === 'sqlite' || !databaseUrl || inferredDialect === undefined) {
-    const dbPath = databaseUrl?.replace('file:', '').replace('sqlite://', '') || '../../prisma/prisma/dev.db'
-    console.log('[DBAL Prisma] Using SQLite with path:', dbPath)
+    // Use absolute path as fallback to avoid path resolution issues
+    const fallbackUrl = 'file:/home/runner/work/metabuilder/metabuilder/prisma/prisma/dev.db'
+    const finalUrl = databaseUrl || fallbackUrl
+    
+    // Ensure URL has file: prefix for SQLite
+    const sqliteUrl = finalUrl.startsWith('file:') ? finalUrl : `file:${finalUrl}`
+    
+    console.log('[DBAL Prisma] Using SQLite URL:', sqliteUrl)
     
     try {
-      const db = new Database(dbPath)
-      console.log('[DBAL Prisma] Database opened successfully')
-      
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      const adapter = new PrismaBetterSqlite3(db)
-      console.log('[DBAL Prisma] Adapter created successfully')
+      // PrismaBetterSqlite3 is a factory that expects { url: string } config
+      const adapter = new PrismaBetterSqlite3({ url: sqliteUrl })
+      console.log('[DBAL Prisma] Adapter factory created successfully')
       
       prisma = new PrismaClient({ adapter } as any)
       console.log('[DBAL Prisma] PrismaClient created successfully')
