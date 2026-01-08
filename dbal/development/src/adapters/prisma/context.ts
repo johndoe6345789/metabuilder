@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client'
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
+import Database from 'better-sqlite3'
 import { PrismaAdapterDialect, type PrismaAdapterOptions, type PrismaContext } from './types'
 
 export function createPrismaContext(
@@ -6,13 +8,26 @@ export function createPrismaContext(
   options?: PrismaAdapterOptions
 ): PrismaContext {
   const inferredDialect = options?.dialect ?? inferDialectFromUrl(databaseUrl)
-  const prisma = new PrismaClient(
-    databaseUrl
-      ? {
-          datasources: { db: { url: databaseUrl } },
-        } as any
-      : undefined
-  )
+  
+  let prisma: PrismaClient
+  
+  // For SQLite, we need to use the driver adapter
+  if (inferredDialect === 'sqlite') {
+    const dbPath = databaseUrl?.replace('file:', '') || '../../prisma/prisma/dev.db'
+    const db = new Database(dbPath)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const adapter = new PrismaBetterSqlite3(db)
+    prisma = new PrismaClient({ adapter } as any)
+  } else {
+    // For other databases, use the URL directly
+    prisma = new PrismaClient(
+      databaseUrl
+        ? {
+            datasources: { db: { url: databaseUrl } },
+          } as any
+        : undefined
+    )
+  }
 
   return {
     prisma,
