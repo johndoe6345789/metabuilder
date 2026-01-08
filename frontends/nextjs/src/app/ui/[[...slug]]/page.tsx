@@ -71,8 +71,43 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
  * Optional: Generate static params for known pages
  * This enables static generation at build time
  */
-export function generateStaticParams() {
-  // TODO: Query database for all active pages
-  // For now, return empty array (all pages will be dynamic)
-  return []
+export async function generateStaticParams() {
+  try {
+    const { getAdapter } = await import('@/lib/db/core/dbal-client')
+    const adapter = getAdapter()
+    
+    // Query database for all active, published pages
+    const result = await adapter.list('UIPage', {
+      filter: {
+        isActive: true,
+        isPublished: true,
+      },
+    })
+
+    if (!result.data || !Array.isArray(result.data)) {
+      return []
+    }
+
+    // Transform to Next.js static params format
+    return result.data
+      .map((page: { path?: string | null }) => {
+        if (!page.path || typeof page.path !== 'string') {
+          return null
+        }
+        
+        // Convert path "/foo/bar" to slug ["foo", "bar"]
+        // Remove leading slash and split
+        const slug = page.path
+          .replace(/^\//, '')  // Remove leading slash
+          .split('/')
+          .filter(Boolean)  // Remove empty segments
+        
+        return { slug }
+      })
+      .filter((param): param is { slug: string[] } => param !== null)
+  } catch (error) {
+    // If database query fails during build, log and return empty array
+    console.error('Failed to generate static params for UI pages:', error)
+    return []
+  }
 }
