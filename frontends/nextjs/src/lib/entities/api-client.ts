@@ -72,7 +72,12 @@ export async function fetchEntityList(
     })
     
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Unknown error' })) as { error?: string }
+      let errorData: { error?: string } = { error: 'Unknown error' }
+      try {
+        errorData = await response.json() as { error?: string }
+      } catch {
+        // If JSON parsing fails, use default error
+      }
       return {
          
         error: errorData.error ?? `HTTP ${response.status}`,
@@ -121,7 +126,12 @@ export async function fetchEntity(
     })
     
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Unknown error' })) as { error?: string }
+      let errorData: { error?: string } = { error: 'Unknown error' }
+      try {
+        errorData = await response.json() as { error?: string }
+      } catch {
+        // If JSON parsing fails, use default error
+      }
       return {
          
         error: errorData.error ?? `HTTP ${response.status}`,
@@ -172,7 +182,12 @@ export async function createEntity(
     })
     
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Unknown error' })) as { error?: string }
+      let errorData: { error?: string } = { error: 'Unknown error' }
+      try {
+        errorData = await response.json() as { error?: string }
+      } catch {
+        // If JSON parsing fails, use default error
+      }
       return {
          
         error: errorData.error ?? `HTTP ${response.status}`,
@@ -225,7 +240,12 @@ export async function updateEntity(
     })
     
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Unknown error' })) as { error?: string }
+      let errorData: { error?: string } = { error: 'Unknown error' }
+      try {
+        errorData = await response.json() as { error?: string }
+      } catch {
+        // If JSON parsing fails, use default error
+      }
       return {
          
         error: errorData.error ?? `HTTP ${response.status}`,
@@ -275,7 +295,12 @@ export async function deleteEntity(
     })
     
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Unknown error' })) as { error?: string }
+      let errorData: { error?: string } = { error: 'Unknown error' }
+      try {
+        errorData = await response.json() as { error?: string }
+      } catch {
+        // If JSON parsing fails, use default error
+      }
       return {
          
         error: errorData.error ?? `HTTP ${response.status}`,
