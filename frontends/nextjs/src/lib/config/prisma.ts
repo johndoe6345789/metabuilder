@@ -45,13 +45,23 @@ const createIntegrationPrisma = (): PrismaClient => {
   return new PrismaClient({ adapter })
 }
 
+const createProductionPrisma = (): PrismaClient => {
+  // Use the database file from env or default location
+  const dbPath = process.env.DATABASE_URL?.replace('file:', '') || '../../prisma/prisma/dev.db'
+  const db = new Database(dbPath)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  const adapter = new PrismaBetterSqlite3(db)
+  return new PrismaClient({
+    adapter,
+    log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+  })
+}
+
 export const prisma =
   globalForPrisma.prisma ??
   (isTestEnv
     ? (isIntegrationTest ? createIntegrationPrisma() : createMockPrisma())
-    : new PrismaClient({
-      log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
-    }))
+    : createProductionPrisma())
 
 if (process.env.NODE_ENV !== 'production' && (!isTestEnv || isIntegrationTest)) {
   globalForPrisma.prisma = prisma
