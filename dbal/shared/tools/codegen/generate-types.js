@@ -117,7 +117,8 @@ function generateEntityInterface(entity) {
 
   output += `export interface ${interfaceName} {\n`
   output += fields.join('\n')
-  output += '\n}\n'
+  output += '\n  [key: string]: unknown  // Allow additional properties for DBAL compatibility\n'
+  output += '}\n'
 
   return output
 }

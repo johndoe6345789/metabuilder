@@ -4,10 +4,11 @@ export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElemen
   children?: React.ReactNode
   sm?: boolean
   error?: boolean
+  sx?: Record<string, unknown>  // MUI sx prop for styling compatibility
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ children, sm, error, className = '', ...props }, ref) => (
+  ({ children, sm, error, className = '', sx, ...props }, ref) => (
     <select
       ref={ref}
       className={`select ${sm ? 'select--sm' : ''} ${error ? 'select--error' : ''} ${className}`}
