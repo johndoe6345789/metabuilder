@@ -575,6 +575,285 @@ npm run build                  # Production build
 
 ---
 
+## API Reference
+
+### RESTful API Endpoints
+
+MetaBuilder provides a RESTful API for all entity operations. The API follows a consistent pattern for multi-tenant data access.
+
+#### Base URL Pattern
+
+```
+/api/v1/{tenant}/{package}/{entity}[/{id}[/{action}]]
+```
+
+#### Authentication
+
+API endpoints use session-based authentication via the `mb_session` cookie. Requests without a valid session will receive a `401 Unauthorized` response.
+
+#### Authorization
+
+Access is controlled by:
+1. **User Permission Level** (0-5): Public, User, Moderator, Admin, God, Supergod
+2. **Package Minimum Level**: Each package defines its minimum required permission level
+3. **Tenant Access**: Users can only access data from their assigned tenant (except God+ users)
+
+### CRUD Operations
+
+#### List Entities
+
+```http
+GET /api/v1/{tenant}/{package}/{entity}
+```
+
+**Query Parameters:**
+- `page` (number): Page number for pagination (default: 1)
+- `limit` (number): Items per page (default: 20, max: 100)
+- `filter` (JSON): Filter criteria as JSON object
+- `sort` (string): Sort field (prefix with `-` for descending)
+
+**Example Request:**
+```bash
+# List all posts with pagination
+GET /api/v1/acme/forum_forge/posts?page=1&limit=20
+
+# Filter published posts
+GET /api/v1/acme/forum_forge/posts?filter={"published":true}
+
+# Sort by creation date (descending)
+GET /api/v1/acme/forum_forge/posts?sort=-createdAt
+```
+
+**Response (200 OK):**
+```json
+{
+  "data": [
+    { "id": "1", "title": "First Post", "createdAt": "2026-01-08T00:00:00Z" },
+    { "id": "2", "title": "Second Post", "createdAt": "2026-01-07T00:00:00Z" }
+  ],
+  "meta": {
+    "page": 1,
+    "limit": 20,
+    "total": 42
+  }
+}
+```
+
+#### Get Entity by ID
+
+```http
+GET /api/v1/{tenant}/{package}/{entity}/{id}
+```
+
+**Example Request:**
+```bash
+GET /api/v1/acme/forum_forge/posts/123
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": "123",
+  "title": "My Post",
+  "content": "Post content here",
+  "published": true,
+  "createdAt": "2026-01-08T00:00:00Z"
+}
+```
+
+**Response (404 Not Found):**
+```json
+{
+  "error": "Entity not found"
+}
+```
+
+#### Create Entity
+
+```http
+POST /api/v1/{tenant}/{package}/{entity}
+Content-Type: application/json
+```
+
+**Example Request:**
+```bash
+POST /api/v1/acme/forum_forge/posts
+Content-Type: application/json
+
+{
+  "title": "New Post",
+  "content": "This is my new post",
+  "published": false
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "id": "new-456",
+  "title": "New Post",
+  "content": "This is my new post",
+  "published": false,
+  "createdAt": "2026-01-08T03:45:00Z"
+}
+```
+
+**Response (400 Bad Request):**
+```json
+{
+  "error": "Validation failed: title is required"
+}
+```
+
+#### Update Entity
+
+```http
+PUT /api/v1/{tenant}/{package}/{entity}/{id}
+Content-Type: application/json
+```
+
+**Example Request:**
+```bash
+PUT /api/v1/acme/forum_forge/posts/123
+Content-Type: application/json
+
+{
+  "title": "Updated Title",
+  "published": true
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": "123",
+  "title": "Updated Title",
+  "content": "Original content",
+  "published": true,
+  "updatedAt": "2026-01-08T03:46:00Z"
+}
+```
+
+#### Delete Entity
+
+```http
+DELETE /api/v1/{tenant}/{package}/{entity}/{id}
+```
+
+**Example Request:**
+```bash
+DELETE /api/v1/acme/forum_forge/posts/123
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true
+}
+```
+
+**Response (404 Not Found):**
+```json
+{
+  "error": "Entity not found"
+}
+```
+
+### Custom Actions
+
+Packages can define custom actions beyond standard CRUD:
+
+```http
+POST /api/v1/{tenant}/{package}/{entity}/{id}/{action}
+```
+
+**Example:**
+```bash
+# Like a post
+POST /api/v1/acme/forum_forge/posts/123/like
+
+# Publish a draft
+POST /api/v1/acme/blog/articles/456/publish
+```
+
+### Error Responses
+
+All errors follow a consistent format:
+
+| Status Code | Meaning | Example |
+|-------------|---------|---------|
+| 400 | Bad Request | Invalid JSON, validation errors |
+| 401 | Unauthorized | No session or expired session |
+| 403 | Forbidden | Insufficient permissions |
+| 404 | Not Found | Entity or package not found |
+| 429 | Too Many Requests | Rate limit exceeded |
+| 500 | Internal Server Error | Server-side error |
+
+**Error Response Format:**
+```json
+{
+  "error": "Descriptive error message",
+  "code": "ERROR_CODE",
+  "details": {
+    "field": "Additional context"
+  }
+}
+```
+
+### Rate Limiting
+
+API endpoints are rate-limited to prevent abuse:
+- **Authenticated users**: 1000 requests per hour
+- **Public endpoints**: 100 requests per hour per IP
+
+Rate limit information is included in response headers:
+```
+X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 999
+X-RateLimit-Reset: 1704672000
+```
+
+### TypeScript Client
+
+Use the provided API client for type-safe requests:
+
+```typescript
+import {
+  fetchEntityList,
+  fetchEntity,
+  createEntity,
+  updateEntity,
+  deleteEntity,
+} from '@/lib/entities/api-client'
+
+// List entities with pagination
+const { data, error } = await fetchEntityList('acme', 'forum', 'posts', {
+  page: 1,
+  limit: 20,
+  filter: { published: true },
+  sort: '-createdAt',
+})
+
+// Get single entity
+const post = await fetchEntity('acme', 'forum', 'posts', '123')
+
+// Create entity
+const newPost = await createEntity('acme', 'forum', 'posts', {
+  title: 'New Post',
+  content: 'Content here',
+})
+
+// Update entity
+const updated = await updateEntity('acme', 'forum', 'posts', '123', {
+  published: true,
+})
+
+// Delete entity
+await deleteEntity('acme', 'forum', 'posts', '123')
+```
+
+---
+
 ## Project Structure
 
 ```
