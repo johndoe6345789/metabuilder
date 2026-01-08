@@ -95,7 +95,7 @@ describe('getErrorLogs', () => {
     // Verify list was called with correct options
     expect(mockList).toHaveBeenCalledWith('ErrorLog', {
       filter: expectedFilter,
-      orderBy: { timestamp: 'desc' },
+      orderBy: [{ timestamp: 'desc' }],
       take: options?.limit ?? undefined,
     })
     expect(result).toHaveLength(dbData.length)
