@@ -42,12 +42,12 @@ export default async function RootPage() {
     const user = await getCurrentUser()
     
     // Auth requirement check - redirect to login if required
-    if (route.requiresAuth && !user) {
+    if (route.requiresAuth && user === null) {
       redirect('/ui/login')
     }
     
     // Permission level check - show access denied if insufficient
-    if (user && user.level < route.level) {
+    if (user !== null && user.level < route.level) {
       return <AccessDenied requiredLevel={route.level} userLevel={user.level} />
     }
 

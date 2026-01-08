@@ -84,14 +84,14 @@ export async function generateStaticParams() {
       },
     })
 
-    if (!result.data || !Array.isArray(result.data)) {
+    if (result.data === null || result.data === undefined || !Array.isArray(result.data)) {
       return []
     }
 
     // Transform to Next.js static params format
     return result.data
       .map((page: { path?: string | null }) => {
-        if (!page.path || typeof page.path !== 'string') {
+        if (page.path === null || page.path === undefined || typeof page.path !== 'string' || page.path.length === 0) {
           return null
         }
         

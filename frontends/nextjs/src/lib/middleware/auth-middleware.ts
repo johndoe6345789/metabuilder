@@ -5,7 +5,8 @@
  * Returns standardized error responses for unauthorized or forbidden requests.
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { getCurrentUser, type CurrentUser } from '@/lib/auth/get-current-user'
 
 export interface AuthMiddlewareOptions {
@@ -84,7 +85,7 @@ export async function authenticate(
     const user = await getCurrentUser()
 
     // Check if user is authenticated
-    if (!user) {
+    if (user === null) {
       return {
         success: false,
         error: NextResponse.json(
@@ -111,7 +112,7 @@ export async function authenticate(
     }
 
     // Run custom permission check if provided
-    if (customCheck && !customCheck(user)) {
+    if (customCheck !== null && customCheck !== undefined && !customCheck(user)) {
       return {
         success: false,
         error: NextResponse.json(
@@ -162,8 +163,8 @@ export async function requireAuth(
 ): Promise<CurrentUser> {
   const { success, user, error } = await authenticate(request, options)
   
-  if (!success || !user) {
-    throw error
+  if (!success || user === null || user === undefined) {
+    throw new Error(error !== undefined ? 'Authentication failed' : 'Unknown authentication error')
   }
   
   return user

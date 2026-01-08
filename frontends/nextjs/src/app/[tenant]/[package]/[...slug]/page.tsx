@@ -63,7 +63,7 @@ export default async function EntityPage({ params }: EntityPageProps) {
         </nav>
         
         <h1>{schema?.displayName ?? entity}</h1>
-        {schema?.description && <p>{schema.description}</p>}
+        {(schema?.description !== null && schema?.description !== undefined) && <p>{schema.description}</p>}
       </header>
 
       <main className="entity-content">
@@ -146,7 +146,7 @@ function EntityListView({ tenant, pkg, entity, schema }: {
         API: <code>{apiUrl}</code>
       </p>
       
-      {response.error ? (
+      {(response.error !== null && response.error !== undefined) ? (
         <div style={{ padding: '1rem', backgroundColor: '#ffebee', borderRadius: '4px', color: '#c62828' }}>
           Error loading data: {response.error}
         </div>
@@ -164,17 +164,22 @@ function EntityListView({ tenant, pkg, entity, schema }: {
               </tr>
             </thead>
             <tbody>
-              {response.data && response.data.length > 0 ? (
+              {(response.data !== null && response.data !== undefined && (response.data as unknown[]).length > 0) ? (
                 (response.data as Record<string, unknown>[]).map((item, idx) => (
                   <tr key={idx} style={{ borderBottom: '1px solid #e0e0e0' }}>
                     {schema?.fields.map(field => (
                       <td key={field.name} style={{ padding: '0.75rem' }}>
-                        {String(item[field.name] ?? '-')}
+                        {(() => {
+                          const value = item[field.name]
+                          if (value === null || value === undefined) return '-'
+                          if (typeof value === 'object') return JSON.stringify(value)
+                          return String(value)
+                        })()}
                       </td>
                     ))}
                     <td style={{ padding: '0.75rem' }}>
                       <a 
-                        href={`/${tenant}/${pkg}/${entity}/${item[schema?.primaryKey ?? 'id']}`}
+                        href={`/${tenant}/${pkg}/${entity}/${String(item[schema?.primaryKey ?? 'id'])}`}
                         style={{ color: '#1976d2', textDecoration: 'none' }}
                       >
                         View
@@ -233,7 +238,7 @@ function EntityDetailView({ tenant, pkg, entity, id, schema }: {
         API: <code>{apiUrl}</code>
       </p>
       
-      {response.error ? (
+      {(response.error !== null && response.error !== undefined) ? (
         <div style={{ padding: '1rem', backgroundColor: '#ffebee', borderRadius: '4px', color: '#c62828' }}>
           Error loading data: {response.error}
         </div>
@@ -245,7 +250,12 @@ function EntityDetailView({ tenant, pkg, entity, id, schema }: {
                 {field.name}:
               </strong>
               <div style={{ color: '#616161' }}>
-                {String((response.data as Record<string, unknown>)?.[field.name] ?? '-')}
+                {(() => {
+                  const value = (response.data as Record<string, unknown>)[field.name]
+                  if (value === null || value === undefined) return '-'
+                  if (typeof value === 'object') return JSON.stringify(value)
+                  return String(value)
+                })()}
               </div>
             </div>
           ))}
@@ -280,7 +290,7 @@ function EntityCreateView({ tenant, pkg, entity, schema }: {
           <div key={field.name} style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.25rem', fontWeight: '500' }}>
               {field.name}
-              {field.required && <span style={{ color: '#d32f2f' }}>*</span>}
+              {(field.required === true) && <span style={{ color: '#d32f2f' }}>*</span>}
             </label>
             <input
               type="text"
@@ -332,7 +342,7 @@ function EntityEditView({ tenant, pkg, entity, id, schema }: {
         API: <code>PUT {apiUrl}</code>
       </p>
       
-      {response.error ? (
+      {(response.error !== null && response.error !== undefined) ? (
         <div style={{ padding: '1rem', backgroundColor: '#ffebee', borderRadius: '4px', color: '#c62828' }}>
           Error loading data: {response.error}
         </div>
@@ -342,17 +352,21 @@ function EntityEditView({ tenant, pkg, entity, id, schema }: {
             Form fields based on schema with current values:
           </p>
           {schema?.fields.map(field => {
-            const value = (response.data as Record<string, unknown>)?.[field.name]
+            const value = (response.data as Record<string, unknown>)[field.name]
             return (
               <div key={field.name} style={{ marginBottom: '1rem' }}>
                 <label style={{ display: 'block', marginBottom: '0.25rem', fontWeight: '500' }}>
                   {field.name}
-                  {field.required && <span style={{ color: '#d32f2f' }}>*</span>}
+                  {(field.required === true) && <span style={{ color: '#d32f2f' }}>*</span>}
                 </label>
                 <input
                   type="text"
-                  defaultValue={String(value ?? '')}
-                  placeholder={field.description || `Enter ${field.name}`}
+                  defaultValue={(() => {
+                    if (value === null || value === undefined) return ''
+                    if (typeof value === 'object') return JSON.stringify(value)
+                    return String(value)
+                  })()}
+                  placeholder={(field.description !== null && field.description !== undefined && field.description.length > 0) ? field.description : `Enter ${field.name}`}
                   style={{
                     width: '100%',
                     padding: '0.5rem',

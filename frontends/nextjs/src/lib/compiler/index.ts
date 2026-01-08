@@ -36,7 +36,7 @@ export async function compile(source: string, options?: CompileOptions): Promise
 
     return {
       code: result.code,
-      map: result.map || undefined,
+      map: (result.map !== null && result.map !== undefined) ? result.map : undefined,
     }
   } catch (error) {
     // Return compilation error as a comment in the code

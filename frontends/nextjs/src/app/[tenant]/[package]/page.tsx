@@ -32,7 +32,7 @@ export default async function PackagePage({ params }: PackagePageProps) {
       c.name === 'Home'
     ) ?? packageData.components?.[0]
 
-    if (!homeComponent) {
+    if (homeComponent === null || homeComponent === undefined) {
       // Package exists but has no components
       notFound()
     }
@@ -54,7 +54,9 @@ export async function generateMetadata({ params }: PackagePageProps) {
     const packageData = await loadJSONPackage(join(getPackagesDir(), pkg))
     return {
       title: `${packageData.metadata.name} - ${tenant} | MetaBuilder`,
-      description: packageData.metadata.description || `${packageData.metadata.name} package for tenant ${tenant}`,
+      description: (packageData.metadata.description !== null && packageData.metadata.description !== undefined && packageData.metadata.description.length > 0) 
+        ? packageData.metadata.description 
+        : `${packageData.metadata.name} package for tenant ${tenant}`,
     }
   } catch {
     // Fallback if package can't be loaded

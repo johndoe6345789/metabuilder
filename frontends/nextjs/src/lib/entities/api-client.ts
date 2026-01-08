@@ -39,7 +39,7 @@ function buildQueryString(params: ListQueryParams): string {
   }
   
   const queryString = searchParams.toString()
-  return queryString ? `?${queryString}` : ''
+  return (queryString.length > 0) ? `?${queryString}` : ''
 }
 
 /**
