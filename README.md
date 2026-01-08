@@ -581,8 +581,8 @@ MetaBuilder has a comprehensive testing strategy with unit tests, integration te
 
 ### Test Statistics
 
-- **Total Tests:** 263 tests across 69 test files
-- **Pass Rate:** 98.5% (259 passing, 4 failing pre-existing issues)
+- **Total Tests:** 418 tests across 73 test files
+- **Pass Rate:** 99.0% (414 passing, 4 failing pre-existing issues)
 - **Coverage:** Unit, Integration, and E2E tests
 - **Framework:** Vitest (unit/integration), Playwright (E2E)
 
@@ -888,7 +888,7 @@ X-RateLimit-Reset: 1704672000
 
 ### TypeScript Client
 
-Use the provided API client for type-safe requests:
+Use the provided API client for type-safe requests with built-in retry logic:
 
 ```typescript
 import {
@@ -898,8 +898,24 @@ import {
   updateEntity,
   deleteEntity,
 } from '@/lib/entities/api-client'
+import { retryFetch } from '@/lib/api/retry'
+import { 
+  normalizePaginationParams,
+  createPaginationResponse 
+} from '@/lib/api/pagination'
+import {
+  parseFilterString,
+  parseSortString,
+  buildPrismaWhere,
+  buildPrismaOrderBy,
+} from '@/lib/api/filtering'
+import {
+  generateEntitySchema,
+  validateEntity,
+  createValidationMiddleware,
+} from '@/lib/api/validation'
 
-// List entities with pagination
+// List entities with pagination, filtering, and sorting
 const { data, error } = await fetchEntityList('acme', 'forum', 'posts', {
   page: 1,
   limit: 20,
@@ -910,11 +926,21 @@ const { data, error } = await fetchEntityList('acme', 'forum', 'posts', {
 // Get single entity
 const post = await fetchEntity('acme', 'forum', 'posts', '123')
 
-// Create entity
-const newPost = await createEntity('acme', 'forum', 'posts', {
-  title: 'New Post',
-  content: 'Content here',
-})
+// Create entity with validation
+const entityDef = {
+  name: 'Post',
+  fields: [
+    { name: 'title', type: 'string', required: true, validation: [{ type: 'min', value: 3 }] },
+    { name: 'content', type: 'string', required: true },
+  ],
+}
+
+const validation = await createValidationMiddleware(entityDef)
+const validationResult = await validation({ title: 'My Post', content: 'Content here' })
+
+if (validationResult.valid) {
+  const newPost = await createEntity('acme', 'forum', 'posts', validationResult.data)
+}
 
 // Update entity
 const updated = await updateEntity('acme', 'forum', 'posts', '123', {
@@ -923,7 +949,39 @@ const updated = await updateEntity('acme', 'forum', 'posts', '123', {
 
 // Delete entity
 await deleteEntity('acme', 'forum', 'posts', '123')
+
+// Use retry for resilient API calls
+const response = await retryFetch(
+  () => fetch('/api/external-service'),
+  { maxRetries: 3, initialDelayMs: 100 }
+)
 ```
+
+### Utilities
+
+MetaBuilder provides comprehensive utilities for common API operations:
+
+**Retry Utilities** (`@/lib/api/retry`)
+- Exponential backoff for transient failures
+- Configurable retry attempts and delays
+- Support for both fetch and generic async functions
+
+**Pagination Utilities** (`@/lib/api/pagination`)
+- Offset-based pagination (traditional)
+- Cursor-based pagination (for large datasets)
+- Metadata calculation and page number generation
+
+**Filtering & Sorting** (`@/lib/api/filtering`)
+- 13 filter operators (eq, ne, gt, gte, lt, lte, in, notIn, contains, startsWith, endsWith, isNull, isNotNull)
+- Multi-field sorting with ascending/descending
+- Prisma query builder integration
+- SQL injection prevention
+
+**Validation Utilities** (`@/lib/api/validation`)
+- Zod schema generation from entity definitions
+- Support for all field types and validation rules
+- Validation middleware for API routes
+- User-friendly error formatting
 
 ---
 
