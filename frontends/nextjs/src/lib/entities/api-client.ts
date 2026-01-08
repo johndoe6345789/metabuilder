@@ -41,7 +41,6 @@ function buildQueryString(params: ListQueryParams): string {
   }
   
   const queryString = searchParams.toString()
-// eslint-disable-next-line
   return (queryString.length > 0) ? `?${queryString}` : ''
 }
 
@@ -81,10 +80,8 @@ export async function fetchEntityList(
       }
     }
     
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const data = await response.json()
     return {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       data: Array.isArray(data) ? data : (data.data ?? []),
       status: response.status,
     }
@@ -132,7 +129,6 @@ export async function fetchEntity(
       }
     }
     
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const data = await response.json()
     return {
        
@@ -145,7 +141,6 @@ export async function fetchEntity(
       error: error instanceof Error ? error.message : 'Unknown error',
       status: 500,
     }
-// eslint-disable-next-line
   }
 }
 
@@ -185,7 +180,6 @@ export async function createEntity(
       }
     }
     
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const responseData = await response.json()
     return {
        
@@ -239,7 +233,6 @@ export async function updateEntity(
       }
     }
     
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const responseData = await response.json()
     return {
        

@@ -3,10 +3,6 @@
  * Prevents multiple instances in development with hot reloading
  */
  
- 
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
-// Prisma client types are generated; when they resolve as error types in linting,
-// these assignments/calls are safe for runtime but look unsafe to the linter.
 import { PrismaClient } from '@prisma/client'
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
 
@@ -38,13 +34,12 @@ const createIntegrationPrisma = (): PrismaClient => {
   // For integration tests, use in-memory database via adapter factory
    
   const adapter = new PrismaBetterSqlite3({ url: ':memory:' })
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   return new PrismaClient({ adapter })
 }
 
 const createProductionPrisma = (): PrismaClient => {
   // CRITICAL: Validate DATABASE_URL is set and properly formatted
-  const databaseUrl = (process.env.DATABASE_URL !== null && process.env.DATABASE_URL !== undefined && process.env.DATABASE_URL.length > 0) 
+  const databaseUrl = (process.env.DATABASE_URL !== undefined && process.env.DATABASE_URL.length > 0) 
     ? process.env.DATABASE_URL 
     : 'file:../../prisma/prisma/dev.db'
   
@@ -63,7 +58,6 @@ const createProductionPrisma = (): PrismaClient => {
     const adapter = new PrismaBetterSqlite3({ url: databaseUrl })
     console.warn('[Prisma] Adapter factory created successfully')
     
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const client = new PrismaClient({
       adapter,
       log: process.env.NODE_ENV === 'development' ? ['error', 'warn', 'query'] : ['error'],
@@ -77,7 +71,6 @@ const createProductionPrisma = (): PrismaClient => {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const prisma =
   globalForPrisma.prisma ??
   (isTestEnv
@@ -86,6 +79,5 @@ export const prisma =
 
  
 if (process.env.NODE_ENV !== 'production' && (!isTestEnv || isIntegrationTest)) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   globalForPrisma.prisma = prisma
 }

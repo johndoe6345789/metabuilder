@@ -45,7 +45,7 @@ export function validateEmail(email: unknown): boolean {
   const localPart = parts[0]
   const domain = parts[1]
   
-  if (!localPart || !domain) {
+  if (localPart === undefined || localPart === '' || domain === undefined || domain === '') {
     return false
   }
 
