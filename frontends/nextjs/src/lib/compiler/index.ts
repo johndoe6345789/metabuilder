@@ -37,7 +37,7 @@ export async function compile(source: string, options?: CompileOptions): Promise
     return {
       code: result.code,
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-nullish-coalescing
-      map: (result.map !== null && result.map !== undefined) ? result.map : undefined,
+      map: (result.map !== null && result.map !== undefined && result.map !== '') ? result.map : undefined,
     }
   } catch (error) {
     // Return compilation error as a comment in the code

@@ -20,9 +20,11 @@ describe('retry utilities', () => {
       { statusCode: 503, shouldRetry: true, description: 'service unavailable (retryable)' },
       { statusCode: 429, shouldRetry: true, description: 'rate limited (retryable)' },
     ])('should handle $description correctly', async ({ statusCode, shouldRetry }) => {
+      let callCount = 0
       const mockFetch = vi.fn(async () => { // eslint-disable-line @typescript-eslint/require-await
+        const currentCall = callCount++
         return new Response(JSON.stringify({ test: 'data' }), {
-          status: shouldRetry ? (mockFetch.mock.calls.length === 0 ? statusCode : 200) : statusCode,
+          status: shouldRetry ? (currentCall === 0 ? statusCode : 200) : statusCode,
         })
       })
 
@@ -112,9 +114,10 @@ describe('retry utilities', () => {
         throw new Error('Network error')
       })
 
-      const promise = retryFetch(mockFetch, { maxRetries: 2, initialDelayMs: 10 })
-      
       // Fast-forward through all retry delays
+      const promise = retryFetch(mockFetch, { maxRetries: 2, initialDelayMs: 10 })
+      // Attach a catch handler to prevent unhandled rejection warning
+      promise.catch(() => {})
       await vi.advanceTimersByTimeAsync(500)
       
       await expect(promise).rejects.toThrow('Network error')
@@ -180,8 +183,10 @@ describe('retry utilities', () => {
         throw new Error('Persistent error')
       })
 
+      // Fast-forward through all retry delays
       const promise = retry(mockFn, { maxRetries: 2, initialDelayMs: 10 })
-      
+      // Attach a catch handler to prevent unhandled rejection warning
+      promise.catch(() => {})
       await vi.advanceTimersByTimeAsync(500)
       
       await expect(promise).rejects.toThrow('Persistent error')
