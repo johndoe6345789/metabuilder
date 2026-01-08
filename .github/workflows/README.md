@@ -4,35 +4,41 @@ This directory contains automated workflows for CI/CD, code quality, and compreh
 
 ## 🚦 Enterprise Gated Tree Workflow
 
-MetaBuilder uses an **Enterprise Gated Tree Workflow** that ensures all code changes pass through multiple validation gates before being merged and deployed.
+MetaBuilder uses a **Unified Enterprise Gated Pipeline** that consolidates all CI/CD, deployment, and development assistance into a single workflow with clear gate visualization.
 
 **📖 Complete Guide:** [Enterprise Gated Workflow Documentation](../../docs/ENTERPRISE_GATED_WORKFLOW.md)
 
 ### Quick Overview
 
-All PRs must pass through 5 sequential gates:
+All PRs and deployments flow through 6 sequential gates in a single workflow:
 
-1. **Gate 1: Code Quality** - Prisma, TypeScript, Lint, Security
-2. **Gate 2: Testing** - Unit, E2E, DBAL Daemon tests
-3. **Gate 3: Build & Package** - Application build, quality metrics
-4. **Gate 4: Review & Approval** - Human code review (1 approval required)
-5. **Gate 5: Deployment** - Staging (auto) → Production (manual approval)
+1. **Gate 1: Code Quality** - Prisma, TypeScript, Lint, Security (7 atomic steps)
+2. **Gate 2: Testing** - Unit, E2E, DBAL Daemon tests (3 atomic steps)
+3. **Gate 3: Build & Package** - Application build, quality metrics (2 atomic steps)
+4. **Gate 4: Development Assistance** - Architectural feedback, Copilot interaction (PR only)
+5. **Gate 5: Staging Deployment** - Automatic deployment to staging (main branch push)
+6. **Gate 6: Production Deployment** - Manual approval required (release/workflow_dispatch)
 
 **Key Benefits:**
+- ✅ **Single unified workflow** - No confusion about which pipeline runs what
 - ✅ Sequential gates prevent wasted resources
+- ✅ Tree structure for clear visualization of all validation steps
 - ✅ Automatic merge after approval
-- ✅ Manual approval required for production
-- ✅ Clear visibility of gate status on PRs
-- ✅ Audit trail for all deployments
+- ✅ Conditional execution based on trigger (PR vs push vs release)
+- ✅ Complete audit trail for all deployments
 
-### Legacy Workflow Cleanup
+### Pipeline Consolidation (Jan 2026)
 
-**Deprecated and Removed (Dec 2025):**
-- ❌ `ci/ci.yml` - Replaced by `gated-ci.yml` (100% redundant)
-- ❌ `quality/deployment.yml` - Replaced by `gated-deployment.yml` (100% redundant)
+**Consolidated into `gated-pipeline.yml`:**
+- ✅ `gated-ci.yml` (1048 lines) - CI with gates 1-5
+- ✅ `gated-deployment.yml` (617 lines) - Deployment workflows
+- ✅ `development.yml` (360 lines) - Development assistance
 
-**Modified:**
-- ⚡ `development.yml` - Refactored to remove redundant quality checks, kept unique Copilot features
+**Result:** Single 1287-line workflow with all functionality preserved and no duplication.
+
+**Previous Deprecated and Removed (Dec 2025):**
+- ❌ `ci/ci.yml` - Replaced by gated workflows
+- ❌ `quality/deployment.yml` - Replaced by gated workflows
 
 See [Legacy Pipeline Cruft Report](../../docs/LEGACY_PIPELINE_CRUFT_REPORT.md) for analysis.
 
@@ -50,23 +56,12 @@ All workflows are designed to work seamlessly with **GitHub Copilot** to assist 
 
 ## Workflows Overview
 
-### 🚦 Enterprise Gated Workflows (New)
+### 🚦 Enterprise Gated Workflow (Unified)
 
-#### Issue and PR Triage (`triage.yml`) 🆕
-**Triggered on:** Issues (opened/edited/reopened) and Pull Requests (opened/reopened/synchronize/edited)
+#### Enterprise Gated Pipeline (`gated-pipeline.yml`) 🆕
+**Triggered on:** Push to main/master/develop, Pull requests, Releases, Manual dispatch, Issue comments
 
-**Purpose:** Quickly categorize inbound work so reviewers know what to look at first.
-
-- Auto-applies labels for type (bug/enhancement/docs/security/testing/performance) and area (frontend/backend/database/workflows/documentation)
-- Sets a default priority and highlights beginner-friendly issues
-- Flags missing information (repro steps, expected/actual results, versions) with a checklist comment
-- For PRs, labels areas touched, estimates risk based on change size and critical paths, and prompts for test plans/screenshots/linked issues
-- Mentions **@copilot** to sanity-check the triage with GitHub-native AI (no external Codex webhooks)
-
-This workflow runs alongside the existing PR management jobs to keep triage lightweight while preserving the richer checks in the gated pipelines.
-
-#### 1. Enterprise Gated CI/CD Pipeline (`gated-ci.yml`)
-**Triggered on:** Push to main/master/develop branches, Pull requests
+**Consolidates:** All CI/CD, deployment, and development assistance in one workflow
 
 **Structure:**
 - **Gate 1:** Code Quality - 7 validation steps
@@ -83,13 +78,24 @@ This workflow runs alongside the existing PR management jobs to keep triage ligh
   - 2.3 DBAL Daemon Tests
 - **Gate 3:** Build & Package - 2 validation steps
   - 3.1 Application Build (+ bundle analysis)
-  - 3.2 Quality Metrics
-- **Gate 4:** Review & Approval (Human review required)
-- **Gate 5:** Deployment (post-merge, automatic staging)
+  - 3.2 Quality Metrics (PR only)
+- **Gate 4:** Development Assistance (PR only)
+  - 4.1 Code metrics analysis
+  - 4.2 Architectural compliance
+  - 4.3 Refactoring suggestions
+  - 4.4 Copilot interaction handler
+- **Gate 5:** Staging Deployment (main branch push)
+  - Automatic deployment to staging environment
+  - Smoke tests and health checks
+- **Gate 6:** Production Deployment (release/manual)
+  - Manual approval gate
+  - Production deployment with health monitoring
+  - Deployment tracking issue creation
 
 **Features:**
 - Individual validation steps for superior visualization
 - **Gate artifacts** persisted between steps (30-day retention)
+- Conditional execution based on trigger type
 - Granular failure detection
 - Parallel execution within gates
 - Complete audit trail with JSON artifacts
@@ -98,42 +104,32 @@ This workflow runs alongside the existing PR management jobs to keep triage ligh
 - Clear gate status reporting on PRs
 - Summary report with all gate results
 
-#### 2. Enterprise Gated Deployment (`gated-deployment.yml`)
-**Triggered on:** Push to main/master, Releases, Manual workflow dispatch
+### 🔄 Supporting Workflows
 
-**Environments:**
-- **Staging:** Automatic deployment after merge to main
-- **Production:** Manual approval required
+#### Issue and PR Triage (`triage.yml`)
+**Triggered on:** Issues (opened/edited/reopened) and Pull Requests (opened/reopened/synchronize/edited)
 
-**Features:**
-- Pre-deployment validation (schema, security, size)
-- Breaking change detection and warnings
-- Environment-specific deployment paths
-- Post-deployment health checks
-- Automatic deployment tracking issues
-- Rollback preparation and procedures
+**Purpose:** Quickly categorize inbound work so reviewers know what to look at first.
 
-**Gate 5:** Deployment gate ensures only reviewed code reaches production
+- Auto-applies labels for type (bug/enhancement/docs/security/testing/performance) and area (frontend/backend/database/workflows/documentation)
+- Sets a default priority and highlights beginner-friendly issues
+- Flags missing information (repro steps, expected/actual results, versions) with a checklist comment
+- For PRs, labels areas touched, estimates risk based on change size and critical paths, and prompts for test plans/screenshots/linked issues
+- Mentions **@copilot** to sanity-check the triage with GitHub-native AI
 
-### 🔄 Legacy Workflows (Still Active)
+This workflow runs alongside the gated pipeline to provide quick triage feedback.
 
-#### 3. CI/CD Workflow (`ci/ci.yml`) - ❌ REMOVED
+### 🗑️ Legacy Workflows (Removed)
+
+#### CI/CD Workflow (`ci/ci.yml`) - ❌ REMOVED
 **Status:** Deprecated and removed (Dec 2025)  
-**Reason:** 100% functionality superseded by `gated-ci.yml`
+**Reason:** 100% functionality superseded by gated pipeline
 
 **Jobs:** ~~Prisma Check, Lint, Build, E2E Tests, Quality Check~~
 
-**Replacement:** Use `gated-ci.yml` for all CI/CD operations
-**Triggered on:** Push to main/master/develop branches, Pull requests
+**Replacement:** Consolidated into `gated-pipeline.yml`
 
-**Jobs:**
-- **Prisma Check**: Validates database schema and generates Prisma client
-- **Lint**: Runs ESLint to check code quality
-- **Build**: Builds the application and uploads artifacts
-- **E2E Tests**: Runs Playwright end-to-end tests
-- **Quality Check**: Checks for console.log statements and TODO comments
-
-### 4. Automated Code Review (`code-review.yml`)
+### 3. Automated Code Review (`pr/code-review.yml`)
 **Triggered on:** Pull request opened, synchronized, or reopened
 
 **Features:**
@@ -150,21 +146,21 @@ This workflow runs alongside the existing PR management jobs to keep triage ligh
 - ✅ React best practices
 - ✅ File size warnings
 
-### 5. Auto Merge (`auto-merge.yml`) - Updated for Gated Workflow
+### 4. Auto Merge (`pr/auto-merge.yml`) - Updated for Gated Pipeline
 **Triggered on:** PR approval, CI workflow completion
 
 **Features:**
 - Automatically merges PRs when:
   - PR is approved by reviewers
-  - All gates pass (supports both gated and legacy CI checks)
+  - All gates pass in unified gated pipeline
   - No merge conflicts
   - PR is not in draft
 - **Automatically deletes the branch** after successful merge
 - Uses squash merge strategy
 - Posts comments about merge status
-- **Updated:** Now supports Enterprise Gated CI/CD Pipeline checks
+- **Updated:** Now supports unified Enterprise Gated Pipeline checks
 
-### 6. Issue Triage (`issue-triage.yml`)
+### 5. Issue Triage (`issue-triage.yml`)
 **Triggered on:** New issues opened, issues labeled
 
 **Features:**
@@ -176,7 +172,7 @@ This workflow runs alongside the existing PR management jobs to keep triage ligh
 - Suggests automated fix attempts for simple issues
 - Can create fix branches automatically with `create-pr` label
 
-### 7. PR Management (`pr-management.yml`)
+### 6. PR Management (`pr/pr-management.yml`)
 **Triggered on:** PR opened, synchronized, labeled
 
 **Features:**
@@ -188,7 +184,7 @@ This workflow runs alongside the existing PR management jobs to keep triage ligh
 - Links related issues automatically
 - Posts comments on related issues
 
-### 8. Merge Conflict Check (`merge-conflict-check.yml`)
+### 7. Merge Conflict Check (`pr/merge-conflict-check.yml`)
 **Triggered on:** PR opened/synchronized, push to main/master
 
 **Features:**
@@ -197,7 +193,7 @@ This workflow runs alongside the existing PR management jobs to keep triage ligh
 - Adds/removes `merge-conflict` label
 - Fails CI if conflicts exist
 
-### 9. Planning & Design (`planning.yml`) 🆕
+### 8. Planning & Design (`quality/planning.yml`) 🆕
 **Triggered on:** Issues opened or labeled with enhancement/feature-request
 
 **Features:**
@@ -211,28 +207,7 @@ This workflow runs alongside the existing PR management jobs to keep triage ligh
 
 **SDLC Phase:** Planning & Design
 
-### 10. Development Assistance (`development.yml`) 🆕 - Refactored
-**Triggered on:** Pull request updates, @copilot mentions
-
-**Features:**
-- **Architectural Compliance Feedback**: Monitors declarative ratio and component sizes
-- **@copilot Interaction Handler**: Responds to @copilot mentions with context-aware guidance
-- **Refactoring Suggestions**: Identifies opportunities for improvement
-- Provides architectural reminders and best practices
-
-**Note:** Refactored to remove redundant quality checks (lint/build now in gated-ci.yml)
-
-**SDLC Phase:** Development
-
-### 11. Deployment & Monitoring (`deployment.yml`) - ❌ REMOVED
-**Status:** Deprecated and removed (Dec 2025)  
-**Reason:** 100% functionality superseded by `gated-deployment.yml` with improvements
-
-**Jobs:** ~~Pre-Deployment Validation, Deployment Summary, Post-Deployment Health Checks~~
-
-**Replacement:** Use `gated-deployment.yml` for all deployment operations
-
-### 12. Code Size Limits (`size-limits.yml`)
+### 9. Code Size Limits (`quality/size-limits.yml`)
 **Triggered on:** Pull requests, pushes to main (when source files change)
 
 **Features:**
@@ -246,11 +221,11 @@ This workflow runs alongside the existing PR management jobs to keep triage ligh
 
 ```
 ┌─────────────┐
-│  Planning   │ ← planning.yml (Architecture Review, PRD Check)
+│  Planning   │ ← quality/planning.yml (Architecture Review, PRD Check)
 └──────┬──────┘
        ↓
 ┌─────────────┐
-│ Development │ ← development.yml (Quality Feedback, Refactoring)
+│ Development │ ← gated-pipeline.yml Gate 4 (Dev Feedback, Copilot)
 └──────┬──────┘
        ↓
 ┌─────────────┐
