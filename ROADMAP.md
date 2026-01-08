@@ -33,10 +33,12 @@ Browser URL → Database Query → JSON Component → Generic Renderer → React
 7. [Feature Status Matrix](#feature-status-matrix)
 8. [Package Ecosystem](#package-ecosystem)
 9. [Post-MVP Priorities](#post-mvp-priorities)
-10. [Known Issues & Technical Debt](#known-issues--technical-debt)
-11. [Long-Term Vision](#long-term-vision)
-12. [Success Metrics](#success-metrics)
-13. [Contributing](#contributing)
+10. [Testing Strategy & Best Practices](#testing-strategy--best-practices)
+11. [Development Best Practices](#development-best-practices)
+12. [Known Issues & Technical Debt](#known-issues--technical-debt)
+13. [Long-Term Vision](#long-term-vision)
+14. [Success Metrics](#success-metrics)
+15. [Contributing](#contributing)
 
 ---
 
