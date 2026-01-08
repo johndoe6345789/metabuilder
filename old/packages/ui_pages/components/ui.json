@@ -1,0 +1,455 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_pages",
+  "description": "UI page components including layouts, navigation, and page containers",
+  "components": [
+    {
+      "id": "page_layout",
+      "name": "PageLayout",
+      "description": "Base page layout with navigation and footer",
+      "props": [
+        {
+          "name": "level",
+          "type": "number",
+          "required": true,
+          "description": "Required permission level (1-6)"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": "Page title"
+        },
+        {
+          "name": "children",
+          "type": "any",
+          "required": true,
+          "description": "Page content"
+        },
+        {
+          "name": "requiresAuth",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether authentication is required"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "page-layout min-h-screen",
+          "children": [
+            {
+              "type": "NavigationBar",
+              "props": {
+                "level": "{{level}}",
+                "onNavigate": "handleNavigate"
+              }
+            },
+            {
+              "type": "Container",
+              "maxWidth": "lg",
+              "className": "px-4 sm:px-6 lg:px-8 pt-6 space-y-6",
+              "children": "{{children}}"
+            },
+            {
+              "type": "AppFooter"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "navigation_bar",
+      "name": "NavigationBar",
+      "description": "Top navigation bar with level-based menu items",
+      "props": [
+        {
+          "name": "level",
+          "type": "number",
+          "required": true,
+          "description": "Current navigation level"
+        },
+        {
+          "name": "onNavigate",
+          "type": "string",
+          "required": false,
+          "description": "Navigation handler function name"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "AppBar",
+          "position": "sticky",
+          "color": "default",
+          "children": [
+            {
+              "type": "Toolbar",
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "h6",
+                  "children": "MetaBuilder"
+                },
+                {
+                  "type": "Box",
+                  "sx": { "flexGrow": 1 }
+                },
+                {
+                  "type": "Button",
+                  "color": "inherit",
+                  "children": "Home"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "app_footer",
+      "name": "AppFooter",
+      "description": "Application footer with links and copyright",
+      "props": [],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "component": "footer",
+          "sx": {
+            "mt": "auto",
+            "py": 3,
+            "px": 2,
+            "backgroundColor": "background.paper"
+          },
+          "children": [
+            {
+              "type": "Container",
+              "maxWidth": "lg",
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "body2",
+                  "color": "textSecondary",
+                  "align": "center",
+                  "children": "© 2026 MetaBuilder. All rights reserved."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "server_status_card",
+      "name": "ServerStatusCard",
+      "description": "Card displaying server status information",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "default": "Server Status"
+        },
+        {
+          "name": "serverName",
+          "type": "string",
+          "default": "MetaBuilder Development Server"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "default": "Active"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "children": [
+                {
+                  "type": "CardTitle",
+                  "props": { "text": "{{title}}" }
+                }
+              ]
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "body1",
+                  "children": "{{serverName}}"
+                },
+                {
+                  "type": "Typography",
+                  "variant": "body2",
+                  "color": "textSecondary",
+                  "children": "Status: {{status}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "login_form",
+      "name": "LoginForm",
+      "description": "Login form with username and password fields",
+      "props": [
+        {
+          "name": "onSubmit",
+          "type": "string",
+          "required": false,
+          "description": "Submit handler function name"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "spacing": 3,
+          "children": [
+            {
+              "type": "Box",
+              "children": [
+                {
+                  "type": "Label",
+                  "htmlFor": "username",
+                  "children": "Username"
+                },
+                {
+                  "type": "Input",
+                  "id": "username",
+                  "name": "username",
+                  "placeholder": "Enter your username",
+                  "required": true
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "children": [
+                {
+                  "type": "Label",
+                  "htmlFor": "password",
+                  "children": "Password"
+                },
+                {
+                  "type": "Input",
+                  "id": "password",
+                  "name": "password",
+                  "type": "password",
+                  "placeholder": "Enter your password",
+                  "required": true
+                }
+              ]
+            },
+            {
+              "type": "Button",
+              "type": "submit",
+              "variant": "contained",
+              "fullWidth": true,
+              "children": "Sign In"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "register_form",
+      "name": "RegisterForm",
+      "description": "Registration form with username, email fields",
+      "props": [
+        {
+          "name": "onSubmit",
+          "type": "string",
+          "required": false,
+          "description": "Submit handler function name"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "spacing": 3,
+          "children": [
+            {
+              "type": "Box",
+              "children": [
+                {
+                  "type": "Label",
+                  "htmlFor": "reg-username",
+                  "children": "Username"
+                },
+                {
+                  "type": "Input",
+                  "id": "reg-username",
+                  "name": "username",
+                  "placeholder": "Choose a username",
+                  "required": true
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "children": [
+                {
+                  "type": "Label",
+                  "htmlFor": "email",
+                  "children": "Email"
+                },
+                {
+                  "type": "Input",
+                  "id": "email",
+                  "name": "email",
+                  "type": "email",
+                  "placeholder": "your@email.com",
+                  "required": true
+                }
+              ]
+            },
+            {
+              "type": "Button",
+              "type": "submit",
+              "variant": "contained",
+              "fullWidth": true,
+              "children": "Create Account"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "pages": [
+    {
+      "id": "level1",
+      "path": "/",
+      "title": "Home",
+      "level": 1,
+      "requiresAuth": false,
+      "layout": {
+        "type": "PageLayout",
+        "props": {
+          "level": 1,
+          "title": "Home"
+        },
+        "children": [
+          {
+            "type": "ServerStatusCard"
+          },
+          {
+            "type": "Tabs",
+            "defaultValue": "overview",
+            "children": [
+              {
+                "type": "TabsList",
+                "children": [
+                  { "type": "TabsTrigger", "value": "overview", "children": "Overview" },
+                  { "type": "TabsTrigger", "value": "features", "children": "Features" },
+                  { "type": "TabsTrigger", "value": "docs", "children": "Documentation" }
+                ]
+              },
+              {
+                "type": "TabsContent",
+                "value": "overview",
+                "children": [
+                  {
+                    "type": "Stack",
+                    "spacing": 2,
+                    "children": [
+                      {
+                        "type": "Typography",
+                        "variant": "h5",
+                        "children": "Welcome to MetaBuilder"
+                      },
+                      {
+                        "type": "Typography",
+                        "variant": "body1",
+                        "children": "MetaBuilder is a powerful data-driven platform with multi-level navigation."
+                      },
+                      {
+                        "type": "Button",
+                        "variant": "contained",
+                        "children": "Explore Level 2",
+                        "onClick": "navigateToLevel2"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "login",
+      "path": "/login",
+      "title": "Login",
+      "level": 1,
+      "requiresAuth": false,
+      "layout": {
+        "type": "Box",
+        "className": "min-h-screen flex items-center justify-center p-4",
+        "sx": {
+          "background": "linear-gradient(to bottom right, rgba(var(--primary), 0.05), transparent, rgba(var(--accent), 0.05))"
+        },
+        "children": [
+          {
+            "type": "Card",
+            "sx": { "width": "100%", "maxWidth": 400 },
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [
+                  { "type": "CardTitle", "children": "Welcome to MetaBuilder" },
+                  { "type": "CardDescription", "children": "Sign in to your account or create a new one" }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "Tabs",
+                    "defaultValue": "login",
+                    "children": [
+                      {
+                        "type": "TabsList",
+                        "sx": { "display": "grid", "gridTemplateColumns": "1fr 1fr", "width": "100%" },
+                        "children": [
+                          { "type": "TabsTrigger", "value": "login", "children": "Login" },
+                          { "type": "TabsTrigger", "value": "register", "children": "Register" }
+                        ]
+                      },
+                      {
+                        "type": "TabsContent",
+                        "value": "login",
+                        "children": [
+                          { "type": "LoginForm", "onSubmit": "handleLogin" }
+                        ]
+                      },
+                      {
+                        "type": "TabsContent",
+                        "value": "register",
+                        "children": [
+                          { "type": "RegisterForm", "onSubmit": "handleRegister" }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

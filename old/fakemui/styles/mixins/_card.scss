@@ -1,0 +1,13 @@
+// Card/Paper mixins
+
+@mixin card {
+  background: var(--color-bg-paper);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+@mixin card-elevated {
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}

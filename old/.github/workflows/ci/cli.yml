@@ -1,0 +1,57 @@
+name: CLI Build
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'frontends/cli/**'
+      - '.github/workflows/ci/cli.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'frontends/cli/**'
+      - '.github/workflows/ci/cli.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build MetaBuilder CLI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build python3-pip libssl-dev
+
+      - name: Install Conan
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install conan
+
+      - name: Detect Conan profile
+        run: conan profile detect --force
+
+      - name: Install Conan dependencies
+        run: |
+          mkdir -p frontends/cli/build
+          conan install frontends/cli \
+            --output-folder frontends/cli/build \
+            --build missing
+
+      - name: Configure CLI with CMake
+        run: |
+          cmake -S frontends/cli -B frontends/cli/build -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE=frontends/cli/build/conan_toolchain.cmake
+
+      - name: Build CLI executable
+        run: cmake --build frontends/cli/build
+
+      - name: Run help command to verify binary
+        run: frontends/cli/build/bin/metabuilder-cli --help

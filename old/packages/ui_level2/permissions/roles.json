@@ -1,0 +1,119 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_level2",
+  "description": "Level 2 user dashboard access permissions",
+  "permissions": [
+    {
+      "id": "level2.dashboard.view",
+      "name": "View User Dashboard",
+      "description": "View user dashboard",
+      "resource": "level2",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "level2.profile.view",
+      "name": "View Profile",
+      "description": "View profile",
+      "resource": "level2.profile",
+      "action": "read",
+      "scope": "user",
+      "minLevel": 2
+    },
+    {
+      "id": "level2.profile.edit",
+      "name": "Edit Profile",
+      "description": "Edit profile",
+      "resource": "level2.profile",
+      "action": "update",
+      "scope": "user",
+      "minLevel": 2
+    },
+    {
+      "id": "level2.comments.view",
+      "name": "View Comments",
+      "description": "View comments",
+      "resource": "level2.comments",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "level2.comments.post",
+      "name": "Post Comments",
+      "description": "Post comments",
+      "resource": "level2.comments",
+      "action": "create",
+      "scope": "user",
+      "minLevel": 2
+    },
+    {
+      "id": "level2.comments.edit",
+      "name": "Edit Comments",
+      "description": "Edit own comments",
+      "resource": "level2.comments",
+      "action": "update",
+      "scope": "user",
+      "minLevel": 2
+    },
+    {
+      "id": "level2.comments.delete",
+      "name": "Delete Comments",
+      "description": "Delete own comments",
+      "resource": "level2.comments",
+      "action": "delete",
+      "scope": "user",
+      "minLevel": 2
+    },
+    {
+      "id": "level2.chat.view",
+      "name": "View Chat",
+      "description": "View chat messages",
+      "resource": "level2.chat",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "level2.chat.send",
+      "name": "Send Chat Messages",
+      "description": "Send chat messages",
+      "resource": "level2.chat",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 2
+    }
+  ],
+  "resources": [
+    {
+      "id": "level2",
+      "name": "Level 2 Dashboard",
+      "type": "component",
+      "description": "Level 2 user dashboard resources",
+      "actions": ["read"]
+    },
+    {
+      "id": "level2.profile",
+      "name": "User Profile",
+      "type": "entity",
+      "description": "User profile data",
+      "actions": ["read", "update"]
+    },
+    {
+      "id": "level2.comments",
+      "name": "User Comments",
+      "type": "entity",
+      "description": "User comments",
+      "actions": ["read", "create", "update", "delete"]
+    },
+    {
+      "id": "level2.chat",
+      "name": "Chat",
+      "type": "custom",
+      "description": "Real-time chat feature",
+      "actions": ["read", "create"]
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Login Components",
+  "description": "Authentication forms for login, registration, and password reset",
+  "stories": [
+    {
+      "name": "LoginForm",
+      "render": "login_form",
+      "description": "Standard login form with username and password",
+      "args": {
+        "showRememberMe": true
+      }
+    },
+    {
+      "name": "LoginFormLoading",
+      "render": "login_form",
+      "description": "Login form in loading state",
+      "args": {
+        "loading": true,
+        "showRememberMe": true
+      }
+    },
+    {
+      "name": "LoginFormError",
+      "render": "login_form",
+      "description": "Login form with error message",
+      "args": {
+        "error": "Invalid username or password",
+        "showRememberMe": true
+      }
+    },
+    {
+      "name": "RegisterForm",
+      "render": "register_form",
+      "description": "User registration form",
+      "args": {
+        "requireAcceptTerms": true,
+        "termsUrl": "/terms",
+        "privacyUrl": "/privacy"
+      }
+    },
+    {
+      "name": "RegisterFormLoading",
+      "render": "register_form",
+      "description": "Registration form in loading state",
+      "args": {
+        "loading": true,
+        "requireAcceptTerms": true
+      }
+    },
+    {
+      "name": "ForgotPassword",
+      "render": "forgot_password",
+      "description": "Password reset request form",
+      "args": {}
+    },
+    {
+      "name": "ForgotPasswordSuccess",
+      "render": "forgot_password",
+      "description": "Password reset form after successful submission",
+      "args": {
+        "success": true
+      }
+    }
+  ],
+  "renders": {
+    "login_form": {
+      "description": "Login form with validation",
+      "featured": true
+    },
+    "register_form": {
+      "description": "Registration form with validation"
+    },
+    "forgot_password": {
+      "description": "Password reset request form"
+    }
+  },
+  "defaultContext": {
+    "user": null,
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Guest",
+      "description": "Unauthenticated visitor",
+      "context": {
+        "user": null
+      }
+    },
+    {
+      "name": "With Tenant",
+      "description": "Guest with tenant context",
+      "context": {
+        "user": null,
+        "tenant": {
+          "id": "acme-corp",
+          "name": "Acme Corporation",
+          "logo": "/logos/acme.svg"
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["login_form", "register_form", "forgot_password"],
+    "ignoredScripts": ["tests", "actions", "validate"]
+  },
+  "parameters": {
+    "layout": "centered",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" },
+        { "name": "branded", "value": "#e3f2fd" }
+      ]
+    }
+  }
+}

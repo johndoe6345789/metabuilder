@@ -1,0 +1,440 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "forum_forge",
+  "description": "Forum Forge UI components including category lists, thread views, and moderation panels",
+  "components": [
+    {
+      "id": "forum_root",
+      "name": "ForumRoot",
+      "description": "Main forum container with hero section, stats, and navigation",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "default": "Forum Forge",
+          "description": "Forum title"
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "required": false,
+          "default": "A modern discussion hub with curated categories, rapid replies, and moderator-ready queues.",
+          "description": "Forum subtitle"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "direction": "column",
+          "gap": 3,
+          "className": "forum-forge-root",
+          "children": [
+            {
+              "type": "Card",
+              "variant": "outlined",
+              "className": "forum-hero",
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "column",
+                  "gap": 2,
+                  "sx": { "p": 3 },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h4",
+                      "fontWeight": "bold",
+                      "children": "{{title}}"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body1",
+                      "color": "secondary",
+                      "children": "{{subtitle}}"
+                    },
+                    {
+                      "type": "Flex",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "color": "primary",
+                          "children": "Start new thread"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "children": "Browse categories"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "forum_stat_card",
+      "name": "ForumStatCard",
+      "description": "Stat card for forum metrics (active threads, replies, flags)",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Stat label"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Stat value"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "forum-stat-card",
+          "children": [
+            {
+              "type": "Stack",
+              "direction": "column",
+              "gap": 0.5,
+              "sx": { "p": 2 },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "caption",
+                  "color": "secondary",
+                  "children": "{{label}}"
+                },
+                {
+                  "type": "Text",
+                  "variant": "h5",
+                  "fontWeight": "semibold",
+                  "children": "{{value}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "forum_stats_grid",
+      "name": "ForumStatsGrid",
+      "description": "Grid layout for forum statistics",
+      "props": [
+        {
+          "name": "activeThreads",
+          "type": "string",
+          "default": "246"
+        },
+        {
+          "name": "repliesToday",
+          "type": "string",
+          "default": "1,092"
+        },
+        {
+          "name": "queuedFlags",
+          "type": "string",
+          "default": "8"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Grid",
+          "container": true,
+          "spacing": 2,
+          "className": "forum-stats-grid",
+          "children": [
+            {
+              "type": "Grid",
+              "item": true,
+              "xs": 12,
+              "sm": 4,
+              "children": [
+                {
+                  "type": "ForumStatCard",
+                  "label": "Active threads",
+                  "value": "{{activeThreads}}"
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "item": true,
+              "xs": 12,
+              "sm": 4,
+              "children": [
+                {
+                  "type": "ForumStatCard",
+                  "label": "Replies today",
+                  "value": "{{repliesToday}}"
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "item": true,
+              "xs": 12,
+              "sm": 4,
+              "children": [
+                {
+                  "type": "ForumStatCard",
+                  "label": "Queued flags",
+                  "value": "{{queuedFlags}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "category_card",
+      "name": "CategoryCard",
+      "description": "Card displaying a forum category with title and description",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": "Category title"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": true,
+          "description": "Category description"
+        },
+        {
+          "name": "onClick",
+          "type": "function",
+          "required": false,
+          "description": "Click handler"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "forum-category-card",
+          "onClick": "{{onClick}}",
+          "children": [
+            {
+              "type": "Stack",
+              "direction": "column",
+              "gap": 0.5,
+              "sx": { "p": 2 },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h6",
+                  "fontWeight": "semibold",
+                  "children": "{{title}}"
+                },
+                {
+                  "type": "Text",
+                  "variant": "body2",
+                  "color": "secondary",
+                  "children": "{{description}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "category_list",
+      "name": "CategoryList",
+      "description": "List of forum categories",
+      "props": [
+        {
+          "name": "categories",
+          "type": "array",
+          "required": false,
+          "default": [],
+          "description": "Array of category objects"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "default": "Featured categories"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "forum-categories",
+          "children": [
+            {
+              "type": "Stack",
+              "direction": "column",
+              "gap": 2,
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h5",
+                  "fontWeight": "semibold",
+                  "children": "{{title}}"
+                },
+                {
+                  "type": "Stack",
+                  "direction": "column",
+                  "gap": 1.5,
+                  "children": {
+                    "type": "loop",
+                    "items": "{{categories}}",
+                    "itemKey": "id",
+                    "template": {
+                      "type": "CategoryCard",
+                      "title": "{{item.title}}",
+                      "description": "{{item.description}}"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "thread_card",
+      "name": "ThreadCard",
+      "description": "Card displaying a forum thread with title and metadata",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": "Thread title"
+        },
+        {
+          "name": "replyCount",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Number of replies"
+        },
+        {
+          "name": "lastUpdated",
+          "type": "string",
+          "required": false,
+          "description": "Last update time"
+        },
+        {
+          "name": "onClick",
+          "type": "function",
+          "required": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "forum-thread-card",
+          "onClick": "{{onClick}}",
+          "children": [
+            {
+              "type": "Stack",
+              "direction": "column",
+              "gap": 0.5,
+              "sx": { "p": 2 },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "subtitle1",
+                  "fontWeight": "semibold",
+                  "children": "{{title}}"
+                },
+                {
+                  "type": "Text",
+                  "variant": "caption",
+                  "color": "secondary",
+                  "children": "{{replyCount}} replies · Updated {{lastUpdated}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "thread_list",
+      "name": "ThreadList",
+      "description": "List of forum threads",
+      "props": [
+        {
+          "name": "threads",
+          "type": "array",
+          "required": false,
+          "default": [],
+          "description": "Array of thread objects"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "default": "Trending threads"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "forum-threads",
+          "children": [
+            {
+              "type": "Stack",
+              "direction": "column",
+              "gap": 2,
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h5",
+                  "fontWeight": "semibold",
+                  "children": "{{title}}"
+                },
+                {
+                  "type": "Stack",
+                  "direction": "column",
+                  "gap": 1.5,
+                  "children": {
+                    "type": "loop",
+                    "items": "{{threads}}",
+                    "itemKey": "id",
+                    "template": {
+                      "type": "ThreadCard",
+                      "title": "{{item.title}}",
+                      "replyCount": "{{item.replyCount}}",
+                      "lastUpdated": "{{item.lastUpdated}}"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

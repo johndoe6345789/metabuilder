@@ -1,0 +1,29 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/entities.schema.json",
+  "schemaVersion": "2.0.0",
+  "entities": [
+    {
+      "name": "User",
+      "version": "1.0",
+      "primaryKey": "id",
+      "timestamps": true,
+      "fields": {
+        "id": {
+          "type": "uuid",
+          "generated": true
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "maxLength": 255
+        },
+        "email": {
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "maxLength": 255
+        }
+      }
+    }
+  ]
+}

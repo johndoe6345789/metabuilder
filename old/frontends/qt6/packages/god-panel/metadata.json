@@ -1,0 +1,7 @@
+{
+  "packageId": "god_panel",
+  "name": "God Panel",
+  "version": "1.0.0",
+  "description": "Power user console with server toggles, credentials, and runtime health.",
+  "dependencies": ["login", "user_settings"]
+}

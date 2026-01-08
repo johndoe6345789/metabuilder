@@ -1,0 +1,419 @@
+{
+  "description": "Schema validation test cases",
+  "version": "1.0.0",
+  "testSuites": [
+    {
+      "name": "Entities Schema Tests",
+      "schema": "../entities_schema.json",
+      "tests": [
+        {
+          "name": "Valid entity with required fields",
+          "valid": true,
+          "data": {
+            "schemaVersion": "2.0.0",
+            "entities": [
+              {
+                "name": "User",
+                "version": "1.0",
+                "primaryKey": "id",
+                "fields": {
+                  "id": {
+                    "type": "uuid"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Missing schemaVersion should fail",
+          "valid": false,
+          "data": {
+            "entities": [
+              {
+                "name": "User",
+                "version": "1.0",
+                "fields": {
+                  "id": {
+                    "type": "uuid"
+                  }
+                }
+              }
+            ]
+          },
+          "expectedError": "required property 'schemaVersion'"
+        },
+        {
+          "name": "Deprecated field.primary should fail",
+          "valid": false,
+          "data": {
+            "schemaVersion": "2.0.0",
+            "entities": [
+              {
+                "name": "User",
+                "version": "1.0",
+                "fields": {
+                  "id": {
+                    "type": "uuid",
+                    "primary": true
+                  }
+                }
+              }
+            ]
+          },
+          "expectedError": "field.primary is no longer supported"
+        },
+        {
+          "name": "Composite primary key",
+          "valid": true,
+          "data": {
+            "schemaVersion": "2.0.0",
+            "entities": [
+              {
+                "name": "UserRole",
+                "version": "1.0",
+                "primaryKey": ["userId", "roleId"],
+                "fields": {
+                  "userId": {
+                    "type": "uuid"
+                  },
+                  "roleId": {
+                    "type": "uuid"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Soft delete with timestamps",
+          "valid": true,
+          "data": {
+            "schemaVersion": "2.0.0",
+            "entities": [
+              {
+                "name": "Post",
+                "version": "1.0",
+                "primaryKey": "id",
+                "timestamps": true,
+                "softDelete": true,
+                "fields": {
+                  "id": {
+                    "type": "uuid"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Validation Schema Tests",
+      "schema": "../validation_schema.json",
+      "tests": [
+        {
+          "name": "Sanitize defaults to true",
+          "valid": true,
+          "data": {
+            "schemaVersion": "2.0.0",
+            "package": "test-package",
+            "functions": [
+              {
+                "id": "test_func",
+                "name": "testFunc",
+                "params": [
+                  {
+                    "name": "input",
+                    "type": "string"
+                  }
+                ],
+                "returnType": "boolean"
+              }
+            ]
+          },
+          "note": "sanitize is optional and defaults to true in v2.0.0"
+        },
+        {
+          "name": "Custom sanitization options",
+          "valid": true,
+          "data": {
+            "schemaVersion": "2.0.0",
+            "package": "test-package",
+            "functions": [
+              {
+                "id": "validate_html",
+                "name": "validateHtml",
+                "params": [
+                  {
+                    "name": "html",
+                    "type": "string",
+                    "sanitize": true,
+                    "sanitizeOptions": {
+                      "allowHtml": true,
+                      "allowedTags": ["p", "strong", "em"],
+                      "stripScripts": true
+                    }
+                  }
+                ],
+                "returnType": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Built-in patterns",
+          "valid": true,
+          "data": {
+            "schemaVersion": "2.0.0",
+            "package": "test-package",
+            "patterns": {
+              "email": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+              "password": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
+            },
+            "functions": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "API Schema Tests",
+      "schema": "../api_schema.json",
+      "tests": [
+        {
+          "name": "Basic GET route",
+          "valid": true,
+          "data": {
+            "schemaVersion": "1.0.0",
+            "package": "test-api",
+            "basePath": "/api",
+            "routes": [
+              {
+                "path": "/users",
+                "method": "GET",
+                "handler": "getUsers"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Route with params and auth",
+          "valid": true,
+          "data": {
+            "schemaVersion": "1.0.0",
+            "package": "test-api",
+            "routes": [
+              {
+                "path": "/users/:id",
+                "method": "GET",
+                "handler": "getUser",
+                "auth": {
+                  "type": "bearer",
+                  "required": true
+                },
+                "params": [
+                  {
+                    "name": "id",
+                    "type": "string",
+                    "required": true
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "Missing required handler",
+          "valid": false,
+          "data": {
+            "schemaVersion": "1.0.0",
+            "package": "test-api",
+            "routes": [
+              {
+                "path": "/users",
+                "method": "GET"
+              }
+            ]
+          },
+          "expectedError": "required property 'handler'"
+        }
+      ]
+    },
+    {
+      "name": "Script Schema Tests",
+      "schema": "../script_schema.json",
+      "tests": [
+        {
+          "name": "Simple function with return",
+          "valid": true,
+          "data": {
+            "schemaVersion": "2.2.0",
+            "package": "test-scripts",
+            "functions": [
+              {
+                "id": "add",
+                "name": "add",
+                "params": [
+                  {"name": "a", "type": "number"},
+                  {"name": "b", "type": "number"}
+                ],
+                "returnType": "number",
+                "body": [
+                  {
+                    "type": "return",
+                    "value": {
+                      "type": "binary_expression",
+                      "operator": "+",
+                      "left": {"type": "identifier", "name": "a"},
+                      "right": {"type": "identifier", "name": "b"}
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "Function with visual metadata",
+          "valid": true,
+          "data": {
+            "schemaVersion": "2.2.0",
+            "package": "test-scripts",
+            "functions": [
+              {
+                "id": "greet",
+                "name": "greet",
+                "params": [
+                  {"name": "name", "type": "string"}
+                ],
+                "returnType": "string",
+                "body": [
+                  {
+                    "type": "return",
+                    "value": {"type": "string_literal", "value": "Hello"}
+                  }
+                ],
+                "visual": {
+                  "icon": "👋",
+                  "color": "#3498db",
+                  "category": "greetings"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Types Schema Tests",
+      "schema": "../types_schema.json",
+      "tests": [
+        {
+          "name": "Object type",
+          "valid": true,
+          "data": {
+            "schemaVersion": "2.0.0",
+            "package": "test-types",
+            "types": [
+              {
+                "id": "user",
+                "name": "User",
+                "kind": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "email": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Enum type",
+          "valid": true,
+          "data": {
+            "schemaVersion": "2.0.0",
+            "package": "test-types",
+            "types": [
+              {
+                "id": "role",
+                "name": "Role",
+                "kind": "enum",
+                "enum": ["user", "admin", "moderator"]
+              }
+            ]
+          }
+        },
+        {
+          "name": "Utility type - Omit",
+          "valid": true,
+          "data": {
+            "schemaVersion": "2.0.0",
+            "package": "test-types",
+            "types": [
+              {
+                "id": "create_user",
+                "name": "CreateUser",
+                "kind": "utility",
+                "utility": {
+                  "type": "Omit",
+                  "targetType": "User",
+                  "keys": ["id", "createdAt"]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Metadata Schema Tests",
+      "schema": "../metadata_schema.json",
+      "tests": [
+        {
+          "name": "Minimal valid package",
+          "valid": true,
+          "data": {
+            "packageId": "test-package",
+            "name": "Test Package",
+            "version": "1.0.0",
+            "description": "A test package"
+          }
+        },
+        {
+          "name": "Package with dependencies",
+          "valid": true,
+          "data": {
+            "packageId": "test-package",
+            "name": "Test Package",
+            "version": "1.0.0",
+            "description": "A test package",
+            "dependencies": {
+              "core": "^1.0.0",
+              "utils": "~2.1.0"
+            }
+          }
+        },
+        {
+          "name": "Invalid semver version",
+          "valid": false,
+          "data": {
+            "packageId": "test-package",
+            "name": "Test Package",
+            "version": "1.0",
+            "description": "A test package"
+          },
+          "expectedError": "pattern"
+        }
+      ]
+    }
+  ]
+}

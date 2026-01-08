@@ -1,0 +1,85 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "stream_cast",
+  "description": "Stream Cast access permissions for streaming and broadcasting",
+  "permissions": [
+    {
+      "id": "stream.view",
+      "name": "View Streams",
+      "description": "View streams",
+      "resource": "stream",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "stream.broadcast",
+      "name": "Start Broadcast",
+      "description": "Start live broadcast",
+      "resource": "stream",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "stream.create",
+      "name": "Create Stream Channels",
+      "description": "Create stream channels",
+      "resource": "stream",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "stream.scene.manage",
+      "name": "Manage Scenes",
+      "description": "Manage stream scenes",
+      "resource": "scene",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "stream.schedule",
+      "name": "Manage Schedule",
+      "description": "Manage stream schedules",
+      "resource": "schedule",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "stream.moderate",
+      "name": "Moderate Stream",
+      "description": "Use moderation controls during live streams",
+      "resource": "stream",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 3
+    }
+  ],
+  "resources": [
+    {
+      "id": "stream",
+      "name": "Stream",
+      "type": "custom",
+      "description": "Live stream resources",
+      "actions": ["read", "create", "execute", "manage"]
+    },
+    {
+      "id": "scene",
+      "name": "Scene",
+      "type": "custom",
+      "description": "Stream scene resources",
+      "actions": ["read", "create", "manage", "delete"]
+    },
+    {
+      "id": "schedule",
+      "name": "Schedule",
+      "type": "custom",
+      "description": "Stream schedule resources",
+      "actions": ["read", "create", "manage", "delete"]
+    }
+  ]
+}

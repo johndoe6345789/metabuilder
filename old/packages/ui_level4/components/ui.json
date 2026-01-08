@@ -1,0 +1,432 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_level4",
+  "description": "Level 4 Admin Panel components for schemas, workflows, and system management",
+  "components": [
+    {
+      "id": "level4_header",
+      "name": "Level4Header",
+      "description": "Header component for Level 4 admin panel with user info and nerd mode toggle",
+      "props": [
+        {
+          "name": "username",
+          "type": "string",
+          "required": true,
+          "description": "Current user's username"
+        },
+        {
+          "name": "nerdMode",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether nerd mode (schema/scripts) is enabled"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Nav",
+          "className": "builder-nav",
+          "children": [
+            {
+              "type": "Flex",
+              "className": "logo-flex",
+              "children": [
+                {
+                  "type": "Box",
+                  "className": "builder-logo",
+                  "children": [
+                    {
+                      "type": "Icon",
+                      "name": "Build",
+                      "color": "white"
+                    }
+                  ]
+                },
+                {
+                  "type": "Stack",
+                  "gap": 0,
+                  "children": [
+                    {
+                      "type": "Text",
+                      "className": "builder-title",
+                      "children": "Application Builder"
+                    },
+                    {
+                      "type": "Text",
+                      "className": "builder-subtitle",
+                      "children": "Level 4"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Flex",
+              "className": "nav-actions-flex",
+              "children": [
+                {
+                  "type": "Switch",
+                  "props": {
+                    "checked": "{{nerdMode}}",
+                    "label": "Nerd Mode"
+                  }
+                },
+                {
+                  "type": "Text",
+                  "variant": "body2",
+                  "children": "{{username}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "level4_layout",
+      "name": "Level4Layout",
+      "description": "Main layout container for Level 4 admin panel",
+      "props": [
+        {
+          "name": "user",
+          "type": "object",
+          "required": true,
+          "description": "User object with username"
+        },
+        {
+          "name": "nerdMode",
+          "type": "boolean",
+          "required": false,
+          "default": false
+        },
+        {
+          "name": "children",
+          "type": "any",
+          "required": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "min-h-screen bg-canvas",
+          "children": [
+            {
+              "type": "Level4Header",
+              "props": {
+                "username": "{{user.username}}",
+                "nerdMode": "{{nerdMode}}"
+              }
+            },
+            {
+              "type": "Container",
+              "className": "builder-workspace",
+              "children": [
+                {
+                  "type": "IntroSection",
+                  "props": {
+                    "eyebrow": "Level 4",
+                    "title": "Application Builder",
+                    "description": "{{nerdMode ? 'Design declaratively with schemas and automation scripts.' : 'Build visually with forms and drag-and-drop.'}}"
+                  }
+                },
+                "{{children}}"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "level4_tabs",
+      "name": "Level4Tabs",
+      "description": "Tabbed interface for Schemas, Workflows, and Scripts",
+      "props": [
+        {
+          "name": "defaultTab",
+          "type": "string",
+          "default": "schemas"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Tabs",
+          "className": "tabs-container",
+          "defaultValue": "{{defaultTab}}",
+          "children": [
+                {
+                  "type": "TabsList",
+                  "children": [
+                    {
+                      "type": "TabsTrigger",
+                      "props": {
+                        "value": "schemas",
+                        "text": "Schemas"
+                      }
+                    },
+                    {
+                      "type": "TabsTrigger",
+                      "props": {
+                        "value": "workflows",
+                        "text": "Workflows"
+                      }
+                    },
+                    {
+                      "type": "TabsTrigger",
+                      "props": {
+                        "value": "scripts",
+                        "text": "Scripts"
+                      }
+                    }
+                  ]
+                },
+            {
+              "type": "TabsContent",
+              "value": "schemas",
+              "children": [
+                {
+                  "type": "SchemasTab"
+                }
+              ]
+            },
+            {
+              "type": "TabsContent",
+              "value": "workflows",
+              "children": [
+                {
+                  "type": "WorkflowsTab"
+                }
+              ]
+            },
+            {
+              "type": "TabsContent",
+              "value": "scripts",
+              "children": [
+                {
+                  "type": "ScriptsTab"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "god_sidebar",
+      "name": "GodSidebar",
+      "description": "God panel sidebar with dark theme for Level 4 admin",
+      "props": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": false,
+          "default": [],
+          "description": "Sidebar navigation items"
+        },
+        {
+          "name": "width",
+          "type": "string",
+          "default": "300px"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "god-sidebar",
+          "sx": {
+            "width": "{{width}}",
+            "backgroundColor": "sidebar",
+            "borderRight": "1px solid",
+            "borderColor": "sidebar-border"
+          },
+          "children": [
+            {
+              "type": "List",
+              "children": {
+                "type": "map",
+                "items": "{{items}}",
+                "template": {
+                  "type": "ListItem",
+                  "props": {
+                    "key": "{{item.id}}"
+                  },
+                  "children": [
+                    {
+                      "type": "conditional",
+                      "condition": "{{item.icon}}",
+                      "then": {
+                        "type": "Icon",
+                        "name": "{{item.icon}}"
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "children": "{{item.label}}"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "god_toolbar",
+      "name": "GodToolbar",
+      "description": "God panel toolbar with system status display",
+      "props": [
+        {
+          "name": "actions",
+          "type": "array",
+          "required": false,
+          "default": [],
+          "description": "Toolbar action buttons"
+        },
+        {
+          "name": "showSystemStatus",
+          "type": "boolean",
+          "default": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "god-toolbar",
+          "children": [
+            {
+              "type": "Flex",
+              "justifyContent": "space-between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "Flex",
+                  "gap": 1,
+                  "children": {
+                    "type": "map",
+                    "items": "{{actions}}",
+                    "template": {
+                      "type": "Button",
+                      "key": "{{item.id}}",
+                      "variant": "outlined",
+                      "size": "small",
+                      "startIcon": "{{item.icon}}",
+                      "onClick": "{{item.onClick}}",
+                      "children": "{{item.label}}"
+                    }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{showSystemStatus}}",
+                  "then": {
+                    "type": "Chip",
+                    "label": "System Online",
+                    "color": "success",
+                    "size": "small"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "god_content",
+      "name": "GodContent",
+      "description": "God panel main content area",
+      "props": [
+        {
+          "name": "children",
+          "type": "any",
+          "required": false
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "default": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "god-content",
+          "sx": {
+            "flex": 1,
+            "padding": 3,
+            "width": "{{fullWidth ? '100%' : 'auto'}}"
+          },
+          "children": "{{children}}"
+        }
+      }
+    },
+    {
+      "id": "workflow_card",
+      "name": "WorkflowCard",
+      "description": "Card displaying a workflow with edit and run actions",
+      "props": [
+        {
+          "name": "workflow",
+          "type": "object",
+          "required": true,
+          "description": "Workflow object with id, name, description, and steps"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "children": [
+                {
+                  "type": "CardTitle",
+                  "children": "{{workflow.name}}"
+                }
+              ]
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Typography",
+                  "children": "{{workflow.description || 'No description'}}"
+                },
+                {
+                  "type": "Badge",
+                  "children": "{{(workflow.steps || []).length}} steps"
+                }
+              ]
+            },
+            {
+              "type": "CardFooter",
+              "children": [
+                {
+                  "type": "Button",
+                  "onClick": "editWorkflow",
+                  "data-id": "{{workflow.id}}",
+                  "children": "Edit"
+                },
+                {
+                  "type": "Button",
+                  "variant": "outlined",
+                  "onClick": "runWorkflow",
+                  "data-id": "{{workflow.id}}",
+                  "children": "Run"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

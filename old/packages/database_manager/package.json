@@ -1,0 +1,39 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "database_manager",
+  "name": "Database Manager",
+  "version": "1.0.0",
+  "description": "Database administration, export/import, schema visualization, and system statistics",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "tools",
+  "icon": "static_content/icon.svg",
+  "minLevel": 5,
+  "primary": true,
+  "keywords": ["database", "admin", "export", "import", "schema", "statistics"],
+  "dependencies": {
+    "data_table": "*",
+    "ui_permissions": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "DatabaseManager",
+      "DatabaseStats",
+      "ExportImportPanel",
+      "SchemaVisualizer"
+    ],
+    "scripts": [
+      "database",
+      "export",
+      "statistics"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  }
+}

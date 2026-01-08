@@ -1,0 +1,211 @@
+# Package Repository Configuration
+# Defines where packages are loaded from and conflict resolution
+version: "1.0"
+description: "Package repository configuration for MetaBuilder"
+
+# Conflict resolution strategy
+conflictResolution: priority  # priority | newest | manual
+
+# Package sources (checked in priority order)
+sources:
+  - id: local
+    name: "Local Packages"
+    type: local
+    url: /packages
+    priority: 0
+    enabled: true
+    description: "Packages in the local /packages directory"
+
+    # Validation
+    validation:
+      requirePackageJson: true
+      requireValidStructure: true
+      allowedCategories: null  # null = all categories allowed
+
+    # Caching
+    cache:
+      enabled: true
+      ttlSeconds: 3600  # Re-scan every hour
+      invalidateOnFileChange: true
+
+  # Example: Future remote registry
+  # - id: official-registry
+  #   name: "Official MetaBuilder Registry"
+  #   type: remote
+  #   url: https://packages.metabuilder.dev
+  #   priority: 10
+  #   enabled: false
+  #   authentication:
+  #     type: bearer
+  #     tokenEnv: METABUILDER_REGISTRY_TOKEN
+  #   cache:
+  #     enabled: true
+  #     ttlSeconds: 86400
+
+  # Example: Git repository source
+  # - id: community-packages
+  #   name: "Community Packages"
+  #   type: git
+  #   url: https://github.com/metabuilder/community-packages.git
+  #   branch: main
+  #   path: packages
+  #   priority: 20
+  #   enabled: false
+  #   updateOnBoot: false
+
+# Package discovery
+discovery:
+  # How to find packages in local sources
+  scanPatterns:
+    - "*/package.json"
+    - "packages/*/package.json"
+
+  excludePatterns:
+    - "**/node_modules/**"
+    - "**/dist/**"
+    - "**/build/**"
+    - "**/.git/**"
+    - "**/tests/**"
+    - "**/examples/**"
+
+  # Parallel processing
+  maxConcurrent: 10
+
+# Package validation rules
+validation:
+  # Required fields in package.json
+  requiredFields:
+    - packageId
+    - name
+    - version
+    - description
+    - author
+    - license
+
+  # Schema validation
+  schemaUrl: "https://metabuilder.dev/schemas/package-metadata.schema.json"
+  enforceSchema: true
+
+  # Version validation
+  versionFormat: semver  # Enforce semantic versioning
+
+  # Naming rules
+  packageIdPattern: "^[a-z][a-z0-9_]*$"  # snake_case, starts with letter
+  maxPackageIdLength: 64
+
+# Dependency resolution
+dependencies:
+  # How to handle missing dependencies
+  missingDependencies: warn  # error | warn | ignore
+
+  # Version constraints
+  allowVersionRanges: true  # Support ^1.0.0, ~2.1.0, etc.
+
+  # Circular dependency detection
+  detectCircular: true
+  circularDependencies: error  # error | warn | ignore
+
+# Conflict handling
+conflicts:
+  # What to do when multiple sources provide same packageId
+  strategy: priority  # Use source with lowest priority number
+
+  # Handling duplicate packageIds with different versions
+  duplicateVersions: newest  # newest | oldest | highest-priority-source
+
+  # Allow override by source priority
+  allowOverride: true
+
+# Caching
+cache:
+  enabled: true
+  directory: .cache/packages
+
+  # Cache invalidation
+  invalidateOn:
+    - fileChange
+    - configChange
+    - dailySchedule
+
+  # Cache key strategy
+  keyStrategy: content-hash  # content-hash | timestamp | version
+
+# Performance
+performance:
+  # Lazy loading
+  lazyLoad: true  # Don't load package contents until needed
+
+  # Pre-loading
+  preloadCorePackages: true
+  corePackagesList: packages/core-packages.yaml
+
+  # Parallel operations
+  parallelValidation: true
+  parallelLoading: true
+
+# Security
+security:
+  # Package verification
+  requireSignature: false  # Future: verify package signatures
+  trustedSources: ["local"]
+
+  # Sandboxing
+  sandboxPackageScripts: true
+  allowedScriptActions:
+    - read-entity
+    - write-entity
+    - call-api
+
+  # Prevent certain operations
+  disallowedPatterns:
+    - "eval("
+    - "Function("
+    - "require("
+    - "import("
+
+# Logging
+logging:
+  logLevel: info  # debug | info | warn | error
+  logPackageLoads: true
+  logValidationErrors: true
+  logConflicts: true
+
+# Metadata
+metadata:
+  # Package categories
+  categories:
+    - core
+    - ui
+    - tools
+    - admin
+    - content
+    - communication
+    - media
+    - analytics
+    - integration
+    - development
+
+  # Feature flags
+  features:
+    enablePackageUpdates: true
+    enablePackageUninstall: true
+    enableDependencyAutoInstall: false  # Auto-install dependencies
+    enableVersionRollback: true
+
+# Integration
+integration:
+  # DBAL integration
+  dbal:
+    validateEntityReferences: true
+    checkSchemaCompatibility: true
+
+  # Frontend integration
+  frontend:
+    autoRegisterComponents: true
+    autoRegisterRoutes: true
+    autoRegisterScripts: true
+
+  # Storybook integration
+  storybook:
+    autoDiscoverStories: true
+    generateDocsOnLoad: false

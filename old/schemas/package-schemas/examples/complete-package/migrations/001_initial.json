@@ -1,0 +1,176 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/migrations.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "complete-example",
+  "description": "Database migrations for complete example package",
+  "migrations": [
+    {
+      "version": "001",
+      "timestamp": "2024-01-01T00:00:00Z",
+      "description": "Create users table",
+      "author": "admin",
+      "up": [
+        {
+          "type": "createTable",
+          "table": "users",
+          "columns": [
+            {
+              "name": "id",
+              "type": "uuid",
+              "primary": true,
+              "nullable": false
+            },
+            {
+              "name": "email",
+              "type": "string",
+              "length": 255,
+              "nullable": false,
+              "unique": true
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "length": 255,
+              "nullable": false
+            },
+            {
+              "name": "password_hash",
+              "type": "string",
+              "length": 255,
+              "nullable": false
+            },
+            {
+              "name": "role",
+              "type": "enum",
+              "enum": ["user", "admin", "moderator"],
+              "nullable": false,
+              "default": "user"
+            },
+            {
+              "name": "is_active",
+              "type": "boolean",
+              "nullable": false,
+              "default": true
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp",
+              "nullable": false
+            },
+            {
+              "name": "updated_at",
+              "type": "timestamp",
+              "nullable": false
+            }
+          ],
+          "indexes": [
+            {
+              "name": "idx_users_email",
+              "columns": ["email"],
+              "unique": true
+            },
+            {
+              "name": "idx_users_role",
+              "columns": ["role"]
+            }
+          ]
+        }
+      ],
+      "down": [
+        {
+          "type": "dropTable",
+          "table": "users"
+        }
+      ],
+      "transactional": true
+    },
+    {
+      "version": "002",
+      "timestamp": "2024-01-02T00:00:00Z",
+      "description": "Create content table",
+      "author": "admin",
+      "dependencies": ["001"],
+      "up": [
+        {
+          "type": "createTable",
+          "table": "content",
+          "columns": [
+            {
+              "name": "id",
+              "type": "uuid",
+              "primary": true,
+              "nullable": false
+            },
+            {
+              "name": "title",
+              "type": "string",
+              "length": 255,
+              "nullable": false
+            },
+            {
+              "name": "body",
+              "type": "text",
+              "nullable": true
+            },
+            {
+              "name": "author_id",
+              "type": "uuid",
+              "nullable": false
+            },
+            {
+              "name": "status",
+              "type": "enum",
+              "enum": ["draft", "published", "archived"],
+              "nullable": false,
+              "default": "draft"
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp",
+              "nullable": false
+            },
+            {
+              "name": "updated_at",
+              "type": "timestamp",
+              "nullable": false
+            }
+          ],
+          "foreignKeys": [
+            {
+              "name": "fk_content_author",
+              "columns": ["author_id"],
+              "references": {
+                "table": "users",
+                "columns": ["id"]
+              },
+              "onDelete": "CASCADE"
+            }
+          ],
+          "indexes": [
+            {
+              "name": "idx_content_author",
+              "columns": ["author_id"]
+            },
+            {
+              "name": "idx_content_status",
+              "columns": ["status"]
+            }
+          ]
+        }
+      ],
+      "down": [
+        {
+          "type": "dropTable",
+          "table": "content"
+        }
+      ],
+      "transactional": true
+    }
+  ],
+  "config": {
+    "tableName": "migrations",
+    "autoRun": false,
+    "validateChecksums": true,
+    "allowOutOfOrder": false
+  }
+}

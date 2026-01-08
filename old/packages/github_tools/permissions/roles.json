@@ -1,0 +1,83 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "github_tools",
+  "description": "GitHub Tools access permissions",
+  "permissions": [
+    {
+      "id": "github.runs.view",
+      "name": "View GitHub Actions Runs",
+      "description": "View GitHub Actions workflow runs",
+      "resource": "github_runs",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "github.runs.analyze",
+      "name": "Analyze GitHub Actions Runs",
+      "description": "Analyze GitHub Actions run statistics",
+      "resource": "github_runs",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "github.workflow.trigger",
+      "name": "Trigger Workflow Runs",
+      "description": "Trigger new GitHub Actions workflow runs",
+      "resource": "github_workflow",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "github.logs.view",
+      "name": "View Workflow Logs",
+      "description": "View job logs from workflow runs",
+      "resource": "github_logs",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "github.config.manage",
+      "name": "Manage GitHub Configuration",
+      "description": "Configure GitHub repository settings and tokens",
+      "resource": "github_config",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 3
+    }
+  ],
+  "resources": [
+    {
+      "id": "github_runs",
+      "name": "GitHub Workflow Runs",
+      "type": "api",
+      "description": "GitHub Actions workflow runs",
+      "actions": ["read"]
+    },
+    {
+      "id": "github_workflow",
+      "name": "GitHub Workflows",
+      "type": "api",
+      "description": "GitHub Actions workflow definitions",
+      "actions": ["read", "execute"]
+    },
+    {
+      "id": "github_logs",
+      "name": "GitHub Job Logs",
+      "type": "api",
+      "description": "GitHub Actions job logs",
+      "actions": ["read"]
+    },
+    {
+      "id": "github_config",
+      "name": "GitHub Configuration",
+      "type": "custom",
+      "description": "GitHub integration configuration",
+      "actions": ["read", "update"]
+    }
+  ]
+}

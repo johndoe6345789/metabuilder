@@ -1,0 +1,53 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "audit_log",
+  "description": "Audit log access permissions",
+  "permissions": [
+    {
+      "id": "audit_log.view",
+      "name": "View Audit Logs",
+      "description": "View audit log entries",
+      "resource": "audit_log",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "audit_log.stats",
+      "name": "View Audit Stats",
+      "description": "View audit statistics",
+      "resource": "audit_log",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "audit_log.filter",
+      "name": "Filter Audit Logs",
+      "description": "Use advanced audit log filters",
+      "resource": "audit_log",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "audit_log.export",
+      "name": "Export Audit Logs",
+      "description": "Export audit log data",
+      "resource": "audit_log",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "audit_log",
+      "name": "Audit Log",
+      "type": "entity",
+      "description": "Security audit log records",
+      "actions": ["read", "execute"]
+    }
+  ]
+}

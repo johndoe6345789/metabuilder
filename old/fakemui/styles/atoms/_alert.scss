@@ -1,0 +1,29 @@
+// Alert atoms - flat selectors
+
+.alert {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+.alert--error {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+}
+
+.alert--warning {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.alert--success {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.alert--info {
+  background: var(--color-info-bg);
+  color: var(--color-info);
+}

@@ -1,0 +1,134 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "dbal_demo",
+  "description": "DBAL Demo access permissions",
+  "permissions": [
+    {
+      "id": "dbal_demo.view",
+      "name": "View DBAL Demo",
+      "description": "View the DBAL demo interface",
+      "resource": "dbal_demo",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "dbal_demo.kv.read",
+      "name": "Read KV Store",
+      "description": "Read from key-value store",
+      "resource": "kv_store",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3,
+      "featureFlags": ["kv_store_enabled"]
+    },
+    {
+      "id": "dbal_demo.kv.write",
+      "name": "Write KV Store",
+      "description": "Write to key-value store",
+      "resource": "kv_store",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 3,
+      "featureFlags": ["kv_store_enabled"]
+    },
+    {
+      "id": "dbal_demo.kv.delete",
+      "name": "Delete KV Store",
+      "description": "Delete from key-value store",
+      "resource": "kv_store",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 3,
+      "featureFlags": ["kv_store_enabled"]
+    },
+    {
+      "id": "dbal_demo.blob.read",
+      "name": "Read Blob Storage",
+      "description": "Download files from blob storage",
+      "resource": "blob_storage",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 4,
+      "featureFlags": ["blob_storage_enabled"]
+    },
+    {
+      "id": "dbal_demo.blob.write",
+      "name": "Write Blob Storage",
+      "description": "Upload files to blob storage",
+      "resource": "blob_storage",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 4,
+      "featureFlags": ["blob_storage_enabled"]
+    },
+    {
+      "id": "dbal_demo.blob.delete",
+      "name": "Delete Blob Storage",
+      "description": "Delete files from blob storage",
+      "resource": "blob_storage",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 4,
+      "featureFlags": ["blob_storage_enabled"]
+    },
+    {
+      "id": "dbal_demo.cache.read",
+      "name": "Read Cache",
+      "description": "Read from cache",
+      "resource": "cached_data",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "dbal_demo.cache.write",
+      "name": "Write Cache",
+      "description": "Write to cache",
+      "resource": "cached_data",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "dbal_demo.cache.clear",
+      "name": "Clear Cache",
+      "description": "Clear cached data",
+      "resource": "cached_data",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 3
+    }
+  ],
+  "resources": [
+    {
+      "id": "dbal_demo",
+      "name": "DBAL Demo",
+      "type": "component",
+      "description": "DBAL demo interface",
+      "actions": ["read"]
+    },
+    {
+      "id": "kv_store",
+      "name": "Key-Value Store",
+      "type": "entity",
+      "description": "Key-value storage operations",
+      "actions": ["read", "update", "delete"]
+    },
+    {
+      "id": "blob_storage",
+      "name": "Blob Storage",
+      "type": "entity",
+      "description": "Binary large object storage operations",
+      "actions": ["read", "update", "delete"]
+    },
+    {
+      "id": "cached_data",
+      "name": "Cached Data",
+      "type": "entity",
+      "description": "Cache storage operations",
+      "actions": ["read", "update", "delete"]
+    }
+  ]
+}

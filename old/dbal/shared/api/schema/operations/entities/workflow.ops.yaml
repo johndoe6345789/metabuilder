@@ -1,0 +1,86 @@
+operations:
+  create:
+    description: "Create a new workflow"
+    input:
+      required: [name, nodes, edges, enabled]
+      optional: [tenantId, description, version, createdAt, updatedAt, createdBy]
+    output: Workflow
+    acl_required: ["workflow:create"]
+    validation:
+      - name_unique: "Workflow name must be unique"
+    errors:
+      - CONFLICT: "Workflow name already exists"
+      - VALIDATION_ERROR: "Invalid workflow input"
+
+  create_many:
+    description: "Bulk create workflows"
+    input:
+      required: [items]
+      optional: []
+    output: integer
+    acl_required: ["workflow:create"]
+    validation:
+      - name_unique: "Workflow name must be unique"
+    errors:
+      - CONFLICT: "Workflow name already exists"
+      - VALIDATION_ERROR: "Invalid workflow input"
+
+  read:
+    description: "Get workflow by ID"
+    input:
+      required: [id]
+    output: Workflow
+    acl_required: ["workflow:read"]
+    errors:
+      - NOT_FOUND: "Workflow not found"
+
+  update:
+    description: "Update workflow"
+    input:
+      required: [id]
+      optional: [tenantId, name, description, nodes, edges, enabled, version, createdAt, updatedAt, createdBy]
+    output: Workflow
+    acl_required: ["workflow:update"]
+    errors:
+      - NOT_FOUND: "Workflow not found"
+      - CONFLICT: "Workflow name already exists"
+      - VALIDATION_ERROR: "Invalid workflow update"
+
+  update_many:
+    description: "Bulk update workflows matching a filter"
+    input:
+      required: [filter, data]
+    output: integer
+    acl_required: ["workflow:update"]
+    errors:
+      - VALIDATION_ERROR: "Invalid update payload"
+
+  delete:
+    description: "Delete workflow"
+    input:
+      required: [id]
+    output: boolean
+    acl_required: ["workflow:delete"]
+    errors:
+      - NOT_FOUND: "Workflow not found"
+
+  delete_many:
+    description: "Bulk delete workflows matching a filter"
+    input:
+      required: [filter]
+    output: integer
+    acl_required: ["workflow:delete"]
+    errors:
+      - VALIDATION_ERROR: "Invalid delete filter"
+
+  list:
+    description: "List workflows with filtering and pagination"
+    input:
+      optional: [tenantId, enabled, page, limit, sort]
+    output: Workflow[]
+    acl_required: ["workflow:read"]
+    pagination: true
+    max_limit: 100
+    default_limit: 20
+    errors:
+      - VALIDATION_ERROR: "Invalid pagination parameters"

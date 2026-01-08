@@ -1,0 +1,12 @@
+{
+  "packageId": "notification_center",
+  "name": "Notification Center",
+  "version": "0.1.0",
+  "description": "Package notification_center",
+  "author": "MetaBuilder Team",
+  "category": "ui",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

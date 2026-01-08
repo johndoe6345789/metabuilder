@@ -1,0 +1,7 @@
+{
+  "packageId": "profile_page",
+  "name": "Profile Page",
+  "version": "1.0.0",
+  "description": "User profile, activity feed, and quick links to social mini-apps.",
+  "dependencies": ["login", "user_settings"]
+}

@@ -1,0 +1,494 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/jobs.schema.json",
+  "title": "Jobs Schema",
+  "description": "Background job and scheduled task definitions for MetaBuilder packages",
+  "type": "object",
+  "required": ["schemaVersion", "package"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "2.0.0"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Jobs module description"
+    },
+    "jobs": {
+      "type": "array",
+      "description": "Job definitions",
+      "items": {
+        "$ref": "#/definitions/job"
+      }
+    },
+    "queues": {
+      "type": "array",
+      "description": "Job queue definitions",
+      "items": {
+        "$ref": "#/definitions/queue"
+      }
+    },
+    "config": {
+      "$ref": "#/definitions/jobConfig"
+    }
+  },
+  "definitions": {
+    "job": {
+      "type": "object",
+      "required": ["id", "name", "handler"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique job identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Job name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Job description"
+        },
+        "handler": {
+          "type": "string",
+          "description": "Job handler function reference"
+        },
+        "queue": {
+          "type": "string",
+          "description": "Queue name for this job",
+          "default": "default"
+        },
+        "schedule": {
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "Cron expression",
+              "examples": ["0 0 * * *", "*/5 * * * *", "@daily", "@hourly"]
+            },
+            {
+              "$ref": "#/definitions/scheduleConfig"
+            }
+          ]
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable/disable job",
+          "default": true
+        },
+        "priority": {
+          "type": "integer",
+          "description": "Job priority (higher = processed first)",
+          "minimum": -20,
+          "maximum": 20,
+          "default": 0
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Job timeout in milliseconds",
+          "minimum": 0
+        },
+        "retry": {
+          "$ref": "#/definitions/retryConfig"
+        },
+        "concurrency": {
+          "type": "integer",
+          "description": "Max concurrent instances of this job",
+          "minimum": 1,
+          "default": 1
+        },
+        "rateLimit": {
+          "type": "object",
+          "description": "Rate limiting configuration",
+          "properties": {
+            "max": {
+              "type": "integer",
+              "description": "Max executions per window"
+            },
+            "window": {
+              "type": "integer",
+              "description": "Time window in milliseconds"
+            }
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "Job dependencies (must complete before this job)",
+          "items": { "type": "string" }
+        },
+        "params": {
+          "type": "object",
+          "description": "Default job parameters",
+          "additionalProperties": true
+        },
+        "validation": {
+          "type": "object",
+          "description": "Parameter validation",
+          "properties": {
+            "schema": {
+              "oneOf": [
+                { "type": "string", "description": "Reference to type definition" },
+                { "type": "object", "description": "Inline schema" }
+              ]
+            },
+            "validator": {
+              "type": "string",
+              "description": "Custom validator function reference"
+            }
+          }
+        },
+        "hooks": {
+          "type": "object",
+          "description": "Job lifecycle hooks",
+          "properties": {
+            "onStart": {
+              "type": "string",
+              "description": "Called before job starts"
+            },
+            "onComplete": {
+              "type": "string",
+              "description": "Called after successful completion"
+            },
+            "onError": {
+              "type": "string",
+              "description": "Called on error"
+            },
+            "onRetry": {
+              "type": "string",
+              "description": "Called before retry"
+            },
+            "onFailed": {
+              "type": "string",
+              "description": "Called after all retries exhausted"
+            }
+          }
+        },
+        "notifications": {
+          "type": "object",
+          "description": "Job notification settings",
+          "properties": {
+            "onSuccess": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Recipients for success notifications"
+            },
+            "onFailure": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Recipients for failure notifications"
+            },
+            "channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["email", "slack", "webhook", "sms"]
+              }
+            }
+          }
+        },
+        "cleanup": {
+          "type": "object",
+          "description": "Job cleanup configuration",
+          "properties": {
+            "removeOnComplete": {
+              "type": "boolean",
+              "description": "Remove job from queue on completion",
+              "default": false
+            },
+            "removeOnFail": {
+              "type": "boolean",
+              "description": "Remove job from queue on failure",
+              "default": false
+            },
+            "keepLogs": {
+              "type": "integer",
+              "description": "Number of job logs to keep"
+            }
+          }
+        },
+        "tags": {
+          "type": "array",
+          "description": "Job tags for organization",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "scheduleConfig": {
+      "type": "object",
+      "properties": {
+        "cron": {
+          "type": "string",
+          "description": "Cron expression"
+        },
+        "timezone": {
+          "type": "string",
+          "description": "Timezone for cron expression",
+          "default": "UTC",
+          "examples": ["America/New_York", "Europe/London", "Asia/Tokyo"]
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Start date for schedule"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "End date for schedule"
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Max number of executions"
+        },
+        "interval": {
+          "type": "integer",
+          "description": "Interval in milliseconds (alternative to cron)"
+        },
+        "delay": {
+          "type": "integer",
+          "description": "Initial delay before first execution (ms)"
+        },
+        "immediate": {
+          "type": "boolean",
+          "description": "Run immediately on schedule",
+          "default": false
+        }
+      }
+    },
+    "retryConfig": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable retry logic",
+          "default": true
+        },
+        "maxAttempts": {
+          "type": "integer",
+          "description": "Maximum retry attempts",
+          "minimum": 0,
+          "default": 3
+        },
+        "backoff": {
+          "type": "string",
+          "description": "Backoff strategy",
+          "enum": ["fixed", "linear", "exponential", "custom"],
+          "default": "exponential"
+        },
+        "delay": {
+          "type": "integer",
+          "description": "Retry delay in milliseconds",
+          "default": 1000
+        },
+        "maxDelay": {
+          "type": "integer",
+          "description": "Maximum retry delay in milliseconds",
+          "default": 60000
+        },
+        "multiplier": {
+          "type": "number",
+          "description": "Backoff multiplier",
+          "minimum": 1,
+          "default": 2
+        },
+        "retryOn": {
+          "type": "array",
+          "description": "Error types to retry on",
+          "items": { "type": "string" }
+        },
+        "customStrategy": {
+          "type": "string",
+          "description": "Custom retry strategy function reference"
+        }
+      }
+    },
+    "queue": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Queue name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Queue description"
+        },
+        "concurrency": {
+          "type": "integer",
+          "description": "Max concurrent jobs in this queue",
+          "minimum": 1,
+          "default": 1
+        },
+        "priority": {
+          "type": "boolean",
+          "description": "Enable priority queue",
+          "default": false
+        },
+        "rateLimit": {
+          "type": "object",
+          "properties": {
+            "max": {
+              "type": "integer",
+              "description": "Max jobs per window"
+            },
+            "window": {
+              "type": "integer",
+              "description": "Time window in milliseconds"
+            }
+          }
+        },
+        "persistence": {
+          "type": "object",
+          "description": "Queue persistence settings",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Persist queue to disk/database",
+              "default": false
+            },
+            "backend": {
+              "type": "string",
+              "enum": ["memory", "redis", "mongodb", "postgresql", "mysql"],
+              "default": "memory"
+            },
+            "connection": {
+              "type": "object",
+              "description": "Backend connection config",
+              "additionalProperties": true
+            }
+          }
+        },
+        "deadLetter": {
+          "type": "object",
+          "description": "Dead letter queue configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "queue": {
+              "type": "string",
+              "description": "Dead letter queue name"
+            },
+            "maxRetries": {
+              "type": "integer",
+              "description": "Max retries before DLQ"
+            }
+          }
+        },
+        "monitoring": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "metrics": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["throughput", "latency", "waiting", "active", "completed", "failed"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "jobConfig": {
+      "type": "object",
+      "description": "Global job system configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable job system",
+          "default": true
+        },
+        "defaultQueue": {
+          "type": "string",
+          "description": "Default queue name",
+          "default": "default"
+        },
+        "defaultTimeout": {
+          "type": "integer",
+          "description": "Default job timeout in milliseconds",
+          "default": 30000
+        },
+        "defaultRetry": {
+          "$ref": "#/definitions/retryConfig"
+        },
+        "maxConcurrentJobs": {
+          "type": "integer",
+          "description": "Max total concurrent jobs across all queues",
+          "minimum": 1
+        },
+        "processInterval": {
+          "type": "integer",
+          "description": "Job processing interval in milliseconds",
+          "default": 1000
+        },
+        "lockDuration": {
+          "type": "integer",
+          "description": "Job lock duration in milliseconds",
+          "default": 30000
+        },
+        "lockRenewInterval": {
+          "type": "integer",
+          "description": "Lock renewal interval in milliseconds",
+          "default": 5000
+        },
+        "stalledInterval": {
+          "type": "integer",
+          "description": "Interval to check for stalled jobs (ms)",
+          "default": 30000
+        },
+        "cleanupInterval": {
+          "type": "integer",
+          "description": "Interval to cleanup old jobs (ms)",
+          "default": 3600000
+        },
+        "retention": {
+          "type": "object",
+          "properties": {
+            "completed": {
+              "type": "integer",
+              "description": "Retention period for completed jobs (seconds)"
+            },
+            "failed": {
+              "type": "integer",
+              "description": "Retention period for failed jobs (seconds)"
+            }
+          }
+        },
+        "logging": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "level": {
+              "type": "string",
+              "enum": ["error", "warn", "info", "debug"],
+              "default": "info"
+            },
+            "logJobData": {
+              "type": "boolean",
+              "description": "Include job data in logs",
+              "default": false
+            }
+          }
+        }
+      }
+    }
+  }
+}

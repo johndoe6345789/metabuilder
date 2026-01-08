@@ -1,0 +1,7 @@
+{
+  "packageId": "retro_games",
+  "name": "Retro Arcade",
+  "version": "1.0.0",
+  "description": "Pixel-perfect retro games to keep visitors entertained inside the app.",
+  "dependencies": ["gallery"]
+}

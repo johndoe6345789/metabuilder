@@ -1,0 +1,177 @@
+# TV Schedule Entry Entity Schema
+
+entity: TvScheduleEntry
+version: "1.0"
+description: "TV program schedule entry for EPG"
+
+fields:
+  id:
+    type: uuid
+    primary: true
+    generated: true
+    description: "Unique schedule entry identifier"
+  
+  tenant_id:
+    type: uuid
+    required: true
+    indexed: true
+    description: "Tenant for multi-tenancy isolation"
+  
+  channel_id:
+    type: uuid
+    required: true
+    indexed: true
+    references: TvChannel.id
+    description: "TV channel this entry belongs to"
+  
+  # Program Info
+  title:
+    type: string
+    required: true
+    max_length: 512
+    description: "Program title"
+  
+  description:
+    type: string
+    max_length: 4096
+    description: "Program description"
+  
+  category:
+    type: enum
+    values: [movie, series, news, sports, documentary, music, talk_show, game_show, kids, other]
+    default: other
+    description: "Program category"
+  
+  content_path:
+    type: string
+    required: true
+    max_length: 1024
+    description: "Path to video file or playlist"
+  
+  duration_seconds:
+    type: integer
+    required: true
+    min: 1
+    description: "Program duration in seconds"
+  
+  # Schedule
+  start_time:
+    type: timestamp
+    required: true
+    indexed: true
+    description: "Scheduled start time"
+  
+  end_time:
+    type: timestamp
+    required: true
+    indexed: true
+    description: "Scheduled end time"
+  
+  # Display Info
+  thumbnail_url:
+    type: string
+    max_length: 512
+    description: "Program thumbnail URL"
+  
+  rating:
+    type: enum
+    values: [G, PG, PG-13, R, NC-17, TV-Y, TV-Y7, TV-G, TV-PG, TV-14, TV-MA, NR]
+    default: NR
+    description: "Content rating"
+  
+  # Episode Info (for series)
+  series_title:
+    type: string
+    max_length: 256
+    description: "Series title (if episode)"
+  
+  season_number:
+    type: integer
+    min: 0
+    description: "Season number"
+  
+  episode_number:
+    type: integer
+    min: 0
+    description: "Episode number"
+  
+  # Flags
+  is_live:
+    type: boolean
+    default: false
+    description: "Whether this is a live broadcast"
+  
+  is_premiere:
+    type: boolean
+    default: false
+    description: "Whether this is a premiere"
+  
+  is_finale:
+    type: boolean
+    default: false
+    description: "Whether this is a finale"
+  
+  is_repeat:
+    type: boolean
+    default: false
+    description: "Whether this is a repeat/rerun"
+  
+  # Interstitials
+  bumper_before:
+    type: string
+    max_length: 512
+    description: "Pre-roll bumper video path"
+  
+  bumper_after:
+    type: string
+    max_length: 512
+    description: "Post-roll bumper video path"
+  
+  commercial_breaks:
+    type: json
+    description: "Commercial break positions (seconds into program)"
+  
+  # Metadata
+  metadata:
+    type: json
+    description: "Additional metadata (actors, director, year, etc.)"
+  
+  # EPG Fields
+  xmltv_id:
+    type: string
+    max_length: 128
+    description: "XMLTV program ID"
+  
+  created_at:
+    type: timestamp
+    auto_now_add: true
+    description: "Entry creation timestamp"
+  
+  updated_at:
+    type: timestamp
+    auto_now: true
+    description: "Last update timestamp"
+
+indexes:
+  - fields: [channel_id, start_time]
+    name: idx_schedule_channel_time
+  - fields: [tenant_id, start_time, end_time]
+    name: idx_schedule_tenant_timerange
+  - fields: [channel_id, start_time, end_time]
+    name: idx_schedule_channel_timerange
+
+# Ensure no overlapping schedules
+constraints:
+  - name: no_overlap
+    type: custom
+    description: "No overlapping schedule entries for same channel"
+
+acl:
+  create:
+    min_level: 3  # Admin
+  read:
+    public: true  # EPG is public
+  update:
+    min_level: 3  # Admin
+  delete:
+    min_level: 3  # Admin

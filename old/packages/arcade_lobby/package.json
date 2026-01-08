@@ -1,0 +1,38 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "arcade_lobby",
+  "name": "Arcade Lobby",
+  "version": "1.0.0",
+  "description": "Gaming lobby for tournaments, party queues, and highlights",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "gaming",
+  "icon": "static_content/icon.svg",
+  "minLevel": 2,
+  "primary": true,
+  "dependencies": {
+    "ui_permissions": "*",
+    "dashboard": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "ArcadeLobby",
+      "GameBrowser",
+      "PartyQueue",
+      "TournamentList"
+    ],
+    "scripts": [
+      "matchmaking",
+      "queue_metrics",
+      "permissions"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  }
+}

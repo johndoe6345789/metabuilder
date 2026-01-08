@@ -1,0 +1,50 @@
+{
+  "name": "@metabuilder/dbal",
+  "version": "1.0.0",
+  "description": "Database Abstraction Layer for MetaBuilder",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:unit": "vitest run --coverage",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:conformance": "tsx tests/conformance/runner.ts",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts",
+    "codegen": "tsx ../shared/tools/codegen/gen_types.ts",
+    "codegen:prisma": "node ../shared/tools/codegen/gen_prisma_schema.js",
+    "generate-types": "node ../shared/tools/codegen/generate-types.js"
+  },
+  "keywords": [
+    "database",
+    "abstraction",
+    "orm",
+    "prisma",
+    "sqlite",
+    "security"
+  ],
+  "author": "MetaBuilder Contributors",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.958.0",
+    "@aws-sdk/lib-storage": "^3.958.0",
+    "@aws-sdk/s3-request-presigner": "^3.958.0",
+    "@prisma/adapter-better-sqlite3": "^7.2.0",
+    "@prisma/client": "^7.2.0",
+    "better-sqlite3": "^12.5.0",
+    "prisma": "^7.2.0",
+    "zod": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "@vitest/coverage-v8": "^4.0.16",
+    "eslint": "^9.39.2",
+    "prettier": "^3.7.4",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
+  }
+}

@@ -1,0 +1,218 @@
+name: Planning & Design
+
+on:
+  issues:
+    types: [opened, labeled]
+  
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  architecture-review:
+    name: Architecture & Design Review
+    runs-on: ubuntu-latest
+    if: |
+      github.event.action == 'labeled' && 
+      (github.event.label.name == 'enhancement' || github.event.label.name == 'feature-request')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Review against architecture principles
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = issue.title;
+            const body = issue.body || '';
+            
+            let suggestions = [];
+            let questions = [];
+            
+            // Check if feature aligns with declarative approach
+            if (body.toLowerCase().includes('component') && !body.toLowerCase().includes('json')) {
+              suggestions.push('💡 Consider implementing this as a **declarative component** using JSON configuration and Lua scripts instead of a TypeScript file.');
+            }
+            
+            // Check if database schema is mentioned
+            if (!body.toLowerCase().includes('database') && !body.toLowerCase().includes('schema')) {
+              questions.push('🤔 Will this feature require database schema changes? Consider adding Prisma schema details.');
+            }
+            
+            // Check if package structure is considered
+            if (body.toLowerCase().includes('new') && !body.toLowerCase().includes('package')) {
+              suggestions.push('📦 This might be a good candidate for a **package-based implementation** with isolated seed data.');
+            }
+            
+            // Check for multi-tenant considerations
+            if (!body.toLowerCase().includes('tenant') && !body.toLowerCase().includes('supergod')) {
+              questions.push('🏢 How should this feature work across different **tenants**? Should it be tenant-specific or global?');
+            }
+            
+            // Check for permission levels
+            if (!body.toLowerCase().match(/level [1-5]|user|admin|god|supergod/)) {
+              questions.push('🔐 Which **permission levels** should have access to this feature? (user/admin/god/supergod)');
+            }
+            
+            // Check for Lua consideration
+            if (body.toLowerCase().includes('logic') && !body.toLowerCase().includes('lua')) {
+              suggestions.push('🌙 Consider implementing business logic in **Lua scripts** for better flexibility and sandboxing.');
+            }
+            
+            let comment = `## 🏗️ Architecture Review\n\n`;
+            comment += `Thank you for proposing this enhancement! Here's an architectural review:\n\n`;
+            
+            if (suggestions.length > 0) {
+              comment += `### 💡 Architectural Suggestions\n\n`;
+              suggestions.forEach(s => comment += `${s}\n\n`);
+            }
+            
+            if (questions.length > 0) {
+              comment += `### 🤔 Questions to Consider\n\n`;
+              questions.forEach(q => comment += `${q}\n\n`);
+            }
+            
+            comment += `### ✅ Design Checklist\n\n`;
+            comment += `- [ ] Database schema changes identified\n`;
+            comment += `- [ ] Package structure planned (if applicable)\n`;
+            comment += `- [ ] Multi-tenant implications considered\n`;
+            comment += `- [ ] Permission levels defined\n`;
+            comment += `- [ ] Declarative approach preferred over imperative\n`;
+            comment += `- [ ] Component size kept under 150 LOC\n`;
+            comment += `- [ ] Security implications reviewed\n`;
+            comment += `- [ ] Testing strategy outlined\n\n`;
+            
+            comment += `---\n`;
+            comment += `**@copilot** can help implement this feature following these architectural principles.\n\n`;
+            comment += `📖 See [Copilot Instructions](/.github/copilot-instructions.md) for development guidelines.`;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: comment
+            });
+
+  prd-check:
+    name: Check PRD Alignment
+    runs-on: ubuntu-latest
+    if: github.event.action == 'labeled' && github.event.label.name == 'enhancement'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Check PRD for similar features
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const issue = context.payload.issue;
+            
+            try {
+              const prd = fs.readFileSync('docs/getting-started/PRD.md', 'utf8');
+              
+              // Extract key terms from issue
+              const issueText = (issue.title + ' ' + issue.body).toLowerCase();
+              const keywords = ['level', 'god', 'tenant', 'package', 'component', 'workflow', 'lua', 'declarative'];
+              
+              const foundKeywords = keywords.filter(k => issueText.includes(k));
+              
+              let comment = `## 📋 PRD Alignment Check\n\n`;
+              
+              if (foundKeywords.length > 0) {
+                comment += `This feature relates to the following PRD concepts: **${foundKeywords.join(', ')}**\n\n`;
+                comment += `Please review [docs/getting-started/PRD.md](/docs/getting-started/PRD.md) to ensure alignment with the project mission and existing features.\n\n`;
+              }
+              
+              comment += `### 🎯 Mission Statement\n\n`;
+              comment += `MetaBuilder aims to be a "fully declarative, procedurally-generated multi-tenant application platform where 95% of functionality is defined through JSON and Lua."\n\n`;
+              comment += `Does this feature support that mission? If so, how?\n\n`;
+              
+              comment += `---\n`;
+              comment += `**@copilot** Review the PRD and suggest implementation approach.`;
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: comment
+              });
+            } catch (e) {
+              console.log('Could not read PRD.md:', e.message);
+            }
+
+  suggest-implementation:
+    name: Suggest Implementation Approach
+    runs-on: ubuntu-latest
+    if: |
+      github.event.action == 'labeled' && 
+      github.event.label.name == 'ready-to-implement'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Generate implementation suggestion
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            
+            let comment = `## 🛠️ Implementation Guidance\n\n`;
+            comment += `This issue is ready for implementation! Here's a suggested approach:\n\n`;
+            
+            comment += `### 📝 Step-by-Step Plan\n\n`;
+            comment += `1. **Planning Phase**\n`;
+            comment += `   - [ ] Review PRD.md and update if needed\n`;
+            comment += `   - [ ] Check existing package structure\n`;
+            comment += `   - [ ] Design database schema changes (if any)\n`;
+            comment += `   - [ ] Sketch component hierarchy\n\n`;
+            
+            comment += `2. **Database Phase**\n`;
+            comment += `   - [ ] Update \`prisma/schema.prisma\`\n`;
+            comment += `   - [ ] Run \`npm run db:generate\`\n`;
+            comment += `   - [ ] Create or update seed data\n`;
+            comment += `   - [ ] Test database operations\n\n`;
+            
+            comment += `3. **Implementation Phase**\n`;
+            comment += `   - [ ] Create package structure (if new package)\n`;
+            comment += `   - [ ] Build generic renderers (prefer over specific components)\n`;
+            comment += `   - [ ] Add Lua scripts for business logic\n`;
+            comment += `   - [ ] Wire up UI components\n`;
+            comment += `   - [ ] Ensure components are <150 LOC\n\n`;
+            
+            comment += `4. **Testing Phase**\n`;
+            comment += `   - [ ] Run \`npm run lint\` and fix issues\n`;
+            comment += `   - [ ] Add E2E tests in \`e2e/\` directory\n`;
+            comment += `   - [ ] Test at all permission levels\n`;
+            comment += `   - [ ] Verify multi-tenant isolation\n`;
+            comment += `   - [ ] Test package import/export\n\n`;
+            
+            comment += `5. **Documentation Phase**\n`;
+            comment += `   - [ ] Update PRD.md with feature details\n`;
+            comment += `   - [ ] Document Lua APIs if new\n`;
+            comment += `   - [ ] Add usage examples\n`;
+            comment += `   - [ ] Update workflow docs if needed\n\n`;
+            
+            comment += `### 🤖 Copilot Assistance\n\n`;
+            comment += `**@copilot** can help with:\n`;
+            comment += `- Generating Prisma schema definitions\n`;
+            comment += `- Creating seed data JSON structures\n`;
+            comment += `- Writing Lua script templates\n`;
+            comment += `- Building generic component renderers\n`;
+            comment += `- Writing E2E tests\n\n`;
+            
+            comment += `### 🔗 Useful Resources\n\n`;
+            comment += `- [Copilot Instructions](/.github/copilot-instructions.md)\n`;
+            comment += `- [PRD](/.github/../PRD.md)\n`;
+            comment += `- [Workflow Testing](/.github/workflows/README.md)\n`;
+            comment += `- [Package Structure](/packages/)\n\n`;
+            
+            comment += `Ready to start? Create a branch: \`feature/issue-${issue.number}\``;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: comment
+            });

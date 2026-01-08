@@ -1,0 +1,625 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/assets.schema.json",
+  "title": "Static Assets Schema",
+  "description": "Static asset definitions for MetaBuilder packages (images, files, fonts, icons)",
+  "type": "object",
+  "required": ["schemaVersion", "package"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "2.0.0"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Asset collection description"
+    },
+    "basePath": {
+      "type": "string",
+      "description": "Base path for asset resolution",
+      "default": "/assets"
+    },
+    "cdn": {
+      "$ref": "#/definitions/cdnConfig"
+    },
+    "images": {
+      "type": "array",
+      "description": "Image asset definitions",
+      "items": {
+        "$ref": "#/definitions/imageAsset"
+      }
+    },
+    "fonts": {
+      "type": "array",
+      "description": "Font asset definitions",
+      "items": {
+        "$ref": "#/definitions/fontAsset"
+      }
+    },
+    "icons": {
+      "type": "array",
+      "description": "Icon asset definitions",
+      "items": {
+        "$ref": "#/definitions/iconAsset"
+      }
+    },
+    "files": {
+      "type": "array",
+      "description": "Generic file assets (PDFs, docs, etc.)",
+      "items": {
+        "$ref": "#/definitions/fileAsset"
+      }
+    },
+    "videos": {
+      "type": "array",
+      "description": "Video asset definitions",
+      "items": {
+        "$ref": "#/definitions/videoAsset"
+      }
+    },
+    "audio": {
+      "type": "array",
+      "description": "Audio asset definitions",
+      "items": {
+        "$ref": "#/definitions/audioAsset"
+      }
+    },
+    "optimization": {
+      "$ref": "#/definitions/optimizationConfig"
+    },
+    "caching": {
+      "$ref": "#/definitions/cachingConfig"
+    }
+  },
+  "definitions": {
+    "cdnConfig": {
+      "type": "object",
+      "description": "CDN configuration for asset delivery",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "provider": {
+          "type": "string",
+          "enum": ["cloudflare", "cloudfront", "fastly", "custom"],
+          "description": "CDN provider"
+        },
+        "baseUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "CDN base URL"
+        },
+        "zones": {
+          "type": "object",
+          "description": "Geographic zones for content delivery",
+          "additionalProperties": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "imageAsset": {
+      "type": "object",
+      "required": ["id", "path"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique image identifier",
+          "pattern": "^[a-z][a-z0-9_-]*$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name"
+        },
+        "path": {
+          "type": "string",
+          "description": "File path relative to basePath"
+        },
+        "alt": {
+          "type": "string",
+          "description": "Alternative text for accessibility"
+        },
+        "title": {
+          "type": "string",
+          "description": "Image title"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["jpeg", "jpg", "png", "gif", "webp", "svg", "avif", "bmp", "ico"],
+          "description": "Image format"
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Image width in pixels"
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Image height in pixels"
+        },
+        "size": {
+          "type": "integer",
+          "description": "File size in bytes"
+        },
+        "variants": {
+          "type": "array",
+          "description": "Responsive image variants",
+          "items": {
+            "type": "object",
+            "required": ["width", "path"],
+            "properties": {
+              "width": {
+                "type": "integer",
+                "description": "Variant width"
+              },
+              "height": {
+                "type": "integer",
+                "description": "Variant height"
+              },
+              "path": {
+                "type": "string",
+                "description": "Variant file path"
+              },
+              "format": {
+                "type": "string",
+                "enum": ["jpeg", "jpg", "png", "webp", "avif"]
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "srcset descriptor (e.g., '2x', '768w')"
+              }
+            }
+          }
+        },
+        "lazy": {
+          "type": "boolean",
+          "description": "Enable lazy loading",
+          "default": true
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["high", "normal", "low"],
+          "default": "normal",
+          "description": "Loading priority"
+        },
+        "category": {
+          "type": "string",
+          "description": "Image category (e.g., 'hero', 'thumbnail', 'logo')"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Asset tags for organization"
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Additional metadata",
+          "properties": {
+            "photographer": {
+              "type": "string"
+            },
+            "license": {
+              "type": "string"
+            },
+            "copyright": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      }
+    },
+    "fontAsset": {
+      "type": "object",
+      "required": ["id", "family", "files"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique font identifier"
+        },
+        "family": {
+          "type": "string",
+          "description": "Font family name"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["serif", "sans-serif", "monospace", "display", "handwriting"],
+          "description": "Font category"
+        },
+        "files": {
+          "type": "array",
+          "description": "Font file variants",
+          "items": {
+            "type": "object",
+            "required": ["path", "format"],
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Font file path"
+              },
+              "format": {
+                "type": "string",
+                "enum": ["woff", "woff2", "ttf", "otf", "eot", "svg"],
+                "description": "Font format"
+              },
+              "weight": {
+                "type": "integer",
+                "minimum": 100,
+                "maximum": 900,
+                "description": "Font weight (100-900)"
+              },
+              "style": {
+                "type": "string",
+                "enum": ["normal", "italic", "oblique"],
+                "default": "normal"
+              },
+              "stretch": {
+                "type": "string",
+                "enum": ["normal", "condensed", "expanded"],
+                "default": "normal"
+              }
+            }
+          }
+        },
+        "fallback": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Fallback font stack"
+        },
+        "display": {
+          "type": "string",
+          "enum": ["auto", "block", "swap", "fallback", "optional"],
+          "default": "swap",
+          "description": "Font display strategy"
+        },
+        "preload": {
+          "type": "boolean",
+          "default": false,
+          "description": "Preload font for performance"
+        },
+        "unicodeRange": {
+          "type": "string",
+          "description": "Unicode range for subsetting"
+        }
+      }
+    },
+    "iconAsset": {
+      "type": "object",
+      "required": ["id", "path"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique icon identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Icon name"
+        },
+        "path": {
+          "type": "string",
+          "description": "Icon file path"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["svg", "png", "ico", "webp"],
+          "default": "svg"
+        },
+        "size": {
+          "type": "integer",
+          "description": "Icon size (square dimension)"
+        },
+        "sizes": {
+          "type": "array",
+          "description": "Available icon sizes",
+          "items": {
+            "type": "object",
+            "properties": {
+              "size": {
+                "type": "integer"
+              },
+              "path": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "category": {
+          "type": "string",
+          "description": "Icon category (e.g., 'ui', 'social', 'brand')"
+        },
+        "sprite": {
+          "type": "string",
+          "description": "Sprite sheet reference if part of one"
+        },
+        "viewBox": {
+          "type": "string",
+          "pattern": "^\\d+ \\d+ \\d+ \\d+$",
+          "description": "SVG viewBox (for SVG icons)"
+        },
+        "fill": {
+          "type": "string",
+          "description": "Default fill color"
+        },
+        "stroke": {
+          "type": "string",
+          "description": "Default stroke color"
+        }
+      }
+    },
+    "fileAsset": {
+      "type": "object",
+      "required": ["id", "path", "mimeType"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique file identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "File name"
+        },
+        "path": {
+          "type": "string",
+          "description": "File path"
+        },
+        "mimeType": {
+          "type": "string",
+          "description": "MIME type",
+          "examples": ["application/pdf", "application/zip", "text/csv"]
+        },
+        "size": {
+          "type": "integer",
+          "description": "File size in bytes"
+        },
+        "description": {
+          "type": "string",
+          "description": "File description"
+        },
+        "downloadable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow download"
+        },
+        "version": {
+          "type": "string",
+          "description": "File version"
+        },
+        "checksum": {
+          "type": "object",
+          "properties": {
+            "md5": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "videoAsset": {
+      "type": "object",
+      "required": ["id", "path"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique video identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Video name"
+        },
+        "path": {
+          "type": "string",
+          "description": "Video file path"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["mp4", "webm", "ogv", "mov", "avi"],
+          "description": "Video format"
+        },
+        "poster": {
+          "type": "string",
+          "description": "Poster image path"
+        },
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        },
+        "duration": {
+          "type": "number",
+          "description": "Duration in seconds"
+        },
+        "subtitles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "language": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "streaming": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "protocol": {
+              "type": "string",
+              "enum": ["hls", "dash", "rtmp"]
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      }
+    },
+    "audioAsset": {
+      "type": "object",
+      "required": ["id", "path"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique audio identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Audio name"
+        },
+        "path": {
+          "type": "string",
+          "description": "Audio file path"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["mp3", "wav", "ogg", "aac", "flac"],
+          "description": "Audio format"
+        },
+        "duration": {
+          "type": "number",
+          "description": "Duration in seconds"
+        },
+        "bitrate": {
+          "type": "integer",
+          "description": "Bitrate in kbps"
+        },
+        "channels": {
+          "type": "integer",
+          "enum": [1, 2],
+          "description": "Audio channels (1=mono, 2=stereo)"
+        }
+      }
+    },
+    "optimizationConfig": {
+      "type": "object",
+      "description": "Asset optimization settings",
+      "properties": {
+        "images": {
+          "type": "object",
+          "properties": {
+            "compress": {
+              "type": "boolean",
+              "default": true
+            },
+            "quality": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 85
+            },
+            "formats": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["webp", "avif", "original"]
+              },
+              "description": "Formats to generate"
+            },
+            "responsive": {
+              "type": "boolean",
+              "default": true,
+              "description": "Generate responsive variants"
+            },
+            "breakpoints": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "description": "Responsive breakpoints in pixels"
+            }
+          }
+        },
+        "fonts": {
+          "type": "object",
+          "properties": {
+            "subset": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable font subsetting"
+            },
+            "formats": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["woff2", "woff", "ttf"]
+              }
+            }
+          }
+        },
+        "videos": {
+          "type": "object",
+          "properties": {
+            "compress": {
+              "type": "boolean",
+              "default": true
+            },
+            "bitrate": {
+              "type": "string",
+              "description": "Target bitrate (e.g., '1M', '500k')"
+            }
+          }
+        }
+      }
+    },
+    "cachingConfig": {
+      "type": "object",
+      "description": "Asset caching configuration",
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": ["cache-first", "network-first", "stale-while-revalidate", "network-only"],
+          "default": "cache-first"
+        },
+        "maxAge": {
+          "type": "integer",
+          "description": "Cache max age in seconds",
+          "default": 31536000
+        },
+        "immutable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mark assets as immutable"
+        },
+        "versioning": {
+          "type": "string",
+          "enum": ["hash", "query", "none"],
+          "default": "hash",
+          "description": "Asset versioning strategy"
+        }
+      }
+    }
+  }
+}

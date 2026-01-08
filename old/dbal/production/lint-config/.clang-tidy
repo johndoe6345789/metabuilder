@@ -1,0 +1,63 @@
+# clang-tidy configuration for DBAL C++ project
+# Industry-standard C++ linting with modern best practices
+
+# Enable comprehensive checks
+Checks: >
+  -*,
+  bugprone-*,
+  cert-*,
+  clang-analyzer-*,
+  cppcoreguidelines-*,
+  google-*,
+  hicpp-*,
+  llvm-*,
+  misc-*,
+  modernize-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  -modernize-use-trailing-return-type,
+  -readability-magic-numbers,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-owning-memory,
+  -hicpp-no-array-decay,
+  -cppcoreguidelines-pro-type-vararg,
+  -hicpp-vararg,
+  -google-readability-todo,
+  -llvm-header-guard,
+  -llvm-include-order,
+  -misc-non-private-member-variables-in-classes,
+  -readability-identifier-length
+
+# Check options
+CheckOptions:
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: camelCase
+  - key: readability-identifier-naming.VariableCase
+    value: lower_case
+  - key: readability-identifier-naming.ConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.ParameterCase
+    value: lower_case
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key: readability-identifier-naming.MemberCase
+    value: lower_case_
+  - key: readability-function-cognitive-complexity.Threshold
+    value: '25'
+  - key: readability-function-size.StatementThreshold
+    value: '100'
+  - key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
+    value: '1'
+
+# Header filter - only check our code
+HeaderFilterRegex: '(dbal/cpp/include|dbal/cpp/src)/.*'
+
+# Use C++17
+WarningsAsErrors: ''
+FormatStyle: google

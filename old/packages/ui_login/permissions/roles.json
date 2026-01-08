@@ -1,0 +1,76 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_login",
+  "description": "Login and registration access permissions",
+  "permissions": [
+    {
+      "id": "login.view",
+      "name": "View Login Page",
+      "description": "View the login page",
+      "resource": "login",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "login.submit",
+      "name": "Submit Login",
+      "description": "Submit login credentials",
+      "resource": "login",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "register.view",
+      "name": "View Registration Page",
+      "description": "View the registration page",
+      "resource": "register",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "register.submit",
+      "name": "Submit Registration",
+      "description": "Submit registration form",
+      "resource": "register",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "password.reset",
+      "name": "Request Password Reset",
+      "description": "Request password reset email",
+      "resource": "password",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 1
+    }
+  ],
+  "resources": [
+    {
+      "id": "login",
+      "name": "Login",
+      "type": "component",
+      "description": "Login page and authentication",
+      "actions": ["read", "execute"]
+    },
+    {
+      "id": "register",
+      "name": "Register",
+      "type": "component",
+      "description": "User registration",
+      "actions": ["read", "execute"]
+    },
+    {
+      "id": "password",
+      "name": "Password",
+      "type": "custom",
+      "description": "Password management",
+      "actions": ["execute"]
+    }
+  ]
+}

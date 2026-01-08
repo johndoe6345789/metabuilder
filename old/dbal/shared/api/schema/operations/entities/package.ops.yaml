@@ -1,0 +1,89 @@
+operations:
+  create:
+    description: "Install a package"
+    input:
+      required: [packageId, version, enabled]
+      optional: [tenantId, installedAt, config]
+    output: InstalledPackage
+    acl_required: ["package:create"]
+    validation:
+      - semver_format: "Version must be valid semver"
+    errors:
+      - CONFLICT: "Package already installed"
+      - VALIDATION_ERROR: "Invalid package input"
+
+  create_many:
+    description: "Bulk install packages"
+    input:
+      required: [items]
+      optional: []
+    output: integer
+    acl_required: ["package:create"]
+    validation:
+      - semver_format: "Version must be valid semver"
+    errors:
+      - CONFLICT: "Package already installed"
+      - VALIDATION_ERROR: "Invalid package input"
+
+  read:
+    description: "Get installed package by packageId"
+    input:
+      required: [packageId]
+    output: InstalledPackage
+    acl_required: ["package:read"]
+    errors:
+      - NOT_FOUND: "Package not found"
+
+  update:
+    description: "Update installed package"
+    input:
+      required: [packageId]
+      optional: [tenantId, installedAt, version, enabled, config]
+    output: InstalledPackage
+    acl_required: ["package:update"]
+    validation:
+      - semver_format: "Version must be valid semver"
+    errors:
+      - NOT_FOUND: "Package not found"
+      - VALIDATION_ERROR: "Invalid package update"
+
+  update_many:
+    description: "Bulk update packages matching a filter"
+    input:
+      required: [filter, data]
+    output: integer
+    acl_required: ["package:update"]
+    validation:
+      - semver_format: "Version must be valid semver"
+    errors:
+      - VALIDATION_ERROR: "Invalid package update"
+
+  delete:
+    description: "Uninstall package"
+    input:
+      required: [packageId]
+    output: boolean
+    acl_required: ["package:delete"]
+    errors:
+      - NOT_FOUND: "Package not found"
+
+  delete_many:
+    description: "Bulk uninstall packages matching a filter"
+    input:
+      required: [filter]
+    output: integer
+    acl_required: ["package:delete"]
+    errors:
+      - VALIDATION_ERROR: "Invalid delete filter"
+
+  list:
+    description: "List installed packages with filtering and pagination"
+    input:
+      optional: [packageId, version, tenantId, enabled, page, limit, sort]
+    output: InstalledPackage[]
+    acl_required: ["package:read"]
+    pagination: true
+    max_limit: 100
+    default_limit: 20
+    errors:
+      - VALIDATION_ERROR: "Invalid pagination parameters"

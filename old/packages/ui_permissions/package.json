@@ -1,0 +1,30 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_permissions",
+  "name": "UI Permissions",
+  "version": "1.0.0",
+  "description": "Shared permission utilities for page access control using 6-level permission system",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "security",
+  "icon": "static_content/icon.svg",
+  "minLevel": 1,
+  "primary": false,
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [],
+    "scripts": [
+      "permissions",
+      "levels",
+      "check"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  }
+}

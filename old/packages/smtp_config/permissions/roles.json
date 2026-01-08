@@ -1,0 +1,44 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "smtp_config",
+  "description": "SMTP configuration access permissions",
+  "permissions": [
+    {
+      "id": "smtp.config.view",
+      "name": "View SMTP Configuration",
+      "description": "View SMTP configuration settings",
+      "resource": "smtp_config",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "smtp.config.edit",
+      "name": "Edit SMTP Configuration",
+      "description": "Edit SMTP configuration settings",
+      "resource": "smtp_config",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "smtp.test",
+      "name": "Test SMTP Connection",
+      "description": "Test SMTP connection and send test emails",
+      "resource": "smtp_config",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    }
+  ],
+  "resources": [
+    {
+      "id": "smtp_config",
+      "name": "SMTP Configuration",
+      "type": "entity",
+      "description": "SMTP email server configuration",
+      "actions": ["read", "update", "execute"]
+    }
+  ]
+}

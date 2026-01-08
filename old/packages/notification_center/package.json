@@ -1,0 +1,35 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "notification_center",
+  "name": "Notification Center",
+  "version": "1.0.0",
+  "description": "Notification center components and summary cards",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "icon": "static_content/icon.svg",
+  "minLevel": 1,
+  "primary": false,
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "NotificationSummary",
+      "NotificationList",
+      "NotificationToast"
+    ],
+    "scripts": [
+      "init",
+      "toast",
+      "list",
+      "summary"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-types.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "minimal-example",
+  "types": []
+}

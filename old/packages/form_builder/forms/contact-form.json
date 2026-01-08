@@ -1,0 +1,71 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/forms.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "form_builder",
+  "description": "Form definitions for form builder package",
+  "forms": [
+    {
+      "id": "contact_form",
+      "name": "ContactForm",
+      "title": "Contact Us",
+      "description": "Send us a message",
+      "layout": "vertical",
+      "fields": [
+        {
+          "name": "name",
+          "type": "text",
+          "label": "Name",
+          "placeholder": "Your name",
+          "required": true,
+          "validation": {
+            "required": "Name is required",
+            "minLength": 2,
+            "maxLength": 100,
+            "messages": {
+              "minLength": "Name must be at least 2 characters",
+              "maxLength": "Name cannot exceed 100 characters"
+            }
+          }
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "label": "Email",
+          "placeholder": "you@example.com",
+          "required": true,
+          "helpText": "We will only use this to reply to your note.",
+          "validation": {
+            "required": "Email is required",
+            "email": true,
+            "messages": {
+              "email": "Please enter a valid email address"
+            }
+          }
+        },
+        {
+          "name": "message",
+          "type": "textarea",
+          "label": "Message",
+          "placeholder": "How can we help?",
+          "required": true,
+          "rows": 4,
+          "validation": {
+            "required": "Message is required",
+            "minLength": 10,
+            "maxLength": 1000,
+            "messages": {
+              "minLength": "Message must be at least 10 characters",
+              "maxLength": "Message cannot exceed 1000 characters"
+            }
+          }
+        }
+      ],
+      "submitButton": {
+        "label": "Send message",
+        "variant": "primary"
+      },
+      "onSubmit": "contact_form.handleSubmit",
+      "successMessage": "Thanks for reaching out. We will get back to you shortly."
+    }
+  ]
+}

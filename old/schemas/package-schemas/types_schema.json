@@ -1,0 +1,218 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/json-script-types.schema.json",
+  "title": "JSON Script Types",
+  "description": "TypeScript-style type definitions for JSON scripts",
+  "type": "object",
+  "required": ["schemaVersion", "package", "types"],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Type file description"
+    },
+    "types": {
+      "type": "array",
+      "description": "Type definitions",
+      "items": {
+        "$ref": "#/definitions/typeDefinition"
+      }
+    },
+    "exports": {
+      "type": "object",
+      "properties": {
+        "types": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "typeDefinition": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Type name (PascalCase)",
+          "pattern": "^[A-Z][a-zA-Z0-9]*$"
+        },
+        "kind": {
+          "type": "string",
+          "description": "Type kind",
+          "enum": ["primitive", "object", "array", "union", "intersection", "tuple", "enum", "literal", "alias", "utility"],
+          "default": "object"
+        },
+        "baseType": {
+          "type": "string",
+          "description": "Base type for primitives and arrays",
+          "enum": ["string", "number", "boolean", "null", "any", "void", "unknown", "never"]
+        },
+        "exported": {
+          "type": "boolean",
+          "description": "Whether type is exported",
+          "default": false
+        },
+        "readonly": {
+          "type": "boolean",
+          "description": "Whether type properties are readonly",
+          "default": false
+        },
+        "description": {
+          "type": "string",
+          "description": "Type description"
+        },
+        "docstring": {
+          "type": "object",
+          "properties": {
+            "summary": { "type": "string" },
+            "description": { "type": "string" },
+            "examples": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "code": { "type": "string" }
+                }
+              }
+            },
+            "see": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "since": { "type": "string" }
+          }
+        },
+        "generics": {
+          "type": "array",
+          "description": "Generic type parameters",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "constraint": { "type": "string", "description": "Type constraint (extends)" },
+              "default": { "type": "string", "description": "Default type" }
+            }
+          }
+        },
+        "extends": {
+          "type": "string",
+          "description": "Parent type for inheritance"
+        },
+        "properties": {
+          "type": "object",
+          "description": "Object type properties",
+          "additionalProperties": {
+            "$ref": "#/definitions/propertyDefinition"
+          }
+        },
+        "elementType": {
+          "type": "string",
+          "description": "Element type for arrays"
+        },
+        "types": {
+          "type": "array",
+          "description": "Types for union/intersection",
+          "items": { "type": "string" }
+        },
+        "elements": {
+          "type": "array",
+          "description": "Tuple element types",
+          "items": { "type": "string" }
+        },
+        "enum": {
+          "type": "array",
+          "description": "Enum values",
+          "items": { 
+            "oneOf": [
+              { "type": "string" },
+              { "type": "number" }
+            ]
+          }
+        },
+        "literalValue": {
+          "description": "Literal type value",
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" }
+          ]
+        },
+        "aliasOf": {
+          "type": "string",
+          "description": "Type this is an alias of"
+        },
+        "utility": {
+          "type": "object",
+          "description": "Utility type configuration",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["Pick", "Omit", "Partial", "Required", "Readonly", "Record", "Extract", "Exclude", "NonNullable", "ReturnType", "Parameters"]
+            },
+            "targetType": { "type": "string" },
+            "keys": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "additionalProperties": {
+          "oneOf": [
+            { "type": "boolean" },
+            {
+              "type": "object",
+              "description": "Schema for dynamic keys",
+              "properties": {
+                "type": { "type": "string" },
+                "description": { "type": "string" }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "propertyDefinition": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Property type"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether property is required",
+          "default": true
+        },
+        "readonly": {
+          "type": "boolean",
+          "description": "Whether property is readonly",
+          "default": false
+        },
+        "description": {
+          "type": "string",
+          "description": "Property description"
+        },
+        "default": {
+          "description": "Default value"
+        }
+      }
+    }
+  }
+}

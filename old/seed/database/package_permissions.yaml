@@ -1,0 +1,202 @@
+# PackagePermission seed data
+# DBAL entity: PackagePermission
+# Schema reference: prisma/schema.prisma (line 1637)
+entity: PackagePermission
+version: "1.0"
+description: "Default package permissions for the 6-level permission system"
+
+# Permission levels: Public (0) → User (1) → Moderator (2) → Admin (3) → God (4) → Supergod (5)
+records:
+  # Package Manager - God+ only
+  - id: perm_package_manager_god_admin
+    packageId: package_manager
+    tenantId: null
+    userId: null
+    role: god
+    permission: admin
+    resource: null
+    granted: true
+    createdAt: 0
+
+  - id: perm_package_manager_supergod_admin
+    packageId: package_manager
+    tenantId: null
+    userId: null
+    role: supergod
+    permission: admin
+    resource: null
+    granted: true
+    createdAt: 0
+
+  # UI Packages - Available to all authenticated users
+  - id: perm_ui_header_user_read
+    packageId: ui_header
+    tenantId: null
+    userId: null
+    role: user
+    permission: read
+    resource: null
+    granted: true
+    createdAt: 0
+
+  - id: perm_ui_footer_user_read
+    packageId: ui_footer
+    tenantId: null
+    userId: null
+    role: user
+    permission: read
+    resource: null
+    granted: true
+    createdAt: 0
+
+  - id: perm_ui_auth_public_read
+    packageId: ui_auth
+    tenantId: null
+    userId: null
+    role: public
+    permission: read
+    resource: null
+    granted: true
+    createdAt: 0
+
+  - id: perm_ui_login_public_read
+    packageId: ui_login
+    tenantId: null
+    userId: null
+    role: public
+    permission: read
+    resource: null
+    granted: true
+    createdAt: 0
+
+  - id: perm_ui_home_public_read
+    packageId: ui_home
+    tenantId: null
+    userId: null
+    role: public
+    permission: read
+    resource: null
+    granted: true
+    createdAt: 0
+
+  # Dashboard - User+
+  - id: perm_dashboard_user_read
+    packageId: dashboard
+    tenantId: null
+    userId: null
+    role: user
+    permission: read
+    resource: null
+    granted: true
+    createdAt: 0
+
+  # User Manager - Admin+
+  - id: perm_user_manager_admin_admin
+    packageId: user_manager
+    tenantId: null
+    userId: null
+    role: admin
+    permission: admin
+    resource: null
+    granted: true
+    createdAt: 0
+
+  - id: perm_user_manager_god_admin
+    packageId: user_manager
+    tenantId: null
+    userId: null
+    role: god
+    permission: admin
+    resource: null
+    granted: true
+    createdAt: 0
+
+  - id: perm_user_manager_supergod_admin
+    packageId: user_manager
+    tenantId: null
+    userId: null
+    role: supergod
+    permission: admin
+    resource: null
+    granted: true
+    createdAt: 0
+
+  # Role Editor - God+
+  - id: perm_role_editor_god_admin
+    packageId: role_editor
+    tenantId: null
+    userId: null
+    role: god
+    permission: admin
+    resource: null
+    granted: true
+    createdAt: 0
+
+  - id: perm_role_editor_supergod_admin
+    packageId: role_editor
+    tenantId: null
+    userId: null
+    role: supergod
+    permission: admin
+    resource: null
+    granted: true
+    createdAt: 0
+
+  # Database Manager - Supergod only
+  - id: perm_database_manager_supergod_admin
+    packageId: database_manager
+    tenantId: null
+    userId: null
+    role: supergod
+    permission: admin
+    resource: null
+    granted: true
+    createdAt: 0
+
+  # Schema Editor - Supergod only
+  - id: perm_schema_editor_supergod_admin
+    packageId: schema_editor
+    tenantId: null
+    userId: null
+    role: supergod
+    permission: admin
+    resource: null
+    granted: true
+    createdAt: 0
+
+# Metadata for seed process
+metadata:
+  bootstrap: true
+  skipIfExists: true
+  timestampField: createdAt
+  useCurrentTimestamp: true
+  validateReferences: true
+
+# Permission matrix reference
+permission_levels:
+  description: "MetaBuilder 6-level permission system"
+  levels:
+    - level: 0
+      name: public
+      description: "Unauthenticated users"
+    - level: 1
+      name: user
+      description: "Authenticated users"
+    - level: 2
+      name: moderator
+      description: "Content moderators"
+    - level: 3
+      name: admin
+      description: "Tenant administrators"
+    - level: 4
+      name: god
+      description: "System administrators"
+    - level: 5
+      name: supergod
+      description: "Super administrators with full access"
+
+  permission_types:
+    - read: "View/access package features"
+    - write: "Modify package data"
+    - execute: "Execute package scripts/functions"
+    - admin: "Full package administration"

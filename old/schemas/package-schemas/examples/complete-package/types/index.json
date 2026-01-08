@@ -1,0 +1,128 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-types.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "complete-example",
+  "description": "Type definitions for complete example package",
+  "types": [
+    {
+      "id": "user_type",
+      "name": "User",
+      "kind": "object",
+      "exported": true,
+      "description": "User entity type",
+      "properties": {
+        "id": {
+          "type": "string",
+          "required": true,
+          "description": "User ID (UUID)"
+        },
+        "email": {
+          "type": "string",
+          "required": true,
+          "description": "Email address"
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "description": "Full name"
+        },
+        "role": {
+          "type": "UserRole",
+          "required": true,
+          "description": "User role"
+        },
+        "isActive": {
+          "type": "boolean",
+          "required": true,
+          "description": "Account status"
+        }
+      }
+    },
+    {
+      "id": "user_role_enum",
+      "name": "UserRole",
+      "kind": "enum",
+      "exported": true,
+      "description": "User role enumeration",
+      "enum": ["user", "admin", "moderator"]
+    },
+    {
+      "id": "validation_result",
+      "name": "ValidationResult",
+      "kind": "object",
+      "exported": true,
+      "description": "Validation result type",
+      "properties": {
+        "valid": {
+          "type": "boolean",
+          "required": true,
+          "description": "Whether validation passed"
+        },
+        "errors": {
+          "type": "ValidationError[]",
+          "required": false,
+          "description": "Validation errors"
+        },
+        "warnings": {
+          "type": "ValidationWarning[]",
+          "required": false,
+          "description": "Validation warnings"
+        }
+      }
+    },
+    {
+      "id": "validation_error",
+      "name": "ValidationError",
+      "kind": "object",
+      "description": "Validation error details",
+      "properties": {
+        "field": {
+          "type": "string",
+          "required": true,
+          "description": "Field that failed validation"
+        },
+        "message": {
+          "type": "string",
+          "required": true,
+          "description": "Error message"
+        },
+        "code": {
+          "type": "string",
+          "required": true,
+          "description": "Error code"
+        }
+      }
+    },
+    {
+      "id": "validation_warning",
+      "name": "ValidationWarning",
+      "kind": "object",
+      "description": "Validation warning details",
+      "properties": {
+        "field": {
+          "type": "string",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    {
+      "id": "create_user_input",
+      "name": "CreateUserInput",
+      "kind": "utility",
+      "exported": true,
+      "description": "Input type for creating a user",
+      "utility": {
+        "type": "Omit",
+        "targetType": "User",
+        "keys": ["id", "createdAt", "updatedAt"]
+      }
+    }
+  ],
+  "exports": {
+    "types": ["User", "UserRole", "ValidationResult", "CreateUserInput"]
+  }
+}

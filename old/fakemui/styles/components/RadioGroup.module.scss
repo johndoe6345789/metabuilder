@@ -1,0 +1,91 @@
+// RadioGroup component styles
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &--row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover .radio-dot {
+    border-color: var(--color-primary, #1976d2);
+  }
+
+  &-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked + .radio-dot {
+      border-color: var(--color-primary, #1976d2);
+
+      &::after {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    &:focus-visible + .radio-dot {
+      outline: 2px solid var(--color-primary, #1976d2);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      & + .radio-dot {
+        border-color: var(--color-disabled, rgba(0, 0, 0, 0.26));
+        background-color: var(--color-disabled-bg, rgba(0, 0, 0, 0.12));
+        cursor: not-allowed;
+      }
+
+      & ~ .radio-label {
+        color: var(--color-text-disabled, rgba(0, 0, 0, 0.38));
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &-dot {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-text-secondary, rgba(0, 0, 0, 0.54));
+    border-radius: 50%;
+    background-color: transparent;
+    transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--color-primary, #1976d2);
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+
+  &-label {
+    font-size: 1rem;
+    color: var(--color-text-primary, rgba(0, 0, 0, 0.87));
+    line-height: 1.5;
+  }
+}

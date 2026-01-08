@@ -1,0 +1,31 @@
+// Stat badge atom - small colored indicators for counts/status
+
+.stat-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 6px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.stat-badge--pending {
+  background: var(--color-warning);
+  color: black;
+}
+
+.stat-badge--success {
+  background: var(--color-success);
+  color: white;
+}
+
+.stat-badge--error {
+  background: var(--color-error);
+  color: white;
+}
+
+.stat-badge--info {
+  background: var(--color-info);
+  color: white;
+}

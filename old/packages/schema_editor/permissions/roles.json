@@ -1,0 +1,85 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "schema_editor",
+  "description": "Schema editor access permissions",
+  "permissions": [
+    {
+      "id": "schema.view",
+      "name": "View Schemas",
+      "description": "View database schemas and table structures",
+      "resource": "schema",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "schema.create",
+      "name": "Create Schemas",
+      "description": "Create new database schemas",
+      "resource": "schema",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "schema.edit",
+      "name": "Edit Schemas",
+      "description": "Edit existing database schemas, tables, and fields",
+      "resource": "schema",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "schema.delete",
+      "name": "Delete Schemas",
+      "description": "Delete database schemas and tables",
+      "resource": "schema",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "schema.migrate",
+      "name": "Run Migrations",
+      "description": "Run schema migrations to apply changes",
+      "resource": "schema",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "schema.export",
+      "name": "Export Schemas",
+      "description": "Export schema definitions to SQL or other formats",
+      "resource": "schema",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    }
+  ],
+  "resources": [
+    {
+      "id": "schema",
+      "name": "Database Schema",
+      "type": "entity",
+      "description": "Database schema definitions including tables, fields, and relations",
+      "actions": ["read", "create", "update", "delete", "execute"]
+    },
+    {
+      "id": "table",
+      "name": "Database Table",
+      "type": "entity",
+      "description": "Individual database table definitions",
+      "actions": ["read", "create", "update", "delete"]
+    },
+    {
+      "id": "field",
+      "name": "Table Field",
+      "type": "entity",
+      "description": "Individual table field/column definitions",
+      "actions": ["read", "create", "update", "delete"]
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Config Summary Components",
+  "description": "Configuration summary panels for displaying system stats and metadata",
+  "stories": [
+    {
+      "name": "ConfigSummary",
+      "render": "summary",
+      "description": "Basic configuration summary card with label-value pairs",
+      "args": {
+        "title": "System Configuration",
+        "rows": [
+          { "label": "Version", "value": "1.0.0" },
+          { "label": "Environment", "value": "Production" },
+          { "label": "Database", "value": "PostgreSQL 15" },
+          { "label": "Cache", "value": "Redis 7.2" }
+        ]
+      }
+    },
+    {
+      "name": "SummaryWithHiddenRows",
+      "render": "summary",
+      "description": "Summary with some rows hidden via visible flag",
+      "args": {
+        "title": "Filtered Configuration",
+        "rows": [
+          { "label": "Public Setting", "value": "Visible", "visible": true },
+          { "label": "Secret Key", "value": "****", "visible": false },
+          { "label": "API Endpoint", "value": "https://api.example.com" }
+        ]
+      }
+    },
+    {
+      "name": "InlineSummaryRows",
+      "render": "inline",
+      "description": "Inline flex-based summary rows (non-table variant)",
+      "args": {
+        "rows": [
+          { "label": "Total Users", "value": "1,234" },
+          { "label": "Active Sessions", "value": "42" },
+          { "label": "Uptime", "value": "99.9%" }
+        ]
+      }
+    },
+    {
+      "name": "AggregatedSummary",
+      "render": "aggregate",
+      "description": "Multiple summary cards generated from aggregate config data",
+      "type": "function"
+    }
+  ],
+  "renders": {
+    "summary": {
+      "description": "Single config summary card with table layout",
+      "featured": true
+    },
+    "inline": {
+      "description": "Inline summary rows with flex layout"
+    },
+    "aggregate": {
+      "description": "Aggregated summaries from multiple config sources"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "admin-user",
+      "username": "admin",
+      "level": 4,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Admin User",
+      "description": "Can view configuration summaries",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    },
+    {
+      "name": "God User",
+      "description": "Can view and configure summaries",
+      "context": {
+        "user": {
+          "username": "god",
+          "level": 5
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["summary", "inline", "aggregate"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f8f9fa" },
+        { "name": "dark", "value": "#212529" }
+      ]
+    }
+  }
+}

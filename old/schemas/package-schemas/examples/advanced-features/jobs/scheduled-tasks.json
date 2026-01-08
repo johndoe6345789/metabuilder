@@ -1,0 +1,238 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/jobs.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "advanced-features",
+  "description": "Advanced job scheduling with dependencies and error handling",
+  "jobs": [
+    {
+      "id": "sync_inventory",
+      "name": "Sync Inventory",
+      "description": "Sync inventory levels from external suppliers",
+      "handler": "jobs.syncInventory",
+      "queue": "integration",
+      "schedule": {
+        "cron": "*/15 * * * *",
+        "timezone": "UTC"
+      },
+      "enabled": true,
+      "priority": 5,
+      "timeout": 600000,
+      "retry": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "backoff": "exponential",
+        "initialDelay": 5000,
+        "maxDelay": 60000,
+        "retryOn": ["NETWORK_ERROR", "TIMEOUT"]
+      },
+      "concurrency": 1,
+      "hooks": {
+        "onStart": "hooks.notifyJobStart",
+        "onComplete": "hooks.logJobSuccess",
+        "onError": "hooks.handleJobError",
+        "onFailed": "hooks.alertJobFailure"
+      },
+      "notifications": {
+        "onFailure": ["ops@example.com"],
+        "channels": ["email", "slack"]
+      },
+      "tags": ["inventory", "integration", "critical"]
+    },
+    {
+      "id": "generate_daily_report",
+      "name": "Generate Daily Sales Report",
+      "description": "Generate and email daily sales report",
+      "handler": "jobs.generateDailySalesReport",
+      "queue": "reports",
+      "schedule": {
+        "cron": "0 8 * * *",
+        "timezone": "America/New_York",
+        "immediate": false
+      },
+      "enabled": true,
+      "timeout": 300000,
+      "dependencies": ["sync_inventory"],
+      "params": {
+        "includeCharts": true,
+        "format": "pdf",
+        "recipients": ["sales@example.com", "management@example.com"]
+      },
+      "validation": {
+        "schema": "DailyReportParams"
+      }
+    },
+    {
+      "id": "cleanup_expired_sessions",
+      "name": "Cleanup Expired Sessions",
+      "description": "Remove expired user sessions from Redis",
+      "handler": "jobs.cleanupExpiredSessions",
+      "queue": "maintenance",
+      "schedule": {
+        "interval": 3600000
+      },
+      "enabled": true,
+      "priority": -5,
+      "timeout": 120000,
+      "cleanup": {
+        "removeOnComplete": true,
+        "removeOnFail": false,
+        "keepLogs": 10
+      }
+    },
+    {
+      "id": "process_abandoned_carts",
+      "name": "Process Abandoned Carts",
+      "description": "Send reminders for abandoned shopping carts",
+      "handler": "jobs.processAbandonedCarts",
+      "queue": "marketing",
+      "schedule": {
+        "cron": "0 10,16 * * *",
+        "timezone": "America/New_York"
+      },
+      "enabled": true,
+      "rateLimit": {
+        "max": 1000,
+        "window": 3600000
+      },
+      "params": {
+        "minCartValue": 50,
+        "abandonedHours": 24
+      }
+    },
+    {
+      "id": "reindex_search",
+      "name": "Reindex Search Database",
+      "description": "Full reindex of product search database",
+      "handler": "jobs.reindexSearch",
+      "queue": "maintenance",
+      "schedule": {
+        "cron": "0 3 * * 0",
+        "timezone": "UTC"
+      },
+      "enabled": true,
+      "priority": 10,
+      "timeout": 7200000,
+      "concurrency": 1,
+      "notifications": {
+        "onSuccess": ["platform-team@example.com"],
+        "onFailure": ["platform-team@example.com", "oncall@example.com"],
+        "channels": ["email", "slack"]
+      }
+    },
+    {
+      "id": "archive_old_orders",
+      "name": "Archive Old Orders",
+      "description": "Archive orders older than 2 years to cold storage",
+      "handler": "jobs.archiveOldOrders",
+      "queue": "maintenance",
+      "schedule": {
+        "cron": "0 2 1 * *",
+        "timezone": "UTC"
+      },
+      "enabled": true,
+      "timeout": 3600000,
+      "params": {
+        "ageInDays": 730,
+        "batchSize": 1000
+      }
+    }
+  ],
+  "queues": [
+    {
+      "name": "default",
+      "description": "Default job queue",
+      "concurrency": 10,
+      "priority": false,
+      "persistence": {
+        "enabled": true,
+        "backend": "redis",
+        "connection": {
+          "url": "${REDIS_URL}"
+        }
+      }
+    },
+    {
+      "name": "integration",
+      "description": "External integration jobs",
+      "concurrency": 3,
+      "priority": true,
+      "rateLimit": {
+        "max": 100,
+        "window": 60000
+      },
+      "persistence": {
+        "enabled": true,
+        "backend": "redis"
+      },
+      "deadLetter": {
+        "enabled": true,
+        "queue": "integration-dlq",
+        "maxRetries": 5
+      },
+      "monitoring": {
+        "enabled": true,
+        "metrics": ["throughput", "latency", "waiting", "failed"]
+      }
+    },
+    {
+      "name": "reports",
+      "description": "Report generation queue",
+      "concurrency": 2,
+      "priority": false,
+      "persistence": {
+        "enabled": true,
+        "backend": "redis"
+      }
+    },
+    {
+      "name": "maintenance",
+      "description": "Maintenance and cleanup tasks",
+      "concurrency": 1,
+      "priority": true,
+      "persistence": {
+        "enabled": true,
+        "backend": "redis"
+      }
+    },
+    {
+      "name": "marketing",
+      "description": "Marketing and email jobs",
+      "concurrency": 5,
+      "rateLimit": {
+        "max": 500,
+        "window": 3600000
+      },
+      "persistence": {
+        "enabled": true,
+        "backend": "redis"
+      }
+    }
+  ],
+  "config": {
+    "enabled": true,
+    "defaultQueue": "default",
+    "defaultTimeout": 30000,
+    "defaultRetry": {
+      "enabled": true,
+      "maxAttempts": 3,
+      "backoff": "exponential",
+      "delay": 1000,
+      "maxDelay": 60000
+    },
+    "maxConcurrentJobs": 20,
+    "processInterval": 1000,
+    "lockDuration": 30000,
+    "lockRenewInterval": 5000,
+    "stalledInterval": 30000,
+    "cleanupInterval": 3600000,
+    "retention": {
+      "completed": 86400,
+      "failed": 604800
+    },
+    "logging": {
+      "enabled": true,
+      "level": "info",
+      "logJobData": false
+    }
+  }
+}

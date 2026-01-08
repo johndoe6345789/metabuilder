@@ -1,0 +1,62 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_home",
+  "description": "Home page access permissions",
+  "permissions": [
+    {
+      "id": "home.view",
+      "name": "View Home Page",
+      "description": "View the public home page",
+      "resource": "home",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "home.server.status",
+      "name": "View Server Status",
+      "description": "View server status information on home page",
+      "resource": "home",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "home.contact.submit",
+      "name": "Submit Contact Form",
+      "description": "Submit contact form on home page",
+      "resource": "home",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "home.navigate.level2",
+      "name": "Navigate to Level 2",
+      "description": "Navigate to authenticated user area",
+      "resource": "home",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "home.navigate.level3",
+      "name": "Navigate to Level 3",
+      "description": "Navigate to moderator panel",
+      "resource": "home",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 3
+    }
+  ],
+  "resources": [
+    {
+      "id": "home",
+      "name": "Home Page",
+      "type": "component",
+      "description": "Home page resources",
+      "actions": ["read", "create", "execute"]
+    }
+  ]
+}

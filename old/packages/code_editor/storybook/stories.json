@@ -1,0 +1,108 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Code Editor Components",
+  "description": "Code editor components for JSON, scripting, and theme editing",
+  "stories": [
+    {
+      "name": "JsonEditor",
+      "render": "json",
+      "description": "JSON editor with formatting and validation",
+      "args": {
+        "value": "{\n  \"name\": \"example\",\n  \"version\": \"1.0.0\"\n}",
+        "readOnly": false,
+        "autoFormat": true
+      }
+    },
+    {
+      "name": "ScriptEditor",
+      "render": "script",
+      "description": "Script editor with sandbox execution",
+      "args": {
+        "value": "// Example script\nfunction greet(name) {\n  return \"Hello, \" + name;\n}\n\ngreet(\"World\");",
+        "readOnly": false,
+        "showSnippets": true,
+        "showOutput": true
+      }
+    },
+    {
+      "name": "ThemeEditor",
+      "render": "theme",
+      "description": "Theme customization editor",
+      "args": {
+        "primary": "#1976d2",
+        "secondary": "#dc004e",
+        "mode": "light"
+      }
+    },
+    {
+      "name": "CodeEditorReadOnly",
+      "render": "json",
+      "description": "Read-only code editor",
+      "args": {
+        "value": "{\n  \"readonly\": true,\n  \"content\": \"Cannot edit\"\n}",
+        "readOnly": true
+      }
+    }
+  ],
+  "renders": {
+    "json": {
+      "description": "JSON editor with validation and formatting",
+      "featured": true
+    },
+    "script": {
+      "description": "Script editor with sandbox execution"
+    },
+    "theme": {
+      "description": "Theme customization interface"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_editor",
+      "level": 5,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "God User",
+      "description": "Full code editing access",
+      "context": {
+        "user": {
+          "username": "god_user",
+          "level": 5
+        }
+      }
+    },
+    {
+      "name": "Supergod User",
+      "description": "Maximum access level",
+      "context": {
+        "user": {
+          "username": "supergod",
+          "level": 6
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["json", "script", "theme"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "dark",
+      "values": [
+        { "name": "light", "value": "#ffffff" },
+        { "name": "dark", "value": "#1e1e1e" }
+      ]
+    }
+  }
+}

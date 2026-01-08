@@ -1,0 +1,44 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_footer",
+  "description": "Footer access permissions",
+  "permissions": [
+    {
+      "id": "footer.view",
+      "name": "View Footer",
+      "description": "View application footer",
+      "resource": "footer",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 1
+    },
+    {
+      "id": "footer.configure",
+      "name": "Configure Footer",
+      "description": "Configure footer content and links",
+      "resource": "footer",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "footer.customize",
+      "name": "Customize Footer",
+      "description": "Customize footer branding and styling",
+      "resource": "footer",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "footer",
+      "name": "Footer",
+      "type": "component",
+      "description": "Application footer resources",
+      "actions": ["read", "manage", "update"]
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "arcade_lobby",
+  "description": "Arcade lobby access and management permissions",
+  "permissions": [
+    {
+      "id": "arcade.lobby.view",
+      "name": "View Arcade Lobby",
+      "description": "View arcade lobby and game listings",
+      "resource": "arcade_lobby",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "arcade.party.create",
+      "name": "Create Party",
+      "description": "Create party queues",
+      "resource": "arcade_party",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "arcade.tournament.join",
+      "name": "Join Tournament",
+      "description": "Join tournaments",
+      "resource": "arcade_tournament",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "arcade.tournament.create",
+      "name": "Create Tournament",
+      "description": "Create new tournaments",
+      "resource": "arcade_tournament",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "arcade.queue.manage",
+      "name": "Manage Queues",
+      "description": "Manage and configure game queues",
+      "resource": "arcade_queue",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 3
+    }
+  ],
+  "resources": [
+    {
+      "id": "arcade_lobby",
+      "name": "Arcade Lobby",
+      "type": "component",
+      "description": "Main arcade lobby interface",
+      "actions": ["read"]
+    },
+    {
+      "id": "arcade_party",
+      "name": "Party",
+      "type": "entity",
+      "description": "Party queue resources",
+      "actions": ["read", "create", "delete"]
+    },
+    {
+      "id": "arcade_tournament",
+      "name": "Tournament",
+      "type": "entity",
+      "description": "Tournament resources",
+      "actions": ["read", "create", "update", "delete"]
+    },
+    {
+      "id": "arcade_queue",
+      "name": "Game Queue",
+      "type": "entity",
+      "description": "Game matchmaking queues",
+      "actions": ["read", "manage"]
+    }
+  ]
+}

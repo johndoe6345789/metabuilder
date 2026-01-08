@@ -1,0 +1,11 @@
+// Typography mixins
+
+@mixin text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin mono {
+  font-family: var(--font-mono);
+}

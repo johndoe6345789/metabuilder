@@ -1,0 +1,7 @@
+{
+  "packageId": "frontpage",
+  "name": "Frontpage Experience",
+  "version": "1.0.0",
+  "description": "Public landing page that stitches the hero, features, and CTA across all Qt experiences.",
+  "dependencies": ["login", "gallery", "blog"]
+}

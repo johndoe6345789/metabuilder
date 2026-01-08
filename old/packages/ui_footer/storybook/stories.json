@@ -1,0 +1,124 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "App Footer Components",
+  "description": "Shared footer components with copyright and navigation links",
+  "stories": [
+    {
+      "name": "AppFooterSimple",
+      "render": "footer_simple",
+      "description": "Simple centered footer with copyright text",
+      "args": {
+        "text": "© 2025 MetaBuilder. Built with the power of visual workflows and declarative schemas."
+      }
+    },
+    {
+      "name": "AppFooterSimpleCustomText",
+      "render": "footer_simple",
+      "description": "Simple footer with custom copyright text",
+      "args": {
+        "text": "© 2025 Your Company. All rights reserved."
+      }
+    },
+    {
+      "name": "AppFooterFull",
+      "render": "footer_full",
+      "description": "Full footer with branding, navigation, and social links",
+      "args": {
+        "brandName": "MetaBuilder",
+        "tagline": "Build. Deploy. Manage.",
+        "copyrightText": "© 2025 MetaBuilder. All rights reserved.",
+        "showSocialLinks": true
+      }
+    },
+    {
+      "name": "AppFooterNoSocial",
+      "render": "footer_full",
+      "description": "Full footer without social media links",
+      "args": {
+        "brandName": "MetaBuilder",
+        "tagline": "Build. Deploy. Manage.",
+        "copyrightText": "© 2025 MetaBuilder. All rights reserved.",
+        "showSocialLinks": false
+      }
+    },
+    {
+      "name": "AppFooterCustomBranding",
+      "render": "footer_full",
+      "description": "Full footer with custom branding",
+      "args": {
+        "brandName": "Acme Corp",
+        "tagline": "Innovation at scale.",
+        "copyrightText": "© 2025 Acme Corp. All rights reserved.",
+        "showSocialLinks": true
+      }
+    }
+  ],
+  "renders": {
+    "footer_simple": {
+      "description": "Simple footer variant with centered copyright",
+      "featured": true
+    },
+    "footer_full": {
+      "description": "Full footer with navigation and social links"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 1,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Public User",
+      "description": "Can view footer (level 1)",
+      "context": {
+        "user": {
+          "username": "public",
+          "level": 1
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Can configure footer (level 3)",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "God Admin",
+      "description": "Can customize footer branding (level 4)",
+      "context": {
+        "user": {
+          "username": "god_admin",
+          "level": 4
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["footer_simple", "footer_full"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#ffffff" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

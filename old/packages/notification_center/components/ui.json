@@ -1,0 +1,281 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "notification_center",
+  "description": "Notification components including toast, list, and summary",
+  "components": [
+    {
+      "id": "notification_summary",
+      "name": "NotificationSummary",
+      "description": "Summary card showing notification counts by severity level",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "default": "Notification Summary"
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "totalLabel",
+          "type": "string",
+          "default": "Total"
+        }
+      ],
+      "state": [
+        {
+          "name": "total",
+          "type": "number",
+          "default": 0
+        },
+        {
+          "name": "items",
+          "type": "array",
+          "default": []
+        }
+      ],
+      "handlers": {
+        "init": "summary.prepareSummary"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "space-y-4 p-4",
+          "children": [
+            {
+              "type": "Box",
+              "className": "space-y-1",
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "overline",
+                  "className": "tracking-[0.3em] text-muted-foreground",
+                  "children": "{{title}}"
+                },
+                {
+                  "type": "Box",
+                  "className": "flex items-baseline justify-between gap-3",
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "h3",
+                      "className": "font-bold",
+                      "children": "{{total}}"
+                    },
+                    {
+                      "type": "Badge",
+                      "variant": "secondary",
+                      "label": "{{totalLabel}}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Separator"
+            },
+            {
+              "type": "List",
+              "dataSource": "items",
+              "className": "space-y-3",
+              "itemTemplate": {
+                "type": "Box",
+                "className": "flex items-center justify-between gap-3",
+                "children": [
+                  {
+                    "type": "Box",
+                    "children": [
+                      {
+                        "type": "Typography",
+                        "variant": "body2",
+                        "fontWeight": "semibold",
+                        "children": "{{item.label}}"
+                      },
+                      {
+                        "type": "Typography",
+                        "variant": "caption",
+                        "color": "textSecondary",
+                        "children": "{{item.hint}}"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Box",
+                    "className": "flex items-center gap-2",
+                    "children": [
+                      {
+                        "type": "Badge",
+                        "variant": "outline",
+                        "className": "{{item.classes}}",
+                        "label": "{{item.count}}"
+                      },
+                      {
+                        "type": "Typography",
+                        "variant": "overline",
+                        "className": "tracking-[0.4em]",
+                        "children": "{{item.severity}}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "notification_toast",
+      "name": "NotificationToast",
+      "description": "Toast notification popup",
+      "props": [
+        {
+          "name": "type",
+          "type": "string",
+          "default": "info",
+          "enum": ["info", "success", "warning", "error"]
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "default": 5000
+        }
+      ],
+      "handlers": {
+        "onDismiss": "toast.dismiss"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "toast toast-{{type}}",
+          "children": [
+            {
+              "type": "Icon",
+              "name": "{{type === 'success' ? 'CheckCircle' : type === 'error' ? 'XCircle' : type === 'warning' ? 'AlertTriangle' : 'Info'}}",
+              "size": 20
+            },
+            {
+              "type": "Box",
+              "children": [
+                {
+                  "type": "Text",
+                  "fontWeight": "semibold",
+                  "children": "{{title}}"
+                },
+                {
+                  "type": "Text",
+                  "variant": "caption",
+                  "children": "{{message}}"
+                }
+              ]
+            },
+            {
+              "type": "Button",
+              "variant": "ghost",
+              "size": "sm",
+              "onClick": "onDismiss",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "X",
+                  "size": 16
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "notification_list",
+      "name": "NotificationList",
+      "description": "List of notifications with read/unread status",
+      "props": [
+        {
+          "name": "notifications",
+          "type": "array",
+          "default": []
+        },
+        {
+          "name": "showUnreadOnly",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "handlers": {
+        "markAsRead": "list.markAsRead",
+        "dismiss": "list.dismiss"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "List",
+          "dataSource": "notifications",
+          "className": "notification-list",
+          "itemTemplate": {
+            "type": "Box",
+            "className": "notification-item {{item.read ? 'read' : 'unread'}}",
+            "children": [
+              {
+                "type": "Icon",
+                "name": "{{item.icon || 'Bell'}}",
+                "size": 24,
+                "color": "{{item.type}}"
+              },
+              {
+                "type": "Box",
+                "className": "flex-1",
+                "children": [
+                  {
+                    "type": "Text",
+                    "fontWeight": "{{item.read ? 'normal' : 'semibold'}}",
+                    "children": "{{item.title}}"
+                  },
+                  {
+                    "type": "Text",
+                    "variant": "caption",
+                    "color": "secondary",
+                    "children": "{{item.message}}"
+                  },
+                  {
+                    "type": "Text",
+                    "variant": "caption",
+                    "color": "secondary",
+                    "children": "{{item.createdAt}}"
+                  }
+                ]
+              },
+              {
+                "type": "conditional",
+                "condition": "{{!item.read}}",
+                "then": {
+                  "type": "Badge",
+                  "variant": "dot",
+                  "color": "primary"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["NotificationSummary", "NotificationToast", "NotificationList"]
+  }
+}

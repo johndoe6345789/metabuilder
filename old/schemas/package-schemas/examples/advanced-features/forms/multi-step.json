@@ -1,0 +1,273 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/forms.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "advanced-features",
+  "description": "Advanced multi-step forms with conditional logic and async validation",
+  "forms": [
+    {
+      "id": "vendor_onboarding",
+      "name": "VendorOnboarding",
+      "title": "Vendor Registration",
+      "description": "Multi-step vendor onboarding with document uploads",
+      "layout": "vertical",
+      "fields": [
+        {
+          "name": "companyName",
+          "type": "text",
+          "label": "Company Name",
+          "required": true,
+          "validation": {
+            "required": "Company name is required",
+            "minLength": 2,
+            "maxLength": 100,
+            "async": "validators.checkCompanyNameAvailability",
+            "messages": {
+              "minLength": "Company name must be at least 2 characters"
+            }
+          },
+          "aria": {
+            "label": "Enter your company name",
+            "required": true
+          }
+        },
+        {
+          "name": "businessType",
+          "type": "select",
+          "label": "Business Type",
+          "required": true,
+          "options": [
+            { "value": "sole-proprietor", "label": "Sole Proprietor" },
+            { "value": "llc", "label": "LLC" },
+            { "value": "corporation", "label": "Corporation" },
+            { "value": "partnership", "label": "Partnership" },
+            { "value": "nonprofit", "label": "Non-Profit" }
+          ]
+        },
+        {
+          "name": "taxId",
+          "type": "text",
+          "label": "Tax ID / EIN",
+          "required": true,
+          "placeholder": "XX-XXXXXXX",
+          "validation": {
+            "required": true,
+            "pattern": "^\\d{2}-\\d{7}$",
+            "messages": {
+              "pattern": "Tax ID must be in format XX-XXXXXXX"
+            }
+          },
+          "conditional": {
+            "when": "businessType",
+            "operator": "notEquals",
+            "value": "sole-proprietor",
+            "then": {
+              "require": ["taxId"]
+            }
+          }
+        },
+        {
+          "name": "revenue",
+          "type": "select",
+          "label": "Annual Revenue",
+          "required": true,
+          "options": [
+            { "value": "0-100k", "label": "Under $100,000" },
+            { "value": "100k-500k", "label": "$100,000 - $500,000" },
+            { "value": "500k-1m", "label": "$500,000 - $1 Million" },
+            { "value": "1m-5m", "label": "$1 Million - $5 Million" },
+            { "value": "5m+", "label": "Over $5 Million" }
+          ]
+        },
+        {
+          "name": "productsOffered",
+          "type": "multiselect",
+          "label": "Product Categories",
+          "required": true,
+          "helpText": "Select all categories that apply",
+          "options": [
+            { "value": "electronics", "label": "Electronics" },
+            { "value": "clothing", "label": "Clothing & Apparel" },
+            { "value": "home-garden", "label": "Home & Garden" },
+            { "value": "sports", "label": "Sports & Outdoors" },
+            { "value": "books", "label": "Books & Media" },
+            { "value": "food-beverage", "label": "Food & Beverage" },
+            { "value": "other", "label": "Other" }
+          ],
+          "validation": {
+            "custom": "validators.validateProductCategories"
+          }
+        },
+        {
+          "name": "otherCategory",
+          "type": "text",
+          "label": "Please Specify Other Category",
+          "required": false,
+          "hidden": true,
+          "conditional": {
+            "when": "productsOffered",
+            "operator": "contains",
+            "value": "other",
+            "then": {
+              "show": ["otherCategory"],
+              "require": ["otherCategory"]
+            },
+            "else": {
+              "hide": ["otherCategory"]
+            }
+          }
+        },
+        {
+          "name": "contactName",
+          "type": "text",
+          "label": "Primary Contact Name",
+          "required": true
+        },
+        {
+          "name": "contactEmail",
+          "type": "email",
+          "label": "Contact Email",
+          "required": true,
+          "validation": {
+            "email": true,
+            "async": "validators.checkEmailDomain"
+          }
+        },
+        {
+          "name": "contactPhone",
+          "type": "tel",
+          "label": "Contact Phone",
+          "required": true,
+          "placeholder": "+1 (555) 000-0000",
+          "validation": {
+            "pattern": "^\\+?1?[-\\s.]?\\(?([0-9]{3})\\)?[-\\s.]?([0-9]{3})[-\\s.]?([0-9]{4})$"
+          }
+        },
+        {
+          "name": "warehouseAddress",
+          "type": "text",
+          "label": "Warehouse Address",
+          "required": true
+        },
+        {
+          "name": "shippingCapabilities",
+          "type": "checkbox",
+          "label": "Can handle own shipping",
+          "defaultValue": false
+        },
+        {
+          "name": "shippingMethods",
+          "type": "multiselect",
+          "label": "Shipping Methods Available",
+          "required": false,
+          "options": [
+            { "value": "ground", "label": "Ground Shipping" },
+            { "value": "express", "label": "Express Shipping" },
+            { "value": "overnight", "label": "Overnight" },
+            { "value": "international", "label": "International" }
+          ],
+          "conditional": {
+            "when": "shippingCapabilities",
+            "operator": "equals",
+            "value": true,
+            "then": {
+              "show": ["shippingMethods"],
+              "require": ["shippingMethods"]
+            },
+            "else": {
+              "hide": ["shippingMethods"]
+            }
+          }
+        },
+        {
+          "name": "businessLicense",
+          "type": "file",
+          "label": "Business License",
+          "required": true,
+          "helpText": "Upload PDF or image (max 5MB)",
+          "validation": {
+            "custom": "validators.validateBusinessLicense"
+          },
+          "attributes": {
+            "accept": ".pdf,.jpg,.jpeg,.png",
+            "maxSize": 5242880
+          }
+        },
+        {
+          "name": "insuranceCert",
+          "type": "file",
+          "label": "Liability Insurance Certificate",
+          "required": true,
+          "helpText": "Required for all vendors",
+          "attributes": {
+            "accept": ".pdf",
+            "maxSize": 5242880
+          }
+        },
+        {
+          "name": "agreeToTerms",
+          "type": "checkbox",
+          "label": "I agree to the Terms and Conditions",
+          "required": true,
+          "validation": {
+            "required": "You must agree to the terms and conditions"
+          }
+        },
+        {
+          "name": "signature",
+          "type": "text",
+          "label": "Electronic Signature",
+          "required": true,
+          "helpText": "Type your full name as signature",
+          "validation": {
+            "required": true,
+            "custom": "validators.matchesContactName"
+          }
+        }
+      ],
+      "sections": [
+        {
+          "title": "Business Information",
+          "description": "Tell us about your business",
+          "fields": ["companyName", "businessType", "taxId", "revenue", "productsOffered", "otherCategory"]
+        },
+        {
+          "title": "Contact Information",
+          "description": "Primary contact details",
+          "fields": ["contactName", "contactEmail", "contactPhone"]
+        },
+        {
+          "title": "Operations",
+          "description": "Warehouse and shipping information",
+          "fields": ["warehouseAddress", "shippingCapabilities", "shippingMethods"],
+          "collapsible": true
+        },
+        {
+          "title": "Documentation",
+          "description": "Required legal documents",
+          "fields": ["businessLicense", "insuranceCert"]
+        },
+        {
+          "title": "Agreement",
+          "description": "Terms and signature",
+          "fields": ["agreeToTerms", "signature"]
+        }
+      ],
+      "validation": {
+        "validateOnChange": false,
+        "validateOnBlur": true,
+        "validateOnSubmit": true,
+        "stopOnFirstError": false,
+        "crossFieldValidation": [
+          {
+            "fields": ["contactEmail", "companyName"],
+            "validator": "validators.validateBusinessEmail",
+            "message": "Email domain should match company name"
+          }
+        ]
+      },
+      "onSubmit": "handlers.submitVendorOnboarding",
+      "onValidate": "handlers.validateVendorForm",
+      "onChange": "handlers.trackFormProgress"
+    }
+  ]
+}

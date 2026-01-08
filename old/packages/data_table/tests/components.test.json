@@ -1,0 +1,124 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/tests.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "data_table",
+  "description": "Component definition and rendering tests",
+
+  "testSuites": [
+    {
+      "id": "component-definitions",
+      "name": "Component Definition Tests",
+      "description": "Validate component schema and structure",
+      "tags": ["components", "schema"],
+
+      "tests": [
+        {
+          "id": "test-datagrid-component-exists",
+          "name": "DataGrid component should be defined",
+          "act": {
+            "type": "function_call",
+            "target": "getComponent",
+            "input": {
+              "package": "data_table",
+              "component": "DataGrid"
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "notNull",
+                "actual": "result",
+                "description": "DataGrid component should exist"
+              },
+              {
+                "type": "equals",
+                "actual": "result.name",
+                "expected": "DataGrid",
+                "description": "Component name should be DataGrid"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-datagrid-required-props",
+          "name": "DataGrid should have required props",
+          "act": {
+            "type": "function_call",
+            "target": "getComponentProps",
+            "input": {
+              "package": "data_table",
+              "component": "DataGrid"
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "hasProperty",
+                "actual": "result",
+                "expected": "columns",
+                "description": "Should have columns prop"
+              },
+              {
+                "type": "hasProperty",
+                "actual": "result",
+                "expected": "data",
+                "description": "Should have data prop"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "component-rendering",
+      "name": "Component Rendering Tests",
+      "description": "Test component rendering with various props",
+      "tags": ["rendering", "integration"],
+
+      "tests": [
+        {
+          "id": "test-render-basic-table",
+          "name": "should render basic data table",
+          "arrange": {
+            "given": "valid columns and data props",
+            "fixtures": {
+              "columns": [
+                { "id": "name", "label": "Name" },
+                { "id": "age", "label": "Age" }
+              ],
+              "data": [
+                { "id": 1, "name": "John", "age": 30 },
+                { "id": 2, "name": "Jane", "age": 25 }
+              ]
+            }
+          },
+          "act": {
+            "when": "the component is rendered",
+            "type": "function_call",
+            "target": "renderComponent",
+            "input": {
+              "component": "DataGrid",
+              "props": "{{fixtures}}"
+            }
+          },
+          "assert": {
+            "then": "the table should render correctly",
+            "expectations": [
+              {
+                "type": "notNull",
+                "actual": "result",
+                "description": "Render output should exist"
+              },
+              {
+                "type": "hasProperty",
+                "actual": "result",
+                "expected": "type",
+                "description": "Should have type property"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

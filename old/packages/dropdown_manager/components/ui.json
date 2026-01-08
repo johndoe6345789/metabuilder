@@ -1,0 +1,584 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "dropdown_manager",
+  "description": "Dropdown configuration components for managing reusable option sets",
+  "components": [
+    {
+      "id": "dropdown_manager",
+      "name": "DropdownManager",
+      "description": "Main dropdown configuration management interface",
+      "props": [
+        {
+          "name": "tenantId",
+          "type": "string",
+          "required": true,
+          "description": "Current tenant ID"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "dropdown-manager",
+          "children": [
+            {
+              "type": "Paper",
+              "elevation": 1,
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "mb": 3,
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "h5",
+                      "children": "Dropdown Manager"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "startIcon": {
+                        "type": "Icon",
+                        "name": "Add"
+                      },
+                      "onClick": "{{handleCreateDropdown}}",
+                      "children": "New Dropdown"
+                    }
+                  ]
+                },
+                {
+                  "type": "TextField",
+                  "placeholder": "Search dropdowns...",
+                  "value": "{{searchQuery}}",
+                  "onChange": "{{handleSearchChange}}",
+                  "size": "small",
+                  "fullWidth": true,
+                  "sx": { "mb": 3 },
+                  "InputProps": {
+                    "startAdornment": {
+                      "type": "InputAdornment",
+                      "position": "start",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "Search"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "Grid",
+                  "container": true,
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "each",
+                      "items": "{{filteredDropdowns}}",
+                      "as": "dropdown",
+                      "render": {
+                        "type": "Grid",
+                        "item": true,
+                        "xs": 12,
+                        "sm": 6,
+                        "md": 4,
+                        "children": [
+                          {
+                            "type": "Card",
+                            "variant": "outlined",
+                            "sx": { "height": "100%" },
+                            "children": [
+                              {
+                                "type": "CardContent",
+                                "children": [
+                                  {
+                                    "type": "Stack",
+                                    "spacing": 1,
+                                    "children": [
+                                      {
+                                        "type": "Typography",
+                                        "variant": "subtitle1",
+                                        "fontWeight": "bold",
+                                        "children": "{{dropdown.name}}"
+                                      },
+                                      {
+                                        "type": "Typography",
+                                        "variant": "body2",
+                                        "color": "textSecondary",
+                                        "children": "{{dropdown.description || 'No description'}}"
+                                      },
+                                      {
+                                        "type": "Typography",
+                                        "variant": "caption",
+                                        "color": "textSecondary",
+                                        "children": "{{dropdown.options.length}} options"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "CardActions",
+                                "children": [
+                                  {
+                                    "type": "Button",
+                                    "size": "small",
+                                    "onClick": "{{() => handlePreview(dropdown)}}",
+                                    "children": "Preview"
+                                  },
+                                  {
+                                    "type": "Button",
+                                    "size": "small",
+                                    "onClick": "{{() => handleEdit(dropdown)}}",
+                                    "children": "Edit"
+                                  },
+                                  {
+                                    "type": "IconButton",
+                                    "size": "small",
+                                    "color": "error",
+                                    "onClick": "{{() => handleDelete(dropdown)}}",
+                                    "children": [
+                                      {
+                                        "type": "Icon",
+                                        "name": "Delete",
+                                        "fontSize": "small"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{editingDropdown}}",
+              "then": {
+                "type": "ComponentRef",
+                "ref": "dropdown_editor",
+                "props": {
+                  "dropdown": "{{editingDropdown}}",
+                  "isNew": "{{isNewDropdown}}",
+                  "onSave": "{{handleSave}}",
+                  "onClose": "{{handleCloseEditor}}"
+                }
+              }
+            },
+            {
+              "type": "conditional",
+              "condition": "{{previewDropdown}}",
+              "then": {
+                "type": "ComponentRef",
+                "ref": "dropdown_preview",
+                "props": {
+                  "dropdown": "{{previewDropdown}}",
+                  "onClose": "{{handleClosePreview}}"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "dropdown_editor",
+      "name": "DropdownEditor",
+      "description": "Editor dialog for creating/editing dropdown configurations",
+      "props": [
+        {
+          "name": "dropdown",
+          "type": "object",
+          "required": false
+        },
+        {
+          "name": "isNew",
+          "type": "boolean",
+          "required": false,
+          "default": false
+        },
+        {
+          "name": "onSave",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onClose",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Dialog",
+          "open": true,
+          "onClose": "{{onClose}}",
+          "maxWidth": "md",
+          "fullWidth": true,
+          "children": [
+            {
+              "type": "DialogTitle",
+              "children": "{{isNew ? 'Create New Dropdown' : 'Edit Dropdown'}}"
+            },
+            {
+              "type": "DialogContent",
+              "dividers": true,
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "sx": { "mt": 1 },
+                  "children": [
+                    {
+                      "type": "TextField",
+                      "label": "Dropdown Name",
+                      "value": "{{formData.name}}",
+                      "onChange": "{{handleFieldChange('name')}}",
+                      "fullWidth": true,
+                      "required": true,
+                      "placeholder": "e.g., countries, status_options"
+                    },
+                    {
+                      "type": "TextField",
+                      "label": "Description",
+                      "value": "{{formData.description}}",
+                      "onChange": "{{handleFieldChange('description')}}",
+                      "fullWidth": true,
+                      "multiline": true,
+                      "rows": 2,
+                      "placeholder": "Describe what this dropdown is used for"
+                    },
+                    {
+                      "type": "Divider"
+                    },
+                    {
+                      "type": "ComponentRef",
+                      "ref": "options_list",
+                      "props": {
+                        "options": "{{formData.options}}",
+                        "onChange": "{{handleOptionsChange}}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DialogActions",
+              "children": [
+                {
+                  "type": "Button",
+                  "onClick": "{{onClose}}",
+                  "children": "Cancel"
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "onClick": "{{handleSave}}",
+                  "disabled": "{{!formData.name || formData.options.length === 0}}",
+                  "children": "{{isNew ? 'Create' : 'Save'}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "options_list",
+      "name": "OptionsList",
+      "description": "Editable list of dropdown options with value/label pairs",
+      "props": [
+        {
+          "name": "options",
+          "type": "array",
+          "required": true,
+          "description": "Array of {value, label} objects"
+        },
+        {
+          "name": "onChange",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "children": [
+            {
+              "type": "Stack",
+              "direction": "row",
+              "justifyContent": "space-between",
+              "alignItems": "center",
+              "mb": 2,
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "subtitle1",
+                  "children": "Options"
+                },
+                {
+                  "type": "Button",
+                  "size": "small",
+                  "startIcon": {
+                    "type": "Icon",
+                    "name": "Add"
+                  },
+                  "onClick": "{{handleAddOption}}",
+                  "children": "Add Option"
+                }
+              ]
+            },
+            {
+              "type": "TableContainer",
+              "component": "Paper",
+              "variant": "outlined",
+              "children": [
+                {
+                  "type": "Table",
+                  "size": "small",
+                  "children": [
+                    {
+                      "type": "TableHead",
+                      "children": [
+                        {
+                          "type": "TableRow",
+                          "children": [
+                            {
+                              "type": "TableCell",
+                              "sx": { "width": 40 },
+                              "children": ""
+                            },
+                            {
+                              "type": "TableCell",
+                              "children": "Value"
+                            },
+                            {
+                              "type": "TableCell",
+                              "children": "Label"
+                            },
+                            {
+                              "type": "TableCell",
+                              "align": "right",
+                              "children": "Actions"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TableBody",
+                      "children": [
+                        {
+                          "type": "each",
+                          "items": "{{options}}",
+                          "as": "option",
+                          "index": "idx",
+                          "render": {
+                            "type": "TableRow",
+                            "children": [
+                              {
+                                "type": "TableCell",
+                                "children": [
+                                  {
+                                    "type": "Icon",
+                                    "name": "DragIndicator",
+                                    "color": "action",
+                                    "sx": { "cursor": "grab" }
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "TableCell",
+                                "children": [
+                                  {
+                                    "type": "TextField",
+                                    "value": "{{option.value}}",
+                                    "onChange": "{{(e) => handleOptionChange(idx, 'value', e.target.value)}}",
+                                    "size": "small",
+                                    "fullWidth": true,
+                                    "placeholder": "value"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "TableCell",
+                                "children": [
+                                  {
+                                    "type": "TextField",
+                                    "value": "{{option.label}}",
+                                    "onChange": "{{(e) => handleOptionChange(idx, 'label', e.target.value)}}",
+                                    "size": "small",
+                                    "fullWidth": true,
+                                    "placeholder": "Display Label"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "TableCell",
+                                "align": "right",
+                                "children": [
+                                  {
+                                    "type": "IconButton",
+                                    "size": "small",
+                                    "color": "error",
+                                    "onClick": "{{() => handleRemoveOption(idx)}}",
+                                    "children": [
+                                      {
+                                        "type": "Icon",
+                                        "name": "Delete",
+                                        "fontSize": "small"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{options.length === 0}}",
+              "then": {
+                "type": "Alert",
+                "severity": "info",
+                "sx": { "mt": 2 },
+                "children": "No options defined. Click \"Add Option\" to get started."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "dropdown_preview",
+      "name": "DropdownPreview",
+      "description": "Live preview of a dropdown configuration",
+      "props": [
+        {
+          "name": "dropdown",
+          "type": "object",
+          "required": true
+        },
+        {
+          "name": "onClose",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Dialog",
+          "open": true,
+          "onClose": "{{onClose}}",
+          "maxWidth": "sm",
+          "fullWidth": true,
+          "children": [
+            {
+              "type": "DialogTitle",
+              "children": "Preview: {{dropdown.name}}"
+            },
+            {
+              "type": "DialogContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "sx": { "mt": 1 },
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "body2",
+                      "color": "textSecondary",
+                      "children": "{{dropdown.description || 'No description'}}"
+                    },
+                    {
+                      "type": "Divider"
+                    },
+                    {
+                      "type": "FormControl",
+                      "fullWidth": true,
+                      "children": [
+                        {
+                          "type": "InputLabel",
+                          "children": "{{dropdown.name}}"
+                        },
+                        {
+                          "type": "Select",
+                          "value": "{{previewValue}}",
+                          "onChange": "{{handlePreviewChange}}",
+                          "label": "{{dropdown.name}}",
+                          "children": [
+                            {
+                              "type": "each",
+                              "items": "{{dropdown.options}}",
+                              "as": "opt",
+                              "render": {
+                                "type": "MenuItem",
+                                "value": "{{opt.value}}",
+                                "children": "{{opt.label}}"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{previewValue}}",
+                      "then": {
+                        "type": "Alert",
+                        "severity": "success",
+                        "children": "Selected value: {{previewValue}}"
+                      }
+                    },
+                    {
+                      "type": "Box",
+                      "children": [
+                        {
+                          "type": "Typography",
+                          "variant": "caption",
+                          "color": "textSecondary",
+                          "children": "Total options: {{dropdown.options.length}}"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DialogActions",
+              "children": [
+                {
+                  "type": "Button",
+                  "onClick": "{{onClose}}",
+                  "children": "Close"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

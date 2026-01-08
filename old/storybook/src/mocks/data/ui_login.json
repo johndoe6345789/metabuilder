@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "packageId": "ui_login",
+    "name": "Login UI",
+    "version": "1.0.0",
+    "description": "Authentication and login forms",
+    "category": "ui",
+    "minLevel": 1,
+    "exports": {
+      "scripts": ["login_form", "register_form", "forgot_password"]
+    }
+  },
+  "renders": {
+    "login_form.script": {
+      "description": "Login form",
+      "component": {
+        "type": "Box",
+        "props": { "sx": { "minHeight": "100vh", "display": "flex", "alignItems": "center", "justifyContent": "center", "bgcolor": "background.default" } },
+        "children": [{
+          "type": "Card",
+          "props": { "sx": { "width": 400, "p": 2 } },
+          "children": [
+            {
+              "type": "CardHeader",
+              "children": [
+                { "type": "Typography", "props": { "variant": "h4", "text": "Sign In", "align": "center" } }
+              ]
+            },
+            {
+              "type": "CardContent",
+              "children": [{
+                "type": "Stack",
+                "props": { "spacing": 3 },
+                "children": [
+                  { "type": "TextField", "props": { "label": "Email", "type": "email", "fullWidth": true } },
+                  { "type": "TextField", "props": { "label": "Password", "type": "password", "fullWidth": true } },
+                  { "type": "Button", "props": { "variant": "contained", "fullWidth": true, "children": "Sign In" } },
+                  { "type": "Divider", "props": { "text": "or" } },
+                  { "type": "Button", "props": { "variant": "outlined", "fullWidth": true, "children": "Sign in with Google" } }
+                ]
+              }]
+            }
+          ]
+        }]
+      }
+    },
+    "register_form.script": {
+      "description": "Registration form",
+      "component": {
+        "type": "Box",
+        "props": { "sx": { "minHeight": "100vh", "display": "flex", "alignItems": "center", "justifyContent": "center" } },
+        "children": [{
+          "type": "Card",
+          "props": { "sx": { "width": 400, "p": 2 } },
+          "children": [
+            {
+              "type": "CardHeader",
+              "children": [
+                { "type": "Typography", "props": { "variant": "h4", "text": "Create Account", "align": "center" } }
+              ]
+            },
+            {
+              "type": "CardContent",
+              "children": [{
+                "type": "Stack",
+                "props": { "spacing": 3 },
+                "children": [
+                  { "type": "TextField", "props": { "label": "Username", "fullWidth": true } },
+                  { "type": "TextField", "props": { "label": "Email", "type": "email", "fullWidth": true } },
+                  { "type": "TextField", "props": { "label": "Password", "type": "password", "fullWidth": true } },
+                  { "type": "TextField", "props": { "label": "Confirm Password", "type": "password", "fullWidth": true } },
+                  { "type": "Button", "props": { "variant": "contained", "fullWidth": true, "children": "Create Account" } }
+                ]
+              }]
+            }
+          ]
+        }]
+      }
+    }
+  }
+}

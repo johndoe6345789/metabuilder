@@ -1,0 +1,223 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "testing",
+  "description": "JSON testing framework UI components for test execution and results display",
+  "components": [
+    {
+      "id": "test_runner",
+      "name": "TestRunner",
+      "description": "Interactive test runner component for executing script tests",
+      "props": [
+        {
+          "name": "packageId",
+          "type": "string",
+          "required": true,
+          "description": "Package ID to test"
+        },
+        {
+          "name": "autoRun",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Automatically run tests on mount"
+        },
+        {
+          "name": "filter",
+          "type": "string",
+          "required": false,
+          "description": "Filter tests by name pattern"
+        },
+        {
+          "name": "verbose",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Show verbose output"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "test-runner",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Test Runner",
+              "subheader": "Package: {{packageId}}",
+              "action": {
+                "type": "IconButton",
+                "onClick": "{{onRun}}",
+                "children": [
+                  {
+                    "type": "Icon",
+                    "name": "PlayArrow",
+                    "color": "primary"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "TextField",
+                      "label": "Filter",
+                      "placeholder": "Filter tests by name...",
+                      "value": "{{filter}}",
+                      "onChange": "{{onFilterChange}}",
+                      "size": "small",
+                      "fullWidth": true
+                    },
+                    {
+                      "type": "FormControlLabel",
+                      "control": {
+                        "type": "Switch",
+                        "checked": "{{verbose}}",
+                        "onChange": "{{onVerboseChange}}"
+                      },
+                      "label": "Verbose output"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{isRunning}}",
+                      "then": {
+                        "type": "LinearProgress",
+                        "color": "primary"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "test_results",
+      "name": "TestResults",
+      "description": "Displays test results in a formatted view with pass/fail indicators",
+      "props": [
+        {
+          "name": "results",
+          "type": "object",
+          "required": true,
+          "description": "Test results object from runner"
+        },
+        {
+          "name": "showDuration",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Show test duration"
+        },
+        {
+          "name": "expandErrors",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Expand error details by default"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "test-results",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Test Results",
+              "subheader": "{{results.summary}}"
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 1,
+                  "children": [
+                    {
+                      "type": "Box",
+                      "className": "results-summary",
+                      "children": [
+                        {
+                          "type": "Flex",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "Chip",
+                              "label": "{{results.passed}} passed",
+                              "color": "success",
+                              "size": "small"
+                            },
+                            {
+                              "type": "Chip",
+                              "label": "{{results.failed}} failed",
+                              "color": "error",
+                              "size": "small"
+                            },
+                            {
+                              "type": "conditional",
+                              "condition": "{{showDuration}}",
+                              "then": {
+                                "type": "Chip",
+                                "label": "{{results.duration}}ms",
+                                "variant": "outlined",
+                                "size": "small"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Divider"
+                    },
+                    {
+                      "type": "List",
+                      "dense": true,
+                      "children": {
+                        "type": "for_each",
+                        "items": "{{results.tests}}",
+                        "as": "test",
+                        "render": {
+                          "type": "ListItem",
+                          "children": [
+                            {
+                              "type": "ListItemIcon",
+                              "children": [
+                                {
+                                  "type": "Icon",
+                                  "name": "{{test.status === 'passed' ? 'CheckCircle' : 'Cancel'}}",
+                                  "color": "{{test.status === 'passed' ? 'success' : 'error'}}"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "ListItemText",
+                              "primary": "{{test.name}}",
+                              "secondary": "{{test.duration}}ms"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+name: Code Size Limits
+
+on:
+  pull_request:
+    paths:
+      - 'frontends/nextjs/src/**/*.{ts,tsx,js,jsx}'
+      - '.github/workflows/size-limits.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontends/nextjs/src/**/*.{ts,tsx,js,jsx}'
+
+jobs:
+  size-limits:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    
+    steps:
+      - uses: actions/checkout@v6
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          key: npm-deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            frontends/nextjs/node_modules
+            ~/.npm
+          restore-keys: npm-deps-${{ runner.os }}-
+      
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+      
+      - name: Check code size limits
+        run: echo "skipping tools-based size limits enforcement (tools/ removed)"
+      
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: size-limits-report
+          path: frontends/nextjs/size-limits-report.json
+          retention-days: 7
+      
+      - name: Comment on PR
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('frontends/nextjs/size-limits-report.json', 'utf8'));
+            
+            let comment = '## 📏 Code Size Limits\n\n';
+            
+            if (report.errors === 0 && report.warnings === 0) {
+              comment += '✅ All files pass size limits!';
+            } else {
+              if (report.errors > 0) {
+                comment += `### ❌ Errors (${report.errors})\n`;
+                report.violations
+                  .filter(v => v.severity === 'error')
+                  .forEach(v => {
+                    comment += `- **${v.file}**: ${v.metric} (${v.current} / ${v.limit})\n`;
+                  });
+              }
+              
+              if (report.warnings > 0) {
+                comment += `\n### ⚠️ Warnings (${report.warnings})\n`;
+                report.violations
+                  .filter(v => v.severity === 'warning')
+                  .forEach(v => {
+                    comment += `- **${v.file}**: ${v.metric} (${v.current} / ${v.limit})\n`;
+                  });
+              }
+              
+              comment += '\n[See refactoring guide →](../blob/main/docs/REFACTORING_ENFORCEMENT_GUIDE.md)';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

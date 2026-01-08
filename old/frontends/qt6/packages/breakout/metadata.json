@@ -1,0 +1,7 @@
+{
+  "packageId": "breakout",
+  "name": "Breakout",
+  "version": "1.0.0",
+  "description": "Brick-breaking arcade experience that shares assets with the Retro Arcade package.",
+  "dependencies": ["retro_games", "gallery"]
+}

@@ -1,0 +1,115 @@
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Introduction" />
+
+# MetaBuilder Package Storybook
+
+This Storybook renders **MetaBuilder packages backed by JSON scripts** from the MetaBuilder platform without running the actual application.
+
+## Quick Start
+
+1. **Explorer** - Use the Auto-Discovered Packages → Explorer to browse all packages interactively
+2. **Component Registry** - See all available components in Components → Registry
+3. **Manual Stories** - Pre-configured stories in JSON package renders
+
+## Auto-Discovery
+
+The storybook automatically discovers packages using `storybook.config.json`:
+
+```json
+  {
+    "discovery": {
+      "enabled": true,
+      "includedCategories": ["ui", "admin", "gaming", "social", "editors"],
+      "excludedPackages": ["shared", "testing"],
+      "minLevel": 1,
+      "maxLevel": 6
+    }
+  }
+```
+
+### Context Variants
+
+Test packages with different user contexts:
+
+- **Guest** - Level 1 user
+- **Admin** - Level 4 user  
+- **Admin (Nerd Mode)** - Level 4 with nerdMode enabled
+- **Supergod** - Level 6 user
+
+## How It Works
+
+1. **JSON script packages** in `/packages/*/seed/scripts/` define UI component trees
+2. **Mock data** mirrors the output structure produced by the JSON scripts
+3. **PackageRenderer** (still the runtime entry) converts the component tree to React components
+4. **Component Registry** maps package-defined type names to React implementations
+
+## Package Structure
+
+Each JSON script package follows this structure:
+
+```
+packages/
+└── {package_name}/
+    └── seed/
+        ├── metadata.json      # Package info
+        ├── components.json    # Component definitions
+        └── scripts/
+            └── [script-name].json  # JSON script definitions following script_schema.json
+                                     # Must include full function implementations with bodies,
+                                     # not just metadata declarations (e.g., automation.json)
+```
+
+## JSON Script Output
+
+JSON script functions return component trees like:
+
+```json
+{
+  "type": "Card",
+  "props": { "className": "p-4" },
+  "children": [
+    {
+      "type": "Typography",
+      "props": { "variant": "h5", "text": "Title" }
+    },
+    {
+      "type": "Button",
+      "props": { "children": "Click Me" }
+    }
+  ]
+}
+```
+
+## Adding New Package Mocks
+
+1. Create a file in `src/mocks/packages/{package-name}.ts`
+2. Define the `MockPackageDefinition` with metadata and renders
+3. Call `registerMockPackage()` to register it
+4. Import it in `src/mocks/packages/index.ts`
+5. Create stories in `src/stories/`
+
+## Available Component Types
+
+The component registry maps these package types to React:
+
+### Layout
+- `Box`, `Stack`, `Flex`, `Grid`, `Container`
+
+### Surfaces
+- `Card`, `CardHeader`, `CardContent`, `CardActions`, `Paper`
+
+### Typography
+- `Typography` (with variants: h1-h6, body1, body2, caption, overline)
+
+### Inputs
+- `Button` (variants: contained, outlined, text)
+
+### Display
+- `Icon`, `Avatar`, `Badge`, `Chip`, `Divider`, `Alert`
+
+### Navigation
+- `Tabs`, `Tab`
+
+### App-Specific
+- `Level4Header`, `IntroSection`, `AppHeader`, `AppFooter`, `Sidebar`

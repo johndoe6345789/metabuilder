@@ -1,0 +1,76 @@
+operations:
+  create:
+    description: "Create a new page configuration"
+    input:
+      required: [path, title, componentTree, level, requiresAuth]
+      optional: [tenantId, packageId, description, icon, component, requiredRole, parentPath, sortOrder, isPublished, params, meta]
+    output: PageConfig
+    acl_required: ["page:create"]
+    validation:
+      - path_unique: "Path must be unique"
+    errors:
+      - CONFLICT: "Page path already exists"
+      - VALIDATION_ERROR: "Invalid page input"
+
+  create_many:
+    description: "Bulk create page configurations"
+    input:
+      required: [items]
+      optional: []
+    output: integer
+    acl_required: ["page:create"]
+    errors:
+      - CONFLICT: "Page path already exists"
+      - VALIDATION_ERROR: "Invalid page input"
+
+  read:
+    description: "Get page by ID"
+    input:
+      required: [id]
+    output: PageConfig
+    acl_required: ["page:read"]
+    errors:
+      - NOT_FOUND: "Page not found"
+
+  read_by_path:
+    description: "Get page by path"
+    input:
+      required: [path]
+      optional: [tenantId]
+    output: PageConfig
+    acl_required: ["page:read"]
+    errors:
+      - NOT_FOUND: "Page not found"
+
+  update:
+    description: "Update page configuration"
+    input:
+      required: [id]
+      optional: [tenantId, packageId, path, title, description, icon, component, componentTree, level, requiresAuth, requiredRole, parentPath, sortOrder, isPublished, params, meta]
+    output: PageConfig
+    acl_required: ["page:update"]
+    errors:
+      - NOT_FOUND: "Page not found"
+      - CONFLICT: "Page path already exists"
+      - VALIDATION_ERROR: "Invalid page update"
+
+  delete:
+    description: "Delete page"
+    input:
+      required: [id]
+    output: boolean
+    acl_required: ["page:delete"]
+    errors:
+      - NOT_FOUND: "Page not found"
+
+  list:
+    description: "List pages with filtering and pagination"
+    input:
+      optional: [tenantId, packageId, path, level, isPublished, page, limit, sort]
+    output: PageConfig[]
+    acl_required: ["page:read"]
+    pagination: true
+    max_limit: 100
+    default_limit: 20
+    errors:
+      - VALIDATION_ERROR: "Invalid pagination parameters"

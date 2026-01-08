@@ -1,0 +1,151 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "package_validator",
+  "description": "Package validator access permissions",
+  "permissions": [
+    {
+      "id": "package.validate",
+      "name": "Run Package Validation",
+      "description": "Run package validation checks",
+      "resource": "package_validator",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "fs.read",
+      "name": "Read Files",
+      "description": "Read files from the file system for validation",
+      "resource": "filesystem",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "fs.list",
+      "name": "List Directories",
+      "description": "List directory contents to discover package files",
+      "resource": "filesystem",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "fs.stat",
+      "name": "File Metadata",
+      "description": "Get file metadata (size, type, timestamps)",
+      "resource": "filesystem",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "external.ajv",
+      "name": "Use AJV Validator",
+      "description": "Use AJV JSON Schema validator for schema validation",
+      "resource": "external",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5,
+      "optional": true
+    },
+    {
+      "id": "package.validate.metadata",
+      "name": "Validate Metadata",
+      "description": "Validate metadata.json structure",
+      "resource": "package_validator",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "package.validate.scripts",
+      "name": "Validate Scripts",
+      "description": "Validate JSON script files",
+      "resource": "package_validator",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "package.validate.types",
+      "name": "Validate Types",
+      "description": "Validate type definitions",
+      "resource": "package_validator",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "package.validate.components",
+      "name": "Validate Components",
+      "description": "Validate component definitions",
+      "resource": "package_validator",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "package.validate.tests",
+      "name": "Validate Tests",
+      "description": "Validate test files",
+      "resource": "package_validator",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "package.validate.storybook",
+      "name": "Validate Storybook",
+      "description": "Validate storybook configuration",
+      "resource": "package_validator",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 5
+    }
+  ],
+  "resources": [
+    {
+      "id": "package_validator",
+      "name": "Package Validator",
+      "type": "function",
+      "description": "Package validation tool resources",
+      "actions": ["execute"]
+    },
+    {
+      "id": "filesystem",
+      "name": "File System",
+      "type": "file",
+      "description": "File system access for validation",
+      "actions": ["read"]
+    },
+    {
+      "id": "external",
+      "name": "External Dependencies",
+      "type": "custom",
+      "description": "External library access",
+      "actions": ["execute"]
+    }
+  ],
+  "roles": [
+    {
+      "id": "validator_user",
+      "name": "Validator User",
+      "description": "Can run package validation",
+      "minLevel": 5,
+      "permissions": [
+        "package.validate",
+        "fs.read",
+        "fs.list",
+        "fs.stat",
+        "package.validate.metadata",
+        "package.validate.scripts",
+        "package.validate.types",
+        "package.validate.components",
+        "package.validate.tests",
+        "package.validate.storybook"
+      ]
+    }
+  ]
+}

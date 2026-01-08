@@ -1,0 +1,820 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "nav_menu",
+  "description": "Navigation menu components including sidebar, nav menu, and breadcrumbs",
+  "components": [
+    {
+      "id": "sidebar",
+      "name": "Sidebar",
+      "description": "Full-height sidebar with header, navigation, and footer",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "description": "Application title"
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "required": false,
+          "description": "Application subtitle"
+        },
+        {
+          "name": "logo",
+          "type": "string",
+          "required": false,
+          "description": "Logo URL or path"
+        },
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Navigation items array"
+        },
+        {
+          "name": "user",
+          "type": "object",
+          "required": false,
+          "description": "Current user info for footer"
+        },
+        {
+          "name": "collapsed",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether sidebar is collapsed"
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "required": false,
+          "default": 280,
+          "description": "Sidebar width in pixels"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "component": "nav",
+          "className": "sidebar",
+          "sx": {
+            "display": "flex",
+            "flexDirection": "column",
+            "height": "100vh",
+            "width": "{{collapsed ? 72 : width}}",
+            "borderRight": 1,
+            "borderColor": "divider",
+            "backgroundColor": "background.paper",
+            "overflow": "hidden",
+            "transition": "width 0.2s ease-in-out"
+          },
+          "children": [
+            {
+              "type": "Box",
+              "className": "sidebar-header",
+              "sx": {
+                "p": 2,
+                "borderBottom": 1,
+                "borderColor": "divider",
+                "display": "flex",
+                "alignItems": "center",
+                "gap": 2,
+                "minHeight": 64
+              },
+              "children": [
+                {
+                  "type": "conditional",
+                  "condition": "{{logo}}",
+                  "then": {
+                    "type": "Box",
+                    "component": "img",
+                    "src": "{{logo}}",
+                    "alt": "Logo",
+                    "sx": {
+                      "width": 40,
+                      "height": 40,
+                      "objectFit": "contain"
+                    }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{!collapsed}}",
+                  "then": {
+                    "type": "Stack",
+                    "spacing": 0,
+                    "sx": { "overflow": "hidden" },
+                    "children": [
+                      {
+                        "type": "Text",
+                        "variant": "h6",
+                        "fontWeight": "bold",
+                        "noWrap": true,
+                        "children": "{{title}}"
+                      },
+                      {
+                        "type": "conditional",
+                        "condition": "{{subtitle}}",
+                        "then": {
+                          "type": "Text",
+                          "variant": "caption",
+                          "color": "text.secondary",
+                          "noWrap": true,
+                          "children": "{{subtitle}}"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "sidebar-content",
+              "sx": {
+                "flex": 1,
+                "overflowY": "auto",
+                "overflowX": "hidden",
+                "py": 1
+              },
+              "children": [
+                {
+                  "type": "List",
+                  "component": "nav",
+                  "sx": { "px": 1 },
+                  "children": "{{items}}"
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{user}}",
+              "then": {
+                "type": "Box",
+                "className": "sidebar-footer",
+                "sx": {
+                  "p": 2,
+                  "borderTop": 1,
+                  "borderColor": "divider",
+                  "mt": "auto"
+                },
+                "children": [
+                  {
+                    "type": "Box",
+                    "sx": {
+                      "display": "flex",
+                      "alignItems": "center",
+                      "gap": 1.5
+                    },
+                    "children": [
+                      {
+                        "type": "Avatar",
+                        "src": "{{user.avatar}}",
+                        "alt": "{{user.name}}",
+                        "sx": { "width": 36, "height": 36 }
+                      },
+                      {
+                        "type": "conditional",
+                        "condition": "{{!collapsed}}",
+                        "then": {
+                          "type": "Stack",
+                          "spacing": 0,
+                          "sx": { "overflow": "hidden", "flex": 1 },
+                          "children": [
+                            {
+                              "type": "Text",
+                              "variant": "body2",
+                              "fontWeight": "medium",
+                              "noWrap": true,
+                              "children": "{{user.name}}"
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "caption",
+                              "color": "text.secondary",
+                              "noWrap": true,
+                              "children": "{{user.role}}"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nav_item_link",
+      "name": "NavItemLink",
+      "description": "Single navigation link item",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Link label text"
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "required": true,
+          "description": "Navigation URL"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "description": "Icon name"
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether link is active"
+        },
+        {
+          "name": "badge",
+          "type": "object",
+          "required": false,
+          "description": "Optional badge"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "ListItem",
+          "disablePadding": true,
+          "className": "nav-item-link",
+          "children": [
+            {
+              "type": "ListItemButton",
+              "selected": "{{active}}",
+              "sx": {
+                "borderRadius": 1,
+                "mb": 0.5,
+                "mx": 0.5
+              },
+              "children": [
+                {
+                  "type": "conditional",
+                  "condition": "{{icon}}",
+                  "then": {
+                    "type": "ListItemIcon",
+                    "sx": { "minWidth": 40 },
+                    "children": [
+                      {
+                        "type": "Icon",
+                        "name": "{{icon}}",
+                        "sx": { "fontSize": 20 }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "ListItemText",
+                  "primary": "{{label}}"
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{badge}}",
+                  "then": {
+                    "type": "Badge",
+                    "badgeContent": "{{badge.text}}",
+                    "color": "{{badge.variant || 'primary'}}",
+                    "sx": { "ml": "auto" }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nav_item_group",
+      "name": "NavItemGroup",
+      "description": "Collapsible navigation group with children",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Group label"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "description": "Group icon"
+        },
+        {
+          "name": "children",
+          "type": "array",
+          "required": true,
+          "description": "Child navigation items"
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether group is expanded"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "nav-item-group",
+          "children": [
+            {
+              "type": "ListItem",
+              "disablePadding": true,
+              "children": [
+                {
+                  "type": "ListItemButton",
+                  "sx": {
+                    "borderRadius": 1,
+                    "mb": 0.5,
+                    "mx": 0.5
+                  },
+                  "children": [
+                    {
+                      "type": "conditional",
+                      "condition": "{{icon}}",
+                      "then": {
+                        "type": "ListItemIcon",
+                        "sx": { "minWidth": 40 },
+                        "children": [
+                          {
+                            "type": "Icon",
+                            "name": "{{icon}}",
+                            "sx": { "fontSize": 20 }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "ListItemText",
+                      "primary": "{{label}}"
+                    },
+                    {
+                      "type": "Icon",
+                      "name": "{{open ? 'ExpandLess' : 'ExpandMore'}}",
+                      "sx": {
+                        "transition": "transform 0.2s",
+                        "fontSize": 20
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Collapse",
+              "in": "{{open}}",
+              "timeout": "auto",
+              "unmountOnExit": true,
+              "children": [
+                {
+                  "type": "List",
+                  "component": "div",
+                  "disablePadding": true,
+                  "sx": { "pl": 2 },
+                  "children": "{{children}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nav_item_divider",
+      "name": "NavItemDivider",
+      "description": "Navigation divider with optional label",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Optional divider label"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "nav-item-divider",
+          "sx": { "my": 1, "mx": 2 },
+          "children": [
+            {
+              "type": "Divider"
+            },
+            {
+              "type": "conditional",
+              "condition": "{{label}}",
+              "then": {
+                "type": "Text",
+                "variant": "overline",
+                "color": "text.secondary",
+                "sx": { "px": 1, "mt": 0.5 },
+                "children": "{{label}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nav_item_header",
+      "name": "NavItemHeader",
+      "description": "Navigation section header",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Header text"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "description": "Header icon"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "nav-item-header",
+          "sx": { "px": 2, "py": 1.5, "mt": 1 },
+          "children": [
+            {
+              "type": "Box",
+              "sx": {
+                "display": "flex",
+                "alignItems": "center",
+                "gap": 1
+              },
+              "children": [
+                {
+                  "type": "conditional",
+                  "condition": "{{icon}}",
+                  "then": {
+                    "type": "Icon",
+                    "name": "{{icon}}",
+                    "sx": { "fontSize": 16, "color": "text.secondary" }
+                  }
+                },
+                {
+                  "type": "Text",
+                  "variant": "overline",
+                  "color": "text.secondary",
+                  "fontWeight": "bold",
+                  "children": "{{label}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "navigation_menu",
+      "name": "NavigationMenu",
+      "description": "Horizontal navigation menu bar",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "description": "Application title"
+        },
+        {
+          "name": "logo",
+          "type": "string",
+          "required": false,
+          "description": "Logo URL"
+        },
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Menu items"
+        },
+        {
+          "name": "actions",
+          "type": "array",
+          "required": false,
+          "description": "Right-side action buttons"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "component": "nav",
+          "className": "navigation-menu",
+          "sx": {
+            "display": "flex",
+            "alignItems": "center",
+            "height": 64,
+            "px": 2,
+            "backgroundColor": "background.paper",
+            "borderBottom": 1,
+            "borderColor": "divider"
+          },
+          "children": [
+            {
+              "type": "Box",
+              "className": "nav-menu-brand",
+              "sx": {
+                "display": "flex",
+                "alignItems": "center",
+                "gap": 1.5,
+                "mr": 4
+              },
+              "children": [
+                {
+                  "type": "conditional",
+                  "condition": "{{logo}}",
+                  "then": {
+                    "type": "Box",
+                    "component": "img",
+                    "src": "{{logo}}",
+                    "alt": "Logo",
+                    "sx": { "width": 32, "height": 32, "objectFit": "contain" }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{title}}",
+                  "then": {
+                    "type": "Text",
+                    "variant": "h6",
+                    "fontWeight": "bold",
+                    "noWrap": true,
+                    "children": "{{title}}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Stack",
+              "direction": "row",
+              "spacing": 0.5,
+              "className": "nav-menu-items",
+              "sx": { "flex": 1, "alignItems": "center" },
+              "children": "{{items}}"
+            },
+            {
+              "type": "conditional",
+              "condition": "{{actions}}",
+              "then": {
+                "type": "Stack",
+                "direction": "row",
+                "spacing": 1,
+                "className": "nav-menu-actions",
+                "sx": { "alignItems": "center", "ml": "auto" },
+                "children": "{{actions}}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nav_menu_item",
+      "name": "NavMenuItem",
+      "description": "Single horizontal menu item",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Menu item label"
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "required": true,
+          "description": "Navigation URL"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "description": "Icon name"
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "required": false,
+          "default": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "nav-menu-item",
+          "children": [
+            {
+              "type": "Button",
+              "variant": "text",
+              "color": "{{active ? 'primary' : 'inherit'}}",
+              "sx": {
+                "textTransform": "none",
+                "px": 2,
+                "py": 1,
+                "borderRadius": 1,
+                "fontWeight": "medium"
+              },
+              "children": [
+                {
+                  "type": "conditional",
+                  "condition": "{{icon}}",
+                  "then": {
+                    "type": "Icon",
+                    "name": "{{icon}}",
+                    "sx": { "mr": 1, "fontSize": 20 }
+                  }
+                },
+                {
+                  "type": "Text",
+                  "children": "{{label}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "breadcrumbs",
+      "name": "Breadcrumbs",
+      "description": "Breadcrumb navigation trail",
+      "props": [
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "description": "Breadcrumb items array"
+        },
+        {
+          "name": "separator",
+          "type": "string",
+          "required": false,
+          "default": "/",
+          "description": "Separator character"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "component": "nav",
+          "className": "breadcrumbs-container",
+          "sx": { "py": 1, "px": 2 },
+          "children": [
+            {
+              "type": "Breadcrumbs",
+              "separator": "{{separator}}",
+              "sx": { "fontSize": "0.875rem" },
+              "children": "{{items}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "breadcrumb_item",
+      "name": "BreadcrumbItem",
+      "description": "Single breadcrumb link",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Breadcrumb label"
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "required": true,
+          "description": "Navigation URL"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "description": "Icon name"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Link",
+          "underline": "hover",
+          "color": "inherit",
+          "href": "{{href}}",
+          "sx": {
+            "display": "flex",
+            "alignItems": "center",
+            "gap": 0.5,
+            "cursor": "pointer"
+          },
+          "children": [
+            {
+              "type": "conditional",
+              "condition": "{{icon}}",
+              "then": {
+                "type": "Icon",
+                "name": "{{icon}}",
+                "sx": { "fontSize": 18 }
+              }
+            },
+            {
+              "type": "Text",
+              "variant": "body2",
+              "children": "{{label}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "breadcrumb_current",
+      "name": "BreadcrumbCurrent",
+      "description": "Current page breadcrumb (non-clickable)",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Current page label"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "description": "Icon name"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "breadcrumb-current",
+          "sx": {
+            "display": "flex",
+            "alignItems": "center",
+            "gap": 0.5
+          },
+          "children": [
+            {
+              "type": "conditional",
+              "condition": "{{icon}}",
+              "then": {
+                "type": "Icon",
+                "name": "{{icon}}",
+                "sx": { "fontSize": 18, "color": "text.secondary" }
+              }
+            },
+            {
+              "type": "Text",
+              "variant": "body2",
+              "color": "text.primary",
+              "fontWeight": "medium",
+              "children": "{{label}}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": [
+      "Sidebar",
+      "NavItemLink",
+      "NavItemGroup",
+      "NavItemDivider",
+      "NavItemHeader",
+      "NavigationMenu",
+      "NavMenuItem",
+      "Breadcrumbs",
+      "BreadcrumbItem",
+      "BreadcrumbCurrent"
+    ]
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Theme Editor Components",
+  "description": "Theme customization with colors, fonts, and preview",
+  "stories": [
+    {
+      "name": "ColorPaletteEditor",
+      "render": "palette",
+      "description": "Color palette with light/dark mode",
+      "args": {
+        "colorMode": "light",
+        "colorGroups": [
+          {
+            "name": "Primary Colors",
+            "colors": [
+              { "key": "primary", "label": "Primary", "value": "#1976d2" },
+              { "key": "secondary", "label": "Secondary", "value": "#9c27b0" }
+            ]
+          },
+          {
+            "name": "Status Colors",
+            "colors": [
+              { "key": "success", "label": "Success", "value": "#2e7d32" },
+              { "key": "error", "label": "Error", "value": "#d32f2f" },
+              { "key": "warning", "label": "Warning", "value": "#ed6c02" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "ColorPicker",
+      "render": "picker",
+      "description": "Single color picker input",
+      "args": {
+        "label": "Primary Color",
+        "value": "#1976d2"
+      }
+    },
+    {
+      "name": "FontSelector",
+      "render": "fonts",
+      "description": "Typography configuration",
+      "args": {
+        "fonts": {
+          "body": "IBM Plex Sans",
+          "heading": "Space Grotesk",
+          "code": "JetBrains Mono"
+        },
+        "borderRadius": 8
+      }
+    },
+    {
+      "name": "ThemePreview",
+      "render": "preview",
+      "description": "Live theme preview",
+      "args": {
+        "compact": false
+      }
+    }
+  ],
+  "renders": {
+    "palette": {
+      "description": "Color palette editor",
+      "featured": true
+    },
+    "picker": {
+      "description": "Color picker"
+    },
+    "fonts": {
+      "description": "Font selector"
+    },
+    "preview": {
+      "description": "Theme preview"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "moderator-user",
+      "username": "moderator",
+      "level": 3,
+      "email": "mod@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  }
+}

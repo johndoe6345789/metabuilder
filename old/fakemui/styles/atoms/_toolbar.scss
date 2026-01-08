@@ -1,0 +1,13 @@
+// Toolbar atom - horizontal action bar
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-lg);
+}
+
+.toolbar--sm { gap: var(--spacing-sm); margin-bottom: var(--spacing-md); }
+.toolbar--end { justify-content: flex-end; }
+.toolbar--between { justify-content: space-between; }

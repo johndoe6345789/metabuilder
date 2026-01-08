@@ -1,0 +1,9 @@
+// Toolbar mixin
+
+@mixin toolbar($gap: var(--spacing-md), $padding: var(--spacing-md)) {
+  display: flex;
+  align-items: center;
+  gap: $gap;
+  padding: $padding;
+  flex-wrap: wrap;
+}

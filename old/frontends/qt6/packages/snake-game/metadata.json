@@ -1,0 +1,7 @@
+{
+  "packageId": "snake_game",
+  "name": "Snake Game",
+  "version": "1.0.0",
+  "description": "Classic snake action that can be embedded into any launcher view.",
+  "dependencies": ["retro_games"]
+}

@@ -1,0 +1,35 @@
+module Material
+singleton MaterialPalette 1.0 MaterialPalette.qml
+MaterialButton 1.0 MaterialButton.qml
+MaterialCard 1.0 MaterialCard.qml
+MaterialTextField 1.0 MaterialTextField.qml
+MaterialChip 1.0 MaterialChip.qml
+MaterialSurface 1.0 MaterialSurface.qml
+MaterialDivider 1.0 MaterialDivider.qml
+MaterialBadge 1.0 MaterialBadge.qml
+MaterialAlert 1.0 MaterialAlert.qml
+MaterialDialog 1.0 MaterialDialog.qml
+MaterialSnackbar 1.0 MaterialSnackbar.qml
+MaterialIconButton 1.0 MaterialIconButton.qml
+MaterialCircularProgress 1.0 MaterialCircularProgress.qml
+MaterialLinearProgress 1.0 MaterialLinearProgress.qml
+MaterialSkeleton 1.0 MaterialSkeleton.qml
+MaterialSwitch 1.0 MaterialSwitch.qml
+MaterialAppBar 1.0 MaterialAppBar.qml
+MaterialToolbar 1.0 MaterialToolbar.qml
+MaterialAvatar 1.0 MaterialAvatar.qml
+MaterialLink 1.0 MaterialLink.qml
+MaterialTypography 1.0 MaterialTypography.qml
+MaterialPaper 1.0 MaterialPaper.qml
+MaterialBox 1.0 MaterialBox.qml
+MaterialAccordion 1.0 MaterialAccordion.qml
+MaterialCollapse 1.0 MaterialCollapse.qml
+MaterialCheckbox 1.0 MaterialCheckbox.qml
+MaterialGrid 1.0 MaterialGrid.qml
+MaterialMenu 1.0 MaterialMenu.qml
+MaterialMenuItem 1.0 MaterialMenuItem.qml
+MaterialMenuProps 1.0 MaterialMenuProps.qml
+MaterialPopover 1.0 MaterialPopover.qml
+MaterialPopoverProps 1.0 MaterialPopoverProps.qml
+MaterialDividerProps 1.0 MaterialDividerProps.qml
+MaterialContainer 1.0 MaterialContainer.qml

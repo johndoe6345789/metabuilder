@@ -1,0 +1,345 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-validation.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "advanced-features",
+  "description": "Advanced validation functions with custom logic",
+  "patterns": {
+    "orderNumber": "^ORD-[0-9]{4}-[0-9]{6}$",
+    "trackingNumber": "^[A-Z0-9]{10,20}$",
+    "currencyCode": "^[A-Z]{3}$",
+    "postalCode": "^[0-9]{5}(-[0-9]{4})?$"
+  },
+  "validators": [
+    {
+      "id": "validate_order_total",
+      "name": "validateOrderTotal",
+      "exported": true,
+      "description": "Validate that order total matches sum of items",
+      "params": [
+        {
+          "name": "order",
+          "type": "Order",
+          "required": true
+        }
+      ],
+      "returnType": "ValidationResult",
+      "body": [
+        {
+          "type": "variable",
+          "name": "itemsTotal",
+          "value": {
+            "type": "expression",
+            "expression": "order.items.reduce((sum, item) => sum + item.subtotal, 0)"
+          }
+        },
+        {
+          "type": "conditional",
+          "condition": {
+            "type": "comparison",
+            "operator": "!==",
+            "left": "order.totalAmount",
+            "right": "itemsTotal"
+          },
+          "then": [
+            {
+              "type": "return",
+              "value": {
+                "valid": false,
+                "errors": [
+                  {
+                    "field": "totalAmount",
+                    "message": "Total amount does not match sum of items",
+                    "code": "INVALID_TOTAL"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "return",
+          "value": {
+            "valid": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "validate_shipping_address",
+      "name": "validateShippingAddress",
+      "exported": true,
+      "description": "Validate shipping address completeness",
+      "params": [
+        {
+          "name": "address",
+          "type": "Address",
+          "required": true
+        }
+      ],
+      "returnType": "ValidationResult",
+      "body": [
+        {
+          "type": "variable",
+          "name": "errors",
+          "value": []
+        },
+        {
+          "type": "conditional",
+          "condition": {
+            "type": "expression",
+            "expression": "!address.street || address.street.trim().length === 0"
+          },
+          "then": [
+            {
+              "type": "expression",
+              "expression": "errors.push({ field: 'street', message: 'Street is required', code: 'REQUIRED' })"
+            }
+          ]
+        },
+        {
+          "type": "conditional",
+          "condition": {
+            "type": "expression",
+            "expression": "!address.city || address.city.trim().length === 0"
+          },
+          "then": [
+            {
+              "type": "expression",
+              "expression": "errors.push({ field: 'city', message: 'City is required', code: 'REQUIRED' })"
+            }
+          ]
+        },
+        {
+          "type": "conditional",
+          "condition": {
+            "type": "expression",
+            "expression": "!address.postalCode || !/^[0-9]{5}(-[0-9]{4})?$/.test(address.postalCode)"
+          },
+          "then": [
+            {
+              "type": "expression",
+              "expression": "errors.push({ field: 'postalCode', message: 'Invalid postal code', code: 'INVALID_FORMAT' })"
+            }
+          ]
+        },
+        {
+          "type": "conditional",
+          "condition": {
+            "type": "expression",
+            "expression": "!address.country || address.country.length !== 2"
+          },
+          "then": [
+            {
+              "type": "expression",
+              "expression": "errors.push({ field: 'country', message: 'Invalid country code', code: 'INVALID_FORMAT' })"
+            }
+          ]
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "ternary",
+            "condition": "errors.length === 0",
+            "ifTrue": { "valid": true },
+            "ifFalse": { "valid": false, "errors": "errors" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "validate_inventory",
+      "name": "validateInventory",
+      "exported": true,
+      "description": "Validate product inventory availability",
+      "async": true,
+      "params": [
+        {
+          "name": "items",
+          "type": "OrderItem[]",
+          "required": true
+        }
+      ],
+      "returnType": "Promise<ValidationResult>",
+      "body": [
+        {
+          "type": "variable",
+          "name": "errors",
+          "value": []
+        },
+        {
+          "type": "for",
+          "iterator": "item",
+          "iterable": "items",
+          "body": [
+            {
+              "type": "variable",
+              "name": "stock",
+              "value": {
+                "type": "await",
+                "expression": "inventory.getStock(item.productId)"
+              }
+            },
+            {
+              "type": "conditional",
+              "condition": {
+                "type": "comparison",
+                "operator": "<",
+                "left": "stock.available",
+                "right": "item.quantity"
+              },
+              "then": [
+                {
+                  "type": "expression",
+                  "expression": "errors.push({ field: `items.${item.productId}`, message: `Insufficient stock. Available: ${stock.available}, Requested: ${item.quantity}`, code: 'INSUFFICIENT_STOCK' })"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "ternary",
+            "condition": "errors.length === 0",
+            "ifTrue": { "valid": true },
+            "ifFalse": { "valid": false, "errors": "errors" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "validate_credit_card",
+      "name": "validateCreditCard",
+      "exported": true,
+      "description": "Validate credit card using Luhn algorithm",
+      "params": [
+        {
+          "name": "cardNumber",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "returnType": "boolean",
+      "body": [
+        {
+          "type": "comment",
+          "text": "Remove all non-digit characters"
+        },
+        {
+          "type": "variable",
+          "name": "digits",
+          "value": {
+            "type": "expression",
+            "expression": "cardNumber.replace(/\\D/g, '')"
+          }
+        },
+        {
+          "type": "conditional",
+          "condition": {
+            "type": "expression",
+            "expression": "digits.length < 13 || digits.length > 19"
+          },
+          "then": [
+            {
+              "type": "return",
+              "value": false
+            }
+          ]
+        },
+        {
+          "type": "comment",
+          "text": "Luhn algorithm implementation"
+        },
+        {
+          "type": "variable",
+          "name": "sum",
+          "value": 0
+        },
+        {
+          "type": "variable",
+          "name": "isEven",
+          "value": false
+        },
+        {
+          "type": "for",
+          "iterator": "i",
+          "start": {
+            "type": "expression",
+            "expression": "digits.length - 1"
+          },
+          "condition": {
+            "type": "comparison",
+            "operator": ">=",
+            "left": "i",
+            "right": 0
+          },
+          "increment": -1,
+          "body": [
+            {
+              "type": "variable",
+              "name": "digit",
+              "value": {
+                "type": "expression",
+                "expression": "parseInt(digits[i], 10)"
+              }
+            },
+            {
+              "type": "conditional",
+              "condition": "isEven",
+              "then": [
+                {
+                  "type": "expression",
+                  "expression": "digit *= 2"
+                },
+                {
+                  "type": "conditional",
+                  "condition": {
+                    "type": "comparison",
+                    "operator": ">",
+                    "left": "digit",
+                    "right": 9
+                  },
+                  "then": [
+                    {
+                      "type": "expression",
+                      "expression": "digit -= 9"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "expression",
+              "expression": "sum += digit"
+            },
+            {
+              "type": "expression",
+              "expression": "isEven = !isEven"
+            }
+          ]
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "expression",
+            "expression": "sum % 10 === 0"
+          }
+        }
+      ]
+    }
+  ],
+  "exports": {
+    "functions": [
+      "validateOrderTotal",
+      "validateShippingAddress",
+      "validateInventory",
+      "validateCreditCard"
+    ],
+    "patterns": [
+      "orderNumber",
+      "trackingNumber",
+      "currencyCode",
+      "postalCode"
+    ]
+  }
+}

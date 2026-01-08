@@ -1,0 +1,336 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/script.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "advanced-features",
+  "description": "Advanced automation scripts with error handling and retry logic",
+  "scripts": [
+    {
+      "id": "process_pending_orders",
+      "name": "processPendingOrders",
+      "description": "Process all pending orders and update their status",
+      "async": true,
+      "returnType": "Promise<ProcessResult>",
+      "params": [],
+      "body": [
+        {
+          "type": "try",
+          "try": [
+            {
+              "type": "variable",
+              "name": "pendingOrders",
+              "value": {
+                "type": "await",
+                "expression": "db.orders.findMany({ where: { status: 'pending' } })"
+              }
+            },
+            {
+              "type": "variable",
+              "name": "results",
+              "value": {
+                "processed": 0,
+                "failed": 0,
+                "errors": []
+              }
+            },
+            {
+              "type": "for",
+              "iterator": "order",
+              "iterable": "pendingOrders",
+              "body": [
+                {
+                  "type": "try",
+                  "try": [
+                    {
+                      "type": "await",
+                      "expression": "processOrder(order)"
+                    },
+                    {
+                      "type": "expression",
+                      "expression": "results.processed++"
+                    }
+                  ],
+                  "catch": {
+                    "errorVar": "error",
+                    "body": [
+                      {
+                        "type": "expression",
+                        "expression": "results.failed++"
+                      },
+                      {
+                        "type": "expression",
+                        "expression": "results.errors.push({ orderId: order.id, error: error.message })"
+                      },
+                      {
+                        "type": "await",
+                        "expression": "logger.error('Failed to process order', { orderId: order.id, error })"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "expression",
+                "expression": "results"
+              }
+            }
+          ],
+          "catch": {
+            "errorVar": "error",
+            "body": [
+              {
+                "type": "await",
+                "expression": "logger.error('Critical error in processPendingOrders', { error })"
+              },
+              {
+                "type": "throw",
+                "value": "error"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "send_order_confirmation",
+      "name": "sendOrderConfirmation",
+      "description": "Send order confirmation email with retry logic",
+      "async": true,
+      "params": [
+        {
+          "name": "orderId",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "returnType": "Promise<void>",
+      "body": [
+        {
+          "type": "variable",
+          "name": "order",
+          "value": {
+            "type": "await",
+            "expression": "db.orders.findUnique({ where: { id: orderId }, include: { customer: true, items: true } })"
+          }
+        },
+        {
+          "type": "conditional",
+          "condition": {
+            "type": "expression",
+            "expression": "!order"
+          },
+          "then": [
+            {
+              "type": "throw",
+              "value": {
+                "type": "new",
+                "class": "Error",
+                "args": ["Order not found"]
+              }
+            }
+          ]
+        },
+        {
+          "type": "variable",
+          "name": "maxRetries",
+          "value": 3
+        },
+        {
+          "type": "variable",
+          "name": "retryDelay",
+          "value": 1000
+        },
+        {
+          "type": "for",
+          "iterator": "attempt",
+          "start": 1,
+          "condition": {
+            "type": "comparison",
+            "operator": "<=",
+            "left": "attempt",
+            "right": "maxRetries"
+          },
+          "increment": 1,
+          "body": [
+            {
+              "type": "try",
+              "try": [
+                {
+                  "type": "await",
+                  "expression": "emailService.send({ to: order.customer.email, template: 'order-confirmation', data: order })"
+                },
+                {
+                  "type": "await",
+                  "expression": "db.orders.update({ where: { id: orderId }, data: { confirmationSent: true } })"
+                },
+                {
+                  "type": "return"
+                }
+              ],
+              "catch": {
+                "errorVar": "error",
+                "body": [
+                  {
+                    "type": "await",
+                    "expression": "logger.warn(`Failed to send confirmation (attempt ${attempt}/${maxRetries})`, { orderId, error })"
+                  },
+                  {
+                    "type": "conditional",
+                    "condition": {
+                      "type": "comparison",
+                      "operator": "===",
+                      "left": "attempt",
+                      "right": "maxRetries"
+                    },
+                    "then": [
+                      {
+                        "type": "throw",
+                        "value": "error"
+                      }
+                    ],
+                    "else": [
+                      {
+                        "type": "await",
+                        "expression": "sleep(retryDelay * attempt)"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "calculate_shipping_cost",
+      "name": "calculateShippingCost",
+      "description": "Calculate shipping cost based on weight, distance, and method",
+      "params": [
+        {
+          "name": "order",
+          "type": "Order",
+          "required": true
+        },
+        {
+          "name": "method",
+          "type": "ShippingMethod",
+          "required": true
+        }
+      ],
+      "returnType": "number",
+      "body": [
+        {
+          "type": "comment",
+          "text": "Calculate total weight"
+        },
+        {
+          "type": "variable",
+          "name": "totalWeight",
+          "value": {
+            "type": "expression",
+            "expression": "order.items.reduce((sum, item) => sum + (item.product.weight * item.quantity), 0)"
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Get distance from warehouse to destination"
+        },
+        {
+          "type": "variable",
+          "name": "distance",
+          "value": {
+            "type": "expression",
+            "expression": "calculateDistance(warehouse.address, order.shippingAddress)"
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Base rate calculation"
+        },
+        {
+          "type": "variable",
+          "name": "baseRate",
+          "value": {
+            "type": "switch",
+            "expression": "method",
+            "cases": [
+              {
+                "value": "'standard'",
+                "result": 5.99
+              },
+              {
+                "value": "'express'",
+                "result": 12.99
+              },
+              {
+                "value": "'overnight'",
+                "result": 24.99
+              }
+            ],
+            "default": 5.99
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Weight surcharge"
+        },
+        {
+          "type": "variable",
+          "name": "weightSurcharge",
+          "value": {
+            "type": "ternary",
+            "condition": "totalWeight > 10",
+            "ifTrue": {
+              "type": "expression",
+              "expression": "(totalWeight - 10) * 0.5"
+            },
+            "ifFalse": 0
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Distance surcharge"
+        },
+        {
+          "type": "variable",
+          "name": "distanceSurcharge",
+          "value": {
+            "type": "ternary",
+            "condition": "distance > 100",
+            "ifTrue": {
+              "type": "expression",
+              "expression": "(distance - 100) * 0.1"
+            },
+            "ifFalse": 0
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Calculate total"
+        },
+        {
+          "type": "variable",
+          "name": "total",
+          "value": {
+            "type": "expression",
+            "expression": "baseRate + weightSurcharge + distanceSurcharge"
+          }
+        },
+        {
+          "type": "comment",
+          "text": "Round to 2 decimal places"
+        },
+        {
+          "type": "return",
+          "value": {
+            "type": "expression",
+            "expression": "Math.round(total * 100) / 100"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+export { addTenant } from './crud/add-tenant'
+export { deleteTenant } from './crud/delete-tenant'
+export { getTenants } from './crud/get-tenants'
+export { setTenants } from './crud/set-tenants'
+export { updateTenant } from './crud/update-tenant'

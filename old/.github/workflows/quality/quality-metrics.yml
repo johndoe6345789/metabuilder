@@ -1,0 +1,664 @@
+name: Comprehensive Quality Metrics
+
+on:
+  pull_request:
+    branches: [ main, master, develop ]
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ============================================================================
+  # CODE QUALITY METRICS
+  # ============================================================================
+  code-quality:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          key: npm-deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            frontends/nextjs/node_modules
+            ~/.npm
+          restore-keys: npm-deps-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      # Cyclomatic Complexity
+      - name: Check code complexity
+        id: complexity
+        run: |
+          echo "skipping tools-based code complexity check (tools/ removed)"
+        continue-on-error: true
+
+      # Function metrics
+      - name: Analyze function metrics
+        id: metrics
+        run: echo "skipping tools-based function metrics (tools/ removed)" > function-metrics.json
+        continue-on-error: true
+
+      # Maintainability Index
+      - name: Calculate maintainability index
+        id: maintainability
+        run: echo "skipping tools-based maintainability check (tools/ removed)" > maintainability-report.json
+        continue-on-error: true
+
+      - name: Detect stub implementations
+        id: stub-detection
+        run: echo "skipping tools-based stub detection (tools/ removed)" > stub-report.json
+        continue-on-error: true
+
+      - name: Upload quality reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: code-quality-reports
+          path: |
+            frontends/nextjs/complexity-report.json
+            frontends/nextjs/function-metrics.json
+            frontends/nextjs/maintainability-report.json
+            frontends/nextjs/stub-report.json
+          retention-days: 30
+
+  # ============================================================================
+  # TEST COVERAGE METRICS
+  # ============================================================================
+  coverage-metrics:
+    name: Test Coverage Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          key: npm-deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            frontends/nextjs/node_modules
+            ~/.npm
+          restore-keys: npm-deps-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Run tests with coverage
+        run: npm run test:unit:coverage
+        env:
+          DATABASE_URL: file:./dev.db
+        continue-on-error: true
+
+      - name: Generate coverage report
+        run: npm run test:coverage:report
+        continue-on-error: true
+
+      - name: Check function test coverage
+        id: function-coverage
+        run: npm run test:check-functions > function-coverage.txt 2>&1
+        continue-on-error: true
+
+      - name: Extract coverage metrics
+        id: coverage-extract
+        run: echo "skipping tools-based coverage extraction (tools/ removed)"
+        continue-on-error: true
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-reports
+          path: |
+            frontends/nextjs/coverage/
+            frontends/nextjs/FUNCTION_TEST_COVERAGE.md
+            frontends/nextjs/function-coverage.txt
+            frontends/nextjs/coverage-metrics.json
+          retention-days: 30
+
+  # ============================================================================
+  # SECURITY SCANNING
+  # ============================================================================
+  security-scan:
+    name: Security Vulnerability Scan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          key: npm-deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            frontends/nextjs/node_modules
+            ~/.npm
+          restore-keys: npm-deps-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+
+      # Npm audit for dependencies
+      - name: NPM Security Audit
+        id: npm-audit
+        run: |
+          npm audit --json > npm-audit.json || true
+          echo "skipping tools-based npm-audit parsing (tools/ removed)"
+        continue-on-error: true
+
+      # Check for security anti-patterns
+      - name: Scan for security issues
+        id: security-scan
+        run: echo "skipping tools-based security scan (tools/ removed)" > security-report.json
+        continue-on-error: true
+
+      # OWASP Dependency Check (if configured)
+      - name: Run dependency check
+        uses: dependency-check/Dependency-Check_Action@1e54355a8b4c8abaa8cc7d0b70aa655a3bb15a6c  # main
+        with:
+          path: '.'
+          format: 'JSON'
+          args: >
+            --scan .
+            --exclude node_modules
+            --exclude build
+            --exclude .git
+            --exclude dbal/production/build
+        continue-on-error: true
+
+      - name: Upload security reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-reports
+          path: |
+            frontends/nextjs/npm-audit.json
+            frontends/nextjs/security-report.json
+            dependency-check-report.json
+          retention-days: 30
+
+  # ============================================================================
+  # DOCUMENTATION QUALITY
+  # ============================================================================
+  documentation-quality:
+    name: Documentation Coverage & Quality
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          key: npm-deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            frontends/nextjs/node_modules
+            ~/.npm
+          restore-keys: npm-deps-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Check JSDoc coverage
+        id: jsdoc
+        run: echo "skipping tools-based jsdoc check (tools/ removed)" > jsdoc-report.json
+        continue-on-error: true
+
+      - name: Validate README files
+        id: readme
+        run: echo "skipping tools-based README validation (tools/ removed)" > readme-report.json
+        continue-on-error: true
+
+      - name: Validate markdown links
+        id: markdown-links
+        run: echo "skipping tools-based markdown link validation (tools/ removed)" > markdown-links-report.json
+        continue-on-error: true
+
+      - name: Check API documentation
+        id: api-docs
+        run: echo "skipping tools-based API docs validation (tools/ removed)" > api-docs-report.json
+        continue-on-error: true
+
+      - name: Verify code examples
+        id: code-examples
+        run: echo "skipping tools-based code examples validation (tools/ removed)" > code-examples-report.json
+        continue-on-error: true
+
+      - name: Upload documentation reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: documentation-reports
+          path: |
+            frontends/nextjs/jsdoc-report.json
+            frontends/nextjs/readme-report.json
+            frontends/nextjs/markdown-links-report.json
+            frontends/nextjs/api-docs-report.json
+            frontends/nextjs/code-examples-report.json
+          retention-days: 30
+
+  # ============================================================================
+  # PERFORMANCE METRICS
+  # ============================================================================
+  performance-metrics:
+    name: Performance Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          key: npm-deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            frontends/nextjs/node_modules
+            ~/.npm
+          restore-keys: npm-deps-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Build application
+        run: npm run build
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Analyze bundle size
+        id: bundle
+        run: echo "skipping tools-based bundle analysis (tools/ removed)" > bundle-analysis.json
+        continue-on-error: true
+
+      - name: Check performance budget
+        id: perf-budget
+        run: echo "skipping tools-based performance budget check (tools/ removed)" > performance-budget.json
+        continue-on-error: true
+
+      - name: Lighthouse audit
+        id: lighthouse
+        run: echo "skipping tools-based lighthouse audit (tools/ removed)" > lighthouse-report.json
+        continue-on-error: true
+
+      - name: Analyze render performance
+        id: render-perf
+        run: echo "skipping tools-based render performance analysis (tools/ removed)" > render-performance.json
+        continue-on-error: true
+
+      - name: Upload performance reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-reports
+          path: |
+            frontends/nextjs/bundle-analysis.json
+            frontends/nextjs/performance-budget.json
+            frontends/nextjs/lighthouse-report.json
+            frontends/nextjs/render-performance.json
+          retention-days: 30
+
+  # ============================================================================
+  # SIZE & STRUCTURE METRICS
+  # ============================================================================
+  size-metrics:
+    name: File Size & Architecture Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          key: npm-deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            frontends/nextjs/node_modules
+            ~/.npm
+          restore-keys: npm-deps-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Check source file sizes
+        id: file-sizes
+        run: echo "skipping tools-based file size check (tools/ removed)" > file-sizes-report.json
+        continue-on-error: true
+
+      - name: Analyze directory structure
+        id: dir-structure
+        run: echo "skipping tools-based directory structure analysis (tools/ removed)" > directory-structure.json
+        continue-on-error: true
+
+      - name: Check for code duplication
+        id: duplication
+        run: echo "skipping tools-based duplication detection (tools/ removed)" > duplication-report.json
+        continue-on-error: true
+
+      - name: Analyze import chains
+        id: imports
+        run: echo "skipping tools-based import chain analysis (tools/ removed)" > import-analysis.json
+        continue-on-error: true
+
+      - name: Upload size reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: size-reports
+          path: |
+            frontends/nextjs/file-sizes-report.json
+            frontends/nextjs/directory-structure.json
+            frontends/nextjs/duplication-report.json
+            frontends/nextjs/import-analysis.json
+          retention-days: 30
+
+  # ============================================================================
+  # DEPENDENCY ANALYSIS
+  # ============================================================================
+  dependency-analysis:
+    name: Dependency Health Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          key: npm-deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            frontends/nextjs/node_modules
+            ~/.npm
+          restore-keys: npm-deps-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Check outdated dependencies
+        id: outdated
+        run: bun outdated --json > outdated-deps.json || true
+        continue-on-error: true
+
+      - name: License compliance check
+        id: licenses
+        run: echo "skipping tools-based license compliance check (tools/ removed)" > license-report.json
+        continue-on-error: true
+
+      - name: Analyze dependency tree
+        id: tree
+        run: echo "skipping tools-based dependency tree analysis (tools/ removed)" > dependency-tree.json
+        continue-on-error: true
+
+      - name: Check for circular dependencies
+        id: circular
+        run: echo "skipping tools-based circular dependency check (tools/ removed)" > circular-deps.json
+        continue-on-error: true
+
+      - name: Upload dependency reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dependency-reports
+          path: |
+            frontends/nextjs/outdated-deps.json
+            frontends/nextjs/license-report.json
+            frontends/nextjs/dependency-tree.json
+            frontends/nextjs/circular-deps.json
+          retention-days: 30
+
+  # ============================================================================
+  # TYPE SAFETY & LINTING
+  # ============================================================================
+  type-and-lint-metrics:
+    name: Type Safety & Code Style Metrics
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          key: npm-deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            frontends/nextjs/node_modules
+            ~/.npm
+          restore-keys: npm-deps-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: TypeScript strict check
+        id: ts-strict
+        run: echo "skipping tools-based TypeScript strict check (tools/ removed)" > ts-strict-report.json
+        continue-on-error: true
+
+      - name: ESLint detailed report
+        id: eslint
+        run: |
+          npx eslint . --format json > eslint-report.json || true
+          echo "skipping tools-based ESLint parse (tools/ removed)"
+        continue-on-error: true
+
+      - name: Check for @ts-ignore usage
+        id: ts-ignore
+        run: echo "skipping tools-based ts-ignore check (tools/ removed)" > ts-ignore-report.json
+        continue-on-error: true
+
+      - name: Check for any types
+        id: any-types
+        run: echo "skipping tools-based any-types check (tools/ removed)" > any-types-report.json
+        continue-on-error: true
+
+      - name: Upload type reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: type-reports
+          path: |
+            frontends/nextjs/ts-strict-report.json
+            frontends/nextjs/eslint-report.json
+            frontends/nextjs/ts-ignore-report.json
+            frontends/nextjs/any-types-report.json
+          retention-days: 30
+
+  # ============================================================================
+  # QUALITY SUMMARY & REPORTING
+  # ============================================================================
+  quality-summary:
+    name: Quality Metrics Summary
+    runs-on: ubuntu-latest
+    needs: [
+      code-quality,
+      coverage-metrics,
+      security-scan,
+      documentation-quality,
+      performance-metrics,
+      size-metrics,
+      dependency-analysis,
+      type-and-lint-metrics
+    ]
+    if: always()
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          key: npm-deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            frontends/nextjs/node_modules
+            ~/.npm
+          restore-keys: npm-deps-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Download all reports
+        uses: actions/download-artifact@v4
+        with:
+          path: quality-reports/
+
+      - name: Generate quality summary
+        id: summary
+        run: echo "skipping tools-based quality summary generation (tools/ removed)" > quality-summary.md
+        continue-on-error: true
+
+      - name: Post summary as PR comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            let summaryContent = '';
+            const summaryPath = 'frontends/nextjs/quality-summary.md';
+            if (fs.existsSync(summaryPath)) {
+              summaryContent = fs.readFileSync(summaryPath, 'utf8');
+            }
+            
+            const comment = `## 📊 Quality Metrics Report\n\n${summaryContent}\n\n<details><summary>📁 Full Reports (click to expand)</summary>\n\nAll detailed reports are available as build artifacts.\n</details>`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Create check run with summary
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const fs = require('fs');
+            const summaryPath = 'frontends/nextjs/quality-summary.md';
+            const summary = fs.existsSync(summaryPath) 
+              ? fs.readFileSync(summaryPath, 'utf8') 
+              : 'Quality metrics report generated.';
+            
+            github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'Quality Metrics',
+              head_sha: context.payload.pull_request.head.sha,
+              status: 'completed',
+              conclusion: 'success',
+              summary: 'All quality metrics collected',
+              text: summary
+            });

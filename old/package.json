@@ -1,0 +1,31 @@
+{
+  "name": "metabuilder-root",
+  "private": true,
+  "version": "0.0.0",
+  "description": "MetaBuilder - Data-driven multi-tenant platform",
+  "scripts": {
+    "db:generate": "npm --prefix frontends/nextjs run db:generate",
+    "db:push": "npm --prefix frontends/nextjs run db:push",
+    "db:migrate": "npm --prefix frontends/nextjs run db:migrate",
+    "dev": "npm --prefix frontends/nextjs run dev",
+    "build": "npm --prefix frontends/nextjs run build",
+    "typecheck": "npm --prefix frontends/nextjs run typecheck",
+    "lint": "npm --prefix frontends/nextjs run lint",
+    "test": "npm --prefix frontends/nextjs run test",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report"
+  },
+  "workspaces": [
+    "frontends/nextjs",
+    "frontends/dbal",
+    "config",
+    "storybook"
+  ],
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "jsdom": "^27.4.0"
+  }
+}

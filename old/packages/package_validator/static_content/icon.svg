@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Package box with checkmark -->
+  <path d="M32 12 L48 20 L48 44 L32 52 L16 44 L16 20 Z" fill="none"/>
+  <path d="M16 20 L32 28 L48 20 M32 28 L32 52" stroke-width="1.5"/>
+  <path d="M26 36 L30 40 L38 32" stroke-width="2.5"/>
+</svg>

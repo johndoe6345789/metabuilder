@@ -1,0 +1,162 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "Script Test Framework",
+  "description": "Unit testing framework components for script suites",
+  "stories": [
+    {
+      "name": "TestRunner",
+      "render": "framework",
+      "description": "Interactive test runner for executing script suites",
+      "args": {
+        "packageId": "dashboard",
+        "autoRun": false,
+        "filter": "",
+        "verbose": true
+      }
+    },
+    {
+      "name": "TestRunnerAutoRun",
+      "render": "framework",
+      "description": "Test runner with auto-run enabled",
+      "args": {
+        "packageId": "dashboard",
+        "autoRun": true,
+        "filter": "",
+        "verbose": true
+      }
+    },
+    {
+      "name": "TestRunnerFiltered",
+      "render": "framework",
+      "description": "Test runner with name filter applied",
+      "args": {
+        "packageId": "dashboard",
+        "autoRun": false,
+        "filter": "stats",
+        "verbose": false
+      }
+    },
+    {
+      "name": "TestResultsPassed",
+      "render": "results",
+      "description": "Test results showing all tests passed",
+      "args": {
+        "results": {
+          "summary": "All tests passed",
+          "passed": 5,
+          "failed": 0,
+          "duration": 42,
+          "tests": [
+            { "name": "should calculate stats", "status": "passed", "duration": 8 },
+            { "name": "should format values", "status": "passed", "duration": 5 },
+            { "name": "should handle empty data", "status": "passed", "duration": 12 },
+            { "name": "should compute trends", "status": "passed", "duration": 9 },
+            { "name": "should validate input", "status": "passed", "duration": 8 }
+          ]
+        },
+        "showDuration": true,
+        "expandErrors": false
+      }
+    },
+    {
+      "name": "TestResultsMixed",
+      "render": "results",
+      "description": "Test results with some failures",
+      "args": {
+        "results": {
+          "summary": "2 of 5 tests failed",
+          "passed": 3,
+          "failed": 2,
+          "duration": 67,
+          "tests": [
+            { "name": "should calculate stats", "status": "passed", "duration": 8 },
+            { "name": "should format values", "status": "failed", "duration": 15, "error": "Expected '1,234' but got '1234'" },
+            { "name": "should handle empty data", "status": "passed", "duration": 12 },
+            { "name": "should compute trends", "status": "failed", "duration": 22, "error": "Assertion failed: expected up, got down" },
+            { "name": "should validate input", "status": "passed", "duration": 10 }
+          ]
+        },
+        "showDuration": true,
+        "expandErrors": true
+      }
+    },
+    {
+      "name": "TestResultsFailed",
+      "render": "results",
+      "description": "Test results showing all tests failed",
+      "args": {
+        "results": {
+          "summary": "All tests failed",
+          "passed": 0,
+          "failed": 3,
+          "duration": 34,
+          "tests": [
+            { "name": "should initialize framework", "status": "failed", "duration": 12, "error": "Module not found: suite" },
+            { "name": "should create suite", "status": "failed", "duration": 11, "error": "Dependency error" },
+            { "name": "should run tests", "status": "failed", "duration": 11, "error": "Framework not initialized" }
+          ]
+        },
+        "showDuration": true,
+        "expandErrors": true
+      }
+    }
+  ],
+  "renders": {
+    "framework": {
+      "description": "Test runner component",
+      "featured": true
+    },
+    "results": {
+      "description": "Test results display"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "dev-user",
+      "username": "developer",
+      "level": 3,
+      "email": "dev@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Development Environment"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Developer",
+      "description": "Can run and view tests",
+      "context": {
+        "user": {
+          "username": "developer",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Can run, view, and configure tests",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["framework", "results"],
+    "ignoredScripts": ["tests", "helpers"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

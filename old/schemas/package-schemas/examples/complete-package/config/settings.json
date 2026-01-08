@@ -1,0 +1,96 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/config.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "complete-example",
+  "description": "Configuration for complete example package",
+  "environments": ["development", "test", "production"],
+  "variables": [
+    {
+      "name": "APP_NAME",
+      "type": "string",
+      "description": "Application name",
+      "required": true,
+      "default": "Complete Example App",
+      "example": "My Application"
+    },
+    {
+      "name": "PORT",
+      "type": "number",
+      "description": "Server port",
+      "required": false,
+      "default": 3000,
+      "min": 1,
+      "max": 65535
+    },
+    {
+      "name": "LOG_LEVEL",
+      "type": "enum",
+      "description": "Logging level",
+      "required": false,
+      "default": "info",
+      "enum": ["error", "warn", "info", "debug"]
+    },
+    {
+      "name": "DATABASE_URL",
+      "type": "url",
+      "description": "Database connection URL",
+      "required": true,
+      "sensitive": true,
+      "example": "postgresql://user:pass@localhost:5432/db"
+    },
+    {
+      "name": "ENABLE_ANALYTICS",
+      "type": "boolean",
+      "description": "Enable analytics tracking",
+      "required": false,
+      "default": false
+    }
+  ],
+  "featureFlags": [
+    {
+      "name": "new-dashboard",
+      "description": "New dashboard UI",
+      "enabled": false,
+      "environments": {
+        "development": {
+          "enabled": true
+        },
+        "production": {
+          "enabled": false,
+          "rollout": {
+            "percentage": 10
+          }
+        }
+      }
+    },
+    {
+      "name": "beta-features",
+      "description": "Beta features access",
+      "enabled": false,
+      "rules": [
+        {
+          "condition": "user.role === 'beta-tester'",
+          "enabled": true,
+          "description": "Enable for beta testers"
+        }
+      ]
+    }
+  ],
+  "secrets": [
+    {
+      "name": "API_KEY",
+      "description": "External API key",
+      "provider": "env",
+      "required": true
+    },
+    {
+      "name": "JWT_SECRET",
+      "description": "JWT signing secret",
+      "provider": "env",
+      "required": true,
+      "rotation": {
+        "enabled": false
+      }
+    }
+  ]
+}

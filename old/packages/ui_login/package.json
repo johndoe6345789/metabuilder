@@ -1,0 +1,38 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_login",
+  "name": "Login Page",
+  "version": "1.0.0",
+  "description": "Login and registration page with form validation",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "icon": "static_content/icon.svg",
+  "minLevel": 1,
+  "primary": true,
+  "dependencies": {
+    "ui_permissions": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "pages": [
+      "login"
+    ],
+    "components": [
+      "LoginForm",
+      "RegisterForm",
+      "ForgotPasswordForm"
+    ],
+    "scripts": [
+      "validate",
+      "actions"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  }
+}

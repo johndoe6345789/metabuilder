@@ -1,0 +1,149 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "UI Pages Bundle",
+  "description": "Page layouts, navigation, and authentication components",
+  "stories": [
+    {
+      "name": "HomePage",
+      "render": "level1",
+      "description": "Level 1 home page with server status and tabs",
+      "args": {
+        "level": 1,
+        "title": "Home"
+      }
+    },
+    {
+      "name": "LoginPage",
+      "render": "login",
+      "description": "Login and registration page",
+      "args": {}
+    },
+    {
+      "name": "NavigationBar",
+      "render": "navigation",
+      "description": "Top navigation bar component",
+      "args": {
+        "level": 1
+      }
+    },
+    {
+      "name": "PageLayout",
+      "render": "layout",
+      "description": "Base page layout with header and footer",
+      "args": {
+        "level": 1,
+        "title": "Sample Page"
+      }
+    },
+    {
+      "name": "LoginForm",
+      "render": "loginForm",
+      "description": "Login form component",
+      "args": {}
+    },
+    {
+      "name": "RegisterForm",
+      "render": "registerForm",
+      "description": "Registration form component",
+      "args": {}
+    }
+  ],
+  "renders": {
+    "level1": {
+      "description": "Level 1 home page layout",
+      "featured": true
+    },
+    "login": {
+      "description": "Login/registration page"
+    },
+    "navigation": {
+      "description": "Navigation bar component"
+    },
+    "layout": {
+      "description": "Base page layout"
+    },
+    "loginForm": {
+      "description": "Login form"
+    },
+    "registerForm": {
+      "description": "Registration form"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 1,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Public User",
+      "description": "Unauthenticated visitor",
+      "context": {
+        "user": null
+      }
+    },
+    {
+      "name": "Level 1 - Public",
+      "description": "Authenticated public user",
+      "context": {
+        "user": {
+          "username": "public_user",
+          "level": 1
+        }
+      }
+    },
+    {
+      "name": "Level 2 - User",
+      "description": "Standard user",
+      "context": {
+        "user": {
+          "username": "standard_user",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Level 3 - Moderator",
+      "description": "Moderator user",
+      "context": {
+        "user": {
+          "username": "moderator",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "Level 4 - Admin",
+      "description": "Administrator user",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["level1", "login", "navigation", "layout", "loginForm", "registerForm"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" },
+        { "name": "gradient", "value": "linear-gradient(to bottom right, rgba(25, 118, 210, 0.05), transparent, rgba(156, 39, 176, 0.05))" }
+      ]
+    }
+  }
+}

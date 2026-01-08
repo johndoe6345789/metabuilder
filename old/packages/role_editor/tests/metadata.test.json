@@ -1,0 +1,76 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/tests.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "role_editor",
+  "description": "Package metadata validation tests",
+
+  "testSuites": [
+    {
+      "id": "package-metadata",
+      "name": "Package Metadata Tests",
+      "description": "Validate package.json metadata structure and values",
+      "tags": ["metadata", "validation"],
+
+      "tests": [
+        {
+          "id": "test-package-id",
+          "name": "should have correct packageId",
+          "act": {
+            "type": "function_call",
+            "target": "getPackageMetadata",
+            "input": "role_editor"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "equals",
+                "actual": "result.packageId",
+                "expected": "role_editor",
+                "description": "Package ID should match"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-icon-exists",
+          "name": "should have an icon file",
+          "act": {
+            "type": "function_call",
+            "target": "checkFileExists",
+            "input": "role_editor/static_content/icon.svg"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "truthy",
+                "actual": "result",
+                "description": "Icon file should exist"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test-schema-valid",
+          "name": "package.json should be valid against schema",
+          "act": {
+            "type": "function_call",
+            "target": "validateAgainstSchema",
+            "input": {
+              "file": "role_editor/package.json",
+              "schema": "https://metabuilder.dev/schemas/package-metadata.schema.json"
+            }
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "truthy",
+                "actual": "result.valid",
+                "description": "package.json should be valid"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

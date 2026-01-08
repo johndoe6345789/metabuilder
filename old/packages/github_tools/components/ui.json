@@ -1,0 +1,527 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "github_tools",
+  "description": "GitHub Tools components for Actions viewer, run analysis, and workflow management",
+  "components": [
+    {
+      "id": "github_viewer",
+      "name": "GitHubViewer",
+      "description": "Main GitHub Actions viewer component",
+      "props": [
+        {
+          "name": "owner",
+          "type": "string",
+          "required": true,
+          "description": "Repository owner"
+        },
+        {
+          "name": "repo",
+          "type": "string",
+          "required": true,
+          "description": "Repository name"
+        },
+        {
+          "name": "workflow",
+          "type": "string",
+          "required": false,
+          "description": "Workflow file name filter"
+        },
+        {
+          "name": "token",
+          "type": "string",
+          "required": false,
+          "description": "GitHub API token"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "github-viewer",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "GitHub Actions",
+              "subtitle": "{{owner}}/{{repo}}"
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "RunFilters",
+                  "props": {}
+                },
+                {
+                  "type": "RunList",
+                  "props": {}
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "init": "init.initialize",
+        "fetchRuns": "fetch_runs.fetchRuns",
+        "filterRuns": "filter.filterRuns"
+      }
+    },
+    {
+      "id": "run_list",
+      "name": "RunList",
+      "description": "List of workflow runs with status badges",
+      "props": [
+        {
+          "name": "runs",
+          "type": "array",
+          "required": false,
+          "default": [],
+          "description": "Array of workflow runs"
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Loading state indicator"
+        },
+        {
+          "name": "onSelect",
+          "type": "function",
+          "required": false,
+          "description": "Callback when a run is selected"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "spacing": 2,
+          "className": "run-list",
+          "children": [
+            {
+              "type": "conditional",
+              "condition": "{{loading}}",
+              "then": {
+                "type": "Box",
+                "sx": { "display": "flex", "justifyContent": "center", "p": 4 },
+                "children": [
+                  {
+                    "type": "CircularProgress"
+                  }
+                ]
+              },
+              "else": {
+                "type": "iterate",
+                "items": "{{runs}}",
+                "render": {
+                  "type": "Card",
+                  "variant": "outlined",
+                  "sx": { "cursor": "pointer" },
+                  "onClick": "{{onSelect}}",
+                  "children": [
+                    {
+                      "type": "CardContent",
+                      "children": [
+                        {
+                          "type": "Flex",
+                          "justifyContent": "space-between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "Text",
+                              "variant": "subtitle1",
+                              "children": "{{item.name}}"
+                            },
+                            {
+                              "type": "StatusBadge",
+                              "status": "{{item.conclusion || item.status}}"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "run_details",
+      "name": "RunDetails",
+      "description": "Detailed view of a single workflow run",
+      "props": [
+        {
+          "name": "run",
+          "type": "object",
+          "required": false,
+          "description": "Selected workflow run"
+        },
+        {
+          "name": "jobs",
+          "type": "array",
+          "required": false,
+          "default": [],
+          "description": "Array of jobs for the run"
+        },
+        {
+          "name": "logs",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Log content"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "run-details",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Run Details",
+              "subtitle": "{{run.name}}"
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "StatusBadge",
+                      "status": "{{run.conclusion || run.status}}"
+                    },
+                    {
+                      "type": "Divider"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "subtitle2",
+                      "children": "Jobs"
+                    },
+                    {
+                      "type": "iterate",
+                      "items": "{{jobs}}",
+                      "render": {
+                        "type": "Flex",
+                        "alignItems": "center",
+                        "gap": 1,
+                        "children": [
+                          {
+                            "type": "StatusBadge",
+                            "status": "{{item.conclusion || item.status}}"
+                          },
+                          {
+                            "type": "Text",
+                            "children": "{{item.name}}"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{logs}}",
+                      "then": {
+                        "type": "Box",
+                        "children": [
+                          {
+                            "type": "Text",
+                            "variant": "subtitle2",
+                            "children": "Logs"
+                          },
+                          {
+                            "type": "Paper",
+                            "variant": "outlined",
+                            "sx": {
+                              "p": 2,
+                              "fontFamily": "monospace",
+                              "fontSize": "0.875rem",
+                              "maxHeight": 400,
+                              "overflow": "auto",
+                              "backgroundColor": "#1e1e1e",
+                              "color": "#d4d4d4"
+                            },
+                            "children": "{{logs}}"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "analysis_panel",
+      "name": "AnalysisPanel",
+      "description": "Statistics and analysis of workflow runs",
+      "props": [
+        {
+          "name": "stats",
+          "type": "object",
+          "required": false,
+          "default": {},
+          "description": "Statistics object"
+        },
+        {
+          "name": "timeRange",
+          "type": "string",
+          "required": false,
+          "default": "7d",
+          "description": "Time range for analysis"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "analysis-panel",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Run Analysis"
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Grid",
+                  "container": true,
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "md": 3,
+                      "children": [
+                        {
+                          "type": "StatCard",
+                          "label": "Total Runs",
+                          "value": "{{stats.total || 0}}",
+                          "icon": "PlayArrow",
+                          "color": "primary"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "md": 3,
+                      "children": [
+                        {
+                          "type": "StatCard",
+                          "label": "Success",
+                          "value": "{{stats.success || 0}}",
+                          "icon": "CheckCircle",
+                          "color": "success"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "md": 3,
+                      "children": [
+                        {
+                          "type": "StatCard",
+                          "label": "Failures",
+                          "value": "{{stats.failure || 0}}",
+                          "icon": "Cancel",
+                          "color": "error"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Grid",
+                      "item": true,
+                      "xs": 6,
+                      "md": 3,
+                      "children": [
+                        {
+                          "type": "StatCard",
+                          "label": "Success Rate",
+                          "value": "{{stats.success_rate || 0}}%",
+                          "icon": "TrendingUp",
+                          "color": "info"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "calculate": "analyze.calculateStats"
+      }
+    },
+    {
+      "id": "run_filters",
+      "name": "RunFilters",
+      "description": "Filter controls for workflow runs",
+      "props": [
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "default": "all",
+          "description": "Status filter value"
+        },
+        {
+          "name": "branch",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Branch filter value"
+        },
+        {
+          "name": "dateRange",
+          "type": "string",
+          "required": false,
+          "default": "7d",
+          "description": "Date range filter value"
+        },
+        {
+          "name": "onChange",
+          "type": "function",
+          "required": false,
+          "description": "Callback when filters change"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "direction": "row",
+          "spacing": 2,
+          "className": "run-filters",
+          "sx": { "mb": 2 },
+          "children": [
+            {
+              "type": "FormControl",
+              "size": "small",
+              "sx": { "minWidth": 120 },
+              "children": [
+                {
+                  "type": "InputLabel",
+                  "children": "Status"
+                },
+                {
+                  "type": "Select",
+                  "label": "Status",
+                  "name": "status",
+                  "value": "{{status}}",
+                  "onChange": "{{onChange}}",
+                  "options": [
+                    { "value": "all", "label": "All" },
+                    { "value": "success", "label": "Success" },
+                    { "value": "failure", "label": "Failure" },
+                    { "value": "pending", "label": "Pending" }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TextField",
+              "label": "Branch",
+              "name": "branch",
+              "size": "small",
+              "value": "{{branch}}",
+              "onChange": "{{onChange}}",
+              "placeholder": "main"
+            },
+            {
+              "type": "FormControl",
+              "size": "small",
+              "sx": { "minWidth": 140 },
+              "children": [
+                {
+                  "type": "InputLabel",
+                  "children": "Time Range"
+                },
+                {
+                  "type": "Select",
+                  "label": "Time Range",
+                  "name": "dateRange",
+                  "value": "{{dateRange}}",
+                  "onChange": "{{onChange}}",
+                  "options": [
+                    { "value": "1d", "label": "Last 24 hours" },
+                    { "value": "7d", "label": "Last 7 days" },
+                    { "value": "30d", "label": "Last 30 days" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "scripts": {
+        "onChange": "filter.applyFilters"
+      }
+    },
+    {
+      "id": "status_badge",
+      "name": "StatusBadge",
+      "description": "Status badge showing run conclusion with appropriate color and icon",
+      "props": [
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "description": "Run status (success, failure, pending, in_progress, cancelled, skipped)"
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "required": false,
+          "default": "small",
+          "description": "Badge size"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Chip",
+          "label": "{{status | statusLabel}}",
+          "color": "{{status | statusColor}}",
+          "size": "{{size}}",
+          "icon": "{{status | statusIcon}}"
+        }
+      },
+      "scripts": {
+        "statusLabel": "status.getStatusLabel",
+        "statusColor": "status.getStatusColor",
+        "statusIcon": "status.getStatusIcon"
+      }
+    }
+  ],
+  "exports": {
+    "components": [
+      "GitHubViewer",
+      "RunList",
+      "RunDetails",
+      "AnalysisPanel",
+      "RunFilters",
+      "StatusBadge"
+    ]
+  }
+}

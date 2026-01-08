@@ -1,0 +1,12 @@
+{
+  "packageId": "form_builder",
+  "name": "Form Builder",
+  "version": "0.1.0",
+  "description": "Package form_builder",
+  "author": "MetaBuilder Team",
+  "category": "ui",
+  "exports": {
+    "components": []
+  },
+  "dependencies": []
+}

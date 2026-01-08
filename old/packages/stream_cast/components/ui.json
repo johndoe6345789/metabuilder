@@ -1,0 +1,557 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "stream_cast",
+  "description": "Stream Cast components including control room, scene manager, and schedule views",
+  "components": [
+    {
+      "id": "control_room",
+      "name": "ControlRoom",
+      "description": "Main streaming control room interface with stats, scenes, and moderation tools",
+      "props": [
+        {
+          "name": "viewers",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Current viewer count"
+        },
+        {
+          "name": "scenesLoaded",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Number of scenes loaded"
+        },
+        {
+          "name": "moderators",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Number of moderators on duty"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Stack",
+          "direction": "column",
+          "gap": 3,
+          "children": [
+            {
+              "type": "Card",
+              "className": "stream-hero",
+              "children": [
+                {
+                  "type": "Box",
+                  "sx": { "p": 3 },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h4",
+                      "fontWeight": "bold",
+                      "children": "Stream Cast"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "body2",
+                      "color": "secondary",
+                      "children": "Run live shows with scene control, schedule cues, and audience telemetry."
+                    },
+                    {
+                      "type": "Flex",
+                      "gap": 1,
+                      "sx": { "mt": 2 },
+                      "children": [
+                        {
+                          "type": "Chip",
+                          "label": "Live",
+                          "color": "success",
+                          "size": "small"
+                        },
+                        {
+                          "type": "Chip",
+                          "label": "Scheduled",
+                          "color": "primary",
+                          "size": "small"
+                        },
+                        {
+                          "type": "Chip",
+                          "label": "Multicast",
+                          "variant": "outlined",
+                          "size": "small"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "container": true,
+              "spacing": 2,
+              "children": [
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 4,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "children": [
+                        {
+                          "type": "Box",
+                          "sx": { "p": 2 },
+                          "children": [
+                            {
+                              "type": "Text",
+                              "variant": "caption",
+                              "color": "secondary",
+                              "children": "Viewers now"
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "h5",
+                              "fontWeight": "bold",
+                              "children": "{{viewers}}"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 4,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "children": [
+                        {
+                          "type": "Box",
+                          "sx": { "p": 2 },
+                          "children": [
+                            {
+                              "type": "Text",
+                              "variant": "caption",
+                              "color": "secondary",
+                              "children": "Scenes loaded"
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "h5",
+                              "fontWeight": "bold",
+                              "children": "{{scenesLoaded}}"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 4,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "children": [
+                        {
+                          "type": "Box",
+                          "sx": { "p": 2 },
+                          "children": [
+                            {
+                              "type": "Text",
+                              "variant": "caption",
+                              "color": "secondary",
+                              "children": "Moderators on duty"
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "h5",
+                              "fontWeight": "bold",
+                              "children": "{{moderators}}"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "scene_manager",
+      "name": "SceneManager",
+      "description": "Scene switcher interface for managing stream scenes",
+      "props": [
+        {
+          "name": "scenes",
+          "type": "array",
+          "required": false,
+          "default": [],
+          "description": "List of available scenes"
+        },
+        {
+          "name": "activeSceneId",
+          "type": "string",
+          "required": false,
+          "description": "Currently active scene ID"
+        },
+        {
+          "name": "onSceneSwitch",
+          "type": "function",
+          "required": false,
+          "description": "Callback when scene is switched"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h6",
+                  "fontWeight": "bold",
+                  "children": "Scene switcher"
+                },
+                {
+                  "type": "Flex",
+                  "gap": 1,
+                  "flexWrap": "wrap",
+                  "sx": { "mt": 2 },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "variant": "outlined",
+                      "children": "Intro"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "children": "Main"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "outlined",
+                      "children": "Q&A"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "stream_schedule",
+      "name": "StreamSchedule",
+      "description": "Run of show schedule display",
+      "props": [
+        {
+          "name": "segments",
+          "type": "array",
+          "required": false,
+          "default": [],
+          "description": "List of scheduled segments"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h6",
+                  "fontWeight": "bold",
+                  "children": "Run of show"
+                },
+                {
+                  "type": "Stack",
+                  "direction": "column",
+                  "gap": 2,
+                  "sx": { "mt": 2 },
+                  "children": [
+                    {
+                      "type": "Card",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "Box",
+                          "sx": { "p": 2 },
+                          "children": [
+                            {
+                              "type": "Text",
+                              "variant": "subtitle1",
+                              "fontWeight": "bold",
+                              "children": "Opening roll"
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "caption",
+                              "color": "secondary",
+                              "children": "00:00 · Countdown + intro scene"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Card",
+                      "variant": "outlined",
+                      "children": [
+                        {
+                          "type": "Box",
+                          "sx": { "p": 2 },
+                          "children": [
+                            {
+                              "type": "Text",
+                              "variant": "subtitle1",
+                              "fontWeight": "bold",
+                              "children": "Guest spotlight"
+                            },
+                            {
+                              "type": "Text",
+                              "variant": "caption",
+                              "color": "secondary",
+                              "children": "00:10 · Dual cam + highlight reel"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "stream_player",
+      "name": "StreamPlayer",
+      "description": "Video player component for live streams",
+      "props": [
+        {
+          "name": "streamUrl",
+          "type": "string",
+          "required": true,
+          "description": "URL of the stream"
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "required": false,
+          "default": "OFFLINE",
+          "description": "Player state: PLAYING, PAUSED, BUFFERING, OFFLINE"
+        },
+        {
+          "name": "viewers",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Current viewer count"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "className": "stream-player",
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 2, "backgroundColor": "#1a1a1a", "borderRadius": 1 },
+              "children": [
+                {
+                  "type": "Box",
+                  "sx": { "aspectRatio": "16/9", "backgroundColor": "#000", "display": "flex", "alignItems": "center", "justifyContent": "center" },
+                  "children": [
+                    {
+                      "type": "Icon",
+                      "name": "PlayCircle",
+                      "size": 64,
+                      "color": "white"
+                    }
+                  ]
+                },
+                {
+                  "type": "Flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "sx": { "mt": 1, "p": 1 },
+                  "children": [
+                    {
+                      "type": "Chip",
+                      "label": "{{state}}",
+                      "size": "small",
+                      "color": "{{state === 'PLAYING' ? 'success' : 'default'}}"
+                    },
+                    {
+                      "type": "Text",
+                      "variant": "caption",
+                      "color": "white",
+                      "children": "{{viewers}} viewers"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "audience_pulse",
+      "name": "AudiencePulse",
+      "description": "Real-time audience engagement indicator",
+      "props": [
+        {
+          "name": "chatVelocity",
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Chat message velocity (0-100)"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "required": false,
+          "description": "Status message to display"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h6",
+                  "fontWeight": "bold",
+                  "children": "Audience pulse"
+                },
+                {
+                  "type": "Text",
+                  "variant": "caption",
+                  "color": "secondary",
+                  "children": "{{message}}"
+                },
+                {
+                  "type": "LinearProgress",
+                  "variant": "determinate",
+                  "value": "{{chatVelocity}}",
+                  "sx": { "mt": 2 }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "moderation_controls",
+      "name": "ModerationControls",
+      "description": "Quick moderation actions for live streams",
+      "props": [
+        {
+          "name": "slowModeEnabled",
+          "type": "boolean",
+          "required": false,
+          "default": false
+        },
+        {
+          "name": "onSlowMode",
+          "type": "function",
+          "required": false
+        },
+        {
+          "name": "onPinMessage",
+          "type": "function",
+          "required": false
+        },
+        {
+          "name": "onHighlightClip",
+          "type": "function",
+          "required": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 3 },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h6",
+                  "fontWeight": "bold",
+                  "children": "Moderation controls"
+                },
+                {
+                  "type": "Text",
+                  "variant": "caption",
+                  "color": "secondary",
+                  "children": "Quick actions for crowd spikes and highlight moments."
+                },
+                {
+                  "type": "Flex",
+                  "gap": 1,
+                  "flexWrap": "wrap",
+                  "sx": { "mt": 2 },
+                  "children": [
+                    {
+                      "type": "Button",
+                      "variant": "outlined",
+                      "children": "Enable slow mode"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "outlined",
+                      "children": "Pin message"
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "children": "Highlight clip"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

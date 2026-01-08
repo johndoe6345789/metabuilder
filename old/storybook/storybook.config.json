@@ -1,0 +1,74 @@
+{
+  "$schema": "./storybook-config.schema.json",
+  "description": "Auto-discovery configuration for the MetaBuilder package Storybook",
+  "packagesPath": "../packages",
+  "packagesIndex": "../packages/index.json",
+  
+  "discovery": {
+    "enabled": true,
+    "scanManifests": true,
+    "includedCategories": ["ui", "admin", "gaming", "social", "editors", "examples"],
+    "excludedPackages": ["shared", "testing"],
+    "minLevel": 0,
+    "maxLevel": 6
+  },
+
+  "rendering": {
+    "defaultContext": {
+      "user": {
+        "id": "storybook-user",
+        "username": "demo_user",
+        "level": 4,
+        "email": "demo@example.com"
+      },
+      "nerdMode": false,
+      "theme": "light"
+    },
+    "contextVariants": [
+      {
+        "name": "Guest",
+        "context": { "user": { "username": "guest", "level": 1 } }
+      },
+      {
+        "name": "Admin",
+        "context": { "user": { "username": "admin", "level": 4 }, "nerdMode": false }
+      },
+      {
+        "name": "Admin (Nerd Mode)",
+        "context": { "user": { "username": "admin", "level": 4 }, "nerdMode": true }
+      },
+      {
+        "name": "Supergod",
+        "context": { "user": { "username": "supergod", "level": 6 } }
+      }
+    ]
+  },
+
+  "scripts": {
+    "renderFunctions": ["render", "main", "layout", "login_form", "register_form", "forgot_password", "form", "page", "view"],
+    "ignoredScripts": ["test", "types", "utils", "init", "validate", "actions", "formatting", "format_time", "format", "send_message", "handle_command", "user_join", "user_leave", "helper", "db"]
+  },
+
+  "manualOverrides": {
+    "dashboard": {
+      "featured": true,
+      "renders": {
+        "stats.card": { "description": "Single stat card with trend indicator" },
+        "stats.grid": { "description": "Grid of stat cards" },
+        "layout.standard": { "description": "Standard dashboard layout" }
+      }
+    },
+    "ui_level4": {
+      "featured": true,
+      "renders": {
+        "layout.render": { "description": "Admin panel main layout" }
+      }
+    },
+    "user_manager": {
+      "featured": true,
+      "renders": {
+        "render_users": { "description": "User management table" }
+      }
+    }
+  }
+}

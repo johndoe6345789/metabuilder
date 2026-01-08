@@ -1,0 +1,727 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "nerd_mode_ide",
+  "description": "Full-featured in-browser IDE components",
+  "components": [
+    {
+      "id": "nerd_mode_ide",
+      "name": "NerdModeIDE",
+      "description": "Main IDE container with file explorer, editor, and panels",
+      "props": [
+        {
+          "name": "tenantId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "initialPath",
+          "type": "string",
+          "required": false,
+          "description": "Initial file/folder path to open"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "nerd-mode-ide",
+          "sx": { "height": "100vh", "display": "flex", "flexDirection": "column", "bgcolor": "background.default" },
+          "children": [
+            {
+              "type": "ComponentRef",
+              "ref": "nerd_mode_ide_header",
+              "props": {
+                "currentFile": "{{currentFile}}",
+                "onSave": "{{handleSave}}",
+                "onRun": "{{handleRun}}"
+              }
+            },
+            {
+              "type": "Box",
+              "sx": { "flex": 1, "display": "flex", "overflow": "hidden" },
+              "children": [
+                {
+                  "type": "ComponentRef",
+                  "ref": "nerd_mode_file_explorer",
+                  "props": {
+                    "files": "{{fileTree}}",
+                    "selectedPath": "{{currentFile?.path}}",
+                    "onSelect": "{{handleFileSelect}}",
+                    "onCreateFile": "{{handleCreateFile}}",
+                    "onCreateFolder": "{{handleCreateFolder}}",
+                    "onDelete": "{{handleDelete}}",
+                    "onRename": "{{handleRename}}"
+                  }
+                },
+                {
+                  "type": "Box",
+                  "sx": { "flex": 1, "display": "flex", "flexDirection": "column", "overflow": "hidden" },
+                  "children": [
+                    {
+                      "type": "ComponentRef",
+                      "ref": "nerd_mode_editor_panel",
+                      "props": {
+                        "file": "{{currentFile}}",
+                        "onChange": "{{handleContentChange}}",
+                        "openTabs": "{{openTabs}}",
+                        "onTabSelect": "{{handleTabSelect}}",
+                        "onTabClose": "{{handleTabClose}}"
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{showBottomPanel}}",
+                      "then": {
+                        "type": "Box",
+                        "sx": { "height": "{{bottomPanelHeight}}", "borderTop": 1, "borderColor": "divider" },
+                        "children": [
+                          {
+                            "type": "Tabs",
+                            "value": "{{activeBottomTab}}",
+                            "onChange": "{{handleBottomTabChange}}",
+                            "sx": { "minHeight": 36 },
+                            "children": [
+                              {
+                                "type": "Tab",
+                                "label": "Console",
+                                "value": "console",
+                                "sx": { "minHeight": 36, "py": 0 }
+                              },
+                              {
+                                "type": "Tab",
+                                "label": "Tests",
+                                "value": "tests",
+                                "sx": { "minHeight": 36, "py": 0 }
+                              },
+                              {
+                                "type": "Tab",
+                                "label": "Git",
+                                "value": "git",
+                                "sx": { "minHeight": 36, "py": 0 }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "Box",
+                            "sx": { "flex": 1, "overflow": "auto" },
+                            "children": [
+                              {
+                                "type": "conditional",
+                                "condition": "{{activeBottomTab === 'console'}}",
+                                "then": {
+                                  "type": "ComponentRef",
+                                  "ref": "nerd_mode_console_panel",
+                                  "props": {
+                                    "logs": "{{consoleLogs}}",
+                                    "onClear": "{{handleClearConsole}}",
+                                    "onCommand": "{{handleConsoleCommand}}"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "conditional",
+                                "condition": "{{activeBottomTab === 'tests'}}",
+                                "then": {
+                                  "type": "ComponentRef",
+                                  "ref": "nerd_mode_tests_panel",
+                                  "props": {
+                                    "testResults": "{{testResults}}",
+                                    "onRunTests": "{{handleRunTests}}"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "conditional",
+                                "condition": "{{activeBottomTab === 'git'}}",
+                                "then": {
+                                  "type": "ComponentRef",
+                                  "ref": "nerd_mode_git_panel",
+                                  "props": {
+                                    "changes": "{{gitChanges}}",
+                                    "branch": "{{currentBranch}}",
+                                    "onCommit": "{{handleCommit}}",
+                                    "onPush": "{{handlePush}}",
+                                    "onPull": "{{handlePull}}"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nerd_mode_ide_header",
+      "name": "NerdModeIDEHeader",
+      "description": "IDE header with file info and actions",
+      "props": [
+        {
+          "name": "currentFile",
+          "type": "object",
+          "required": false
+        },
+        {
+          "name": "onSave",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onRun",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Paper",
+          "elevation": 0,
+          "sx": { "px": 2, "py": 1, "borderBottom": 1, "borderColor": "divider", "display": "flex", "alignItems": "center", "gap": 2 },
+          "children": [
+            {
+              "type": "Icon",
+              "name": "Code",
+              "color": "primary"
+            },
+            {
+              "type": "Typography",
+              "variant": "subtitle1",
+              "fontWeight": "bold",
+              "children": "Nerd Mode IDE"
+            },
+            {
+              "type": "Box",
+              "sx": { "flex": 1 }
+            },
+            {
+              "type": "conditional",
+              "condition": "{{currentFile}}",
+              "then": {
+                "type": "Chip",
+                "label": "{{currentFile.path}}",
+                "size": "small",
+                "variant": "outlined"
+              }
+            },
+            {
+              "type": "ButtonGroup",
+              "size": "small",
+              "children": [
+                {
+                  "type": "Button",
+                  "startIcon": {
+                    "type": "Icon",
+                    "name": "Save"
+                  },
+                  "onClick": "{{onSave}}",
+                  "disabled": "{{!currentFile}}",
+                  "children": "Save"
+                },
+                {
+                  "type": "Button",
+                  "startIcon": {
+                    "type": "Icon",
+                    "name": "PlayArrow"
+                  },
+                  "onClick": "{{onRun}}",
+                  "disabled": "{{!currentFile}}",
+                  "children": "Run"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nerd_mode_file_explorer",
+      "name": "NerdModeFileExplorer",
+      "description": "File tree explorer with CRUD operations",
+      "props": [
+        {
+          "name": "files",
+          "type": "array",
+          "required": true
+        },
+        {
+          "name": "selectedPath",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "onSelect",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onCreateFile",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onCreateFolder",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onDelete",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onRename",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Paper",
+          "variant": "outlined",
+          "sx": { "width": 240, "height": "100%", "display": "flex", "flexDirection": "column", "borderRadius": 0 },
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 1, "borderBottom": 1, "borderColor": "divider", "display": "flex", "alignItems": "center", "justifyContent": "space-between" },
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "caption",
+                  "fontWeight": "bold",
+                  "color": "textSecondary",
+                  "children": "EXPLORER"
+                },
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "spacing": 0.5,
+                  "children": [
+                    {
+                      "type": "IconButton",
+                      "size": "small",
+                      "onClick": "{{onCreateFile}}",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "NoteAdd",
+                          "fontSize": "small"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "IconButton",
+                      "size": "small",
+                      "onClick": "{{onCreateFolder}}",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "CreateNewFolder",
+                          "fontSize": "small"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "flex": 1, "overflow": "auto", "p": 1 },
+              "children": [
+                {
+                  "type": "TreeView",
+                  "defaultCollapseIcon": {
+                    "type": "Icon",
+                    "name": "ExpandMore"
+                  },
+                  "defaultExpandIcon": {
+                    "type": "Icon",
+                    "name": "ChevronRight"
+                  },
+                  "selected": "{{selectedPath}}",
+                  "children": [
+                    {
+                      "type": "each",
+                      "items": "{{files}}",
+                      "as": "node",
+                      "render": {
+                        "type": "TreeItem",
+                        "nodeId": "{{node.path}}",
+                        "label": "{{node.name}}",
+                        "onClick": "{{() => onSelect(node)}}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nerd_mode_editor_panel",
+      "name": "NerdModeEditorPanel",
+      "description": "Code editor with tabs",
+      "props": [
+        {
+          "name": "file",
+          "type": "object",
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "openTabs",
+          "type": "array",
+          "required": true
+        },
+        {
+          "name": "onTabSelect",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onTabClose",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "sx": { "flex": 1, "display": "flex", "flexDirection": "column", "overflow": "hidden" },
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "borderBottom": 1, "borderColor": "divider", "display": "flex", "overflow": "auto" },
+              "children": [
+                {
+                  "type": "each",
+                  "items": "{{openTabs}}",
+                  "as": "tab",
+                  "render": {
+                    "type": "Chip",
+                    "label": "{{tab.name}}",
+                    "onClick": "{{() => onTabSelect(tab)}}",
+                    "onDelete": "{{() => onTabClose(tab)}}",
+                    "variant": "{{file?.path === tab.path ? 'filled' : 'outlined'}}",
+                    "size": "small",
+                    "sx": { "borderRadius": 0, "m": 0.5 }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "{{file}}",
+              "then": {
+                "type": "Box",
+                "sx": { "flex": 1, "overflow": "hidden" },
+                "children": [
+                  {
+                    "type": "ComponentRef",
+                    "ref": "code_editor.CodeEditor",
+                    "props": {
+                      "value": "{{file.content}}",
+                      "language": "{{file.language}}",
+                      "onChange": "{{onChange}}"
+                    }
+                  }
+                ]
+              },
+              "else": {
+                "type": "Box",
+                "sx": { "flex": 1, "display": "flex", "alignItems": "center", "justifyContent": "center" },
+                "children": [
+                  {
+                    "type": "Typography",
+                    "color": "textSecondary",
+                    "children": "Select a file to edit"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nerd_mode_console_panel",
+      "name": "NerdModeConsolePanel",
+      "description": "Console output panel",
+      "props": [
+        {
+          "name": "logs",
+          "type": "array",
+          "required": true
+        },
+        {
+          "name": "onClear",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onCommand",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "sx": { "height": "100%", "display": "flex", "flexDirection": "column", "bgcolor": "grey.900" },
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "flex": 1, "overflow": "auto", "p": 1, "fontFamily": "monospace", "fontSize": 12 },
+              "children": [
+                {
+                  "type": "each",
+                  "items": "{{logs}}",
+                  "as": "log",
+                  "render": {
+                    "type": "Typography",
+                    "variant": "body2",
+                    "sx": { "fontFamily": "monospace", "color": "{{log.type === 'error' ? 'error.main' : log.type === 'warn' ? 'warning.main' : 'grey.300'}}" },
+                    "children": "{{log.message}}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "TextField",
+              "placeholder": "> Enter command..."
+              "size": "small",
+              "fullWidth": true,
+              "onKeyPress": "{{handleKeyPress}}",
+              "sx": { "bgcolor": "grey.800", "input": { "fontFamily": "monospace", "color": "grey.100" } }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nerd_mode_tests_panel",
+      "name": "NerdModeTestsPanel",
+      "description": "Test runner panel",
+      "props": [
+        {
+          "name": "testResults",
+          "type": "array",
+          "required": true
+        },
+        {
+          "name": "onRunTests",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "sx": { "height": "100%", "display": "flex", "flexDirection": "column" },
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 1, "borderBottom": 1, "borderColor": "divider", "display": "flex", "alignItems": "center", "gap": 1 },
+              "children": [
+                {
+                  "type": "Button",
+                  "size": "small",
+                  "startIcon": {
+                    "type": "Icon",
+                    "name": "PlayArrow"
+                  },
+                  "onClick": "{{onRunTests}}",
+                  "children": "Run All Tests"
+                }
+              ]
+            },
+            {
+              "type": "List",
+              "dense": true,
+              "sx": { "flex": 1, "overflow": "auto" },
+              "children": [
+                {
+                  "type": "each",
+                  "items": "{{testResults}}",
+                  "as": "test",
+                  "render": {
+                    "type": "ListItem",
+                    "children": [
+                      {
+                        "type": "ListItemIcon",
+                        "children": [
+                          {
+                            "type": "Icon",
+                            "name": "{{test.passed ? 'CheckCircle' : 'Cancel'}}",
+                            "color": "{{test.passed ? 'success' : 'error'}}",
+                            "fontSize": "small"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "ListItemText",
+                        "primary": "{{test.name}}",
+                        "secondary": "{{test.duration}}ms"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nerd_mode_git_panel",
+      "name": "NerdModeGitPanel",
+      "description": "Git integration panel",
+      "props": [
+        {
+          "name": "changes",
+          "type": "array",
+          "required": true
+        },
+        {
+          "name": "branch",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "onCommit",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onPush",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onPull",
+          "type": "function",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "sx": { "height": "100%", "display": "flex", "flexDirection": "column" },
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 1, "borderBottom": 1, "borderColor": "divider", "display": "flex", "alignItems": "center", "gap": 1 },
+              "children": [
+                {
+                  "type": "Chip",
+                  "icon": {
+                    "type": "Icon",
+                    "name": "AccountTree"
+                  },
+                  "label": "{{branch}}",
+                  "size": "small",
+                  "variant": "outlined"
+                },
+                {
+                  "type": "Box",
+                  "sx": { "flex": 1 }
+                },
+                {
+                  "type": "ButtonGroup",
+                  "size": "small",
+                  "children": [
+                    {
+                      "type": "Button",
+                      "onClick": "{{onPull}}",
+                      "children": "Pull"
+                    },
+                    {
+                      "type": "Button",
+                      "onClick": "{{onPush}}",
+                      "children": "Push"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "List",
+              "dense": true,
+              "sx": { "flex": 1, "overflow": "auto" },
+              "children": [
+                {
+                  "type": "each",
+                  "items": "{{changes}}",
+                  "as": "change",
+                  "render": {
+                    "type": "ListItem",
+                    "children": [
+                      {
+                        "type": "ListItemIcon",
+                        "children": [
+                          {
+                            "type": "Icon",
+                            "name": "{{change.type === 'added' ? 'Add' : change.type === 'deleted' ? 'Remove' : 'Edit'}}",
+                            "color": "{{change.type === 'added' ? 'success' : change.type === 'deleted' ? 'error' : 'warning'}}",
+                            "fontSize": "small"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "ListItemText",
+                        "primary": "{{change.path}}"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "sx": { "p": 1, "borderTop": 1, "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "TextField",
+                  "placeholder": "Commit message...",
+                  "size": "small",
+                  "fullWidth": true,
+                  "value": "{{commitMessage}}",
+                  "onChange": "{{handleCommitMessageChange}}",
+                  "sx": { "mb": 1 }
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "fullWidth": true,
+                  "onClick": "{{onCommit}}",
+                  "disabled": "{{!commitMessage || changes.length === 0}}",
+                  "children": "Commit"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+// Code preview / diff view atom
+
+.code-preview {
+  padding: var(--spacing-sm);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  overflow: hidden;
+}
+
+.code-line {
+  padding: 2px 0;
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.code-line-num {
+  color: var(--color-text-secondary);
+  opacity: 0.6;
+  font-size: 0.7rem;
+  min-width: 24px;
+}
+
+.code-line-content {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.code-line-content--added {
+  color: var(--color-success);
+}
+
+.code-line-content--removed {
+  color: var(--color-error);
+}

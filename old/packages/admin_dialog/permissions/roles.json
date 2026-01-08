@@ -1,0 +1,44 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "admin_dialog",
+  "description": "Admin dialog access permissions",
+  "permissions": [
+    {
+      "id": "admin_dialog.confirm",
+      "name": "Use Confirm Dialogs",
+      "description": "Access confirmation dialogs",
+      "resource": "admin_dialog",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "admin_dialog.delete",
+      "name": "Use Delete Dialogs",
+      "description": "Access delete confirmation dialogs",
+      "resource": "admin_dialog",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "admin_dialog.action",
+      "name": "Use Action Dialogs",
+      "description": "Access multi-action dialogs",
+      "resource": "admin_dialog",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "admin_dialog",
+      "name": "Admin Dialog",
+      "type": "component",
+      "description": "Administrative dialog components",
+      "actions": ["execute"]
+    }
+  ]
+}

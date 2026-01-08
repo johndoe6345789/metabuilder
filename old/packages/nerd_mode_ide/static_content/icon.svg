@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Main IDE window -->
+  <rect x="4" y="8" width="56" height="48" rx="3" fill="none"/>
+  <!-- Title bar -->
+  <path d="M4 16 L60 16" stroke-width="1.5"/>
+  <circle cx="10" cy="12" r="2" fill="currentColor"/>
+  <circle cx="17" cy="12" r="2" fill="currentColor"/>
+  <circle cx="24" cy="12" r="2" fill="currentColor"/>
+  <!-- File tree sidebar -->
+  <path d="M18 16 L18 56" stroke-width="1"/>
+  <path d="M8 24 L14 24 M10 30 L14 30 M10 36 L14 36 M8 42 L14 42 M10 48 L14 48" stroke-width="1.5"/>
+  <!-- Code editor area -->
+  <path d="M22 24 L42 24" stroke-width="1.5"/>
+  <path d="M22 30 L52 30" stroke-width="1.5"/>
+  <path d="M26 36 L48 36" stroke-width="1.5"/>
+  <path d="M26 42 L44 42" stroke-width="1.5"/>
+  <path d="M22 48 L38 48" stroke-width="1.5"/>
+  <!-- Bottom panel divider -->
+  <path d="M18 52 L60 52" stroke-width="1"/>
+  <!-- Glasses emoji (nerd) -->
+  <circle cx="52" cy="12" r="3" fill="none" stroke-width="1"/>
+  <circle cx="58" cy="12" r="3" fill="none" stroke-width="1"/>
+  <path d="M55 12 L55 12" stroke-width="1"/>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Level 6 badge - SuperGod level -->
+  <circle cx="32" cy="32" r="18" fill="none" stroke-width="2.5"/>
+  <text x="32" y="40" font-size="24" font-weight="bold" fill="currentColor" text-anchor="middle" font-family="Arial, sans-serif">6</text>
+  <path d="M32 10 L32 16 M18 14 L23 19 M14 28 L20 28 M18 42 L23 37 M46 14 L41 19 M50 28 L44 28 M46 42 L41 37 M32 48 L32 42" stroke-width="2" opacity="0.8"/>
+</svg>

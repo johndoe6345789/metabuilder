@@ -1,0 +1,176 @@
+# Core Packages - Auto-installed on system bootstrap
+# These packages provide essential functionality for MetaBuilder
+version: "1.0"
+description: "Essential packages that are automatically installed during system initialization"
+
+packages:
+  # Package Management
+  - packageId: package_manager
+    version: "1.0.0"
+    enabled: true
+    priority: 1
+    required: true
+    description: "Core package management interface - required for installing/managing other packages"
+
+  # Core UI Components
+  - packageId: ui_header
+    version: "1.0.0"
+    enabled: true
+    priority: 2
+    required: true
+    description: "Main application header navigation"
+
+  - packageId: ui_footer
+    version: "1.0.0"
+    enabled: true
+    priority: 2
+    required: true
+    description: "Application footer"
+
+  - packageId: ui_home
+    version: "1.0.0"
+    enabled: true
+    priority: 2
+    required: true
+    description: "Home/landing page with hero, features, about, and contact sections"
+
+  - packageId: ui_auth
+    version: "1.0.0"
+    enabled: true
+    priority: 2
+    required: true
+    description: "Authentication UI components"
+
+  - packageId: ui_login
+    version: "1.0.0"
+    enabled: true
+    priority: 2
+    required: true
+    description: "Login page and forms"
+
+  # Core Functionality
+  - packageId: dashboard
+    version: "1.0.0"
+    enabled: true
+    priority: 3
+    required: true
+    description: "Main dashboard interface"
+
+  - packageId: user_manager
+    version: "1.0.0"
+    enabled: true
+    priority: 4
+    required: true
+    description: "User management for admin/god levels"
+
+  - packageId: role_editor
+    version: "1.0.0"
+    enabled: true
+    priority: 4
+    required: false
+    description: "Role and permission management"
+
+  # Admin Tools
+  - packageId: admin_dialog
+    version: "1.0.0"
+    enabled: true
+    priority: 5
+    required: false
+    description: "Admin dialog utilities"
+
+  - packageId: database_manager
+    version: "1.0.0"
+    enabled: true
+    priority: 6
+    required: false
+    description: "Database management interface (god/supergod level)"
+
+  - packageId: schema_editor
+    version: "1.0.0"
+    enabled: true
+    priority: 6
+    required: false
+    description: "Database schema editing tools"
+
+# Optional but recommended packages
+recommended:
+  - packageId: notification_center
+    version: "1.0.0"
+    enabled: false
+    description: "User notifications and alerts"
+
+  - packageId: audit_log
+    version: "1.0.0"
+    enabled: false
+    description: "System audit logging"
+
+  - packageId: data_table
+    version: "1.0.0"
+    enabled: false
+    description: "Reusable data table components"
+
+  - packageId: form_builder
+    version: "1.0.0"
+    enabled: false
+    description: "Dynamic form generation"
+
+  - packageId: quick_guide
+    version: "1.0.0"
+    enabled: false
+    description: "User onboarding and help system"
+
+# Development tools (only install in dev environments)
+development:
+  - packageId: testing
+    version: "2.0.0"
+    enabled: false
+    description: "JSON-based testing framework"
+
+  - packageId: package_validator
+    version: "1.0.0"
+    enabled: false
+    description: "Package validation tools"
+
+  - packageId: component_editor
+    version: "1.0.0"
+    enabled: false
+    description: "Visual component editor"
+
+  - packageId: theme_editor
+    version: "1.0.0"
+    enabled: false
+    description: "Theme customization tools"
+
+  - packageId: code_editor
+    version: "1.0.0"
+    enabled: false
+    description: "Integrated code editing"
+
+bootstrap_order:
+  description: "Packages are installed in priority order (lowest first)"
+  note: "Required packages must be successfully installed before optional packages"
+  phases:
+    - phase: 1
+      name: "Core System"
+      packages: ["package_manager"]
+
+    - phase: 2
+      name: "Base UI"
+      packages: ["ui_header", "ui_footer", "ui_home", "ui_auth", "ui_login"]
+
+    - phase: 3
+      name: "Essential Features"
+      packages: ["dashboard"]
+
+    - phase: 4
+      name: "Administration"
+      packages: ["user_manager", "role_editor"]
+
+    - phase: 5
+      name: "Admin Tools"
+      packages: ["admin_dialog", "database_manager", "schema_editor"]
+
+    - phase: 6
+      name: "Recommended Packages"
+      install: recommended
+      continue_on_error: true

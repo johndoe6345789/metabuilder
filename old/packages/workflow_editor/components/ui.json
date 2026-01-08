@@ -1,0 +1,290 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "workflow_editor",
+  "description": "Workflow editor and execution monitoring components",
+  "components": [
+    {
+      "id": "workflow_editor",
+      "name": "WorkflowEditor",
+      "description": "Visual workflow editor with drag-and-drop node canvas",
+      "props": [
+        {
+          "name": "workflowId",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "initialWorkflow",
+          "type": "object",
+          "required": false
+        }
+      ],
+      "state": [
+        {
+          "name": "workflowName",
+          "type": "string",
+          "default": "Untitled Workflow"
+        },
+        {
+          "name": "nodes",
+          "type": "array",
+          "default": []
+        },
+        {
+          "name": "edges",
+          "type": "array",
+          "default": []
+        },
+        {
+          "name": "selectedNode",
+          "type": "string",
+          "default": null
+        },
+        {
+          "name": "isRunning",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "handlers": {
+        "save": "editor.saveWorkflow",
+        "run": "run.executeWorkflow",
+        "addNode": "editor.addNode",
+        "deleteNode": "editor.deleteNode",
+        "connect": "editor.connectNodes"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "workflow-editor-container",
+          "children": [
+            {
+              "type": "Toolbar",
+              "variant": "dense",
+              "children": [
+                {
+                  "type": "TextField",
+                  "size": "small",
+                  "label": "Workflow Name",
+                  "value": "{{workflowName}}",
+                  "onChange": "updateName"
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "color": "primary",
+                  "size": "small",
+                  "disabled": "{{isRunning}}",
+                  "onClick": "run",
+                  "children": "{{isRunning ? 'Running...' : 'Run'}}"
+                },
+                {
+                  "type": "Button",
+                  "variant": "outlined",
+                  "size": "small",
+                  "onClick": "save",
+                  "children": "Save"
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "workflow-editor-canvas",
+              "sx": {
+                "height": "500px",
+                "border": "1px solid",
+                "borderColor": "divider",
+                "position": "relative"
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "caption",
+                  "color": "secondary",
+                  "className": "p-4",
+                  "children": "Drag nodes from sidebar to create workflow"
+                }
+              ]
+            },
+            {
+              "type": "Stack",
+              "className": "workflow-editor-sidebar",
+              "spacing": 1,
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h6",
+                  "children": "Workflow Nodes"
+                },
+                {
+                  "type": "Button",
+                  "variant": "outlined",
+                  "size": "small",
+                  "onClick": "addNode",
+                  "children": "Add Step"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "workflow_run_card",
+      "name": "WorkflowRunCard",
+      "description": "Card showing workflow execution status",
+      "props": [
+        {
+          "name": "runId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "workflowName",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "enum": ["pending", "running", "success", "failed", "cancelled"]
+        },
+        {
+          "name": "progress",
+          "type": "number",
+          "default": 0
+        },
+        {
+          "name": "startTime",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "handlers": {
+        "cancel": "run.cancelWorkflow",
+        "retry": "run.retryWorkflow"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "workflow-run-card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "{{workflowName}}",
+              "subtitle": "Run ID: {{runId}}"
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Chip",
+                  "size": "small",
+                  "color": "{{status === 'success' ? 'success' : status === 'failed' ? 'error' : status === 'running' ? 'primary' : 'default'}}",
+                  "label": "{{status.toUpperCase()}}"
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{status === 'running'}}",
+                  "then": {
+                    "type": "LinearProgress",
+                    "value": "{{progress}}",
+                    "variant": "determinate"
+                  }
+                },
+                {
+                  "type": "Text",
+                  "variant": "caption",
+                  "color": "secondary",
+                  "children": "Started: {{startTime}}"
+                }
+              ]
+            },
+            {
+              "type": "CardActions",
+              "children": [
+                {
+                  "type": "conditional",
+                  "condition": "{{status === 'running'}}",
+                  "then": {
+                    "type": "Button",
+                    "size": "small",
+                    "color": "error",
+                    "onClick": "cancel",
+                    "children": "Cancel"
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{status === 'failed'}}",
+                  "then": {
+                    "type": "Button",
+                    "size": "small",
+                    "onClick": "retry",
+                    "children": "Retry"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "workflow_run_status",
+      "name": "WorkflowRunStatus",
+      "description": "Detailed workflow run status with step breakdown",
+      "props": [
+        {
+          "name": "steps",
+          "type": "array",
+          "required": true
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "List",
+          "className": "workflow-steps",
+          "children": {
+            "type": "loop",
+            "items": "{{steps}}",
+            "iterator": "step",
+            "key": "{{step.id}}",
+            "template": {
+              "type": "Box",
+              "className": "flex items-center gap-2 p-2",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "{{step.status === 'success' ? 'CheckCircle' : step.status === 'failed' ? 'XCircle' : step.status === 'running' ? 'Loader' : 'Circle'}}",
+                  "size": 20,
+                  "color": "{{step.status === 'success' ? 'success' : step.status === 'failed' ? 'error' : 'default'}}"
+                },
+                {
+                  "type": "Text",
+                  "children": "{{step.name}}"
+                },
+                {
+                  "type": "Text",
+                  "variant": "caption",
+                  "color": "secondary",
+                  "children": "{{step.duration}}"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["WorkflowEditor", "WorkflowRunCard", "WorkflowRunStatus"]
+  }
+}

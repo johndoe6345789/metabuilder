@@ -1,0 +1,40 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "social_hub",
+  "name": "Social Hub",
+  "version": "1.0.0",
+  "description": "Modern social feed with creator tools and live rooms",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "social",
+  "icon": "static_content/icon.svg",
+  "minLevel": 2,
+  "primary": true,
+  "dependencies": {
+    "ui_permissions": "*",
+    "form_builder": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "SocialHubRoot",
+      "SocialHubHero",
+      "SocialHubStats",
+      "SocialHubComposer",
+      "SocialHubFeed",
+      "SocialHubPost"
+    ],
+    "scripts": [
+      "feed",
+      "composer",
+      "stats"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  }
+}

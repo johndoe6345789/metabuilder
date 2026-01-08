@@ -1,0 +1,158 @@
+name: 🔧 DBAL Issue
+description: Report an issue with the Database Abstraction Layer (TypeScript or C++)
+title: "[DBAL]: "
+labels: ["dbal", "bug", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        DBAL is MetaBuilder's critical database abstraction layer with TypeScript (dev) and C++ (production) implementations.
+
+  - type: dropdown
+    id: implementation
+    attributes:
+      label: DBAL Implementation
+      description: Which DBAL implementation is affected?
+      options:
+        - TypeScript SDK (dbal/development/)
+        - C++ Daemon (dbal/production/)
+        - Both implementations
+        - YAML Contracts (api/schema/)
+        - Conformance Tests
+        - Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: Issue Description
+      description: Describe the DBAL issue you're experiencing
+      placeholder: The DBAL operation fails when...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: operation
+    attributes:
+      label: Operation Type
+      description: What type of operation is failing?
+      options:
+        - Entity Operations (CRUD)
+        - Query Operations
+        - Transaction Operations
+        - Blob Storage
+        - Key-Value Store
+        - Tenant Management
+        - Access Control
+        - Connection Management
+        - Type Generation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction Code
+      description: Provide code to reproduce the issue
+      placeholder: |
+        ```typescript
+        // Your code here
+        const result = await dbalQuery({...})
+        ```
+      render: typescript
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should happen?
+      placeholder: The operation should...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happens?
+      placeholder: Instead, I see...
+    validations:
+      required: true
+
+  - type: textarea
+    id: error
+    attributes:
+      label: Error Messages/Logs
+      description: Include any error messages, stack traces, or logs
+      render: shell
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Critical (Data corruption/loss)
+        - High (Operation completely fails)
+        - Medium (Operation partially works)
+        - Low (Minor inconsistency)
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment Details
+      value: |
+        - DBAL Version: [e.g., commit hash or version]
+        - Node/C++ Version: [e.g., Node 18.17, gcc 11.3]
+        - Database: [e.g., SQLite, PostgreSQL 15]
+        - OS: [e.g., Ubuntu 22.04]
+      render: markdown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: parity
+    attributes:
+      label: Implementation Parity
+      description: If both implementations exist, do they behave the same?
+      options:
+        - Both implementations fail
+        - Only TypeScript fails
+        - Only C++ fails
+        - Different behavior between implementations
+        - Haven't tested both
+        - N/A (only one implementation exists)
+
+  - type: textarea
+    id: conformance
+    attributes:
+      label: Conformance Test Status
+      description: Do conformance tests pass for this operation?
+      placeholder: |
+        - Ran: python tools/conformance/run_all.py
+        - Result: [Pass/Fail details]
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: YAML contract issues? Schema problems? Performance concerns?
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have checked the YAML schema definitions in api/schema/
+          required: true
+        - label: I have verified this isn't a tenant isolation issue
+          required: true
+        - label: I have checked conformance test results if applicable
+          required: false

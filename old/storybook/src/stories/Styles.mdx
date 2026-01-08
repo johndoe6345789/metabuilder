@@ -1,0 +1,306 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Developer/Styles System" />
+
+# Styles System V2
+
+## Overview
+
+MetaBuilder uses an **abstract styling system** (V2 schema) where CSS is treated as a deterministic function:
+
+```
+CSS = f(Style Rules, Element Tree, Environment) → Computed Styles
+```
+
+This is **NOT** a CSS file format. This is structured data that gets **compiled** to CSS.
+
+## The Problem with Traditional CSS
+
+Traditional approach (❌):
+```json
+{
+  "id": "hero_title",
+  "css": ".hero-title { font-size: 4rem; background: linear-gradient(...); }"
+}
+```
+
+**Problems:**
+- CSS syntax mixed with JSON
+- Not GUI-editable
+- No semantic structure
+- Can't query/manipulate programmatically
+
+## The V2 Approach
+
+V2 schema (✅):
+```json
+{
+  "selectors": [{
+    "predicate": {
+      "targetType": "Text",
+      "classes": ["hero-title"]
+    }
+  }],
+  "effects": [{
+    "properties": {
+      "fontSize": { "type": "responsive", ... }
+    }
+  }],
+  "appearance": [{
+    "layers": [
+      { "type": "background", "properties": { "gradient": {...} } }
+    ]
+  }]
+}
+```
+
+**Benefits:**
+- Fully structured and queryable
+- GUI-editable (CSS Designer)
+- Type-safe values
+- Explicit cascade resolution
+- Responsive by design
+
+## The 10 Layers
+
+### 1. Identity Layer
+**What is this thing?**
+- Objects have: type, ID, classes, attributes, states
+- GUI: Object inspector with property panel
+
+### 2. Selection Layer
+**Which rules apply?**
+- Selectors as predicates (not strings)
+- GUI: Visual selector builder
+
+### 3. Cascade Layer
+**Which rule wins?**
+- Explicit priority: importance → specificity → source order
+- GUI: Rule stack with drag-to-reorder
+
+### 4. Value System
+**What does this value mean?**
+- Typed properties: color, length, transform, responsive
+- GUI: Type-specific editors (color picker, slider, etc.)
+
+### 5. Computed Values
+**Why does this look like that?**
+- Read-only resolved styles with source attribution
+- GUI: Debug panel showing cascade trail
+
+### 6. Layout System
+**How is it arranged?**
+- Constraints: flex, grid, absolute
+- GUI: Layout mode switcher with visual handles
+
+### 7. Paint & Effects
+**How does it look?**
+- Layered: background → border → shadow
+- GUI: Layer compositor (Photoshop-style)
+
+### 8. Environment & Context
+**What are the conditions?**
+- Viewport, color scheme, DPI, platform
+- GUI: Environment simulator toolbar
+
+### 9. Tokens & Variables
+**Design system values**
+- First-class design tokens
+- GUI: Token editor with palettes
+
+### 10. Animations & Transitions
+**How does it change?**
+- State machines with keyframes
+- GUI: Timeline editor
+
+## How It Works in Storybook
+
+### 1. Schema is Loaded
+```typescript
+const response = await fetch('/packages/ui_home/seed/styles.json')
+const schema = await response.json()
+```
+
+### 2. Schema is Compiled to CSS
+```typescript
+import { compileToCSS } from '@/styles/compiler'
+const css = compileToCSS(schema)
+```
+
+### 3. CSS is Injected
+```typescript
+const styleEl = document.createElement('style')
+styleEl.textContent = css
+document.head.appendChild(styleEl)
+```
+
+### 4. Components Use Classes
+```tsx
+<h1 className="text hero-title">Welcome</h1>
+```
+
+The compiler matches:
+- Selector predicate: `targetType: "Text", classes: ["hero-title"]`
+- Generates CSS: `.text.hero-title { ... }`
+- Applies effects + appearance from rules
+
+## Example: Hero Title
+
+### V2 Schema
+```json
+{
+  "selectors": [{
+    "id": "hero_title_selector",
+    "predicate": {
+      "targetType": "Text",
+      "classes": ["hero-title"],
+      "states": []
+    }
+  }],
+  "effects": [{
+    "id": "hero_title_typography",
+    "properties": {
+      "fontWeight": { "type": "number", "value": 700 },
+      "fontSize": {
+        "type": "responsive",
+        "breakpoints": {
+          "xs": { "value": 2.5, "unit": "rem" },
+          "md": { "value": 4, "unit": "rem" }
+        }
+      }
+    }
+  }],
+  "appearance": [{
+    "id": "hero_title_gradient",
+    "layers": [{
+      "type": "background",
+      "properties": {
+        "gradient": {
+          "type": "linear",
+          "angle": 90,
+          "stops": [
+            { "position": 0, "color": { "token": "primary" } },
+            { "position": 1, "color": { "token": "accent" } }
+          ]
+        }
+      }
+    }],
+    "clip": "text"
+  }],
+  "rules": [{
+    "selector": "hero_title_selector",
+    "effects": { "ref": "hero_title_typography" },
+    "appearance": { "ref": "hero_title_gradient" },
+    "priority": { "sourceOrder": 10 }
+  }]
+}
+```
+
+### Compiled CSS
+```css
+.text.hero-title {
+  font-weight: 700;
+  font-size: 4rem;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+@media (max-width: 768px) {
+  .text.hero-title {
+    font-size: 2.5rem;
+  }
+}
+```
+
+### Component Usage
+```tsx
+<h1 className="text hero-title">Welcome to MetaBuilder</h1>
+```
+
+## Viewing Styles in Storybook
+
+### Styles Viewer
+Navigate to **Developer → Styles Viewer** to see:
+- Compiled CSS output
+- Raw V2 schema
+- Summary statistics
+
+### Package-Specific Styles
+Each story can load its package styles:
+```typescript
+export default {
+  title: 'My Component',
+  parameters: {
+    package: 'ui_home', // Auto-loads ui_home styles
+  },
+}
+```
+
+### Console Output
+Check the browser console for:
+```
+✓ Loaded styles for shared (2.4KB)
+✓ Loaded styles for ui_home (5.1KB)
+📦 All package styles loaded
+```
+
+## GUI Designer Vision
+
+The V2 schema enables a visual CSS designer where users:
+
+1. **Tag objects** (identity) - Select component type and classes
+2. **Define conditions** (selection) - Build predicates visually
+3. **Assign visual outcomes** (effects) - Use type-specific editors
+4. **Resolve conflicts** (cascade) - Drag rules to reorder
+5. **Preview result** (computed) - See final applied styles
+
+**Users never see CSS syntax.** The designer exposes abstract concepts through visual interfaces.
+
+## Validation
+
+The package validator checks V2 schema structure:
+
+```bash
+lua packages/package_validator/seed/scripts/cli.lua ui_home
+```
+
+Validates:
+- All 10 layers
+- Required fields
+- Duplicate IDs
+- Type enums
+- Reference integrity
+
+## Migration from V1
+
+V1 schemas (array with CSS strings) are still supported but deprecated.
+
+To migrate:
+1. Convert CSS strings to predicates + effects
+2. Extract colors/spacing to tokens
+3. Define cascade priority explicitly
+4. Add responsive breakpoints
+
+See `packages/shared/seed/CSS_SCHEMA_V2.md` for full specification.
+
+## Summary
+
+**What V2 Gives Us:**
+- ✅ Database-driven styling
+- ✅ GUI-editable design system
+- ✅ Type-safe property values
+- ✅ Explicit cascade resolution
+- ✅ Responsive by default
+- ✅ Programmatically queryable
+
+**What We Avoid:**
+- ❌ CSS syntax in JSON
+- ❌ String-based selectors
+- ❌ Implicit cascade
+- ❌ Magic numbers
+- ❌ Unmaintainable stylesheets
+
+CSS becomes a **compilation target**, not an authoring format.

@@ -1,0 +1,11 @@
+// Editor atom - code editor wrapper
+
+.editor-wrapper {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  height: 400px;
+}
+
+.editor-wrapper--sm { height: 300px; }
+.editor-wrapper--lg { height: 500px; }
+.editor-wrapper--xl { height: 600px; }

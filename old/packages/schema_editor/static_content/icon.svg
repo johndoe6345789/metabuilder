@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Database table -->
+  <rect x="12" y="16" width="40" height="32" rx="2" fill="none"/>
+  <path d="M12 26 L52 26 M12 36 L52 36" stroke-width="2"/>
+  <path d="M28 16 L28 48 M40 16 L40 48" stroke-width="1.5"/>
+</svg>

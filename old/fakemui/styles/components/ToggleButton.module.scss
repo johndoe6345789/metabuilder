@@ -1,0 +1,162 @@
+// ToggleButton and ToggleButtonGroup component styles
+
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family-body, 'IBM Plex Sans', sans-serif);
+  font-weight: 500;
+  text-transform: none;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  background-color: transparent;
+  color: var(--text-primary, rgba(0, 0, 0, 0.87));
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--hover-bg, rgba(0, 0, 0, 0.04));
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring-color, #1976d2);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+  }
+
+  // Selected state
+  &--selected {
+    background-color: var(--selected-bg, rgba(25, 118, 210, 0.12));
+    color: var(--primary-color, #1976d2);
+    border-color: var(--primary-color, #1976d2);
+
+    &:hover:not(:disabled) {
+      background-color: var(--selected-hover-bg, rgba(25, 118, 210, 0.2));
+    }
+  }
+
+  // Size variants
+  &--small {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.8125rem;
+    min-height: 32px;
+  }
+
+  &--medium {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    min-height: 40px;
+  }
+
+  &--large {
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    min-height: 48px;
+  }
+
+  // Full width
+  &--full-width {
+    width: 100%;
+  }
+}
+
+// Toggle Button Group
+.toggle-btn-group {
+  display: inline-flex;
+  border-radius: var(--border-radius, 4px);
+
+  // Remove individual button borders and add group border
+  .toggle-btn {
+    border-radius: 0;
+
+    &:first-child {
+      border-top-left-radius: var(--border-radius, 4px);
+      border-bottom-left-radius: var(--border-radius, 4px);
+    }
+
+    &:last-child {
+      border-top-right-radius: var(--border-radius, 4px);
+      border-bottom-right-radius: var(--border-radius, 4px);
+    }
+
+    // Collapse borders between buttons
+    &:not(:first-child) {
+      margin-left: -1px;
+    }
+
+    // Ensure focused/selected buttons are above siblings
+    &:focus-visible,
+    &--selected {
+      z-index: 1;
+    }
+  }
+
+  // Vertical orientation
+  &--vertical {
+    flex-direction: column;
+
+    .toggle-btn {
+      &:first-child {
+        border-top-left-radius: var(--border-radius, 4px);
+        border-top-right-radius: var(--border-radius, 4px);
+        border-bottom-left-radius: 0;
+      }
+
+      &:last-child {
+        border-bottom-left-radius: var(--border-radius, 4px);
+        border-bottom-right-radius: var(--border-radius, 4px);
+        border-top-right-radius: 0;
+      }
+
+      &:not(:first-child) {
+        margin-left: 0;
+        margin-top: -1px;
+      }
+    }
+  }
+
+  // Full width
+  &--full-width {
+    display: flex;
+    width: 100%;
+
+    .toggle-btn {
+      flex: 1;
+    }
+  }
+
+  // Color variants
+  &--primary {
+    .toggle-btn--selected {
+      background-color: var(--primary-color, #1976d2);
+      color: var(--primary-contrast, #fff);
+      border-color: var(--primary-color, #1976d2);
+
+      &:hover:not(:disabled) {
+        background-color: var(--primary-dark, #1565c0);
+      }
+    }
+  }
+
+  &--secondary {
+    .toggle-btn--selected {
+      background-color: var(--secondary-color, #9c27b0);
+      color: var(--secondary-contrast, #fff);
+      border-color: var(--secondary-color, #9c27b0);
+
+      &:hover:not(:disabled) {
+        background-color: var(--secondary-dark, #7b1fa2);
+      }
+    }
+  }
+
+  &--standard {
+    // Standard uses default styles with subtle selection
+    .toggle-btn--selected {
+      background-color: var(--action-selected, rgba(0, 0, 0, 0.08));
+    }
+  }
+}

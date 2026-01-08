@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Forum discussion bubbles -->
+  <path d="M12 20 L12 36 L18 36 L22 42 L22 36 L40 36 L40 20 Z" fill="none"/>
+  <path d="M24 28 L52 28 L52 44 L46 44 L42 50 L42 44 L24 44 Z" fill="none"/>
+  <path d="M18 26 L34 26 M18 30 L30 30" stroke-width="1.5"/>
+</svg>

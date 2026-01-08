@@ -1,0 +1,44 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "config_summary",
+  "description": "Configuration summary access permissions",
+  "permissions": [
+    {
+      "id": "config.summary.view",
+      "name": "View Configuration Summary",
+      "description": "View configuration summaries",
+      "resource": "config_summary",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "config.summary.export",
+      "name": "Export Configuration Data",
+      "description": "Export configuration data from summaries",
+      "resource": "config_summary",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "config.summary.configure",
+      "name": "Configure Summary Display",
+      "description": "Configure which data appears in configuration summaries",
+      "resource": "config_summary",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 5
+    }
+  ],
+  "resources": [
+    {
+      "id": "config_summary",
+      "name": "Configuration Summary",
+      "type": "component",
+      "description": "Configuration summary panel resources",
+      "actions": ["read", "manage"]
+    }
+  ]
+}

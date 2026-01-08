@@ -1,0 +1,199 @@
+name: Stub Implementation Detection
+
+on:
+  pull_request:
+    branches: [ main, master, develop ]
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [ main, master, develop ]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1'  # Weekly on Monday
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  detect-stubs:
+    name: Detect Stub Implementations
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          key: npm-deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            frontends/nextjs/node_modules
+            ~/.npm
+          restore-keys: npm-deps-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      # Pattern-based stub detection
+      - name: Detect stub patterns
+        id: detect-patterns
+        run: echo "skipping tools-based stub pattern detection (tools/ removed)" > stub-patterns.json
+        continue-on-error: true
+
+      # Implementation completeness analysis
+      - name: Analyze implementation completeness
+        id: analyze-completeness
+        run: echo "skipping tools-based implementation completeness analysis (tools/ removed)" > implementation-analysis.json
+        continue-on-error: true
+
+      # Generate detailed report
+      - name: Generate stub report
+        id: generate-report
+        run: echo "skipping tools-based stub report generation (tools/ removed)" > stub-report.md
+        continue-on-error: true
+
+      # Check for unimplemented TODOs in changed files (PR only)
+      - name: Check changed files for stubs
+        if: github.event_name == 'pull_request'
+        id: check-changed
+        run: |
+          git diff origin/${{ github.base_ref }}...HEAD -- 'src/**/*.{ts,tsx}' | \
+            grep -E '^\+.*(TODO|FIXME|not implemented|stub|placeholder|mock)' | \
+            tee changed-stubs.txt || true
+          
+          STUB_COUNT=$(wc -l < changed-stubs.txt)
+          echo "stub_count=$STUB_COUNT" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      # Post PR comment with findings
+      - name: Post stub detection comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let comment = '## 🔍 Stub Implementation Detection Report\n\n';
+            
+            try {
+              const patternData = JSON.parse(fs.readFileSync('stub-patterns.json', 'utf8'));
+              const completenessData = JSON.parse(fs.readFileSync('implementation-analysis.json', 'utf8'));
+              
+              // Summary table
+              comment += '### Summary\n\n';
+              comment += `**Pattern-Based Stubs**: ${patternData.totalStubsFound}\n`;
+              comment += `**Low Completeness Items**: ${completenessData.bySeverity.high + completenessData.bySeverity.medium}\n`;
+              comment += `**Average Completeness**: ${completenessData.averageCompleteness}%\n\n`;
+              
+              // Severity breakdown
+              if (patternData.totalStubsFound > 0) {
+                comment += '### Severity Breakdown (Patterns)\n\n';
+                comment += `| Severity | Count |\n`;
+                comment += `|----------|-------|\n`;
+                comment += `| 🔴 Critical | ${patternData.bySeverity.high} |\n`;
+                comment += `| 🟠 Medium | ${patternData.bySeverity.medium} |\n`;
+                comment += `| 🟡 Low | ${patternData.bySeverity.low} |\n\n`;
+              }
+              
+              // Type breakdown
+              if (Object.values(patternData.byType).some(v => v > 0)) {
+                comment += '### Issue Types\n\n';
+                for (const [type, count] of Object.entries(patternData.byType)) {
+                  if (count > 0) {
+                    comment += `- **${type}**: ${count}\n`;
+                  }
+                }
+                comment += '\n';
+              }
+              
+              // Critical issues
+              if (patternData.criticalIssues && patternData.criticalIssues.length > 0) {
+                comment += '### 🔴 Critical Issues Found\n\n';
+                comment += '<details><summary>Click to expand</summary>\n\n';
+                comment += `| File | Line | Function | Type |\n`;
+                comment += `|------|------|----------|------|\n`;
+                patternData.criticalIssues.slice(0, 10).forEach(issue => {
+                  comment += `| ${issue.file} | ${issue.line} | \`${issue.function}\` | ${issue.type} |\n`;
+                });
+                comment += '\n</details>\n\n';
+              }
+              
+              // Recommendations
+              comment += '### 📋 Recommendations\n\n';
+              comment += '- [ ] Review all critical stubs before merging\n';
+              comment += '- [ ] Replace TODO comments with GitHub issues\n';
+              comment += '- [ ] Implement placeholder functions before production\n';
+              comment += '- [ ] Run `npm run test:check-functions` to ensure coverage\n';
+              comment += '- [ ] Use type system to force implementation (avoid `any` types)\n\n';
+              
+              // Artifacts info
+              comment += '### 📁 Detailed Reports\n\n';
+              comment += 'Full analysis available in artifacts:\n';
+              comment += '- `stub-patterns.json` - Pattern-based detection results\n';
+              comment += '- `implementation-analysis.json` - Completeness scoring\n';
+              comment += '- `stub-report.md` - Detailed markdown report\n';
+            } catch (e) {
+              comment += '⚠️ Could not generate detailed report. Check logs for errors.\n';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      # Upload detailed reports
+      - name: Upload stub detection reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stub-detection-reports
+          path: |
+            stub-patterns.json
+            implementation-analysis.json
+            stub-report.md
+            changed-stubs.txt
+          retention-days: 30
+
+      # Create check run with summary
+      - name: Create check run
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let summary = '';
+            try {
+              const data = JSON.parse(fs.readFileSync('stub-patterns.json', 'utf8'));
+              summary = `Found ${data.totalStubsFound} stub implementations (${data.bySeverity.high} high severity)`;
+            } catch (e) {
+              summary = 'Stub detection completed. See artifacts for details.';
+            }
+            
+            github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'Stub Implementation Detection',
+              head_sha: context.sha,
+              status: 'completed',
+              conclusion: 'neutral',
+              summary: summary
+            });

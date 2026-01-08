@@ -1,0 +1,47 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "stream_cast",
+  "name": "Stream Cast",
+  "version": "1.0.0",
+  "description": "Live streaming control room with schedules, scenes, and audience pulse",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "media",
+  "minLevel": 2,
+  "primary": true,
+  "icon": "static_content/icon.svg",
+  "dependencies": {
+    "ui_permissions": "*",
+    "dashboard": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "ControlRoom",
+      "SceneManager",
+      "StreamSchedule",
+      "StreamPlayer",
+      "AudiencePulse"
+    ],
+    "scripts": [
+      "control_room",
+      "scene_manager",
+      "stream_schedule"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  },
+  "schema": {
+    "entities": [
+      "StreamChannel",
+      "StreamSchedule",
+      "StreamScene"
+    ],
+    "path": "schema/entities.yaml"
+  }
+}

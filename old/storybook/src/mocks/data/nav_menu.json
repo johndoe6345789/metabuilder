@@ -1,0 +1,132 @@
+{
+  "metadata": {
+    "packageId": "nav_menu",
+    "name": "Navigation Menu",
+    "version": "1.0.0",
+    "description": "Navigation and menu components",
+    "category": "ui",
+    "minLevel": 1,
+    "exports": {
+      "scripts": ["sidebar", "navbar", "breadcrumbs"]
+    }
+  },
+  "renders": {
+    "init.script": {
+      "description": "Lifecycle hooks",
+      "component": {
+        "type": "Alert",
+        "props": { "severity": "info" },
+        "children": [
+          { "type": "Typography", "props": { "text": "init.script - lifecycle hooks" } }
+        ]
+      }
+    },
+    "sidebar.script": {
+      "description": "Sidebar navigation",
+      "component": {
+        "type": "Box",
+        "props": { "sx": { "width": 280, "height": "100vh", "bgcolor": "background.paper", "borderRight": 1, "borderColor": "divider" } },
+        "children": [
+          {
+            "type": "Box",
+            "props": { "sx": { "p": 2, "borderBottom": 1, "borderColor": "divider" } },
+            "children": [
+              { "type": "Typography", "props": { "variant": "h6", "text": "MetaBuilder" } }
+            ]
+          },
+          {
+            "type": "List",
+            "children": [
+              {
+                "type": "ListItem",
+                "props": { "button": true, "selected": true },
+                "children": [
+                  { "type": "Icon", "props": { "name": "home" } },
+                  { "type": "Typography", "props": { "text": "Dashboard" } }
+                ]
+              },
+              {
+                "type": "ListItem",
+                "props": { "button": true },
+                "children": [
+                  { "type": "Icon", "props": { "name": "users" } },
+                  { "type": "Typography", "props": { "text": "Users" } }
+                ]
+              },
+              {
+                "type": "ListItem",
+                "props": { "button": true },
+                "children": [
+                  { "type": "Icon", "props": { "name": "settings" } },
+                  { "type": "Typography", "props": { "text": "Settings" } }
+                ]
+              },
+              {
+                "type": "Divider"
+              },
+              {
+                "type": "ListItem",
+                "props": { "button": true },
+                "children": [
+                  { "type": "Icon", "props": { "name": "package" } },
+                  { "type": "Typography", "props": { "text": "Packages" } }
+                ]
+              },
+              {
+                "type": "ListItem",
+                "props": { "button": true },
+                "children": [
+                  { "type": "Icon", "props": { "name": "code" } },
+                  { "type": "Typography", "props": { "text": "Scripts" } }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Box",
+            "props": { "sx": { "position": "absolute", "bottom": 0, "left": 0, "right": 0, "p": 2, "borderTop": 1, "borderColor": "divider" } },
+            "children": [
+              {
+                "type": "Flex",
+                "props": { "alignItems": "center", "gap": 2 },
+                "children": [
+                  { "type": "Avatar", "props": { "children": "{{user.username}}" } },
+                  {
+                    "type": "Box",
+                    "children": [
+                      { "type": "Typography", "props": { "variant": "body2", "text": "{{user.username}}" } },
+                      { "type": "Typography", "props": { "variant": "caption", "color": "text.secondary", "text": "Level {{user.level}}" } }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "navbar.script": {
+      "description": "Top navigation bar",
+      "component": {
+        "type": "AppBar",
+        "props": { "position": "static" },
+        "children": [{
+          "type": "Toolbar",
+          "children": [
+            { "type": "Typography", "props": { "variant": "h6", "text": "MetaBuilder", "sx": { "flexGrow": 1 } } },
+            {
+              "type": "Stack",
+              "props": { "direction": "row", "spacing": 2, "alignItems": "center" },
+              "children": [
+                { "type": "Button", "props": { "color": "inherit", "children": "Dashboard" } },
+                { "type": "Button", "props": { "color": "inherit", "children": "Packages" } },
+                { "type": "Button", "props": { "color": "inherit", "children": "Settings" } },
+                { "type": "Avatar", "props": { "sx": { "width": 32, "height": 32 }, "children": "{{user.username}}" } }
+              ]
+            }
+          ]
+        }]
+      }
+    }
+  }
+}

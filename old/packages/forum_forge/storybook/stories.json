@@ -1,0 +1,160 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Forum Forge Components",
+  "description": "Modern forum UI with categories, threads, and moderation",
+  "stories": [
+    {
+      "name": "CreateThread",
+      "render": "create_thread",
+      "description": "Thread creation form with category selection and rich text editor",
+      "args": {
+        "categoryId": "launch-radar",
+        "title": "",
+        "content": ""
+      }
+    },
+    {
+      "name": "ViewCategories",
+      "render": "view_categories",
+      "description": "Browse all forum categories",
+      "args": {
+        "categories": [
+          {
+            "id": "launch-radar",
+            "title": "Launch Radar",
+            "description": "Share product launches, traction stories, and founder notes."
+          },
+          {
+            "id": "growth-ops",
+            "title": "Growth Ops",
+            "description": "Tactics for onboarding, retention, and community rituals."
+          },
+          {
+            "id": "dev-lounge",
+            "title": "Dev Lounge",
+            "description": "Deep dives on tooling, architecture, and deployment patterns."
+          }
+        ]
+      }
+    },
+    {
+      "name": "ThreadList",
+      "render": "thread_list",
+      "description": "View trending threads with engagement metrics",
+      "args": {
+        "threads": [
+          {
+            "id": "thread-1",
+            "title": "What does your onboarding checklist look like in 2025?",
+            "replyCount": 128,
+            "lastUpdated": "2h ago"
+          },
+          {
+            "id": "thread-2",
+            "title": "Best practices for AI-assisted moderation?",
+            "replyCount": 64,
+            "lastUpdated": "30m ago"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ForumStats",
+      "render": "stats",
+      "description": "Forum statistics dashboard",
+      "args": {
+        "activeThreads": "246",
+        "repliesToday": "1,092",
+        "queuedFlags": "8"
+      }
+    },
+    {
+      "name": "ModerationQueue",
+      "render": "moderation_queue",
+      "description": "Moderation queue for flagged content",
+      "type": "function",
+      "args": {
+        "flags": []
+      }
+    }
+  ],
+  "renders": {
+    "create_thread": {
+      "description": "Thread creation form",
+      "featured": true
+    },
+    "view_categories": {
+      "description": "Category browser",
+      "featured": true
+    },
+    "thread_list": {
+      "description": "Trending threads list",
+      "featured": true
+    },
+    "stats": {
+      "description": "Forum statistics overview"
+    },
+    "moderation_queue": {
+      "description": "Moderation queue for flagged posts"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 2,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Standard User",
+      "description": "Can view and post in forums",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Moderator",
+      "description": "Can view, post, and moderate forums",
+      "context": {
+        "user": {
+          "username": "moderator",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Full forum access including category management",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["create_thread", "view_categories", "thread_list", "stats", "moderation_queue"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

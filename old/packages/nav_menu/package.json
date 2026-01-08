@@ -1,0 +1,35 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "nav_menu",
+  "name": "Navigation Menu",
+  "version": "1.0.0",
+  "description": "Sidebar, navigation menus, and breadcrumbs",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 2,
+  "primary": false,
+  "icon": "static_content/icon.svg",
+  "dependencies": {
+    "ui_permissions": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "Sidebar",
+      "NavigationMenu",
+      "Breadcrumbs"
+    ],
+    "scripts": [
+      "sidebar",
+      "menu"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  }
+}

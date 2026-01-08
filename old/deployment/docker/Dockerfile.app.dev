@@ -1,0 +1,37 @@
+# Development Dockerfile for MetaBuilder App with hot-reload
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install development dependencies
+RUN apk add --no-cache \
+    git \
+    curl \
+    python3 \
+    make \
+    g++
+
+# Install pnpm for faster installs
+RUN npm install -g pnpm
+
+# Copy package files first for better caching
+COPY package*.json ./
+
+# Install all dependencies (including dev)
+RUN npm install
+
+# Copy Prisma schema
+COPY prisma ./prisma/
+
+# Generate Prisma client
+RUN npm run db:generate
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s \
+  CMD curl -f http://localhost:3000/ || exit 1
+
+# Expose Vite dev server port
+EXPOSE 3000
+
+# Start development server with hot-reload
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

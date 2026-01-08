@@ -1,0 +1,26 @@
+{
+  "name": "@metabuilder/config",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "generate:package": "npx ts-node scripts/generate-package.ts",
+    "extract:preview": "cd frontends/nextjs && npm run extract:preview",
+    "extract:quick": "cd frontends/nextjs && npm run extract:quick",
+    "extract:auto": "cd frontends/nextjs && npm run extract:auto",
+    "extract:all": "cd frontends/nextjs && npm run extract:all",
+    "extract:help": "cd frontends/nextjs && npm run extract:help",
+    "db:generate": "npx prisma generate --schema=../prisma/schema.prisma",
+    "db:migrate": "npx prisma migrate dev --schema=../prisma/schema.prisma"
+  },
+  "devDependencies": {
+    "@prisma/client": "^7.2.0",
+    "prisma": "^7.2.0",
+    "yaml": "^2.8.2"
+  },
+  "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.2.0",
+    "better-sqlite3": "^12.5.0",
+    "clsx": "^2.1.1",
+    "jszip": "^3.10.1"
+  }
+}

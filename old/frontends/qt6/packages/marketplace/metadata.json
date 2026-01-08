@@ -1,0 +1,7 @@
+{
+  "packageId": "marketplace",
+  "name": "Marketplace",
+  "version": "1.0.0",
+  "description": "Curated extensions and paid components with purchase-to-install workflow.",
+  "dependencies": ["frontpage", "storybook"]
+}

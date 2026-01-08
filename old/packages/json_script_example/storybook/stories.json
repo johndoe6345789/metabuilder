@@ -1,0 +1,251 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": false,
+  "title": "JSON Script Examples",
+  "description": "Comprehensive examples demonstrating the full JSON script specification",
+  "stories": [
+    {
+      "name": "All Expressions",
+      "render": "all_expressions",
+      "description": "Demonstrates all expression types: binary, logical, unary, conditional, template literals",
+      "type": "function",
+      "args": {
+        "a": 10,
+        "b": 5
+      },
+      "argControls": {
+        "a": {
+          "type": "number",
+          "default": 10,
+          "min": -100,
+          "max": 100,
+          "step": 1,
+          "description": "First number"
+        },
+        "b": {
+          "type": "number",
+          "default": 5,
+          "min": -100,
+          "max": 100,
+          "step": 1,
+          "description": "Second number"
+        }
+      }
+    },
+    {
+      "name": "All Statements",
+      "render": "all_statements",
+      "description": "Demonstrates all statement types: declarations, loops, conditionals, error handling",
+      "type": "function",
+      "args": {
+        "items": [1, 2, 3, 4, 5]
+      },
+      "argControls": {
+        "items": {
+          "type": "json",
+          "default": [1, 2, 3, 4, 5],
+          "description": "Array of numbers to process"
+        }
+      }
+    },
+    {
+      "name": "All Operators",
+      "render": "all_operators",
+      "description": "Demonstrates all operators: arithmetic, comparison, logical, unary",
+      "type": "function",
+      "args": {
+        "x": 10,
+        "y": 5
+      },
+      "argControls": {
+        "x": {
+          "type": "number",
+          "default": 10,
+          "min": -100,
+          "max": 100,
+          "step": 1,
+          "description": "First operand"
+        },
+        "y": {
+          "type": "number",
+          "default": 5,
+          "min": -100,
+          "max": 100,
+          "step": 1,
+          "description": "Second operand"
+        }
+      }
+    },
+    {
+      "name": "Control Flow",
+      "render": "control_flow",
+      "description": "Demonstrates control flow patterns with nested if/else classification",
+      "type": "function",
+      "args": {
+        "value": 42
+      },
+      "argControls": {
+        "value": {
+          "type": "number",
+          "default": 42,
+          "min": -100,
+          "max": 200,
+          "step": 1,
+          "description": "Number to classify"
+        }
+      }
+    },
+    {
+      "name": "Data Structures",
+      "render": "data_structures",
+      "description": "Demonstrates working with objects and arrays",
+      "type": "function",
+      "args": {}
+    },
+    {
+      "name": "Expression Demo Component",
+      "render": "ExpressionDemo",
+      "description": "Interactive expression calculator component",
+      "type": "component",
+      "args": {
+        "initialA": 10,
+        "initialB": 5
+      },
+      "argControls": {
+        "initialA": {
+          "type": "number",
+          "default": 10,
+          "min": -100,
+          "max": 100,
+          "step": 1,
+          "description": "Initial value for first number"
+        },
+        "initialB": {
+          "type": "number",
+          "default": 5,
+          "min": -100,
+          "max": 100,
+          "step": 1,
+          "description": "Initial value for second number"
+        }
+      }
+    },
+    {
+      "name": "Operator Demo Component",
+      "render": "OperatorDemo",
+      "description": "Interactive operator demonstration showing all operator results",
+      "type": "component",
+      "args": {
+        "x": 10,
+        "y": 5
+      },
+      "argControls": {
+        "x": {
+          "type": "number",
+          "default": 10,
+          "min": -100,
+          "max": 100,
+          "step": 1,
+          "description": "First operand"
+        },
+        "y": {
+          "type": "number",
+          "default": 5,
+          "min": -100,
+          "max": 100,
+          "step": 1,
+          "description": "Second operand"
+        }
+      }
+    }
+  ],
+  "renders": {
+    "all_expressions": {
+      "description": "All expression types demo",
+      "featured": true
+    },
+    "all_statements": {
+      "description": "All statement types demo"
+    },
+    "all_operators": {
+      "description": "All operators demo",
+      "featured": true
+    },
+    "control_flow": {
+      "description": "Control flow patterns demo"
+    },
+    "data_structures": {
+      "description": "Data structures demo"
+    },
+    "ExpressionDemo": {
+      "description": "Interactive expression calculator"
+    },
+    "OperatorDemo": {
+      "description": "Interactive operator demonstration"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 1,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Public User",
+      "description": "Can view examples",
+      "context": {
+        "user": {
+          "username": "public_user",
+          "level": 0
+        }
+      }
+    },
+    {
+      "name": "Standard User",
+      "description": "Can view and execute examples",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 1
+        }
+      }
+    },
+    {
+      "name": "Moderator",
+      "description": "Can modify examples",
+      "context": {
+        "user": {
+          "username": "moderator",
+          "level": 2
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": [
+      "all_expressions",
+      "all_statements",
+      "all_operators",
+      "control_flow",
+      "data_structures"
+    ],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#fafafa" },
+        { "name": "dark", "value": "#212121" }
+      ]
+    }
+  }
+}

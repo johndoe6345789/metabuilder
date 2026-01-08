@@ -1,0 +1,51 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "json_script_example",
+  "name": "JSON Script Example",
+  "version": "1.0.0",
+  "description": "Comprehensive example demonstrating the full JSON script specification",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "examples",
+  "icon": "static_content/icon.svg",
+  "minLevel": 0,
+  "primary": false,
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "ExpressionDemo",
+      "OperatorDemo",
+      "ResultDisplay"
+    ],
+    "scripts": [
+      "all_expressions",
+      "all_statements",
+      "all_operators",
+      "control_flow",
+      "data_structures"
+    ],
+    "types": [
+      "ArithmeticResult",
+      "ComparisonResult",
+      "LogicalResult",
+      "OperatorsDemoResult",
+      "ExpressionsDemoResult",
+      "StatementsDemoResult",
+      "DataStructuresResult",
+      "Classification",
+      "TestResult",
+      "ValidationResult"
+    ]
+  },
+  "tests": {
+    "parameterized": [
+      {
+        "logic": "tests/math.test.logic.json",
+        "parameters": "tests/math.test.parameters.json"
+      }
+    ]
+  }
+}

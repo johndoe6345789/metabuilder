@@ -1,0 +1,193 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "IRC Webchat Components",
+  "description": "Classic IRC-style webchat with channels, commands, and real-time messaging",
+  "stories": [
+    {
+      "name": "IRCWebchat",
+      "render": "webchat",
+      "description": "Complete IRC webchat interface with channels, messages, and users",
+      "args": {
+        "channelName": "general",
+        "channels": [
+          { "name": "general", "topic": "General discussion" },
+          { "name": "help", "topic": "Help and support" },
+          { "name": "random", "topic": "Off-topic chat" }
+        ],
+        "messages": [
+          {
+            "id": "msg_1",
+            "username": "System",
+            "userId": "system",
+            "message": "Welcome to #general!",
+            "type": "system",
+            "timestamp": 1735776000000
+          },
+          {
+            "id": "msg_2",
+            "username": "alice",
+            "userId": "user_alice",
+            "message": "Hey everyone!",
+            "type": "message",
+            "timestamp": 1735776060000
+          },
+          {
+            "id": "msg_3",
+            "username": "bob",
+            "userId": "user_bob",
+            "message": "Hi alice, how's it going?",
+            "type": "message",
+            "timestamp": 1735776120000
+          }
+        ],
+        "onlineUsers": [
+          { "username": "alice", "status": "online" },
+          { "username": "bob", "status": "online" },
+          { "username": "charlie", "status": "away" }
+        ]
+      }
+    },
+    {
+      "name": "ChannelList",
+      "render": "channel_list",
+      "description": "Sidebar with list of available channels",
+      "args": {
+        "channels": [
+          { "name": "general", "topic": "General discussion" },
+          { "name": "dev", "topic": "Development talk" },
+          { "name": "help", "topic": "Help and support" }
+        ],
+        "activeChannel": "general"
+      }
+    },
+    {
+      "name": "MessageList",
+      "render": "message_list",
+      "description": "Scrollable list of chat messages",
+      "args": {
+        "messages": [
+          {
+            "id": "msg_1",
+            "username": "alice",
+            "message": "Hello world!",
+            "type": "message",
+            "timestamp": 1735776000000
+          },
+          {
+            "id": "msg_2",
+            "username": "System",
+            "message": "bob has joined the channel",
+            "type": "join",
+            "timestamp": 1735776060000
+          },
+          {
+            "id": "msg_3",
+            "username": "bob",
+            "message": "waves hello",
+            "type": "system",
+            "timestamp": 1735776120000
+          }
+        ]
+      }
+    },
+    {
+      "name": "UserList",
+      "render": "user_list",
+      "description": "Sidebar with online users",
+      "args": {
+        "channelName": "general",
+        "users": [
+          { "username": "alice", "status": "online" },
+          { "username": "bob", "status": "online" },
+          { "username": "charlie", "status": "away" },
+          { "username": "david", "status": "online" }
+        ]
+      }
+    },
+    {
+      "name": "MessageInput",
+      "render": "message_input",
+      "description": "Input field for sending messages",
+      "args": {
+        "placeholder": "Type a message or /help for commands..."
+      }
+    }
+  ],
+  "renders": {
+    "webchat": {
+      "description": "Complete IRC webchat interface",
+      "featured": true
+    },
+    "channel_list": {
+      "description": "Channel navigation sidebar"
+    },
+    "message_list": {
+      "description": "Chat message display"
+    },
+    "user_list": {
+      "description": "Online users sidebar"
+    },
+    "message_input": {
+      "description": "Message input with command support"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "demo_user",
+      "level": 2,
+      "email": "demo@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Standard User",
+      "description": "Can view channels and send messages",
+      "context": {
+        "user": {
+          "username": "user",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Moderator",
+      "description": "Can moderate channels",
+      "context": {
+        "user": {
+          "username": "moderator",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Full IRC management access",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["webchat", "channel_list", "message_list", "user_list", "message_input"],
+    "ignoredScripts": ["tests", "init"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#ffffff" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

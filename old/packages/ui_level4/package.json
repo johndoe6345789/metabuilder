@@ -1,0 +1,48 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_level4",
+  "name": "Level 4 - Admin Panel",
+  "version": "1.0.0",
+  "description": "Admin panel for user and system management with schemas, workflows, and automated scripts",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 4,
+  "primary": true,
+  "icon": "static_content/icon.svg",
+  "dependencies": {
+    "ui_permissions": "*",
+    "ui_header": "*",
+    "ui_intro": "*",
+    "user_manager": "*",
+    "admin_dialog": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "Level4Header",
+      "Level4Layout",
+      "SchemasTab",
+      "WorkflowsTab",
+      "ScriptsTab",
+      "GodSidebar",
+      "GodToolbar",
+      "GodContent"
+    ],
+    "scripts": [
+      "layout",
+      "schemas",
+      "workflows"
+    ],
+    "pages": [
+      "level4"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  }
+}

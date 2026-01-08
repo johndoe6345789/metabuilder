@@ -1,0 +1,51 @@
+import { fonts } from './fonts'
+
+export const typography = {
+  fontFamily: fonts.body,
+  h1: {
+    fontFamily: fonts.heading,
+    fontWeight: 700,
+    fontSize: '3rem',
+    lineHeight: 1.2,
+    letterSpacing: '-0.02em',
+  },
+  h2: {
+    fontFamily: fonts.heading,
+    fontWeight: 700,
+    fontSize: '2.25rem',
+    lineHeight: 1.25,
+    letterSpacing: '-0.01em',
+  },
+  h3: { fontFamily: fonts.heading, fontWeight: 600, fontSize: '1.875rem', lineHeight: 1.3 },
+  h4: { fontFamily: fonts.heading, fontWeight: 600, fontSize: '1.5rem', lineHeight: 1.35 },
+  h5: { fontFamily: fonts.heading, fontWeight: 600, fontSize: '1.25rem', lineHeight: 1.4 },
+  h6: { fontFamily: fonts.heading, fontWeight: 600, fontSize: '1rem', lineHeight: 1.5 },
+  subtitle1: { fontWeight: 500, fontSize: '1rem', lineHeight: 1.5 },
+  subtitle2: { fontWeight: 500, fontSize: '0.875rem', lineHeight: 1.5 },
+  body1: { fontSize: '1rem', lineHeight: 1.6 },
+  body2: { fontSize: '0.875rem', lineHeight: 1.5 },
+  caption: { fontSize: '0.75rem', lineHeight: 1.4 },
+  overline: {
+    fontWeight: 600,
+    fontSize: '0.75rem',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase' as const,
+  },
+  button: { fontWeight: 500, fontSize: '0.875rem', textTransform: 'none' as const },
+  code: {
+    fontFamily: fonts.mono,
+    fontSize: '0.875rem',
+    backgroundColor: 'rgba(0,0,0,0.06)',
+    padding: '2px 6px',
+    borderRadius: 4,
+  },
+  kbd: {
+    fontFamily: fonts.mono,
+    fontSize: '0.75rem',
+    fontWeight: 500,
+    padding: '2px 8px',
+    borderRadius: 4,
+    border: '1px solid',
+  },
+  label: { fontSize: '0.875rem', fontWeight: 500, lineHeight: 1.5 },
+}

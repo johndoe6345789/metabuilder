@@ -1,0 +1,50 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/jobs.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "workflow_editor",
+  "description": "Background jobs for workflow execution",
+  "jobs": [
+    {
+      "id": "execute_workflow",
+      "name": "Execute Workflow",
+      "description": "Execute workflow in background",
+      "handler": "run.executeWorkflow",
+      "queue": "workflows",
+      "priority": "normal",
+      "retry": {
+        "maxAttempts": 3,
+        "backoff": "exponential",
+        "backoffDelay": 1000
+      },
+      "timeout": 3600000
+    },
+    {
+      "id": "cleanup_old_runs",
+      "name": "Cleanup Old Workflow Runs",
+      "description": "Remove old workflow run data",
+      "handler": "status.cleanupOldRuns",
+      "schedule": "0 2 * * *",
+      "queue": "maintenance",
+      "priority": "low",
+      "retry": {
+        "maxAttempts": 2,
+        "backoff": "fixed",
+        "backoffDelay": 5000
+      }
+    }
+  ],
+  "queues": [
+    {
+      "name": "workflows",
+      "concurrency": 5,
+      "rateLimit": {
+        "max": 100,
+        "duration": 60000
+      }
+    },
+    {
+      "name": "maintenance",
+      "concurrency": 1
+    }
+  ]
+}

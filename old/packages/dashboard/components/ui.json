@@ -1,0 +1,192 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "dashboard",
+  "description": "Dashboard components including stat cards, grids, and widgets",
+  "components": [
+    {
+      "id": "stat_card",
+      "name": "StatCard",
+      "description": "Statistic card with icon, label, value, and trend indicator",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Card label text"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "Main statistic value"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "description": "Icon name"
+        },
+        {
+          "name": "trend",
+          "type": "object",
+          "required": false,
+          "description": "Trend data with direction and percentage"
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "required": false,
+          "default": "primary"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "stat-card",
+          "children": [
+            {
+              "type": "Box",
+              "className": "stat-card-icon",
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "{{icon}}",
+                  "color": "{{color}}",
+                  "size": 48
+                }
+              ]
+            },
+            {
+              "type": "Stack",
+              "gap": 1,
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "caption",
+                  "color": "secondary",
+                  "children": "{{label}}"
+                },
+                {
+                  "type": "Text",
+                  "variant": "h4",
+                  "fontWeight": "bold",
+                  "children": "{{value}}"
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{trend}}",
+                  "then": {
+                    "type": "Flex",
+                    "alignItems": "center",
+                    "gap": 0.5,
+                    "children": [
+                      {
+                        "type": "Icon",
+                        "name": "{{trend.direction === 'up' ? 'TrendingUp' : 'TrendingDown'}}",
+                        "size": 16,
+                        "color": "{{trend.direction === 'up' ? 'success' : 'error'}}"
+                      },
+                      {
+                        "type": "Text",
+                        "variant": "caption",
+                        "color": "{{trend.direction === 'up' ? 'success' : 'error'}}",
+                        "children": "{{trend.percentage}}%"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "dashboard_grid",
+      "name": "DashboardGrid",
+      "description": "Responsive grid layout for dashboard widgets",
+      "props": [
+        {
+          "name": "children",
+          "type": "any",
+          "required": true
+        },
+        {
+          "name": "spacing",
+          "type": "number",
+          "default": 3
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Grid",
+          "container": true,
+          "spacing": "{{spacing}}",
+          "className": "dashboard-grid",
+          "children": "{{children}}"
+        }
+      }
+    },
+    {
+      "id": "widget",
+      "name": "Widget",
+      "description": "Generic dashboard widget container",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "any",
+          "required": true
+        },
+        {
+          "name": "actions",
+          "type": "any",
+          "required": false
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "elevation",
+          "className": "dashboard-widget",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "{{title}}",
+              "subtitle": "{{subtitle}}"
+            },
+            {
+              "type": "CardContent",
+              "children": "{{children}}"
+            },
+            {
+              "type": "conditional",
+              "condition": "{{actions}}",
+              "then": {
+                "type": "CardActions",
+                "children": "{{actions}}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["StatCard", "DashboardGrid", "Widget"]
+  }
+}

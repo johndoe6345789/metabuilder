@@ -1,0 +1,53 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "stats_grid",
+  "description": "Stats grid access permissions",
+  "permissions": [
+    {
+      "id": "stats.grid.view",
+      "name": "View Stats Grid",
+      "description": "View statistics grids",
+      "resource": "stats_grid",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "stats.grid.configure",
+      "name": "Configure Stats Grid",
+      "description": "Configure statistics grids layout and settings",
+      "resource": "stats_grid",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "stats.card.create",
+      "name": "Create Stat Cards",
+      "description": "Create custom stat cards",
+      "resource": "stats_grid",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "stats.card.delete",
+      "name": "Delete Stat Cards",
+      "description": "Delete stat cards from grids",
+      "resource": "stats_grid",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "stats_grid",
+      "name": "Stats Grid",
+      "type": "component",
+      "description": "Statistics grid resources",
+      "actions": ["read", "manage", "create", "delete"]
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+entity: Workflow
+version: "1.0"
+description: "Workflow definitions for automation"
+
+fields:
+  id:
+    type: uuid
+    primary: true
+    generated: true
+
+  tenantId:
+    type: uuid
+    optional: true
+    nullable: true
+
+  name:
+    type: string
+    required: true
+    max_length: 255
+
+  description:
+    type: text
+    optional: true
+
+  nodes:
+    type: string
+    required: true
+    description: "Workflow node graph"
+
+  edges:
+    type: string
+    required: true
+    description: "Workflow edge graph"
+
+  enabled:
+    type: boolean
+    required: true
+    default: true
+
+  version:
+    type: integer
+    required: true
+    default: 1
+
+  createdAt:
+    type: bigint
+    optional: true
+    nullable: true
+
+  updatedAt:
+    type: bigint
+    optional: true
+    nullable: true
+
+  createdBy:
+    type: uuid
+    optional: true
+    nullable: true
+    foreign_key:
+      entity: User
+      field: id
+
+indexes:
+  - fields: [tenantId]
+  - fields: [enabled]
+
+acl:
+  create:
+    role: [god, supergod]
+  read:
+    role: [admin, god, supergod]
+  update:
+    role: [god, supergod]
+  delete:
+    role: [god, supergod]

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "nerd_mode_ide",
+  "description": "Nerd Mode IDE access permissions",
+  "permissions": [
+    {
+      "id": "ide.view",
+      "name": "View IDE",
+      "description": "Access the IDE interface",
+      "resource": "ide",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "ide.edit",
+      "name": "Edit Files",
+      "description": "Create, edit, and delete files",
+      "resource": "ide",
+      "action": "write",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "ide.execute",
+      "name": "Execute Scripts",
+      "description": "Run scripts and tests",
+      "resource": "ide",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "ide.git",
+      "name": "Git Operations",
+      "description": "Commit, push, and pull",
+      "resource": "ide",
+      "action": "git",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "ide",
+      "name": "IDE",
+      "type": "system",
+      "description": "Nerd Mode IDE resources",
+      "actions": ["read", "write", "execute", "git"]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "ui_level2",
+  "name": "Level 2 - User Dashboard",
+  "version": "1.0.0",
+  "description": "User dashboard with profile, comments, and chat",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "minLevel": 2,
+  "primary": true,
+  "icon": "static_content/icon.svg",
+  "dependencies": {
+    "ui_permissions": "*",
+    "ui_header": "*",
+    "ui_intro": "*"
+  },
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "pages": [
+      "level2"
+    ],
+    "components": [
+      "Level2Layout",
+      "ProfilePanel",
+      "CommentsPanel",
+      "ChatPanel"
+    ],
+    "scripts": [
+      "layout",
+      "profile",
+      "comments"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  }
+}

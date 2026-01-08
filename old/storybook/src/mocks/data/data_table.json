@@ -1,0 +1,88 @@
+{
+  "metadata": {
+    "packageId": "data_table",
+    "name": "Data Table",
+    "version": "1.0.0",
+    "description": "Advanced data table with sorting, filtering, pagination",
+    "category": "ui",
+    "minLevel": 2,
+    "exports": {
+      "components": ["DataTable", "DataGrid"],
+      "scripts": ["render_table", "render_grid"]
+    }
+  },
+  "renders": {
+    "init.script": {
+      "description": "Lifecycle hooks",
+      "component": {
+        "type": "Alert",
+        "props": { "severity": "info" },
+        "children": [
+          { "type": "Typography", "props": { "text": "init.script - lifecycle hooks" } }
+        ]
+      }
+    },
+    "render_table.script": {
+      "description": "Data table with pagination",
+      "component": {
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [{
+              "type": "Flex",
+              "props": { "justifyContent": "space-between", "alignItems": "center" },
+              "children": [
+                { "type": "Typography", "props": { "variant": "h6", "text": "Data Records" } },
+                {
+                  "type": "Stack",
+                  "props": { "direction": "row", "spacing": 1 },
+                  "children": [
+                    { "type": "TextField", "props": { "size": "small", "placeholder": "Search...", "sx": { "width": 200 } } },
+                    { "type": "Button", "props": { "variant": "outlined", "children": "Filter" } },
+                    { "type": "Button", "props": { "variant": "contained", "children": "Add New" } }
+                  ]
+                }
+              ]
+            }]
+          },
+          {
+            "type": "Table",
+            "props": {
+              "columns": [
+                { "field": "id", "headerName": "ID", "width": 70 },
+                { "field": "name", "headerName": "Name", "flex": 1 },
+                { "field": "email", "headerName": "Email", "flex": 1 },
+                { "field": "status", "headerName": "Status", "width": 100 },
+                { "field": "created", "headerName": "Created", "width": 150 }
+              ],
+              "rows": [
+                { "id": 1, "name": "John Doe", "email": "john@example.com", "status": "Active", "created": "2024-01-15" },
+                { "id": 2, "name": "Jane Smith", "email": "jane@example.com", "status": "Active", "created": "2024-01-14" },
+                { "id": 3, "name": "Bob Johnson", "email": "bob@example.com", "status": "Inactive", "created": "2024-01-13" },
+                { "id": 4, "name": "Alice Brown", "email": "alice@example.com", "status": "Active", "created": "2024-01-12" },
+                { "id": 5, "name": "Charlie Wilson", "email": "charlie@example.com", "status": "Pending", "created": "2024-01-11" }
+              ],
+              "pagination": true,
+              "pageSize": 10
+            }
+          },
+          {
+            "type": "CardActions",
+            "children": [{
+              "type": "Flex",
+              "props": { "justifyContent": "space-between", "alignItems": "center", "sx": { "px": 2, "py": 1 } },
+              "children": [
+                { "type": "Typography", "props": { "variant": "body2", "color": "text.secondary", "text": "Showing 1-5 of 5 records" } },
+                {
+                  "type": "Pagination",
+                  "props": { "count": 1, "page": 1 }
+                }
+              ]
+            }]
+          }
+        ]
+      }
+    }
+  }
+}

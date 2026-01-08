@@ -1,0 +1,360 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_dialogs",
+  "description": "Dialog components for confirmations, alerts, and forms",
+  "components": [
+    {
+      "id": "confirm_dialog",
+      "name": "ConfirmDialog",
+      "description": "Confirmation dialog with title, message, and confirm/cancel buttons",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "confirmLabel",
+          "type": "string",
+          "default": "Confirm"
+        },
+        {
+          "name": "cancelLabel",
+          "type": "string",
+          "default": "Cancel"
+        },
+        {
+          "name": "severity",
+          "type": "string",
+          "default": "primary",
+          "enum": ["primary", "secondary", "error", "warning", "info", "success"]
+        }
+      ],
+      "handlers": {
+        "onConfirm": "confirm.handleConfirm",
+        "onCancel": "confirm.handleCancel",
+        "onClose": "confirm.handleClose"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Dialog",
+          "open": "{{open}}",
+          "maxWidth": "sm",
+          "fullWidth": true,
+          "onClose": "onClose",
+          "children": [
+            {
+              "type": "DialogTitle",
+              "sx": {
+                "display": "flex",
+                "alignItems": "center",
+                "gap": 1
+              },
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "HelpOutline",
+                  "color": "{{severity}}"
+                },
+                "{{title}}"
+              ]
+            },
+            {
+              "type": "DialogContent",
+              "dividers": true,
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "body1",
+                  "color": "textSecondary",
+                  "children": "{{message}}"
+                }
+              ]
+            },
+            {
+              "type": "DialogActions",
+              "sx": {
+                "px": 3,
+                "py": 2,
+                "gap": 1
+              },
+              "children": [
+                {
+                  "type": "Button",
+                  "variant": "outlined",
+                  "color": "secondary",
+                  "onClick": "onCancel",
+                  "children": "{{cancelLabel}}"
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "color": "{{severity}}",
+                  "autoFocus": true,
+                  "onClick": "onConfirm",
+                  "children": "{{confirmLabel}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "alert_dialog",
+      "name": "AlertDialog",
+      "description": "Simple alert dialog with message and OK button",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "confirmLabel",
+          "type": "string",
+          "default": "OK"
+        },
+        {
+          "name": "severity",
+          "type": "string",
+          "default": "info",
+          "enum": ["info", "error", "warning", "success"]
+        }
+      ],
+      "handlers": {
+        "onConfirm": "alert.handleConfirm",
+        "onClose": "alert.handleClose"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Dialog",
+          "open": "{{open}}",
+          "maxWidth": "xs",
+          "fullWidth": true,
+          "onClose": "onClose",
+          "children": [
+            {
+              "type": "DialogTitle",
+              "sx": {
+                "display": "flex",
+                "alignItems": "center",
+                "gap": 1
+              },
+              "children": [
+                {
+                  "type": "Icon",
+                  "name": "{{severity === 'error' ? 'Error' : severity === 'warning' ? 'Warning' : severity === 'success' ? 'CheckCircle' : 'Info'}}",
+                  "color": "{{severity}}"
+                },
+                "{{title}}"
+              ]
+            },
+            {
+              "type": "DialogContent",
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "body1",
+                  "color": "textSecondary",
+                  "children": "{{message}}"
+                }
+              ]
+            },
+            {
+              "type": "DialogActions",
+              "sx": {
+                "px": 3,
+                "py": 2
+              },
+              "children": [
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "color": "{{severity}}",
+                  "autoFocus": true,
+                  "onClick": "onConfirm",
+                  "children": "{{confirmLabel}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "form_dialog",
+      "name": "FormDialog",
+      "description": "Dialog containing a form with submit/cancel buttons",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "formFields",
+          "type": "array",
+          "required": true,
+          "description": "Array of form field components"
+        },
+        {
+          "name": "submitLabel",
+          "type": "string",
+          "default": "Submit"
+        },
+        {
+          "name": "cancelLabel",
+          "type": "string",
+          "default": "Cancel"
+        },
+        {
+          "name": "hideCloseButton",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "state": [
+        {
+          "name": "isSubmitting",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "handlers": {
+        "onSubmit": "confirm.handleSubmit",
+        "onCancel": "confirm.handleCancel",
+        "onClose": "confirm.handleClose",
+        "validate": "confirm.validate"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Dialog",
+          "open": "{{open}}",
+          "maxWidth": "sm",
+          "fullWidth": true,
+          "onClose": "onClose",
+          "children": [
+            {
+              "type": "DialogTitle",
+              "sx": {
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "space-between"
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "h6",
+                  "children": "{{title}}"
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{!hideCloseButton}}",
+                  "then": {
+                    "type": "IconButton",
+                    "size": "small",
+                    "onClick": "onClose",
+                    "children": [
+                      {
+                        "type": "Icon",
+                        "name": "Close",
+                        "size": 20
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "DialogContent",
+              "dividers": true,
+              "children": [
+                {
+                  "type": "Box",
+                  "component": "form",
+                  "onSubmit": "onSubmit",
+                  "sx": {
+                    "display": "flex",
+                    "flexDirection": "column",
+                    "gap": 2,
+                    "pt": 1
+                  },
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "direction": "column",
+                      "spacing": 2,
+                      "children": "{{formFields}}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "DialogActions",
+              "sx": {
+                "px": 3,
+                "py": 2,
+                "gap": 1
+              },
+              "children": [
+                {
+                  "type": "Button",
+                  "variant": "outlined",
+                  "color": "secondary",
+                  "onClick": "onCancel",
+                  "children": "{{cancelLabel}}"
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "color": "primary",
+                  "type": "submit",
+                  "disabled": "{{isSubmitting}}",
+                  "onClick": "onSubmit",
+                  "children": "{{submitLabel}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["ConfirmDialog", "AlertDialog", "FormDialog"]
+  }
+}

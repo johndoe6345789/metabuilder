@@ -1,0 +1,62 @@
+# MetaBuilder Tools/Admin Container
+# Includes migrations, seed scripts, and administrative tools
+# Build: docker build -f deployment/docker/Dockerfile.tools -t metabuilder-tools .
+# Run: docker run -it --rm --network metabuilder_network metabuilder-tools
+
+FROM node:20-alpine AS node-builder
+
+WORKDIR /build
+
+# Install Node dependencies for Next.js
+COPY frontends/nextjs/package*.json ./frontends/nextjs/
+RUN cd frontends/nextjs && npm ci
+
+COPY frontends/nextjs/ ./frontends/nextjs/
+COPY prisma/ ./prisma/
+
+# Build Prisma client
+RUN cd frontends/nextjs && npx prisma generate
+
+FROM node:20-alpine
+
+# Install additional tools
+RUN apk add --no-cache \
+    postgresql-client \
+    curl \
+    jq \
+    bash \
+    libcurl \
+    ca-certificates
+
+# Create app user
+RUN adduser -D -s /bin/bash metabuilder
+
+WORKDIR /app
+
+# Copy Node.js tools and Prisma artifacts
+COPY --from=node-builder /build/frontends/nextjs /app/nextjs
+COPY --from=node-builder /build/prisma /app/prisma
+
+# Copy seed data and scripts
+COPY seed/ /app/seed/
+COPY deployment/scripts/ /app/scripts/
+RUN chmod +x /app/scripts/*.sh
+
+# Copy packages
+COPY packages/ /app/packages/
+
+# Set ownership
+RUN chown -R metabuilder:metabuilder /app
+
+USER metabuilder
+
+# Environment variables
+ENV METABUILDER_BASE_URL=http://metabuilder-app:3000
+ENV METABUILDER_PACKAGES=/app/packages
+ENV DBAL_API_URL=http://dbal-daemon:8080
+ENV NODE_ENV=production
+
+WORKDIR /app
+
+# Default to interactive shell
+CMD ["/bin/bash"]

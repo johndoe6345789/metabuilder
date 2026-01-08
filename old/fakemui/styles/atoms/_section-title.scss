@@ -1,0 +1,16 @@
+// Section title atom
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.section-title svg {
+  width: 18px;
+  height: 18px;
+}

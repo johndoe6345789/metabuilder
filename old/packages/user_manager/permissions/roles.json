@@ -1,0 +1,107 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "user_manager",
+  "description": "Role-based access control for user management package",
+  "permissions": [
+    {
+      "id": "users.view",
+      "name": "View Users",
+      "description": "View user details",
+      "resource": "users",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "users.list",
+      "name": "List Users",
+      "description": "List all users",
+      "resource": "users",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "users.create",
+      "name": "Create Users",
+      "description": "Create new users",
+      "resource": "users",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "users.edit",
+      "name": "Edit Users",
+      "description": "Edit user profiles",
+      "resource": "users",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "users.delete",
+      "name": "Delete Users",
+      "description": "Delete users",
+      "resource": "users",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "users.level.change",
+      "name": "Change User Levels",
+      "description": "Change user access levels",
+      "resource": "users",
+      "action": "admin",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "users.permissions.manage",
+      "name": "Manage User Permissions",
+      "description": "Manage user permissions and roles",
+      "resource": "users",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 5
+    },
+    {
+      "id": "users.ban",
+      "name": "Ban Users",
+      "description": "Ban or suspend users",
+      "resource": "users",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "users.activate",
+      "name": "Activate Users",
+      "description": "Activate user accounts",
+      "resource": "users",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "users.deactivate",
+      "name": "Deactivate Users",
+      "description": "Deactivate user accounts",
+      "resource": "users",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "users",
+      "name": "Users",
+      "type": "entity",
+      "description": "User management resources",
+      "actions": ["create", "read", "update", "delete", "manage", "admin"]
+    }
+  ]
+}

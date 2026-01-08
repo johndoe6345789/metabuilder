@@ -1,0 +1,344 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_footer",
+  "description": "App footer components including simple and full variants",
+  "components": [
+    {
+      "id": "app_footer_simple",
+      "name": "AppFooterSimple",
+      "description": "Simple footer with centered copyright text",
+      "props": [
+        {
+          "name": "text",
+          "type": "string",
+          "required": false,
+          "default": "© 2025 MetaBuilder. Built with the power of visual workflows and declarative schemas.",
+          "description": "Copyright text to display"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "component": "footer",
+          "className": "app-footer app-footer--simple",
+          "sx": {
+            "borderTop": 1,
+            "borderColor": "divider",
+            "bgcolor": "action.hover",
+            "py": 4,
+            "mt": 10
+          },
+          "children": [
+            {
+              "type": "Container",
+              "maxWidth": "lg",
+              "className": "footer-container",
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "body2",
+                  "className": "footer-copyright",
+                  "sx": {
+                    "color": "text.secondary",
+                    "textAlign": "center"
+                  },
+                  "children": "{{text}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "app_footer",
+      "name": "AppFooter",
+      "description": "Full footer with branding, navigation links, social icons, and legal links",
+      "props": [
+        {
+          "name": "brandName",
+          "type": "string",
+          "required": false,
+          "default": "MetaBuilder",
+          "description": "Brand name to display"
+        },
+        {
+          "name": "tagline",
+          "type": "string",
+          "required": false,
+          "default": "Build. Deploy. Manage.",
+          "description": "Brand tagline"
+        },
+        {
+          "name": "copyrightText",
+          "type": "string",
+          "required": false,
+          "default": "© 2025 MetaBuilder. All rights reserved.",
+          "description": "Copyright text"
+        },
+        {
+          "name": "showSocialLinks",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Whether to show social media links"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "component": "footer",
+          "className": "app-footer footer-main",
+          "children": [
+            {
+              "type": "Box",
+              "className": "footer-container",
+              "children": [
+                {
+                  "type": "Flex",
+                  "className": "footer-grid",
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "className": "footer-brand",
+                      "children": [
+                        {
+                          "type": "Text",
+                          "variant": "h6",
+                          "className": "footer-brand-logo",
+                          "children": "{{brandName}}"
+                        },
+                        {
+                          "type": "Text",
+                          "variant": "body2",
+                          "className": "footer-brand-description",
+                          "children": "{{tagline}}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Stack",
+                      "className": "footer-column",
+                      "children": [
+                        {
+                          "type": "Text",
+                          "variant": "subtitle2",
+                          "className": "footer-heading",
+                          "children": "Product"
+                        },
+                        {
+                          "type": "Box",
+                          "className": "footer-links",
+                          "children": [
+                            {
+                              "type": "Link",
+                              "href": "/features",
+                              "className": "footer-link",
+                              "children": "Features"
+                            },
+                            {
+                              "type": "Link",
+                              "href": "/pricing",
+                              "className": "footer-link",
+                              "children": "Pricing"
+                            },
+                            {
+                              "type": "Link",
+                              "href": "/docs",
+                              "className": "footer-link",
+                              "children": "Documentation"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Stack",
+                      "className": "footer-column",
+                      "children": [
+                        {
+                          "type": "Text",
+                          "variant": "subtitle2",
+                          "className": "footer-heading",
+                          "children": "Company"
+                        },
+                        {
+                          "type": "Box",
+                          "className": "footer-links",
+                          "children": [
+                            {
+                              "type": "Link",
+                              "href": "/about",
+                              "className": "footer-link",
+                              "children": "About"
+                            },
+                            {
+                              "type": "Link",
+                              "href": "/blog",
+                              "className": "footer-link",
+                              "children": "Blog"
+                            },
+                            {
+                              "type": "Link",
+                              "href": "/contact",
+                              "className": "footer-link",
+                              "children": "Contact"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Stack",
+                      "className": "footer-column",
+                      "children": [
+                        {
+                          "type": "Text",
+                          "variant": "subtitle2",
+                          "className": "footer-heading",
+                          "children": "Legal"
+                        },
+                        {
+                          "type": "Box",
+                          "className": "footer-links",
+                          "children": [
+                            {
+                              "type": "Link",
+                              "href": "/privacy",
+                              "className": "footer-link",
+                              "children": "Privacy Policy"
+                            },
+                            {
+                              "type": "Link",
+                              "href": "/terms",
+                              "className": "footer-link",
+                              "children": "Terms of Service"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{showSocialLinks}}",
+                      "then": {
+                        "type": "Stack",
+                        "className": "footer-column",
+                        "children": [
+                          {
+                            "type": "Text",
+                            "variant": "subtitle2",
+                            "className": "footer-heading",
+                            "children": "Follow Us"
+                          },
+                          {
+                            "type": "Flex",
+                            "className": "footer-social",
+                            "children": [
+                              {
+                                "type": "Link",
+                                "href": "https://github.com",
+                                "external": true,
+                                "title": "GitHub",
+                                "className": "footer-social-link",
+                                "children": [
+                                  {
+                                    "type": "Icon",
+                                    "name": "GitHub",
+                                    "size": 20
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "Link",
+                                "href": "https://twitter.com",
+                                "external": true,
+                                "title": "Twitter",
+                                "className": "footer-social-link",
+                                "children": [
+                                  {
+                                    "type": "Icon",
+                                    "name": "Twitter",
+                                    "size": 20
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "Link",
+                                "href": "https://linkedin.com",
+                                "external": true,
+                                "title": "LinkedIn",
+                                "className": "footer-social-link",
+                                "children": [
+                                  {
+                                    "type": "Icon",
+                                    "name": "LinkedIn",
+                                    "size": 20
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "Link",
+                                "href": "https://discord.com",
+                                "external": true,
+                                "title": "Discord",
+                                "className": "footer-social-link",
+                                "children": [
+                                  {
+                                    "type": "Icon",
+                                    "name": "Forum",
+                                    "size": 20
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Box",
+                  "className": "footer-bottom",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "caption",
+                      "className": "footer-copyright",
+                      "children": "{{copyrightText}}"
+                    },
+                    {
+                      "type": "Flex",
+                      "className": "footer-legal-links",
+                      "children": [
+                        {
+                          "type": "Link",
+                          "href": "/status",
+                          "className": "footer-legal-link",
+                          "children": "Status"
+                        },
+                        {
+                          "type": "Link",
+                          "href": "/security",
+                          "className": "footer-legal-link",
+                          "children": "Security"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["AppFooter", "AppFooterSimple"]
+  }
+}

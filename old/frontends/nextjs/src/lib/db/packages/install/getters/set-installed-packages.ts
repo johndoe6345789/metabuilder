@@ -1,0 +1,29 @@
+import { getAdapter } from '../../../core/dbal-client'
+import type { InstalledPackage } from '@/lib/package-types'
+
+type DBALInstalledPackageRecord = {
+  packageId: string
+}
+
+/**
+ * Set all installed packages (replaces existing)
+ */
+export async function setInstalledPackages(packages: InstalledPackage[]): Promise<void> {
+  const adapter = getAdapter()
+  // Delete all existing
+  const existing = (await adapter.list('InstalledPackage')) as {
+    data: DBALInstalledPackageRecord[]
+  }
+  for (const item of existing.data) {
+    await adapter.delete('InstalledPackage', item.packageId)
+  }
+  // Create new ones
+  for (const pkg of packages) {
+    await adapter.create('InstalledPackage', {
+      packageId: pkg.packageId,
+      installedAt: BigInt(pkg.installedAt),
+      version: pkg.version,
+      enabled: pkg.enabled,
+    })
+  }
+}

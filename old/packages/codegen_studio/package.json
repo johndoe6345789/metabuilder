@@ -1,0 +1,37 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "codegen_studio",
+  "name": "Codegen Studio",
+  "version": "1.1.0",
+  "description": "Generate Next.js, React, CLI starters, and MetaBuilder packages from configurable templates.",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "tools",
+  "icon": "static_content/icon.svg",
+  "minLevel": 5,
+  "primary": true,
+  "dependencies": {},
+  "devDependencies": {
+    "testing": "*"
+  },
+  "exports": {
+    "components": [
+      "CodegenStudio",
+      "TemplateSelector",
+      "PackageGenerator"
+    ],
+    "scripts": [
+      "init",
+      "blueprint",
+      "package_template",
+      "package_template.generator",
+      "package_template.templates",
+      "package_template.cli"
+    ]
+  },
+  "tests": {
+    "suites": [
+      "tests/metadata.test.json"
+    ]
+  }
+}

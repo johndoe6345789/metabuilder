@@ -1,0 +1,63 @@
+entity: Session
+version: "1.0"
+description: "User session tracking and management"
+
+fields:
+  id:
+    type: uuid
+    primary: true
+    generated: true
+
+  userId:
+    type: uuid
+    required: true
+    foreign_key:
+      entity: User
+      field: id
+      on_delete: cascade
+
+  token:
+    type: string
+    required: true
+    unique: true
+    sensitive: true
+    description: "Session token"
+
+  expiresAt:
+    type: bigint
+    required: true
+    description: "Session expiration time"
+
+  createdAt:
+    type: bigint
+    generated: true
+
+  lastActivity:
+    type: bigint
+    required: true
+
+  ipAddress:
+    type: string
+    optional: true
+    nullable: true
+
+  userAgent:
+    type: string
+    optional: true
+    nullable: true
+
+indexes:
+  - fields: [token]
+    unique: true
+  - fields: [userId]
+  - fields: [expiresAt]
+
+acl:
+  create:
+    system: true
+  read:
+    system: true
+  update:
+    system: true
+  delete:
+    system: true

@@ -1,0 +1,119 @@
+{
+  "metadata": {
+    "packageId": "ui_level4",
+    "name": "Level 4 - Admin Panel",
+    "version": "1.0.0",
+    "description": "Admin panel for user and system management",
+    "category": "ui",
+    "minLevel": 4,
+    "dependencies": ["ui_permissions", "ui_header", "ui_intro", "user_manager", "admin_dialog"],
+    "exports": {
+      "pages": ["level4"],
+      "scripts": ["layout", "schemas", "workflows"]
+    }
+  },
+  "renders": {
+    "init.script": {
+      "description": "Lifecycle hooks",
+      "component": {
+        "type": "Alert",
+        "props": { "severity": "info" },
+        "children": [
+          { "type": "Typography", "props": { "variant": "body2", "text": "init.script contains lifecycle hooks - no visual render" } }
+        ]
+      }
+    },
+    "layout.script": {
+      "description": "Main admin panel layout",
+      "component": {
+        "type": "Box",
+        "props": { "sx": { "minHeight": "100vh", "bgcolor": "background.default" } },
+        "children": [
+          {
+            "type": "Level4Header",
+            "props": { "username": "{{user.username}}", "nerdMode": "{{nerdMode}}" }
+          },
+          {
+            "type": "Container",
+            "props": { "maxWidth": "xl", "sx": { "py": 4 } },
+            "children": [
+              {
+                "type": "IntroSection",
+                "props": {
+                  "eyebrow": "Level 4",
+                  "title": "Application Builder",
+                  "description": "Build and manage your application components"
+                }
+              },
+              {
+                "type": "Tabs",
+                "props": {
+                  "items": [
+                    { "value": "schemas", "label": "Schemas" },
+                    { "value": "workflows", "label": "Workflows" },
+                    { "value": "users", "label": "Users" },
+                    { "value": "settings", "label": "Settings" }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "schemas.script": {
+      "description": "Schema editor interface",
+      "component": {
+        "type": "Stack",
+        "props": { "spacing": 3 },
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [
+                  { "type": "Typography", "props": { "variant": "h5", "text": "Schema Editor" } }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  { "type": "Typography", "props": { "variant": "body2", "color": "text.secondary", "text": "Define data models and validation rules for your application." } },
+                  { "type": "Button", "props": { "variant": "contained", "children": "Create Schema" } }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "workflows.script": {
+      "description": "Workflow designer interface",
+      "component": {
+        "type": "Stack",
+        "props": { "spacing": 3 },
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [
+                  { "type": "Typography", "props": { "variant": "h5", "text": "Workflow Designer" } }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  { "type": "Typography", "props": { "variant": "body2", "color": "text.secondary", "text": "Create automated workflows with visual node-based editor." } },
+                  { "type": "Button", "props": { "variant": "contained", "children": "New Workflow" } }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

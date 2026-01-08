@@ -1,0 +1,152 @@
+# InstalledPackage seed data
+# DBAL entity: InstalledPackage
+# Schema reference: prisma/schema.prisma (line 327)
+entity: InstalledPackage
+version: "1.0"
+description: "Initial package installation records for bootstrapping the system"
+
+# Default records for fresh installation
+records:
+  # Core system package - always required
+  - packageId: package_manager
+    tenantId: null  # Global/system-wide package
+    installedAt: 0  # Will be set to actual timestamp during bootstrap
+    version: "1.0.0"
+    enabled: true
+    config: |
+      {
+        "autoUpdate": false,
+        "systemPackage": true,
+        "uninstallProtection": true
+      }
+
+  # Base UI packages
+  - packageId: ui_header
+    tenantId: null
+    installedAt: 0
+    version: "1.0.0"
+    enabled: true
+    config: |
+      {
+        "systemPackage": true
+      }
+
+  - packageId: ui_footer
+    tenantId: null
+    installedAt: 0
+    version: "1.0.0"
+    enabled: true
+    config: |
+      {
+        "systemPackage": true
+      }
+
+  - packageId: ui_home
+    tenantId: null
+    installedAt: 0
+    version: "1.0.0"
+    enabled: true
+    config: |
+      {
+        "systemPackage": true,
+        "defaultRoute": "/",
+        "publicAccess": true
+      }
+
+  - packageId: ui_auth
+    tenantId: null
+    installedAt: 0
+    version: "1.0.0"
+    enabled: true
+    config: |
+      {
+        "systemPackage": true
+      }
+
+  - packageId: ui_login
+    tenantId: null
+    installedAt: 0
+    version: "1.0.0"
+    enabled: true
+    config: |
+      {
+        "systemPackage": true
+      }
+
+  # Core functionality
+  - packageId: dashboard
+    tenantId: null
+    installedAt: 0
+    version: "1.0.0"
+    enabled: true
+    config: |
+      {
+        "systemPackage": true,
+        "defaultRoute": "/"
+      }
+
+  - packageId: user_manager
+    tenantId: null
+    installedAt: 0
+    version: "1.0.0"
+    enabled: true
+    config: |
+      {
+        "systemPackage": true,
+        "minLevel": 4
+      }
+
+  - packageId: role_editor
+    tenantId: null
+    installedAt: 0
+    version: "1.0.0"
+    enabled: true
+    config: |
+      {
+        "systemPackage": false,
+        "minLevel": 4
+      }
+
+  # Admin tools
+  - packageId: admin_dialog
+    tenantId: null
+    installedAt: 0
+    version: "1.0.0"
+    enabled: true
+    config: |
+      {
+        "systemPackage": false,
+        "minLevel": 4
+      }
+
+  - packageId: database_manager
+    tenantId: null
+    installedAt: 0
+    version: "1.0.0"
+    enabled: true
+    config: |
+      {
+        "systemPackage": false,
+        "minLevel": 5,
+        "dangerousOperations": true
+      }
+
+  - packageId: schema_editor
+    tenantId: null
+    installedAt: 0
+    version: "1.0.0"
+    enabled: true
+    config: |
+      {
+        "systemPackage": false,
+        "minLevel": 5,
+        "dangerousOperations": true
+      }
+
+# Metadata for seed process
+metadata:
+  bootstrap: true
+  skipIfExists: true  # Don't re-seed if records already exist
+  timestampField: installedAt
+  useCurrentTimestamp: true  # Replace 0 with actual timestamp
+  validateReferences: true  # Ensure referenced packages exist in /packages

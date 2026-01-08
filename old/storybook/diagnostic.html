@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CSS Diagnostic</title>
+  <style id="test-styles">
+    /* This will be replaced by compiled CSS */
+  </style>
+</head>
+<body>
+  <h1>CSS Compilation Diagnostic</h1>
+
+  <h2>Test Elements:</h2>
+  <button class="button ui_level3_button">UI Level 3 Button</button>
+  <div class="card ui_level3_card" style="padding: 1rem; margin: 1rem 0;">UI Level 3 Card</div>
+
+  <h2>Diagnostic Info:</h2>
+  <pre id="output"></pre>
+
+  <script type="module">
+    // Simulate the compiler
+    const schema = await fetch('/packages/ui_level3/seed/styles.json').then(r => r.json());
+
+    const output = document.getElementById('output');
+    const log = (msg) => {
+      output.textContent += msg + '\n';
+      console.log(msg);
+    };
+
+    log('=== PACKAGE LOADED ===');
+    log('Package: ' + schema.package);
+    log('Selectors: ' + schema.selectors.length);
+    log('');
+
+    log('=== EXPECTED CLASSES ===');
+    schema.selectors.slice(0, 8).forEach(sel => {
+      const className = schema.package + '_' + sel.predicate.classes[0];
+      log('  .' + className);
+    });
+    log('');
+
+    log('=== TESTING COMPILATION ===');
+
+    // Import and test compiler
+    try {
+      const compilerModule = await import('./src/styles/compiler.ts');
+      const { compileToCSS } = compilerModule;
+
+      const css = compileToCSS(schema);
+      log('✓ Compilation successful');
+      log('CSS length: ' + css.length + ' bytes');
+      log('');
+
+      log('=== COMPILED CSS PREVIEW ===');
+      log(css.split('\n').slice(0, 30).join('\n'));
+
+      // Inject the CSS
+      document.getElementById('test-styles').textContent = css;
+      log('');
+      log('✓ CSS injected into DOM');
+
+    } catch (error) {
+      log('✗ Compilation failed: ' + error.message);
+      log(error.stack);
+    }
+  </script>
+</body>
+</html>

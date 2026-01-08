@@ -1,0 +1,179 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Level 4 Admin Panel",
+  "description": "Admin panel components for schemas, workflows, and script automation management",
+  "stories": [
+    {
+      "name": "AdminPanel",
+      "render": "layout",
+      "description": "Complete Level 4 admin panel layout",
+      "type": "function",
+      "args": {
+        "nerdMode": false
+      }
+    },
+    {
+      "name": "AdminPanelNerdMode",
+      "render": "layout",
+      "description": "Level 4 admin panel with nerd mode enabled",
+      "type": "function",
+      "args": {
+        "nerdMode": true
+      }
+    },
+    {
+      "name": "UserManagement",
+      "render": "users",
+      "description": "User management interface",
+      "type": "function"
+    },
+    {
+      "name": "SchemasTab",
+      "render": "schemas",
+      "description": "Schema editor tab",
+      "type": "function"
+    },
+    {
+      "name": "WorkflowsTab",
+      "render": "workflows",
+      "description": "Workflows management tab",
+      "type": "function",
+      "args": {
+        "workflows": [
+          {
+            "id": "wf-1",
+            "name": "User Onboarding",
+            "description": "Automated user onboarding workflow",
+            "steps": [
+              { "id": "s1", "name": "Create Account", "type": "action" },
+              { "id": "s2", "name": "Send Welcome Email", "type": "action" },
+              { "id": "s3", "name": "Assign Default Role", "type": "action" }
+            ]
+          },
+          {
+            "id": "wf-2",
+            "name": "Content Approval",
+            "description": "Multi-stage content approval process",
+            "steps": [
+              { "id": "s1", "name": "Submit for Review", "type": "action" },
+              { "id": "s2", "name": "Moderator Review", "type": "approval" },
+              { "id": "s3", "name": "Publish", "type": "action" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "GodSidebar",
+      "render": "godSidebar",
+      "description": "God panel sidebar component",
+      "type": "function",
+      "args": {
+        "items": [
+          { "id": "users", "label": "Users", "icon": "People" },
+          { "id": "schemas", "label": "Schemas", "icon": "Schema" },
+          { "id": "workflows", "label": "Workflows", "icon": "AccountTree" },
+          { "id": "settings", "label": "Settings", "icon": "Settings" }
+        ]
+      }
+    },
+    {
+      "name": "GodToolbar",
+      "render": "godToolbar",
+      "description": "God panel toolbar with actions",
+      "type": "function",
+      "args": {
+        "actions": [
+          { "id": "save", "label": "Save", "icon": "Save", "onClick": "save" },
+          { "id": "preview", "label": "Preview", "icon": "Visibility", "onClick": "preview" },
+          { "id": "deploy", "label": "Deploy", "icon": "Publish", "onClick": "deploy" }
+        ]
+      }
+    }
+  ],
+  "renders": {
+    "layout": {
+      "description": "Full Level 4 admin panel layout",
+      "featured": true
+    },
+    "users": {
+      "description": "User management interface"
+    },
+    "schemas": {
+      "description": "Schema editor interface"
+    },
+    "workflows": {
+      "description": "Workflow management interface"
+    },
+    "godSidebar": {
+      "description": "God panel sidebar"
+    },
+    "godToolbar": {
+      "description": "God panel toolbar"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "admin-user",
+      "username": "admin",
+      "level": 4,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    },
+    "nerdMode": false
+  },
+  "contextVariants": [
+    {
+      "name": "Admin User",
+      "description": "Standard admin with Level 4 access",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        },
+        "nerdMode": false
+      }
+    },
+    {
+      "name": "Admin Nerd Mode",
+      "description": "Admin with nerd mode enabled",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        },
+        "nerdMode": true
+      }
+    },
+    {
+      "name": "God User",
+      "description": "God-level user with full access",
+      "context": {
+        "user": {
+          "username": "god",
+          "level": 5
+        },
+        "nerdMode": true
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["layout", "users", "schemas", "workflows", "godSidebar", "godToolbar"],
+    "ignoredScripts": ["tests", "init"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "dark",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" },
+        { "name": "canvas", "value": "#0f0f0f" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Arcade Lobby Components",
+  "description": "Gaming lobby for tournaments, party queues, and highlights",
+  "stories": [
+    {
+      "name": "GameBrowser",
+      "render": "game_browser",
+      "description": "Featured game queues grid with wait times",
+      "args": {
+        "games": [
+          {
+            "title": "Neon Rush",
+            "description": "Fast-paced sprint arenas",
+            "waitTime": "45s"
+          },
+          {
+            "title": "Gridline",
+            "description": "Team tactics mode",
+            "waitTime": "2m"
+          },
+          {
+            "title": "Star Kart",
+            "description": "Party racing",
+            "waitTime": "30s"
+          }
+        ],
+        "columns": 3
+      }
+    },
+    {
+      "name": "PartyQueue",
+      "render": "party_queue",
+      "description": "Queue status with progress indicator",
+      "args": {
+        "queueName": "Neon Rush",
+        "progress": 65,
+        "estimatedWait": "45s"
+      }
+    },
+    {
+      "name": "TournamentList",
+      "render": "tournament_list",
+      "description": "List of available tournaments",
+      "args": {
+        "tournaments": [
+          {
+            "name": "Friday Night Showdown",
+            "participants": 128,
+            "status": "Live"
+          },
+          {
+            "name": "Weekend Warriors Cup",
+            "participants": 64,
+            "status": "Registering"
+          },
+          {
+            "name": "Pro League Qualifier",
+            "participants": 256,
+            "status": "Starting soon"
+          }
+        ],
+        "canCreate": false
+      }
+    },
+    {
+      "name": "TournamentListAdmin",
+      "render": "tournament_list",
+      "description": "Tournament list with admin create button",
+      "args": {
+        "tournaments": [
+          {
+            "name": "Friday Night Showdown",
+            "participants": 128,
+            "status": "Live"
+          }
+        ],
+        "canCreate": true
+      }
+    },
+    {
+      "name": "PartyCTA",
+      "render": "party_cta",
+      "description": "Call to action for creating parties",
+      "args": {
+        "canCreateTournament": false
+      }
+    },
+    {
+      "name": "PartyCTAAdmin",
+      "render": "party_cta",
+      "description": "Party CTA with tournament creation for admins",
+      "args": {
+        "canCreateTournament": true
+      }
+    }
+  ],
+  "renders": {
+    "game_browser": {
+      "description": "Featured game queues grid",
+      "featured": true
+    },
+    "party_queue": {
+      "description": "Queue status with progress"
+    },
+    "tournament_list": {
+      "description": "Available tournaments list"
+    },
+    "party_cta": {
+      "description": "Party creation call to action"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-user",
+      "username": "gamer123",
+      "level": 2,
+      "email": "gamer@example.com"
+    },
+    "tenant": {
+      "id": "arcade-tenant",
+      "name": "Arcade Gaming Hub"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Standard Player",
+      "description": "Can view lobby and join queues",
+      "context": {
+        "user": {
+          "username": "player1",
+          "level": 2
+        }
+      }
+    },
+    {
+      "name": "Tournament Admin",
+      "description": "Can create and manage tournaments",
+      "context": {
+        "user": {
+          "username": "tournament_admin",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "God User",
+      "description": "Full arcade management access",
+      "context": {
+        "user": {
+          "username": "arcade_god",
+          "level": 4
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["game_browser", "party_queue", "tournament_list", "party_cta"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "dark",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#0f0f23" },
+        { "name": "arcade", "value": "#1a1a2e" }
+      ]
+    }
+  }
+}

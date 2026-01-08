@@ -1,0 +1,299 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "code_editor",
+  "description": "Code editor components for JSON, scripting, and theme editing",
+  "components": [
+    {
+      "id": "code_editor",
+      "name": "CodeEditor",
+      "description": "Base code editor component with language selection and theming",
+      "props": [
+        {
+          "name": "language",
+          "type": "string",
+          "required": false,
+          "default": "json",
+          "description": "Programming language for syntax highlighting"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Editor content"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether the editor is read-only"
+        },
+        {
+          "name": "lineNumbers",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Show line numbers"
+        },
+        {
+          "name": "theme",
+          "type": "string",
+          "required": false,
+          "default": "light",
+          "description": "Editor color theme"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "code-editor-container",
+          "children": [
+            {
+              "type": "Toolbar",
+              "variant": "dense",
+              "children": [
+                {
+                  "type": "Select",
+                  "size": "small",
+                  "label": "Language",
+                  "value": "{{language}}"
+                },
+                {
+                  "type": "Select",
+                  "size": "small",
+                  "label": "Theme",
+                  "value": "{{theme}}"
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "code-editor-content",
+              "sx": {
+                "height": "400px",
+                "overflow": "auto"
+              },
+              "children": "{{value}}"
+            },
+            {
+              "type": "Box",
+              "className": "code-editor-status",
+              "children": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "json_editor",
+      "name": "JsonEditor",
+      "description": "JSON-specific code editor with formatting and validation",
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "default": "{}",
+          "description": "JSON content"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether the editor is read-only"
+        },
+        {
+          "name": "autoFormat",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Auto-format JSON on blur"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "json-editor-container",
+          "children": [
+            {
+              "type": "Toolbar",
+              "variant": "dense",
+              "children": [
+                {
+                  "type": "IconButton",
+                  "title": "Format JSON",
+                  "icon": "FormatAlignLeft"
+                },
+                {
+                  "type": "IconButton",
+                  "title": "Validate JSON",
+                  "icon": "Check"
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "json-editor-content",
+              "children": "{{value}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "lua_editor",
+      "name": "ScriptEditor",
+      "description": "Script editor component with sandbox execution support",
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "default": "",
+          "description": "Script code content"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether the editor is read-only"
+        },
+        {
+          "name": "showSnippets",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Show code snippets panel"
+        },
+        {
+          "name": "showOutput",
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Show output panel"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "lua-editor-container",
+          "children": [
+            {
+              "type": "Toolbar",
+              "variant": "dense",
+              "children": [
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "color": "primary",
+                  "size": "small",
+                  "children": "Run"
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "className": "lua-editor-content",
+              "children": "{{value}}"
+            },
+            {
+              "type": "conditional",
+              "condition": "{{showOutput}}",
+              "then": {
+                "type": "Box",
+                "className": "lua-editor-output",
+                "children": []
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "theme_editor",
+      "name": "ThemeEditor",
+      "description": "Theme customization editor with color pickers and mode toggle",
+      "props": [
+        {
+          "name": "primary",
+          "type": "string",
+          "required": false,
+          "default": "#1976d2",
+          "description": "Primary color"
+        },
+        {
+          "name": "secondary",
+          "type": "string",
+          "required": false,
+          "default": "#dc004e",
+          "description": "Secondary color"
+        },
+        {
+          "name": "mode",
+          "type": "string",
+          "required": false,
+          "default": "light",
+          "description": "Color mode (light/dark)"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "variant": "outlined",
+          "className": "theme-editor-container",
+          "children": [
+            {
+              "type": "Toolbar",
+              "variant": "dense",
+              "children": []
+            },
+            {
+              "type": "Box",
+              "className": "theme-editor-preview",
+              "children": []
+            },
+            {
+              "type": "Stack",
+              "spacing": 2,
+              "className": "theme-editor-controls",
+              "children": [
+                {
+                  "type": "ColorPicker",
+                  "name": "primary",
+                  "value": "{{primary}}",
+                  "label": "Primary Color"
+                },
+                {
+                  "type": "ColorPicker",
+                  "name": "secondary",
+                  "value": "{{secondary}}",
+                  "label": "Secondary Color"
+                },
+                {
+                  "type": "Switch",
+                  "label": "Dark Mode",
+                  "name": "dark_mode",
+                  "checked": "{{mode === 'dark'}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["CodeEditor", "JsonEditor", "ScriptEditor", "ThemeEditor"]
+  }
+}

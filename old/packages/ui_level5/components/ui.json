@@ -1,0 +1,321 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "ui_level5",
+  "description": "Level 5 God Panel components for tenant management and cross-tenant operations",
+  "components": [
+    {
+      "id": "level5_layout",
+      "name": "Level5Layout",
+      "description": "Main layout for Level 5 God Panel with header and navigation",
+      "props": [
+        {
+          "name": "username",
+          "type": "string",
+          "required": true,
+          "description": "Current user's username"
+        },
+        {
+          "name": "nerdMode",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Enable developer/nerd mode"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "level5-layout min-h-screen",
+          "sx": {
+            "background": "linear-gradient(to bottom right, #581c87, #0f172a, #312e81)"
+          },
+          "children": [
+            {
+              "type": "AppHeader",
+              "children": [
+                {
+                  "type": "Toolbar",
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "variant": "h6",
+                      "children": "Level 5 - God Panel"
+                    },
+                    {
+                      "type": "Box",
+                      "sx": { "flexGrow": 1 }
+                    },
+                    {
+                      "type": "Typography",
+                      "variant": "body2",
+                      "children": "{{username}}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "maxWidth": "xl",
+              "sx": { "py": 4 },
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 4,
+                  "children": [
+                    {
+                      "type": "IntroSection",
+                      "props": {
+                        "eyebrow": "Level 5",
+                        "title": "Super God Panel",
+                        "description": "Govern tenants and manage cross-level operations."
+                      }
+                    },
+                    {
+                      "type": "Level5Navigator"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "level5_navigator",
+      "name": "Level5Navigator",
+      "description": "Tab navigation for Level 5 panel sections",
+      "props": [
+        {
+          "name": "defaultTab",
+          "type": "string",
+          "required": false,
+          "default": "tenants"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "Tabs",
+              "defaultValue": "{{defaultTab}}",
+              "children": [
+                {
+                  "type": "TabsList",
+                  "children": [
+                    {
+                      "type": "Tab",
+                      "value": "tenants",
+                      "label": "Tenants"
+                    },
+                    {
+                      "type": "Tab",
+                      "value": "gods",
+                      "label": "God Users"
+                    },
+                    {
+                      "type": "Tab",
+                      "value": "transfer",
+                      "label": "Transfer"
+                    }
+                  ]
+                },
+                {
+                  "type": "TabPanel",
+                  "value": "tenants",
+                  "children": [{ "type": "TenantsPanel" }]
+                },
+                {
+                  "type": "TabPanel",
+                  "value": "gods",
+                  "children": [{ "type": "GodsPanel" }]
+                },
+                {
+                  "type": "TabPanel",
+                  "value": "transfer",
+                  "children": [{ "type": "TransferPanel" }]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tenants_panel",
+      "name": "TenantsPanel",
+      "description": "Tenant management panel with CRUD operations",
+      "props": [
+        {
+          "name": "tenants",
+          "type": "array",
+          "required": false,
+          "description": "List of tenants to display"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Tenant Management",
+              "subheader": "Create, edit, and manage tenants across the platform."
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Table",
+                  "columns": [
+                    { "field": "name", "headerName": "Name", "width": 200 },
+                    { "field": "slug", "headerName": "Slug", "width": 120 },
+                    { "field": "users", "headerName": "Users", "width": 100 },
+                    { "field": "status", "headerName": "Status", "width": 100 }
+                  ],
+                  "rows": "{{tenants}}"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "gods_panel",
+      "name": "GodsPanel",
+      "description": "Panel showing users with god-level privileges",
+      "props": [
+        {
+          "name": "godUsers",
+          "type": "array",
+          "required": false,
+          "description": "List of god-level users"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "God Users",
+              "subheader": "Users with elevated cross-tenant privileges."
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "List",
+                  "children": [
+                    {
+                      "type": "iterate",
+                      "over": "{{godUsers}}",
+                      "as": "user",
+                      "render": {
+                        "type": "ListItem",
+                        "children": [
+                          {
+                            "type": "ListItemAvatar",
+                            "children": [
+                              {
+                                "type": "Avatar",
+                                "alt": "{{user.username}}"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "ListItemText",
+                            "primary": "{{user.email}}",
+                            "secondary": "Level {{user.level}} - {{user.levelName}}"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "transfer_panel",
+      "name": "TransferPanel",
+      "description": "Data transfer panel for moving data between tenants",
+      "props": [
+        {
+          "name": "sourceTenant",
+          "type": "string",
+          "required": false,
+          "description": "Selected source tenant"
+        },
+        {
+          "name": "targetTenant",
+          "type": "string",
+          "required": false,
+          "description": "Selected target tenant"
+        },
+        {
+          "name": "tenantOptions",
+          "type": "array",
+          "required": false,
+          "description": "Available tenants for selection"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "title": "Data Transfer",
+              "subheader": "Transfer data and configurations between tenants."
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Stack",
+                  "spacing": 3,
+                  "children": [
+                    {
+                      "type": "Select",
+                      "label": "Source Tenant",
+                      "value": "{{sourceTenant}}",
+                      "options": "{{tenantOptions}}",
+                      "fullWidth": true
+                    },
+                    {
+                      "type": "Select",
+                      "label": "Target Tenant",
+                      "value": "{{targetTenant}}",
+                      "options": "{{tenantOptions}}",
+                      "fullWidth": true
+                    },
+                    {
+                      "type": "Button",
+                      "variant": "contained",
+                      "color": "primary",
+                      "children": "Start Transfer",
+                      "disabled": "{{!sourceTenant || !targetTenant || sourceTenant === targetTenant}}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+@forward './core/_variables';
+@forward './core/_mixins';
+@forward './core/_components';
+
+// Compatibility wrapper for old @use paths

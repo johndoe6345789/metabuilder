@@ -1,0 +1,154 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Role Editor Components",
+  "description": "User role management and permission configuration UI",
+  "stories": [
+    {
+      "name": "RoleEditor",
+      "render": "role_editor",
+      "description": "Complete role editor with permission management",
+      "args": {
+        "allowedRoles": ["user", "moderator", "admin", "god"],
+        "readonly": false,
+        "showInstanceOwner": false
+      }
+    },
+    {
+      "name": "RoleEditorReadonly",
+      "render": "role_editor",
+      "description": "Role editor in readonly mode",
+      "args": {
+        "allowedRoles": ["user", "moderator", "admin"],
+        "readonly": true,
+        "showInstanceOwner": false
+      }
+    },
+    {
+      "name": "RoleEditorWithInstanceOwner",
+      "render": "role_editor",
+      "description": "Role editor with instance owner toggle",
+      "args": {
+        "allowedRoles": ["admin", "god", "supergod"],
+        "readonly": false,
+        "showInstanceOwner": true
+      }
+    },
+    {
+      "name": "RoleCard",
+      "render": "role_card",
+      "description": "Single role card component",
+      "args": {
+        "role": "admin",
+        "info": {
+          "label": "Admin",
+          "level": 3,
+          "blurb": "Tenant-level administrator controls.",
+          "highlights": ["Invite users", "Configure pages", "Reset credentials"],
+          "badge": "AdminPanelSettings",
+          "variant": "secondary"
+        },
+        "selected": false,
+        "showBadge": true,
+        "ownPermissionCount": 12,
+        "inheritedPermissionCount": 5
+      }
+    },
+    {
+      "name": "RoleCardSelected",
+      "render": "role_card",
+      "description": "Role card in selected state",
+      "args": {
+        "role": "moderator",
+        "info": {
+          "label": "Moderator",
+          "level": 2,
+          "blurb": "Content moderator with collaboration tools.",
+          "highlights": ["Manage comments", "Resolve reports", "Escalate to admins"],
+          "badge": "Shield",
+          "variant": "secondary"
+        },
+        "selected": true,
+        "showBadge": true,
+        "ownPermissionCount": 8,
+        "inheritedPermissionCount": 3
+      }
+    },
+    {
+      "name": "AllRoleCards",
+      "render": "all_role_cards",
+      "description": "All role cards displayed in a grid",
+      "type": "function"
+    }
+  ],
+  "renders": {
+    "role_editor": {
+      "description": "Full role editor interface",
+      "featured": true
+    },
+    "role_card": {
+      "description": "Individual role card"
+    },
+    "all_role_cards": {
+      "description": "Grid of all role cards"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-admin",
+      "username": "admin_user",
+      "level": 4,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "Admin User",
+      "description": "Can view and edit roles",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "God User",
+      "description": "Can manage advanced permissions",
+      "context": {
+        "user": {
+          "username": "god",
+          "level": 4
+        }
+      }
+    },
+    {
+      "name": "Supergod User",
+      "description": "Full access including role deletion",
+      "context": {
+        "user": {
+          "username": "supergod",
+          "level": 5
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["role_editor", "role_card", "all_role_cards"],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

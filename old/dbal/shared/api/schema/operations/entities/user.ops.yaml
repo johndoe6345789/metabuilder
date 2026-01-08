@@ -1,0 +1,99 @@
+operations:
+  create:
+    description: "Create a new user account"
+    input:
+      required: [username, email, role]
+      optional: [profilePicture, bio, tenantId, isInstanceOwner, passwordChangeTimestamp, firstLogin]
+    output: User
+    acl_required: ["user:create"]
+    validation:
+      - username_unique: "Username must be unique"
+      - email_unique: "Email must be unique"
+      - email_format: "Must be valid email address"
+    errors:
+      - CONFLICT: "Username or email already exists"
+      - VALIDATION_ERROR: "Invalid input data"
+
+  create_many:
+    description: "Bulk create user accounts"
+    input:
+      required: [items]
+      optional: []
+    output: integer
+    acl_required: ["user:create"]
+    validation:
+      - username_unique: "Usernames must be unique"
+      - email_unique: "Emails must be unique"
+      - email_format: "Each user must have a valid email address"
+    errors:
+      - CONFLICT: "Username or email already exists"
+      - VALIDATION_ERROR: "Invalid user input"
+
+  read:
+    description: "Get user by ID"
+    input:
+      required: [id]
+    output: User
+    acl_required: ["user:read"]
+    row_level_check: "id = $user.id OR $user.role IN ('admin', 'god', 'supergod')"
+    errors:
+      - NOT_FOUND: "User not found"
+      - FORBIDDEN: "Cannot access other user's data"
+
+  update:
+    description: "Update user details"
+    input:
+      required: [id]
+      optional: [username, email, role, profilePicture, bio, tenantId, isInstanceOwner, passwordChangeTimestamp, firstLogin]
+    output: User
+    acl_required: ["user:update"]
+    row_level_check: "id = $user.id OR $user.role IN ('admin', 'god', 'supergod')"
+    validation:
+      - no_role_escalation: "Cannot elevate your own role"
+    errors:
+      - NOT_FOUND: "User not found"
+      - FORBIDDEN: "Cannot update other user"
+      - CONFLICT: "Username or email already exists"
+
+  update_many:
+    description: "Bulk update users matching a filter"
+    input:
+      required: [filter, data]
+    output: integer
+    acl_required: ["user:update"]
+    validation:
+      - no_role_escalation: "Cannot elevate roles in bulk updates"
+    errors:
+      - VALIDATION_ERROR: "Invalid update payload"
+
+  delete:
+    description: "Delete user account"
+    input:
+      required: [id]
+    output: boolean
+    acl_required: ["user:delete"]
+    row_level_check: "$user.role IN ('admin', 'god', 'supergod')"
+    errors:
+      - NOT_FOUND: "User not found"
+      - FORBIDDEN: "Insufficient permissions"
+
+  delete_many:
+    description: "Bulk delete users matching a filter"
+    input:
+      required: [filter]
+    output: integer
+    acl_required: ["user:delete"]
+    errors:
+      - VALIDATION_ERROR: "Invalid delete filter"
+
+  list:
+    description: "List users with filtering and pagination"
+    input:
+      optional: [tenantId, role, username, email, page, limit, sort]
+    output: User[]
+    acl_required: ["user:read"]
+    pagination: true
+    max_limit: 100
+    default_limit: 20
+    errors:
+      - VALIDATION_ERROR: "Invalid pagination parameters"

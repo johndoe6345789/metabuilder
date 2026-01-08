@@ -1,0 +1,447 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "audit_log",
+  "description": "UI components for audit log viewer and stats dashboard",
+  "components": [
+    {
+      "id": "audit_stats_cards",
+      "name": "AuditStatsCard",
+      "description": "Grid of stat cards showing audit log summary",
+      "props": [
+        {
+          "name": "stats",
+          "type": "object",
+          "required": true,
+          "description": "Statistics object with total, successful, failed, and rateLimit counts"
+        }
+      ],
+      "handlers": {
+        "prepare": "stats.prepareStatsDisplay"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Grid",
+          "props": {
+            "cols": 4,
+            "gap": 4,
+            "className": "md:grid-cols-4"
+          },
+          "children": [
+            {
+              "type": "Card",
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "props": {
+                    "className": "flex flex-row items-center justify-between pb-2 space-y-0"
+                  },
+                  "children": [
+                    {
+                      "type": "CardTitle",
+                      "props": {
+                        "className": "text-sm font-medium",
+                        "text": "Total Operations"
+                      }
+                    },
+                    {
+                      "type": "Icon",
+                      "props": {
+                        "name": "ChartLine",
+                        "className": "w-4 h-4 text-muted-foreground"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "props": {
+                        "variant": "h4",
+                        "className": "text-2xl font-bold",
+                        "text": "{{stats.total}}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Card",
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "props": {
+                    "className": "flex flex-row items-center justify-between pb-2 space-y-0"
+                  },
+                  "children": [
+                    {
+                      "type": "CardTitle",
+                      "props": {
+                        "className": "text-sm font-medium",
+                        "text": "Successful"
+                      }
+                    },
+                    {
+                      "type": "Icon",
+                      "props": {
+                        "name": "ShieldCheck",
+                        "className": "w-4 h-4 text-green-600"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "props": {
+                        "variant": "h4",
+                        "className": "text-2xl font-bold text-green-600",
+                        "text": "{{stats.successful}}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Card",
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "props": {
+                    "className": "flex flex-row items-center justify-between pb-2 space-y-0"
+                  },
+                  "children": [
+                    {
+                      "type": "CardTitle",
+                      "props": {
+                        "className": "text-sm font-medium",
+                        "text": "Failed"
+                      }
+                    },
+                    {
+                      "type": "Icon",
+                      "props": {
+                        "name": "Warning",
+                        "className": "w-4 h-4 text-red-600"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "props": {
+                        "variant": "h4",
+                        "className": "text-2xl font-bold text-red-600",
+                        "text": "{{stats.failed}}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Card",
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "props": {
+                    "className": "flex flex-row items-center justify-between pb-2 space-y-0"
+                  },
+                  "children": [
+                    {
+                      "type": "CardTitle",
+                      "props": {
+                        "className": "text-sm font-medium",
+                        "text": "Rate Limited"
+                      }
+                    },
+                    {
+                      "type": "Icon",
+                      "props": {
+                        "name": "Clock",
+                        "className": "w-4 h-4 text-yellow-600"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "Typography",
+                      "props": {
+                        "variant": "h4",
+                        "className": "text-2xl font-bold text-yellow-600",
+                        "text": "{{stats.rateLimit}}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "audit_log_viewer",
+      "name": "AuditLogViewer",
+      "description": "Complete audit log viewer with stats and scrollable log list",
+      "props": [
+        {
+          "name": "logs",
+          "type": "array",
+          "required": false,
+          "default": []
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "default": false
+        }
+      ],
+      "state": [
+        {
+          "name": "stats",
+          "type": "object",
+          "default": {}
+        },
+        {
+          "name": "formattedLogs",
+          "type": "array",
+          "default": []
+        }
+      ],
+      "handlers": {
+        "loadLogs": "init.loadLogs",
+        "calculateStats": "stats.calculateStats",
+        "formatLogs": "formatting.formatAllLogs",
+        "applyFilters": "filters.applyFilters"
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "props": {
+            "className": "space-y-6"
+          },
+          "children": [
+            {
+              "type": "ComponentRef",
+              "props": {
+                "ref": "audit_stats_cards",
+                "stats": "{{stats}}"
+              }
+            },
+            {
+              "type": "Card",
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "children": [
+                    {
+                      "type": "CardTitle",
+                      "props": {
+                        "text": "Security Audit Log"
+                      }
+                    },
+                    {
+                      "type": "CardDescription",
+                      "props": {
+                        "text": "Last 100 database operations with access control enforcement"
+                      }
+                    },
+                    {
+                      "type": "Button",
+                      "props": {
+                        "size": "sm",
+                        "className": "mt-2",
+                        "disabled": "{{loading}}"
+                      },
+                      "events": {
+                        "onClick": "loadLogs"
+                      },
+                      "children": [
+                        {
+                          "type": "Text",
+                          "props": {
+                            "text": "{{loading ? 'Loading...' : 'Refresh'}}"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "CardContent",
+                  "children": [
+                    {
+                      "type": "ScrollArea",
+                      "props": {
+                        "className": "h-[600px] pr-4"
+                      },
+                      "children": [
+                        {
+                          "type": "List",
+                          "props": {
+                            "dataSource": "formattedLogs",
+                            "className": "space-y-3",
+                            "emptyText": "No audit logs found"
+                          },
+                          "itemTemplate": {
+                            "type": "Box",
+                            "props": {
+                              "className": "flex items-start gap-3 p-3 rounded-lg border {{item.rowClass}}"
+                            },
+                            "children": [
+                              {
+                                "type": "Box",
+                                "props": {
+                                  "className": "flex items-center justify-center w-8 h-8 rounded-full bg-muted"
+                                },
+                                "children": [
+                                  {
+                                    "type": "Icon",
+                                    "props": {
+                                      "name": "{{item.resourceIcon}}",
+                                      "className": "w-4 h-4"
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "Box",
+                                "props": {
+                                  "className": "flex-1 space-y-1"
+                                },
+                                "children": [
+                                  {
+                                    "type": "Box",
+                                    "props": {
+                                      "className": "flex items-center gap-2"
+                                    },
+                                    "children": [
+                                      {
+                                        "type": "Badge",
+                                        "props": {
+                                          "className": "{{item.operationColor}}",
+                                          "text": "{{item.operation}}"
+                                        }
+                                      },
+                                      {
+                                        "type": "Typography",
+                                        "props": {
+                                          "variant": "body2",
+                                          "fontWeight": "medium",
+                                          "text": "{{item.resource}}"
+                                        }
+                                      },
+                                      {
+                                        "type": "Typography",
+                                        "props": {
+                                          "variant": "caption",
+                                          "color": "textSecondary",
+                                          "text": "{{item.resourceId}}"
+                                        }
+                                      },
+                                      {
+                                        "type": "ConditionalRender",
+                                        "props": {
+                                          "condition": "{{!item.success}}"
+                                        },
+                                        "children": [
+                                          {
+                                            "type": "Badge",
+                                            "props": {
+                                              "variant": "destructive",
+                                              "className": "ml-auto",
+                                              "text": "Failed"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "type": "Typography",
+                                    "props": {
+                                      "variant": "caption",
+                                      "color": "textSecondary"
+                                    },
+                                    "children": [
+                                      {
+                                        "type": "Text",
+                                        "props": {
+                                          "fontWeight": "medium",
+                                          "text": "{{item.username}}"
+                                        }
+                                      },
+                                      {
+                                        "type": "Text",
+                                        "props": {
+                                          "text": " • {{item.timestamp}}"
+                                        }
+                                      },
+                                      {
+                                        "type": "ConditionalRender",
+                                        "props": {
+                                          "condition": "{{item.ipAddress}}"
+                                        },
+                                        "children": [
+                                          {
+                                            "type": "Text",
+                                            "props": {
+                                              "text": " • {{item.ipAddress}}"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "type": "ConditionalRender",
+                                    "props": {
+                                      "condition": "{{item.errorMessage}}"
+                                    },
+                                    "children": [
+                                      {
+                                        "type": "Typography",
+                                        "props": {
+                                          "variant": "caption",
+                                          "color": "error",
+                                          "text": "{{item.errorMessage}}"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "exports": {
+    "components": ["AuditStatsCard", "AuditLogViewer"]
+  }
+}

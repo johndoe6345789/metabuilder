@@ -1,0 +1,52 @@
+operations:
+  create:
+    description: "Create a new component node"
+    input:
+      required: [pageId, type, childIds, order]
+      optional: [parentId]
+    output: ComponentNode
+    acl_required: ["component:create"]
+    errors:
+      - VALIDATION_ERROR: "Invalid component input"
+      - NOT_FOUND: "Parent component not found"
+
+  read:
+    description: "Get component by ID"
+    input:
+      required: [id]
+    output: ComponentNode
+    acl_required: ["component:read"]
+    errors:
+      - NOT_FOUND: "Component not found"
+
+  update:
+    description: "Update component"
+    input:
+      required: [id]
+      optional: [pageId, parentId, type, childIds, order]
+    output: ComponentNode
+    acl_required: ["component:update"]
+    errors:
+      - NOT_FOUND: "Component not found"
+      - VALIDATION_ERROR: "Invalid component update"
+
+  delete:
+    description: "Delete component"
+    input:
+      required: [id]
+    output: boolean
+    acl_required: ["component:delete"]
+    errors:
+      - NOT_FOUND: "Component not found"
+
+  list:
+    description: "List components with filtering and pagination"
+    input:
+      optional: [pageId, parentId, type, page, limit, sort]
+    output: ComponentNode[]
+    acl_required: ["component:read"]
+    pagination: true
+    max_limit: 200
+    default_limit: 50
+    errors:
+      - VALIDATION_ERROR: "Invalid pagination parameters"

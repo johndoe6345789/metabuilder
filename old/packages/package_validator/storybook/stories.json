@@ -1,0 +1,191 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Package Validator",
+  "description": "Validation tools for MetaBuilder packages",
+  "stories": [
+    {
+      "name": "Validate Package",
+      "render": "validate_package",
+      "description": "Run full package validation",
+      "type": "function",
+      "args": {
+        "packagePath": "packages/json_script_example"
+      },
+      "argControls": {
+        "packagePath": {
+          "type": "text",
+          "label": "Package Path",
+          "default": "packages/json_script_example"
+        }
+      }
+    },
+    {
+      "name": "Validate Metadata",
+      "render": "validate_metadata",
+      "description": "Validate package metadata.json",
+      "type": "function",
+      "args": {
+        "packagePath": "packages/json_script_example"
+      },
+      "argControls": {
+        "packagePath": {
+          "type": "text",
+          "label": "Package Path",
+          "default": "packages/json_script_example"
+        }
+      }
+    },
+    {
+      "name": "Validate Scripts",
+      "render": "validate_scripts",
+      "description": "Validate script definitions and exports",
+      "type": "function",
+      "args": {
+        "packagePath": "packages/json_script_example"
+      },
+      "argControls": {
+        "packagePath": {
+          "type": "text",
+          "label": "Package Path",
+          "default": "packages/json_script_example"
+        }
+      }
+    },
+    {
+      "name": "Validation Result Card - Success",
+      "render": "validation_result_card",
+      "description": "Display successful validation result",
+      "type": "component",
+      "args": {
+        "valid": true,
+        "errorCount": 0,
+        "warningCount": 2,
+        "packageId": "example_package"
+      }
+    },
+    {
+      "name": "Validation Result Card - Failure",
+      "render": "validation_result_card",
+      "description": "Display failed validation result",
+      "type": "component",
+      "args": {
+        "valid": false,
+        "errorCount": 3,
+        "warningCount": 5,
+        "packageId": "broken_package"
+      }
+    },
+    {
+      "name": "Validation Error List",
+      "render": "validation_error_list",
+      "description": "Display validation errors",
+      "type": "component",
+      "args": {
+        "errors": [
+          {
+            "code": "MISSING_FIELD",
+            "message": "Required field 'packageId' is missing",
+            "file": "metadata.json",
+            "line": 1
+          },
+          {
+            "code": "INVALID_SYNTAX",
+            "message": "Invalid JSON syntax at line 15",
+            "file": "components.json",
+            "line": 15
+          },
+          {
+            "code": "EXPORT_NOT_FOUND",
+            "message": "Exported function 'init' not found in scripts",
+            "file": "metadata.json"
+          }
+        ],
+        "title": "Validation Errors"
+      }
+    },
+    {
+      "name": "Package Validator Panel",
+      "render": "package_validator_panel",
+      "description": "Full validation panel UI",
+      "type": "component",
+      "args": {
+        "loading": false,
+        "results": null
+      }
+    }
+  ],
+  "renders": {
+    "validate_package": {
+      "description": "Full package validation",
+      "featured": true
+    },
+    "validate_metadata": {
+      "description": "Metadata validation"
+    },
+    "validate_scripts": {
+      "description": "Script validation"
+    },
+    "validation_result_card": {
+      "description": "Validation result display card"
+    },
+    "validation_error_list": {
+      "description": "Error list component"
+    },
+    "package_validator_panel": {
+      "description": "Complete validator UI panel"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "admin-user",
+      "username": "admin",
+      "level": 5,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    }
+  },
+  "contextVariants": [
+    {
+      "name": "God User",
+      "description": "Full validation access",
+      "context": {
+        "user": {
+          "username": "god",
+          "level": 5
+        }
+      }
+    },
+    {
+      "name": "Supergod User",
+      "description": "System-level access",
+      "context": {
+        "user": {
+          "username": "supergod",
+          "level": 6
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": [
+      "validate_package",
+      "validate_metadata",
+      "validate_scripts"
+    ],
+    "ignoredScripts": ["tests"]
+  },
+  "parameters": {
+    "layout": "padded",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#f5f5f5" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    }
+  }
+}

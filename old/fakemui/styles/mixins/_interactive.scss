@@ -1,0 +1,39 @@
+// Interactive state mixins
+
+@mixin hover-lift {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+@mixin clickable {
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  
+  &:hover {
+    background-color: var(--color-bg-hover);
+  }
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+@mixin focus-ring {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-primary);
+  }
+  
+  &:focus:not(:focus-visible) {
+    box-shadow: none;
+  }
+  
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-primary);
+  }
+}

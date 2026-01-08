@@ -1,0 +1,124 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "ui_level4",
+  "description": "Level 4 Admin Panel access permissions",
+  "permissions": [
+    {
+      "id": "level4.panel.view",
+      "name": "View Admin Panel",
+      "description": "View the Level 4 admin panel",
+      "resource": "level4",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "level4.settings.edit",
+      "name": "Edit System Settings",
+      "description": "Edit system settings in the admin panel",
+      "resource": "level4.settings",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "level4.users.manage",
+      "name": "Manage Users",
+      "description": "Manage user accounts and permissions",
+      "resource": "level4.users",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "level4.users.ban",
+      "name": "Ban Users",
+      "description": "Ban or suspend user accounts",
+      "resource": "level4.users",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "level4.schemas.edit",
+      "name": "Edit Schemas",
+      "description": "Create and modify schemas",
+      "resource": "level4.schemas",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "level4.workflows.edit",
+      "name": "Edit Workflows",
+      "description": "Create and modify workflows",
+      "resource": "level4.workflows",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "level4.workflows.run",
+      "name": "Run Workflows",
+      "description": "Execute workflows",
+      "resource": "level4.workflows",
+      "action": "execute",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "level4.scripts.edit",
+      "name": "Edit Scripts",
+      "description": "Create and modify automation scripts",
+      "resource": "level4.scripts",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "level4",
+      "name": "Admin Panel",
+      "type": "component",
+      "description": "Level 4 Admin Panel",
+      "actions": ["read"]
+    },
+    {
+      "id": "level4.settings",
+      "name": "System Settings",
+      "type": "custom",
+      "description": "System configuration settings",
+      "actions": ["read", "update"]
+    },
+    {
+      "id": "level4.users",
+      "name": "User Management",
+      "type": "entity",
+      "description": "User accounts and permissions",
+      "actions": ["read", "update", "manage"]
+    },
+    {
+      "id": "level4.schemas",
+      "name": "Schemas",
+      "type": "custom",
+      "description": "Schema definitions",
+      "actions": ["read", "update"]
+    },
+    {
+      "id": "level4.workflows",
+      "name": "Workflows",
+      "type": "function",
+      "description": "Workflow definitions and execution",
+      "actions": ["read", "update", "execute"]
+    },
+    {
+      "id": "level4.scripts",
+      "name": "Scripts",
+      "type": "function",
+      "description": "Automation script definitions",
+      "actions": ["read", "update", "execute"]
+    }
+  ]
+}

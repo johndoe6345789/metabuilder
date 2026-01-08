@@ -1,0 +1,133 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/entities.schema.json",
+  "schemaVersion": "2.0.0",
+  "entities": [
+    {
+      "name": "AuditLog",
+      "version": "1.0",
+      "description": "Audit log entry for tracking user and system actions",
+      "primaryKey": "id",
+      "timestamps": false,
+      "softDelete": false,
+      "fields": {
+        "id": {
+          "type": "string",
+          "generated": true,
+          "description": "Unique identifier (CUID)"
+        },
+        "tenantId": {
+          "type": "string",
+          "required": true,
+          "index": true,
+          "description": "Tenant identifier for multi-tenancy"
+        },
+        "userId": {
+          "type": "string",
+          "nullable": true,
+          "index": true,
+          "description": "User who performed the action"
+        },
+        "username": {
+          "type": "string",
+          "nullable": true,
+          "description": "Username for display purposes"
+        },
+        "action": {
+          "type": "enum",
+          "required": true,
+          "index": true,
+          "enum": ["create", "update", "delete", "login", "logout", "access", "execute", "export", "import"],
+          "description": "Type of action performed"
+        },
+        "entity": {
+          "type": "string",
+          "required": true,
+          "maxLength": 100,
+          "description": "Entity/resource type affected"
+        },
+        "entityId": {
+          "type": "string",
+          "nullable": true,
+          "description": "Specific entity instance identifier"
+        },
+        "oldValue": {
+          "type": "text",
+          "nullable": true,
+          "description": "JSON: previous state before change"
+        },
+        "newValue": {
+          "type": "text",
+          "nullable": true,
+          "description": "JSON: new state after change"
+        },
+        "ipAddress": {
+          "type": "string",
+          "nullable": true,
+          "maxLength": 45,
+          "description": "IP address of the client (IPv4 or IPv6)"
+        },
+        "userAgent": {
+          "type": "string",
+          "nullable": true,
+          "description": "Browser/client user agent string"
+        },
+        "details": {
+          "type": "text",
+          "nullable": true,
+          "description": "JSON: additional context and metadata"
+        },
+        "timestamp": {
+          "type": "bigint",
+          "required": true,
+          "index": true,
+          "description": "Unix timestamp in milliseconds"
+        }
+      },
+      "indexes": [
+        {
+          "fields": ["tenantId"],
+          "name": "idx_audit_tenant"
+        },
+        {
+          "fields": ["userId"],
+          "name": "idx_audit_user"
+        },
+        {
+          "fields": ["entity", "entityId"],
+          "name": "idx_audit_entity"
+        },
+        {
+          "fields": ["action"],
+          "name": "idx_audit_action"
+        },
+        {
+          "fields": ["timestamp"],
+          "name": "idx_audit_timestamp"
+        }
+      ],
+      "relations": [
+        {
+          "name": "tenant",
+          "type": "belongsTo",
+          "entity": "Tenant",
+          "field": "tenantId",
+          "onDelete": "Cascade"
+        },
+        {
+          "name": "user",
+          "type": "belongsTo",
+          "entity": "User",
+          "field": "userId",
+          "onDelete": "SetNull",
+          "optional": true
+        }
+      ],
+      "acl": {
+        "create": ["admin", "system"],
+        "read": ["admin", "god"],
+        "update": ["supergod"],
+        "delete": ["supergod"]
+      }
+    }
+  ]
+}

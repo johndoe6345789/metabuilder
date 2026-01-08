@@ -1,0 +1,66 @@
+operations:
+  create:
+    description: "Create a new session"
+    input:
+      required: [userId, token, expiresAt]
+      optional: [createdAt, lastActivity, ipAddress, userAgent]
+    output: Session
+    acl_required: ["session:write"]
+    system_only: true
+    security:
+      audit: true
+      never_log_token: true
+    errors:
+      - VALIDATION_ERROR: "Invalid session input"
+      - CONFLICT: "Session token already exists"
+
+  read:
+    description: "Get session by ID"
+    input:
+      required: [id]
+    output: Session
+    acl_required: ["session:read"]
+    system_only: true
+    errors:
+      - NOT_FOUND: "Session not found"
+
+  update:
+    description: "Update session expiration or activity timestamp"
+    input:
+      required: [id]
+      optional: [userId, token, expiresAt, lastActivity, ipAddress, userAgent]
+    output: Session
+    acl_required: ["session:write"]
+    system_only: true
+    security:
+      audit: true
+      never_log_token: true
+    errors:
+      - NOT_FOUND: "Session not found"
+      - VALIDATION_ERROR: "Invalid session update"
+      - CONFLICT: "Session token already exists"
+
+  delete:
+    description: "Delete session by ID"
+    input:
+      required: [id]
+    output: boolean
+    acl_required: ["session:delete"]
+    system_only: true
+    security:
+      audit: true
+    errors:
+      - NOT_FOUND: "Session not found"
+
+  list:
+    description: "List sessions with filtering and pagination"
+    input:
+      optional: [userId, token, page, limit, sort]
+    output: Session[]
+    acl_required: ["session:read"]
+    system_only: true
+    pagination: true
+    max_limit: 200
+    default_limit: 50
+    errors:
+      - VALIDATION_ERROR: "Invalid pagination parameters"

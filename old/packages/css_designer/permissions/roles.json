@@ -1,0 +1,53 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "css_designer",
+  "description": "CSS Designer access permissions",
+  "permissions": [
+    {
+      "id": "css.designer.view",
+      "name": "View CSS Designer",
+      "description": "View the CSS designer interface",
+      "resource": "css_designer",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "css.designer.edit",
+      "name": "Edit CSS Styles",
+      "description": "Edit CSS styles and theme settings",
+      "resource": "css_designer",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "css.designer.export",
+      "name": "Export CSS/SCSS",
+      "description": "Export theme to CSS or SCSS files",
+      "resource": "css_designer",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "css.designer.manage",
+      "name": "Manage CSS Designer",
+      "description": "Full management access to CSS designer settings",
+      "resource": "css_designer",
+      "action": "manage",
+      "scope": "global",
+      "minLevel": 3
+    }
+  ],
+  "resources": [
+    {
+      "id": "css_designer",
+      "name": "CSS Designer",
+      "type": "component",
+      "description": "CSS Designer resources for theme editing and export",
+      "actions": ["read", "update", "manage"]
+    }
+  ]
+}

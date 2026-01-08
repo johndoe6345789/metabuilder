@@ -1,0 +1,25 @@
+/**
+ * Set App Config
+ * Saves the application configuration to database
+ */
+
+import type { AppConfiguration } from '@/lib/types/level-types'
+import { prisma } from '@/lib/config/prisma'
+
+/**
+ * Set the application configuration
+ * @param config - The configuration to save
+ */
+export const setAppConfig = async (config: AppConfiguration): Promise<void> => {
+  await (prisma as any).appConfiguration.deleteMany()
+  await (prisma as any).appConfiguration.create({
+    data: {
+      id: config.id,
+      name: config.name,
+      schemas: JSON.stringify(config.schemas),
+      workflows: JSON.stringify(config.workflows),
+      pages: JSON.stringify(config.pages),
+      theme: JSON.stringify(config.theme),
+    },
+  })
+}

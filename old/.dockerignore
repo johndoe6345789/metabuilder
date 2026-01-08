@@ -1,0 +1,99 @@
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testing
+coverage
+.nyc_output
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__
+__mocks__
+.vitest
+
+# Next.js
+.next
+out
+dist
+build
+
+# Production
+/build
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env
+.env*.local
+.env.development
+.env.test
+.env.production
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+docs
+README*
+CHANGELOG*
+LICENSE
+
+# CI/CD
+.github
+.gitlab-ci.yml
+azure-pipelines.yml
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Development
+.editorconfig
+.prettierrc*
+.eslintrc*
+.eslintignore
+
+# Storybook
+.storybook
+storybook-static
+
+# E2E
+e2e
+playwright-report
+test-results
+
+# Temporary files
+tmp
+temp
+.tmp
+.cache

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/test-parameters.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "route_manager",
+  "description": "Parameterized test data for route manager tests",
+
+  "parameters": {
+    "sampleRoutes": [
+      {
+        "id": "1",
+        "path": "/",
+        "title": "Home",
+        "accessLevel": 0,
+        "requireAuth": false,
+        "enabled": true
+      },
+      {
+        "id": "2",
+        "path": "/dashboard",
+        "title": "Dashboard",
+        "accessLevel": 2,
+        "requireAuth": true,
+        "enabled": true
+      },
+      {
+        "id": "3",
+        "path": "/admin",
+        "title": "Admin Panel",
+        "accessLevel": 4,
+        "requireAuth": true,
+        "enabled": true
+      },
+      {
+        "id": "4",
+        "path": "/users/:id",
+        "title": "User Profile",
+        "accessLevel": 1,
+        "requireAuth": true,
+        "enabled": true
+      }
+    ],
+    "accessLevels": [
+      { "level": 0, "name": "Public" },
+      { "level": 1, "name": "User" },
+      { "level": 2, "name": "Moderator" },
+      { "level": 3, "name": "Admin" },
+      { "level": 4, "name": "God" },
+      { "level": 5, "name": "SuperGod" }
+    ],
+    "validPaths": [
+      { "path": "/", "valid": true },
+      { "path": "/dashboard", "valid": true },
+      { "path": "/users/:id", "valid": true },
+      { "path": "/api/v1/users", "valid": true },
+      { "path": "dashboard", "valid": false },
+      { "path": "/path with spaces", "valid": false },
+      { "path": "", "valid": false }
+    ],
+    "conflictScenarios": [
+      {
+        "name": "exact duplicate",
+        "existing": "/dashboard",
+        "new": "/dashboard",
+        "hasConflict": true
+      },
+      {
+        "name": "different paths",
+        "existing": "/dashboard",
+        "new": "/settings",
+        "hasConflict": false
+      },
+      {
+        "name": "param vs static",
+        "existing": "/users/:id",
+        "new": "/users/new",
+        "hasConflict": true
+      }
+    ]
+  }
+}

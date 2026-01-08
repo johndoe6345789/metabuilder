@@ -1,0 +1,149 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/forms.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "complete-example",
+  "description": "Dynamic forms for complete example package",
+  "forms": [
+    {
+      "id": "user_registration",
+      "name": "UserRegistration",
+      "title": "Create Account",
+      "description": "User registration form",
+      "layout": "vertical",
+      "fields": [
+        {
+          "name": "email",
+          "type": "email",
+          "label": "Email Address",
+          "placeholder": "you@example.com",
+          "required": true,
+          "validation": {
+            "email": true,
+            "required": "Email is required",
+            "messages": {
+              "email": "Please enter a valid email address"
+            }
+          }
+        },
+        {
+          "name": "password",
+          "type": "password",
+          "label": "Password",
+          "placeholder": "Enter password",
+          "required": true,
+          "helpText": "Password must be at least 8 characters",
+          "validation": {
+            "required": true,
+            "minLength": 8,
+            "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
+            "messages": {
+              "minLength": "Password must be at least 8 characters",
+              "pattern": "Password must contain uppercase, lowercase, and numbers"
+            }
+          }
+        },
+        {
+          "name": "confirmPassword",
+          "type": "password",
+          "label": "Confirm Password",
+          "placeholder": "Re-enter password",
+          "required": true,
+          "validation": {
+            "required": true,
+            "custom": "validators.matchesPassword"
+          }
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "label": "Full Name",
+          "placeholder": "John Doe",
+          "required": true,
+          "validation": {
+            "required": true,
+            "minLength": 2,
+            "maxLength": 100
+          }
+        },
+        {
+          "name": "role",
+          "type": "select",
+          "label": "Role",
+          "required": true,
+          "defaultValue": "user",
+          "options": [
+            { "value": "user", "label": "User" },
+            { "value": "moderator", "label": "Moderator" }
+          ]
+        },
+        {
+          "name": "newsletter",
+          "type": "checkbox",
+          "label": "Subscribe to newsletter",
+          "defaultValue": false
+        }
+      ],
+      "validation": {
+        "validateOnBlur": true,
+        "validateOnChange": false,
+        "validateOnSubmit": true
+      },
+      "onSubmit": "handlers.registerUser"
+    },
+    {
+      "id": "user_profile",
+      "name": "UserProfile",
+      "title": "Edit Profile",
+      "description": "User profile editing form",
+      "layout": "grid",
+      "columns": 2,
+      "fields": [
+        {
+          "name": "name",
+          "type": "text",
+          "label": "Full Name",
+          "required": true,
+          "grid": { "column": 2 }
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "label": "Email",
+          "required": true,
+          "readonly": true,
+          "grid": { "column": 2 }
+        },
+        {
+          "name": "phone",
+          "type": "tel",
+          "label": "Phone Number",
+          "placeholder": "+1 (555) 000-0000",
+          "grid": { "column": 1 }
+        },
+        {
+          "name": "timezone",
+          "type": "select",
+          "label": "Timezone",
+          "options": [
+            { "value": "America/New_York", "label": "Eastern Time" },
+            { "value": "America/Chicago", "label": "Central Time" },
+            { "value": "America/Denver", "label": "Mountain Time" },
+            { "value": "America/Los_Angeles", "label": "Pacific Time" }
+          ],
+          "grid": { "column": 1 }
+        },
+        {
+          "name": "bio",
+          "type": "textarea",
+          "label": "Bio",
+          "placeholder": "Tell us about yourself",
+          "validation": {
+            "maxLength": 500
+          },
+          "grid": { "column": 2 }
+        }
+      ],
+      "onSubmit": "handlers.updateProfile"
+    }
+  ]
+}

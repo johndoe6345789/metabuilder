@@ -1,0 +1,19 @@
+// Text utility classes
+
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-disabled {
+  color: var(--color-text-disabled);
+}
+
+.text-center {
+  text-align: center;
+}

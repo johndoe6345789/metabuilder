@@ -1,0 +1,62 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "component_editor",
+  "description": "Component editor access permissions",
+  "permissions": [
+    {
+      "id": "components.view",
+      "name": "View Components",
+      "description": "View component hierarchies",
+      "resource": "components",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "components.create",
+      "name": "Create Components",
+      "description": "Create and modify component hierarchies",
+      "resource": "components",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "components.update",
+      "name": "Update Components",
+      "description": "Update component configurations",
+      "resource": "components",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "components.delete",
+      "name": "Delete Components",
+      "description": "Delete components from hierarchies",
+      "resource": "components",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 4
+    },
+    {
+      "id": "components.export",
+      "name": "Export Components",
+      "description": "Export component hierarchies",
+      "resource": "components",
+      "action": "export",
+      "scope": "global",
+      "minLevel": 3
+    }
+  ],
+  "resources": [
+    {
+      "id": "components",
+      "name": "Components",
+      "type": "data",
+      "description": "Component hierarchy resources",
+      "actions": ["read", "create", "update", "delete", "export"]
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+// Prose / Markdown typography atom
+
+.prose h1 {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  margin: var(--spacing-lg) 0 var(--spacing-md);
+}
+
+.prose h2 {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin: var(--spacing-md) 0 var(--spacing-sm);
+}
+
+.prose h3 {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin: var(--spacing-md) 0 var(--spacing-sm);
+}
+
+.prose h4,
+.prose h5,
+.prose h6 {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  margin: var(--spacing-sm) 0;
+}
+
+.prose p {
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.7;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
+}
+
+.prose li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.prose a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.prose a:hover {
+  text-decoration: underline;
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--color-divider);
+  margin: var(--spacing-lg) 0;
+}
+
+.prose img {
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+}
+
+.prose input[type="checkbox"] {
+  margin-right: var(--spacing-sm);
+}

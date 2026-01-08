@@ -1,0 +1,114 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "featured": true,
+  "title": "Audit Log Package",
+  "description": "Security audit log viewer and stats dashboard components",
+  "stories": [
+    {
+      "name": "AuditLogViewer",
+      "render": "init",
+      "description": "Complete audit log viewer with stats and scrollable log list",
+      "args": {
+        "limit": 100
+      },
+      "argTypes": {
+        "limit": {
+          "type": "number",
+          "defaultValue": 100,
+          "description": "Maximum number of log entries to display"
+        }
+      }
+    },
+    {
+      "name": "AuditStatsCard",
+      "render": "stats",
+      "description": "Statistics cards showing audit log summary",
+      "args": {
+        "stats": {
+          "total": 1250,
+          "successful": 1100,
+          "failed": 120,
+          "rateLimit": 30
+        }
+      }
+    }
+  ],
+  "renders": {
+    "init": {
+      "description": "Main audit log viewer with full functionality",
+      "featured": true
+    },
+    "stats": {
+      "description": "Audit statistics dashboard cards"
+    },
+    "filters": {
+      "description": "Log filtering interface"
+    },
+    "formatting": {
+      "description": "Log entry formatting utilities"
+    }
+  },
+  "defaultContext": {
+    "user": {
+      "id": "demo-admin",
+      "username": "admin_user",
+      "level": 4,
+      "email": "admin@example.com"
+    },
+    "tenant": {
+      "id": "demo-tenant",
+      "name": "Demo Organization"
+    },
+    "nerdMode": false,
+    "theme": "light"
+  },
+  "contextVariants": [
+    {
+      "name": "Admin User",
+      "description": "Full admin access to audit logs",
+      "context": {
+        "user": {
+          "username": "admin",
+          "level": 4
+        }
+      }
+    },
+    {
+      "name": "Moderator",
+      "description": "Limited audit log access",
+      "context": {
+        "user": {
+          "username": "moderator",
+          "level": 3
+        }
+      }
+    },
+    {
+      "name": "God Mode",
+      "description": "Super admin with full access",
+      "context": {
+        "user": {
+          "username": "god_user",
+          "level": 5
+        }
+      }
+    }
+  ],
+  "scripts": {
+    "renderFunctions": ["init", "stats", "filters", "formatting"],
+    "ignoredScripts": ["db/operations", "tests"]
+  },
+  "parameters": {
+    "layout": "fullscreen",
+    "backgrounds": {
+      "default": "light",
+      "values": [
+        { "name": "light", "value": "#ffffff" },
+        { "name": "dark", "value": "#1a1a1a" }
+      ]
+    },
+    "docs": {
+      "description": "Security audit log viewer for tracking database operations and user actions"
+    }
+  }
+}

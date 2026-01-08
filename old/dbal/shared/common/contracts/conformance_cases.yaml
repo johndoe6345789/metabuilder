@@ -1,0 +1,301 @@
+- name: "User CRUD operations"
+  description: "Test basic create, read, update, delete operations for User entity"
+  operations:
+    - action: create
+      entity: User
+      input:
+        username: "testuser"
+        email: "test@example.com"
+        role: "user"
+      expected:
+        status: success
+        output:
+          username: "testuser"
+          email: "test@example.com"
+          role: "user"
+          
+    - action: read
+      entity: User
+      input:
+        id: "$prev.id"
+      expected:
+        status: success
+        output:
+          username: "testuser"
+          
+    - action: update
+      entity: User
+      input:
+        id: "$prev.id"
+        email: "updated@example.com"
+      expected:
+        status: success
+        output:
+          email: "updated@example.com"
+          
+    - action: delete
+      entity: User
+      input:
+        id: "$prev.id"
+      expected:
+        status: success
+        output: true
+
+- name: "Page hierarchy management"
+  description: "Test creating pages and component hierarchies"
+  operations:
+    - action: create
+      entity: PageConfig
+      input:
+        path: "/test-page"
+        title: "Test Page"
+        level: 1
+        componentTree: "{}"
+        requiresAuth: false
+        isPublished: true
+      expected:
+        status: success
+        
+    - action: create
+      entity: ComponentNode
+      input:
+        pageId: "$prev.id"
+        type: "Container"
+        childIds: "[]"
+        order: 0
+      expected:
+        status: success
+        
+    - action: getTree
+      entity: ComponentNode
+      input:
+        pageId: "$steps[0].id"
+      expected:
+        status: success
+        output:
+          - type: "Container"
+
+- name: "Error handling"
+  description: "Test proper error responses"
+  operations:
+    - action: read
+      entity: User
+      input:
+        id: "nonexistent-id"
+      expected:
+        status: error
+        error:
+          code: 404
+          message: "Resource not found"
+          
+    - action: create
+      entity: User
+      input:
+        username: "duplicate"
+        email: "dup@example.com"
+        role: "user"
+      expected:
+        status: success
+        
+    - action: create
+      entity: User
+      input:
+        username: "duplicate"
+        email: "other@example.com"
+        role: "user"
+      expected:
+        status: error
+        error:
+          code: 409
+          message: "Resource conflict"
+
+- name: "Validation errors"
+  description: "Test input validation"
+  operations:
+    - action: create
+      entity: User
+      input:
+        username: "ab"
+        email: "invalid-email"
+        role: "user"
+      expected:
+        status: error
+        error:
+          code: 422
+          
+    - action: create
+      entity: PageView
+      input:
+        slug: "/valid"
+        title: "Valid Page"
+        level: 99
+        layout: {}
+      expected:
+        status: error
+        error:
+          code: 422
+
+- name: "Workflow CRUD operations"
+  description: "Test basic create, read, update, delete operations for Workflow entity"
+  operations:
+    - action: create
+      entity: User
+      input:
+        username: "workflow_user"
+        email: "workflow@example.com"
+        role: "admin"
+      expected:
+        status: success
+
+    - action: create
+      entity: Workflow
+      input:
+        name: "daily_digest"
+        description: "Daily digest workflow"
+        trigger: "schedule"
+        triggerConfig:
+          cron: "0 9 * * *"
+        steps:
+          actions: ["send_email"]
+        isActive: true
+        createdBy: "$steps[0].id"
+      expected:
+        status: success
+        output:
+          name: "daily_digest"
+          trigger: "schedule"
+          isActive: true
+
+    - action: read
+      entity: Workflow
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output:
+          name: "daily_digest"
+
+    - action: update
+      entity: Workflow
+      input:
+        id: "$steps[1].id"
+        isActive: false
+        description: "Paused for maintenance"
+      expected:
+        status: success
+        output:
+          isActive: false
+          description: "Paused for maintenance"
+
+    - action: delete
+      entity: Workflow
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output: true
+
+- name: "Package CRUD operations"
+  description: "Test basic create, read, update, delete operations for Package entity"
+  operations:
+    - action: create
+      entity: User
+      input:
+        username: "package_owner"
+        email: "package_owner@example.com"
+        role: "admin"
+      expected:
+        status: success
+
+    - action: create
+      entity: Package
+      input:
+        name: "forum"
+        version: "1.2.3"
+        description: "Forum package"
+        author: "MetaBuilder"
+        manifest:
+          entry: "index.js"
+        isInstalled: false
+      expected:
+        status: success
+        output:
+          name: "forum"
+          version: "1.2.3"
+
+    - action: read
+      entity: Package
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output:
+          name: "forum"
+
+    - action: update
+      entity: Package
+      input:
+        id: "$steps[1].id"
+        isInstalled: true
+        installedBy: "$steps[0].id"
+        installedAt: "2099-01-01T00:00:00Z"
+      expected:
+        status: success
+        output:
+          isInstalled: true
+
+    - action: delete
+      entity: Package
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output: true
+
+- name: "Session CRUD operations"
+  description: "Test basic create, read, update, delete operations for Session entity"
+  operations:
+    - action: create
+      entity: User
+      input:
+        username: "session_owner"
+        email: "session_owner@example.com"
+        role: "admin"
+      expected:
+        status: success
+
+    - action: create
+      entity: Session
+      input:
+        userId: "$steps[0].id"
+        token: "session-token-123"
+        expiresAt: "2099-01-01T00:00:00Z"
+      expected:
+        status: success
+        output:
+          token: "session-token-123"
+
+    - action: read
+      entity: Session
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output:
+          token: "session-token-123"
+
+    - action: update
+      entity: Session
+      input:
+        id: "$steps[1].id"
+        lastActivity: "2099-01-02T00:00:00Z"
+      expected:
+        status: success
+
+    - action: delete
+      entity: Session
+      input:
+        id: "$steps[1].id"
+      expected:
+        status: success
+        output: true

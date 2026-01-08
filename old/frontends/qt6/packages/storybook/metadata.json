@@ -1,0 +1,7 @@
+{
+  "packageId": "storybook",
+  "name": "Storybook Showcase",
+  "version": "1.0.0",
+  "description": "Interactive catalog of all Material components, used for QA and design feedback.",
+  "dependencies": ["login", "frontpage"]
+}

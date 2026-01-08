@@ -1,0 +1,610 @@
+#ifndef DBAL_SQL_ADAPTER_HPP
+#define DBAL_SQL_ADAPTER_HPP
+
+#include <algorithm>
+#include <cctype>
+#include <chrono>
+#include <cstdlib>
+#include <map>
+#include <sstream>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+#include "dbal/adapters/adapter.hpp"
+#include "dbal/types.hpp"
+#include "dbal/errors.hpp"
+#include "sql_connection.hpp"
+#include "../../runtime/requests_client.hpp"
+
+namespace dbal {
+namespace adapters {
+namespace sql {
+
+struct SqlParam {
+    std::string name;
+    std::string value;
+};
+
+struct SqlRow {
+    std::map<std::string, std::string> columns;
+};
+
+struct SqlError {
+    enum class Code {
+        UniqueViolation,
+        ForeignKeyViolation,
+        NotFound,
+        Timeout,
+        ConnectionLost,
+        Unknown
+    };
+
+    Code code;
+    std::string message;
+};
+
+class SqlAdapter : public Adapter {
+public:
+    explicit SqlAdapter(const SqlConnectionConfig& config, Dialect dialect)
+        : pool_(config), dialect_(dialect) {}
+
+    ~SqlAdapter() override = default;
+
+    Result<User> createUser(const CreateUserInput& input) override {
+        auto conn = pool_.acquire();
+        if (!conn) {
+            return Error::internal("Unable to acquire SQL connection");
+        }
+        ConnectionGuard guard(pool_, conn);
+
+        const std::string sql = "INSERT INTO users (tenantId, username, email, role, profilePicture, bio, isInstanceOwner, passwordChangeTimestamp, firstLogin) "
+                                "VALUES (" + placeholder(1) + ", " + placeholder(2) + ", " + placeholder(3) +
+                                ", " + placeholder(4) + ", " + placeholder(5) + ", " + placeholder(6) +
+                                ", " + placeholder(7) + ", " + placeholder(8) + ", " + placeholder(9) + ") "
+                                "RETURNING " + userFields();
+        const std::vector<SqlParam> params = {
+            {"tenantId", input.tenantId.value_or("")},
+            {"username", input.username},
+            {"email", input.email},
+            {"role", input.role},
+            {"profilePicture", input.profilePicture.value_or("")},
+            {"bio", input.bio.value_or("")},
+            {"isInstanceOwner", input.isInstanceOwner.value_or(false) ? "1" : "0"},
+            {"passwordChangeTimestamp", input.passwordChangeTimestamp.has_value() ? timestampToString(input.passwordChangeTimestamp.value()) : ""},
+            {"firstLogin", input.firstLogin.value_or(false) ? "1" : "0"},
+        };
+
+        try {
+            const auto rows = executeQuery(conn, sql, params);
+            if (rows.empty()) {
+                return Error::internal("SQL insert returned no rows");
+            }
+            return mapRowToUser(rows.front());
+        } catch (const SqlError& err) {
+            return mapSqlError(err);
+        }
+    }
+
+    Result<User> getUser(const std::string& id) override {
+        auto conn = pool_.acquire();
+        if (!conn) {
+            return Error::internal("Unable to acquire SQL connection");
+        }
+        ConnectionGuard guard(pool_, conn);
+
+        const std::string sql = "SELECT " + userFields() +
+                                " FROM users WHERE id = " + placeholder(1);
+        const std::vector<SqlParam> params = {{"id", id}};
+
+        try {
+            const auto rows = executeQuery(conn, sql, params);
+            if (rows.empty()) {
+                return Error::notFound("User not found");
+            }
+            return mapRowToUser(rows.front());
+        } catch (const SqlError& err) {
+            return mapSqlError(err);
+        }
+    }
+
+    Result<User> updateUser(const std::string& id, const UpdateUserInput& input) override {
+        auto conn = pool_.acquire();
+        if (!conn) {
+            return Error::internal("Unable to acquire SQL connection");
+        }
+        ConnectionGuard guard(pool_, conn);
+
+        std::vector<std::string> setFragments;
+        std::vector<SqlParam> params;
+        params.reserve(4);
+        params.push_back({"id", id});
+
+        int paramIndex = 2;
+        if (input.username) {
+            setFragments.push_back("username = " + placeholder(paramIndex++));
+            params.push_back({"username", *input.username});
+        }
+        if (input.email) {
+            setFragments.push_back("email = " + placeholder(paramIndex++));
+            params.push_back({"email", *input.email});
+        }
+        if (input.role) {
+            setFragments.push_back("role = " + placeholder(paramIndex++));
+            params.push_back({"role", *input.role});
+        }
+        if (input.profilePicture) {
+            setFragments.push_back("profilePicture = " + placeholder(paramIndex++));
+            params.push_back({"profilePicture", *input.profilePicture});
+        }
+        if (input.bio) {
+            setFragments.push_back("bio = " + placeholder(paramIndex++));
+            params.push_back({"bio", *input.bio});
+        }
+        if (input.tenantId) {
+            setFragments.push_back("tenantId = " + placeholder(paramIndex++));
+            params.push_back({"tenantId", *input.tenantId});
+        }
+        if (input.isInstanceOwner) {
+            setFragments.push_back("isInstanceOwner = " + placeholder(paramIndex++));
+            params.push_back({"isInstanceOwner", *input.isInstanceOwner ? "1" : "0"});
+        }
+        if (input.passwordChangeTimestamp) {
+            setFragments.push_back("passwordChangeTimestamp = " + placeholder(paramIndex++));
+            params.push_back({"passwordChangeTimestamp", timestampToString(*input.passwordChangeTimestamp)});
+        }
+        if (input.firstLogin) {
+            setFragments.push_back("firstLogin = " + placeholder(paramIndex++));
+            params.push_back({"firstLogin", *input.firstLogin ? "1" : "0"});
+        }
+
+        if (setFragments.empty()) {
+            return Error::validationError("No update fields supplied");
+        }
+
+        const std::string sql = "UPDATE users SET " + joinFragments(setFragments, ", ") +
+                                " WHERE id = " + placeholder(1) +
+                                " RETURNING " + userFields();
+
+        try {
+            const auto rows = executeQuery(conn, sql, params);
+            if (rows.empty()) {
+                return Error::notFound("User not found");
+            }
+            return mapRowToUser(rows.front());
+        } catch (const SqlError& err) {
+            return mapSqlError(err);
+        }
+    }
+
+    Result<bool> deleteUser(const std::string& id) override {
+        auto conn = pool_.acquire();
+        if (!conn) {
+            return Error::internal("Unable to acquire SQL connection");
+        }
+        ConnectionGuard guard(pool_, conn);
+
+        const std::string sql = "DELETE FROM users WHERE id = " + placeholder(1);
+        const std::vector<SqlParam> params = {{"id", id}};
+
+        try {
+            const int affected = executeNonQuery(conn, sql, params);
+            if (affected == 0) {
+                return Error::notFound("User not found");
+            }
+            return Result<bool>(true);
+        } catch (const SqlError& err) {
+            return mapSqlError(err);
+        }
+    }
+
+    Result<std::vector<User>> listUsers(const ListOptions& options) override {
+        auto conn = pool_.acquire();
+        if (!conn) {
+            return Error::internal("Unable to acquire SQL connection");
+        }
+        ConnectionGuard guard(pool_, conn);
+
+        const int limit = options.limit > 0 ? options.limit : 50;
+        const int offset = options.page > 1 ? (options.page - 1) * limit : 0;
+
+        std::string where_clause;
+        std::vector<SqlParam> params;
+        params.reserve(3);
+        int param_index = 1;
+        auto tenant_filter = options.filter.find("tenantId");
+        if (tenant_filter == options.filter.end()) {
+            tenant_filter = options.filter.find("tenantId");
+        }
+        if (tenant_filter != options.filter.end()) {
+            where_clause = " WHERE tenantId = " + placeholder(param_index++);
+            params.push_back({"tenantId", tenant_filter->second});
+        }
+
+        const std::string sql = "SELECT " + userFields() +
+                                " FROM users" + where_clause +
+                                " ORDER BY createdAt DESC LIMIT " + placeholder(param_index++) +
+                                " OFFSET " + placeholder(param_index++);
+        params.push_back({"limit", std::to_string(limit)});
+        params.push_back({"offset", std::to_string(offset)});
+
+        try {
+            const auto rows = executeQuery(conn, sql, params);
+            std::vector<User> users;
+            users.reserve(rows.size());
+            for (const auto& row : rows) {
+                users.push_back(mapRowToUser(row));
+            }
+            return Result<std::vector<User>>(users);
+        } catch (const SqlError& err) {
+            return mapSqlError(err);
+        }
+    }
+
+    Result<PageConfig> createPage(const CreatePageInput& input) override {
+        (void)input;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter createPage");
+    }
+
+    Result<PageConfig> getPage(const std::string& id) override {
+        (void)id;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter getPage");
+    }
+
+    Result<PageConfig> updatePage(const std::string& id, const UpdatePageInput& input) override {
+        (void)id;
+        (void)input;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter updatePage");
+    }
+
+    Result<bool> deletePage(const std::string& id) override {
+        (void)id;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter deletePage");
+    }
+
+    Result<std::vector<PageConfig>> listPages(const ListOptions& options) override {
+        (void)options;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter listPages");
+    }
+
+    Result<Workflow> createWorkflow(const CreateWorkflowInput& input) override {
+        (void)input;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter createWorkflow");
+    }
+
+    Result<Workflow> getWorkflow(const std::string& id) override {
+        (void)id;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter getWorkflow");
+    }
+
+    Result<Workflow> updateWorkflow(const std::string& id, const UpdateWorkflowInput& input) override {
+        (void)id;
+        (void)input;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter updateWorkflow");
+    }
+
+    Result<bool> deleteWorkflow(const std::string& id) override {
+        (void)id;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter deleteWorkflow");
+    }
+
+    Result<std::vector<Workflow>> listWorkflows(const ListOptions& options) override {
+        (void)options;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter listWorkflows");
+    }
+
+    Result<Session> createSession(const CreateSessionInput& input) override {
+        (void)input;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter createSession");
+    }
+
+    Result<Session> getSession(const std::string& id) override {
+        (void)id;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter getSession");
+    }
+
+    Result<Session> updateSession(const std::string& id, const UpdateSessionInput& input) override {
+        (void)id;
+        (void)input;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter updateSession");
+    }
+
+    Result<bool> deleteSession(const std::string& id) override {
+        (void)id;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter deleteSession");
+    }
+
+    Result<std::vector<Session>> listSessions(const ListOptions& options) override {
+        (void)options;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter listSessions");
+    }
+
+    Result<InstalledPackage> createPackage(const CreatePackageInput& input) override {
+        (void)input;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter createPackage");
+    }
+
+    Result<InstalledPackage> getPackage(const std::string& id) override {
+        (void)id;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter getPackage");
+    }
+
+    Result<InstalledPackage> updatePackage(const std::string& id, const UpdatePackageInput& input) override {
+        (void)id;
+        (void)input;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter updatePackage");
+    }
+
+    Result<bool> deletePackage(const std::string& id) override {
+        (void)id;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter deletePackage");
+    }
+
+    Result<std::vector<InstalledPackage>> listPackages(const ListOptions& options) override {
+        (void)options;
+        return Error(ErrorCode::CapabilityNotSupported, "SQL adapter listPackages");
+    }
+
+    void close() override {
+        // Connections will tear down automatically via RAII in the pool.
+    }
+
+protected:
+    struct ConnectionGuard {
+        SqlPool& pool;
+        SqlConnection* connection;
+        ConnectionGuard(SqlPool& pool_, SqlConnection* connection_)
+            : pool(pool_), connection(connection_) {}
+        ~ConnectionGuard() {
+            if (connection) {
+                pool.release(connection);
+            }
+        }
+    };
+
+    std::vector<SqlRow> executeQuery(SqlConnection* connection,
+                                     const std::string& sql,
+                                     const std::vector<SqlParam>& params) {
+        return runQuery(connection, sql, params);
+    }
+
+    int executeNonQuery(SqlConnection* connection,
+                        const std::string& sql,
+                        const std::vector<SqlParam>& params) {
+        return runNonQuery(connection, sql, params);
+    }
+
+    virtual std::vector<SqlRow> runQuery(SqlConnection*,
+                                         const std::string&,
+                                         const std::vector<SqlParam>&) {
+        throw SqlError{SqlError::Code::Unknown, "SQL execution not implemented"};
+    }
+
+    virtual int runNonQuery(SqlConnection*,
+                            const std::string&,
+                            const std::vector<SqlParam>&) {
+        throw SqlError{SqlError::Code::Unknown, "SQL execution not implemented"};
+    }
+
+    static Error mapSqlError(const SqlError& error) {
+        switch (error.code) {
+            case SqlError::Code::UniqueViolation:
+                return Error::conflict(error.message);
+            case SqlError::Code::ForeignKeyViolation:
+                return Error::validationError(error.message);
+            case SqlError::Code::NotFound:
+                return Error::notFound(error.message);
+            case SqlError::Code::Timeout:
+            case SqlError::Code::ConnectionLost:
+                return Error::internal(error.message);
+            default:
+                return Error::internal(error.message);
+        }
+    }
+
+    static User mapRowToUser(const SqlRow& row) {
+        User user;
+        user.id = columnValue(row, "id");
+        user.tenantId = emptyToNull(columnValue(row, "tenantId"));
+        user.username = columnValue(row, "username");
+        user.email = columnValue(row, "email");
+        user.role = columnValue(row, "role");
+        user.profilePicture = emptyToNull(columnValue(row, "profilePicture"));
+        user.bio = emptyToNull(columnValue(row, "bio"));
+        user.createdAt = parseTimestamp(columnValue(row, "createdAt"));
+        user.isInstanceOwner = columnValue(row, "isInstanceOwner") == "1";
+        user.passwordChangeTimestamp = parseOptionalTimestamp(columnValue(row, "passwordChangeTimestamp"));
+        user.firstLogin = columnValue(row, "firstLogin") == "1";
+        return user;
+    }
+
+    static std::string columnValue(const SqlRow& row, const std::string& key) {
+        const auto itr = row.columns.find(key);
+        return itr != row.columns.end() ? itr->second : "";
+    }
+
+    static Timestamp parseTimestamp(const std::string& value) {
+        if (value.empty()) {
+            return std::chrono::system_clock::now();
+        }
+        try {
+            const auto seconds = std::stoll(value);
+            return Timestamp(std::chrono::seconds(seconds));
+        } catch (...) {
+            return std::chrono::system_clock::now();
+        }
+    }
+
+    static std::optional<Timestamp> parseOptionalTimestamp(const std::string& value) {
+        if (value.empty()) {
+            return std::nullopt;
+        }
+        return parseTimestamp(value);
+    }
+
+    static std::string timestampToString(const Timestamp& value) {
+        const auto seconds = std::chrono::duration_cast<std::chrono::seconds>(value.time_since_epoch()).count();
+        return std::to_string(seconds);
+    }
+
+    static std::optional<std::string> emptyToNull(const std::string& value) {
+        if (value.empty()) {
+            return std::nullopt;
+        }
+        return value;
+    }
+
+    static std::string joinFragments(const std::vector<std::string>& fragments, const std::string& separator) {
+        std::ostringstream out;
+        for (size_t i = 0; i < fragments.size(); ++i) {
+            if (i > 0) {
+                out << separator;
+            }
+            out << fragments[i];
+        }
+        return out.str();
+    }
+
+    static std::string userFields() {
+        return "id, tenantId, username, email, role, profilePicture, bio, createdAt, isInstanceOwner, passwordChangeTimestamp, firstLogin";
+    }
+
+    std::string placeholder(size_t index) const {
+        if (dialect_ == Dialect::Postgres || dialect_ == Dialect::Prisma) {
+            return "$" + std::to_string(index);
+        }
+        return "?";
+    }
+
+    SqlPool pool_;
+    Dialect dialect_;
+};
+
+class PostgresAdapter : public SqlAdapter {
+public:
+    explicit PostgresAdapter(const SqlConnectionConfig& config);
+};
+
+class MySQLAdapter : public SqlAdapter {
+public:
+    explicit MySQLAdapter(const SqlConnectionConfig& config);
+};
+
+class PrismaAdapter : public SqlAdapter {
+public:
+    explicit PrismaAdapter(const SqlConnectionConfig& config)
+        : SqlAdapter(config, Dialect::Prisma) {}
+};
+
+class NativePrismaAdapter : public SqlAdapter {
+public:
+    explicit NativePrismaAdapter(const SqlConnectionConfig& config)
+        : SqlAdapter(config, Dialect::Prisma),
+          requestsClient_(resolveBridgeUrl(config), buildBridgeHeaders(resolveBridgeToken(config))) {}
+
+    std::vector<SqlRow> runQuery(SqlConnection* connection,
+                                 const std::string& sql,
+                                 const std::vector<SqlParam>& params) override {
+        (void)connection;
+        const auto payload = buildPayload(sql, params, "query");
+        ::Json::StreamWriterBuilder writer;
+        writer["indentation"] = "";
+        const auto response = requestsClient_.post(
+            "/api/native-prisma",
+            ::Json::writeString(writer, payload));
+        if (response.statusCode != 200) {
+            throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge request failed"};
+        }
+        std::vector<SqlRow> rows;
+        const auto& rowsJson = response.json["rows"];
+        if (!rowsJson.isNull() && rowsJson.isArray()) {
+            for (const auto& entry : rowsJson) {
+                SqlRow row;
+                if (entry.isObject()) {
+                    const auto keys = entry.getMemberNames();
+                    for (const auto& key : keys) {
+                        const auto& value = entry[key];
+                        if (value.isString()) {
+                            row.columns[key] = value.asString();
+                        } else {
+                            ::Json::StreamWriterBuilder writer;
+                            writer["indentation"] = "";
+                            row.columns[key] = ::Json::writeString(writer, value);
+                        }
+                    }
+                }
+                rows.push_back(std::move(row));
+            }
+        }
+        return rows;
+    }
+
+    int runNonQuery(SqlConnection* connection,
+                    const std::string& sql,
+                    const std::vector<SqlParam>& params) override {
+        (void)connection;
+        const auto payload = buildPayload(sql, params, "nonquery");
+        ::Json::StreamWriterBuilder writer;
+        writer["indentation"] = "";
+        const auto response = requestsClient_.post(
+            "/api/native-prisma",
+            ::Json::writeString(writer, payload));
+        if (response.statusCode != 200) {
+            throw SqlError{SqlError::Code::Unknown, "Native Prisma bridge request failed"};
+        }
+        if (response.json.isMember("affected")) {
+            return response.json["affected"].asInt();
+        }
+        return 0;
+    }
+
+private:
+    static std::string resolveBridgeUrl(const SqlConnectionConfig& config) {
+        if (!config.prisma_bridge_url.empty()) {
+            return config.prisma_bridge_url;
+        }
+        if (const char* env_url = std::getenv("DBAL_NATIVE_PRISMA_URL")) {
+            return std::string(env_url);
+        }
+        return "http://localhost:3000";
+    }
+
+    static std::string resolveBridgeToken(const SqlConnectionConfig& config) {
+        if (!config.prisma_bridge_token.empty()) {
+            return config.prisma_bridge_token;
+        }
+        if (const char* env_token = std::getenv("DBAL_NATIVE_PRISMA_TOKEN")) {
+            return std::string(env_token);
+        }
+        return "";
+    }
+
+    static std::unordered_map<std::string, std::string> buildBridgeHeaders(const std::string& token) {
+        std::unordered_map<std::string, std::string> headers;
+        headers["Content-Type"] = "application/json";
+        if (!token.empty()) {
+            headers["x-dbal-native-prisma-token"] = token;
+        }
+        return headers;
+    }
+
+    runtime::RequestsClient requestsClient_;
+    ::Json::Value buildPayload(const std::string& sql,
+                               const std::vector<SqlParam>& params,
+                               const std::string& type) const {
+        ::Json::Value payload;
+        payload["sql"] = sql;
+        payload["type"] = type;
+        payload["params"] = ::Json::Value(::Json::arrayValue);
+        for (const auto& param : params) {
+            payload["params"].append(param.value);
+        }
+        return payload;
+    }
+};
+
+}
+}
+}
+
+#endif

@@ -1,0 +1,193 @@
+name: PR Labeling and Management
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  label-pr:
+    name: Auto-Label Pull Request
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened' || github.event.action == 'synchronize'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Analyze PR and add labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            
+            // Get PR files
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+            });
+            
+            let labels = [];
+            
+            // Analyze file changes
+            const fileTypes = {
+              workflows: files.some(f => f.filename.includes('.github/workflows')),
+              tests: files.some(f => f.filename.includes('test') || f.filename.includes('spec') || f.filename.includes('e2e')),
+              docs: files.some(f => f.filename.includes('README') || f.filename.includes('.md') || f.filename.includes('docs/')),
+              components: files.some(f => f.filename.includes('components/') || f.filename.includes('.tsx')),
+              styles: files.some(f => f.filename.includes('.css') || f.filename.includes('style')),
+              config: files.some(f => f.filename.match(/\.(json|yml|yaml|config\.(js|ts))$/)),
+              dependencies: files.some(f => f.filename === 'package.json' || f.filename === 'package-lock.json'),
+            };
+            
+            if (fileTypes.workflows) labels.push('workflows');
+            if (fileTypes.tests) labels.push('tests');
+            if (fileTypes.docs) labels.push('documentation');
+            if (fileTypes.components) labels.push('ui');
+            if (fileTypes.styles) labels.push('styling');
+            if (fileTypes.config) labels.push('configuration');
+            if (fileTypes.dependencies) labels.push('dependencies');
+            
+            // Size labels
+            const totalChanges = files.reduce((sum, f) => sum + f.additions + f.deletions, 0);
+            if (totalChanges < 50) {
+              labels.push('size: small');
+            } else if (totalChanges < 200) {
+              labels.push('size: medium');
+            } else {
+              labels.push('size: large');
+            }
+            
+            // Check PR title for type
+            const title = pr.title.toLowerCase();
+            if (title.match(/^fix|bug/)) labels.push('bug');
+            if (title.match(/^feat|feature|add/)) labels.push('enhancement');
+            if (title.match(/^refactor/)) labels.push('refactor');
+            if (title.match(/^docs/)) labels.push('documentation');
+            if (title.match(/^test/)) labels.push('tests');
+            if (title.match(/^chore/)) labels.push('chore');
+            
+            // Add labels
+            if (labels.length > 0) {
+              try {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  labels: labels
+                });
+              } catch (e) {
+                console.log('Some labels may not exist:', e.message);
+              }
+            }
+
+  check-pr-description:
+    name: Check PR Description
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened'
+    steps:
+      - name: Validate PR description
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const body = pr.body || '';
+            
+            let issues = [];
+            
+            // Check if description is too short
+            if (body.length < 50) {
+              issues.push('PR description is too short. Please provide more details about the changes.');
+            }
+            
+            // Check if description links to an issue
+            if (!body.match(/#\d+|https:\/\/github\.com/)) {
+              issues.push('Consider linking to a related issue using #issue_number');
+            }
+            
+            // Check for test information
+            if (body.toLowerCase().includes('test') === false && 
+                !pr.labels.some(l => l.name === 'documentation')) {
+              issues.push('Please mention how these changes were tested.');
+            }
+            
+            if (issues.length > 0) {
+              const issueList = issues.map(i => '- [ ] ' + i).join('\n');
+              const comment = [
+                '## \uD83D\uDCCB PR Description Checklist',
+                '',
+                'The following items could improve this PR:',
+                '',
+                issueList,
+                '',
+                '**Good PR descriptions include:**',
+                '- What changes were made and why',
+                '- How to test the changes',
+                '- Any breaking changes or special considerations',
+                '- Links to related issues',
+                '- Screenshots (for UI changes)',
+                '',
+                'This is a friendly reminder to help maintain code quality! \uD83D\uDE0A'
+              ].join('\n');
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body: comment
+              });
+            }
+
+  link-related-issues:
+    name: Link Related Issues
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened'
+    steps:
+      - name: Find and link related issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const body = pr.body || '';
+            const title = pr.title;
+            
+            // Extract issue numbers from PR body
+            const issueNumbers = [...body.matchAll(/#(\d+)/g)].map(m => m[1]);
+            
+            if (issueNumbers.length > 0) {
+              const relatedList = issueNumbers.map(n => '#' + n).join(', ');
+              const comment = [
+                '\uD83D\uDD17 **Related Issues**',
+                '',
+                'This PR is related to: ' + relatedList,
+                '',
+                'These issues will be automatically closed when this PR is merged.'
+              ].join('\n');
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body: comment
+              });
+              
+              // Add comment to related issues
+              for (const issueNum of issueNumbers) {
+                try {
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: parseInt(issueNum),
+                    body: '\uD83D\uDD17 Pull request #' + pr.number + ' has been created to address this issue.'
+                  });
+                } catch (e) {
+                  console.log('Could not comment on issue #' + issueNum);
+                }
+              }
+            }

@@ -1,0 +1,116 @@
+{
+  "metadata": {
+    "packageId": "user_manager",
+    "name": "User Manager",
+    "version": "1.0.0",
+    "description": "User management with roles and permissions",
+    "category": "admin",
+    "minLevel": 4,
+    "exports": {
+      "scripts": ["list", "create_user", "render_users"]
+    }
+  },
+  "renders": {
+    "init.script": {
+      "description": "Lifecycle hooks",
+      "component": {
+        "type": "Alert",
+        "props": { "severity": "info" },
+        "children": [
+          { "type": "Typography", "props": { "variant": "body2", "text": "init.script contains lifecycle hooks - no visual render" } }
+        ]
+      }
+    },
+    "render_users.script": {
+      "description": "User management table",
+      "component": {
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [{
+              "type": "Flex",
+              "props": { "justifyContent": "space-between", "alignItems": "center" },
+              "children": [
+                { "type": "Typography", "props": { "variant": "h5", "text": "Users" } },
+                { "type": "Button", "props": { "variant": "contained", "children": "Add User" } }
+              ]
+            }]
+          },
+          {
+            "type": "CardContent",
+            "children": [{
+              "type": "Table",
+              "props": {
+                "columns": [
+                  { "field": "username", "headerName": "Username" },
+                  { "field": "email", "headerName": "Email" },
+                  { "field": "level", "headerName": "Level" },
+                  { "field": "status", "headerName": "Status" },
+                  { "field": "actions", "headerName": "Actions" }
+                ],
+                "rows": [
+                  { "id": 1, "username": "admin", "email": "admin@example.com", "level": 6, "status": "Active" },
+                  { "id": 2, "username": "moderator", "email": "mod@example.com", "level": 3, "status": "Active" },
+                  { "id": 3, "username": "user1", "email": "user1@example.com", "level": 2, "status": "Inactive" }
+                ]
+              }
+            }]
+          }
+        ]
+      }
+    },
+    "list.script": {
+      "description": "Simple user list",
+      "component": {
+        "type": "Stack",
+        "props": { "spacing": 1 },
+        "children": [
+          { "type": "Typography", "props": { "variant": "h6", "text": "User List" } },
+          { "type": "Typography", "props": { "variant": "body2", "text": "• admin (Level 6)" } },
+          { "type": "Typography", "props": { "variant": "body2", "text": "• moderator (Level 3)" } },
+          { "type": "Typography", "props": { "variant": "body2", "text": "• user1 (Level 2)" } }
+        ]
+      }
+    },
+    "create_user.script": {
+      "description": "Create user form",
+      "component": {
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [
+              { "type": "Typography", "props": { "variant": "h5", "text": "Create User" } }
+            ]
+          },
+          {
+            "type": "CardContent",
+            "children": [{
+              "type": "Stack",
+              "props": { "spacing": 3 },
+              "children": [
+                { "type": "TextField", "props": { "label": "Username", "placeholder": "Enter username", "fullWidth": true } },
+                { "type": "TextField", "props": { "label": "Email", "placeholder": "user@example.com", "fullWidth": true } },
+                { "type": "TextField", "props": { "label": "Password", "type": "password", "fullWidth": true } },
+                { 
+                  "type": "Select",
+                  "props": {
+                    "label": "Level",
+                    "options": [
+                      { "value": 1, "label": "Public (1)" },
+                      { "value": 2, "label": "User (2)" },
+                      { "value": 3, "label": "Moderator (3)" },
+                      { "value": 4, "label": "Admin (4)" }
+                    ]
+                  }
+                },
+                { "type": "Button", "props": { "variant": "contained", "children": "Create User" } }
+              ]
+            }]
+          }
+        ]
+      }
+    }
+  }
+}

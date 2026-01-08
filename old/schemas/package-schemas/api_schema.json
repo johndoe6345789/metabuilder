@@ -1,0 +1,483 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/api.schema.json",
+  "title": "API Schema",
+  "description": "REST and GraphQL API endpoint definitions for MetaBuilder packages",
+  "type": "object",
+  "required": ["schemaVersion", "package"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "2.0.0"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "API description"
+    },
+    "basePath": {
+      "type": "string",
+      "description": "Base path for all routes",
+      "pattern": "^/.*",
+      "default": "/"
+    },
+    "version": {
+      "type": "string",
+      "description": "API version",
+      "pattern": "^v\\d+(\\.\\d+)?$",
+      "examples": ["v1", "v2.0"]
+    },
+    "auth": {
+      "$ref": "#/definitions/authConfig"
+    },
+    "rateLimit": {
+      "$ref": "#/definitions/rateLimitConfig"
+    },
+    "cors": {
+      "$ref": "#/definitions/corsConfig"
+    },
+    "routes": {
+      "type": "array",
+      "description": "API route definitions",
+      "items": {
+        "$ref": "#/definitions/route"
+      }
+    },
+    "graphql": {
+      "$ref": "#/definitions/graphqlConfig"
+    },
+    "middleware": {
+      "type": "array",
+      "description": "Global middleware stack",
+      "items": {
+        "type": "string",
+        "description": "Middleware function reference"
+      }
+    },
+    "errorHandlers": {
+      "type": "object",
+      "description": "Error handler definitions",
+      "additionalProperties": {
+        "type": "string",
+        "description": "Error handler function reference"
+      }
+    }
+  },
+  "definitions": {
+    "route": {
+      "type": "object",
+      "required": ["path", "method", "handler"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique route identifier"
+        },
+        "path": {
+          "type": "string",
+          "description": "Route path (supports :param and * wildcards)",
+          "examples": ["/users", "/users/:id", "/files/*"]
+        },
+        "method": {
+          "type": "string",
+          "description": "HTTP method",
+          "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]
+        },
+        "handler": {
+          "type": "string",
+          "description": "Handler function reference"
+        },
+        "description": {
+          "type": "string",
+          "description": "Route description"
+        },
+        "summary": {
+          "type": "string",
+          "description": "Brief summary for documentation"
+        },
+        "tags": {
+          "type": "array",
+          "description": "Tags for grouping routes",
+          "items": { "type": "string" }
+        },
+        "auth": {
+          "oneOf": [
+            { "type": "boolean", "description": "Enable/disable auth" },
+            { "$ref": "#/definitions/authConfig" }
+          ]
+        },
+        "rateLimit": {
+          "oneOf": [
+            { "type": "boolean", "description": "Enable/disable rate limiting" },
+            { "$ref": "#/definitions/rateLimitConfig" }
+          ]
+        },
+        "middleware": {
+          "type": "array",
+          "description": "Route-specific middleware",
+          "items": { "type": "string" }
+        },
+        "params": {
+          "type": "array",
+          "description": "URL parameter definitions",
+          "items": {
+            "$ref": "#/definitions/parameter"
+          }
+        },
+        "query": {
+          "type": "array",
+          "description": "Query parameter definitions",
+          "items": {
+            "$ref": "#/definitions/parameter"
+          }
+        },
+        "body": {
+          "$ref": "#/definitions/bodySchema"
+        },
+        "response": {
+          "type": "object",
+          "description": "Response definitions by status code",
+          "additionalProperties": {
+            "$ref": "#/definitions/responseSchema"
+          }
+        },
+        "deprecated": {
+          "type": "boolean",
+          "description": "Mark route as deprecated",
+          "default": false
+        },
+        "cache": {
+          "$ref": "#/definitions/cacheConfig"
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Request timeout in milliseconds",
+          "minimum": 0
+        }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Parameter name"
+        },
+        "type": {
+          "type": "string",
+          "description": "Parameter type",
+          "enum": ["string", "number", "integer", "boolean", "array"]
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether parameter is required",
+          "default": false
+        },
+        "description": {
+          "type": "string",
+          "description": "Parameter description"
+        },
+        "default": {
+          "description": "Default value"
+        },
+        "enum": {
+          "type": "array",
+          "description": "Allowed values"
+        },
+        "pattern": {
+          "type": "string",
+          "description": "Regex pattern for validation"
+        },
+        "minimum": {
+          "type": "number",
+          "description": "Minimum value (for numbers)"
+        },
+        "maximum": {
+          "type": "number",
+          "description": "Maximum value (for numbers)"
+        },
+        "minLength": {
+          "type": "integer",
+          "description": "Minimum length (for strings/arrays)"
+        },
+        "maxLength": {
+          "type": "integer",
+          "description": "Maximum length (for strings/arrays)"
+        }
+      }
+    },
+    "bodySchema": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string",
+          "description": "Request content type",
+          "enum": ["application/json", "application/x-www-form-urlencoded", "multipart/form-data", "text/plain"],
+          "default": "application/json"
+        },
+        "schema": {
+          "oneOf": [
+            { "type": "string", "description": "Reference to type definition" },
+            { "type": "object", "description": "Inline schema definition" }
+          ]
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether request body is required. Recommendation: set to true for POST/PUT/PATCH methods where body contains data, false for GET/DELETE methods. Explicitly specify this value for clarity."
+        },
+        "maxSize": {
+          "type": "integer",
+          "description": "Maximum body size in bytes"
+        }
+      }
+    },
+    "responseSchema": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Response description"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "Response content type",
+          "default": "application/json"
+        },
+        "schema": {
+          "oneOf": [
+            { "type": "string", "description": "Reference to type definition" },
+            { "type": "object", "description": "Inline schema definition" }
+          ]
+        },
+        "headers": {
+          "type": "object",
+          "description": "Response headers",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "authConfig": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Authentication type",
+          "enum": ["none", "bearer", "basic", "apiKey", "oauth2", "custom"]
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether authentication is required",
+          "default": true
+        },
+        "roles": {
+          "type": "array",
+          "description": "Required roles",
+          "items": { "type": "string" }
+        },
+        "permissions": {
+          "type": "array",
+          "description": "Required permissions",
+          "items": { "type": "string" }
+        },
+        "scheme": {
+          "type": "string",
+          "description": "Authentication scheme (for bearer/basic)"
+        },
+        "in": {
+          "type": "string",
+          "description": "Where to look for API key",
+          "enum": ["header", "query", "cookie"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Parameter name for API key"
+        },
+        "handler": {
+          "type": "string",
+          "description": "Custom auth handler function reference"
+        }
+      }
+    },
+    "rateLimitConfig": {
+      "type": "object",
+      "properties": {
+        "windowMs": {
+          "type": "integer",
+          "description": "Time window in milliseconds",
+          "default": 60000
+        },
+        "max": {
+          "type": "integer",
+          "description": "Maximum requests per window",
+          "default": 100
+        },
+        "message": {
+          "type": "string",
+          "description": "Rate limit exceeded message"
+        },
+        "statusCode": {
+          "type": "integer",
+          "description": "HTTP status code for rate limit errors",
+          "default": 429
+        },
+        "skipSuccessfulRequests": {
+          "type": "boolean",
+          "description": "Don't count successful requests",
+          "default": false
+        },
+        "skipFailedRequests": {
+          "type": "boolean",
+          "description": "Don't count failed requests",
+          "default": false
+        },
+        "keyGenerator": {
+          "type": "string",
+          "description": "Function to generate rate limit keys (e.g., by user, IP)"
+        }
+      }
+    },
+    "corsConfig": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable CORS",
+          "default": false
+        },
+        "origin": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } },
+            { "type": "boolean" }
+          ],
+          "description": "Allowed origins (* for all, true for request origin, false to disable)"
+        },
+        "methods": {
+          "type": "array",
+          "description": "Allowed HTTP methods",
+          "items": { "type": "string" },
+          "default": ["GET", "POST", "PUT", "DELETE"]
+        },
+        "allowedHeaders": {
+          "type": "array",
+          "description": "Allowed headers",
+          "items": { "type": "string" }
+        },
+        "exposedHeaders": {
+          "type": "array",
+          "description": "Headers to expose to client",
+          "items": { "type": "string" }
+        },
+        "credentials": {
+          "type": "boolean",
+          "description": "Allow credentials",
+          "default": false
+        },
+        "maxAge": {
+          "type": "integer",
+          "description": "Preflight cache duration in seconds"
+        }
+      }
+    },
+    "cacheConfig": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable caching",
+          "default": false
+        },
+        "ttl": {
+          "type": "integer",
+          "description": "Cache TTL in seconds"
+        },
+        "key": {
+          "type": "string",
+          "description": "Cache key generator function reference"
+        },
+        "vary": {
+          "type": "array",
+          "description": "Headers to vary cache by",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "graphqlConfig": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable GraphQL endpoint",
+          "default": false
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "GraphQL endpoint path",
+          "default": "/graphql"
+        },
+        "playgroundEnabled": {
+          "type": "boolean",
+          "description": "Enable GraphQL Playground",
+          "default": true
+        },
+        "schema": {
+          "type": "string",
+          "description": "Path to GraphQL schema file"
+        },
+        "resolvers": {
+          "type": "object",
+          "description": "Resolver function references",
+          "properties": {
+            "Query": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+            "Mutation": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+            "Subscription": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        },
+        "context": {
+          "type": "string",
+          "description": "Context builder function reference"
+        },
+        "introspection": {
+          "type": "boolean",
+          "description": "Enable schema introspection",
+          "default": true
+        },
+        "subscriptions": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "path": {
+              "type": "string",
+              "default": "/subscriptions"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,179 @@
+# Bootstrap Configuration
+# Controls how the package system initializes
+version: "1.0"
+description: "Bootstrap configuration for MetaBuilder package system initialization"
+
+bootstrap:
+  # Execution mode
+  mode: auto  # auto | manual | interactive
+
+  # Behavior flags
+  failOnError: false  # Continue installing optional packages even if some fail
+  verbose: true       # Detailed logging during bootstrap
+  dryRun: false       # Simulate without making changes
+
+  # Validation
+  validatePackages: true      # Verify package.json exists before installing
+  validateDependencies: true  # Check package dependencies
+  skipBrokenPackages: true    # Skip packages with validation errors
+
+  # Timing
+  retryAttempts: 3
+  retryDelayMs: 1000
+  timeoutMs: 30000  # Per-package timeout
+
+# Package source configuration
+sources:
+  # Local package directory
+  local:
+    enabled: true
+    path: ./packages
+    priority: 0
+    description: "Local packages in /packages directory"
+
+  # Future: Remote package registry
+  # registry:
+  #   enabled: false
+  #   url: https://packages.metabuilder.dev
+  #   priority: 1
+  #   authentication: false
+
+# Installation phases
+phases:
+  - id: 1
+    name: "Core System"
+    description: "Essential system packages - installation cannot proceed without these"
+    required: true
+    packages:
+      source: core-packages.yaml
+      filter: priority=1
+
+  - id: 2
+    name: "Base UI"
+    description: "User interface foundation packages"
+    required: true
+    packages:
+      source: core-packages.yaml
+      filter: priority=2
+
+  - id: 3
+    name: "Essential Features"
+    description: "Core application features"
+    required: true
+    packages:
+      source: core-packages.yaml
+      filter: priority=3
+
+  - id: 4
+    name: "Administration"
+    description: "User and role management"
+    required: true
+    packages:
+      source: core-packages.yaml
+      filter: priority=4
+
+  - id: 5
+    name: "Admin Tools"
+    description: "Advanced administration tools"
+    required: false
+    packages:
+      source: core-packages.yaml
+      filter: priority=5-6
+
+  - id: 6
+    name: "Recommended"
+    description: "Recommended optional packages"
+    required: false
+    packages:
+      source: core-packages.yaml
+      filter: section=recommended
+
+  - id: 7
+    name: "Development Tools"
+    description: "Development and debugging packages (dev environments only)"
+    required: false
+    packages:
+      source: core-packages.yaml
+      filter: section=development
+    conditions:
+      - NODE_ENV=development
+
+# Database seeding
+database:
+  # Seed in order - later seeds may depend on earlier ones
+  seedFiles:
+    - database/installed_packages.yaml
+    - database/package_permissions.yaml
+
+  # Behavior
+  skipIfPopulated: true  # Don't re-seed if InstalledPackage table has records
+  useTransactions: true  # Rollback all changes if any seed fails
+  validateSchema: true   # Verify entities match DBAL schema
+
+# Hooks - DBAL CLI commands to run at various stages
+hooks:
+  preBootstrap:
+    description: "Run before any bootstrap operations"
+    commands: []
+
+  postBootstrap:
+    description: "Run after successful bootstrap"
+    commands:
+      - dbal validate-schema
+      - dbal verify-packages
+
+  onError:
+    description: "Run if bootstrap fails"
+    commands:
+      - dbal rollback-seed
+
+  prePhase:
+    description: "Run before each installation phase"
+    commands: []
+
+  postPhase:
+    description: "Run after each installation phase"
+    commands:
+      - dbal verify-phase-integrity
+
+# Logging
+logging:
+  level: info  # debug | info | warn | error
+  file: logs/bootstrap.log
+  console: true
+  structured: true  # JSON-formatted logs
+
+# Environment-specific overrides
+environments:
+  development:
+    bootstrap:
+      verbose: true
+      failOnError: false
+    phases:
+      - id: 7
+        enabled: true  # Include development tools
+
+  production:
+    bootstrap:
+      verbose: false
+      failOnError: true
+      validatePackages: true
+      validateDependencies: true
+    phases:
+      - id: 7
+        enabled: false  # Exclude development tools
+
+  test:
+    bootstrap:
+      dryRun: false
+      skipIfPopulated: false  # Always re-seed in tests
+    database:
+      skipIfPopulated: false
+      useTransactions: true
+
+# Cleanup
+cleanup:
+  removeOrphanedPackageData: false  # Don't auto-delete PackageData for uninstalled packages
+  archiveOldVersions: false         # Keep old package version records
+  cleanupLogs: true
+  logRetentionDays: 30

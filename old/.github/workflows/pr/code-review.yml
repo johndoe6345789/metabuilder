@@ -1,0 +1,277 @@
+name: Automated Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: read
+
+jobs:
+  automated-review:
+    name: AI-Assisted Code Review
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/nextjs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          key: npm-deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            frontends/nextjs/node_modules
+            ~/.npm
+          restore-keys: npm-deps-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Run linter for review
+        id: lint
+        run: |
+          npm run lint > lint-output.txt 2>&1 || echo "LINT_FAILED=true" >> $GITHUB_OUTPUT
+          cat lint-output.txt
+        continue-on-error: true
+
+      - name: Analyze code changes
+        id: analyze
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Get PR diff
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            
+            let issues = [];
+            let warnings = [];
+            let suggestions = [];
+            
+            // Analyze each file
+            for (const file of files) {
+              const patch = file.patch || '';
+              const filename = file.filename;
+              
+              // Check for security issues
+              if (patch.match(/eval\s*\(/)) {
+                issues.push(`⚠️ **Security**: Use of \`eval()\` found in ${filename}`);
+              }
+              if (patch.match(/innerHTML\s*=/)) {
+                warnings.push(`⚠️ **Security**: Direct \`innerHTML\` usage in ${filename}. Consider using safer alternatives.`);
+              }
+              if (patch.match(/dangerouslySetInnerHTML/)) {
+                warnings.push(`⚠️ **Security**: \`dangerouslySetInnerHTML\` usage in ${filename}. Ensure content is sanitized.`);
+              }
+              
+              // Check for code quality
+              if (patch.match(/console\.(log|debug|info)/)) {
+                warnings.push(`🔍 **Code Quality**: Console statements found in ${filename}. Remove before merging.`);
+              }
+              if (patch.match(/debugger/)) {
+                issues.push(`🐛 **Debug Code**: Debugger statement found in ${filename}. Remove before merging.`);
+              }
+              if (patch.match(/(:\s*any\b|\bany\s*[>;,\)])/)) {
+                suggestions.push(`💡 **Type Safety**: Consider replacing \`any\` types with specific types in ${filename}`);
+              }
+              
+              // Check for best practices
+              if (filename.endsWith('.tsx') || filename.endsWith('.jsx')) {
+                if (patch.match(/useEffect.*\[\]/) && !patch.includes('// eslint-disable')) {
+                  suggestions.push(`💡 **React**: Empty dependency array in useEffect in ${filename}. Verify if intentional.`);
+                }
+              }
+              
+              // Check for large files
+              if (file.additions > 500) {
+                warnings.push(`📏 **File Size**: ${filename} has ${file.additions} additions. Consider breaking into smaller files.`);
+              }
+            }
+            
+            // Read lint output if exists
+            let lintIssues = '';
+            try {
+              lintIssues = fs.readFileSync('lint-output.txt', 'utf8');
+            } catch (e) {
+              // File doesn't exist
+            }
+            
+            // Determine if auto-approve is appropriate
+            const hasBlockingIssues = issues.length > 0 || lintIssues.includes('error');
+            
+            return {
+              issues,
+              warnings,
+              suggestions,
+              lintIssues,
+              hasBlockingIssues,
+              fileCount: files.length,
+              totalAdditions: files.reduce((sum, f) => sum + f.additions, 0),
+              totalDeletions: files.reduce((sum, f) => sum + f.deletions, 0)
+            };
+
+      - name: Post review comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const analysis = JSON.parse('${{ steps.analyze.outputs.result }}');
+            
+            let comment = '## 🤖 Automated Code Review\n\n';
+            comment += `**Changes Summary:**\n`;
+            comment += `- Files changed: ${analysis.fileCount}\n`;
+            comment += `- Lines added: ${analysis.totalAdditions}\n`;
+            comment += `- Lines deleted: ${analysis.totalDeletions}\n\n`;
+            
+            if (analysis.issues.length > 0) {
+              comment += '### ❌ Blocking Issues\n\n';
+              analysis.issues.forEach(issue => comment += `- ${issue}\n`);
+              comment += '\n';
+            }
+            
+            if (analysis.warnings.length > 0) {
+              comment += '### ⚠️ Warnings\n\n';
+              analysis.warnings.forEach(warning => comment += `- ${warning}\n`);
+              comment += '\n';
+            }
+            
+            if (analysis.suggestions.length > 0) {
+              comment += '### 💡 Suggestions\n\n';
+              analysis.suggestions.forEach(suggestion => comment += `- ${suggestion}\n`);
+              comment += '\n';
+            }
+            
+            if (analysis.lintIssues && analysis.lintIssues.includes('error')) {
+              comment += '### 🔴 Linting Errors\n\n';
+              comment += '```\n' + analysis.lintIssues + '\n```\n\n';
+            }
+            
+            if (analysis.hasBlockingIssues) {
+              comment += '---\n';
+              comment += '### ❌ Review Status: **CHANGES REQUESTED**\n\n';
+              comment += 'Please address the blocking issues above before this PR can be approved.\n';
+            } else {
+              comment += '---\n';
+              comment += '### ✅ Review Status: **APPROVED**\n\n';
+              comment += 'No blocking issues found! This PR looks good to merge after CI checks pass.\n';
+            }
+            
+            // Check if we already commented
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(c => 
+              c.user.type === 'Bot' && c.body.includes('Automated Code Review')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
+
+      - name: Add labels based on review
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const analysis = JSON.parse('${{ steps.analyze.outputs.result }}');
+            
+            let labels = [];
+            
+            if (analysis.hasBlockingIssues) {
+              labels.push('needs-changes');
+            } else {
+              labels.push('ready-for-review');
+            }
+            
+            if (analysis.warnings.length > 0) {
+              labels.push('has-warnings');
+            }
+            
+            if (analysis.totalAdditions > 500) {
+              labels.push('large-pr');
+            }
+            
+            // Remove conflicting labels first
+            try {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                name: 'needs-changes'
+              });
+            } catch (e) {
+              // Label doesn't exist
+            }
+            
+            try {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                name: 'ready-for-review'
+              });
+            } catch (e) {
+              // Label doesn't exist
+            }
+            
+            // Add new labels
+            for (const label of labels) {
+              try {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  labels: [label]
+                });
+              } catch (e) {
+                console.log(`Label ${label} might not exist, skipping...`);
+              }
+            }
+
+      - name: Auto-approve if no issues
+        if: steps.analyze.outputs.result && !fromJSON(steps.analyze.outputs.result).hasBlockingIssues
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              event: 'APPROVE',
+              body: '✅ Automated review passed! No blocking issues found. This PR is approved pending successful CI checks.'
+            });

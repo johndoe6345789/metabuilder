@@ -1,0 +1,173 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/test-parameters.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "complete-example",
+  "description": "Test parameters for email and password validation functions",
+
+  "parameters": [
+    {
+      "id": "email-validation-params",
+      "name": "Email Validation Test Parameters",
+      "description": "Various email formats to test email validation",
+      "tags": ["validation", "email", "edge-cases"],
+      "params": {
+        "email": {
+          "type": "string",
+          "description": "Email address to validate",
+          "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        },
+        "expected": {
+          "type": "boolean",
+          "description": "Whether the email should be valid"
+        }
+      }
+    },
+    {
+      "id": "password-strength-params",
+      "name": "Password Strength Test Parameters",
+      "description": "Test various password strengths and security requirements",
+      "tags": ["validation", "security", "password"],
+      "params": {
+        "password": {
+          "type": "string",
+          "description": "Password to test",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "minLength": {
+          "type": "integer",
+          "description": "Minimum required password length",
+          "minimum": 1,
+          "maximum": 128,
+          "default": 8
+        },
+        "requireUppercase": {
+          "type": "boolean",
+          "description": "Require at least one uppercase letter",
+          "default": true
+        },
+        "requireLowercase": {
+          "type": "boolean",
+          "description": "Require at least one lowercase letter",
+          "default": true
+        },
+        "requireNumbers": {
+          "type": "boolean",
+          "description": "Require at least one number",
+          "default": true
+        },
+        "requireSpecialChars": {
+          "type": "boolean",
+          "description": "Require at least one special character",
+          "default": true
+        },
+        "expectedStrength": {
+          "type": "string",
+          "description": "Expected password strength result",
+          "enum": ["weak", "medium", "strong"]
+        }
+      }
+    },
+    {
+      "id": "user-registration-params",
+      "name": "User Registration Test Parameters",
+      "description": "Complete user registration data validation",
+      "tags": ["registration", "integration", "validation"],
+      "params": {
+        "userData": {
+          "type": "object",
+          "description": "User registration data",
+          "properties": {
+            "username": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 20,
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            },
+            "email": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+            },
+            "password": {
+              "type": "string",
+              "minLength": 8
+            },
+            "age": {
+              "type": "integer",
+              "minimum": 13,
+              "maximum": 120,
+              "nullable": true
+            }
+          },
+          "required": ["username", "email", "password"]
+        },
+        "shouldPass": {
+          "type": "boolean",
+          "description": "Whether validation should pass"
+        },
+        "expectedErrors": {
+          "type": "array",
+          "description": "Expected validation error fields",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "fixtures": {
+        "validUser": {
+          "username": "john_doe",
+          "email": "john@example.com",
+          "password": "SecurePass123!",
+          "age": 25
+        },
+        "minimalUser": {
+          "username": "jane",
+          "email": "jane@test.com",
+          "password": "Pass1234!"
+        }
+      }
+    },
+    {
+      "id": "data-generator-params",
+      "name": "Generated Test Data Parameters",
+      "description": "Parameters with automatic test data generation",
+      "tags": ["generated", "faker", "random"],
+      "params": {
+        "randomEmail": {
+          "type": "string",
+          "description": "Random email for testing",
+          "generator": {
+            "type": "faker",
+            "config": {
+              "method": "internet.email"
+            }
+          }
+        },
+        "randomAge": {
+          "type": "integer",
+          "description": "Random age between 18 and 65",
+          "minimum": 18,
+          "maximum": 65,
+          "generator": {
+            "type": "random",
+            "config": {
+              "min": 18,
+              "max": 65
+            }
+          }
+        },
+        "sequentialId": {
+          "type": "integer",
+          "description": "Sequential ID for batch tests",
+          "generator": {
+            "type": "sequential",
+            "config": {
+              "start": 1,
+              "step": 1
+            }
+          }
+        }
+      }
+    }
+  ]
+}

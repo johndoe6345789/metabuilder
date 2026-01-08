@@ -1,0 +1,53 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/permissions.schema.json",
+  "schemaVersion": "1.0.0",
+  "package": "quick_guide",
+  "description": "Quick guide access permissions",
+  "permissions": [
+    {
+      "id": "guide.view",
+      "name": "View Quick Guides",
+      "description": "View quick guides",
+      "resource": "quick_guide",
+      "action": "read",
+      "scope": "global",
+      "minLevel": 2
+    },
+    {
+      "id": "guide.create",
+      "name": "Create Quick Guides",
+      "description": "Create new quick guides",
+      "resource": "quick_guide",
+      "action": "create",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "guide.edit",
+      "name": "Edit Quick Guides",
+      "description": "Edit existing quick guides",
+      "resource": "quick_guide",
+      "action": "update",
+      "scope": "global",
+      "minLevel": 3
+    },
+    {
+      "id": "guide.delete",
+      "name": "Delete Quick Guides",
+      "description": "Delete quick guides",
+      "resource": "quick_guide",
+      "action": "delete",
+      "scope": "global",
+      "minLevel": 4
+    }
+  ],
+  "resources": [
+    {
+      "id": "quick_guide",
+      "name": "Quick Guide",
+      "type": "entity",
+      "description": "Quick guide resources for step-by-step instructions",
+      "actions": ["read", "create", "update", "delete"]
+    }
+  ]
+}

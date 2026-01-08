@@ -1,0 +1,7 @@
+{
+  "packageId": "forum",
+  "name": "Community Forum",
+  "version": "1.0.0",
+  "description": "Threaded discussions with tagging and moderation tools.",
+  "dependencies": ["profile_page", "guestbook"]
+}

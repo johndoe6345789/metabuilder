@@ -1,0 +1,388 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "irc_webchat",
+  "description": "IRC Webchat components for real-time messaging",
+  "components": [
+    {
+      "id": "irc_webchat",
+      "name": "IRCWebchat",
+      "description": "Main IRC webchat container with channels, messages, and users",
+      "props": [
+        {
+          "name": "channelName",
+          "type": "string",
+          "required": true,
+          "description": "Initial channel to join"
+        },
+        {
+          "name": "userId",
+          "type": "string",
+          "required": false,
+          "description": "Current user ID"
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "required": false,
+          "description": "Current username"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "irc-webchat",
+          "sx": {
+            "display": "flex",
+            "height": "100%",
+            "minHeight": "500px",
+            "border": "1px solid",
+            "borderColor": "divider",
+            "borderRadius": 1
+          },
+          "children": [
+            {
+              "type": "ChannelList",
+              "channels": "{{channels}}",
+              "activeChannel": "{{channelName}}",
+              "onChannelSelect": "{{onChannelSelect}}"
+            },
+            {
+              "type": "Box",
+              "sx": {
+                "flex": 1,
+                "display": "flex",
+                "flexDirection": "column"
+              },
+              "children": [
+                {
+                  "type": "Box",
+                  "className": "irc-header",
+                  "sx": {
+                    "p": 2,
+                    "borderBottom": "1px solid",
+                    "borderColor": "divider",
+                    "bgcolor": "background.paper"
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "h6",
+                      "children": "#{{channelName}}"
+                    }
+                  ]
+                },
+                {
+                  "type": "MessageList",
+                  "messages": "{{messages}}",
+                  "sx": { "flex": 1 }
+                },
+                {
+                  "type": "MessageInput",
+                  "onSend": "{{onSendMessage}}",
+                  "onCommand": "{{onCommand}}"
+                }
+              ]
+            },
+            {
+              "type": "UserList",
+              "users": "{{onlineUsers}}",
+              "channelName": "{{channelName}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "channel_list",
+      "name": "ChannelList",
+      "description": "Sidebar list of available IRC channels",
+      "props": [
+        {
+          "name": "channels",
+          "type": "array",
+          "required": true,
+          "description": "Array of channel objects"
+        },
+        {
+          "name": "activeChannel",
+          "type": "string",
+          "required": false,
+          "description": "Currently active channel name"
+        },
+        {
+          "name": "onChannelSelect",
+          "type": "function",
+          "required": false,
+          "description": "Callback when channel is selected"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "irc-channel-list",
+          "sx": {
+            "width": 200,
+            "borderRight": "1px solid",
+            "borderColor": "divider",
+            "bgcolor": "background.default"
+          },
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 2, "borderBottom": "1px solid", "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "subtitle2",
+                  "color": "text.secondary",
+                  "children": "CHANNELS"
+                }
+              ]
+            },
+            {
+              "type": "List",
+              "dense": true,
+              "children": {
+                "type": "map",
+                "items": "{{channels}}",
+                "template": {
+                  "type": "ListItem",
+                  "button": true,
+                  "selected": "{{item.name === activeChannel}}",
+                  "onClick": "{{() => onChannelSelect(item.name)}}",
+                  "children": [
+                    {
+                      "type": "ListItemText",
+                      "primary": "#{{item.name}}"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "message_list",
+      "name": "MessageList",
+      "description": "Scrollable list of chat messages",
+      "props": [
+        {
+          "name": "messages",
+          "type": "array",
+          "required": true,
+          "description": "Array of message objects"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "irc-message-list",
+          "sx": {
+            "flex": 1,
+            "overflow": "auto",
+            "p": 2,
+            "bgcolor": "background.paper"
+          },
+          "children": {
+            "type": "map",
+            "items": "{{messages}}",
+            "template": {
+              "type": "Box",
+              "className": "irc-message irc-message--{{item.type}}",
+              "sx": { "mb": 1 },
+              "children": [
+                {
+                  "type": "Flex",
+                  "gap": 1,
+                  "alignItems": "baseline",
+                  "children": [
+                    {
+                      "type": "Text",
+                      "variant": "caption",
+                      "color": "text.secondary",
+                      "children": "{{formatTime(item.timestamp)}}"
+                    },
+                    {
+                      "type": "conditional",
+                      "condition": "{{item.type === 'message'}}",
+                      "then": {
+                        "type": "Text",
+                        "variant": "body2",
+                        "children": [
+                          {
+                            "type": "Text",
+                            "component": "span",
+                            "fontWeight": "bold",
+                            "color": "primary.main",
+                            "children": "<{{item.username}}> "
+                          },
+                          "{{item.message}}"
+                        ]
+                      },
+                      "else": {
+                        "type": "Text",
+                        "variant": "body2",
+                        "fontStyle": "italic",
+                        "color": "text.secondary",
+                        "children": "* {{item.message}}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "user_list",
+      "name": "UserList",
+      "description": "Sidebar list of online users in channel",
+      "props": [
+        {
+          "name": "users",
+          "type": "array",
+          "required": true,
+          "description": "Array of online user objects"
+        },
+        {
+          "name": "channelName",
+          "type": "string",
+          "required": false,
+          "description": "Current channel name"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "irc-user-list",
+          "sx": {
+            "width": 160,
+            "borderLeft": "1px solid",
+            "borderColor": "divider",
+            "bgcolor": "background.default"
+          },
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "p": 2, "borderBottom": "1px solid", "borderColor": "divider" },
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "subtitle2",
+                  "color": "text.secondary",
+                  "children": "USERS ({{users.length}})"
+                }
+              ]
+            },
+            {
+              "type": "List",
+              "dense": true,
+              "children": {
+                "type": "map",
+                "items": "{{users}}",
+                "template": {
+                  "type": "ListItem",
+                  "children": [
+                    {
+                      "type": "ListItemIcon",
+                      "sx": { "minWidth": 24 },
+                      "children": [
+                        {
+                          "type": "Box",
+                          "component": "span",
+                          "sx": {
+                            "width": 8,
+                            "height": 8,
+                            "borderRadius": "50%",
+                            "bgcolor": "success.main",
+                            "display": "inline-block"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "ListItemText",
+                      "primary": "{{item.username}}"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "message_input",
+      "name": "MessageInput",
+      "description": "Input field for sending messages and commands",
+      "props": [
+        {
+          "name": "onSend",
+          "type": "function",
+          "required": true,
+          "description": "Callback when message is sent"
+        },
+        {
+          "name": "onCommand",
+          "type": "function",
+          "required": false,
+          "description": "Callback when command is entered"
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "default": "Type a message or /help for commands..."
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "className": "irc-message-input",
+          "sx": {
+            "p": 2,
+            "borderTop": "1px solid",
+            "borderColor": "divider",
+            "bgcolor": "background.paper"
+          },
+          "children": [
+            {
+              "type": "Flex",
+              "gap": 1,
+              "children": [
+                {
+                  "type": "TextField",
+                  "fullWidth": true,
+                  "size": "small",
+                  "variant": "outlined",
+                  "placeholder": "{{placeholder}}",
+                  "value": "{{inputValue}}",
+                  "onChange": "{{handleInputChange}}",
+                  "onKeyPress": "{{handleKeyPress}}"
+                },
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "color": "primary",
+                  "onClick": "{{handleSend}}",
+                  "children": "Send"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

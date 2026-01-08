@@ -1,0 +1,914 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/json-script-components.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "media_center",
+  "description": "Media center components including dashboard, players, and job management",
+  "components": [
+    {
+      "id": "media_dashboard",
+      "name": "MediaDashboard",
+      "description": "Main media center dashboard with stats cards and navigation",
+      "props": [
+        {
+          "name": "stats",
+          "type": "object",
+          "required": true,
+          "description": "Dashboard statistics data"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "sx": { "display": "flex", "flexDirection": "column", "gap": 3, "p": 3 },
+          "children": [
+            {
+              "type": "Typography",
+              "variant": "h4",
+              "gutterBottom": true,
+              "children": "Media Center"
+            },
+            {
+              "type": "Grid",
+              "container": true,
+              "spacing": 3,
+              "children": [
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 4,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "children": [
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "type": "Box",
+                              "sx": { "display": "flex", "alignItems": "center", "gap": 2 },
+                              "children": [
+                                { "type": "Icon", "name": "Queue", "color": "primary" },
+                                { "type": "Typography", "variant": "h6", "children": "Job Queue" }
+                              ]
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "h3",
+                              "color": "primary",
+                              "children": "{{stats.pending_jobs}}"
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "body2",
+                              "color": "text.secondary",
+                              "children": "Pending jobs"
+                            },
+                            {
+                              "type": "LinearProgress",
+                              "variant": "determinate",
+                              "value": "{{stats.queue_utilization}}",
+                              "sx": { "mt": 2 }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "CardActions",
+                          "children": [
+                            {
+                              "type": "Button",
+                              "size": "small",
+                              "events": { "onClick": "navigateTo('/media/jobs')" },
+                              "children": "View All Jobs"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 4,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "children": [
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "type": "Box",
+                              "sx": { "display": "flex", "alignItems": "center", "gap": 2 },
+                              "children": [
+                                { "type": "Icon", "name": "Radio", "color": "secondary" },
+                                { "type": "Typography", "variant": "h6", "children": "Radio" }
+                              ]
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "h3",
+                              "color": "secondary",
+                              "children": "{{stats.radio_live}}"
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "body2",
+                              "color": "text.secondary",
+                              "children": "Live channels • {{stats.radio_listeners}} listeners"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "CardActions",
+                          "children": [
+                            {
+                              "type": "Button",
+                              "size": "small",
+                              "events": { "onClick": "navigateTo('/media/radio')" },
+                              "children": "Manage Radio"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 12,
+                  "md": 4,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "children": [
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            {
+                              "type": "Box",
+                              "sx": { "display": "flex", "alignItems": "center", "gap": 2 },
+                              "children": [
+                                { "type": "Icon", "name": "Tv", "color": "success" },
+                                { "type": "Typography", "variant": "h6", "children": "TV Channels" }
+                              ]
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "h3",
+                              "color": "success.main",
+                              "children": "{{stats.tv_live}}"
+                            },
+                            {
+                              "type": "Typography",
+                              "variant": "body2",
+                              "color": "text.secondary",
+                              "children": "Live channels • {{stats.tv_viewers}} viewers"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "CardActions",
+                          "children": [
+                            {
+                              "type": "Button",
+                              "size": "small",
+                              "events": { "onClick": "navigateTo('/media/tv')" },
+                              "children": "Manage TV"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "job_queue",
+      "name": "JobQueue",
+      "description": "Table displaying media processing jobs with status and actions",
+      "props": [
+        {
+          "name": "jobs",
+          "type": "array",
+          "required": true,
+          "description": "Array of job objects"
+        },
+        {
+          "name": "onCancel",
+          "type": "function",
+          "required": false,
+          "description": "Callback when job is cancelled"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "h6",
+                  "gutterBottom": true,
+                  "children": "Job Queue"
+                },
+                {
+                  "type": "Table",
+                  "size": "small",
+                  "children": [
+                    {
+                      "type": "TableHead",
+                      "children": [
+                        {
+                          "type": "TableRow",
+                          "children": [
+                            { "type": "TableCell", "children": "ID" },
+                            { "type": "TableCell", "children": "Type" },
+                            { "type": "TableCell", "children": "Status" },
+                            { "type": "TableCell", "children": "Progress" },
+                            { "type": "TableCell", "children": "Actions" }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TableBody",
+                      "children": {
+                        "type": "each",
+                        "items": "{{jobs}}",
+                        "as": "job",
+                        "render": {
+                          "type": "TableRow",
+                          "key": "{{job.id}}",
+                          "children": [
+                            { "type": "TableCell", "children": "{{job.id}}" },
+                            { "type": "TableCell", "children": "{{job.type}}" },
+                            {
+                              "type": "TableCell",
+                              "children": [
+                                {
+                                  "type": "Chip",
+                                  "label": "{{job.status}}",
+                                  "size": "small",
+                                  "color": "{{job.status === 'completed' ? 'success' : job.status === 'failed' ? 'error' : job.status === 'processing' ? 'warning' : 'info'}}"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "TableCell",
+                              "children": [
+                                {
+                                  "type": "LinearProgress",
+                                  "variant": "determinate",
+                                  "value": "{{job.progress}}",
+                                  "sx": { "width": 100 }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "TableCell",
+                              "children": [
+                                {
+                                  "type": "conditional",
+                                  "condition": "{{job.status === 'pending' || job.status === 'processing'}}",
+                                  "then": {
+                                    "type": "IconButton",
+                                    "size": "small",
+                                    "color": "error",
+                                    "events": { "onClick": "onCancel(job.id)" },
+                                    "children": [{ "type": "Icon", "name": "Cancel" }]
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "job_submit_form",
+      "name": "JobSubmitForm",
+      "description": "Form for submitting new media processing jobs",
+      "props": [
+        {
+          "name": "onSubmit",
+          "type": "function",
+          "required": true,
+          "description": "Callback when form is submitted"
+        }
+      ],
+      "state": {
+        "type": "",
+        "inputPath": "",
+        "priority": 0,
+        "params": {}
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "h6",
+                  "gutterBottom": true,
+                  "children": "Submit New Job"
+                },
+                {
+                  "type": "Stack",
+                  "spacing": 2,
+                  "children": [
+                    {
+                      "type": "Select",
+                      "label": "Job Type",
+                      "value": "{{state.type}}",
+                      "fullWidth": true,
+                      "events": { "onChange": "setState({ type: event.target.value })" },
+                      "children": [
+                        { "type": "MenuItem", "value": "transcode", "children": "Transcode" },
+                        { "type": "MenuItem", "value": "thumbnail", "children": "Generate Thumbnail" },
+                        { "type": "MenuItem", "value": "convert", "children": "Convert Format" },
+                        { "type": "MenuItem", "value": "compress", "children": "Compress" },
+                        { "type": "MenuItem", "value": "analyze", "children": "Analyze" }
+                      ]
+                    },
+                    {
+                      "type": "TextField",
+                      "label": "Input Path",
+                      "value": "{{state.inputPath}}",
+                      "fullWidth": true,
+                      "events": { "onChange": "setState({ inputPath: event.target.value })" }
+                    },
+                    {
+                      "type": "TextField",
+                      "label": "Priority",
+                      "type": "number",
+                      "value": "{{state.priority}}",
+                      "fullWidth": true,
+                      "events": { "onChange": "setState({ priority: parseInt(event.target.value) })" }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "CardActions",
+              "children": [
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "events": { "onClick": "onSubmit(state)" },
+                  "children": "Submit Job"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "radio_player",
+      "name": "RadioPlayer",
+      "description": "Audio player component for radio streaming",
+      "props": [
+        {
+          "name": "channel",
+          "type": "object",
+          "required": true,
+          "description": "Radio channel object with name and streamUrl"
+        },
+        {
+          "name": "onStop",
+          "type": "function",
+          "required": false,
+          "description": "Callback when playback stops"
+        }
+      ],
+      "state": {
+        "isPlaying": false,
+        "volume": 80
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Box",
+                  "sx": { "display": "flex", "alignItems": "center", "gap": 2 },
+                  "children": [
+                    { "type": "Icon", "name": "Radio", "sx": { "fontSize": 48 }, "color": "secondary" },
+                    {
+                      "type": "Box",
+                      "children": [
+                        { "type": "Typography", "variant": "h6", "children": "{{channel.name}}" },
+                        { "type": "Typography", "variant": "body2", "color": "text.secondary", "children": "{{state.isPlaying ? 'Now Playing' : 'Stopped'}}" }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Box",
+                  "sx": { "display": "flex", "alignItems": "center", "gap": 2, "mt": 2 },
+                  "children": [
+                    {
+                      "type": "IconButton",
+                      "color": "primary",
+                      "events": { "onClick": "setState({ isPlaying: !state.isPlaying })" },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "name": "{{state.isPlaying ? 'Pause' : 'PlayArrow'}}"
+                        }
+                      ]
+                    },
+                    { "type": "Icon", "name": "VolumeUp", "color": "action" },
+                    {
+                      "type": "Slider",
+                      "value": "{{state.volume}}",
+                      "min": 0,
+                      "max": 100,
+                      "sx": { "width": 150 },
+                      "events": { "onChange": "setState({ volume: value })" }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "media_player",
+      "name": "MediaPlayer",
+      "description": "Video/audio media player component",
+      "props": [
+        {
+          "name": "src",
+          "type": "string",
+          "required": true,
+          "description": "Media source URL"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "required": false,
+          "default": "video",
+          "description": "Media type: video or audio"
+        },
+        {
+          "name": "autoplay",
+          "type": "boolean",
+          "required": false,
+          "default": false
+        }
+      ],
+      "state": {
+        "isPlaying": false,
+        "currentTime": 0,
+        "duration": 0,
+        "volume": 100,
+        "isFullscreen": false
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "sx": { "bgcolor": "black" },
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "position": "relative", "aspectRatio": "16/9" },
+              "children": [
+                {
+                  "type": "video",
+                  "src": "{{src}}",
+                  "style": { "width": "100%", "height": "100%" }
+                }
+              ]
+            },
+            {
+              "type": "CardContent",
+              "sx": { "bgcolor": "grey.900" },
+              "children": [
+                {
+                  "type": "Box",
+                  "sx": { "display": "flex", "alignItems": "center", "gap": 1 },
+                  "children": [
+                    {
+                      "type": "IconButton",
+                      "color": "inherit",
+                      "sx": { "color": "white" },
+                      "events": { "onClick": "setState({ isPlaying: !state.isPlaying })" },
+                      "children": [{ "type": "Icon", "name": "{{state.isPlaying ? 'Pause' : 'PlayArrow'}}" }]
+                    },
+                    {
+                      "type": "Slider",
+                      "value": "{{state.currentTime}}",
+                      "max": "{{state.duration}}",
+                      "sx": { "flex": 1, "mx": 2 },
+                      "events": { "onChange": "setState({ currentTime: value })" }
+                    },
+                    {
+                      "type": "IconButton",
+                      "color": "inherit",
+                      "sx": { "color": "white" },
+                      "events": { "onClick": "setState({ isFullscreen: !state.isFullscreen })" },
+                      "children": [{ "type": "Icon", "name": "{{state.isFullscreen ? 'FullscreenExit' : 'Fullscreen'}}" }]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "retro_game_launcher",
+      "name": "RetroGameLauncher",
+      "description": "Game selection and launch interface for retro gaming",
+      "props": [
+        {
+          "name": "games",
+          "type": "array",
+          "required": true,
+          "description": "Array of available games"
+        },
+        {
+          "name": "onLaunch",
+          "type": "function",
+          "required": true,
+          "description": "Callback when game is launched"
+        }
+      ],
+      "state": {
+        "selectedGame": null,
+        "searchQuery": ""
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "children": [
+            {
+              "type": "Box",
+              "sx": { "mb": 3, "display": "flex", "gap": 2 },
+              "children": [
+                {
+                  "type": "TextField",
+                  "label": "Search Games",
+                  "value": "{{state.searchQuery}}",
+                  "fullWidth": true,
+                  "InputProps": {
+                    "startAdornment": { "type": "Icon", "name": "Search" }
+                  },
+                  "events": { "onChange": "setState({ searchQuery: event.target.value })" }
+                }
+              ]
+            },
+            {
+              "type": "Grid",
+              "container": true,
+              "spacing": 2,
+              "children": {
+                "type": "each",
+                "items": "{{games}}",
+                "as": "game",
+                "render": {
+                  "type": "Grid",
+                  "item": true,
+                  "xs": 6,
+                  "sm": 4,
+                  "md": 3,
+                  "children": [
+                    {
+                      "type": "Card",
+                      "sx": { "cursor": "pointer", "border": "{{state.selectedGame?.id === game.id ? '2px solid' : 'none'}}", "borderColor": "primary.main" },
+                      "events": { "onClick": "setState({ selectedGame: game })" },
+                      "children": [
+                        {
+                          "type": "CardMedia",
+                          "component": "img",
+                          "height": 140,
+                          "image": "{{game.coverUrl}}"
+                        },
+                        {
+                          "type": "CardContent",
+                          "children": [
+                            { "type": "Typography", "variant": "body2", "noWrap": true, "children": "{{game.name}}" },
+                            { "type": "Typography", "variant": "caption", "color": "text.secondary", "children": "{{game.platform}}" }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "Box",
+              "sx": { "mt": 3, "display": "flex", "justifyContent": "center" },
+              "children": [
+                {
+                  "type": "Button",
+                  "variant": "contained",
+                  "size": "large",
+                  "startIcon": { "type": "Icon", "name": "SportsEsports" },
+                  "disabled": "{{!state.selectedGame}}",
+                  "events": { "onClick": "onLaunch(state.selectedGame)" },
+                  "children": "Launch Game"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "retro_game_player",
+      "name": "RetroGamePlayer",
+      "description": "Emulator display and controls for retro gaming",
+      "props": [
+        {
+          "name": "sessionId",
+          "type": "string",
+          "required": true,
+          "description": "Game session identifier"
+        },
+        {
+          "name": "game",
+          "type": "object",
+          "required": true,
+          "description": "Game object with name and metadata"
+        },
+        {
+          "name": "onExit",
+          "type": "function",
+          "required": true,
+          "description": "Callback when exiting game"
+        }
+      ],
+      "state": {
+        "isPaused": false,
+        "showControls": true
+      },
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "sx": { "height": "100vh", "bgcolor": "black", "display": "flex", "flexDirection": "column" },
+          "children": [
+            {
+              "type": "conditional",
+              "condition": "{{state.showControls}}",
+              "then": {
+                "type": "AppBar",
+                "position": "static",
+                "color": "transparent",
+                "children": [
+                  {
+                    "type": "Toolbar",
+                    "children": [
+                      {
+                        "type": "IconButton",
+                        "color": "inherit",
+                        "sx": { "color": "white" },
+                        "events": { "onClick": "onExit()" },
+                        "children": [{ "type": "Icon", "name": "ArrowBack" }]
+                      },
+                      { "type": "Typography", "variant": "h6", "sx": { "flex": 1, "color": "white" }, "children": "{{game.name}}" },
+                      {
+                        "type": "IconButton",
+                        "color": "inherit",
+                        "sx": { "color": "white" },
+                        "events": { "onClick": "saveState()" },
+                        "children": [{ "type": "Icon", "name": "Save" }]
+                      },
+                      {
+                        "type": "IconButton",
+                        "color": "inherit",
+                        "sx": { "color": "white" },
+                        "events": { "onClick": "setState({ isPaused: !state.isPaused })" },
+                        "children": [{ "type": "Icon", "name": "{{state.isPaused ? 'PlayArrow' : 'Pause'}}" }]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Box",
+              "sx": { "flex": 1, "display": "flex", "alignItems": "center", "justifyContent": "center" },
+              "events": { "onClick": "setState({ showControls: !state.showControls })" },
+              "children": [
+                {
+                  "type": "canvas",
+                  "id": "emulator-canvas",
+                  "style": { "maxWidth": "100%", "maxHeight": "100%" }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "save_state_manager",
+      "name": "SaveStateManager",
+      "description": "UI for managing game save states",
+      "props": [
+        {
+          "name": "gameId",
+          "type": "string",
+          "required": true,
+          "description": "Game identifier"
+        },
+        {
+          "name": "saveStates",
+          "type": "array",
+          "required": true,
+          "description": "Array of save state objects"
+        },
+        {
+          "name": "onLoad",
+          "type": "function",
+          "required": true,
+          "description": "Callback to load a save state"
+        },
+        {
+          "name": "onDelete",
+          "type": "function",
+          "required": true,
+          "description": "Callback to delete a save state"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Typography",
+                  "variant": "h6",
+                  "gutterBottom": true,
+                  "children": "Save States"
+                },
+                {
+                  "type": "List",
+                  "children": {
+                    "type": "each",
+                    "items": "{{saveStates}}",
+                    "as": "state",
+                    "render": {
+                      "type": "ListItem",
+                      "secondaryAction": {
+                        "type": "Box",
+                        "children": [
+                          {
+                            "type": "IconButton",
+                            "events": { "onClick": "onLoad(state.id)" },
+                            "children": [{ "type": "Icon", "name": "PlayArrow" }]
+                          },
+                          {
+                            "type": "IconButton",
+                            "color": "error",
+                            "events": { "onClick": "onDelete(state.id)" },
+                            "children": [{ "type": "Icon", "name": "Delete" }]
+                          }
+                        ]
+                      },
+                      "children": [
+                        {
+                          "type": "ListItemAvatar",
+                          "children": [
+                            {
+                              "type": "Avatar",
+                              "src": "{{state.thumbnailUrl}}"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ListItemText",
+                          "primary": "{{state.name || 'Save ' + state.slot}}",
+                          "secondary": "{{formatDate(state.createdAt)}}"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "active_sessions_list",
+      "name": "ActiveSessionsList",
+      "description": "List of currently active gaming sessions",
+      "props": [
+        {
+          "name": "sessions",
+          "type": "array",
+          "required": true,
+          "description": "Array of active session objects"
+        },
+        {
+          "name": "onJoin",
+          "type": "function",
+          "required": false,
+          "description": "Callback to join a session as spectator"
+        }
+      ],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Box",
+                  "sx": { "display": "flex", "alignItems": "center", "gap": 1, "mb": 2 },
+                  "children": [
+                    { "type": "Icon", "name": "Groups", "color": "primary" },
+                    { "type": "Typography", "variant": "h6", "children": "Active Sessions" }
+                  ]
+                },
+                {
+                  "type": "conditional",
+                  "condition": "{{sessions.length === 0}}",
+                  "then": {
+                    "type": "Typography",
+                    "color": "text.secondary",
+                    "children": "No active sessions"
+                  },
+                  "else": {
+                    "type": "List",
+                    "children": {
+                      "type": "each",
+                      "items": "{{sessions}}",
+                      "as": "session",
+                      "render": {
+                        "type": "ListItem",
+                        "secondaryAction": {
+                          "type": "Button",
+                          "size": "small",
+                          "events": { "onClick": "onJoin(session.id)" },
+                          "children": "Watch"
+                        },
+                        "children": [
+                          {
+                            "type": "ListItemAvatar",
+                            "children": [{ "type": "Avatar", "children": [{ "type": "Icon", "name": "SportsEsports" }] }]
+                          },
+                          {
+                            "type": "ListItemText",
+                            "primary": "{{session.gameName}}",
+                            "secondary": "{{session.playerName}} • {{session.viewers}} watching"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
