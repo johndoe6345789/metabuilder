@@ -111,7 +111,22 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install root dependencies
+        run: |
+          cd ../..
+          npm install
+
+      - name: Install DBAL dependencies
+        run: |
+          cd ../../dbal/development
+          npm install
+
+      - name: Generate DBAL types from YAML schemas
+        run: |
+          cd ../../dbal/development
+          npx tsx ../shared/tools/codegen/generate-types.ts
+
+      - name: Install frontend dependencies
         run: npm install
 
       - name: Generate Prisma Client
