@@ -46,7 +46,9 @@ export function useLevelRouting(): LevelRouting {
 
   const redirectToLevel = (targetLevel: number): void => {
     const route = LEVEL_ROUTES[targetLevel] ?? LEVEL_ROUTES[0]
-    router.push(route)
+    if (route !== undefined) {
+      router.push(route)
+    }
   }
 
   return {

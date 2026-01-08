@@ -258,11 +258,11 @@ function evaluateSimpleExpression(expr: string, context: RenderContext): JsonVal
     // Handle ternary operator
     if (part.includes('?')) {
       const [condition, branches] = part.split('?')
-      if (condition.length === 0 || branches === undefined || branches.length === 0) {
+      if (condition === undefined || condition.length === 0 || branches === undefined || branches.length === 0) {
         return value
       }
       const [trueBranch, falseBranch] = branches.split(':')
-      if (trueBranch.length === 0 || falseBranch === undefined || falseBranch.length === 0) {
+      if (trueBranch === undefined || trueBranch.length === 0 || falseBranch === undefined || falseBranch.length === 0) {
         return value
       }
       const conditionValue = evaluateSimpleExpression(condition.trim(), context)

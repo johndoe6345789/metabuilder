@@ -159,7 +159,7 @@ export const PackageSchemas = {
   installConfig: z.object({
     packageId: z.string(),
     enabled: z.boolean().default(true),
-    config: z.record(z.unknown()).optional(),
+    config: z.record(z.string(), z.unknown()).optional(),
   }),
 }
 

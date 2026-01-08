@@ -19,6 +19,7 @@ export interface CreateUserInput {
 }
 
 export interface UpdateUserInput {
+  [key: string]: unknown
   username?: string
   email?: string
   role?: UserRole

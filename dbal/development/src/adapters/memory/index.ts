@@ -48,7 +48,11 @@ const applySort = (
   if (!sort || Object.keys(sort).length === 0) {
     return records
   }
-  const [key, direction] = Object.entries(sort)[0]
+  const sortEntries = Object.entries(sort)[0]
+  if (sortEntries === undefined) {
+    return records
+  }
+  const [key, direction] = sortEntries
   return [...records].sort((left, right) => {
     const a = left[key]
     const b = right[key]

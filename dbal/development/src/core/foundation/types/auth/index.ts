@@ -15,6 +15,7 @@ export interface CreateSessionInput {
 }
 
 export interface UpdateSessionInput {
+  [key: string]: unknown
   userId?: string
   token?: string
   expiresAt?: bigint

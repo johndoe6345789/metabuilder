@@ -25,6 +25,7 @@ export interface CreatePageInput {
 }
 
 export interface UpdatePageInput {
+  [key: string]: unknown
   tenantId?: string | null
   packageId?: string | null
   path?: string
@@ -57,6 +58,7 @@ export interface CreateComponentNodeInput {
 }
 
 export interface UpdateComponentNodeInput {
+  [key: string]: unknown
   type?: string
   parentId?: string | null
   childIds?: string

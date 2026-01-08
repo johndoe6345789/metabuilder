@@ -3,7 +3,7 @@ import type { DBALAdapter } from '../adapter'
 export interface User {
   id: string
   username: string
-  role: 'user' | 'admin' | 'god' | 'supergod'
+  role: 'user' | 'admin' | 'god' | 'supergod' | 'public' | 'moderator'
 }
 
 export interface ACLRule {

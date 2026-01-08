@@ -25,10 +25,12 @@ export interface PackageData {
 }
 
 export interface CreatePackageDataInput {
+  [key: string]: unknown
   packageId: string
   data: string
 }
 
 export interface UpdatePackageDataInput {
+  [key: string]: unknown
   data?: string
 }

@@ -12,7 +12,7 @@ import { prisma } from '@/lib/config/prisma'
  */
 export const getComments = async (): Promise<Comment[]> => {
   const comments = await prisma.comment.findMany()
-  return comments.map(c => ({
+  return comments.map((c: Record<string, unknown>) => ({
     id: c.id,
     userId: c.userId,
     entityType: c.entityType,

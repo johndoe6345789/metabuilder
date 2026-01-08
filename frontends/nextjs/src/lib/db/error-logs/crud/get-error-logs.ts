@@ -27,7 +27,7 @@ export async function getErrorLogs(options?: {
   
   const result = await adapter.list('ErrorLog', {
     filter: Object.keys(filter).length > 0 ? filter : undefined,
-    orderBy: { timestamp: 'desc' },
+    orderBy: [{ timestamp: 'desc' }],
     take: options?.limit,
   })
 

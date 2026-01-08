@@ -17,6 +17,7 @@ export interface CreateWorkflowInput {
 }
 
 export interface UpdateWorkflowInput {
+  [key: string]: unknown
   name?: string
   description?: string
   nodes?: string
