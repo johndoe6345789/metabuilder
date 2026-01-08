@@ -47,7 +47,8 @@ const createIntegrationPrisma = (): PrismaClient => {
 
 const createProductionPrisma = (): PrismaClient => {
   // Use the database file from env or default location
-  const dbPath = process.env.DATABASE_URL?.replace('file:', '') || '../../prisma/prisma/dev.db'
+  const databaseUrl = process.env.DATABASE_URL || 'file:../../prisma/prisma/dev.db'
+  const dbPath = databaseUrl.replace('file:', '')
   const db = new Database(dbPath)
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const adapter = new PrismaBetterSqlite3(db)
