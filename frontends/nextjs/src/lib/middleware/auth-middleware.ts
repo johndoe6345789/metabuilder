@@ -85,7 +85,7 @@ export async function authenticate(
     const user = await getCurrentUser()
 
     // Check if user is authenticated
-    if (user === null) {
+    if (user === null || user === undefined) {
       return {
         success: false,
         error: NextResponse.json(
