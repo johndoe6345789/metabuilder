@@ -147,7 +147,7 @@ async function EntityListView({ tenant, pkg, entity, schema }: {
         API: <code>{apiUrl}</code>
       </p>
       
-      {(response.error !== null && response.error !== undefined) ? (
+      {response.error !== undefined ? (
         <div style={{ padding: '1rem', backgroundColor: '#ffebee', borderRadius: '4px', color: '#c62828' }}>
           Error loading data: {response.error}
         </div>
@@ -165,7 +165,7 @@ async function EntityListView({ tenant, pkg, entity, schema }: {
               </tr>
             </thead>
             <tbody>
-              {(response.data !== null && response.data !== undefined && (response.data as unknown[]).length > 0) ? (
+              {(response.data !== undefined && response.data.length > 0) ? (
                 (response.data as Record<string, unknown>[]).map((item, idx) => (
                   <tr key={idx} style={{ borderBottom: '1px solid #e0e0e0' }}>
                     {schema?.fields.map(field => (
@@ -240,7 +240,7 @@ async function EntityDetailView({ tenant, pkg, entity, id, schema }: {
         API: <code>{apiUrl}</code>
       </p>
       
-      {(response.error !== null && response.error !== undefined) ? (
+      {response.error !== undefined ? (
         <div style={{ padding: '1rem', backgroundColor: '#ffebee', borderRadius: '4px', color: '#c62828' }}>
           Error loading data: {response.error}
         </div>
@@ -346,7 +346,7 @@ async function EntityEditView({ tenant, pkg, entity, id, schema }: {
         API: <code>PUT {apiUrl}</code>
       </p>
       
-      {(response.error !== null && response.error !== undefined) ? (
+      {response.error !== undefined ? (
         <div style={{ padding: '1rem', backgroundColor: '#ffebee', borderRadius: '4px', color: '#c62828' }}>
           Error loading data: {response.error}
         </div>

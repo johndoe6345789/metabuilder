@@ -35,7 +35,7 @@ describe('ItemsPerPageSelector', () => {
 
     const select = container.querySelector('select')
     expect(select !== null).toBe(true)
-    if (select) {
+    if (select !== null) {
       // Create a proper change event with a select element
       Object.defineProperty(select, 'value', {
         writable: true,

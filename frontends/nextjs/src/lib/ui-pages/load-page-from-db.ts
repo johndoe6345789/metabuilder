@@ -6,8 +6,6 @@ import type { PageConfig } from '../types/level-types'
 import { prisma } from '@/lib/config/prisma'
 
 export async function loadPageFromDb(path: string, tenantId?: string): Promise<PageConfig | null> {
-  // Prisma client typing is generated; suppress lint in environments without generated types.
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
   const page = await prisma.pageConfig.findFirst({
     where: {
       path,
