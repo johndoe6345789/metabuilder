@@ -4,6 +4,7 @@ export type Credential = GeneratedCredential
 export type Session = GeneratedSession
 
 export interface CreateSessionInput {
+  [key: string]: unknown
   id?: string
   userId: string
   token: string

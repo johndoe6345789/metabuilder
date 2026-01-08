@@ -65,7 +65,7 @@ const withWorkflowDefaults = (data: CreateWorkflowInput): Workflow => {
     id: data.id ?? randomUUID(),
     tenantId: data.tenantId ?? null,
     name: data.name,
-    description: data.description,
+    description: data.description ?? null,
     nodes: data.nodes,
     edges: data.edges,
     enabled: data.enabled,

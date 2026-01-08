@@ -3,6 +3,7 @@ import type { InstalledPackage as GeneratedInstalledPackage } from '../types.gen
 export type InstalledPackage = GeneratedInstalledPackage
 
 export interface CreatePackageInput {
+  [key: string]: unknown
   packageId: string
   tenantId?: string | null
   installedAt?: bigint
@@ -12,6 +13,7 @@ export interface CreatePackageInput {
 }
 
 export interface UpdatePackageInput {
+  [key: string]: unknown
   tenantId?: string | null
   installedAt?: bigint
   version?: string

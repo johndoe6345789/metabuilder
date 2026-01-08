@@ -74,7 +74,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body>
-        <PackageStyleLoader packages={PACKAGES_WITH_STYLES} />
+        {/* TODO: Fix PackageStyleLoader to work with server-only compiler or create API route */}
+        {/* <PackageStyleLoader packages={PACKAGES_WITH_STYLES} /> */}
 
         {/* Render a simple header/footer when package metadata is available */}
         {headerName !== undefined && headerName.length > 0 ? (

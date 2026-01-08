@@ -5,6 +5,7 @@ export type UserRole = 'public' | 'user' | 'moderator' | 'admin' | 'god' | 'supe
 export type User = GeneratedUser
 
 export interface CreateUserInput {
+  [key: string]: unknown
   id?: string
   username: string
   email: string

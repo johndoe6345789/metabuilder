@@ -2,8 +2,8 @@
  * Prisma Client singleton instance
  * Prevents multiple instances in development with hot reloading
  */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+ 
+ 
 /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 // Prisma client types are generated; when they resolve as error types in linting,
 // these assignments/calls are safe for runtime but look unsafe to the linter.
@@ -40,6 +40,7 @@ const createIntegrationPrisma = (): PrismaClient => {
   if (globalForPrisma.prismaTestDb === undefined) {
     globalForPrisma.prismaTestDb = new Database(':memory:')
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const adapter = new PrismaBetterSqlite3(globalForPrisma.prismaTestDb)
   return new PrismaClient({ adapter })
 }

@@ -3,6 +3,7 @@ import type { PageConfig as GeneratedPageConfig, ComponentNode as GeneratedCompo
 export type PageConfig = GeneratedPageConfig
 
 export interface CreatePageInput {
+  [key: string]: unknown
   id?: string
   tenantId?: string | null
   packageId?: string | null
@@ -49,6 +50,7 @@ export interface UpdatePageInput {
 export type ComponentNode = GeneratedComponentNode
 
 export interface CreateComponentNodeInput {
+  [key: string]: unknown
   id?: string
   type: string
   parentId?: string | null
