@@ -75,25 +75,24 @@ function generateEntityInterface(entity: YamlEntity): string {
   output += ` * @generated from ${entity.entity.toLowerCase()}.yaml\n */\n`
 
   for (const [fieldName, field] of Object.entries(entity.fields)) {
-    // Skip sensitive fields (they should never be in client types)
-    if (field.sensitive) {
-      continue
-    }
-
     const tsType = mapYamlTypeToTS(field.type)
     const isOptional = field.optional || field.nullable || !field.required
     const optionalMark = isOptional ? '?' : ''
     const nullableType = field.nullable ? ` | null` : ''
 
-    // Add field comment if description exists
-    if (field.description) {
-      fields.push(`  /** ${field.description} */`)
+    // Add field comment if description exists or if sensitive
+    if (field.description || field.sensitive) {
+      const comment = field.description || ''
+      const sensitiveNote = field.sensitive ? ' ⚠️ SENSITIVE - Never expose to client' : ''
+      fields.push(`  /** ${comment}${sensitiveNote} */`)
     }
 
     fields.push(`  ${fieldName}${optionalMark}: ${tsType}${nullableType}`)
   }
 
   output += `export interface ${interfaceName} {\n`
+  // Add index signature for compatibility with Record<string, unknown>
+  output += '  [key: string]: unknown\n'
   output += fields.join('\n')
   output += '\n}\n'
 
@@ -132,10 +131,24 @@ function generateAllTypes(): string {
   for (const file of yamlFiles) {
     try {
       const content = fs.readFileSync(file, 'utf-8')
-      const parsed = yaml.parse(content) as YamlEntity
       
-      if (parsed.entity && parsed.fields) {
-        entities.push(parsed)
+      // Check if file contains multiple documents (separated by ---)
+      // Match document separator at start of line
+      if (/\n---\s*\n/.test(content)) {
+        // Parse all documents in the file
+        const docs = yaml.parseAllDocuments(content)
+        for (const doc of docs) {
+          const parsed = doc.toJSON() as YamlEntity
+          if (parsed && parsed.entity && parsed.fields) {
+            entities.push(parsed)
+          }
+        }
+      } else {
+        // Single document
+        const parsed = yaml.parse(content) as YamlEntity
+        if (parsed && parsed.entity && parsed.fields) {
+          entities.push(parsed)
+        }
       }
     } catch (error) {
       console.error(`Error parsing ${file}:`, error)
