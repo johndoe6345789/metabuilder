@@ -37,7 +37,17 @@ export function validateEmail(email: unknown): boolean {
   }
 
   // Additional validations
-  const [localPart, domain] = trimmed.split('@')
+  const parts = trimmed.split('@')
+  if (parts.length !== 2) {
+    return false
+  }
+  
+  const localPart = parts[0]
+  const domain = parts[1]
+  
+  if (!localPart || !domain) {
+    return false
+  }
 
   // Local part cannot start or end with dot
   if (localPart.startsWith('.') || localPart.endsWith('.')) {

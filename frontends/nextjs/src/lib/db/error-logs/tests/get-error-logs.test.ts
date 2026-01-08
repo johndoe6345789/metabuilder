@@ -93,10 +93,11 @@ describe('getErrorLogs', () => {
     const result = await getErrorLogs(options)
 
     // Verify list was called with correct options
+    const expectedLimit = options && 'limit' in options ? options.limit : undefined
     expect(mockList).toHaveBeenCalledWith('ErrorLog', {
       filter: expectedFilter,
       orderBy: [{ timestamp: 'desc' }],
-      take: options?.limit ?? undefined,
+      take: expectedLimit ?? undefined,
     })
     expect(result).toHaveLength(dbData.length)
 

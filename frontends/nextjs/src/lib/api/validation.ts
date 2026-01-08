@@ -88,7 +88,7 @@ export function generateFieldSchema(field: FieldDefinition): ZodTypeAny {
         }
         schema = z.object(objectShape)
       } else {
-        schema = z.record(z.unknown())
+        schema = z.record(z.string(), z.unknown())
       }
       break
     case 'relation':

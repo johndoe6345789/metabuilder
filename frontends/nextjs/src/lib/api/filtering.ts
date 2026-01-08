@@ -47,14 +47,14 @@ export function parseFilterString(filterStr: string): FilterCondition[] {
   for (const part of parts) {
     const segments = part.trim().split(':')
     
-    if (segments.length === 2) {
+    if (segments.length === 2 && segments[0] && segments[1]) {
       // field:value (default to eq)
       filters.push({
         field: segments[0],
         operator: 'eq',
         value: parseValue(segments[1]),
       })
-    } else if (segments.length === 3) {
+    } else if (segments.length === 3 && segments[0] && segments[1] && segments[2]) {
       // field:operator:value
       filters.push({
         field: segments[0],

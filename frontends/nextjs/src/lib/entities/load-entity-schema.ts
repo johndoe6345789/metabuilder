@@ -43,8 +43,8 @@ export async function loadEntitySchema(
     // Look for entity schema in package metadata
     // This assumes packages have an entities field in their metadata
     // The actual structure may vary based on your package format
-    const packageMetadata = pkg.metadata as Record<string, unknown>
-    const entities = packageMetadata.entities as Record<string, unknown>[] | undefined
+    const packageMetadata = pkg.metadata as unknown
+    const entities = (packageMetadata as Record<string, unknown>).entities as Record<string, unknown>[] | undefined
     
     if (entities === undefined || !Array.isArray(entities)) {
       return null

@@ -42,7 +42,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
 
     // Get user from database
     const adapter = getAdapter()
-    const userResult = await adapter.get('User', session.userId)
+    const userResult = await adapter.get('User', session.userId) as { data?: unknown }
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
      

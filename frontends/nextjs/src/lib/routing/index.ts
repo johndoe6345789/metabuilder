@@ -103,7 +103,12 @@ export interface RestfulContext {
     action?: string
   }
   operation: string
-  dbalOp: unknown
+  dbalOp: {
+    entity: string
+    operation: string
+    id?: string
+    action?: string
+  }
 }
 
 export function parseRestfulRequest(
