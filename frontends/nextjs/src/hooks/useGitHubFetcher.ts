@@ -23,7 +23,7 @@ export function useGitHubFetcher() {
     try {
       const { listWorkflowRuns } = await import('@/lib/github/workflows/listing/list-workflow-runs')
       // TODO: Get owner/repo from environment or context
-      const workflowRuns = await listWorkflowRuns({ owner: 'owner', repo: 'repo' })
+      const workflowRuns = await listWorkflowRuns({ client: null, owner: 'owner', repo: 'repo' })
       setRuns(workflowRuns)
     } catch (err) {
       setError(err as Error)

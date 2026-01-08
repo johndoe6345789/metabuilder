@@ -11,9 +11,9 @@ import { prisma } from '@/lib/config/prisma'
  * @param comments - Array of comments to save
  */
 export const setComments = async (comments: Comment[]): Promise<void> => {
-  await prisma.comment.deleteMany()
+  await (prisma as any).comment.deleteMany()
   for (const comment of comments) {
-    await prisma.comment.create({
+    await (prisma as any).comment.create({
       data: {
         id: comment.id,
         userId: comment.userId,

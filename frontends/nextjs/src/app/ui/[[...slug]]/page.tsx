@@ -91,15 +91,16 @@ export async function generateStaticParams() {
 
     // Transform to Next.js static params format
     return result.data
-      .map((page: { path?: string | null }) => {
+      .map((page: unknown) => {
+        const typedPage = page as { path?: string | null }
          
-        if (page.path === null || page.path === undefined || typeof page.path !== 'string' || page.path.length === 0) {
+        if (typedPage.path === null || typedPage.path === undefined || typeof typedPage.path !== 'string' || typedPage.path.length === 0) {
           return null
         }
         
         // Convert path "/foo/bar" to slug ["foo", "bar"]
         // Remove leading slash and split
-        const slug = page.path
+        const slug = typedPage.path
           .replace(/^\//, '')  // Remove leading slash
           .split('/')
           .filter(Boolean)  // Remove empty segments

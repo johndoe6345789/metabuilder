@@ -27,7 +27,7 @@ describe('auth-middleware', () => {
     role: 'user',
     level: 1,
     tenantId: 'tenant-1',
-    passwordHash: 'hash',
+    createdAt: Date.now(),
     ...overrides,
   })
 

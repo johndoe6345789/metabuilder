@@ -90,7 +90,7 @@ describe('API Client', () => {
         ok: true,
         status: mockStatus,
         json: () => mockResponse,
-      } as Response)
+      } as unknown as Response)
 
       const result = await fetchEntityList(tenant, pkg, entity, params as ListQueryParams)
 
@@ -129,7 +129,7 @@ describe('API Client', () => {
         ok: false,
         status: mockStatus,
         json: () => ({ error: mockError }),
-      } as Response)
+      } as unknown as Response)
 
       const result = await fetchEntityList('acme', 'forum', 'posts')
 
@@ -165,7 +165,7 @@ describe('API Client', () => {
         ok: true,
         status: mockStatus,
         json: () => mockResponse,
-      } as Response)
+      } as unknown as Response)
 
       const result = await fetchEntity(tenant, pkg, entity, id)
 
@@ -190,7 +190,7 @@ describe('API Client', () => {
         ok: false,
         status: mockStatus,
         json: () => ({ error: mockError }),
-      } as Response)
+      } as unknown as Response)
 
       const result = await fetchEntity('acme', 'forum', 'posts', '123')
 
@@ -216,7 +216,7 @@ describe('API Client', () => {
         ok: true,
         status: mockStatus,
         json: () => mockResponse,
-      } as Response)
+      } as unknown as Response)
 
       const result = await createEntity(tenant, pkg, entity, data)
 
@@ -246,7 +246,7 @@ describe('API Client', () => {
         ok: false,
         status: mockStatus,
         json: () => ({ error: mockError }),
-      } as Response)
+      } as unknown as Response)
 
       const result = await createEntity('acme', 'forum', 'posts', { title: '' })
 
@@ -282,7 +282,7 @@ describe('API Client', () => {
         ok: true,
         status: mockStatus,
         json: () => mockResponse,
-      } as Response)
+      } as unknown as Response)
 
       const result = await updateEntity(tenant, pkg, entity, id, data)
 
@@ -307,7 +307,7 @@ describe('API Client', () => {
         ok: false,
         status: mockStatus,
         json: () => ({ error: mockError }),
-      } as Response)
+      } as unknown as Response)
 
       const result = await updateEntity('acme', 'forum', 'posts', '123', {})
 
@@ -322,7 +322,7 @@ describe('API Client', () => {
         ok: true,
         status: 200,
         json: () => ({}),
-      } as Response)
+      } as unknown as Response)
 
       const result = await deleteEntity('acme', 'forum', 'posts', '123')
 
@@ -351,7 +351,7 @@ describe('API Client', () => {
         ok: false,
         status: mockStatus,
         json: () => ({ error: mockError }),
-      } as Response)
+      } as unknown as Response)
 
       const result = await deleteEntity('acme', 'forum', 'posts', '123')
 
@@ -366,7 +366,7 @@ describe('API Client', () => {
         ok: true,
         status: 200,
         json: () => ({ data: [] }),
-      } as Response)
+      } as unknown as Response)
 
       await fetchEntityList('acme', 'forum', 'posts', { page: 2, limit: 20 })
 
@@ -381,15 +381,15 @@ describe('API Client', () => {
         ok: true,
         status: 200,
         json: () => ({ data: [] }),
-      } as Response)
+      } as unknown as Response)
 
       await fetchEntityList('acme', 'forum', 'posts', {
         filter: { published: true, author: 'john' },
       })
 
       const call = vi.mocked(fetch).mock.calls[0]
-      expect(call[0]).toContain('/api/v1/acme/forum/posts?')
-      expect(call[0]).toContain('filter=')
+      expect(call?.[0]).toContain('/api/v1/acme/forum/posts?')
+      expect(call?.[0]).toContain('filter=')
     })
 
     it('should build correct query string for sort', async () => {
@@ -397,7 +397,7 @@ describe('API Client', () => {
         ok: true,
         status: 200,
         json: () => ({ data: [] }),
-      } as Response)
+      } as unknown as Response)
 
       await fetchEntityList('acme', 'forum', 'posts', { sort: '-createdAt' })
 
@@ -412,7 +412,7 @@ describe('API Client', () => {
         ok: true,
         status: 200,
         json: () => ({ data: [] }),
-      } as Response)
+      } as unknown as Response)
 
       await fetchEntityList('acme', 'forum', 'posts', {})
 

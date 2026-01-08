@@ -42,9 +42,9 @@ export const createUser = async (
     return { success: false, error: { code: 'CONFLICT', message: 'Username already exists' } }
   }
 
-  store.users.set(user.id, user)
-  store.usersByEmail.set(user.email, user.id)
-  store.usersByUsername.set(user.username, user.id)
+  store.users.set(user.id!, user)
+  store.usersByEmail.set(user.email, user.id!)
+  store.usersByUsername.set(user.username, user.id!)
 
   return { success: true, data: user }
 }

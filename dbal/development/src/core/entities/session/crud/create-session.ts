@@ -39,8 +39,8 @@ export const createSession = async (
     return { success: false, error: { code: 'CONFLICT', message: 'Session token already exists' } }
   }
 
-  store.sessions.set(session.id, session)
-  store.sessionTokens.set(session.token, session.id)
+  store.sessions.set(session.id!, session)
+  store.sessionTokens.set(session.token, session.id!)
 
   return { success: true, data: session }
 }

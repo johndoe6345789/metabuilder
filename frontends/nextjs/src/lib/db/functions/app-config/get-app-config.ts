@@ -11,7 +11,7 @@ import { prisma } from '@/lib/config/prisma'
  * @returns AppConfiguration or null if not found
  */
 export const getAppConfig = async (): Promise<AppConfiguration | null> => {
-  const config = await prisma.appConfiguration.findFirst()
+  const config = await (prisma as any).appConfiguration.findFirst()
   if (!config) return null
 
   return {

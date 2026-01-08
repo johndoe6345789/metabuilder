@@ -110,8 +110,10 @@ export function calculateCursorPaginationMetadata<T extends { id: string }>(
   limit: number,
   hasMore: boolean
 ): CursorPaginationMetadata {
-  const startCursor = items.length > 0 ? items[0].id : undefined
-  const endCursor = items.length > 0 ? items[items.length - 1].id : undefined
+  const firstItem = items.length > 0 ? items[0] : undefined
+  const lastItem = items.length > 0 ? items[items.length - 1] : undefined
+  const startCursor = firstItem?.id
+  const endCursor = lastItem?.id
   
   return {
     limit,

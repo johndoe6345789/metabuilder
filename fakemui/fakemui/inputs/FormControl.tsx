@@ -42,6 +42,8 @@ export interface FormControlProps extends React.HTMLAttributes<HTMLDivElement> {
   filled?: boolean
   /** Whether the input is focused */
   focused?: boolean
+  /** MUI sx prop for styling compatibility */
+  sx?: Record<string, unknown>
 }
 
 /**
@@ -70,6 +72,7 @@ export const FormControl = forwardRef<HTMLDivElement, FormControlProps>(
       filled = false,
       focused = false,
       className = '', 
+      sx,
       ...props 
     }, 
     ref

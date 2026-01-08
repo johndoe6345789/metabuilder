@@ -11,7 +11,7 @@ import { prisma } from '@/lib/config/prisma'
  * @returns Array of comments
  */
 export const getComments = async (): Promise<Comment[]> => {
-  const comments = await prisma.comment.findMany()
+  const comments = await (prisma as any).comment.findMany()
   return comments.map((c: Record<string, unknown>) => ({
     id: c.id,
     userId: c.userId,

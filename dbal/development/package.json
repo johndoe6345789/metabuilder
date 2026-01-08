@@ -15,7 +15,8 @@
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts",
     "codegen": "tsx ../shared/tools/codegen/gen_types.ts",
-    "codegen:prisma": "node ../shared/tools/codegen/gen_prisma_schema.js"
+    "codegen:prisma": "node ../shared/tools/codegen/gen_prisma_schema.js",
+    "generate-types": "node ../shared/tools/codegen/generate-types.js"
   },
   "keywords": [
     "database",

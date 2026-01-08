@@ -11,8 +11,8 @@ import { prisma } from '@/lib/config/prisma'
  * @param config - The configuration to save
  */
 export const setAppConfig = async (config: AppConfiguration): Promise<void> => {
-  await prisma.appConfiguration.deleteMany()
-  await prisma.appConfiguration.create({
+  await (prisma as any).appConfiguration.deleteMany()
+  await (prisma as any).appConfiguration.create({
     data: {
       id: config.id,
       name: config.name,

@@ -313,9 +313,9 @@ describe('validation utilities', () => {
         expect(formatted.name).toBeDefined()
         expect(formatted.email).toBeDefined()
         expect(formatted.age).toBeDefined()
-        expect(formatted.name[0]).toContain('3')
-        expect(formatted.email[0]).toContain('email')
-        expect(formatted.age[0]).toContain('18')
+        expect(formatted.name?.[0]).toContain('3')
+        expect(formatted.email?.[0]).toContain('email')
+        expect(formatted.age?.[0]).toContain('18')
       }
     })
 

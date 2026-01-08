@@ -10,6 +10,7 @@ export interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   gutterBottom?: boolean
   noWrap?: boolean
   as?: React.ElementType
+  sx?: Record<string, unknown>  // MUI sx prop for styling compatibility
 }
 
 export const Typography: React.FC<TypographyProps> = ({
@@ -21,6 +22,7 @@ export const Typography: React.FC<TypographyProps> = ({
   noWrap,
   className = '',
   as,
+  sx,
   ...props
 }) => {
   const Tag =

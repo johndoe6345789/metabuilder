@@ -107,7 +107,7 @@ async function handleRequest(
         route.entity,
         route.action,
         route.id,
-        { user, tenant: tenantResult.tenant, body }
+        { user: user ?? undefined, tenant: tenantResult.tenant, body }
       )
       
       if (actionResult.success === false) {
@@ -132,7 +132,7 @@ async function handleRequest(
         route.entity,
         operation,
         route.id,
-        { user, tenant: tenantResult.tenant, body },
+        { user: user ?? undefined, tenant: tenantResult.tenant, body },
         { allowFallback: true }
       )
 
@@ -147,7 +147,7 @@ async function handleRequest(
 
     // Execute standard CRUD operation
     const result = await executeDbalOperation(dbalOp, {
-      user,
+      user: user ?? undefined,
       tenant: tenantResult.tenant,
       body,
     })

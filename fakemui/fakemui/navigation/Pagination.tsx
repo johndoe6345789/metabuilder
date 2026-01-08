@@ -24,6 +24,7 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
   disabled?: boolean
   renderItem?: (item: PaginationRenderItemParams) => React.ReactNode
   getItemAriaLabel?: (type: string, page: number, selected: boolean) => string
+  sx?: Record<string, unknown>  // MUI sx prop for styling compatibility
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
@@ -44,6 +45,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   renderItem,
   getItemAriaLabel,
   className = '',
+  sx,
   ...props
 }) => {
   const generateItems = (): PaginationRenderItemParams[] => {
