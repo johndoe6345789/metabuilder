@@ -1,0 +1,16 @@
+messages:
+  - role: system
+    content: >-
+      Use software architecture best practices, unit testing, e2e testing,
+      linting.
+  - role: user
+    content: >-
+      Implement features found in ROADMAP.md and README.md, keep both files up
+      to date. Write playwright and unit tests. Follow code style. Use JSON
+      schema but its mostly correct so leave the schema alone. Index repository
+      and make notes. Align styling with old/ folder while sticking with plain
+      SASS files. Work towards MVP. Run linter and fix lint issues. Ensure
+      development DBAL is aligned with C++ production DBAL. Tables, Prisma
+      schemas and types should be generated using DBAL. C++ CLI frontend can
+      interface with DBAL and make life a bit easier. Implement any stub code.
+model: openai/gpt-4o
