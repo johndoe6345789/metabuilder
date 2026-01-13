@@ -10,6 +10,7 @@ RUN apk add --no-cache libc6-compat
 
 # Copy package files for all workspaces
 COPY package*.json ./
+COPY package-lock.json ./
 COPY frontends/nextjs/package*.json ./frontends/nextjs/
 COPY dbal/development/package*.json ./dbal/development/
 COPY config/package*.json ./config/
