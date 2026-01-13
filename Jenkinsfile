@@ -22,8 +22,8 @@ pipeline {
     stage('Download Node') {
       steps {
         sh '''
-          apt-get update
-          apt-get install -y xz-utils
+          sudo apt-get update
+          sudo apt-get install -y xz-utils
           curl -fsSLO https://nodejs.org/dist/v${NODE_VERSION}/${NODE_DIST}.tar.xz
           tar -xJf ${NODE_DIST}.tar.xz
           node --version
