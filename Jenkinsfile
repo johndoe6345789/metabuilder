@@ -1,11 +1,9 @@
 pipeline {
   agent any
 
-  environment {
-    NODE_VERSION = '20.11.1'
-    NODE_DIST = "node-v${NODE_VERSION}-linux-x64"
-    NODE_HOME = "${WORKSPACE}/${NODE_DIST}"
-    PATH = "${NODE_HOME}/bin:${env.PATH}"
+  tools {
+      nodejs 'node20'
+      jdk 'jdk17'
   }
 
   options {
@@ -16,19 +14,6 @@ pipeline {
     stage('Checkout') {
       steps {
         checkout scm
-      }
-    }
-
-    stage('Download Node') {
-      steps {
-        sh '''
-          sudo apt-get update
-          sudo apt-get install -y xz-utils
-          curl -fsSLO https://nodejs.org/dist/v${NODE_VERSION}/${NODE_DIST}.tar.xz
-          tar -xJf ${NODE_DIST}.tar.xz
-          node --version
-          npm --version
-        '''
       }
     }
 
