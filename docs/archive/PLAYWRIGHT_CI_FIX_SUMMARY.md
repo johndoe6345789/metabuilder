@@ -124,7 +124,7 @@ npm run test:e2e:dbal-daemon -- --list
 
 ### Unit Tests
 ```bash
-cd frontends/nextjs  
+cd frontends/nextjs
 npm run test:unit
 ```
 **Result:** ✅ Successfully runs all unit tests

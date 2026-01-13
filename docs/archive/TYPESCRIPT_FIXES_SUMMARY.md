@@ -70,7 +70,7 @@ This document summarizes the comprehensive work done to fix TypeScript errors, i
 
 Added explicit rules for:
 - `@typescript-eslint/require-await`: error
-- `@typescript-eslint/no-unsafe-assignment`: error  
+- `@typescript-eslint/no-unsafe-assignment`: error
 - `@typescript-eslint/no-unsafe-member-access`: error
 - `@typescript-eslint/no-unsafe-call`: error
 - `@typescript-eslint/no-unsafe-return`: error
@@ -252,14 +252,14 @@ Added pragmatic overrides for stub directories:
 - **Quality Improvement**: Stricter type checking, explicit null handling, better async patterns
 
 **Decision**: Focus on fixing production code quality rather than implementing stubs
-**Rationale**: 
+**Rationale**:
 - Most stubs are in directories with relaxed linting rules (warnings, not errors)
 - Implementing stubs would add significant scope beyond fixing type errors
 - Stubs should be implemented as separate features, not as part of linting cleanup
 
 #### High Priority Stubs (not implemented in this PR)
 - [ ] `src/lib/auth/api/login.ts` - Implement actual login
-- [ ] `src/lib/auth/api/register.ts` - Implement registration  
+- [ ] `src/lib/auth/api/register.ts` - Implement registration
 - [ ] `src/lib/auth/api/fetch-session.ts` - Implement session retrieval
 - [ ] `src/lib/routing/index.ts` - Implement route parsing and operations
 - [ ] `src/lib/routing/route-parser.ts` - Implement route parsing logic

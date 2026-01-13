@@ -138,7 +138,7 @@ export async function fetchSession(): Promise<User | null>
 - Updated mock to return `LoginResult` instead of `User`
 - Wrapped user objects in success response structure
 
-#### useAuth.session.test.ts  
+#### useAuth.session.test.ts
 - Updated 5 test cases with new mock structure
 - Fixed login mocks to return `{ success: true, user: ... }`
 - Fixed register mocks to return `{ success: true, user: ... }`
@@ -332,7 +332,7 @@ The remaining 337 warnings are primarily in stub/integration code with relaxed r
 
 ### Key Achievements:
 - ✅ 0 TypeScript errors
-- ✅ 45 fewer ESLint warnings  
+- ✅ 45 fewer ESLint warnings
 - ✅ 3 critical functions implemented
 - ✅ Enhanced linter configuration
 - ✅ All tests updated and passing
