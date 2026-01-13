@@ -415,7 +415,7 @@ The codebase now has a solid foundation for type safety with clear boundaries be
 
 ---
 
-**Generated**: January 6, 2026  
-**TypeScript Version**: 5.9.3  
-**ESLint Version**: 9.39.2  
+**Generated**: January 6, 2026
+**TypeScript Version**: 5.9.3
+**ESLint Version**: 9.39.2
 **Next.js Version**: 16.1.1

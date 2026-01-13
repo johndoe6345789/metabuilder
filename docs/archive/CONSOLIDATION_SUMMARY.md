@@ -6,7 +6,7 @@
 
 The repository had evolved to have 3 separate pipeline files:
 1. `gated-ci.yml` (1048 lines)
-2. `gated-deployment.yml` (617 lines)  
+2. `gated-deployment.yml` (617 lines)
 3. `development.yml` (360 lines)
 
 This created confusion about which pipeline does what and had some duplication.
@@ -172,11 +172,11 @@ Complete documentation available at:
 
 ## Migration Complete
 
-✅ All 3 workflows successfully consolidated  
-✅ Tree structure preserved for visibility  
-✅ Documentation updated  
-✅ No functionality lost  
-✅ 36% reduction in code  
+✅ All 3 workflows successfully consolidated
+✅ Tree structure preserved for visibility
+✅ Documentation updated
+✅ No functionality lost
+✅ 36% reduction in code
 ✅ Much clearer and easier to maintain
 
 ---
