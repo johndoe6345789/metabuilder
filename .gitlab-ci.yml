@@ -1,0 +1,37 @@
+image: node:20-bullseye
+
+stages:
+  - lint
+  - test
+  - build
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .npm/
+
+variables:
+  NPM_CONFIG_CACHE: $CI_PROJECT_DIR/.npm
+
+before_script:
+  - npm ci
+
+lint:
+  stage: lint
+  script:
+    - npm run lint
+
+typecheck:
+  stage: test
+  script:
+    - npm run typecheck
+
+unit_tests:
+  stage: test
+  script:
+    - npm test
+
+build:
+  stage: build
+  script:
+    - npm run build
