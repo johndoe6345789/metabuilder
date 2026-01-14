@@ -4,13 +4,74 @@
 
 **These documents establish the proper architecture - READ THEM FIRST:**
 
-1. **ARCHITECTURE.md** - Defines the proper MetaBuilder foundation and data flow
-2. **DBAL_REFACTOR_PLAN.md** - Implementation roadmap (Phase 2 in progress)
-3. **TESTING.md** - E2E testing and database initialization guide
-4. **schemas/package-schemas/** - Complete MetaBuilder system definition
-5. **dbal/shared/docs/** - DBAL implementation and design documentation
+1. **README.md** - Complete system overview, deployment, routing, packages, permissions
+2. **ARCHITECTURE.md** - Proper MetaBuilder foundation and data flow
+3. **DBAL_REFACTOR_PLAN.md** - Implementation roadmap (Phase 2 in progress)
+4. **TESTING.md** - E2E testing and database initialization guide
+5. **schemas/package-schemas/** - Complete MetaBuilder system definition
+6. **dbal/shared/docs/** - DBAL implementation and design documentation
+7. **docs/TESTING_GUIDE.md** - TDD methodology and testing best practices
+8. **docs/CONTAINER_IMAGES.md** - Docker deployment and GHCR images
 
-**Current Status**: Phase 2 (TypeScript DBAL) - Phase 3 (C++ daemon) is future work
+**Current Status**: Phase 2 (TypeScript DBAL + SQLite dev) - Phase 3 (C++ daemon) is future work
+
+**Production Deployment**: PostgreSQL + C++ DBAL daemon + Media daemon + Redis + Nginx + Monitoring
+
+---
+
+## 🎯 Core MetaBuilder Concepts
+
+### The Mental Model
+
+```
+Browser URL → Database Query → JSON Component → Generic Renderer → React → User
+```
+
+**Zero hardcoded connections**. Everything is a database lookup:
+
+```typescript
+// ❌ Traditional (hardcoded)
+import HomePage from './HomePage'
+<Route path="/" component={HomePage} />
+
+// ✅ MetaBuilder (data-driven)
+const route = await db.query('PageConfig', { path: '/' })
+const component = await loadPackage(route.packageId)
+return renderJSONComponent(component)
+```
+
+### Key Principles
+
+1. **No Hardcoded Routes** - Routes live in `PageConfig` database table
+2. **No Component Imports** - Components are JSON definitions in packages
+3. **No Direct Database Access** - Everything goes through DBAL
+4. **Complete Loose Coupling** - Frontend knows nothing about packages
+
+### Available Packages
+
+| Package | Purpose | Permission Level |
+|---------|---------|------------------|
+| `ui_home` | Landing page | Public (0) |
+| `ui_header` | App header/navbar | Public (0) |
+| `ui_footer` | App footer | Public (0) |
+| `dashboard` | User dashboard | User (1) |
+| `user_manager` | User management | Admin (3) |
+| `package_manager` | Install packages | God (4) |
+| `database_manager` | Database admin | Supergod (5) |
+| `schema_editor` | Schema editor | Supergod (5) |
+
+### Permission System (6 Levels)
+
+| Level | Role | Use Cases |
+|-------|------|-----------|
+| 0 | Public | Landing page, login |
+| 1 | User | Personal dashboard, profile |
+| 2 | Moderator | Content moderation |
+| 3 | Admin | User management, settings |
+| 4 | God | Package installation, workflows |
+| 5 | Supergod | Full system control, schema editor |
+
+**Each level inherits permissions from levels below.**
 
 ---
 
@@ -18,32 +79,90 @@
 
 MetaBuilder is structured in **phases**, with a **three-layer DBAL system**:
 
+### Production Deployment Stack
+
+```
+┌────────────────────────────────────────────────────────────┐
+│                    Browser                                  │
+└────────────────────┬─────────────────────────────────────────┘
+                     │ HTTPS
+┌────────────────────▼─────────────────────────────────────────┐
+│                   Nginx (Reverse Proxy)                       │
+│              - SSL/TLS termination                            │
+│              - Caching (Redis)                                │
+│              - Load balancing                                 │
+└────────────────────┬─────────────────────────────────────────┘
+                     │
+   ┌─────────────────┼─────────────────┬────────────────────┐
+   │                 │                 │                    │
+   ▼                 ▼                 ▼                    ▼
+┌────────┐    ┌────────────┐    ┌──────────┐    ┌──────────────┐
+│Next.js │    │ Media      │    │ DBAL     │    │ Monitoring   │
+│Frontend│    │ Daemon     │    │ Daemon   │    │ Stack        │
+│(Node)  │    │ (C++)      │    │ (C++)    │    │              │
+└────┬───┘    │ FFmpeg,    │    │ Security │    │ Prometheus   │
+     │        │ ImageMgk   │    │ Sandbox  │    │ Grafana      │
+     │        └─────┬──────┘    └────┬─────┘    │ Loki         │
+     │              │                 │         └──────────────┘
+     └──────────────┼─────────────────┘
+                    │
+         ┌──────────┴──────────┐
+         │                     │
+         ▼                     ▼
+    ┌─────────────┐    ┌───────────────┐
+    │ PostgreSQL  │    │ Redis Cache   │
+    │ (Database)  │    │ (Memory Store)│
+    └─────────────┘    └───────────────┘
+```
+
 ### Architecture Phases
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ Phase 2: Hybrid Mode (CURRENT - TypeScript DBAL)        │
+│ Phase 2: Hybrid Mode (CURRENT)                          │
 ├─────────────────────────────────────────────────────────┤
-│ - DBAL in TypeScript at /dbal/development/              │
-│ - Runs in Next.js process                               │
-│ - Prisma adapter for database                           │
+│ - TypeScript DBAL in /dbal/development/                 │
+│ - Runs in Next.js process (dev) or docker (prod)        │
+│ - Prisma adapter for SQLite (dev) or PostgreSQL (prod)  │
 │ - ACL layer for security                                │
-│ - Production-ready within GitHub Spark constraints      │
+│ - Media daemon for FFmpeg processing                    │
+│ - Redis for caching                                     │
+│ - Nginx for reverse proxy & SSL                         │
+│ - Monitoring stack optional                             │
 └─────────────────────────────────────────────────────────┘
                             ↓
                         (Future)
                             ↓
 ┌─────────────────────────────────────────────────────────┐
-│ Phase 3: Daemon Mode (FUTURE - C++ DBAL)                │
+│ Phase 3: Daemon Mode (FUTURE)                           │
 ├─────────────────────────────────────────────────────────┤
-│ - DBAL as separate C++ process                          │
+│ - C++ DBAL daemon at /dbal/production/                  │
 │ - WebSocket RPC protocol                                │
-│ - Credential isolation and security hardening           │
-│ - Sandboxed execution                                   │
-│ - Audit logging                                         │
-│ - Multiple database adapters (PostgreSQL, MySQL, etc.)  │
+│ - Credential isolation in separate process              │
+│ - Full security hardening & sandboxing                  │
+│ - Comprehensive audit logging                           │
+│ - Multiple database adapters                            │
 └─────────────────────────────────────────────────────────┘
 ```
+
+### Bootstrap Process (7 Phases)
+
+When system starts, `deployment/scripts/bootstrap-system.sh` runs:
+
+1. **Wait for Database** - Ensure PostgreSQL/SQLite is ready
+2. **Run Migrations** - Apply Prisma schema changes
+3. **Check Bootstrap Status** - Idempotent (safe to rerun)
+4. **Seed Database** - Load from `/seed/database/*.yaml`
+5. **Install Core Packages** - 12 packages in priority order:
+   - Phase 1: `package_manager` (required first)
+   - Phase 2: Headers, footers, auth UI, login
+   - Phase 3: Dashboard
+   - Phase 4: User & role managers
+   - Phase 5: Admin tools
+6. **Verify Installation** - Health checks
+7. **Run Post-Hooks** - Custom initialization
+
+See `seed/packages/core-packages.yaml` for full order.
 
 ### Data Flow: Seed → Packages → DBAL → Frontend
 
@@ -545,19 +664,127 @@ npm run test:e2e
 
 ---
 
+## 🚀 Deployment & Quick Start
+
+### One-Command Deployment
+
+```bash
+# Full production stack (PostgreSQL, DBAL, Next.js, Media daemon, Redis, Nginx, Monitoring)
+./deployment/deploy.sh all --bootstrap
+
+# Individual stacks
+./deployment/deploy.sh production      # Main services only
+./deployment/deploy.sh development     # Dev environment
+./deployment/deploy.sh monitoring      # Prometheus, Grafana, Loki
+```
+
+**What gets deployed**:
+- PostgreSQL 16 (database)
+- C++ DBAL daemon (from Phase 3, auto-starts WebSocket server)
+- Next.js app (Node 18)
+- C++ Media daemon (FFmpeg, ImageMagick)
+- Redis 7 (caching)
+- Nginx (reverse proxy, SSL/TLS, caching)
+- Prometheus, Grafana, Loki (optional monitoring)
+
+### Development Setup
+
+```bash
+# Clone and install
+git clone <repo>
+cd metabuilder
+
+# Option 1: From root (recommended)
+npm install
+npm run db:generate
+npm run db:push
+
+# Option 2: From Next.js directory
+cd frontends/nextjs
+npm install
+npm run db:generate
+npm run db:push
+
+# Bootstrap seed data
+cd ../../deployment/scripts
+./bootstrap-system.sh
+
+# Start development
+cd ../../
+npm run dev  # or cd frontends/nextjs && npm run dev
+```
+
+### Docker Deployment
+
+```bash
+# Pull images from GHCR
+docker login ghcr.io -u USERNAME --password-stdin
+
+# Using docker-compose with GHCR images
+docker compose -f docker-compose.ghcr.yml up -d
+
+# With monitoring stack
+docker compose -f docker-compose.ghcr.yml --profile monitoring up -d
+
+# View logs
+docker compose -f docker-compose.ghcr.yml logs -f
+```
+
+**GHCR Images Available:**
+- `ghcr.io/johndoe6345789/metabuilder/nextjs-app` - Next.js frontend
+- `ghcr.io/johndoe6345789/metabuilder/dbal-daemon` - C++ DBAL daemon
+
+### Development Workflow (Multiple Terminals)
+
+**Terminal 1: Frontend**
+```bash
+cd frontends/nextjs
+npm run dev  # Starts at http://localhost:3000
+```
+
+**Terminal 2: DBAL (optional - TypeScript version)**
+```bash
+cd dbal/development
+npm install
+npm run dev
+```
+
+**Terminal 3: C++ Daemons (if building locally)**
+```bash
+cd dbal/production
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+./build/bin/dbal-daemon
+```
+
+---
+
 ## 📖 Further Reading
 
+### System Overview & Deployment
+1. **README.md** - Complete system architecture, routing, packages, deployment
+2. **docs/CONTAINER_IMAGES.md** - Docker images and GHCR deployment
+3. **deployment/deploy.sh** - Deployment automation script
+4. **deployment/scripts/bootstrap-system.sh** - System bootstrap process
+
 ### Architecture & Refactoring
-1. **ARCHITECTURE.md** - Complete blueprint and data flow
-2. **DBAL_REFACTOR_PLAN.md** - Implementation phases and cleanup steps
-3. **TESTING.md** - E2E testing guide
+5. **ARCHITECTURE.md** - MetaBuilder foundation and data flow
+6. **DBAL_REFACTOR_PLAN.md** - Phase 2 cleanup implementation steps
+7. **TESTING.md** - E2E testing guide
+
+### Testing & Quality
+8. **docs/TESTING_GUIDE.md** - TDD methodology, testing pyramid, best practices
+9. **docs/TODO_MVP_IMPLEMENTATION.md** - MVP feature checklist
+10. **docs/PIPELINE_CONSOLIDATION.md** - CI/CD pipeline configuration
 
 ### DBAL Documentation
-4. **dbal/shared/docs/IMPLEMENTATION_SUMMARY.md** - Phase 2 overview
-5. **dbal/shared/docs/PHASE2_IMPLEMENTATION.md** - Phase 2 detailed guide
-6. **dbal/production/docs/PHASE3_DAEMON.md** - Phase 3 future design
+11. **dbal/shared/docs/IMPLEMENTATION_SUMMARY.md** - Phase 2 overview
+12. **dbal/shared/docs/PHASE2_IMPLEMENTATION.md** - Phase 2 detailed guide
+13. **dbal/production/docs/PHASE3_DAEMON.md** - Phase 3 design (future)
 
 ### Schema & Package System
-7. **schemas/SCHEMAS_README.md** - Package system definitions
-8. **schemas/QUICKSTART.md** - Package system quick start
-9. **dbal/shared/api/schema/** - YAML schema sources
+14. **schemas/SCHEMAS_README.md** - Package system definitions
+15. **schemas/QUICKSTART.md** - Package system quick start
+16. **schemas/package-schemas/** - Complete schema definitions (18 files)
+17. **dbal/shared/api/schema/** - YAML schema sources (both phases)
+18. **seed/packages/core-packages.yaml** - Bootstrap package installation order
