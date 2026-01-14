@@ -1,5 +1,20 @@
 # MetaBuilder Project Instructions for AI Assistants
 
+## ⚠️ Architecture Refactoring In Progress
+
+The project is transitioning to a **proper DBAL-centric architecture**. See `DBAL_REFACTOR_PLAN.md` for:
+- Moving Prisma client from Next.js to DBAL
+- Moving database schema to DBAL
+- Implementing proper seeding in DBAL
+- Removing duplicate adapter code from Next.js
+
+**Current state**: Hybrid (working but with workarounds)
+**Target state**: Pure DBAL architecture (DBAL owns all database logic)
+
+This impacts how bots should approach database-related changes. Review the refactoring plan before touching database code.
+
+---
+
 ## Architecture Overview
 
 MetaBuilder is a **data-driven platform** where everything flows through the database. The key principle: **No hardcoded routes, components, or UI structure.**
@@ -99,8 +114,13 @@ Browser → Database Query → JSON Definition → Generic Renderer → React UI
 
 ## DO NOTs for Bots
 
-- ❌ Don't try to understand the full DBAL system - it's complex
-- ✅ DO understand that everything goes through the adapter
-- ✅ DO check how seed data works before modifying database initialization
+⚠️ **IMPORTANT**: See `DBAL_REFACTOR_PLAN.md` - architecture is being modernized to move DBAL logic from Next.js to DBAL subproject.
+
+- ❌ Don't use `/lib/dbal-client/` - being removed in refactoring
+- ❌ Don't use `/lib/database-dbal/` - being removed in refactoring
+- ❌ Don't create new functions in `/lib/db/` that use raw adapter
+- ✅ DO understand that DBAL subproject should own all database logic
+- ✅ DO check `DBAL_REFACTOR_PLAN.md` before modifying database code
+- ✅ DO follow current patterns (getAdapter) while refactoring is in progress
 - ✅ DO ensure database schema exists before accessing tables
-- ✅ DO follow the pattern of using `Database.seedDefaultData()` for initialization
+- ✅ DO understand the goal: DBAL as single source of truth for database
