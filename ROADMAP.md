@@ -2034,89 +2034,210 @@ None - All configuration remains backward compatible
 
 ---
 
-## Post-MVP Priorities
+## Technical Debt & Prioritization Roadmap
 
-### Immediate Next Steps (Q1 2026)
+Based on comprehensive codebase audit (January 2026), MetaBuilder has **well-managed technical debt** with a clear refactoring path to increase data-driven architecture from 27% to 35-40%.
 
-**1. Backend API Integration** ⭐ HIGHEST PRIORITY
-- Connect placeholder API client to real endpoints
-- Implement entity CRUD endpoints
-- Add authentication middleware
-- Request/response validation
-- Error handling
+### Executive Summary
 
-**Why:** Without real API integration, CRUD operations are non-functional
+**Current State**:
+- 2,047 total files
+- 73% TypeScript (1,487 files) - Infrastructure + UI
+- 27% JSON/YAML (560 files) - Schemas + packages + seed data
+- **Goal**: 35-40% JSON/YAML (data-driven) through strategic cleanup
 
-**2. Enhanced CRUD UX** ⭐ HIGH PRIORITY
-- RenderComponent integration for forms
-- Client-side validation
-- Pagination for lists
-- Search/filter UI
+**Total Estimated Effort**: 9-16 hours of refactoring
+**Recommended Timeline**: Phase 1 (1-2 weeks) + Phase 2 (4-6 weeks)
 
-**Why:** Current UI is functional but bare-bones; needs polish for real users
+### Phase 1: Critical Cleanup (1-2 weeks, ~2-3 hours)
 
-**3. God Panel Foundation** ⭐ MEDIUM PRIORITY
-- Route management UI
-- Package installation UI
-- Basic user management
+**🔴 P0 - Block Production Issues** (None identified - codebase is stable)
 
-**Why:** Enables non-technical users to configure the system
+**🟠 P1 - Quick Wins, High Impact**
 
-### Technical Debt
+| # | Task | Effort | Impact | Files | Status |
+|---|------|--------|--------|-------|--------|
+| **1.1** | **Delete `/old` directory** | 1h | High | 119 | ❌ TODO |
+| | Pre-Next.js SPA implementation | | | | |
+| | Contains Vite, React, Radix UI | | | | |
+| | Completely superseded by NextJS | | | | |
+| **1.2** | **Delete `.backup` files** | 10m | Low | 4 | ❌ TODO |
+| | Not needed with Git history | | | | |
+| | Files: `*.backup` in `/dbal/development/` | | | | |
+| **1.3** | **Verify experimental code** | 1h | Low | 1 | ❌ TODO |
+| | `/css/categories/experimental.ts` | | | | |
+| | Check usage, delete if unused | | | | |
 
-**Low Priority:**
-- [ ] Replace placeholder API implementations with real calls
-- [ ] Add comprehensive error boundaries
-- [ ] Improve TypeScript type coverage
-- [ ] Add performance monitoring
-- [ ] Optimize bundle size
+**P1 Deliverables**: Remove 124 files of dead code, reduce confusion
 
-**Medium Priority:**
-- [ ] Fix 4 failing tests (pre-existing, unrelated to MVP)
-- [ ] Add E2E tests for new MVP features
-- [ ] Document API contracts
-- [ ] Add developer setup guide
+### Phase 2: Architecture Refactoring (4-6 weeks, ~9-16 hours)
 
-**High Priority:**
-- [ ] None currently
+**🟡 P2 - Medium Priority, Medium Effort**
 
----
+| # | Task | Effort | Impact | Type | Status |
+|---|------|--------|--------|------|--------|
+| **2.1** | **Migrate seed data to YAML** | 4-5h | ⭐⭐⭐ High | Architecture | ❌ TODO |
+| | Move `/lib/db/database-admin/seed-default-data/*.ts` to `/seed/database/` | | | | |
+| | Load via DBAL `seedDatabase()` orchestration | | | | |
+| | Affected files: 5 TS files (~150 lines) | | | | |
+| | **Sub-tasks**: | | | | |
+| | - `seed-users.ts` → `users.yaml` | 1h | | | |
+| | - `seed-app-config.ts` → `app-config.yaml` | 1h | | | |
+| | - `seed-css-categories.ts` → `css-categories.yaml` | 1h | | | |
+| | - `seed-dropdown-configs.ts` → `dropdown-configs.yaml` | 1h | | | |
+| | - Update DBAL `seedDatabase()` to load all YAML | 1-2h | | | |
+| **2.2** | **Eliminate adapter code duplication** | 2-3h | ⭐⭐ Medium | DRY | ❌ TODO |
+| | Delete `/frontends/nextjs/src/lib/dbal-client/adapter/` | | | | |
+| | Remove `PrismaAdapter` and `DevelopmentAdapter` classes (355 lines) | | | | |
+| | Frontend uses DBAL client exclusively | | | | |
+| | **Sub-tasks**: | | | | |
+| | - Audit current adapter usage | 30m | | | |
+| | - Move any unique logic to DBAL | 1h | | | |
+| | - Delete adapter classes | 30m | | | |
+| | - Update imports to use DBAL | 30m | | | |
+| **2.3** | **Migrate role/permission constants to DB** | 2-3h | ⭐⭐ Medium | Data-Driven | ❌ TODO |
+| | Move hardcoded `ROLE_LEVELS` from `constants.ts` | | | | |
+| | Target: `/schemas/permissions_schema.json` + seed | | | | |
+| | **Sub-tasks**: | | | | |
+| | - Update `permissions_schema.json` with role definitions | 1h | | | |
+| | - Create `seed/database/roles.yaml` | 30m | | | |
+| | - Update frontend to load roles from DB | 1h | | | |
+| **2.4** | **Migrate environment configuration** | 2-3h | ⭐ Medium | Data-Driven | ❌ TODO |
+| | Move `ENV_DEFAULTS`, `TIMEOUTS` from `constants.ts` | | | | |
+| | Target: `/seed/config/app-config.yaml` | | | | |
+| | **Sub-tasks**: | | | | |
+| | - Extract config to YAML | 1h | | | |
+| | - Add config loading at startup | 1h | | | |
+| | - Update all config references | 30m | | | |
 
-## Long-Term Vision
+**P2 Deliverables**: Reach 35-40% data-driven architecture, eliminate 3 sources of hardcoded data
 
-### Year 1 (2026)
-- ✅ MVP with core features
-- 🎯 Production-ready CRUD operations
-- 🎯 God panel for system configuration
+### Phase 3: Polish & Optimization (Future, 2-3 hours)
+
+**🟢 P3 - Low Priority, Low Effort**
+
+| # | Task | Effort | Impact | Type | Status |
+|---|------|--------|--------|------|--------|
+| **3.1** | **Complete TODO items** | Varies | Low | Code Quality | ❌ TODO |
+| | Compiler implementation (`/lib/compiler/index.ts`) | | | | |
+| | Review `/docs/TODO_MVP_IMPLEMENTATION.md` | 1h | | | |
+| **3.2** | **Add error boundaries** | 2h | Low | UX | ❌ TODO |
+| | Comprehensive React error boundaries | | | | |
+| **3.3** | **Improve TypeScript coverage** | 2-3h | Low | Type Safety | ❌ TODO |
+| | Strict mode compliance, eliminate `any` types | | | | |
+
+### Implementation Timeline
+
+```
+Week 1 (P1 - Quick Wins)
+├── Day 1-2: Delete /old and backups (1.5h)
+└── Day 3-5: Verify experimental code (1h)
+
+Week 2-6 (P2 - Architecture Refactoring)
+├── Week 2: Migrate seed data to YAML (2.1) - 4-5h
+├── Week 3: Eliminate adapter duplication (2.2) - 2-3h
+├── Week 4: Migrate roles to DB (2.3) - 2-3h
+├── Week 5: Migrate environment config (2.4) - 2-3h
+└── Week 6: Integration testing & validation
+
+Ongoing (P3 - Polish)
+└── As time permits after P1 + P2
+```
+
+### Dependencies & Blocking Issues
+
+**No blockers identified** - All work is independent and can be started immediately.
+
+**Recommended Sequence**:
+1. **Start P1 immediately** (delete old code) - quick win, high clarity
+2. **Start P2.1 next** (seed data) - foundation for other refactoring
+3. **Parallel P2.2, P2.3, P2.4** - Can work in parallel after P2.1
+
+### Success Metrics
+
+| Metric | Current | Target | Timeline |
+|--------|---------|--------|----------|
+| **Data-Driven Ratio** | 27% JSON/YAML | 35-40% | After P2 |
+| **Hardcoded Data** | 3 sources | 0 sources | After P2 |
+| **Deprecated Code** | 119 files | 0 files | After P1 |
+| **Adapter Duplication** | 355 lines | 0 lines | After P2.2 |
+| **Code Clarity** | 73% TS overhead | 60-65% TS | After P2 |
+
+### Risk Assessment
+
+**Low Risk**: All refactoring is backward compatible
+- Git history preserved
+- No production impact (development artifacts only)
+- All changes are additive to data-driven architecture
+- Can be tested incrementally with E2E tests
+
+**Testing Plan**:
+1. Verify all existing tests pass after each phase
+2. Run E2E tests to ensure no functionality lost
+3. Manual testing of seed data loading
+4. Verification of role/permission system after 2.3
+5. Environment config testing after 2.4
+
+### Post-Refactoring Priorities
+
+Once technical debt is addressed (after Phase 2), focus on feature development:
+
+#### Feature Roadmap (Q1-Q2 2026)
+
+**Q1 2026: Foundation**
+- ✅ Core platform (completed)
+- ✅ DBAL integration (completed)
+- 🎯 **Tech Debt Cleanup** (Phase 1-2, Jan-Feb 2026)
+
+**Q2 2026: Enhanced Features**
+- 🎯 Backend API Integration (real endpoints, not mocks)
+- 🎯 Enhanced CRUD UX (forms, validation, pagination)
+- 🎯 God Panel Foundation (route/package management)
+
+**Q3-Q4 2026: Production Hardening**
 - 🎯 C++ DBAL in production
-- 🎯 First 10 public packages
+- 🎯 Performance optimization
+- 🎯 Security hardening
+- 🎯 First production deployments
 
-### Year 2 (2027)
-- 🔮 Package marketplace
-- 🔮 Advanced search capabilities
-- 🔮 Multi-language support
-- 🔮 Enterprise authentication
-- 🔮 100+ public packages
+### Related Documentation
 
-### Year 3 (2028+)
-- 🔮 Visual component builder
-- 🔮 AI-assisted schema generation
-- 🔮 Real-time collaboration
-- 🔮 Plugin ecosystem
-- 🔮 1000+ active deployments
+- **Audit Report**: See "Codebase Composition" section above for detailed breakdown
+- **Architecture**: See `/ARCHITECTURE.md` for system design
+- **Development**: See `CLAUDE.md` for AI assistant guidance
+- **Implementation**: See `.github/prompts/` for development workflows
 
 ---
 
 ## Long-Term Vision
 
 ### Year 1 (2026) - Foundation & Growth
-- ✅ MVP with core features (Achieved Q1)
-- 🎯 Production-ready CRUD operations (Q1-Q2)
-- 🎯 God panel for system configuration (Q2)
-- 🎯 C++ DBAL in production (Q3-Q4)
-- 🎯 First 10 third-party packages (Q4)
-- 🎯 Production deployments: >5 sites
+
+**Q1 2026: Platform Foundation**
+- ✅ MVP with core features (Completed)
+- ✅ DBAL TypeScript implementation (Completed)
+- 🎯 **Tech Debt Cleanup Phase 1** (Jan-Feb, ~2-3 hours)
+  - Delete `/old` directory (119 files)
+  - Delete backup files (4 files)
+  - Remove experimental code (1 file)
+
+**Q2 2026: Architecture Hardening & Features**
+- 🎯 **Tech Debt Cleanup Phase 2** (Feb-Mar, ~9-16 hours)
+  - Migrate seed data to YAML (4-5h)
+  - Eliminate adapter duplication (2-3h)
+  - Migrate roles to database (2-3h)
+  - Migrate environment config (2-3h)
+- 🎯 Production-ready CRUD operations (integration with real API endpoints)
+- 🎯 Enhanced CRUD UX (forms, validation, pagination)
+- 🎯 God panel foundation (route/package management)
+
+**Q3-Q4 2026: Production Hardening & Scale**
+- 🎯 C++ DBAL in production
+- 🎯 Performance optimization
+- 🎯 Security hardening
+- 🎯 First production deployments: >5 sites
 - 🎯 Active users: >100
+- 🎯 First 10 third-party packages
 
 ### Year 2 (2027) - Ecosystem & Enterprise
 - 🔮 Package marketplace with ratings
