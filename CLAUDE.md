@@ -763,28 +763,29 @@ cmake --build build
 
 ### System Overview & Deployment
 1. **README.md** - Complete system architecture, routing, packages, deployment
-2. **docs/CONTAINER_IMAGES.md** - Docker images and GHCR deployment
-3. **deployment/deploy.sh** - Deployment automation script
-4. **deployment/scripts/bootstrap-system.sh** - System bootstrap process
+2. **ROADMAP.md** - Project vision, history (Spark → Next.js evolution), and current status
+3. **docs/CONTAINER_IMAGES.md** - Docker images and GHCR deployment
+4. **deployment/deploy.sh** - Deployment automation script
+5. **deployment/scripts/bootstrap-system.sh** - System bootstrap process
 
 ### Architecture & Refactoring
-5. **ARCHITECTURE.md** - MetaBuilder foundation and data flow
-6. **DBAL_REFACTOR_PLAN.md** - Phase 2 cleanup implementation steps
-7. **TESTING.md** - E2E testing guide
+6. **ARCHITECTURE.md** - MetaBuilder foundation and data flow
+7. **DBAL_REFACTOR_PLAN.md** - Phase 2 cleanup implementation steps
+8. **TESTING.md** - E2E testing guide
 
 ### Testing & Quality
-8. **docs/TESTING_GUIDE.md** - TDD methodology, testing pyramid, best practices
-9. **docs/TODO_MVP_IMPLEMENTATION.md** - MVP feature checklist
-10. **docs/PIPELINE_CONSOLIDATION.md** - CI/CD pipeline configuration
+9. **docs/TESTING_GUIDE.md** - TDD methodology, testing pyramid, best practices
+10. **docs/TODO_MVP_IMPLEMENTATION.md** - MVP feature checklist
+11. **docs/PIPELINE_CONSOLIDATION.md** - CI/CD pipeline configuration
 
 ### DBAL Documentation
-11. **dbal/shared/docs/IMPLEMENTATION_SUMMARY.md** - Phase 2 overview
-12. **dbal/shared/docs/PHASE2_IMPLEMENTATION.md** - Phase 2 detailed guide
-13. **dbal/production/docs/PHASE3_DAEMON.md** - Phase 3 design (future)
+12. **dbal/shared/docs/IMPLEMENTATION_SUMMARY.md** - Phase 2 overview
+13. **dbal/shared/docs/PHASE2_IMPLEMENTATION.md** - Phase 2 detailed guide
+14. **dbal/production/docs/PHASE3_DAEMON.md** - Phase 3 design (future)
 
 ### Schema & Package System
-14. **schemas/SCHEMAS_README.md** - Package system definitions
-15. **schemas/QUICKSTART.md** - Package system quick start
-16. **schemas/package-schemas/** - Complete schema definitions (18 files)
-17. **dbal/shared/api/schema/** - YAML schema sources (both phases)
-18. **seed/packages/core-packages.yaml** - Bootstrap package installation order
+15. **schemas/SCHEMAS_README.md** - Package system definitions
+16. **schemas/QUICKSTART.md** - Package system quick start
+17. **schemas/package-schemas/** - Complete schema definitions (18 files)
+18. **dbal/shared/api/schema/** - YAML schema sources (both phases)
+19. **seed/packages/core-packages.yaml** - Bootstrap package installation order
