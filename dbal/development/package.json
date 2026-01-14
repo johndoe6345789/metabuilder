@@ -16,7 +16,10 @@
     "format": "prettier --write src/**/*.ts",
     "codegen": "tsx ../shared/tools/codegen/gen_types.ts",
     "codegen:prisma": "node ../shared/tools/codegen/gen_prisma_schema.js",
-    "generate-types": "node ../shared/tools/codegen/generate-types.js"
+    "generate-types": "node ../shared/tools/codegen/generate-types.js",
+    "db:generate": "prisma generate --schema=prisma/schema.prisma",
+    "db:push": "prisma db push --schema=prisma/schema.prisma",
+    "db:studio": "prisma studio --schema=prisma/schema.prisma"
   },
   "keywords": [
     "database",

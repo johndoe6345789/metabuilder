@@ -1,0 +1,121 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id String @id
+  username String @unique
+  email String @unique
+  role String
+  profilePicture String?
+  bio String?
+  createdAt BigInt
+  tenantId String?
+  isInstanceOwner Boolean @default(false)
+  passwordChangeTimestamp BigInt?
+  firstLogin Boolean @default(false)
+  @@index([tenantId])
+  @@index([role])
+}
+
+model Credential {
+  username String @id
+  passwordHash String
+}
+
+model Session {
+  id String @id
+  userId String
+  token String @unique
+  expiresAt BigInt
+  createdAt BigInt
+  lastActivity BigInt
+  ipAddress String?
+  userAgent String?
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([token])
+}
+
+model PageConfig {
+  id String @id
+  tenantId String?
+  packageId String?
+  path String // Route pattern: /media/jobs, /forum/:id
+  title String
+  description String?
+  icon String?
+  component String?
+  componentTree String // JSON: full component tree
+  level Int
+  requiresAuth Boolean
+  requiredRole String?
+  parentPath String?
+  sortOrder Int @default(0)
+  isPublished Boolean @default(true)
+  params String?
+  meta String?
+  createdAt BigInt?
+  updatedAt BigInt?
+  @@unique([tenantId, path])
+  @@index([tenantId])
+  @@index([packageId])
+  @@index([level])
+  @@index([parentPath])
+}
+
+model ComponentNode {
+  id String @id
+  type String
+  parentId String?
+  childIds String // JSON: string[]
+  order Int
+  pageId String
+  @@index([pageId])
+  @@index([parentId])
+}
+
+model ComponentConfig {
+  id String @id
+  componentId String
+  props String // JSON
+  styles String // JSON
+  events String // JSON
+  conditionalRendering String?
+  @@index([componentId])
+}
+
+model Workflow {
+  id String @id
+  tenantId String?
+  name String
+  description String?
+  nodes String // JSON: WorkflowNode[]
+  edges String // JSON: WorkflowEdge[]
+  enabled Boolean
+  version Int @default(1)
+  createdAt BigInt?
+  updatedAt BigInt?
+  createdBy String?
+  @@index([tenantId])
+  @@index([enabled])
+}
+
+model InstalledPackage {
+  packageId String @id
+  tenantId String?
+  installedAt BigInt
+  version String
+  enabled Boolean
+  config String?
+  @@index([tenantId])
+}
+
+model PackageData {
+  packageId String @id
+  data String // JSON
+}

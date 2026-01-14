@@ -1,126 +1,359 @@
 # MetaBuilder Project Instructions for AI Assistants
 
-## ⚠️ Architecture Refactoring In Progress
+## ⚠️ Critical: Read Before Any Database Work
 
-The project is transitioning to a **proper DBAL-centric architecture**. See `DBAL_REFACTOR_PLAN.md` for:
-- Moving Prisma client from Next.js to DBAL
-- Moving database schema to DBAL
-- Implementing proper seeding in DBAL
-- Removing duplicate adapter code from Next.js
+**These documents establish the proper architecture - READ THEM FIRST:**
 
-**Current state**: Hybrid (working but with workarounds)
-**Target state**: Pure DBAL architecture (DBAL owns all database logic)
+1. **ARCHITECTURE.md** - Defines the proper MetaBuilder foundation and data flow
+2. **DBAL_REFACTOR_PLAN.md** - Implementation roadmap (Phase 1 partially complete)
+3. **TESTING.md** - E2E testing and database initialization guide
+4. **schemas/package-schemas/** - The /schemas folder is the SOURCE OF TRUTH for MetaBuilder architecture
 
-This impacts how bots should approach database-related changes. Review the refactoring plan before touching database code.
+**Current Status**: Phase 1 refactoring in progress - DBAL now owns Prisma schema and client factories
 
 ---
 
-## Architecture Overview
+## 🎯 Architecture Overview
 
-MetaBuilder is a **data-driven platform** where everything flows through the database. The key principle: **No hardcoded routes, components, or UI structure.**
+MetaBuilder follows a **data-driven, declarative architecture**:
 
 ```
-Browser → Database Query → JSON Definition → Generic Renderer → React UI
+┌─────────────────────┐
+│ /seed/ folder       │  ← Seed data (YAML format)
+│ Packages seed data  │  ← Package-specific definitions
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ DBAL (Database      │  ← Single source of truth for database
+│ Abstraction Layer)  │    /dbal/development/
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Next.js Frontend    │  ← Uses DBALClient for all database access
+│ /frontends/nextjs   │
+└─────────────────────┘
 ```
 
-## Critical Concepts
+### Proper Data Flow
 
-### 1. DBAL (Database Abstraction Layer)
-- **Never** use Prisma directly
-- **Always** use the DBAL adapter through `getAdapter()` from `@/lib/db/core/dbal-client`
-- The adapter wraps Prisma but provides a unified interface
-- DBAL is defined in packages but fronted by the DBAL daemon (C++ service)
+1. **Seed Data** (`/seed/` folder)
+   - Contains YAML files defining base bootstrap data
+   - `seed/database/installed_packages.yaml` - Package installation records
+   - `seed/database/package_permissions.yaml` - Permission rules
+   - NOT TypeScript code, NOT hardcoded in Next.js
 
-### 2. Database Schema
-- Schema is **auto-generated from DBAL** - DO NOT EDIT `prisma/schema.prisma` MANUALLY
-- Tables include: User, Session, PageConfig, InstalledPackage, ComponentConfig, etc.
-- To create/push schema: `npm run db:push` (from frontends/nextjs)
+2. **Packages** (`/packages/*/`)
+   - Optional `seed/metadata.json` for package-specific seed data
+   - Self-contained UI and logic
+   - Reference seed data through metadata
 
-### 3. Package System
-- Packages are in `/packages/<package-name>/`
-- Each package has:
-  - `package.json` - metadata
-  - `components/` - JSON component definitions
-  - `seed/metadata.json` - seed data defining what gets inserted into PageConfig
-  - `static_content/` - assets
+3. **DBAL** (`/dbal/development/`)
+   - **OWNS:** Prisma schema, database adapter, client factories
+   - **OWNS:** Seed orchestration (loading from /seed/)
+   - **EXPORTS:** `getDBALClient()`, `getPrismaClient()`, `seedDatabase()`
+   - **PROVIDES:** Entity operations (users, pageConfigs, components, etc.)
 
-### 4. Routing System
-- **No hardcoded routes** - all routes come from `PageConfig` database table
-- PageConfig references a package + component
-- Home page (`/`) must have an entry in PageConfig with `path: '/'`
-- Package's `seed/metadata.json` defines what pages should be created
+4. **Frontend** (`/frontends/nextjs/`)
+   - Uses DBALClient from DBAL
+   - Example: `db.users.list()`, `db.pageConfigs.findOne()`
+   - NEVER touches Prisma, adapters, or schema
+   - NEVER defines seed data (that's in /seed/)
 
-### 5. JSON Components
-- Components are defined as JSON in package `components/*.json`
-- Rendered by generic `renderJSONComponent()`
-- Structure: `{ id, name, render: { type, template } }`
-- `template` uses component types like Button, Text, Box, Link, etc. (NOT HTML tags)
+---
 
-## Development Workflow
+## 📋 DBAL Usage (Phase 1 Complete)
 
-1. **Never modify Prisma schema directly** - it's generated from DBAL
-2. **Database initialization**:
-   ```bash
-   npm run db:generate  # Generate Prisma client
-   npm run db:push      # Create/sync database schema
-   ```
-3. **Seeding**:
-   - Packages define seed data in `seed/metadata.json`
-   - Seed functions in `src/lib/db/database-admin/seed-default-data/`
-   - Health endpoint triggers seeding on first request
-4. **Always use DBAL adapter** - never raw Prisma queries
+### Getting a DBAL Client
 
-## Key Files & Paths
+```typescript
+// CORRECT: Use factory from DBAL
+import { getDBALClient } from '@/dbal'
 
-- `/prisma/schema.prisma` - Database schema (auto-generated)
-- `/frontends/nextjs/src/lib/db/core/dbal-client/` - DBAL adapter interface
-- `/frontends/nextjs/src/lib/db/core/operations.ts` - Database operations (Database class)
-- `/frontends/nextjs/src/app/page.tsx` - Root page (loads from PageConfig)
-- `/packages/` - All UI packages
-- `/frontends/nextjs/src/lib/packages/json/render-json-component.tsx` - Generic renderer
+const db = getDBALClient()
+const users = await db.users.list()
+```
 
-## Testing
+### Factory Functions Available in DBAL
 
-- E2E tests in `/e2e/` using Playwright
-- Config: `/playwright.config.ts`
-- Must run: `npm run db:generate && npm run db:push` before tests
-- Health endpoint seeding is automatic on first request
+```typescript
+// From @/dbal (DBAL subproject)
+export { getDBALClient, useDBAL }              // ← Use these
+export { getPrismaClient, createPrismaClient } // Available if needed
+export { seedDatabase }                        // Seed orchestration
+```
 
-## Common Tasks
+### Entity Operations
 
-### Add a new home page
-1. Ensure `ui_home` package exists with `components/ui.json` having `home_page` component
-2. Create `/packages/ui_home/seed/metadata.json` with PageConfig definition for `path: /`
-3. Update `seed-home-page.ts` to load from the seed metadata
-4. Database seeding happens automatically on first `/api/health` call
+DBALClient provides typed entity operations:
 
-### Create a new page
-1. Define the route in PageConfig table (via API or seed)
-2. Reference a package + component
-3. System automatically loads and renders it
+```typescript
+const db = getDBALClient()
 
-### Modify the schema
-- Edit DBAL definition (not Prisma schema)
-- Run code gen: `npm run db:generate`
-- Push to DB: `npm run db:push`
+// Users
+db.users.list({ limit: 10 })
+db.users.findOne({ id })
+db.users.create({ username, email, role })
+db.users.update(id, { ... })
 
-## DO NOTs
+// Pages
+db.pageConfigs.list({ filter: { path: '/' } })
+db.pageConfigs.findOne({ path: '/' })
+db.pageConfigs.create({ path, title, component })
 
-- ❌ Don't edit `prisma/schema.prisma` directly
-- ❌ Don't use `prisma` client directly - use `getAdapter()`
-- ❌ Don't hardcode routes or components
-- ❌ Don't delete the DATABASE_URL env var
-- ❌ Don't mix HTML tags in JSON components (use Component types instead)
+// Other entities
+db.sessions.list()
+db.components.list()
+db.workflows.list()
+// ... and more
+```
 
-## DO NOTs for Bots
+---
 
-⚠️ **IMPORTANT**: See `DBAL_REFACTOR_PLAN.md` - architecture is being modernized to move DBAL logic from Next.js to DBAL subproject.
+## ❌ Common Mistakes to Avoid
 
-- ❌ Don't use `/lib/dbal-client/` - being removed in refactoring
-- ❌ Don't use `/lib/database-dbal/` - being removed in refactoring
-- ❌ Don't create new functions in `/lib/db/` that use raw adapter
-- ✅ DO understand that DBAL subproject should own all database logic
-- ✅ DO check `DBAL_REFACTOR_PLAN.md` before modifying database code
-- ✅ DO follow current patterns (getAdapter) while refactoring is in progress
-- ✅ DO ensure database schema exists before accessing tables
-- ✅ DO understand the goal: DBAL as single source of truth for database
+### Mistake 1: Using Prisma Directly
+```typescript
+// ❌ WRONG
+import { prisma } from '@/lib/config/prisma'
+const users = await prisma.user.findMany()
+
+// ✅ CORRECT
+import { getDBALClient } from '@/dbal'
+const db = getDBALClient()
+const users = await db.users.list()
+```
+
+### Mistake 2: Using Old Frontend Adapter
+```typescript
+// ❌ WRONG (being removed in refactoring)
+import { getAdapter } from '@/lib/dbal-client/adapter/get-adapter'
+const adapter = getAdapter()
+await adapter.list('User', { ... })
+
+// ✅ CORRECT
+import { getDBALClient } from '@/dbal'
+const db = getDBALClient()
+await db.users.list()
+```
+
+### Mistake 3: Defining Seed Data in Code
+```typescript
+// ❌ WRONG - seed data should not be in code
+const seedData = [
+  { username: 'admin', email: 'admin@localhost' },
+  { username: 'demo', email: 'demo@localhost' },
+]
+for (const user of seedData) {
+  await db.users.create(user)
+}
+
+// ✅ CORRECT - seed data is in /seed/ folder (YAML)
+// Frontend calls: await seedDatabase(db)
+// DBAL loads from /seed/database/installed_packages.yaml, etc.
+```
+
+### Mistake 4: Trying to Edit Prisma Schema Directly
+```typescript
+// ❌ WRONG
+// Don't edit /prisma/schema.prisma directly
+
+// ✅ CORRECT
+// Schema is at /dbal/development/prisma/schema.prisma
+// Edit there, then run: npm run db:generate && npm run db:push
+```
+
+### Mistake 5: Forgetting Database Schema Exists
+```typescript
+// ❌ PROBLEM: Tables don't exist, tests fail
+// Cause: db:push was never run
+
+// ✅ SOLUTION
+// 1. Run: npm --prefix dbal/development run db:push
+// 2. Or let playwright global.setup.ts handle it
+```
+
+---
+
+## 📁 Key Files & Locations
+
+| File | Purpose |
+|------|---------|
+| `/dbal/development/prisma/schema.prisma` | **Database schema** (DBAL owns this now) |
+| `/dbal/development/src/core/client/factory.ts` | `getDBALClient()`, `useDBAL()` factories |
+| `/dbal/development/src/runtime/prisma-client.ts` | `getPrismaClient()` factory |
+| `/dbal/development/src/seeds/index.ts` | `seedDatabase()` orchestration |
+| `/seed/database/installed_packages.yaml` | Base seed data (YAML) |
+| `/packages/*/seed/metadata.json` | Package-specific seed data |
+| `/ARCHITECTURE.md` | Complete architecture blueprint |
+| `/schemas/package-schemas/` | Complete MetaBuilder system definition |
+
+---
+
+## 🚀 Development Tasks
+
+### Task 1: Add a New API Endpoint
+```typescript
+// Use DBAL, not Prisma
+import { getDBALClient } from '@/dbal'
+
+export async function GET(request: Request) {
+  const db = getDBALClient()
+  const users = await db.users.list()
+  return Response.json(users)
+}
+```
+
+### Task 2: Create New Seed Data
+```typescript
+// ❌ DON'T create TypeScript seed files
+// ✅ DO add to /seed/ folder (YAML format)
+// Or add to /packages/my-package/seed/metadata.json (JSON)
+```
+
+### Task 3: Initialize Database for Tests
+```typescript
+// In Playwright global setup:
+import { seedDatabase } from '@/dbal'
+import { getDBALClient } from '@/dbal'
+
+const db = getDBALClient()
+await seedDatabase(db)
+```
+
+### Task 4: Modify Database Schema
+1. Edit `/dbal/development/prisma/schema.prisma`
+2. Run: `npm --prefix dbal/development run db:generate`
+3. Run: `npm --prefix dbal/development run db:push`
+4. Verify tables exist: Check `/prisma/prisma/dev.db` exists
+
+---
+
+## 🧪 Testing
+
+E2E tests use Playwright with automatic database initialization:
+
+```bash
+# Database must exist with schema first
+npm --prefix dbal/development run db:push
+
+# Then run tests (global.setup.ts calls seedDatabase)
+npm run test:e2e
+```
+
+**Key files:**
+- `playwright.config.ts` - Configures webServer and global setup
+- `e2e/global.setup.ts` - Runs before tests, calls /api/setup to seed
+- `e2e/*.spec.ts` - Test files
+
+---
+
+## 📚 Source of Truth: /schemas Folder
+
+The `/schemas/package-schemas/` folder defines the **complete MetaBuilder architecture**:
+
+- `metadata_schema.json` - Package structure
+- `entities_schema.json` - Database models
+- `types_schema.json` - Type system
+- `validation_schema.json` - Validation rules
+- Plus 14 more schemas defining components, API, events, jobs, etc.
+
+**For architectural questions**, check `/schemas` first.
+
+---
+
+## ⚠️ DO NOTs for All Assistants
+
+### Database Code
+- ❌ Don't use `prisma` client directly
+- ❌ Don't use old `getAdapter()` from frontend
+- ❌ Don't edit `/prisma/schema.prisma` (it's at `/dbal/development/prisma/schema.prisma`)
+- ❌ Don't hardcode seed data in TypeScript
+- ❌ Don't assume database tables exist (they might not until db:push is run)
+
+### Architecture
+- ❌ Don't bypass DBAL for database access
+- ❌ Don't move logic from DBAL back to frontend
+- ❌ Don't define seed data anywhere except `/seed/` or `/packages/*/seed/`
+- ❌ Don't ignore errors about missing tables (run db:push)
+
+### Refactoring
+- ❌ Don't stop midway through a refactoring phase
+- ❌ Don't commit code that mixes old and new patterns
+- ❌ Don't assume Phase 2 or Phase 3 are complete (check status)
+
+---
+
+## ✅ DO This Instead
+
+- ✅ Read ARCHITECTURE.md before starting database work
+- ✅ Use `getDBALClient()` from `@/dbal` for all database access
+- ✅ Put seed data in `/seed/` folder or `/packages/*/seed/metadata.json`
+- ✅ Run `npm --prefix dbal/development run db:push` if tables are missing
+- ✅ Follow entity operations pattern (db.users.list(), etc.)
+- ✅ Check /schemas folder for architectural questions
+- ✅ Verify Prisma schema exists at `/dbal/development/prisma/schema.prisma`
+
+---
+
+## 🔍 Refactoring Status
+
+**Phase 1 - DBAL Improvements** ✅ (COMPLETE)
+- [x] Moved Prisma schema to DBAL ownership
+- [x] Created Prisma client factory
+- [x] Created DBAL client factory
+- [x] Set up seed orchestration structure
+- [x] Updated DBAL exports
+
+**Phase 2 - Next.js Cleanup** ⏳ (PENDING)
+- [ ] Delete duplicate adapter code from frontend
+- [ ] Create single db-client integration point
+- [ ] Refactor all operations to use new DBALClient
+- [ ] Update API endpoints
+
+**Phase 3 - Build System** ⏳ (PENDING)
+- [ ] Update TypeScript path mappings
+- [ ] Update workspace configuration
+
+See `DBAL_REFACTOR_PLAN.md` for detailed steps.
+
+---
+
+## 🆘 If Something Breaks
+
+### Error: "The table `X` does not exist"
+```bash
+# Solution: Push the schema
+npm --prefix dbal/development run db:push
+```
+
+### Error: "Cannot find module '@/dbal'"
+```bash
+# Solution: Verify DBAL exports exist
+cat dbal/development/src/index.ts | grep getDBALClient
+```
+
+### Error: "Seed data not created"
+```bash
+# Solution: Verify /seed/ folder exists and has YAML files
+ls -la seed/database/
+```
+
+### Tests fail with database errors
+```bash
+# Solution: Run database setup before tests
+npm --prefix dbal/development run db:generate
+npm --prefix dbal/development run db:push
+npm run test:e2e
+```
+
+---
+
+## 📖 Further Reading
+
+1. **ARCHITECTURE.md** - Complete blueprint and data flow
+2. **DBAL_REFACTOR_PLAN.md** - Implementation phases and steps
+3. **TESTING.md** - E2E testing guide
+4. **schemas/SCHEMAS_README.md** - Schema system documentation
+5. **schemas/QUICKSTART.md** - Getting started with schemas

@@ -45,7 +45,8 @@
       "Bash(npx playwright install)",
       "Bash(DATABASE_URL=file:../../prisma/prisma/dev.db npx prisma db push:*)",
       "Bash(DATABASE_URL=file:../../prisma/prisma/dev.db npm run db:push:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
