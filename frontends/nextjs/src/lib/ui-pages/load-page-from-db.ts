@@ -6,6 +6,7 @@ import type { PageConfig } from '../types/level-types'
 import { prisma } from '@/lib/config/prisma'
 
 export async function loadPageFromDb(path: string, tenantId?: string): Promise<PageConfig | null> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
   const page = await prisma.pageConfig.findFirst({
     where: {
       path,

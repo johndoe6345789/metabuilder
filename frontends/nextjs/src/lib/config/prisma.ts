@@ -6,8 +6,8 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
+const globalForPrisma = globalThis as {
+  prisma?: PrismaClient
 }
 
 const isTestEnv = process.env.NODE_ENV === 'test' || process.env.VITEST === 'true'
@@ -32,9 +32,10 @@ const createMockPrisma = (): PrismaClient => {
 
 const createIntegrationPrisma = (): PrismaClient => {
   // For integration tests, use in-memory database via adapter factory
-   
+
   const adapter = new PrismaBetterSqlite3({ url: ':memory:' })
-  return new PrismaClient({ adapter })
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  return new PrismaClient({ adapter }) as unknown as PrismaClient
 }
 
 const createProductionPrisma = (): PrismaClient => {
@@ -54,16 +55,17 @@ const createProductionPrisma = (): PrismaClient => {
   
   try {
     // For Prisma 7, PrismaBetterSqlite3 is a FACTORY that takes config with url, not a client instance
-     
+
     const adapter = new PrismaBetterSqlite3({ url: databaseUrl })
     console.warn('[Prisma] Adapter factory created successfully')
-    
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
     const client = new PrismaClient({
       adapter,
       log: process.env.NODE_ENV === 'development' ? ['error', 'warn', 'query'] : ['error'],
-    })
+    }) as unknown as PrismaClient
     console.warn('[Prisma] PrismaClient created successfully')
-    
+
     return client
   } catch (error) {
     console.error('[Prisma] Error creating Prisma client:', error)
@@ -71,13 +73,16 @@ const createProductionPrisma = (): PrismaClient => {
   }
 }
 
-export const prisma =
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+export const prisma = (
   globalForPrisma.prisma ??
   (isTestEnv
     ? (isIntegrationTest ? createIntegrationPrisma() : createMockPrisma())
     : createProductionPrisma())
+) as PrismaClient
 
- 
+
 if (process.env.NODE_ENV !== 'production' && (!isTestEnv || isIntegrationTest)) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   globalForPrisma.prisma = prisma
 }

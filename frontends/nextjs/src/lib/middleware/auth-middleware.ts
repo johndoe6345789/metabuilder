@@ -85,7 +85,7 @@ export async function authenticate(
     const user = await getCurrentUser()
 
     // Check if user is authenticated
-    if (user === null || user === undefined) {
+    if (user === null) {
       return {
         success: false,
         error: NextResponse.json(
@@ -112,8 +112,7 @@ export async function authenticate(
     }
 
     // Run custom permission check if provided
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (customCheck !== null && customCheck !== undefined && !customCheck(user)) {
+    if (customCheck !== undefined && !customCheck(user)) {
       return {
         success: false,
         error: NextResponse.json(
@@ -163,11 +162,10 @@ export async function requireAuth(
   options: AuthMiddlewareOptions = {}
 ): Promise<CurrentUser> {
   const { success, user, error } = await authenticate(request, options)
-  
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (!success || user === null || user === undefined) {
+
+  if (!success) {
     throw new Error(error !== undefined ? 'Authentication failed' : 'Unknown authentication error')
   }
-  
-  return user
+
+  return user as CurrentUser
 }

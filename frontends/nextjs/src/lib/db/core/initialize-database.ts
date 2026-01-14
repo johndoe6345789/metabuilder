@@ -5,6 +5,7 @@ import { prisma } from '../../config/prisma'
  */
 export async function initializeDatabase(): Promise<void> {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     await prisma.$connect()
     // Database initialized successfully
   } catch (error) {
