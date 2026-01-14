@@ -1,21 +1,64 @@
 # MetaBuilder Project Instructions for AI Assistants
 
-## ⚠️ Critical: Read Before Any Database Work
+## ⚠️ CRITICAL: Start Here for Development Work
 
-**These documents establish the proper architecture - READ THEM FIRST:**
+**YOUR WORKFLOW**: Follow `.github/prompts/workflow/0-kickstart.md` - this is your complete development roadmap
 
-1. **README.md** - Complete system overview, deployment, routing, packages, permissions
-2. **ARCHITECTURE.md** - Proper MetaBuilder foundation and data flow
-3. **DBAL_REFACTOR_PLAN.md** - Implementation roadmap (Phase 2 in progress)
-4. **TESTING.md** - E2E testing and database initialization guide
-5. **schemas/package-schemas/** - Complete MetaBuilder system definition
-6. **dbal/shared/docs/** - DBAL implementation and design documentation
-7. **docs/TESTING_GUIDE.md** - TDD methodology and testing best practices
-8. **docs/CONTAINER_IMAGES.md** - Docker deployment and GHCR images
+**IF YOU GET STUCK**: See `.github/prompts/misc/EEK-STUCK.md` - recovery guide for common problems
 
-**Current Status**: Phase 2 (TypeScript DBAL + SQLite dev) - Phase 3 (C++ daemon) is future work
+**READ THESE FIRST** (in order):
 
-**Production Deployment**: PostgreSQL + C++ DBAL daemon + Media daemon + Redis + Nginx + Monitoring
+### Step 1: Onboarding (First Time)
+1. **.github/prompts/workflow/0-kickstart.md** - Complete workflow guide, common commands, architecture guardrails
+   - References nested `AGENTS.md` files (e.g., `dbal/docs/AGENTS.md`) for scoped rules
+   - References `.github/prompts/LAMBDA_PROMPT.md` - **one lambda/function per file pattern**
+   - If stuck: See `.github/prompts/misc/EEK-STUCK.md`
+
+### Step 2: Architecture & Core Concepts
+2. **README.md** - System overview, deployment, routing, packages, permissions
+3. **ARCHITECTURE.md** - Proper MetaBuilder foundation and data flow
+4. **.github/copilot-instructions.md** - AI development instructions, critical patterns, code conventions
+5. **.github/TEMPLATES.md** - PR/issue template guidelines, MetaBuilder-specific conventions
+
+### Step 3: Scoped Rules for Your Area
+6. **dbal/docs/AGENTS.md** (if working on DBAL) - DBAL-specific development, API contracts, conformance tests
+7. Check for other nested `AGENTS.md` files in subdirectories you're editing
+
+### Step 4: Development Workflow (Follow in Order)
+8. **.github/prompts/workflow/1-plan-feature.md** - Feature planning
+9. **.github/prompts/workflow/2-design-component.md** - Component design
+10. **.github/prompts/implement/** - Implementation prompts:
+    - `3-impl-database.prompt.md` - Database/DBAL changes
+    - `3-impl-dbal-entity.prompt.md` - New DBAL entities
+    - `3-impl-component.prompt.md` - React components
+    - `3-impl-feature.prompt.md` - Feature implementation
+    - `3-impl-package.prompt.md` - Package creation
+    - `3-impl-migration.prompt.md` - Database migrations
+    - `3-impl-lua-script.prompt.md` - Lua scripting
+11. **.github/prompts/test/** - Testing guidance:
+    - `4-test-write.prompt.md` - Test writing patterns
+    - `4-test-run.prompt.md` - Running tests locally and in CI
+12. **.github/prompts/workflow/5-review-code.md** - Code review checklist
+13. **.github/prompts/deploy/** - Deployment procedures:
+    - `6-deploy-ci-local.prompt.md` - Local CI testing with `act`
+    - `6-deploy-production.prompt.md` - Production deployment
+14. **.github/prompts/maintain/** - Maintenance tasks:
+    - `7-maintain-debug.prompt.md` - Debugging problems
+    - `7-maintain-refactor.prompt.md` - Refactoring guidance
+    - `7-maintain-security.prompt.md` - Security fixes
+    - `7-maintain-performance.prompt.md` - Performance optimization
+15. **.github/prompts/workflow/8-docs-feature.prompt.md** - Documentation
+16. **.github/prompts/misc/LAMBDA_PROMPT.md** - Code organization pattern
+
+### Reference Documentation
+17. **DBAL_REFACTOR_PLAN.md** - Implementation roadmap
+18. **ROADMAP.md** - Project vision and evolution (Spark → Next.js)
+19. **TESTING.md** - E2E testing guide
+20. **schemas/package-schemas/** - System definitions (18 files)
+
+**Current Status**: Phase 2 (TypeScript DBAL + SQLite dev) - Phase 3 (C++ daemon) is future
+
+**Production Stack**: PostgreSQL + C++ DBAL daemon + Media daemon + Redis + Nginx + Monitoring
 
 ---
 
@@ -42,10 +85,23 @@ return renderJSONComponent(component)
 
 ### Key Principles
 
-1. **No Hardcoded Routes** - Routes live in `PageConfig` database table
-2. **No Component Imports** - Components are JSON definitions in packages
-3. **No Direct Database Access** - Everything goes through DBAL
-4. **Complete Loose Coupling** - Frontend knows nothing about packages
+1. **95% Data-Driven Architecture** - MetaBuilder is 95% JSON/Lua, not TypeScript:
+   - UI components defined as JSON (not hardcoded TSX)
+   - Business logic in Lua scripts (not TypeScript)
+   - Configuration in YAML/JSON (not code)
+   - TypeScript is **only** infrastructure, adapters, and frameworks
+   - When choosing between TS code and JSON config → choose JSON
+
+2. **One Lambda Per File** - Code organization pattern:
+   - Each function is in its own file (lambda = one focused function)
+   - Use classes only as containers for related functions
+   - See `.github/prompts/misc/LAMBDA_PROMPT.md`
+
+3. **No Hardcoded Routes** - Routes live in `PageConfig` database table
+4. **No Component Imports** - Components are JSON definitions in packages
+5. **No Direct Database Access** - Everything goes through DBAL
+6. **Complete Loose Coupling** - Frontend knows nothing about packages
+7. **Multi-Tenant First** - Always filter by `tenantId` in every query
 
 ### Available Packages
 
@@ -72,6 +128,43 @@ return renderJSONComponent(component)
 | 5 | Supergod | Full system control, schema editor |
 
 **Each level inherits permissions from levels below.**
+
+---
+
+## 💡 Code Organization: One Lambda Per File
+
+MetaBuilder follows a specific code organization pattern to keep files small and focused:
+
+```typescript
+// ✅ CORRECT: One function/lambda per file
+// filename: src/lib/users/createUser.ts
+export async function createUser(username: string, email: string): Promise<User> {
+  // Single responsibility
+}
+
+// filename: src/lib/users/listUsers.ts
+export async function listUsers(limit: number): Promise<User[]> {
+  // Single responsibility
+}
+
+// filename: src/lib/users/UserManager.ts
+// Use classes only as containers for related functions
+export class UserManager {
+  static async create = createUser
+  static async list = listUsers
+}
+
+// ❌ WRONG: Multiple functions in one file
+// filename: src/lib/users.ts
+export function createUser() { ... }
+export function listUsers() { ... }
+export function deleteUser() { ... }
+export function updateUser() { ... }
+```
+
+**Why**: This keeps files small, makes testing easier, and aligns with the lambda pattern where each file is effectively a single callable unit.
+
+**Reference**: See `.github/prompts/misc/LAMBDA_PROMPT.md` for detailed guidance.
 
 ---
 
@@ -398,9 +491,63 @@ for (const user of seedData) {
 // 3. Verify tables exist in database
 ```
 
+### Mistake 7: Using TypeScript Instead of JSON/Lua (95% Rule Violation)
+```typescript
+// ❌ WRONG - Hardcoding UI in TypeScript
+function MyPage() {
+  return (
+    <div>
+      <h1>Welcome</h1>
+      <button onClick={() => alert('Hello')}>Click Me</button>
+      {/* All hardcoded, can't customize from admin panel */}
+    </div>
+  )
+}
+
+// ✅ CORRECT - Define in JSON, render generically
+// File: packages/my_package/seed/metadata.json
+{
+  "packageId": "my_package",
+  "pages": [{
+    "id": "welcome_page",
+    "path": "/welcome",
+    "component": "DeclaredComponent",
+    "config": {
+      "title": "Welcome",
+      "button": { "label": "Click Me", "action": "run_script", "scriptId": "hello_script" }
+    }
+  }]
+}
+
+// Then use RenderComponent or generic renderer to display
+// Now admins can customize without code changes
+```
+
+**The 95% Rule**:
+- 5% TypeScript = Infrastructure, adapters, frameworks only
+- 95% JSON/Lua = UI definitions, business logic, configuration
+- Ask yourself: "Can this be JSON/Lua?" → If yes, do it as JSON/Lua, not TS
+
+See `.github/TEMPLATES.md` under "Data-Driven Architecture" for full guidance.
+
 ---
 
 ## 📁 Key Files & Locations
+
+### ⚠️ Scoped Rules (AGENTS.md Files)
+
+**Important**: Before editing a subdirectory, check for an `AGENTS.md` file with scoped rules:
+
+```
+dbal/docs/AGENTS.md                    ← DBAL-specific rules (mandatory read if editing DBAL)
+dbal/development/docs/AGENTS.md        ← TypeScript DBAL-specific rules (if exists)
+dbal/shared/docs/AGENTS.md             ← Shared code rules (if exists)
+dbal/production/docs/AGENTS.md         ← C++ DBAL-specific rules (if editing C++)
+packages/[package-name]/AGENTS.md      ← Package-specific rules (if exists)
+frontends/nextjs/AGENTS.md             ← Frontend-specific rules (if exists)
+```
+
+**Pattern**: If working in a directory, search for `AGENTS.md` in that directory or its parents. It provides critical scoped rules that override general guidance.
 
 ### TypeScript DBAL (Phase 2 - Current)
 
