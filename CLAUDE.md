@@ -34,7 +34,6 @@
     - `3-impl-feature.prompt.md` - Feature implementation
     - `3-impl-package.prompt.md` - Package creation
     - `3-impl-migration.prompt.md` - Database migrations
-    - `3-impl-lua-script.prompt.md` - Lua scripting
 11. **.github/prompts/test/** - Testing guidance:
     - `4-test-write.prompt.md` - Test writing patterns
     - `4-test-run.prompt.md` - Running tests locally and in CI
@@ -85,9 +84,9 @@ return renderJSONComponent(component)
 
 ### Key Principles
 
-1. **95% Data-Driven Architecture** - MetaBuilder is 95% JSON/Lua, not TypeScript:
+1. **95% Data-Driven Architecture** - MetaBuilder is 95% JSON/JSON Script, not TypeScript:
    - UI components defined as JSON (not hardcoded TSX)
-   - Business logic in Lua scripts (not TypeScript)
+   - Business logic in JSON Script (custom JSON-based language, not TypeScript)
    - Configuration in YAML/JSON (not code)
    - TypeScript is **only** infrastructure, adapters, and frameworks
    - When choosing between TS code and JSON config → choose JSON
@@ -491,7 +490,7 @@ for (const user of seedData) {
 // 3. Verify tables exist in database
 ```
 
-### Mistake 7: Using TypeScript Instead of JSON/Lua (95% Rule Violation)
+### Mistake 7: Using TypeScript Instead of JSON/JSON Script (95% Rule Violation)
 ```typescript
 // ❌ WRONG - Hardcoding UI in TypeScript
 function MyPage() {
@@ -519,16 +518,19 @@ function MyPage() {
   }]
 }
 
+// Script defined in JSON Script format (see /schemas/package-schemas/script_schema.json)
 // Then use RenderComponent or generic renderer to display
 // Now admins can customize without code changes
 ```
 
 **The 95% Rule**:
 - 5% TypeScript = Infrastructure, adapters, frameworks only
-- 95% JSON/Lua = UI definitions, business logic, configuration
-- Ask yourself: "Can this be JSON/Lua?" → If yes, do it as JSON/Lua, not TS
+- 95% JSON/JSON Script = UI definitions, business logic, configuration
+- Ask yourself: "Can this be JSON or JSON Script?" → If yes, do it as JSON/JSON Script, not TS
+- **Planned Migration**: Eventually moving to n8n-style JSON, but custom JSON Script for now
 
 See `.github/TEMPLATES.md` under "Data-Driven Architecture" for full guidance.
+See `/schemas/package-schemas/script_schema.json` for JSON Script specification (v2.2.0).
 
 ---
 
@@ -933,6 +935,10 @@ cmake --build build
 ### Schema & Package System
 15. **schemas/SCHEMAS_README.md** - Package system definitions
 16. **schemas/QUICKSTART.md** - Package system quick start
-17. **schemas/package-schemas/** - Complete schema definitions (18 files)
+17. **schemas/package-schemas/** - Complete schema definitions:
+    - `script_schema.json` - JSON Script language specification (v2.2.0, planned n8n migration)
+    - `metadata_schema.json` - Package structure
+    - `entities_schema.json` - Database models
+    - Plus 15 more schemas for components, APIs, validation, permissions, etc.
 18. **dbal/shared/api/schema/** - YAML schema sources (both phases)
 19. **seed/packages/core-packages.yaml** - Bootstrap package installation order
