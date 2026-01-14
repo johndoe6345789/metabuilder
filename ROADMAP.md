@@ -1889,48 +1889,119 @@ PackageConsistency ==
 
 ### Technical Debt
 
-#### High Priority
-None currently - MVP implemented with best practices
+#### Codebase Composition (Current State)
 
-#### Medium Priority
+**Overview**: MetaBuilder is a **well-architected, data-driven system** with approximately **2,047 files**:
 
-1. **API Client Implementation** 🎯 **BLOCKING FOR PHASE 2**
-   - Current: Placeholder functions returning mock data
-   - Needed: Real HTTP calls to backend endpoints
-   - Files: `frontends/nextjs/src/lib/entities/api-client.ts`
-   - Blocks: All CRUD operations
+```
+TypeScript/TSX:    1,487 files (73%)
+  ├── DBAL              282 files (14%)
+  ├── FakeMUI           514 files (25%)
+  ├── NextJS Frontend   491 files (24%)
+  ├── E2E Tests         16 files (1%)
+  └── Deprecated        119 files (6%)
 
-2. **E2E Tests for MVP Features**
-   - Current: E2E tests exist but don't cover new MVP features
-   - Needed: Tests for auth flows, CRUD operations, package loading
-   - Files: `e2e/crud.spec.ts`, `e2e/login.spec.ts`, `e2e/package-rendering.spec.ts`
+JSON/YAML:           560 files (27%)
+  ├── Packages         376 files (18%)
+  ├── Schemas          76 files (4%)
+  └── Seed Config      5 files (<1%)
+```
 
-3. **API Documentation**
-   - Current: Code comments only
-   - Needed: OpenAPI/Swagger documentation for all endpoints
-   - Blocks: Third-party integrations
+**Data-Driven Ratio**: 27% (could reach 35-40% with recommended refactoring)
 
-#### Low Priority
+#### High Priority (Quick Wins - ~2-3 hours)
 
-1. **Error Boundaries**
-   - Current: Basic error handling
-   - Needed: Comprehensive React error boundaries
-   - Impact: Better error recovery and user experience
+1. **Delete `/old` Directory** (119 files)
+   - Pre-Next.js SPA implementation, completely superseded
+   - Contains Vite, React 19, Radix UI components
+   - Pure cruft from Spark-based era
+   - **Action**: Delete `/old/` entirely
+   - **Impact**: Reduces confusion, removes maintenance burden
 
-2. **TypeScript Coverage**
-   - Current: Good coverage, some `any` types remain
-   - Needed: Strict mode compliance, eliminate all `any`
-   - Impact: Improved type safety
+2. **Delete Backup Files** (4 files)
+   - `/dbal/development/src/core/foundation/tenant-context.ts.backup`
+   - `/dbal/development/src/core/client/client.ts.backup`
+   - `/dbal/development/src/bridges/websocket-bridge.ts.backup`
+   - `/dbal/development/src/adapters/acl-adapter.ts.backup`
+   - **Action**: Delete all `.backup` files
+   - **Impact**: Clean code footprint, no functionality impact (Git history preserved)
 
-3. **Bundle Optimization**
-   - Current: Next.js default optimization
-   - Needed: Code splitting analysis, lazy loading optimization
-   - Impact: Faster page loads
+3. **Migrate Seed Data from TypeScript to YAML**
+   - **Current**: `/frontends/nextjs/src/lib/db/database-admin/seed-default-data/*.ts` (5 files, ~150 lines)
+     - `seed-users.ts` - Hardcoded default users
+     - `seed-app-config.ts` - App configuration
+     - `seed-css-categories.ts` - CSS categories
+     - `seed-dropdown-configs.ts` - Dropdown definitions
+   - **Better**: `/seed/database/*.yaml` loaded via DBAL orchestration
+   - **Status**: Current approach bypasses DBAL, should use seed system
+   - **Effort**: 4-5 hours
+   - **Impact**: 100% YAML-based seed system, better bootstrapping
 
-4. **Performance Monitoring**
-   - Current: Basic logging
-   - Needed: APM integration (Sentry, DataDog, etc.)
-   - Impact: Proactive performance issue detection
+#### Medium Priority (~4-5 hours)
+
+4. **Eliminate Adapter Code Duplication**
+   - **Current**: Frontend duplicates adapter logic at `/frontends/nextjs/src/lib/dbal-client/adapter/` (355 lines)
+     - `PrismaAdapter` class
+     - `DevelopmentAdapter` class
+   - **Problem**: Two implementations of same adapter, inconsistent with DBAL ownership
+   - **Better**: Frontend should only use DBAL client, not re-implement adapters
+   - **Effort**: 2-3 hours
+   - **Impact**: Single source of truth for database logic
+
+5. **Migrate Role/Permission Constants to Seed Data**
+   - **Current**: Hardcoded in `/frontends/nextjs/src/lib/constants.ts`
+     ```typescript
+     export const ROLE_LEVELS = {
+       public: 0, user: 1, moderator: 2, admin: 3, god: 4, supergod: 5
+     }
+     ```
+   - **Better**: `/schemas/permissions_schema.json` or `/seed/database/permissions.yaml`
+   - **Effort**: 2-3 hours
+   - **Impact**: All roles database-driven, dynamic permission system
+
+6. **Migrate Environment Configuration**
+   - **Current**: Hardcoded defaults in `constants.ts` (`ENV_DEFAULTS`, `TIMEOUTS`)
+   - **Better**: `/seed/config/app-config.yaml` loaded at startup
+   - **Effort**: 2-3 hours
+   - **Impact**: All configuration declarative, environment-specific
+
+#### Low Priority (~2-3 hours)
+
+7. **Remove Experimental Code**
+   - Verify `/frontends/nextjs/src/lib/db/database-admin/seed-default-data/css/categories/experimental.ts`
+   - Check usage, delete if unused
+   - **Effort**: 1 hour
+   - **Impact**: Minimal
+
+8. **Complete TODO Items**
+   - Review `/docs/TODO_MVP_IMPLEMENTATION.md`
+   - Compiler implementation (`/lib/compiler/index.ts` - marked TODO, unimplemented)
+   - **Status**: Affects 2-3 files
+   - **Effort**: Variable depending on scope
+
+#### Architecture Strengths (Keep As-Is)
+
+✅ **Infrastructure (TypeScript) - 14% of codebase**
+- DBAL (282 files) - Type-safe database abstraction, multi-adapter support
+- FakeMUI (514 files) - Consistent UI components across web/QML
+- NextJS Frontend (491 files) - Server-side rendering, API routes
+
+✅ **Data-Driven Design (JSON/YAML) - 27% of codebase**
+- 18 interconnected schemas in `/schemas/` - Single source of truth
+- 376 component definitions in `/packages/*/components/ui.json` - 100% declarative
+- Package system - Fully self-contained with seed data
+
+#### Migration Path to 35-40% Data-Driven
+
+| Task | Current % | Target % | Effort | Impact |
+|------|-----------|----------|--------|--------|
+| Remove cruft (old/, backups) | 73% TS | 70% TS | 1h | High |
+| Migrate seed data YAML | 73% TS | 68% TS | 4-5h | Medium |
+| Eliminate adapter duplication | 73% TS | 72% TS | 2-3h | Medium |
+| Migrate constants/config | 73% TS | 70% TS | 2-3h | Low |
+| **Total (recommended)** | **73%** | **~35-40%** | **9-16h** | **High** |
+
+**Recommended Timeline**: Address high-priority items first (Phase 1: 1-2 weeks), then medium-priority refactoring (Phase 2: 4-6 weeks)
 
 ### Deprecated Features
 
