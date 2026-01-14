@@ -156,12 +156,14 @@ for (const user of seedData) {
 
 ### Mistake 4: Trying to Edit Prisma Schema Directly
 ```typescript
-// ❌ WRONG
+// ❌ WRONG - Prisma schema is auto-generated
 // Don't edit /prisma/schema.prisma directly
+// Don't edit /dbal/development/prisma/schema.prisma
 
-// ✅ CORRECT
-// Schema is at /dbal/development/prisma/schema.prisma
-// Edit there, then run: npm run db:generate && npm run db:push
+// ✅ CORRECT - Edit YAML schemas instead
+// 1. Edit: /dbal/shared/api/schema/entities/core/[entity].yaml
+// 2. Generate Prisma: npm --prefix dbal/development run codegen:prisma
+// 3. Push to DB: npm --prefix dbal/development run db:push
 ```
 
 ### Mistake 5: Forgetting Database Schema Exists
@@ -180,7 +182,8 @@ for (const user of seedData) {
 
 | File | Purpose |
 |------|---------|
-| `/dbal/development/prisma/schema.prisma` | **Database schema** (DBAL owns this now) |
+| `/dbal/shared/api/schema/entities/` | **YAML schemas** (source of truth for database structure) |
+| `/prisma/schema.prisma` | Generated Prisma schema (auto-generated from YAML) |
 | `/dbal/development/src/core/client/factory.ts` | `getDBALClient()`, `useDBAL()` factories |
 | `/dbal/development/src/runtime/prisma-client.ts` | `getPrismaClient()` factory |
 | `/dbal/development/src/seeds/index.ts` | `seedDatabase()` orchestration |
@@ -223,10 +226,10 @@ await seedDatabase(db)
 ```
 
 ### Task 4: Modify Database Schema
-1. Edit `/dbal/development/prisma/schema.prisma`
-2. Run: `npm --prefix dbal/development run db:generate`
-3. Run: `npm --prefix dbal/development run db:push`
-4. Verify tables exist: Check `/prisma/prisma/dev.db` exists
+1. Edit YAML schema: `/dbal/shared/api/schema/entities/core/[entity-name].yaml`
+2. Generate Prisma schema: `npm --prefix dbal/development run codegen:prisma`
+3. Push to database: `npm --prefix dbal/development run db:push`
+4. Verify: Check `/prisma/prisma/dev.db` and `/prisma/schema.prisma` updated
 
 ---
 
@@ -249,17 +252,25 @@ npm run test:e2e
 
 ---
 
-## 📚 Source of Truth: /schemas Folder
+## 📚 Multiple Layers of Schema
 
-The `/schemas/package-schemas/` folder defines the **complete MetaBuilder architecture**:
-
+### 1. Package System Schemas (`/schemas/package-schemas/`)
+Defines the complete MetaBuilder **package architecture**:
 - `metadata_schema.json` - Package structure
-- `entities_schema.json` - Database models
+- `entities_schema.json` - Database models from packages perspective
 - `types_schema.json` - Type system
 - `validation_schema.json` - Validation rules
 - Plus 14 more schemas defining components, API, events, jobs, etc.
 
-**For architectural questions**, check `/schemas` first.
+**For architectural and package design questions**, check `/schemas` first.
+
+### 2. DBAL YAML Schemas (`/dbal/shared/api/schema/entities/`)
+Defines the actual **database structure** (source of truth):
+- `/dbal/shared/api/schema/entities/core/*.yaml` - Core entities (User, Session, Workflow, etc.)
+- `/dbal/shared/api/schema/entities/access/*.yaml` - Access control entities (Credential, PageConfig, etc.)
+- `/dbal/shared/api/schema/entities/packages/*.yaml` - Package-specific entities
+
+**For database schema changes**, edit YAML files here, then regenerate Prisma schema.
 
 ---
 
@@ -268,7 +279,8 @@ The `/schemas/package-schemas/` folder defines the **complete MetaBuilder archit
 ### Database Code
 - ❌ Don't use `prisma` client directly
 - ❌ Don't use old `getAdapter()` from frontend
-- ❌ Don't edit `/prisma/schema.prisma` (it's at `/dbal/development/prisma/schema.prisma`)
+- ❌ Don't edit `/prisma/schema.prisma` directly (it's auto-generated)
+- ❌ Don't manually edit Prisma schema - edit YAML schemas instead
 - ❌ Don't hardcode seed data in TypeScript
 - ❌ Don't assume database tables exist (they might not until db:push is run)
 
@@ -290,21 +302,23 @@ The `/schemas/package-schemas/` folder defines the **complete MetaBuilder archit
 - ✅ Read ARCHITECTURE.md before starting database work
 - ✅ Use `getDBALClient()` from `@/dbal` for all database access
 - ✅ Put seed data in `/seed/` folder or `/packages/*/seed/metadata.json`
-- ✅ Run `npm --prefix dbal/development run db:push` if tables are missing
+- ✅ Edit YAML schemas at `/dbal/shared/api/schema/entities/` for database changes
+- ✅ Generate Prisma from YAML: `npm --prefix dbal/development run codegen:prisma`
+- ✅ Run `npm --prefix dbal/development run db:push` to apply schema changes
 - ✅ Follow entity operations pattern (db.users.list(), etc.)
-- ✅ Check /schemas folder for architectural questions
-- ✅ Verify Prisma schema exists at `/dbal/development/prisma/schema.prisma`
+- ✅ Check `/schemas/` folder for architectural/package design questions
+- ✅ Check `/dbal/shared/api/schema/` folder for database schema questions
 
 ---
 
 ## 🔍 Refactoring Status
 
 **Phase 1 - DBAL Improvements** ✅ (COMPLETE)
-- [x] Moved Prisma schema to DBAL ownership
-- [x] Created Prisma client factory
-- [x] Created DBAL client factory
-- [x] Set up seed orchestration structure
+- [x] Created Prisma client factory (`getPrismaClient`)
+- [x] Created DBAL client factory (`getDBALClient`, `useDBAL`)
+- [x] Set up seed orchestration structure (`seedDatabase`)
 - [x] Updated DBAL exports
+- [x] Clarified YAML schemas as source of truth (Prisma is auto-generated)
 
 **Phase 2 - Next.js Cleanup** ⏳ (PENDING)
 - [ ] Delete duplicate adapter code from frontend
@@ -324,7 +338,8 @@ See `DBAL_REFACTOR_PLAN.md` for detailed steps.
 
 ### Error: "The table `X` does not exist"
 ```bash
-# Solution: Push the schema
+# Solution: Generate Prisma schema from YAML, then push
+npm --prefix dbal/development run codegen:prisma
 npm --prefix dbal/development run db:push
 ```
 
@@ -342,8 +357,8 @@ ls -la seed/database/
 
 ### Tests fail with database errors
 ```bash
-# Solution: Run database setup before tests
-npm --prefix dbal/development run db:generate
+# Solution: Generate schema from YAML, push to DB, then run tests
+npm --prefix dbal/development run codegen:prisma
 npm --prefix dbal/development run db:push
 npm run test:e2e
 ```

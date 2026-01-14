@@ -177,15 +177,27 @@ export async function seedDatabase(dbal: DBALClient): Promise<void>
 - Loads package-specific seed data
 - Uses entity operations, not raw adapter
 
-### 5. Prisma Schema Ownership
+### 5. Schema Ownership - YAML is Source of Truth
 ```
-dbal/development/prisma/schema.prisma
+dbal/shared/api/schema/entities/
+  ├── core/
+  │   ├── user.yaml
+  │   ├── session.yaml
+  │   ├── ui_page.yaml
+  │   ├── workflow.yaml
+  │   └── package.yaml
+  ├── access/
+  │   ├── credential.yaml
+  │   ├── page_config.yaml
+  │   └── component_node.yaml
+  └── packages/
+      └── [package-specific entities]
 ```
 
-- DBAL owns and versions the database schema
-- Moved from `/prisma/schema.prisma` (frontend location)
-- Defines all entities (User, PageConfig, Component, etc.)
-- Used by DBAL's PrismaClient
+- **YAML schemas** are the source of truth for database structure
+- Generated Prisma schema (from YAML via `gen_prisma_schema.js`)
+- Prisma schema is at `/prisma/schema.prisma` (auto-generated)
+- DBAL's PrismaClient uses the generated Prisma schema
 
 ---
 
@@ -251,10 +263,10 @@ export async function POST() {
 
 The `/schemas` folder defines the structure; DBAL implements it:
 
-| Schema | DBAL Implementation |
-|--------|-------------------|
+| Top-Level Schema | DBAL Implementation |
+|------------------|-------------------|
 | `metadata_schema.json` | Package loading & exports in DBALClient.packages |
-| `entities_schema.json` | Entity definitions reflected in Prisma schema, DBAL entity operations |
+| `entities_schema.json` | Entity definitions reflected in DBAL YAML schemas |
 | `types_schema.json` | Type system in TypeScript types, used by entity operations |
 | `validation_schema.json` | Validation applied in entity create/update operations |
 | `components_schema.json` | Component metadata stored in database, accessible via API |
@@ -265,6 +277,12 @@ The `/schemas` folder defines the structure; DBAL implements it:
 | `permissions_schema.json` | ACL enforced in DBALClient entity operations |
 | `script_schema.json` | Scripts have access to DBAL operations and stdlib |
 | `stdlib_schema.json` | Standard library functions available to scripts |
+
+| DBAL YAML Schemas | Prisma Implementation |
+|-------------------|----------------------|
+| `/dbal/shared/api/schema/entities/core/*.yaml` | Generated Prisma models (User, Session, etc.) |
+| `/dbal/shared/api/schema/entities/access/*.yaml` | Generated Prisma models (Credential, PageConfig, etc.) |
+| `/dbal/shared/api/schema/entities/packages/*.yaml` | Package-specific entity definitions |
 
 ---
 
