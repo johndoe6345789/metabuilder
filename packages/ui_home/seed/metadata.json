@@ -1,0 +1,23 @@
+{
+  "packageId": "ui_home",
+  "name": "Home Page",
+  "version": "1.0.0",
+  "description": "Seed data for ui_home package - defines the home page",
+  "author": "MetaBuilder Team",
+  "category": "ui",
+  "exports": {
+    "components": [],
+    "pages": [
+      {
+        "path": "/",
+        "title": "MetaBuilder",
+        "description": "Data-driven application platform",
+        "component": "home_page",
+        "level": 0,
+        "requiresAuth": false,
+        "isPublished": true
+      }
+    ]
+  },
+  "dependencies": []
+}

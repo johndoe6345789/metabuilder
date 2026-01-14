@@ -5,9 +5,12 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
+  // Global setup to seed database before tests
+  globalSetup: require.resolve('./e2e/global.setup.ts'),
+
   // Only look for test files in the e2e directory
   testDir: './e2e',
-  
+
   // Only match files that end with .spec.ts (excludes .test.ts which are unit tests)
   testMatch: '**/*.spec.ts',
   
@@ -48,6 +51,8 @@ export default defineConfig({
 
   // Run your local dev server before starting the tests
   webServer: {
+    // Generate Prisma client and start dev server
+    // Note: Database schema must be manually pushed via: npm run db:push (from frontends/nextjs)
     command: 'npm --prefix frontends/nextjs run db:generate && npm --prefix frontends/nextjs run dev',
     url: 'http://localhost:3000/api/health',
     reuseExistingServer: !process.env.CI,

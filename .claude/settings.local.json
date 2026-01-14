@@ -40,7 +40,12 @@
       "Bash(bun test:*)",
       "Bash(136*100/234)",
       "Bash(\")",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(npm run test:e2e:*)",
+      "Bash(npx playwright install)",
+      "Bash(DATABASE_URL=file:../../prisma/prisma/dev.db npx prisma db push:*)",
+      "Bash(DATABASE_URL=file:../../prisma/prisma/dev.db npm run db:push:*)",
+      "Bash(git add:*)"
     ]
   }
 }
