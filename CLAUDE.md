@@ -10,7 +10,7 @@
 
 ### Step 1: Onboarding (First Time)
 1. **.github/prompts/workflow/0-kickstart.md** - Complete workflow guide, common commands, architecture guardrails
-   - References nested `AGENTS.md` files (e.g., `dbal/docs/AGENTS.md`) for scoped rules
+   - References nested `AGENTS.md` files (e.g., `AGENTS.md`) for scoped rules
    - References `.github/prompts/LAMBDA_PROMPT.md` - **one lambda/function per file pattern**
    - If stuck: See `.github/prompts/misc/EEK-STUCK.md`
 
@@ -21,8 +21,8 @@
 5. **.github/TEMPLATES.md** - PR/issue template guidelines, MetaBuilder-specific conventions
 
 ### Step 3: Scoped Rules for Your Area
-6. **dbal/docs/AGENTS.md** (if working on DBAL) - DBAL-specific development, API contracts, conformance tests
-7. Check for other nested `AGENTS.md` files in subdirectories you're editing
+6. **AGENTS.md** (READ FIRST - for all agents) - Quick reference for core principles, DBAL, frontend, packages, testing, deployment, troubleshooting
+7. Check for other nested scoped rules in subdirectories you're editing (e.g., `dbal/development/docs/AGENTS.md`, `frontends/nextjs/AGENTS.md`)
 
 ### Step 4: Development Workflow (Follow in Order)
 8. **.github/prompts/workflow/1-plan-feature.md** - Feature planning
@@ -366,6 +366,15 @@ See `seed/packages/core-packages.yaml` for full order.
 
 ## 📋 DBAL Usage (Phase 2 - Current)
 
+**See `/AGENTS.md` for comprehensive development guidance** including:
+- Core principles (95% config rule, schema-first, one lambda per file, multi-tenant safety, ACL-first)
+- DBAL development (API contract model, Phase 2 vs Phase 3, file organization, code generation)
+- Frontend development (Next.js patterns, DBAL integration)
+- Package development (JSON-based UI, metadata structure)
+- Testing strategy (Unit, Integration, E2E)
+- Deployment guidelines
+- Troubleshooting
+
 ### Getting a DBAL Client
 
 ```typescript
@@ -379,15 +388,15 @@ const users = await db.users.list()
 ### Factory Functions Available (Phase 2)
 
 ```typescript
-// From @/dbal (TypeScript DBAL)
-export { getDBALClient, useDBAL }              // Main factories
+// From @/dbal (TypeScript DBAL in /dbal/development/src/)
+export { getDBALClient, useDBAL }              // Main client factories
 export { getPrismaClient, createPrismaClient } // Prisma access (if needed)
 export { seedDatabase }                        // Seed orchestration
 ```
 
 ### Entity Operations
 
-DBALClient provides typed entity operations:
+DBALClient provides type-safe entity operations (types generated from YAML schemas):
 
 ```typescript
 const db = getDBALClient()
@@ -398,7 +407,7 @@ db.users.findOne({ id })
 db.users.create({ username, email, role })
 db.users.update(id, { ... })
 
-// Pages (from PageConfig table)
+// Pages (from PageConfig table, defined in YAML schema)
 db.pageConfigs.list({ filter: { path: '/' } })
 db.pageConfigs.findOne({ path: '/' })
 db.pageConfigs.create({ path, title, component })
@@ -408,6 +417,11 @@ db.sessions.list()
 db.components.list()
 db.workflows.list()
 db.packages.list()
+
+// All operations are validated against:
+// - YAML schema at /dbal/shared/api/schema/entities/
+// - ACL rules for current user
+// - Prisma adapter safety checks
 ```
 
 ---
@@ -538,18 +552,22 @@ See `/schemas/package-schemas/script_schema.json` for JSON Script specification 
 
 ### ⚠️ Scoped Rules (AGENTS.md Files)
 
-**Important**: Before editing a subdirectory, check for an `AGENTS.md` file with scoped rules:
+**CRITICAL**: Before editing any major subsystem, check for scoped `AGENTS.md` files with specific rules:
 
-```
-dbal/docs/AGENTS.md                    ← DBAL-specific rules (mandatory read if editing DBAL)
-dbal/development/docs/AGENTS.md        ← TypeScript DBAL-specific rules (if exists)
-dbal/shared/docs/AGENTS.md             ← Shared code rules (if exists)
-dbal/production/docs/AGENTS.md         ← C++ DBAL-specific rules (if editing C++)
-packages/[package-name]/AGENTS.md      ← Package-specific rules (if exists)
-frontends/nextjs/AGENTS.md             ← Frontend-specific rules (if exists)
-```
+| Location | Purpose | Mandatory? |
+|----------|---------|-----------|
+| `AGENTS.md` (root) | **START HERE** - All agents. Core principles, DBAL, frontend, packages, testing, deployment | **YES** for all work |
+| `dbal/development/docs/AGENTS.md` | TypeScript DBAL-specific rules (if exists) | If editing TypeScript DBAL |
+| `dbal/shared/docs/AGENTS.md` | YAML schema rules (if exists) | If editing YAML schemas |
+| `dbal/production/docs/AGENTS.md` | C++ DBAL rules (if exists) | If editing C++ daemon |
+| `packages/[package-name]/AGENTS.md` | Package-specific rules (if exists) | If editing package |
+| `frontends/nextjs/AGENTS.md` | Frontend-specific rules (if exists) | If editing Next.js |
 
-**Pattern**: If working in a directory, search for `AGENTS.md` in that directory or its parents. It provides critical scoped rules that override general guidance.
+**Pattern**:
+1. Find the directory you're editing
+2. Search for `AGENTS.md` in that directory or its parents
+3. These scoped rules **override** general guidance in CLAUDE.md
+4. If you find an `AGENTS.md`, read it completely before starting work
 
 ### TypeScript DBAL (Phase 2 - Current)
 
@@ -603,7 +621,8 @@ frontends/nextjs/AGENTS.md             ← Frontend-specific rules (if exists)
 | `/DBAL_REFACTOR_PLAN.md` | Refactoring phases and steps |
 | `/TESTING.md` | E2E testing guide |
 | `/schemas/package-schemas/` | Package system definitions |
-| `/dbal/shared/docs/` | DBAL implementation guides |
+| `/AGENTS.md` | **DBAL-specific guidance for AI agents** (contract-based dev, Phase 2/3, conformance testing) |
+| `/dbal/shared/docs/` | DBAL implementation guides (PHASE2_IMPLEMENTATION.md, PHASE3_DAEMON.md, etc.) |
 
 ---
 
@@ -725,15 +744,17 @@ Defines the actual **database structure** (source of truth for both Phase 2 & 3)
 
 ## ✅ DO This Instead
 
-- ✅ Read ARCHITECTURE.md before starting database work
-- ✅ Use `getDBALClient()` from `@/dbal` for all database access (Phase 2)
-- ✅ Put seed data in `/seed/` folder or `/packages/*/seed/metadata.json`
+- ✅ **Read `/AGENTS.md` FIRST** - comprehensive agent guide for all MetaBuilder work
+- ✅ Follow core principles: 95% config, schema-first, one lambda per file, multi-tenant safe, ACL-first
+- ✅ Use DBAL for all database access: `getDBALClient()` from `@/dbal`
 - ✅ Edit YAML schemas at `/dbal/shared/api/schema/entities/` for database changes
 - ✅ Generate Prisma from YAML: `npm --prefix dbal/development run codegen:prisma`
 - ✅ Run `npm --prefix dbal/development run db:push` to apply schema changes
-- ✅ Follow entity operations pattern (db.users.list(), etc.)
-- ✅ Check `/schemas/` folder for architectural/package design questions
-- ✅ Check `/dbal/shared/api/schema/` folder for database schema questions
+- ✅ Put seed data in `/seed/` folder or `/packages/*/seed/metadata.json`
+- ✅ Put UI config in package `seed/metadata.json` (JSON-based, not hardcoded TSX)
+- ✅ Check `/AGENTS.md` for quick guidance on any subsystem
+- ✅ Check `/ARCHITECTURE.md` for system architecture
+- ✅ Check `/CLAUDE.md` for detailed project instructions
 - ✅ Check `/dbal/shared/docs/` for DBAL implementation details
 
 ---
@@ -927,18 +948,21 @@ cmake --build build
 10. **docs/TODO_MVP_IMPLEMENTATION.md** - MVP feature checklist
 11. **docs/PIPELINE_CONSOLIDATION.md** - CI/CD pipeline configuration
 
+### Project Guidance
+12. **AGENTS.md** - ⭐ **READ FIRST** - All agents. Core principles, DBAL development, frontend, packages, testing, deployment, troubleshooting, best practices
+
 ### DBAL Documentation
-12. **dbal/shared/docs/IMPLEMENTATION_SUMMARY.md** - Phase 2 overview
-13. **dbal/shared/docs/PHASE2_IMPLEMENTATION.md** - Phase 2 detailed guide
-14. **dbal/production/docs/PHASE3_DAEMON.md** - Phase 3 design (future)
+13. **dbal/shared/docs/IMPLEMENTATION_SUMMARY.md** - Phase 2 overview
+14. **dbal/shared/docs/PHASE2_IMPLEMENTATION.md** - Phase 2 detailed guide
+15. **dbal/production/docs/PHASE3_DAEMON.md** - Phase 3 design (future)
 
 ### Schema & Package System
-15. **schemas/SCHEMAS_README.md** - Package system definitions
-16. **schemas/QUICKSTART.md** - Package system quick start
-17. **schemas/package-schemas/** - Complete schema definitions:
+16. **schemas/SCHEMAS_README.md** - Package system definitions
+17. **schemas/QUICKSTART.md** - Package system quick start
+18. **schemas/package-schemas/** - Complete schema definitions:
     - `script_schema.json` - JSON Script language specification (v2.2.0, planned n8n migration)
     - `metadata_schema.json` - Package structure
     - `entities_schema.json` - Database models
     - Plus 15 more schemas for components, APIs, validation, permissions, etc.
-18. **dbal/shared/api/schema/** - YAML schema sources (both phases)
-19. **seed/packages/core-packages.yaml** - Bootstrap package installation order
+19. **dbal/shared/api/schema/** - YAML schema sources (both phases)
+20. **seed/packages/core-packages.yaml** - Bootstrap package installation order
