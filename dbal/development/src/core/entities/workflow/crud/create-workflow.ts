@@ -18,7 +18,7 @@ export const createWorkflow = async (
     id: input.id ?? store.generateId('workflow'),
     tenantId: input.tenantId ?? null,
     name: input.name,
-    description: input.description ?? undefined,
+    ...(input.description && { description: input.description }),
     nodes: input.nodes,
     edges: input.edges,
     enabled: input.enabled ?? true,

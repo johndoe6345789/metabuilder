@@ -52,7 +52,8 @@
       "Bash(npm run build:*)",
       "Bash(npm run codegen:*)",
       "Bash(npm:*)",
-      "Bash(__NEW_LINE_5881b1d201560748__ echo \"\")"
+      "Bash(__NEW_LINE_5881b1d201560748__ echo \"\")",
+      "Bash(grep:*)"
     ]
   },
   "spinnerTipsEnabled": false

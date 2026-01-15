@@ -34,21 +34,27 @@ const globalDBAL = globalThis as { dbalClient?: DBALClient }
  */
 export function createDBALClient(config?: DBALClientFactoryConfig): DBALClient {
   // Get or create Prisma client
-  const prisma = createPrismaClient({
-    databaseUrl: config?.databaseUrl,
-    environment: config?.environment,
-  })
+  const prismaConfig: PrismaClientConfig = {}
+  if (config?.databaseUrl) {
+    prismaConfig.databaseUrl = config.databaseUrl
+  }
+  if (config?.environment) {
+    prismaConfig.environment = config.environment
+  }
+  const prisma = createPrismaClient(prismaConfig)
 
   // Create DBAL client with Prisma
-  return new DBALClient({
+  const databaseUrl = config?.databaseUrl || config?.database?.url
+  const dbalConfig: DBALConfig = {
     mode: config?.mode || 'production',
     adapter: 'prisma',
     ...config,
     database: {
       ...config?.database,
-      url: config?.databaseUrl || config?.database?.url,
+      ...(databaseUrl && { url: databaseUrl }),
     },
-  })
+  }
+  return new DBALClient(dbalConfig)
 }
 
 /**

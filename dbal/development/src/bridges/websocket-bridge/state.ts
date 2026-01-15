@@ -13,6 +13,6 @@ export const createBridgeState = (
 ): BridgeState => ({
   ws: null,
   endpoint,
-  auth,
+  ...(auth && { auth }),
   pendingRequests: new Map<string, PendingRequest>(),
 })
