@@ -47,7 +47,11 @@
       "Bash(DATABASE_URL=file:../../prisma/prisma/dev.db npm run db:push:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run codegen:*)",
+      "Bash(npm:*)"
     ]
   },
   "spinnerTipsEnabled": false

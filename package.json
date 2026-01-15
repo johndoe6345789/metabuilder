@@ -19,6 +19,7 @@
     "test:e2e:report": "playwright show-report"
   },
   "workspaces": [
+    "dbal/development",
     "frontends/nextjs",
     "frontends/dbal",
     "config",

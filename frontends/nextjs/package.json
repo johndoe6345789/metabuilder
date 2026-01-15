@@ -27,6 +27,7 @@
         "db:migrate": "prisma migrate deploy --schema=../../prisma/schema.prisma"
     },
     "dependencies": {
+        "@metabuilder/dbal": "file:../../dbal/development",
         "@monaco-editor/react": "^4.7.0",
         "@octokit/core": "^7.0.6",
         "@prisma/adapter-better-sqlite3": "^7.2.0",

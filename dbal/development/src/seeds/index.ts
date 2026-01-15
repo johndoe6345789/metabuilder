@@ -7,8 +7,8 @@
  * DBAL only manages the loading and application of that seed data.
  *
  * Seed data hierarchy:
- * 1. /seed/database/ - Base system bootstrap data (YAML format)
- * 2. packages/*/seed/metadata.json - Package-specific seed data
+ * 1. /seed/database - Base system bootstrap data (YAML format)
+ * 2. packages/[packageId]/seed/metadata.json - Package-specific seed data
  */
 
 import type { DBALClient } from '../core/client'
