@@ -24,6 +24,8 @@
 **Reference Documents**:
 - `/DBAL_REFACTOR_PLAN.md` - Architectural overview
 - `/TD_1_REFACTORING_GUIDE.md` - ⭐ **Step-by-step execution guide with exact refactoring patterns**
+- `/TD_1_BLOCKER.md` - Workspace dependency setup (RESOLVED - see status)
+- `/DBAL_BUILD_ISSUES.md` - Pre-existing DBAL build errors blocking progress
 
 **Bot Instructions**:
 
@@ -32,13 +34,25 @@
 2. ✅ DBAL owns all Prisma initialization
 3. ✅ DBAL exports `getDBALClient()`, `seedDatabase()`, `getPrismaClient()`
 
-**Phase 2 (Frontend Cleanup)** - Ready for execution
-1. Read `/TD_1_REFACTORING_GUIDE.md` - Exact refactoring patterns for 100+ files
-2. Follow refactoring approach of choice (A: Automated, B: Manual, C: Git-based)
-3. Refactor 14 Prisma imports → use `db` from `/lib/db-client.ts`
-4. Refactor 110+ getAdapter() calls → use `db.entity.list()` pattern
-5. Delete old modules: `/lib/dbal-client/`, `/lib/database-dbal/`, `/lib/config/prisma.ts`
-6. Verify with checklist in `/TD_1_REFACTORING_GUIDE.md`
+**Phase 1.5 (Workspace Setup)** - COMPLETE ✅
+1. ✅ Added dbal/development to root package.json workspaces
+2. ✅ Added @metabuilder/dbal dependency to frontend
+3. ✅ Updated TypeScript paths for @/dbal resolution
+4. ⚠️ **NEW BLOCKER**: DBAL has pre-existing build errors
+   - Missing `types.generated.ts` file
+   - CodeGen script failing
+   - TypeScript type strictness errors
+   - See `/DBAL_BUILD_ISSUES.md` for details and fix options
+
+**Phase 2 (Frontend Cleanup)** - BLOCKED by DBAL build
+1. WAITING: DBAL TypeScript compilation must succeed first
+2. Once DBAL builds to dist/, then proceed:
+   - Read `/TD_1_REFACTORING_GUIDE.md` - Exact refactoring patterns for 100+ files
+   - Follow refactoring approach of choice (A: Automated, B: Manual, C: Git-based)
+   - Refactor 14 Prisma imports → use `db` from `/lib/db-client.ts`
+   - Refactor 110+ getAdapter() calls → use `db.entity.list()` pattern
+   - Delete old modules: `/lib/dbal-client/`, `/lib/database-dbal/`, `/lib/config/prisma.ts`
+   - Verify with checklist in `/TD_1_REFACTORING_GUIDE.md`
 
 **Phase 3 (Build System)** - Simple configuration updates
 1. Update DBAL package.json (if needed)
