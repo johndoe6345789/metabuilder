@@ -950,16 +950,18 @@ cmake --build build
 
 ### Project Guidance
 12. **AGENTS.md** - ⭐ **READ FIRST** - All agents. Core principles, DBAL development, frontend, packages, testing, deployment, troubleshooting, best practices
+13. **TECH_DEBT.md** - ⭐ **For AI Assistants** - Bot-actionable tech debt tasks (TD-1 through TD-13) with explicit step-by-step instructions
 
-### DBAL Documentation
-13. **dbal/shared/docs/IMPLEMENTATION_SUMMARY.md** - Phase 2 overview
-14. **dbal/shared/docs/PHASE2_IMPLEMENTATION.md** - Phase 2 detailed guide
-15. **dbal/production/docs/PHASE3_DAEMON.md** - Phase 3 design (future)
+### DBAL Documentation & Refactoring
+14. **DBAL_REFACTOR_PLAN.md** - Detailed implementation plan (reference for TD-1)
+15. **dbal/shared/docs/IMPLEMENTATION_SUMMARY.md** - Phase 2 overview
+16. **dbal/shared/docs/PHASE2_IMPLEMENTATION.md** - Phase 2 detailed guide
+17. **dbal/production/docs/PHASE3_DAEMON.md** - Phase 3 design (future)
 
 ### Schema & Package System
-16. **schemas/SCHEMAS_README.md** - Package system definitions
-17. **schemas/QUICKSTART.md** - Package system quick start
-18. **schemas/package-schemas/** - Complete schema definitions:
+18. **schemas/SCHEMAS_README.md** - Package system definitions
+19. **schemas/QUICKSTART.md** - Package system quick start
+20. **schemas/package-schemas/** - Complete schema definitions:
     - `script_schema.json` - JSON Script language specification (v2.2.0, planned n8n migration)
     - `metadata_schema.json` - Package structure
     - `entities_schema.json` - Database models

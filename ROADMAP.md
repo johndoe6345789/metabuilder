@@ -320,23 +320,24 @@ The original Spark-based version is preserved in `/old` directory for reference:
 
 ### What's NOT Done Yet (Phase 2 Remaining & Future Phases)
 
-❌ **Phase 2 - Final Items:**
-- Rate limiting (API endpoint protection)
-- OpenAPI/Swagger API documentation
-- Detailed error handling documentation
+❌ **Phase 2 - Final Items** (see `/TECH_DEBT.md` for detailed instructions):
+- TD-1: DBAL Refactoring - Move database logic from frontend to DBAL (🔴 CRITICAL)
+- TD-2: Rate limiting - API endpoint protection (🟡 HIGH)
+- TD-3: OpenAPI/Swagger API documentation (🟡 HIGH)
+- TD-4: Error handling documentation (🟡 MEDIUM)
 
-🔮 **Phase 3+:**
-- [ ] Rich form editors with nested object/array support
-- [ ] Bulk operations (multi-select, bulk delete, export)
-- [ ] Advanced filtering UI with visual builder
-- [ ] Relationship/foreign key dropdown selectors
-- [ ] God Panel (system admin dashboard)
-- [ ] Workflow automation UI
-- [ ] Advanced authentication (SSO, SAML, OAuth)
-- [ ] C++ DBAL daemon (production security mode)
-- [ ] Multi-source package system (NPM, git, http)
+🔮 **Phase 3+** (blocked until Phase 2 completes):
+- TD-5: Rich form editors with nested object/array support
+- TD-6: Bulk operations (multi-select, bulk delete, export)
+- TD-7: Advanced filtering UI with visual builder
+- TD-8: Relationship/foreign key dropdown selectors
+- TD-9: God Panel (system admin dashboard)
+- TD-10: Workflow automation UI
+- TD-11: Advanced authentication (SSO, SAML, OAuth)
+- TD-12: C++ DBAL daemon (production security mode)
+- TD-13: Multi-source package system (NPM, git, http)
 
-See [Roadmap Phases](#roadmap-phases) for detailed roadmap.
+**See `/TECH_DEBT.md` for bot-actionable instructions on each task.**
 
 ---
 

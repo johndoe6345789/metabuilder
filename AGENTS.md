@@ -4,6 +4,7 @@
 
 ## Quick Navigation
 
+- **Finding Tech Debt** → See `/TECH_DEBT.md` (bot-actionable task list with explicit instructions)
 - **Starting Development** → [Core Principles](#core-principles) + [Scoped Rules](#scoped-rules)
 - **Working on DBAL** → [DBAL Development](#dbal-development-phase-2--phase-3)
 - **Working on Frontend** → [Frontend Development](#frontend-development)
