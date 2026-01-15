@@ -22,9 +22,10 @@
         "test:e2e:debug": "playwright test --config=../../playwright.config.ts --debug",
         "test:e2e:report": "playwright show-report",
         "test:e2e:dbal-daemon": "playwright test --config=../../e2e/playwright.dbal-daemon.config.ts",
-        "db:generate": "prisma generate --schema=../../prisma/schema.prisma",
-        "db:push": "prisma db push --schema=../../prisma/schema.prisma",
-        "db:migrate": "prisma migrate deploy --schema=../../prisma/schema.prisma"
+        "db:generate": "npm --prefix ../../dbal/development run db:generate",
+        "db:push": "npm --prefix ../../dbal/development run db:push",
+        "db:migrate": "npm --prefix ../../dbal/development run db:migrate",
+        "db:seed": "npm --prefix ../../dbal/development run db:seed"
     },
     "dependencies": {
         "@metabuilder/dbal": "file:../../dbal/development",
