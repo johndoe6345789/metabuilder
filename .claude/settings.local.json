@@ -51,7 +51,8 @@
       "Bash(npx tsc:*)",
       "Bash(npm run build:*)",
       "Bash(npm run codegen:*)",
-      "Bash(npm:*)"
+      "Bash(npm:*)",
+      "Bash(__NEW_LINE_5881b1d201560748__ echo \"\")"
     ]
   },
   "spinnerTipsEnabled": false

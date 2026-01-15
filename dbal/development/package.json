@@ -17,10 +17,10 @@
     "codegen": "tsx ../shared/tools/codegen/gen_types.ts",
     "codegen:prisma": "node ../shared/tools/codegen/gen_prisma_schema.js",
     "generate-types": "node ../shared/tools/codegen/generate-types.js",
-    "db:generate": "prisma generate --schema=prisma/schema.prisma",
-    "db:push": "prisma db push --schema=prisma/schema.prisma",
-    "db:migrate": "prisma migrate deploy --schema=prisma/schema.prisma",
-    "db:studio": "prisma studio --schema=prisma/schema.prisma",
+    "db:generate": "prisma generate --schema=../shared/prisma/schema.prisma",
+    "db:push": "prisma db push --schema=../shared/prisma/schema.prisma",
+    "db:migrate": "prisma migrate deploy --schema=../shared/prisma/schema.prisma",
+    "db:studio": "prisma studio --schema=../shared/prisma/schema.prisma",
     "db:seed": "tsx ../shared/seeds/load-and-apply.ts"
   },
   "keywords": [
