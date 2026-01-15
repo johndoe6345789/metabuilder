@@ -410,9 +410,26 @@ Acknowledge all crimes:
 - Dead code ✓
 - Missing dependencies ✓
 - Specification violations ✓
+- Architecture violations (seed/schema not in DBAL) ✓
 ```
 
-### STEP 2: Restitution
+### STEP 2: Architecture Restructure (MUST DO FIRST)
+```
+Execute ARCHITECTURE_RESTRUCTURE.md:
+1. Move /seed/ → /dbal/shared/seeds/
+2. Move /prisma/schema.prisma → /dbal/development/prisma/
+3. Create seed orchestration in DBAL
+4. Update all package.json scripts
+5. Update DBAL exports (add seedDatabase)
+6. Update frontend bootstrap code
+7. Delete old /seed/ and /prisma/ folders
+8. Verify no broken references
+
+THIS MUST COMPLETE BEFORE STEP 3.
+Fixing code without fixing architecture = perpetuating wrong design.
+```
+
+### STEP 3: Restitution (AFTER RESTRUCTURE)
 ```
 Execute CODEBASE_RECOVERY_PLAN.md:
 1. Fix DBAL codegen
@@ -424,7 +441,7 @@ Execute CODEBASE_RECOVERY_PLAN.md:
 7. Verify all systems operational
 ```
 
-### STEP 3: Probation
+### STEP 4: Probation
 ```
 ALL future commits must:
 - Pass compilation
@@ -437,7 +454,7 @@ Any violation = immediate revert.
 No exceptions.
 ```
 
-### STEP 4: Permanent Record
+### STEP 5: Permanent Record
 ```
 This crime is forever recorded in git history.
 Future developers will see:
