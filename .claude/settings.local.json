@@ -49,5 +49,6 @@
       "Bash(git commit:*)",
       "Bash(tree:*)"
     ]
-  }
+  },
+  "spinnerTipsEnabled": false
 }
