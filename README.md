@@ -6,6 +6,14 @@ No hardcoded routes, no component imports, no assumptions. The entire applicatio
 
 ---
 
+## For Different Audiences
+
+> **👤 End Users?** → See Quick Start below
+> **👨‍💻 Developers?** → Read [AGENTS.md](/AGENTS.md) + [CLAUDE.md](/CLAUDE.md)
+> **🤖 AI Assistants?** → Read `/AGENTS.md` first, then check [TECH_DEBT.md](/TECH_DEBT.md) for tasks
+
+---
+
 ## Table of Contents
 
 1. [Core Concept](#core-concept)
@@ -482,21 +490,28 @@ model InstalledPackage {
 
 ### DBAL (Database Abstraction Layer)
 
-**Why?** Credentials never touch the frontend. All database operations go through the DBAL daemon.
+**Why?** Credentials never touch the frontend. All database operations go through the DBAL abstraction.
 
 **Architecture**:
-- **TypeScript SDK** (`dbal/development/`) - Development, fast iteration
-- **C++ Daemon** (`dbal/production/`) - Production, credential protection
+- **Phase 2 (Current)**: TypeScript SDK (`dbal/development/`) - Development, fast iteration
+- **Phase 3 (Planned)**: C++ Daemon (`dbal/production/`) - Production, credential isolation & security hardening
 
-**Usage**:
+**Usage** (Phase 2 - Current):
 ```typescript
-import { getAdapter } from '@/lib/db/core/dbal-client'
+import { getDBALClient } from '@/dbal'
 
-const adapter = getAdapter()
-const result = await adapter.list('InstalledPackage', {
-  filters: { enabled: true }
-})
+const db = getDBALClient()
+const packages = await db.packages.list({ enabled: true })
+const user = await db.users.findOne({ id: 'user-123' })
+const newPost = await db.posts.create({ title: 'My Post', content: '...' })
 ```
+
+**Entity Operations Available**:
+- `db.users.list()`, `findOne()`, `create()`, `update()`, `delete()`
+- `db.pageConfigs.list()`, `findOne()`, `create()`, `update()`, `delete()`
+- `db.sessions.list()`, `findOne()`, `create()`
+- `db.packages.list()`, `findOne()`
+- And more - all type-safe with schema validation
 
 ### Database Commands
 
@@ -542,14 +557,11 @@ brew install cmake ninja conan
 cd frontends/nextjs
 npm run dev
 
-# Terminal 2: DBAL daemon (optional, TypeScript version)
-cd dbal/development
-npm install
-npm run dev
-
-# Terminal 3: PostgreSQL (via Docker)
+# Terminal 2: PostgreSQL (via Docker)
 docker run -p 5432:5432 -e POSTGRES_PASSWORD=dev postgres:16
 ```
+
+> **Note**: Phase 2 is TypeScript-only. The C++ DBAL daemon (`dbal/production/`) is for Phase 3 (planned). Currently all database operations use the TypeScript DBAL in `/dbal/development/`.
 
 ### Code Conventions
 
@@ -887,11 +899,15 @@ All errors follow a consistent format:
 
 ### Rate Limiting
 
-API endpoints are rate-limited to prevent abuse:
-- **Authenticated users**: 1000 requests per hour
-- **Public endpoints**: 100 requests per hour per IP
+⏳ **Status**: In Progress (TD-2)
 
-Rate limit information is included in response headers:
+Rate limiting is currently being implemented. See [TECH_DEBT.md](TECH_DEBT.md) for implementation details.
+
+When complete, API endpoints will be rate-limited to prevent abuse:
+- **Authenticated users**: 1000 requests per hour (planned)
+- **Public endpoints**: 100 requests per hour per IP (planned)
+
+Rate limit information will be included in response headers:
 ```
 X-RateLimit-Limit: 1000
 X-RateLimit-Remaining: 999
@@ -1185,10 +1201,56 @@ MIT License - See LICENSE file
 
 ## Learn More
 
-- [Deployment Guide](deployment/DEPLOYMENT_GUIDE.md) - Detailed deployment documentation
+### 🚀 For Getting Started
+- [Quick Start](#quick-start) - Setup in minutes
+- [Architecture](#architecture) - System overview
+- [Deployment](#deployment) - How to deploy
+
+### 👨‍💻 For Developers
+- **[AGENTS.md](/AGENTS.md)** - ⭐ **START HERE** - Development guide for all subsystems
+- **[CLAUDE.md](/CLAUDE.md)** - Comprehensive project instructions and architecture
+- **[TECH_DEBT.md](/TECH_DEBT.md)** - Bot-actionable tech debt tasks (TD-1 through TD-13)
+- [ROADMAP.md](/ROADMAP.md) - Project vision, phases, and status
+- [ARCHITECTURE.md](/ARCHITECTURE.md) - Detailed system architecture and data flow
+- [DBAL_REFACTOR_PLAN.md](/DBAL_REFACTOR_PLAN.md) - Phase 2 cleanup implementation (TD-1)
+- [TESTING.md](/TESTING.md) - E2E testing guide
+
+### 📦 For Packages & Components
 - [Package Structure](packages/README.md) - How to create packages
-- [DBAL Documentation](dbal/docs/) - Database abstraction layer
-- [Prisma Schema](prisma/schema.prisma) - Database schema reference
+- [Package Schemas](/schemas/package-schemas/) - JSON schema definitions
+- [Seed Data](/seed/) - Bootstrap configuration
+
+### 🗄️ For Database & DBAL
+- [DBAL Documentation](/dbal/shared/docs/) - Database abstraction layer guides
+- [YAML Schemas](/dbal/shared/api/schema/) - Database entity definitions (source of truth)
+- [Prisma Schema](prisma/schema.prisma) - Generated database schema
+
+### 📊 For Status & Planning
+- [ROADMAP.md](/ROADMAP.md) - What's done, in progress, and planned
+- [TECH_DEBT.md](/TECH_DEBT.md) - Current tech debt with explicit instructions
+
+---
+
+## Current Status
+
+**Phase**: Phase 2 (Backend Integration) - **90% Complete**
+
+**Done**:
+- ✅ Core architecture (Next.js, Prisma, DBAL, Multi-tenant)
+- ✅ Authentication & authorization
+- ✅ CRUD operations
+- ✅ Package system (52 packages)
+- ✅ Generic component renderer
+- ✅ Infrastructure (Docker, PostgreSQL, Redis, Nginx)
+- ✅ Test suite (464 tests, 100% pass rate)
+
+**In Progress**:
+- 🔄 DBAL Refactoring (TD-1) - Move database logic from frontend to DBAL
+- ⏳ Rate limiting (TD-2)
+- ⏳ API documentation / Swagger (TD-3)
+- ⏳ Error handling docs (TD-4)
+
+**See [TECH_DEBT.md](/TECH_DEBT.md) for detailed task instructions.**
 
 ---
 
