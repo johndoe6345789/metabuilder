@@ -5,7 +5,6 @@ const path = require('path')
 
 const header = `datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
 }
 
 generator client {
