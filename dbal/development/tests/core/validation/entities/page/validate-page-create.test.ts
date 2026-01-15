@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validatePageCreate } from '../../../src/core/validation/validate-page-create'
+import { validatePageCreate } from '../../../../../src/core/validation/validate-page-create'
 
 const tooLongTitle = 'a'.repeat(256)
 
@@ -11,7 +11,7 @@ describe('validatePageCreate', () => {
       description: 'missing required fields',
     },
     {
-      data: { path: '', title: 'Valid title', componentTree: '[]', level: 1, requiresAuth: true },
+      data: { path: 'a'.repeat(256), title: 'Valid title', componentTree: '[]', level: 1, requiresAuth: true },
       expected: ['path must be 1-255 characters'],
       description: 'invalid path',
     },

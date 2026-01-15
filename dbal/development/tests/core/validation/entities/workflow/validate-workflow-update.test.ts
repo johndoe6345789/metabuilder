@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { validateWorkflowUpdate } from '../../../src/core/validation/validate-workflow-update'
+import { validateWorkflowUpdate } from '../../../../../src/core/validation/validate-workflow-update'
 
 describe('validateWorkflowUpdate', () => {
   it.each([

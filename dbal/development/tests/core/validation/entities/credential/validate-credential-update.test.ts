@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { validateCredentialUpdate } from '../../../src/core/validation/validate-credential-update'
+import { validateCredentialUpdate } from '../../../../../src/core/validation/validate-credential-update'
 
 describe('validateCredentialUpdate', () => {
   it.each([

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { isPlainObject } from '../../../src/core/validation/is-plain-object'
+import { isPlainObject } from '../../../../../src/core/validation/is-plain-object'
 
 describe('isPlainObject', () => {
   it.each([

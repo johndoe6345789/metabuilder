@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { isValidDate } from '../../../src/core/validation/is-valid-date'
+import { isValidDate } from '../../../../../src/core/validation/is-valid-date'
 
 describe('isValidDate', () => {
   const validDate = new Date('2024-01-01T00:00:00Z')

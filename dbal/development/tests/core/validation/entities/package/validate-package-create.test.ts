@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { validatePackageCreate } from '../../../src/core/validation/validate-package-create'
+import { validatePackageCreate } from '../../../../../src/core/validation/validate-package-create'
 
 describe('validatePackageCreate', () => {
   const base = {

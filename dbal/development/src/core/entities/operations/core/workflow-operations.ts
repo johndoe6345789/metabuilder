@@ -101,9 +101,9 @@ export const createWorkflowOperations = (adapter: DBALAdapter, tenantId?: string
     const payload = withWorkflowDefaults({ ...data, tenantId: resolvedTenantId })
     assertValidCreate(payload)
     try {
-      return adapter.create('Workflow', payload) as Promise<Workflow>
+      return await adapter.create('Workflow', payload) as Workflow
     } catch (error) {
-      if (error instanceof DBALError && error.code === 409) {
+      if ((error as any)?.code === 409) {
         const name = typeof data.name === 'string' ? data.name : 'unknown'
         throw DBALError.conflict(`Workflow with name '${name}' already exists`)
       }
@@ -137,9 +137,9 @@ export const createWorkflowOperations = (adapter: DBALAdapter, tenantId?: string
       throw DBALError.notFound(`Workflow not found: ${id}`)
     }
     try {
-      return adapter.update('Workflow', id, data) as Promise<Workflow>
+      return await adapter.update('Workflow', id, data) as Workflow
     } catch (error) {
-      if (error instanceof DBALError && error.code === 409) {
+      if ((error as any)?.code === 409) {
         if (typeof data.name === 'string') {
           throw DBALError.conflict(`Workflow with name '${data.name}' already exists`)
         }

@@ -21,7 +21,9 @@ const mockAdapter = vi.hoisted(() => ({
 }))
 
 vi.mock('../../src/adapters/prisma', () => ({
-  PrismaAdapter: vi.fn(() => mockAdapter),
+  PrismaAdapter: vi.fn(function() { return mockAdapter }),
+  PostgresAdapter: vi.fn(function() { return mockAdapter }),
+  MySQLAdapter: vi.fn(function() { return mockAdapter }),
 }))
 
 const baseConfig = {

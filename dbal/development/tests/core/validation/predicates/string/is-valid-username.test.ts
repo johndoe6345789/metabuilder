@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isValidUsername } from '../../../src/core/validation/is-valid-username'
+import { isValidUsername } from '../../../../../src/core/validation/is-valid-username'
 
 const fiftyChars = 'a'.repeat(50)
 const fiftyOneChars = 'a'.repeat(51)

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validateUserCreate } from '../../../src/core/validation/validate-user-create'
+import { validateUserCreate } from '../../../../../src/core/validation/validate-user-create'
 
 describe('validateUserCreate', () => {
   it.each([

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isValidLevel } from '../../../src/core/validation/is-valid-level'
+import { isValidLevel } from '../../../../../src/core/validation/is-valid-level'
 
 describe('isValidLevel', () => {
   it.each([

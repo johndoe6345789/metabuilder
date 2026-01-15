@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isValidTitle } from '../../../src/core/validation/is-valid-title'
+import { isValidTitle } from '../../../../../src/core/validation/is-valid-title'
 
 const maxTitle = 'a'.repeat(255)
 const tooLongTitle = 'a'.repeat(256)

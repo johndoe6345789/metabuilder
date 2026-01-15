@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isValidSlug } from '../../../src/core/validation/is-valid-slug'
+import { isValidSlug } from '../../../../../src/core/validation/is-valid-slug'
 
 const maxSlug = 'a'.repeat(255)
 const tooLongSlug = 'a'.repeat(256)

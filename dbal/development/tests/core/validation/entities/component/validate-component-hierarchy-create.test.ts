@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { validateComponentHierarchyCreate } from '../../../src/core/validation/validate-component-hierarchy-create'
+import { validateComponentHierarchyCreate } from '../../../../../src/core/validation/validate-component-hierarchy-create'
 
 describe('validateComponentHierarchyCreate', () => {
   const base = {

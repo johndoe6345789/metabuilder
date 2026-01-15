@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { isValidSemver } from '../../../src/core/validation/is-valid-semver'
+import { isValidSemver } from '../../../../../src/core/validation/is-valid-semver'
 
 describe('isValidSemver', () => {
   it.each([

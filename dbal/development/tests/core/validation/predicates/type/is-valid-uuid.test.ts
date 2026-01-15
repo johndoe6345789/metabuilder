@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { isValidUuid } from '../../../src/core/validation/is-valid-uuid'
+import { isValidUuid } from '../../../../../src/core/validation/is-valid-uuid'
 
 describe('isValidUuid', () => {
   it.each([
