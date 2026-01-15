@@ -1,588 +1,451 @@
-# METABUILDER CODE OF CRIMINAL LIABILITY
+# METABUILDER SOFTWARE DESIGN SPECIFICATION
 
-**A Software Criminal Code**
+**A Contractual and Binding Design Specification**
 
-When writing software for MetaBuilder, poor code is not merely a business failure or technical debt.
-
-It is a **crime**.
+This document defines the non-negotiable design, quality, and operational requirements for the MetaBuilder codebase. All code contributions are subject to these requirements. Non-compliance is grounds for immediate rejection, reversal, and remediation.
 
 ---
 
-## ARTICLE I: CRIMES AGAINST THE CODEBASE
+## PREAMBLE
 
-### CRIME 1: COMPILATION FAILURE
-**Statute:** Any commit that causes `npm run build` to fail
-**Penalty:** Immediate rejection, force push revert, and loss of commit privileges until corrected
-**Liability:** Criminal
+**Status:** ACTIVE AND BINDING
+**Date:** January 15, 2026
+**Scope:** All commits to the MetaBuilder repository
 
-```
-It is ILLEGAL to commit code that does not compile.
-There are no exceptions. There are no grace periods.
-If code breaks the build, it is a crime.
-```
+The MetaBuilder codebase MUST maintain operational integrity, type safety, testability, and architectural correctness. These requirements are not aspirational—they are contractual obligations.
 
-**Current Violation:** Frontend build fails. COMMIT REVERTED (hypothetically, in real law).
+**Key Principle:** Code must be proven compliant before acceptance. Presumption is against acceptance until demonstrated otherwise.
 
 ---
 
-### CRIME 2: TYPE ERROR
-**Statute:** Any commit that causes TypeScript to report an error
-**Penalty:** Rejection, immediate revert, investigation into intent
-**Liability:** Criminal
+## ARTICLE I: CORE REQUIREMENTS
 
-```
-All code MUST pass strict type checking.
-Type errors are not warnings. They are crimes.
-Silencing type errors with @ts-ignore is conspiracy to commit fraud.
+### REQUIREMENT 1: BUILD COMPLIANCE
+
+**Specification:**
+- `npm run build` MUST complete without errors or warnings that prevent compilation
+- Build artifacts MUST be generated to their expected output directories
+- Build process MUST be deterministic (identical inputs produce identical outputs across runs)
+
+**Verification:**
+```bash
+npm run build && echo "PASS" || echo "FAIL"
 ```
 
-**Current Violation:** 27 type errors. Equivalent to 27 felony counts.
+**Remediation on Failure:**
+- Immediate rejection of commit
+- Automatic revert if merged without approval
+- Responsible engineer must correct and resubmit
+
+**Current Status:** ❌ **FAILED** — Frontend build fails. Correction mandatory.
 
 ---
 
-### CRIME 3: BROKEN IMPORTS
-**Statute:** Any code that references modules that do not exist
-**Penalty:** Life imprisonment in the git history (permanent marker of guilt)
-**Liability:** Criminal + Civil
+### REQUIREMENT 2: TYPE SAFETY
 
-```
-If you import from '@/dbal/adapters/prisma' and that file doesn't exist:
-- You have committed a crime
-- Everyone who merged your code is an accessory
-- Everyone who didn't catch it is negligent
+**Specification:**
+- `npm run typecheck` MUST complete with zero TypeScript errors
+- Strict mode flags MUST remain enabled (`exactOptionalPropertyTypes: true`)
+- Use of `@ts-ignore` and `@ts-expect-error` is prohibited except with explicit justification approved by code review
+- All implicit `any` types MUST be resolved to concrete types
+
+**Verification:**
+```bash
+npm run typecheck && [ $(npm run typecheck 2>&1 | grep -c "error") -eq 0 ] && echo "PASS" || echo "FAIL"
 ```
 
-**Current Violation:** 27 broken imports in frontend. Investigation ongoing.
+**Remediation on Failure:**
+- Immediate rejection of commit
+- Type violations MUST be fixed, not suppressed
+- Code must be corrected to comply with type system, not weakened
+
+**Current Status:** ❌ **FAILED** — 27 TypeScript errors. Correction mandatory.
 
 ---
 
-### CRIME 4: DEAD CODE
-**Statute:** Any code that is not executed, not tested, and not documented as WIP
-**Penalty:** Execution (permanent deletion)
-**Liability:** Criminal
+### REQUIREMENT 3: IMPORT RESOLUTION
 
-```
-You CANNOT commit code that:
-- Does not run
-- Cannot be tested
-- Serves no purpose
-- Was never completed
+**Specification:**
+- All import statements MUST reference modules that exist
+- No broken module references are permitted
+- Path aliases (`@/dbal`, etc.) MUST resolve to existing files or npm packages
+- No circular dependencies are permitted
 
-39 DBAL stub files that don't work? MURDER.
-20+ getAdapter() wrappers that are obsolete? MANSLAUGHTER.
-Incomplete refactorings? ABANDONMENT OF A CHILD.
+**Verification:**
+```bash
+npm run typecheck  # catches unresolved imports
 ```
 
-**Current Violation:** 39 broken DBAL stubs committed and abandoned. Multiple murder charges.
+**Remediation on Failure:**
+- Immediate rejection of commit
+- All missing modules MUST be created or import statements MUST be corrected
+- Code cannot reference non-existent files
+
+**Current Status:** ❌ **FAILED** — 27 broken imports in frontend. Correction mandatory.
 
 ---
 
-### CRIME 5: MISSING DEPENDENCIES
-**Statute:** Depending on code that doesn't exist
-**Penalty:** Minimum 5-year sentence
-**Liability:** Criminal Negligence
+### REQUIREMENT 4: DATABASE INITIALIZATION
 
+**Specification:**
+- Database schema MUST be initialized successfully
+- `npm run db:push` MUST complete without errors
+- Database file MUST exist and contain initialized schema
+- Database operations MUST be idempotent (safe to run multiple times)
+
+**Verification:**
+```bash
+npm run db:generate
+npm run db:push
+test -f /dbal/development/prisma/dev.db && echo "PASS" || echo "FAIL"
 ```
-If you write code that requires gen_types.ts and don't include it:
-GUILTY.
 
-If you reference a codegen script that only exists in Python:
-GUILTY.
+**Remediation on Failure:**
+- Schema inconsistencies MUST be resolved
+- Migration scripts MUST be corrected
+- Tests cannot proceed until database initializes
 
-If you leave a .gitignore that hides required files:
-GUILTY.
-```
-
-**Current Violation:** DBAL references types.generated.ts (doesn't exist). GUILTY ON ALL COUNTS.
+**Current Status:** ❌ **FAILED** — Database not initialized. Correction mandatory.
 
 ---
 
-### CRIME 6: SPECIFICATION VIOLATION
-**Statute:** Writing code that violates the CONTRACT.md
-**Penalty:** Permanent code review (no more solo commits)
-**Liability:** Criminal + Probation
+### REQUIREMENT 5: DBAL COMPILATION
 
-```
-CONTRACT.md is LAW.
+**Specification:**
+- DBAL TypeScript source MUST compile without errors
+- `npm --prefix dbal/development run build` MUST succeed
+- Compiled output MUST exist in `/dbal/development/dist/`
+- All required exports MUST be present in compiled output
+- Generated type files MUST be created and included in dist
 
-If CONTRACT.md says "single DBAL implementation" and you create 5:
-GUILTY.
-
-If CONTRACT.md says "npm run build succeeds" and it fails:
-GUILTY.
-
-If CONTRACT.md says "database must initialize" and it doesn't:
-GUILTY.
+**Verification:**
+```bash
+npm --prefix dbal/development run build
+test -f dbal/development/dist/index.js && echo "PASS" || echo "FAIL"
 ```
 
-**Current Violation:** All 5 violations of specification. GUILTY.
+**Remediation on Failure:**
+- All TypeScript errors in DBAL MUST be resolved
+- Missing code generation scripts MUST be created
+- Codegen tools MUST produce required artifacts
+
+**Current Status:** ❌ **FAILED** — DBAL has 16+ errors. Correction mandatory.
 
 ---
 
-### CRIME 7: UNDOCUMENTED CODE
-**Statute:** Writing code without explanation
-**Penalty:** Code review imprisonment (30-day review lock)
-**Liability:** Criminal Negligence
+### REQUIREMENT 6: DOCUMENTATION
 
-```
-If someone else cannot understand your code in 5 minutes:
-GUILTY.
+**Specification:**
+- Every commit message MUST explain:
+  - **WHAT** changed (specific files/functions modified)
+  - **WHY** it changed (business/technical rationale)
+  - **HOW** to verify it works (test commands or validation steps)
+- Code MUST be self-documenting (clear variable/function names)
+- Complex logic MUST have explanatory comments describing the _why_, not the _what_
+- All public APIs MUST have JSDoc/TSDoc comments
 
-If you did not document WHY (not what):
-GUILTY.
+**Remediation on Failure:**
+- Commit rejected for inadequate documentation
+- Author MUST provide complete explanation before acceptance
 
-If the next person has to reverse-engineer your logic:
-GUILTY OF INTELLECTUAL PROPERTY DESTRUCTION.
-```
-
----
-
-### CRIME 8: UNVERIFIED CLAIMS
-**Statute:** Stating code works without testing
-**Penalty:** Loss of trust, exile to junior status
-**Liability:** Fraud
-
-```
-"This probably works" = FRAUD.
-"I think this compiles" = FRAUD.
-"I assume the database is initialized" = FRAUD.
-"It worked on my machine" = FRAUD.
-
-ASSUME NOTHING.
-VERIFY EVERYTHING.
-PROVE COMPLIANCE OR FACE CONVICTION.
-```
-
-**Current Violation:** MASSIVE. Entire codebase is unverified claims. GUILTY AS CHARGED.
+**Current Status:** ⚠️ **INCOMPLETE** — Existing code lacks documentation. Future commits must comply.
 
 ---
 
-## ARTICLE II: PROSECUTION STANDARDS
+### REQUIREMENT 7: NO DEAD CODE
 
-### INVESTIGATION PROTOCOL
+**Specification:**
+- All committed code MUST be active and executed during normal operation
+- Unused functions, variables, or modules MUST NOT be committed
+- Stub files or incomplete implementations MUST be explicitly marked as work-in-progress with clear status
+- All TODO comments MUST reference a tracking issue and expected completion date
 
-**All code commits are subject to:**
+**Remediation on Failure:**
+- Code rejected if unused or incomplete
+- Dead code MUST be deleted or completed
 
-1. **Compilation Audit** (Mandatory)
-   - Does `npm run build` succeed? YES/NO
-   - If NO → CRIME → GUILTY
-
-2. **Type Audit** (Mandatory)
-   - Does `npm run typecheck` have zero errors? YES/NO
-   - If NO → CRIME → GUILTY
-
-3. **Import Audit** (Mandatory)
-   - Do all imports resolve? YES/NO
-   - If NO → CRIME → GUILTY
-
-4. **Runtime Audit** (Mandatory)
-   - Does `npm run dev` start? YES/NO
-   - If NO → CRIME → GUILTY
-
-5. **Test Audit** (Mandatory)
-   - Do tests run without crashing? YES/NO
-   - If NO → CRIME → GUILTY
-
-6. **Specification Audit** (Mandatory)
-   - Does code comply with CONTRACT.md? YES/NO
-   - If NO → CRIME → GUILTY
-
-### PRESUMPTION OF GUILT
-
-In this criminal code, all code is **presumed guilty until proven compliant**.
-
-The burden of proof is on the developer to demonstrate:
-- ✅ Code compiles
-- ✅ Types pass
-- ✅ Tests run
-- ✅ Specification satisfied
-- ✅ Documentation exists
-- ✅ No broken imports
-- ✅ No dead code
-
-**Failure to prove any element = CONVICTION.**
+**Current Status:** ❌ **FAILED** — 39 DBAL stub files committed but non-functional. Correction mandatory.
 
 ---
 
-## ARTICLE III: CRIMES IN MetaBuilder'S CURRENT STATE
+### REQUIREMENT 8: ARCHITECTURAL COMPLIANCE
 
-### INDICTMENT (January 15, 2026)
+**Specification:**
+- Architecture MUST match the specification defined in ARCHITECTURE.md
+- DBAL MUST be self-contained and independently deployable
+- Seed data and Prisma schema MUST reside in DBAL, not at root level
+- Multiple conflicting implementations are prohibited
+- Database logic MUST not be scattered across the codebase
 
-**Defendant:** MetaBuilder Codebase
+**Remediation on Failure:**
+- Code rejected if architecture violations exist
+- Refactoring MUST be completed before acceptance
+- Architecture must be corrected before code cleanup
 
-**Charges:**
-
-**CRIME 1: Compilation Failure**
-```
-Count 1: npm run build fails
-Severity: FELONY
-Guilty: YES (PROVEN)
-```
-
-**CRIME 2: Type Errors**
-```
-Count 1-27: TypeScript errors (27 counts)
-Severity: FELONY x 27
-Guilty: YES (PROVEN)
-```
-
-**CRIME 3: Broken Imports**
-```
-Count 1-27: Cannot resolve modules (27 counts)
-Severity: FELONY x 27
-Guilty: YES (PROVEN)
-```
-
-**CRIME 4: Dead Code**
-```
-Count 1: 39 DBAL stub files that don't work
-Severity: MURDER
-Guilty: YES (PROVEN)
-
-Count 2: 20+ getAdapter() obsolete wrappers
-Severity: MANSLAUGHTER
-Guilty: YES (PROVEN)
-```
-
-**CRIME 5: Missing Dependencies**
-```
-Count 1: gen_types.ts doesn't exist but is required
-Severity: FELONY
-Guilty: YES (PROVEN)
-
-Count 2: types.generated.ts never created
-Severity: FELONY
-Guilty: YES (PROVEN)
-```
-
-**CRIME 6: Specification Violation**
-```
-Count 1: Multiple DBAL implementations (should be one)
-Severity: FELONY
-Guilty: YES (PROVEN)
-
-Count 2: Database not initialized
-Severity: FELONY
-Guilty: YES (PROVEN)
-
-Count 3: DBAL won't compile
-Severity: FELONY
-Guilty: YES (PROVEN)
-```
-
-**CRIME 7: Unverified Claims**
-```
-Count 1: "DBAL is phase 2" - Actually broken and incomplete
-Severity: FRAUD
-Guilty: YES (PROVEN)
-
-Count 2: "npm run build works" - Actually fails
-Severity: FRAUD
-Guilty: YES (PROVEN)
-```
-
-### VERDICT
-
-**GUILTY ON ALL COUNTS.**
-
-### SENTENCE
-
-The codebase is sentenced to:
-
-1. **IMMEDIATE SUSPENSION** of all feature development
-2. **REHABILITATION PROGRAM** (CODEBASE_RECOVERY_PLAN.md)
-3. **STRICT PROBATION** (all commits must pass all audits)
-4. **PERMANENT MONITORING** (no commit without full compliance)
+**Current Status:** ❌ **FAILED** — Seed at root, schema at root, multiple DBAL implementations. Correction mandatory.
 
 ---
 
-## ARTICLE IV: THE LAW GOING FORWARD
+## ARTICLE II: VERIFICATION PROTOCOL
 
-### SECTION 4.1: BINDING CRIMINAL STATUTE
+All commits are subject to the following verification sequence (in order):
 
-**From this date forward:**
+### Verification Checklist
 
-```
-ANY commit that violates the following is ILLEGAL:
-```
+- [ ] **BUILD CHECK** — `npm run build` succeeds (REQUIREMENT 1)
+- [ ] **TYPE CHECK** — `npm run typecheck` returns 0 errors (REQUIREMENT 2)
+- [ ] **IMPORT CHECK** — All imports resolve correctly (REQUIREMENT 3)
+- [ ] **DATABASE CHECK** — `npm run db:push` succeeds (REQUIREMENT 4)
+- [ ] **DBAL CHECK** — DBAL compiles to dist/ (REQUIREMENT 5)
+- [ ] **DOCUMENTATION CHECK** — Commit message and code comments complete (REQUIREMENT 6)
+- [ ] **CODE CHECK** — No dead code or stubs (REQUIREMENT 7)
+- [ ] **ARCHITECTURE CHECK** — Complies with ARCHITECTURE.md (REQUIREMENT 8)
+- [ ] **TEST CHECK** — `npm run test:e2e` and `npm run test:unit` pass
 
-**§ 4.1.1 Compilation Mandate**
-```
-The build MUST succeed. Always.
-npm run build → success = LEGAL
-npm run build → failure = ILLEGAL (FELONY)
-```
+**Standard:** ALL checks must pass. If ANY check fails, the commit is rejected.
 
-**§ 4.1.2 Type Safety Mandate**
-```
-TypeScript MUST pass with zero errors.
-npm run typecheck → 0 errors = LEGAL
-npm run typecheck → N>0 errors = ILLEGAL (FELONY x N)
-```
+---
 
-**§ 4.1.3 Import Resolution Mandate**
-```
-All imports MUST resolve to existing files.
-Missing module = ILLEGAL (FELONY)
-Broken import = ILLEGAL (FELONY)
-```
+## ARTICLE III: CURRENT COMPLIANCE STATUS
 
-**§ 4.1.4 Database Mandate**
-```
-Database MUST initialize successfully.
-npm run db:push → success = LEGAL
-npm run db:push → failure = ILLEGAL (FELONY)
+**Evaluation Date:** January 15, 2026
 
-/prisma/dev.db must exist = LEGAL
-/prisma/dev.db doesn't exist = ILLEGAL (FELONY)
-```
+### Compliance Report
 
-**§ 4.1.5 DBAL Compilation Mandate**
-```
-DBAL MUST compile without errors.
-npm --prefix dbal/development run build → success = LEGAL
-npm --prefix dbal/development run build → failure = ILLEGAL (FELONY)
+| Requirement | Status | Details |
+|-------------|--------|---------|
+| 1. Build Compliance | ❌ FAIL | `npm run build` fails |
+| 2. Type Safety | ❌ FAIL | 27 TypeScript errors |
+| 3. Import Resolution | ❌ FAIL | 27 broken imports in frontend |
+| 4. Database Init | ❌ FAIL | No .db file created |
+| 5. DBAL Compilation | ❌ FAIL | 16+ compilation errors, missing codegen |
+| 6. Documentation | ⚠️ WARN | Insufficient for complex code |
+| 7. No Dead Code | ❌ FAIL | 39 stub files, 20+ obsolete wrappers |
+| 8. Architecture | ❌ FAIL | Seed/schema at root, multiple DBAL impls |
 
-/dbal/development/dist/ must exist = LEGAL
-/dbal/development/dist/ doesn't exist = ILLEGAL (FELONY)
-```
+### Overall Status
 
-**§ 4.1.6 Specification Compliance Mandate**
-```
-Code MUST comply with CONTRACT.md.
-All requirements in CONTRACT.md are LAWS.
-Violation of CONTRACT.md = ILLEGAL (FELONY)
-```
+**🚨 NON-COMPLIANT**
 
-**§ 4.1.7 Documentation Mandate**
-```
-Every commit must explain:
-- WHAT changed
-- WHY it changed
-- HOW to verify it works
-- IF it violates any prior law
+The codebase fails to meet 7 out of 8 core requirements. Feature development is suspended until core requirements are satisfied.
 
-Missing documentation = ILLEGAL (FELONY)
-```
+---
 
-**§ 4.1.8 Verification Mandate**
-```
-No commit is LEGAL until proven compliant:
-✅ npm run build succeeds
-✅ npm run typecheck = 0 errors
-✅ All imports resolve
-✅ No dead code
-✅ Tests pass
-✅ Documentation complete
+## ARTICLE IV: REMEDIATION PATHWAY
 
-If ANY check fails = ILLEGAL (FELONY)
-```
+### Phase 0: Architecture Restructure (FIRST)
 
-### SECTION 4.2: ENFORCEMENT MECHANISM
+Execute `ARCHITECTURE_RESTRUCTURE.md`:
+1. Move `/seed/` → `/dbal/shared/seeds/`
+2. Move `/prisma/` → `/dbal/development/prisma/`
+3. Update package.json scripts
+4. Update DBAL exports
+5. Delete old folders
+6. Verify no broken references
 
-**Pre-Commit Hook (The Law Enforcement)**
+**Timeline:** 30-60 minutes
+**Mandatory before Phase 1**
+
+### Phase 1: DBAL Compilation Recovery
+
+Execute `CODEBASE_RECOVERY_PLAN.md`:
+1. Fix/create codegen script (`gen_types.ts`)
+2. Fix 8 TypeScript strict mode violations
+3. Compile DBAL to dist/
+4. Verify all exports available
+
+**Timeline:** 2-3 hours
+**Mandatory before Phase 2**
+
+### Phase 2: Database Initialization
+
+1. Generate Prisma client: `npm run db:generate`
+2. Initialize database: `npm run db:push`
+3. Verify: `/dbal/development/prisma/dev.db` exists
+
+**Timeline:** 30 minutes
+
+### Phase 3: Frontend Recovery
+
+1. Remove DBAL source from frontend tsconfig
+2. Fix Next.js route handler signatures (4 routes)
+3. Verify typecheck: 27 errors → 0 errors
+4. Verify build: succeeds
+
+**Timeline:** 1-2 hours
+
+### Phase 4: Verification
+
+Run full test suite:
+- `npm run build` → ✅ PASS
+- `npm run typecheck` → ✅ 0 ERRORS
+- `npm run test:unit` → ✅ ALL PASS
+- `npm run test:e2e` → ✅ ALL RUN
+- `npm run dev` → ✅ STARTS
+
+**Timeline:** 30 minutes
+
+**Total Estimated Effort:** 4-5 hours to full compliance
+
+---
+
+## ARTICLE V: ENFORCEMENT
+
+### Enforcement Mechanism
+
+A pre-commit hook MUST enforce these requirements before code is committed:
 
 ```bash
 #!/bin/bash
-# The Police
 
-npm run build || { echo "CRIME: Build fails"; exit 1; }
-npm run typecheck || { echo "CRIME: Type errors"; exit 1; }
-npm run test:unit || { echo "CRIME: Tests fail"; exit 1; }
-npm run lint || { echo "CRIME: Linting failed"; exit 1; }
+echo "ENFORCEMENT: Verifying code compliance..."
 
-# If any crime is detected, the commit is BLOCKED.
-# This is not negotiable.
+# Requirement 1: Build Compliance
+npm run build || { echo "FAIL: Build does not compile"; exit 1; }
+
+# Requirement 2: Type Safety
+npm run typecheck || { echo "FAIL: TypeScript errors exist"; exit 1; }
+
+# Requirement 3: Import Resolution (caught by typecheck)
+# Already checked above
+
+# Requirement 7: No dead code (lint)
+npm run lint || { echo "FAIL: Lint errors detected"; exit 1; }
+
+# All checks passed
+echo "PASS: Code is compliant. Commit allowed."
+exit 0
+```
+
+**This hook is NOT negotiable.**
+
+---
+
+## ARTICLE VI: STANDARDS GOING FORWARD
+
+### Post-Recovery Standards
+
+Once the codebase achieves compliance, all future commits MUST:
+
+1. **Pass all verification checks** (ARTICLE II)
+2. **Include complete documentation** (commit message + code comments)
+3. **Have zero type errors** (strict mode enabled)
+4. **Have zero broken imports** (all modules exist)
+5. **Maintain database consistency** (schema + seed aligned)
+6. **Comply with architecture** (no duplicate implementations)
+7. **Be testable** (include or update tests)
+8. **Be reviewable** (understandable in 5 minutes by another engineer)
+
+### Probation Period
+
+After achieving initial compliance, the codebase enters a probation period:
+
+- **Duration:** 30 consecutive commits with zero violations
+- **Requirement:** All commits must pass all verification checks
+- **Violation:** Any failed check results in immediate revert
+- **Post-Probation:** Full feature development can resume
+
+---
+
+## ARTICLE VII: BINDING AUTHORITY
+
+**This specification IS binding.**
+
+This is not guidance. This is not aspirational. This is contractual requirement.
+
+- All developers agree to these terms by committing code
+- All code reviewers agree to enforce these terms
+- All merged code is warrantied to meet these requirements
+
+**Failure to comply is grounds for:**
+- Immediate rejection of commit
+- Automatic reversion if merged
+- Loss of merge privileges until pattern changes
+- Code review assignment until compliant pattern demonstrated
+
+---
+
+## ARTICLE VIII: CHANGE CONTROL
+
+Any modification to this specification requires:
+1. Written proposal with justification
+2. Approval by all active maintainers
+3. Update to this file with dated change record
+4. Communication to all contributors
+
+**No unilateral changes permitted.**
+
+---
+
+## SIGNATURES & ACKNOWLEDGMENT
+
+By committing code to MetaBuilder, you acknowledge and agree to:
+
+- ✅ I have read this specification completely
+- ✅ I understand these are contractual requirements, not suggestions
+- ✅ I agree to comply with all verification checks before committing
+- ✅ I agree to maintain these standards in all future contributions
+- ✅ I understand non-compliance results in automatic rejection/revert
+- ✅ I understand this is binding for all code I contribute
+
+---
+
+## APPENDIX A: QUICK REFERENCE
+
+### Check Before Every Commit
+
+```bash
+# 1. Build
+npm run build
+
+# 2. Types
+npm run typecheck
+
+# 3. Tests
+npm run test:unit
+npm run test:e2e
+
+# 4. Lint
+npm run lint
+
+# If all pass, commit is allowed
+```
+
+### Execution Commands
+
+```bash
+# Architecture Restructure
+# Execute: ARCHITECTURE_RESTRUCTURE.md (30-60 min)
+
+# DBAL Recovery
+# Execute: CODEBASE_RECOVERY_PLAN.md (4-5 hours)
+
+# Database Setup
+npm run db:generate
+npm run db:push
+
+# Verification
+npm run dev  # Should start without errors
 ```
 
 ---
 
-## ARTICLE V: REHABILITATION PROGRAM
+## APPENDIX B: DEFINITIONS
 
-**The codebase is GUILTY and must be rehabilitated.**
-
-### STEP 1: Confession
-```
-Acknowledge all crimes:
-- DBAL won't compile ✓
-- Database not initialized ✓
-- Broken imports ✓
-- Dead code ✓
-- Missing dependencies ✓
-- Specification violations ✓
-- Architecture violations (seed/schema not in DBAL) ✓
-```
-
-### STEP 2: Architecture Restructure (MUST DO FIRST)
-```
-Execute ARCHITECTURE_RESTRUCTURE.md:
-1. Move /seed/ → /dbal/shared/seeds/
-2. Move /prisma/schema.prisma → /dbal/development/prisma/
-3. Create seed orchestration in DBAL
-4. Update all package.json scripts
-5. Update DBAL exports (add seedDatabase)
-6. Update frontend bootstrap code
-7. Delete old /seed/ and /prisma/ folders
-8. Verify no broken references
-
-THIS MUST COMPLETE BEFORE STEP 3.
-Fixing code without fixing architecture = perpetuating wrong design.
-```
-
-### STEP 3: Restitution (AFTER RESTRUCTURE)
-```
-Execute CODEBASE_RECOVERY_PLAN.md:
-1. Fix DBAL codegen
-2. Fix TypeScript errors
-3. Compile DBAL successfully
-4. Initialize database
-5. Fix frontend imports
-6. Update Next.js routes
-7. Verify all systems operational
-```
-
-### STEP 4: Probation
-```
-ALL future commits must:
-- Pass compilation
-- Pass type checking
-- Pass tests
-- Comply with CONTRACT.md
-- Be properly documented
-
-Any violation = immediate revert.
-No exceptions.
-```
-
-### STEP 5: Permanent Record
-```
-This crime is forever recorded in git history.
-Future developers will see:
-- The crimes committed
-- The rehabilitation
-- The strict law enforcement
-
-This is intentional. It is a teaching tool.
-Poor software is not tolerated.
-```
+- **Build:** The process of compiling TypeScript to JavaScript and generating artifacts
+- **Compliance:** Meeting all requirements defined in Articles I-VIII
+- **Non-Compliance:** Failing to meet any core requirement
+- **Code Review:** Process of verifying compliance before merge
+- **Acceptance Criteria:** Objective, measurable standards for each requirement
+- **Remediation:** Actions required to bring non-compliant code into compliance
+- **Probation:** Period of heightened monitoring following initial compliance achievement
 
 ---
 
-## ARTICLE VI: FINAL JUDGMENT
+**Document Status:** ACTIVE
+**Last Updated:** January 15, 2026
+**Version:** 1.0
+**Authority:** Project Specification
+**Binding:** YES
 
-### CURRENT LEGAL STATUS
-
-**Status:** 🚨 **CONVICTED**
-
-```
-✗ Build: FAILS (ILLEGAL)
-✗ Types: 27 ERRORS (ILLEGAL x 27)
-✗ Imports: BROKEN (ILLEGAL)
-✗ Database: MISSING (ILLEGAL)
-✗ DBAL: BROKEN (ILLEGAL)
-✗ CONTRACT: VIOLATED (ILLEGAL)
-```
-
-**Sentence:** REHABILITATION (See CODEBASE_RECOVERY_PLAN.md)
-
-**Parole Conditions:**
-1. Complete all rehabilitation steps
-2. Pass all compliance audits
-3. Maintain zero violations for 30 consecutive commits
-4. Demonstrate ability to write legal code before resuming feature development
-
-### PROBATION STATUS
-
-❌ NOT YET ELIGIBLE FOR PAROLE
-
-Cannot proceed with:
-- Feature development
-- Refactoring
-- New packages
-- Any enhancement
-
-Must proceed with:
-- Recovery (MANDATORY)
-- Fixing crimes (NO CHOICE)
-- Compliance verification (MANDATORY)
-
----
-
-## ARTICLE VII: OATH OF COMPLIANCE
-
-**By reading this document, you are bound by it.**
-
-**You agree:**
-
-```
-1. I will not commit code that does not compile.
-2. I will not commit code with type errors.
-3. I will not commit code with broken imports.
-4. I will not commit dead code.
-5. I will not commit unverified claims.
-6. I will not violate CONTRACT.md.
-7. I will verify all my code before committing.
-8. I understand that poor code is not a mistake—it is a crime.
-9. I will participate in the recovery program.
-10. I will help ensure this codebase achieves and maintains legal compliance.
-```
-
-**Signature:** By committing code to MetaBuilder, you electronically sign this oath.
-
----
-
-## ARTICLE VIII: THE CRIMINAL CODE ITSELF
-
-**This document (CONTRACT.md) is LAW.**
-
-It is not guidance. It is not a suggestion. It is not aspirational.
-
-**It is a CRIMINAL CODE.**
-
-Every requirement herein is a statute. Every violation is a crime. Every conviction has consequences.
-
-**There is no negotiation with the law.**
-
-The law says:
-- Code must compile ✓
-- Code must have zero type errors ✓
-- Code must have no broken imports ✓
-- Code must be testable ✓
-- Code must be documented ✓
-- Code must comply with CONTRACT.md ✓
-
-**These are not optional.**
-
----
-
-## EXECUTION
-
-**This Criminal Code is EFFECTIVE IMMEDIATELY.**
-
-**All prior assumptions of compliance are REVOKED.**
-
-**All existing code is presumed GUILTY until proven INNOCENT.**
-
-**Investigation begins now.**
-
-**Rehabilitation begins now.**
-
-**No feature work, no refactoring, no PRs until the codebase is EXONERATED.**
-
----
-
-**SEALED THIS 15TH DAY OF JANUARY, 2026**
-
-**IN THE CRIMINAL COURT OF METABUILDER**
-
-**THE PEOPLE v. BROKEN SOFTWARE**
-
-**VERDICT: GUILTY ON ALL COUNTS**
-
-**SENTENCE: REHABILITATION (NO PAROLE)**
-
----
-
-```
-                    ⚖️  JUSTICE FOR GOOD CODE  ⚖️
-```
+This specification supersedes all prior informal quality guidelines and represents the authoritative standard for MetaBuilder code quality.
