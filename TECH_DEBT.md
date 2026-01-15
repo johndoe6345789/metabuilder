@@ -21,14 +21,29 @@
 
 **Impact**: DBAL can't be versioned/deployed independently, code duplication, poor separation of concerns
 
-**Reference Document**: `/DBAL_REFACTOR_PLAN.md` - Contains full implementation details
+**Reference Documents**:
+- `/DBAL_REFACTOR_PLAN.md` - Architectural overview
+- `/TD_1_REFACTORING_GUIDE.md` - ⭐ **Step-by-step execution guide with exact refactoring patterns**
 
 **Bot Instructions**:
-1. Read `/DBAL_REFACTOR_PLAN.md` completely to understand all 3 phases
-2. Follow the "Implementation Order" section (page 356-375) exactly
-3. After each step, verify against the "Verification Checklist" (page 379-392)
-4. Commit after each phase completes successfully
-5. Total work: 13 atomic steps across 3 phases
+
+**Phase 1 (DBAL Foundation)** - Already Done ✅
+1. ✅ Prisma schema moved to `/dbal/development/prisma/schema.prisma`
+2. ✅ DBAL owns all Prisma initialization
+3. ✅ DBAL exports `getDBALClient()`, `seedDatabase()`, `getPrismaClient()`
+
+**Phase 2 (Frontend Cleanup)** - Ready for execution
+1. Read `/TD_1_REFACTORING_GUIDE.md` - Exact refactoring patterns for 100+ files
+2. Follow refactoring approach of choice (A: Automated, B: Manual, C: Git-based)
+3. Refactor 14 Prisma imports → use `db` from `/lib/db-client.ts`
+4. Refactor 110+ getAdapter() calls → use `db.entity.list()` pattern
+5. Delete old modules: `/lib/dbal-client/`, `/lib/database-dbal/`, `/lib/config/prisma.ts`
+6. Verify with checklist in `/TD_1_REFACTORING_GUIDE.md`
+
+**Phase 3 (Build System)** - Simple configuration updates
+1. Update DBAL package.json (if needed)
+2. Update TypeScript paths (if needed)
+3. Update root package.json (if needed)
 
 **Expected Outcome**:
 - ✅ Prisma schema moved to `/dbal/development/prisma/schema.prisma`
