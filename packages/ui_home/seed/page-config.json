@@ -1,6 +1,5 @@
 [
   {
-    "$schema": "https://metabuilder.dev/schemas/seed/page-config/schema.json",
     "id": "page_ui_home_root",
     "path": "/",
     "title": "MetaBuilder",
