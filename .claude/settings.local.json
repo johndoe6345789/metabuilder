@@ -63,7 +63,8 @@
       "Bash(node -e:*)",
       "Bash(git push:*)",
       "WebFetch(domain:www.prisma.io)",
-      "WebFetch(domain:pris.ly)"
+      "WebFetch(domain:pris.ly)",
+      "Bash(wc:*)"
     ]
   },
   "spinnerTipsEnabled": false

@@ -17,6 +17,10 @@ import { AccessDenied } from '@/components/AccessDenied'
  * This allows god/supergod users to override any route through the admin panel,
  * while still having sensible defaults from packages.
  */
+
+// Disable static generation - this page requires dynamic database access
+export const dynamic = 'force-dynamic'
+
 export default async function RootPage() {
   const client = getDBALClient()
 

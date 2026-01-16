@@ -9,7 +9,7 @@ export type {
 export { DB_KEYS } from './types'
 
 // DBAL Client
-export type { DBALAdapter, ListOptions, ListResult } from './dbal-client'
+export type { LegacyAdapter } from './dbal-client'
 export { closeAdapter, getAdapter } from './dbal-client'
 
 // Operations

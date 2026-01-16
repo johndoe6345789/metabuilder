@@ -8,17 +8,19 @@ type DBALSMTPConfig = SMTPConfig
  */
 export async function getSMTPConfig(): Promise<SMTPConfig | null> {
   const adapter = getAdapter()
-  const result = (await adapter.list('SMTPConfig')) as { data: DBALSMTPConfig[] }
-  const config = result.data[0]
-  if (config === undefined) return null
+  const result = await adapter.list('SMTPConfig')
+  const rawConfig = result.data[0] as unknown
+  if (!rawConfig) return null
+
+  const config = rawConfig as DBALSMTPConfig
 
   return {
-    host: config.host,
-    port: config.port,
-    secure: config.secure,
-    username: config.username,
-    password: config.password,
-    fromEmail: config.fromEmail,
-    fromName: config.fromName,
+    host: String(config.host),
+    port: Number(config.port),
+    secure: Boolean(config.secure),
+    username: String(config.username),
+    password: String(config.password),
+    fromEmail: String(config.fromEmail),
+    fromName: String(config.fromName),
   }
 }
