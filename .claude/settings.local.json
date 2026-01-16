@@ -68,7 +68,8 @@
       "Bash(for pkg in /Users/rmac/Documents/metabuilder/packages/*/)",
       "Bash(do if [ ! -d \"$pkg/seed\" ])",
       "Bash(then basename \"$pkg\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(sqlite3:*)"
     ]
   },
   "spinnerTipsEnabled": false

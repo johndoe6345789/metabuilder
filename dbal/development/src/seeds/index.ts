@@ -17,6 +17,7 @@ import fs from 'fs'
 import path from 'path'
 import yaml from 'yaml'
 import type { DBALClient } from '../core/client'
+import { getPrismaClient } from '../runtime/prisma-client'
 
 /**
  * Seed the database using seed data from /dbal/shared/seeds/ folder
@@ -27,8 +28,10 @@ import type { DBALClient } from '../core/client'
  * @param dbal DBALClient instance for database access
  */
 export async function seedDatabase(dbal: DBALClient): Promise<void> {
-  const seedDir = path.resolve(__dirname, '../../shared/seeds/database')
-  const packagesDir = path.resolve(__dirname, '../../../packages')
+  // __dirname resolves to dist directory, so we need to go up 3 levels
+  // dist -> src -> development -> . -> dbal -> shared/seeds/database
+  const seedDir = path.resolve(__dirname, '../../../shared/seeds/database')
+  const packagesDir = path.resolve(__dirname, '../../../../packages')
 
   // 1. Load installed_packages.yaml
   const packagesPath = path.join(seedDir, 'installed_packages.yaml')
@@ -36,26 +39,44 @@ export async function seedDatabase(dbal: DBALClient): Promise<void> {
   const packagesData = yaml.parse(packagesYaml)
 
   // 2. Insert packages (skip if already exists - idempotent)
+  // Note: Using Prisma directly for system packages (tenantId = null) to bypass ACL
+  const prisma = getPrismaClient()
   for (const pkg of packagesData.records) {
     try {
-      await dbal.installedPackages.read(pkg.packageId)
-      console.log(`Package ${pkg.packageId} already installed, skipping`)
-    } catch (error) {
-      // Package doesn't exist, create it
-      // Parse config from YAML string to JSON object
-      const config = typeof pkg.config === 'string'
-        ? JSON.parse(pkg.config.trim())
-        : pkg.config || {}
+      const existing = await prisma.installedPackage.findFirst({
+        where: { packageId: pkg.packageId }
+      })
+      if (existing) {
+        console.log(`Package ${pkg.packageId} already installed, skipping`)
+        continue
+      }
+    } catch (e) {
+      // Not found, proceed with creation
+    }
 
-      await dbal.installedPackages.create({
-        packageId: pkg.packageId,
-        tenantId: pkg.tenantId || null,
-        installedAt: BigInt(Date.now()),
-        version: pkg.version,
-        enabled: pkg.enabled,
-        config: JSON.stringify(config)
+    // Parse config from YAML string to JSON object
+    const config = typeof pkg.config === 'string'
+      ? JSON.parse(pkg.config.trim())
+      : pkg.config || {}
+
+    try {
+      await prisma.installedPackage.create({
+        data: {
+          packageId: pkg.packageId,
+          tenantId: pkg.tenantId || null,
+          installedAt: BigInt(Date.now()),
+          version: pkg.version,
+          enabled: pkg.enabled,
+          config: JSON.stringify(config)
+        }
       })
       console.log(`Installed package: ${pkg.packageId}`)
+    } catch (error) {
+      if ((error as any).code === 'P2002') {
+        console.log(`Package ${pkg.packageId} already exists, skipping`)
+      } else {
+        throw error
+      }
     }
   }
 
@@ -80,33 +101,43 @@ export async function seedDatabase(dbal: DBALClient): Promise<void> {
 
           for (const page of pages) {
             // Check if page already exists
-            const existing = await dbal.pageConfigs.list({
-              filter: { path: page.path }
+            const existing = await prisma.pageConfig.findFirst({
+              where: { path: page.path }
             })
 
-            if (existing.data.length === 0) {
-              await dbal.pageConfigs.create({
-                id: page.id || `page_${pkg.packageId}_${page.path.replace(/\//g, '_')}`,
-                tenantId: page.tenantId || null,
-                packageId: pkg.packageId,
-                path: page.path,
-                title: page.title,
-                description: page.description || null,
-                icon: page.icon || null,
-                component: page.component,
-                componentTree: page.componentTree || '{}', // Empty for now - will be populated later
-                level: page.level || 0,
-                requiresAuth: page.requiresAuth === true,
-                requiredRole: page.requiredRole || null,
-                parentPath: page.parentPath || null,
-                sortOrder: page.sortOrder || 0,
-                isPublished: page.isPublished === true,
-                params: page.params || null,
-                meta: page.meta || null,
-                createdAt: BigInt(Date.now()),
-                updatedAt: BigInt(Date.now())
-              })
-              console.log(`Created PageConfig for: ${page.path}`)
+            if (!existing) {
+              try {
+                await prisma.pageConfig.create({
+                  data: {
+                    id: page.id || `page_${pkg.packageId}_${page.path.replace(/\//g, '_')}`,
+                    tenantId: page.tenantId || null,
+                    packageId: pkg.packageId,
+                    path: page.path,
+                    title: page.title,
+                    description: page.description || null,
+                    icon: page.icon || null,
+                    component: page.component,
+                    componentTree: page.componentTree || '{}',
+                    level: page.level || 0,
+                    requiresAuth: page.requiresAuth === true,
+                    requiredRole: page.requiredRole || null,
+                    parentPath: page.parentPath || null,
+                    sortOrder: page.sortOrder || 0,
+                    isPublished: page.isPublished === true,
+                    params: page.params || null,
+                    meta: page.meta || null,
+                    createdAt: BigInt(Date.now()),
+                    updatedAt: BigInt(Date.now())
+                  }
+                })
+                console.log(`Created PageConfig for: ${page.path}`)
+              } catch (error) {
+                if ((error as any).code === 'P2002') {
+                  console.log(`PageConfig ${page.path} already exists, skipping`)
+                } else {
+                  throw error
+                }
+              }
             }
           }
         }

@@ -9,17 +9,18 @@ export function createPrismaContext(
   console.log('[DBAL Prisma] Creating Prisma context')
   console.log('[DBAL Prisma] Database URL parameter:', databaseUrl)
   console.log('[DBAL Prisma] Options:', options)
-  
+
   const inferredDialect = options?.dialect ?? inferDialectFromUrl(databaseUrl)
   console.log('[DBAL Prisma] Inferred dialect:', inferredDialect)
-  
+
   let prisma: PrismaClient
-  
+
   // For SQLite (or when dialect cannot be inferred), we need to use the driver adapter
   if (inferredDialect === 'sqlite' || !databaseUrl || inferredDialect === undefined) {
-    // Use relative path as fallback
-    const fallbackUrl = 'file:../../prisma/prisma/dev.db'
-    const finalUrl = databaseUrl || fallbackUrl
+    // Use environment variable or absolute fallback
+    const envUrl = process.env.DATABASE_URL
+    const fallbackUrl = 'file:/Users/rmac/Documents/metabuilder/dbal/shared/prisma/dev.db'
+    const finalUrl = databaseUrl || envUrl || fallbackUrl
     
     // Ensure URL has file: prefix for SQLite
     const sqliteUrl = finalUrl.startsWith('file:') ? finalUrl : `file:${finalUrl}`
