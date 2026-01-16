@@ -45,7 +45,7 @@ import {
   ColorPicker,
   FileUpload,
   FormField,
-} from '@/fakemui/inputs'
+} from '@/fakemui/fakemui/inputs'
 
 // Surfaces / Containers
 import {
@@ -63,7 +63,7 @@ import {
   AppBar,
   Toolbar,
   Drawer,
-} from '@/fakemui/surfaces'
+} from '@/fakemui/fakemui/surfaces'
 
 // Layout
 import {
@@ -75,7 +75,7 @@ import {
   ImageList,
   ImageListItem,
   ImageListItemBar,
-} from '@/fakemui/layout'
+} from '@/fakemui/fakemui/layout'
 
 // Data Display
 import {
@@ -102,7 +102,7 @@ import {
   TablePagination,
   TableSortLabel,
   Tooltip,
-} from '@/fakemui/data-display'
+} from '@/fakemui/fakemui/data-display'
 
 // Feedback
 import {
@@ -110,7 +110,7 @@ import {
   Backdrop,
   Skeleton,
   Snackbar,
-} from '@/fakemui/feedback'
+} from '@/fakemui/fakemui/feedback'
 
 // Navigation
 import {
@@ -135,7 +135,7 @@ import {
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
-} from '@/fakemui/navigation'
+} from '@/fakemui/fakemui/navigation'
 
 // Utils
 import {
@@ -147,7 +147,7 @@ import {
   CssBaseline,
   GlobalStyles,
   NoSsr,
-} from '@/fakemui/utils'
+} from '@/fakemui/fakemui/utils'
 
 // Atoms
 import {
@@ -160,7 +160,7 @@ import {
   States,
   EditorWrapper,
   AutoGrid,
-} from '@/fakemui/atoms'
+} from '@/fakemui/fakemui/atoms'
 
 // Lab (Experimental)
 import {
@@ -169,12 +169,12 @@ import {
   Timeline,
   TreeView,
   TreeItem,
-} from '@/fakemui/lab'
+} from '@/fakemui/fakemui/lab'
 
 // X (Advanced)
 import {
   DataGrid,
-} from '@/fakemui/x'
+} from '@/fakemui/fakemui/x'
 
 // Icons
 import {
@@ -309,7 +309,6 @@ export const FAKEMUI_REGISTRY: Record<string, React.ComponentType<any>> = {
   Backdrop,
   Skeleton,
   Snackbar,
-  States,
   EditorWrapper,
 
   // Navigation (22 components)
@@ -431,7 +430,7 @@ export const FAKEMUI_CATEGORIES = {
   ],
 
   custom: [
-    'Alert', 'Backdrop', 'Skeleton', 'Snackbar', 'States',
+    'Alert', 'Backdrop', 'Skeleton', 'Snackbar',
     'EditorWrapper', 'ClickAwayListener', 'CssBaseline',
     'GlobalStyles', 'NoSsr', 'TreeView',
   ],
