@@ -7,8 +7,8 @@ import { getDBALClient, seedDatabase } from '@/dbal'
  * Database schema should already be created via `npm run db:push`
  * 
  * Uses DBAL seed system which loads data from:
- * - /dbal/shared/seeds/database/*.yaml - Base system data
- * - /packages/*/page-config/*.json - Package-specific routes
+ * - Base system data from /dbal/shared/seeds/database/*.yaml
+ * - Package routes from /packages/* directories
  */
 export async function POST() {
   try {
