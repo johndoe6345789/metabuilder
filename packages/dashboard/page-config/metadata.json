@@ -1,0 +1,6 @@
+{
+  "entity": "page-config",
+  "packageId": "dashboard",
+  "description": "Page routes for dashboard",
+  "version": "1.0.0"
+}

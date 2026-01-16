@@ -1,0 +1,6 @@
+{
+  "entity": "page-config",
+  "packageId": "ui_home",
+  "description": "Home page routes",
+  "version": "1.0.0"
+}

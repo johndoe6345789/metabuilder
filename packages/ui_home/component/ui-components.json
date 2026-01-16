@@ -1,0 +1,255 @@
+[
+  {
+    "id": "comp_home_button",
+    "name": "Home Page Button",
+    "description": "Primary call-to-action button for home page",
+    "category": "form",
+    "version": "1.0.0",
+    "isPublished": true,
+    "schema": {
+      "type": "object",
+      "properties": {
+        "label": { "type": "string", "default": "Get Started" },
+        "variant": { "type": "string", "enum": ["default", "primary", "secondary", "outline", "ghost"], "default": "primary" },
+        "size": { "type": "string", "enum": ["sm", "md", "lg"], "default": "md" },
+        "disabled": { "type": "boolean", "default": false },
+        "loading": { "type": "boolean", "default": false }
+      }
+    },
+    "template": {
+      "type": "Button",
+      "props": {
+        "variant": "{{variant}}",
+        "size": "{{size}}",
+        "disabled": "{{disabled}}",
+        "loading": "{{loading}}"
+      },
+      "children": "{{label}}"
+    },
+    "props": {
+      "label": "Get Started",
+      "variant": "primary",
+      "size": "md",
+      "disabled": false,
+      "loading": false
+    },
+    "events": [
+      { "name": "onClick", "description": "Fired when button is clicked" }
+    ]
+  },
+  {
+    "id": "comp_home_card",
+    "name": "Feature Card",
+    "description": "Card component for displaying feature highlights",
+    "category": "layout",
+    "version": "1.0.0",
+    "isPublished": true,
+    "schema": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "icon": { "type": "string" }
+      }
+    },
+    "template": {
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardContent",
+          "children": [
+            {
+              "type": "Box",
+              "style": { "marginBottom": "1rem" },
+              "children": {
+                "type": "Icon",
+                "props": { "name": "{{icon}}" }
+              }
+            },
+            {
+              "type": "Typography",
+              "props": { "variant": "h6" },
+              "children": "{{title}}"
+            },
+            {
+              "type": "Typography",
+              "props": { "variant": "body2", "color": "textSecondary" },
+              "children": "{{description}}"
+            }
+          ]
+        }
+      ]
+    },
+    "props": {
+      "title": "Feature Title",
+      "description": "Feature description goes here",
+      "icon": "Star"
+    }
+  },
+  {
+    "id": "comp_home_hero",
+    "name": "Hero Section",
+    "description": "Large hero section with title and subtitle",
+    "category": "layout",
+    "version": "1.0.0",
+    "isPublished": true,
+    "schema": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "background": { "type": "string", "default": "#f5f5f5" }
+      }
+    },
+    "template": {
+      "type": "Box",
+      "style": {
+        "background": "{{background}}",
+        "padding": "4rem 2rem",
+        "textAlign": "center",
+        "minHeight": "400px",
+        "display": "flex",
+        "flexDirection": "column",
+        "justifyContent": "center"
+      },
+      "children": [
+        {
+          "type": "Typography",
+          "props": { "variant": "h1" },
+          "style": { "marginBottom": "1rem", "fontSize": "3rem", "fontWeight": "bold" },
+          "children": "{{title}}"
+        },
+        {
+          "type": "Typography",
+          "props": { "variant": "h4", "color": "textSecondary" },
+          "children": "{{subtitle}}"
+        }
+      ]
+    },
+    "props": {
+      "title": "MetaBuilder",
+      "subtitle": "Data-driven application platform",
+      "background": "#f5f5f5"
+    }
+  },
+  {
+    "id": "comp_home_form",
+    "name": "Contact Form",
+    "description": "Simple contact form with email and message fields",
+    "category": "form",
+    "version": "1.0.0",
+    "isPublished": true,
+    "schema": {
+      "type": "object",
+      "properties": {
+        "showPhone": { "type": "boolean", "default": false },
+        "submitLabel": { "type": "string", "default": "Send Message" }
+      }
+    },
+    "template": {
+      "type": "Box",
+      "style": { "maxWidth": "500px", "margin": "0 auto" },
+      "children": [
+        {
+          "type": "FormField",
+          "props": { "label": "Email" },
+          "children": {
+            "type": "TextField",
+            "props": { "type": "email", "placeholder": "your@email.com", "fullWidth": true }
+          }
+        },
+        {
+          "type": "FormField",
+          "props": {
+            "label": "Message",
+            "condition": "{{showPhone}}"
+          },
+          "children": {
+            "type": "Textarea",
+            "props": { "placeholder": "Your message here...", "fullWidth": true, "rows": 4 }
+          }
+        },
+        {
+          "type": "Box",
+          "style": { "marginTop": "1rem" },
+          "children": {
+            "type": "Button",
+            "props": { "variant": "primary", "fullWidth": true },
+            "children": "{{submitLabel}}"
+          }
+        }
+      ]
+    },
+    "props": {
+      "showPhone": false,
+      "submitLabel": "Send Message"
+    },
+    "events": [
+      { "name": "onSubmit", "description": "Fired when form is submitted" }
+    ]
+  },
+  {
+    "id": "comp_home_grid",
+    "name": "Feature Grid",
+    "description": "Responsive grid of feature cards",
+    "category": "layout",
+    "version": "1.0.0",
+    "isPublished": true,
+    "schema": {
+      "type": "object",
+      "properties": {
+        "columns": { "type": "number", "default": 3, "minimum": 1, "maximum": 4 },
+        "gap": { "type": "string", "default": "2rem" }
+      }
+    },
+    "template": {
+      "type": "Grid",
+      "props": {
+        "container": true,
+        "spacing": "{{gap}}"
+      },
+      "children": [
+        {
+          "type": "Grid",
+          "props": { "item": true, "xs": 12, "sm": 6, "md": 4 },
+          "children": {
+            "type": "comp_home_card",
+            "props": {
+              "title": "Fast",
+              "description": "Lightning-quick performance",
+              "icon": "Zap"
+            }
+          }
+        },
+        {
+          "type": "Grid",
+          "props": { "item": true, "xs": 12, "sm": 6, "md": 4 },
+          "children": {
+            "type": "comp_home_card",
+            "props": {
+              "title": "Simple",
+              "description": "Easy to use and configure",
+              "icon": "Smile"
+            }
+          }
+        },
+        {
+          "type": "Grid",
+          "props": { "item": true, "xs": 12, "sm": 6, "md": 4 },
+          "children": {
+            "type": "comp_home_card",
+            "props": {
+              "title": "Powerful",
+              "description": "Feature-rich and extensible",
+              "icon": "Rocket"
+            }
+          }
+        }
+      ]
+    },
+    "props": {
+      "columns": 3,
+      "gap": "2rem"
+    }
+  }
+]

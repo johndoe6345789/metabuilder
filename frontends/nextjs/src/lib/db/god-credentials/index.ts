@@ -17,10 +17,8 @@ export async function setGodCredentialsExpiry(timestamp: number): Promise<void> 
   const adapter = getAdapter()
   await adapter.upsert(
     'SystemConfig',
-    'key',
-    'godCredentialsExpiry',
-    { key: 'godCredentialsExpiry', value: String(timestamp) },
-    { value: String(timestamp) }
+    { key: 'godCredentialsExpiry' },
+    { key: 'godCredentialsExpiry', value: String(timestamp) }
   )
 }
 
@@ -65,10 +63,8 @@ export async function setGodCredentialsExpiryDuration(duration: number): Promise
   const adapter = getAdapter()
   await adapter.upsert(
     'SystemConfig',
-    'key',
-    'godCredentialsExpiryDuration',
-    { key: 'godCredentialsExpiryDuration', value: String(duration) },
-    { value: String(duration) }
+    { key: 'godCredentialsExpiryDuration' },
+    { key: 'godCredentialsExpiryDuration', value: String(duration) }
   )
 }
 

@@ -39,7 +39,19 @@ export function createPrismaClient(config?: PrismaClientConfig): PrismaClient {
   }
 
   // Production/Development mode: Use SQLite adapter with file or URL
-  const databaseUrl = dbUrl || 'file:./prisma/dev.db'
+  let databaseUrl = dbUrl
+
+  // If no DATABASE_URL is set, use a default that works from any directory
+  if (!databaseUrl) {
+    // Detect if we're running from Next.js (frontends/nextjs)
+    const cwd = process.cwd()
+    let projectRoot = cwd
+    if (cwd.endsWith('frontends/nextjs') || cwd.endsWith('frontends\\nextjs')) {
+      projectRoot = require('path').resolve(cwd, '../..')
+    }
+    databaseUrl = `file:${require('path').resolve(projectRoot, 'dbal/shared/prisma/dev.db')}`
+  }
+
   const adapter = new PrismaBetterSqlite3({
     url: databaseUrl,
   })

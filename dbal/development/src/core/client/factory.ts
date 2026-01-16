@@ -44,7 +44,8 @@ export function createDBALClient(config?: DBALClientFactoryConfig): DBALClient {
   const prisma = createPrismaClient(prismaConfig)
 
   // Create DBAL client with Prisma
-  const databaseUrl = config?.databaseUrl || config?.database?.url
+  // Use databaseUrl from config, database.url, or environment DATABASE_URL
+  const databaseUrl = config?.databaseUrl || config?.database?.url || process.env.DATABASE_URL
   const dbalConfig: DBALConfig = {
     mode: config?.mode || 'production',
     adapter: 'prisma',

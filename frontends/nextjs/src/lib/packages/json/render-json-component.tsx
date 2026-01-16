@@ -4,9 +4,12 @@
  * Renders JSON component definitions to React elements
  */
 
+'use client'
+
 import React from 'react'
 import type { JSONComponent } from './types'
 import type { JsonValue } from '@/types/utility-types'
+import { FAKEMUI_REGISTRY } from '@/lib/fakemui-registry'
 
 export interface RenderContext {
   props: Record<string, JsonValue>
@@ -16,11 +19,14 @@ export interface RenderContext {
 
 /**
  * Render a JSON component definition to React
+ *
+ * By default, uses the FAKEMUI_REGISTRY to render components.
+ * Pass a custom ComponentRegistry to override specific components.
  */
 export function renderJSONComponent(
   component: JSONComponent,
   props: Record<string, JsonValue> = {},
-  ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>> = {}
+  ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>> = FAKEMUI_REGISTRY
 ): React.ReactElement {
   if (component.render === undefined) {
     return (

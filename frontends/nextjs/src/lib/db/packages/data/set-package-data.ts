@@ -9,9 +9,9 @@ export async function setPackageData(
   data: PackageSeedData
 ): Promise<void> {
   const adapter = getAdapter()
-  await adapter.upsert('PackageData', {
-    where: { packageId },
-    update: { data: JSON.stringify(data) },
-    create: { packageId, data: JSON.stringify(data) },
-  })
+  await adapter.upsert(
+    'PackageData',
+    { packageId },
+    { packageId, data: JSON.stringify(data) }
+  )
 }

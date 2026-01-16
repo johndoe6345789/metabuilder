@@ -172,7 +172,12 @@ export const createPageConfigOperations = (adapter: DBALAdapter, tenantId?: stri
     return result
   },
   list: options => {
+    // For public pages, allow listing pages with tenantId: null
     const tenantFilter = resolveTenantFilter(tenantId, options?.filter)
+    if (!tenantFilter && !tenantId) {
+      // No configured tenant and no filter provided - allow listing public pages (tenantId: null)
+      return adapter.list('PageConfig', { ...options, filter: { ...(options?.filter ?? {}), tenantId: null } }) as Promise<ListResult<PageConfig>>
+    }
     if (!tenantFilter) {
       throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
     }

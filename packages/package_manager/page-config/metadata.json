@@ -1,0 +1,6 @@
+{
+  "entity": "page-config",
+  "packageId": "package_manager",
+  "description": "Page routes for package_manager",
+  "version": "1.0.0"
+}
