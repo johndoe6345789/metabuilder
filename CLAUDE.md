@@ -280,27 +280,30 @@ See `seed/packages/core-packages.yaml` for full order.
 
 ### Proper Data Flow (Detailed)
 
-1. **Base Seed Data** (`/dbal/shared/seeds/database/`)
-   - YAML files for system bootstrap (not package-specific)
-   - `installed_packages.yaml` - List of 12 packages to install at bootstrap
-   - `package_permissions.yaml` - Permission/access control seed data
+1. **Root DBAL Seed Data** (`/dbal/shared/seeds/database/` - MINIMAL)
+   - `installed_packages.yaml` - List of 12 core packages to install at bootstrap
+   - `package_permissions.yaml` - System-wide permissions and roles
+   - That's it. Nothing else belongs here.
    - Loaded during `POST /api/bootstrap` via `seedDatabase()`
 
-2. **Package Entity Seed Data** (`/packages/[packageId]/[entity-type]/`)
-   - One folder per entity type: `page-config/`, `workflow/`, `credential/`, etc.
-   - `metadata.json` - Describes the entity folder (entity type, packageId, description)
-   - `*.json` - Data files (e.g., `home.json`, `dashboard.json` in page-config folder)
-   - Simple JSON arrays, not code or schemas
+2. **Package Entity Seed Data** (`/packages/[packageId]/[entity-type]/` - EVERYTHING)
+   - One folder per entity type: `page-config/`, `workflow/`, `credential/`, `notification/`, `component/`
+   - `metadata.json` - Describes entity folder (entity type, packageId, description)
+   - `*.json` - Actual seed data (e.g., `home.json`, `dashboard.json` in page-config/)
+   - Simple JSON arrays, validated by `/schemas/seed-data/` JSON schemas
    - Loaded automatically for packages listed in `installed_packages.yaml`
-   - Examples: ui_home/page-config/, dashboard/page-config/, etc.
+   - Each package self-contained with all its seed data
+   - Examples: ui_home/page-config/, dashboard/page-config/, user_manager/workflow/
 
 3. **DBAL** (Phase 2: TypeScript, Phase 3: C++)
-   - **OWNS:** Database schema (YAML source of truth)
+   - **OWNS:** Database schema definitions (YAML source of truth in `/dbal/shared/api/schema/entities/`)
    - **OWNS:** Prisma schema (auto-generated from YAML)
-   - **OWNS:** Seed orchestration (loading from /seed/)
+   - **OWNS:** Seed orchestration (reads `installed_packages.yaml`, loads package entity folders)
    - **OWNS:** Client factories, adapters, entity operations
+   - **OWNS:** Root seed data only (`/dbal/shared/seeds/database/` - package list + permissions)
    - **EXPORTS:** `getDBALClient()`, `seedDatabase()`, etc.
    - **PROVIDES:** Type-safe entity operations
+   - **DOES NOT DEFINE:** Entity seed data (belongs in packages)
 
 4. **Frontend** (`/frontends/nextjs/`)
    - Uses DBALClient from DBAL
@@ -340,23 +343,46 @@ See `seed/packages/core-packages.yaml` for full order.
 │       ├── tools/                [Schema generation tools]
 │       └── backends/             [Database connection utilities]
 │
-├── schemas/                       [Package system schemas]
-│   └── package-schemas/          [JSON schema definitions]
-│       ├── metadata_schema.json
-│       ├── entities_schema.json
-│       ├── components_schema.json
-│       └── ... (14+ more schemas)
+├── schemas/                       [All schemas - validation + definitions]
+│   ├── seed-data/                [JSON seed validation schemas]
+│   │   ├── page-config.schema.json
+│   │   ├── workflow.schema.json
+│   │   ├── credential.schema.json
+│   │   ├── notification.schema.json
+│   │   ├── component.schema.json
+│   │   └── README.md
+│   ├── package-schemas/          [Package system definitions]
+│   │   ├── metadata_schema.json
+│   │   ├── entities_schema.json
+│   │   ├── components_schema.json
+│   │   └── ... (14+ more schemas)
+│   └── SEED_SCHEMAS.md           [Two-layer schema explanation]
 │
-├── seed/                         [Base bootstrap data]
-│   ├── database/
-│   │   ├── installed_packages.yaml
-│   │   └── package_permissions.yaml
-│   └── config/
+├── packages/                     [Modular packages - ALL ENTITY DATA]
+│   ├── [packageId]/
+│   │   ├── page-config/          [Routes/pages]
+│   │   │   ├── metadata.json
+│   │   │   └── *.json
+│   │   ├── workflow/             [Workflows]
+│   │   │   ├── metadata.json
+│   │   │   └── *.json
+│   │   ├── credential/           [API credentials]
+│   │   │   ├── metadata.json
+│   │   │   └── *.json
+│   │   ├── notification/         [Notifications]
+│   │   │   ├── metadata.json
+│   │   │   └── *.json
+│   │   ├── component/            [Components]
+│   │   │   ├── metadata.json
+│   │   │   └── *.json
+│   │   └── package.json
+│   ├── PACKAGE_STRUCTURE.md      [Package organization guide]
+│   └── SEED_FORMAT.md            [Seed format specification]
 │
-├── packages/                     [Modular packages]
-│   └── */
-│       ├── seed/metadata.json    [Package-specific seed data]
-│       └── ...
+├── dbal/shared/seeds/            [Root DBAL seed - MINIMAL]
+│   └── database/
+│       ├── installed_packages.yaml    [12 core packages to install]
+│       └── package_permissions.yaml   [System permissions]
 │
 └── frontends/
     └── nextjs/                   [Next.js frontend]
@@ -1109,18 +1135,30 @@ cmake --build build
 16. **dbal/shared/docs/PHASE2_IMPLEMENTATION.md** - Phase 2 detailed guide
 17. **dbal/production/docs/PHASE3_DAEMON.md** - Phase 3 design (future)
 
-### Seed System & Package Data
-18. **packages/SEED_FORMAT.md** - ⭐ Seed data structure, format, and best practices
-19. **packages/PACKAGE_AUDIT.md** - Audit of all 51 packages (12 with seed, 39 optional)
-20. **dbal/shared/seeds/database/** - Base bootstrap data (installed_packages.yaml, etc.)
+### Seed System Architecture (Complete & Production-Ready)
+18. **schemas/SEED_SCHEMAS.md** - ⭐ Two-layer schema system (YAML + JSON validation)
+19. **dbal/shared/seeds/README.md** - Root DBAL seed architecture (minimal bootstrap only)
+20. **packages/PACKAGE_STRUCTURE.md** - ⭐ Package organization (entity-type folders)
+21. **packages/SEED_FORMAT.md** - Seed data file format and best practices
+22. **packages/PACKAGE_AUDIT.md** - Audit of all 51 packages (12 core, 39 optional)
+23. **schemas/seed-data/README.md** - JSON schema usage and integration
+24. **schemas/seed-data/** - JSON validation schemas:
+    - `page-config.schema.json` - Route/page definitions
+    - `workflow.schema.json` - Automation workflows
+    - `credential.schema.json` - API credentials
+    - `notification.schema.json` - Notification templates
+    - `component.schema.json` - Reusable components
 
-### Schema & Package System
-21. **schemas/SCHEMAS_README.md** - Package system definitions
-22. **schemas/QUICKSTART.md** - Package system quick start
-23. **schemas/package-schemas/** - Complete schema definitions:
-    - `script_schema.json` - JSON Script language specification (v2.2.0, planned n8n migration)
+### Core Entity Definitions
+25. **dbal/shared/api/schema/entities/** - YAML entity schemas (source of truth for both phases)
+26. **dbal/shared/seeds/database/installed_packages.yaml** - List of 12 core packages
+27. **dbal/shared/seeds/database/package_permissions.yaml** - System permissions
+
+### Package System & Schemas
+28. **schemas/SCHEMAS_README.md** - Package system overview
+29. **schemas/QUICKSTART.md** - Package system quick start
+30. **schemas/package-schemas/** - Package definition schemas:
+    - `script_schema.json` - JSON Script language (v2.2.0, planned n8n migration)
     - `metadata_schema.json` - Package structure
     - `entities_schema.json` - Database models
     - Plus 15 more schemas for components, APIs, validation, permissions, etc.
-24. **dbal/shared/api/schema/** - YAML schema sources (both phases)
-25. **dbal/shared/seeds/database/installed_packages.yaml** - List of 12 packages to install at bootstrap
