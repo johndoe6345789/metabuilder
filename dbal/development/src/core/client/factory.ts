@@ -2,12 +2,12 @@
  * @file factory.ts
  * @description DBAL Client Factory
  *
- * Provides factory functions for creating and managing DBALClient instances.
+ * Provides a single factory function for creating and managing DBALClient instances.
  * Implements the singleton pattern for convenience while allowing configuration overrides.
  */
 
 import type { DBALConfig } from '../../runtime/config'
-import { getPrismaClient, createPrismaClient, type PrismaClientConfig } from '../../runtime/prisma-client'
+import { createPrismaClient, type PrismaClientConfig } from '../../runtime/prisma-client'
 import { DBALClient } from './client'
 
 export interface DBALClientFactoryConfig extends Omit<DBALConfig, 'adapter'> {
@@ -28,11 +28,24 @@ export interface DBALClientFactoryConfig extends Omit<DBALConfig, 'adapter'> {
 const globalDBAL = globalThis as { dbalClient?: DBALClient }
 
 /**
- * Create a new DBALClient instance
+ * Get or create DBALClient instance (singleton pattern)
  *
- * This always creates a fresh instance. For singleton access, use getDBALClient().
+ * Returns existing instance if available without config override.
+ * Pass config to create a new instance with different settings.
+ *
+ * @example
+ * // Get or create singleton
+ * const dbal = getDBALClient()
+ *
+ * @example
+ * // Create instance with specific config
+ * const testDbal = getDBALClient({ mode: 'development', databaseUrl: 'file::memory:' })
  */
-export function createDBALClient(config?: DBALClientFactoryConfig): DBALClient {
+export function getDBALClient(config?: DBALClientFactoryConfig): DBALClient {
+  if (globalDBAL.dbalClient && !config) {
+    return globalDBAL.dbalClient
+  }
+
   // Get or create Prisma client
   const prismaConfig: PrismaClientConfig = {}
   if (config?.databaseUrl) {
@@ -55,38 +68,9 @@ export function createDBALClient(config?: DBALClientFactoryConfig): DBALClient {
       ...(databaseUrl && { url: databaseUrl }),
     },
   }
-  return new DBALClient(dbalConfig)
-}
-
-/**
- * Get singleton DBALClient instance
- *
- * Returns existing instance if available without config override.
- * Pass config to create a new instance with different settings.
- *
- * @example
- * // Get or create singleton
- * const dbal = getDBALClient()
- *
- * @example
- * // Create instance with specific config
- * const testDbal = getDBALClient({ mode: 'development', databaseUrl: 'file::memory:' })
- */
-export function getDBALClient(config?: DBALClientFactoryConfig): DBALClient {
-  if (globalDBAL.dbalClient && !config) {
-    return globalDBAL.dbalClient
-  }
-
-  globalDBAL.dbalClient = createDBALClient(config)
+  
+  globalDBAL.dbalClient = new DBALClient(dbalConfig)
   return globalDBAL.dbalClient
-}
-
-/**
- * Convenience alias for getDBALClient
- * Shorter name for common usage
- */
-export function useDBAL(config?: DBALClientFactoryConfig): DBALClient {
-  return getDBALClient(config)
 }
 
 /**
