@@ -3,12 +3,11 @@
  * 
  * Authenticates a user and returns user data on success
  * 
- * TODO: Migrate authenticate logic to DBAL auth operations
+ * TODO: Implement authentication in DBAL auth operations
+ * Currently returns error until auth migration is complete
  */
 
 import type { User } from '@/lib/types/level-types'
-// TODO: Replace with DBAL auth operations
-import { authenticateUser } from '@/lib/db-old-to-delete/auth/queries/authenticate-user'
 
 export interface LoginCredentials {
   username: string
@@ -23,33 +22,12 @@ export interface LoginResult {
 }
 
 export async function login(identifier: string, password: string): Promise<LoginResult> {
-  try {
-    const result = await authenticateUser(identifier, password)
-    
-    if (!result.success) {
-      return {
-        success: false,
-        user: null,
-        error: result.error === 'invalid_credentials' 
-          ? 'Invalid username or password'
-          : result.error === 'user_not_found'
-          ? 'User not found'
-          : result.error === 'account_locked'
-          ? 'Account is locked'
-          : 'Authentication failed',
-      }
-    }
-    
-    return {
-      success: true,
-      user: result.user,
-      requiresPasswordChange: result.requiresPasswordChange,
-    }
-  } catch (error) {
-    return {
-      success: false,
-      user: null,
-      error: error instanceof Error ? error.message : 'Login failed',
-    }
+  // TODO: Implement authentication using DBAL
+  // The old authentication logic was in the deleted db-old-to-delete directory
+  // This needs to be reimplemented in DBAL's auth operations
+  return {
+    success: false,
+    user: null,
+    error: 'Authentication not yet migrated to DBAL. This is being tracked as part of the database migration.',
   }
 }

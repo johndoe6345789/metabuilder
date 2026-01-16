@@ -1,5 +1,0 @@
-export { addPage } from './crud/add-page'
-export { deletePage } from './crud/delete-page'
-export { getPages } from './crud/get-pages'
-export { setPages } from './crud/set-pages'
-export { updatePage } from './crud/update-page'

@@ -1,5 +1,0 @@
-export { addDropdownConfig } from './crud/add-dropdown-config'
-export { deleteDropdownConfig } from './crud/delete-dropdown-config'
-export { getDropdownConfigs } from './crud/get-dropdown-configs'
-export { setDropdownConfigs } from './crud/set-dropdown-configs'
-export { updateDropdownConfig } from './crud/update-dropdown-config'
