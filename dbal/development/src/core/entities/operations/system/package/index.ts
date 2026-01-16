@@ -135,7 +135,12 @@ export const createInstalledPackageOperations = (adapter: DBALAdapter, tenantId?
     return deleteInstalledPackage(adapter, id)
   },
   list: options => {
+    // For public packages, allow listing packages with tenantId: null
     const tenantFilter = resolveTenantFilter(tenantId, options?.filter)
+    if (!tenantFilter && !tenantId) {
+      // No configured tenant and no filter provided - allow listing public packages (tenantId: null)
+      return listInstalledPackages(adapter, { ...options, filter: { ...(options?.filter ?? {}), tenantId: null } })
+    }
     if (!tenantFilter) {
       throw DBALError.validationError('Tenant ID is required', [{ field: 'tenantId', error: 'tenantId is required' }])
     }

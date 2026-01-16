@@ -80,7 +80,8 @@
       "Bash(if [ -f \"$file\" ])",
       "Bash(if ! head -1 \"$file\")",
       "Bash(for file in fakemui/fakemui/utils/useMediaQuery.js)",
-      "Bash(perl -pi -e:*)"
+      "Bash(perl -pi -e:*)",
+      "Bash(pkill:*)"
     ]
   },
   "spinnerTipsEnabled": false
