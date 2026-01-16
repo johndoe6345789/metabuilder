@@ -208,7 +208,7 @@ export async function executeDbalOperation(
     body?: unknown
   }
 ): Promise<{ success: boolean; data?: unknown; error?: string; meta?: unknown }> {
-  const { getAdapter } = await import('@/lib/db/core/dbal-client')
+  const { getAdapter } = await import('@/lib/db/dbal-client')
   const adapter = getAdapter()
   
   try {
@@ -281,7 +281,7 @@ export async function executePackageAction(
   // Package actions are custom operations defined by packages
   // Load package config and execute the registered action handler
   try {
-    const { getAdapter } = await import('@/lib/db/core/dbal-client')
+    const { getAdapter } = await import('@/lib/db/dbal-client')
     const adapter = getAdapter()
     
     // Get package configuration
@@ -365,7 +365,7 @@ export async function validateTenantAccess(
   
   // For lower levels, verify tenant membership
   try {
-    const { getAdapter } = await import('@/lib/db/core/dbal-client')
+    const { getAdapter } = await import('@/lib/db/dbal-client')
     const adapter = getAdapter()
     
     const tenant = await adapter.findFirst('Tenant', {

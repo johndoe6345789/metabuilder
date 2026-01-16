@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-import { deletePackageData } from '@/lib/db/packages/delete-package-data'
+import { db } from '@/lib/db-client'
 import { getSessionUser, STATUS } from '@/lib/routing'
 import { getRoleLevel, ROLE_LEVELS } from '@/lib/constants'
 import { PackageSchemas } from '@/lib/validation'
@@ -42,7 +42,9 @@ export async function DELETE(
       )
     }
     
-    await deletePackageData(resolvedParams.packageId)
+    // Delete package data using DBAL
+    await db.packageData.delete(resolvedParams.packageId)
+    
     return NextResponse.json({ deleted: true })
   } catch (error) {
     console.error('Error deleting package data:', error)

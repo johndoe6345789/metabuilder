@@ -38,23 +38,9 @@ export class DBALClient {
   }
 
   /**
-   * Deprecated: use pageConfigs
-   */
-  get pages() {
-    return this.operations.pageConfigs
-  }
-
-  /**
    * ComponentNode entity operations
    */
   get componentNodes() {
-    return this.operations.componentNodes
-  }
-
-  /**
-   * Deprecated: use componentNodes
-   */
-  get components() {
     return this.operations.componentNodes
   }
 
@@ -69,13 +55,6 @@ export class DBALClient {
    * InstalledPackage entity operations
    */
   get installedPackages() {
-    return this.operations.installedPackages
-  }
-
-  /**
-   * Deprecated: use installedPackages
-   */
-  get packages() {
     return this.operations.installedPackages
   }
 

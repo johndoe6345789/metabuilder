@@ -5,10 +5,8 @@
  */
 
 import type { User } from '@/lib/types/level-types'
-import { getAdapter } from '@/lib/db/core/dbal-client'
-import { hashPassword } from '@/lib/db/password/hash-password'
-import { getUserByUsername } from '@/lib/db/auth/queries/get-user-by-username'
-import { getUserByEmail } from '@/lib/db/auth/queries/get-user-by-email'
+import { db } from '@/lib/db-client'
+import crypto from 'crypto'
 
 export interface RegisterData {
   username: string
@@ -22,10 +20,17 @@ export interface RegisterResult {
   error?: string
 }
 
+/**
+ * Hash password using SHA-512
+ */
+async function hashPassword(password: string): Promise<string> {
+  return crypto.createHash('sha512').update(password).digest('hex')
+}
+
 export async function register(username: string, email: string, password: string): Promise<RegisterResult> {
   try {
     // Validate input
-    if (username.length === 0 || email.length === 0 || password.length === 0) {
+    if (!username || !email || !password) {
       return {
         success: false,
         user: null,
@@ -34,8 +39,11 @@ export async function register(username: string, email: string, password: string
     }
 
     // Check if username already exists
-    const existingUserByUsername = await getUserByUsername(username)
-    if (existingUserByUsername !== null) {
+    const existingByUsername = await db.users.list({
+      filter: { username }
+    })
+    
+    if (existingByUsername.data && existingByUsername.data.length > 0) {
       return {
         success: false,
         user: null,
@@ -44,8 +52,11 @@ export async function register(username: string, email: string, password: string
     }
 
     // Check if email already exists
-    const existingUserByEmail = await getUserByEmail(email)
-    if (existingUserByEmail !== null) {
+    const existingByEmail = await db.users.list({
+      filter: { email }
+    })
+    
+    if (existingByEmail.data && existingByEmail.data.length > 0) {
       return {
         success: false,
         user: null,
@@ -57,44 +68,40 @@ export async function register(username: string, email: string, password: string
     const passwordHash = await hashPassword(password)
 
     // Create user
-    const adapter = getAdapter()
     const userId = crypto.randomUUID()
     
-    await adapter.create('User', {
-      id: userId,
-      username,
-      email,
-      role: 'user', // Default role
-      createdAt: BigInt(Date.now()),
-      isInstanceOwner: false,
-    })
-
-    // Create credentials
-    await adapter.create('Credential', {
-      username,
-      passwordHash,
-    })
-
-    // Fetch the created user
-    const userRecord = await adapter.findFirst('User', {
-      where: { id: userId },
-    })
-
-    if (userRecord === null || userRecord === undefined) {
-      return {
-        success: false,
-        user: null,
-        error: 'Failed to create user',
-      }
-    }
-
-    const user: User = {
+    const newUser = await db.users.create({
       id: userId,
       username,
       email,
       role: 'user',
-      createdAt: Date.now(),
+      createdAt: BigInt(Date.now()),
       isInstanceOwner: false,
+      tenantId: null,
+      profilePicture: null,
+      bio: null,
+    })
+
+    // Create credentials
+    const { getAdapter } = await import('@/lib/db/dbal-client')
+    const adapter = getAdapter()
+    await adapter.create('Credential', {
+      id: `cred_${userId}`,
+      username,
+      passwordHash,
+      userId,
+    })
+
+    const user: User = {
+      id: newUser.id,
+      username: newUser.username,
+      email: newUser.email,
+      role: newUser.role,
+      createdAt: Number(newUser.createdAt),
+      isInstanceOwner: newUser.isInstanceOwner || false,
+      tenantId: newUser.tenantId || null,
+      profilePicture: newUser.profilePicture || null,
+      bio: newUser.bio || null,
     }
 
     return {
@@ -102,6 +109,7 @@ export async function register(username: string, email: string, password: string
       user,
     }
   } catch (error) {
+    console.error('Registration error:', error)
     return {
       success: false,
       user: null,

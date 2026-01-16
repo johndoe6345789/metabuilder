@@ -1,14 +1,19 @@
 import { NextResponse } from 'next/server'
-import { Database } from '@/lib/db/core/operations'
+import { getDBALClient, seedDatabase } from '@/dbal'
 
 /**
  * POST /api/setup
  * One-time setup endpoint to seed database with default data
  * Database schema should already be created via `npm run db:push`
+ * 
+ * Uses DBAL seed system which loads data from:
+ * - /dbal/shared/seeds/database/*.yaml - Base system data
+ * - /packages/*/page-config/*.json - Package-specific routes
  */
 export async function POST() {
   try {
-    await Database.seedDefaultData()
+    const dbal = getDBALClient()
+    await seedDatabase(dbal)
     return NextResponse.json({
       status: 'ok',
       message: 'Database seeded with default data',

@@ -1,13 +1,11 @@
 /**
  * Fetch current session
  * 
- * Retrieves the current user based on session token from cookies or headers
+ * Retrieves the current user based on session token from cookies
  */
 
 import type { User } from '@/lib/types/level-types'
-import { getSessionByToken } from '@/lib/db/sessions/getters/get-session-by-token'
-import { mapUserRecord } from '@/lib/db/users/map-user-record'
-import { getAdapter } from '@/lib/db/core/dbal-client'
+import { db } from '@/lib/db-client'
 import { cookies } from 'next/headers'
 
 /**
@@ -17,33 +15,42 @@ import { cookies } from 'next/headers'
  */
 export async function fetchSession(): Promise<User | null> {
   try {
-    // Get session token from cookies
     const cookieStore = await cookies()
     const sessionToken = cookieStore.get('session_token')?.value
 
-    if (sessionToken === undefined || sessionToken.length === 0) {
+    if (!sessionToken || sessionToken.length === 0) {
       return null
     }
 
-    // Get session from token
-    const session = await getSessionByToken(sessionToken)
-    
-    if (session === null) {
-      return null
-    }
-
-    // Get user from session
-    const adapter = getAdapter()
-    const userRecord = await adapter.findFirst('User', {
-      where: { id: session.userId },
+    // Get session from token using DBAL
+    const sessions = await db.sessions.list({
+      filter: { token: sessionToken }
     })
-
-    if (userRecord === null || userRecord === undefined) {
+    
+    const session = sessions.data?.[0]
+    
+    if (!session) {
       return null
     }
 
-    const user = mapUserRecord(userRecord as Record<string, unknown>)
-    return user
+    // Get user from session using DBAL
+    const user = await db.users.read(session.userId)
+
+    if (!user) {
+      return null
+    }
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      isInstanceOwner: user.isInstanceOwner || false,
+      profilePicture: user.profilePicture || null,
+      bio: user.bio || null,
+      createdAt: Number(user.createdAt),
+      tenantId: user.tenantId || null,
+    }
   } catch (error) {
     console.error('Error fetching session:', error)
     return null

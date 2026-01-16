@@ -1,5 +1,5 @@
-export { DBALClient, createDBALClient } from './core/client'
-export { getDBALClient, useDBAL, createDBALClient as createDBALClientFactory } from './core/client/factory'
+export { DBALClient } from './core/client'
+export { getDBALClient, resetDBALClient } from './core/client/factory'
 export type { DBALClientFactoryConfig } from './core/client/factory'
 export { getPrismaClient, createPrismaClient } from './runtime/prisma-client'
 export type { PrismaClientConfig } from './runtime/prisma-client'
