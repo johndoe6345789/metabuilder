@@ -22,11 +22,13 @@ export interface RenderContext {
  *
  * By default, uses the FAKEMUI_REGISTRY to render components.
  * Pass a custom ComponentRegistry to override specific components.
+ * Pass allComponents to enable $ref resolution within the same package.
  */
 export function renderJSONComponent(
   component: JSONComponent,
   props: Record<string, JsonValue> = {},
-  ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>> = FAKEMUI_REGISTRY
+  ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>> = FAKEMUI_REGISTRY,
+  allComponents?: JSONComponent[]
 ): React.ReactElement {
   if (component.render === undefined) {
     return (
@@ -35,6 +37,11 @@ export function renderJSONComponent(
       </div>
     )
   }
+
+  // Build component registry for $ref resolution
+  const componentRegistry = allComponents
+    ? new Map(allComponents.map(c => [c.id, c]))
+    : undefined
 
   const context: RenderContext = {
     props,
@@ -50,7 +57,7 @@ export function renderJSONComponent(
         </div>
       )
     }
-    return renderTemplate(template, context, ComponentRegistry)
+    return renderTemplate(template, context, ComponentRegistry, componentRegistry)
   } catch (error) {
     return (
       <div style={{ padding: '1rem', border: '1px solid red', borderRadius: '0.25rem' }}>
@@ -67,7 +74,8 @@ export function renderJSONComponent(
 function renderTemplate(
   node: JsonValue,
   context: RenderContext,
-  ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>>
+  ComponentRegistry: Record<string, React.ComponentType<Record<string, unknown>>>,
+  componentRegistry?: Map<string, JSONComponent>
 ): React.ReactElement {
   if (node === null || typeof node !== 'object') {
     return <>{String(node)}</>
@@ -81,6 +89,20 @@ function renderTemplate(
   // Now TypeScript knows it's a JsonObject (non-array object)
   const nodeObj = node as Record<string, JsonValue>
 
+  // Handle $ref to other components in the same package
+  if (typeof nodeObj.$ref === 'string' && componentRegistry !== undefined) {
+    const referencedComponent = componentRegistry.get(nodeObj.$ref)
+    if (referencedComponent !== undefined && referencedComponent.render?.template !== undefined) {
+      return renderTemplate(referencedComponent.render.template, context, ComponentRegistry, componentRegistry)
+    } else {
+      return (
+        <div style={{ padding: '0.5rem', border: '1px dashed orange', borderRadius: '0.25rem' }}>
+          <strong>Warning:</strong> Component reference "${nodeObj.$ref}" not found
+        </div>
+      )
+    }
+  }
+
   // Handle conditional rendering
   if (nodeObj.type === 'conditional') {
     const conditionValue = nodeObj.condition
@@ -90,9 +112,9 @@ function renderTemplate(
     const condition = evaluateExpression(conditionValue, context)
     const conditionIsTrue = condition !== null && condition !== undefined && condition !== false && condition !== 0 && condition !== ''
     if (conditionIsTrue && nodeObj.then !== null && nodeObj.then !== undefined) {
-      return renderTemplate(nodeObj.then, context, ComponentRegistry)
+      return renderTemplate(nodeObj.then, context, ComponentRegistry, componentRegistry)
     } else if (!conditionIsTrue && nodeObj.else !== null && nodeObj.else !== undefined) {
-      return renderTemplate(nodeObj.else, context, ComponentRegistry)
+      return renderTemplate(nodeObj.else, context, ComponentRegistry, componentRegistry)
     }
     return <></>
   }
@@ -128,12 +150,12 @@ function renderTemplate(
             }
             return (
               <React.Fragment key={index}>
-                {renderTemplate(child, context, ComponentRegistry)}
+                {renderTemplate(child, context, ComponentRegistry, componentRegistry)}
               </React.Fragment>
             )
           })
         } else {
-          children = renderTemplate(nodeChildren, context, ComponentRegistry)
+          children = renderTemplate(nodeChildren, context, ComponentRegistry, componentRegistry)
         }
       }
 
@@ -189,12 +211,12 @@ function renderTemplate(
         }
         return (
           <React.Fragment key={index}>
-            {renderTemplate(child, context, ComponentRegistry)}
+            {renderTemplate(child, context, ComponentRegistry, componentRegistry)}
           </React.Fragment>
         )
       })
     } else {
-      children = renderTemplate(nodeChildren, context, ComponentRegistry)
+      children = renderTemplate(nodeChildren, context, ComponentRegistry, componentRegistry)
     }
   }
 

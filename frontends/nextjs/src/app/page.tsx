@@ -79,7 +79,7 @@ export default async function RootPage() {
         const component = pkg.components?.find(c => c.id === route.component || c.name === route.component)
 
         if (component !== undefined) {
-          return renderJSONComponent(component, {}, {})
+          return renderJSONComponent(component, {}, {}, pkg.components)
         }
       } catch {
         // Package doesn't exist or can't be loaded, fall through
@@ -116,7 +116,7 @@ export default async function RootPage() {
         ) ?? pkg.components[0]
 
         if (pageComponent !== undefined) {
-          return renderJSONComponent(pageComponent, {}, {})
+          return renderJSONComponent(pageComponent, {}, {}, pkg.components)
         }
       }
     } catch {

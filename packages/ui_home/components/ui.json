@@ -13,17 +13,19 @@
         "type": "element",
         "template": {
           "type": "Box",
-          "component": "main",
+          "component": "div",
           "className": "home-page",
           "sx": {
             "minHeight": "100vh",
             "background": "linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.05) 0%, transparent 50%, rgba(var(--color-accent-rgb), 0.05) 100%)"
           },
           "children": [
+            { "$ref": "landing_nav" },
             { "$ref": "hero_section" },
             { "$ref": "features_section" },
             { "$ref": "about_section" },
-            { "$ref": "contact_section" }
+            { "$ref": "contact_section" },
+            { "$ref": "landing_footer" }
           ]
         }
       }
@@ -620,6 +622,161 @@
           ]
         }
       }
+    },
+    {
+      "id": "landing_nav",
+      "name": "LandingNav",
+      "description": "Navigation bar for landing page with logo, links, and mobile menu",
+      "props": [],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "component": "nav",
+          "className": "landing-nav",
+          "sx": {
+            "borderBottom": 1,
+            "borderColor": "divider",
+            "bgcolor": "rgba(255, 255, 255, 0.5)",
+            "backdropFilter": "blur(8px)",
+            "position": "sticky",
+            "top": 0,
+            "zIndex": 50
+          },
+          "children": [
+            {
+              "type": "Container",
+              "maxWidth": "lg",
+              "children": [
+                {
+                  "type": "Stack",
+                  "direction": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "center",
+                  "sx": { "height": 64 },
+                  "children": [
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "alignItems": "center",
+                      "spacing": 1.5,
+                      "children": [
+                        {
+                          "type": "Box",
+                          "sx": {
+                            "width": 32,
+                            "height": 32,
+                            "borderRadius": 2,
+                            "background": "linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)"
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "variant": "h6",
+                          "children": "MetaBuilder",
+                          "sx": { "fontWeight": 700 }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Stack",
+                      "direction": "row",
+                      "spacing": 2,
+                      "sx": { "display": { "xs": "none", "md": "flex" } },
+                      "children": [
+                        {
+                          "type": "Link",
+                          "href": "#features",
+                          "children": "Features",
+                          "sx": {
+                            "color": "text.secondary",
+                            "textDecoration": "none",
+                            "fontSize": "0.875rem",
+                            "&:hover": { "color": "text.primary" }
+                          }
+                        },
+                        {
+                          "type": "Link",
+                          "href": "#about",
+                          "children": "About",
+                          "sx": {
+                            "color": "text.secondary",
+                            "textDecoration": "none",
+                            "fontSize": "0.875rem",
+                            "&:hover": { "color": "text.primary" }
+                          }
+                        },
+                        {
+                          "type": "Link",
+                          "href": "#contact",
+                          "children": "Contact",
+                          "sx": {
+                            "color": "text.secondary",
+                            "textDecoration": "none",
+                            "fontSize": "0.875rem",
+                            "&:hover": { "color": "text.primary" }
+                          }
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "outlined",
+                          "size": "small",
+                          "children": "Sign In",
+                          "href": "/ui/login"
+                        },
+                        {
+                          "type": "Button",
+                          "variant": "contained",
+                          "size": "small",
+                          "children": "Admin"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "landing_footer",
+      "name": "LandingFooter",
+      "description": "Simple footer for landing page",
+      "props": [],
+      "render": {
+        "type": "element",
+        "template": {
+          "type": "Box",
+          "component": "footer",
+          "className": "landing-footer",
+          "sx": {
+            "borderTop": 1,
+            "borderColor": "divider",
+            "bgcolor": "action.hover",
+            "py": 4,
+            "mt": 10
+          },
+          "children": [
+            {
+              "type": "Container",
+              "maxWidth": "lg",
+              "children": [
+                {
+                  "type": "Text",
+                  "variant": "body2",
+                  "sx": {
+                    "color": "text.secondary",
+                    "textAlign": "center"
+                  },
+                  "children": "© 2025 MetaBuilder. Built with the power of visual workflows and declarative schemas."
+                }
+              ]
+            }
+          ]
+        }
+      }
     }
   ],
   "exports": {
@@ -634,7 +791,9 @@
       "FeatureCard5",
       "FeatureCard6",
       "AboutSection",
-      "ContactSection"
+      "ContactSection",
+      "LandingNav",
+      "LandingFooter"
     ]
   }
 }
