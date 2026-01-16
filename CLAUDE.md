@@ -740,6 +740,20 @@ See `/schemas/package-schemas/script_schema.json` for JSON Script specification 
 | `/AGENTS.md` | **DBAL-specific guidance for AI agents** (contract-based dev, Phase 2/3, conformance testing) |
 | `/dbal/shared/docs/` | DBAL implementation guides (PHASE2_IMPLEMENTATION.md, PHASE3_DAEMON.md, etc.) |
 
+### Peripheral Directories (Supporting, Not Critical for Development)
+
+| File | Purpose |
+|------|---------|
+| `/old/` | Legacy/archived code from previous implementation phases |
+| `/storybook/` | Component documentation using Storybook |
+| `/spec/` | Technical specification documents |
+| `/test-results/` | Playwright test output artifacts |
+| `/.openhands/` | Open Hands configuration (autonomous agents) |
+| `/.vscode/` | VS Code workspace settings and extensions |
+| `/scripts/` | Utility scripts for development and maintenance |
+
+**Note**: These directories support development workflows but aren't critical for understanding the core system. See `docs/PROJECT_STRUCTURE.md` for complete directory documentation.
+
 ---
 
 ## 🚀 Development Tasks
