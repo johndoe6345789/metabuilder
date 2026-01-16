@@ -1,0 +1,13 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "user_manager",
+  "name": "User Manager",
+  "version": "1.0.0",
+  "description": "Seed data for user_manager package",
+  "author": "MetaBuilder Contributors",
+  "license": "MIT",
+  "category": "admin",
+  "minLevel": 3,
+  "primary": true,
+  "keywords": ["users", "management", "admin", "seed-data"]
+}

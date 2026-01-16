@@ -1,13 +1,13 @@
 {
   "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
-  "packageId": "dashboard",
-  "name": "Dashboard",
+  "packageId": "ui_login",
+  "name": "UI Login",
   "version": "1.0.0",
-  "description": "Seed data for dashboard package",
+  "description": "Seed data for ui_login package",
   "author": "MetaBuilder Contributors",
   "license": "MIT",
   "category": "ui",
-  "minLevel": 1,
+  "minLevel": 0,
   "primary": true,
-  "keywords": ["dashboard", "user", "ui", "seed-data"]
+  "keywords": ["login", "authentication", "ui", "seed-data"]
 }

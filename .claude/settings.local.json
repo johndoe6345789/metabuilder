@@ -69,7 +69,12 @@
       "Bash(do if [ ! -d \"$pkg/seed\" ])",
       "Bash(then basename \"$pkg\")",
       "Bash(fi)",
-      "Bash(sqlite3:*)"
+      "Bash(sqlite3:*)",
+      "Bash(for pkg in package_manager ui_header ui_footer ui_home ui_auth ui_login dashboard user_manager role_editor admin_dialog database_manager schema_editor)",
+      "Bash(do)",
+      "Bash(if [ -f \"/Users/rmac/Documents/metabuilder/packages/$pkg/seed/metadata.json\" ])",
+      "Bash(then)",
+      "Bash(else)"
     ]
   },
   "spinnerTipsEnabled": false

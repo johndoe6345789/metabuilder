@@ -1,0 +1,13 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "schema_editor",
+  "name": "Schema Editor",
+  "version": "1.0.0",
+  "description": "Seed data for schema_editor package",
+  "author": "MetaBuilder Contributors",
+  "license": "MIT",
+  "category": "admin",
+  "minLevel": 5,
+  "primary": false,
+  "keywords": ["schema", "editor", "admin", "system", "seed-data"]
+}
