@@ -280,16 +280,18 @@ See `seed/packages/core-packages.yaml` for full order.
 
 ### Proper Data Flow (Detailed)
 
-1. **Seed Data** (`/seed/` folder)
-   - Contains YAML files defining base bootstrap data
-   - `seed/database/installed_packages.yaml` - Package installation records
-   - `seed/database/package_permissions.yaml` - Permission rules
-   - NOT TypeScript code, NOT hardcoded in Next.js
+1. **Base Seed Data** (`/dbal/shared/seeds/database/`)
+   - YAML files for system bootstrap (not package-specific)
+   - `installed_packages.yaml` - List of 12 packages to install at bootstrap
+   - `package_permissions.yaml` - Permission/access control seed data
+   - Loaded during `POST /api/bootstrap` via `seedDatabase()`
 
-2. **Packages** (`/packages/*/`)
-   - Optional `seed/metadata.json` for package-specific seed data
-   - Self-contained UI and logic
-   - Reference seed data through metadata
+2. **Package Seed Data** (`/packages/[packageId]/seed/`)
+   - `metadata.json` - **Required**. Describes the package and references data files
+   - `[entity-type].json` - **Optional**. Data files for specific entities (page-config, workflow, etc.)
+   - Simple JSON arrays, not code or schemas
+   - Loaded automatically for packages listed in `installed_packages.yaml`
+   - Examples: ui_home (has page-config.json), others ready to add as needed
 
 3. **DBAL** (Phase 2: TypeScript, Phase 3: C++)
    - **OWNS:** Database schema (YAML source of truth)
@@ -455,7 +457,7 @@ await db.users.list()
 
 ### Mistake 3: Defining Seed Data in Code
 ```typescript
-// ❌ WRONG - seed data should not be in code
+// ❌ WRONG - seed data should not be in TypeScript files
 const seedData = [
   { username: 'admin', email: 'admin@localhost' },
   { username: 'demo', email: 'demo@localhost' },
@@ -464,9 +466,20 @@ for (const user of seedData) {
   await db.users.create(user)
 }
 
-// ✅ CORRECT - seed data is in /seed/ folder (YAML)
-// Frontend calls: await seedDatabase(db)
-// DBAL loads from /seed/database/installed_packages.yaml
+// ✅ CORRECT - seed data lives in /packages/*/seed/ as JSON files
+// File: /packages/my-package/seed/metadata.json
+{
+  "packageId": "my_package",
+  "seed": { "schema": "page-config.json" }
+}
+
+// File: /packages/my-package/seed/page-config.json
+[
+  { "id": "page_1", "path": "/my-route", "title": "My Route", ... }
+]
+
+// System loads via: await seedDatabase(db) from DBAL
+// Which reads installed_packages.yaml and each package's seed/metadata.json
 ```
 
 ### Mistake 4: Putting Non-Seed Code in Seed Folders (CRITICAL)
@@ -539,19 +552,33 @@ Orchestration functions (like `seedDatabase()`) belong in DBAL source code, not 
 
 ### Mistake 7: Putting Kitchen Sink in Seed Folders
 
-**Seed folders are ONLY for mundane bootstrap data.** Nothing else.
+**Seed folders are ONLY for mundane data files.** One folder per entity type. Nothing else.
 
+**Pattern:**
 ```
-❌ WRONG - Don't add this:
-/schemas/seed/
-├── page-config/
-│   ├── schema.json
-│   ├── examples.json
-│   ├── README.md              ← Extra documentation
-│   └── utils.ts              ← Code files
+✅ CORRECT - Simple and clean:
+/packages/my-package/seed/
+├── metadata.json          ← Package manifest (required)
+├── page-config.json       ← Page routes (if needed)
+├── workflow.json          ← Workflows (if needed)
+└── credential.json        ← Credentials (if needed)
+
+❌ WRONG - Don't add anything else:
+/packages/my-package/seed/
+├── metadata.json
+├── schema.json           ← NO: Use DBAL schemas instead
+├── examples.json         ← NO: Kitchen sink
+├── README.md             ← NO: Docs go in /packages/SEED_FORMAT.md
+├── loader.ts             ← NO: Code goes in /dbal/development/src/seeds/
+└── utils/                ← NO: Utilities go in DBAL source code
 ```
 
-Keep it minimal - ONLY schema files if needed.
+Each package's seed folder follows this simple structure:
+- `metadata.json` - Always required. Points to data files and describes the package
+- Entity data files (e.g., `page-config.json`) - Only if the package needs to seed that entity
+- Nothing else. No documentation, no code, no schemas
+
+See `/packages/SEED_FORMAT.md` for complete seed data specification.
 
 ### Mistake 8: Using TypeScript Instead of JSON/JSON Script (95% Rule Violation)
 ```typescript
@@ -689,16 +716,53 @@ export async function GET(request: Request) {
 }
 ```
 
-### Task 2: Create New Seed Data
-```typescript
-// ❌ DON'T create TypeScript seed files
-// ✅ DO add to /seed/ folder (YAML format)
-// Or add to /packages/my-package/seed/metadata.json (JSON)
+### Task 2: Add Seed Data to a Package
 
-// Examples:
-// - /seed/database/installed_packages.yaml
-// - /packages/ui_home/seed/metadata.json
+Each package that needs bootstrap data gets a simple seed folder:
+
 ```
+/packages/my-package/seed/
+├── metadata.json          [Required - describes package]
+└── page-config.json       [Optional - entity data]
+```
+
+**Step 1: Create metadata.json**
+```json
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "my_package",
+  "name": "My Package",
+  "version": "1.0.0",
+  "description": "Seed data for my_package",
+  "author": "MetaBuilder Contributors",
+  "category": "ui",
+  "minLevel": 0,
+  "seed": {
+    "schema": "page-config.json"
+  }
+}
+```
+
+**Step 2: Create entity data file (if needed)**
+```json
+// /packages/my-package/seed/page-config.json
+[
+  {
+    "id": "page_my_pkg_home",
+    "path": "/my-package",
+    "title": "My Package",
+    "component": "my_component",
+    "level": 0,
+    "requiresAuth": false,
+    "isPublished": true
+  }
+]
+```
+
+**Step 3: Package must be listed in bootstrap**
+Add to `/dbal/shared/seeds/database/installed_packages.yaml` if it's a core system package.
+
+See `/packages/SEED_FORMAT.md` for complete seed data specification.
 
 ### Task 3: Initialize Database for Tests
 ```typescript
@@ -715,6 +779,40 @@ await seedDatabase(db)
 2. Generate Prisma schema: `npm --prefix dbal/development run codegen:prisma`
 3. Push to database: `npm --prefix dbal/development run db:push`
 4. Verify: Check `/prisma/prisma/dev.db` and `/prisma/schema.prisma` updated
+
+### Task 5: Bootstrap the System
+
+After setting up seed data, call the bootstrap endpoint to load it:
+
+```bash
+# Bootstrap API endpoint
+POST /api/bootstrap
+
+# Response (success):
+{
+  "success": true,
+  "message": "Database seeded successfully",
+  "packagesInstalled": 12,
+  "recordsCreated": 45
+}
+
+# Response (error):
+{
+  "success": false,
+  "error": "Failed to create PageConfig: Duplicate path '/'"
+}
+```
+
+**When to bootstrap:**
+- First deployment (initial system setup)
+- After adding new packages to `installed_packages.yaml`
+- After modifying seed data
+- Safe to call multiple times (idempotent - skips existing records)
+
+**See also:**
+- `/frontends/nextjs/src/app/api/bootstrap/route.ts` - Bootstrap endpoint implementation
+- `/packages/SEED_FORMAT.md` - Seed data format specification
+- `/packages/PACKAGE_AUDIT.md` - Analysis of all 51 packages
 
 ---
 
@@ -1007,13 +1105,18 @@ cmake --build build
 16. **dbal/shared/docs/PHASE2_IMPLEMENTATION.md** - Phase 2 detailed guide
 17. **dbal/production/docs/PHASE3_DAEMON.md** - Phase 3 design (future)
 
+### Seed System & Package Data
+18. **packages/SEED_FORMAT.md** - ⭐ Seed data structure, format, and best practices
+19. **packages/PACKAGE_AUDIT.md** - Audit of all 51 packages (12 with seed, 39 optional)
+20. **dbal/shared/seeds/database/** - Base bootstrap data (installed_packages.yaml, etc.)
+
 ### Schema & Package System
-18. **schemas/SCHEMAS_README.md** - Package system definitions
-19. **schemas/QUICKSTART.md** - Package system quick start
-20. **schemas/package-schemas/** - Complete schema definitions:
+21. **schemas/SCHEMAS_README.md** - Package system definitions
+22. **schemas/QUICKSTART.md** - Package system quick start
+23. **schemas/package-schemas/** - Complete schema definitions:
     - `script_schema.json` - JSON Script language specification (v2.2.0, planned n8n migration)
     - `metadata_schema.json` - Package structure
     - `entities_schema.json` - Database models
     - Plus 15 more schemas for components, APIs, validation, permissions, etc.
-19. **dbal/shared/api/schema/** - YAML schema sources (both phases)
-20. **seed/packages/core-packages.yaml** - Bootstrap package installation order
+24. **dbal/shared/api/schema/** - YAML schema sources (both phases)
+25. **dbal/shared/seeds/database/installed_packages.yaml** - List of 12 packages to install at bootstrap
