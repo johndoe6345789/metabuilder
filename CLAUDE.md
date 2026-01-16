@@ -469,7 +469,40 @@ for (const user of seedData) {
 // DBAL loads from /seed/database/installed_packages.yaml
 ```
 
-### Mistake 4: Editing Prisma Schema Directly
+### Mistake 4: Putting Non-Seed Code in Seed Folders (CRITICAL)
+
+**Seed folders contain ONLY data files.** No TypeScript, scripts, or orchestration code.
+
+```
+❌ WRONG:
+/dbal/shared/seeds/
+├── database/
+│   └── installed_packages.yaml
+└── load-and-apply.ts        ← DON'T PUT THIS HERE!
+
+✅ CORRECT:
+/dbal/shared/seeds/
+└── database/
+    └── installed_packages.yaml
+
+/dbal/development/src/seeds/index.ts    ← Orchestration lives HERE
+```
+
+**For package seeds:**
+```
+❌ WRONG:
+/packages/my-package/seed/
+├── page-config.json
+└── loader.ts               ← DON'T PUT THIS HERE!
+
+✅ CORRECT:
+/packages/my-package/seed/
+└── page-config.json        ← ONLY data files
+```
+
+Orchestration functions (like `seedDatabase()`) belong in DBAL source code, not in seed folders. Seed folders are **mundane data only**.
+
+### Mistake 5: Editing Prisma Schema Directly
 ```typescript
 // ❌ WRONG - Prisma schema is auto-generated
 // Don't edit /prisma/schema.prisma directly
@@ -481,7 +514,7 @@ for (const user of seedData) {
 // 3. Push to DB: npm --prefix dbal/development run db:push
 ```
 
-### Mistake 5: Ignoring C++ Production Code
+### Mistake 6: Ignoring C++ Production Code
 ```typescript
 // ❌ WRONG - Don't assume only TypeScript matters
 // C++ DBAL in /dbal/production/ is for Phase 3
@@ -504,7 +537,23 @@ for (const user of seedData) {
 // 3. Verify tables exist in database
 ```
 
-### Mistake 7: Using TypeScript Instead of JSON/JSON Script (95% Rule Violation)
+### Mistake 7: Putting Kitchen Sink in Seed Folders
+
+**Seed folders are ONLY for mundane bootstrap data.** Nothing else.
+
+```
+❌ WRONG - Don't add this:
+/schemas/seed/
+├── page-config/
+│   ├── schema.json
+│   ├── examples.json
+│   ├── README.md              ← Extra documentation
+│   └── utils.ts              ← Code files
+```
+
+Keep it minimal - ONLY schema files if needed.
+
+### Mistake 8: Using TypeScript Instead of JSON/JSON Script (95% Rule Violation)
 ```typescript
 // ❌ WRONG - Hardcoding UI in TypeScript
 function MyPage() {
