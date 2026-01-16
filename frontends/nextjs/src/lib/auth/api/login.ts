@@ -2,10 +2,13 @@
  * Login API
  * 
  * Authenticates a user and returns user data on success
+ * 
+ * TODO: Migrate authenticate logic to DBAL auth operations
  */
 
 import type { User } from '@/lib/types/level-types'
-import { authenticateUser } from '@/lib/db/auth/queries/authenticate-user'
+// TODO: Replace with DBAL auth operations
+import { authenticateUser } from '@/lib/db-old-to-delete/auth/queries/authenticate-user'
 
 export interface LoginCredentials {
   username: string
