@@ -37,7 +37,7 @@ export async function setValue(
     sizeBytes,
     createdAt: existing?.createdAt || now,
     updatedAt: now,
-    expiresAt: ttl ? new Date(now.getTime() + ttl * 1000) : undefined
+    ...(ttl && { expiresAt: new Date(now.getTime() + ttl * 1000) })
   }
 
   state.data.set(scoped, entry)

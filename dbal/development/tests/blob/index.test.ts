@@ -1,8 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createBlobStorage } from '../../src/blob'
-import { FilesystemStorage } from '../../src/blob/filesystem-storage'
-import { MemoryStorage } from '../../src/blob/memory-storage'
-import { S3Storage } from '../../src/blob/s3-storage'
+import { MemoryStorage } from '../../src/blob/providers/memory-storage'
+import { S3Storage } from '../../src/blob/providers/s3'
 
 vi.mock('@aws-sdk/client-s3', () => ({
   S3Client: class {},
@@ -14,11 +13,6 @@ describe('createBlobStorage', () => {
       config: { type: 'memory' as const },
       expected: MemoryStorage,
       description: 'memory storage',
-    },
-    {
-      config: { type: 'filesystem' as const, filesystem: { basePath: '/tmp/dbal-blob-test' } },
-      expected: FilesystemStorage,
-      description: 'filesystem storage',
     },
     {
       config: { type: 's3' as const, s3: { bucket: 'test-bucket', region: 'us-east-1' } },

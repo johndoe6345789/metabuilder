@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validateId } from '../../../src/core/validation/validate-id'
+import { validateId } from '../../../../src/core/validation/validate-id'
 
 describe('validateId', () => {
   it.each([

@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "description": "MetaBuilder - Data-driven multi-tenant platform",
   "scripts": {
-    "db:generate": "npm --prefix frontends/nextjs run db:generate",
-    "db:push": "npm --prefix frontends/nextjs run db:push",
-    "db:migrate": "npm --prefix frontends/nextjs run db:migrate",
+    "db:generate": "npm --prefix dbal/development run db:generate",
+    "db:push": "npm --prefix dbal/development run db:push",
+    "db:migrate": "npm --prefix dbal/development run db:migrate",
+    "db:seed": "npm --prefix dbal/development run db:seed",
     "dev": "npm --prefix frontends/nextjs run dev",
     "build": "npm --prefix frontends/nextjs run build",
     "typecheck": "npm --prefix frontends/nextjs run typecheck",
@@ -19,6 +20,7 @@
     "test:e2e:report": "playwright show-report"
   },
   "workspaces": [
+    "dbal/development",
     "frontends/nextjs",
     "frontends/dbal",
     "config",

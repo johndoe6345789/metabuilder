@@ -12,16 +12,14 @@ type PackageDataPayload = {
   data?: PackageSeedData
 }
 
-interface RouteParams {
-  params: {
-    packageId: string
-  }
-}
-
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ packageId: string }> }
+) {
   try {
+    const resolvedParams = await params
     // Validate packageId format
-    const packageIdResult = PackageSchemas.packageId.safeParse(params.packageId)
+    const packageIdResult = PackageSchemas.packageId.safeParse(resolvedParams.packageId)
     if (!packageIdResult.success) {
       return NextResponse.json(
         { error: 'Invalid package ID format' },
@@ -55,7 +53,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Package data is required' }, { status: 400 })
     }
 
-    await setPackageData(params.packageId, body.data)
+    await setPackageData(resolvedParams.packageId, body.data)
     return NextResponse.json({ saved: true })
   } catch (error) {
     console.error('Error saving package data:', error)

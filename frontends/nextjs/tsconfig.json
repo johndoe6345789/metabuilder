@@ -44,10 +44,10 @@
         "../../fakemui/*"
       ],
       "@/dbal": [
-        "../../dbal/development/src"
+        "../../node_modules/@metabuilder/dbal"
       ],
       "@/dbal/*": [
-        "../../dbal/development/src/*"
+        "../../node_modules/@metabuilder/dbal/*"
       ],
       "@dbal-ui/*": [
         "../../dbal/shared/ui/*"

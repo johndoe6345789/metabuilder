@@ -23,12 +23,13 @@ export function createBlobStorage(config: BlobStorageConfig): BlobStorage {
 
     case 'filesystem':
       // Dynamically import FilesystemStorage only on server (Node.js)
-      if (typeof window === 'undefined') {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
+      // In browser environments, this storage type should never be requested
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
         const { FilesystemStorage } = require('./providers/filesystem')
         return new FilesystemStorage(config)
-      } else {
-        throw new Error('FilesystemStorage is not available in browser environments')
+      } catch (error) {
+        throw new Error('FilesystemStorage is not available in this environment. Use \'memory\' or \'s3\' instead.')
       }
 
     default:

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { validateSessionCreate } from '../../../src/core/validation/validate-session-create'
+import { validateSessionCreate } from '../../../../../src/core/validation/validate-session-create'
 
 describe('validateSessionCreate', () => {
   const base = {

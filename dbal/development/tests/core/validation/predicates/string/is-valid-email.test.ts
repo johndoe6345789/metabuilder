@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isValidEmail } from '../../../src/core/validation/is-valid-email'
+import { isValidEmail } from '../../../../../src/core/validation/is-valid-email'
 
 describe('isValidEmail', () => {
   const longEmail = `${'a'.repeat(250)}@example.com`

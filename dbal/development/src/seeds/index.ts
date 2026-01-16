@@ -2,19 +2,25 @@
  * @file seeds/index.ts
  * @description Database Seed Orchestration
  *
- * Orchestrates loading and applying seed data from the /seed/ folder.
- * DBAL does NOT define what to seed - that lives in /seed/ folder as data files.
+ * Orchestrates loading and applying seed data from /dbal/shared/seeds/ folder.
+ * DBAL does NOT define what to seed - that lives in /dbal/shared/seeds/ as data files.
  * DBAL only manages the loading and application of that seed data.
  *
  * Seed data hierarchy:
- * 1. /seed/database/ - Base system bootstrap data (YAML format)
- * 2. packages/*/seed/metadata.json - Package-specific seed data
+ * 1. /dbal/shared/seeds/database - Base system bootstrap data (YAML format)
+ * 2. /dbal/shared/seeds/config - Bootstrap configuration (YAML format)
+ * 3. /dbal/shared/seeds/packages - Package installation order (YAML format)
+ * 4. packages/[packageId]/[entity-type]/ - Entity-specific seed data (page-config, workflow, etc.)
  */
 
+import fs from 'fs'
+import path from 'path'
+import yaml from 'yaml'
 import type { DBALClient } from '../core/client'
+import { getPrismaClient } from '../runtime/prisma-client'
 
 /**
- * Seed the database using seed data from /seed/ folder
+ * Seed the database using seed data from /dbal/shared/seeds/ folder
  *
  * Loads seed data files and applies them using entity operations.
  * All seeds are idempotent - they check if data exists before creating.
@@ -22,16 +28,125 @@ import type { DBALClient } from '../core/client'
  * @param dbal DBALClient instance for database access
  */
 export async function seedDatabase(dbal: DBALClient): Promise<void> {
-  // TODO: Implement seed loading from /seed/ folder
-  // For now, this is a placeholder that can be expanded when seed data
-  // structure and format is finalized.
-  //
-  // Expected implementation:
-  // 1. Load /seed/database/installed_packages.yaml
-  // 2. Load /seed/database/package_permissions.yaml
-  // 3. Load /seed/config/bootstrap.yaml
-  // 4. Load package-specific seeds from packages/*/seed/metadata.json
-  // 5. Apply each using DBALClient entity operations
+  // Determine project root: Next.js runs from nextjs directory, so check parent if needed
+  let cwd = process.cwd()
 
-  console.log('Seed database orchestration ready (awaiting seed data implementation)')
+  // If we're in frontends/nextjs, go up two levels to project root
+  if (cwd.endsWith('frontends/nextjs') || cwd.endsWith('frontends\\nextjs')) {
+    cwd = path.resolve(cwd, '../..')
+  }
+
+  const seedDir = path.resolve(cwd, 'dbal/shared/seeds/database')
+  const packagesDir = path.resolve(cwd, 'packages')
+
+  // 1. Load installed_packages.yaml
+  const packagesPath = path.join(seedDir, 'installed_packages.yaml')
+  const packagesYaml = fs.readFileSync(packagesPath, 'utf8')
+  const packagesData = yaml.parse(packagesYaml)
+
+  // 2. Insert packages (skip if already exists - idempotent)
+  // Note: Using Prisma directly for system packages (tenantId = null) to bypass ACL
+  const prisma = getPrismaClient()
+  for (const pkg of packagesData.records) {
+    try {
+      const existing = await prisma.installedPackage.findFirst({
+        where: { packageId: pkg.packageId }
+      })
+      if (existing) {
+        console.log(`Package ${pkg.packageId} already installed, skipping`)
+        continue
+      }
+    } catch (e) {
+      // Not found, proceed with creation
+    }
+
+    // Parse config from YAML string to JSON object
+    const config = typeof pkg.config === 'string'
+      ? JSON.parse(pkg.config.trim())
+      : pkg.config || {}
+
+    try {
+      await prisma.installedPackage.create({
+        data: {
+          packageId: pkg.packageId,
+          tenantId: pkg.tenantId || null,
+          installedAt: BigInt(Date.now()),
+          version: pkg.version,
+          enabled: pkg.enabled,
+          config: JSON.stringify(config)
+        }
+      })
+      console.log(`Installed package: ${pkg.packageId}`)
+    } catch (error) {
+      if ((error as any).code === 'P2002') {
+        console.log(`Package ${pkg.packageId} already exists, skipping`)
+      } else {
+        throw error
+      }
+    }
+  }
+
+  // 3. Load PageConfig entries from packages/[packageId]/page-config/ folders
+  for (const pkg of packagesData.records) {
+    const pageConfigDir = path.join(packagesDir, pkg.packageId, 'page-config')
+
+    // Check if this package has page-config folder
+    if (fs.existsSync(pageConfigDir)) {
+      // Load all JSON files in page-config folder
+      const files = fs.readdirSync(pageConfigDir)
+      const jsonFiles = files.filter(f => f.endsWith('.json') && f !== 'metadata.json')
+
+      for (const file of jsonFiles) {
+        const seedDataPath = path.join(pageConfigDir, file)
+        const seedData = JSON.parse(fs.readFileSync(seedDataPath, 'utf8'))
+
+        // seedData should be an array of PageConfig entries
+        const pages = Array.isArray(seedData) ? seedData : []
+
+        for (const page of pages) {
+          // Check if page already exists
+          const existing = await prisma.pageConfig.findFirst({
+            where: { path: page.path }
+          })
+
+          if (!existing) {
+            try {
+              await prisma.pageConfig.create({
+                data: {
+                  id: page.id || `page_${pkg.packageId}_${page.path.replace(/\//g, '_')}`,
+                  tenantId: page.tenantId || null,
+                  packageId: pkg.packageId,
+                  path: page.path,
+                  title: page.title,
+                  description: page.description || null,
+                  icon: page.icon || null,
+                  component: page.component,
+                  componentTree: page.componentTree || '{}',
+                  level: page.level || 0,
+                  requiresAuth: page.requiresAuth === true,
+                  requiredRole: page.requiredRole || null,
+                  parentPath: page.parentPath || null,
+                  sortOrder: page.sortOrder || 0,
+                  isPublished: page.isPublished === true,
+                  params: page.params || null,
+                  meta: page.meta || null,
+                  createdAt: BigInt(Date.now()),
+                  updatedAt: BigInt(Date.now())
+                }
+              })
+              console.log(`Created PageConfig for: ${page.path}`)
+            } catch (error) {
+              if ((error as any).code === 'P2002') {
+                console.log(`PageConfig ${page.path} already exists, skipping`)
+              } else {
+                throw error
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  console.log('Database seeded successfully')
 }

@@ -17,9 +17,10 @@
     "codegen": "tsx ../shared/tools/codegen/gen_types.ts",
     "codegen:prisma": "node ../shared/tools/codegen/gen_prisma_schema.js",
     "generate-types": "node ../shared/tools/codegen/generate-types.js",
-    "db:generate": "prisma generate --schema=prisma/schema.prisma",
-    "db:push": "prisma db push --schema=prisma/schema.prisma",
-    "db:studio": "prisma studio --schema=prisma/schema.prisma"
+    "db:generate": "prisma generate --schema=../shared/prisma/schema.prisma",
+    "db:push": "prisma db push --schema=../shared/prisma/schema.prisma",
+    "db:migrate": "prisma migrate deploy --schema=../shared/prisma/schema.prisma",
+    "db:studio": "prisma studio --schema=../shared/prisma/schema.prisma"
   },
   "keywords": [
     "database",
@@ -38,7 +39,9 @@
     "@prisma/adapter-better-sqlite3": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "better-sqlite3": "^12.5.0",
+    "dotenv": "^17.2.3",
     "prisma": "^7.2.0",
+    "yaml": "^2.8.2",
     "zod": "^4.2.1"
   },
   "devDependencies": {

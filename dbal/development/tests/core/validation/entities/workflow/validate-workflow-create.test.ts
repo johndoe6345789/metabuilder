@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { validateWorkflowCreate } from '../../../src/core/validation/validate-workflow-create'
+import { validateWorkflowCreate } from '../../../../../src/core/validation/validate-workflow-create'
 
 describe('validateWorkflowCreate', () => {
   const base = {

@@ -59,7 +59,6 @@ export async function listEntries(
   return {
     entries,
     hasMore: false,
-    nextCursor: undefined
   }
 }
 

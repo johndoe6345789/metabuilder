@@ -55,6 +55,14 @@ export const updateManyUsers = async (
     ])
   }
 
+  // Check that filter has at least one field besides tenantId
+  const filterKeys = Object.keys(filter).filter(k => k !== 'tenantId')
+  if (filterKeys.length === 0) {
+    throw DBALError.validationError('Bulk update requires a filter', [
+      { field: 'filter', error: 'Filter must include at least one field besides tenantId' },
+    ])
+  }
+
   if (!data || Object.keys(data).length === 0) {
     throw DBALError.validationError('Bulk update requires data', [
       { field: 'data', error: 'Update data is required' },

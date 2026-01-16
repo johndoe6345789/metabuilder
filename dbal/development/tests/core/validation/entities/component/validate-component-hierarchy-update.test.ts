@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { validateComponentHierarchyUpdate } from '../../../src/core/validation/validate-component-hierarchy-update'
+import { validateComponentHierarchyUpdate } from '../../../../../src/core/validation/validate-component-hierarchy-update'
 
 describe('validateComponentHierarchyUpdate', () => {
   it.each([

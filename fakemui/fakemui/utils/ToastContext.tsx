@@ -1,3 +1,5 @@
+'use client'
+
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react'
 import { Snackbar, SnackbarContent } from '../feedback/Snackbar'
 

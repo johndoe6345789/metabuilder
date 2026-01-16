@@ -3,25 +3,25 @@
   "packageId": "ui_home",
   "name": "Home Page",
   "version": "1.0.0",
-  "description": "Level 1 home page with hero, features, about, and contact sections - the original MetaBuilder landing experience",
-  "author": "MetaBuilder",
+  "description": "Landing page with hero, features, about, and contact sections - the MetaBuilder home experience",
+  "author": "MetaBuilder Contributors",
   "license": "MIT",
+  "repository": "https://github.com/metabuilder/metabuilder",
+  "homepage": "https://metabuilder.dev",
+  "bugs": "https://github.com/metabuilder/metabuilder/issues",
   "category": "ui",
   "icon": "static_content/icon.svg",
-  "minLevel": 1,
+  "minLevel": 0,
   "primary": true,
+  "keywords": ["home", "landing", "hero", "ui", "public"],
   "dependencies": {
-    "ui_permissions": "*",
-    "ui_header": "*",
-    "ui_footer": "*"
+    "ui_header": "^1.0.0",
+    "ui_footer": "^1.0.0"
   },
   "devDependencies": {
     "testing": "*"
   },
   "exports": {
-    "pages": [
-      "level1"
-    ],
     "components": [
       "home_page",
       "hero_section",
@@ -40,8 +40,11 @@
       "navigate"
     ]
   },
+  "seed": {
+    "schema": "seed/page-config.json"
+  },
   "tests": {
-    "suites": [
+    "scripts": [
       "tests/metadata.test.json"
     ]
   }

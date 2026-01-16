@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { validatePackageUpdate } from '../../../src/core/validation/validate-package-update'
+import { validatePackageUpdate } from '../../../../../src/core/validation/validate-package-update'
 
 describe('validatePackageUpdate', () => {
   it.each([

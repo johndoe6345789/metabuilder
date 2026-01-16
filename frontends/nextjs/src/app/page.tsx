@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import { join } from 'path'
-import { getAdapter } from '@/lib/db/core/dbal-client'
+import { getDBALClient } from '@/dbal'
 import { loadJSONPackage } from '@/lib/packages/json/functions/load-json-package'
 import { renderJSONComponent } from '@/lib/packages/json/render-json-component'
 import { getPackagesDir } from '@/lib/packages/unified/get-packages-dir'
@@ -17,22 +17,20 @@ import { AccessDenied } from '@/components/AccessDenied'
  * This allows god/supergod users to override any route through the admin panel,
  * while still having sensible defaults from packages.
  */
+
+// Disable static generation - this page requires dynamic database access
+export const dynamic = 'force-dynamic'
+
 export default async function RootPage() {
-  const adapter = getAdapter()
+  const client = getDBALClient()
 
   // PRIORITY 1: Check god panel routes (PageConfig)
-  const godPanelRoutes = await adapter.list('PageConfig', {
+  const godPanelRoutes = await client.pageConfigs.list({
     filter: {
       path: '/',
       isPublished: true,
     },
-  }) as { data: Array<{
-    packageId?: string | null
-    component?: string | null
-    componentTree?: string | null
-    level: number
-    requiresAuth: boolean
-  }> }
+  })
 
   if (godPanelRoutes.data.length > 0) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -90,11 +88,11 @@ export default async function RootPage() {
   }
 
   // PRIORITY 2: Check package default routes (InstalledPackage.config.defaultRoute)
-  const installedPackages = await adapter.list('InstalledPackage', {
+  const installedPackages = await client.installedPackages.list({
     filter: {
       enabled: true,
     },
-  }) as { data: Array<{ packageId: string; config?: string | null }> }
+  })
 
   const homePackageRecord = installedPackages.data.find((pkg) => {
     try {
@@ -105,7 +103,7 @@ export default async function RootPage() {
     }
   })
 
-  if (homePackageRecord !== undefined) {
+  if (homePackageRecord !== undefined && homePackageRecord.packageId !== undefined && homePackageRecord.packageId !== null) {
     const packageId = homePackageRecord.packageId
     try {
       const pkg = await loadJSONPackage(join(getPackagesDir(), packageId))

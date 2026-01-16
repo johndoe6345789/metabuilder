@@ -219,7 +219,7 @@ export async function executeDbalOperation(
     switch (operation) {
       case 'list': {
         const result = await adapter.list(entity, { filter })
-        return { success: true, data: result.data, meta: { count: result.total } }
+        return { success: true, data: result.data, meta: { count: result.data.length } }
       }
       case 'read': {
         if (id === undefined || id.length === 0) return { success: false, error: 'ID required for read operation' }

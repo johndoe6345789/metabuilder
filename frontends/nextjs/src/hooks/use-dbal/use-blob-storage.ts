@@ -1,105 +1,12 @@
-import { useCallback } from 'react'
-// toast will be used when implementing error notifications
-// import { toast } from 'sonner'
+// Legacy hook - blob storage is available via getDBALClient()
 
-import { dbal } from '@/lib/dbal/core/client'
-
-import { useDBAL } from './use-dbal'
+import { getDBALClient } from '@/dbal'
 
 /**
- * Hook for blob storage operations
+ * Hook for blob storage operations via DBAL client
  */
 export function useBlobStorage() {
-  const { isReady } = useDBAL()
-
-  const upload = useCallback(
-    async (key: string, data: Buffer | Uint8Array, metadata?: Record<string, string>) => {
-      if (!isReady) {
-        throw new Error('DBAL not ready')
-      }
-      try {
-        await dbal.blobUpload(key, data, metadata)
-        // toast.success(`Uploaded: ${key}`)
-      } catch (err) {
-        const _errorInfo = dbal.handleError(err)
-        // toast.error(`Upload Error: ${errorInfo.message}`)
-        throw err
-      }
-    },
-    [isReady]
-  )
-
-  const download = useCallback(
-    async (key: string): Promise<Buffer> => {
-      if (!isReady) {
-        throw new Error('DBAL not ready')
-      }
-      try {
-        return await dbal.blobDownload(key)
-      } catch (err) {
-        const _errorInfo = dbal.handleError(err)
-        // toast.error(`Download Error: ${errorInfo.message}`)
-        throw err
-      }
-    },
-    [isReady]
-  )
-
-  const del = useCallback(
-    async (key: string) => {
-      if (!isReady) {
-        throw new Error('DBAL not ready')
-      }
-      try {
-        await dbal.blobDelete(key)
-        // toast.success(`Deleted: ${key}`)
-      } catch (err) {
-        const _errorInfo = dbal.handleError(err)
-        // toast.error(`Delete Error: ${errorInfo.message}`)
-        throw err
-      }
-    },
-    [isReady]
-  )
-
-  const list = useCallback(
-    async (prefix?: string): Promise<string[]> => {
-      if (!isReady) {
-        throw new Error('DBAL not ready')
-      }
-      try {
-        return await dbal.blobList(prefix)
-      } catch (err) {
-        const _errorInfo = dbal.handleError(err)
-        // toast.error(`List Error: ${errorInfo.message}`)
-        throw err
-      }
-    },
-    [isReady]
-  )
-
-  const getMetadata = useCallback(
-    async (key: string): Promise<Record<string, string>> => {
-      if (!isReady) {
-        throw new Error('DBAL not ready')
-      }
-      try {
-        return await dbal.blobGetMetadata(key)
-      } catch (err) {
-        const _errorInfo = dbal.handleError(err)
-        // toast.error(`Get Metadata Error: ${errorInfo.message}`)
-        throw err
-      }
-    },
-    [isReady]
-  )
-
   return {
-    isReady,
-    upload,
-    download,
-    delete: del,
-    list,
-    getMetadata,
+    getClient: getDBALClient,
   }
 }

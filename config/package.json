@@ -9,8 +9,8 @@
     "extract:auto": "cd frontends/nextjs && npm run extract:auto",
     "extract:all": "cd frontends/nextjs && npm run extract:all",
     "extract:help": "cd frontends/nextjs && npm run extract:help",
-    "db:generate": "npx prisma generate --schema=../prisma/schema.prisma",
-    "db:migrate": "npx prisma migrate dev --schema=../prisma/schema.prisma"
+    "db:generate": "npx prisma generate --schema=../dbal/shared/prisma/schema.prisma",
+    "db:migrate": "npx prisma migrate dev --schema=../dbal/shared/prisma/schema.prisma"
   },
   "devDependencies": {
     "@prisma/client": "^7.2.0",

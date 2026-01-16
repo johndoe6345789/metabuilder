@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Notification Seed Data",
+  "description": "Validation schema for notification template seed data files",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "Unique identifier for this notification template",
+        "pattern": "^notif_"
+      },
+      "name": {
+        "type": "string",
+        "description": "Display name for this notification template",
+        "minLength": 1,
+        "maxLength": 255
+      },
+      "description": {
+        "type": ["string", "null"],
+        "description": "Description of when this notification is sent",
+        "maxLength": 500
+      },
+      "type": {
+        "type": "string",
+        "description": "Notification type",
+        "enum": ["email", "sms", "push", "in_app", "webhook"]
+      },
+      "trigger": {
+        "type": "string",
+        "description": "Event that triggers this notification",
+        "examples": ["user.created", "order.shipped", "payment.failed"]
+      },
+      "subject": {
+        "type": "string",
+        "description": "Notification subject (for email)",
+        "maxLength": 255
+      },
+      "template": {
+        "type": "string",
+        "description": "Notification template/body (supports variables like {{name}})",
+        "minLength": 1
+      },
+      "variables": {
+        "type": "array",
+        "description": "Available variables for template substitution",
+        "items": {
+          "type": "string"
+        },
+        "examples": [["name", "email", "orderId"]]
+      },
+      "isActive": {
+        "type": "boolean",
+        "description": "Whether notification is active",
+        "default": true
+      },
+      "priority": {
+        "type": "string",
+        "description": "Notification priority",
+        "enum": ["low", "normal", "high", "urgent"],
+        "default": "normal"
+      },
+      "retryConfig": {
+        "type": "object",
+        "description": "Retry configuration if notification fails",
+        "properties": {
+          "maxRetries": {
+            "type": "integer",
+            "default": 3
+          },
+          "retryDelayMs": {
+            "type": "integer",
+            "default": 5000
+          }
+        }
+      },
+      "tenantId": {
+        "type": ["string", "null"],
+        "description": "Tenant ID (null = system-wide)"
+      },
+      "packageId": {
+        "type": ["string", "null"],
+        "description": "Package that defined this notification"
+      },
+      "createdAt": {
+        "type": ["integer", "null"],
+        "description": "Creation timestamp"
+      }
+    },
+    "required": ["id", "name", "type", "trigger", "template"],
+    "additionalProperties": false
+  },
+  "minItems": 1,
+  "examples": [
+    [
+      {
+        "id": "notif_welcome_email",
+        "name": "Welcome Email",
+        "description": "Sent when new user signs up",
+        "type": "email",
+        "trigger": "user.created",
+        "subject": "Welcome to MetaBuilder, {{name}}!",
+        "template": "Hi {{name}},\n\nWelcome to MetaBuilder! Your account has been created.\n\nLogin here: https://app.metabuilder.dev",
+        "variables": ["name", "email"],
+        "isActive": true,
+        "priority": "normal"
+      }
+    ]
+  ]
+}

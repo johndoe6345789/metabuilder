@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Component Seed Data",
+  "description": "Validation schema for reusable component seed data files",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "Unique identifier for this component",
+        "pattern": "^comp_"
+      },
+      "name": {
+        "type": "string",
+        "description": "Component name",
+        "minLength": 1,
+        "maxLength": 255
+      },
+      "description": {
+        "type": ["string", "null"],
+        "description": "What this component does",
+        "maxLength": 500
+      },
+      "category": {
+        "type": "string",
+        "description": "Component category",
+        "enum": ["form", "display", "layout", "navigation", "modal", "chart", "table", "custom"],
+        "default": "custom"
+      },
+      "schema": {
+        "type": "object",
+        "description": "Component props schema (JSON Schema format)"
+      },
+      "template": {
+        "type": "object",
+        "description": "Default component template/configuration"
+      },
+      "props": {
+        "type": "object",
+        "description": "Default props for this component"
+      },
+      "styles": {
+        "type": "object",
+        "description": "Default styles (CSS or style object)"
+      },
+      "events": {
+        "type": "array",
+        "description": "Events this component can emit",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "required": ["name"]
+        }
+      },
+      "slots": {
+        "type": "array",
+        "description": "Named slots for component content",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "required": ["name"]
+        }
+      },
+      "version": {
+        "type": "string",
+        "description": "Component version",
+        "default": "1.0.0"
+      },
+      "isPublished": {
+        "type": "boolean",
+        "description": "Whether component is published",
+        "default": true
+      },
+      "tenantId": {
+        "type": ["string", "null"],
+        "description": "Tenant ID (null = system-wide)"
+      },
+      "packageId": {
+        "type": ["string", "null"],
+        "description": "Package that defines this component"
+      },
+      "createdAt": {
+        "type": ["integer", "null"],
+        "description": "Creation timestamp"
+      }
+    },
+    "required": ["id", "name", "category"],
+    "additionalProperties": false
+  },
+  "minItems": 1,
+  "examples": [
+    [
+      {
+        "id": "comp_form_input",
+        "name": "Form Input",
+        "description": "Standard text input field for forms",
+        "category": "form",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "label": { "type": "string" },
+            "placeholder": { "type": "string" },
+            "required": { "type": "boolean" }
+          }
+        },
+        "props": {
+          "type": "text",
+          "maxLength": 255
+        },
+        "events": [
+          { "name": "onChange", "description": "Fired when value changes" },
+          { "name": "onBlur", "description": "Fired when field loses focus" }
+        ],
+        "version": "1.0.0",
+        "isPublished": true
+      }
+    ]
+  ]
+}

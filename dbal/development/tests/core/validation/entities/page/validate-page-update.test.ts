@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validatePageUpdate } from '../../../src/core/validation/validate-page-update'
+import { validatePageUpdate } from '../../../../../src/core/validation/validate-page-update'
 
 describe('validatePageUpdate', () => {
   it.each([

@@ -24,9 +24,7 @@ export const createAdapter = (config: DBALConfig): DBALAdapter => {
       case 'prisma':
         baseAdapter = new PrismaAdapter(
           config.database?.url,
-          {
-            queryTimeout: config.performance?.queryTimeout
-          }
+          config.performance?.queryTimeout ? { queryTimeout: config.performance.queryTimeout } : undefined
         )
         break
       case 'memory':
@@ -35,17 +33,13 @@ export const createAdapter = (config: DBALConfig): DBALAdapter => {
       case 'postgres':
         baseAdapter = new PostgresAdapter(
           config.database?.url,
-          {
-            queryTimeout: config.performance?.queryTimeout
-          }
+          config.performance?.queryTimeout ? { queryTimeout: config.performance.queryTimeout } : undefined
         )
         break
       case 'mysql':
         baseAdapter = new MySQLAdapter(
           config.database?.url,
-          {
-            queryTimeout: config.performance?.queryTimeout
-          }
+          config.performance?.queryTimeout ? { queryTimeout: config.performance.queryTimeout } : undefined
         )
         break
       case 'sqlite':
