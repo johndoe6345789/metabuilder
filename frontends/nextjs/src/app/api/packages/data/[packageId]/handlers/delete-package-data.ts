@@ -6,16 +6,14 @@ import { getSessionUser, STATUS } from '@/lib/routing'
 import { getRoleLevel, ROLE_LEVELS } from '@/lib/constants'
 import { PackageSchemas } from '@/lib/validation'
 
-interface RouteParams {
-  params: {
-    packageId: string
-  }
-}
-
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ packageId: string }> }
+) {
   try {
+    const resolvedParams = await params
     // Validate packageId format
-    const packageIdResult = PackageSchemas.packageId.safeParse(params.packageId)
+    const packageIdResult = PackageSchemas.packageId.safeParse(resolvedParams.packageId)
     if (!packageIdResult.success) {
       return NextResponse.json(
         { error: 'Invalid package ID format' },
@@ -44,7 +42,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       )
     }
     
-    await deletePackageData(params.packageId)
+    await deletePackageData(resolvedParams.packageId)
     return NextResponse.json({ deleted: true })
   } catch (error) {
     console.error('Error deleting package data:', error)

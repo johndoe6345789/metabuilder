@@ -5,16 +5,14 @@ import { getPackageData } from '@/lib/db/packages/get-package-data'
 import { getSessionUser, STATUS } from '@/lib/routing'
 import { PackageSchemas } from '@/lib/validation'
 
-interface RouteParams {
-  params: {
-    packageId: string
-  }
-}
-
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ packageId: string }> }
+) {
   try {
+    const resolvedParams = await params
     // Validate packageId format
-    const packageIdResult = PackageSchemas.packageId.safeParse(params.packageId)
+    const packageIdResult = PackageSchemas.packageId.safeParse(resolvedParams.packageId)
     if (!packageIdResult.success) {
       return NextResponse.json(
         { error: 'Invalid package ID format' },
@@ -32,7 +30,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       )
     }
     
-    const data = await getPackageData(params.packageId)
+    const data = await getPackageData(resolvedParams.packageId)
     return NextResponse.json({ data })
   } catch (error) {
     console.error('Error fetching package data:', error)

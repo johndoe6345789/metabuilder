@@ -8,15 +8,13 @@ import { resolveGitHubRepo } from '@/lib/github/resolve-github-repo'
 import { getSessionUser, STATUS } from '@/lib/routing'
 import { getRoleLevel } from '@/lib/constants'
 
-interface RouteParams {
-  params: {
-    runId: string
-  }
-}
-
 export const dynamic = 'force-dynamic'
 
-export const GET = async (request: NextRequest, { params }: RouteParams) => {
+export const GET = async (
+  request: NextRequest,
+  { params }: { params: Promise<{ runId: string }> }
+) => {
+  const resolvedParams = await params
   // Require authentication - logs may contain sensitive info
   const session = await getSessionUser(request)
   
@@ -36,7 +34,7 @@ export const GET = async (request: NextRequest, { params }: RouteParams) => {
     )
   }
 
-  const runId = Number(params.runId)
+  const runId = Number(resolvedParams.runId)
   if (!Number.isFinite(runId) || runId <= 0) {
     return NextResponse.json({ error: 'Invalid run id' }, { status: 400 })
   }
