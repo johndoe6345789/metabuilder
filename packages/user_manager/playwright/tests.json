@@ -1,0 +1,74 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "user_manager",
+  "version": "1.0.0",
+  "description": "E2E tests for user_manager package - validates user CRUD operations and admin workflows",
+  "tests": [
+    {
+      "name": "should display user list",
+      "tags": ["@smoke", "@admin"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/admin/users"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify user table",
+          "action": "expect",
+          "selector": ".user-table",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should create new user",
+      "tags": ["@crud", "@admin"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/admin/users"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "Add User"
+        },
+        {
+          "action": "waitForSelector",
+          "selector": ".user-form"
+        },
+        {
+          "description": "Fill username",
+          "action": "fill",
+          "selector": "input[name='username']",
+          "value": "testuser"
+        },
+        {
+          "description": "Fill email",
+          "action": "fill",
+          "selector": "input[name='email']",
+          "value": "test@example.com"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "Save"
+        },
+        {
+          "description": "Verify success message",
+          "action": "expect",
+          "text": "User created successfully",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

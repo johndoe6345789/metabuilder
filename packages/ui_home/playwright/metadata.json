@@ -1,0 +1,16 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "folder": "playwright",
+  "description": "Playwright E2E test definitions for ui_home package",
+  "version": "1.0.0",
+  "files": {
+    "tests.json": "Main test suite with declarative test definitions"
+  },
+  "testRunner": "playwright",
+  "coverage": {
+    "components": ["home_page", "hero_section", "features_section", "about_section", "contact_section"],
+    "interactions": ["navigation", "forms", "anchors"],
+    "viewports": ["desktop", "mobile"]
+  },
+  "tags": ["@smoke", "@ui", "@critical", "@navigation", "@form", "@interaction", "@features", "@content"]
+}
