@@ -136,21 +136,44 @@ export const Default: Story = {
 
 ## Existing Test Files Status
 
-### Can Be Converted (2,500+ lines)
-- `e2e/smoke.spec.ts` → `packages/smoke_tests/playwright/tests.json` ✅ DONE
-- `e2e/login.spec.ts` → `packages/auth/playwright/tests.json` ✅ DONE
-- `e2e/crud.spec.ts` → `packages/crud/playwright/tests.json` ✅ DONE
-- `e2e/navigation.spec.ts` → `packages/navigation/playwright/tests.json` ✅ DONE
-- `e2e/pagination.spec.ts` → `packages/pagination/playwright/tests.json` ✅ DONE
-- `e2e/package-loading.spec.ts` → `packages/package_tests/playwright/tests.json` ✅ DONE
-- `e2e/package-rendering.spec.ts` → `packages/package_tests/playwright/tests.json` ✅ DONE
-- `e2e/auth/*.spec.ts` → `packages/auth/playwright/tests.json` ✅ DONE
-- `e2e/crud/*.spec.ts` → `packages/crud/playwright/tests.json` ✅ DONE
-- `e2e/api/*.spec.ts` → `packages/api_tests/playwright/tests.json` ✅ DONE (marked skip - requires request context)
+### ✅ Fully Converted (2,500+ lines → 95 JSON tests)
 
-### Should Keep As-Is
-- `e2e/dbal-daemon/*.spec.ts` - Complex daemon testing
-- Tests with custom TypeScript logic that can't be represented in JSON
+**Tests now properly scoped to their functional packages:**
+
+1. **`packages/smoke_tests/playwright/tests.json`** (4 tests)
+   - From: `e2e/smoke.spec.ts`
+   - Cross-cutting smoke tests for overall app functionality
+
+2. **`packages/ui_auth/playwright/tests.json`** (16 tests)
+   - From: `e2e/login.spec.ts`, `e2e/auth/authentication.spec.ts`, `e2e/auth/complete-flow.spec.ts`
+   - Authentication and login functionality tests
+
+3. **`packages/user_manager/playwright/tests.json`** (24 tests)
+   - From: `e2e/crud.spec.ts`, `e2e/crud/user-management.spec.ts`, `e2e/crud/complete-flow.spec.ts`
+   - User CRUD operations and management tests
+
+4. **`packages/ui_home/playwright/tests.json`** (14 tests: 8 original + 6 navigation)
+   - From: Original + `e2e/navigation.spec.ts` (merged)
+   - Home page and app navigation tests
+
+5. **`packages/data_table/playwright/tests.json`** (9 tests)
+   - From: `e2e/pagination.spec.ts`
+   - Pagination component tests
+
+6. **`packages/package_manager/playwright/tests.json`** (24 tests)
+   - From: `e2e/package-rendering.spec.ts`, `e2e/package-loading.spec.ts`
+   - Package lifecycle and rendering tests
+
+7. **`packages/dashboard/playwright/tests.json`** (2 tests)
+   - Dashboard widget tests
+
+8. **`packages/api_tests/playwright/tests.json`** (12 tests, marked skip)
+   - From: `e2e/api/crud-operations.spec.ts`
+   - API endpoint tests (requires JSON runner enhancement for request context)
+
+### Should Keep As TypeScript
+- `e2e/dbal-daemon/*.spec.ts` - Complex daemon testing with specialized logic
+- Tests requiring custom TypeScript logic that can't be represented in JSON declaratively
 
 ### Storybook Files
 - `storybook/src/stories/*.stories.tsx` (8 files) - Can be converted

@@ -24,7 +24,10 @@
     {
       "name": "should load home page successfully",
       "description": "Verifies the home page loads with HTTP 200 and displays content",
-      "tags": ["@smoke", "@critical"],
+      "tags": [
+        "@smoke",
+        "@critical"
+      ],
       "timeout": 10000,
       "steps": [
         {
@@ -51,7 +54,10 @@
     {
       "name": "should display hero section with title and CTAs",
       "description": "Validates hero section renders with gradient title and action buttons",
-      "tags": ["@smoke", "@ui"],
+      "tags": [
+        "@smoke",
+        "@ui"
+      ],
       "steps": [
         {
           "action": "navigate",
@@ -101,7 +107,11 @@
     {
       "name": "should display six level feature cards",
       "description": "Validates the Six Levels of Power feature grid with all 6 level cards",
-      "tags": ["@smoke", "@ui", "@features"],
+      "tags": [
+        "@smoke",
+        "@ui",
+        "@features"
+      ],
       "steps": [
         {
           "action": "navigate",
@@ -158,7 +168,10 @@
     {
       "name": "should display navigation with Sign In and Admin buttons",
       "description": "Validates navigation bar with authentication links",
-      "tags": ["@smoke", "@navigation"],
+      "tags": [
+        "@smoke",
+        "@navigation"
+      ],
       "steps": [
         {
           "action": "navigate",
@@ -199,7 +212,10 @@
     {
       "name": "should display about section",
       "description": "Validates About MetaBuilder section content",
-      "tags": ["@ui", "@content"],
+      "tags": [
+        "@ui",
+        "@content"
+      ],
       "steps": [
         {
           "action": "navigate",
@@ -231,7 +247,10 @@
     {
       "name": "should display contact form",
       "description": "Validates contact section with form fields",
-      "tags": ["@ui", "@form"],
+      "tags": [
+        "@ui",
+        "@form"
+      ],
       "steps": [
         {
           "action": "navigate",
@@ -303,7 +322,10 @@
     {
       "name": "should have no critical console errors",
       "description": "Ensures page loads without JavaScript errors",
-      "tags": ["@smoke", "@critical"],
+      "tags": [
+        "@smoke",
+        "@critical"
+      ],
       "steps": [
         {
           "action": "navigate",
@@ -326,7 +348,10 @@
     {
       "name": "should navigate to sections via anchor links",
       "description": "Tests smooth scrolling to sections via navigation links",
-      "tags": ["@interaction", "@navigation"],
+      "tags": [
+        "@interaction",
+        "@navigation"
+      ],
       "steps": [
         {
           "action": "navigate",
@@ -350,6 +375,166 @@
           "description": "Features section should be in viewport",
           "action": "expect",
           "selector": "#features",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "navigation_tests_merged",
+      "description": "Navigation tests from navigation package"
+    },
+    {
+      "name": "should navigate from homepage to key sections",
+      "tags": [
+        "@navigation",
+        "@routing"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify page has content",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have working navigation menu",
+      "tags": [
+        "@navigation"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "description": "Check for navigation element",
+          "action": "expect",
+          "selector": "nav, [role=\"navigation\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should handle 404 pages gracefully",
+      "tags": [
+        "@navigation",
+        "@error-handling"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/this-page-does-not-exist-12345"
+        },
+        {
+          "description": "Wait for page to load",
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check for not found message",
+          "action": "expect",
+          "text": "not found",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have accessible navigation",
+      "tags": [
+        "@navigation",
+        "@accessibility"
+      ],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "description": "Check for main landmark",
+          "action": "expect",
+          "selector": "main, [role=\"main\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Press Tab key for keyboard navigation",
+          "action": "press",
+          "key": "Tab"
+        }
+      ]
+    },
+    {
+      "name": "should show mobile menu on small screens",
+      "tags": [
+        "@navigation",
+        "@responsive",
+        "@mobile"
+      ],
+      "steps": [
+        {
+          "description": "Set mobile viewport",
+          "action": "evaluate",
+          "script": "await page.setViewportSize({ width: 375, height: 667 })"
+        },
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify navigation is present",
+          "action": "expect",
+          "selector": "[role=\"navigation\"], nav",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show desktop navigation on large screens",
+      "tags": [
+        "@navigation",
+        "@responsive",
+        "@desktop"
+      ],
+      "steps": [
+        {
+          "description": "Set desktop viewport",
+          "action": "evaluate",
+          "script": "await page.setViewportSize({ width: 1920, height: 1080 })"
+        },
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "description": "Desktop navigation should be visible",
+          "action": "expect",
+          "selector": "nav, [role=\"navigation\"]",
           "assertion": {
             "matcher": "toBeVisible"
           }
