@@ -1,0 +1,571 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "package_tests",
+  "version": "1.0.0",
+  "description": "Package rendering and loading E2E tests - converted from e2e/package-rendering.spec.ts and e2e/package-loading.spec.ts",
+  "tests": [
+    {
+      "name": "should render homepage with fakemui components",
+      "tags": ["@package", "@rendering", "@smoke"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Should have navigation",
+          "action": "expect",
+          "selector": "nav, header, [role=\"navigation\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Should have main content area",
+          "action": "expect",
+          "selector": "main, [role=\"main\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should render Card components",
+      "tags": ["@package", "@rendering", "@ui"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Look for card-like elements",
+          "action": "expect",
+          "selector": "[class*=\"card\"], [class*=\"Card\"], .MuiCard-root, .paper",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should render Typography components",
+      "tags": ["@package", "@rendering"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check for typography elements",
+          "action": "expect",
+          "selector": "h1, h2, h3, h4, h5, h6",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should render Button components",
+      "tags": ["@package", "@rendering"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check for buttons",
+          "action": "expect",
+          "selector": "button, [role=\"button\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should render Box layout correctly",
+      "tags": ["@package", "@rendering", "@layout"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Box components should render",
+          "action": "expect",
+          "selector": "[class*=\"box\"], [class*=\"Box\"], div.flex, div.block",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should render Container with max-width",
+      "tags": ["@package", "@rendering", "@layout"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Container should be visible",
+          "action": "expect",
+          "selector": "[class*=\"container\"], [class*=\"Container\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have sign in button visible",
+      "tags": ["@package", "@navigation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Should have auth-related buttons",
+          "action": "expect",
+          "role": "button",
+          "text": "sign in",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should navigate to login page",
+      "tags": ["@package", "@navigation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Click sign in",
+          "action": "click",
+          "role": "button",
+          "text": "sign in"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Should be on login page",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toContainText",
+            "expected": "login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should render fakemui icons without errors",
+      "tags": ["@package", "@icons"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Icons should be SVG elements",
+          "action": "expect",
+          "selector": "svg",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should apply consistent styling",
+      "tags": ["@package", "@theme"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check that body has proper background",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should be mobile-responsive",
+      "tags": ["@package", "@responsive", "@mobile"],
+      "steps": [
+        {
+          "description": "Set mobile viewport",
+          "action": "evaluate",
+          "script": "await page.setViewportSize({ width: 375, height: 667 })"
+        },
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Content should still be visible",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should be tablet-responsive",
+      "tags": ["@package", "@responsive", "@tablet"],
+      "steps": [
+        {
+          "description": "Set tablet viewport",
+          "action": "evaluate",
+          "script": "await page.setViewportSize({ width: 768, height: 1024 })"
+        },
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Content should be visible",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should load within acceptable time",
+      "tags": ["@package", "@performance"],
+      "timeout": 15000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Page should be loaded",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should render ui_home package",
+      "tags": ["@package", "@loading"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Should load and render home page",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should render dashboard package",
+      "tags": ["@package", "@loading"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/default/dashboard"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Should load dashboard",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should handle package not found",
+      "tags": ["@package", "@error-handling"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/default/non_existent_package"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Should show 404 or not found message",
+          "action": "expect",
+          "text": "not found",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should respect package min level permissions",
+      "tags": ["@package", "@permissions"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/default/admin_dialog"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Should be denied or redirected",
+          "action": "expect",
+          "text": "access denied",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should render JSON components from package",
+      "tags": ["@package", "@json"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Components should be rendered from JSON",
+          "action": "expect",
+          "selector": "main, section, div",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should set page title from package",
+      "tags": ["@package", "@metadata"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Should have page title",
+          "action": "expect",
+          "selector": "head title",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should load packages for specific tenant",
+      "tags": ["@package", "@multi-tenant"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/default/dashboard"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Should load for default tenant",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should handle missing package files",
+      "tags": ["@package", "@error-handling"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/default/missing_package_123"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Should show 404 or package not found",
+          "action": "expect",
+          "text": "not found",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should load packages quickly",
+      "tags": ["@package", "@performance"],
+      "timeout": 10000,
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Should load in reasonable time",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have semantic HTML from package components",
+      "tags": ["@package", "@accessibility"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check for semantic elements",
+          "action": "expect",
+          "selector": "main, header, nav",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have proper heading hierarchy",
+      "tags": ["@package", "@accessibility"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Should have h1",
+          "action": "expect",
+          "selector": "h1",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

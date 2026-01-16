@@ -1,0 +1,145 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "navigation",
+  "version": "1.0.0",
+  "description": "Navigation and routing E2E tests - converted from e2e/navigation.spec.ts",
+  "tests": [
+    {
+      "name": "should navigate from homepage to key sections",
+      "tags": ["@navigation", "@routing"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify page has content",
+          "action": "expect",
+          "selector": "body",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have working navigation menu",
+      "tags": ["@navigation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "description": "Check for navigation element",
+          "action": "expect",
+          "selector": "nav, [role=\"navigation\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should handle 404 pages gracefully",
+      "tags": ["@navigation", "@error-handling"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/this-page-does-not-exist-12345"
+        },
+        {
+          "description": "Wait for page to load",
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Check for not found message",
+          "action": "expect",
+          "text": "not found",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have accessible navigation",
+      "tags": ["@navigation", "@accessibility"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "description": "Check for main landmark",
+          "action": "expect",
+          "selector": "main, [role=\"main\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Press Tab key for keyboard navigation",
+          "action": "press",
+          "key": "Tab"
+        }
+      ]
+    },
+    {
+      "name": "should show mobile menu on small screens",
+      "tags": ["@navigation", "@responsive", "@mobile"],
+      "steps": [
+        {
+          "description": "Set mobile viewport",
+          "action": "evaluate",
+          "script": "await page.setViewportSize({ width: 375, height: 667 })"
+        },
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify navigation is present",
+          "action": "expect",
+          "selector": "[role=\"navigation\"], nav",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show desktop navigation on large screens",
+      "tags": ["@navigation", "@responsive", "@desktop"],
+      "steps": [
+        {
+          "description": "Set desktop viewport",
+          "action": "evaluate",
+          "script": "await page.setViewportSize({ width: 1920, height: 1080 })"
+        },
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "description": "Desktop navigation should be visible",
+          "action": "expect",
+          "selector": "nav, [role=\"navigation\"]",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

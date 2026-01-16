@@ -1,0 +1,10 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "packageId": "crud",
+  "name": "CRUD Tests",
+  "version": "1.0.0",
+  "description": "CRUD operations E2E tests for entity management",
+  "category": "testing",
+  "minLevel": 0,
+  "keywords": ["crud", "tests", "entities", "operations"]
+}
