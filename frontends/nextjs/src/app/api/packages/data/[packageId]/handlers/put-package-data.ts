@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
 import { readJson } from '@/lib/api/read-json'
-import { setPackageData } from '@/lib/db/packages/set-package-data'
+import { db } from '@/lib/db-client'
 import type { PackageSeedData } from '@/lib/package-types'
 import { getSessionUser, STATUS } from '@/lib/routing'
 import { getRoleLevel, ROLE_LEVELS } from '@/lib/constants'
@@ -53,7 +53,17 @@ export async function PUT(
       return NextResponse.json({ error: 'Package data is required' }, { status: 400 })
     }
 
-    await setPackageData(resolvedParams.packageId, body.data)
+    // Save package data using DBAL
+    const dataJson = JSON.stringify(body.data)
+    
+    // Use upsert to create or update
+    const { getAdapter } = await import('@/lib/db/dbal-client')
+    const adapter = getAdapter()
+    await adapter.upsert('PackageData', 
+      { packageId: resolvedParams.packageId },
+      { packageId: resolvedParams.packageId, data: dataJson }
+    )
+    
     return NextResponse.json({ saved: true })
   } catch (error) {
     console.error('Error saving package data:', error)

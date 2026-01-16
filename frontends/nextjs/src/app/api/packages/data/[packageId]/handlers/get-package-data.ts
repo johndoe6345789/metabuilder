@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-import { getPackageData } from '@/lib/db/packages/get-package-data'
+import { db } from '@/lib/db-client'
 import { getSessionUser, STATUS } from '@/lib/routing'
 import { PackageSchemas } from '@/lib/validation'
 
@@ -30,7 +30,16 @@ export async function GET(
       )
     }
     
-    const data = await getPackageData(resolvedParams.packageId)
+    // Get package data using DBAL
+    const packageData = await db.packageData.read(resolvedParams.packageId)
+    
+    if (!packageData) {
+      return NextResponse.json({ data: null })
+    }
+    
+    // Parse the JSON data field
+    const data = packageData.data ? JSON.parse(packageData.data) : null
+    
     return NextResponse.json({ data })
   } catch (error) {
     console.error('Error fetching package data:', error)
