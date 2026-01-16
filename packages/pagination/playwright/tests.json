@@ -73,7 +73,7 @@
           "selector": "button[aria-label=\"Go to page 2\"]",
           "assertion": {
             "matcher": "toHaveAttribute",
-            "expected": "aria-current"
+            "expected": ["aria-current", "page"]
           }
         }
       ]
@@ -103,19 +103,21 @@
           }
         },
         {
-          "description": "Next button should be enabled",
+          "description": "Next button should not be disabled",
           "action": "expect",
           "selector": "button[aria-label=\"Go to next page\"]",
           "assertion": {
-            "matcher": "toBeEnabled"
+            "matcher": "toBeDisabled",
+            "not": true
           }
         },
         {
-          "description": "Last button should be enabled",
+          "description": "Last button should not be disabled",
           "action": "expect",
           "selector": "button[aria-label=\"Go to last page\"]",
           "assertion": {
-            "matcher": "toBeEnabled"
+            "matcher": "toBeDisabled",
+            "not": true
           }
         }
       ]
@@ -150,19 +152,21 @@
           }
         },
         {
-          "description": "Previous button should be enabled",
+          "description": "Previous button should not be disabled",
           "action": "expect",
           "selector": "button[aria-label=\"Go to previous page\"]",
           "assertion": {
-            "matcher": "toBeEnabled"
+            "matcher": "toBeDisabled",
+            "not": true
           }
         },
         {
-          "description": "First button should be enabled",
+          "description": "First button should not be disabled",
           "action": "expect",
           "selector": "button[aria-label=\"Go to first page\"]",
           "assertion": {
-            "matcher": "toBeEnabled"
+            "matcher": "toBeDisabled",
+            "not": true
           }
         }
       ]
@@ -261,7 +265,7 @@
           "selector": "button[aria-label=\"Go to page 1\"]",
           "assertion": {
             "matcher": "toHaveAttribute",
-            "expected": "aria-current"
+            "expected": ["aria-current", "page"]
           }
         },
         {
@@ -281,7 +285,7 @@
           "selector": "button[aria-label=\"Go to page 2\"]",
           "assertion": {
             "matcher": "toHaveAttribute",
-            "expected": "aria-current"
+            "expected": ["aria-current", "page"]
           }
         },
         {
@@ -295,7 +299,7 @@
           "selector": "button[aria-label=\"Go to page 3\"]",
           "assertion": {
             "matcher": "toHaveAttribute",
-            "expected": "aria-current"
+            "expected": ["aria-current", "page"]
           }
         },
         {
@@ -319,7 +323,7 @@
           "selector": "button[aria-label=\"Go to page 1\"]",
           "assertion": {
             "matcher": "toHaveAttribute",
-            "expected": "aria-current"
+            "expected": ["aria-current", "page"]
           }
         }
       ]

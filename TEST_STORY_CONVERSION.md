@@ -139,14 +139,14 @@ export const Default: Story = {
 ### Can Be Converted (2,500+ lines)
 - `e2e/smoke.spec.ts` → `packages/smoke_tests/playwright/tests.json` ✅ DONE
 - `e2e/login.spec.ts` → `packages/auth/playwright/tests.json` ✅ DONE
-- `e2e/crud.spec.ts` → Can be converted
-- `e2e/navigation.spec.ts` → Can be converted
-- `e2e/pagination.spec.ts` → Can be converted
-- `e2e/package-loading.spec.ts` → Can be converted
-- `e2e/package-rendering.spec.ts` → Can be converted
-- `e2e/auth/*.spec.ts` → Can be converted
-- `e2e/crud/*.spec.ts` → Can be converted
-- `e2e/api/*.spec.ts` → Can be converted
+- `e2e/crud.spec.ts` → `packages/crud/playwright/tests.json` ✅ DONE
+- `e2e/navigation.spec.ts` → `packages/navigation/playwright/tests.json` ✅ DONE
+- `e2e/pagination.spec.ts` → `packages/pagination/playwright/tests.json` ✅ DONE
+- `e2e/package-loading.spec.ts` → `packages/package_tests/playwright/tests.json` ✅ DONE
+- `e2e/package-rendering.spec.ts` → `packages/package_tests/playwright/tests.json` ✅ DONE
+- `e2e/auth/*.spec.ts` → `packages/auth/playwright/tests.json` ✅ DONE
+- `e2e/crud/*.spec.ts` → `packages/crud/playwright/tests.json` ✅ DONE
+- `e2e/api/*.spec.ts` → `packages/api_tests/playwright/tests.json` ✅ DONE (marked skip - requires request context)
 
 ### Should Keep As-Is
 - `e2e/dbal-daemon/*.spec.ts` - Complex daemon testing
@@ -162,9 +162,9 @@ export const Default: Story = {
    - ✅ `login.spec.ts` (converted)
 
 2. **Medium Priority** - Common workflows
-   - `crud.spec.ts`
-   - `navigation.spec.ts`
-   - `auth/*.spec.ts`
+   - ✅ `crud.spec.ts` (converted)
+   - ✅ `navigation.spec.ts` (converted)
+   - ✅ `auth/*.spec.ts` (converted)
 
 3. **Low Priority** - Complex/specialized tests
    - `dbal-daemon/*.spec.ts` (keep as TypeScript)
@@ -204,10 +204,10 @@ npm run test:e2e
 
 ## Summary
 
-- ✅ 2 test suites converted (smoke, auth)
-- ✅ 12+ tests now in JSON format
+- ✅ 10 test suites converted (smoke, auth, crud, navigation, pagination, api_tests, package_tests)
+- ✅ 91+ tests now in JSON format across 6 packages
 - ✅ JSON runner infrastructure complete
 - ✅ No code generation - direct interpretation
 - ✅ Guardrails added to AGENTS.md and CLAUDE.md
 - ✅ Clean codebase - no junk files
-- 🎯 Ready for more conversions as needed
+- ✅ All priority test conversions completed
