@@ -47,7 +47,6 @@ const DEFAULT_USERS = [
 export async function seedUsers(): Promise<void> {
   const adapter = getAdapter()
   const now = BigInt(Date.now())
-  const DEFAULT_TENANT = 'default' // Use 'default' as system tenant for seed data
 
   for (const userData of DEFAULT_USERS) {
     // Check if user already exists
@@ -60,7 +59,7 @@ export async function seedUsers(): Promise<void> {
       continue
     }
 
-    // Create user with default tenant
+    // Create user
     await adapter.create('User', {
       id: userData.id,
       username: userData.username,
@@ -68,7 +67,7 @@ export async function seedUsers(): Promise<void> {
       role: userData.role,
       isInstanceOwner: userData.isInstanceOwner,
       createdAt: now,
-      tenantId: DEFAULT_TENANT, // Use default tenant instead of null
+      tenantId: null,
       profilePicture: null,
       bio: null,
     })
