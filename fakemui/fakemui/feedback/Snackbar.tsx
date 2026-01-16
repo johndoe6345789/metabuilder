@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useCallback, useState } from 'react'
 import { classNames } from '../utils/classNames'
 

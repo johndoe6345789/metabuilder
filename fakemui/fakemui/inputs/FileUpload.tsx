@@ -1,3 +1,5 @@
+'use client'
+
 import React, { forwardRef, useCallback, useRef, useState } from 'react'
 import { FormLabel } from './FormLabel'
 import { FormHelperText } from './FormHelperText'

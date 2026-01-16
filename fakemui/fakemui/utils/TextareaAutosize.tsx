@@ -1,3 +1,5 @@
+'use client'
+
 import React, { forwardRef, useRef, useEffect, useCallback } from 'react'
 import { classNames } from './classNames'
 

@@ -28,10 +28,16 @@ import { getPrismaClient } from '../runtime/prisma-client'
  * @param dbal DBALClient instance for database access
  */
 export async function seedDatabase(dbal: DBALClient): Promise<void> {
-  // __dirname resolves to dist directory, so we need to go up 3 levels
-  // dist -> src -> development -> . -> dbal -> shared/seeds/database
-  const seedDir = path.resolve(__dirname, '../../../shared/seeds/database')
-  const packagesDir = path.resolve(__dirname, '../../../../packages')
+  // Determine project root: Next.js runs from nextjs directory, so check parent if needed
+  let cwd = process.cwd()
+
+  // If we're in frontends/nextjs, go up two levels to project root
+  if (cwd.endsWith('frontends/nextjs') || cwd.endsWith('frontends\\nextjs')) {
+    cwd = path.resolve(cwd, '../..')
+  }
+
+  const seedDir = path.resolve(cwd, 'dbal/shared/seeds/database')
+  const packagesDir = path.resolve(cwd, 'packages')
 
   // 1. Load installed_packages.yaml
   const packagesPath = path.join(seedDir, 'installed_packages.yaml')

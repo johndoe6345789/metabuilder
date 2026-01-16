@@ -4,6 +4,8 @@
  * Renders JSON component definitions to React elements
  */
 
+'use client'
+
 import React from 'react'
 import type { JSONComponent } from './types'
 import type { JsonValue } from '@/types/utility-types'
