@@ -59,43 +59,55 @@ export async function seedDatabase(dbal: DBALClient): Promise<void> {
     }
   }
 
-  // 3. Load PageConfig entries from package seed/metadata.json files
+  // 3. Load PageConfig entries from package seed/page-config.json files
   for (const pkg of packagesData.records) {
-    const metadataPath = path.join(packagesDir, pkg.packageId, 'seed', 'metadata.json')
+    const seedMetadataPath = path.join(packagesDir, pkg.packageId, 'seed', 'metadata.json')
 
-    if (fs.existsSync(metadataPath)) {
-      const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'))
+    // Check if this package has seed data
+    if (fs.existsSync(seedMetadataPath)) {
+      const seedMetadata = JSON.parse(fs.readFileSync(seedMetadataPath, 'utf8'))
 
-      if (metadata.exports?.pages) {
-        for (const page of metadata.exports.pages) {
-          // Check if page already exists
-          const existing = await dbal.pageConfigs.list({
-            filter: { path: page.path }
-          })
+      // Get the reference to the actual seed data file (e.g., page-config.json)
+      const seedFile = seedMetadata.seed?.schema
+      if (seedFile) {
+        const seedDataPath = path.join(packagesDir, pkg.packageId, 'seed', seedFile)
 
-          if (existing.data.length === 0) {
-            await dbal.pageConfigs.create({
-              id: `page_${pkg.packageId}_${page.path.replace(/\//g, '_')}`,
-              tenantId: null,
-              packageId: pkg.packageId,
-              path: page.path,
-              title: page.title,
-              description: page.description || null,
-              icon: null,
-              component: page.component,
-              componentTree: '{}', // Empty for now - will be populated later
-              level: page.level,
-              requiresAuth: page.requiresAuth,
-              requiredRole: null,
-              parentPath: null,
-              sortOrder: 0,
-              isPublished: page.isPublished,
-              params: null,
-              meta: null,
-              createdAt: BigInt(Date.now()),
-              updatedAt: BigInt(Date.now())
+        if (fs.existsSync(seedDataPath)) {
+          const seedData = JSON.parse(fs.readFileSync(seedDataPath, 'utf8'))
+
+          // seedData should be an array of PageConfig entries
+          const pages = Array.isArray(seedData) ? seedData : []
+
+          for (const page of pages) {
+            // Check if page already exists
+            const existing = await dbal.pageConfigs.list({
+              filter: { path: page.path }
             })
-            console.log(`Created PageConfig for: ${page.path}`)
+
+            if (existing.data.length === 0) {
+              await dbal.pageConfigs.create({
+                id: page.id || `page_${pkg.packageId}_${page.path.replace(/\//g, '_')}`,
+                tenantId: page.tenantId || null,
+                packageId: pkg.packageId,
+                path: page.path,
+                title: page.title,
+                description: page.description || null,
+                icon: page.icon || null,
+                component: page.component,
+                componentTree: page.componentTree || '{}', // Empty for now - will be populated later
+                level: page.level || 0,
+                requiresAuth: page.requiresAuth === true,
+                requiredRole: page.requiredRole || null,
+                parentPath: page.parentPath || null,
+                sortOrder: page.sortOrder || 0,
+                isPublished: page.isPublished === true,
+                params: page.params || null,
+                meta: page.meta || null,
+                createdAt: BigInt(Date.now()),
+                updatedAt: BigInt(Date.now())
+              })
+              console.log(`Created PageConfig for: ${page.path}`)
+            }
           }
         }
       }

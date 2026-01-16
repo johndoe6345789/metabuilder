@@ -64,7 +64,11 @@
       "Bash(git push:*)",
       "WebFetch(domain:www.prisma.io)",
       "WebFetch(domain:pris.ly)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(for pkg in /Users/rmac/Documents/metabuilder/packages/*/)",
+      "Bash(do if [ ! -d \"$pkg/seed\" ])",
+      "Bash(then basename \"$pkg\")",
+      "Bash(fi)"
     ]
   },
   "spinnerTipsEnabled": false
