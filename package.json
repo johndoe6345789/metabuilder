@@ -18,10 +18,7 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
-    "test:generate": "tsx e2e/generators/generate.ts",
-    "test:generate:watch": "tsx watch e2e/generators/generate.ts",
-    "storybook:generate": "tsx storybook/generators/generate.ts",
-    "storybook:generate:watch": "tsx watch storybook/generators/generate.ts"
+    "test:e2e:json": "playwright test e2e/json-packages.spec.ts"
   },
   "workspaces": [
     "dbal/development",
