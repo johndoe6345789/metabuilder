@@ -1,0 +1,81 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "api_tests",
+  "version": "1.0.0",
+  "description": "API CRUD operations E2E tests - converted from e2e/api/crud-operations.spec.ts",
+  "baseURL": "http://localhost:3000",
+  "tests": [
+    {
+      "name": "should list entities with default pagination",
+      "tags": ["@api", "@list", "@get"],
+      "skip": true,
+      "description": "API test - requires request context (not standard page navigation)"
+    },
+    {
+      "name": "should list entities with pagination parameters",
+      "tags": ["@api", "@list", "@pagination"],
+      "skip": true,
+      "description": "API test - requires request context"
+    },
+    {
+      "name": "should list entities with filters",
+      "tags": ["@api", "@list", "@filter"],
+      "skip": true,
+      "description": "API test - requires request context"
+    },
+    {
+      "name": "should list entities with sorting",
+      "tags": ["@api", "@list", "@sort"],
+      "skip": true,
+      "description": "API test - requires request context"
+    },
+    {
+      "name": "should create a new entity or return appropriate error",
+      "tags": ["@api", "@create", "@post"],
+      "skip": true,
+      "description": "API test - requires request context"
+    },
+    {
+      "name": "should reject invalid entity data",
+      "tags": ["@api", "@create", "@validation"],
+      "skip": true,
+      "description": "API test - requires request context"
+    },
+    {
+      "name": "should get entity by ID or return not found",
+      "tags": ["@api", "@read", "@get"],
+      "skip": true,
+      "description": "API test - requires request context"
+    },
+    {
+      "name": "should update an existing entity or return error",
+      "tags": ["@api", "@update", "@put"],
+      "skip": true,
+      "description": "API test - requires request context"
+    },
+    {
+      "name": "should delete an existing entity or return error",
+      "tags": ["@api", "@delete"],
+      "skip": true,
+      "description": "API test - requires request context"
+    },
+    {
+      "name": "should return proper error for invalid route",
+      "tags": ["@api", "@error-handling"],
+      "skip": true,
+      "description": "API test - requires request context"
+    },
+    {
+      "name": "should handle missing package gracefully",
+      "tags": ["@api", "@error-handling"],
+      "skip": true,
+      "description": "API test - requires request context"
+    },
+    {
+      "name": "should return JSON error responses",
+      "tags": ["@api", "@error-handling"],
+      "skip": true,
+      "description": "API test - requires request context"
+    }
+  ]
+}

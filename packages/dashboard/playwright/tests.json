@@ -1,0 +1,52 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "dashboard",
+  "version": "1.0.0",
+  "description": "E2E tests for dashboard package - validates user dashboard, widgets, and data display",
+  "tests": [
+    {
+      "name": "should load dashboard for authenticated user",
+      "tags": ["@smoke", "@dashboard"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/dashboard"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "domcontentloaded"
+        },
+        {
+          "description": "Verify dashboard container",
+          "action": "expect",
+          "selector": ".dashboard-container",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should display user widgets",
+      "tags": ["@ui", "@widgets"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/dashboard"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Check widgets grid exists",
+          "action": "expect",
+          "selector": ".dashboard-widgets",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    }
+  ]
+}

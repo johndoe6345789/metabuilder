@@ -28,8 +28,15 @@ test.describe('Basic Smoke Tests', () => {
     // Check if the page has loaded
     await page.waitForLoadState('domcontentloaded');
     
-    // Check if navigation buttons are present (more reliable than text search)
-    await expect(page.getByRole('button', { name: /sign in|get started/i })).toBeVisible();
+    // Check if navigation buttons are present - check for at least one
+    const signInButton = page.getByRole('button', { name: /sign in/i });
+    const getStartedButton = page.getByRole('button', { name: /get started/i });
+    
+    // At least one of these buttons should be visible
+    const signInVisible = await signInButton.isVisible().catch(() => false);
+    const getStartedVisible = await getStartedButton.isVisible().catch(() => false);
+    
+    expect(signInVisible || getStartedVisible).toBeTruthy();
   });
 
   test('should not have critical console errors on load', async ({ page }) => {

@@ -1,0 +1,380 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "title": "Package Playwright Test Configuration",
+  "description": "Playwright E2E test configuration for MetaBuilder packages - defines test scenarios, assertions, and page interactions",
+  "type": "object",
+  "required": ["$schema", "tests"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference",
+      "const": "https://metabuilder.dev/schemas/package-playwright.schema.json"
+    },
+    "package": {
+      "type": "string",
+      "description": "Package identifier",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "version": {
+      "type": "string",
+      "description": "Schema version",
+      "default": "1.0.0"
+    },
+    "description": {
+      "type": "string",
+      "description": "Test suite description"
+    },
+    "baseURL": {
+      "type": "string",
+      "description": "Base URL for tests (defaults to playwright config)",
+      "format": "uri"
+    },
+    "setup": {
+      "type": "object",
+      "description": "Global test setup configuration",
+      "properties": {
+        "beforeAll": {
+          "type": "array",
+          "description": "Steps to run once before all tests",
+          "items": { "$ref": "#/definitions/setupStep" }
+        },
+        "beforeEach": {
+          "type": "array",
+          "description": "Steps to run before each test",
+          "items": { "$ref": "#/definitions/setupStep" }
+        },
+        "afterEach": {
+          "type": "array",
+          "description": "Steps to run after each test",
+          "items": { "$ref": "#/definitions/setupStep" }
+        },
+        "afterAll": {
+          "type": "array",
+          "description": "Steps to run once after all tests",
+          "items": { "$ref": "#/definitions/setupStep" }
+        }
+      }
+    },
+    "fixtures": {
+      "type": "object",
+      "description": "Test fixtures - reusable test data",
+      "additionalProperties": {
+        "type": "object",
+        "description": "Fixture data"
+      }
+    },
+    "tests": {
+      "type": "array",
+      "description": "Test definitions",
+      "items": { "$ref": "#/definitions/test" }
+    }
+  },
+  "definitions": {
+    "setupStep": {
+      "type": "object",
+      "required": ["action"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "Action to perform",
+          "enum": ["navigate", "click", "fill", "select", "wait", "eval", "mock", "seed", "custom"]
+        },
+        "url": {
+          "type": "string",
+          "description": "URL for navigate action"
+        },
+        "selector": {
+          "type": "string",
+          "description": "Element selector"
+        },
+        "value": {
+          "description": "Value for fill/select actions"
+        },
+        "script": {
+          "type": "string",
+          "description": "JavaScript code to evaluate"
+        },
+        "timeout": {
+          "type": "number",
+          "description": "Timeout in milliseconds",
+          "minimum": 0
+        }
+      }
+    },
+    "test": {
+      "type": "object",
+      "required": ["name", "steps"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Test name",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed test description"
+        },
+        "skip": {
+          "type": "boolean",
+          "description": "Skip this test",
+          "default": false
+        },
+        "only": {
+          "type": "boolean",
+          "description": "Run only this test",
+          "default": false
+        },
+        "timeout": {
+          "type": "number",
+          "description": "Test timeout in milliseconds",
+          "minimum": 0
+        },
+        "retries": {
+          "type": "number",
+          "description": "Number of retries on failure",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "tags": {
+          "type": "array",
+          "description": "Test tags for filtering",
+          "items": { "type": "string" },
+          "examples": [["@smoke", "@critical", "@slow"]]
+        },
+        "fixtures": {
+          "type": "object",
+          "description": "Test-specific fixture overrides",
+          "additionalProperties": true
+        },
+        "steps": {
+          "type": "array",
+          "description": "Test steps to execute",
+          "items": { "$ref": "#/definitions/testStep" },
+          "minItems": 1
+        }
+      }
+    },
+    "testStep": {
+      "type": "object",
+      "required": ["action"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Human-readable step description"
+        },
+        "action": {
+          "type": "string",
+          "description": "Action to perform",
+          "enum": [
+            "navigate",
+            "click",
+            "dblclick",
+            "fill",
+            "type",
+            "select",
+            "check",
+            "uncheck",
+            "hover",
+            "focus",
+            "press",
+            "wait",
+            "waitForSelector",
+            "waitForNavigation",
+            "waitForLoadState",
+            "screenshot",
+            "evaluate",
+            "expect",
+            "custom"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "description": "URL for navigate action"
+        },
+        "selector": {
+          "type": "string",
+          "description": "CSS selector or role-based selector"
+        },
+        "role": {
+          "type": "string",
+          "description": "ARIA role for getByRole selector",
+          "enum": ["button", "link", "textbox", "heading", "img", "navigation", "main", "article", "section"]
+        },
+        "text": {
+          "type": "string",
+          "description": "Text content or pattern for getByText selector"
+        },
+        "label": {
+          "type": "string",
+          "description": "Label for getByLabel selector"
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder for getByPlaceholder selector"
+        },
+        "testId": {
+          "type": "string",
+          "description": "Test ID for getByTestId selector"
+        },
+        "value": {
+          "description": "Value to fill, type, or select"
+        },
+        "key": {
+          "type": "string",
+          "description": "Key to press (e.g., 'Enter', 'Escape')"
+        },
+        "timeout": {
+          "type": "number",
+          "description": "Step timeout in milliseconds",
+          "minimum": 0
+        },
+        "assertion": {
+          "$ref": "#/definitions/assertion",
+          "description": "Assertion to make for expect actions"
+        },
+        "state": {
+          "type": "string",
+          "description": "Load state for waitForLoadState",
+          "enum": ["load", "domcontentloaded", "networkidle"]
+        },
+        "path": {
+          "type": "string",
+          "description": "File path for screenshot"
+        },
+        "fullPage": {
+          "type": "boolean",
+          "description": "Capture full page screenshot",
+          "default": false
+        },
+        "script": {
+          "type": "string",
+          "description": "JavaScript code for evaluate action"
+        },
+        "condition": {
+          "type": "string",
+          "description": "Conditional expression for conditional steps"
+        }
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "required": ["matcher"],
+      "properties": {
+        "matcher": {
+          "type": "string",
+          "description": "Playwright assertion matcher",
+          "enum": [
+            "toBeVisible",
+            "toBeHidden",
+            "toBeEnabled",
+            "toBeDisabled",
+            "toBeChecked",
+            "toBeFocused",
+            "toBeEmpty",
+            "toHaveText",
+            "toContainText",
+            "toHaveValue",
+            "toHaveCount",
+            "toHaveAttribute",
+            "toHaveClass",
+            "toHaveCSS",
+            "toHaveURL",
+            "toHaveTitle",
+            "toBeTruthy",
+            "toBeFalsy",
+            "toEqual",
+            "toContain",
+            "toBeGreaterThan",
+            "toBeLessThan"
+          ]
+        },
+        "expected": {
+          "description": "Expected value for matcher"
+        },
+        "not": {
+          "type": "boolean",
+          "description": "Negate the assertion",
+          "default": false
+        },
+        "timeout": {
+          "type": "number",
+          "description": "Assertion timeout in milliseconds",
+          "minimum": 0
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+      "package": "ui_home",
+      "description": "E2E tests for home page components",
+      "tests": [
+        {
+          "name": "should display home page with hero section",
+          "tags": ["@smoke", "@critical"],
+          "steps": [
+            {
+              "description": "Navigate to home page",
+              "action": "navigate",
+              "url": "/"
+            },
+            {
+              "description": "Wait for page to load",
+              "action": "waitForLoadState",
+              "state": "domcontentloaded"
+            },
+            {
+              "description": "Verify hero title is visible",
+              "action": "expect",
+              "text": "Build Anything, Visually",
+              "assertion": {
+                "matcher": "toBeVisible"
+              }
+            },
+            {
+              "description": "Verify Get Started button exists",
+              "action": "expect",
+              "role": "button",
+              "text": "Get Started",
+              "assertion": {
+                "matcher": "toBeVisible"
+              }
+            }
+          ]
+        },
+        {
+          "name": "should display six feature cards",
+          "steps": [
+            {
+              "action": "navigate",
+              "url": "/"
+            },
+            {
+              "action": "waitForLoadState",
+              "state": "networkidle"
+            },
+            {
+              "description": "Check feature grid container exists",
+              "action": "expect",
+              "selector": ".features-grid",
+              "assertion": {
+                "matcher": "toBeVisible"
+              }
+            },
+            {
+              "description": "Verify 6 feature cards are rendered",
+              "action": "expect",
+              "selector": ".feature-card",
+              "assertion": {
+                "matcher": "toHaveCount",
+                "expected": 6
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

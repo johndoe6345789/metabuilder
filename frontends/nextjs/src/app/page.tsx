@@ -3,11 +3,10 @@ import { notFound, redirect } from 'next/navigation'
 import { join } from 'path'
 import { getDBALClient } from '@/dbal'
 import { loadJSONPackage } from '@/lib/packages/json/functions/load-json-package'
-import { renderJSONComponent } from '@/lib/packages/json/render-json-component'
 import { getPackagesDir } from '@/lib/packages/unified/get-packages-dir'
-import type { JSONComponent } from '@/lib/packages/json/types'
 import { getCurrentUser } from '@/lib/auth/get-current-user'
 import { AccessDenied } from '@/components/AccessDenied'
+import { JSONComponentRenderer } from '@/components/JSONComponentRenderer'
 
 /**
  * Root page handler with routing priority:
@@ -55,16 +54,16 @@ export default async function RootPage() {
         const parsed = JSON.parse(route.componentTree) as Record<string, unknown>
         // Validate required fields for JSONComponent
         if (typeof parsed.id === 'string' && typeof parsed.name === 'string') {
-          const componentDef: JSONComponent = {
+          const componentDef = {
             id: parsed.id,
             name: parsed.name,
             description: typeof parsed.description === 'string' ? parsed.description : undefined,
-            props: Array.isArray(parsed.props) ? parsed.props as JSONComponent['props'] : undefined,
+            props: Array.isArray(parsed.props) ? parsed.props : undefined,
             render: typeof parsed.render === 'object' && parsed.render !== null 
-              ? parsed.render as JSONComponent['render'] 
+              ? parsed.render 
               : undefined,
           }
-          return renderJSONComponent(componentDef, {}, {})
+          return <JSONComponentRenderer component={componentDef} />
         }
       } catch {
         // Invalid JSON in componentTree, fall through to package reference
@@ -75,13 +74,20 @@ export default async function RootPage() {
     if (route.packageId !== null && route.packageId !== undefined &&
         route.component !== null && route.component !== undefined) {
       try {
+        console.log('[RootPage] Loading package:', route.packageId, 'component:', route.component)
         const pkg = await loadJSONPackage(join(getPackagesDir(), route.packageId))
+        console.log('[RootPage] Package loaded, has', pkg.components?.length, 'components')
         const component = pkg.components?.find(c => c.id === route.component || c.name === route.component)
+        console.log('[RootPage] Component found:', !!component)
 
         if (component !== undefined) {
-          return renderJSONComponent(component, {}, {}, pkg.components)
+          console.log('[RootPage] Rendering component:', component.name)
+          return <JSONComponentRenderer component={component} allComponents={pkg.components} />
+        } else {
+          console.error('[RootPage] Component not found in package. Available:', pkg.components?.map(c => c.id).join(', '))
         }
-      } catch {
+      } catch (error) {
+        console.error('[RootPage] Error loading package:', error)
         // Package doesn't exist or can't be loaded, fall through
       }
     }
@@ -116,7 +122,7 @@ export default async function RootPage() {
         ) ?? pkg.components[0]
 
         if (pageComponent !== undefined) {
-          return renderJSONComponent(pageComponent, {}, {}, pkg.components)
+          return <JSONComponentRenderer component={pageComponent} allComponents={pkg.components} />
         }
       }
     } catch {
