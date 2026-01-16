@@ -18,9 +18,9 @@ jobs:
       - name: Mirror repository
         uses: yesolutions/mirror-action@v0.7.0
         with:
-          REMOTE_NAME: mirror
-          REMOTE: https://git.wardcrew.com/username/metabuilder.git
-          GIT_USERNAME: username
-          GIT_PASSWORD: password
+          REMOTE_NAME: git
+          REMOTE: https://git.wardcrew.com/git/metabuilder.git
+          GIT_USERNAME: git
+          GIT_PASSWORD: 4wHhnUX7n7pVaFZi
           PUSH_ALL_REFS: true
           GIT_PUSH_ARGS: --tags --force --prune
