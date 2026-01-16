@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/seed/permission.json",
+  "title": "Permission Seed Data",
+  "description": "Seed data for permission entries",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["resource", "action"],
+    "properties": {
+      "id": { "type": "string", "description": "Permission ID" },
+      "resource": { "type": "string", "description": "Resource type" },
+      "action": { "type": "string", "description": "Action (read, write, delete, etc)" },
+      "role": { "type": "string", "description": "Required role" },
+      "level": { "type": "integer", "minimum": 0, "maximum": 5, "description": "Required level" },
+      "description": { "type": "string" },
+      "conditions": { "type": "string", "description": "JSON string of conditions" }
+    }
+  }
+}

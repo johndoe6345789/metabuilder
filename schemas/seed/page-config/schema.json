@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://metabuilder.dev/schemas/seed/page-config.json",
+  "title": "Page Config Seed Data",
+  "description": "Seed data for PageConfig database entries",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["path", "title", "component"],
+    "properties": {
+      "id": { "type": "string", "description": "Page ID" },
+      "path": { "type": "string", "description": "URL path" },
+      "title": { "type": "string", "description": "Page title" },
+      "description": { "type": "string", "description": "Page description" },
+      "packageId": { "type": "string", "description": "Package ID" },
+      "component": { "type": "string", "description": "Component to render" },
+      "icon": { "type": "string", "description": "Icon for navigation" },
+      "level": { "type": "integer", "minimum": 0, "maximum": 5, "default": 0, "description": "Access level" },
+      "requiresAuth": { "type": "boolean", "default": false },
+      "isPublished": { "type": "boolean", "default": true },
+      "sortOrder": { "type": "integer", "default": 0 },
+      "parentPath": { "type": "string", "description": "Parent page path" },
+      "requiredRole": { "type": "string" },
+      "params": { "type": "string", "description": "JSON string of parameters" },
+      "meta": { "type": "string", "description": "JSON string of metadata" }
+    }
+  }
+}
