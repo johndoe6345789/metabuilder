@@ -15,9 +15,11 @@ export const createPackage = async (
 ): Promise<Result<InstalledPackage>> => {
   const installedAt = input.installedAt ?? BigInt(Date.now())
   const payload: InstalledPackage = {
+    id: input.packageId, // Use packageId as id
     packageId: input.packageId,
     tenantId: input.tenantId ?? null,
     installedAt,
+    updatedAt: installedAt, // Set updatedAt to installedAt initially
     version: input.version,
     enabled: input.enabled,
     config: input.config ?? null

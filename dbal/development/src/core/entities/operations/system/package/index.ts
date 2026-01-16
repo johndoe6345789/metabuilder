@@ -56,9 +56,11 @@ const assertValidId = (id: string) => {
 const withInstalledPackageDefaults = (data: CreatePackageInput): InstalledPackage => {
   const installedAt = data.installedAt ?? BigInt(Date.now())
   return {
+    id: data.packageId, // Use packageId as id
     packageId: data.packageId,
     tenantId: data.tenantId ?? null,
     installedAt,
+    updatedAt: installedAt, // Set updatedAt to installedAt initially
     version: data.version,
     enabled: data.enabled,
     config: data.config ?? null,
