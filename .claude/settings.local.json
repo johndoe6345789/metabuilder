@@ -60,7 +60,10 @@
       "Bash(DATABASE_URL=\"file:./dbal/development/prisma/dev.db\" npm run db:push:*)",
       "Bash(DATABASE_URL=\"file:../shared/prisma/dev.db\" prisma db push:*)",
       "Bash(DATABASE_URL=\"file:../shared/prisma/dev.db\" npx prisma db push:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:www.prisma.io)",
+      "WebFetch(domain:pris.ly)"
     ]
   },
   "spinnerTipsEnabled": false

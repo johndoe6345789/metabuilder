@@ -73,41 +73,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
  */
 export async function generateStaticParams() {
   try {
-    const { getAdapter } = await import('@/lib/db/core/dbal-client')
-    const adapter = getAdapter()
-    
-    // Query database for all active, published pages
-    const result = await adapter.list('UIPage', {
-      filter: {
-        isActive: true,
-        isPublished: true,
-      },
-    })
-
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (result.data === null || result.data === undefined || !Array.isArray(result.data)) {
-      return []
-    }
-
-    // Transform to Next.js static params format
-    return result.data
-      .map((page: unknown) => {
-        const typedPage = page as { path?: string | null }
-         
-        if (typedPage.path === null || typedPage.path === undefined || typeof typedPage.path !== 'string' || typedPage.path.length === 0) {
-          return null
-        }
-        
-        // Convert path "/foo/bar" to slug ["foo", "bar"]
-        // Remove leading slash and split
-        const slug = typedPage.path
-          .replace(/^\//, '')  // Remove leading slash
-          .split('/')
-          .filter(Boolean)  // Remove empty segments
-        
-        return { slug }
-      })
-      .filter((param): param is { slug: string[] } => param !== null)
+    // TODO: Implement UIPage entity in DBAL
+    // For now, return empty array to allow dynamic generation
+    return []
   } catch (error) {
     // If database query fails during build, log and return empty array
     console.error('Failed to generate static params for UI pages:', error)
