@@ -329,6 +329,50 @@ npm run test:e2e
 
 See `TESTING.md` for comprehensive E2E testing guide.
 
+#### Component Documentation (Storybook)
+
+**🚨 CRITICAL GUARDRAIL: Stories Are Data, Not Code**
+
+Like tests, Storybook stories must be JSON, not TypeScript!
+
+**❌ WRONG: Writing new .stories.tsx files**
+```typescript
+// DON'T DO THIS - No new .stories.tsx files!
+export const HomePage: Story = {
+  render: () => <HomePage title="Welcome" />
+}
+```
+
+**✅ CORRECT: JSON story definitions in packages**
+```json
+// packages/ui_home/storybook/stories.json
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "title": "Home Page Components",
+  "stories": [{
+    "name": "HomePage",
+    "render": "home_page",
+    "description": "Complete home page",
+    "args": {
+      "title": "Welcome to MetaBuilder"
+    }
+  }]
+}
+```
+
+**Story Location Rules:**
+- ✅ `packages/{package_name}/storybook/stories.json` - Package stories (PREFERRED)
+- ✅ `storybook/src/stories/*.stories.tsx` - Existing stories (legacy, don't add more)
+- ❌ NEVER create new `.stories.tsx` files - use JSON instead!
+
+**JSON Story Loader:**
+- Stories defined in `packages/*/storybook/stories.json` are auto-discovered
+- `storybook/json-loader/` loads and renders JSON stories directly
+- No code generation - JSON is rendered at runtime
+- Uses `DynamicStory` component to render from JSON definitions
+
+See `storybook/json-loader/README.md` for complete guide.
+
 #### Project Structure
 
 ```
@@ -477,7 +521,56 @@ npm run test:e2e
 
 ### Writing Tests
 
-**Unit test example:**
+**🚨 CRITICAL GUARDRAIL: Tests Are Data, Not Code**
+
+MetaBuilder follows the **95% JSON rule** for tests too. Tests must be defined as JSON, not TypeScript!
+
+**❌ WRONG: Writing new .spec.ts files**
+```typescript
+// DON'T DO THIS - No new .spec.ts files!
+test('should login', async ({ page }) => {
+  await page.goto('/login')
+  await page.fill('[name="username"]', 'user')
+})
+```
+
+**✅ CORRECT: JSON test definitions in packages**
+```json
+// packages/auth/playwright/tests.json
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "auth",
+  "tests": [{
+    "name": "should login",
+    "tags": ["@auth", "@smoke"],
+    "steps": [
+      {"action": "navigate", "url": "/login"},
+      {"action": "fill", "label": "Username", "value": "user"},
+      {"action": "click", "role": "button", "text": "Login"}
+    ]
+  }]
+}
+```
+
+**Test Location Rules:**
+- ✅ `packages/{package_name}/playwright/tests.json` - Package-scoped tests (NEW)
+- ✅ `e2e/*.spec.ts` - Existing manual tests (legacy, don't add more)
+- ✅ `e2e/json-packages.spec.ts` - Auto-loads all package JSON tests
+- ❌ NEVER create new `.spec.ts` files - use JSON instead!
+
+**JSON Test Runner:**
+- Tests defined in `packages/*/playwright/tests.json` are auto-discovered
+- `e2e/json-runner/playwright-json-runner.ts` interprets and executes JSON directly
+- No code generation - JSON is executed at runtime
+- Changes to JSON tests take effect immediately
+
+**Running JSON Tests:**
+```bash
+npm run test:e2e:json              # All package JSON tests
+npm run test:e2e -- e2e/json-packages.spec.ts  # Same thing, explicit
+```
+
+**Unit test example (still TypeScript):**
 ```typescript
 // tests/lib/users/createUser.test.ts
 import { createUser } from '@/lib/users/createUser'
@@ -490,20 +583,7 @@ describe('createUser', () => {
 })
 ```
 
-**E2E test example:**
-```typescript
-// e2e/users.spec.ts
-import { test, expect } from '@playwright/test'
-
-test('create user flow', async ({ page }) => {
-  await page.goto('http://localhost:3000/users')
-  await page.fill('input[name="username"]', 'john')
-  await page.click('button:has-text("Create")')
-  await expect(page).toHaveURL(/.*\/users\/.*/)
-})
-```
-
-See `TESTING.md` for comprehensive testing guide.
+See `TESTING.md` and `e2e/json-runner/README.md` for comprehensive testing guide.
 
 ---
 

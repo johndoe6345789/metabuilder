@@ -1,0 +1,160 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "auth",
+  "version": "1.0.0",
+  "description": "Authentication and login tests converted from e2e/login.spec.ts",
+  "tests": [
+    {
+      "name": "should display login form after navigating from landing page",
+      "tags": ["@auth", "@login"],
+      "timeout": 10000,
+      "steps": [
+        {
+          "description": "Navigate to home page",
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "description": "Click Sign In button",
+          "action": "click",
+          "role": "button",
+          "text": "Sign In"
+        },
+        {
+          "description": "Wait for navigation",
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify username field is visible",
+          "action": "expect",
+          "label": "Username",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        },
+        {
+          "description": "Verify password field is visible",
+          "action": "expect",
+          "label": "Password",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        },
+        {
+          "description": "Verify login button is visible",
+          "action": "expect",
+          "role": "button",
+          "text": "Login",
+          "assertion": {
+            "matcher": "toBeVisible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "should show error on invalid credentials",
+      "tags": ["@auth", "@login", "@validation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "Sign In"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Fill username",
+          "action": "fill",
+          "label": "Username",
+          "value": "invaliduser"
+        },
+        {
+          "description": "Fill password",
+          "action": "fill",
+          "label": "Password",
+          "value": "wrongpassword"
+        },
+        {
+          "description": "Click login button",
+          "action": "click",
+          "role": "button",
+          "text": "Login"
+        },
+        {
+          "description": "Verify error message appears",
+          "action": "expect",
+          "text": "invalid",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have register/sign up option",
+      "tags": ["@auth", "@registration"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "Sign In"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify register option exists",
+          "action": "expect",
+          "text": "register",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    },
+    {
+      "name": "should have back button to return to landing",
+      "tags": ["@auth", "@navigation"],
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "click",
+          "role": "button",
+          "text": "Sign In"
+        },
+        {
+          "action": "waitForLoadState",
+          "state": "networkidle"
+        },
+        {
+          "description": "Verify back button exists",
+          "action": "expect",
+          "role": "button",
+          "text": "back",
+          "assertion": {
+            "matcher": "toBeVisible",
+            "timeout": 5000
+          }
+        }
+      ]
+    }
+  ]
+}

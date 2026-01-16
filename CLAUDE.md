@@ -78,6 +78,87 @@ import HomePage from './HomePage'
 
 // ✅ MetaBuilder (data-driven)
 const route = await db.query('PageConfig', { path: '/' })
+const component = await loadComponent(route.componentId)
+return renderComponent(component)
+```
+
+### 🚨 CRITICAL GUARDRAILS
+
+#### 1. Tests Are Data, Not Code
+
+**❌ NEVER write new .spec.ts files** - Tests must be JSON!
+
+```json
+// ✅ CORRECT: packages/auth/playwright/tests.json
+{
+  "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
+  "package": "auth",
+  "tests": [{
+    "name": "should login successfully",
+    "tags": ["@auth", "@smoke"],
+    "steps": [
+      {"action": "navigate", "url": "/login"},
+      {"action": "fill", "label": "Username", "value": "testuser"},
+      {"action": "click", "role": "button", "text": "Login"},
+      {"action": "expect", "selector": ".dashboard", "assertion": {"matcher": "toBeVisible"}}
+    ]
+  }]
+}
+```
+
+- ✅ `packages/{name}/playwright/tests.json` - JSON test definitions (PREFERRED)
+- ✅ `e2e/*.spec.ts` - Existing manual tests (legacy)
+- ❌ NEVER create new .spec.ts files!
+
+Tests are auto-discovered and executed directly from JSON by `e2e/json-runner/`.
+
+#### 2. Stories Are Data, Not Code
+
+**❌ NEVER write new .stories.tsx files** - Stories must be JSON!
+
+```json
+// ✅ CORRECT: packages/ui_home/storybook/stories.json
+{
+  "$schema": "https://metabuilder.dev/schemas/package-storybook.schema.json",
+  "title": "Home Page Components",
+  "stories": [{
+    "name": "HomePage",
+    "render": "home_page",
+    "args": {"title": "Welcome"}
+  }]
+}
+```
+
+- ✅ `packages/{name}/storybook/stories.json` - JSON story definitions (PREFERRED)
+- ✅ `storybook/src/stories/*.stories.tsx` - Existing stories (legacy)
+- ❌ NEVER create new .stories.tsx files!
+
+Stories are auto-discovered and rendered directly from JSON by `storybook/json-loader/`.
+
+#### 3. 95% Configuration Rule
+
+Everything should be data/configuration:
+- UI → JSON component definitions
+- Routes → Database PageConfig entries
+- Tests → JSON test definitions
+- Stories → JSON story definitions
+- Business logic → JSON workflows/scripts
+
+Only infrastructure code should be TypeScript (5%).
+
+---
+
+## 📚 Documentation Priority
+
+**READ THESE IN ORDER:**
+
+1. **.github/prompts/workflow/0-kickstart.md** - Your complete development workflow
+2. **AGENTS.md** - Core principles, testing (JSON!), DBAL, packages
+3. **.github/copilot-instructions.md** - AI development patterns
+4. **README.md** - System overview
+5. **ARCHITECTURE.md** - MetaBuilder foundation
+
+---
 const component = await loadPackage(route.packageId)
 return renderJSONComponent(component)
 ```
