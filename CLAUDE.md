@@ -716,6 +716,19 @@ See `/schemas/package-schemas/script_schema.json` for JSON Script specification 
 | `/seed/database/package_permissions.yaml` | Permission seed data (YAML) |
 | `/packages/*/seed/metadata.json` | Package-specific seed data (JSON) |
 
+### Component System (Fakemui Integration - Complete & Production-Ready)
+
+| File | Purpose |
+|------|---------|
+| `/frontends/nextjs/src/lib/fakemui-registry.ts` | 151+ component registry (type-safe lookup) |
+| `/frontends/nextjs/src/lib/packages/json/render-json-component.tsx` | JSON component renderer (uses fakemui) |
+| `/packages/*/component/` | Package component seed data (entity folder) |
+| `/packages/*/component/metadata.json` | Component entity metadata |
+| `/packages/*/component/*.json` | Component definitions (JSON declarative) |
+| `/schemas/package-schemas/component.schema.json` | Component definition validation schema |
+| `/fakemui/` | Material-UI inspired component library |
+| `/fakemui/COMPONENT_MAPPING.md` | Inventory of 151+ components |
+
 ### Application Layers
 
 | File | Purpose |
@@ -810,7 +823,52 @@ await seedDatabase(db)
 3. Push to database: `npm --prefix dbal/development run db:push`
 4. Verify: Check `/prisma/prisma/dev.db` and `/prisma/schema.prisma` updated
 
-### Task 5: Bootstrap the System
+### Task 5: Create Declarative JSON Components
+
+Add components to packages using fakemui (151+ Material Design components):
+
+```bash
+# 1. Create component folder
+mkdir -p packages/my_package/component
+
+# 2. Create metadata.json
+cat > packages/my_package/component/metadata.json << 'EOF'
+{
+  "entityType": "component",
+  "description": "My components",
+  "components": [{ "id": "comp_my_button", "name": "My Button" }]
+}
+EOF
+
+# 3. Create components.json with JSON definitions
+cat > packages/my_package/component/components.json << 'EOF'
+[
+  {
+    "id": "comp_my_button",
+    "name": "My Button",
+    "category": "form",
+    "template": {
+      "type": "Button",
+      "props": { "variant": "{{variant}}" },
+      "children": "{{label}}"
+    },
+    "props": { "label": "Click Me", "variant": "primary" }
+  }
+]
+EOF
+
+# 4. Use in page definitions or bootstrap
+```
+
+**Components available**: 151+ fakemui Material Design components (Button, TextField, Card, Grid, etc.)
+
+**Learn more**:
+- `docs/README_COMPONENTS.md` - Start here for component system
+- `docs/FAKEMUI_QUICK_REFERENCE.md` - Quick lookup
+- `docs/FAKEMUI_INTEGRATION.md` - Complete guide
+- `docs/COMPONENT_MIGRATION_GUIDE.md` - Real-world examples
+
+### Task 6: Bootstrap the System
 
 After setting up seed data, call the bootstrap endpoint to load it:
 
@@ -1154,10 +1212,34 @@ cmake --build build
 26. **dbal/shared/seeds/database/installed_packages.yaml** - List of 12 core packages
 27. **dbal/shared/seeds/database/package_permissions.yaml** - System permissions
 
+### Component System & Fakemui Integration (Complete & Production-Ready)
+28. **docs/README_COMPONENTS.md** - ⭐ **START HERE** - Central hub for component system with learning paths
+29. **docs/FAKEMUI_QUICK_REFERENCE.md** - Quick lookup for components, expressions, patterns
+30. **docs/FAKEMUI_INTEGRATION.md** - Complete integration guide (2,000+ lines)
+    - 151+ available components
+    - Creating JSON components
+    - Template syntax and examples
+    - Best practices
+31. **docs/COMPONENT_SYSTEM_ARCHITECTURE.md** - System architecture (7 layers)
+    - Data flow from seed to browser
+    - Component categories explained
+    - Integration and extension points
+32. **docs/COMPONENT_MIGRATION_GUIDE.md** - Migration examples (5 detailed migrations)
+    - Quick start for new components
+    - Common patterns
+    - Troubleshooting
+33. **docs/FAKEMUI_INTEGRATION_SUMMARY.md** - Project completion summary
+    - What was accomplished
+    - Metrics and statistics
+    - Implementation status
+34. **fakemui/COMPONENT_MAPPING.md** - Inventory of 151+ components
+35. **frontends/nextjs/src/lib/fakemui-registry.ts** - Component registry (type-safe, 151+ components)
+36. **packages/ui_home/component/** - Example components (5 examples showing all patterns)
+
 ### Package System & Schemas
-28. **schemas/SCHEMAS_README.md** - Package system overview
-29. **schemas/QUICKSTART.md** - Package system quick start
-30. **schemas/package-schemas/** - Package definition schemas:
+37. **schemas/SCHEMAS_README.md** - Package system overview
+38. **schemas/QUICKSTART.md** - Package system quick start
+39. **schemas/package-schemas/** - Package definition schemas:
     - `script_schema.json` - JSON Script language (v2.2.0, planned n8n migration)
     - `metadata_schema.json` - Package structure
     - `entities_schema.json` - Database models
