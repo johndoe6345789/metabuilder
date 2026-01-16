@@ -10,7 +10,7 @@
  * 1. /dbal/shared/seeds/database - Base system bootstrap data (YAML format)
  * 2. /dbal/shared/seeds/config - Bootstrap configuration (YAML format)
  * 3. /dbal/shared/seeds/packages - Package installation order (YAML format)
- * 4. packages/[packageId]/seed/metadata.json - Package-specific seed data
+ * 4. packages/[packageId]/[entity-type]/ - Entity-specific seed data (page-config, workflow, etc.)
  */
 
 import fs from 'fs'
@@ -80,63 +80,60 @@ export async function seedDatabase(dbal: DBALClient): Promise<void> {
     }
   }
 
-  // 3. Load PageConfig entries from package seed/page-config.json files
+  // 3. Load PageConfig entries from packages/[packageId]/page-config/ folders
   for (const pkg of packagesData.records) {
-    const seedMetadataPath = path.join(packagesDir, pkg.packageId, 'seed', 'metadata.json')
+    const pageConfigDir = path.join(packagesDir, pkg.packageId, 'page-config')
 
-    // Check if this package has seed data
-    if (fs.existsSync(seedMetadataPath)) {
-      const seedMetadata = JSON.parse(fs.readFileSync(seedMetadataPath, 'utf8'))
+    // Check if this package has page-config folder
+    if (fs.existsSync(pageConfigDir)) {
+      // Load all JSON files in page-config folder
+      const files = fs.readdirSync(pageConfigDir)
+      const jsonFiles = files.filter(f => f.endsWith('.json') && f !== 'metadata.json')
 
-      // Get the reference to the actual seed data file (e.g., page-config.json)
-      const seedFile = seedMetadata.seed?.schema
-      if (seedFile) {
-        const seedDataPath = path.join(packagesDir, pkg.packageId, 'seed', seedFile)
+      for (const file of jsonFiles) {
+        const seedDataPath = path.join(pageConfigDir, file)
+        const seedData = JSON.parse(fs.readFileSync(seedDataPath, 'utf8'))
 
-        if (fs.existsSync(seedDataPath)) {
-          const seedData = JSON.parse(fs.readFileSync(seedDataPath, 'utf8'))
+        // seedData should be an array of PageConfig entries
+        const pages = Array.isArray(seedData) ? seedData : []
 
-          // seedData should be an array of PageConfig entries
-          const pages = Array.isArray(seedData) ? seedData : []
+        for (const page of pages) {
+          // Check if page already exists
+          const existing = await prisma.pageConfig.findFirst({
+            where: { path: page.path }
+          })
 
-          for (const page of pages) {
-            // Check if page already exists
-            const existing = await prisma.pageConfig.findFirst({
-              where: { path: page.path }
-            })
-
-            if (!existing) {
-              try {
-                await prisma.pageConfig.create({
-                  data: {
-                    id: page.id || `page_${pkg.packageId}_${page.path.replace(/\//g, '_')}`,
-                    tenantId: page.tenantId || null,
-                    packageId: pkg.packageId,
-                    path: page.path,
-                    title: page.title,
-                    description: page.description || null,
-                    icon: page.icon || null,
-                    component: page.component,
-                    componentTree: page.componentTree || '{}',
-                    level: page.level || 0,
-                    requiresAuth: page.requiresAuth === true,
-                    requiredRole: page.requiredRole || null,
-                    parentPath: page.parentPath || null,
-                    sortOrder: page.sortOrder || 0,
-                    isPublished: page.isPublished === true,
-                    params: page.params || null,
-                    meta: page.meta || null,
-                    createdAt: BigInt(Date.now()),
-                    updatedAt: BigInt(Date.now())
-                  }
-                })
-                console.log(`Created PageConfig for: ${page.path}`)
-              } catch (error) {
-                if ((error as any).code === 'P2002') {
-                  console.log(`PageConfig ${page.path} already exists, skipping`)
-                } else {
-                  throw error
+          if (!existing) {
+            try {
+              await prisma.pageConfig.create({
+                data: {
+                  id: page.id || `page_${pkg.packageId}_${page.path.replace(/\//g, '_')}`,
+                  tenantId: page.tenantId || null,
+                  packageId: pkg.packageId,
+                  path: page.path,
+                  title: page.title,
+                  description: page.description || null,
+                  icon: page.icon || null,
+                  component: page.component,
+                  componentTree: page.componentTree || '{}',
+                  level: page.level || 0,
+                  requiresAuth: page.requiresAuth === true,
+                  requiredRole: page.requiredRole || null,
+                  parentPath: page.parentPath || null,
+                  sortOrder: page.sortOrder || 0,
+                  isPublished: page.isPublished === true,
+                  params: page.params || null,
+                  meta: page.meta || null,
+                  createdAt: BigInt(Date.now()),
+                  updatedAt: BigInt(Date.now())
                 }
+              })
+              console.log(`Created PageConfig for: ${page.path}`)
+            } catch (error) {
+              if ((error as any).code === 'P2002') {
+                console.log(`PageConfig ${page.path} already exists, skipping`)
+              } else {
+                throw error
               }
             }
           }

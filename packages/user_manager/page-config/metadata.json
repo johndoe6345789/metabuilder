@@ -1,0 +1,6 @@
+{
+  "entity": "page-config",
+  "packageId": "user_manager",
+  "description": "Page routes for user_manager",
+  "version": "1.0.0"
+}

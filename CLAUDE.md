@@ -286,12 +286,13 @@ See `seed/packages/core-packages.yaml` for full order.
    - `package_permissions.yaml` - Permission/access control seed data
    - Loaded during `POST /api/bootstrap` via `seedDatabase()`
 
-2. **Package Seed Data** (`/packages/[packageId]/seed/`)
-   - `metadata.json` - **Required**. Describes the package and references data files
-   - `[entity-type].json` - **Optional**. Data files for specific entities (page-config, workflow, etc.)
+2. **Package Entity Seed Data** (`/packages/[packageId]/[entity-type]/`)
+   - One folder per entity type: `page-config/`, `workflow/`, `credential/`, etc.
+   - `metadata.json` - Describes the entity folder (entity type, packageId, description)
+   - `*.json` - Data files (e.g., `home.json`, `dashboard.json` in page-config folder)
    - Simple JSON arrays, not code or schemas
    - Loaded automatically for packages listed in `installed_packages.yaml`
-   - Examples: ui_home (has page-config.json), others ready to add as needed
+   - Examples: ui_home/page-config/, dashboard/page-config/, etc.
 
 3. **DBAL** (Phase 2: TypeScript, Phase 3: C++)
    - **OWNS:** Database schema (YAML source of truth)
@@ -718,34 +719,37 @@ export async function GET(request: Request) {
 
 ### Task 2: Add Seed Data to a Package
 
-Each package that needs bootstrap data gets a simple seed folder:
+Each package organizes seed data by entity type in subfolders:
 
 ```
-/packages/my-package/seed/
-├── metadata.json          [Required - describes package]
-└── page-config.json       [Optional - entity data]
+/packages/my-package/
+├── page-config/           [If package defines routes]
+│   ├── metadata.json
+│   └── home.json
+├── workflow/              [If package defines workflows]
+│   ├── metadata.json
+│   └── sync.json
+└── package.json
 ```
 
-**Step 1: Create metadata.json**
+**Step 1: Create entity folder**
+```bash
+mkdir -p /packages/my-package/page-config
+```
+
+**Step 2: Create metadata.json**
 ```json
 {
-  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "entity": "page-config",
   "packageId": "my_package",
-  "name": "My Package",
-  "version": "1.0.0",
-  "description": "Seed data for my_package",
-  "author": "MetaBuilder Contributors",
-  "category": "ui",
-  "minLevel": 0,
-  "seed": {
-    "schema": "page-config.json"
-  }
+  "description": "Page routes for my_package",
+  "version": "1.0.0"
 }
 ```
 
-**Step 2: Create entity data file (if needed)**
+**Step 3: Create data files**
 ```json
-// /packages/my-package/seed/page-config.json
+// /packages/my-package/page-config/home.json
 [
   {
     "id": "page_my_pkg_home",
@@ -759,10 +763,10 @@ Each package that needs bootstrap data gets a simple seed folder:
 ]
 ```
 
-**Step 3: Package must be listed in bootstrap**
+**Step 4: Package must be listed in bootstrap**
 Add to `/dbal/shared/seeds/database/installed_packages.yaml` if it's a core system package.
 
-See `/packages/SEED_FORMAT.md` for complete seed data specification.
+See `/packages/PACKAGE_STRUCTURE.md` for complete package organization guide.
 
 ### Task 3: Initialize Database for Tests
 ```typescript

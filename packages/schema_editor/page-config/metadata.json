@@ -1,0 +1,6 @@
+{
+  "entity": "page-config",
+  "packageId": "schema_editor",
+  "description": "Page routes for schema_editor",
+  "version": "1.0.0"
+}
