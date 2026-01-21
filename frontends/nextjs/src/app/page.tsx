@@ -52,18 +52,30 @@ export default async function RootPage() {
     if (route.componentTree !== null && route.componentTree !== undefined && route.componentTree.length > 0) {
       try {
         const parsed = JSON.parse(route.componentTree) as Record<string, unknown>
-        // Validate required fields for JSONComponent
+        // Validate required fields for JSONComponent (render requires type: string)
         if (typeof parsed.id === 'string' && typeof parsed.name === 'string') {
-          const componentDef = {
-            id: parsed.id,
-            name: parsed.name,
-            description: typeof parsed.description === 'string' ? parsed.description : undefined,
-            props: Array.isArray(parsed.props) ? parsed.props : undefined,
-            render: typeof parsed.render === 'object' && parsed.render !== null 
-              ? parsed.render 
-              : undefined,
+          // Validate render has required 'type' field
+          const renderObj = parsed.render as Record<string, unknown> | undefined
+          const hasValidRender =
+            typeof renderObj === 'object' &&
+            renderObj !== null &&
+            typeof renderObj.type === 'string'
+
+          if (hasValidRender) {
+            // Type-safe render object with required 'type' field
+            const safeRender: { type: string; template?: unknown } = {
+              type: renderObj.type,
+              template: renderObj.template,
+            }
+            const componentDef = {
+              id: parsed.id,
+              name: parsed.name,
+              description: typeof parsed.description === 'string' ? parsed.description : undefined,
+              props: Array.isArray(parsed.props) ? parsed.props : undefined,
+              render: safeRender,
+            }
+            return <JSONComponentRenderer component={componentDef} />
           }
-          return <JSONComponentRenderer component={componentDef} />
         }
       } catch {
         // Invalid JSON in componentTree, fall through to package reference

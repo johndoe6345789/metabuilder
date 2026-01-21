@@ -81,7 +81,8 @@
       "Bash(if ! head -1 \"$file\")",
       "Bash(for file in fakemui/fakemui/utils/useMediaQuery.js)",
       "Bash(perl -pi -e:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(node --version:*)"
     ]
   },
   "spinnerTipsEnabled": false
