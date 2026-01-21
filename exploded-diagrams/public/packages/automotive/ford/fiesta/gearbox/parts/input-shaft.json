@@ -1,0 +1,17 @@
+{
+  "id": "input-shaft",
+  "name": "Input Shaft",
+  "partNumber": "FD-1848302",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 1850.0,
+  "weightUnit": "g",
+  "baseY": 80,
+  "description": "Splined input shaft from clutch disc",
+  "geometry": [
+    { "type": "cylinder", "rx": 18, "ry": 6, "height": 45 },
+    { "type": "rect", "width": 28, "height": 8, "offsetY": -30, "fill": "#555" },
+    { "type": "cylinder", "rx": 12, "ry": 4, "height": 25, "offsetY": 35 },
+    { "type": "gearRing", "teeth": 16, "outerRadius": 14, "toothHeight": 4, "offsetY": 15 }
+  ]
+}

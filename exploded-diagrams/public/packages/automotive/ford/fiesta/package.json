@@ -1,0 +1,6 @@
+{
+  "id": "fiesta",
+  "name": "Fiesta",
+  "description": "Ford Fiesta compact car",
+  "assemblies": ["gearbox"]
+}

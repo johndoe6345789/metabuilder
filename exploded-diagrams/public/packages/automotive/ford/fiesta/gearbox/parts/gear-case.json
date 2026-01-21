@@ -1,0 +1,22 @@
+{
+  "id": "gear-case",
+  "name": "Gear Case",
+  "partNumber": "FD-1848360",
+  "material": "castAluminum",
+  "quantity": 1,
+  "weight": 5800.0,
+  "weightUnit": "g",
+  "baseY": 760,
+  "description": "Main gearbox housing - rear section",
+  "geometry": [
+    { "type": "rect", "width": 160, "height": 90, "rx": 12 },
+    { "type": "rect", "width": 140, "height": 70, "rx": 8, "fill": "#777" },
+    { "type": "circle", "r": 25, "offsetY": -5, "fill": "#555" },
+    { "type": "circle", "r": 8, "offsetX": -65, "offsetY": -30, "fill": "#666" },
+    { "type": "circle", "r": 8, "offsetX": 65, "offsetY": -30, "fill": "#666" },
+    { "type": "circle", "r": 8, "offsetX": -65, "offsetY": 30, "fill": "#666" },
+    { "type": "circle", "r": 8, "offsetX": 65, "offsetY": 30, "fill": "#666" },
+    { "type": "rect", "width": 30, "height": 15, "offsetX": -50, "offsetY": 50, "fill": "#888" },
+    { "type": "text", "content": "IB5", "offsetY": 5, "fill": "#333", "fontSize": 12 }
+  ]
+}

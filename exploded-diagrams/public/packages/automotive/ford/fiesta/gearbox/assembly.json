@@ -1,0 +1,19 @@
+{
+  "name": "5-Speed Manual Gearbox",
+  "description": "IB5 Manual Transmission - Ford Fiesta Mk7",
+  "category": "automotive",
+  "parts": [
+    "bell-housing",
+    "input-shaft",
+    "layshaft",
+    "first-gear",
+    "second-gear",
+    "third-gear",
+    "fourth-gear",
+    "fifth-gear",
+    "output-shaft",
+    "synchro-hub",
+    "selector-fork",
+    "gear-case"
+  ]
+}

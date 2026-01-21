@@ -1,0 +1,6 @@
+{
+  "id": "automotive",
+  "name": "Automotive",
+  "description": "Car and vehicle components",
+  "manufacturers": ["ford"]
+}

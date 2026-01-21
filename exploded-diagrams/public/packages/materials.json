@@ -12,6 +12,19 @@
       ]
     }
   },
+  "castAluminum": {
+    "name": "Cast Aluminum",
+    "gradient": {
+      "angle": 135,
+      "stops": [
+        { "offset": 0, "color": "#a8a8a8" },
+        { "offset": 20, "color": "#c0c0c0" },
+        { "offset": 50, "color": "#909090" },
+        { "offset": 80, "color": "#b0b0b0" },
+        { "offset": 100, "color": "#808080" }
+      ]
+    }
+  },
   "steel": {
     "name": "Hardened Steel",
     "gradient": {

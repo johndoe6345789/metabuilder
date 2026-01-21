@@ -1,0 +1,18 @@
+{
+  "id": "selector-fork",
+  "name": "Selector Fork",
+  "partNumber": "FD-1848350",
+  "material": "steel",
+  "quantity": 3,
+  "weight": 145.0,
+  "weightUnit": "g",
+  "baseY": 680,
+  "description": "Gear selector fork - 1st/2nd rail",
+  "geometry": [
+    { "type": "rect", "width": 80, "height": 8, "rx": 2 },
+    { "type": "rect", "width": 12, "height": 35, "offsetY": 18 },
+    { "type": "ellipse", "rx": 25, "ry": 8, "offsetY": -8 },
+    { "type": "ellipse", "rx": 18, "ry": 5, "offsetY": -8, "fill": "#444" },
+    { "type": "circle", "r": 4, "offsetY": 30, "fill": "#555" }
+  ]
+}

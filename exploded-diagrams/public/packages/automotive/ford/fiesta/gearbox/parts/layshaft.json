@@ -1,0 +1,18 @@
+{
+  "id": "layshaft",
+  "name": "Layshaft Assembly",
+  "partNumber": "FD-1848315",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 3200.0,
+  "weightUnit": "g",
+  "baseY": 160,
+  "description": "Counter shaft with integrated gear cluster",
+  "geometry": [
+    { "type": "cylinder", "rx": 14, "ry": 5, "height": 120 },
+    { "type": "gearRing", "teeth": 24, "outerRadius": 28, "toothHeight": 5, "offsetY": -40 },
+    { "type": "gearRing", "teeth": 20, "outerRadius": 24, "toothHeight": 5, "offsetY": -15 },
+    { "type": "gearRing", "teeth": 18, "outerRadius": 22, "toothHeight": 5, "offsetY": 10 },
+    { "type": "gearRing", "teeth": 16, "outerRadius": 20, "toothHeight": 5, "offsetY": 35 }
+  ]
+}

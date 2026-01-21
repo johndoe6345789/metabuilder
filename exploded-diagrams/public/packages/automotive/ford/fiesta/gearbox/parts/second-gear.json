@@ -1,0 +1,16 @@
+{
+  "id": "second-gear",
+  "name": "2nd Gear",
+  "partNumber": "FD-1848322",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 520.0,
+  "weightUnit": "g",
+  "baseY": 340,
+  "description": "Second gear - 1.95:1 ratio",
+  "geometry": [
+    { "type": "gearRing", "teeth": 28, "outerRadius": 38, "toothHeight": 5 },
+    { "type": "cylinder", "rx": 32, "ry": 10, "height": 18 },
+    { "type": "circle", "r": 14, "fill": "#555" }
+  ]
+}

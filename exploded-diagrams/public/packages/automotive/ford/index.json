@@ -1,0 +1,6 @@
+{
+  "id": "ford",
+  "name": "Ford",
+  "description": "Ford Motor Company",
+  "products": ["fiesta"]
+}

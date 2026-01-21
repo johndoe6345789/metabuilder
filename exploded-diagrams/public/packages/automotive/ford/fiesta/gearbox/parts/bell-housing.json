@@ -1,0 +1,20 @@
+{
+  "id": "bell-housing",
+  "name": "Bell Housing",
+  "partNumber": "FD-1848291",
+  "material": "castAluminum",
+  "quantity": 1,
+  "weight": 4200.0,
+  "weightUnit": "g",
+  "baseY": 0,
+  "description": "Clutch bell housing - mates to engine block",
+  "geometry": [
+    { "type": "ellipse", "rx": 85, "ry": 45 },
+    { "type": "rect", "width": 150, "height": 60, "rx": 8, "offsetY": 25 },
+    { "type": "circle", "r": 35, "fill": "#1a1a1a", "offsetY": -5 },
+    { "type": "circle", "r": 6, "offsetX": -60, "offsetY": -20, "fill": "#666" },
+    { "type": "circle", "r": 6, "offsetX": 60, "offsetY": -20, "fill": "#666" },
+    { "type": "circle", "r": 6, "offsetX": -60, "offsetY": 35, "fill": "#666" },
+    { "type": "circle", "r": 6, "offsetX": 60, "offsetY": 35, "fill": "#666" }
+  ]
+}

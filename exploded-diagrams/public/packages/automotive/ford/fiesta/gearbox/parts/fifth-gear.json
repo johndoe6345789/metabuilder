@@ -1,0 +1,16 @@
+{
+  "id": "fifth-gear",
+  "name": "5th Gear",
+  "partNumber": "FD-1848325",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 290.0,
+  "weightUnit": "g",
+  "baseY": 490,
+  "description": "Fifth gear - 0.82:1 overdrive ratio",
+  "geometry": [
+    { "type": "gearRing", "teeth": 18, "outerRadius": 24, "toothHeight": 4 },
+    { "type": "cylinder", "rx": 18, "ry": 6, "height": 12 },
+    { "type": "circle", "r": 8, "fill": "#555" }
+  ]
+}

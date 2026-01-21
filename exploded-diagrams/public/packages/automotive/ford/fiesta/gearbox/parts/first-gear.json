@@ -1,0 +1,16 @@
+{
+  "id": "first-gear",
+  "name": "1st Gear",
+  "partNumber": "FD-1848321",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 680.0,
+  "weightUnit": "g",
+  "baseY": 280,
+  "description": "First gear - 3.58:1 ratio",
+  "geometry": [
+    { "type": "gearRing", "teeth": 32, "outerRadius": 45, "toothHeight": 6 },
+    { "type": "cylinder", "rx": 38, "ry": 12, "height": 22 },
+    { "type": "circle", "r": 16, "fill": "#555" }
+  ]
+}

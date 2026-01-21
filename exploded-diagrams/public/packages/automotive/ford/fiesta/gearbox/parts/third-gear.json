@@ -1,0 +1,16 @@
+{
+  "id": "third-gear",
+  "name": "3rd Gear",
+  "partNumber": "FD-1848323",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 420.0,
+  "weightUnit": "g",
+  "baseY": 395,
+  "description": "Third gear - 1.36:1 ratio",
+  "geometry": [
+    { "type": "gearRing", "teeth": 24, "outerRadius": 32, "toothHeight": 5 },
+    { "type": "cylinder", "rx": 26, "ry": 8, "height": 16 },
+    { "type": "circle", "r": 12, "fill": "#555" }
+  ]
+}

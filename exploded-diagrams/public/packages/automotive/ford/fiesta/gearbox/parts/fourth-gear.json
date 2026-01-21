@@ -1,0 +1,16 @@
+{
+  "id": "fourth-gear",
+  "name": "4th Gear",
+  "partNumber": "FD-1848324",
+  "material": "steel",
+  "quantity": 1,
+  "weight": 350.0,
+  "weightUnit": "g",
+  "baseY": 445,
+  "description": "Fourth gear - 1.03:1 ratio",
+  "geometry": [
+    { "type": "gearRing", "teeth": 22, "outerRadius": 28, "toothHeight": 4 },
+    { "type": "cylinder", "rx": 22, "ry": 7, "height": 14 },
+    { "type": "circle", "r": 10, "fill": "#555" }
+  ]
+}
