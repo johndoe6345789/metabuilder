@@ -2,334 +2,174 @@
 
 ## Directory Organization
 
-Plugins are organized by **language** first, then by **category**, then by **plugin name**:
+Plugins are organized by **language** first, then by **category**:
 
 ```
-workflow/plugins/
-├── ts/                          # TypeScript plugins (Phase 2 - current)
-│   ├── dbal/
-│   │   ├── dbal-read/
-│   │   │   ├── package.json
-│   │   │   ├── tsconfig.json
-│   │   │   ├── src/
-│   │   │   ├── dist/
-│   │   │   └── README.md
-│   │   └── dbal-write/
-│   ├── integration/
-│   │   ├── http-request/
-│   │   ├── email-send/
-│   │   └── webhook-response/
-│   ├── control-flow/
-│   │   └── condition/
-│   └── utility/
-│       ├── transform/
-│       ├── wait/
-│       └── set-variable/
+workflow/
+├── core/                    # Core engine (TypeScript)
+│   ├── executor/            # DAG executor
+│   ├── registry/            # Plugin registry
+│   ├── utils/               # Priority queue, template engine
+│   ├── types.ts             # Type definitions
+│   └── index.ts             # Main exports
 │
-├── cpp/                         # C++ plugins (Phase 3 - coming)
-│   ├── dbal/
-│   │   ├── dbal-aggregate/
-│   │   │   ├── package.json     # npm package metadata
-│   │   │   ├── CMakeLists.txt
-│   │   │   ├── src/
-│   │   │   │   ├── aggregate.cpp
-│   │   │   │   └── aggregate.h
-│   │   │   ├── build/
-│   │   │   └── README.md
-│   │   └── dbal-bulk-ops/
-│   │
-│   ├── integration/
-│   │   ├── s3-upload/
-│   │   ├── redis-cache/
-│   │   └── kafka-producer/
-│   │
-│   ├── performance/
-│   │   ├── bulk-process/
-│   │   └── stream-aggregate/
-│   │
-│   └── ai/
-│       ├── ml-predict/
-│       └── vector-search/
+├── executor/                # Language-specific runtimes
+│   ├── ts/                  # TypeScript executor (direct import)
+│   ├── python/              # Python executor (child process)
+│   └── cpp/                 # C++ executor (native FFI)
 │
-├── python/                      # Python plugins (future)
-│   ├── ai/
-│   │   ├── nlp-process/
-│   │   └── sentiment-analyze/
-│   └── data-science/
-│       └── statistical-analysis/
+├── plugins/                 # All plugins by language
+│   ├── ts/                  # TypeScript plugins
+│   │   ├── dbal/
+│   │   │   ├── dbal-read/
+│   │   │   └── dbal-write/
+│   │   ├── integration/
+│   │   │   ├── http-request/
+│   │   │   ├── email-send/
+│   │   │   └── webhook-response/
+│   │   ├── control-flow/
+│   │   │   └── condition/
+│   │   └── utility/
+│   │       ├── transform/
+│   │       ├── wait/
+│   │       └── set-variable/
+│   │
+│   └── python/              # Python plugins (from AutoMetabuilder)
+│       ├── control/         # Bot control, switch logic
+│       ├── convert/         # Type conversions
+│       ├── core/            # AI requests, message handling
+│       ├── dict/            # Dictionary operations
+│       ├── list/            # List operations
+│       ├── logic/           # Boolean logic
+│       ├── math/            # Mathematical operations
+│       ├── notifications/   # Slack, Discord
+│       ├── string/          # String manipulation
+│       ├── test/            # Unit testing assertions
+│       ├── tools/           # External tool integration
+│       ├── utils/           # Utility functions
+│       ├── var/             # Variable management
+│       └── web/             # Flask server, API endpoints
 │
-└── STRUCTURE.md                 # This file
+├── package.json
+└── tsconfig.json
 ```
 
-## Plugin Configuration
+## Plugin Categories
 
-### TypeScript Plugin (ts/dbal/dbal-read/)
+### TypeScript Plugins (`plugins/ts/`)
 
-```json
-{
-  "name": "@metabuilder/workflow-plugin-ts-dbal-read",
-  "version": "1.0.0",
-  "description": "...",
-  "main": "dist/index.js",
-  "language": "typescript",
-  "nodeType": "dbal-read",
-  "category": "dbal"
-}
-```
+| Category | Plugins | Purpose |
+|----------|---------|---------|
+| dbal | dbal-read, dbal-write | Database operations |
+| integration | http-request, email-send, webhook-response | External services |
+| control-flow | condition | Workflow control |
+| utility | transform, wait, set-variable | Data manipulation |
 
-### C++ Plugin (cpp/dbal/dbal-aggregate/)
+### Python Plugins (`plugins/python/`)
 
-```json
-{
-  "name": "@metabuilder/workflow-plugin-cpp-dbal-aggregate",
-  "version": "1.0.0",
-  "description": "High-performance aggregation operations",
-  "main": "build/libaggregate.so",
-  "language": "c++",
-  "nodeType": "dbal-aggregate",
-  "category": "dbal",
-  "bindings": "node-ffi",
-  "build": "cmake",
-  "performance": {
-    "speedup": "100x vs TypeScript",
-    "use_cases": ["large datasets", "complex aggregations"]
-  }
-}
-```
+| Category | Plugins | Purpose |
+|----------|---------|---------|
+| control | control_switch, control_start_bot, control_get_bot_status | Bot control |
+| convert | convert_to_*, convert_parse_json | Type conversion |
+| core | core_ai_request, core_load_context, core_run_tool_calls | AI operations |
+| dict | dict_get, dict_set, dict_keys, dict_values, dict_merge | Dictionary ops |
+| list | list_concat, list_find, list_sort, list_slice | List operations |
+| logic | logic_and, logic_or, logic_equals, logic_gt, logic_lt | Comparisons |
+| math | math_add, math_subtract, math_multiply, math_divide | Arithmetic |
+| notifications | notifications_slack, notifications_discord | Notifications |
+| string | string_concat, string_split, string_replace, string_format | String ops |
+| test | test_assert_equals, test_assert_true, test_run_suite | Testing |
+| tools | tools_read_file, tools_run_tests, tools_run_docker | External tools |
+| utils | utils_filter_list, utils_map_list, utils_check_mvp | Utilities |
+| var | var_get, var_set, var_delete, var_exists | Variables |
+| web | web_create_flask_app, web_start_server, web_get_env_vars | Web/Flask |
 
-### Python Plugin (python/ai/nlp-process/)
+## Plugin Interface
 
-```json
-{
-  "name": "@metabuilder/workflow-plugin-python-nlp-process",
-  "version": "1.0.0",
-  "language": "python",
-  "nodeType": "nlp-process",
-  "category": "ai",
-  "runtime": "python3.11",
-  "bindings": "child-process"
-}
-```
-
-## Plugin Registry Enhancement
+### TypeScript Plugin
 
 ```typescript
-interface PluginMetadata {
-  nodeType: string;
-  language: 'typescript' | 'c++' | 'python' | 'rust' | 'go';
-  category: string;
-  version: string;
-  bindings?: 'native' | 'node-ffi' | 'child-process' | 'wasm';
-  performance?: {
-    speedup: string;
-    use_cases: string[];
-  };
-}
+// plugins/ts/dbal/dbal-read/src/index.ts
+export class DBALReadExecutor implements INodeExecutor {
+  nodeType = 'dbal-read';
 
-interface PluginExecutor {
-  language: string;
-  executor: INodeExecutor | ExternalProcess;
-  loadTime?: number;
-  warmupTime?: number;
-}
-```
-
-## Build & Load Strategy
-
-### TypeScript Plugins
-```bash
-# Build
-cd workflow/plugins/ts/dbal/dbal-read
-npm run build
-
-# Load
-import { dbalReadExecutor } from '@metabuilder/workflow-plugin-ts-dbal-read'
-registry.register('dbal-read', dbalReadExecutor)
-```
-
-### C++ Plugins
-```bash
-# Build
-cd workflow/plugins/cpp/dbal/dbal-aggregate
-cmake -B build .
-cmake --build build
-
-# Load (via native bindings)
-const binding = require('@metabuilder/workflow-plugin-cpp-dbal-aggregate');
-const executor = new binding.AggregateExecutor();
-registry.register('dbal-aggregate', executor)
-```
-
-### Python Plugins
-```bash
-# Install dependencies
-cd workflow/plugins/python/ai/nlp-process
-pip install -r requirements.txt
-
-# Load (via child process)
-const { PythonProcessExecutor } = require('@metabuilder/workflow-plugin-python-nlp-process');
-const executor = new PythonProcessExecutor('./src/executor.py');
-registry.register('nlp-process', executor)
-```
-
-## Phase Roadmap
-
-### Phase 2 (Current) - TypeScript Plugins
-✅ Complete
-- DBAL: read, write
-- Integration: http-request, email-send, webhook-response
-- Control-flow: condition
-- Utility: transform, wait, set-variable
-
-### Phase 3 - C++ Plugins
-🚀 Coming Soon
-- DBAL: aggregate, bulk-operations
-- Integration: S3, Redis, Kafka connectors
-- Performance: Bulk processing, stream aggregation
-- AI: ML predictions, vector search
-
-### Phase 4+ - Multi-Language
-🔮 Future
-- Python: NLP, data science, ML
-- Rust: High-performance utilities
-- Go: Concurrent operations
-- WebAssembly: Browser-side execution
-
-## Plugin Loading Architecture
-
-```typescript
-// Enhanced registry with language support
-class MultiLanguageNodeExecutorRegistry extends NodeExecutorRegistry {
-  private loaders: Map<string, PluginLoader> = new Map();
-
-  constructor() {
-    super();
-    this.loaders.set('typescript', new TypeScriptPluginLoader());
-    this.loaders.set('c++', new NativePluginLoader());
-    this.loaders.set('python', new PythonPluginLoader());
-  }
-
-  async loadPlugin(language: string, path: string): Promise<void> {
-    const loader = this.loaders.get(language);
-    if (!loader) throw new Error(`Unknown language: ${language}`);
-
-    const plugin = await loader.load(path);
-    this.register(plugin.nodeType, plugin.executor, plugin.metadata);
-  }
-
-  async loadAllPlugins(baseDir: string): Promise<void> {
-    const languages = ['ts', 'cpp', 'python'];
-
-    for (const lang of languages) {
-      const categoryPath = path.join(baseDir, lang);
-      const categories = await fs.readdir(categoryPath);
-
-      for (const category of categories) {
-        const pluginPath = path.join(categoryPath, category);
-        const plugins = await fs.readdir(pluginPath);
-
-        for (const plugin of plugins) {
-          await this.loadPlugin(lang, path.join(pluginPath, plugin));
-        }
-      }
-    }
+  async execute(
+    node: WorkflowNode,
+    context: WorkflowContext,
+    state: ExecutionState
+  ): Promise<NodeResult> {
+    // Implementation
   }
 }
 ```
 
-## Example Multi-Language Workflow
+### Python Plugin
 
-```json
-{
-  "id": "wf-hybrid-processing",
-  "name": "TS + C++ + Python Hybrid",
-  "nodes": [
-    {
-      "id": "read-data",
-      "nodeType": "dbal-read",
-      "language": "typescript",
-      "parameters": { "entity": "Dataset", "limit": 10000 }
-    },
-    {
-      "id": "aggregate",
-      "nodeType": "dbal-aggregate",
-      "language": "c++",
-      "parameters": { "groupBy": "category", "aggregates": ["count", "sum"] }
-    },
-    {
-      "id": "analyze",
-      "nodeType": "nlp-process",
-      "language": "python",
-      "parameters": { "model": "bert", "task": "sentiment" }
-    },
-    {
-      "id": "send-result",
-      "nodeType": "email-send",
-      "language": "typescript",
-      "parameters": { "to": "team@example.com", "body": "{{ $json.result }}" }
-    }
-  ]
-}
+```python
+# plugins/python/math/math_add.py
+def run(_runtime, inputs):
+    """Add two or more numbers."""
+    numbers = inputs.get("numbers", [])
+    return {"result": sum(numbers)}
 ```
 
-## Performance Characteristics by Language
+## Execution Flow
+
+```
+┌─────────────────────────────────────────┐
+│  DAGExecutor (core/executor/)           │
+│  - Resolves node dependencies           │
+│  - Schedules execution                  │
+└─────────────────┬───────────────────────┘
+                  │
+                  ↓
+┌─────────────────────────────────────────┐
+│  NodeExecutorRegistry (core/registry/)  │
+│  - Looks up plugin by nodeType          │
+│  - Determines language from metadata    │
+└─────────────────┬───────────────────────┘
+                  │
+        ┌─────────┼─────────┐
+        │         │         │
+        ↓         ↓         ↓
+    ┌────────┬────────┬────────┐
+    │   TS   │ Python │  C++   │
+    │Executor│Executor│Executor│
+    └────────┴────────┴────────┘
+        │         │         │
+        ↓         ↓         ↓
+    ┌────────┬────────┬────────┐
+    │plugins/│plugins/│plugins/│
+    │  ts/   │python/ │  cpp/  │
+    └────────┴────────┴────────┘
+```
+
+## Performance Characteristics
 
 | Language | Execution Speed | Memory | Startup | Best For |
 |----------|-----------------|--------|---------|----------|
 | TypeScript | 1x baseline | High | Fast | Orchestration, logic |
+| Python | 0.1-1x | Medium | Medium | AI/ML, data science |
 | C++ | 100-1000x | Low | Slow | Bulk ops, aggregations |
-| Python | 0.1-1x | Medium | Medium | ML, data science |
-| Rust | 100-500x | Low | Slow | Concurrent ops |
 
 ## Best Practices
 
 ### Choose Language Based On:
 
 **TypeScript**
-- ✅ REST APIs and webhooks
-- ✅ JSON transformations
-- ✅ Simple orchestration
-- ✅ Rapid development
-
-**C++**
-- ✅ Large dataset processing (1M+ rows)
-- ✅ Complex aggregations
-- ✅ Performance-critical operations
-- ✅ Bulk operations
+- REST APIs and webhooks
+- JSON transformations
+- Simple orchestration
+- Rapid development
 
 **Python**
-- ✅ Machine learning tasks
-- ✅ Natural language processing
-- ✅ Data science operations
-- ✅ Complex statistical analysis
+- Machine learning tasks
+- Natural language processing
+- Data science operations
+- AI model integration
 
-## Migration Path
-
-1. **Start**: Build plugins in TypeScript (fast iteration)
-2. **Measure**: Identify performance bottlenecks
-3. **Optimize**: Convert hot paths to C++
-4. **Extend**: Add Python ML capabilities
-5. **Scale**: Add Rust for concurrent operations
-
-## File Naming Convention
-
-```
-workflow/plugins/{language}/{category}/{plugin-name}/
-
-Examples:
-  workflow/plugins/ts/dbal/dbal-read/
-  workflow/plugins/cpp/dbal/dbal-aggregate/
-  workflow/plugins/python/ai/nlp-process/
-  workflow/plugins/rust/concurrent/batch-processor/
-```
-
-## Package Naming Convention
-
-```
-@metabuilder/workflow-plugin-{language}-{category}-{plugin}
-
-Examples:
-  @metabuilder/workflow-plugin-ts-dbal-read
-  @metabuilder/workflow-plugin-cpp-dbal-aggregate
-  @metabuilder/workflow-plugin-python-ai-nlp
-```
+**C++**
+- Large dataset processing (1M+ rows)
+- Complex aggregations
+- Performance-critical operations
+- Memory-intensive operations
