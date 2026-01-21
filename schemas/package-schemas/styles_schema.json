@@ -375,7 +375,7 @@
       "type": "object",
       "description": "CSS property definitions for styling",
       "properties": {
-        "display": { "type": "string", "enum": ["flex", "grid", "block", "inline", "inline-block", "none"] },
+        "display": { "type": "string", "enum": ["flex", "inline-flex", "grid", "inline-grid", "block", "inline-block", "inline", "none"] },
         "flexDirection": { "type": "string", "enum": ["row", "column", "row-reverse", "column-reverse"] },
         "justifyContent": { "type": "string" },
         "alignItems": { "type": "string" },
