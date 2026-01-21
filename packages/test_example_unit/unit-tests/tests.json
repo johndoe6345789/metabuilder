@@ -1,0 +1,182 @@
+{
+  "$schema": "https://metabuilder.dev/schemas/tests.schema.json",
+  "schemaVersion": "2.0.0",
+  "package": "test_example_unit",
+  "description": "Example unit tests demonstrating JSON test format with AAA pattern",
+  "imports": [
+    {
+      "from": "@testing-library/react",
+      "import": ["render", "screen", "fireEvent"]
+    },
+    {
+      "from": "@/components/Button",
+      "import": ["Button"]
+    }
+  ],
+  "testSuites": [
+    {
+      "id": "suite_button_basic",
+      "name": "Button Component - Basic Rendering",
+      "description": "Tests for button rendering and basic interactions",
+      "tests": [
+        {
+          "id": "test_button_renders_with_label",
+          "name": "should render button with label",
+          "description": "Verify button component renders with provided label text",
+          "arrange": {
+            "given": "a Button component with label 'Click Me'",
+            "fixtures": {
+              "label": "Click Me",
+              "variant": "primary"
+            }
+          },
+          "act": {
+            "when": "the component is rendered",
+            "type": "render",
+            "target": "Button",
+            "input": {
+              "label": "$arrange.fixtures.label",
+              "variant": "$arrange.fixtures.variant"
+            }
+          },
+          "assert": {
+            "then": "the button should be visible with correct text",
+            "expectations": [
+              {
+                "type": "toBeVisible",
+                "text": "Click Me",
+                "message": "Button label should be visible"
+              },
+              {
+                "type": "toHaveClass",
+                "selector": "button",
+                "expected": "btn-primary",
+                "message": "Button should have primary variant class"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_button_click_handler",
+          "name": "should call onClick handler when clicked",
+          "description": "Verify button fires onClick callback when user clicks",
+          "arrange": {
+            "given": "a Button component with onClick handler",
+            "fixtures": {
+              "label": "Submit",
+              "onClick": "mockFn"
+            },
+            "mocks": [
+              {
+                "target": "mockFn",
+                "type": "function",
+                "behavior": {
+                  "returnValue": null
+                }
+              }
+            ]
+          },
+          "act": {
+            "when": "user clicks the button",
+            "type": "click",
+            "role": "button",
+            "text": "Submit"
+          },
+          "assert": {
+            "then": "onClick handler should be called once",
+            "expectations": [
+              {
+                "type": "custom",
+                "description": "mockFn should have been called",
+                "message": "Button click handler was not invoked"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_button_disabled_state",
+          "name": "should render disabled button correctly",
+          "description": "Verify button respects disabled prop",
+          "arrange": {
+            "given": "a Button component with disabled=true",
+            "fixtures": {
+              "label": "Disabled Button",
+              "disabled": true
+            }
+          },
+          "act": {
+            "when": "disabled prop is true",
+            "type": "render",
+            "target": "Button",
+            "input": "$arrange.fixtures"
+          },
+          "assert": {
+            "then": "button should appear disabled",
+            "expectations": [
+              {
+                "type": "toBeDisabled",
+                "selector": "button",
+                "message": "Disabled button should have disabled attribute"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "suite_button_variants",
+      "name": "Button Component - Variants",
+      "description": "Tests for different button variants (size, color)",
+      "tests": [
+        {
+          "id": "test_button_size_small",
+          "name": "should render small variant correctly",
+          "arrange": {
+            "fixtures": {
+              "label": "Small",
+              "size": "small"
+            }
+          },
+          "act": {
+            "type": "render",
+            "target": "Button",
+            "input": "$arrange.fixtures"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "toHaveClass",
+                "selector": "button",
+                "expected": "btn-sm"
+              }
+            ]
+          }
+        },
+        {
+          "id": "test_button_size_large",
+          "name": "should render large variant correctly",
+          "arrange": {
+            "fixtures": {
+              "label": "Large",
+              "size": "large"
+            }
+          },
+          "act": {
+            "type": "render",
+            "target": "Button",
+            "input": "$arrange.fixtures"
+          },
+          "assert": {
+            "expectations": [
+              {
+                "type": "toHaveClass",
+                "selector": "button",
+                "expected": "btn-lg"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
