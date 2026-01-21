@@ -75,7 +75,7 @@ export const createSessionOperations = (adapter: DBALAdapter, tenantId?: string)
     }
     assertValidCreate(payload)
     await assertUserInTenant(adapter, payload.userId, resolvedTenantId)
-    return adapter.create('Session', payload) as Promise<Session>
+    return adapter.create('Session', payload as unknown as Record<string, unknown>) as Promise<Session>
   },
 
   /**
@@ -110,7 +110,7 @@ export const createSessionOperations = (adapter: DBALAdapter, tenantId?: string)
       throw DBALError.notFound(`Session not found: ${id}`)
     }
     await assertUserInTenant(adapter, existing.userId, resolvedTenantId)
-    return adapter.update('Session', id, data) as Promise<Session>
+    return adapter.update('Session', id, data as unknown as Record<string, unknown>) as Promise<Session>
   },
 
   /**

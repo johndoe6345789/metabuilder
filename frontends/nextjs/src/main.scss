@@ -8,5 +8,219 @@
 @use './styles/core/theme' as *;
 
 // FakeMUI component styles
-@import '../../../fakemui/styles/base.scss';
-@import '../../../fakemui/styles/components.scss';
+@use '../../../fakemui/styles/base';
+@use '../../../fakemui/styles/components';
+
+// ========================================
+// UX Polish: Loading & Animation Styles
+// ========================================
+
+// Skeleton loading animation
+@keyframes skeleton-pulse {
+  0% {
+    background-color: #e0e0e0;
+  }
+  50% {
+    background-color: #f0f0f0;
+  }
+  100% {
+    background-color: #e0e0e0;
+  }
+}
+
+.skeleton {
+  display: inline-block;
+  &.skeleton-animate {
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+  }
+}
+
+// Page transition fade-in
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-transition {
+  animation: fade-in 0.3s ease-in;
+}
+
+// Smooth hover effects
+@keyframes button-hover {
+  from {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  to {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+button,
+a[role='button'] {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+
+  &:hover {
+    animation: button-hover 0.2s ease forwards;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Loading spinner
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e0e0e0;
+  border-top: 2px solid #228be6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+// Staggered list animations
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.list-item-animated {
+  animation: slide-in 0.3s ease forwards;
+
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{($i - 1) * 50}ms;
+    }
+  }
+}
+
+// Empty state styling
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #868e96;
+
+  .empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  .empty-state-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #495057;
+  }
+
+  .empty-state-message {
+    font-size: 14px;
+    margin-bottom: 24px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .empty-state-action {
+    margin-top: 16px;
+  }
+}
+
+// Accessibility focus states
+button,
+a,
+input,
+select,
+textarea {
+  &:focus-visible {
+    outline: 2px solid #228be6;
+    outline-offset: 2px;
+  }
+}
+
+// Progress bar animation
+@keyframes progress-animation {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+// Dots loading animation
+@keyframes dots-animation {
+  0%,
+  80%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Pulse animation
+@keyframes pulse-animation {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// Print styles
+@media print {
+  .no-print,
+  button,
+  .loading-spinner,
+  .page-transition,
+  .loading-indicator {
+    display: none;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+}
+
+// Accessibility: Reduce motion
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-animate,
+  .loading-spinner,
+  .page-transition,
+  .list-item-animated,
+  button {
+    animation: none !important;
+    transition: none !important;
+  }
+}

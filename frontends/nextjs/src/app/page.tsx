@@ -7,6 +7,7 @@ import { getPackagesDir } from '@/lib/packages/unified/get-packages-dir'
 import { getCurrentUser } from '@/lib/auth/get-current-user'
 import { AccessDenied } from '@/components/AccessDenied'
 import { JSONComponentRenderer } from '@/components/JSONComponentRenderer'
+import { ErrorState } from '@/components/EmptyState'
 import type { JSONComponent } from '@/lib/packages/json/types'
 import type { JsonValue } from '@/types/utility-types'
 

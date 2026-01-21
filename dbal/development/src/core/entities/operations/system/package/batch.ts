@@ -19,7 +19,7 @@ export const createManyInstalledPackages = async (
   }
 
   try {
-    return adapter.createMany('InstalledPackage', data as Record<string, unknown>[])
+    return adapter.createMany('InstalledPackage', data as unknown as Record<string, unknown>[])
   } catch (error) {
     if (error instanceof DBALError && error.code === 409) {
       throw DBALError.conflict('Installed package already exists')
@@ -54,7 +54,7 @@ export const updateManyInstalledPackages = async (
   }
 
   try {
-    return adapter.updateMany('InstalledPackage', filter, data as Record<string, unknown>)
+    return adapter.updateMany('InstalledPackage', filter, data as unknown as Record<string, unknown>)
   } catch (error) {
     if (error instanceof DBALError && error.code === 409) {
       throw DBALError.conflict('Installed package already exists')

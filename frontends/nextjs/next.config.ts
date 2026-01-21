@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '2mb',
       allowedOrigins: ['localhost:3000'],
     },
-    // Optimize package imports
+    // Optimize package imports - reduces bundle size significantly
     optimizePackageImports: [
       '@mui/material',
       '@mui/icons-material',
@@ -25,6 +25,8 @@ const nextConfig: NextConfig = {
       '@mui/x-date-pickers',
       'recharts',
       'd3',
+      'lodash-es',
+      'date-fns',
     ],
   },
   

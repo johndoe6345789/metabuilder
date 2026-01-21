@@ -66,7 +66,7 @@ const resolveTenantFilter = (
   return null
 }
 
-const withPageDefaults = (data: CreatePageInput): PageConfig => {
+const withPageDefaults = (data: CreatePageInput): CreatePageInput => {
   const now = BigInt(Date.now())
   return {
     id: data.id ?? randomUUID(),
@@ -100,7 +100,7 @@ export const createPageConfigOperations = (adapter: DBALAdapter, tenantId?: stri
     const payload = withPageDefaults({ ...data, tenantId: resolvedTenantId })
     assertValidCreate(payload)
     try {
-      return adapter.create('PageConfig', payload) as Promise<PageConfig>
+      return adapter.create('PageConfig', payload as unknown as Record<string, unknown>) as Promise<PageConfig>
     } catch (error) {
       if (error instanceof DBALError && error.code === 409) {
         throw DBALError.conflict(`Page with path '${data.path}' already exists`)
@@ -147,7 +147,7 @@ export const createPageConfigOperations = (adapter: DBALAdapter, tenantId?: stri
       throw DBALError.notFound(`Page not found: ${id}`)
     }
     try {
-      return adapter.update('PageConfig', id, data) as Promise<PageConfig>
+      return adapter.update('PageConfig', id, data as unknown as Record<string, unknown>) as Promise<PageConfig>
     } catch (error) {
       if (error instanceof DBALError && error.code === 409) {
         throw DBALError.conflict('Page path already exists')

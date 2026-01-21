@@ -33,7 +33,7 @@ export const createPackageDataOperations = (adapter: DBALAdapter): PackageDataOp
   create: async data => {
     assertValidId(data.packageId)
     assertValidData(data)
-    return adapter.create('PackageData', data) as Promise<PackageData>
+    return adapter.create('PackageData', data as unknown as Record<string, unknown>) as Promise<PackageData>
   },
   read: async packageId => {
     assertValidId(packageId)
@@ -48,7 +48,7 @@ export const createPackageDataOperations = (adapter: DBALAdapter): PackageDataOp
     if (data.data !== undefined) {
       assertValidData({ data: data.data })
     }
-    return adapter.update('PackageData', packageId, data) as Promise<PackageData>
+    return adapter.update('PackageData', packageId, data as unknown as Record<string, unknown>) as Promise<PackageData>
   },
   delete: async packageId => {
     assertValidId(packageId)

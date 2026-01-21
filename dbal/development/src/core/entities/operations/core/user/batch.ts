@@ -35,7 +35,7 @@ export const createManyUsers = async (
   }
 
   try {
-    return adapter.createMany('User', payload as Record<string, unknown>[])
+    return adapter.createMany('User', payload as unknown as Record<string, unknown>[])
   } catch (error) {
     if (error instanceof DBALError && error.code === 409) {
       throw DBALError.conflict('Username or email already exists')
@@ -75,7 +75,7 @@ export const updateManyUsers = async (
   }
 
   try {
-    return adapter.updateMany('User', filter, data as Record<string, unknown>)
+    return adapter.updateMany('User', filter, data as unknown as Record<string, unknown>)
   } catch (error) {
     if (error instanceof DBALError && error.code === 409) {
       throw DBALError.conflict('Username or email already exists')

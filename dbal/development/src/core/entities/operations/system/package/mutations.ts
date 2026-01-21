@@ -16,7 +16,7 @@ export const createInstalledPackage = async (
   }
 
   try {
-    return adapter.create('InstalledPackage', data) as Promise<InstalledPackage>
+    return adapter.create('InstalledPackage', data as unknown as Record<string, unknown>) as Promise<InstalledPackage>
   } catch (error) {
     if (error instanceof DBALError && error.code === 409) {
       throw DBALError.conflict(`Installed package ${data.packageId} already exists`)
@@ -44,7 +44,7 @@ export const updateInstalledPackage = async (
   }
 
   try {
-    return adapter.update('InstalledPackage', packageId, data) as Promise<InstalledPackage>
+    return adapter.update('InstalledPackage', packageId, data as unknown as Record<string, unknown>) as Promise<InstalledPackage>
   } catch (error) {
     if (error instanceof DBALError && error.code === 409) {
       throw DBALError.conflict('Installed package already exists')

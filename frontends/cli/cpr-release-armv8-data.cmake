@@ -1,0 +1,50 @@
+########### AGGREGATED COMPONENTS AND DEPENDENCIES FOR THE MULTI CONFIG #####################
+#############################################################################################
+
+set(cpr_COMPONENT_NAMES "")
+if(DEFINED cpr_FIND_DEPENDENCY_NAMES)
+  list(APPEND cpr_FIND_DEPENDENCY_NAMES CURL)
+  list(REMOVE_DUPLICATES cpr_FIND_DEPENDENCY_NAMES)
+else()
+  set(cpr_FIND_DEPENDENCY_NAMES CURL)
+endif()
+set(CURL_FIND_MODE "NO_MODULE")
+
+########### VARIABLES #######################################################################
+#############################################################################################
+set(cpr_PACKAGE_FOLDER_RELEASE "/Users/rmac/.conan2/p/b/cpr910a1eebf2927/p")
+set(cpr_BUILD_MODULES_PATHS_RELEASE )
+
+
+set(cpr_INCLUDE_DIRS_RELEASE "${cpr_PACKAGE_FOLDER_RELEASE}/include")
+set(cpr_RES_DIRS_RELEASE )
+set(cpr_DEFINITIONS_RELEASE )
+set(cpr_SHARED_LINK_FLAGS_RELEASE )
+set(cpr_EXE_LINK_FLAGS_RELEASE )
+set(cpr_OBJECTS_RELEASE )
+set(cpr_COMPILE_DEFINITIONS_RELEASE )
+set(cpr_COMPILE_OPTIONS_C_RELEASE )
+set(cpr_COMPILE_OPTIONS_CXX_RELEASE )
+set(cpr_LIB_DIRS_RELEASE "${cpr_PACKAGE_FOLDER_RELEASE}/lib")
+set(cpr_BIN_DIRS_RELEASE )
+set(cpr_LIBRARY_TYPE_RELEASE STATIC)
+set(cpr_IS_HOST_WINDOWS_RELEASE 0)
+set(cpr_LIBS_RELEASE cpr)
+set(cpr_SYSTEM_LIBS_RELEASE )
+set(cpr_FRAMEWORK_DIRS_RELEASE )
+set(cpr_FRAMEWORKS_RELEASE )
+set(cpr_BUILD_DIRS_RELEASE )
+set(cpr_NO_SONAME_MODE_RELEASE FALSE)
+
+
+# COMPOUND VARIABLES
+set(cpr_COMPILE_OPTIONS_RELEASE
+    "$<$<COMPILE_LANGUAGE:CXX>:${cpr_COMPILE_OPTIONS_CXX_RELEASE}>"
+    "$<$<COMPILE_LANGUAGE:C>:${cpr_COMPILE_OPTIONS_C_RELEASE}>")
+set(cpr_LINKER_FLAGS_RELEASE
+    "$<$<STREQUAL:$<TARGET_PROPERTY:TYPE>,SHARED_LIBRARY>:${cpr_SHARED_LINK_FLAGS_RELEASE}>"
+    "$<$<STREQUAL:$<TARGET_PROPERTY:TYPE>,MODULE_LIBRARY>:${cpr_SHARED_LINK_FLAGS_RELEASE}>"
+    "$<$<STREQUAL:$<TARGET_PROPERTY:TYPE>,EXECUTABLE>:${cpr_EXE_LINK_FLAGS_RELEASE}>")
+
+
+set(cpr_COMPONENTS_RELEASE )

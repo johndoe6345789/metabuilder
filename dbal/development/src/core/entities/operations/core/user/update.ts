@@ -12,7 +12,7 @@ export const updateUser = async (
   assertValidUserUpdate(data)
 
   try {
-    return adapter.update('User', id, data) as Promise<User>
+    return adapter.update('User', id, data as unknown as Record<string, unknown>) as Promise<User>
   } catch (error) {
     if (error instanceof DBALError && error.code === 409) {
       throw DBALError.conflict('Username or email already exists')

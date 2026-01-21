@@ -101,7 +101,7 @@ export const createWorkflowOperations = (adapter: DBALAdapter, tenantId?: string
     const payload = withWorkflowDefaults({ ...data, tenantId: resolvedTenantId })
     assertValidCreate(payload)
     try {
-      return await adapter.create('Workflow', payload) as Workflow
+      return await adapter.create('Workflow', payload as unknown as Record<string, unknown>) as Workflow
     } catch (error) {
       if ((error as any)?.code === 409) {
         const name = typeof data.name === 'string' ? data.name : 'unknown'
@@ -137,7 +137,7 @@ export const createWorkflowOperations = (adapter: DBALAdapter, tenantId?: string
       throw DBALError.notFound(`Workflow not found: ${id}`)
     }
     try {
-      return await adapter.update('Workflow', id, data) as Workflow
+      return await adapter.update('Workflow', id, data as unknown as Record<string, unknown>) as Workflow
     } catch (error) {
       if ((error as any)?.code === 409) {
         if (typeof data.name === 'string') {

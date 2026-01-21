@@ -40,9 +40,9 @@ const createIntegrationPrisma = (): PrismaClient => {
 
 const createProductionPrisma = (): PrismaClient => {
   // CRITICAL: Validate DATABASE_URL is set and properly formatted
-  const databaseUrl = (process.env.DATABASE_URL !== undefined && process.env.DATABASE_URL.length > 0) 
-    ? process.env.DATABASE_URL 
-    : 'file:../../prisma/prisma/dev.db'
+  const databaseUrl = (process.env.DATABASE_URL !== undefined && process.env.DATABASE_URL.length > 0)
+    ? process.env.DATABASE_URL
+    : 'file:../../../dbal/shared/prisma/dev.db'
   
   console.warn('[Prisma] Creating production Prisma client')
   console.warn('[Prisma] DATABASE_URL from env:', process.env.DATABASE_URL)

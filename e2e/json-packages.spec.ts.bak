@@ -13,4 +13,6 @@ import { loadAllPackageTests } from './json-runner/playwright-json-runner'
 
 // Load all package tests from JSON
 const packagesDir = resolve(__dirname, '../packages')
-await loadAllPackageTests(packagesDir, test)
+
+// Dynamically load package tests
+void loadAllPackageTests(packagesDir, test)

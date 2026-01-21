@@ -1,0 +1,1 @@
+. "/Users/rmac/Documents/metabuilder/frontends/cli/deactivate_conanbuildenv-release-armv8.sh"

@@ -1,0 +1,45 @@
+{
+    "version": 3,
+    "vendor": {
+        "conan": {}
+    },
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 15,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "conan-release",
+            "displayName": "'conan-release' config",
+            "description": "'conan-release' configure using 'Unix Makefiles' generator",
+            "generator": "Unix Makefiles",
+            "cacheVariables": {
+                "CMAKE_POLICY_DEFAULT_CMP0091": "NEW",
+                "CMAKE_BUILD_TYPE": "Release"
+            },
+            "environment": {
+                "PATH": "/Users/rmac/.conan2/p/cmake253f38c8fbec3/p/CMake.app/Contents/bin:$penv{PATH}"
+            },
+            "cmakeExecutable": "/Users/rmac/.conan2/p/cmake253f38c8fbec3/p/CMake.app/Contents/bin/cmake",
+            "toolchainFile": "conan_toolchain.cmake",
+            "binaryDir": "/Users/rmac/Documents/metabuilder/frontends/cli"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "conan-release",
+            "configurePreset": "conan-release",
+            "jobs": 14
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "conan-release",
+            "configurePreset": "conan-release",
+            "execution": {
+                "jobs": 14
+            }
+        }
+    ]
+}

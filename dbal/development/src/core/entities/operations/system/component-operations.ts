@@ -76,7 +76,7 @@ export const createComponentNodeOperations = (adapter: DBALAdapter, tenantId?: s
     assertValidCreate(data)
     await assertPageTenant(adapter, resolvedTenantId, data.pageId)
     const payload = withComponentDefaults(data)
-    return adapter.create('ComponentNode', payload) as Promise<ComponentNode>
+    return adapter.create('ComponentNode', payload as unknown as Record<string, unknown>) as Promise<ComponentNode>
   },
   read: async id => {
     const resolvedTenantId = resolveTenantId(tenantId)
@@ -106,7 +106,7 @@ export const createComponentNodeOperations = (adapter: DBALAdapter, tenantId?: s
     if (data.pageId) {
       await assertPageTenant(adapter, resolvedTenantId, data.pageId)
     }
-    return adapter.update('ComponentNode', id, data) as Promise<ComponentNode>
+    return adapter.update('ComponentNode', id, data as unknown as Record<string, unknown>) as Promise<ComponentNode>
   },
   delete: async id => {
     const resolvedTenantId = resolveTenantId(tenantId)

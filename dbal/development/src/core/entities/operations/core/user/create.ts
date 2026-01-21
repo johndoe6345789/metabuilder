@@ -25,7 +25,7 @@ export const createUser = async (
   assertValidUserCreate(payload)
 
   try {
-    return adapter.create('User', payload) as Promise<User>
+    return adapter.create('User', payload as unknown as Record<string, unknown>) as Promise<User>
   } catch (error) {
     if (error instanceof DBALError && error.code === 409) {
       throw DBALError.conflict('User with username or email already exists')
