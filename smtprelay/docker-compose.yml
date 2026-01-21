@@ -1,0 +1,19 @@
+services:
+  smtp-relay:
+    build: .
+    ports:
+      - "2525:2525"
+      - "8080:8080"
+    environment:
+      # Required:
+      - GMAIL_USERNAME=${GMAIL_USERNAME}
+      - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD}
+      - FORWARD_TO=${FORWARD_TO}
+      # Optional:
+      - SMTP_LISTEN_HOST=0.0.0.0
+      - SMTP_LISTEN_PORT=2525
+      - HTTP_LISTEN_HOST=0.0.0.0
+      - HTTP_LISTEN_PORT=8080
+      - ALLOW_ANY_RCPT=true
+      - ADD_X_HEADERS=true
+      - MAX_STORE=200
