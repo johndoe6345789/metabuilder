@@ -1,0 +1,13 @@
+{
+  "name": "web_server_json_routes",
+  "version": "1.0.0",
+  "description": "Web server with routes defined in JSON workflow",
+  "main": "workflow.json",
+  "author": "AutoMetabuilder",
+  "metadata": {
+    "label": "Web Server (JSON Routes)",
+    "tags": ["web", "server", "json-routes"],
+    "icon": "web",
+    "category": "templates"
+  }
+}

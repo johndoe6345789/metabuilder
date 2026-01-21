@@ -1,0 +1,157 @@
+{
+  "name": "meta.workflow_packages.testing_triangle.label",
+  "active": false,
+  "nodes": [
+    {
+      "id": "lint",
+      "name": "Lint",
+      "type": "tools.run_lint",
+      "typeVersion": 1,
+      "position": [
+        0,
+        50
+      ],
+      "parameters": {
+        "path": "src"
+      }
+    },
+    {
+      "id": "lint_failed",
+      "name": "Lint Failed",
+      "type": "utils.branch_condition",
+      "typeVersion": 1,
+      "position": [
+        300,
+        50
+      ],
+      "parameters": {
+        "value": "$lint_results",
+        "mode": "regex",
+        "compare": "(FAILED|ERROR)"
+      }
+    },
+    {
+      "id": "lint_ok",
+      "name": "Lint Ok",
+      "type": "utils.not",
+      "typeVersion": 1,
+      "position": [
+        600,
+        50
+      ],
+      "parameters": {
+        "value": "$lint_failed"
+      }
+    },
+    {
+      "id": "unit_tests",
+      "name": "Unit Tests",
+      "type": "tools.run_tests",
+      "typeVersion": 1,
+      "position": [
+        900,
+        50
+      ],
+      "parameters": {
+        "path": "tests"
+      }
+    },
+    {
+      "id": "unit_failed",
+      "name": "Unit Failed",
+      "type": "utils.branch_condition",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        50
+      ],
+      "parameters": {
+        "value": "$unit_results",
+        "mode": "regex",
+        "compare": "(FAILED|ERROR)"
+      }
+    },
+    {
+      "id": "unit_ok",
+      "name": "Unit Ok",
+      "type": "utils.not",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        50
+      ],
+      "parameters": {
+        "value": "$unit_failed"
+      }
+    },
+    {
+      "id": "ui_tests",
+      "name": "Ui Tests",
+      "type": "tools.run_tests",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        50
+      ],
+      "parameters": {
+        "path": "tests/ui"
+      }
+    }
+  ],
+  "connections": {
+    "Lint": {
+      "main": {
+        "0": [
+          {
+            "node": "Lint Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Lint Failed": {
+      "main": {
+        "0": [
+          {
+            "node": "Lint Ok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Unit Tests": {
+      "main": {
+        "0": [
+          {
+            "node": "Unit Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Unit Failed": {
+      "main": {
+        "0": [
+          {
+            "node": "Unit Ok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    }
+  },
+  "triggers": [
+    {
+      "nodeId": "lint",
+      "kind": "manual",
+      "enabled": true,
+      "meta": {
+        "description": "Manually triggered meta.workflow_packages.testing_triangle.label workflow execution"
+      }
+    }
+  ]
+}

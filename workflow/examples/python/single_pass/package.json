@@ -1,0 +1,22 @@
+{
+  "name": "single_pass",
+  "version": "1.0.0",
+  "description": "meta.workflow_packages.single_pass.description",
+  "author": "AutoMetabuilder",
+  "license": "MIT",
+  "keywords": [
+    "single",
+    "tools"
+  ],
+  "main": "workflow.json",
+  "metadata": {
+    "label": "meta.workflow_packages.single_pass.label",
+    "description": "meta.workflow_packages.single_pass.description",
+    "tags": [
+      "single",
+      "tools"
+    ],
+    "icon": "workflow",
+    "category": "templates"
+  }
+}

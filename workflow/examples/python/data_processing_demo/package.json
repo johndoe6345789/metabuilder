@@ -1,0 +1,24 @@
+{
+  "name": "data_processing_demo",
+  "version": "1.0.0",
+  "description": "meta.workflow_packages.data_processing_demo.description",
+  "author": "AutoMetabuilder",
+  "license": "MIT",
+  "keywords": [
+    "map",
+    "reduce",
+    "filter",
+    "data"
+  ],
+  "main": "workflow.json",
+  "metadata": {
+    "label": "meta.workflow_packages.data_processing_demo.label",
+    "description": "meta.workflow_packages.data_processing_demo.description",
+    "tags": [
+      "data",
+      "processing"
+    ],
+    "icon": "workflow",
+    "category": "templates"
+  }
+}

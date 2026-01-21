@@ -1,0 +1,7 @@
+{
+  "name": "default_app_workflow",
+  "version": "1.0.0",
+  "description": "Default application workflow with backend bootstrap and iterative AI loop",
+  "keywords": ["backend", "bootstrap", "ai", "iterative", "default"],
+  "license": "MIT"
+}

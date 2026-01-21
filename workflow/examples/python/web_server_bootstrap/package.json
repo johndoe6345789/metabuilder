@@ -1,0 +1,8 @@
+{
+  "name": "web_server_bootstrap",
+  "version": "1.0.0",
+  "description": "Bootstrap the Flask web server with all routes",
+  "keywords": ["web", "flask", "server", "bootstrap"],
+  "license": "MIT",
+  "category": "infrastructure"
+}

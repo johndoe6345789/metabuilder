@@ -1,0 +1,20 @@
+{
+  "name": "blank",
+  "version": "1.0.0",
+  "description": "meta.workflow_packages.blank.description",
+  "author": "AutoMetabuilder",
+  "license": "MIT",
+  "keywords": [
+    "starter"
+  ],
+  "main": "workflow.json",
+  "metadata": {
+    "label": "meta.workflow_packages.blank.label",
+    "description": "meta.workflow_packages.blank.description",
+    "tags": [
+      "starter"
+    ],
+    "icon": "workflow",
+    "category": "templates"
+  }
+}

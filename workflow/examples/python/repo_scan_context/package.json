@@ -1,0 +1,24 @@
+{
+  "name": "repo_scan_context",
+  "version": "1.0.0",
+  "description": "meta.workflow_packages.repo_scan_context.description",
+  "author": "AutoMetabuilder",
+  "license": "MIT",
+  "keywords": [
+    "map",
+    "reduce",
+    "context"
+  ],
+  "main": "workflow.json",
+  "metadata": {
+    "label": "meta.workflow_packages.repo_scan_context.label",
+    "description": "meta.workflow_packages.repo_scan_context.description",
+    "tags": [
+      "map",
+      "reduce",
+      "context"
+    ],
+    "icon": "workflow",
+    "category": "templates"
+  }
+}

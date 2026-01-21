@@ -1,0 +1,347 @@
+{
+  "name": "Web Server Bootstrap",
+  "active": true,
+  "nodes": [
+    {
+      "id": "configure_logging",
+      "name": "Configure Logging",
+      "type": "backend.configure_logging",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {}
+    },
+    {
+      "id": "load_env",
+      "name": "Load Environment",
+      "type": "backend.load_env",
+      "typeVersion": 1,
+      "position": [300, 0],
+      "parameters": {}
+    },
+    {
+      "id": "create_app",
+      "name": "Create Flask App",
+      "type": "web.create_flask_app",
+      "typeVersion": 1,
+      "position": [600, 0],
+      "parameters": {
+        "name": "autometabuilder",
+        "config": {
+          "JSON_SORT_KEYS": false
+        }
+      }
+    },
+    {
+      "id": "create_context_routes",
+      "name": "Create Context Routes",
+      "type": "web.route_context",
+      "typeVersion": 1,
+      "position": [900, -150],
+      "parameters": {}
+    },
+    {
+      "id": "create_run_routes",
+      "name": "Create Run Routes",
+      "type": "web.route_run",
+      "typeVersion": 1,
+      "position": [900, -50],
+      "parameters": {}
+    },
+    {
+      "id": "create_prompt_routes",
+      "name": "Create Prompt Routes",
+      "type": "web.route_prompt",
+      "typeVersion": 1,
+      "position": [900, 50],
+      "parameters": {}
+    },
+    {
+      "id": "create_settings_routes",
+      "name": "Create Settings Routes",
+      "type": "web.route_settings",
+      "typeVersion": 1,
+      "position": [900, 150],
+      "parameters": {}
+    },
+    {
+      "id": "create_translations_routes",
+      "name": "Create Translation Routes",
+      "type": "web.route_translations",
+      "typeVersion": 1,
+      "position": [900, 250],
+      "parameters": {}
+    },
+    {
+      "id": "create_navigation_routes",
+      "name": "Create Navigation Routes",
+      "type": "web.route_navigation",
+      "typeVersion": 1,
+      "position": [900, 350],
+      "parameters": {}
+    },
+    {
+      "id": "register_context",
+      "name": "Register Context Blueprint",
+      "type": "web.register_blueprint",
+      "typeVersion": 1,
+      "position": [1200, -150],
+      "parameters": {
+        "blueprint": "={{$node.create_context_routes.json.result}}"
+      }
+    },
+    {
+      "id": "register_run",
+      "name": "Register Run Blueprint",
+      "type": "web.register_blueprint",
+      "typeVersion": 1,
+      "position": [1200, -50],
+      "parameters": {
+        "blueprint": "={{$node.create_run_routes.json.result}}"
+      }
+    },
+    {
+      "id": "register_prompt",
+      "name": "Register Prompt Blueprint",
+      "type": "web.register_blueprint",
+      "typeVersion": 1,
+      "position": [1200, 50],
+      "parameters": {
+        "blueprint": "={{$node.create_prompt_routes.json.result}}"
+      }
+    },
+    {
+      "id": "register_settings",
+      "name": "Register Settings Blueprint",
+      "type": "web.register_blueprint",
+      "typeVersion": 1,
+      "position": [1200, 150],
+      "parameters": {
+        "blueprint": "={{$node.create_settings_routes.json.result}}"
+      }
+    },
+    {
+      "id": "register_translations",
+      "name": "Register Translations Blueprint",
+      "type": "web.register_blueprint",
+      "typeVersion": 1,
+      "position": [1200, 250],
+      "parameters": {
+        "blueprint": "={{$node.create_translations_routes.json.result}}"
+      }
+    },
+    {
+      "id": "register_navigation",
+      "name": "Register Navigation Blueprint",
+      "type": "web.register_blueprint",
+      "typeVersion": 1,
+      "position": [1200, 350],
+      "parameters": {
+        "blueprint": "={{$node.create_navigation_routes.json.result}}"
+      }
+    },
+    {
+      "id": "start_server",
+      "name": "Start Web Server",
+      "type": "web.start_server",
+      "typeVersion": 1,
+      "position": [1500, 100],
+      "parameters": {
+        "host": "0.0.0.0",
+        "port": 8000,
+        "debug": false
+      }
+    }
+  ],
+  "connections": {
+    "Configure Logging": {
+      "main": {
+        "0": [
+          {
+            "node": "Load Environment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Load Environment": {
+      "main": {
+        "0": [
+          {
+            "node": "Create Flask App",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Flask App": {
+      "main": {
+        "0": [
+          {
+            "node": "Create Context Routes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Run Routes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Prompt Routes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Settings Routes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Translation Routes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Navigation Routes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Context Routes": {
+      "main": {
+        "0": [
+          {
+            "node": "Register Context Blueprint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Run Routes": {
+      "main": {
+        "0": [
+          {
+            "node": "Register Run Blueprint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Prompt Routes": {
+      "main": {
+        "0": [
+          {
+            "node": "Register Prompt Blueprint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Settings Routes": {
+      "main": {
+        "0": [
+          {
+            "node": "Register Settings Blueprint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Translation Routes": {
+      "main": {
+        "0": [
+          {
+            "node": "Register Translations Blueprint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Create Navigation Routes": {
+      "main": {
+        "0": [
+          {
+            "node": "Register Navigation Blueprint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Register Context Blueprint": {
+      "main": {
+        "0": [
+          {
+            "node": "Start Web Server",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Register Run Blueprint": {
+      "main": {
+        "0": [
+          {
+            "node": "Start Web Server",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Register Prompt Blueprint": {
+      "main": {
+        "0": [
+          {
+            "node": "Start Web Server",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Register Settings Blueprint": {
+      "main": {
+        "0": [
+          {
+            "node": "Start Web Server",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Register Translations Blueprint": {
+      "main": {
+        "0": [
+          {
+            "node": "Start Web Server",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Register Navigation Blueprint": {
+      "main": {
+        "0": [
+          {
+            "node": "Start Web Server",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    }
+  }
+}

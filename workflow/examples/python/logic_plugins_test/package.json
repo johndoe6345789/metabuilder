@@ -1,0 +1,24 @@
+{
+  "name": "logic_plugins_test",
+  "version": "1.0.0",
+  "description": "meta.workflow_packages.logic_plugins_test.description",
+  "author": "AutoMetabuilder",
+  "license": "MIT",
+  "keywords": [
+    "testing",
+    "logic",
+    "unit-test"
+  ],
+  "main": "workflow.json",
+  "metadata": {
+    "label": "meta.workflow_packages.logic_plugins_test.label",
+    "description": "meta.workflow_packages.logic_plugins_test.description",
+    "tags": [
+      "testing",
+      "logic",
+      "unit-test"
+    ],
+    "icon": "workflow",
+    "category": "testing"
+  }
+}

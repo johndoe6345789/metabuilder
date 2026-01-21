@@ -1,0 +1,16 @@
+{
+  "name": "list_plugins_test",
+  "version": "1.0.0",
+  "description": "meta.workflow_packages.list_plugins_test.description",
+  "author": "AutoMetabuilder",
+  "license": "MIT",
+  "keywords": ["testing", "list", "unit-test"],
+  "main": "workflow.json",
+  "metadata": {
+    "label": "meta.workflow_packages.list_plugins_test.label",
+    "description": "meta.workflow_packages.list_plugins_test.description",
+    "tags": ["testing", "list", "unit-test"],
+    "icon": "workflow",
+    "category": "testing"
+  }
+}

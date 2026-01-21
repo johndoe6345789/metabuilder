@@ -1,0 +1,23 @@
+{
+  "name": "backend_bootstrap",
+  "version": "1.0.0",
+  "description": "meta.workflow_packages.backend_bootstrap.description",
+  "author": "AutoMetabuilder",
+  "license": "MIT",
+  "keywords": [
+    "backend",
+    "bootstrap",
+    "initialization"
+  ],
+  "main": "workflow.json",
+  "metadata": {
+    "label": "meta.workflow_packages.backend_bootstrap.label",
+    "description": "meta.workflow_packages.backend_bootstrap.description",
+    "tags": [
+      "backend",
+      "bootstrap"
+    ],
+    "icon": "settings",
+    "category": "templates"
+  }
+}

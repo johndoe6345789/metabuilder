@@ -1,0 +1,22 @@
+{
+  "name": "iterative_loop",
+  "version": "1.0.0",
+  "description": "meta.workflow_packages.iterative_loop.description",
+  "author": "AutoMetabuilder",
+  "license": "MIT",
+  "keywords": [
+    "loop",
+    "tools"
+  ],
+  "main": "workflow.json",
+  "metadata": {
+    "label": "meta.workflow_packages.iterative_loop.label",
+    "description": "meta.workflow_packages.iterative_loop.description",
+    "tags": [
+      "loop",
+      "tools"
+    ],
+    "icon": "workflow",
+    "category": "templates"
+  }
+}

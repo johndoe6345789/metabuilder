@@ -1,0 +1,22 @@
+{
+  "name": "plan_execute_summarize",
+  "version": "1.0.0",
+  "description": "meta.workflow_packages.plan_execute_summarize.description",
+  "author": "AutoMetabuilder",
+  "license": "MIT",
+  "keywords": [
+    "plan",
+    "summarize"
+  ],
+  "main": "workflow.json",
+  "metadata": {
+    "label": "meta.workflow_packages.plan_execute_summarize.label",
+    "description": "meta.workflow_packages.plan_execute_summarize.description",
+    "tags": [
+      "plan",
+      "summarize"
+    ],
+    "icon": "workflow",
+    "category": "templates"
+  }
+}

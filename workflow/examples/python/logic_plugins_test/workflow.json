@@ -1,0 +1,342 @@
+{
+  "name": "Logic Plugins Test Suite",
+  "active": false,
+  "nodes": [
+    {
+      "id": "test_and_true",
+      "name": "Test AND (all true)",
+      "type": "logic.and",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "values": [
+          true,
+          true,
+          true
+        ]
+      }
+    },
+    {
+      "id": "assert_and_true",
+      "name": "Assert AND result is true",
+      "type": "test.assert_true",
+      "typeVersion": 1,
+      "position": [
+        300,
+        0
+      ],
+      "parameters": {
+        "value": "$test_and_true.result",
+        "message": "logic.and with all true values should return true"
+      }
+    },
+    {
+      "id": "test_and_false",
+      "name": "Test AND (with false)",
+      "type": "logic.and",
+      "typeVersion": 1,
+      "position": [
+        0,
+        100
+      ],
+      "parameters": {
+        "values": [
+          true,
+          false,
+          true
+        ]
+      }
+    },
+    {
+      "id": "assert_and_false",
+      "name": "Assert AND result is false",
+      "type": "test.assert_false",
+      "typeVersion": 1,
+      "position": [
+        300,
+        100
+      ],
+      "parameters": {
+        "value": "$test_and_false.result",
+        "message": "logic.and with any false value should return false"
+      }
+    },
+    {
+      "id": "test_or_true",
+      "name": "Test OR (with true)",
+      "type": "logic.or",
+      "typeVersion": 1,
+      "position": [
+        0,
+        200
+      ],
+      "parameters": {
+        "values": [
+          false,
+          false,
+          true
+        ]
+      }
+    },
+    {
+      "id": "assert_or_true",
+      "name": "Assert OR result is true",
+      "type": "test.assert_true",
+      "typeVersion": 1,
+      "position": [
+        300,
+        200
+      ],
+      "parameters": {
+        "value": "$test_or_true.result",
+        "message": "logic.or with any true value should return true"
+      }
+    },
+    {
+      "id": "test_or_false",
+      "name": "Test OR (all false)",
+      "type": "logic.or",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {
+        "values": [
+          false,
+          false,
+          false
+        ]
+      }
+    },
+    {
+      "id": "assert_or_false",
+      "name": "Assert OR result is false",
+      "type": "test.assert_false",
+      "typeVersion": 1,
+      "position": [
+        300,
+        300
+      ],
+      "parameters": {
+        "value": "$test_or_false.result",
+        "message": "logic.or with all false values should return false"
+      }
+    },
+    {
+      "id": "test_equals_true",
+      "name": "Test Equals (same)",
+      "type": "logic.equals",
+      "typeVersion": 1,
+      "position": [
+        0,
+        400
+      ],
+      "parameters": {
+        "a": 42,
+        "b": 42
+      }
+    },
+    {
+      "id": "assert_equals_true",
+      "name": "Assert Equals is true",
+      "type": "test.assert_true",
+      "typeVersion": 1,
+      "position": [
+        300,
+        400
+      ],
+      "parameters": {
+        "value": "$test_equals_true.result",
+        "message": "logic.equals with same values should return true"
+      }
+    },
+    {
+      "id": "test_equals_false",
+      "name": "Test Equals (different)",
+      "type": "logic.equals",
+      "typeVersion": 1,
+      "position": [
+        0,
+        500
+      ],
+      "parameters": {
+        "a": 42,
+        "b": 24
+      }
+    },
+    {
+      "id": "assert_equals_false",
+      "name": "Assert Equals is false",
+      "type": "test.assert_false",
+      "typeVersion": 1,
+      "position": [
+        300,
+        500
+      ],
+      "parameters": {
+        "value": "$test_equals_false.result",
+        "message": "logic.equals with different values should return false"
+      }
+    },
+    {
+      "id": "test_gt",
+      "name": "Test Greater Than",
+      "type": "logic.gt",
+      "typeVersion": 1,
+      "position": [
+        0,
+        600
+      ],
+      "parameters": {
+        "a": 10,
+        "b": 5
+      }
+    },
+    {
+      "id": "assert_gt",
+      "name": "Assert GT is true",
+      "type": "test.assert_true",
+      "typeVersion": 1,
+      "position": [
+        300,
+        600
+      ],
+      "parameters": {
+        "value": "$test_gt.result",
+        "message": "logic.gt should return true when a > b"
+      }
+    },
+    {
+      "id": "test_lt",
+      "name": "Test Less Than",
+      "type": "logic.lt",
+      "typeVersion": 1,
+      "position": [
+        0,
+        700
+      ],
+      "parameters": {
+        "a": 3,
+        "b": 7
+      }
+    },
+    {
+      "id": "assert_lt",
+      "name": "Assert LT is true",
+      "type": "test.assert_true",
+      "typeVersion": 1,
+      "position": [
+        300,
+        700
+      ],
+      "parameters": {
+        "value": "$test_lt.result",
+        "message": "logic.lt should return true when a < b"
+      }
+    }
+  ],
+  "connections": {
+    "Test AND (all true)": {
+      "main": {
+        "0": [
+          {
+            "node": "Assert AND result is true",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Test AND (with false)": {
+      "main": {
+        "0": [
+          {
+            "node": "Assert AND result is false",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Test OR (with true)": {
+      "main": {
+        "0": [
+          {
+            "node": "Assert OR result is true",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Test OR (all false)": {
+      "main": {
+        "0": [
+          {
+            "node": "Assert OR result is false",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Test Equals (same)": {
+      "main": {
+        "0": [
+          {
+            "node": "Assert Equals is true",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Test Equals (different)": {
+      "main": {
+        "0": [
+          {
+            "node": "Assert Equals is false",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Test Greater Than": {
+      "main": {
+        "0": [
+          {
+            "node": "Assert GT is true",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    },
+    "Test Less Than": {
+      "main": {
+        "0": [
+          {
+            "node": "Assert LT is true",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      }
+    }
+  },
+  "triggers": [
+    {
+      "nodeId": "test_and_true",
+      "kind": "manual",
+      "enabled": true,
+      "meta": {
+        "description": "Manually triggered Logic Plugins Test Suite workflow execution"
+      }
+    }
+  ]
+}

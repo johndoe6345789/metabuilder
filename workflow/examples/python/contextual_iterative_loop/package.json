@@ -1,0 +1,24 @@
+{
+  "name": "contextual_iterative_loop",
+  "version": "1.0.0",
+  "description": "meta.workflow_packages.contextual_iterative_loop.description",
+  "author": "AutoMetabuilder",
+  "license": "MIT",
+  "keywords": [
+    "context",
+    "loop",
+    "map-reduce"
+  ],
+  "main": "workflow.json",
+  "metadata": {
+    "label": "meta.workflow_packages.contextual_iterative_loop.label",
+    "description": "meta.workflow_packages.contextual_iterative_loop.description",
+    "tags": [
+      "context",
+      "loop",
+      "map-reduce"
+    ],
+    "icon": "workflow",
+    "category": "templates"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "conditional_logic_demo",
+  "version": "1.0.0",
+  "description": "meta.workflow_packages.conditional_logic_demo.description",
+  "author": "AutoMetabuilder",
+  "license": "MIT",
+  "keywords": [
+    "logic",
+    "conditional",
+    "branching"
+  ],
+  "main": "workflow.json",
+  "metadata": {
+    "label": "meta.workflow_packages.conditional_logic_demo.label",
+    "description": "meta.workflow_packages.conditional_logic_demo.description",
+    "tags": [
+      "logic",
+      "demo"
+    ],
+    "icon": "workflow",
+    "category": "templates"
+  }
+}

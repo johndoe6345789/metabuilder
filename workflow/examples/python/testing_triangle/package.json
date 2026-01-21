@@ -1,0 +1,24 @@
+{
+  "name": "testing_triangle",
+  "version": "1.0.0",
+  "description": "meta.workflow_packages.testing_triangle.description",
+  "author": "AutoMetabuilder",
+  "license": "MIT",
+  "keywords": [
+    "testing",
+    "lint",
+    "e2e"
+  ],
+  "main": "workflow.json",
+  "metadata": {
+    "label": "meta.workflow_packages.testing_triangle.label",
+    "description": "meta.workflow_packages.testing_triangle.description",
+    "tags": [
+      "testing",
+      "lint",
+      "e2e"
+    ],
+    "icon": "workflow",
+    "category": "templates"
+  }
+}
