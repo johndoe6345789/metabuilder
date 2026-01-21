@@ -305,15 +305,35 @@
                 "function_call",
                 "api_request",
                 "event_trigger",
+                "render",
+                "click",
+                "fill",
+                "select",
+                "hover",
+                "focus",
+                "blur",
+                "waitFor",
                 "custom"
               ]
             },
             "target": {
               "type": "string",
-              "description": "Function/endpoint/event to test"
+              "description": "Function/endpoint/event/component/selector to test"
+            },
+            "selector": {
+              "type": "string",
+              "description": "CSS selector for DOM interaction"
+            },
+            "role": {
+              "type": "string",
+              "description": "ARIA role for query (e.g., 'button', 'link')"
+            },
+            "text": {
+              "type": "string",
+              "description": "Text content for interaction or button label"
             },
             "input": {
-              "description": "Input data/parameters"
+              "description": "Input data/parameters/value to enter"
             },
             "config": {
               "type": "object",
@@ -445,6 +465,14 @@
             "instanceOf",
             "hasProperty",
             "hasLength",
+            "toBeVisible",
+            "toBeInTheDocument",
+            "toHaveTextContent",
+            "toHaveAttribute",
+            "toHaveClass",
+            "toBeDisabled",
+            "toBeEnabled",
+            "toHaveValue",
             "custom"
           ]
         },
@@ -457,6 +485,18 @@
         },
         "expected": {
           "description": "Expected value"
+        },
+        "selector": {
+          "type": "string",
+          "description": "CSS selector for DOM query (alternative to actual)"
+        },
+        "role": {
+          "type": "string",
+          "description": "ARIA role for query (e.g., 'button', 'link')"
+        },
+        "text": {
+          "type": "string",
+          "description": "Text content matcher"
         },
         "message": {
           "type": "string",
