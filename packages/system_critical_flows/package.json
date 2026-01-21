@@ -1,0 +1,10 @@
+{
+  "name": "system_critical_flows",
+  "version": "1.0.0",
+  "description": "System-wide critical user flow end-to-end tests - proves all essential functionality works",
+  "type": "module",
+  "packageId": "system_critical_flows",
+  "level": 0,
+  "tags": ["@system", "@e2e", "@critical"],
+  "keywords": ["e2e", "critical", "flows", "system"]
+}
