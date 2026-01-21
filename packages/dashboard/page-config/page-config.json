@@ -1,0 +1,13 @@
+[
+  {
+    "id": "page_dashboard_home",
+    "path": "/dashboard",
+    "title": "Dashboard",
+    "packageId": "dashboard",
+    "component": "dashboard_home",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 0
+  }
+]

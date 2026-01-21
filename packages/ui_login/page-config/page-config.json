@@ -1,0 +1,13 @@
+[
+  {
+    "id": "page_ui_login_login",
+    "path": "/login",
+    "title": "Login",
+    "packageId": "ui_login",
+    "component": "login_page",
+    "level": 0,
+    "requiresAuth": false,
+    "isPublished": true,
+    "sortOrder": 0
+  }
+]
