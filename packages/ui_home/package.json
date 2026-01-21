@@ -13,7 +13,13 @@
   "icon": "static_content/icon.svg",
   "minLevel": 0,
   "primary": true,
-  "keywords": ["home", "landing", "hero", "ui", "public"],
+  "keywords": [
+    "home",
+    "landing",
+    "hero",
+    "ui",
+    "public"
+  ],
   "dependencies": {
     "ui_header": "^1.0.0",
     "ui_footer": "^1.0.0"
@@ -47,5 +53,49 @@
     "scripts": [
       "tests/metadata.test.json"
     ]
+  },
+  "files": {
+    "directories": [
+      "component",
+      "components",
+      "page-config",
+      "permissions",
+      "playwright",
+      "seed",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "pages": [
+        "page-config/metadata.json",
+        "page-config/page-config.json"
+      ],
+      "tests": [
+        "playwright/metadata.json",
+        "playwright/tests.json",
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "component/metadata.json",
+        "component/ui-components.json",
+        "static_content/icon.svg"
+      ]
+    }
   }
 }

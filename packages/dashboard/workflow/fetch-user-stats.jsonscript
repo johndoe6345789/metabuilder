@@ -1,0 +1,94 @@
+{
+  "version": "2.2.0",
+  "name": "Fetch User Statistics",
+  "description": "Calculate and fetch user statistics (posts, comments, activity, etc)",
+  "trigger": {
+    "type": "http",
+    "method": "GET",
+    "path": "/stats"
+  },
+  "nodes": [
+    {
+      "id": "validate_context",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.user.id }}",
+      "validator": "required"
+    },
+    {
+      "id": "count_forum_posts",
+      "type": "operation",
+      "op": "database_count",
+      "entity": "ForumPost",
+      "params": {
+        "filter": {
+          "authorId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isDeleted": false
+        }
+      }
+    },
+    {
+      "id": "count_forum_threads",
+      "type": "operation",
+      "op": "database_count",
+      "entity": "ForumThread",
+      "params": {
+        "filter": {
+          "authorId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        }
+      }
+    },
+    {
+      "id": "count_media_uploads",
+      "type": "operation",
+      "op": "database_count",
+      "entity": "MediaAsset",
+      "params": {
+        "filter": {
+          "uploadedBy": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}"
+        }
+      }
+    },
+    {
+      "id": "calculate_engagement",
+      "type": "operation",
+      "op": "database_aggregate",
+      "entity": "ForumPost",
+      "params": {
+        "filter": {
+          "authorId": "{{ $context.user.id }}",
+          "tenantId": "{{ $context.tenantId }}",
+          "isDeleted": false
+        },
+        "aggregations": {
+          "totalLikes": "sum(likes)",
+          "avgScore": "avg(score)"
+        }
+      }
+    },
+    {
+      "id": "format_response",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "forumPosts": "{{ $steps.count_forum_posts.output }}",
+        "forumThreads": "{{ $steps.count_forum_threads.output }}",
+        "mediaUploads": "{{ $steps.count_media_uploads.output }}",
+        "engagement": {
+          "totalLikes": "{{ $steps.calculate_engagement.output.totalLikes || 0 }}",
+          "averageScore": "{{ $steps.calculate_engagement.output.avgScore || 0 }}"
+        }
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": "{{ $steps.format_response.output }}"
+    }
+  ]
+}

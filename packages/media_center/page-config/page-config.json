@@ -1,0 +1,46 @@
+[
+  {
+    "id": "page_media_gallery",
+    "path": "/media/gallery",
+    "title": "Media Gallery",
+    "packageId": "media_center",
+    "component": "media_gallery",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 40
+  },
+  {
+    "id": "page_media_upload",
+    "path": "/media/upload",
+    "title": "Upload Media",
+    "packageId": "media_center",
+    "component": "media_uploader",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 41
+  },
+  {
+    "id": "page_media_jobs",
+    "path": "/admin/media/jobs",
+    "title": "Media Processing Jobs",
+    "packageId": "media_center",
+    "component": "media_jobs_monitor",
+    "level": 3,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 42
+  },
+  {
+    "id": "page_media_details",
+    "path": "/media/details/:assetId",
+    "title": "Media Details",
+    "packageId": "media_center",
+    "component": "media_details_viewer",
+    "level": 1,
+    "requiresAuth": true,
+    "isPublished": true,
+    "sortOrder": 43
+  }
+]

@@ -31,5 +31,54 @@
     "suites": [
       "tests/metadata.test.json"
     ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "entities",
+      "events",
+      "page-config",
+      "permissions",
+      "seed",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests",
+      "workflow"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "pages": [
+        "page-config/page-config.json"
+      ],
+      "workflows": [
+        "workflow/cleanup-expired.jsonscript",
+        "workflow/dispatch.jsonscript",
+        "workflow/list-unread.jsonscript",
+        "workflow/mark-as-read.jsonscript"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "entities/schema.json",
+        "events/handlers.json",
+        "seed/metadata.json",
+        "static_content/icon.svg"
+      ]
+    }
   }
 }

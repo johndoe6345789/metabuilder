@@ -10,7 +10,14 @@
   "icon": "static_content/icon.svg",
   "minLevel": 5,
   "primary": true,
-  "keywords": ["database", "admin", "export", "import", "schema", "statistics"],
+  "keywords": [
+    "database",
+    "admin",
+    "export",
+    "import",
+    "schema",
+    "statistics"
+  ],
   "dependencies": {
     "data_table": "*",
     "ui_permissions": "*"
@@ -35,5 +42,43 @@
     "suites": [
       "tests/metadata.test.json"
     ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "page-config",
+      "permissions",
+      "playwright",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "pages": [
+        "page-config/metadata.json"
+      ],
+      "tests": [
+        "playwright/tests.json",
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
   }
 }

@@ -42,5 +42,37 @@
     "dbal": false,
     "browser": true
   },
-  "icon": "static_content/icon.svg"
+  "icon": "static_content/icon.svg",
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/stories.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
+  }
 }

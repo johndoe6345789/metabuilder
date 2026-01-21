@@ -32,5 +32,52 @@
     "suites": [
       "tests/metadata.test.json"
     ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "page-config",
+      "permissions",
+      "playwright",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests",
+      "workflow"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "pages": [
+        "page-config/metadata.json",
+        "page-config/page-config.json"
+      ],
+      "workflows": [
+        "workflow/create-user.jsonscript",
+        "workflow/delete-user.jsonscript",
+        "workflow/list-users.jsonscript",
+        "workflow/reset-password.jsonscript",
+        "workflow/update-user.jsonscript"
+      ],
+      "tests": [
+        "playwright/tests.json",
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
   }
 }

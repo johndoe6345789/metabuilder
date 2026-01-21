@@ -1,0 +1,7 @@
+[
+  {"id":"page_streams_list","path":"/streams","title":"Streams","packageId":"stream_cast","component":"streams_list","level":1,"requiresAuth":true,"isPublished":true,"sortOrder":70},
+  {"id":"page_stream_viewer","path":"/streams/:channelId","title":"Stream","packageId":"stream_cast","component":"stream_viewer","level":1,"requiresAuth":true,"isPublished":true,"sortOrder":71},
+  {"id":"page_stream_control","path":"/streams/:channelId/control-room","title":"Control Room","packageId":"stream_cast","component":"control_room","level":2,"requiresAuth":true,"isPublished":true,"sortOrder":72},
+  {"id":"page_stream_schedule","path":"/streams/:channelId/schedule","title":"Schedule","packageId":"stream_cast","component":"stream_schedule","level":1,"requiresAuth":true,"isPublished":true,"sortOrder":73},
+  {"id":"page_stream_scenes","path":"/streams/:channelId/scenes","title":"Scenes","packageId":"stream_cast","component":"scene_manager","level":2,"requiresAuth":true,"isPublished":true,"sortOrder":74}
+]

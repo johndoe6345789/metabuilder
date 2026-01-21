@@ -1,0 +1,132 @@
+name: Product
+displayName: Product
+package: ecommerce-basic
+description: E-commerce product with inventory and pricing
+
+fields:
+  id:
+    type: string
+    label: Product ID
+    required: true
+    primaryKey: true
+    description: Unique product identifier
+
+  tenantId:
+    type: string
+    label: Tenant ID
+    required: true
+    description: Multi-tenant identifier for data isolation
+    index: true
+
+  name:
+    type: string
+    label: Product Name
+    required: true
+    maxLength: 255
+    description: Display name of the product
+
+  description:
+    type: text
+    label: Description
+    required: false
+    maxLength: 5000
+    description: Detailed product description
+
+  price:
+    type: decimal
+    label: Regular Price
+    required: true
+    precision: 10
+    scale: 2
+    min: 0
+    description: Standard product price
+
+  salePrice:
+    type: decimal
+    label: Sale Price
+    required: false
+    precision: 10
+    scale: 2
+    min: 0
+    description: Discounted price if on sale
+
+  imageUrl:
+    type: string
+    label: Product Image URL
+    required: false
+    maxLength: 2048
+    description: Primary product image URL
+
+  category:
+    type: string
+    label: Category
+    required: false
+    maxLength: 100
+    description: Product category for organization
+
+  sku:
+    type: string
+    label: SKU
+    required: false
+    maxLength: 50
+    unique: true
+    description: Stock Keeping Unit for inventory tracking
+
+  stock:
+    type: integer
+    label: Stock Quantity
+    required: true
+    default: 0
+    min: 0
+    description: Current inventory quantity
+
+  featured:
+    type: boolean
+    label: Featured
+    required: true
+    default: false
+    description: Whether product is featured on storefront
+
+  isActive:
+    type: boolean
+    label: Active
+    required: true
+    default: true
+    description: Enable/disable product availability
+
+  createdAt:
+    type: datetime
+    label: Created At
+    required: true
+    description: Product creation timestamp
+    autoCreate: true
+
+  updatedAt:
+    type: datetime
+    label: Updated At
+    required: false
+    description: Last modification timestamp
+    autoUpdate: true
+
+indexes:
+  - fields: [tenantId]
+    name: idx_product_tenant
+  - fields: [tenantId, category]
+    name: idx_product_tenant_category
+  - fields: [tenantId, featured]
+    name: idx_product_tenant_featured
+  - fields: [tenantId, isActive]
+    name: idx_product_tenant_active
+
+relations:
+  carts:
+    type: oneToMany
+    target: Cart
+    foreignKey: productId
+    description: Product items in carts
+
+  orderItems:
+    type: oneToMany
+    target: OrderItem
+    foreignKey: productId
+    description: Product items in orders

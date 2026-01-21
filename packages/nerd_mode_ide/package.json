@@ -10,7 +10,16 @@
   "icon": "static_content/icon.svg",
   "minLevel": 4,
   "primary": false,
-  "keywords": ["ide", "editor", "code", "files", "git", "console", "tests", "development"],
+  "keywords": [
+    "ide",
+    "editor",
+    "code",
+    "files",
+    "git",
+    "console",
+    "tests",
+    "development"
+  ],
   "dependencies": {
     "code_editor": "*",
     "ui_permissions": "*"
@@ -36,5 +45,37 @@
     "suites": [
       "tests/metadata.test.json"
     ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "permissions",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "static_content/icon.svg"
+      ]
+    }
   }
 }

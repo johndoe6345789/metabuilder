@@ -1,0 +1,76 @@
+{
+  "name": "@metabuilder/workflow",
+  "version": "3.0.0",
+  "description": "Enterprise-grade DAG workflow engine with N8N-style architecture",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./executor": {
+      "import": "./dist/executor/dag-executor.js",
+      "require": "./dist/executor/dag-executor.js",
+      "types": "./dist/executor/dag-executor.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types.js",
+      "require": "./dist/types.js",
+      "types": "./dist/types.d.ts"
+    },
+    "./registry": {
+      "import": "./dist/registry/node-executor-registry.js",
+      "require": "./dist/registry/node-executor-registry.js",
+      "types": "./dist/registry/node-executor-registry.d.ts"
+    },
+    "./plugins": {
+      "import": "./dist/plugins/index.js",
+      "require": "./dist/plugins/index.js",
+      "types": "./dist/plugins/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint src --ext .ts",
+    "type-check": "tsc --noEmit",
+    "prepublish": "npm run build"
+  },
+  "keywords": [
+    "workflow",
+    "dag",
+    "orchestration",
+    "automation",
+    "n8n",
+    "enterprise"
+  ],
+  "author": "MetaBuilder Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/jest": "^29.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "node-fetch": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metabuilder/metabuilder.git",
+    "directory": "workflow"
+  },
+  "bugs": {
+    "url": "https://github.com/metabuilder/metabuilder.git/issues"
+  },
+  "homepage": "https://github.com/metabuilder/metabuilder.git/tree/main/workflow"
+}

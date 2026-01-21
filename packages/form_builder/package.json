@@ -33,5 +33,43 @@
     "suites": [
       "tests/metadata.test.json"
     ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "forms",
+      "permissions",
+      "seed",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests",
+      "validation"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "tests": [
+        "tests/metadata.params.json",
+        "tests/metadata.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "forms/contact-form.json",
+        "seed/metadata.json",
+        "static_content/icon.svg",
+        "validation/validators.json"
+      ]
+    }
   }
 }

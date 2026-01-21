@@ -1,0 +1,94 @@
+name: Artist
+displayName: Artist
+description: Music artist entity for Spotify clone
+tableName: artist
+tenantScoped: true
+
+fields:
+  id:
+    type: string
+    required: true
+    primaryKey: true
+    description: Unique identifier for the artist
+    label: ID
+
+  tenantId:
+    type: string
+    required: true
+    description: Multi-tenant identifier
+    label: Tenant ID
+    index: true
+
+  name:
+    type: string
+    required: true
+    description: Artist name
+    label: Name
+    maxLength: 255
+
+  bio:
+    type: text
+    required: false
+    description: Artist biography
+    label: Biography
+
+  imageUrl:
+    type: string
+    required: false
+    description: URL to artist profile image
+    label: Image URL
+    maxLength: 2048
+
+  genre:
+    type: string
+    required: false
+    description: Primary music genre
+    label: Genre
+    maxLength: 100
+
+  verified:
+    type: boolean
+    required: true
+    defaultValue: false
+    description: Whether artist is verified
+    label: Verified
+
+  followers:
+    type: number
+    required: true
+    defaultValue: 0
+    description: Total follower count
+    label: Followers
+    min: 0
+
+  createdAt:
+    type: datetime
+    required: true
+    description: Timestamp when artist was created
+    label: Created At
+    autoSet: creation
+
+  updatedAt:
+    type: datetime
+    required: false
+    description: Timestamp when artist was last updated
+    label: Updated At
+    autoSet: update
+
+indexes:
+  - fields: [tenantId, name]
+    unique: false
+  - fields: [tenantId, verified]
+    unique: false
+  - fields: [tenantId, createdAt]
+    unique: false
+
+relations:
+  albums:
+    type: hasMany
+    target: Album
+    foreignKey: artistId
+  tracks:
+    type: hasMany
+    target: Track
+    foreignKey: artistId

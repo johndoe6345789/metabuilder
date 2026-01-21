@@ -1,0 +1,65 @@
+{
+  "version": "2.2.0",
+  "name": "Handle Data Table Filtering",
+  "description": "Apply filters to data while maintaining multi-tenant safety",
+  "trigger": {
+    "type": "operation",
+    "op": "transform"
+  },
+  "nodes": [
+    {
+      "id": "validate_context",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.tenantId }}",
+      "validator": "required"
+    },
+    {
+      "id": "extract_filters",
+      "type": "operation",
+      "op": "transform_data",
+      "input": "{{ $json }}",
+      "output": {
+        "status": "{{ $json.filters.status || null }}",
+        "searchTerm": "{{ $json.filters.search || '' }}",
+        "dateFrom": "{{ $json.filters.dateFrom || null }}",
+        "dateTo": "{{ $json.filters.dateTo || null }}"
+      }
+    },
+    {
+      "id": "apply_status_filter",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $steps.extract_filters.output.status !== null }}"
+    },
+    {
+      "id": "apply_search_filter",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $steps.extract_filters.output.searchTerm.length > 0 }}"
+    },
+    {
+      "id": "apply_date_filter",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $steps.extract_filters.output.dateFrom !== null || $steps.extract_filters.output.dateTo !== null }}"
+    },
+    {
+      "id": "filter_data",
+      "type": "operation",
+      "op": "transform_data",
+      "input": "{{ $json.data }}",
+      "output": "{{ $json.data.filter(item => { let match = true; if ($steps.extract_filters.output.status && item.status !== $steps.extract_filters.output.status) match = false; if ($steps.extract_filters.output.searchTerm && !JSON.stringify(item).toLowerCase().includes($steps.extract_filters.output.searchTerm.toLowerCase())) match = false; if ($steps.extract_filters.output.dateFrom && new Date(item.createdAt) < new Date($steps.extract_filters.output.dateFrom)) match = false; if ($steps.extract_filters.output.dateTo && new Date(item.createdAt) > new Date($steps.extract_filters.output.dateTo)) match = false; return match; }) }}"
+    },
+    {
+      "id": "return_filtered",
+      "type": "action",
+      "action": "emit_event",
+      "event": "data_filtered",
+      "data": {
+        "filters": "{{ $steps.extract_filters.output }}",
+        "data": "{{ $steps.filter_data.output }}"
+      }
+    }
+  ]
+}

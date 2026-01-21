@@ -1,0 +1,56 @@
+{
+  "version": "2.2.0",
+  "name": "Handle Data Table Pagination",
+  "description": "Apply pagination logic to data results",
+  "trigger": {
+    "type": "operation",
+    "op": "transform"
+  },
+  "nodes": [
+    {
+      "id": "extract_pagination_params",
+      "type": "operation",
+      "op": "transform_data",
+      "input": "{{ $json }}",
+      "output": {
+        "page": "{{ Math.max($json.page || 1, 1) }}",
+        "limit": "{{ Math.min($json.limit || 50, 500) }}"
+      }
+    },
+    {
+      "id": "calculate_offset",
+      "type": "operation",
+      "op": "transform_data",
+      "output": "{{ ($steps.extract_pagination_params.output.page - 1) * $steps.extract_pagination_params.output.limit }}"
+    },
+    {
+      "id": "slice_data",
+      "type": "operation",
+      "op": "transform_data",
+      "input": "{{ $json.data }}",
+      "output": "{{ $json.data.slice($steps.calculate_offset.output, $steps.calculate_offset.output + $steps.extract_pagination_params.output.limit) }}"
+    },
+    {
+      "id": "calculate_total_pages",
+      "type": "operation",
+      "op": "transform_data",
+      "output": "{{ Math.ceil($json.data.length / $steps.extract_pagination_params.output.limit) }}"
+    },
+    {
+      "id": "return_paginated",
+      "type": "action",
+      "action": "emit_event",
+      "event": "data_paginated",
+      "data": {
+        "data": "{{ $steps.slice_data.output }}",
+        "pagination": {
+          "page": "{{ $steps.extract_pagination_params.output.page }}",
+          "limit": "{{ $steps.extract_pagination_params.output.limit }}",
+          "total": "{{ $json.data.length }}",
+          "totalPages": "{{ $steps.calculate_total_pages.output }}",
+          "hasMore": "{{ $steps.extract_pagination_params.output.page < $steps.calculate_total_pages.output }}"
+        }
+      }
+    }
+  ]
+}

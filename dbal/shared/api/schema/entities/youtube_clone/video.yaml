@@ -1,0 +1,213 @@
+entity: Video
+label: Video
+description: A video content in the platform
+plural: Videos
+
+fields:
+  id:
+    type: String
+    required: true
+    primaryKey: true
+    description: Unique video identifier
+    example: "vid_abc123xyz"
+
+  tenantId:
+    type: String
+    required: true
+    description: Multi-tenant identifier for data isolation
+    example: "tenant_acme"
+    indexed: true
+
+  title:
+    type: String
+    required: true
+    maxLength: 256
+    description: Video title
+    example: "Building a Video Platform"
+
+  description:
+    type: String
+    required: false
+    maxLength: 5000
+    description: Detailed video description
+    example: "In this tutorial, we build a complete video sharing platform..."
+
+  uploaderId:
+    type: String
+    required: true
+    description: ID of the user who uploaded the video
+    example: "user_john123"
+    indexed: true
+    relationship:
+      entity: User
+      field: id
+      type: many-to-one
+
+  videoUrl:
+    type: String
+    required: true
+    description: URL to the video file
+    example: "https://cdn.example.com/videos/vid_abc123xyz.mp4"
+
+  thumbnailUrl:
+    type: String
+    required: false
+    description: URL to the video thumbnail image
+    example: "https://cdn.example.com/thumbnails/vid_abc123xyz.jpg"
+
+  duration:
+    type: Number
+    required: true
+    min: 0
+    description: Duration of video in seconds
+    example: 3600
+
+  category:
+    type: String
+    required: false
+    maxLength: 128
+    description: Video category for organization
+    example: "Technology"
+    enum:
+      - Technology
+      - Entertainment
+      - Education
+      - Music
+      - Sports
+      - Gaming
+      - Other
+
+  tags:
+    type: Json
+    required: false
+    description: Array of tags for searchability
+    example: ["tutorial", "video-platform", "nodejs"]
+
+  views:
+    type: Number
+    required: true
+    default: 0
+    min: 0
+    description: Total number of video views
+    example: 1500
+
+  likes:
+    type: Number
+    required: true
+    default: 0
+    min: 0
+    description: Number of likes received
+    example: 45
+
+  dislikes:
+    type: Number
+    required: true
+    default: 0
+    min: 0
+    description: Number of dislikes received (deprecated but tracked)
+    example: 2
+
+  published:
+    type: Boolean
+    required: true
+    default: false
+    description: Whether the video is publicly visible
+    example: true
+
+  unlisted:
+    type: Boolean
+    required: false
+    default: false
+    description: Video is hidden from search but accessible via link
+    example: false
+
+  status:
+    type: String
+    required: true
+    default: "draft"
+    description: Current processing status of the video
+    example: "published"
+    enum:
+      - draft
+      - processing
+      - published
+      - archived
+      - deleted
+
+  createdAt:
+    type: DateTime
+    required: true
+    autoSet: true
+    description: Timestamp when video was created
+    example: "2025-01-21T10:30:00Z"
+
+  updatedAt:
+    type: DateTime
+    required: false
+    autoUpdate: true
+    description: Timestamp when video was last updated
+    example: "2025-01-21T14:45:00Z"
+
+  publishedAt:
+    type: DateTime
+    required: false
+    description: Timestamp when video was first published
+    example: "2025-01-21T11:00:00Z"
+
+relationships:
+  - entity: VideoComment
+    field: videoId
+    type: one-to-many
+    description: Comments on this video
+
+  - entity: Playlist
+    through: PlaylistVideo
+    type: many-to-many
+    description: Playlists containing this video
+
+  - entity: User
+    field: uploaderId
+    type: many-to-one
+    description: The uploader (channel owner)
+
+indexes:
+  - fields: [tenantId, publishedAt]
+    unique: false
+    description: For efficient listing of published videos
+
+  - fields: [uploaderId, tenantId]
+    unique: false
+    description: For retrieving channel videos
+
+  - fields: [tenantId, status]
+    unique: false
+    description: For filtering by status
+
+  - fields: [createdAt, tenantId]
+    unique: false
+    description: For chronological ordering
+
+acl:
+  read:
+    - authenticated: true
+      published: true
+    - authenticated: true
+      uploaderId: "{{ currentUserId }}"
+  create:
+    - authenticated: true
+      role: user
+  update:
+    - authenticated: true
+      uploaderId: "{{ currentUserId }}"
+  delete:
+    - authenticated: true
+      uploaderId: "{{ currentUserId }}"
+    - role: admin
+
+timestamps:
+  - field: createdAt
+    type: created
+  - field: updatedAt
+    type: updated
+  - field: publishedAt
+    type: custom

@@ -1,0 +1,23 @@
+{
+  "packageId": "test_example_unit",
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "name": "Test Example Unit",
+  "version": "1.0.0",
+  "description": "Unit test example",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "testing",
+  "files": {
+    "directories": [
+      "unit-tests"
+    ],
+    "byType": {
+      "config": [
+        "package.json"
+      ],
+      "other": [
+        "unit-tests/tests.json"
+      ]
+    }
+  }
+}

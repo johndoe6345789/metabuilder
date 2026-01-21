@@ -1,0 +1,827 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://metabuilder.io/schemas/metabuilder-workflow-v3.schema.json",
+  "title": "MetaBuilder Workflow Schema v3",
+  "description": "Enterprise-grade DAG workflow engine with full N8N-style capabilities",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "version", "nodes", "connections"],
+  "properties": {
+    "id": {
+      "description": "Workflow UUID - immutable identifier",
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "description": "Human-readable workflow name",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "description": {
+      "description": "Detailed description and usage notes",
+      "type": "string",
+      "maxLength": 2000
+    },
+    "version": {
+      "description": "Schema version - currently 3.0.0",
+      "type": "string",
+      "enum": ["3.0.0"]
+    },
+    "tenantId": {
+      "description": "Multi-tenant scoping",
+      "type": "string",
+      "format": "uuid"
+    },
+    "createdBy": {
+      "description": "User ID that created this workflow",
+      "type": "string",
+      "format": "uuid"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "active": {
+      "description": "Whether workflow can be triggered",
+      "type": "boolean",
+      "default": true
+    },
+    "locked": {
+      "description": "Prevents editing (archived or in-use)",
+      "type": "boolean",
+      "default": false
+    },
+    "tags": {
+      "description": "Categorization and search tags",
+      "type": "array",
+      "items": { "type": "string", "maxLength": 50 },
+      "default": []
+    },
+    "category": {
+      "description": "High-level workflow category",
+      "type": "string",
+      "enum": ["automation", "integration", "business-logic", "data-transformation", "notification", "approval", "other"],
+      "default": "automation"
+    },
+    "settings": {
+      "$ref": "#/$defs/workflowSettings"
+    },
+    "nodes": {
+      "description": "All workflow nodes (triggers, operations, actions)",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 500,
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "connections": {
+      "description": "DAG edges: node output -> node input routing",
+      "$ref": "#/$defs/connections"
+    },
+    "triggers": {
+      "description": "Explicit trigger declarations for event-driven workflows",
+      "type": "array",
+      "items": { "$ref": "#/$defs/trigger" },
+      "default": []
+    },
+    "variables": {
+      "description": "Workflow-level variables for reuse and templating",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/workflowVariable"
+      },
+      "default": {}
+    },
+    "errorHandling": {
+      "$ref": "#/$defs/errorHandlingPolicy"
+    },
+    "retryPolicy": {
+      "$ref": "#/$defs/retryPolicy"
+    },
+    "rateLimiting": {
+      "$ref": "#/$defs/rateLimitPolicy"
+    },
+    "credentials": {
+      "description": "Workflow-level credential bindings (node-specific overrides in node.credentials)",
+      "type": "array",
+      "items": { "$ref": "#/$defs/credentialBinding" },
+      "default": []
+    },
+    "metadata": {
+      "description": "Custom metadata for integrations and tooling",
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    },
+    "executionLimits": {
+      "$ref": "#/$defs/executionLimits"
+    },
+    "multiTenancy": {
+      "$ref": "#/$defs/multiTenancyPolicy"
+    },
+    "versionHistory": {
+      "description": "Optional version tracking metadata",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["versionId", "createdAt", "createdBy"],
+        "properties": {
+          "versionId": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "createdBy": { "type": "string", "format": "uuid" },
+          "message": { "type": "string" },
+          "changesSummary": { "type": "string" }
+        }
+      },
+      "default": []
+    }
+  },
+  "$defs": {
+    "workflowSettings": {
+      "description": "Global execution settings",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "timezone": {
+          "description": "IANA timezone (e.g., Europe/London)",
+          "type": "string",
+          "default": "UTC"
+        },
+        "executionTimeout": {
+          "description": "Hard timeout in seconds (0 = unlimited)",
+          "type": "integer",
+          "minimum": 0,
+          "default": 3600
+        },
+        "saveExecutionProgress": {
+          "description": "Persist intermediate execution state",
+          "type": "boolean",
+          "default": true
+        },
+        "saveExecutionData": {
+          "description": "What to save on completion",
+          "type": "string",
+          "enum": ["all", "errors-only", "none"],
+          "default": "all"
+        },
+        "maxConcurrentExecutions": {
+          "description": "Concurrency limit per workflow",
+          "type": "integer",
+          "minimum": 1,
+          "default": 10
+        },
+        "debugMode": {
+          "description": "Enable detailed logging and breakpoints",
+          "type": "boolean",
+          "default": false
+        },
+        "enableNotifications": {
+          "description": "Send execution notifications",
+          "type": "boolean",
+          "default": true
+        },
+        "notificationChannels": {
+          "description": "Where to send notifications",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["email", "webhook", "in-app", "slack"]
+          },
+          "default": ["email"]
+        }
+      },
+      "default": {}
+    },
+    "node": {
+      "description": "Workflow node - trigger, operation, or action",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "type", "typeVersion", "position"],
+      "properties": {
+        "id": {
+          "description": "Unique node identifier (UUID preferred)",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "name": {
+          "description": "Human-readable node name",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "description": {
+          "description": "Node documentation and purpose",
+          "type": "string",
+          "maxLength": 1000
+        },
+        "type": {
+          "description": "Node type category",
+          "type": "string",
+          "enum": ["trigger", "operation", "action", "logic", "transformer", "iterator", "parallel", "wait", "webhook", "schedule"]
+        },
+        "typeVersion": {
+          "description": "Node type implementation version",
+          "type": ["integer", "number"],
+          "minimum": 1
+        },
+        "nodeType": {
+          "description": "Detailed node classification",
+          "type": "string",
+          "examples": ["dbal-read", "dbal-write", "http-request", "condition", "loop", "parallel-execute", "email-send", "webhook-trigger"]
+        },
+        "position": {
+          "description": "[x, y] canvas coordinates for visual editors",
+          "$ref": "#/$defs/position"
+        },
+        "size": {
+          "description": "[width, height] optional node dimensions",
+          "$ref": "#/$defs/size"
+        },
+        "parameters": {
+          "description": "Node-specific configuration (arbitrary JSON)",
+          "type": "object",
+          "additionalProperties": true,
+          "default": {}
+        },
+        "parameterSchema": {
+          "description": "JSON Schema for parameter validation (optional)",
+          "type": "object",
+          "additionalProperties": true
+        },
+        "inputs": {
+          "description": "Input port definitions",
+          "type": "array",
+          "items": { "$ref": "#/$defs/port" },
+          "default": [
+            {
+              "name": "main",
+              "type": "main",
+              "maxConnections": -1,
+              "description": "Primary input"
+            }
+          ]
+        },
+        "outputs": {
+          "description": "Output port definitions with routing info",
+          "type": "array",
+          "items": { "$ref": "#/$defs/port" },
+          "default": [
+            {
+              "name": "main",
+              "type": "main",
+              "maxConnections": -1,
+              "description": "Primary output"
+            }
+          ]
+        },
+        "credentials": {
+          "description": "Node-level credential bindings",
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/credentialRef" },
+          "default": {}
+        },
+        "disabled": {
+          "description": "Skip execution of this node",
+          "type": "boolean",
+          "default": false
+        },
+        "skipOnFail": {
+          "description": "Skip execution if previous node failed",
+          "type": "boolean",
+          "default": false
+        },
+        "alwaysOutputData": {
+          "description": "Output data even if operation fails",
+          "type": "boolean",
+          "default": false
+        },
+        "retryPolicy": {
+          "description": "Override global retry policy for this node",
+          "$ref": "#/$defs/retryPolicy"
+        },
+        "timeout": {
+          "description": "Node-specific timeout in seconds",
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxTries": {
+          "description": "Maximum retry attempts",
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "waitBetweenTries": {
+          "description": "Milliseconds between retries",
+          "type": "integer",
+          "minimum": 0,
+          "default": 1000
+        },
+        "continueOnError": {
+          "description": "Continue workflow execution on error",
+          "type": "boolean",
+          "default": false
+        },
+        "onError": {
+          "description": "Error handling strategy for this node",
+          "type": "string",
+          "enum": ["stopWorkflow", "continueRegularOutput", "continueErrorOutput", "retry"],
+          "default": "stopWorkflow"
+        },
+        "errorOutput": {
+          "description": "Route errors to specific output port",
+          "type": "string"
+        },
+        "notes": {
+          "description": "Internal documentation",
+          "type": "string"
+        },
+        "notesInFlow": {
+          "description": "Display notes on canvas",
+          "type": "boolean",
+          "default": false
+        },
+        "color": {
+          "description": "Canvas node color (hex or named)",
+          "type": "string",
+          "pattern": "^#?[0-9a-fA-F]{6}$|^(red|green|blue|yellow|purple|orange|gray)$"
+        },
+        "icon": {
+          "description": "Node icon identifier",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "Custom node metadata",
+          "type": "object",
+          "additionalProperties": true,
+          "default": {}
+        }
+      }
+    },
+    "port": {
+      "description": "Node input/output port definition",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "description": "Port identifier (e.g., 'main', 'error')",
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "description": "Port type category",
+          "type": "string",
+          "enum": ["main", "error", "success", "condition"]
+        },
+        "index": {
+          "description": "Numeric port index",
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "label": {
+          "description": "Display label",
+          "type": "string"
+        },
+        "description": {
+          "description": "Port documentation",
+          "type": "string"
+        },
+        "maxConnections": {
+          "description": "Max incoming/outgoing connections (-1 = unlimited)",
+          "type": "integer",
+          "minimum": -1,
+          "default": -1
+        },
+        "dataTypes": {
+          "description": "Expected data types flowing through",
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["any"]
+        },
+        "required": {
+          "description": "Port must be connected",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "position": {
+      "description": "[x, y] canvas coordinates",
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "number" }
+    },
+    "size": {
+      "description": "[width, height] canvas dimensions",
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "number", "minimum": 50 }
+    },
+    "connections": {
+      "description": "DAG edges: fromNode -> output type -> output index -> array of targets",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/connectionTarget" }
+          }
+        }
+      },
+      "default": {}
+    },
+    "connectionTarget": {
+      "description": "Connection routing definition",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "type", "index"],
+      "properties": {
+        "node": {
+          "description": "Target node ID",
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "description": "Target input port type",
+          "type": "string",
+          "enum": ["main", "error", "condition"]
+        },
+        "index": {
+          "description": "Target input port index",
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "conditional": {
+          "description": "Optional conditional routing",
+          "type": "boolean",
+          "default": false
+        },
+        "condition": {
+          "description": "Condition expression (if conditional=true)",
+          "type": "string"
+        }
+      }
+    },
+    "trigger": {
+      "description": "Explicit workflow trigger definition",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "kind"],
+      "properties": {
+        "nodeId": {
+          "description": "Node ID that acts as trigger",
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "description": "Trigger type",
+          "type": "string",
+          "enum": ["webhook", "schedule", "manual", "event", "email", "message-queue", "webhook-listen", "polling", "custom"]
+        },
+        "enabled": {
+          "description": "Trigger is active",
+          "type": "boolean",
+          "default": true
+        },
+        "webhookId": {
+          "description": "Unique webhook identifier (for webhook triggers)",
+          "type": "string"
+        },
+        "webhookUrl": {
+          "description": "Full webhook URL (generated)",
+          "type": "string",
+          "format": "uri"
+        },
+        "webhookMethods": {
+          "description": "Allowed HTTP methods",
+          "type": "array",
+          "items": { "type": "string", "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"] },
+          "default": ["POST"]
+        },
+        "schedule": {
+          "description": "Cron expression (for scheduled triggers)",
+          "type": "string",
+          "examples": ["0 0 * * *", "*/15 * * * *"]
+        },
+        "timezone": {
+          "description": "Timezone for schedule",
+          "type": "string",
+          "default": "UTC"
+        },
+        "eventType": {
+          "description": "Event type to listen for",
+          "type": "string",
+          "examples": ["user.created", "post.published", "payment.completed"]
+        },
+        "eventFilters": {
+          "description": "Event filtering criteria",
+          "type": "object",
+          "additionalProperties": true
+        },
+        "rateLimiting": {
+          "description": "Trigger rate limiting",
+          "$ref": "#/$defs/rateLimitPolicy"
+        },
+        "metadata": {
+          "description": "Trigger-specific configuration",
+          "type": "object",
+          "additionalProperties": true,
+          "default": {}
+        }
+      }
+    },
+    "workflowVariable": {
+      "description": "Workflow-level variable definition",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "description": "Variable identifier",
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "description": "Variable data type",
+          "type": "string",
+          "enum": ["string", "number", "boolean", "array", "object", "date", "any"]
+        },
+        "description": {
+          "description": "Variable documentation",
+          "type": "string"
+        },
+        "defaultValue": {
+          "description": "Default value",
+          "type": ["string", "number", "boolean", "null"]
+        },
+        "required": {
+          "description": "Variable must be provided",
+          "type": "boolean",
+          "default": false
+        },
+        "scope": {
+          "description": "Variable scope",
+          "type": "string",
+          "enum": ["workflow", "execution", "global"],
+          "default": "workflow"
+        }
+      }
+    },
+    "errorHandlingPolicy": {
+      "description": "Global error handling strategy",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "default": {
+          "description": "Default error behavior",
+          "type": "string",
+          "enum": ["stopWorkflow", "continueRegularOutput", "continueErrorOutput"],
+          "default": "stopWorkflow"
+        },
+        "nodeOverrides": {
+          "description": "Per-node error handling",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "enum": ["stopWorkflow", "continueRegularOutput", "continueErrorOutput", "skipNode"]
+          }
+        },
+        "errorLogger": {
+          "description": "Log errors to this node",
+          "type": "string"
+        },
+        "errorNotification": {
+          "description": "Notify on error",
+          "type": "boolean",
+          "default": true
+        },
+        "notifyChannels": {
+          "description": "Notification destinations",
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["email"]
+        }
+      },
+      "default": {}
+    },
+    "retryPolicy": {
+      "description": "Retry strategy for transient failures",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "description": "Enable retries",
+          "type": "boolean",
+          "default": false
+        },
+        "maxAttempts": {
+          "description": "Maximum retry attempts",
+          "type": "integer",
+          "minimum": 1,
+          "default": 3
+        },
+        "backoffType": {
+          "description": "Backoff strategy",
+          "type": "string",
+          "enum": ["linear", "exponential", "fibonacci"],
+          "default": "exponential"
+        },
+        "initialDelay": {
+          "description": "Initial retry delay (ms)",
+          "type": "integer",
+          "minimum": 100,
+          "default": 1000
+        },
+        "maxDelay": {
+          "description": "Maximum retry delay (ms)",
+          "type": "integer",
+          "minimum": 1000,
+          "default": 60000
+        },
+        "retryableErrors": {
+          "description": "Error types to retry on",
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": ["TIMEOUT", "RATE_LIMIT", "TEMPORARY_FAILURE"],
+          "default": ["TIMEOUT", "TEMPORARY_FAILURE"]
+        },
+        "retryableStatusCodes": {
+          "description": "HTTP status codes to retry on",
+          "type": "array",
+          "items": { "type": "integer" },
+          "default": [408, 429, 500, 502, 503, 504]
+        }
+      },
+      "default": { "enabled": false }
+    },
+    "rateLimitPolicy": {
+      "description": "Rate limiting configuration",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "description": "Enable rate limiting",
+          "type": "boolean",
+          "default": false
+        },
+        "requestsPerWindow": {
+          "description": "Max requests per time window",
+          "type": "integer",
+          "minimum": 1
+        },
+        "windowSeconds": {
+          "description": "Time window in seconds",
+          "type": "integer",
+          "minimum": 1
+        },
+        "key": {
+          "description": "Rate limit key (per tenant/user/ip)",
+          "type": "string",
+          "enum": ["global", "tenant", "user", "ip", "custom"],
+          "default": "global"
+        },
+        "customKeyTemplate": {
+          "description": "Custom key template (if key=custom)",
+          "type": "string"
+        },
+        "onLimitExceeded": {
+          "description": "Action when limit exceeded",
+          "type": "string",
+          "enum": ["queue", "reject", "skip"],
+          "default": "queue"
+        }
+      },
+      "default": { "enabled": false }
+    },
+    "credentialBinding": {
+      "description": "Credential binding reference",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "credentialType", "credentialId"],
+      "properties": {
+        "nodeId": {
+          "description": "Node that uses credential",
+          "type": "string",
+          "minLength": 1
+        },
+        "credentialType": {
+          "description": "Type of credential",
+          "type": "string",
+          "examples": ["api-key", "oauth2", "basic-auth", "bearer-token", "database"]
+        },
+        "credentialId": {
+          "description": "Credential identifier",
+          "type": ["string", "integer"]
+        },
+        "credentialName": {
+          "description": "Human-readable credential name",
+          "type": "string"
+        },
+        "fieldMappings": {
+          "description": "Credential field mappings",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "credentialRef": {
+      "description": "Credential reference",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "description": "Credential ID",
+          "type": ["string", "integer"]
+        },
+        "name": {
+          "description": "Display name",
+          "type": "string"
+        }
+      }
+    },
+    "executionLimits": {
+      "description": "Execution resource limits",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxExecutionTime": {
+          "description": "Total execution time limit (seconds)",
+          "type": "integer",
+          "minimum": 1,
+          "default": 3600
+        },
+        "maxMemoryMb": {
+          "description": "Maximum memory usage (MB)",
+          "type": "integer",
+          "minimum": 64,
+          "default": 512
+        },
+        "maxNodeExecutions": {
+          "description": "Maximum nodes executed per workflow run",
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxDataSizeMb": {
+          "description": "Maximum data size per node output (MB)",
+          "type": "integer",
+          "minimum": 1,
+          "default": 50
+        },
+        "maxArrayItems": {
+          "description": "Maximum array items before truncation",
+          "type": "integer",
+          "minimum": 100,
+          "default": 10000
+        }
+      },
+      "default": {}
+    },
+    "multiTenancyPolicy": {
+      "description": "Multi-tenant safety configuration",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enforced": {
+          "description": "Enforce multi-tenant filtering",
+          "type": "boolean",
+          "default": true
+        },
+        "tenantIdField": {
+          "description": "Field name for tenant scoping",
+          "type": "string",
+          "default": "tenantId"
+        },
+        "restrictNodeTypes": {
+          "description": "Block dangerous node types",
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["raw-sql", "eval", "shell-exec"]
+        },
+        "allowCrossTenantAccess": {
+          "description": "Allow workflows to access other tenants' data",
+          "type": "boolean",
+          "default": false
+        },
+        "auditLogging": {
+          "description": "Log all workflow executions for audit",
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "default": {}
+    }
+  }
+}

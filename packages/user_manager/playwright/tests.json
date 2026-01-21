@@ -1,634 +1,192 @@
 {
   "$schema": "https://metabuilder.dev/schemas/package-playwright.schema.json",
-  "package": "crud",
-  "version": "1.0.0",
-  "description": "CRUD operations E2E tests - converted from e2e/crud.spec.ts, e2e/crud/user-management.spec.ts, and e2e/crud/complete-flow.spec.ts",
+  "package": "user_manager",
+  "description": "User management admin panel - CRUD operations and validation",
+  "version": "1.0",
+  "tags": ["@admin", "@user-management", "@phase-3"],
   "tests": [
     {
-      "name": "should have landing page with navigation options",
-      "tags": ["@crud", "@interface"],
+      "name": "admin can view list of users",
+      "description": "Verify admin can navigate to user list and see table populated",
+      "tags": ["@user-management", "@smoke"],
+      "timeout": 30000,
       "steps": [
-        {
-          "description": "Navigate to home page",
-          "action": "navigate",
-          "url": "/"
-        },
-        {
-          "description": "Wait for page to load",
-          "action": "waitForLoadState",
-          "state": "domcontentloaded"
-        },
-        {
-          "description": "Verify sign in button is visible",
-          "action": "expect",
-          "role": "button",
-          "text": "sign in",
-          "assertion": {
-            "matcher": "toBeVisible"
-          }
-        }
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "testId": "user-list-table", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "role": "columnheader", "text": "Username", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "role": "columnheader", "text": "Email", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "role": "columnheader", "text": "Role", "assertion": {"matcher": "toBeVisible"}}
       ]
     },
     {
-      "name": "should navigate to login when clicking sign in",
-      "tags": ["@crud", "@navigation"],
+      "name": "can search users by username",
+      "description": "User list can be filtered by username search",
+      "tags": ["@user-management", "@search"],
+      "timeout": 30000,
       "steps": [
-        {
-          "action": "navigate",
-          "url": "/"
-        },
-        {
-          "description": "Click sign in button",
-          "action": "click",
-          "role": "button",
-          "text": "sign in"
-        },
-        {
-          "description": "Verify username field appears",
-          "action": "expect",
-          "label": "username",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "fill", "placeholder": "Search users...", "value": "admin"},
+        {"action": "wait", "timeout": 500},
+        {"action": "expect", "selector": "tbody tr", "assertion": {"matcher": "toHaveCount", "count": 1}},
+        {"action": "expect", "selector": "tbody tr:first-child", "assertion": {"matcher": "toContainText", "text": "admin"}}
       ]
     },
     {
-      "name": "should have descriptive content on landing page",
-      "tags": ["@crud", "@content"],
+      "name": "can filter users by role",
+      "description": "User list can be filtered by role selection",
+      "tags": ["@user-management", "@filter"],
+      "timeout": 30000,
       "steps": [
-        {
-          "action": "navigate",
-          "url": "/"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Check body has content",
-          "action": "expect",
-          "selector": "body",
-          "assertion": {
-            "matcher": "toBeVisible"
-          }
-        }
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "testId": "role-filter-button"},
+        {"action": "click", "role": "option", "text": "Admin"},
+        {"action": "wait", "timeout": 500},
+        {"action": "expect", "selector": "tbody tr", "assertion": {"matcher": "toHaveCount", "count": 1}},
+        {"action": "expect", "selector": "tbody tr td:nth-child(3)", "assertion": {"matcher": "toContainText", "text": "Admin"}}
       ]
     },
     {
-      "name": "should have username and password fields in login",
-      "tags": ["@crud", "@login"],
+      "name": "pagination works correctly",
+      "description": "User list pagination navigates between pages",
+      "tags": ["@user-management", "@pagination"],
+      "timeout": 30000,
       "steps": [
-        {
-          "action": "navigate",
-          "url": "/"
-        },
-        {
-          "action": "click",
-          "role": "button",
-          "text": "sign in"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Check for username field",
-          "action": "expect",
-          "label": "username",
-          "assertion": {
-            "matcher": "toBeVisible"
-          }
-        },
-        {
-          "description": "Check for password field",
-          "action": "expect",
-          "label": "password",
-          "assertion": {
-            "matcher": "toBeVisible"
-          }
-        }
+        {"action": "navigate", "url": "/admin/users?page=1&limit=2"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "expect", "selector": "tbody tr", "assertion": {"matcher": "toHaveCount", "count": 2}},
+        {"action": "expect", "role": "button", "text": "Next", "assertion": {"matcher": "toBeEnabled"}},
+        {"action": "click", "role": "button", "text": "Next"},
+        {"action": "waitForNavigation"},
+        {"action": "expect", "selector": "tbody tr:first-child", "assertion": {"matcher": "toContainText", "text": "testuser"}}
       ]
     },
     {
-      "name": "should have submit button on login form",
-      "tags": ["@crud", "@login"],
+      "name": "admin can create new user",
+      "description": "Admin can fill form and create new user successfully",
+      "tags": ["@user-management", "@create"],
+      "timeout": 30000,
       "steps": [
-        {
-          "action": "navigate",
-          "url": "/"
-        },
-        {
-          "action": "click",
-          "role": "button",
-          "text": "sign in"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Check for login button",
-          "action": "expect",
-          "role": "button",
-          "text": "login",
-          "assertion": {
-            "matcher": "toBeVisible"
-          }
-        }
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "button", "text": "Create User"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']", "timeout": 5000},
+        {"action": "fill", "label": "Username", "value": "newuser123"},
+        {"action": "fill", "label": "Email Address", "value": "newuser@metabuilder.local"},
+        {"action": "select", "label": "Role", "value": "user"},
+        {"action": "click", "role": "button", "text": "Create"},
+        {"action": "waitForNavigation"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "User created successfully"}},
+        {"action": "expect", "selector": "tbody tr", "assertion": {"matcher": "toContainText", "text": "newuser123"}}
       ]
     },
     {
-      "name": "should display entity list",
-      "tags": ["@crud", "@list", "@flow"],
+      "name": "form validates required fields",
+      "description": "User creation form shows errors for empty required fields",
+      "tags": ["@user-management", "@validation"],
+      "timeout": 30000,
       "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Check if list view is visible",
-          "action": "expect",
-          "role": "heading",
-          "text": "list",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        },
-        {
-          "description": "Check if table or list container exists",
-          "action": "expect",
-          "selector": "table, [role=\"table\"], .entity-list",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "click", "role": "button", "text": "Create User"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']"},
+        {"action": "click", "role": "button", "text": "Create"},
+        {"action": "expect", "selector": "[data-testid='username-error']", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "[data-testid='username-error']", "assertion": {"matcher": "toContainText", "text": "Username is required"}},
+        {"action": "expect", "selector": "[data-testid='email-error']", "assertion": {"matcher": "toBeVisible"}}
       ]
     },
     {
-      "name": "should have create button in entity list",
-      "tags": ["@crud", "@list"],
+      "name": "form validates email format",
+      "description": "User creation form validates email format",
+      "tags": ["@user-management", "@validation"],
+      "timeout": 30000,
       "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Check for create/new button",
-          "action": "expect",
-          "role": "button",
-          "text": "create",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "click", "role": "button", "text": "Create User"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']"},
+        {"action": "fill", "label": "Username", "value": "testuser"},
+        {"action": "fill", "label": "Email Address", "value": "invalid-email"},
+        {"action": "blur", "label": "Email Address"},
+        {"action": "expect", "selector": "[data-testid='email-error']", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "[data-testid='email-error']", "assertion": {"matcher": "toContainText", "text": "Invalid email format"}}
       ]
     },
     {
-      "name": "should navigate to create form",
-      "tags": ["@crud", "@create"],
+      "name": "form validates username format",
+      "description": "User creation form validates username format",
+      "tags": ["@user-management", "@validation"],
+      "timeout": 30000,
       "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Click create button",
-          "action": "click",
-          "role": "button",
-          "text": "create"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Should see create form",
-          "action": "expect",
-          "role": "heading",
-          "text": "create",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "click", "role": "button", "text": "Create User"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']"},
+        {"action": "fill", "label": "Username", "value": "invalid user!"},
+        {"action": "blur", "label": "Username"},
+        {"action": "expect", "selector": "[data-testid='username-error']", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "selector": "[data-testid='username-error']", "assertion": {"matcher": "toContainText", "text": "Username must be alphanumeric"}}
       ]
     },
     {
-      "name": "should show form fields in create form",
-      "tags": ["@crud", "@create"],
+      "name": "admin can edit existing user",
+      "description": "Admin can open edit form and update user data",
+      "tags": ["@user-management", "@edit"],
+      "timeout": 30000,
       "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users/create"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Should have at least one input field",
-          "action": "expect",
-          "selector": "input, textarea, select",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "button", "text": "Edit", "selector": "tr:has-text('testuser')"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']"},
+        {"action": "fill", "label": "Bio", "value": "Updated bio"},
+        {"action": "click", "role": "button", "text": "Save"},
+        {"action": "waitForNavigation"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "User updated successfully"}}
       ]
     },
     {
-      "name": "should have submit button in create form",
-      "tags": ["@crud", "@create"],
+      "name": "edit form loads user data",
+      "description": "User edit form pre-fills with current user data",
+      "tags": ["@user-management", "@edit"],
+      "timeout": 30000,
       "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users/create"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Should have submit/save/create button",
-          "action": "expect",
-          "role": "button",
-          "text": "submit",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "click", "role": "button", "text": "Edit", "selector": "tr:has-text('admin')"},
+        {"action": "waitForSelector", "selector": "[data-testid='user-form']"},
+        {"action": "expect", "label": "Username", "assertion": {"matcher": "toHaveValue", "value": "admin"}},
+        {"action": "expect", "label": "Email Address", "assertion": {"matcher": "toHaveValue", "value": "admin@metabuilder.local"}}
       ]
     },
     {
-      "name": "should show validation errors for empty required fields",
-      "tags": ["@crud", "@create", "@validation"],
+      "name": "admin can delete user",
+      "description": "Admin can delete a user after confirmation",
+      "tags": ["@user-management", "@delete"],
+      "timeout": 30000,
       "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users/create"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Try to submit without filling required fields",
-          "action": "click",
-          "role": "button",
-          "text": "submit"
-        },
-        {
-          "description": "Should show validation error",
-          "action": "expect",
-          "text": "required",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "waitForLoadState", "state": "networkidle"},
+        {"action": "click", "role": "button", "text": "Delete", "selector": "tr:has-text('newuser123')"},
+        {"action": "waitForSelector", "selector": "[role='dialog']"},
+        {"action": "click", "role": "button", "text": "Confirm"},
+        {"action": "waitForNavigation"},
+        {"action": "expect", "role": "alert", "assertion": {"matcher": "toContainText", "text": "User deleted successfully"}},
+        {"action": "expect", "selector": "tbody", "assertion": {"matcher": "not.toContainText", "text": "newuser123"}}
       ]
     },
     {
-      "name": "should display entity details",
-      "tags": ["@crud", "@read"],
+      "name": "delete shows confirmation",
+      "description": "Delete action shows confirmation dialog before removing",
+      "tags": ["@user-management", "@delete"],
+      "timeout": 30000,
       "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users/test-user-123"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Should show detail view",
-          "action": "expect",
-          "role": "heading",
-          "text": "detail",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
-      ]
-    },
-    {
-      "name": "should have edit button in detail view",
-      "tags": ["@crud", "@update"],
-      "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users/test-user-123"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Should have edit button",
-          "action": "expect",
-          "role": "button",
-          "text": "edit",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
-      ]
-    },
-    {
-      "name": "should have delete button in detail view",
-      "tags": ["@crud", "@delete"],
-      "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users/test-user-123"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Should have delete button",
-          "action": "expect",
-          "role": "button",
-          "text": "delete",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
-      ]
-    },
-    {
-      "name": "should show 404 for non-existent entity",
-      "tags": ["@crud", "@error-handling"],
-      "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users/non-existent-id-999"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "domcontentloaded"
-        },
-        {
-          "description": "Should show 404 or not found message",
-          "action": "expect",
-          "text": "not found",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
-      ]
-    },
-    {
-      "name": "should navigate to edit form",
-      "tags": ["@crud", "@update"],
-      "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users/test-user-123"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Click edit button",
-          "action": "click",
-          "role": "button",
-          "text": "edit"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Should see edit form",
-          "action": "expect",
-          "role": "heading",
-          "text": "edit",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
-      ]
-    },
-    {
-      "name": "should show pre-filled form fields in edit form",
-      "tags": ["@crud", "@update"],
-      "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users/test-user-123/edit"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Form fields should have values",
-          "action": "expect",
-          "selector": "input[type=\"text\"], input[type=\"email\"]",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
-      ]
-    },
-    {
-      "name": "should have update button in edit form",
-      "tags": ["@crud", "@update"],
-      "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users/test-user-123/edit"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Should have update/save button",
-          "action": "expect",
-          "role": "button",
-          "text": "update",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
-      ]
-    },
-    {
-      "name": "should show confirmation before delete",
-      "tags": ["@crud", "@delete"],
-      "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users/test-user-123"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Click delete button",
-          "action": "click",
-          "role": "button",
-          "text": "delete"
-        },
-        {
-          "description": "Should show confirmation dialog",
-          "action": "expect",
-          "role": "button",
-          "text": "confirm",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
-      ]
-    },
-    {
-      "name": "should have cancel option in delete confirmation",
-      "tags": ["@crud", "@delete"],
-      "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users/test-user-123"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Click delete button",
-          "action": "click",
-          "role": "button",
-          "text": "delete"
-        },
-        {
-          "description": "Should have cancel button",
-          "action": "expect",
-          "role": "button",
-          "text": "cancel",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
-      ]
-    },
-    {
-      "name": "should show pagination controls when list is large",
-      "tags": ["@crud", "@pagination"],
-      "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Look for pagination controls",
-          "action": "expect",
-          "selector": "[role=\"navigation\"], .pagination, nav",
-          "assertion": {
-            "matcher": "toBeVisible"
-          }
-        }
-      ]
-    },
-    {
-      "name": "should have filter/search input",
-      "tags": ["@crud", "@filter"],
-      "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Look for search or filter input",
-          "action": "expect",
-          "selector": "input[type=\"search\"], input[placeholder*=\"search\" i]",
-          "assertion": {
-            "matcher": "toBeVisible"
-          }
-        }
-      ]
-    },
-    {
-      "name": "should restrict access based on user level",
-      "tags": ["@crud", "@permissions"],
-      "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/admin/system_config"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "domcontentloaded"
-        },
-        {
-          "description": "Should see access denied or redirect to login",
-          "action": "expect",
-          "text": "access denied",
-          "assertion": {
-            "matcher": "toBeVisible",
-            "timeout": 5000
-          }
-        }
-      ]
-    },
-    {
-      "name": "should show breadcrumb trail on detail pages",
-      "tags": ["@crud", "@navigation"],
-      "steps": [
-        {
-          "action": "navigate",
-          "url": "/default/dashboard/users/test-user-123"
-        },
-        {
-          "action": "waitForLoadState",
-          "state": "networkidle"
-        },
-        {
-          "description": "Look for breadcrumb",
-          "action": "expect",
-          "selector": "nav[aria-label*=\"breadcrumb\" i], .breadcrumb, [role=\"navigation\"]",
-          "assertion": {
-            "matcher": "toBeVisible"
-          }
-        }
+        {"action": "navigate", "url": "/admin/users"},
+        {"action": "click", "role": "button", "text": "Delete", "selector": "tr:has-text('testuser')"},
+        {"action": "expect", "role": "dialog", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "role": "heading", "assertion": {"matcher": "toContainText", "text": "Confirm Deletion"}},
+        {"action": "expect", "role": "button", "text": "Cancel", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "expect", "role": "button", "text": "Confirm", "assertion": {"matcher": "toBeVisible"}},
+        {"action": "click", "role": "button", "text": "Cancel"},
+        {"action": "expect", "selector": "tbody", "assertion": {"matcher": "toContainText", "text": "testuser"}}
       ]
     }
   ]

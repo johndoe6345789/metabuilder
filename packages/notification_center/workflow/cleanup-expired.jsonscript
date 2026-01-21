@@ -1,0 +1,92 @@
+{
+  "version": "2.2.0",
+  "name": "Cleanup Expired Notifications",
+  "description": "Delete expired notifications and cleanup old read notifications",
+  "trigger": {
+    "type": "scheduled",
+    "schedule": "0 2 * * *"
+  },
+  "nodes": [
+    {
+      "id": "get_current_time",
+      "type": "operation",
+      "op": "transform_data",
+      "output": "{{ new Date().toISOString() }}"
+    },
+    {
+      "id": "find_expired",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "Notification",
+      "params": {
+        "filter": {
+          "expiresAt": {
+            "$lt": "{{ $steps.get_current_time.output }}"
+          }
+        },
+        "limit": 10000
+      }
+    },
+    {
+      "id": "delete_expired",
+      "type": "operation",
+      "op": "database_delete_many",
+      "entity": "Notification",
+      "params": {
+        "filter": {
+          "expiresAt": {
+            "$lt": "{{ $steps.get_current_time.output }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "find_old_read",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "Notification",
+      "params": {
+        "filter": {
+          "isRead": true,
+          "readAt": {
+            "$lt": "{{ new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString() }}"
+          }
+        },
+        "limit": 10000
+      }
+    },
+    {
+      "id": "delete_old_read",
+      "type": "operation",
+      "op": "database_delete_many",
+      "entity": "Notification",
+      "params": {
+        "filter": {
+          "isRead": true,
+          "readAt": {
+            "$lt": "{{ new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString() }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "emit_cleanup_complete",
+      "type": "action",
+      "action": "emit_event",
+      "event": "cleanup_complete",
+      "channel": "admin",
+      "data": {
+        "expiredCount": "{{ $steps.find_expired.output.length }}",
+        "oldReadCount": "{{ $steps.find_old_read.output.length }}",
+        "timestamp": "{{ $steps.get_current_time.output }}"
+      }
+    },
+    {
+      "id": "return_summary",
+      "type": "action",
+      "action": "log",
+      "level": "info",
+      "message": "Cleanup complete: {{ $steps.find_expired.output.length }} expired, {{ $steps.find_old_read.output.length }} old read notifications deleted"
+    }
+  ]
+}

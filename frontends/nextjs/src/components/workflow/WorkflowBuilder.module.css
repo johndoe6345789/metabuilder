@@ -1,0 +1,404 @@
+/* WorkflowBuilder Component Styles */
+
+.container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+}
+
+.canvas {
+  flex: 1;
+  background: white;
+  border-right: 1px solid #e9ecef;
+  position: relative;
+  overflow: auto;
+}
+
+.svg {
+  display: block;
+}
+
+.connections {
+  pointer-events: none;
+}
+
+.connection {
+  stroke: #6c757d;
+  stroke-width: 2;
+  fill: none;
+}
+
+.nodes {
+  cursor: grab;
+}
+
+.nodes:active {
+  cursor: grabbing;
+}
+
+.node {
+  fill: #fff;
+  stroke: #dee2e6;
+  stroke-width: 2;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.node:hover {
+  stroke: #adb5bd;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.node.selected {
+  stroke: #0d6efd;
+  stroke-width: 3;
+  filter: drop-shadow(0 2px 8px rgba(13, 110, 253, 0.3));
+}
+
+.nodeLabel {
+  font-size: 12px;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+  fill: #212529;
+  font-weight: 500;
+}
+
+.status-success .node {
+  fill: #d1f2eb;
+  stroke: #10b981;
+}
+
+.status-error .node {
+  fill: #fee2e2;
+  stroke: #ef4444;
+}
+
+.status-running .node {
+  fill: #dbeafe;
+  stroke: #3b82f6;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.status-pending .node {
+  fill: #fef3c7;
+  stroke: #f59e0b;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.indicator-success,
+.indicator-error,
+.indicator-running {
+  pointer-events: none;
+}
+
+.indicator-success {
+  fill: #10b981;
+}
+
+.indicator-error {
+  fill: #ef4444;
+}
+
+.indicator-running {
+  fill: #3b82f6;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+/* Sidebar Styles */
+
+.sidebar {
+  width: 320px;
+  background: white;
+  border-left: 1px solid #e9ecef;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebarHeader {
+  padding: 16px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.sidebarHeader h2 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #212529;
+}
+
+.workflowName {
+  margin: 0;
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.section {
+  padding: 16px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.section h3 {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #212529;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section h4 {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.triggerInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inputField label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.inputField input {
+  padding: 6px 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 12px;
+  background: #f8f9fa;
+}
+
+.inputField input:focus {
+  outline: none;
+  border-color: #0d6efd;
+  background: white;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.1);
+}
+
+.nodeDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nodeType {
+  margin: 0;
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.nodeType code {
+  background: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Monaco', 'Courier New', monospace;
+  color: #0d6efd;
+}
+
+.nodeDescription {
+  margin: 0;
+  font-size: 12px;
+  color: #6c757d;
+  line-height: 1.5;
+}
+
+.parameters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.paramField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.paramField label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.paramField input {
+  padding: 4px 6px;
+  border: 1px solid #dee2e6;
+  border-radius: 3px;
+  font-size: 11px;
+  font-family: 'Monaco', 'Courier New', monospace;
+  background: white;
+}
+
+.paramField input:disabled {
+  background: #e9ecef;
+  color: #6c757d;
+}
+
+.result {
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border-left: 3px solid #0d6efd;
+}
+
+.result pre {
+  margin: 0;
+  font-size: 10px;
+  font-family: 'Monaco', 'Courier New', monospace;
+  overflow-x: auto;
+  color: #212529;
+}
+
+/* Control Buttons */
+
+.executeButton {
+  width: 100%;
+  padding: 10px 12px;
+  background: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.executeButton:hover:not(:disabled) {
+  background: #0b5ed7;
+  box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3);
+}
+
+.executeButton:disabled {
+  background: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.error {
+  padding: 8px;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.error p {
+  margin: 0;
+}
+
+.success {
+  padding: 8px;
+  background: #d1f2eb;
+  border: 1px solid #a7f3d0;
+  border-radius: 4px;
+  color: #059669;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.success p {
+  margin: 0;
+}
+
+.metrics {
+  font-size: 11px;
+  margin-top: 4px;
+  opacity: 0.8;
+}
+
+/* Advanced Options */
+
+.advancedToggle {
+  width: 100%;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.advancedToggle:hover {
+  background: #e9ecef;
+}
+
+.advanced {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.advanced label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #495057;
+  cursor: pointer;
+}
+
+.advanced input[type='checkbox'] {
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+}
+
+/* Responsive */
+
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #e9ecef;
+  }
+
+  .canvas {
+    height: 400px;
+    border-right: none;
+  }
+}

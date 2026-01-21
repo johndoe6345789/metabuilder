@@ -1,0 +1,146 @@
+{
+  "version": "2.2.0",
+  "name": "Login Workflow",
+  "description": "User login with email/password, rate limiting, and session creation",
+  "trigger": {
+    "type": "http",
+    "method": "POST",
+    "path": "/auth/login"
+  },
+  "nodes": [
+    {
+      "id": "apply_rate_limit",
+      "type": "operation",
+      "op": "rate_limit",
+      "key": "{{ $json.email }}",
+      "limit": 5,
+      "window": 60000,
+      "errorMessage": "Too many login attempts. Please try again in a few minutes."
+    },
+    {
+      "id": "validate_input",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $json }}",
+      "rules": {
+        "email": "required|email",
+        "password": "required|string|minLength:6"
+      }
+    },
+    {
+      "id": "fetch_user",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "User",
+      "params": {
+        "filter": {
+          "email": "{{ $json.email }}"
+        }
+      }
+    },
+    {
+      "id": "check_user_exists",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $steps.fetch_user.output !== null }}"
+    },
+    {
+      "id": "verify_password",
+      "type": "operation",
+      "op": "crypto",
+      "operation": "bcrypt_compare",
+      "input": "{{ $json.password }}",
+      "hash": "{{ $steps.fetch_user.output.passwordHash }}"
+    },
+    {
+      "id": "check_password_valid",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $steps.verify_password.output === true }}"
+    },
+    {
+      "id": "check_account_active",
+      "type": "operation",
+      "op": "condition",
+      "condition": "{{ $steps.fetch_user.output.isActive !== false }}"
+    },
+    {
+      "id": "generate_session",
+      "type": "operation",
+      "op": "crypto",
+      "operation": "generate_jwt",
+      "payload": {
+        "userId": "{{ $steps.fetch_user.output.id }}",
+        "email": "{{ $steps.fetch_user.output.email }}",
+        "tenantId": "{{ $steps.fetch_user.output.tenantId }}",
+        "level": "{{ $steps.fetch_user.output.level }}"
+      },
+      "secret": "{{ $env.JWT_SECRET }}",
+      "expiresIn": "24h"
+    },
+    {
+      "id": "create_session_record",
+      "type": "operation",
+      "op": "database_create",
+      "entity": "Session",
+      "data": {
+        "userId": "{{ $steps.fetch_user.output.id }}",
+        "tenantId": "{{ $steps.fetch_user.output.tenantId }}",
+        "token": "{{ $steps.generate_session.output }}",
+        "ipAddress": "{{ $json.ipAddress }}",
+        "userAgent": "{{ $json.userAgent }}",
+        "expiresAt": "{{ new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() }}"
+      }
+    },
+    {
+      "id": "update_last_login",
+      "type": "operation",
+      "op": "database_update",
+      "entity": "User",
+      "params": {
+        "filter": {
+          "id": "{{ $steps.fetch_user.output.id }}"
+        },
+        "data": {
+          "lastLogin": "{{ new Date().toISOString() }}"
+        }
+      }
+    },
+    {
+      "id": "emit_login_event",
+      "type": "action",
+      "action": "emit_event",
+      "event": "user_login",
+      "channel": "{{ 'user:' + $steps.fetch_user.output.id }}",
+      "data": {
+        "userId": "{{ $steps.fetch_user.output.id }}",
+        "tenantId": "{{ $steps.fetch_user.output.tenantId }}",
+        "timestamp": "{{ new Date().toISOString() }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": {
+        "token": "{{ $steps.generate_session.output }}",
+        "user": {
+          "id": "{{ $steps.fetch_user.output.id }}",
+          "email": "{{ $steps.fetch_user.output.email }}",
+          "displayName": "{{ $steps.fetch_user.output.displayName }}",
+          "tenantId": "{{ $steps.fetch_user.output.tenantId }}"
+        }
+      }
+    }
+  ],
+  "errorHandler": {
+    "type": "action",
+    "action": "http_response",
+    "status": 401,
+    "body": {
+      "error": "Invalid credentials",
+      "message": "Email or password is incorrect"
+    }
+  }
+}

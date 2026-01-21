@@ -1,0 +1,23 @@
+{
+  "packageId": "admin",
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "name": "Admin",
+  "version": "1.0.0",
+  "description": "Admin package for dashboard management",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "files": {
+    "directories": [
+      "playwright"
+    ],
+    "byType": {
+      "tests": [
+        "playwright/tests.json"
+      ],
+      "config": [
+        "package.json"
+      ]
+    }
+  }
+}

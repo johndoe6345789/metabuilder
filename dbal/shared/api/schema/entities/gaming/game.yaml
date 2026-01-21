@@ -1,0 +1,133 @@
+name: Game
+displayName: Arcade Game
+description: A playable retro arcade game
+pluralName: Games
+
+fields:
+  id:
+    type: string
+    label: Game ID
+    description: Unique identifier for the game
+    required: true
+    primaryKey: true
+    dbType: TEXT
+    defaultValue: "gen_ulid()"
+
+  tenantId:
+    type: string
+    label: Tenant ID
+    description: Tenant this game belongs to
+    required: true
+    dbType: TEXT
+    index: true
+    comment: "Multi-tenant isolation"
+
+  name:
+    type: string
+    label: Game Name
+    description: Display name of the game (e.g., Snake, Tetris, Pong)
+    required: true
+    dbType: TEXT
+    maxLength: 255
+
+  description:
+    type: text
+    label: Description
+    description: Detailed game description and rules
+    required: false
+    dbType: TEXT
+
+  thumbnailUrl:
+    type: string
+    label: Thumbnail URL
+    description: URL to the game's thumbnail image
+    required: false
+    dbType: TEXT
+    maxLength: 2048
+
+  gameType:
+    type: string
+    label: Game Type
+    description: Type/category of game (snake, tetris, pong, etc.)
+    required: true
+    dbType: TEXT
+    maxLength: 100
+    enum:
+      - snake
+      - tetris
+      - pong
+      - breakout
+      - spaceinvaders
+      - custom
+
+  difficulty:
+    type: string
+    label: Difficulty Level
+    description: Default difficulty setting for the game
+    required: false
+    dbType: TEXT
+    defaultValue: "medium"
+    enum:
+      - easy
+      - medium
+      - hard
+      - extreme
+
+  playCount:
+    type: number
+    label: Play Count
+    description: Total number of times the game has been played
+    required: true
+    dbType: INTEGER
+    defaultValue: 0
+    comment: "Incremented on each gameplay session"
+
+  isActive:
+    type: boolean
+    label: Active
+    description: Whether the game is currently playable
+    required: true
+    dbType: BOOLEAN
+    defaultValue: true
+
+  maxPlayers:
+    type: number
+    label: Max Players
+    description: Maximum number of simultaneous players (1 for single-player)
+    required: false
+    dbType: INTEGER
+    defaultValue: 1
+
+  createdAt:
+    type: number
+    label: Created At
+    description: Timestamp when the game was added (milliseconds)
+    required: true
+    dbType: INTEGER
+    defaultValue: "current_timestamp_ms()"
+    index: true
+
+  updatedAt:
+    type: number
+    label: Updated At
+    description: Timestamp when the game was last modified (milliseconds)
+    required: false
+    dbType: INTEGER
+
+indexes:
+  - fields: [tenantId, gameType]
+    unique: false
+    name: idx_game_tenant_type
+  - fields: [tenantId, createdAt]
+    unique: false
+    name: idx_game_tenant_created
+
+relations:
+  highScores:
+    type: hasMany
+    target: HighScore
+    foreignKey: gameId
+  achievements:
+    type: hasMany
+    target: Achievement
+    foreignKey: gameId

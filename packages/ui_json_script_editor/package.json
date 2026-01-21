@@ -26,5 +26,34 @@
     "script_testing": true,
     "library_management": true,
     "version_control": true
+  },
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "files": {
+    "directories": [
+      "component",
+      "page-config",
+      "seed",
+      "workflow"
+    ],
+    "byType": {
+      "workflows": [
+        "workflow/export-script.jsonscript",
+        "workflow/import-script.jsonscript",
+        "workflow/list-scripts.jsonscript",
+        "workflow/save-script.jsonscript",
+        "workflow/validate-script.jsonscript"
+      ],
+      "config": [
+        "package.json"
+      ],
+      "other": [
+        "seed/component.json",
+        "seed/metadata.json",
+        "seed/page-config.json"
+      ]
+    }
   }
 }

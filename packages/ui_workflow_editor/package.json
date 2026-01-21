@@ -28,5 +28,27 @@
     "triggers": true,
     "actions": true,
     "conditions": true
+  },
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "ui",
+  "files": {
+    "directories": [
+      "component",
+      "page-config",
+      "seed",
+      "workflow"
+    ],
+    "byType": {
+      "config": [
+        "package.json"
+      ],
+      "other": [
+        "seed/component.json",
+        "seed/metadata.json",
+        "seed/page-config.json"
+      ]
+    }
   }
 }

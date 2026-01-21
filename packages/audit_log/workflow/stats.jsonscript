@@ -1,0 +1,87 @@
+{
+  "version": "2.2.0",
+  "name": "Calculate Audit Statistics",
+  "description": "Calculate audit log statistics (action counts, user activity)",
+  "trigger": {
+    "type": "http",
+    "method": "GET",
+    "path": "/audit-logs/stats"
+  },
+  "nodes": [
+    {
+      "id": "validate_context",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.tenantId }}",
+      "validator": "required",
+      "errorMessage": "tenantId is required"
+    },
+    {
+      "id": "get_date_range",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "startDate": "{{ new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() }}",
+        "endDate": "{{ new Date().toISOString() }}"
+      }
+    },
+    {
+      "id": "count_by_action",
+      "type": "operation",
+      "op": "database_aggregate",
+      "entity": "AuditLog",
+      "params": {
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "timestamp": {
+            "$gte": "{{ $steps.get_date_range.output.startDate }}",
+            "$lte": "{{ $steps.get_date_range.output.endDate }}"
+          }
+        },
+        "groupBy": "action",
+        "aggregations": {
+          "count": "count"
+        }
+      },
+      "output": "actionStats"
+    },
+    {
+      "id": "count_by_entity",
+      "type": "operation",
+      "op": "database_aggregate",
+      "entity": "AuditLog",
+      "params": {
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "timestamp": {
+            "$gte": "{{ $steps.get_date_range.output.startDate }}",
+            "$lte": "{{ $steps.get_date_range.output.endDate }}"
+          }
+        },
+        "groupBy": "entity",
+        "aggregations": {
+          "count": "count"
+        }
+      },
+      "output": "entityStats"
+    },
+    {
+      "id": "format_response",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "dateRange": "{{ $steps.get_date_range.output }}",
+        "actionStatistics": "{{ $steps.count_by_action.output }}",
+        "entityStatistics": "{{ $steps.count_by_entity.output }}",
+        "totalEntries": "{{ $steps.count_by_action.output.reduce((sum, item) => sum + item.count, 0) }}"
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": "{{ $steps.format_response.output }}"
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "version": "2.2.0",
+  "name": "List Forum Threads",
+  "description": "List forum threads in a category with pagination and sorting",
+  "trigger": {
+    "type": "http",
+    "method": "GET",
+    "path": "/forum/categories/:categoryId/threads"
+  },
+  "nodes": [
+    {
+      "id": "validate_tenant",
+      "type": "operation",
+      "op": "validate",
+      "input": "{{ $context.tenantId }}",
+      "validator": "required"
+    },
+    {
+      "id": "extract_params",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "categoryId": "{{ $json.categoryId }}",
+        "sortBy": "{{ $json.sortBy || 'updatedAt' }}",
+        "sortOrder": "{{ $json.sortOrder || 'desc' }}",
+        "limit": "{{ Math.min($json.limit || 20, 100) }}",
+        "page": "{{ $json.page || 1 }}"
+      }
+    },
+    {
+      "id": "calculate_offset",
+      "type": "operation",
+      "op": "transform_data",
+      "output": "{{ ($steps.extract_params.output.page - 1) * $steps.extract_params.output.limit }}"
+    },
+    {
+      "id": "fetch_threads",
+      "type": "operation",
+      "op": "database_read",
+      "entity": "ForumThread",
+      "params": {
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "categoryId": "{{ $steps.extract_params.output.categoryId }}"
+        },
+        "sort": {
+          "{{ $steps.extract_params.output.sortBy }}": "{{ $steps.extract_params.output.sortOrder === 'asc' ? 1 : -1 }}"
+        },
+        "limit": "{{ $steps.extract_params.output.limit }}",
+        "offset": "{{ $steps.calculate_offset.output }}"
+      }
+    },
+    {
+      "id": "fetch_total",
+      "type": "operation",
+      "op": "database_count",
+      "entity": "ForumThread",
+      "params": {
+        "filter": {
+          "tenantId": "{{ $context.tenantId }}",
+          "categoryId": "{{ $steps.extract_params.output.categoryId }}"
+        }
+      }
+    },
+    {
+      "id": "format_response",
+      "type": "operation",
+      "op": "transform_data",
+      "output": {
+        "threads": "{{ $steps.fetch_threads.output }}",
+        "pagination": {
+          "total": "{{ $steps.fetch_total.output }}",
+          "page": "{{ $steps.extract_params.output.page }}",
+          "limit": "{{ $steps.extract_params.output.limit }}",
+          "totalPages": "{{ Math.ceil($steps.fetch_total.output / $steps.extract_params.output.limit) }}"
+        }
+      }
+    },
+    {
+      "id": "return_success",
+      "type": "action",
+      "action": "http_response",
+      "status": 200,
+      "body": "{{ $steps.format_response.output }}"
+    }
+  ]
+}

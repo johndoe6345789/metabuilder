@@ -6,5 +6,25 @@
   "description": "API CRUD operations E2E tests",
   "category": "testing",
   "minLevel": 0,
-  "keywords": ["api", "tests", "rest", "crud"]
+  "keywords": [
+    "api",
+    "tests",
+    "rest",
+    "crud"
+  ],
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "files": {
+    "directories": [
+      "playwright"
+    ],
+    "byType": {
+      "tests": [
+        "playwright/tests.json"
+      ],
+      "config": [
+        "package.json"
+      ]
+    }
+  }
 }

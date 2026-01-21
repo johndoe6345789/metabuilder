@@ -35,5 +35,56 @@
       "tests/sorting.test.json",
       "tests/pagination.test.json"
     ]
+  },
+  "files": {
+    "directories": [
+      "components",
+      "page-config",
+      "permissions",
+      "playwright",
+      "seed",
+      "static_content",
+      "storybook",
+      "styles",
+      "tests",
+      "workflow"
+    ],
+    "byType": {
+      "components": [
+        "components/ui.json"
+      ],
+      "pages": [
+        "page-config/page-config.json"
+      ],
+      "workflows": [
+        "workflow/fetch-data.jsonscript",
+        "workflow/filtering.jsonscript",
+        "workflow/pagination.jsonscript",
+        "workflow/sorting.jsonscript"
+      ],
+      "tests": [
+        "playwright/tests.json",
+        "tests/components.test.json",
+        "tests/metadata.params.json",
+        "tests/metadata.test.json",
+        "tests/pagination.test.json",
+        "tests/sorting.params.json",
+        "tests/sorting.test.json"
+      ],
+      "config": [
+        "package.json",
+        "storybook/config.json"
+      ],
+      "permissions": [
+        "permissions/roles.json"
+      ],
+      "styles": [
+        "styles/tokens.json"
+      ],
+      "other": [
+        "seed/metadata.json",
+        "static_content/icon.svg"
+      ]
+    }
   }
 }

@@ -1,0 +1,35 @@
+{
+  "name": "@metabuilder/workflow-plugin-http-request",
+  "version": "1.0.0",
+  "description": "HTTP Request node executor - Make outbound HTTP calls with retry and response parsing",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": ["workflow", "plugin", "http", "request", "api", "integration"],
+  "author": "MetaBuilder Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "@metabuilder/workflow": "^3.0.0",
+    "node-fetch": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metabuilder/metabuilder.git",
+    "directory": "workflow/plugins/integration/http-request"
+  }
+}

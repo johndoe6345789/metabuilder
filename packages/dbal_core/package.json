@@ -1,0 +1,23 @@
+{
+  "packageId": "dbal_core",
+  "$schema": "https://metabuilder.dev/schemas/package-metadata.schema.json",
+  "name": "Dbal Core",
+  "version": "1.0.0",
+  "description": "Database abstraction layer core",
+  "author": "MetaBuilder",
+  "license": "MIT",
+  "category": "database",
+  "files": {
+    "directories": [
+      "unit-tests"
+    ],
+    "byType": {
+      "config": [
+        "package.json"
+      ],
+      "other": [
+        "unit-tests/tests.json"
+      ]
+    }
+  }
+}

@@ -12,3 +12,19 @@ export { useGitHubFetcher } from './useGitHubFetcher'
 export { useKV } from './useKV'
 export { useLevelRouting } from './data/useLevelRouting'
 export { useResolvedUser } from './data/useResolvedUser'
+
+// Phase 3 User CRUD hooks
+export { useUsers } from './useUsers'
+export type { UseUsersReturn } from './useUsers'
+export { useUserForm } from './useUserForm'
+export type { UseUserFormReturn, UserFormData, UserFormErrors } from './useUserForm'
+export { useUserActions } from './useUserActions'
+export type { UseUserActionsReturn } from './useUserActions'
+
+// Phase 3 Package CRUD hooks
+export { usePackages } from './usePackages'
+export type { UsePackagesReturn } from './usePackages'
+export { usePackageActions } from './usePackageActions'
+export type { UsePackageActionsReturn } from './usePackageActions'
+export { usePackageDetails } from './usePackageDetails'
+export type { UsePackageDetailsReturn } from './usePackageDetails'
