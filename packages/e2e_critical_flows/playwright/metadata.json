@@ -1,0 +1,16 @@
+{
+  "entityType": "playwright",
+  "package": "e2e_critical_flows",
+  "description": "Critical user flow end-to-end tests",
+  "version": "1.0.0",
+  "testCoverage": [
+    "Public discovery & login",
+    "Authentication & session",
+    "User dashboard",
+    "Admin features",
+    "Package management",
+    "Navigation",
+    "Error handling",
+    "Performance"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "e2e_critical_flows",
+  "version": "1.0.0",
+  "description": "Critical user flow end-to-end tests - proves all essential functionality works",
+  "type": "module",
+  "packageId": "e2e_critical_flows",
+  "level": 0,
+  "tags": ["@e2e", "@critical"],
+  "keywords": ["e2e", "critical", "flows", "playwright"]
+}
