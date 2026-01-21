@@ -116,16 +116,45 @@ a[role='button'] {
   }
 }
 
-// Empty state styling
+// Empty state styling with animations
+@keyframes empty-state-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes icon-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
 .empty-state {
   text-align: center;
   padding: 40px 20px;
   color: #868e96;
 
+  &.empty-state-animated {
+    animation: empty-state-fade-in 0.5s ease-out;
+  }
+
   .empty-state-icon {
     font-size: 48px;
     margin-bottom: 16px;
-    opacity: 0.5;
+    opacity: 0.7;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
   }
 
   .empty-state-title {
@@ -133,6 +162,7 @@ a[role='button'] {
     font-weight: 600;
     margin-bottom: 8px;
     color: #495057;
+    transition: color 0.2s ease;
   }
 
   .empty-state-message {
@@ -141,10 +171,47 @@ a[role='button'] {
     max-width: 400px;
     margin-left: auto;
     margin-right: auto;
+    line-height: 1.5;
   }
 
-  .empty-state-action {
+  .empty-state-hint {
+    font-size: 13px;
+    color: #868e96;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .empty-state-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
     margin-top: 16px;
+  }
+
+  .empty-state-action-btn,
+  .empty-state-secondary-btn {
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #228be6;
+      outline-offset: 2px;
+    }
   }
 }
 
