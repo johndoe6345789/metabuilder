@@ -306,6 +306,58 @@
       "additionalProperties": {
         "type": "integer"
       }
+    },
+    "components": {
+      "type": "object",
+      "description": "Component-scoped style definitions",
+      "additionalProperties": {
+        "type": "object",
+        "description": "Component style definition",
+        "properties": {
+          "base": {
+            "$ref": "#/definitions/styleDefinition",
+            "description": "Base component styles"
+          },
+          "variants": {
+            "type": "object",
+            "description": "Style variants (size, color, etc.)",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/styleDefinition"
+              }
+            }
+          },
+          "states": {
+            "type": "object",
+            "description": "State-based styles (hover, focus, disabled)",
+            "properties": {
+              "hover": { "$ref": "#/definitions/styleDefinition" },
+              "focus": { "$ref": "#/definitions/styleDefinition" },
+              "active": { "$ref": "#/definitions/styleDefinition" },
+              "disabled": { "$ref": "#/definitions/styleDefinition" },
+              "loading": { "$ref": "#/definitions/styleDefinition" }
+            },
+            "additionalProperties": {
+              "$ref": "#/definitions/styleDefinition"
+            }
+          },
+          "responsive": {
+            "type": "object",
+            "description": "Responsive breakpoints",
+            "properties": {
+              "sm": { "$ref": "#/definitions/styleDefinition" },
+              "md": { "$ref": "#/definitions/styleDefinition" },
+              "lg": { "$ref": "#/definitions/styleDefinition" },
+              "xl": { "$ref": "#/definitions/styleDefinition" },
+              "xxl": { "$ref": "#/definitions/styleDefinition" }
+            },
+            "additionalProperties": {
+              "$ref": "#/definitions/styleDefinition"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -318,6 +370,41 @@
       "type": "string",
       "description": "CSS size value (px, rem, em, %, etc.)",
       "pattern": "^(-?\\d+(\\.\\d+)?(px|rem|em|%|vh|vw|vmin|vmax|ch|ex)?|0|auto|inherit)$"
+    },
+    "styleDefinition": {
+      "type": "object",
+      "description": "CSS property definitions for styling",
+      "properties": {
+        "display": { "type": "string", "enum": ["flex", "grid", "block", "inline", "inline-block", "none"] },
+        "flexDirection": { "type": "string", "enum": ["row", "column", "row-reverse", "column-reverse"] },
+        "justifyContent": { "type": "string" },
+        "alignItems": { "type": "string" },
+        "gap": { "$ref": "#/definitions/size" },
+        "padding": { "$ref": "#/definitions/size" },
+        "margin": { "$ref": "#/definitions/size" },
+        "width": { "$ref": "#/definitions/size" },
+        "height": { "$ref": "#/definitions/size" },
+        "minWidth": { "$ref": "#/definitions/size" },
+        "minHeight": { "$ref": "#/definitions/size" },
+        "maxWidth": { "$ref": "#/definitions/size" },
+        "maxHeight": { "$ref": "#/definitions/size" },
+        "backgroundColor": { "type": "string", "description": "Color reference or hex" },
+        "color": { "type": "string", "description": "Text color reference or hex" },
+        "fontSize": { "$ref": "#/definitions/size" },
+        "fontWeight": { "type": "string", "enum": ["normal", "bold", "400", "500", "600", "700"] },
+        "lineHeight": { "type": "string" },
+        "letterSpacing": { "$ref": "#/definitions/size" },
+        "borderRadius": { "$ref": "#/definitions/size" },
+        "borderWidth": { "$ref": "#/definitions/size" },
+        "borderColor": { "type": "string" },
+        "borderStyle": { "type": "string", "enum": ["solid", "dashed", "dotted", "double"] },
+        "boxShadow": { "type": "string" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "transform": { "type": "string" },
+        "transition": { "type": "string" },
+        "cursor": { "type": "string" }
+      },
+      "additionalProperties": true
     }
   }
 }
