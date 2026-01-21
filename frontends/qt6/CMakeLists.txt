@@ -9,7 +9,6 @@ include(${CMAKE_BINARY_DIR}/conan_toolchain.cmake OPTIONAL)
 
 find_package(Qt6 COMPONENTS Core Gui Quick REQUIRED)
 find_package(cpr CONFIG REQUIRED)
-find_package(libopenmpt CONFIG REQUIRED)
 
 qt_add_executable(dbal-qml
     main.cpp
@@ -26,7 +25,7 @@ qt_add_qml_module(dbal-qml
         qmllib/dbal/DBALProvider.qml
 )
 
-target_link_libraries(dbal-qml PRIVATE Qt6::Core Qt6::Gui Qt6::Quick cpr::cpr libopenmpt::libopenmpt)
+target_link_libraries(dbal-qml PRIVATE Qt6::Core Qt6::Gui Qt6::Quick cpr::cpr)
 
 qt_finalize_executable(dbal-qml)
 

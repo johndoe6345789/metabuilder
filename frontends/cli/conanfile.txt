@@ -1,6 +1,6 @@
 [requires]
 cpr/1.10.0
-lua/5.4.7
+lua/5.4.6
 sol2/3.3.1
 nlohmann_json/3.11.3
 
@@ -9,7 +9,7 @@ CMakeDeps
 CMakeToolchain
 
 [options]
-cpr:ssl_backend=openssl
+cpr/*:ssl_backend=openssl
 lua/*:shared=False
 
 [tool_requires]

@@ -1,7 +1,6 @@
 [requires]
 qt/6.7.0
 cpr/1.14.1
-libopenmpt/0.6.0
 
 [generators]
 CMakeDeps

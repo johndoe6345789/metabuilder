@@ -36,8 +36,8 @@ void LuaRunner::setup_sandbox() {
     );
 
     // Remove dangerous functions from base
-    impl_->lua["dofile"] = sol::nil;
-    impl_->lua["loadfile"] = sol::nil;
+    impl_->lua["dofile"] = sol::lua_nil;
+    impl_->lua["loadfile"] = sol::lua_nil;
     
     // Custom print that captures output
     impl_->lua.set_function("print", [](sol::variadic_args args) {
@@ -111,7 +111,7 @@ sol::table config_to_lua(sol::state& lua, const LuaConfig& config) {
         std::visit([&](auto&& v) {
             using T = std::decay_t<decltype(v)>;
             if constexpr (std::is_same_v<T, std::nullptr_t>) {
-                tbl[key] = sol::nil;
+                tbl[key] = sol::lua_nil;
             } else if constexpr (std::is_same_v<T, std::vector<std::string>>) {
                 sol::table arr = lua.create_table();
                 int i = 1;
